@@ -21,9 +21,10 @@ export default function Page() {
 
   const { events } = useNostrEvents({
     filter: {
+      until: dateToUnix(now.current),
       since: dateToUnix(hoursAgo(1, now.current)),
       kinds: [1],
-      limit: 100,
+      limit: 10,
     },
   });
 

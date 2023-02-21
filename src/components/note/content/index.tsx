@@ -2,16 +2,15 @@
 import ImageCard from '@components/note/content/preview/imageCard';
 import Video from '@components/note/content/preview/video';
 
-import { MarkdownPreviewProps } from '@uiw/react-markdown-preview';
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
-const MarkdownPreview = dynamic<MarkdownPreviewProps>(() => import('@uiw/react-markdown-preview'), {
+const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
   ssr: false,
 });
 
-export default function Content({ data }: { data: string }) {
+export default function Content({ data }: { data: any }) {
   const [preview, setPreview] = useState({});
 
   const content = useRef(data);
@@ -25,8 +24,15 @@ export default function Content({ data }: { data: string }) {
 
   useEffect(() => {
     if (urls !== null && urls.length > 0) {
-      const parseURL = new URL(urls[0]);
-
+      // #TODO: support multiple url
+      let url = urls[0];
+      // make sure url alway have http://
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'http://' + url;
+      }
+      // parse url with new URL();
+      const parseURL = new URL(url, 'https://uselume.xyz');
+      // #TODO performance test
       if (parseURL.pathname.toLowerCase().match(/\.(jpg|jpeg|gif|png|webp)$/)) {
         // add image to preview
         setPreview({ image: parseURL.href, type: 'image' });
@@ -35,7 +41,7 @@ export default function Content({ data }: { data: string }) {
         // add video to preview
         setPreview({ url: parseURL.href, type: 'video' });
         content.current = content.current.replace(parseURL.href, '');
-      } // #TODO: support multiple preview
+      } // #TODO: support multiple previ3ew
     }
   }, [urls]);
 
