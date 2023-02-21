@@ -9,7 +9,7 @@ import PostIcon from '@assets/icons/Post';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { useStore } from '@nanostores/react';
-import { commands } from '@uiw/react-md-editor';
+import * as commands from '@uiw/react-md-editor/lib/commands';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { dateToUnix, useNostr } from 'nostr-react';
