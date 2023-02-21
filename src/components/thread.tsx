@@ -27,6 +27,13 @@ export function Thread({ data }: { data: any }) {
     [data]
   );
 
+  const computeItemKey = useCallback(
+    (index) => {
+      return data[index].id;
+    },
+    [data]
+  );
+
   return (
     <Virtuoso
       data={data}
@@ -35,6 +42,7 @@ export function Thread({ data }: { data: any }) {
         EmptyPlaceholder: () => <Placeholder />,
         ScrollSeekPlaceholder: () => <Placeholder />,
       }}
+      computeItemKey={computeItemKey}
       scrollSeekConfiguration={{
         enter: (velocity) => Math.abs(velocity) > 800,
         exit: (velocity) => Math.abs(velocity) < 500,
