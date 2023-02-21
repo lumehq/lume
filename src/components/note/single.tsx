@@ -17,14 +17,20 @@ const DynamicContent = dynamic(() => import('@components/note/content'), {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Single = memo(function Single({ event }: { event: any }) {
+  const openThread = () => {
+    console.log('ok');
+  };
+
   return (
-    <div className="flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-6 px-6">
+    <div
+      onClick={() => openThread()}
+      className="flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-4 px-6 hover:bg-zinc-800">
       <div className="flex flex-col">
         <User pubkey={event.pubkey} time={event.created_at} />
         <div className="-mt-4 pl-[60px]">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-6">
             <DynamicContent data={event.content} />
-            <div className="-ml-1 flex items-center gap-8">
+            <div className="relative z-10 -ml-1 flex items-center gap-8">
               <Reply eventID={event.id} />
               <Reaction eventID={event.id} eventPubkey={event.pubkey} />
             </div>

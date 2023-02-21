@@ -123,7 +123,7 @@ export default function AccountBar() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95">
                 <Dialog.Panel className="relative w-full max-w-2xl transform overflow-hidden rounded-lg text-zinc-100 shadow-modal transition-all">
-                  <div className="absolute top-0 left-0 h-full w-full bg-black bg-opacity-10 backdrop-blur-md"></div>
+                  <div className="absolute top-0 left-0 h-full w-full bg-black bg-opacity-20 backdrop-blur-lg"></div>
                   <div className="absolute bottom-0 left-0 h-24 w-full border-t border-white/10 bg-zinc-900"></div>
                   <div className="relative z-10 px-4 pt-4 pb-2">
                     <MDEditor
