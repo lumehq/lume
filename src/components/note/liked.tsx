@@ -1,7 +1,7 @@
 import Reaction from '@components/note/atoms/reaction';
 import Reply from '@components/note/atoms/reply';
 import RootUser from '@components/note/atoms/rootUser';
-import User from '@components/note/atoms/user';
+import { User } from '@components/note/atoms/user';
 import { Placeholder } from '@components/note/placeholder';
 
 import LikeSolidIcon from '@assets/icons/LikeSolid';

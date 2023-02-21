@@ -1,6 +1,6 @@
 import Reaction from '@components/note/atoms/reaction';
 import Reply from '@components/note/atoms/reply';
-import User from '@components/note/atoms/user';
+import { User } from '@components/note/atoms/user';
 import { Placeholder } from '@components/note/placeholder';
 
 import dynamic from 'next/dynamic';

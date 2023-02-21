@@ -8,7 +8,7 @@ export default function ImageCard({ data }: { data: object }) {
       <div className="relative h-full w-full">
         <Image
           src={data['image']}
-          alt="image preview"
+          alt={data['image']}
           width="0"
           height="0"
           sizes="100vw"

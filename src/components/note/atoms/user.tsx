@@ -42,11 +42,11 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
         </div>
         <div className="flex w-full flex-1 items-start justify-between">
           <div className="flex w-full justify-between">
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-baseline gap-2 text-sm">
               <span className="font-bold leading-tight">
                 {userData?.name ? userData.name : truncate(pubkey, 16, ' .... ')}
               </span>
-              <span className="text-zinc-500">·</span>
+              <span className="leading-tight text-zinc-500">·</span>
               <Moment fromNow unix className="text-zinc-500">
                 {time}
               </Moment>
