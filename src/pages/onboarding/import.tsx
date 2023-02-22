@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
-import Database from 'tauri-plugin-sql-api';
 
 type FormValues = {
   key: string;
@@ -44,15 +43,10 @@ export default function Page() {
     try {
       const pubKey = getPublicKey(privKey);
       if (pubKey) {
-        const npub = nip19.npubEncode(pubKey);
-        const db = await Database.load('sqlite:lume.db');
-
-        await db.execute(
-          `INSERT INTO accounts (privkey, pubkey, npub) VALUES ("${privKey}", "${pubKey}", "${npub}")`
-        );
-        await db.close();
-
-        router.push('/');
+        router.push({
+          pathname: '/onboarding/fetch-profile',
+          query: { privkey: privKey },
+        });
       }
     } catch (error) {
       setError('key', {
@@ -63,7 +57,7 @@ export default function Page() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex h-full flex-col justify-between">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex h-full flex-col justify-between px-8">
       <div>{/* spacer */}</div>
       <motion.div layoutId="form">
         <div className="mb-8 flex flex-col gap-3">
@@ -82,7 +76,7 @@ export default function Page() {
             <input
               {...register('key', { required: true, minLength: 32 })}
               placeholder="Paste key here..."
-              className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
+              className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
             />
           </div>
           <span className="text-sm text-red-400">{errors.key && <p>{errors.key.message}</p>}</span>

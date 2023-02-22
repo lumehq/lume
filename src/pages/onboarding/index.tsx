@@ -34,7 +34,7 @@ export default function Page() {
           <Link
             href="/onboarding/import"
             className="hover:bg-zinc-900/2.5 transform rounded-lg border border-black/5 bg-zinc-800 px-3.5 py-2 font-medium ring-1 ring-inset ring-zinc-900/10 hover:text-zinc-900 active:translate-y-1 dark:text-zinc-300 dark:ring-white/10 dark:hover:bg-zinc-700 dark:hover:text-white">
-            Import key
+            Login
           </Link>
         </motion.div>
       </div>

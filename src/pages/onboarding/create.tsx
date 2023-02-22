@@ -53,7 +53,7 @@ export default function Page() {
 
   const pubKey = getPublicKey(privKey);
   const npub = nip19.npubEncode(pubKey);
-  const nsec = nip19.nsecEncode(pubKey);
+  const nsec = nip19.nsecEncode(privKey);
 
   // auto-generated profile
   const data = {
@@ -96,7 +96,7 @@ export default function Page() {
       pubkey: pubKey,
     });
 
-    // redirect to following newsfeed
+    // redirect to pre-follow
     setTimeout(() => {
       setLoading(false);
       router.push('/onboarding/following');
