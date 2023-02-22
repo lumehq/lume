@@ -37,11 +37,14 @@ export default function Page() {
 
   const onSubmit = async (data: any) => {
     let privKey = data['key'];
+
     if (privKey.substring(0, 4) === 'nsec') {
       privKey = nip19.decode(privKey).data;
     }
+
     try {
       const pubKey = getPublicKey(privKey);
+
       if (pubKey) {
         router.push({
           pathname: '/onboarding/fetch-profile',
@@ -75,8 +78,8 @@ export default function Page() {
           <div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
             <input
               {...register('key', { required: true, minLength: 32 })}
-              placeholder="Paste key here..."
-              className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
+              placeholder="Paste nsec or hex key here..."
+              className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
             />
           </div>
           <span className="text-sm text-red-400">{errors.key && <p>{errors.key.message}</p>}</span>
