@@ -4,6 +4,7 @@ import Reply from '@components/note/atoms/reply';
 import { User } from '@components/note/atoms/user';
 
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { memo } from 'react';
 
 const DynamicContent = dynamic(() => import('@components/note/content'), {
@@ -17,8 +18,16 @@ const DynamicContent = dynamic(() => import('@components/note/content'), {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Single = memo(function Single({ event }: { event: any }) {
+  const router = useRouter();
+
+  const openThread = (id: string) => {
+    router.push(`/feed/${id}`);
+  };
+
   return (
-    <div className="flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-4 px-6 hover:bg-zinc-800">
+    <div
+      onClick={() => openThread(event.id)}
+      className="flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-4 px-6 hover:bg-zinc-800">
       <div className="flex flex-col">
         <User pubkey={event.pubkey} time={event.created_at} />
         <div className="-mt-4 pl-[60px]">

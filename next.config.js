@@ -9,4 +9,8 @@ module.exports = removeImports({
   typescript: {
     ignoreBuildErrors: true,
   },
+  webpack: (config) => {
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+    return config;
+  },
 });

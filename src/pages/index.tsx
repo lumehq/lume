@@ -17,30 +17,36 @@ import {
 } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
+const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
+
 export default function Page() {
   const [done, setDone] = useState(false);
 
   const initDB = useCallback(async () => {
-    const db = await Database.load('sqlite:lume.db');
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY, privkey TEXT NOT NULL, pubkey TEXT NOT NULL, npub TEXT, nsec TEXT, metadata JSON, UNIQUE(privkey));'
-    );
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS followings (id INTEGER PRIMARY KEY, pubkey TEXT NOT NULL, account TEXT, UNIQUE(pubkey));'
-    );
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS note_reactions (id INTEGER PRIMARY KEY, reaction_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reaction_id));'
-    );
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS note_replies (id INTEGER PRIMARY KEY, reply_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reply_id));'
-    );
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, event_id TEXT, event JSON, UNIQUE(event_id));'
-    );
-    await db.execute(
-      'CREATE TABLE IF NOT EXISTS block_pubkeys (id INTEGER PRIMARY KEY, pubkey TEXT, UNIQUE(pubkey));'
-    );
-    await db.close();
+    if (db) {
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY, privkey TEXT NOT NULL, pubkey TEXT NOT NULL, npub TEXT, nsec TEXT, metadata JSON, UNIQUE(privkey));'
+      );
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS followings (id INTEGER PRIMARY KEY, pubkey TEXT NOT NULL, account TEXT, UNIQUE(pubkey));'
+      );
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS note_reactions (id INTEGER PRIMARY KEY, reaction_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reaction_id));'
+      );
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS note_replies (id INTEGER PRIMARY KEY, reply_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reply_id));'
+      );
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, event_id TEXT, event JSON, UNIQUE(event_id));'
+      );
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS cache_profiles (id INTEGER PRIMARY KEY, pubkey TEXT, metadata JSON, UNIQUE(pubkey));'
+      );
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS block_pubkeys (id INTEGER PRIMARY KEY, pubkey TEXT, UNIQUE(pubkey));'
+      );
+      await db.close();
+    }
 
     setDone(true);
   }, []);
