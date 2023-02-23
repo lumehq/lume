@@ -3,8 +3,10 @@ import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
 import { motion } from 'framer-motion';
+import { GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import { useNostrEvents } from 'nostr-react';
+import { getPublicKey, nip19 } from 'nostr-tools';
 import {
   JSXElementConstructor,
   ReactElement,
@@ -15,23 +17,27 @@ import {
 } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
-export default function Page() {
-  const [follows, setFollows] = useState([null]);
+export default function Page({ privkey }: { privkey: string }) {
+  const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const { pubkey }: any = router.query;
+
+  const pubkey = getPublicKey(privkey);
+  const npub = nip19.npubEncode(pubkey);
+  const nsec = nip19.nsecEncode(privkey);
 
   const { onEvent } = useNostrEvents({
     filter: {
       authors: [pubkey],
-      kinds: [3],
+      kinds: [0],
     },
   });
 
   onEvent((rawMetadata) => {
     try {
-      setFollows(rawMetadata.tags);
+      const metadata: any = JSON.parse(rawMetadata.content);
+      setAccount(metadata);
     } catch (err) {
       console.error(err, rawMetadata);
     }
@@ -39,29 +45,28 @@ export default function Page() {
 
   useEffect(() => {
     setLoading(true);
-
     const insertDB = async () => {
+      // save account to database
       const db = await Database.load('sqlite:lume.db');
-      follows.forEach(async (item) => {
-        if (item) {
-          await db.execute(
-            `INSERT INTO followings (pubkey, account) VALUES ("${item[1]}", "${pubkey}")`
-          );
-        }
-      });
+      await db.execute(
+        `INSERT INTO accounts (privkey, pubkey, npub, nsec, metadata) VALUES ("${privkey}", "${pubkey}", "${npub}", "${nsec}", '${JSON.stringify(
+          account
+        )}')`
+      );
+      await db.close();
     };
 
-    if (follows !== null && follows.length > 0) {
+    if (account !== null) {
       insertDB()
         .then(() => {
           setTimeout(() => {
             setLoading(false);
-            router.push('/feed/following');
+            router.push(`/onboarding/follows/${pubkey}`);
           }, 1500);
         })
         .catch(console.error);
     }
-  }, [follows, pubkey, router]);
+  }, [account, npub, nsec, privkey, pubkey, router]);
 
   return (
     <div className="flex h-full flex-col justify-between px-8">
@@ -71,11 +76,11 @@ export default function Page() {
           <motion.h1
             layoutId="title"
             className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
-            Fetching your follows...
+            Fetching your profile...
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            Not only profile, every nostr client can sync your follows list when you move to a new
-            client, so please keep your key safely (again)
+            As long as you have private key, you alway can sync your profile on every nostr client,
+            so please keep your key safely
           </motion.h2>
         </div>
       </motion.div>
@@ -106,6 +111,20 @@ export default function Page() {
       </motion.div>
     </div>
   );
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export async function getStaticProps(context) {
+  const privkey = context.params.privkey;
+  return {
+    props: { privkey },
+  };
 }
 
 Page.getLayout = function getLayout(

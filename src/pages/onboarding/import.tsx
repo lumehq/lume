@@ -46,10 +46,7 @@ export default function Page() {
       const pubKey = getPublicKey(privKey);
 
       if (pubKey) {
-        router.push({
-          pathname: '/onboarding/fetch-profile',
-          query: { privkey: privKey },
-        });
+        router.push(`/onboarding/profile/${privKey}`);
       }
     } catch (error) {
       setError('key', {
