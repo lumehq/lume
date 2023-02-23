@@ -2,25 +2,35 @@
 import { truncate } from '@utils/truncate';
 
 import { useNostrEvents } from 'nostr-react';
+import { useState } from 'react';
 
 export default function RootUser({ userPubkey, action }: { userPubkey: string; action: string }) {
-  const { events } = useNostrEvents({
+  const [profile, setProfile] = useState({ picture: null, name: null });
+
+  const { onEvent } = useNostrEvents({
     filter: {
       authors: [userPubkey],
       kinds: [0],
     },
   });
 
-  if (events !== undefined && events.length > 0) {
-    const userData: any = JSON.parse(events[0].content);
-    return (
-      <div className="text-zinc-400">
-        <p>
-          {userData?.name ? userData.name : truncate(userPubkey, 16, ' .... ')} {action}
-        </p>
-      </div>
-    );
-  } else {
-    return <></>;
-  }
+  // #TODO: save response to DB
+  onEvent((rawMetadata) => {
+    try {
+      const metadata: any = JSON.parse(rawMetadata.content);
+      if (metadata) {
+        setProfile(metadata);
+      }
+    } catch (err) {
+      console.error(err, rawMetadata);
+    }
+  });
+
+  return (
+    <div className="text-zinc-400">
+      <p>
+        {profile.name ? profile.name : truncate(userPubkey, 16, ' .... ')} {action}
+      </p>
+    </div>
+  );
 }
