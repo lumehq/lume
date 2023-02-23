@@ -45,7 +45,7 @@ export default function Page({ pubkey }: { pubkey: string }) {
       follows.forEach(async (item) => {
         if (item) {
           await db.execute(
-            `INSERT INTO followings (pubkey, account) VALUES ("${item[1]}", "${pubkey}")`
+            `INSERT INTO follows (pubkey, account) VALUES ("${item[1]}", "${pubkey}")`
           );
         }
       });

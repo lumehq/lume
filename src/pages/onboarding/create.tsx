@@ -82,7 +82,7 @@ export default function Page() {
     // save account to database
     const db = await Database.load('sqlite:lume.db');
     await db.execute(
-      `INSERT INTO accounts (privkey, pubkey, npub, nsec, metadata) VALUES ("${privKey}", "${pubKey}", "${npub}", "${nsec}", '${JSON.stringify(
+      `INSERT INTO accounts (privkey, pubkey, npub, nsec, current, metadata) VALUES ("${privKey}", "${pubKey}", "${npub}", "${nsec}", "1", '${JSON.stringify(
         data
       )}')`
     );

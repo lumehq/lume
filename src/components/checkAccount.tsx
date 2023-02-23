@@ -13,15 +13,17 @@ export default function CheckAccount() {
   useEffect(() => {
     const accounts = async () => {
       const db = await Database.load('sqlite:lume.db');
-      const result = await db.select('SELECT * FROM accounts ORDER BY id ASC LIMIT 1');
+      const result = await db.select(
+        `SELECT * FROM accounts WHERE current = "1" ORDER BY id ASC LIMIT 1`
+      );
 
       return result;
     };
 
-    const getFollowings = async (account) => {
+    const getFollows = async (account) => {
       const db = await Database.load('sqlite:lume.db');
       const result: any = await db.select(
-        `SELECT pubkey FROM followings WHERE account = "${account.pubkey}"`
+        `SELECT pubkey FROM follows WHERE account = "${account.pubkey}"`
       );
 
       const arr = [];
@@ -43,7 +45,7 @@ export default function CheckAccount() {
         } else {
           currentUser.set(res[0]);
 
-          getFollowings(res[0])
+          getFollows(res[0])
             .then(async (res) => {
               follows.set(res);
 

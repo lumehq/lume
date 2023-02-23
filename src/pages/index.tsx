@@ -25,10 +25,10 @@ export default function Page() {
   const initDB = useCallback(async () => {
     if (db) {
       await db.execute(
-        'CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY, privkey TEXT NOT NULL, pubkey TEXT NOT NULL, npub TEXT, nsec TEXT, metadata JSON, UNIQUE(privkey));'
+        'CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY, privkey TEXT NOT NULL, pubkey TEXT NOT NULL, npub TEXT, nsec TEXT, current INTEGER DEFAULT "0" NOT NULL, metadata JSON, UNIQUE(privkey));'
       );
       await db.execute(
-        'CREATE TABLE IF NOT EXISTS followings (id INTEGER PRIMARY KEY, pubkey TEXT NOT NULL, account TEXT, UNIQUE(pubkey));'
+        'CREATE TABLE IF NOT EXISTS follows (id INTEGER PRIMARY KEY, pubkey TEXT NOT NULL, account TEXT, UNIQUE(pubkey));'
       );
       await db.execute(
         'CREATE TABLE IF NOT EXISTS note_reactions (id INTEGER PRIMARY KEY, reaction_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reaction_id));'

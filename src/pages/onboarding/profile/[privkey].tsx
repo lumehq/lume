@@ -18,10 +18,10 @@ import {
 import Database from 'tauri-plugin-sql-api';
 
 export default function Page({ privkey }: { privkey: string }) {
+  const router = useRouter();
+
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   const pubkey = getPublicKey(privkey);
   const npub = nip19.npubEncode(pubkey);
@@ -45,11 +45,12 @@ export default function Page({ privkey }: { privkey: string }) {
 
   useEffect(() => {
     setLoading(true);
+
     const insertDB = async () => {
       // save account to database
       const db = await Database.load('sqlite:lume.db');
       await db.execute(
-        `INSERT INTO accounts (privkey, pubkey, npub, nsec, metadata) VALUES ("${privkey}", "${pubkey}", "${npub}", "${nsec}", '${JSON.stringify(
+        `INSERT INTO accounts (privkey, pubkey, npub, nsec, current, metadata) VALUES ("${privkey}", "${pubkey}", "${npub}", "${nsec}", "1", '${JSON.stringify(
           account
         )}')`
       );
