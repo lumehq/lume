@@ -6,12 +6,14 @@ import PlusIcon from '@assets/icons/Plus';
 
 export default function NavigatorBar() {
   return (
-    <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-12 pb-4">
+    <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-3 pb-4">
       {/* main */}
       <div className="flex flex-col gap-4">
         {/* Create post */}
-        <div className="flex flex-col gap-2">
-          <CreatePost />
+        <div className="flex flex-col gap-2 rounded-lg bg-zinc-900 ring-1 ring-white/10">
+          <div className="p-2">
+            <CreatePost />
+          </div>
         </div>
         {/* Newsfeed */}
         <div className="flex flex-col gap-2">

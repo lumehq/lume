@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default function ImageCard({ data }: { data: object }) {
   return (
     <div className={`relative mt-2 flex flex-col overflow-hidden`}>
-      <div className="relative h-full w-2/3 rounded-lg border border-zinc-800">
+      <div className="relative h-full w-full rounded-lg border border-zinc-800">
         <Image
           src={data['image']}
           alt={data['image']}

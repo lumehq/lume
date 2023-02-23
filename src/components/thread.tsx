@@ -49,7 +49,7 @@ export function Thread({ data }: { data: any }) {
       }}
       overscan={800}
       increaseViewportBy={1000}
-      className="scrollbar-hide relative h-full w-full"
+      className="scrollbar-hide relative h-full w-full rounded-lg"
       style={{
         contain: 'strict',
       }}
