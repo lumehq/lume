@@ -9,6 +9,9 @@ import Avatar from 'boring-avatars';
 import { useNostrEvents } from 'nostr-react';
 import { memo, useState } from 'react';
 import Moment from 'react-moment';
+import Database from 'tauri-plugin-sql-api';
+
+const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
 
 export const User = memo(function User({ pubkey, time }: { pubkey: string; time: any }) {
   const [profile, setProfile] = useState({ picture: null, name: null });
@@ -20,12 +23,16 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
     },
   });
 
-  // #TODO: save response to DB
-  onEvent((rawMetadata) => {
+  onEvent(async (rawMetadata) => {
     try {
       const metadata: any = JSON.parse(rawMetadata.content);
       if (metadata) {
         setProfile(metadata);
+        await db.execute(
+          `INSERT INTO cache_profiles (pubkey, metadata) VALUES ("${pubkey}", '${JSON.stringify(
+            metadata
+          )}')`
+        );
       }
     } catch (err) {
       console.error(err, rawMetadata);
