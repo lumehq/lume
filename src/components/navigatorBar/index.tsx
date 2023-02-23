@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ActiveLink from '@components/activeLink';
+import CreatePost from '@components/navigatorBar/createPost';
 
 import PlusIcon from '@assets/icons/Plus';
 
@@ -8,6 +9,10 @@ export default function NavigatorBar() {
     <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-12 pb-4">
       {/* main */}
       <div className="flex flex-col gap-4">
+        {/* Create post */}
+        <div className="flex flex-col gap-2">
+          <CreatePost />
+        </div>
         {/* Newsfeed */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between px-2">
@@ -35,20 +40,7 @@ export default function NavigatorBar() {
             </ActiveLink>
           </div>
         </div>
-        {/* Channels
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between px-2">
-            <h3 className="text-sm font-bold text-zinc-400">Channels</h3>
-            <button
-              type="button"
-              className="group flex h-6 w-6 items-center justify-center rounded-full hover:bg-zinc-900">
-              <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100" />
-            </button>
-          </div>
-          <div></div>
-        </div>
-        */}
-        {/* Direct messages */}
+        {/* Messages */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between px-2">
             <h3 className="text-sm font-bold text-zinc-400">Direct Messages</h3>
@@ -64,3 +56,17 @@ export default function NavigatorBar() {
     </div>
   );
 }
+
+/* Channels
+<div className="flex flex-col gap-2">
+  <div className="flex items-center justify-between px-2">
+    <h3 className="text-sm font-bold text-zinc-400">Channels</h3>
+    <button
+      type="button"
+      className="group flex h-6 w-6 items-center justify-center rounded-full hover:bg-zinc-900">
+      <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100" />
+    </button>
+  </div>
+  <div></div>
+</div>
+*/

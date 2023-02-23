@@ -8,9 +8,9 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.11",
     "@nanostores/persistent": "^0.7.0",
     "@nanostores/react": "^0.4.1",
+    "@radix-ui/react-dialog": "^1.0.2",
     "@tauri-apps/api": "^1.2.0",
     "@uiw/react-markdown-preview": "^4.1.8",
     "@uiw/react-md-editor": "^3.20.5",
