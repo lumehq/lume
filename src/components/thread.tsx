@@ -1,5 +1,3 @@
-import { Liked } from '@components/note/liked';
-// import { Multi } from '@components/note/multi';
 import { Placeholder } from '@components/note/placeholder';
 import { Repost } from '@components/note/repost';
 import { Single } from '@components/note/single';
@@ -13,15 +11,12 @@ export function Thread({ data }: { data: any }) {
     (index: string | number) => {
       const event = data[index];
 
-      if (event.kind === 7) {
-        // type: like
-        return <Liked key={index} eventUser={event.pubkey} sourceID={event.tags[0][1]} />;
-      } else if (event.content === '#[0]') {
+      if (event.content.includes('#[0]') && event.tags[0][0] == 'e') {
         // type: repost
-        return <Repost key={index} eventUser={event.pubkey} sourceID={event.tags[0][1]} />;
+        return <Repost root={event.tags} user={event.pubkey} />;
       } else {
         // type: default
-        return <Single key={index} event={event} />;
+        return <Single event={event} />;
       }
     },
     [data]

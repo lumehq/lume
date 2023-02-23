@@ -2,14 +2,14 @@
 import { truncate } from '@utils/truncate';
 
 import { useNostrEvents } from 'nostr-react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
-export default function RootUser({ userPubkey, action }: { userPubkey: string; action: string }) {
+export const UserRepost = memo(function UserRepost({ pubkey }: { pubkey: string }) {
   const [profile, setProfile] = useState({ picture: null, name: null });
 
   const { onEvent } = useNostrEvents({
     filter: {
-      authors: [userPubkey],
+      authors: [pubkey],
       kinds: [0],
     },
   });
@@ -28,9 +28,7 @@ export default function RootUser({ userPubkey, action }: { userPubkey: string; a
 
   return (
     <div className="text-zinc-400">
-      <p>
-        {profile.name ? profile.name : truncate(userPubkey, 16, ' .... ')} {action}
-      </p>
+      <p>{profile.name ? profile.name : truncate(pubkey, 16, ' .... ')} repost</p>
     </div>
   );
-}
+});

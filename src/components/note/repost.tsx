@@ -1,55 +1,56 @@
-import Reaction from '@components/note/atoms/reaction';
-import Reply from '@components/note/atoms/reply';
-import RootUser from '@components/note/atoms/rootUser';
-import { User } from '@components/note/atoms/user';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { UserRepost } from '@components/note/atoms/userRepost';
 import Content from '@components/note/content';
 import { Placeholder } from '@components/note/placeholder';
 
 import RepostIcon from '@assets/icons/Repost';
 
+import * as Dialog from '@radix-ui/react-dialog';
+import dynamic from 'next/dynamic';
 import { useNostrEvents } from 'nostr-react';
 import { memo } from 'react';
 
-export const Repost = memo(function Repost({
-  eventUser,
-  sourceID,
-}: {
-  eventUser: string;
-  sourceID: string;
-}) {
+const Modal = dynamic(() => import('@components/note/modal'), {
+  ssr: false,
+  loading: () => <></>,
+});
+
+export const Repost = memo(function Repost({ root, user }: { root: any; user: string }) {
   const { events } = useNostrEvents({
     filter: {
-      ids: [sourceID],
+      ids: [root[0][1]],
       since: 0,
       kinds: [1],
-      limit: 1,
     },
   });
 
-  if (events !== undefined && events.length > 0) {
+  if (events !== null) {
     return (
-      <div className="flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-6 px-6">
-        <div className="flex items-center gap-1 pl-8 text-sm">
-          <RepostIcon className="h-4 w-4 text-zinc-400" />
-          <div className="ml-2">
-            <RootUser userPubkey={eventUser} action={'repost'} />
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <User pubkey={events[0].pubkey} time={events[0].created_at} />
-          <div className="-mt-4 pl-[60px]">
-            <div className="flex flex-col gap-2">
-              <Content data={events[0].content} />
-              <div className="-ml-1 flex items-center gap-8">
-                <Reply eventID={events[0].id} />
-                <Reaction eventID={events[0].id} eventPubkey={events[0].pubkey} />
+      <Dialog.Root>
+        <Dialog.Trigger>
+          <div className="flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-6 px-6">
+            <div className="flex items-center gap-1 pl-8 text-sm">
+              <RepostIcon className="h-4 w-4 text-zinc-400" />
+              <div className="ml-2">
+                <UserRepost pubkey={user} />
               </div>
             </div>
+            <Content data={events[0]} />
           </div>
-        </div>
-      </div>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
+            <Dialog.Content className="fixed inset-0 overflow-y-auto">
+              <Modal event={events[0]} />
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Trigger>
+      </Dialog.Root>
     );
   } else {
-    return <Placeholder />;
+    return (
+      <div className="border-b border-zinc-800">
+        <Placeholder />
+      </div>
+    );
   }
 });

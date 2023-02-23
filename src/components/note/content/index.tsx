@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Reaction from '@components/note/atoms/reaction';
+import Reply from '@components/note/atoms/reply';
+import { User } from '@components/note/atoms/user';
 import { ImageCard } from '@components/note/content/preview/imageCard';
 import { Video } from '@components/note/content/preview/video';
 
@@ -14,13 +17,13 @@ const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
 export default function Content({ data }: { data: any }) {
   const [preview, setPreview] = useState({});
 
-  const content = useRef(data);
+  const content = useRef(data.content);
   const urls = useMemo(
     () =>
-      data.match(
+      content.current.match(
         /((http|ftp|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
       ),
-    [data]
+    []
   );
 
   useEffect(() => {
@@ -61,25 +64,36 @@ export default function Content({ data }: { data: any }) {
 
   return (
     <div className="flex flex-col">
-      <div>
-        <MarkdownPreview
-          source={content.current}
-          className={
-            'prose prose-zinc max-w-none break-words dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-normal prose-ul:mt-2 prose-li:my-1'
-          }
-          linkTarget="_blank"
-          disallowedElements={[
-            'Table',
-            'Heading ID',
-            'Highlight',
-            'Fenced Code Block',
-            'Footnote',
-            'Definition List',
-            'Task List',
-          ]}
-        />
+      <User pubkey={data.pubkey} time={data.created_at} />
+      <div className="-mt-4 pl-[60px]">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col">
+            <div>
+              <MarkdownPreview
+                source={content.current}
+                className={
+                  'prose prose-zinc max-w-none break-words dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-normal prose-ul:mt-2 prose-li:my-1'
+                }
+                linkTarget="_blank"
+                disallowedElements={[
+                  'Table',
+                  'Heading ID',
+                  'Highlight',
+                  'Fenced Code Block',
+                  'Footnote',
+                  'Definition List',
+                  'Task List',
+                ]}
+              />
+            </div>
+            <>{previewAttachment()}</>
+          </div>
+          <div className="relative z-10 -ml-1 flex items-center gap-8">
+            <Reply eventID={data.id} />
+            <Reaction eventID={data.id} eventPubkey={data.pubkey} />
+          </div>
+        </div>
       </div>
-      <div>{previewAttachment()}</div>
     </div>
   );
 }
