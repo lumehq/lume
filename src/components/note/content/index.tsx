@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import ImageCard from '@components/note/content/preview/imageCard';
-import Video from '@components/note/content/preview/video';
+import { ImageCard } from '@components/note/content/preview/imageCard';
+import { Video } from '@components/note/content/preview/video';
 
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';

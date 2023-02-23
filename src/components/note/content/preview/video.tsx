@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import ReactPlayer from 'react-player/lazy';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function Video({ data }: { data: object }) {
+export const Video = memo(function Video({ data }: { data: object }) {
   return (
     <div className="relative mt-2 flex flex-col overflow-hidden rounded-xl border border-zinc-800">
       <ReactPlayer
@@ -14,4 +15,4 @@ export default function Video({ data }: { data: object }) {
       />
     </div>
   );
-}
+});
