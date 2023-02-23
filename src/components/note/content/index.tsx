@@ -8,6 +8,7 @@ import ReactPlayer from 'react-player';
 
 const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
   ssr: false,
+  loading: () => <div className="h-4 w-36 animate-pulse rounded bg-zinc-700" />,
 });
 
 export default function Content({ data }: { data: any }) {

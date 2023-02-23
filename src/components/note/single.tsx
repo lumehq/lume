@@ -2,19 +2,10 @@
 import Reaction from '@components/note/atoms/reaction';
 import Reply from '@components/note/atoms/reply';
 import { User } from '@components/note/atoms/user';
+import Content from '@components/note/content';
 
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { memo } from 'react';
-
-const DynamicContent = dynamic(() => import('@components/note/content'), {
-  ssr: false,
-  loading: () => (
-    <>
-      <p>Loading...</p>
-    </>
-  ),
-});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Single = memo(function Single({ event }: { event: any }) {
@@ -32,7 +23,7 @@ export const Single = memo(function Single({ event }: { event: any }) {
         <User pubkey={event.pubkey} time={event.created_at} />
         <div className="-mt-4 pl-[60px]">
           <div className="flex flex-col gap-6">
-            <DynamicContent data={event.content} />
+            <Content data={event.content} />
             <div className="relative z-10 -ml-1 flex items-center gap-8">
               <Reply eventID={event.id} />
               <Reaction eventID={event.id} eventPubkey={event.pubkey} />

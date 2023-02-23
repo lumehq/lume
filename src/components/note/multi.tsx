@@ -1,19 +1,10 @@
 import Reaction from '@components/note/atoms/reaction';
 import Reply from '@components/note/atoms/reply';
 import { User } from '@components/note/atoms/user';
+import Content from '@components/note/content';
 import { Placeholder } from '@components/note/placeholder';
 
-import dynamic from 'next/dynamic';
 import { useNostrEvents } from 'nostr-react';
-
-const DynamicContent = dynamic(() => import('@components/note/content'), {
-  ssr: false,
-  loading: () => (
-    <>
-      <p>Loading...</p>
-    </>
-  ),
-});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Multi({ event }: { event: any }) {
@@ -36,7 +27,7 @@ export function Multi({ event }: { event: any }) {
           <User pubkey={events[0].pubkey} time={events[0].created_at} />
           <div className="-mt-4 pl-[60px]">
             <div className="flex flex-col gap-2">
-              <DynamicContent data={events[0].content} />
+              <Content data={events[0].content} />
               <div className="-ml-1 flex items-center gap-8">
                 <Reply eventID={events[0].id} />
                 <Reaction eventID={events[0].id} eventPubkey={events[0].pubkey} />
@@ -48,7 +39,7 @@ export function Multi({ event }: { event: any }) {
           <User pubkey={event.pubkey} time={event.created_at} />
           <div className="relative z-10 -mt-4 pl-[60px]">
             <div className="flex flex-col gap-2">
-              <DynamicContent data={event.content} />
+              <Content data={event.content} />
               <div className="-ml-1 flex items-center gap-8">
                 <Reply eventID={event.id} />
                 <Reaction eventID={event.id} eventPubkey={event.pubkey} />

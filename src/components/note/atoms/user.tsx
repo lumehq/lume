@@ -7,7 +7,7 @@ import MoreIcon from '@assets/icons/More';
 
 import Avatar from 'boring-avatars';
 import { useNostrEvents } from 'nostr-react';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import Moment from 'react-moment';
 import Database from 'tauri-plugin-sql-api';
 
@@ -26,18 +26,38 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
   onEvent(async (rawMetadata) => {
     try {
       const metadata: any = JSON.parse(rawMetadata.content);
-      if (metadata) {
+      if (profile.picture === null || profile.name === null) {
         setProfile(metadata);
         await db.execute(
-          `INSERT INTO cache_profiles (pubkey, metadata) VALUES ("${pubkey}", '${JSON.stringify(
+          `INSERT OR IGNORE INTO cache_profiles (pubkey, metadata) VALUES ("${pubkey}", '${JSON.stringify(
             metadata
           )}')`
         );
+      } else {
+        return;
       }
     } catch (err) {
       console.error(err, rawMetadata);
     }
   });
+
+  useEffect(() => {
+    const initialProfile = async () => {
+      const result: any = await db.select(
+        `SELECT metadata FROM cache_profiles WHERE pubkey = "${pubkey}"`
+      );
+      db.close;
+      return result;
+    };
+
+    initialProfile()
+      .then((res) => {
+        if (res[0] !== undefined) {
+          setProfile(JSON.parse(res[0].metadata));
+        }
+      })
+      .catch(console.error);
+  }, [pubkey]);
 
   return (
     <div className="relative flex items-start gap-4">
