@@ -37,45 +37,47 @@ Lume is simple as it is, no more buzzwords
   <br />
 </p>
 
-# How Nostr works?
+## How Nostr works?
 
 Everybody runs a client. It can be a native client, a web client, etc. To publish something, you write a post, sign it with your key and send it to multiple relays (servers hosted by someone else, or yourself). To get updates from other people, you ask multiple relays if they know anything about these other people. Anyone can run a relay. A relay is very simple and dumb. It does nothing besides accepting posts from some people and forwarding to others. Relays don't have to be trusted. Signatures are verified on the client side. [Learn more](https://github.com/nostr-protocol/nostr)
 
-# Motivation
+## Motivation
 
 When Nostr became popular, many clients exist but none of them satisfy me, so I built my own. I don't many experence in develop desktop app before, my background is just strongly in Ruby on Rails, this is also a good opportunity for me to improve my skills.
 
-# Why desktop only?
+## Why desktop only?
 
 Lume is "an ambitious nostr client", so I don't want to limit it be a part of your daily web browsing, I want it to be a part of your computer. With a desktop app, I can explore more potentials, and in my opinion, web is broken I don't want to focus on it anymore (I will share more about this opinion later)
 
-# Features
+## Features
 
-TODO
+**Current**: v0.1.0-alpha
+- [x] create new key
+- [x] import private key (hex/nsec)
+- [x] followings newsfeed
+- [x] global newsfeed
+- [x] handle note reaction
+- [x] handle note repost
+- [x] handle note have image/video
+- [x] handle note have markdown
+- [x] publish a note (support markdown)
+- [x] update profile
+- [x] cache profile to local database
 
-# Roadmap
+**Next**:
+- [ ] offline support
+- [ ] implement newsfeed infinite loading
+- [ ] handle tags (#[x]) in note
+- [ ] handle reply note
+- [ ] integrate webtorrent
+- [ ] native notification
+- [ ] publish a reply
+- [ ] direct message
+- [ ] multi accounts
+- [ ] personal profile page
+- [ ] setting page
+- [ ] windows & linux support
 
-TODO
+## Roadmap
 
-# Developer Guide
-
-TODO: add more detail and contributor guide
-
-1. Clone repo
-
-```
-git clone git@git.sr.ht:~reya/
-cd lume-desktop/
-```
-
-2. Install packages
-
-```
-pnpm install
-```
-
-3. Start a development build
-
-```
-pnpm tauri dev
-```
+Public roadmap will be released when Lume reach v0.3.0
