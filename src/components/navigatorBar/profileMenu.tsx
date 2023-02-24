@@ -12,6 +12,13 @@ export const ProfileMenu = memo(function ProfileMenu({ pubkey }: { pubkey: strin
     router.push(`/profile/${pubkey}`);
   };
 
+  const updateProfile = () => {
+    router.push({
+      pathname: '/profile/update',
+      query: { pubkey: pubkey },
+    });
+  };
+
   const copyPubkey = async () => {
     const npub = nip19.npubEncode(pubkey);
     await writeText(npub);
@@ -32,6 +39,11 @@ export const ProfileMenu = memo(function ProfileMenu({ pubkey }: { pubkey: strin
             onClick={() => viewProfile()}
             className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400">
             View profile
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
+            onClick={() => updateProfile()}
+            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400">
+            Update profile
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onClick={() => copyPubkey()}

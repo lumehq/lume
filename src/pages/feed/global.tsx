@@ -1,5 +1,5 @@
 import BaseLayout from '@layouts/baseLayout';
-import UserLayout from '@layouts/userLayout';
+import NewsFeedLayout from '@layouts/newsfeedLayout';
 
 import { Placeholder } from '@components/note/placeholder';
 import { Thread } from '@components/thread';
@@ -48,7 +48,7 @@ Page.getLayout = function getLayout(
 ) {
   return (
     <BaseLayout>
-      <UserLayout>{page}</UserLayout>
+      <NewsFeedLayout>{page}</NewsFeedLayout>
     </BaseLayout>
   );
 };
