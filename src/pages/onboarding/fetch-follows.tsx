@@ -3,7 +3,6 @@ import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
 import { motion } from 'framer-motion';
-import { GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import { useNostrEvents } from 'nostr-react';
 import {
@@ -16,11 +15,12 @@ import {
 } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
-export default function Page({ pubkey }: { pubkey: string }) {
+export default function Page() {
   const [follows, setFollows] = useState([null]);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { pubkey }: any = router.query;
 
   const { onEvent } = useNostrEvents({
     filter: {
@@ -45,7 +45,7 @@ export default function Page({ pubkey }: { pubkey: string }) {
       follows.forEach(async (item) => {
         if (item) {
           await db.execute(
-            `INSERT INTO follows (pubkey, account) VALUES ("${item[1]}", "${pubkey}")`
+            `INSERT OR IGNORE INTO follows (pubkey, account) VALUES ("${item[1]}", "${pubkey}")`
           );
         }
       });
@@ -56,7 +56,7 @@ export default function Page({ pubkey }: { pubkey: string }) {
         .then(() => {
           setTimeout(() => {
             setLoading(false);
-            router.push('/feed/following');
+            router.push('/');
           }, 1500);
         })
         .catch(console.error);
@@ -106,20 +106,6 @@ export default function Page({ pubkey }: { pubkey: string }) {
       </motion.div>
     </div>
   );
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
-
-export async function getStaticProps(context) {
-  const pubkey = context.params.pubkey;
-  return {
-    props: { pubkey },
-  };
 }
 
 Page.getLayout = function getLayout(

@@ -3,7 +3,6 @@ import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
 import { motion } from 'framer-motion';
-import { GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import { useNostrEvents } from 'nostr-react';
 import { getPublicKey, nip19 } from 'nostr-tools';
@@ -17,15 +16,16 @@ import {
 } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
-export default function Page({ privkey }: { privkey: string }) {
+export default function Page() {
   const router = useRouter();
+  const { privkey }: any = router.query;
 
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const pubkey = getPublicKey(privkey);
-  const npub = nip19.npubEncode(pubkey);
-  const nsec = nip19.nsecEncode(privkey);
+  const pubkey = privkey ? getPublicKey(privkey) : null;
+  const npub = privkey ? nip19.npubEncode(pubkey) : null;
+  const nsec = privkey ? nip19.nsecEncode(privkey) : null;
 
   const { onEvent } = useNostrEvents({
     filter: {
@@ -62,7 +62,10 @@ export default function Page({ privkey }: { privkey: string }) {
         .then(() => {
           setTimeout(() => {
             setLoading(false);
-            router.push(`/onboarding/follows/${pubkey}`);
+            router.push({
+              pathname: '/onboarding/fetch-follows',
+              query: { pubkey: pubkey },
+            });
           }, 1500);
         })
         .catch(console.error);
@@ -112,20 +115,6 @@ export default function Page({ privkey }: { privkey: string }) {
       </motion.div>
     </div>
   );
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
-
-export async function getStaticProps(context) {
-  const privkey = context.params.privkey;
-  return {
-    props: { privkey },
-  };
 }
 
 Page.getLayout = function getLayout(
