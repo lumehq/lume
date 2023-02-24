@@ -13,10 +13,7 @@ export const ProfileMenu = memo(function ProfileMenu({ pubkey }: { pubkey: strin
   };
 
   const updateProfile = () => {
-    router.push({
-      pathname: '/profile/update',
-      query: { pubkey: pubkey },
-    });
+    router.push('/profile/update');
   };
 
   const copyPubkey = async () => {

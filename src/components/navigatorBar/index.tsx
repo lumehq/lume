@@ -3,8 +3,6 @@ import ActiveLink from '@components/activeLink';
 import CreatePost from '@components/navigatorBar/createPost';
 import { ProfileMenu } from '@components/navigatorBar/profileMenu';
 
-import { truncate } from '@utils/truncate';
-
 import { currentUser } from '@stores/currentUser';
 
 import { useStore } from '@nanostores/react';
@@ -12,7 +10,10 @@ import { PlusIcon } from '@radix-ui/react-icons';
 
 export default function NavigatorBar() {
   const $currentUser: any = useStore(currentUser);
-  const profile = JSON.parse($currentUser.metadata);
+  const profile =
+    $currentUser.metadata !== undefined
+      ? JSON.parse($currentUser.metadata)
+      : { display_name: null, username: null };
 
   return (
     <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-3 pb-4">
@@ -23,13 +24,11 @@ export default function NavigatorBar() {
           <div className="flex flex-col p-2">
             <div className="flex items-center justify-between">
               <h5 className="font-semibold leading-tight text-zinc-100">
-                {profile.display_name || profile.name}
+                {profile.display_name || ''}
               </h5>
               <ProfileMenu pubkey={$currentUser.pubkey} />
             </div>
-            <span className="text-sm leading-tight text-zinc-500">
-              @{profile.username || truncate($currentUser.pubkey, 16, ' .... ')}
-            </span>
+            <span className="text-sm leading-tight text-zinc-500">@{profile.username || ''}</span>
           </div>
           <div className="p-2">
             <CreatePost />

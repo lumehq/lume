@@ -29,7 +29,10 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
 
   const $currentUser: any = useStore(currentUser);
-  const profile = JSON.parse($currentUser.metadata);
+  const profile =
+    $currentUser.metadata !== undefined
+      ? JSON.parse($currentUser.metadata)
+      : { display_name: null, username: null };
 
   const {
     register,
