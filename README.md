@@ -51,7 +51,8 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 
 ## Features
 
-**Current**: v0.1.0-alpha
+**Current**: v0.1.1-alpha
+
 - [x] create new key
 - [x] import private key (hex/nsec)
 - [x] followings newsfeed
@@ -65,6 +66,7 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 - [x] cache profile to local database
 
 **Next**:
+
 - [ ] offline support
 - [ ] implement newsfeed infinite loading
 - [ ] handle tags (#[x]) in note
