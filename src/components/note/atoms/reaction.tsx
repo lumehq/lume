@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { currentUser } from '@stores/currentUser';
 
-import LikeIcon from '@assets/icons/Like';
-import LikeSolidIcon from '@assets/icons/LikeSolid';
-
 import { useStore } from '@nanostores/react';
+import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
 import { dateToUnix, useNostr, useNostrEvents } from 'nostr-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useState } from 'react';
@@ -72,9 +70,9 @@ export default function Reaction({
       className="group flex w-16 items-center gap-1.5 text-sm text-zinc-500">
       <div className="rounded-lg p-1 group-hover:bg-zinc-600">
         {isReact ? (
-          <LikeSolidIcon className="h-5 w-5 text-red-500" />
+          <HeartFilledIcon className="h-4 w-4 group-hover:text-red-400" />
         ) : (
-          <LikeIcon className="h-5 w-5 group-hover:text-red-400" />
+          <HeartIcon className="h-4 w-4 text-zinc-500" />
         )}
       </div>
       <span>{reaction}</span>

@@ -7,9 +7,9 @@ import { truncate } from '@utils/truncate';
 import { currentUser } from '@stores/currentUser';
 
 import data from '@assets/directory.json';
-import CheckCircleIcon from '@assets/icons/CheckCircle';
 
 import { useStore } from '@nanostores/react';
+import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -97,7 +97,7 @@ export default function Page() {
                   </div>
                   <div>
                     {follow.includes(item.npub) ? (
-                      <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                      <CheckCircledIcon className="h-4 w-4 text-green-500" />
                     ) : (
                       <></>
                     )}

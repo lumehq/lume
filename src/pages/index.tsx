@@ -3,7 +3,7 @@ import FullLayout from '@layouts/fullLayout';
 
 import CheckAccount from '@components/checkAccount';
 
-import LumeIcon from '@assets/icons/Lume';
+import LumeSymbol from '@assets/icons/Lume';
 
 import { motion } from 'framer-motion';
 import {
@@ -60,7 +60,7 @@ export default function Page() {
       <div>{/* spacer */}</div>
       <div className="flex flex-col items-center gap-4">
         <motion.div layoutId="logo" className="relative">
-          <LumeIcon className="h-16 w-16 text-white" />
+          <LumeSymbol className="h-16 w-16 text-white" />
         </motion.div>
         <div className="flex flex-col items-center gap-0.5">
           <motion.h2

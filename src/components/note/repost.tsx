@@ -3,9 +3,8 @@ import { UserRepost } from '@components/note/atoms/userRepost';
 import { Content } from '@components/note/content';
 import { Placeholder } from '@components/note/placeholder';
 
-import RepostIcon from '@assets/icons/Repost';
-
 import * as Dialog from '@radix-ui/react-dialog';
+import { LoopIcon } from '@radix-ui/react-icons';
 import dynamic from 'next/dynamic';
 import { useNostrEvents } from 'nostr-react';
 import { memo } from 'react';
@@ -30,7 +29,7 @@ export const Repost = memo(function Repost({ root, user }: { root: any; user: st
         <Dialog.Trigger>
           <div className="flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-6 px-6">
             <div className="flex items-center gap-1 pl-8 text-sm">
-              <RepostIcon className="h-4 w-4 text-zinc-400" />
+              <LoopIcon className="h-4 w-4 text-zinc-400" />
               <div className="ml-2">
                 <UserRepost pubkey={user} />
               </div>

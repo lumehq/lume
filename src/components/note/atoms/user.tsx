@@ -3,8 +3,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { truncate } from '@utils/truncate';
 
-import MoreIcon from '@assets/icons/More';
-
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import Avatar from 'boring-avatars';
 import { useNostrEvents } from 'nostr-react';
 import { memo, useEffect, useState } from 'react';
@@ -90,7 +89,7 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
             </Moment>
           </div>
           <div>
-            <MoreIcon />
+            <DotsHorizontalIcon className="h-4 w-4 text-zinc-500" />
           </div>
         </div>
       </div>

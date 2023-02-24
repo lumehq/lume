@@ -4,6 +4,7 @@ specifiers:
   '@nanostores/persistent': ^0.7.0
   '@nanostores/react': ^0.4.1
   '@radix-ui/react-dialog': ^1.0.2
+  '@radix-ui/react-icons': ^1.2.0
   '@tailwindcss/typography': ^0.5.9
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.3
@@ -51,6 +52,7 @@ dependencies:
   '@nanostores/persistent': 0.7.0_nanostores@0.7.4
   '@nanostores/react': 0.4.1_nkfnbc2tpc77iht7asm3uqwau4
   '@radix-ui/react-dialog': 1.0.2_zula6vjvt3wdocc4mwcxqa6nzi
+  '@radix-ui/react-icons': 1.2.0_react@18.2.0
   '@tauri-apps/api': 1.2.0
   '@uiw/react-markdown-preview': 4.1.8_zula6vjvt3wdocc4mwcxqa6nzi
   '@uiw/react-md-editor': 3.20.5_zula6vjvt3wdocc4mwcxqa6nzi
@@ -777,6 +779,14 @@ packages:
       '@radix-ui/react-use-callback-ref': 1.0.0_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@radix-ui/react-icons/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-NqrZxn+Ig6c6MypUt84/Nab9WBFXH75T1mhEhFjPlIYaNkp113pqlo6QdK5r7zb3b7RckDAPgUQACes0aKwcFA==}
+    peerDependencies:
+      react: ^16.x || ^17.x || ^18.x
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@radix-ui/react-id/1.0.0_react@18.2.0:

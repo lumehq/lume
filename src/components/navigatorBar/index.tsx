@@ -2,7 +2,7 @@
 import ActiveLink from '@components/activeLink';
 import CreatePost from '@components/navigatorBar/createPost';
 
-import PlusIcon from '@assets/icons/Plus';
+import { PlusIcon } from '@radix-ui/react-icons';
 
 export default function NavigatorBar() {
   return (
@@ -10,7 +10,7 @@ export default function NavigatorBar() {
       {/* main */}
       <div className="flex flex-col gap-4">
         {/* Create post */}
-        <div className="flex flex-col gap-2 rounded-lg bg-zinc-900 ring-1 ring-white/10">
+        <div className="flex flex-col rounded-lg bg-zinc-900 ring-1 ring-white/10">
           <div className="p-2">
             <CreatePost />
           </div>
@@ -22,7 +22,7 @@ export default function NavigatorBar() {
             <button
               type="button"
               className="group flex h-6 w-6 items-center justify-center rounded-full hover:bg-zinc-900">
-              <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100" />
+              <PlusIcon className="h-3 w-3 text-zinc-400 group-hover:text-zinc-100" />
             </button>
           </div>
           <div className="flex flex-col gap-1 text-zinc-500">
@@ -49,7 +49,7 @@ export default function NavigatorBar() {
             <button
               type="button"
               className="group flex h-6 w-6 items-center justify-center rounded-full hover:bg-zinc-900">
-              <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100" />
+              <PlusIcon className="h-3 w-3 text-zinc-400 group-hover:text-zinc-100" />
             </button>
           </div>
           <div></div>

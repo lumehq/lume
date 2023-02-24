@@ -1,7 +1,4 @@
-import MiniMailIcon from '@assets/icons/MiniMail';
-import MiniPlusIcon from '@assets/icons/MiniPlus';
-import RefreshIcon from '@assets/icons/Refresh';
-
+import { EnvelopeClosedIcon, PlusIcon, UpdateIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 
 const sampleData = [
@@ -56,7 +53,7 @@ export default function Empty() {
             placeholder="Enter an email"
           />
           <button className="absolute right-0.5 top-1/2 inline-flex h-10 -translate-y-1/2 transform items-center gap-1 rounded-md border border-zinc-600 bg-zinc-700 px-4 text-sm font-medium text-zinc-200 shadow-md">
-            <MiniMailIcon className="h-4 w-4" />
+            <EnvelopeClosedIcon className="h-4 w-4" />
             Invite
           </button>
         </form>
@@ -64,7 +61,7 @@ export default function Empty() {
       <div className="mt-10 flex flex-col items-start gap-4">
         <div className="flex w-full items-center justify-between">
           <h3 className="text-sm font-medium text-zinc-500">Suggestions</h3>
-          <RefreshIcon className="h-4 w-4 text-zinc-600" />
+          <UpdateIcon className="h-4 w-4 text-zinc-600" />
         </div>
         <ul className="w-full divide-y divide-zinc-800 border-t border-b border-zinc-800">
           {sampleData.map((person, index) => (
@@ -87,7 +84,7 @@ export default function Empty() {
                 <button
                   type="button"
                   className="inline-flex items-center rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 text-xs font-medium text-zinc-400 shadow-sm hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:ring-offset-2">
-                  <MiniPlusIcon className="-ml-1 h-5 w-5" />
+                  <PlusIcon className="-ml-1 h-5 w-5" />
                   <span className="text-sm font-medium text-zinc-300">Follow</span>
                 </button>
               </div>

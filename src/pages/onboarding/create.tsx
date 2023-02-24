@@ -4,8 +4,7 @@ import OnboardingLayout from '@layouts/onboardingLayout';
 
 import { currentUser } from '@stores/currentUser';
 
-import EyeIcon from '@assets/icons/Eye';
-
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -149,7 +148,11 @@ export default function Page() {
               <button
                 onClick={() => showNsec()}
                 className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700">
-                <EyeIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
+                {type === 'password' ? (
+                  <EyeClosedIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
+                ) : (
+                  <EyeOpenIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
+                )}
               </button>
             </div>
           </div>
