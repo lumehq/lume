@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from '@components/note/atoms/user';
-import Content from '@components/note/content';
+import { Content } from '@components/note/content';
 
 export default function NoteReply({ event }: { event: any }) {
   return (

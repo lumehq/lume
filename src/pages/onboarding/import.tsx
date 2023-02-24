@@ -4,7 +4,7 @@ import OnboardingLayout from '@layouts/onboardingLayout';
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { getPublicKey, nip19 } from 'nostr-tools';
+import { nip19 } from 'nostr-tools';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 
@@ -36,17 +36,15 @@ export default function Page() {
   } = useForm<FormValues>({ resolver });
 
   const onSubmit = async (data: any) => {
-    let privKey = data['key'];
+    let privkey = data['key'];
 
-    if (privKey.substring(0, 4) === 'nsec') {
-      privKey = nip19.decode(privKey).data;
+    if (privkey.substring(0, 4) === 'nsec') {
+      privkey = nip19.decode(privkey).data;
     }
 
     try {
-      const pubKey = getPublicKey(privKey);
-
-      if (pubKey) {
-        router.push(`/onboarding/profile/${privKey}`);
+      if (privkey) {
+        router.push(`/onboarding/profile/${privkey}`);
       }
     } catch (error) {
       setError('key', {

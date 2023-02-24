@@ -6,7 +6,7 @@ import { ImageCard } from '@components/note/content/preview/imageCard';
 import { Video } from '@components/note/content/preview/video';
 
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
@@ -14,7 +14,7 @@ const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
   loading: () => <div className="h-4 w-36 animate-pulse rounded bg-zinc-700" />,
 });
 
-export default function Content({ data }: { data: any }) {
+export const Content = memo(function Content({ data }: { data: any }) {
   const [preview, setPreview] = useState({});
 
   const content = useRef(data.content);
@@ -96,4 +96,4 @@ export default function Content({ data }: { data: any }) {
       </div>
     </div>
   );
-}
+});

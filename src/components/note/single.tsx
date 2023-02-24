@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Content from '@components/note/content';
+import { Content } from '@components/note/content';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import dynamic from 'next/dynamic';
@@ -12,8 +12,6 @@ const Modal = dynamic(() => import('@components/note/modal'), {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Single = memo(function Single({ event }: { event: any }) {
-  console.log(event);
-
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>

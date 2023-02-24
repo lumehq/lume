@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserRepost } from '@components/note/atoms/userRepost';
-import Content from '@components/note/content';
+import { Content } from '@components/note/content';
 import { Placeholder } from '@components/note/placeholder';
 
 import RepostIcon from '@assets/icons/Repost';
@@ -24,7 +24,7 @@ export const Repost = memo(function Repost({ root, user }: { root: any; user: st
     },
   });
 
-  if (events !== null) {
+  if (events !== null && Object.keys(events).length > 0) {
     return (
       <Dialog.Root>
         <Dialog.Trigger>
@@ -35,12 +35,12 @@ export const Repost = memo(function Repost({ root, user }: { root: any; user: st
                 <UserRepost pubkey={user} />
               </div>
             </div>
-            <Content data={events[0]} />
+            {events[0].content && <Content data={events[0]} />}
           </div>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
             <Dialog.Content className="fixed inset-0 overflow-y-auto">
-              <Modal event={events[0]} />
+              {events[0].content && <Modal event={events[0]} />}
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Trigger>

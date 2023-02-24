@@ -1,5 +1,5 @@
 import { UserWithUsername } from '@components/note/atoms/userWithUsername';
-import Content from '@components/note/content';
+import { Content } from '@components/note/content';
 import NoteReply from '@components/note/modal/noteReply';
 
 import { useNostrEvents } from 'nostr-react';
@@ -24,7 +24,7 @@ const Modal = ({ event }: { event: any }) => {
           <div className="relative h-full overflow-auto rounded-lg border-[0.5px] border-white/30 bg-zinc-800 p-4 shadow-inner">
             <div className="flex flex-col gap-4">
               <UserWithUsername pubkey={event.pubkey} />
-              <Content data={event.content} />
+              <Content data={event} />
             </div>
             <div className="flex flex-col gap-2 divide-y divide-zinc-700">
               {events.map((item) => (
