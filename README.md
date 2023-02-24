@@ -17,10 +17,6 @@
     Windows
     ·
     Linux
-    ·
-    iOS
-    ·
-    Android
     <br />
     <i>~ Links will be added once a release is available. ~</i>
   </p>
@@ -36,7 +32,7 @@ Nostr is truly censorship-resistant protocol for social network and messenger ap
 Lume is simple as it is, no more buzzwords
 
 <p align="center">
-  <img src="https://bafybeiemr3ni6kmcvfugz3xo4ywejbvxdeobwauiixc432nyik4rx45wlq.ipfs.w3s.link/Screenshot%202023-02-21%20at%2021.47.04.png" alt="App screenshot">
+  <img src="https://bafybeiczmks7vkylveykhj5xef743wht7cq664mf5gzxb6nf32yol3qgaq.ipfs.w3s.link/app-screenshot.png" alt="App screenshot">
   <br />
   <br />
 </p>
@@ -83,7 +79,3 @@ pnpm install
 ```
 pnpm tauri dev
 ```
-
-# Repo structure
-
-TODO
