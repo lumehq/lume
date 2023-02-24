@@ -11,6 +11,7 @@
     "@nanostores/persistent": "^0.7.0",
     "@nanostores/react": "^0.4.1",
     "@radix-ui/react-dialog": "^1.0.2",
+    "@radix-ui/react-dropdown-menu": "^2.0.2",
     "@radix-ui/react-icons": "^1.2.0",
     "@tauri-apps/api": "^1.2.0",
     "@uiw/react-markdown-preview": "^4.1.8",

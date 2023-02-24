@@ -17,6 +17,14 @@
         "all": false,
         "open": true
       },
+      "clipboard": {
+        "all": true,
+        "writeText": true,
+        "readText": true
+      },
+      "notification": {
+        "all": true
+      },
       "window": {
         "startDragging": true
       }
