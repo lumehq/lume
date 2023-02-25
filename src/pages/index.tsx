@@ -7,7 +7,7 @@ import { follows } from '@stores/follows';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { isPermissionGranted, requestPermission } from '@tauri-apps/api/notification';
+import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect, useState } from 'react';
@@ -43,6 +43,9 @@ export default function Page() {
     if (!permissionGranted) {
       const permission = await requestPermission();
       permissionGranted = permission === 'granted';
+    }
+    if (permissionGranted) {
+      sendNotification({ title: 'Lume', body: 'Nostr is awesome' });
     }
   }, []);
 
