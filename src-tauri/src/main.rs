@@ -9,7 +9,7 @@ extern crate objc;
 
 use std::time::Duration;
 
-use tauri::{Manager, WindowEvent};
+use tauri::{Manager, WindowEvent, SystemTray};
 use webpage::{Webpage, WebpageOptions};
 use window_ext::WindowExt;
 
@@ -49,6 +49,8 @@ async fn opengraph(url: String) -> OpenGraphResponse {
 }
 
 fn main() {
+  let tray = SystemTray::new();
+
   tauri::Builder::default()
     .setup(|app| {
       let main_window = app.get_window("main").unwrap();
@@ -57,6 +59,7 @@ fn main() {
 
       Ok(())
     })
+    .system_tray(tray)
     .invoke_handler(tauri::generate_handler![opengraph])
     .plugin(tauri_plugin_sql::Builder::default().build())
     .on_window_event(|e| {
