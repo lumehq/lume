@@ -75,7 +75,7 @@ export default function Page() {
     // redirect to newsfeed
     setTimeout(() => {
       setLoading(false);
-      router.push('/feed/following');
+      router.reload();
     }, 1500);
   };
 
