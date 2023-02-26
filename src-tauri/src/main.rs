@@ -7,46 +7,11 @@
 #[macro_use]
 extern crate objc;
 
-use std::time::Duration;
-
-use tauri::{Manager, WindowEvent, SystemTray};
-use webpage::{Webpage, WebpageOptions};
+use tauri::{Manager, SystemTray, WindowEvent};
+use tauri_plugin_sql::{Migration, MigrationKind};
 use window_ext::WindowExt;
 
 mod window_ext;
-
-#[derive(serde::Serialize)]
-struct OpenGraphResponse {
-  title: String,
-  description: String,
-  url: String,
-  image: String,
-}
-
-async fn fetch_opengraph(url: String) -> OpenGraphResponse {
-  let options = WebpageOptions {
-    allow_insecure: false,
-    max_redirections: 3,
-    timeout: Duration::from_secs(30),
-    useragent: "lume - desktop app".to_string(),
-    ..Default::default()
-  };
-  let result = Webpage::from_url(&url, options).expect("Could not read from URL");
-  let html = result.html;
-
-  return OpenGraphResponse {
-    title: html.opengraph.properties["title"].to_string(),
-    description: html.opengraph.properties["description"].to_string(),
-    url: html.opengraph.properties["url"].to_string(),
-    image: html.opengraph.images[0].url.to_string(),
-  };
-}
-
-#[tauri::command]
-async fn opengraph(url: String) -> OpenGraphResponse {
-  let result = fetch_opengraph(url).await;
-  return result;
-}
 
 fn main() {
   let tray = SystemTray::new();
@@ -60,8 +25,19 @@ fn main() {
       Ok(())
     })
     .system_tray(tray)
-    .invoke_handler(tauri::generate_handler![opengraph])
-    .plugin(tauri_plugin_sql::Builder::default().build())
+    .plugin(
+      tauri_plugin_sql::Builder::default()
+        .add_migrations(
+          "sqlite:lume.db",
+          vec![Migration {
+            version: 1,
+            description: "create default tables",
+            sql: include_str!("../migrations/20230226004139_create_tables.sql"),
+            kind: MigrationKind::Up,
+          }],
+        )
+        .build(),
+    )
     .on_window_event(|e| {
       let apply_offset = || {
         let win = e.window();
