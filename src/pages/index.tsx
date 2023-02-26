@@ -40,7 +40,7 @@ export default function Page() {
     return result;
   }, []);
 
-  const getFollows = useCallback(async (account) => {
+  const getFollows = useCallback(async (account: { id: string }) => {
     const arr = [];
     const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.id}"`);
 
@@ -82,7 +82,7 @@ export default function Page() {
         })
         .catch(console.error);
     });
-  }, [getAccount, getFollows, requestNotification, router]);
+  }, [requestNotification, getAccount, getFollows, router]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-between">

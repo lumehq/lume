@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import RelayProvider from '@stores/context';
 import { relays } from '@stores/relays';
 
 import { useStore } from '@nanostores/react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { NostrProvider } from 'nostr-react';
-import type { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import '../App.css';
 
@@ -21,12 +21,8 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
-  // Get relays
+  // Get all relays
   const $relays = useStore(relays);
 
-  return (
-    <NostrProvider relayUrls={$relays} debug={false}>
-      {getLayout(<Component {...pageProps} />)}
-    </NostrProvider>
-  );
+  return <RelayProvider relays={$relays}>{getLayout(<Component {...pageProps} />)}</RelayProvider>;
 }
