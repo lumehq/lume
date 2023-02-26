@@ -33,8 +33,9 @@ export default function Page() {
 
   const insertDB = async () => {
     const db = await Database.load('sqlite:lume.db');
-    // self followed
+    // self follow
     await db.execute(`INSERT INTO follows (pubkey, account) VALUES ("${$currentUser.pubkey}", "${$currentUser.pubkey}")`);
+    // follow selected
     follow.forEach(async (npub) => {
       const { data } = nip19.decode(npub);
       await db.execute(`INSERT INTO follows (pubkey, account) VALUES ("${data}", "${$currentUser.pubkey}")`);
