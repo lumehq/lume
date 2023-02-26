@@ -2,42 +2,52 @@
 import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
+import { DatabaseContext } from '@components/contexts/database';
+import { RelayContext } from '@components/contexts/relay';
+
+import { relays } from '@stores/relays';
+
+import { useStore } from '@nanostores/react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useNostrEvents } from 'nostr-react';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useState } from 'react';
 
 export default function Page() {
-  const [follows, setFollows] = useState([null]);
-  const [loading, setLoading] = useState(false);
+  const db: any = useContext(DatabaseContext);
+  const relayPool: any = useContext(RelayContext);
+  const $relays = useStore(relays);
 
   const router = useRouter();
   const { pubkey }: any = router.query;
 
-  const { onEvent } = useNostrEvents({
-    filter: {
-      authors: [pubkey],
-      kinds: [3],
-    },
-  });
+  const [follows, setFollows] = useState([null]);
+  const [loading, setLoading] = useState(false);
 
-  onEvent((rawMetadata) => {
-    try {
-      setFollows(rawMetadata.tags);
-    } catch (err) {
-      console.error(err, rawMetadata);
+  relayPool.subscribe(
+    [
+      {
+        authors: [pubkey],
+        kinds: [0],
+        since: 0,
+      },
+    ],
+    $relays,
+    (event: any) => {
+      setFollows(event.tags);
+    },
+    undefined,
+    (events: any, relayURL: any) => {
+      console.log(events, relayURL);
     }
-  });
+  );
 
   useEffect(() => {
     setLoading(true);
 
     const insertDB = async () => {
-      const db = await Database.load('sqlite:lume.db');
       follows.forEach(async (item) => {
         if (item) {
-          await db.execute(`INSERT OR IGNORE INTO follows (pubkey, account) VALUES ("${item[1]}", "${pubkey}")`);
+          await db.execute(`INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${item[1]}", "${pubkey}", "0")`);
         }
       });
     };
@@ -52,7 +62,7 @@ export default function Page() {
         })
         .catch(console.error);
     }
-  }, [follows, pubkey, router]);
+  }, [db, follows, pubkey, router]);
 
   return (
     <div className="flex h-full flex-col justify-between px-8">

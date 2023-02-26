@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import RelayProvider from '@stores/context';
+import DatabaseProvider from '@components/contexts/database';
+import RelayProvider from '@components/contexts/relay';
+
 import { relays } from '@stores/relays';
 
 import { useStore } from '@nanostores/react';
@@ -24,5 +26,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Get all relays
   const $relays = useStore(relays);
 
-  return <RelayProvider relays={$relays}>{getLayout(<Component {...pageProps} />)}</RelayProvider>;
+  return (
+    <DatabaseProvider>
+      <RelayProvider relays={$relays}>{getLayout(<Component {...pageProps} />)}</RelayProvider>
+    </DatabaseProvider>
+  );
 }

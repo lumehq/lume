@@ -2,6 +2,8 @@
 import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
+import { DatabaseContext } from '@components/contexts/database';
+
 import { truncate } from '@utils/truncate';
 
 import { currentUser } from '@stores/currentUser';
@@ -14,11 +16,12 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
 
 export default function Page() {
+  const db: any = useContext(DatabaseContext);
   const router = useRouter();
+
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
   const [follow, setFollow] = useState([]);
@@ -32,13 +35,12 @@ export default function Page() {
   };
 
   const insertDB = async () => {
-    const db = await Database.load('sqlite:lume.db');
     // self follow
-    await db.execute(`INSERT INTO follows (pubkey, account) VALUES ("${$currentUser.pubkey}", "${$currentUser.pubkey}")`);
+    await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${$currentUser.pubkey}", "${$currentUser.pubkey}", "0")`);
     // follow selected
     follow.forEach(async (npub) => {
       const { data } = nip19.decode(npub);
-      await db.execute(`INSERT INTO follows (pubkey, account) VALUES ("${data}", "${$currentUser.pubkey}")`);
+      await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${data}", "${$currentUser.pubkey}", "0")`);
     });
   };
 

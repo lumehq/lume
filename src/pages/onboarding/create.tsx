@@ -2,84 +2,79 @@
 import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
-import { currentUser } from '@stores/currentUser';
+import { DatabaseContext } from '@components/contexts/database';
+import { RelayContext } from '@components/contexts/relay';
 
+import { currentUser } from '@stores/currentUser';
+import { relays } from '@stores/relays';
+
+import { useStore } from '@nanostores/react';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { dateToUnix, useNostr } from 'nostr-react';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
 import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const config: Config = {
   dictionaries: [names],
 };
 
-const defaultAvatars = [
-  'https://bafybeidfsbrzqbvontmucteomoz2rkrxugu462l5hyhh6uioslkfzzs4oq.ipfs.w3s.link/avatar-11.png',
-  'https://bafybeid7mrvznbnd6r2ju2iu7lsxkcikufys6z6ssy5ldxrxq5qh3yqf4u.ipfs.w3s.link/avatar-12.png',
-  'https://bafybeih5gpwu53ohui6p7scekjpxjk2d4lusq2jqohqhjsvhfkeu56ea4e.ipfs.w3s.link/avatar-13.png',
-  'https://bafybeibpbvrpuphkerjygdbnh26av5brqggzunbbbmfl3ozlvcn2mj6zxa.ipfs.w3s.link/avatar-14.png',
-  'https://bafybeia4ue4loinuflu7y5q3xu6hcvt653mzw5yorw25oarf2wqksig4ma.ipfs.w3s.link/avatar-15.png',
-  'https://bafybeib3gzl6n2bebiru2cpkdljmlzbtqfsl6xcnqtabxt6jrpj7l7ltm4.ipfs.w3s.link/avatar-16.png',
-];
-
-const defaultBanners = [
-  'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg',
-  'https://bafybeiderllqadxsikh3envikobmyka3uwgojriwh6epctqartq2loswyi.ipfs.w3s.link/banner-2.jpg',
-  'https://bafybeiba4tifde2kczvd26vxhbb5jpqi3wmgvccpkcrle4hse2cqrwlwiy.ipfs.w3s.link/banner-3.jpg',
-  'https://bafybeifqpny2eom7ccvmaguxxxfajutmn5h3fotaasga7gce2xfx37p6oy.ipfs.w3s.link/banner-4.jpg',
-];
-
 export default function Page() {
+  const db: any = useContext(DatabaseContext);
   const router = useRouter();
-  const { publish } = useNostr();
+
+  const relayPool: any = useContext(RelayContext);
+  const $relays = useStore(relays);
 
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
 
   const [privKey] = useState(() => generatePrivateKey());
   const [name] = useState(() => uniqueNamesGenerator(config).toString());
-  const [avatar] = useState(() => defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)]);
-  const [banner] = useState(() => defaultBanners[Math.floor(Math.random() * defaultBanners.length)]);
 
   const pubKey = getPublicKey(privKey);
   const npub = nip19.npubEncode(pubKey);
   const nsec = nip19.nsecEncode(privKey);
+
+  const showPrivateKey = () => {
+    if (type === 'password') {
+      setType('text');
+    } else {
+      setType('password');
+    }
+  };
 
   // auto-generated profile
   const data = {
     display_name: name,
     name: name,
     username: name.toLowerCase(),
-    picture: avatar,
-    banner: banner,
+    picture: 'https://bafybeidfsbrzqbvontmucteomoz2rkrxugu462l5hyhh6uioslkfzzs4oq.ipfs.w3s.link/avatar-11.png',
+    banner: 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg',
   };
 
   const createAccount = async () => {
     setLoading(true);
 
-    // publish account to relays
+    // build event
     const event: any = {
       content: JSON.stringify(data),
-      created_at: dateToUnix(),
+      created_at: Math.floor(Date.now() / 1000),
       kind: 0,
       pubkey: pubKey,
       tags: [],
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, privKey);
-    publish(event);
+    // publish to relays
+    relayPool.publish(event, $relays);
 
     // save account to database
-    const db = await Database.load('sqlite:lume.db');
     await db.execute(
       `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubKey}", "${privKey}", "${npub}", "${nsec}", '${JSON.stringify(data)}')`
     );
-    await db.close();
 
     // set currentUser in global state
     currentUser.set({
@@ -94,14 +89,6 @@ export default function Page() {
       setLoading(false);
       router.push('/onboarding/following');
     }, 1500);
-  };
-
-  const showNsec = () => {
-    if (type === 'password') {
-      setType('text');
-    } else {
-      setType('password');
-    }
   };
 
   return (
@@ -137,7 +124,9 @@ export default function Page() {
                 value={nsec}
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
               />
-              <button onClick={() => showNsec()} className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700">
+              <button
+                onClick={() => showPrivateKey()}
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700">
                 {type === 'password' ? (
                   <EyeClosedIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
                 ) : (

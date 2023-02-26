@@ -2,14 +2,22 @@
 import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
+import { DatabaseContext } from '@components/contexts/database';
+import { RelayContext } from '@components/contexts/relay';
+
+import { relays } from '@stores/relays';
+
+import { useStore } from '@nanostores/react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useNostrEvents } from 'nostr-react';
 import { getPublicKey, nip19 } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useEffect, useState } from 'react';
 
 export default function Page() {
+  const db: any = useContext(DatabaseContext);
+  const relayPool: any = useContext(RelayContext);
+  const $relays = useStore(relays);
+
   const router = useRouter();
   const { privkey }: any = router.query;
 
@@ -20,31 +28,32 @@ export default function Page() {
   const npub = privkey ? nip19.npubEncode(pubkey) : null;
   const nsec = privkey ? nip19.nsecEncode(privkey) : null;
 
-  const { onEvent } = useNostrEvents({
-    filter: {
-      authors: [pubkey],
-      kinds: [0],
-    },
-  });
-
-  onEvent((rawMetadata) => {
-    try {
-      const metadata: any = JSON.parse(rawMetadata.content);
+  relayPool.subscribe(
+    [
+      {
+        authors: [pubkey],
+        kinds: [0],
+      },
+    ],
+    $relays,
+    (event: any) => {
+      const metadata = JSON.parse(event.content);
       setAccount(metadata);
-    } catch (err) {
-      console.error(err, rawMetadata);
+    },
+    undefined,
+    (events: any, relayURL: any) => {
+      console.log(events, relayURL);
     }
-  });
+  );
 
   const insertDB = useCallback(async () => {
     // save account to database
-    const db = await Database.load('sqlite:lume.db');
     const metadata = JSON.stringify(account);
     await db.execute(
       `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubkey}", "${privkey}", "${npub}", "${nsec}", '${metadata}')`
     );
     await db.close();
-  }, [account, npub, nsec, privkey, pubkey]);
+  }, [account, db, npub, nsec, privkey, pubkey]);
 
   useEffect(() => {
     setLoading(true);

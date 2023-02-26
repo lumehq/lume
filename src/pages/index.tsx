@@ -2,6 +2,8 @@
 import BaseLayout from '@layouts/baseLayout';
 import FullLayout from '@layouts/fullLayout';
 
+import { DatabaseContext } from '@components/contexts/database';
+
 import { currentUser } from '@stores/currentUser';
 import { follows } from '@stores/follows';
 
@@ -10,12 +12,11 @@ import LumeSymbol from '@assets/icons/Lume';
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
-
-const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useEffect, useState } from 'react';
 
 export default function Page() {
+  const db: any = useContext(DatabaseContext);
+
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -36,20 +37,22 @@ export default function Page() {
 
   const getAccount = useCallback(async () => {
     const result = await db.select(`SELECT * FROM accounts ASC LIMIT 1`);
-
     return result;
-  }, []);
+  }, [db]);
 
-  const getFollows = useCallback(async (account: { id: string }) => {
-    const arr = [];
-    const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.id}"`);
+  const getFollows = useCallback(
+    async (account: { id: string }) => {
+      const arr = [];
+      const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.id}"`);
 
-    result.forEach((item: { pubkey: string }) => {
-      arr.push(item.pubkey);
-    });
+      result.forEach((item: { pubkey: string }) => {
+        arr.push(item.pubkey);
+      });
 
-    return arr;
-  }, []);
+      return arr;
+    },
+    [db]
+  );
 
   // Explain:
   // Step 1: request allow notification from system
