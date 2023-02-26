@@ -15,6 +15,7 @@ CREATE TABLE
     id INTEGER PRIMARY KEY,
     pubkey TEXT NOT NULL,
     account TEXT NOT NULL,
+    kind INTEGER NOT NULL DEFAULT 0,
     metadata JSON
   );
 
@@ -26,8 +27,8 @@ CREATE TABLE
   cache_profiles (
     id TEXT PRIMARY KEY,
     metadata JSON,
-    created_at TEXT,
-    updated_at TEXT
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
 -- create cache notes
@@ -35,6 +36,8 @@ CREATE TABLE
   cache_notes (
     id TEXT PRIMARY KEY,
     note JSON,
-    created_at TEXT,
-    updated_at TEXT
+    kind INTEGER NOT NULL DEFAULT 1,
+    is_multi BOOLEAN DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
