@@ -35,14 +35,14 @@ export default function Page() {
   }, []);
 
   const getAccount = useCallback(async () => {
-    const result = await db.select(`SELECT id FROM accounts ASC LIMIT 1`);
+    const result = await db.select(`SELECT * FROM accounts ASC LIMIT 1`);
 
     return result;
   }, []);
 
   const getFollows = useCallback(async (account) => {
     const arr = [];
-    const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.pubkey}"`);
+    const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.id}"`);
 
     result.forEach((item: { pubkey: string }) => {
       arr.push(item.pubkey);
@@ -59,7 +59,6 @@ export default function Page() {
     requestNotification().then(() => {
       getAccount()
         .then((res: any) => {
-          console.log(res);
           if (res.length === 0) {
             setTimeout(() => {
               setLoading(false);

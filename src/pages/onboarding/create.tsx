@@ -43,12 +43,8 @@ export default function Page() {
 
   const [privKey] = useState(() => generatePrivateKey());
   const [name] = useState(() => uniqueNamesGenerator(config).toString());
-  const [avatar] = useState(
-    () => defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)]
-  );
-  const [banner] = useState(
-    () => defaultBanners[Math.floor(Math.random() * defaultBanners.length)]
-  );
+  const [avatar] = useState(() => defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)]);
+  const [banner] = useState(() => defaultBanners[Math.floor(Math.random() * defaultBanners.length)]);
 
   const pubKey = getPublicKey(privKey);
   const npub = nip19.npubEncode(pubKey);
@@ -81,9 +77,7 @@ export default function Page() {
     // save account to database
     const db = await Database.load('sqlite:lume.db');
     await db.execute(
-      `INSERT INTO accounts (privkey, pubkey, npub, nsec, current, metadata) VALUES ("${privKey}", "${pubKey}", "${npub}", "${nsec}", "1", '${JSON.stringify(
-        data
-      )}')`
+      `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubKey}", "${privKey}", "${npub}", "${nsec}", '${JSON.stringify(data)}')`
     );
     await db.close();
 
@@ -115,14 +109,12 @@ export default function Page() {
       <div>{/* spacer */}</div>
       <motion.div layoutId="form">
         <div className="mb-8 flex flex-col gap-3">
-          <motion.h1
-            layoutId="title"
-            className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          <motion.h1 layoutId="title" className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
             Create new key
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            Lume will generate key with default profile for you, you can edit it later, and please
-            store your key safely so you can restore your account or use other client
+            Lume will generate key with default profile for you, you can edit it later, and please store your key safely so you can restore your
+            account or use other client
           </motion.h2>
         </div>
         <div className="flex flex-col gap-4">
@@ -145,9 +137,7 @@ export default function Page() {
                 value={nsec}
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
               />
-              <button
-                onClick={() => showNsec()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700">
+              <button onClick={() => showNsec()} className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700">
                 {type === 'password' ? (
                   <EyeClosedIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
                 ) : (
@@ -157,19 +147,12 @@ export default function Page() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-zinc-400">
-              Default Profile (you can change it later)
-            </label>
+            <label className="text-sm font-semibold text-zinc-400">Default Profile (you can change it later)</label>
             <div className="relative max-w-sm shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
               <div className="relative max-w-sm rounded-lg border border-black/5 px-3.5 py-4 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200  dark:shadow-black/10 dark:placeholder:text-zinc-600">
                 <div className="flex space-x-4">
                   <div className="relative h-10 w-10 rounded-full">
-                    <Image
-                      className="inline-block rounded-full"
-                      src={data.picture}
-                      alt=""
-                      fill={true}
-                    />
+                    <Image className="inline-block rounded-full" src={data.picture} alt="" fill={true} />
                   </div>
                   <div className="flex-1 space-y-4 py-1">
                     <div className="flex items-center gap-2">
@@ -193,18 +176,8 @@ export default function Page() {
       <motion.div layoutId="action" className="pb-5">
         <div className="flex h-10 items-center">
           {loading === true ? (
-            <svg
-              className="h-5 w-5 animate-spin text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"></circle>
+            <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -226,13 +199,7 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page:
-    | string
-    | number
-    | boolean
-    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
-    | ReactFragment
-    | ReactPortal
+  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
 ) {
   return (
     <BaseLayout>

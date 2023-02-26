@@ -60,14 +60,12 @@ export default function Page() {
       <div>{/* spacer */}</div>
       <motion.div layoutId="form">
         <div className="mb-8 flex flex-col gap-3">
-          <motion.h1
-            layoutId="title"
-            className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          <motion.h1 layoutId="title" className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
             Import your private key
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            You can import private key format as hex string or nsec. If you have installed Nostr
-            Connect compality wallet in your mobile, you can connect by scan QR Code below
+            You can import private key format as hex string or nsec. If you have installed Nostr Connect compality wallet in your mobile, you can
+            connect by scan QR Code below
           </motion.h2>
         </div>
         <div className="flex flex-col gap-2">
@@ -85,18 +83,8 @@ export default function Page() {
       <motion.div layoutId="action" className="pb-5">
         <div className="flex h-10 items-center">
           {isSubmitting ? (
-            <svg
-              className="h-5 w-5 animate-spin text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"></circle>
+            <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -117,13 +105,7 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page:
-    | string
-    | number
-    | boolean
-    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
-    | ReactFragment
-    | ReactPortal
+  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
 ) {
   return (
     <BaseLayout>

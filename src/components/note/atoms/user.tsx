@@ -27,11 +27,7 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
       const metadata: any = JSON.parse(rawMetadata.content);
       if (profile.picture === null || profile.name === null) {
         setProfile(metadata);
-        await db.execute(
-          `INSERT OR IGNORE INTO cache_profiles (pubkey, metadata) VALUES ("${pubkey}", '${JSON.stringify(
-            metadata
-          )}')`
-        );
+        await db.execute(`INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES ("${pubkey}", '${JSON.stringify(metadata)}')`);
       } else {
         return;
       }
@@ -42,9 +38,7 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
 
   useEffect(() => {
     const initialProfile = async () => {
-      const result: any = await db.select(
-        `SELECT metadata FROM cache_profiles WHERE pubkey = "${pubkey}"`
-      );
+      const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${pubkey}"`);
       db.close;
       return result;
     };
@@ -62,27 +56,15 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
     <div className="relative flex items-start gap-4">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-full border border-white/10">
         {profile.picture ? (
-          <ImageWithFallback
-            src={profile.picture}
-            alt={pubkey}
-            fill={true}
-            className="rounded-full object-cover"
-          />
+          <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
         ) : (
-          <Avatar
-            size={44}
-            name={pubkey}
-            variant="beam"
-            colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
-          />
+          <Avatar size={44} name={pubkey} variant="beam" colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']} />
         )}
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">
           <div className="flex items-baseline gap-2 text-sm">
-            <span className="font-bold leading-tight">
-              {profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}
-            </span>
+            <span className="font-bold leading-tight">{profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}</span>
             <span className="leading-tight text-zinc-500">·</span>
             <Moment fromNow unix className="text-zinc-500">
               {time}
