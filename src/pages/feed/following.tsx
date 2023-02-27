@@ -2,59 +2,43 @@
 import BaseLayout from '@layouts/baseLayout';
 import NewsFeedLayout from '@layouts/newsfeedLayout';
 
+import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
+import { Placeholder } from '@components/note/placeholder';
+import { Thread } from '@components/thread';
 
 import { hoursAgo } from '@utils/getDate';
 
-import { currentUser } from '@stores/currentUser';
 import { follows } from '@stores/follows';
 import { relays } from '@stores/relays';
 
 import { useStore } from '@nanostores/react';
 import { dateToUnix } from 'nostr-react';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, Suspense, useContext, useEffect, useRef, useState } from 'react';
 
 export default function Page() {
+  const db: any = useContext(DatabaseContext);
   const relayPool: any = useContext(RelayContext);
+
   const now = useRef(new Date());
 
   const $follows = useStore(follows);
   const $relays = useStore(relays);
-  const $currentUser = useStore(currentUser);
+
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const unsub = relayPool.subscribe(
       [
         {
-          kinds: [0, 1, 3, 5, 7],
+          kinds: [1],
           authors: $follows,
           since: dateToUnix(hoursAgo(12, now.current)),
         },
       ],
       $relays,
       async (event: any) => {
-        switch (event.kind) {
-          case 0:
-            //await db.execute(`INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES ("${event.pubkey}", '${JSON.stringify(event.content)}')`);
-            break;
-          case 3:
-            //await db.execute(`INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${event.pubkey}", "${$currentUser.pubkey}", "1")`);
-            break;
-          case 1:
-          case 5:
-          case 7:
-            /*
-            const isMulti = event.tags.length > 0;
-            await db.execute(
-              `INSERT OR IGNORE INTO cache_notes (id, note, kind, is_multi) VALUES ("${event.pubkey}", '${JSON.stringify(event)}', "${
-                event.kind
-              }", "${isMulti}")`
-            );
-            */
-            break;
-          default:
-            break;
-        }
+        setEvents((events) => [event, ...events]);
       },
       undefined,
       (events: any, relayURL: any) => {
@@ -63,9 +47,15 @@ export default function Page() {
     );
 
     return () => unsub();
-  }, [$currentUser.pubkey, $follows, $relays, relayPool]);
+  }, [$follows, $relays, db, relayPool]);
 
-  return <div className="h-full w-full"></div>;
+  return (
+    <div className="h-full w-full">
+      <Suspense fallback={<Placeholder />}>
+        <Thread data={events} />
+      </Suspense>
+    </div>
+  );
 }
 
 Page.getLayout = function getLayout(
