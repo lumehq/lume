@@ -2,13 +2,12 @@
 import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
 
-import { hoursAgo } from '@utils/getDate';
+import { dateToUnix, hoursAgo } from '@utils/getDate';
 
 import { follows } from '@stores/follows';
 import { relays } from '@stores/relays';
 
 import { useStore } from '@nanostores/react';
-import { dateToUnix } from 'nostr-react';
 import { memo, useCallback, useContext, useRef } from 'react';
 
 export const NoteConnector = memo(function NoteConnector() {
