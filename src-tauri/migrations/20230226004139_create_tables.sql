@@ -35,9 +35,10 @@ CREATE TABLE
 CREATE TABLE
   cache_notes (
     id TEXT PRIMARY KEY,
-    note JSON,
+    pubkey TEXT NOT NULL,
+    created_at TEXT,
     kind INTEGER NOT NULL DEFAULT 1,
-    is_multi BOOLEAN DEFAULT 0,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    tags TEXT NOT NULL,
+    content TEXT NOT NULL,
+    is_multi BOOLEAN DEFAULT 0
   );

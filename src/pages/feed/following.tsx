@@ -3,56 +3,29 @@ import BaseLayout from '@layouts/baseLayout';
 import NewsFeedLayout from '@layouts/newsfeedLayout';
 
 import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
 import { Placeholder } from '@components/note/placeholder';
 import { Thread } from '@components/thread';
 
-import { hoursAgo } from '@utils/getDate';
-
-import { follows } from '@stores/follows';
-import { relays } from '@stores/relays';
-
-import { useStore } from '@nanostores/react';
-import { dateToUnix } from 'nostr-react';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, Suspense, useContext, useEffect, useRef, useState } from 'react';
 
 export default function Page() {
   const db: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
-  const now = useRef(new Date());
-
-  const $follows = useStore(follows);
-  const $relays = useStore(relays);
-
-  const [events, setEvents] = useState([]);
+  const [data, setData] = useState([]);
+  const limit = useRef(25);
 
   useEffect(() => {
-    const unsub = relayPool.subscribe(
-      [
-        {
-          kinds: [1],
-          authors: $follows,
-          since: dateToUnix(hoursAgo(12, now.current)),
-        },
-      ],
-      $relays,
-      async (event: any) => {
-        setEvents((events) => [event, ...events]);
-      },
-      undefined,
-      (events: any, relayURL: any) => {
-        console.log(events, relayURL);
-      }
-    );
+    const getData = async () => {
+      const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
+      setData(result);
+    };
 
-    return () => unsub();
-  }, [$follows, $relays, db, relayPool]);
+    getData().catch(console.error);
+  }, [db]);
 
   return (
     <div className="h-full w-full">
       <Suspense fallback={<Placeholder />}>
-        <Thread data={events} />
+        <Thread data={data} />
       </Suspense>
     </div>
   );
