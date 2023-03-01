@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { writeStorage } from '@rehooks/local-storage';
-import { createContext, useEffect, useMemo } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
 export const DatabaseContext = createContext({});
 
-const initDB = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
+const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
 
 export default function DatabaseProvider({ children }: { children: React.ReactNode }) {
-  const db = useMemo(() => initDB, []);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
     const getRelays = async () => {
@@ -40,17 +40,18 @@ export default function DatabaseProvider({ children }: { children: React.ReactNo
       writeStorage('follows', arr);
     };
 
-    if (db !== null) {
-      getRelays().catch(console.error);
-      getAccount()
-        .then((res) => {
-          if (res) {
-            getFollows(res.id).catch(console.error);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [db]);
+    getRelays().catch(console.error);
+    getAccount()
+      .then((res) => {
+        if (res) {
+          getFollows(res.id).catch(console.error);
+        }
+        setDone(true);
+      })
+      .catch(console.error);
+  }, []);
 
-  return <DatabaseContext.Provider value={{ db }}>{children}</DatabaseContext.Provider>;
+  if (done === true) {
+    return <DatabaseContext.Provider value={{ db }}>{children}</DatabaseContext.Provider>;
+  }
 }

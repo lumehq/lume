@@ -53,7 +53,6 @@ export default function Page() {
     // save account to database
     const db = await Database.load('sqlite:lume.db');
     await db.execute(`UPDATE accounts SET metadata = '${JSON.stringify(data)}' WHERE pubkey = "${currentUser.pubkey}"`);
-    await db.close();
 
     // set currentUser in global state
     currentUser.set({

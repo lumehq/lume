@@ -15,7 +15,6 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(currentUser);
     if (!currentUser) {
       setTimeout(() => {
         setLoading(false);

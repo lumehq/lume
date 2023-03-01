@@ -8,7 +8,7 @@ import { useLocalStorage } from '@rehooks/local-storage';
 import { memo, useCallback, useContext, useRef } from 'react';
 
 export const NoteConnector = memo(function NoteConnector() {
-  const db: any = useContext(DatabaseContext);
+  const { db }: any = useContext(DatabaseContext);
   const relayPool: any = useContext(RelayContext);
 
   const now = useRef(new Date());

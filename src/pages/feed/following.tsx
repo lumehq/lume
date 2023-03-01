@@ -7,20 +7,22 @@ import { Placeholder } from '@components/note/placeholder';
 import { Repost } from '@components/note/repost';
 import { Single } from '@components/note/single';
 
+import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { useCallback } from 'react';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function Page() {
-  const db: any = useContext(DatabaseContext);
-  const [data, setData] = useState(() => []);
+  const { db }: any = useContext(DatabaseContext);
+  const [data]: any = useLocalStorage('notes');
+
   const limit = useRef(30);
   const offset = useRef(0);
 
   useEffect(() => {
     const getData = async () => {
       const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
-      setData(result);
+      writeStorage('notes', result);
     };
 
     getData().catch(console.error);
@@ -30,7 +32,7 @@ export default function Page() {
     offset.current += limit.current;
     // next query
     const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current} OFFSET ${offset.current}`);
-    setData((data) => [...data, ...result]);
+    writeStorage('notes', (data) => [...data, ...result]);
   }, [db]);
 
   const ItemContent = useCallback(

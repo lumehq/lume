@@ -9,7 +9,7 @@ import { useLocalStorage } from '@rehooks/local-storage';
 
 export default function NavigatorBar() {
   const [currentUser]: any = useLocalStorage('current-user');
-  const profile = currentUser.metadata !== undefined ? JSON.parse(currentUser.metadata) : { display_name: null, username: null };
+  const profile = JSON.parse(currentUser.metadata);
 
   return (
     <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-3 pb-4">

@@ -39,7 +39,6 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
   useEffect(() => {
     const initialProfile = async () => {
       const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${pubkey}"`);
-      db.close;
       return result;
     };
 
