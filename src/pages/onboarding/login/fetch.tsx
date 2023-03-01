@@ -5,73 +5,75 @@ import OnboardingLayout from '@layouts/onboardingLayout';
 import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
 
-import { relays } from '@stores/relays';
-
-import { useStore } from '@nanostores/react';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useEffect, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useMemo, useState } from 'react';
 
 export default function Page() {
-  const db: any = useContext(DatabaseContext);
+  const { db }: any = useContext(DatabaseContext);
   const relayPool: any = useContext(RelayContext);
-  const $relays = useStore(relays);
+
+  const [loading, setLoading] = useState(false);
+  const [relays] = useLocalStorage('relays');
 
   const router = useRouter();
   const { privkey }: any = router.query;
 
-  const [account, setAccount] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const pubkey = useMemo(() => (privkey ? getPublicKey(privkey) : null), [privkey]);
 
-  const pubkey = privkey ? getPublicKey(privkey) : null;
-  const npub = privkey ? nip19.npubEncode(pubkey) : null;
-  const nsec = privkey ? nip19.nsecEncode(privkey) : null;
+  // save account to database
+  const insertAccount = useCallback(
+    async (metadata) => {
+      if (loading === false) {
+        const npub = privkey ? nip19.npubEncode(pubkey) : null;
+        const nsec = privkey ? nip19.nsecEncode(privkey) : null;
+        await db.execute(
+          `INSERT OR IGNORE INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubkey}", "${privkey}", "${npub}", "${nsec}", '${metadata}')`
+        );
+        setLoading(true);
+      }
+    },
+    [db, privkey, pubkey, loading]
+  );
+
+  // save follows to database
+  const insertFollows = useCallback(
+    async (follows) => {
+      follows.forEach(async (item) => {
+        if (item) {
+          await db.execute(`INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${item[1]}", "${pubkey}", "0")`);
+        }
+      });
+    },
+    [db, pubkey]
+  );
 
   relayPool.subscribe(
     [
       {
         authors: [pubkey],
-        kinds: [0],
+        kinds: [0, 3],
+        since: 0,
       },
     ],
-    $relays,
+    relays,
     (event: any) => {
-      const metadata = JSON.parse(event.content);
-      setAccount(metadata);
+      if (event.kind === 0) {
+        insertAccount(event.content);
+      } else {
+        if (event.tags.length > 0) {
+          insertFollows(event.tags);
+        }
+      }
     },
     undefined,
     (events: any, relayURL: any) => {
       console.log(events, relayURL);
     }
   );
-
-  const insertDB = useCallback(async () => {
-    // save account to database
-    const metadata = JSON.stringify(account);
-    await db.execute(
-      `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubkey}", "${privkey}", "${npub}", "${nsec}", '${metadata}')`
-    );
-    await db.close();
-  }, [account, db, npub, nsec, privkey, pubkey]);
-
-  useEffect(() => {
-    setLoading(true);
-
-    if (account !== null) {
-      insertDB()
-        .then(() => {
-          setTimeout(() => {
-            setLoading(false);
-            router.push({
-              pathname: '/onboarding/fetch-follows',
-              query: { pubkey: pubkey },
-            });
-          }, 1500);
-        })
-        .catch(console.error);
-    }
-  }, [account, insertDB, npub, nsec, privkey, pubkey, router]);
 
   return (
     <div className="flex h-full flex-col justify-between px-8">
@@ -82,7 +84,7 @@ export default function Page() {
             Fetching your profile...
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            As long as you have private key, you alway can sync your profile on every nostr client, so please keep your key safely
+            As long as you have private key, you alway can sync your profile and follows list on every nostr client, so please keep your key safely
           </motion.h2>
         </div>
       </motion.div>
@@ -97,7 +99,11 @@ export default function Page() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           ) : (
-            <></>
+            <Link
+              href="/"
+              className="transform rounded-lg bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 px-3.5 py-2 font-medium active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30">
+              <span className="drop-shadow-lg">Finish</span>
+            </Link>
           )}
         </div>
       </motion.div>

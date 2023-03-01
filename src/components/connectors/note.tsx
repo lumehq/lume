@@ -4,10 +4,7 @@ import { RelayContext } from '@components/contexts/relay';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 
-import { follows } from '@stores/follows';
-import { relays } from '@stores/relays';
-
-import { useStore } from '@nanostores/react';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { memo, useCallback, useContext, useRef } from 'react';
 
 export const NoteConnector = memo(function NoteConnector() {
@@ -16,8 +13,8 @@ export const NoteConnector = memo(function NoteConnector() {
 
   const now = useRef(new Date());
 
-  const $follows = useStore(follows);
-  const $relays = useStore(relays);
+  const [follows]: any = useLocalStorage('follows');
+  const [relays]: any = useLocalStorage('relays');
 
   const insertDB = useCallback(
     async (event: any) => {
@@ -35,11 +32,11 @@ export const NoteConnector = memo(function NoteConnector() {
     [
       {
         kinds: [1],
-        authors: $follows,
+        authors: follows,
         since: dateToUnix(hoursAgo(12, now.current)),
       },
     ],
-    $relays,
+    relays,
     (event: any) => {
       insertDB(event).catch(console.error);
     },

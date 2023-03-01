@@ -2,12 +2,10 @@
 import AccountBar from '@components/accountBar';
 import ActiveLink from '@components/activeLink';
 
-import { currentUser } from '@stores/currentUser';
-
-import { useStore } from '@nanostores/react';
+import { useLocalStorage } from '@rehooks/local-storage';
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {
-  const $currentUser: any = useStore(currentUser);
+  const [currentUser]: any = useLocalStorage('current-user');
 
   return (
     <div className="flex h-full w-full flex-row">
@@ -27,13 +25,13 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
                 </div>
                 <div className="flex flex-col gap-1 text-zinc-500">
                   <ActiveLink
-                    href={`/profile/${$currentUser.pubkey}`}
+                    href={`/profile/${currentUser.pubkey}`}
                     activeClassName="ring-1 ring-white/10 dark:bg-zinc-900 dark:text-white"
                     className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900">
                     <span>Personal Page</span>
                   </ActiveLink>
                   <ActiveLink
-                    href={`/profile/update?pubkey=${$currentUser.pubkey}`}
+                    href={`/profile/update?pubkey=${currentUser.pubkey}`}
                     activeClassName="ring-1 ring-white/10 dark:bg-zinc-900 dark:text-white"
                     className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900">
                     <span>Update Profile</span>

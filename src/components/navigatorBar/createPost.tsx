@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { currentUser } from '@stores/currentUser';
-
-import { useStore } from '@nanostores/react';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useLocalStorage } from '@rehooks/local-storage';
 import * as commands from '@uiw/react-md-editor/lib/commands';
 import dynamic from 'next/dynamic';
 import { dateToUnix, useNostr } from 'nostr-react';
@@ -17,9 +15,9 @@ export default function CreatePost() {
   const { publish } = useNostr();
   const [value, setValue] = useState('');
 
-  const $currentUser: any = useStore(currentUser);
-  const pubkey = $currentUser.pubkey;
-  const privkey = $currentUser.privkey;
+  const [currentUser]: any = useLocalStorage('current-user');
+  const pubkey = currentUser.pubkey;
+  const privkey = currentUser.privkey;
 
   const postButton = {
     name: 'post',
@@ -27,9 +25,7 @@ export default function CreatePost() {
     buttonProps: { className: 'cta-btn', 'aria-label': 'Post a message' },
     icon: (
       <div className="relative inline-flex h-10 w-16 transform cursor-pointer overflow-hidden rounded bg-zinc-900 px-2.5 ring-zinc-500/50 ring-offset-zinc-900 will-change-transform focus:outline-none focus:ring-1 focus:ring-offset-2 active:translate-y-1">
-        <span className="absolute inset-px z-10 inline-flex items-center justify-center rounded bg-zinc-900 text-zinc-200">
-          Post
-        </span>
+        <span className="absolute inset-px z-10 inline-flex items-center justify-center rounded bg-zinc-900 text-zinc-200">Post</span>
         <span className="absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-disco before:bg-gradient-conic before:from-gray-300 before:via-fuchsia-600 before:to-orange-600"></span>
       </div>
     ),

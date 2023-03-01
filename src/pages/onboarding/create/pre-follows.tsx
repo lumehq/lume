@@ -6,28 +6,25 @@ import { DatabaseContext } from '@components/contexts/database';
 
 import { truncate } from '@utils/truncate';
 
-import { currentUser } from '@stores/currentUser';
-
 import data from '@assets/directory.json';
-
-import { useStore } from '@nanostores/react';
 import { CheckCircledIcon } from '@radix-ui/react-icons';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
 
+const shuffle = (arr: { name: string; avatar: string; npub: string }[]) => [...arr].sort(() => Math.random() - 0.5);
+
 export default function Page() {
   const db: any = useContext(DatabaseContext);
   const router = useRouter();
 
-  const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
-
   const [follow, setFollow] = useState([]);
   const [loading, setLoading] = useState(false);
   const [list] = useState(shuffle(data));
-  const $currentUser: any = useStore(currentUser);
+  const [currentUser]: any = useLocalStorage('current-user');
 
   const followUser = (e) => {
     const npub = e.currentTarget.getAttribute('data-npub');
@@ -36,11 +33,11 @@ export default function Page() {
 
   const insertDB = async () => {
     // self follow
-    await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${$currentUser.pubkey}", "${$currentUser.pubkey}", "0")`);
+    await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${currentUser.pubkey}", "${currentUser.pubkey}", "0")`);
     // follow selected
     follow.forEach(async (npub) => {
       const { data } = nip19.decode(npub);
-      await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${data}", "${$currentUser.pubkey}", "0")`);
+      await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${data}", "${currentUser.pubkey}", "0")`);
     });
   };
 

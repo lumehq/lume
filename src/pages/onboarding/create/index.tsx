@@ -5,16 +5,13 @@ import OnboardingLayout from '@layouts/onboardingLayout';
 import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
 
-import { currentUser } from '@stores/currentUser';
-import { relays } from '@stores/relays';
-
-import { useStore } from '@nanostores/react';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useMemo, useState } from 'react';
 import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const config: Config = {
@@ -22,11 +19,12 @@ const config: Config = {
 };
 
 export default function Page() {
-  const db: any = useContext(DatabaseContext);
   const router = useRouter();
 
+  const { db }: any = useContext(DatabaseContext);
   const relayPool: any = useContext(RelayContext);
-  const $relays = useStore(relays);
+
+  const [relays] = useLocalStorage('relays');
 
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
@@ -47,13 +45,22 @@ export default function Page() {
   };
 
   // auto-generated profile
-  const data = {
-    display_name: name,
-    name: name,
-    username: name.toLowerCase(),
-    picture: 'https://bafybeidfsbrzqbvontmucteomoz2rkrxugu462l5hyhh6uioslkfzzs4oq.ipfs.w3s.link/avatar-11.png',
-    banner: 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg',
-  };
+  const data = useMemo(
+    () => ({
+      display_name: name,
+      name: name,
+      username: name.toLowerCase(),
+      picture: 'https://bafybeidfsbrzqbvontmucteomoz2rkrxugu462l5hyhh6uioslkfzzs4oq.ipfs.w3s.link/avatar-11.png',
+      banner: 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg',
+    }),
+    [name]
+  );
+
+  const insertDB = useCallback(async () => {
+    await db.execute(
+      `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubKey}", "${privKey}", "${npub}", "${nsec}", '${JSON.stringify(data)}')`
+    );
+  }, [data, db, npub, nsec, privKey, pubKey]);
 
   const createAccount = async () => {
     setLoading(true);
@@ -68,27 +75,25 @@ export default function Page() {
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, privKey);
-    // publish to relays
-    relayPool.publish(event, $relays);
 
-    // save account to database
-    await db.execute(
-      `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubKey}", "${privKey}", "${npub}", "${nsec}", '${JSON.stringify(data)}')`
-    );
-
-    // set currentUser in global state
-    currentUser.set({
-      metadata: JSON.stringify(data),
-      npub: npub,
-      privkey: privKey,
-      pubkey: pubKey,
-    });
-
-    // redirect to pre-follow
-    setTimeout(() => {
-      setLoading(false);
-      router.push('/onboarding/following');
-    }, 1500);
+    insertDB()
+      .then(() => {
+        // publish to relays
+        relayPool.publish(event, relays);
+        // set currentUser in global state
+        writeStorage('current-user', {
+          metadata: JSON.stringify(data),
+          npub: npub,
+          privkey: privKey,
+          pubkey: pubKey,
+        });
+        // redirect to pre-follow
+        setTimeout(() => {
+          setLoading(false);
+          router.push('/onboarding/create/pre-follows');
+        }, 1500);
+      })
+      .catch(console.error);
   };
 
   return (

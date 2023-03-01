@@ -1,26 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { currentUser } from '@stores/currentUser';
-
-import { useStore } from '@nanostores/react';
 import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { dateToUnix, useNostr, useNostrEvents } from 'nostr-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useState } from 'react';
 
-export default function Reaction({
-  eventID,
-  eventPubkey,
-}: {
-  eventID: string;
-  eventPubkey: string;
-}) {
+export default function Reaction({ eventID, eventPubkey }: { eventID: string; eventPubkey: string }) {
   const { publish } = useNostr();
   const [reaction, setReaction] = useState(0);
   const [isReact, setIsReact] = useState(false);
 
-  const $currentUser: any = useStore(currentUser);
-  const pubkey = $currentUser.pubkey;
-  const privkey = $currentUser.privkey;
+  const [currentUser]: any = useLocalStorage('current-user');
+  const pubkey = currentUser.pubkey;
+  const privkey = currentUser.privkey;
 
   const { onEvent } = useNostrEvents({
     filter: {
@@ -65,15 +57,9 @@ export default function Reaction({
   };
 
   return (
-    <button
-      onClick={(e) => handleReaction(e)}
-      className="group flex w-16 items-center gap-1.5 text-sm text-zinc-500">
+    <button onClick={(e) => handleReaction(e)} className="group flex w-16 items-center gap-1.5 text-sm text-zinc-500">
       <div className="rounded-lg p-1 group-hover:bg-zinc-600">
-        {isReact ? (
-          <HeartFilledIcon className="h-4 w-4 group-hover:text-red-400" />
-        ) : (
-          <HeartIcon className="h-4 w-4 text-zinc-500" />
-        )}
+        {isReact ? <HeartFilledIcon className="h-4 w-4 group-hover:text-red-400" /> : <HeartIcon className="h-4 w-4 text-zinc-500" />}
       </div>
       <span>{reaction}</span>
     </button>

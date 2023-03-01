@@ -1,11 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@nanostores/persistent': ^0.7.0
-  '@nanostores/react': ^0.4.1
   '@radix-ui/react-dialog': ^1.0.2
   '@radix-ui/react-dropdown-menu': ^2.0.3
   '@radix-ui/react-icons': ^1.2.0
+  '@rehooks/local-storage': ^2.4.4
   '@tailwindcss/typography': ^0.5.9
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.3
@@ -54,11 +53,10 @@ specifiers:
   ws: ^8.12.1
 
 dependencies:
-  '@nanostores/persistent': 0.7.0_nanostores@0.7.4
-  '@nanostores/react': 0.4.1_nkfnbc2tpc77iht7asm3uqwau4
   '@radix-ui/react-dialog': 1.0.2_zula6vjvt3wdocc4mwcxqa6nzi
   '@radix-ui/react-dropdown-menu': 2.0.3_zula6vjvt3wdocc4mwcxqa6nzi
   '@radix-ui/react-icons': 1.2.0_react@18.2.0
+  '@rehooks/local-storage': 2.4.4_react@18.2.0
   '@tauri-apps/api': 1.2.0
   '@uiw/react-markdown-preview': 4.1.9_zula6vjvt3wdocc4mwcxqa6nzi
   '@uiw/react-md-editor': 3.20.5_zula6vjvt3wdocc4mwcxqa6nzi
@@ -465,27 +463,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
-    dev: false
-
-  /@nanostores/persistent/0.7.0_nanostores@0.7.4:
-    resolution: { integrity: sha512-4PAInL/T1hbftZUJ0cmgdFHBMalUoq7BUXFBy7QfyMv/8X3LPTYNh/yxspL7+J+XM3UNvVI7IFRMMs6FBasjhQ== }
-    engines: { node: ^14.0.0 || ^16.0.0 || >=18.0.0 }
-    peerDependencies:
-      nanostores: ^0.7.0
-    dependencies:
-      nanostores: 0.7.4
-    dev: false
-
-  /@nanostores/react/0.4.1_nkfnbc2tpc77iht7asm3uqwau4:
-    resolution: { integrity: sha512-lsv0CYrMxczbXtoV/mxFVEoL/uVjEjseoP89srO/5yNAOkJka+dSFS7LYyWEbuvCPO7EgbtkvRpO5V+OztKQOw== }
-    engines: { node: ^14.0.0 || ^16.0.0 || >=18.0.0 }
-    peerDependencies:
-      nanostores: ^0.7.0
-      react: '>=18.0.0'
-    dependencies:
-      nanostores: 0.7.4
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /@next/env/13.2.1:
@@ -1007,6 +984,14 @@ packages:
     resolution: { integrity: sha512-d0O68AYy/9oeEy1DdC07bz1/ZXX+DqCskRd3i4JzLSTXwefzaepQrKjXC7aNM8lTHjFLDO0pDgaEiQ7jEk+HVg== }
     dependencies:
       '@babel/runtime': 7.21.0
+    dev: false
+
+  /@rehooks/local-storage/2.4.4_react@18.2.0:
+    resolution: { integrity: sha512-zE+kfOkG59n/1UTxdmbwktIosclr67Nlbf2MzUJ9mNtCSypVscNHeD1qT6JCSo5Pjj8DO893IKWNLJqKKzDL/Q== }
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@rushstack/eslint-patch/1.2.0:
@@ -5372,14 +5357,6 @@ packages:
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.5.0
-    dev: false
-
-  /use-sync-external-store/1.2.0_react@18.2.0:
-    resolution: { integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA== }
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /util-deprecate/1.0.2:

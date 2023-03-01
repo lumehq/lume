@@ -44,7 +44,7 @@ export default function Page() {
 
     try {
       router.push({
-        pathname: '/onboarding/fetch-profile',
+        pathname: '/onboarding/login/fetch',
         query: { privkey: privkey },
       });
     } catch (error) {

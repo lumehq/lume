@@ -2,90 +2,32 @@
 import BaseLayout from '@layouts/baseLayout';
 import FullLayout from '@layouts/fullLayout';
 
-import { DatabaseContext } from '@components/contexts/database';
-
-import { currentUser } from '@stores/currentUser';
-import { follows } from '@stores/follows';
-
 import LumeSymbol from '@assets/icons/Lume';
-
-import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useEffect, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
 
 export default function Page() {
-  const db: any = useContext(DatabaseContext);
-
   const router = useRouter();
+
+  const [currentUser]: any = useLocalStorage('current-user');
   const [loading, setLoading] = useState(true);
 
-  const requestNotification = useCallback(async () => {
-    // NOTE: notification don't work in dev mode (only affect MacOS)
-    // ref: https://github.com/tauri-apps/tauri/issues/4965
-    let permissionGranted = await isPermissionGranted();
-    if (!permissionGranted) {
-      const permission = await requestPermission();
-      permissionGranted = permission === 'granted';
-    }
-    if (permissionGranted) {
-      sendNotification({ title: 'Lume', body: 'Nostr is awesome' });
-    }
-
-    return permissionGranted;
-  }, []);
-
-  const getAccount = useCallback(async () => {
-    const result = await db.select(`SELECT * FROM accounts ASC LIMIT 1`);
-    return result;
-  }, [db]);
-
-  const getFollows = useCallback(
-    async (account: { id: string }) => {
-      const arr = [];
-      const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.id}"`);
-
-      result.forEach((item: { pubkey: string }) => {
-        arr.push(item.pubkey);
-      });
-
-      return arr;
-    },
-    [db]
-  );
-
-  // Explain:
-  // Step 1: request allow notification from system
-  // Step 2: get first account. #TODO: get last used account instead (part of multi account feature)
-  // Step 3: get follows by account
   useEffect(() => {
-    requestNotification().then(() => {
-      getAccount()
-        .then((res: any) => {
-          if (res.length === 0) {
-            setTimeout(() => {
-              setLoading(false);
-              router.push('/onboarding');
-            }, 1500);
-          } else {
-            // store current user in localstorage
-            currentUser.set(res[0]);
-            getFollows(res[0])
-              .then(async (res) => {
-                // store follows in localstorage
-                follows.set(res);
-                // redirect to newsfeed
-                setTimeout(() => {
-                  setLoading(false);
-                  router.push('/feed/following');
-                }, 1500);
-              })
-              .catch(console.error);
-          }
-        })
-        .catch(console.error);
-    });
-  }, [requestNotification, getAccount, getFollows, router]);
+    console.log(currentUser);
+    if (!currentUser) {
+      setTimeout(() => {
+        setLoading(false);
+        router.push('/onboarding');
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        setLoading(false);
+        router.push('/feed/following');
+      }, 1500);
+    }
+  }, [currentUser, router]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-between">
