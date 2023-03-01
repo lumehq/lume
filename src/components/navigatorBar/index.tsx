@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ActiveLink from '@components/activeLink';
-import { NoteConnector } from '@components/connectors/note';
 import CreatePost from '@components/navigatorBar/createPost';
 import { ProfileMenu } from '@components/navigatorBar/profileMenu';
 
@@ -15,9 +14,6 @@ export default function NavigatorBar() {
     <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-3 pb-4">
       {/* main */}
       <div className="flex flex-col gap-4">
-        <div>
-          <NoteConnector />
-        </div>
         {/* Create post */}
         <div className="flex flex-col rounded-lg bg-zinc-900 ring-1 ring-white/10">
           <div className="flex flex-col p-2">

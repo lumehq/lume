@@ -3,18 +3,18 @@ import BaseLayout from '@layouts/baseLayout';
 import NewsFeedLayout from '@layouts/newsfeedLayout';
 
 import { DatabaseContext } from '@components/contexts/database';
+import { NoteConnector } from '@components/note/connector';
 import { Placeholder } from '@components/note/placeholder';
 import { Repost } from '@components/note/repost';
 import { Single } from '@components/note/single';
 
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function Page() {
   const { db }: any = useContext(DatabaseContext);
-  const [data]: any = useLocalStorage('notes');
+  const [data, setData] = useState([]);
 
   const limit = useRef(30);
   const offset = useRef(0);
@@ -22,7 +22,7 @@ export default function Page() {
   useEffect(() => {
     const getData = async () => {
       const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
-      writeStorage('notes', result);
+      setData(result);
     };
 
     getData().catch(console.error);
@@ -32,7 +32,7 @@ export default function Page() {
     offset.current += limit.current;
     // next query
     const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current} OFFSET ${offset.current}`);
-    writeStorage('notes', (data) => [...data, ...result]);
+    setData((data) => [...data, ...result]);
   }, [db]);
 
   const ItemContent = useCallback(
@@ -57,26 +57,29 @@ export default function Page() {
   );
 
   return (
-    <Virtuoso
-      data={data}
-      itemContent={ItemContent}
-      components={{
-        EmptyPlaceholder: () => <Placeholder />,
-        ScrollSeekPlaceholder: () => <Placeholder />,
-      }}
-      computeItemKey={computeItemKey}
-      scrollSeekConfiguration={{
-        enter: (velocity) => Math.abs(velocity) > 800,
-        exit: (velocity) => Math.abs(velocity) < 500,
-      }}
-      endReached={loadMore}
-      overscan={800}
-      increaseViewportBy={1000}
-      className="scrollbar-hide relative h-full w-full rounded-lg"
-      style={{
-        contain: 'strict',
-      }}
-    />
+    <div className="h-full w-full">
+      <NoteConnector />
+      <Virtuoso
+        data={data}
+        itemContent={ItemContent}
+        components={{
+          EmptyPlaceholder: () => <Placeholder />,
+          ScrollSeekPlaceholder: () => <Placeholder />,
+        }}
+        computeItemKey={computeItemKey}
+        scrollSeekConfiguration={{
+          enter: (velocity) => Math.abs(velocity) > 800,
+          exit: (velocity) => Math.abs(velocity) < 500,
+        }}
+        endReached={loadMore}
+        overscan={800}
+        increaseViewportBy={1000}
+        className="scrollbar-hide relative h-full w-full"
+        style={{
+          contain: 'strict',
+        }}
+      />
+    </div>
   );
 }
 
