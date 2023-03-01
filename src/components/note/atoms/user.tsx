@@ -1,55 +1,66 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { DatabaseContext } from '@components/contexts/database';
+import { RelayContext } from '@components/contexts/relay';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import useLocalStorage from '@rehooks/local-storage';
 import Avatar from 'boring-avatars';
-import { useNostrEvents } from 'nostr-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 import Moment from 'react-moment';
-import Database from 'tauri-plugin-sql-api';
-
-const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
 
 export const User = memo(function User({ pubkey, time }: { pubkey: string; time: any }) {
+  const { db }: any = useContext(DatabaseContext);
+  const relayPool: any = useContext(RelayContext);
+
+  const [relays] = useLocalStorage('relays');
   const [profile, setProfile] = useState({ picture: null, name: null, username: null });
 
-  const { onEvent } = useNostrEvents({
-    filter: {
-      authors: [pubkey],
-      kinds: [0],
-    },
-  });
-
-  onEvent(async (rawMetadata) => {
-    try {
-      const metadata: any = JSON.parse(rawMetadata.content);
+  relayPool.subscribe(
+    [
+      {
+        authors: [pubkey],
+        kinds: [0],
+      },
+    ],
+    relays,
+    (event: any) => {
       if (profile.picture === null || profile.name === null) {
-        setProfile(metadata);
-        await db.execute(`INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES ("${pubkey}", '${JSON.stringify(metadata)}')`);
-      } else {
-        return;
+        insertCacheProfile(event);
       }
-    } catch (err) {
-      console.error(err, rawMetadata);
+    },
+    undefined,
+    (events: any, relayURL: any) => {
+      console.log(events, relayURL);
     }
-  });
+  );
+
+  const insertCacheProfile = useCallback(
+    async (event) => {
+      const metadata: any = JSON.parse(event.content);
+
+      await db.execute(`INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES ("${pubkey}", '${JSON.stringify(metadata)}')`);
+      setProfile(metadata);
+    },
+    [db, pubkey]
+  );
+
+  const getCacheProfile = useCallback(async () => {
+    const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${pubkey}"`);
+    return result;
+  }, [db, pubkey]);
 
   useEffect(() => {
-    const initialProfile = async () => {
-      const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${pubkey}"`);
-      return result;
-    };
-
-    initialProfile()
+    getCacheProfile()
       .then((res) => {
         if (res[0] !== undefined) {
           setProfile(JSON.parse(res[0].metadata));
         }
       })
       .catch(console.error);
-  }, [pubkey]);
+  }, [getCacheProfile]);
 
   return (
     <div className="relative flex items-start gap-4">
