@@ -19,6 +19,7 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
   const pubkey = currentUser.pubkey;
   const privkey = currentUser.privkey;
 
+  /*
   relayPool.subscribe(
     [
       {
@@ -31,7 +32,7 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
     relays,
     (event: any) => {
       if (event.content === '🤙' || event.content === '+') {
-        //setReaction(reaction + 1);
+        setReaction(reaction + 1);
       }
     },
     undefined,
@@ -39,6 +40,7 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
       console.log(events, relayURL);
     }
   );
+  */
 
   const handleReaction = (e: any) => {
     e.stopPropagation();

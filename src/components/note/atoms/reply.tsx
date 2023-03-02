@@ -2,8 +2,7 @@
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
-export default function Reply({ eventID }: { eventID: string }) {
-  console.log(eventID);
+export default function Reply() {
   const [count] = useState(0);
 
   return (
