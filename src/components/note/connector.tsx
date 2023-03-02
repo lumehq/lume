@@ -4,10 +4,11 @@ import { RelayContext } from '@components/contexts/relay';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { memo, useCallback, useContext, useRef } from 'react';
 
-export const NoteConnector = memo(function NoteConnector() {
+export const NoteConnector = memo(function NoteConnector({ setReload }: { setReload: any }) {
   const { db }: any = useContext(DatabaseContext);
   const relayPool: any = useContext(RelayContext);
 
@@ -51,13 +52,16 @@ export const NoteConnector = memo(function NoteConnector() {
       <div>
         <h3 className="text-sm font-semibold text-zinc-500"># following</h3>
       </div>
-      <div>
-        <div className="inline-flex items-center gap-2">
-          <span className="relative flex h-3 w-3">
+      <div className="flex items-center gap-2">
+        <button onClick={() => setReload(true)} className="rounded-full p-1 hover:bg-zinc-800">
+          <ReloadIcon className="h-3.5 w-3.5 text-zinc-500" />
+        </button>
+        <div className="inline-flex items-center gap-1 rounded-full border border-zinc-700 bg-zinc-800 px-2.5 py-1">
+          <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500"></span>
           </span>
-          <p className="text-sm font-medium text-zinc-500">Online</p>
+          <p className="text-xs font-medium text-zinc-500">Online</p>
         </div>
       </div>
     </div>

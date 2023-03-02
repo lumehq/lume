@@ -15,18 +15,10 @@ import { Virtuoso } from 'react-virtuoso';
 export default function Page() {
   const { db }: any = useContext(DatabaseContext);
   const [data, setData] = useState([]);
+  const [reload, setReload] = useState(false);
 
   const limit = useRef(30);
   const offset = useRef(0);
-
-  useEffect(() => {
-    const getData = async () => {
-      const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
-      setData(result);
-    };
-
-    getData().catch(console.error);
-  }, [db]);
 
   const loadMore = useCallback(async () => {
     offset.current += limit.current;
@@ -49,6 +41,15 @@ export default function Page() {
     [data]
   );
 
+  useEffect(() => {
+    const getData = async () => {
+      const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
+      setData(result);
+    };
+
+    getData().catch(console.error);
+  }, [db, reload]);
+
   const computeItemKey = useCallback(
     (index: string | number) => {
       return data[index].id;
@@ -58,7 +59,7 @@ export default function Page() {
 
   return (
     <div className="h-full w-full">
-      <NoteConnector />
+      <NoteConnector setReload={setReload} />
       <Virtuoso
         data={data}
         itemContent={ItemContent}
