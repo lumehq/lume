@@ -8,22 +8,34 @@ import { Placeholder } from '@components/note/placeholder';
 import { Repost } from '@components/note/repost';
 import { Single } from '@components/note/single';
 
+import { dateToUnix } from '@utils/getDate';
+
+import { writeStorage } from '@rehooks/local-storage';
 import { useCallback, useState } from 'react';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function Page() {
   const { db }: any = useContext(DatabaseContext);
-  const [data, setData] = useState([]);
-  const [reload, setReload] = useState(false);
 
+  const [data, setData] = useState([]);
+  const [parentReload, setParentReload] = useState(false);
+  const [hasNewNote, setHasNewNote] = useState(false);
+
+  const now = useRef(new Date());
   const limit = useRef(30);
   const offset = useRef(0);
 
   const loadMore = useCallback(async () => {
     offset.current += limit.current;
     // next query
-    const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current} OFFSET ${offset.current}`);
+    const result = await db.select(
+      `SELECT * FROM
+        cache_notes
+        WHERE created_at <= ${dateToUnix(now.current)}
+        ORDER BY created_at DESC
+        LIMIT ${limit.current} OFFSET ${offset.current}`
+    );
     setData((data) => [...data, ...result]);
   }, [db]);
 
@@ -43,12 +55,17 @@ export default function Page() {
 
   useEffect(() => {
     const getData = async () => {
-      const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
-      setData(result);
+      const result = await db.select(
+        `SELECT * FROM cache_notes WHERE created_at <= ${dateToUnix(now.current)} ORDER BY created_at DESC LIMIT ${limit.current}`
+      );
+      if (result) {
+        setData(result);
+        writeStorage('settings', new Date());
+      }
     };
 
     getData().catch(console.error);
-  }, [db, reload]);
+  }, [db, parentReload]);
 
   const computeItemKey = useCallback(
     (index: string | number) => {
@@ -58,8 +75,13 @@ export default function Page() {
   );
 
   return (
-    <div className="h-full w-full">
-      <NoteConnector setReload={setReload} />
+    <div className="relative h-full w-full">
+      <NoteConnector setParentReload={setParentReload} setHasNewNote={setHasNewNote} currentDate={now.current} />
+      {hasNewNote && (
+        <div className="fixed top-10 left-1/2 z-50 -translate-x-1/2 transform">
+          <button>Load newest</button>
+        </div>
+      )}
       <Virtuoso
         data={data}
         itemContent={ItemContent}
