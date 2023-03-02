@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { RelayContext } from '@components/contexts/relay';
+
+import { dateToUnix } from '@utils/getDate';
+
 import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
 import { useLocalStorage } from '@rehooks/local-storage';
-import { dateToUnix, useNostr, useNostrEvents } from 'nostr-react';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 export default function Reaction({ eventID, eventPubkey }: { eventID: string; eventPubkey: string }) {
-  const { publish } = useNostr();
+  const relayPool: any = useContext(RelayContext);
+  const [relays]: any = useLocalStorage('relays');
+
   const [reaction, setReaction] = useState(0);
   const [isReact, setIsReact] = useState(false);
 
@@ -14,25 +19,26 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
   const pubkey = currentUser.pubkey;
   const privkey = currentUser.privkey;
 
-  const { onEvent } = useNostrEvents({
-    filter: {
-      '#e': [eventID],
-      since: 0,
-      kinds: [7],
-      limit: 20,
-    },
-  });
-
-  onEvent((rawMetadata) => {
-    try {
-      const content = rawMetadata.content;
-      if (content === '🤙' || content === '+') {
-        setReaction(reaction + 1);
+  relayPool.subscribe(
+    [
+      {
+        '#e': [eventID],
+        since: 0,
+        kinds: [7],
+        limit: 10,
+      },
+    ],
+    relays,
+    (event: any) => {
+      if (event.content === '🤙' || event.content === '+') {
+        //setReaction(reaction + 1);
       }
-    } catch (err) {
-      console.error(err, rawMetadata);
+    },
+    undefined,
+    (events: any, relayURL: any) => {
+      console.log(events, relayURL);
     }
-  });
+  );
 
   const handleReaction = (e: any) => {
     e.stopPropagation();
@@ -50,7 +56,7 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
 
-    publish(event);
+    relayPool.publish(event, relays);
 
     setIsReact(true);
     setReaction(reaction + 1);

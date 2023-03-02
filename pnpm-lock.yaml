@@ -32,7 +32,6 @@ specifiers:
   nanostores: ^0.7.4
   next: ^13.2.1
   next-remove-imports: ^1.0.10
-  nostr-react: ^0.6.4
   nostr-relaypool: ^0.5.3
   nostr-tools: ^1.7.1
   postcss: ^8.4.21
@@ -67,7 +66,6 @@ dependencies:
   nanostores: 0.7.4
   next: 13.2.1_biqbaboplfbrettd7655fr4n2y
   next-remove-imports: 1.0.10
-  nostr-react: 0.6.4_react@18.2.0
   nostr-relaypool: 0.5.3_ws@8.12.1
   nostr-tools: 1.7.1
   qrcode.react: 3.1.0_react@18.2.0
@@ -3201,49 +3199,6 @@ packages:
     resolution: { integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw== }
     dev: true
 
-  /jotai/1.13.1_react@18.2.0:
-    resolution: { integrity: sha512-RUmH1S4vLsG3V6fbGlKzGJnLrDcC/HNb5gH2AeA9DzuJknoVxSGvvg8OBB7lke+gDc4oXmdVsaKn/xDUhWZ0vw== }
-    engines: { node: '>=12.20.0' }
-    peerDependencies:
-      '@babel/core': '*'
-      '@babel/template': '*'
-      jotai-devtools: '*'
-      jotai-immer: '*'
-      jotai-optics: '*'
-      jotai-redux: '*'
-      jotai-tanstack-query: '*'
-      jotai-urql: '*'
-      jotai-valtio: '*'
-      jotai-xstate: '*'
-      jotai-zustand: '*'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@babel/template':
-        optional: true
-      jotai-devtools:
-        optional: true
-      jotai-immer:
-        optional: true
-      jotai-optics:
-        optional: true
-      jotai-redux:
-        optional: true
-      jotai-tanstack-query:
-        optional: true
-      jotai-urql:
-        optional: true
-      jotai-valtio:
-        optional: true
-      jotai-xstate:
-        optional: true
-      jotai-zustand:
-        optional: true
-    dependencies:
-      react: 18.2.0
-    dev: false
-
   /js-sdsl/4.3.0:
     resolution: { integrity: sha512-mifzlm2+5nZ+lEcLJMoBK0/IH/bDg8XnJfd/Wq6IP+xoCjLZsTOnV2QpxlVbX9bMnkl5PdEjNtBJ9Cj1NjifhQ== }
     dev: true
@@ -3969,29 +3924,6 @@ packages:
     resolution: { integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA== }
     engines: { node: '>=0.10.0' }
     dev: true
-
-  /nostr-react/0.6.4_react@18.2.0:
-    resolution: { integrity: sha512-esRgmhTP5kPQ8ufs8cFAQxxJtMmzuba/k2QfXevG/ejHP3IMa41pb82qi8V0aPzY3KJ0Nr54x0OSa39d2InKzA== }
-    engines: { node: '>=12' }
-    peerDependencies:
-      react: '>=16'
-    dependencies:
-      jotai: 1.13.1_react@18.2.0
-      nostr-tools: 1.7.1
-      react: 18.2.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@babel/template'
-      - jotai-devtools
-      - jotai-immer
-      - jotai-optics
-      - jotai-redux
-      - jotai-tanstack-query
-      - jotai-urql
-      - jotai-valtio
-      - jotai-xstate
-      - jotai-zustand
-    dev: false
 
   /nostr-relaypool/0.5.3_ws@8.12.1:
     resolution: { integrity: sha512-1INGKleOTuUTFUs3RnnZrew4+G/idLUewh44WBtmTTJ9g+kRiQtMMaBGTVUpf9621nBNleEVOB8p3XSNcaX3FQ== }

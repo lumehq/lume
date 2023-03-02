@@ -5,49 +5,18 @@ import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import Avatar from 'boring-avatars';
-import { useNostrEvents } from 'nostr-react';
 import { memo, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
-
-const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
 
 export const UserWithUsername = memo(function UserWithUsername({ pubkey }: { pubkey: string }) {
   const [profile, setProfile] = useState({ picture: null, name: null, username: null });
 
-  const { onEvent } = useNostrEvents({
-    filter: {
-      authors: [pubkey],
-      kinds: [0],
-    },
-  });
-
-  onEvent(async (rawMetadata) => {
-    try {
-      const metadata: any = JSON.parse(rawMetadata.content);
-      if (profile.picture === null || profile.name === null) {
-        setProfile(metadata);
-        await db.execute(`INSERT OR IGNORE INTO cache_profiles (pubkey, metadata) VALUES ("${pubkey}", '${JSON.stringify(metadata)}')`);
-      } else {
-        return;
-      }
-    } catch (err) {
-      console.error(err, rawMetadata);
-    }
-  });
-
   useEffect(() => {
-    const initialProfile = async () => {
-      const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE pubkey = "${pubkey}"`);
-      return result;
-    };
-
-    initialProfile()
-      .then((res) => {
-        if (res[0] !== undefined) {
-          setProfile(JSON.parse(res[0].metadata));
-        }
+    fetch(`https://rbr.bio/${pubkey}/metadata.json`).then((res) =>
+      res.json().then((res) => {
+        // update state
+        setProfile(JSON.parse(res.content));
       })
-      .catch(console.error);
+    );
   }, [pubkey]);
 
   return (

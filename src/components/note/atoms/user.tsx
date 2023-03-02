@@ -1,41 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import useLocalStorage from '@rehooks/local-storage';
 import Avatar from 'boring-avatars';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 import Moment from 'react-moment';
 
 export const User = memo(function User({ pubkey, time }: { pubkey: string; time: any }) {
   const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
-  const [relays] = useLocalStorage('relays');
   const [profile, setProfile] = useState({ picture: null, name: null, username: null });
-
-  relayPool.subscribe(
-    [
-      {
-        authors: [pubkey],
-        kinds: [0],
-      },
-    ],
-    relays,
-    (event: any) => {
-      if (profile.picture === null || profile.name === null) {
-        insertCacheProfile(event);
-      }
-    },
-    undefined,
-    (events: any, relayURL: any) => {
-      console.log(events, relayURL);
-    }
-  );
 
   const insertCacheProfile = useCallback(
     async (event) => {
@@ -57,10 +33,19 @@ export const User = memo(function User({ pubkey, time }: { pubkey: string; time:
       .then((res) => {
         if (res[0] !== undefined) {
           setProfile(JSON.parse(res[0].metadata));
+        } else {
+          fetch(`https://rbr.bio/${pubkey}/metadata.json`).then((res) =>
+            res.json().then((res) => {
+              // update state
+              setProfile(JSON.parse(res.content));
+              // save profile to database
+              insertCacheProfile(res);
+            })
+          );
         }
       })
       .catch(console.error);
-  }, [getCacheProfile]);
+  }, [getCacheProfile, insertCacheProfile, pubkey]);
 
   return (
     <div className="relative flex items-start gap-4">

@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { RelayContext } from '@components/contexts/relay';
 import { UserRepost } from '@components/note/atoms/userRepost';
 import { Content } from '@components/note/content';
 import { Placeholder } from '@components/note/placeholder';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { LoopIcon } from '@radix-ui/react-icons';
+import useLocalStorage from '@rehooks/local-storage';
 import dynamic from 'next/dynamic';
-import { useNostrEvents } from 'nostr-react';
-import { memo } from 'react';
+import { memo, useContext, useState } from 'react';
 
 const Modal = dynamic(() => import('@components/note/modal'), {
   ssr: false,
@@ -15,13 +16,27 @@ const Modal = dynamic(() => import('@components/note/modal'), {
 });
 
 export const Repost = memo(function Repost({ root, user }: { root: any; user: string }) {
-  const { events } = useNostrEvents({
-    filter: {
-      ids: [root[0][1]],
-      since: 0,
-      kinds: [1],
+  const relayPool: any = useContext(RelayContext);
+  const [relays]: any = useLocalStorage('relays');
+  const [events, setEvents] = useState([]);
+
+  relayPool.subscribe(
+    [
+      {
+        ids: [root[0][1]],
+        since: 0,
+        kinds: [1],
+      },
+    ],
+    relays,
+    (event: any) => {
+      setEvents((events) => [event, ...events]);
     },
-  });
+    undefined,
+    (events: any, relayURL: any) => {
+      console.log(events, relayURL);
+    }
+  );
 
   if (events !== null && Object.keys(events).length > 0) {
     return (
@@ -38,9 +53,7 @@ export const Repost = memo(function Repost({ root, user }: { root: any; user: st
           </div>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
-            <Dialog.Content className="fixed inset-0 overflow-y-auto">
-              {events[0].content && <Modal event={events[0]} />}
-            </Dialog.Content>
+            <Dialog.Content className="fixed inset-0 overflow-y-auto">{events[0].content && <Modal event={events[0]} />}</Dialog.Content>
           </Dialog.Portal>
         </Dialog.Trigger>
       </Dialog.Root>

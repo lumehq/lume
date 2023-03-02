@@ -2,11 +2,14 @@
 import BaseLayout from '@layouts/baseLayout';
 import UserLayout from '@layouts/userLayout';
 
+import { RelayContext } from '@components/contexts/relay';
+
+import { dateToUnix } from '@utils/getDate';
+
 import { useLocalStorage } from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
-import { dateToUnix, useNostr } from 'nostr-react';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Database from 'tauri-plugin-sql-api';
 
@@ -22,8 +25,10 @@ type FormValues = {
 
 // TODO: update the design
 export default function Page() {
+  const relayPool: any = useContext(RelayContext);
+  const [relays]: any = useLocalStorage('relays');
+
   const router = useRouter();
-  const { publish } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const [currentUser]: any = useLocalStorage('current-user');
@@ -46,9 +51,11 @@ export default function Page() {
       pubkey: currentUser.pubkey,
       tags: [],
     };
+
     event.id = getEventHash(event);
     event.sig = signEvent(event, currentUser.privkey);
-    publish(event);
+
+    relayPool.publish(event, relays);
 
     // save account to database
     const db = await Database.load('sqlite:lume.db');

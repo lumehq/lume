@@ -1,30 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { truncate } from '@utils/truncate';
 
-import { useNostrEvents } from 'nostr-react';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 export const UserRepost = memo(function UserRepost({ pubkey }: { pubkey: string }) {
   const [profile, setProfile] = useState({ picture: null, name: null });
 
-  const { onEvent } = useNostrEvents({
-    filter: {
-      authors: [pubkey],
-      kinds: [0],
-    },
-  });
-
-  // #TODO: save response to DB
-  onEvent((rawMetadata) => {
-    try {
-      const metadata: any = JSON.parse(rawMetadata.content);
-      if (metadata) {
-        setProfile(metadata);
-      }
-    } catch (err) {
-      console.error(err, rawMetadata);
-    }
-  });
+  useEffect(() => {
+    fetch(`https://rbr.bio/${pubkey}/metadata.json`).then((res) =>
+      res.json().then((res) => {
+        // update state
+        setProfile(JSON.parse(res.content));
+      })
+    );
+  }, [pubkey]);
 
   return (
     <div className="text-zinc-400">

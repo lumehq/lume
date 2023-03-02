@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { RelayContext } from '@components/contexts/relay';
+
+import { dateToUnix } from '@utils/getDate';
+
 import * as Dialog from '@radix-ui/react-dialog';
 import { useLocalStorage } from '@rehooks/local-storage';
 import * as commands from '@uiw/react-md-editor/lib/commands';
 import dynamic from 'next/dynamic';
-import { dateToUnix, useNostr } from 'nostr-react';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor').then((mod) => mod.default), {
   ssr: false,
 });
 
 export default function CreatePost() {
-  const { publish } = useNostr();
+  const relayPool: any = useContext(RelayContext);
+  const [relays]: any = useLocalStorage('relays');
+
   const [value, setValue] = useState('');
 
   const [currentUser]: any = useLocalStorage('current-user');
@@ -40,11 +45,10 @@ export default function CreatePost() {
           pubkey: pubkey,
           tags: [],
         };
-
         event.id = getEventHash(event);
         event.sig = signEvent(event, privkey);
 
-        publish(event);
+        relayPool.publish(event, relays);
         setValue('');
       }
     },
