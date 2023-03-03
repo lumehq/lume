@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { relays } from '@stores/relays';
+import DatabaseProvider from '@components/contexts/database';
+import RelayProvider from '@components/contexts/relay';
 
-import { useStore } from '@nanostores/react';
+import { useLocalStorage } from '@rehooks/local-storage';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { NostrProvider } from 'nostr-react';
-import type { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import '../App.css';
 
@@ -21,12 +21,12 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
-  // Get relays
-  const $relays = useStore(relays);
+  // Get relays from localstorage
+  const [relays] = useLocalStorage('relays');
 
   return (
-    <NostrProvider relayUrls={$relays} debug={false}>
-      {getLayout(<Component {...pageProps} />)}
-    </NostrProvider>
+    <DatabaseProvider>
+      <RelayProvider relays={relays}>{getLayout(<Component {...pageProps} />)}</RelayProvider>
+    </DatabaseProvider>
   );
 }

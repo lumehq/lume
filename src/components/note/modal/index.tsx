@@ -1,18 +1,33 @@
+import { RelayContext } from '@components/contexts/relay';
 import { Content } from '@components/note/content';
 import NoteReply from '@components/note/modal/noteReply';
 
-import { useNostrEvents } from 'nostr-react';
-import { memo } from 'react';
+import useLocalStorage from '@rehooks/local-storage';
+import { memo, useContext, useState } from 'react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Modal = ({ event }: { event: any }) => {
-  const { events } = useNostrEvents({
-    filter: {
-      '#e': [event.id],
-      since: event.created_at,
-      kinds: [1],
+  const relayPool: any = useContext(RelayContext);
+  const [relays]: any = useLocalStorage('relays');
+  const [events, setEvents] = useState([]);
+
+  relayPool.subscribe(
+    [
+      {
+        '#e': [event.id],
+        since: event.created_at,
+        kinds: [1],
+      },
+    ],
+    relays,
+    (event: any) => {
+      setEvents((events) => [event, ...events]);
     },
-  });
+    undefined,
+    (events: any, relayURL: any) => {
+      console.log(events, relayURL);
+    }
+  );
 
   return (
     <div className="flex min-h-full items-center justify-center p-4">

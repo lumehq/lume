@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Account } from '@components/accountBar/account';
 
-import { currentUser } from '@stores/currentUser';
-
 import LumeSymbol from '@assets/icons/Lume';
-
-import { useStore } from '@nanostores/react';
 import { PlusIcon } from '@radix-ui/react-icons';
+import { useLocalStorage } from '@rehooks/local-storage';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
 export default function AccountBar() {
   const [users, setUsers] = useState([]);
-  const $currentUser: any = useStore(currentUser);
+  const [currentUser]: any = useLocalStorage('current-user');
 
   const getAccounts = useCallback(async () => {
     const db = await Database.load('sqlite:lume.db');
@@ -30,7 +27,7 @@ export default function AccountBar() {
     <div className="flex h-full flex-col items-center justify-between px-2 pt-12 pb-4">
       <div className="flex flex-col gap-4">
         {users.map((user, index) => (
-          <Account key={index} user={user} current={$currentUser.pubkey} />
+          <Account key={index} user={user} current={currentUser.pubkey} />
         ))}
         <Link
           href="/onboarding"

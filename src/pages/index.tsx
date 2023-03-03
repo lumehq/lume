@@ -2,108 +2,31 @@
 import BaseLayout from '@layouts/baseLayout';
 import FullLayout from '@layouts/fullLayout';
 
-import { currentUser } from '@stores/currentUser';
-import { follows } from '@stores/follows';
-
 import LumeSymbol from '@assets/icons/Lume';
-
-import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
-
-const db = typeof window !== 'undefined' ? await Database.load('sqlite:lume.db') : null;
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
 
 export default function Page() {
   const router = useRouter();
+
+  const [currentUser]: any = useLocalStorage('current-user');
   const [loading, setLoading] = useState(true);
 
-  const initDB = useCallback(async () => {
-    if (db) {
-      await db.execute(
-        'CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY, privkey TEXT NOT NULL, pubkey TEXT NOT NULL, npub TEXT, nsec TEXT, current INTEGER DEFAULT "0" NOT NULL, metadata JSON, UNIQUE(privkey));'
-      );
-      await db.execute('CREATE TABLE IF NOT EXISTS follows (id INTEGER PRIMARY KEY, pubkey TEXT NOT NULL, account TEXT, UNIQUE(pubkey));');
-      await db.execute(
-        'CREATE TABLE IF NOT EXISTS note_reactions (id INTEGER PRIMARY KEY, reaction_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reaction_id));'
-      );
-      await db.execute('CREATE TABLE IF NOT EXISTS note_replies (id INTEGER PRIMARY KEY, reply_id TEXT NOT NULL, e TEXT, p TEXT, UNIQUE(reply_id));');
-      await db.execute('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, event_id TEXT, event JSON, UNIQUE(event_id));');
-      await db.execute('CREATE TABLE IF NOT EXISTS cache_profiles (id INTEGER PRIMARY KEY, pubkey TEXT, metadata JSON, UNIQUE(pubkey));');
-      await db.execute('CREATE TABLE IF NOT EXISTS block_pubkeys (id INTEGER PRIMARY KEY, pubkey TEXT, UNIQUE(pubkey));');
-      await db.close();
-    }
-  }, []);
-
-  const notification = useCallback(async () => {
-    // NOTE: notification don't work in dev mode (only affect MacOS)
-    // ref: https://github.com/tauri-apps/tauri/issues/4965
-    let permissionGranted = await isPermissionGranted();
-    if (!permissionGranted) {
-      const permission = await requestPermission();
-      permissionGranted = permission === 'granted';
-    }
-    if (permissionGranted) {
-      sendNotification({ title: 'Lume', body: 'Nostr is awesome' });
-    }
-  }, []);
-
-  const getAccount = useCallback(async () => {
-    const db = await Database.load('sqlite:lume.db');
-    const result = await db.select(`SELECT * FROM accounts WHERE current = "1" ORDER BY id ASC LIMIT 1`);
-
-    return result;
-  }, []);
-
-  const getFollows = useCallback(async (account) => {
-    const arr = [];
-    const db = await Database.load('sqlite:lume.db');
-    const result: any = await db.select(`SELECT pubkey FROM follows WHERE account = "${account.pubkey}"`);
-
-    result.forEach((item: { pubkey: string }) => {
-      arr.push(item.pubkey);
-    });
-
-    return arr;
-  }, []);
-
-  // Explain:
-  // Step 1: check DB tables, if not exist then create new table. #TODO: move this function to Rust code
-  // Step 2: request allow notification from system
-  // Step 3: get first account. #TODO: get last used account instead (part of multi account feature)
-  // Step 4: get follows by account
   useEffect(() => {
-    initDB()
-      .then(() => notification())
-      .then(() => {
-        getAccount()
-          .then((res: any) => {
-            if (res.length === 0) {
-              setTimeout(() => {
-                setLoading(false);
-                router.push('/onboarding');
-              }, 1500);
-            } else {
-              // store current user in localstorage
-              currentUser.set(res[0]);
-              getFollows(res[0])
-                .then(async (res) => {
-                  // store follows in localstorage
-                  follows.set(res);
-                  // redirect to newsfeed
-                  setTimeout(() => {
-                    setLoading(false);
-                    router.push('/feed/following');
-                  }, 1500);
-                })
-                .catch(console.error);
-            }
-          })
-          .catch(console.error);
-      })
-      .catch(console.error);
-  }, [getAccount, getFollows, initDB, notification, router]);
+    if (!currentUser) {
+      setTimeout(() => {
+        setLoading(false);
+        router.push('/onboarding');
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        setLoading(false);
+        router.push('/feed/following');
+      }, 1500);
+    }
+  }, [currentUser, router]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-between">

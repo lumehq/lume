@@ -2,13 +2,14 @@
 import BaseLayout from '@layouts/baseLayout';
 import UserLayout from '@layouts/userLayout';
 
-import { currentUser } from '@stores/currentUser';
+import { RelayContext } from '@components/contexts/relay';
 
-import { useStore } from '@nanostores/react';
+import { dateToUnix } from '@utils/getDate';
+
+import { useLocalStorage } from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
-import { dateToUnix, useNostr } from 'nostr-react';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Database from 'tauri-plugin-sql-api';
 
@@ -24,15 +25,14 @@ type FormValues = {
 
 // TODO: update the design
 export default function Page() {
+  const relayPool: any = useContext(RelayContext);
+  const [relays]: any = useLocalStorage('relays');
+
   const router = useRouter();
-  const { publish } = useNostr();
   const [loading, setLoading] = useState(false);
 
-  const $currentUser: any = useStore(currentUser);
-  const profile =
-    $currentUser.metadata !== undefined
-      ? JSON.parse($currentUser.metadata)
-      : { display_name: null, username: null };
+  const [currentUser]: any = useLocalStorage('current-user');
+  const profile = currentUser.metadata !== undefined ? JSON.parse(currentUser.metadata) : { display_name: null, username: null };
 
   const {
     register,
@@ -48,28 +48,25 @@ export default function Page() {
       content: JSON.stringify(data),
       created_at: dateToUnix(),
       kind: 0,
-      pubkey: $currentUser.pubkey,
+      pubkey: currentUser.pubkey,
       tags: [],
     };
+
     event.id = getEventHash(event);
-    event.sig = signEvent(event, $currentUser.privkey);
-    publish(event);
+    event.sig = signEvent(event, currentUser.privkey);
+
+    relayPool.publish(event, relays);
 
     // save account to database
     const db = await Database.load('sqlite:lume.db');
-    await db.execute(
-      `UPDATE accounts SET metadata = '${JSON.stringify(data)}' WHERE pubkey = "${
-        $currentUser.pubkey
-      }"`
-    );
-    await db.close();
+    await db.execute(`UPDATE accounts SET metadata = '${JSON.stringify(data)}' WHERE pubkey = "${currentUser.pubkey}"`);
 
     // set currentUser in global state
     currentUser.set({
       metadata: JSON.stringify(data),
-      npub: $currentUser.npub,
-      privkey: $currentUser.privkey,
-      pubkey: $currentUser.pubkey,
+      npub: currentUser.npub,
+      privkey: currentUser.privkey,
+      pubkey: currentUser.pubkey,
     });
 
     // redirect to newsfeed
@@ -80,16 +77,11 @@ export default function Page() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex h-full w-full flex-col justify-between px-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex h-full w-full flex-col justify-between px-6">
       <div className="mb-8 flex flex-col gap-3 pt-8">
-        <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
-          Update profile
-        </h1>
+        <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">Update profile</h1>
         <h2 className="w-3/4 text-zinc-400">
-          Your profile will be published to all relays, as long as you have the private key, you
-          always can recover your profile in any client
+          Your profile will be published to all relays, as long as you have the private key, you always can recover your profile in any client
         </h2>
       </div>
       <fieldset className="flex flex-col gap-2">
@@ -105,9 +97,7 @@ export default function Page() {
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
               />
             </div>
-            <span className="text-sm text-red-400">
-              {errors.display_name && <p>{errors.display_name.message}</p>}
-            </span>
+            <span className="text-sm text-red-400">{errors.display_name && <p>{errors.display_name.message}</p>}</span>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -122,9 +112,7 @@ export default function Page() {
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
               />
             </div>
-            <span className="text-sm text-red-400">
-              {errors.name && <p>{errors.name.message}</p>}
-            </span>
+            <span className="text-sm text-red-400">{errors.name && <p>{errors.name.message}</p>}</span>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -139,9 +127,7 @@ export default function Page() {
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
               />
             </div>
-            <span className="text-sm text-red-400">
-              {errors.username && <p>{errors.username.message}</p>}
-            </span>
+            <span className="text-sm text-red-400">{errors.username && <p>{errors.username.message}</p>}</span>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -156,9 +142,7 @@ export default function Page() {
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
               />
             </div>
-            <span className="text-sm text-red-400">
-              {errors.picture && <p>{errors.picture.message}</p>}
-            </span>
+            <span className="text-sm text-red-400">{errors.picture && <p>{errors.picture.message}</p>}</span>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -173,9 +157,7 @@ export default function Page() {
                 className="relative w-full rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
               />
             </div>
-            <span className="text-sm text-red-400">
-              {errors.banner && <p>{errors.banner.message}</p>}
-            </span>
+            <span className="text-sm text-red-400">{errors.banner && <p>{errors.banner.message}</p>}</span>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -190,27 +172,15 @@ export default function Page() {
                 className="relative h-24 w-full resize-none rounded-lg border border-black/5 px-3.5 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
               />
             </div>
-            <span className="text-sm text-red-400">
-              {errors.about && <p>{errors.about.message}</p>}
-            </span>
+            <span className="text-sm text-red-400">{errors.about && <p>{errors.about.message}</p>}</span>
           </div>
         </div>
       </fieldset>
       <div className="pb-5">
         <div className="flex h-10 items-center">
           {loading === true ? (
-            <svg
-              className="h-5 w-5 animate-spin text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"></circle>
+            <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -231,13 +201,7 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page:
-    | string
-    | number
-    | boolean
-    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
-    | ReactFragment
-    | ReactPortal
+  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
 ) {
   return (
     <BaseLayout>

@@ -2,29 +2,29 @@
 import BaseLayout from '@layouts/baseLayout';
 import OnboardingLayout from '@layouts/onboardingLayout';
 
+import { DatabaseContext } from '@components/contexts/database';
+
 import { truncate } from '@utils/truncate';
 
-import { currentUser } from '@stores/currentUser';
-
 import data from '@assets/directory.json';
-
-import { useStore } from '@nanostores/react';
 import { CheckCircledIcon } from '@radix-ui/react-icons';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useState } from 'react';
+
+const shuffle = (arr: { name: string; avatar: string; npub: string }[]) => [...arr].sort(() => Math.random() - 0.5);
 
 export default function Page() {
+  const db: any = useContext(DatabaseContext);
   const router = useRouter();
-  const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
   const [follow, setFollow] = useState([]);
   const [loading, setLoading] = useState(false);
   const [list] = useState(shuffle(data));
-  const $currentUser: any = useStore(currentUser);
+  const [currentUser]: any = useLocalStorage('current-user');
 
   const followUser = (e) => {
     const npub = e.currentTarget.getAttribute('data-npub');
@@ -32,15 +32,12 @@ export default function Page() {
   };
 
   const insertDB = async () => {
-    const db = await Database.load('sqlite:lume.db');
-    await db.execute(
-      `INSERT INTO follows (pubkey, account) VALUES ("${$currentUser.pubkey}", "${$currentUser.pubkey}")`
-    );
+    // self follow
+    await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${currentUser.pubkey}", "${currentUser.pubkey}", "0")`);
+    // follow selected
     follow.forEach(async (npub) => {
       const { data } = nip19.decode(npub);
-      await db.execute(
-        `INSERT INTO follows (pubkey, account) VALUES ("${data}", "${$currentUser.pubkey}")`
-      );
+      await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${data}", "${currentUser.pubkey}", "0")`);
     });
   };
 
@@ -60,14 +57,11 @@ export default function Page() {
       <div>{/* spacer */}</div>
       <motion.div layoutId="form" className="flex flex-col">
         <div className="mb-8 flex flex-col gap-3">
-          <motion.h1
-            layoutId="title"
-            className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          <motion.h1 layoutId="title" className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
             Choose 10 people you want to following
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            For better experiences, you should follow the people you care about to personalize your
-            newsfeed, otherwise you will be very bored
+            For better experiences, you should follow the people you care about to personalize your newsfeed, otherwise you will be very bored
           </motion.h2>
         </div>
         <div className="h-full w-full shrink">
@@ -81,27 +75,14 @@ export default function Page() {
                   follow.includes(item.npub) ? 'bg-zinc-800' : ''
                 }`}>
                 <div className="relative h-10 w-10 flex-shrink-0">
-                  <Image
-                    className="rounded-full object-cover"
-                    src={item.avatar}
-                    alt={item.name}
-                    fill={true}
-                  />
+                  <Image className="rounded-full object-cover" src={item.avatar} alt={item.name} fill={true} />
                 </div>
                 <div className="inline-flex flex-1 items-center justify-between">
                   <div>
                     <p className="truncate text-sm font-medium text-zinc-200">{item.name}</p>
-                    <p className="text-sm leading-tight text-zinc-500">
-                      {truncate(item.npub, 16, ' .... ')}
-                    </p>
+                    <p className="text-sm leading-tight text-zinc-500">{truncate(item.npub, 16, ' .... ')}</p>
                   </div>
-                  <div>
-                    {follow.includes(item.npub) ? (
-                      <CheckCircledIcon className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <></>
-                    )}
-                  </div>
+                  <div>{follow.includes(item.npub) ? <CheckCircledIcon className="h-4 w-4 text-green-500" /> : <></>}</div>
                 </div>
               </div>
             ))}
@@ -111,18 +92,8 @@ export default function Page() {
       <motion.div layoutId="action" className="pb-5">
         <div className="flex h-10 items-center">
           {loading === true ? (
-            <svg
-              className="h-5 w-5 animate-spin text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"></circle>
+            <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -145,13 +116,7 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page:
-    | string
-    | number
-    | boolean
-    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
-    | ReactFragment
-    | ReactPortal
+  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
 ) {
   return (
     <BaseLayout>
