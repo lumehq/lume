@@ -10,6 +10,7 @@ import { Single } from '@components/note/single';
 
 import { dateToUnix } from '@utils/getDate';
 
+import { ArrowUpIcon } from '@radix-ui/react-icons';
 import { writeStorage } from '@rehooks/local-storage';
 import { useCallback, useState } from 'react';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
@@ -37,6 +38,18 @@ export default function Page() {
         LIMIT ${limit.current} OFFSET ${offset.current}`
     );
     setData((data) => [...data, ...result]);
+  }, [db]);
+
+  const loadNewest = useCallback(async () => {
+    const result = await db.select(
+      `SELECT * FROM
+        cache_notes
+        WHERE created_at > ${dateToUnix(now.current)}
+        ORDER BY created_at DESC
+        LIMIT ${limit.current}`
+    );
+    setData((data) => [...result, ...data]);
+    setHasNewNote(false);
   }, [db]);
 
   const ItemContent = useCallback(
@@ -78,8 +91,13 @@ export default function Page() {
     <div className="relative h-full w-full">
       <NoteConnector setParentReload={setParentReload} setHasNewNote={setHasNewNote} currentDate={now.current} />
       {hasNewNote && (
-        <div className="fixed top-10 left-1/2 z-50 -translate-x-1/2 transform">
-          <button>Load newest</button>
+        <div className="absolute top-16 left-1/2 z-50 -translate-x-1/2 transform">
+          <button
+            onClick={() => loadNewest()}
+            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 pl-3 pr-3.5 text-sm shadow-lg active:translate-y-1">
+            <ArrowUpIcon className="h-4 w-4" />
+            <span className="drop-shadow-md">Load newest</span>
+          </button>
         </div>
       )}
       <Virtuoso
