@@ -97,7 +97,7 @@ export default function Page() {
         endReached={loadMore}
         overscan={800}
         increaseViewportBy={1000}
-        className="scrollbar-hide relative h-full w-full"
+        className="relative h-full w-full"
         style={{
           contain: 'strict',
         }}

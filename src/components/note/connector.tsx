@@ -6,7 +6,7 @@ import { dateToUnix, hoursAgo } from '@utils/getDate';
 
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { useLocalStorage } from '@rehooks/local-storage';
-import { memo, useCallback, useContext, useEffect } from 'react';
+import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export const NoteConnector = memo(function NoteConnector({
   setParentReload,
@@ -22,6 +22,17 @@ export const NoteConnector = memo(function NoteConnector({
 
   const [follows]: any = useLocalStorage('follows');
   const [relays]: any = useLocalStorage('relays');
+
+  const [reload, setReload] = useState(false);
+  const timeout = useRef(null);
+
+  const reloadNewsfeed = () => {
+    setParentReload(true);
+    setReload(true);
+    timeout.current = setTimeout(() => {
+      setReload(false);
+    }, 2000);
+  };
 
   const insertDB = useCallback(
     async (event: any) => {
@@ -46,12 +57,12 @@ export const NoteConnector = memo(function NoteConnector({
       ],
       relays,
       (event: any) => {
-        // insert event to local database
-        insertDB(event).catch(console.error);
         // show trigger update newer event
         if (event.created_at > dateToUnix(currentDate)) {
           setHasNewNote(true);
         }
+        // insert event to local database
+        insertDB(event).catch(console.error);
       },
       undefined,
       (events: any, relayURL: any) => {
@@ -62,6 +73,10 @@ export const NoteConnector = memo(function NoteConnector({
 
   useEffect(() => {
     fetchEvent();
+
+    return () => {
+      clearTimeout(timeout.current);
+    };
   }, [fetchEvent]);
 
   return (
@@ -70,7 +85,7 @@ export const NoteConnector = memo(function NoteConnector({
         <h3 className="text-sm font-semibold text-zinc-500"># following</h3>
       </div>
       <div className="flex items-center gap-2">
-        <button onClick={() => setParentReload(true)} className="rounded-full p-1 hover:bg-zinc-800">
+        <button onClick={() => reloadNewsfeed()} className={`${reload ? 'animate-spin' : ''} rounded-full p-1 hover:bg-zinc-800`}>
           <ReloadIcon className="h-3.5 w-3.5 text-zinc-500" />
         </button>
         <div className="inline-flex items-center gap-1 rounded-full border border-zinc-700 bg-zinc-800 px-2.5 py-1">

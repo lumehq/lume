@@ -12,7 +12,6 @@ export default function NavigatorBar() {
 
   return (
     <div className="flex h-full flex-col flex-wrap justify-between overflow-hidden px-2 pt-3 pb-4">
-      {/* main */}
       <div className="flex flex-col gap-4">
         {/* Create post */}
         <div className="flex flex-col rounded-lg bg-zinc-900 ring-1 ring-white/10">
@@ -66,17 +65,3 @@ export default function NavigatorBar() {
     </div>
   );
 }
-
-/* Channels
-<div className="flex flex-col gap-2">
-  <div className="flex items-center justify-between px-2">
-    <h3 className="text-sm font-bold text-zinc-400">Channels</h3>
-    <button
-      type="button"
-      className="group flex h-6 w-6 items-center justify-center rounded-full hover:bg-zinc-900">
-      <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-100" />
-    </button>
-  </div>
-  <div></div>
-</div>
-*/
