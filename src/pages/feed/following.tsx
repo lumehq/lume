@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import BaseLayout from '@layouts/baseLayout';
 import NewsFeedLayout from '@layouts/newsfeedLayout';
 

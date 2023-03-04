@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RelayPool } from 'nostr-relaypool';
 import { createContext, useMemo } from 'react';
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 

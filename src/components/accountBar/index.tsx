@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Account } from '@components/accountBar/account';
 
 import LumeSymbol from '@assets/icons/Lume';

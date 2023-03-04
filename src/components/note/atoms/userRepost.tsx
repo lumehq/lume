@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { truncate } from '@utils/truncate';
 
 import { memo, useEffect, useState } from 'react';

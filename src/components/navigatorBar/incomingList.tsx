@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export function IncomingList({ data }: { data: any }) {
   const list: any = Array.from(new Set(data.map((item: any) => item.pubkey)));
 

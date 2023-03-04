@@ -5,7 +5,6 @@ import NoteReply from '@components/note/modal/noteReply';
 import useLocalStorage from '@rehooks/local-storage';
 import { memo, useContext, useState } from 'react';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const Modal = ({ event }: { event: any }) => {
   const relayPool: any = useContext(RelayContext);
   const [relays]: any = useLocalStorage('relays');

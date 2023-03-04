@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Content } from '@components/note/content';
 
 export default function NoteReply({ event }: { event: any }) {

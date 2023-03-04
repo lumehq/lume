@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { truncate } from '@utils/truncate';

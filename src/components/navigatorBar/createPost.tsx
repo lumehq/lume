@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RelayContext } from '@components/contexts/relay';
 
 import { dateToUnix } from '@utils/getDate';

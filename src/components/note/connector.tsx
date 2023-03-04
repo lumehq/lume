@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
 

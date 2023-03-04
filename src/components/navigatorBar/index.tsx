@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import ActiveLink from '@components/activeLink';
 import CreatePost from '@components/navigatorBar/createPost';
 import { ProfileMenu } from '@components/navigatorBar/profileMenu';

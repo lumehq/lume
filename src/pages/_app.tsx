@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import DatabaseProvider from '@components/contexts/database';
 import RelayProvider from '@components/contexts/relay';
 

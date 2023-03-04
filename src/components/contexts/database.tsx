@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { writeStorage } from '@rehooks/local-storage';
 import { createContext, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';

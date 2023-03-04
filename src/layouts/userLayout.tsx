@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import AccountBar from '@components/accountBar';
 import ActiveLink from '@components/activeLink';
 
