@@ -67,7 +67,11 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
   return (
     <button onClick={(e) => handleReaction(e)} className="group flex w-16 items-center gap-1.5 text-sm text-zinc-500">
       <div className="rounded-lg p-1 group-hover:bg-zinc-600">
-        {isReact ? <HeartFilledIcon className="h-4 w-4 group-hover:text-red-400" /> : <HeartIcon className="h-4 w-4 text-zinc-500" />}
+        {isReact ? (
+          <HeartFilledIcon className="h-4 w-4 group-hover:text-red-400" />
+        ) : (
+          <HeartIcon className="h-4 w-4 text-zinc-500" />
+        )}
       </div>
       <span>{reaction}</span>
     </button>

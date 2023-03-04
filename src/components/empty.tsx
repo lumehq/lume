@@ -29,19 +29,19 @@ export default function Empty() {
             fill="none"
             stroke="currentColor"
             viewBox="0 0 48 48"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z"
+            ></path>
           </svg>
-          <h2 className="mt-2 text-lg font-medium text-zinc-100">
-            You haven&apos;t followed anyone yet
-          </h2>
+          <h2 className="mt-2 text-lg font-medium text-zinc-100">You haven&apos;t followed anyone yet</h2>
           <p className="mt-1 text-sm text-zinc-500">
-            You can send invite via email to your friend and lume will onboard them into nostr or
-            follow some people in suggested below
+            You can send invite via email to your friend and lume will onboard them into nostr or follow some people in
+            suggested below
           </p>
         </div>
         <form action="#" className="relative mt-6">
@@ -68,12 +68,7 @@ export default function Empty() {
             <li key={index} className="flex items-center justify-between space-x-3 py-4">
               <div className="flex min-w-0 flex-1 items-center space-x-3">
                 <div className="relative h-10 w-10 flex-shrink-0">
-                  <Image
-                    className="rounded-full object-cover"
-                    src={person.imageUrl}
-                    alt={person.name}
-                    fill={true}
-                  />
+                  <Image className="rounded-full object-cover" src={person.imageUrl} alt={person.name} fill={true} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-zinc-200">{person.name}</p>
@@ -83,7 +78,8 @@ export default function Empty() {
               <div className="flex-shrink-0">
                 <button
                   type="button"
-                  className="inline-flex items-center rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 text-xs font-medium text-zinc-400 shadow-sm hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:ring-offset-2">
+                  className="inline-flex items-center rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1 text-xs font-medium text-zinc-400 shadow-sm hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:ring-offset-2"
+                >
                   <PlusIcon className="-ml-1 h-5 w-5" />
                   <span className="text-sm font-medium text-zinc-300">Follow</span>
                 </button>

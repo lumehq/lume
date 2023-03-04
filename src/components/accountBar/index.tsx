@@ -31,7 +31,8 @@ export default function AccountBar() {
         ))}
         <Link
           href="/onboarding"
-          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-zinc-600 hover:border-zinc-400">
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-zinc-600 hover:border-zinc-400"
+        >
           <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-200" />
         </Link>
       </div>

@@ -5,7 +5,7 @@
     "next/core-web-vitals",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
-		"plugin:react-hooks/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],

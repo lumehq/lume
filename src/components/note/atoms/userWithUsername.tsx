@@ -25,14 +25,23 @@ export const UserWithUsername = memo(function UserWithUsername({ pubkey }: { pub
         {profile.picture ? (
           <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
         ) : (
-          <Avatar size={44} name={pubkey} variant="beam" colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']} />
+          <Avatar
+            size={44}
+            name={pubkey}
+            variant="beam"
+            colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
+          />
         )}
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">
           <div className="flex flex-col gap-1 text-sm">
-            <span className="font-bold leading-tight">{profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}</span>
-            <span className="text-zinc-500">{profile.username ? profile.username : truncate(pubkey, 16, ' .... ')}</span>
+            <span className="font-bold leading-tight">
+              {profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}
+            </span>
+            <span className="text-zinc-500">
+              {profile.username ? profile.username : truncate(pubkey, 16, ' .... ')}
+            </span>
           </div>
           <div>
             <DotsHorizontalIcon className="h-4 w-4 text-zinc-500" />

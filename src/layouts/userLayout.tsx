@@ -27,13 +27,15 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
                   <ActiveLink
                     href={`/profile/${currentUser.pubkey}`}
                     activeClassName="ring-1 ring-white/10 dark:bg-zinc-900 dark:text-white"
-                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900">
+                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900"
+                  >
                     <span>Personal Page</span>
                   </ActiveLink>
                   <ActiveLink
                     href={`/profile/update?pubkey=${currentUser.pubkey}`}
                     activeClassName="ring-1 ring-white/10 dark:bg-zinc-900 dark:text-white"
-                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900">
+                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900"
+                  >
                     <span>Update Profile</span>
                   </ActiveLink>
                 </div>

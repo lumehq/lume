@@ -40,7 +40,14 @@ export const NoteConnector = memo(function NoteConnector({
         `INSERT OR IGNORE INTO
           cache_notes
             (id, pubkey, created_at, kind, tags, content) VALUES
-            ("${event.id}", "${event.pubkey}", "${event.created_at}", "${event.kind}", '${JSON.stringify(event.tags)}', "${event.content}");`
+            (
+              "${event.id}",
+              "${event.pubkey}",
+              "${event.created_at}",
+              "${event.kind}",
+              '${JSON.stringify(event.tags)}',
+              "${event.content}"
+            );`
       );
     },
     [db]
@@ -85,7 +92,10 @@ export const NoteConnector = memo(function NoteConnector({
         <h3 className="text-sm font-semibold text-zinc-500"># following</h3>
       </div>
       <div className="flex items-center gap-2">
-        <button onClick={() => reloadNewsfeed()} className={`${reload ? 'animate-spin' : ''} rounded-full p-1 hover:bg-zinc-800`}>
+        <button
+          onClick={() => reloadNewsfeed()}
+          className={`${reload ? 'animate-spin' : ''} rounded-full p-1 hover:bg-zinc-800`}
+        >
           <ReloadIcon className="h-3.5 w-3.5 text-zinc-500" />
         </button>
         <div className="inline-flex items-center gap-1 rounded-full border border-zinc-700 bg-zinc-800 px-2.5 py-1">

@@ -31,20 +31,24 @@ export const ProfileMenu = memo(function ProfileMenu({ pubkey }: { pubkey: strin
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           className="min-w-[220px] rounded-md border border-white/20 bg-zinc-800 p-1 shadow-lg shadow-black/30 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
-          sideOffset={2}>
+          sideOffset={2}
+        >
           <DropdownMenu.Item
             onClick={() => viewProfile()}
-            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400">
+            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400"
+          >
             View profile
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onClick={() => updateProfile()}
-            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400">
+            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400"
+          >
             Update profile
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onClick={() => copyPubkey()}
-            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400">
+            className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400"
+          >
             Copy public key
           </DropdownMenu.Item>
           <DropdownMenu.Item className="group relative flex h-[30px] select-none items-center rounded px-1 pl-6 text-sm leading-none text-zinc-100 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-700 data-[highlighted]:text-fuchsia-400 data-[disabled]:text-zinc-400">

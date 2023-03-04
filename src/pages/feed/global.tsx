@@ -12,7 +12,13 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
+  page:
+    | string
+    | number
+    | boolean
+    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
+    | ReactFragment
+    | ReactPortal
 ) {
   return (
     <BaseLayout>
