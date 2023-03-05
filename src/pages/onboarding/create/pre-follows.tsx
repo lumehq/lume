@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import BaseLayout from '@layouts/baseLayout';
-import OnboardingLayout from '@layouts/onboardingLayout';
+import BaseLayout from '@layouts/base';
+import OnboardingLayout from '@layouts/onboarding';
 
 import { DatabaseContext } from '@components/contexts/database';
 
@@ -33,7 +32,9 @@ export default function Page() {
 
   const insertDB = async () => {
     // self follow
-    await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${currentUser.pubkey}", "${currentUser.pubkey}", "0")`);
+    await db.execute(
+      `INSERT INTO follows (pubkey, account, kind) VALUES ("${currentUser.pubkey}", "${currentUser.pubkey}", "0")`
+    );
     // follow selected
     follow.forEach(async (npub) => {
       const { data } = nip19.decode(npub);
@@ -57,11 +58,15 @@ export default function Page() {
       <div>{/* spacer */}</div>
       <motion.div layoutId="form" className="flex flex-col">
         <div className="mb-8 flex flex-col gap-3">
-          <motion.h1 layoutId="title" className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          <motion.h1
+            layoutId="title"
+            className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent"
+          >
             Choose 10 people you want to following
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            For better experiences, you should follow the people you care about to personalize your newsfeed, otherwise you will be very bored
+            For better experiences, you should follow the people you care about to personalize your newsfeed, otherwise
+            you will be very bored
           </motion.h2>
         </div>
         <div className="h-full w-full shrink">
@@ -73,7 +78,8 @@ export default function Page() {
                 data-npub={item.npub}
                 className={`col-span-1 inline-flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-zinc-700 ${
                   follow.includes(item.npub) ? 'bg-zinc-800' : ''
-                }`}>
+                }`}
+              >
                 <div className="relative h-10 w-10 flex-shrink-0">
                   <Image className="rounded-full object-cover" src={item.avatar} alt={item.name} fill={true} />
                 </div>
@@ -82,7 +88,9 @@ export default function Page() {
                     <p className="truncate text-sm font-medium text-zinc-200">{item.name}</p>
                     <p className="text-sm leading-tight text-zinc-500">{truncate(item.npub, 16, ' .... ')}</p>
                   </div>
-                  <div>{follow.includes(item.npub) ? <CheckCircledIcon className="h-4 w-4 text-green-500" /> : <></>}</div>
+                  <div>
+                    {follow.includes(item.npub) ? <CheckCircledIcon className="h-4 w-4 text-green-500" /> : <></>}
+                  </div>
                 </div>
               </div>
             ))}
@@ -92,19 +100,26 @@ export default function Page() {
       <motion.div layoutId="action" className="pb-5">
         <div className="flex h-10 items-center">
           {loading === true ? (
-            <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg
+              className="h-5 w-5 animate-spin text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           ) : (
             <div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
               <button
                 onClick={() => createFollowing()}
                 disabled={follow.length < 10 ? true : false}
-                className="transform rounded-lg border border-white/10 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 px-3.5 py-2 font-medium shadow-input shadow-black/5 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 dark:shadow-black/10">
+                className="transform rounded-lg border border-white/10 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 px-3.5 py-2 font-medium shadow-input shadow-black/5 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 dark:shadow-black/10"
+              >
                 <span className="drop-shadow-lg">Finish →</span>
               </button>
             </div>
@@ -116,7 +131,13 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
+  page:
+    | string
+    | number
+    | boolean
+    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
+    | ReactFragment
+    | ReactPortal
 ) {
   return (
     <BaseLayout>

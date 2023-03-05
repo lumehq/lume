@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RelayContext } from '@components/contexts/relay';
 import { UserRepost } from '@components/note/atoms/userRepost';
 import { Content } from '@components/note/content';

@@ -145,8 +145,8 @@
 .w-md-editor-toolbar-child {
   position: absolute;
   border-radius: 3px;
-  box-shadow: 0 0 0 1px var(--color-border-default),
-    0 0 0 var(--color-border-default), 0 1px 1px var(--color-border-default);
+  box-shadow: 0 0 0 1px var(--color-border-default), 0 0 0 var(--color-border-default),
+    0 1px 1px var(--color-border-default);
   background-color: var(--color-canvas-default);
   z-index: 1;
   display: none;

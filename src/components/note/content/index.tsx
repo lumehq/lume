@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Reaction from '@components/note/atoms/reaction';
 import Reply from '@components/note/atoms/reply';
 import { User } from '@components/note/atoms/user';

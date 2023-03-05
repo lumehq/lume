@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import BaseLayout from '@layouts/baseLayout';
-import OnboardingLayout from '@layouts/onboardingLayout';
+import BaseLayout from '@layouts/base';
+import OnboardingLayout from '@layouts/onboarding';
 
 import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
@@ -10,7 +9,16 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useContext, useMemo, useState } from 'react';
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 export default function Page() {
   const { db }: any = useContext(DatabaseContext);
@@ -44,7 +52,9 @@ export default function Page() {
     async (follows) => {
       follows.forEach(async (item) => {
         if (item) {
-          await db.execute(`INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${item[1]}", "${pubkey}", "0")`);
+          await db.execute(
+            `INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${item[1]}", "${pubkey}", "0")`
+          );
         }
       });
     },
@@ -80,28 +90,39 @@ export default function Page() {
       <div>{/* spacer */}</div>
       <motion.div layoutId="form">
         <div className="mb-8 flex flex-col gap-3">
-          <motion.h1 layoutId="title" className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          <motion.h1
+            layoutId="title"
+            className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent"
+          >
             Fetching your profile...
           </motion.h1>
           <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-            As long as you have private key, you alway can sync your profile and follows list on every nostr client, so please keep your key safely
+            As long as you have private key, you alway can sync your profile and follows list on every nostr client, so
+            please keep your key safely
           </motion.h2>
         </div>
       </motion.div>
       <motion.div layoutId="action" className="pb-5">
         <div className="flex h-10 items-center">
           {loading === true ? (
-            <svg className="h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg
+              className="h-5 w-5 animate-spin text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           ) : (
             <Link
               href="/"
-              className="transform rounded-lg bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 px-3.5 py-2 font-medium active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30">
+              className="transform rounded-lg bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 px-3.5 py-2 font-medium active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
+            >
               <span className="drop-shadow-lg">Finish</span>
             </Link>
           )}
@@ -112,7 +133,13 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
+  page:
+    | string
+    | number
+    | boolean
+    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
+    | ReactFragment
+    | ReactPortal
 ) {
   return (
     <BaseLayout>

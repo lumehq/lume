@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import AccountBar from '@components/accountBar';
 import ActiveLink from '@components/activeLink';
+import AccountColumn from '@components/columns/account';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 
@@ -11,7 +10,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
     <div className="flex h-full w-full flex-row">
       <div className="relative h-full w-[70px] shrink-0 border-r border-zinc-900">
         <div data-tauri-drag-region className="absolute top-0 left-0 h-12 w-full" />
-        <AccountBar />
+        <AccountColumn />
       </div>
       <div className="grid grow grid-cols-4">
         <div className="col-span-1">
@@ -27,13 +26,15 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
                   <ActiveLink
                     href={`/profile/${currentUser.pubkey}`}
                     activeClassName="ring-1 ring-white/10 dark:bg-zinc-900 dark:text-white"
-                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900">
+                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900"
+                  >
                     <span>Personal Page</span>
                   </ActiveLink>
                   <ActiveLink
                     href={`/profile/update?pubkey=${currentUser.pubkey}`}
                     activeClassName="ring-1 ring-white/10 dark:bg-zinc-900 dark:text-white"
-                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900">
+                    className="flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-medium hover:bg-zinc-900"
+                  >
                     <span>Update Profile</span>
                   </ActiveLink>
                 </div>

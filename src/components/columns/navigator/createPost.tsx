@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RelayContext } from '@components/contexts/relay';
 
 import { dateToUnix } from '@utils/getDate';
@@ -30,7 +29,9 @@ export default function CreatePost() {
     buttonProps: { className: 'cta-btn', 'aria-label': 'Post a message' },
     icon: (
       <div className="relative inline-flex h-10 w-16 transform cursor-pointer overflow-hidden rounded bg-zinc-900 px-2.5 ring-zinc-500/50 ring-offset-zinc-900 will-change-transform focus:outline-none focus:ring-1 focus:ring-offset-2 active:translate-y-1">
-        <span className="absolute inset-px z-10 inline-flex items-center justify-center rounded bg-zinc-900 text-zinc-200">Post</span>
+        <span className="absolute inset-px z-10 inline-flex items-center justify-center rounded bg-zinc-900 text-zinc-200">
+          Post
+        </span>
         <span className="absolute inset-0 z-0 scale-x-[2.0] blur before:absolute before:inset-0 before:top-1/2 before:aspect-square before:animate-disco before:bg-gradient-conic before:from-gray-300 before:via-fuchsia-600 before:to-orange-600"></span>
       </div>
     ),

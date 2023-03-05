@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Account } from '@components/accountBar/account';
+import { Account } from '@components/columns/account/account';
 
 import LumeSymbol from '@assets/icons/Lume';
 import { PlusIcon } from '@radix-ui/react-icons';
@@ -8,7 +7,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
-export default function AccountBar() {
+export default function AccountColumn() {
   const [users, setUsers] = useState([]);
   const [currentUser]: any = useLocalStorage('current-user');
 
@@ -31,7 +30,8 @@ export default function AccountBar() {
         ))}
         <Link
           href="/onboarding"
-          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-zinc-600 hover:border-zinc-400">
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-zinc-600 hover:border-zinc-400"
+        >
           <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-200" />
         </Link>
       </div>

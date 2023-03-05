@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import BaseLayout from '@layouts/baseLayout';
-import NewsFeedLayout from '@layouts/newsfeedLayout';
+import BaseLayout from '@layouts/base';
+import NewsFeedLayout from '@layouts/newsfeed';
 
 import { DatabaseContext } from '@components/contexts/database';
 import { NoteConnector } from '@components/note/connector';
@@ -69,7 +68,9 @@ export default function Page() {
   useEffect(() => {
     const getData = async () => {
       const result = await db.select(
-        `SELECT * FROM cache_notes WHERE created_at <= ${dateToUnix(now.current)} ORDER BY created_at DESC LIMIT ${limit.current}`
+        `SELECT * FROM cache_notes WHERE created_at <= ${dateToUnix(now.current)} ORDER BY created_at DESC LIMIT ${
+          limit.current
+        }`
       );
       if (result) {
         setData(result);
@@ -94,7 +95,8 @@ export default function Page() {
         <div className="absolute top-16 left-1/2 z-50 -translate-x-1/2 transform">
           <button
             onClick={() => loadNewest()}
-            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 pl-3 pr-3.5 text-sm shadow-lg active:translate-y-1">
+            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 pl-3 pr-3.5 text-sm shadow-lg active:translate-y-1"
+          >
             <ArrowUpIcon className="h-4 w-4" />
             <span className="drop-shadow-md">Load newest</span>
           </button>
@@ -125,7 +127,13 @@ export default function Page() {
 }
 
 Page.getLayout = function getLayout(
-  page: string | number | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | ReactFragment | ReactPortal
+  page:
+    | string
+    | number
+    | boolean
+    | ReactElement<unknown, string | JSXElementConstructor<unknown>>
+    | ReactFragment
+    | ReactPortal
 ) {
   return (
     <BaseLayout>

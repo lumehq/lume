@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Avatar from 'boring-avatars';
 import Image from 'next/image';
 import { memo, useEffect, useState } from 'react';
@@ -9,7 +8,7 @@ export const ImageWithFallback = memo(function ImageWithFallback({
   fill,
   className,
 }: {
-  src: any;
+  src: string;
   alt: string;
   fill: boolean;
   className: string;

@@ -51,7 +51,7 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 
 ## Features
 
-**Current**: v0.1.1-alpha
+**Current**: v0.1.2-alpha
 
 - [x] create new key
 - [x] import private key (hex/nsec)
@@ -64,15 +64,15 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 - [x] publish a note (support markdown)
 - [x] update profile
 - [x] cache profile to local database
+- [x] offline support
+- [x] implement newsfeed infinite loading
+- [x] native notification
 
 **Next**:
 
-- [ ] offline support
-- [ ] implement newsfeed infinite loading
 - [ ] handle tags (#[x]) in note
 - [ ] handle reply note
 - [ ] integrate webtorrent
-- [ ] native notification
 - [ ] publish a reply
 - [ ] direct message
 - [ ] multi accounts
@@ -83,3 +83,29 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 ## Roadmap
 
 Public roadmap will be released when Lume reach v0.3.0
+
+## Running dev build
+
+Prerequisites:
+
+- Nodejs >= 18.0.0
+- Install pnpm: [docs](https://pnpm.io/)
+- Setup Tauri: [docs](https://tauri.app/v1/guides/getting-started/prerequisites)
+
+Clone repo:
+
+```
+git clone https://github.com/reyamir/lume-desktop.git
+```
+
+Install dependencies
+
+```
+pnpm install
+```
+
+Run development window
+
+```
+pnpm tauri dev
+```
