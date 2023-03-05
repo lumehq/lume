@@ -1,4 +1,4 @@
-import { Account } from '@components/accountBar/account';
+import { Account } from '@components/columns/account/account';
 
 import LumeSymbol from '@assets/icons/Lume';
 import { PlusIcon } from '@radix-ui/react-icons';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
-export default function AccountBar() {
+export default function AccountColumn() {
   const [users, setUsers] = useState([]);
   const [currentUser]: any = useLocalStorage('current-user');
 

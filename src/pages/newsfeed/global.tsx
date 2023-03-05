@@ -1,9 +1,14 @@
 import BaseLayout from '@layouts/base';
+import NewsFeedLayout from '@layouts/newsfeed';
 
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 
 export default function Page() {
-  return <div></div>;
+  return (
+    <div className="h-full w-full">
+      <p>Global</p>
+    </div>
+  );
 }
 
 Page.getLayout = function getLayout(
@@ -15,5 +20,9 @@ Page.getLayout = function getLayout(
     | ReactFragment
     | ReactPortal
 ) {
-  return <BaseLayout>{page}</BaseLayout>;
+  return (
+    <BaseLayout>
+      <NewsFeedLayout>{page}</NewsFeedLayout>
+    </BaseLayout>
+  );
 };

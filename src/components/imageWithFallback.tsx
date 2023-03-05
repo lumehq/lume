@@ -8,7 +8,7 @@ export const ImageWithFallback = memo(function ImageWithFallback({
   fill,
   className,
 }: {
-  src: any;
+  src: string;
   alt: string;
   fill: boolean;
   className: string;

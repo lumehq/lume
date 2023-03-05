@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
 import { memo } from 'react';
 
-export const ProfileMenu = memo(function ProfileMenu({ pubkey }: { pubkey: string }) {
+export const UserDropdownMenu = memo(function ProfileMenu({ pubkey }: { pubkey: string }) {
   const router = useRouter();
 
   const viewProfile = () => {

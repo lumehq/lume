@@ -1,5 +1,5 @@
-import BaseLayout from '@layouts/baseLayout';
-import FullLayout from '@layouts/fullLayout';
+import BaseLayout from '@layouts/base';
+import FullscreenLayout from '@layouts/fullscreen';
 
 import LumeSymbol from '@assets/icons/Lume';
 import { useLocalStorage } from '@rehooks/local-storage';
@@ -22,7 +22,7 @@ export default function Page() {
     } else {
       setTimeout(() => {
         setLoading(false);
-        router.push('/feed/following');
+        router.push('/newsfeed/following');
       }, 1500);
     }
   }, [currentUser, router]);
@@ -106,7 +106,7 @@ Page.getLayout = function getLayout(
 ) {
   return (
     <BaseLayout>
-      <FullLayout>{page}</FullLayout>
+      <FullscreenLayout>{page}</FullscreenLayout>
     </BaseLayout>
   );
 };

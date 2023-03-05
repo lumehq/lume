@@ -1,5 +1,5 @@
-import BaseLayout from '@layouts/baseLayout';
-import NewsFeedLayout from '@layouts/newsfeedLayout';
+import BaseLayout from '@layouts/base';
+import NewsFeedLayout from '@layouts/newsfeed';
 
 import { DatabaseContext } from '@components/contexts/database';
 import { NoteConnector } from '@components/note/connector';

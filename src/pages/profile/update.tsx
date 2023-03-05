@@ -1,5 +1,5 @@
-import BaseLayout from '@layouts/baseLayout';
-import UserLayout from '@layouts/userLayout';
+import BaseLayout from '@layouts/base';
+import UserLayout from '@layouts/user';
 
 import { RelayContext } from '@components/contexts/relay';
 

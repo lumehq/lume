@@ -1,5 +1,5 @@
-import AccountBar from '@components/accountBar';
 import ActiveLink from '@components/activeLink';
+import AccountColumn from '@components/columns/account';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 
@@ -10,7 +10,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
     <div className="flex h-full w-full flex-row">
       <div className="relative h-full w-[70px] shrink-0 border-r border-zinc-900">
         <div data-tauri-drag-region className="absolute top-0 left-0 h-12 w-full" />
-        <AccountBar />
+        <AccountColumn />
       </div>
       <div className="grid grow grid-cols-4">
         <div className="col-span-1">

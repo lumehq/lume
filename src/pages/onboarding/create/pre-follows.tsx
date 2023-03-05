@@ -1,5 +1,5 @@
-import BaseLayout from '@layouts/baseLayout';
-import OnboardingLayout from '@layouts/onboardingLayout';
+import BaseLayout from '@layouts/base';
+import OnboardingLayout from '@layouts/onboarding';
 
 import { DatabaseContext } from '@components/contexts/database';
 

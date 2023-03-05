@@ -1,4 +1,4 @@
-export default function FullLayout({ children }: { children: React.ReactNode }) {
+export default function FullscreenLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-gradient-radial-page relative h-full overflow-hidden">
       {/* dragging area */}
