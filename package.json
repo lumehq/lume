@@ -23,7 +23,6 @@
     "boring-avatars": "^1.7.0",
     "framer-motion": "^9.1.7",
     "moment": "^2.29.4",
-    "nanostores": "^0.7.4",
     "next": "^13.2.3",
     "next-remove-imports": "^1.0.10",
     "nostr-relaypool": "^0.5.3",

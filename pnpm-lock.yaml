@@ -29,7 +29,6 @@ specifiers:
   husky: ^8.0.3
   lint-staged: ^13.1.2
   moment: ^2.29.4
-  nanostores: ^0.7.4
   next: ^13.2.3
   next-remove-imports: ^1.0.10
   nostr-relaypool: ^0.5.3
@@ -63,7 +62,6 @@ dependencies:
   boring-avatars: 1.7.0
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   moment: 2.29.4
-  nanostores: 0.7.4
   next: 13.2.3_biqbaboplfbrettd7655fr4n2y
   next-remove-imports: 1.0.10
   nostr-relaypool: 0.5.3_ws@8.12.1
@@ -4306,12 +4304,6 @@ packages:
       { integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw== }
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
-
-  /nanostores/0.7.4:
-    resolution:
-      { integrity: sha512-MBeUVt7NBcXqh7AGT+KSr3O0X/995CZsvcP2QEMP+PXFwb07qv3Vjyq+EX0yS8f12Vv3Tn2g/BvK/OZoMhJlOQ== }
-    engines: { node: ^14.0.0 || ^16.0.0 || >=18.0.0 }
-    dev: false
 
   /natural-compare-lite/1.4.0:
     resolution:
