@@ -48,7 +48,7 @@ export default function Page() {
       content: JSON.stringify(data),
       created_at: dateToUnix(),
       kind: 0,
-      pubkey: currentUser.pubkey,
+      pubkey: currentUser.id,
       tags: [],
     };
 
@@ -59,14 +59,14 @@ export default function Page() {
 
     // save account to database
     const db = await Database.load('sqlite:lume.db');
-    await db.execute(`UPDATE accounts SET metadata = '${JSON.stringify(data)}' WHERE pubkey = "${currentUser.pubkey}"`);
+    await db.execute(`UPDATE accounts SET metadata = '${JSON.stringify(data)}' WHERE pubkey = "${currentUser.id}"`);
 
     // set currentUser in global state
     currentUser.set({
       metadata: JSON.stringify(data),
       npub: currentUser.npub,
       privkey: currentUser.privkey,
-      pubkey: currentUser.pubkey,
+      pubkey: currentUser.id,
     });
 
     // redirect to newsfeed

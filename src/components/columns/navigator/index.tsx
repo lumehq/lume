@@ -17,7 +17,7 @@ export default function NavigatorColumn() {
           <div className="flex flex-col p-2">
             <div className="flex items-center justify-between">
               <h5 className="font-semibold leading-tight text-zinc-100">{profile.display_name || ''}</h5>
-              <UserDropdownMenu pubkey={currentUser.pubkey} />
+              <UserDropdownMenu pubkey={currentUser.id} />
             </div>
             <span className="text-sm leading-tight text-zinc-500">@{profile.username || ''}</span>
           </div>

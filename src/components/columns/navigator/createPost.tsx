@@ -20,7 +20,7 @@ export default function CreatePost() {
   const [value, setValue] = useState('');
 
   const [currentUser]: any = useLocalStorage('current-user');
-  const pubkey = currentUser.pubkey;
+  const pubkey = currentUser.id;
   const privkey = currentUser.privkey;
 
   const postButton = {

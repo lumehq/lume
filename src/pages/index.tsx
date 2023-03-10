@@ -5,26 +5,32 @@ import LumeSymbol from '@assets/icons/Lume';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useRef, useState } from 'react';
 
 export default function Page() {
   const router = useRouter();
 
   const [currentUser]: any = useLocalStorage('current-user');
   const [loading, setLoading] = useState(true);
+  const timer = useRef(null);
 
   useEffect(() => {
-    if (!currentUser) {
-      setTimeout(() => {
-        setLoading(false);
-        router.push('/onboarding');
-      }, 1500);
-    } else {
-      setTimeout(() => {
+    if (currentUser) {
+      timer.current = setTimeout(() => {
         setLoading(false);
         router.push('/newsfeed/following');
-      }, 1500);
+      }, 1000);
+    } else {
+      timer.current = setTimeout(() => {
+        setLoading(false);
+        router.push('/onboarding');
+      }, 1000);
     }
+
+    // clean up
+    return () => {
+      clearTimeout(timer.current);
+    };
   }, [currentUser, router]);
 
   return (

@@ -26,7 +26,7 @@ export default function AccountColumn() {
     <div className="flex h-full flex-col items-center justify-between px-2 pt-12 pb-4">
       <div className="flex flex-col gap-4">
         {users.map((user, index) => (
-          <Account key={index} user={user} current={currentUser.pubkey} />
+          <Account key={index} user={user} current={currentUser.id} />
         ))}
         <Link
           href="/onboarding"

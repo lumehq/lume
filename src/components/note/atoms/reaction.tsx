@@ -15,7 +15,7 @@ export default function Reaction({ eventID, eventPubkey }: { eventID: string; ev
   const [isReact, setIsReact] = useState(false);
 
   const [currentUser]: any = useLocalStorage('current-user');
-  const pubkey = currentUser.pubkey;
+  const pubkey = currentUser.id;
   const privkey = currentUser.privkey;
 
   /*

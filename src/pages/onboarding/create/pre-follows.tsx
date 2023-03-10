@@ -17,7 +17,7 @@ import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCon
 const shuffle = (arr: { name: string; avatar: string; npub: string }[]) => [...arr].sort(() => Math.random() - 0.5);
 
 export default function Page() {
-  const db: any = useContext(DatabaseContext);
+  const { db }: any = useContext(DatabaseContext);
   const router = useRouter();
 
   const [follow, setFollow] = useState([]);
@@ -33,12 +33,12 @@ export default function Page() {
   const insertDB = async () => {
     // self follow
     await db.execute(
-      `INSERT INTO follows (pubkey, account, kind) VALUES ("${currentUser.pubkey}", "${currentUser.pubkey}", "0")`
+      `INSERT INTO follows (pubkey, account, kind) VALUES ("${currentUser.id}", "${currentUser.id}", "0")`
     );
     // follow selected
     follow.forEach(async (npub) => {
       const { data } = nip19.decode(npub);
-      await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${data}", "${currentUser.pubkey}", "0")`);
+      await db.execute(`INSERT INTO follows (pubkey, account, kind) VALUES ("${data}", "${currentUser.id}", "0")`);
     });
   };
 
