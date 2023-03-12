@@ -1,47 +1,33 @@
 import BaseLayout from '@layouts/base';
-import OnboardingLayout from '@layouts/onboarding';
 
-import { motion } from 'framer-motion';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 
 export default function Page() {
   return (
-    <div className="flex h-full flex-col justify-between px-8">
-      <div>{/* spacer */}</div>
-      <div className="flex flex-col gap-3">
-        <motion.h1
-          layoutId="title"
-          className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent"
-        >
-          Other social network require email/password
-          <br />
-          nostr use{' '}
-          <span className="bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 bg-clip-text text-transparent">
-            public/private key instead
-          </span>
-        </motion.h1>
-        <motion.h2 layoutId="subtitle" className="w-3/4 text-zinc-400">
-          If you have used nostr before, you can import your own private key. Otherwise, you can create a new key or use
-          auto-generated account created by system.
-        </motion.h2>
-        <motion.div layoutId="form"></motion.div>
-        <motion.div layoutId="action" className="mt-4 flex gap-2">
+    <div className="grid h-full w-full grid-rows-5">
+      <div className="row-span-3 overflow-hidden p-4"></div>
+      <div className="row-span-2 flex w-full flex-col items-center gap-8 overflow-hidden pt-10">
+        <h1 className="animate-moveBg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-5xl font-bold leading-none text-transparent">
+          Let&apos;s start!
+        </h1>
+        <div className="mt-4 flex flex-col items-center gap-1.5">
           <Link
             href="/onboarding/create"
-            className="hover:bg-zinc-900/2.5 transform rounded-lg border border-black/5 bg-zinc-800 px-3.5 py-2 font-medium ring-1 ring-inset ring-zinc-900/10 hover:text-zinc-900 active:translate-y-1 dark:text-zinc-300 dark:ring-white/10 dark:hover:bg-zinc-700 dark:hover:text-white"
+            className="relative inline-flex h-14 w-64 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 text-lg font-medium ring-1 ring-zinc-800 hover:bg-zinc-800"
           >
             Create new key
+            <ArrowRightIcon className="h-5 w-5" />
           </Link>
           <Link
             href="/onboarding/login"
-            className="hover:bg-zinc-900/2.5 transform rounded-lg border border-black/5 bg-zinc-800 px-3.5 py-2 font-medium ring-1 ring-inset ring-zinc-900/10 hover:text-zinc-900 active:translate-y-1 dark:text-zinc-300 dark:ring-white/10 dark:hover:bg-zinc-700 dark:hover:text-white"
+            className="inline-flex h-14 w-64 items-center justify-center gap-2 rounded-full px-6 text-base font-medium text-zinc-300 hover:bg-zinc-800"
           >
             Login with private key
           </Link>
-        </motion.div>
+        </div>
       </div>
-      <div>{/* spacer */}</div>
     </div>
   );
 }
@@ -55,9 +41,5 @@ Page.getLayout = function getLayout(
     | ReactFragment
     | ReactPortal
 ) {
-  return (
-    <BaseLayout>
-      <OnboardingLayout>{page}</OnboardingLayout>
-    </BaseLayout>
-  );
+  return <BaseLayout>{page}</BaseLayout>;
 };

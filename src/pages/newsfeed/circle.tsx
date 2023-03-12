@@ -6,7 +6,7 @@ import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 
 export default function Page() {
   return (
     <div className="h-full w-full">
-      <p>Global</p>
+      <p>Circle Newsfeed</p>
     </div>
   );
 }

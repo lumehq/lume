@@ -65,6 +65,14 @@ module.exports = {
           from: { opacity: 0, transform: 'translateX(2px)' },
           to: { opacity: 1, transform: 'translateX(0)' },
         },
+        moveBg: {
+          '0%': { backgroundPosition: '50px' },
+          '20%': { backgroundPosition: '150px' },
+          '40%': { backgroundPosition: '250px' },
+          '60%': { backgroundPosition: '350px' },
+          '80%': { backgroundPosition: '450px' },
+          '100%': { backgroundPosition: '550px' },
+        },
       },
       animation: {
         disco: 'disco 1.5s linear infinite',
@@ -74,6 +82,7 @@ module.exports = {
         slideLeftAndFade: 'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade: 'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        moveBg: 'moveBg 3s ease-in-out infinite alternate running forwards',
       },
     },
   },
