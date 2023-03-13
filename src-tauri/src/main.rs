@@ -20,7 +20,7 @@ fn main() {
     .setup(|app| {
       let main_window = app.get_window("main").unwrap();
       // set inset for traffic lights
-      main_window.position_traffic_lights(8.0, 16.0);
+      main_window.position_traffic_lights(8.0, 20.0);
 
       Ok(())
     })
@@ -41,7 +41,7 @@ fn main() {
     .on_window_event(|e| {
       let apply_offset = || {
         let win = e.window();
-        win.position_traffic_lights(8.0, 16.0);
+        win.position_traffic_lights(8.0, 20.0);
       };
 
       match e.event() {

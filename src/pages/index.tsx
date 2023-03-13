@@ -40,9 +40,9 @@ export default function Page() {
         <div className="flex flex-col items-center gap-2">
           <LumeSymbol className="h-16 w-16 text-black dark:text-white" />
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Did you know?</h3>
+            <h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">Did you know?</h3>
             <p className="font-medium text-zinc-300 dark:text-zinc-600">
-              no one can&apos;t stop you use bitcoin and nostr
+              No one can&apos;t stop you use bitcoin and nostr
             </p>
           </div>
         </div>

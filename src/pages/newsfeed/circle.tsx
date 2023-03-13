@@ -1,5 +1,5 @@
 import BaseLayout from '@layouts/base';
-import NewsFeedLayout from '@layouts/newsfeed';
+import WithSidebarLayout from '@layouts/withSidebar';
 
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 
@@ -22,7 +22,7 @@ Page.getLayout = function getLayout(
 ) {
   return (
     <BaseLayout>
-      <NewsFeedLayout>{page}</NewsFeedLayout>
+      <WithSidebarLayout>{page}</WithSidebarLayout>
     </BaseLayout>
   );
 };
