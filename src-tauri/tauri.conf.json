@@ -13,6 +13,11 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "app": {
+        "all": true,
+        "hide": false,
+        "show": false
+      },
       "shell": {
         "all": false,
         "open": true

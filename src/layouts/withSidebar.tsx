@@ -1,3 +1,4 @@
+import AppHeader from '@components/appHeader';
 import AccountColumn from '@components/columns/account';
 import NavigatorColumn from '@components/columns/navigator';
 
@@ -6,12 +7,12 @@ export default function WithSidebarLayout({ children }: { children: React.ReactN
     <div className="flex h-screen w-full flex-col">
       <div
         data-tauri-drag-region
-        className="flex h-11 shrink-0 items-center border-b border-zinc-100 bg-white dark:border-zinc-900 dark:bg-black"
+        className="relative h-11 shrink-0 border-b border-zinc-100 bg-white dark:border-zinc-900 dark:bg-black"
       >
-        <p className="w-full text-center">Header</p>
+        <AppHeader />
       </div>
       <div className="relative flex h-full w-full flex-1 flex-row">
-        <div className="relative w-[67px] shrink-0 border-r border-zinc-900">
+        <div className="relative w-[68px] shrink-0 border-r border-zinc-900">
           <div className="absolute top-0 left-0 h-12 w-full" />
           <AccountColumn />
         </div>
