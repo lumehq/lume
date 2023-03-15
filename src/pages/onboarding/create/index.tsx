@@ -93,12 +93,12 @@ export default function Page() {
           metadata: JSON.stringify(data),
           npub: npub,
           privkey: privKey,
-          pubkey: pubKey,
+          id: pubKey,
         });
         // redirect to pre-follow
         setTimeout(() => {
           setLoading(false);
-          router.push('/');
+          router.push('/onboarding/create/step-2');
         }, 1500);
       })
       .catch(console.error);
@@ -107,7 +107,7 @@ export default function Page() {
   return (
     <div className="grid h-full w-full grid-rows-5">
       <div className="row-span-1 flex items-center justify-center">
-        <div className="mb-8 flex flex-col gap-3">
+        <div>
           <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
             Create new account
           </h1>

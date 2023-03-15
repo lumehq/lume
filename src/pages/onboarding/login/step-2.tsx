@@ -91,7 +91,7 @@ export default function Page() {
   return (
     <div className="grid h-full w-full grid-rows-5">
       <div className="row-span-1 flex items-center justify-center">
-        <div className="mb-8 flex flex-col gap-3">
+        <div>
           <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
             Bringing back your profile...
           </h1>

@@ -56,9 +56,11 @@ export default function Page() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid h-full w-full grid-rows-5">
       <div className="row-span-1 flex items-center justify-center">
-        <h1 className="bg-gradient-to-br from-zinc-200 via-white to-zinc-300 bg-clip-text text-3xl font-semibold text-transparent">
-          Login with Private Key
-        </h1>
+        <div>
+          <h1 className="bg-gradient-to-br from-zinc-200 via-white to-zinc-300 bg-clip-text text-3xl font-semibold text-transparent">
+            Login with Private Key
+          </h1>
+        </div>
       </div>
       <div className="row-span-4">
         <div className="mx-auto w-full max-w-md">
