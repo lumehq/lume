@@ -13,7 +13,7 @@ INSERT INTO
   relays (relay_url, relay_status)
 VALUES
   ("wss://relay.damus.io", "1"),
-  ("wss://relay.uselume.xyz", "0"),
+  ("wss://eden.nostr.land", "1"),
   ("wss://nostr-pub.wellorder.net", "1"),
   ("wss://nostr.bongbong.com", "1"),
   ("wss://nostr.zebedee.cloud", "1"),
@@ -21,6 +21,16 @@ VALUES
   ("wss://nostr.walletofsatoshi.com", "1"),
   ("wss://relay.snort.social", "1"),
   ("wss://offchain.pub", "1"),
+  ("wss://brb.io", "1"),
+  ("wss://relay.current.fyi", "1"),
+  ("wss://nostr.relayer.se", "1"),
+  ("wss://nostr.bitcoiner.social", "1"),
+  ("wss://relay.nostr.info", "1"),
+  ("wss://relay.zeh.app", "1"),
+  ("wss://nostr-01.dorafactory.org", "1"),
+  ("wss://nostr.zhongwen.world", "1"),
+  ("wss://nostro.cc", "1"),
+  ("wss://relay.nostr.net.in", "1"),
   ("wss://nos.lol", "1");
 
 -- create accounts
