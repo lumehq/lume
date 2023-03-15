@@ -9,6 +9,10 @@ CREATE TABLE
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
+-- add default relays
+-- relay status:
+-- 0: off
+-- 1: on
 INSERT INTO
   relays (relay_url, relay_status)
 VALUES
@@ -34,6 +38,9 @@ VALUES
   ("wss://nos.lol", "1");
 
 -- create accounts
+-- is_active (part of multi-account feature):
+-- 0: false
+-- 1: true
 CREATE TABLE
   accounts (
     id TEXT PRIMARY KEY,
@@ -45,6 +52,9 @@ CREATE TABLE
   );
 
 -- create follows
+-- kind (part of multi-newsfeed feature):
+-- 0: direct
+-- 1: follow of follow
 CREATE TABLE
   follows (
     id INTEGER PRIMARY KEY,
@@ -55,7 +65,7 @@ CREATE TABLE
   );
 
 -- create index for pubkey in follows
-CREATE UNIQUE INDEX index_pubkey ON follows (pubkey);
+CREATE UNIQUE INDEX index_pubkey_on_follows ON follows (pubkey);
 
 -- create cache profiles
 CREATE TABLE
@@ -74,7 +84,5 @@ CREATE TABLE
     created_at TEXT,
     kind INTEGER NOT NULL DEFAULT 1,
     tags TEXT NOT NULL,
-    content TEXT NOT NULL,
-    relay TEXT,
-    is_multi BOOLEAN DEFAULT 0
+    content TEXT NOT NULL
   );
