@@ -2,14 +2,12 @@ import { Account } from '@components/columns/account/account';
 
 import LumeSymbol from '@assets/icons/Lume';
 import { PlusIcon } from '@radix-ui/react-icons';
-import { useLocalStorage } from '@rehooks/local-storage';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
 export default function AccountColumn() {
   const [users, setUsers] = useState([]);
-  const [currentUser]: any = useLocalStorage('current-user');
 
   const getAccounts = useCallback(async () => {
     const db = await Database.load('sqlite:lume.db');
@@ -26,7 +24,7 @@ export default function AccountColumn() {
     <div className="flex h-full flex-col items-center justify-between px-2 pt-4 pb-4">
       <div className="flex flex-col gap-4">
         {users.map((user, index) => (
-          <Account key={index} user={user} current={currentUser.id} />
+          <Account key={index} user={user} />
         ))}
         <Link
           href="/onboarding"

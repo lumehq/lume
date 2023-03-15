@@ -53,7 +53,7 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
 
   return (
     <div className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm font-medium hover:bg-zinc-900">
-      <div className="relative h-5 w-5">
+      <div className="relative h-5 w-5 rounded-full">
         {profile.picture ? (
           <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
         ) : (
