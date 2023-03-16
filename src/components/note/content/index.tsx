@@ -14,7 +14,7 @@ const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
 export const Content = memo(function Content({ data }: { data: any }) {
   const [preview, setPreview] = useState({});
 
-  const content = useRef(data.content);
+  const content = useRef(JSON.parse(data.content));
   const urls = useMemo(
     () =>
       content.current.match(

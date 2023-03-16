@@ -29,6 +29,7 @@ specifiers:
   eslint-plugin-react-hooks: ^4.6.0
   framer-motion: ^9.1.7
   husky: ^8.0.3
+  jotai: ^2.0.3
   lint-staged: ^13.2.0
   moment: ^2.29.4
   next: ^13.2.4
@@ -65,6 +66,7 @@ dependencies:
   bitcoin-address-validation: 2.2.1
   boring-avatars: 1.7.0
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
+  jotai: 2.0.3_react@18.2.0
   moment: 2.29.4
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   next-remove-imports: 1.0.10
@@ -1160,9 +1162,9 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/gotrue-js/2.13.0:
+  /@supabase/gotrue-js/2.14.0:
     resolution:
-      { integrity: sha512-NFBHuHNUn94mP/zOQzsp1k2PtwV55Vhf6ZbTzmMpiUvIRlXhVteZcdfdoAQDIBrdxOdL7F54NFp1gIupPZka6g== }
+      { integrity: sha512-FI6q4n4iZ2zrEt1BnBYYe8HQ1k9t5CpBcDQxVXa8PeMwygXpzR0AcdfAsZ5Yba42C8YsBA132ti01f+RINS3UQ== }
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
@@ -1178,9 +1180,9 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/realtime-js/2.6.0:
+  /@supabase/realtime-js/2.7.0:
     resolution:
-      { integrity: sha512-tOVulMobhpxyDuu8VIImpL8FXmZOKsGNOSyS5ihJdj2xYmPPvYG+D2J51Ewfl+MFF65tweiB6p9N9bNIW1cDNA== }
+      { integrity: sha512-wg35ofiCpIemycmPZvvZk3jM9c9z8VvnPUBbSP9ZZN2vSOEJ9C7DZuLiiZMXsyNUzjVgIn62A1tN99T5+9O8Aw== }
     dependencies:
       '@types/phoenix': 1.5.5
       websocket: 1.0.34
@@ -1202,9 +1204,9 @@ packages:
       { integrity: sha512-/vkpPxGDyLfTASWnVHL8vdgQxn9SX/Cs+BotTxFhLSIeGFSazC6rpQSMKu6RqzO7gjBD1KqTv0h3auWfClWs+Q== }
     dependencies:
       '@supabase/functions-js': 2.1.0
-      '@supabase/gotrue-js': 2.13.0
+      '@supabase/gotrue-js': 2.14.0
       '@supabase/postgrest-js': 1.4.1
-      '@supabase/realtime-js': 2.6.0
+      '@supabase/realtime-js': 2.7.0
       '@supabase/storage-js': 2.3.1
       cross-fetch: 3.1.5
     transitivePeerDependencies:
@@ -2004,7 +2006,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001466
-      electron-to-chromium: 1.4.330
+      electron-to-chromium: 1.4.331
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10_browserslist@4.21.5
 
@@ -2414,9 +2416,9 @@ packages:
       { integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA== }
     dev: true
 
-  /electron-to-chromium/1.4.330:
+  /electron-to-chromium/1.4.331:
     resolution:
-      { integrity: sha512-PqyefhybrVdjAJ45HaPLtuVaehiSw7C3ya0aad+rvmV53IVyXmYRk3pwIOb2TxTDTnmgQdn46NjMMaysx79/6Q== }
+      { integrity: sha512-tdtr9y9oJl8VDiS+HeB6e/JDJqdDGjIk3yRfEMHm5rDnWQ/D5SbafybAayInxolbfbH6pouV5g7ZUAwE/WVtHw== }
 
   /emoji-regex/8.0.0:
     resolution:
@@ -3754,6 +3756,19 @@ packages:
     resolution:
       { integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw== }
     dev: true
+
+  /jotai/2.0.3_react@18.2.0:
+    resolution:
+      { integrity: sha512-MMjhSPAL3RoeZD9WbObufRT2quThEAEknHHridf2ma8Ml7ZVQmUiHk0ssdbR3F0h3kcwhYqSGJ59OjhPge7RRg== }
+    engines: { node: '>=12.20.0' }
+    peerDependencies:
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /js-sdsl/4.3.0:
     resolution:

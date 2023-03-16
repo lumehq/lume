@@ -8,7 +8,7 @@ import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
   const { db }: any = useContext(DatabaseContext);
-  const [profile, setProfile] = useState({ picture: null, display_name: null });
+  const [profile, setProfile] = useState({ picture: null, name: null });
 
   const insertCacheProfile = useCallback(
     async (event) => {
@@ -67,7 +67,7 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
       </div>
       <div className="inline-flex w-full flex-1 flex-col overflow-hidden">
         <p className="truncate leading-tight text-zinc-300">
-          {profile.display_name ? profile.display_name : truncate(pubkey, 16, ' .... ')}
+          {profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}
         </p>
       </div>
     </div>

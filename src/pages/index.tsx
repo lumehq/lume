@@ -16,7 +16,7 @@ export default function Page() {
     if (currentUser) {
       timer.current = setTimeout(() => {
         setLoading(false);
-        router.push('/newsfeed/circle');
+        router.push('/newsfeed/following');
       }, 1000);
     } else {
       timer.current = setTimeout(() => {
