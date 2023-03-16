@@ -5,8 +5,11 @@ import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import Avatar from 'boring-avatars';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
-import Moment from 'react-moment';
+
+dayjs.extend(relativeTime);
 
 export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
   const { db }: any = useContext(DatabaseContext);
@@ -74,9 +77,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
               {profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}
             </span>
             <span className="leading-tight text-zinc-500">·</span>
-            <Moment fromNow unix className="text-zinc-500">
-              {time}
-            </Moment>
+            <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
           </div>
           <div>
             <DotsHorizontalIcon className="h-4 w-4 text-zinc-500" />

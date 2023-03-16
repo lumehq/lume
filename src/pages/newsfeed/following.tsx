@@ -48,8 +48,12 @@ export default function Page() {
         ORDER BY created_at DESC
         LIMIT ${limit.current}`
     );
+    // update data
     setData((data) => [...result, ...data]);
+    // update hasNewerNote to false to disable button
     setHasNewerNote(false);
+    // update current time, fixed duplicate note
+    now.current = new Date();
   }, [db, setHasNewerNote]);
 
   const ItemContent = useCallback(

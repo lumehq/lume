@@ -22,6 +22,7 @@ specifiers:
   bitcoin-address-validation: ^2.2.1
   boring-avatars: ^1.7.0
   csstype: ^3.1.1
+  dayjs: ^1.11.7
   eslint: ^8.36.0
   eslint-config-next: ^13.2.4
   eslint-config-prettier: ^8.7.0
@@ -44,7 +45,6 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-hook-form: ^7.43.5
-  react-moment: ^1.1.3
   react-player: ^2.12.0
   react-virtuoso: ^4.1.0
   tailwindcss: ^3.2.7
@@ -65,6 +65,7 @@ dependencies:
   '@uiw/react-md-editor': 3.20.5_zula6vjvt3wdocc4mwcxqa6nzi
   bitcoin-address-validation: 2.2.1
   boring-avatars: 1.7.0
+  dayjs: 1.11.7
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   jotai: 2.0.3_react@18.2.0
   moment: 2.29.4
@@ -76,7 +77,6 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.5_react@18.2.0
-  react-moment: 1.1.3_mmavuqf6ek6upnyryxchoaliru
   react-player: 2.12.0_react@18.2.0
   react-virtuoso: 4.1.0_biqbaboplfbrettd7655fr4n2y
   tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/3a8b9a6b244df7512bc5ef8692cebdedbab3ccce
@@ -2245,6 +2245,11 @@ packages:
     resolution:
       { integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA== }
     dev: true
+
+  /dayjs/1.11.7:
+    resolution:
+      { integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ== }
+    dev: false
 
   /debug/2.6.9:
     resolution:
@@ -5189,19 +5194,6 @@ packages:
       vfile: 5.3.7
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /react-moment/1.1.3_mmavuqf6ek6upnyryxchoaliru:
-    resolution:
-      { integrity: sha512-8EPvlUL8u6EknPp1ISF5MQ3wx2OHJVXIP/iZc4wRh3iV3XozftZERDv9ANZeAtMlhNNQHdFoqcZHFUkBSTONfA== }
-    peerDependencies:
-      moment: ^2.29.0
-      prop-types: ^15.7.0
-      react: ^16.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      moment: 2.29.4
-      prop-types: 15.8.1
-      react: 18.2.0
     dev: false
 
   /react-player/2.12.0_react@18.2.0:
