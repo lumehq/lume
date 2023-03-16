@@ -11,7 +11,7 @@ import { atomHasNewerNote } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback, useState } from 'react';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
@@ -21,7 +21,7 @@ export default function Page() {
 
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(false);
-  const hasNewerNote = useAtomValue(atomHasNewerNote);
+  const [hasNewerNote, setHasNewerNote] = useAtom(atomHasNewerNote);
 
   const now = useRef(new Date());
   const limit = useRef(30);
@@ -49,7 +49,8 @@ export default function Page() {
         LIMIT ${limit.current}`
     );
     setData((data) => [...result, ...data]);
-  }, [db]);
+    setHasNewerNote(false);
+  }, [db, setHasNewerNote]);
 
   const ItemContent = useCallback(
     (index: string | number) => {
@@ -100,7 +101,7 @@ export default function Page() {
   return (
     <div className="relative h-full w-full">
       {hasNewerNote && (
-        <div className="absolute top-16 left-1/2 z-50 -translate-x-1/2 transform">
+        <div className="absolute top-8 left-1/2 z-50 -translate-x-1/2 transform">
           <button
             onClick={() => loadNewest()}
             className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 px-3 text-sm shadow-lg active:translate-y-1"
