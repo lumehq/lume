@@ -3,6 +3,7 @@ import WithSidebarLayout from '@layouts/withSidebar';
 
 import { DatabaseContext } from '@components/contexts/database';
 import { NoteConnector } from '@components/note/connector';
+import NoteForm from '@components/note/form';
 import { Placeholder } from '@components/note/placeholder';
 import { Repost } from '@components/note/repost';
 import { Single } from '@components/note/single';
@@ -90,7 +91,6 @@ export default function Page() {
 
   return (
     <div className="relative h-full w-full">
-      <NoteConnector setParentReload={setParentReload} setHasNewNote={setHasNewNote} currentDate={now.current} />
       {hasNewNote && (
         <div className="absolute top-16 left-1/2 z-50 -translate-x-1/2 transform">
           <button
@@ -106,6 +106,7 @@ export default function Page() {
         data={data}
         itemContent={ItemContent}
         components={{
+          Header: () => <NoteForm />,
           EmptyPlaceholder: () => <Placeholder />,
           ScrollSeekPlaceholder: () => <Placeholder />,
         }}

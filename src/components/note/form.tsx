@@ -3,6 +3,7 @@ import { RelayContext } from '@components/contexts/relay';
 import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import { ImageIcon, SizeIcon } from '@radix-ui/react-icons';
 import { useLocalStorage } from '@rehooks/local-storage';
 import * as commands from '@uiw/react-md-editor/lib/commands';
 import dynamic from 'next/dynamic';
@@ -13,7 +14,7 @@ const MDEditor = dynamic(() => import('@uiw/react-md-editor').then((mod) => mod.
   ssr: false,
 });
 
-export default function CreatePost() {
+export default function NoteForm() {
   const relayPool: any = useContext(RelayContext);
   const [relays]: any = useLocalStorage('relays');
 
@@ -57,20 +58,56 @@ export default function CreatePost() {
 
   return (
     <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <div className="flex flex-col gap-1.5">
-          <div className="relative h-16 shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
+      <div className="p-3">
+        <div className="relative h-32 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
+          <div>
             <textarea
-              readOnly
+              name="content"
+              onChange={(e) => setValue(e.target.value)}
               placeholder="What's your thought?"
-              className="relative h-16 w-full resize-none rounded-lg border border-black/5 px-3.5 py-3 text-sm shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+              className="relative h-32 w-full resize-none rounded-lg border border-black/5 px-3.5 py-3 text-sm shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+              spellCheck={false}
             />
           </div>
-          <button className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-white/10 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gray-300 via-fuchsia-600 to-orange-600 text-sm font-semibold shadow-input">
-            <span className="drop-shadow-lg">Post</span>
-          </button>
+          <div className="absolute bottom-2 w-full px-2">
+            <div className="flex w-full items-center justify-between bg-zinc-800">
+              <div className="flex items-center gap-2 divide-x divide-zinc-700">
+                <Dialog.Trigger asChild>
+                  <span className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
+                    <SizeIcon className="h-4 w-4 text-zinc-400" />
+                  </span>
+                </Dialog.Trigger>
+                <div className="flex items-center gap-2 pl-2">
+                  <span className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="h-4 w-4 text-zinc-400"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
+                      />
+                    </svg>
+                  </span>
+                  <span className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
+                    <ImageIcon className="h-4 w-4 text-zinc-400" />
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm font-medium shadow-md shadow-fuchsia-900/50 hover:bg-fuchsia-600">
+                  <span className="text-white drop-shadow">Send</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </Dialog.Trigger>
+      </div>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
         <Dialog.Content className="fixed inset-0 overflow-y-auto">

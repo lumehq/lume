@@ -1,8 +1,6 @@
-import Reaction from '@components/note/atoms/reaction';
-import Reply from '@components/note/atoms/reply';
-import { User } from '@components/note/atoms/user';
 import { ImageCard } from '@components/note/content/preview/imageCard';
 import { Video } from '@components/note/content/preview/video';
+import { UserExtend } from '@components/user/extend';
 
 import dynamic from 'next/dynamic';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -63,7 +61,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
 
   return (
     <div className="flex flex-col">
-      <User pubkey={data.pubkey} time={data.created_at} />
+      <UserExtend pubkey={data.pubkey} time={data.created_at} />
       <div className="-mt-4 pl-[60px]">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col">
@@ -87,10 +85,12 @@ export const Content = memo(function Content({ data }: { data: any }) {
             </div>
             <>{previewAttachment()}</>
           </div>
+          {/*
           <div className="relative z-10 -ml-1 flex items-center gap-8">
             <Reply eventID={data.id} />
             <Reaction eventID={data.id} eventPubkey={data.pubkey} />
           </div>
+          */}
         </div>
       </div>
     </div>
