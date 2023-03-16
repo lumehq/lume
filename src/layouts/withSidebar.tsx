@@ -11,13 +11,13 @@ export default function WithSidebarLayout({ children }: { children: React.ReactN
       >
         <AppHeader />
       </div>
-      <div className="relative flex h-full w-full flex-1 flex-row">
+      <div className="relative flex min-h-0 w-full flex-1">
         <div className="relative w-[68px] shrink-0 border-r border-zinc-900">
           <div className="absolute top-0 left-0 h-12 w-full" />
           <AccountColumn />
         </div>
-        <div className="grid grow grid-cols-4">
-          <div className="col-span-1 border-r border-zinc-900">
+        <div className="grid w-full grid-cols-4">
+          <div className="scrollbar-hide col-span-1 overflow-y-auto overflow-x-hidden border-r border-zinc-900">
             <NavigatorColumn />
           </div>
           <div className="col-span-3 m-3 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">

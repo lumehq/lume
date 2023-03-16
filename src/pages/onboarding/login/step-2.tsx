@@ -5,7 +5,6 @@ import { RelayContext } from '@components/contexts/relay';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
 import {
@@ -61,6 +60,10 @@ export default function Page() {
     },
     [db, pubkey]
   );
+
+  const submit = () => {
+    router.push('/');
+  };
 
   useEffect(() => {
     relayPool.subscribe(
@@ -122,12 +125,12 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <Link
-            href="/"
+          <button
+            onClick={() => submit()}
             className="inline-flex w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
           >
             <span className="drop-shadow-lg">Done →</span>
-          </Link>
+          </button>
         </div>
       </div>
     </div>

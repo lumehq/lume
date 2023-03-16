@@ -53,7 +53,7 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
 
   return (
     <div className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm font-medium hover:bg-zinc-900">
-      <div className="relative h-5 w-5 overflow-hidden rounded-full">
+      <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full">
         {profile.picture ? (
           <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
         ) : (
@@ -65,8 +65,8 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
           />
         )}
       </div>
-      <div className="flex flex-col">
-        <p className="leading-tight text-zinc-300">
+      <div className="inline-flex w-full flex-1 flex-col overflow-hidden">
+        <p className="truncate leading-tight text-zinc-300">
           {profile.display_name ? profile.display_name : truncate(pubkey, 16, ' .... ')}
         </p>
       </div>
