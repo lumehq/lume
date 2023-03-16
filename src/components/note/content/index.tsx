@@ -1,5 +1,6 @@
 import { ImageCard } from '@components/note/content/preview/imageCard';
 import { Video } from '@components/note/content/preview/video';
+import { Reaction } from '@components/note/reaction';
 import { UserExtend } from '@components/user/extend';
 
 import dynamic from 'next/dynamic';
@@ -42,7 +43,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
         // add video to preview
         setPreview({ url: parseURL.href, type: 'video' });
         content.current = content.current.replace(parseURL.href, '');
-      } // #TODO: support multiple previ3ew
+      } // #TODO: support multiple preview
     }
   }, [urls]);
 
@@ -85,12 +86,9 @@ export const Content = memo(function Content({ data }: { data: any }) {
             </div>
             <>{previewAttachment()}</>
           </div>
-          {/*
           <div className="relative z-10 -ml-1 flex items-center gap-8">
-            <Reply eventID={data.id} />
             <Reaction eventID={data.id} eventPubkey={data.pubkey} />
           </div>
-          */}
         </div>
       </div>
     </div>

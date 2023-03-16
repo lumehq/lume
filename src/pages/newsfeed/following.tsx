@@ -4,7 +4,6 @@ import WithSidebarLayout from '@layouts/withSidebar';
 import { DatabaseContext } from '@components/contexts/database';
 import NoteForm from '@components/note/form';
 import { Placeholder } from '@components/note/placeholder';
-import { Repost } from '@components/note/repost';
 import { Single } from '@components/note/single';
 
 import { atomHasNewerNote } from '@stores/note';
@@ -59,13 +58,7 @@ export default function Page() {
   const ItemContent = useCallback(
     (index: string | number) => {
       const event = data[index];
-      if (event.content.includes('#[0]') && event.tags[0][0] == 'e') {
-        // type: repost
-        return <Repost root={event.tags} user={event.pubkey} />;
-      } else {
-        // type: default
-        return <Single event={event} />;
-      }
+      return <Single event={event} />;
     },
     [data]
   );
