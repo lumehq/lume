@@ -4,8 +4,7 @@ import { dateToUnix } from '@utils/getDate';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { memo, useContext, useState } from 'react';
-import { useEffect } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 
 export const Reaction = memo(function Reaction({ eventID, eventPubkey }: { eventID: string; eventPubkey: string }) {
   const relayPool: any = useContext(RelayContext);
