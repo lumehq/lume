@@ -3,7 +3,7 @@ import { RelayContext } from '@components/contexts/relay';
 import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { ImageIcon, SizeIcon } from '@radix-ui/react-icons';
+import { SizeIcon } from '@radix-ui/react-icons';
 import { useLocalStorage } from '@rehooks/local-storage';
 import * as commands from '@uiw/react-md-editor/lib/commands';
 import dynamic from 'next/dynamic';
