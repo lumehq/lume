@@ -1,38 +1,8 @@
-import { RelayContext } from '@components/contexts/relay';
+import { memo } from 'react';
 
-import { useLocalStorage } from '@rehooks/local-storage';
-import { memo, useContext, useEffect, useState } from 'react';
-
-export const Reply = memo(function Reply({ eventID }: { eventID: string }) {
-  const relayPool: any = useContext(RelayContext);
-
-  const [relays]: any = useLocalStorage('relays');
-  const [reply, setReply] = useState(0);
-
-  useEffect(() => {
-    relayPool.subscribe(
-      [
-        {
-          '#e': [eventID],
-          since: 0,
-          kinds: [1],
-          limit: 10,
-        },
-      ],
-      relays,
-      () => {
-        setReply(reply + 1);
-      },
-      undefined,
-      (events: any, relayURL: any) => {
-        console.log(events, relayURL);
-      }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventID, relayPool, relays]);
-
+export const CommentsCounter = memo(function CommentsCounter({ comments }: { comments: number }) {
   return (
-    <div className="group flex w-16 items-center gap-1.5 text-sm text-zinc-500">
+    <div className="group flex w-16 items-center gap-1 text-sm text-zinc-500">
       <div className="rounded-md p-1 group-hover:bg-zinc-800">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +19,7 @@ export const Reply = memo(function Reply({ eventID }: { eventID: string }) {
           />
         </svg>
       </div>
-      <span>{reply}</span>
+      <span>{comments}</span>
     </div>
   );
 });

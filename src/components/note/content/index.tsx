@@ -1,7 +1,6 @@
+import NoteMetadata from '@components/note/content/metadata';
 import { ImageCard } from '@components/note/content/preview/imageCard';
 import { Video } from '@components/note/content/preview/video';
-import { Reaction } from '@components/note/reaction';
-import { Reply } from '@components/note/reply';
 import { UserExtend } from '@components/user/extend';
 
 import dynamic from 'next/dynamic';
@@ -87,10 +86,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
             </div>
             <>{previewAttachment()}</>
           </div>
-          <div className="relative z-10 -ml-1 flex items-center gap-8">
-            <Reply eventID={data.id} />
-            <Reaction eventID={data.id} eventPubkey={data.pubkey} />
-          </div>
+          <NoteMetadata eventID={data.id} eventPubkey={data.pubkey} />
         </div>
       </div>
     </div>

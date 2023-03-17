@@ -4,66 +4,50 @@ import { dateToUnix } from '@utils/getDate';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useState } from 'react';
 
-export const Reaction = memo(function Reaction({ eventID, eventPubkey }: { eventID: string; eventPubkey: string }) {
+export const LikesCounter = memo(function LikesCounter({
+  likes,
+  eventID,
+  eventPubkey,
+}: {
+  likes: number;
+  eventID: string;
+  eventPubkey: string;
+}) {
   const relayPool: any = useContext(RelayContext);
+
   const [relays]: any = useLocalStorage('relays');
-
-  const [reaction, setReaction] = useState(0);
-  const [isReact, setIsReact] = useState(false);
-
   const [currentUser]: any = useLocalStorage('current-user');
 
-  const handleReaction = (e: any) => {
-    e.stopPropagation();
+  const [isReact, setIsReact] = useState(false);
 
-    const event: any = {
-      content: '+',
-      kind: 7,
-      tags: [
-        ['e', eventID],
-        ['p', eventPubkey],
-      ],
-      created_at: dateToUnix(),
-      pubkey: currentUser.id,
-    };
-    event.id = getEventHash(event);
-    event.sig = signEvent(event, currentUser.privkey);
-    // publish event to all relays
-    relayPool.publish(event, relays);
-    // update state to change icon to filled heart
-    setIsReact(true);
-    // update reaction count
-    setReaction(reaction + 1);
-  };
+  const handleLike = useCallback(
+    (e: any) => {
+      e.stopPropagation();
 
-  useEffect(() => {
-    relayPool.subscribe(
-      [
-        {
-          '#e': [eventID],
-          since: 0,
-          kinds: [7],
-          limit: 10,
-        },
-      ],
-      relays,
-      (event: any) => {
-        if (event.content === '🤙' || event.content === '+') {
-          setReaction(reaction + 1);
-        }
-      },
-      undefined,
-      (events: any, relayURL: any) => {
-        console.log(events, relayURL);
-      }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventID, relayPool, relays]);
+      const event: any = {
+        content: '+',
+        kind: 7,
+        tags: [
+          ['e', eventID],
+          ['p', eventPubkey],
+        ],
+        created_at: dateToUnix(),
+        pubkey: currentUser.id,
+      };
+      event.id = getEventHash(event);
+      event.sig = signEvent(event, currentUser.privkey);
+      // publish event to all relays
+      relayPool.publish(event, relays);
+      // update state to change icon to filled heart
+      setIsReact(true);
+    },
+    [currentUser.id, currentUser.privkey, eventID, eventPubkey, relayPool, relays]
+  );
 
   return (
-    <button onClick={(e) => handleReaction(e)} className="group flex w-16 items-center gap-1.5 text-sm text-zinc-500">
+    <button onClick={(e) => handleLike(e)} className="group flex w-16 items-center gap-1 text-sm text-zinc-500">
       <div className="rounded-md p-1 group-hover:bg-zinc-800">
         {isReact ? (
           <svg
@@ -91,7 +75,7 @@ export const Reaction = memo(function Reaction({ eventID, eventPubkey }: { event
           </svg>
         )}
       </div>
-      <span>{reaction}</span>
+      <span>{likes}</span>
     </button>
   );
 });

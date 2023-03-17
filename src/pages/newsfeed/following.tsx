@@ -3,7 +3,7 @@ import WithSidebarLayout from '@layouts/withSidebar';
 
 import { DatabaseContext } from '@components/contexts/database';
 import { Note } from '@components/note';
-import NoteForm from '@components/note/form';
+import FormBasic from '@components/note/form/basic';
 import { Placeholder } from '@components/note/placeholder';
 
 import { atomHasNewerNote } from '@stores/note';
@@ -102,7 +102,7 @@ export default function Page() {
         <div className="absolute top-8 left-1/2 z-50 -translate-x-1/2 transform">
           <button
             onClick={() => loadNewest()}
-            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 px-3 text-sm shadow-lg shadow-lg active:translate-y-1"
+            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 px-3 text-sm shadow-lg shadow-fuchsia-900/50 active:translate-y-1"
           >
             <span className="text-white drop-shadow">Load newest</span>
           </button>
@@ -112,7 +112,7 @@ export default function Page() {
         data={data}
         itemContent={ItemContent}
         components={{
-          Header: () => <NoteForm />,
+          Header: () => <FormBasic />,
           EmptyPlaceholder: () => <Placeholder />,
           ScrollSeekPlaceholder: () => <Placeholder />,
         }}
