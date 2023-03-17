@@ -5,7 +5,6 @@ import { atomHasNewerNote } from '@stores/note';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 
-import { SliderIcon } from '@radix-ui/react-icons';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { memo, useCallback, useContext, useEffect, useRef } from 'react';
@@ -26,14 +25,14 @@ export const NoteConnector = memo(function NoteConnector() {
       await db.execute(
         `INSERT OR IGNORE INTO
           cache_notes
-            (id, pubkey, created_at, kind, tags, content) VALUES
+            (id, pubkey, created_at, kind, content, tags) VALUES
             (
               "${event.id}",
               "${event.pubkey}",
               "${event.created_at}",
               "${event.kind}",
-              '${JSON.stringify(event.tags)}',
-              '${JSON.stringify(event.content)}'
+              "${event.content}",
+              '${JSON.stringify(event.tags)}'
             );`
       );
     },

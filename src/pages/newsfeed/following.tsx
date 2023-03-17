@@ -2,16 +2,16 @@ import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
 import { DatabaseContext } from '@components/contexts/database';
+import { Note } from '@components/note';
 import NoteForm from '@components/note/form';
 import { Placeholder } from '@components/note/placeholder';
-import { Single } from '@components/note/single';
 
 import { atomHasNewerNote } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 
 import { useAtom } from 'jotai';
-import { useCallback, useState } from 'react';
+import { Key, useCallback, useState } from 'react';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
@@ -56,15 +56,15 @@ export default function Page() {
   }, [db, setHasNewerNote]);
 
   const ItemContent = useCallback(
-    (index: string | number) => {
+    (index: Key) => {
       const event = data[index];
-      return <Single event={event} />;
+      return <Note event={event} />;
     },
     [data]
   );
 
   const computeItemKey = useCallback(
-    (index: string | number) => {
+    (index: Key) => {
       return data[index].id;
     },
     [data]
@@ -87,6 +87,7 @@ export default function Page() {
     if (reload === false) {
       getData().catch(console.error);
     } else {
+      // auto reload after 8s
       const timer = setTimeout(() => {
         getData().catch(console.error);
       }, 8000);
@@ -101,7 +102,7 @@ export default function Page() {
         <div className="absolute top-8 left-1/2 z-50 -translate-x-1/2 transform">
           <button
             onClick={() => loadNewest()}
-            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 px-3 text-sm shadow-lg active:translate-y-1"
+            className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 px-3 text-sm shadow-lg shadow-lg active:translate-y-1"
           >
             <span className="text-white drop-shadow">Load newest</span>
           </button>
