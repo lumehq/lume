@@ -70,7 +70,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
               <MarkdownPreview
                 source={content.current}
                 className={
-                  'prose prose-zinc max-w-none break-words dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-normal prose-a:font-medium prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1'
+                  'prose prose-zinc max-w-none break-words dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-tight prose-a:font-medium prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1'
                 }
                 linkTarget="_blank"
                 disallowedElements={[

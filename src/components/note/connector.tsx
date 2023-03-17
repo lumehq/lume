@@ -7,7 +7,7 @@ import { dateToUnix, hoursAgo } from '@utils/getDate';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
-import { memo, useCallback, useContext, useEffect, useRef } from 'react';
+import { memo, useCallback, useContext, useMemo, useRef } from 'react';
 
 export const NoteConnector = memo(function NoteConnector() {
   const { db }: any = useContext(DatabaseContext);
@@ -23,23 +23,14 @@ export const NoteConnector = memo(function NoteConnector() {
     async (event: any) => {
       // insert to local database
       await db.execute(
-        `INSERT OR IGNORE INTO
-          cache_notes
-            (id, pubkey, created_at, kind, content, tags) VALUES
-            (
-              "${event.id}",
-              "${event.pubkey}",
-              "${event.created_at}",
-              "${event.kind}",
-              "${event.content}",
-              '${JSON.stringify(event.tags)}'
-            );`
+        'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags) VALUES (?, ?, ?, ?, ?, ?);',
+        [event.id, event.pubkey, event.created_at, event.kind, event.content, JSON.stringify(event.tags)]
       );
     },
     [db]
   );
 
-  const fetchEvent = useCallback(() => {
+  useMemo(() => {
     relayPool.subscribe(
       [
         {
@@ -59,10 +50,6 @@ export const NoteConnector = memo(function NoteConnector() {
       }
     );
   }, [relayPool, follows, relays, insertDB, setHasNewerNote]);
-
-  useEffect(() => {
-    fetchEvent();
-  }, [fetchEvent]);
 
   return (
     <>

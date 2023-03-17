@@ -12,13 +12,10 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
 
   const insertCacheProfile = useCallback(
     async (event) => {
-      const metadata: any = JSON.parse(event.content);
       // insert to database
-      await db.execute(
-        `INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES ("${pubkey}", '${JSON.stringify(metadata)}')`
-      );
+      await db.execute('INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES (?, ?);', [pubkey, event.content]);
       // update state
-      setProfile(metadata);
+      setProfile(JSON.parse(event.content));
     },
     [db, pubkey]
   );
