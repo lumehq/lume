@@ -48,7 +48,7 @@ export default function AccountColumn() {
         </Link>
       </div>
       <div className="flex flex-col gap-0.5 text-center">
-        <span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-sm font-black uppercase leading-tight text-transparent">
+        <span className="animate-moveBg from-fuchsia-300 via-orange-100 to-amber-300 text-sm font-black uppercase leading-tight text-zinc-600 hover:bg-gradient-to-r hover:bg-clip-text hover:text-transparent">
           Lume
         </span>
         <span className="text-xs font-medium text-zinc-700">v{version}</span>
