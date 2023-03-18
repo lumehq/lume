@@ -21,6 +21,7 @@ export const LikesCounter = memo(function LikesCounter({
   const [currentUser]: any = useLocalStorage('current-user');
 
   const [isReact, setIsReact] = useState(false);
+  const [count, setCount] = useState(likes);
 
   const handleLike = useCallback(
     (e: any) => {
@@ -42,8 +43,10 @@ export const LikesCounter = memo(function LikesCounter({
       relayPool.publish(event, relays);
       // update state to change icon to filled heart
       setIsReact(true);
+      // update counter
+      setCount(count + 1);
     },
-    [currentUser.id, currentUser.privkey, eventID, eventPubkey, relayPool, relays]
+    [currentUser.id, currentUser.privkey, eventID, eventPubkey, count, relayPool, relays]
   );
 
   return (
@@ -75,7 +78,7 @@ export const LikesCounter = memo(function LikesCounter({
           </svg>
         )}
       </div>
-      <span>{likes}</span>
+      <span>{count}</span>
     </button>
   );
 });

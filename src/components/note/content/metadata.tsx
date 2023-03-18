@@ -1,6 +1,6 @@
 import { RelayContext } from '@components/contexts/relay';
-import { CommentsCounter } from '@components/note/content/counter/comments';
-import { LikesCounter } from '@components/note/content/counter/likes';
+import { CommentsCounter } from '@components/note/counter/comments';
+import { LikesCounter } from '@components/note/counter/likes';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 import { useContext, useMemo, useState } from 'react';
