@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { memo } from 'react';
 
-export const Account = memo(function Account({ user }: { user: any }) {
+export const InactiveAccount = memo(function InactiveAccount({ user }: { user: any }) {
   const userData = JSON.parse(user.metadata);
 
   const setCurrentUser = () => {
