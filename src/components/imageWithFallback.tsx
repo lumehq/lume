@@ -26,6 +26,7 @@ export const ImageWithFallback = memo(function ImageWithFallback({
           size={44}
           name={alt}
           variant="beam"
+          square={true}
           colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
         />
       ) : (

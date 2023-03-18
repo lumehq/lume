@@ -9,8 +9,8 @@ export const Account = memo(function Account({ user }: { user: any }) {
   };
 
   return (
-    <button onClick={() => setCurrentUser()} className="relative h-11 w-11 shrink rounded-full">
-      <Image src={userData.picture} alt="user's avatar" fill={true} className="rounded-full object-cover" />
+    <button onClick={() => setCurrentUser()} className="relative h-11 w-11 shrink rounded-lg">
+      <Image src={userData.picture} alt="user's avatar" fill={true} className="rounded-lg object-cover" />
     </button>
   );
 });

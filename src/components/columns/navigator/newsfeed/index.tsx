@@ -29,7 +29,7 @@ export default function Newsfeed() {
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:bg-zinc-900"
           >
             <div className="inline-flex h-5 w-5 items-center justify-center">
-              <span className="h-4 w-3.5 rounded bg-gradient-to-br from-fuchsia-500 via-purple-300 to-pink-300"></span>
+              <span className="h-4 w-3 rounded-sm bg-gradient-to-br from-fuchsia-500 via-purple-300 to-pink-300"></span>
             </div>
             <span>Following</span>
           </ActiveLink>
@@ -39,7 +39,7 @@ export default function Newsfeed() {
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:bg-zinc-900"
           >
             <div className="inline-flex h-5 w-5 items-center justify-center">
-              <span className="h-4 w-3.5 rounded bg-gradient-to-br from-amber-500 via-orange-200 to-yellow-300"></span>
+              <span className="h-4 w-3 rounded-sm bg-gradient-to-br from-amber-500 via-orange-200 to-yellow-300"></span>
             </div>
             <span>Circle</span>
           </ActiveLink>

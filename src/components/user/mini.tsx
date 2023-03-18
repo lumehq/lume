@@ -50,14 +50,15 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
 
   return (
     <div className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm font-medium hover:bg-zinc-900">
-      <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full">
+      <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded">
         {profile.picture ? (
-          <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
+          <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded object-cover" />
         ) : (
           <Avatar
             size={20}
             name={pubkey}
             variant="beam"
+            square={true}
             colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
           />
         )}
