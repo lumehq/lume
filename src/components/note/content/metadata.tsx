@@ -37,14 +37,11 @@ export default function NoteMetadata({ eventID, eventPubkey }: { eventID: string
         }
       },
       undefined,
-      (events, relayURL) => {
-        console.log(events, relayURL);
-      },
+      undefined,
       {
         unsubscribeOnEose: true,
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventID, relayPool, relays]);
 
   return (

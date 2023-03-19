@@ -72,11 +72,7 @@ export default function Page() {
 
   useEffect(() => {
     const getData = async () => {
-      const result = await db.select(
-        `SELECT * FROM cache_notes WHERE created_at <= ${dateToUnix(now.current)} ORDER BY created_at DESC LIMIT ${
-          limit.current
-        }`
-      );
+      const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
       if (result.length > 0) {
         setData(result);
       } else {

@@ -12,9 +12,9 @@ export default function AccountList() {
   const renderAccount = useCallback(
     (user: { id: string }) => {
       if (user.id === currentUser.id) {
-        return <ActiveAccount user={user} />;
+        return <ActiveAccount key={user.id} user={user} />;
       } else {
-        return <InactiveAccount user={user} />;
+        return <InactiveAccount key={user.id} user={user} />;
       }
     },
     [currentUser.id]

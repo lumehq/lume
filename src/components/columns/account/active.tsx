@@ -53,9 +53,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
         insertFollows(event.tags);
       },
       undefined,
-      (events, relayURL) => {
-        console.log(events, relayURL);
-      },
+      undefined,
       {
         unsubscribeOnEose: true,
       }
