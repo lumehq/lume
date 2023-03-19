@@ -18,6 +18,11 @@
         "hide": false,
         "show": false
       },
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["https://rbr.bio/*", "https://metadata.uselume.xyz/*"]
+      },
       "shell": {
         "all": false,
         "open": true
