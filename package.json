@@ -16,6 +16,7 @@
     "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.4",
     "@radix-ui/react-icons": "^1.2.0",
+    "@radix-ui/react-tabs": "^1.0.3",
     "@rehooks/local-storage": "^2.4.4",
     "@supabase/supabase-js": "^2.10.0",
     "@tauri-apps/api": "^1.2.0",
