@@ -1,11 +1,9 @@
 import NoteMetadata from '@components/note/content/metadata';
-import { ImageCard } from '@components/note/content/preview/imageCard';
-import { Video } from '@components/note/content/preview/video';
+import NotePreview from '@components/note/content/preview';
 import { UserExtend } from '@components/user/extend';
 
 import dynamic from 'next/dynamic';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import ReactPlayer from 'react-player';
+import { memo } from 'react';
 
 const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
   ssr: false,
@@ -13,53 +11,6 @@ const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
 });
 
 export const Content = memo(function Content({ data }: { data: any }) {
-  const [preview, setPreview] = useState({});
-
-  const content = useRef(data.content);
-  const urls = useMemo(
-    () =>
-      content.current.match(
-        /((http|ftp|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
-      ),
-    []
-  );
-
-  useEffect(() => {
-    if (urls !== null && urls.length > 0) {
-      // #TODO: support multiple url
-      let url = urls[0];
-      // make sure url alway have http://
-      if (!/^https?:\/\//i.test(url)) {
-        url = 'http://' + url;
-      }
-      // parse url with new URL();
-      const parseURL = new URL(url, 'https://uselume.xyz');
-      // #TODO performance test
-      if (parseURL.pathname.toLowerCase().match(/\.(jpg|jpeg|gif|png|webp)$/)) {
-        // add image to preview
-        setPreview({ image: parseURL.href, type: 'image' });
-        content.current = content.current.replace(parseURL.href, '');
-      } else if (ReactPlayer.canPlay(parseURL.href)) {
-        // add video to preview
-        setPreview({ url: parseURL.href, type: 'video' });
-        content.current = content.current.replace(parseURL.href, '');
-      } // #TODO: support multiple preview
-    }
-  }, [urls]);
-
-  const previewAttachment = useCallback(() => {
-    if (Object.keys(preview).length > 0) {
-      switch (preview['type']) {
-        case 'image':
-          return <ImageCard data={preview} />;
-        case 'video':
-          return <Video data={preview} />;
-        default:
-          return null;
-      }
-    }
-  }, [preview]);
-
   return (
     <div className="relative z-10 flex flex-col">
       <UserExtend pubkey={data.pubkey} time={data.created_at} />
@@ -68,7 +19,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
           <div className="flex flex-col">
             <div>
               <MarkdownPreview
-                source={content.current}
+                source={data.content}
                 className={
                   'prose prose-zinc max-w-none break-words dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1'
                 }
@@ -84,7 +35,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
                 ]}
               />
             </div>
-            <>{previewAttachment()}</>
+            <NotePreview content={data.content} />
           </div>
           <NoteMetadata
             eventID={data.id}
