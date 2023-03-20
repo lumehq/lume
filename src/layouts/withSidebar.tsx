@@ -16,12 +16,20 @@ export default function WithSidebarLayout({ children }: { children: React.ReactN
           <div className="absolute top-0 left-0 h-12 w-full" />
           <AccountColumn />
         </div>
-        <div className="grid w-full grid-cols-4">
+        <div className="grid w-full grid-cols-4 xl:grid-cols-5">
           <div className="scrollbar-hide col-span-1 overflow-y-auto overflow-x-hidden border-r border-zinc-900">
             <NavigatorColumn />
           </div>
-          <div className="col-span-3 m-3 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
+          <div className="col-span-3 m-3 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20 xl:col-span-2 xl:mr-1.5">
             <div className="h-full w-full rounded-lg">{children}</div>
+          </div>
+          <div className="col-span-3 m-3 hidden overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20 xl:col-span-2 xl:ml-1.5 xl:flex">
+            <div className="flex h-full w-full items-center justify-center">
+              <p className="select-text p-8 text-center text-zinc-400">
+                This feature hasn&apos;t implemented yet, so resize Lume to the initial size for a better experience.
+                I&apos;m sorry for this inconvenience, and I swear I will add it soon 😁
+              </p>
+            </div>
           </div>
         </div>
       </div>

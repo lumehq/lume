@@ -54,7 +54,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   }, [getCacheProfile, insertCacheProfile, pubkey]);
 
   return (
-    <div className="relative flex items-start gap-4">
+    <div className="flex items-start gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
         {profile.picture ? (
           <ImageWithFallback
@@ -83,7 +83,9 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
             <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
           </div>
           <div>
-            <DotsHorizontalIcon className="h-4 w-4 text-zinc-500" />
+            <button className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800">
+              <DotsHorizontalIcon className="h-3 w-3 text-zinc-500" />
+            </button>
           </div>
         </div>
       </div>

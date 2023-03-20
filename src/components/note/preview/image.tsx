@@ -5,7 +5,7 @@ export const ImagePreview = memo(function ImagePreview({ data }: { data: any }) 
   return (
     <div className="relative mt-2 flex flex-col overflow-hidden">
       {data.map((image: string, index: number) => (
-        <div key={index} className={`relative h-full w-full rounded-lg ${index == 1 ? 'mt-2' : ''}`}>
+        <div key={index} className={`relative h-full w-full rounded-lg xl:w-2/3 ${index == 1 ? 'mt-2' : ''}`}>
           <Image
             placeholder="blur"
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
