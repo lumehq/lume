@@ -69,7 +69,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[220px] rounded-lg bg-zinc-800 p-1.5 shadow-lg shadow-black/50 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+          className="min-w-[220px] rounded-lg bg-zinc-800 p-1.5 shadow-modal will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
           side="right"
           sideOffset={5}
           align="start"
@@ -102,7 +102,6 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
             </div>
             Logout
           </DropdownMenu.Item>
-          <DropdownMenu.Arrow className="fill-zinc-800" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

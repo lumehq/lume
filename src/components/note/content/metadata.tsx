@@ -5,7 +5,17 @@ import { LikesCounter } from '@components/note/counter/likes';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { useContext, useMemo, useState } from 'react';
 
-export default function NoteMetadata({ eventID, eventPubkey }: { eventID: string; eventPubkey: string }) {
+export default function NoteMetadata({
+  eventID,
+  eventPubkey,
+  eventContent,
+  eventTime,
+}: {
+  eventID: string;
+  eventPubkey: string;
+  eventTime: string;
+  eventContent: any;
+}) {
   const relayPool: any = useContext(RelayContext);
   const [relays]: any = useLocalStorage('relays');
 
@@ -46,8 +56,14 @@ export default function NoteMetadata({ eventID, eventPubkey }: { eventID: string
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">
-      <CommentsCounter comments={comments} />
-      <LikesCounter likes={likes} eventID={eventID} eventPubkey={eventPubkey} />
+      <CommentsCounter
+        count={comments}
+        eventID={eventID}
+        eventPubkey={eventPubkey}
+        eventContent={eventContent}
+        eventTime={eventTime}
+      />
+      <LikesCounter count={likes} eventID={eventID} eventPubkey={eventPubkey} />
     </div>
   );
 }

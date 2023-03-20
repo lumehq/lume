@@ -74,7 +74,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
     );
   } else {
     return (
-      <div className="relative z-10 flex h-min animate-pulse select-text flex-col">
+      <div className="relative z-10 flex h-min animate-pulse select-text flex-col pb-5">
         <div className="flex items-start gap-4">
           <div className="relative h-11 w-11 shrink overflow-hidden rounded-full bg-zinc-700" />
           <div className="flex w-full flex-1 items-start justify-between">

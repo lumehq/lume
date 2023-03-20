@@ -1,21 +1,11 @@
 import { Content } from '@components/note/content';
 import { RootNote } from '@components/note/root';
 
-import { useRouter } from 'next/router';
 import { memo, useEffect, useState } from 'react';
 
 export const Note = memo(function Note({ event }: { event: any }) {
-  const router = useRouter();
-
   const [root, setRoot] = useState(null);
   const tags = JSON.parse(event.tags);
-
-  const openThread = () => {
-    router.push({
-      pathname: '/newsfeed/thread',
-      query: { id: root ? root : event.id },
-    });
-  };
 
   useEffect(() => {
     if (tags.length > 0) {
@@ -26,15 +16,8 @@ export const Note = memo(function Note({ event }: { event: any }) {
   }, [tags]);
 
   return (
-    <div
-      onClick={() => openThread()}
-      className="relative z-10 flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
-    >
-      {root && (
-        <>
-          <RootNote id={root} />
-        </>
-      )}
+    <div className="relative z-10 flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20">
+      {root && <RootNote id={root} />}
       <Content data={event} />
     </div>
   );
