@@ -32,7 +32,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
         } else {
           // #TODO: handle mention other note
-          console.log(tags[match]);
+          // console.log(tags[match]);
         }
       });
     }

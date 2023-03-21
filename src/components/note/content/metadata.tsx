@@ -3,7 +3,7 @@ import { CommentsCounter } from '@components/note/counter/comments';
 import { LikesCounter } from '@components/note/counter/likes';
 
 import { useLocalStorage } from '@rehooks/local-storage';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 export default function NoteMetadata({
   eventID,
@@ -22,8 +22,8 @@ export default function NoteMetadata({
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(0);
 
-  useMemo(() => {
-    relayPool.subscribe(
+  useEffect(() => {
+    const unsubscribe = relayPool.subscribe(
       [
         {
           '#e': [eventID],
@@ -52,6 +52,10 @@ export default function NoteMetadata({
         unsubscribeOnEose: true,
       }
     );
+
+    return () => {
+      unsubscribe();
+    };
   }, [eventID, relayPool, relays]);
 
   return (

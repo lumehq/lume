@@ -3,12 +3,21 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { truncate } from '@utils/truncate';
 
+import { fetch } from '@tauri-apps/api/http';
 import Avatar from 'boring-avatars';
-import { memo, useCallback, useContext, useMemo, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
   const { db }: any = useContext(DatabaseContext);
   const [profile, setProfile] = useState({ picture: null, display_name: null, name: null });
+
+  const fetchProfile = useCallback(async (id: string) => {
+    const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
+      method: 'GET',
+      timeout: 30,
+    });
+    return res;
+  }, []);
 
   const cacheProfile = useCallback(
     async (event) => {
@@ -20,20 +29,11 @@ export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
     [db, pubkey]
   );
 
-  useMemo(() => {
-    fetch(`https://rbr.bio/${pubkey}/metadata.json`, { redirect: 'follow' })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status === 404) {
-          return Promise.reject('error 404');
-        } else {
-          return Promise.reject('some other error: ' + response.status);
-        }
-      })
-      .then((data) => cacheProfile(data))
-      .catch((error) => console.log('error is', error));
-  }, [cacheProfile, pubkey]);
+  useEffect(() => {
+    fetchProfile(pubkey)
+      .then((res) => cacheProfile(res))
+      .catch(console.error);
+  }, [fetchProfile, cacheProfile, pubkey]);
 
   return (
     <div className="flex items-center gap-2">
