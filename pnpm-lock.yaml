@@ -48,6 +48,7 @@ specifiers:
   react-dom: ^18.2.0
   react-hook-form: ^7.43.7
   react-player: ^2.12.0
+  react-string-replace: ^1.1.0
   react-virtuoso: ^4.1.0
   tailwindcss: ^3.2.7
   tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
@@ -82,6 +83,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.7_react@18.2.0
   react-player: 2.12.0_react@18.2.0
+  react-string-replace: 1.1.0
   react-virtuoso: 4.1.0_biqbaboplfbrettd7655fr4n2y
   tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/3a8b9a6b244df7512bc5ef8692cebdedbab3ccce
   unique-names-generator: 4.7.1
@@ -1682,7 +1684,7 @@ packages:
       '@uiw/copy-to-clipboard': 1.0.12
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-markdown: 8.0.5_pmekkgnqduwlme35zpnqhenc34
+      react-markdown: 8.0.6_pmekkgnqduwlme35zpnqhenc34
       rehype-attr: 2.1.4
       rehype-autolink-headings: 6.1.1
       rehype-ignore: 1.0.4
@@ -5240,9 +5242,9 @@ packages:
       { integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w== }
     dev: false
 
-  /react-markdown/8.0.5_pmekkgnqduwlme35zpnqhenc34:
+  /react-markdown/8.0.6_pmekkgnqduwlme35zpnqhenc34:
     resolution:
-      { integrity: sha512-jGJolWWmOWAvzf+xMdB9zwStViODyyFQhNB/bwCerbBKmrTmgmA599CGiOlP58OId1IMoIRsA8UdI1Lod4zb5A== }
+      { integrity: sha512-KgPWsYgHuftdx510wwIzpwf+5js/iHqBR+fzxefv8Khk3mFbnioF1bmL2idHN3ler0LMQmICKeDrWnZrX9mtbQ== }
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
@@ -5317,6 +5319,12 @@ packages:
       tslib: 2.5.0
       use-callback-ref: 1.3.0_pmekkgnqduwlme35zpnqhenc34
       use-sidecar: 1.1.2_pmekkgnqduwlme35zpnqhenc34
+    dev: false
+
+  /react-string-replace/1.1.0:
+    resolution:
+      { integrity: sha512-N6RalSDFGbOHs0IJi1H611WbZsvk3ZT47Jl2JEXFbiS3kTwsdCYij70Keo/tWtLy7sfhDsYm7CwNM/WmjXIaMw== }
+    engines: { node: '>=0.12.0' }
     dev: false
 
   /react-style-singleton/2.2.1_pmekkgnqduwlme35zpnqhenc34:

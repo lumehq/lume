@@ -1,22 +1,35 @@
 import NoteMetadata from '@components/note/content/metadata';
 import NotePreview from '@components/note/content/preview';
 import { UserExtend } from '@components/user/extend';
+import { UserMention } from '@components/user/mention';
 
-import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
-
-const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'), {
-  ssr: false,
-  loading: () => <div className="h-4 w-36 animate-pulse rounded bg-zinc-700" />,
-});
+import reactStringReplace from 'react-string-replace';
 
 export const Content = memo(function Content({ data }: { data: any }) {
-  const content = useMemo(
-    () =>
-      // remove all image urls
-      data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp)((\?.*)$|$))/i, ''),
-    [data.content]
-  );
+  const content = useMemo(() => {
+    let parsedContent;
+    // get data tags
+    const tags = JSON.parse(data.tags);
+    // remove all image urls
+    parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp)((\?.*)$|$))/gim, '');
+    // handle urls
+    parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => (
+      <a key={match + i} href={match} target="_blank" rel="noreferrer">
+        {match}
+      </a>
+    ));
+    // handle hashtags
+    parsedContent = reactStringReplace(parsedContent, /#(\w+)/g, (match, i) => (
+      <span className="text-fuchsia-500">#{match}</span>
+    ));
+    // handle mentions
+    parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => (
+      <UserMention pubkey={tags[match][1]} key={i} />
+    ));
+
+    return parsedContent;
+  }, [data.content, data.tags]);
 
   return (
     <div className="relative z-10 flex flex-col">
@@ -24,23 +37,8 @@ export const Content = memo(function Content({ data }: { data: any }) {
       <div className="-mt-5 pl-[52px]">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col">
-            <div>
-              <MarkdownPreview
-                source={content}
-                className={
-                  'prose prose-zinc max-w-none break-words dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1'
-                }
-                linkTarget="_blank"
-                disallowedElements={[
-                  'Table',
-                  'Heading ID',
-                  'Highlight',
-                  'Fenced Code Block',
-                  'Footnote',
-                  'Definition List',
-                  'Task List',
-                ]}
-              />
+            <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
+              {content}
             </div>
             <NotePreview content={data.content} />
           </div>
