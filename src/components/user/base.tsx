@@ -4,7 +4,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { truncate } from '@utils/truncate';
 
 import Avatar from 'boring-avatars';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useMemo, useState } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
   const { db }: any = useContext(DatabaseContext);
@@ -20,7 +20,7 @@ export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
     [db, pubkey]
   );
 
-  useEffect(() => {
+  useMemo(() => {
     fetch(`https://rbr.bio/${pubkey}/metadata.json`, { redirect: 'follow' })
       .then((response) => {
         if (response.ok) {

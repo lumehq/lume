@@ -2,7 +2,7 @@ import { DatabaseContext } from '@components/contexts/database';
 
 import { truncate } from '@utils/truncate';
 
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useMemo, useState } from 'react';
 
 export const UserMention = memo(function UserMention({ pubkey }: { pubkey: string }) {
   const { db }: any = useContext(DatabaseContext);
@@ -23,7 +23,7 @@ export const UserMention = memo(function UserMention({ pubkey }: { pubkey: strin
     return result[0];
   }, [db, pubkey]);
 
-  useEffect(() => {
+  useMemo(() => {
     getCacheProfile()
       .then((res) => {
         if (res !== undefined) {

@@ -7,7 +7,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import Avatar from 'boring-avatars';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useMemo, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
@@ -30,7 +30,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
     return result[0];
   }, [db, pubkey]);
 
-  useEffect(() => {
+  useMemo(() => {
     getCacheProfile()
       .then((res) => {
         if (res !== undefined) {

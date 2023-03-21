@@ -4,7 +4,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { truncate } from '@utils/truncate';
 
 import Avatar from 'boring-avatars';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useContext, useMemo, useState } from 'react';
 
 export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
   const { db }: any = useContext(DatabaseContext);
@@ -25,7 +25,7 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
     return result[0];
   }, [db, pubkey]);
 
-  useEffect(() => {
+  useMemo(() => {
     getCacheProfile()
       .then((res) => {
         if (res !== undefined) {

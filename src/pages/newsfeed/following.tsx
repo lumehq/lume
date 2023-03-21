@@ -12,7 +12,7 @@ import { dateToUnix } from '@utils/getDate';
 
 import { useAtom } from 'jotai';
 import { Key, useCallback, useState } from 'react';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function Page() {
@@ -70,7 +70,7 @@ export default function Page() {
     [data]
   );
 
-  useEffect(() => {
+  useMemo(() => {
     const getData = async () => {
       const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
       if (result.length > 0) {

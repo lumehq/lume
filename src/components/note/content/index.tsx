@@ -10,9 +10,9 @@ export const Content = memo(function Content({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
     // get data tags
-    const tags = JSON.parse(data.tags);
+    const tags = data.tags ? JSON.parse(data.tags) : null;
     // remove all image urls
-    parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp)((\?.*)$|$))/gim, '');
+    parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp|mp4|webm)((\?.*)$|$))/gim, '');
     // handle urls
     parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => (
       <a key={match + i} href={match} target="_blank" rel="noreferrer">
@@ -21,12 +21,21 @@ export const Content = memo(function Content({ data }: { data: any }) {
     ));
     // handle hashtags
     parsedContent = reactStringReplace(parsedContent, /#(\w+)/g, (match, i) => (
-      <span className="text-fuchsia-500">#{match}</span>
+      <span key={match + i} className="text-fuchsia-500">
+        #{match}
+      </span>
     ));
     // handle mentions
-    parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => (
-      <UserMention pubkey={tags[match][1]} key={i} />
-    ));
+    if (tags) {
+      parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
+        if (tags[match][0] === 'p') {
+          return <UserMention key={match + i} pubkey={tags[match][1]} />;
+        } else {
+          // #TODO: handle mention other note
+          console.log(tags[match]);
+        }
+      });
+    }
 
     return parsedContent;
   }, [data.content, data.tags]);
