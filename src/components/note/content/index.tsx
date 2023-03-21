@@ -9,8 +9,11 @@ import reactStringReplace from 'react-string-replace';
 export const Content = memo(function Content({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
+    let tags;
     // get data tags
-    const tags = data.tags ? JSON.parse(data.tags) : null;
+    if (data.tags.length > 1) {
+      tags = JSON.parse(data.tags);
+    }
     // remove all image urls
     parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp|mp4|webm)((\?.*)$|$))/gim, '');
     // handle urls
@@ -26,7 +29,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
       </span>
     ));
     // handle mentions
-    if (tags) {
+    if (tags.length > 0) {
       parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
         if (tags[match][0] === 'p') {
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
