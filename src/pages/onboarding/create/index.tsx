@@ -8,16 +8,7 @@ import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
-import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactFragment,
-  ReactPortal,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo, useState } from 'react';
 import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const config: Config = {
@@ -42,6 +33,7 @@ export default function Page() {
   const npub = nip19.npubEncode(pubKey);
   const nsec = nip19.nsecEncode(privKey);
 
+  // toggle privatek key
   const showPrivateKey = () => {
     if (type === 'password') {
       setType('text');
@@ -49,7 +41,6 @@ export default function Page() {
       setType('password');
     }
   };
-
   // auto-generated profile
   const data = useMemo(
     () => ({
@@ -61,16 +52,16 @@ export default function Page() {
     }),
     [name]
   );
-
-  const insertDB = useCallback(async () => {
+  // insert to database
+  const insertDB = async () => {
     await db.execute(
       `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubKey}", "${privKey}", "${npub}", "${nsec}", '${JSON.stringify(
         data
       )}')`
     );
-  }, [data, db, npub, nsec, privKey, pubKey]);
-
-  const createAccount = async () => {
+  };
+  // build event and broadcast to all relays
+  const createAccount = () => {
     setLoading(true);
 
     // build event
@@ -83,7 +74,7 @@ export default function Page() {
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, privKey);
-
+    // insert to database then broadcast
     insertDB()
       .then(() => {
         // publish to relays

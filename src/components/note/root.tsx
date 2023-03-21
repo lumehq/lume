@@ -3,7 +3,7 @@ import { RelayContext } from '@components/contexts/relay';
 import { Content } from '@components/note/content';
 
 import useLocalStorage from '@rehooks/local-storage';
-import { memo, useCallback, useContext, useMemo, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const RootNote = memo(function RootNote({ id }: { id: string }) {
   const { db }: any = useContext(DatabaseContext);
@@ -26,7 +26,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
   const getData = useCallback(async () => {
     const result = await db.select(`SELECT * FROM cache_notes WHERE id = "${id}"`);
     return result[0];
-  }, []);
+  }, [db, id]);
 
   const fetchEvent = useCallback(() => {
     relayPool.subscribe(
@@ -53,7 +53,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
     );
   }, [id, insertDB, relayPool, relays]);
 
-  useMemo(() => {
+  useEffect(() => {
     getData()
       .then((res) => {
         if (res) {

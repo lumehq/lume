@@ -78,7 +78,6 @@ export default function Page() {
     const arr = follows.includes(pubkey) ? follows.filter((i) => i !== pubkey) : [...follows, pubkey];
     setFollows(arr);
   };
-
   // insert follow to database
   const insertDB = async () => {
     // self follow
@@ -92,7 +91,6 @@ export default function Page() {
       );
     });
   };
-
   // build event tags
   const createTags = () => {
     const tags = [];
@@ -103,7 +101,6 @@ export default function Page() {
 
     return tags;
   };
-
   // commit and publish to relays
   const createFollows = () => {
     setLoading(true);

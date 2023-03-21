@@ -45,7 +45,6 @@ export default function Page() {
     },
     [db, privkey, pubkey]
   );
-
   // save follows to database
   const insertFollows = useCallback(
     async (follows) => {
@@ -60,13 +59,13 @@ export default function Page() {
     },
     [db, pubkey]
   );
-
+  // submit then redirect to home
   const submit = () => {
     router.push('/');
   };
 
   useEffect(() => {
-    relayPool.subscribe(
+    const unsubscribe = relayPool.subscribe(
       [
         {
           authors: [pubkey],
@@ -89,6 +88,10 @@ export default function Page() {
         console.log(events, relayURL);
       }
     );
+
+    return () => {
+      unsubscribe();
+    };
   }, [insertAccount, insertFollows, pubkey, relayPool, relays]);
 
   return (
