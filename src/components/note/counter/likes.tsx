@@ -7,7 +7,7 @@ import LikedIcon from '@assets/icons/liked';
 
 import { useLocalStorage } from '@rehooks/local-storage';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 
 export const LikesCounter = memo(function LikesCounter({
   count,
@@ -24,7 +24,7 @@ export const LikesCounter = memo(function LikesCounter({
   const [currentUser]: any = useLocalStorage('current-user');
 
   const [isReact, setIsReact] = useState(false);
-  const [like, setLike] = useState(count);
+  const [like, setLike] = useState(0);
 
   const handleLike = (e: any) => {
     e.stopPropagation();
@@ -48,6 +48,10 @@ export const LikesCounter = memo(function LikesCounter({
     // update counter
     setLike(like + 1);
   };
+
+  useEffect(() => {
+    setLike(count);
+  }, [count]);
 
   return (
     <button onClick={(e) => handleLike(e)} className="group flex w-16 items-center gap-1 text-sm text-zinc-500">

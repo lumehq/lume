@@ -4,16 +4,17 @@ import { RootNote } from '@components/note/root';
 import { memo, useMemo } from 'react';
 
 export const Note = memo(function Note({ event }: { event: any }) {
-  const tags = JSON.parse(event.tags);
+  const tags = event.tags.replaceAll("'", '"');
+  const parseTags = JSON.parse(tags);
 
   const fetchRootEvent = useMemo(() => {
-    if (tags.length > 0) {
-      if (tags[0][0] === 'e') {
-        return <RootNote id={tags[0][1]} />;
+    if (parseTags.length > 0) {
+      if (parseTags[0][0] === 'e' || parseTags[0][2] === 'root') {
+        return <RootNote id={parseTags[0][1]} />;
       } else {
-        tags.every((tag) => {
-          if (tag[2] === 'root') {
-            return <RootNote id={tags[1]} />;
+        parseTags.every((tag) => {
+          if (tag[0] === 'e' && tag[2] === 'root') {
+            return <RootNote id={parseTags[1]} />;
           }
           return <></>;
         });
@@ -21,7 +22,7 @@ export const Note = memo(function Note({ event }: { event: any }) {
     } else {
       return <></>;
     }
-  }, [tags]);
+  }, [parseTags]);
 
   return (
     <div className="relative z-10 flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20">

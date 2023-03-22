@@ -48,7 +48,7 @@ CREATE TABLE
     npub TEXT NOT NULL,
     nsec TEXT NOT NULL,
     is_active INTEGER NOT NULL DEFAULT 0,
-    metadata JSON
+    metadata TEXT
   );
 
 -- create follows
@@ -61,7 +61,7 @@ CREATE TABLE
     pubkey TEXT NOT NULL,
     account TEXT NOT NULL,
     kind INTEGER NOT NULL DEFAULT 0,
-    metadata JSON
+    metadata TEXT
   );
 
 -- create index for pubkey in follows
@@ -71,7 +71,7 @@ CREATE UNIQUE INDEX index_pubkey_on_follows ON follows (pubkey);
 CREATE TABLE
   cache_profiles (
     id TEXT PRIMARY KEY,
-    metadata JSON,
+    metadata TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
@@ -84,5 +84,8 @@ CREATE TABLE
     created_at TEXT,
     kind INTEGER NOT NULL DEFAULT 1,
     tags TEXT NOT NULL,
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    is_circle INTEGER NOT NULL DEFAULT 0,
+    is_root INTEGER NOT NULL DEFAULT 0,
+    is_reply INTEGER NOT NULL DEFAULT 0
   );

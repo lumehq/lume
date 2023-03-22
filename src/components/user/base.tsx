@@ -4,12 +4,11 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { truncate } from '@utils/truncate';
 
 import { fetch } from '@tauri-apps/api/http';
-import Avatar from 'boring-avatars';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
   const { db }: any = useContext(DatabaseContext);
-  const [profile, setProfile] = useState({ picture: null, display_name: null, name: null });
+  const [profile, setProfile] = useState(null);
 
   const fetchProfile = useCallback(async (id: string) => {
     const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
@@ -38,22 +37,13 @@ export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
   return (
     <div className="flex items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-full border border-white/10">
-        {profile.picture ? (
+        {profile?.picture && (
           <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
-        ) : (
-          <Avatar
-            size={44}
-            name={pubkey}
-            variant="beam"
-            colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
-          />
         )}
       </div>
       <div className="flex w-full flex-1 flex-col items-start">
-        <span className="font-medium leading-tight text-zinc-200">
-          {profile.display_name ? profile.display_name : truncate(pubkey, 16, ' .... ')}
-        </span>
-        <span className="text-sm leading-tight text-zinc-400">{profile.name}</span>
+        <span className="font-medium leading-tight text-zinc-200">{profile?.display_name || profile?.name}</span>
+        <span className="text-sm leading-tight text-zinc-400">{truncate(pubkey, 16, ' .... ')}</span>
       </div>
     </div>
   );

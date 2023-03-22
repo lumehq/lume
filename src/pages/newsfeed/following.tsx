@@ -6,13 +6,13 @@ import { Note } from '@components/note';
 import FormBasic from '@components/note/form/basic';
 import { Placeholder } from '@components/note/placeholder';
 
-import { atomHasNewerNote } from '@stores/note';
+import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 
 import { useAtom } from 'jotai';
 import { Key, useCallback, useState } from 'react';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo, useRef } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function Page() {
@@ -20,7 +20,7 @@ export default function Page() {
 
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(false);
-  const [hasNewerNote, setHasNewerNote] = useAtom(atomHasNewerNote);
+  const [hasNewerNote, setHasNewerNote] = useAtom(hasNewerNoteAtom);
 
   const now = useRef(new Date());
   const limit = useRef(30);
@@ -70,7 +70,7 @@ export default function Page() {
     [data]
   );
 
-  useMemo(() => {
+  useEffect(() => {
     const getData = async () => {
       const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
       if (result.length > 0) {

@@ -4,7 +4,7 @@ export const Placeholder = memo(function Placeholder() {
   return (
     <div className="relative z-10 flex h-min animate-pulse select-text flex-col py-5 px-3">
       <div className="flex items-start gap-2">
-        <div className="relative h-11 w-11 shrink overflow-hidden rounded-full bg-zinc-700" />
+        <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
         <div className="flex w-full flex-1 items-start justify-between">
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-2 text-sm">

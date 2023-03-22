@@ -1,8 +1,6 @@
 import { DatabaseContext } from '@components/contexts/database';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
-import { truncate } from '@utils/truncate';
-
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { fetch } from '@tauri-apps/api/http';
 import Avatar from 'boring-avatars';
@@ -14,7 +12,7 @@ dayjs.extend(relativeTime);
 
 export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
   const { db }: any = useContext(DatabaseContext);
-  const [profile, setProfile] = useState({ picture: null, name: null, username: null });
+  const [profile, setProfile] = useState(null);
 
   const fetchProfile = useCallback(async (id: string) => {
     const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
@@ -31,10 +29,10 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
 
   const insertCacheProfile = useCallback(
     async (event) => {
-      // insert to database
-      await db.execute('INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES (?, ?);', [pubkey, event.content]);
       // update state
       setProfile(JSON.parse(event.content));
+      // insert to database
+      await db.execute('INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES (?, ?);', [pubkey, event.content]);
     },
     [db, pubkey]
   );
@@ -56,7 +54,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   return (
     <div className="flex items-start gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
-        {profile.picture ? (
+        {profile?.picture ? (
           <ImageWithFallback
             src={profile.picture}
             alt={pubkey}
@@ -76,9 +74,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">
           <div className="flex items-baseline gap-2 text-sm">
-            <span className="font-bold leading-tight">
-              {profile.name ? profile.name : truncate(pubkey, 16, ' .... ')}
-            </span>
+            <span className="font-bold leading-tight">{profile?.name}</span>
             <span className="leading-tight text-zinc-500">·</span>
             <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
           </div>

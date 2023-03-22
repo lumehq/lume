@@ -16,8 +16,8 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
     async (event: any) => {
       // insert to local database
       await db.execute(
-        'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags) VALUES (?, ?, ?, ?, ?, ?);',
-        [event.id, event.pubkey, event.created_at, event.kind, event.content, JSON.stringify(event.tags)]
+        'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, is_root) VALUES (?, ?, ?, ?, ?, ?, ?);',
+        [event.id, event.pubkey, event.created_at, event.kind, event.content, String(event.tags), 1]
       );
     },
     [db]
@@ -76,7 +76,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
     return (
       <div className="relative z-10 flex h-min animate-pulse select-text flex-col pb-5">
         <div className="flex items-start gap-2">
-          <div className="relative h-11 w-11 shrink overflow-hidden rounded-full bg-zinc-700" />
+          <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
           <div className="flex w-full flex-1 items-start justify-between">
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2 text-sm">

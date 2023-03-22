@@ -10,6 +10,8 @@ specifiers:
   '@rehooks/local-storage': ^2.4.4
   '@supabase/supabase-js': ^2.12.0
   '@tailwindcss/typography': ^0.5.9
+  '@tanstack/query-core': ^4.27.0
+  '@tanstack/react-virtual': 3.0.0-beta.54
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.3
   '@trivago/prettier-plugin-sort-imports': ^4.1.1
@@ -33,6 +35,7 @@ specifiers:
   framer-motion: ^9.1.7
   husky: ^8.0.3
   jotai: ^2.0.3
+  jotai-tanstack-query: ^0.6.0
   lint-staged: ^13.2.0
   moment: ^2.29.4
   next: ^13.2.4
@@ -65,6 +68,8 @@ dependencies:
   '@radix-ui/react-tabs': 1.0.3_biqbaboplfbrettd7655fr4n2y
   '@rehooks/local-storage': 2.4.4_react@18.2.0
   '@supabase/supabase-js': 2.12.0
+  '@tanstack/query-core': 4.27.0
+  '@tanstack/react-virtual': 3.0.0-beta.54_react@18.2.0
   '@tauri-apps/api': 1.2.0
   '@uiw/react-markdown-preview': 4.1.10_zula6vjvt3wdocc4mwcxqa6nzi
   '@uiw/react-md-editor': 3.20.5_zula6vjvt3wdocc4mwcxqa6nzi
@@ -73,6 +78,7 @@ dependencies:
   dayjs: 1.11.7
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   jotai: 2.0.3_react@18.2.0
+  jotai-tanstack-query: 0.6.0_jqgumvl52k2nlr5n23qdneaa6y
   moment: 2.29.4
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   next-remove-imports: 1.0.10
@@ -1301,6 +1307,26 @@ packages:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.2.7_postcss@8.4.21
     dev: true
+
+  /@tanstack/query-core/4.27.0:
+    resolution:
+      { integrity: sha512-sm+QncWaPmM73IPwFlmWSKPqjdTXZeFf/7aEmWh00z7yl2FjqophPt0dE1EHW9P1giMC5rMviv7OUbSDmWzXXA== }
+    dev: false
+
+  /@tanstack/react-virtual/3.0.0-beta.54_react@18.2.0:
+    resolution:
+      { integrity: sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ== }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.0.0-beta.54
+      react: 18.2.0
+    dev: false
+
+  /@tanstack/virtual-core/3.0.0-beta.54:
+    resolution:
+      { integrity: sha512-jtkwqdP2rY2iCCDVAFuaNBH3fiEi29aTn2RhtIoky8DTTiCdc48plpHHreLwmv1PICJ4AJUUESaq3xa8fZH8+g== }
+    dev: false
 
   /@tauri-apps/api/1.2.0:
     resolution:
@@ -3835,6 +3861,17 @@ packages:
     resolution:
       { integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw== }
     dev: true
+
+  /jotai-tanstack-query/0.6.0_jqgumvl52k2nlr5n23qdneaa6y:
+    resolution:
+      { integrity: sha512-87oD6MnjrgfLWeCJXB/dQt4xyCmyFYZeG9jw4Y2lIprtwLKS5s/vCEjNP5fnYG2nuPBkopiRECTEqtIysvHSxg== }
+    peerDependencies:
+      '@tanstack/query-core': '*'
+      jotai: '>=1.11.0'
+    dependencies:
+      '@tanstack/query-core': 4.27.0
+      jotai: 2.0.3_react@18.2.0
+    dev: false
 
   /jotai/2.0.3_react@18.2.0:
     resolution:

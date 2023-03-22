@@ -46,5 +46,5 @@ export const UserMention = memo(function UserMention({ pubkey }: { pubkey: strin
       .catch(console.error);
   }, [fetchProfile, getCacheProfile, insertCacheProfile, pubkey]);
 
-  return <span className="text-fuchsia-500">@{profile ? profile.name : truncate(pubkey, 16, ' .... ')}</span>;
+  return <span className="text-fuchsia-500">@{profile?.name || truncate(pubkey, 16, ' .... ')}</span>;
 });

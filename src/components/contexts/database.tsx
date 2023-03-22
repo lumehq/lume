@@ -48,17 +48,25 @@ export default function DatabaseProvider({ children }: { children: React.ReactNo
     return;
   }, []);
 
+  const clearCacheNote = useCallback(async () => {
+    const result: any = await db.select('SELECT COUNT(*) AS "total" FROM cache_notes');
+    if (result[0].total >= 1000) {
+      await db.execute('DELETE FROM cache_notes');
+    }
+  }, []);
+
   useEffect(() => {
     getRelays().catch(console.error);
     getAccount()
       .then((res) => {
         if (res) {
           getFollows(res.id).catch(console.error);
+          clearCacheNote().catch(console.error);
         }
         setDone(true);
       })
       .catch(console.error);
-  }, [getAccount, getFollows, getRelays]);
+  }, [getAccount, getFollows, clearCacheNote, getRelays]);
 
   if (!done) {
     return <></>;

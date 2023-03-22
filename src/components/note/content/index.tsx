@@ -9,11 +9,9 @@ import reactStringReplace from 'react-string-replace';
 export const Content = memo(function Content({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
-    let tags;
     // get data tags
-    if (data.tags.length > 1) {
-      tags = JSON.parse(data.tags);
-    }
+    const tags = String(data.tags).replaceAll("'", '"');
+    const parseTags = JSON.parse(tags);
     // remove all image urls
     parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp|mp4|webm)((\?.*)$|$))/gim, '');
     // handle urls
@@ -29,10 +27,10 @@ export const Content = memo(function Content({ data }: { data: any }) {
       </span>
     ));
     // handle mentions
-    if (tags.length > 0) {
+    if (parseTags.length > 0) {
       parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
-        if (tags[match][0] === 'p') {
-          return <UserMention key={match + i} pubkey={tags[match][1]} />;
+        if (parseTags[match][0] === 'p') {
+          return <UserMention key={match + i} pubkey={parseTags[match][1]} />;
         } else {
           // #TODO: handle mention other note
           // console.log(tags[match]);
@@ -48,7 +46,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
       <UserExtend pubkey={data.pubkey} time={data.created_at} />
       <div className="-mt-5 pl-[52px]">
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
               {content}
             </div>
