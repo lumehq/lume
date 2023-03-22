@@ -3,6 +3,7 @@ import NotePreview from '@components/note/content/preview';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
+import destr from 'destr';
 import { memo, useMemo } from 'react';
 import reactStringReplace from 'react-string-replace';
 
@@ -10,7 +11,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
     // get data tags
-    const tags = JSON.parse(data.tags);
+    const tags = destr(data.tags);
     // remove all image urls
     parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp|mp4|webm)((\?.*)$|$))/gim, '');
     // handle urls

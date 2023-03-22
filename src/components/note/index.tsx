@@ -1,10 +1,11 @@
 import { Content } from '@components/note/content';
 import { RootNote } from '@components/note/root';
 
+import destr from 'destr';
 import { memo, useMemo } from 'react';
 
 export const Note = memo(function Note({ event }: { event: any }) {
-  const tags = JSON.parse(event.tags);
+  const tags = destr(event.tags);
 
   const fetchRootEvent = useMemo(() => {
     if (tags.length > 0) {

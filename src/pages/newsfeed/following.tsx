@@ -32,7 +32,7 @@ export default function Page() {
     const result = await db.select(
       `SELECT * FROM
         cache_notes
-        WHERE created_at <= ${dateToUnix(now.current)}
+        WHERE created_at <= ${dateToUnix(now.current)} AND is_root = 0
         ORDER BY created_at DESC
         LIMIT ${limit.current} OFFSET ${offset.current}`
     );
@@ -43,7 +43,7 @@ export default function Page() {
     const result = await db.select(
       `SELECT * FROM
         cache_notes
-        WHERE created_at > ${dateToUnix(now.current)}
+        WHERE created_at > ${dateToUnix(now.current)} AND is_root = 0
         ORDER BY created_at DESC
         LIMIT ${limit.current}`
     );
@@ -65,14 +65,16 @@ export default function Page() {
 
   const computeItemKey = useCallback(
     (index: Key) => {
-      return data[index].id;
+      return data[index].id + data[index].created_at;
     },
     [data]
   );
 
   useEffect(() => {
     const getData = async () => {
-      const result = await db.select(`SELECT * FROM cache_notes ORDER BY created_at DESC LIMIT ${limit.current}`);
+      const result = await db.select(
+        `SELECT * FROM cache_notes WHERE is_root = 0 ORDER BY created_at DESC LIMIT ${limit.current}`
+      );
       if (result.length > 0) {
         setData(result);
       } else {
