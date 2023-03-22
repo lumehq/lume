@@ -10,8 +10,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
     // get data tags
-    const tags = String(data.tags).replaceAll("'", '"');
-    const parseTags = JSON.parse(tags);
+    const tags = JSON.parse(data.tags);
     // remove all image urls
     parsedContent = data.content.replace(/(https?:\/\/.*\.(jpg|jpeg|gif|png|webp|mp4|webm)((\?.*)$|$))/gim, '');
     // handle urls
@@ -27,10 +26,10 @@ export const Content = memo(function Content({ data }: { data: any }) {
       </span>
     ));
     // handle mentions
-    if (parseTags.length > 0) {
+    if (tags.length > 0) {
       parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
-        if (parseTags[match][0] === 'p') {
-          return <UserMention key={match + i} pubkey={parseTags[match][1]} />;
+        if (tags[match][0] === 'p') {
+          return <UserMention key={match + i} pubkey={tags[match][1]} />;
         } else {
           // #TODO: handle mention other note
           // console.log(tags[match]);

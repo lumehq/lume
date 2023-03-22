@@ -25,7 +25,7 @@ export const NoteConnector = memo(function NoteConnector() {
       // insert to local database
       await db.execute(
         'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags) VALUES (?, ?, ?, ?, ?, ?);',
-        [event.id, event.pubkey, event.created_at, event.kind, event.content, String(event.tags)]
+        [event.id, event.pubkey, event.created_at, event.kind, event.content, JSON.stringify(event.tags)]
       );
     },
     [db]

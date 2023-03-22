@@ -17,7 +17,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
       // insert to local database
       await db.execute(
         'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, is_root) VALUES (?, ?, ?, ?, ?, ?, ?);',
-        [event.id, event.pubkey, event.created_at, event.kind, event.content, String(event.tags), 1]
+        [event.id, event.pubkey, event.created_at, event.kind, event.content, JSON.stringify(event.tags), 1]
       );
     },
     [db]
