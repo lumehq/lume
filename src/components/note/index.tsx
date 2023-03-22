@@ -3,20 +3,23 @@ import { RootNote } from '@components/note/root';
 
 import destr from 'destr';
 import { useRouter } from 'next/router';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 
 export const Note = memo(function Note({ event }: { event: any }) {
   const router = useRouter();
   const tags = destr(event.tags);
+  const rootEventID = useRef(null);
 
   const fetchRootEvent = useMemo(() => {
     if (tags.length > 0) {
       if (tags[0][0] === 'e' || tags[0][2] === 'root') {
+        rootEventID.current = tags[0][1];
         return <RootNote id={tags[0][1]} />;
       } else {
         tags.every((tag) => {
           if (tag[0] === 'e' && tag[2] === 'root') {
-            return <RootNote id={tags[1]} />;
+            rootEventID.current = tag[1];
+            return <RootNote id={tag[1]} />;
           }
           return <></>;
         });
@@ -27,7 +30,7 @@ export const Note = memo(function Note({ event }: { event: any }) {
   }, [tags]);
 
   const openThread = () => {
-    router.push(`/newsfeed/${event.id}`);
+    router.push(`/newsfeed/${rootEventID.current || event.id}`);
   };
 
   return (

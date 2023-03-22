@@ -45,20 +45,20 @@ export const Content = memo(function Content({ data }: { data: any }) {
     <div className="relative z-10 flex flex-col">
       <UserExtend pubkey={data.pubkey} time={data.created_at} />
       <div className="-mt-5 pl-[52px]">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
-              {content}
-            </div>
-            <NotePreview content={data.content} />
+        <div className="flex flex-col gap-2">
+          <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
+            {content}
           </div>
-          <NoteMetadata
-            eventID={data.id}
-            eventPubkey={data.pubkey}
-            eventContent={data.content}
-            eventTime={data.created_at}
-          />
+          <NotePreview content={data.content} />
         </div>
+      </div>
+      <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+        <NoteMetadata
+          eventID={data.id}
+          eventPubkey={data.pubkey}
+          eventContent={data.content}
+          eventTime={data.created_at}
+        />
       </div>
     </div>
   );
