@@ -18,12 +18,11 @@ import {
 } from 'react';
 
 export default function Page() {
+  const router = useRouter();
   const { db }: any = useContext(DatabaseContext);
 
+  const id = router.query.id;
   const [root, setRoot] = useState(null);
-
-  const router = useRouter();
-  const { id }: any = router.query;
 
   const fetchRoot = useCallback(async () => {
     const result = await db.select(`SELECT * FROM cache_notes WHERE id = "${id}"`);

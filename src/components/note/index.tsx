@@ -2,9 +2,11 @@ import { Content } from '@components/note/content';
 import { RootNote } from '@components/note/root';
 
 import destr from 'destr';
+import { useRouter } from 'next/router';
 import { memo, useMemo } from 'react';
 
 export const Note = memo(function Note({ event }: { event: any }) {
+  const router = useRouter();
   const tags = destr(event.tags);
 
   const fetchRootEvent = useMemo(() => {
@@ -24,8 +26,15 @@ export const Note = memo(function Note({ event }: { event: any }) {
     }
   }, [tags]);
 
+  const openThread = () => {
+    router.push(`/newsfeed/${event.id}`);
+  };
+
   return (
-    <div className="relative z-10 flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20">
+    <div
+      onClick={() => openThread()}
+      className="relative z-10 flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
+    >
       <>{fetchRootEvent}</>
       <Content data={event} />
     </div>
