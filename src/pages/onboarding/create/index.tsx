@@ -54,11 +54,13 @@ export default function Page() {
   );
   // insert to database
   const insertDB = async () => {
-    await db.execute(
-      `INSERT INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubKey}", "${privKey}", "${npub}", "${nsec}", '${JSON.stringify(
-        data
-      )}')`
-    );
+    await db.execute('INSERT OR IGNORE INTO accounts (id, privkey, npub, nsec, metadata) VALUES (?, ?, ?, ?, ?)', [
+      pubKey,
+      privKey,
+      npub,
+      nsec,
+      data,
+    ]);
   };
   // build event and broadcast to all relays
   const createAccount = () => {

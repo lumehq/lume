@@ -3,7 +3,7 @@ import BaseLayout from '@layouts/base';
 import { DatabaseContext } from '@components/contexts/database';
 import { RelayContext } from '@components/contexts/relay';
 
-import { useLocalStorage } from '@rehooks/local-storage';
+import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
@@ -37,9 +37,15 @@ export default function Page() {
       const npub = privkey ? nip19.npubEncode(pubkey) : null;
       const nsec = privkey ? nip19.nsecEncode(privkey) : null;
       // insert to database
-      await db.execute(
-        `INSERT OR IGNORE INTO accounts (id, privkey, npub, nsec, metadata) VALUES ("${pubkey}", "${privkey}", "${npub}", "${nsec}", '${metadata}')`
-      );
+      await db.execute('INSERT OR IGNORE INTO accounts (id, privkey, npub, nsec, metadata) VALUES (?, ?, ?, ?, ?)', [
+        pubkey,
+        privkey,
+        npub,
+        nsec,
+        metadata,
+      ]);
+      // write to localstorage
+      writeStorage('current-user', { id: pubkey, privkey: privkey, npub: npub, nsec: nsec, metadata: metadata });
       // update state
       setProfile(JSON.parse(metadata));
     },
