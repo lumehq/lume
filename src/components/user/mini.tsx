@@ -64,7 +64,9 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
         )}
       </div>
       <div className="inline-flex w-full flex-1 flex-col overflow-hidden">
-        <p className="truncate leading-tight text-zinc-300">{profile?.name || truncate(pubkey, 16, ' .... ')}</p>
+        <p className="truncate leading-tight text-zinc-300">
+          {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
+        </p>
       </div>
     </div>
   );

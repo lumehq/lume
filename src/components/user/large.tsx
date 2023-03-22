@@ -10,9 +10,11 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
+truncate;
+
 dayjs.extend(relativeTime);
 
-export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
+export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: string; time: any }) {
   const { db }: any = useContext(DatabaseContext);
   const [profile, setProfile] = useState(null);
 
@@ -54,7 +56,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   }, [fetchProfile, getCacheProfile, insertCacheProfile, pubkey]);
 
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
         {profile?.picture ? (
           <ImageWithFallback
@@ -73,14 +75,15 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
           />
         )}
       </div>
-      <div className="flex w-full flex-1 items-start justify-between">
+      <div className="w-full flex-1">
         <div className="flex w-full justify-between">
-          <div className="flex items-baseline gap-2 text-sm">
-            <span className="font-bold leading-tight">
+          <div className="flex flex-col gap-1 text-sm">
+            <span className="font-bold leading-tight text-zinc-100">
               {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
             </span>
-            <span className="leading-tight text-zinc-500">·</span>
-            <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
+            <span className="leading-tight text-zinc-400">
+              {profile?.username || truncate(pubkey, 16, ' .... ')} · {dayjs().to(dayjs.unix(time))}
+            </span>
           </div>
           <div>
             <button className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800">

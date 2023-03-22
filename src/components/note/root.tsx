@@ -44,9 +44,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
         insertDB(event);
       },
       undefined,
-      (events, relayURL) => {
-        console.log(events, relayURL);
-      },
+      undefined,
       {
         unsubscribeOnEose: true,
       }

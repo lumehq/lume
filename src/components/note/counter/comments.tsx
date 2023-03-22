@@ -38,10 +38,7 @@ export const CommentsCounter = memo(function CommentsCounter({
   const profile = JSON.parse(currentUser.metadata);
 
   const openThread = () => {
-    router.push({
-      pathname: '/newsfeed/thread',
-      query: { id: eventID },
-    });
+    router.push(`/newsfeed/${eventID}`);
   };
 
   const submitEvent = () => {
