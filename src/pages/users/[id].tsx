@@ -1,46 +1,22 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
-import { RelayContext } from '@components/contexts/relay';
+import ProfileFollowers from '@components/profile/followers';
+import ProfileFollows from '@components/profile/follows';
+import ProfileMetadata from '@components/profile/metadata';
+import ProfileNotes from '@components/profile/notes';
 
 import * as Tabs from '@radix-ui/react-tabs';
-import useLocalStorage from '@rehooks/local-storage';
-import Image from 'next/image';
-import { Author } from 'nostr-relaypool';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo } from 'react';
+import { useRouter } from 'next/router';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 
 export default function Page() {
-  const relayPool: any = useContext(RelayContext);
-
-  const [relays]: any = useLocalStorage('relays');
-  const [currentUser]: any = useLocalStorage('current-user');
-
-  const user = new Author(relayPool, relays, currentUser.id);
-  const userProfile = JSON.parse(currentUser.metadata);
+  const router = useRouter();
+  const id: any = router.query.id;
 
   return (
-    <div className="h-full w-full p-px">
-      <div className="relative">
-        <div className="relative h-64 w-full rounded-t-lg bg-zinc-800">
-          {userProfile.banner && (
-            <Image src={userProfile.banner} alt="user's banner" fill={true} className="h-full w-full object-cover" />
-          )}
-        </div>
-        <div className="relative -top-8 px-4">
-          <button className="relative h-16 w-16">
-            <Image src={userProfile.picture} alt="user's avatar" fill={true} className="rounded-lg object-cover" />
-          </button>
-        </div>
-      </div>
-      <div className="-mt-4 mb-8 px-4">
-        <div>
-          <div className="mb-3 flex flex-col">
-            <h3 className="text-xl font-bold leading-tight text-zinc-100">{userProfile.display_name}</h3>
-            <span className="leading-tight text-zinc-500">@{userProfile.username}</span>
-          </div>
-          <div className="prose prose-zinc leading-tight dark:prose-invert">{userProfile.about}</div>
-        </div>
-      </div>
+    <div className="scrollbar-hide h-full w-full overflow-y-auto">
+      <ProfileMetadata id={id} />
       <Tabs.Root className="flex w-full flex-col" defaultValue="notes">
         <Tabs.List className="flex border-b border-zinc-800">
           <Tabs.Trigger
@@ -62,14 +38,14 @@ export default function Page() {
             Following
           </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content className="px-4" value="notes">
-          <p>Notes</p>
+        <Tabs.Content value="notes">
+          <ProfileNotes id={id} />
         </Tabs.Content>
-        <Tabs.Content className="px-4" value="followers">
-          <p>Followers</p>
+        <Tabs.Content value="followers">
+          <ProfileFollowers id={id} />
         </Tabs.Content>
-        <Tabs.Content className="px-4" value="following">
-          <p>Following</p>
+        <Tabs.Content value="following">
+          <ProfileFollows id={id} />
         </Tabs.Content>
       </Tabs.Root>
     </div>

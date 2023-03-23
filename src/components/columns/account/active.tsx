@@ -19,10 +19,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
   const [currentUser]: any = useLocalStorage('current-user');
 
   const openProfile = () => {
-    router.push({
-      pathname: '/profile',
-      query: { id: currentUser.id },
-    });
+    router.push(`/users/${currentUser.id}`);
   };
 
   // save follows to database

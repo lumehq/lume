@@ -8,13 +8,20 @@ import { fetch } from '@tauri-apps/api/http';
 import Avatar from 'boring-avatars';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useRouter } from 'next/router';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
 export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
+  const router = useRouter();
   const { db }: any = useContext(DatabaseContext);
   const [profile, setProfile] = useState(null);
+
+  const openUserPage = (e) => {
+    e.stopPropagation();
+    router.push(`/users/${pubkey}`);
+  };
 
   const fetchProfile = useCallback(async (id: string) => {
     const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
@@ -54,8 +61,8 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   }, [fetchProfile, getCacheProfile, insertCacheProfile, pubkey]);
 
   return (
-    <div className="flex items-start gap-2">
-      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
+    <div onClick={(e) => openUserPage(e)} className="group flex items-start gap-2">
+      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1">
         {profile?.picture ? (
           <ImageWithFallback
             src={profile.picture}
@@ -76,7 +83,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">
           <div className="flex items-baseline gap-2 text-sm">
-            <span className="font-bold leading-tight">
+            <span className="font-bold leading-tight group-hover:underline">
               {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
             </span>
             <span className="leading-tight text-zinc-500">·</span>
