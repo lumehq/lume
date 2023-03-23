@@ -31,12 +31,14 @@ export const ImageWithFallback = memo(function ImageWithFallback({
         />
       ) : (
         <Image
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
           src={src}
           alt={alt}
           fill={fill}
           className={className}
           onError={setError}
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
+          priority
         />
       )}
     </>
