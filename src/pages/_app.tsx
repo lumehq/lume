@@ -1,7 +1,3 @@
-import DatabaseProvider from '@components/contexts/database';
-import RelayProvider from '@components/contexts/relay';
-
-import { useLocalStorage } from '@rehooks/local-storage';
 import { Provider } from 'jotai';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
@@ -21,14 +17,5 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
-  // Get relays from localstorage
-  const [relays] = useLocalStorage('relays');
-
-  return (
-    <Provider>
-      <DatabaseProvider>
-        <RelayProvider relays={relays}>{getLayout(<Component {...pageProps} />)}</RelayProvider>
-      </DatabaseProvider>
-    </Provider>
-  );
+  return <Provider>{getLayout(<Component {...pageProps} />)}</Provider>;
 }
