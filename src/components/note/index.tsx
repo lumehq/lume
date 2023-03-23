@@ -29,14 +29,19 @@ export const Note = memo(function Note({ event }: { event: any }) {
     }
   }, [tags]);
 
-  const openThread = () => {
-    router.push(`/newsfeed/${rootEventID.current || event.id}`);
+  const openThread = (e) => {
+    const selection = window.getSelection();
+    if (selection.toString().length === 0) {
+      router.push(`/newsfeed/${rootEventID.current || event.id}`);
+    } else {
+      e.stopPropagation();
+    }
   };
 
   return (
     <div
-      onClick={() => openThread()}
-      className="relative z-10 flex h-min min-h-min w-full cursor-pointer select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
+      onClick={(e) => openThread(e)}
+      className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
     >
       <>{fetchRootEvent}</>
       <Content data={event} />

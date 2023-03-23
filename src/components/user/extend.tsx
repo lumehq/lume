@@ -24,6 +24,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   };
 
   const fetchProfile = useCallback(async (id: string) => {
+    console.log('fetch');
     const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
       method: 'GET',
       timeout: 30,

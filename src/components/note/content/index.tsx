@@ -1,5 +1,6 @@
 import NoteMetadata from '@components/note/content/metadata';
 import NotePreview from '@components/note/content/preview';
+import { MentionNote } from '@components/note/mention';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
@@ -22,7 +23,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
     ));
     // handle hashtags
     parsedContent = reactStringReplace(parsedContent, /#(\w+)/g, (match, i) => (
-      <span key={match + i} className="text-fuchsia-500">
+      <span key={match + i} className="cursor-pointer text-fuchsia-500">
         #{match}
       </span>
     ));
@@ -31,9 +32,8 @@ export const Content = memo(function Content({ data }: { data: any }) {
       parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
         if (tags[match][0] === 'p') {
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
-        } else {
-          // #TODO: handle mention other note
-          // console.log(tags[match]);
+        } else if (tags[match][0] === 'e') {
+          return <MentionNote id={tags[match][1]} />;
         }
       });
     }
