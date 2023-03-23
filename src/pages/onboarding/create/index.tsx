@@ -1,14 +1,13 @@
 import BaseLayout from '@layouts/base';
 
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
+import { pool } from '@utils/pool';
+import { createAccount, getAllRelays } from '@utils/storage';
 
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useMemo, useState } from 'react';
 import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const config: Config = {
@@ -17,11 +16,6 @@ const config: Config = {
 
 export default function Page() {
   const router = useRouter();
-
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
-  const [relays] = useLocalStorage('relays');
 
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
@@ -33,16 +27,8 @@ export default function Page() {
   const npub = nip19.npubEncode(pubKey);
   const nsec = nip19.nsecEncode(privKey);
 
-  // toggle privatek key
-  const showPrivateKey = () => {
-    if (type === 'password') {
-      setType('text');
-    } else {
-      setType('password');
-    }
-  };
-  // auto-generated profile
-  const data = useMemo(
+  // auto-generated profile metadata
+  const metadata = useMemo(
     () => ({
       display_name: name,
       name: name,
@@ -52,23 +38,35 @@ export default function Page() {
     }),
     [name]
   );
-  // insert to database
-  const insertDB = async () => {
-    await db.execute('INSERT OR IGNORE INTO accounts (id, privkey, npub, nsec, metadata) VALUES (?, ?, ?, ?, ?)', [
-      pubKey,
-      privKey,
-      npub,
-      nsec,
-      data,
-    ]);
+
+  // build profile
+  const data = useMemo(
+    () => ({
+      pubkey: pubKey,
+      privkey: privKey,
+      npub: npub,
+      nsec: nsec,
+      metadata: metadata,
+    }),
+    [metadata, npub, nsec, privKey, pubKey]
+  );
+
+  // toggle privatek key
+  const showPrivateKey = () => {
+    if (type === 'password') {
+      setType('text');
+    } else {
+      setType('password');
+    }
   };
-  // build event and broadcast to all relays
-  const createAccount = () => {
+
+  // create account and broadcast to all relays
+  const submit = () => {
     setLoading(true);
 
     // build event
     const event: any = {
-      content: JSON.stringify(data),
+      content: JSON.stringify(metadata),
       created_at: Math.floor(Date.now() / 1000),
       kind: 0,
       pubkey: pubKey,
@@ -76,23 +74,20 @@ export default function Page() {
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, privKey);
+
     // insert to database then broadcast
-    insertDB()
+    createAccount(data)
       .then(() => {
-        // publish to relays
-        relayPool.publish(event, relays);
-        // set currentUser in global state
-        writeStorage('current-user', {
-          metadata: JSON.stringify(data),
-          npub: npub,
-          privkey: privKey,
-          id: pubKey,
-        });
-        // redirect to pre-follow
-        setTimeout(() => {
-          setLoading(false);
-          router.push('/onboarding/create/step-2');
-        }, 1500);
+        getAllRelays()
+          .then((res) => {
+            // publish to relays
+            pool(res).publish(event, res);
+            router.push({
+              pathname: '/onboarding/create/step-2',
+              query: { id: pubKey, privkey: privKey },
+            });
+          })
+          .catch(console.error);
       })
       .catch(console.error);
   };
@@ -146,12 +141,12 @@ export default function Page() {
                 <div className="relative w-full rounded-lg border border-black/5 px-3.5 py-4 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200  dark:shadow-black/10 dark:placeholder:text-zinc-600">
                   <div className="flex space-x-4">
                     <div className="relative h-10 w-10 rounded-full">
-                      <Image className="inline-block rounded-full" src={data.picture} alt="" fill={true} />
+                      <Image className="inline-block rounded-full" src={metadata.picture} alt="" fill={true} />
                     </div>
                     <div className="flex-1 space-y-4 py-1">
                       <div className="flex items-center gap-2">
-                        <p className="font-semibold">{data.display_name}</p>
-                        <p className="text-zinc-400">@{data.username}</p>
+                        <p className="font-semibold">{metadata.display_name}</p>
+                        <p className="text-zinc-400">@{metadata.username}</p>
                       </div>
                       <div className="space-y-3">
                         <div className="grid grid-cols-3 gap-4">
@@ -183,7 +178,7 @@ export default function Page() {
               </svg>
             ) : (
               <button
-                onClick={() => createAccount()}
+                onClick={() => submit()}
                 className="w-full transform rounded-lg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <span className="drop-shadow-lg">Continue →</span>

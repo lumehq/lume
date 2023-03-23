@@ -1,104 +1,74 @@
 import BaseLayout from '@layouts/base';
 
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
+import { pool } from '@utils/pool';
+import { createAccount, createFollows, getAllRelays } from '@utils/storage';
+import { truncate } from '@utils/truncate';
 
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+import destr from 'destr';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
-import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactFragment,
-  ReactPortal,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
+
+const tags = (arr) => {
+  const newarr = [];
+  // push item to newarr
+  arr.forEach((item) => {
+    newarr.push(['p', item]);
+  });
+  return newarr;
+};
 
 export default function Page() {
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
   const router = useRouter();
-  const { privkey }: any = router.query;
+  const privkey: any = router.query.privkey;
+  const pubkey = getPublicKey(privkey);
 
-  const [relays] = useLocalStorage('relays');
-  const [profile, setProfile] = useState({ picture: '', display_name: '', username: '' });
+  const [profile, setProfile] = useState(null);
 
-  const pubkey = useMemo(() => (privkey ? getPublicKey(privkey) : null), [privkey]);
+  useEffect(() => {
+    getAllRelays()
+      .then((res) => {
+        pool(res).subscribe(
+          [
+            {
+              authors: [pubkey],
+              kinds: [0, 3],
+              since: 0,
+            },
+          ],
+          res,
+          (event: any) => {
+            if (event.kind === 0) {
+              const data = {
+                pubkey: pubkey,
+                privkey: privkey,
+                npub: nip19.npubEncode(pubkey),
+                nsec: nip19.nsecEncode(privkey),
+                metadata: event.content,
+              };
+              setProfile(destr(event.content));
+              createAccount(data);
+            } else {
+              if (event.tags.length > 0) {
+                createFollows(tags(event.tags), pubkey, 0);
+              }
+            }
+          },
+          undefined,
+          undefined,
+          {
+            unsubscribeOnEose: true,
+          }
+        );
+      })
+      .catch(console.error);
+  }, [privkey, pubkey]);
 
-  // save account to database
-  const insertAccount = useCallback(
-    async (metadata) => {
-      const npub = privkey ? nip19.npubEncode(pubkey) : null;
-      const nsec = privkey ? nip19.nsecEncode(privkey) : null;
-      // insert to database
-      await db.execute('INSERT OR IGNORE INTO accounts (id, privkey, npub, nsec, metadata) VALUES (?, ?, ?, ?, ?)', [
-        pubkey,
-        privkey,
-        npub,
-        nsec,
-        metadata,
-      ]);
-      // write to localstorage
-      writeStorage('current-user', { id: pubkey, privkey: privkey, npub: npub, nsec: nsec, metadata: metadata });
-      // update state
-      setProfile(JSON.parse(metadata));
-    },
-    [db, privkey, pubkey]
-  );
-  // save follows to database
-  const insertFollows = useCallback(
-    async (follows) => {
-      follows.forEach(async (item) => {
-        if (item) {
-          // insert to database
-          await db.execute(
-            `INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${item[1]}", "${pubkey}", "0")`
-          );
-        }
-      });
-    },
-    [db, pubkey]
-  );
   // submit then redirect to home
   const submit = () => {
     router.push('/');
   };
-
-  useEffect(() => {
-    const unsubscribe = relayPool.subscribe(
-      [
-        {
-          authors: [pubkey],
-          kinds: [0, 3],
-          since: 0,
-        },
-      ],
-      relays,
-      (event: any) => {
-        if (event.kind === 0) {
-          insertAccount(event.content);
-        } else {
-          if (event.tags.length > 0) {
-            insertFollows(event.tags);
-          }
-        }
-      },
-      undefined,
-      (events: any, relayURL: any) => {
-        console.log(events, relayURL);
-      }
-    );
-
-    return () => {
-      unsubscribe();
-    };
-  }, [insertAccount, insertFollows, pubkey, relayPool, relays]);
 
   return (
     <div className="grid h-full w-full grid-rows-5">
@@ -115,13 +85,13 @@ export default function Page() {
             <div className="w-full rounded-lg bg-zinc-900 p-4 shadow-input ring-1 ring-zinc-800">
               <div className="flex space-x-4">
                 <div className="relative h-10 w-10 rounded-full">
-                  <Image className="inline-block rounded-full" src={profile.picture} alt="" fill={true} />
+                  <Image className="inline-block rounded-full" src={profile?.picture} alt="" fill={true} />
                 </div>
                 <div className="flex-1 space-y-4 py-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{profile.display_name}</p>
+                    <p className="font-semibold">{profile?.display_name || profile?.name}</p>
                     <span className="leading-tight text-zinc-500">·</span>
-                    <p className="text-zinc-500">@{profile.username}</p>
+                    <p className="text-zinc-500">@{profile?.username || truncate(pubkey, 16, ' .... ')}</p>
                   </div>
                   <div className="space-y-3">
                     <div className="grid grid-cols-3 gap-4">

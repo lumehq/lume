@@ -1,24 +1,15 @@
 import BaseLayout from '@layouts/base';
 
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
 import { UserBase } from '@components/user/base';
 
+import { pool } from '@utils/pool';
+import { createFollows, getAllRelays } from '@utils/storage';
+
 import { CheckCircledIcon } from '@radix-ui/react-icons';
-import useLocalStorage from '@rehooks/local-storage';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/router';
-import { getEventHash, nip19, signEvent } from 'nostr-tools';
-import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactFragment,
-  ReactPortal,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { getEventHash, signEvent } from 'nostr-tools';
+import { JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
 
 const supabase = createClient(
   'https://niwaazauwnrwiwmnocnn.supabase.co',
@@ -62,12 +53,7 @@ const initialList = [
 
 export default function Page() {
   const router = useRouter();
-
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
-  const [currentUser]: any = useLocalStorage('current-user');
-  const [relays] = useLocalStorage('relays');
+  const { id, privkey }: any = router.query;
 
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
@@ -78,31 +64,19 @@ export default function Page() {
     const arr = follows.includes(pubkey) ? follows.filter((i) => i !== pubkey) : [...follows, pubkey];
     setFollows(arr);
   };
-  // insert follow to database
-  const insertDB = async () => {
-    // self follow
-    await db.execute(
-      `INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${currentUser.id}", "${currentUser.id}", "0")`
-    );
-    // follow selected
-    follows.forEach(async (pubkey) => {
-      await db.execute(
-        `INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${pubkey}", "${currentUser.id}", "0")`
-      );
-    });
-  };
+
   // build event tags
-  const createTags = () => {
-    const tags = [];
+  const tags = () => {
+    const arr = [];
     // push item to tags
     follows.forEach((item) => {
-      tags.push(['p', item]);
+      arr.push(['p', item]);
     });
-
-    return tags;
+    return arr;
   };
-  // commit and publish to relays
-  const createFollows = () => {
+
+  // save follows to database then broadcast
+  const submit = () => {
     setLoading(true);
 
     // build event
@@ -110,21 +84,25 @@ export default function Page() {
       content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 3,
-      pubkey: currentUser.id,
-      tags: createTags(),
+      pubkey: id,
+      tags: tags(),
     };
     event.id = getEventHash(event);
-    event.sig = signEvent(event, currentUser.privkey);
+    event.sig = signEvent(event, privkey);
 
-    insertDB().then(() => {
-      // publish to relays
-      relayPool.publish(event, relays);
-      // redirect to home
-      setTimeout(() => {
-        setLoading(false);
-        router.push('/');
-      }, 1000);
-    });
+    createFollows(follows, id, 0)
+      .then((res) => {
+        if (res === 'ok') {
+          getAllRelays()
+            .then((res) => {
+              // publish to relays
+              pool(res).publish(event, res);
+              router.push('/');
+            })
+            .catch(console.error);
+        }
+      })
+      .catch(console.error);
   };
 
   useEffect(() => {
@@ -174,7 +152,7 @@ export default function Page() {
       {follows.length >= 10 && (
         <div className="fixed bottom-0 left-0 z-10 flex h-24 w-full items-center justify-center">
           <button
-            onClick={() => createFollows()}
+            onClick={() => submit()}
             className="relative z-20 inline-flex w-36 transform items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 shadow-xl active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
           >
             {loading === true ? (
