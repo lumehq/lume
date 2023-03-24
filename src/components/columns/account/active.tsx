@@ -3,18 +3,18 @@ import { RelayContext } from '@components/relaysProvider';
 import { relaysAtom } from '@stores/relays';
 
 import { createFollows } from '@utils/storage';
-import { tagsToArray } from '@utils/tags';
+import { tagsToArray } from '@utils/transform';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { memo, useContext, useEffect } from 'react';
 
 export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
   const pool: any = useContext(RelayContext);
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
 
   const router = useRouter();
   const userData = JSON.parse(user.metadata);

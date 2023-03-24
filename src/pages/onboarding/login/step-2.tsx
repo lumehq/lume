@@ -5,11 +5,11 @@ import { RelayContext } from '@components/relaysProvider';
 import { relaysAtom } from '@stores/relays';
 
 import { createAccount, createFollows } from '@utils/storage';
-import { tagsToArray } from '@utils/tags';
+import { tagsToArray } from '@utils/transform';
 import { truncate } from '@utils/truncate';
 
 import destr from 'destr';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
@@ -30,7 +30,7 @@ export default function Page() {
   const privkey: any = router.query.privkey;
   const pubkey = getPublicKey(privkey);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {

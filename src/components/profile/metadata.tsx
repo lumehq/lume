@@ -1,11 +1,13 @@
-import { RelayContext } from '@components/contexts/relay';
 import { ImageWithFallback } from '@components/imageWithFallback';
+import { RelayContext } from '@components/relaysProvider';
+
+import { relaysAtom } from '@stores/relays';
 
 import { truncate } from '@utils/truncate';
 
-import useLocalStorage from '@rehooks/local-storage';
 import Avatar from 'boring-avatars';
 import destr from 'destr';
+import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
@@ -13,15 +15,15 @@ import { useContext, useEffect, useState } from 'react';
 const DEFAULT_BANNER = 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg';
 
 export default function ProfileMetadata({ id }: { id: string }) {
-  const relayPool: any = useContext(RelayContext);
-  const [relays]: any = useLocalStorage('relays');
+  const pool: any = useContext(RelayContext);
+  const relays: any = useAtomValue(relaysAtom);
 
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    const user = new Author(relayPool, relays, id);
+    const user = new Author(pool, relays, id);
     user.metaData((res) => setProfile(destr(res.content)), 0);
-  }, [id, relayPool, relays]);
+  }, [id, pool, relays]);
 
   return (
     <>

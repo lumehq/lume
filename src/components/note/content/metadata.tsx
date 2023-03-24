@@ -4,7 +4,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useContext, useEffect, useState } from 'react';
 
 export default function NoteMetadata({
@@ -19,7 +19,7 @@ export default function NoteMetadata({
   eventContent: any;
 }) {
   const pool: any = useContext(RelayContext);
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
 
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(0);

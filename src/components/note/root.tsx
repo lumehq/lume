@@ -1,17 +1,17 @@
-import { Content } from '@components/note/content';
+import { NoteContent } from '@components/note/content';
 import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
 import { createCacheNote, getNoteByID } from '@utils/storage';
 
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const RootNote = memo(function RootNote({ id }: { id: string }) {
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [event, setEvent] = useState(null);
 
   const fetchEvent = useCallback(() => {
@@ -51,7 +51,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
     return (
       <div className="relative pb-5">
         <div className="absolute top-0 left-[21px] h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
-        <Content data={event} />
+        <NoteContent data={event} />
       </div>
     );
   } else {

@@ -8,7 +8,7 @@ import { dateToUnix } from '@utils/getDate';
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
 import * as commands from '@uiw/react-md-editor/lib/commands';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import dynamic from 'next/dynamic';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -20,7 +20,7 @@ const MDEditor = dynamic(() => import('@uiw/react-md-editor').then((mod) => mod.
 export default function FormBasic() {
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
   const [open, setOpen] = useState(false);

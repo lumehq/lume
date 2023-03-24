@@ -6,14 +6,14 @@ import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
   const [value, setValue] = useState('');

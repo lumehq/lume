@@ -7,7 +7,7 @@ import { relaysAtom } from '@stores/relays';
 import { createAccount } from '@utils/storage';
 
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
@@ -22,7 +22,7 @@ export default function Page() {
   const router = useRouter();
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
 

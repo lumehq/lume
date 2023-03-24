@@ -6,9 +6,11 @@ import { ContentExtend } from '@components/note/content/extend';
 import FormComment from '@components/note/form/comment';
 import { RelayContext } from '@components/relaysProvider';
 
+import { relaysAtom } from '@stores/relays';
+
 import { getNoteByID } from '@utils/storage';
 
-import useLocalStorage from '@rehooks/local-storage';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -26,7 +28,7 @@ export default function Page() {
   const router = useRouter();
   const id = router.query.id;
 
-  const [relays]: any = useLocalStorage('relays');
+  const relays: any = useAtomValue(relaysAtom);
 
   const [rootEvent, setRootEvent] = useState(null);
   const [comments, setComments] = useState([]);

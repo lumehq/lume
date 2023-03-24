@@ -2,7 +2,7 @@ import RelayProvider from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
-import { Provider, useAtom } from 'jotai';
+import { Provider, useAtomValue } from 'jotai';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { ReactElement, ReactNode } from 'react';
@@ -21,7 +21,7 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
 
   return (
     <Provider>

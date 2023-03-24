@@ -5,13 +5,13 @@ import { relaysAtom } from '@stores/relays';
 
 import { createCacheNote, getNoteByID } from '@utils/storage';
 
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [event, setEvent] = useState(null);
 
   const fetchEvent = useCallback(() => {

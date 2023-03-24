@@ -9,7 +9,7 @@ import { createFollows } from '@utils/storage';
 
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { createClient } from '@supabase/supabase-js';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import {
@@ -69,7 +69,7 @@ export default function Page() {
   const router = useRouter();
   const { id, privkey }: any = router.query;
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
   const [follows, setFollows] = useState([]);

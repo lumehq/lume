@@ -11,7 +11,7 @@ import CommentIcon from '@assets/icons/comment';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
@@ -32,7 +32,7 @@ export const CommentsCounter = memo(function CommentsCounter({
   const router = useRouter();
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
   const [open, setOpen] = useState(false);

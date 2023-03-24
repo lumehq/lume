@@ -1,20 +1,22 @@
-import { RelayContext } from '@components/contexts/relay';
+import { RelayContext } from '@components/relaysProvider';
 
-import useLocalStorage from '@rehooks/local-storage';
+import { relaysAtom } from '@stores/relays';
+
 import destr from 'destr';
+import { useAtomValue } from 'jotai';
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
 
 export default function ProfileFollowers({ id }: { id: string }) {
-  const relayPool: any = useContext(RelayContext);
-  const [relays]: any = useLocalStorage('relays');
+  const pool: any = useContext(RelayContext);
+  const relays: any = useAtomValue(relaysAtom);
 
   const [followers, setFollowers] = useState(null);
 
   useEffect(() => {
-    const user = new Author(relayPool, relays, id);
+    const user = new Author(pool, relays, id);
     user.followers((res) => setFollowers(destr(res.tags)), 0, 100);
-  }, [id, relayPool, relays]);
+  }, [id, pool, relays]);
 
   return (
     <div className="flex flex-col gap-3 py-5">

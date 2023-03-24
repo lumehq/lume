@@ -8,7 +8,7 @@ import destr from 'destr';
 import { memo, useMemo } from 'react';
 import reactStringReplace from 'react-string-replace';
 
-export const Content = memo(function Content({ data }: { data: any }) {
+export const NoteContent = memo(function NoteContent({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
     // get data tags
@@ -33,7 +33,7 @@ export const Content = memo(function Content({ data }: { data: any }) {
         if (tags[match][0] === 'p') {
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
         } else if (tags[match][0] === 'e') {
-          return <MentionNote id={tags[match][1]} />;
+          return <MentionNote key={match + i} id={tags[match][1]} />;
         }
       });
     }

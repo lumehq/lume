@@ -8,7 +8,7 @@ import { dateToUnix } from '@utils/getDate';
 import LikeIcon from '@assets/icons/like';
 import LikedIcon from '@assets/icons/liked';
 
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useEffect, useState } from 'react';
 
@@ -23,7 +23,7 @@ export const LikesCounter = memo(function LikesCounter({
 }) {
   const pool: any = useContext(RelayContext);
 
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
   const [isReact, setIsReact] = useState(false);

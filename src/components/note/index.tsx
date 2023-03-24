@@ -1,16 +1,16 @@
-import { Content } from '@components/note/content';
+import { NoteContent } from '@components/note/content';
 import { RootNote } from '@components/note/root';
 
 import destr from 'destr';
 import { useRouter } from 'next/router';
-import { memo, useMemo, useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 
 export const Note = memo(function Note({ event }: { event: any }) {
   const router = useRouter();
   const tags = destr(event.tags);
   const rootEventID = useRef(null);
 
-  const fetchRootEvent = useMemo(() => {
+  const fetchRootEvent = useCallback(() => {
     if (tags.length > 0) {
       if (tags[0][0] === 'e' || tags[0][2] === 'root') {
         rootEventID.current = tags[0][1];
@@ -43,8 +43,8 @@ export const Note = memo(function Note({ event }: { event: any }) {
       onClick={(e) => openThread(e)}
       className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
     >
-      <>{fetchRootEvent}</>
-      <Content data={event} />
+      <div>{fetchRootEvent()}</div>
+      <NoteContent data={event} />
     </div>
   );
 });

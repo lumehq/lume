@@ -87,6 +87,12 @@ export async function getCacheProfile(id) {
 }
 
 // get note by id
+export async function getAllNotes() {
+  const db = await connect();
+  return await db.select(`SELECT * FROM cache_notes WHERE is_root = 0 ORDER BY created_at DESC LIMIT 1000`);
+}
+
+// get note by id
 export async function getNoteByID(id) {
   const db = await connect();
   const result = await db.select(`SELECT * FROM cache_notes WHERE id = "${id}"`);

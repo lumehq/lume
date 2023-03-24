@@ -6,29 +6,28 @@ import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { createCacheNote, getAllFollowsByID } from '@utils/storage';
+import { pubkeyArray } from '@utils/transform';
 
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 
 export const NoteConnector = memo(function NoteConnector() {
   const pool: any = useContext(RelayContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const [relays] = useAtom(relaysAtom);
+  const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
   const [isOnline] = useState(true);
   const now = useRef(new Date());
 
   useEffect(() => {
-    let unsubscribe;
-
     getAllFollowsByID(activeAccount.id).then((follows) => {
-      unsubscribe = pool.subscribe(
+      pool.subscribe(
         [
           {
             kinds: [1],
-            authors: follows,
+            authors: pubkeyArray(follows),
             since: dateToUnix(hoursAgo(12, now.current)),
           },
         ],
@@ -43,10 +42,6 @@ export const NoteConnector = memo(function NoteConnector() {
         }
       );
     });
-
-    return () => {
-      unsubscribe();
-    };
   }, [activeAccount.id, pool, relays, setHasNewerNote]);
 
   return (
