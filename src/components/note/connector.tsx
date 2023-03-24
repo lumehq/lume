@@ -17,7 +17,7 @@ export const NoteConnector = memo(function NoteConnector() {
   const [relays] = useAtom(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
-  const [isOnline] = useState(navigator.onLine);
+  const [isOnline] = useState(true);
   const now = useRef(new Date());
 
   useEffect(() => {

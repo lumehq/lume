@@ -35,7 +35,9 @@ export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
         )}
       </div>
       <div className="flex w-full flex-1 flex-col items-start text-start">
-        <span className="font-medium leading-tight text-zinc-200">{profile?.display_name || profile?.name}</span>
+        <span className="truncate font-medium leading-tight text-zinc-200">
+          {profile?.display_name || profile?.name}
+        </span>
         <span className="text-sm leading-tight text-zinc-400">{truncate(pubkey, 16, ' .... ')}</span>
       </div>
     </div>
