@@ -1,14 +1,13 @@
-import { DatabaseContext } from '@components/contexts/database';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
+import { createCacheProfile, getCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
 import { fetch } from '@tauri-apps/api/http';
 import Avatar from 'boring-avatars';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
-  const { db }: any = useContext(DatabaseContext);
   const [profile, setProfile] = useState(null);
 
   const fetchProfile = useCallback(async (id: string) => {
@@ -19,34 +18,20 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
     return res.data;
   }, []);
 
-  const getCacheProfile = useCallback(async () => {
-    const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${pubkey}"`);
-    return result[0];
-  }, [db, pubkey]);
-
-  const insertCacheProfile = useCallback(
-    async (event) => {
-      // update state
-      setProfile(JSON.parse(event.content));
-      // insert to database
-      await db.execute('INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES (?, ?);', [pubkey, event.content]);
-    },
-    [db, pubkey]
-  );
-
   useEffect(() => {
-    getCacheProfile()
-      .then((res) => {
-        if (res !== undefined) {
-          setProfile(JSON.parse(res.metadata));
-        } else {
-          fetchProfile(pubkey)
-            .then((res) => insertCacheProfile(res))
-            .catch(console.error);
-        }
-      })
-      .catch(console.error);
-  }, [fetchProfile, getCacheProfile, insertCacheProfile, pubkey]);
+    getCacheProfile(pubkey).then((res) => {
+      if (res) {
+        setProfile(JSON.parse(res.metadata));
+      } else {
+        fetchProfile(pubkey)
+          .then((res: any) => {
+            setProfile(JSON.parse(res.content));
+            createCacheProfile(pubkey, res.content);
+          })
+          .catch(console.error);
+      }
+    });
+  }, [fetchProfile, pubkey]);
 
   return (
     <div className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm font-medium hover:bg-zinc-900">

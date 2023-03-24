@@ -1,13 +1,17 @@
 import BaseLayout from '@layouts/base';
 
-import { pool } from '@utils/pool';
-import { createAccount, getAllRelays } from '@utils/storage';
+import { RelayContext } from '@components/relaysProvider';
+
+import { relaysAtom } from '@stores/relays';
+
+import { createAccount } from '@utils/storage';
 
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { useAtom } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useMemo, useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo, useState } from 'react';
 import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const config: Config = {
@@ -16,7 +20,9 @@ const config: Config = {
 
 export default function Page() {
   const router = useRouter();
+  const pool: any = useContext(RelayContext);
 
+  const [relays] = useAtom(relaysAtom);
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
 
@@ -78,16 +84,11 @@ export default function Page() {
     // insert to database then broadcast
     createAccount(data)
       .then(() => {
-        getAllRelays()
-          .then((res) => {
-            // publish to relays
-            pool(res).publish(event, res);
-            router.push({
-              pathname: '/onboarding/create/step-2',
-              query: { id: pubKey, privkey: privKey },
-            });
-          })
-          .catch(console.error);
+        pool.publish(event, relays);
+        router.push({
+          pathname: '/onboarding/create/step-2',
+          query: { id: pubKey, privkey: privKey },
+        });
       })
       .catch(console.error);
   };

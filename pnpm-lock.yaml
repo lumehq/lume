@@ -7,7 +7,6 @@ specifiers:
   '@radix-ui/react-icons': ^1.3.0
   '@radix-ui/react-popover': ^1.0.5
   '@radix-ui/react-tabs': ^1.0.3
-  '@rehooks/local-storage': ^2.4.4
   '@supabase/supabase-js': ^2.12.1
   '@tailwindcss/typography': ^0.5.9
   '@tanstack/react-virtual': 3.0.0-beta.54
@@ -34,6 +33,7 @@ specifiers:
   framer-motion: ^9.1.7
   husky: ^8.0.3
   jotai: ^2.0.3
+  jotai-cache: ^0.3.0
   lint-staged: ^13.2.0
   next: ^13.2.4
   next-remove-imports: ^1.0.10
@@ -62,7 +62,6 @@ dependencies:
   '@radix-ui/react-icons': 1.3.0_react@18.2.0
   '@radix-ui/react-popover': 1.0.5_zula6vjvt3wdocc4mwcxqa6nzi
   '@radix-ui/react-tabs': 1.0.3_biqbaboplfbrettd7655fr4n2y
-  '@rehooks/local-storage': 2.4.4_react@18.2.0
   '@supabase/supabase-js': 2.12.1
   '@tanstack/react-virtual': 3.0.0-beta.54_react@18.2.0
   '@tauri-apps/api': 1.2.0
@@ -73,6 +72,7 @@ dependencies:
   destr: 1.2.2
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   jotai: 2.0.3_react@18.2.0
+  jotai-cache: 0.3.0_jotai@2.0.3
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   next-remove-imports: 1.0.10
   nostr-relaypool: 0.5.18_ws@8.13.0
@@ -1175,15 +1175,6 @@ packages:
       { integrity: sha512-d0O68AYy/9oeEy1DdC07bz1/ZXX+DqCskRd3i4JzLSTXwefzaepQrKjXC7aNM8lTHjFLDO0pDgaEiQ7jEk+HVg== }
     dependencies:
       '@babel/runtime': 7.21.0
-    dev: false
-
-  /@rehooks/local-storage/2.4.4_react@18.2.0:
-    resolution:
-      { integrity: sha512-zE+kfOkG59n/1UTxdmbwktIosclr67Nlbf2MzUJ9mNtCSypVscNHeD1qT6JCSo5Pjj8DO893IKWNLJqKKzDL/Q== }
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /@rushstack/eslint-patch/1.2.0:
@@ -3828,6 +3819,15 @@ packages:
     resolution:
       { integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw== }
     dev: true
+
+  /jotai-cache/0.3.0_jotai@2.0.3:
+    resolution:
+      { integrity: sha512-hV6DUD1frRpW0EN8Ss7n4KNaMZRBokQw6KPT3seA4P35QRXctMNUn4pHRlg3hzO+KBPpEZw+fyKlWAqagmuIwQ== }
+    peerDependencies:
+      jotai: '>=1.11.0'
+    dependencies:
+      jotai: 2.0.3_react@18.2.0
+    dev: false
 
   /jotai/2.0.3_react@18.2.0:
     resolution:

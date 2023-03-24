@@ -1,53 +1,41 @@
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
+import { RelayContext } from '@components/relaysProvider';
+
+import { relaysAtom } from '@stores/relays';
+
+import { createFollows } from '@utils/storage';
+import { tagsToArray } from '@utils/tags';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
-import useLocalStorage from '@rehooks/local-storage';
+import { useAtom } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { memo, useCallback, useContext, useMemo } from 'react';
+import { memo, useContext, useEffect } from 'react';
 
 export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
+  const pool: any = useContext(RelayContext);
+  const [relays] = useAtom(relaysAtom);
+
   const router = useRouter();
   const userData = JSON.parse(user.metadata);
 
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
-  const [relays]: any = useLocalStorage('relays');
-  const [currentUser]: any = useLocalStorage('current-user');
-
   const openProfile = () => {
-    router.push(`/users/${currentUser.id}`);
+    router.push(`/users/${user.pubkey}`);
   };
 
-  // save follows to database
-  const insertFollows = useCallback(
-    async (follows) => {
-      follows.forEach(async (item) => {
-        if (item) {
-          // insert to database
-          await db.execute(
-            `INSERT OR IGNORE INTO follows (pubkey, account, kind) VALUES ("${item[1]}", "${currentUser.id}", "0")`
-          );
-        }
-      });
-    },
-    [db, currentUser.id]
-  );
-
-  useMemo(() => {
-    relayPool.subscribe(
+  useEffect(() => {
+    pool.subscribe(
       [
         {
           kinds: [3],
-          authors: [currentUser.id],
+          authors: [user.pubkey],
         },
       ],
       relays,
       (event: any) => {
-        insertFollows(event.tags);
+        if (event.tags.length > 0) {
+          createFollows(tagsToArray(event.tags), user.pubkey, 0);
+        }
       },
       undefined,
       undefined,
@@ -55,7 +43,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
         unsubscribeOnEose: true,
       }
     );
-  }, [currentUser.id, insertFollows, relayPool, relays]);
+  }, [pool, relays, user.pubkey]);
 
   return (
     <DropdownMenu.Root>

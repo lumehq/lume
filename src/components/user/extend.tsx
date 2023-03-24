@@ -1,6 +1,6 @@
-import { DatabaseContext } from '@components/contexts/database';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
+import { createCacheProfile, getCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
@@ -9,13 +9,12 @@ import Avatar from 'boring-avatars';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/router';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
 export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
   const router = useRouter();
-  const { db }: any = useContext(DatabaseContext);
   const [profile, setProfile] = useState(null);
 
   const openUserPage = (e) => {
@@ -24,7 +23,6 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   };
 
   const fetchProfile = useCallback(async (id: string) => {
-    console.log('fetch');
     const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
       method: 'GET',
       timeout: 30,
@@ -32,34 +30,20 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
     return res.data;
   }, []);
 
-  const getCacheProfile = useCallback(async () => {
-    const result: any = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${pubkey}"`);
-    return result[0];
-  }, [db, pubkey]);
-
-  const insertCacheProfile = useCallback(
-    async (event) => {
-      // update state
-      setProfile(JSON.parse(event.content));
-      // insert to database
-      await db.execute('INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES (?, ?);', [pubkey, event.content]);
-    },
-    [db, pubkey]
-  );
-
   useEffect(() => {
-    getCacheProfile()
-      .then((res) => {
-        if (res !== undefined) {
-          setProfile(JSON.parse(res.metadata));
-        } else {
-          fetchProfile(pubkey)
-            .then((res) => insertCacheProfile(res))
-            .catch(console.error);
-        }
-      })
-      .catch(console.error);
-  }, [fetchProfile, getCacheProfile, insertCacheProfile, pubkey]);
+    getCacheProfile(pubkey).then((res) => {
+      if (res) {
+        setProfile(JSON.parse(res.metadata));
+      } else {
+        fetchProfile(pubkey)
+          .then((res: any) => {
+            setProfile(JSON.parse(res.content));
+            createCacheProfile(pubkey, res.content);
+          })
+          .catch(console.error);
+      }
+    });
+  }, [fetchProfile, pubkey]);
 
   return (
     <div onClick={(e) => openUserPage(e)} className="group flex items-start gap-2">

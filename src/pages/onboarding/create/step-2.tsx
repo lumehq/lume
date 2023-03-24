@@ -1,15 +1,27 @@
 import BaseLayout from '@layouts/base';
 
+import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
-import { pool } from '@utils/pool';
-import { createFollows, getAllRelays } from '@utils/storage';
+import { relaysAtom } from '@stores/relays';
+
+import { createFollows } from '@utils/storage';
 
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { createClient } from '@supabase/supabase-js';
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
+import {
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 const supabase = createClient(
   'https://niwaazauwnrwiwmnocnn.supabase.co',
@@ -52,9 +64,12 @@ const initialList = [
 ];
 
 export default function Page() {
+  const pool: any = useContext(RelayContext);
+
   const router = useRouter();
   const { id, privkey }: any = router.query;
 
+  const [relays] = useAtom(relaysAtom);
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
   const [follows, setFollows] = useState([]);
@@ -93,13 +108,9 @@ export default function Page() {
     createFollows(follows, id, 0)
       .then((res) => {
         if (res === 'ok') {
-          getAllRelays()
-            .then((res) => {
-              // publish to relays
-              pool(res).publish(event, res);
-              router.push('/');
-            })
-            .catch(console.error);
+          // publish to relays
+          pool.publish(event, relays);
+          router.push('/');
         }
       })
       .catch(console.error);

@@ -1,33 +1,36 @@
-import { RelayContext } from '@components/contexts/relay';
 import { ImageWithFallback } from '@components/imageWithFallback';
+import { RelayContext } from '@components/relaysProvider';
+
+import { activeAccountAtom } from '@stores/account';
+import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { useLocalStorage } from '@rehooks/local-storage';
+import { useAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
-  const relayPool: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
-  const [relays]: any = useLocalStorage('relays');
-  const [currentUser]: any = useLocalStorage('current-user');
+  const [relays] = useAtom(relaysAtom);
+  const [activeAccount] = useAtom(activeAccountAtom);
 
   const [value, setValue] = useState('');
-  const profile = JSON.parse(currentUser.metadata);
+  const profile = JSON.parse(activeAccount.metadata);
 
   const submitEvent = () => {
     const event: any = {
       content: value,
       created_at: dateToUnix(),
       kind: 1,
-      pubkey: currentUser.id,
+      pubkey: activeAccount.id,
       tags: [['e', eventID]],
     };
     event.id = getEventHash(event);
-    event.sig = signEvent(event, currentUser.privkey);
+    event.sig = signEvent(event, activeAccount.privkey);
 
-    relayPool.publish(event, relays);
+    pool.publish(event, relays);
   };
 
   return (
@@ -37,7 +40,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
             <ImageWithFallback
               src={profile.picture}
-              alt={currentUser.id}
+              alt={activeAccount.id}
               fill={true}
               className="rounded-md object-cover"
             />

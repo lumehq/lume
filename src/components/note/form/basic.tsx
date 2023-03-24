@@ -1,11 +1,14 @@
-import { RelayContext } from '@components/contexts/relay';
+import { RelayContext } from '@components/relaysProvider';
+
+import { activeAccountAtom } from '@stores/account';
+import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
-import { useLocalStorage } from '@rehooks/local-storage';
 import * as commands from '@uiw/react-md-editor/lib/commands';
+import { useAtom } from 'jotai';
 import dynamic from 'next/dynamic';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -15,16 +18,16 @@ const MDEditor = dynamic(() => import('@uiw/react-md-editor').then((mod) => mod.
 });
 
 export default function FormBasic() {
-  const relayPool: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
-  const [relays]: any = useLocalStorage('relays');
-  const [currentUser]: any = useLocalStorage('current-user');
+  const [relays] = useAtom(relaysAtom);
+  const [activeAccount] = useAtom(activeAccountAtom);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const pubkey = currentUser.id;
-  const privkey = currentUser.privkey;
+  const pubkey = activeAccount.id;
+  const privkey = activeAccount.privkey;
 
   const submitEvent = () => {
     const event: any = {
@@ -37,7 +40,7 @@ export default function FormBasic() {
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
 
-    relayPool.publish(event, relays);
+    pool.publish(event, relays);
     setValue('');
   };
 

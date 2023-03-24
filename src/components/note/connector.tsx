@@ -1,70 +1,53 @@
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
+import { RelayContext } from '@components/relaysProvider';
 
+import { activeAccountAtom } from '@stores/account';
 import { hasNewerNoteAtom } from '@stores/note';
+import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
+import { createCacheNote, getAllFollowsByID } from '@utils/storage';
 
-import { useLocalStorage } from '@rehooks/local-storage';
-import { useSetAtom } from 'jotai';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
 
 export const NoteConnector = memo(function NoteConnector() {
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
-
-  const [follows]: any = useLocalStorage('follows');
-  const [relays]: any = useLocalStorage('relays');
+  const pool: any = useContext(RelayContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [relays] = useAtom(relaysAtom);
+  const [activeAccount] = useAtom(activeAccountAtom);
+
+  const [isOnline] = useState(navigator.onLine);
   const now = useRef(new Date());
 
-  const insertDB = useCallback(
-    async (event: any) => {
-      // insert to local database
-      await db.execute(
-        'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags) VALUES (?, ?, ?, ?, ?, ?);',
-        [event.id, event.pubkey, event.created_at, event.kind, event.content, JSON.stringify(event.tags)]
-      );
-    },
-    [db]
-  );
-
-  useMemo(() => {
-    relayPool.subscribe(
-      [
-        {
-          kinds: [1],
-          authors: follows,
-          since: dateToUnix(hoursAgo(12, now.current)),
-        },
-      ],
-      relays,
-      (event: any) => {
-        // insert event to local database
-        insertDB(event).catch(console.error);
-        // ask user load newer note
-        if (event.created_at > dateToUnix(now.current)) {
-          setHasNewerNote(true);
-        }
-      }
-    );
-  }, [relayPool, follows, relays, insertDB, setHasNewerNote]);
-
   useEffect(() => {
-    const handleStatusChange = () => {
-      setIsOnline(navigator.onLine);
-    };
+    let unsubscribe;
 
-    window.addEventListener('online', handleStatusChange);
-    window.addEventListener('offline', handleStatusChange);
+    getAllFollowsByID(activeAccount.id).then((follows) => {
+      unsubscribe = pool.subscribe(
+        [
+          {
+            kinds: [1],
+            authors: follows,
+            since: dateToUnix(hoursAgo(12, now.current)),
+          },
+        ],
+        relays,
+        (event: any) => {
+          // insert event to local database
+          createCacheNote(event);
+          // ask user load newer note
+          if (event.created_at > dateToUnix(now.current)) {
+            setHasNewerNote(true);
+          }
+        }
+      );
+    });
 
     return () => {
-      window.removeEventListener('online', handleStatusChange);
-      window.removeEventListener('offline', handleStatusChange);
+      unsubscribe();
     };
-  }, [isOnline]);
+  }, [activeAccount.id, pool, relays, setHasNewerNote]);
 
   return (
     <>

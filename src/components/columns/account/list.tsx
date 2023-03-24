@@ -1,35 +1,36 @@
 import { ActiveAccount } from '@components/columns/account/active';
 import { InactiveAccount } from '@components/columns/account/inactive';
 
-import useLocalStorage from '@rehooks/local-storage';
+import { activeAccountAtom } from '@stores/account';
+
+import { getAccounts } from '@utils/storage';
+
+import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
 
 export default function AccountList() {
-  const [currentUser]: any = useLocalStorage('current-user');
+  const [activeAccount] = useAtom(activeAccountAtom);
   const [users, setUsers] = useState([]);
 
   const renderAccount = useCallback(
     (user: { id: string }) => {
-      if (user.id === currentUser.id) {
+      if (user.id === activeAccount.id) {
         return <ActiveAccount key={user.id} user={user} />;
       } else {
         return <InactiveAccount key={user.id} user={user} />;
       }
     },
-    [currentUser.id]
+    [activeAccount.id]
   );
 
-  const getAccounts = useCallback(async () => {
-    const db = await Database.load('sqlite:lume.db');
-    const result: any = await db.select('SELECT * FROM accounts');
-
-    setUsers(result);
-  }, []);
-
   useEffect(() => {
-    getAccounts().catch(console.error);
-  }, [getAccounts]);
+    const fetchAccount = async () => {
+      const result: any = await getAccounts();
+      setUsers(result);
+    };
+
+    fetchAccount().catch(console.error);
+  }, []);
 
   return <>{users.map((user) => renderAccount(user))}</>;
 }

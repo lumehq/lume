@@ -1,11 +1,14 @@
-import { RelayContext } from '@components/contexts/relay';
+import { RelayContext } from '@components/relaysProvider';
+
+import { activeAccountAtom } from '@stores/account';
+import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
 import LikeIcon from '@assets/icons/like';
 import LikedIcon from '@assets/icons/liked';
 
-import { useLocalStorage } from '@rehooks/local-storage';
+import { useAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useEffect, useState } from 'react';
 
@@ -18,10 +21,10 @@ export const LikesCounter = memo(function LikesCounter({
   eventID: string;
   eventPubkey: string;
 }) {
-  const relayPool: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
-  const [relays]: any = useLocalStorage('relays');
-  const [currentUser]: any = useLocalStorage('current-user');
+  const [relays] = useAtom(relaysAtom);
+  const [activeAccount] = useAtom(activeAccountAtom);
 
   const [isReact, setIsReact] = useState(false);
   const [like, setLike] = useState(0);
@@ -37,12 +40,12 @@ export const LikesCounter = memo(function LikesCounter({
         ['p', eventPubkey],
       ],
       created_at: dateToUnix(),
-      pubkey: currentUser.id,
+      pubkey: activeAccount.id,
     };
     event.id = getEventHash(event);
-    event.sig = signEvent(event, currentUser.privkey);
+    event.sig = signEvent(event, activeAccount.privkey);
     // publish event to all relays
-    relayPool.publish(event, relays);
+    pool.publish(event, relays);
     // update state to change icon to filled heart
     setIsReact(true);
     // update counter

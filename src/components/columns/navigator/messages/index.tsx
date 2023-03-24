@@ -1,13 +1,24 @@
 import { MessageList } from '@components/columns/navigator/messages/list';
 
+import { activeAccountAtom } from '@stores/account';
+
+import { getAllFollowsByID } from '@utils/storage';
+
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { TriangleUpIcon } from '@radix-ui/react-icons';
-import useLocalStorage from '@rehooks/local-storage';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 
 export default function Messages() {
   const [open, setOpen] = useState(true);
-  const [follows] = useLocalStorage('follows');
+  const [follows, setFollows] = useState([]);
+  const [activeAccount] = useAtom(activeAccountAtom);
+
+  useEffect(() => {
+    getAllFollowsByID(activeAccount.id)
+      .then((res: any) => setFollows(res))
+      .catch(console.error);
+  }, [activeAccount.id]);
 
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen}>

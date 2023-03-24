@@ -1,6 +1,9 @@
-import { RelayContext } from '@components/contexts/relay';
 import { ImageWithFallback } from '@components/imageWithFallback';
+import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
+
+import { activeAccountAtom } from '@stores/account';
+import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -8,7 +11,7 @@ import CommentIcon from '@assets/icons/comment';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
-import useLocalStorage from '@rehooks/local-storage';
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
@@ -27,15 +30,15 @@ export const CommentsCounter = memo(function CommentsCounter({
   eventContent: any;
 }) {
   const router = useRouter();
-  const relayPool: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
-  const [relays]: any = useLocalStorage('relays');
-  const [currentUser]: any = useLocalStorage('current-user');
+  const [relays] = useAtom(relaysAtom);
+  const [activeAccount] = useAtom(activeAccountAtom);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const profile = JSON.parse(currentUser.metadata);
+  const profile = JSON.parse(activeAccount.metadata);
 
   const openThread = () => {
     router.push(`/newsfeed/${eventID}`);
@@ -46,13 +49,13 @@ export const CommentsCounter = memo(function CommentsCounter({
       content: value,
       created_at: dateToUnix(),
       kind: 1,
-      pubkey: currentUser.id,
+      pubkey: activeAccount.id,
       tags: [['e', eventID]],
     };
     event.id = getEventHash(event);
-    event.sig = signEvent(event, currentUser.privkey);
+    event.sig = signEvent(event, activeAccount.privkey);
 
-    relayPool.publish(event, relays);
+    pool.publish(event, relays);
     setOpen(false);
   };
 

@@ -1,6 +1,6 @@
 import BaseLayout from '@layouts/base';
 
-import { getActiveAccount } from '@utils/storage';
+import { getAccounts } from '@utils/storage';
 
 import LumeSymbol from '@assets/icons/Lume';
 
@@ -11,10 +11,10 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    getActiveAccount()
-      .then((res: any[]) => {
+    getAccounts()
+      .then((res: any) => {
         if (res.length > 0) {
-          router.push('/newsfeed/following');
+          router.push('/newsfeed/circle');
         } else {
           router.push('/onboarding');
         }

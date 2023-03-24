@@ -1,8 +1,10 @@
-import { RelayContext } from '@components/contexts/relay';
 import { CommentsCounter } from '@components/note/counter/comments';
 import { LikesCounter } from '@components/note/counter/likes';
+import { RelayContext } from '@components/relaysProvider';
 
-import { useLocalStorage } from '@rehooks/local-storage';
+import { relaysAtom } from '@stores/relays';
+
+import { useAtom } from 'jotai';
 import { useContext, useEffect, useState } from 'react';
 
 export default function NoteMetadata({
@@ -16,14 +18,14 @@ export default function NoteMetadata({
   eventTime: string;
   eventContent: any;
 }) {
-  const relayPool: any = useContext(RelayContext);
-  const [relays]: any = useLocalStorage('relays');
+  const pool: any = useContext(RelayContext);
+  const [relays] = useAtom(relaysAtom);
 
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(0);
 
   useEffect(() => {
-    const unsubscribe = relayPool.subscribe(
+    const unsubscribe = pool.subscribe(
       [
         {
           '#e': [eventID],
@@ -56,7 +58,7 @@ export default function NoteMetadata({
     return () => {
       unsubscribe();
     };
-  }, [eventID, relayPool, relays]);
+  }, [eventID, pool, relays]);
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">

@@ -1,11 +1,12 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
 import { Content } from '@components/note/content';
 import { ContentExtend } from '@components/note/content/extend';
 import FormComment from '@components/note/form/comment';
+import { RelayContext } from '@components/relaysProvider';
+
+import { getNoteByID } from '@utils/storage';
 
 import useLocalStorage from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
@@ -14,15 +15,13 @@ import {
   ReactElement,
   ReactFragment,
   ReactPortal,
-  useCallback,
   useContext,
   useEffect,
   useState,
 } from 'react';
 
 export default function Page() {
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const router = useRouter();
   const id = router.query.id;
@@ -32,17 +31,15 @@ export default function Page() {
   const [rootEvent, setRootEvent] = useState(null);
   const [comments, setComments] = useState([]);
 
-  const fetchRoot = useCallback(async () => {
-    const result = await db.select(`SELECT * FROM cache_notes WHERE id = "${id}"`);
-    setRootEvent(result[0]);
-  }, [db, id]);
-
   useEffect(() => {
     let unsubscribe: () => void;
 
-    fetchRoot()
-      .then(() => {
-        unsubscribe = relayPool.subscribe(
+    getNoteByID(id)
+      .then((res) => {
+        // update state
+        setRootEvent(res);
+        // get all comments
+        unsubscribe = pool.subscribe(
           [
             {
               '#e': [id],
@@ -60,7 +57,7 @@ export default function Page() {
     return () => {
       unsubscribe();
     };
-  }, [fetchRoot, id, relayPool, relays]);
+  }, [id, pool, relays]);
 
   return (
     <div className="scrollbar-hide flex h-full flex-col gap-2 overflow-y-auto py-5">

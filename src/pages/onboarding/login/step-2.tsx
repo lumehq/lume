@@ -1,69 +1,72 @@
 import BaseLayout from '@layouts/base';
 
-import { pool } from '@utils/pool';
-import { createAccount, createFollows, getAllRelays } from '@utils/storage';
+import { RelayContext } from '@components/relaysProvider';
+
+import { relaysAtom } from '@stores/relays';
+
+import { createAccount, createFollows } from '@utils/storage';
+import { tagsToArray } from '@utils/tags';
 import { truncate } from '@utils/truncate';
 
 import destr from 'destr';
+import { useAtom } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
-
-const tags = (arr) => {
-  const newarr = [];
-  // push item to newarr
-  arr.forEach((item) => {
-    newarr.push(['p', item]);
-  });
-  return newarr;
-};
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 export default function Page() {
+  const pool: any = useContext(RelayContext);
+
   const router = useRouter();
   const privkey: any = router.query.privkey;
   const pubkey = getPublicKey(privkey);
 
+  const [relays] = useAtom(relaysAtom);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    getAllRelays()
-      .then((res) => {
-        pool(res).subscribe(
-          [
-            {
-              authors: [pubkey],
-              kinds: [0, 3],
-              since: 0,
-            },
-          ],
-          res,
-          (event: any) => {
-            if (event.kind === 0) {
-              const data = {
-                pubkey: pubkey,
-                privkey: privkey,
-                npub: nip19.npubEncode(pubkey),
-                nsec: nip19.nsecEncode(privkey),
-                metadata: event.content,
-              };
-              setProfile(destr(event.content));
-              createAccount(data);
-            } else {
-              if (event.tags.length > 0) {
-                createFollows(tags(event.tags), pubkey, 0);
-              }
-            }
-          },
-          undefined,
-          undefined,
-          {
-            unsubscribeOnEose: true,
+    pool.subscribe(
+      [
+        {
+          authors: [pubkey],
+          kinds: [0, 3],
+          since: 0,
+        },
+      ],
+      relays,
+      (event: any) => {
+        if (event.kind === 0) {
+          const data = {
+            pubkey: pubkey,
+            privkey: privkey,
+            npub: nip19.npubEncode(pubkey),
+            nsec: nip19.nsecEncode(privkey),
+            metadata: event.content,
+          };
+          setProfile(destr(event.content));
+          createAccount(data);
+        } else {
+          if (event.tags.length > 0) {
+            createFollows(tagsToArray(event.tags), pubkey, 0);
           }
-        );
-      })
-      .catch(console.error);
-  }, [privkey, pubkey]);
+        }
+      },
+      undefined,
+      undefined,
+      {
+        unsubscribeOnEose: true,
+      }
+    );
+  }, [pool, privkey, pubkey, relays]);
 
   // submit then redirect to home
   const submit = () => {

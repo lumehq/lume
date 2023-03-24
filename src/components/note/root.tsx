@@ -1,35 +1,21 @@
-import { DatabaseContext } from '@components/contexts/database';
-import { RelayContext } from '@components/contexts/relay';
 import { Content } from '@components/note/content';
+import { RelayContext } from '@components/relaysProvider';
 
-import useLocalStorage from '@rehooks/local-storage';
+import { relaysAtom } from '@stores/relays';
+
+import { createCacheNote, getNoteByID } from '@utils/storage';
+
+import { useAtom } from 'jotai';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const RootNote = memo(function RootNote({ id }: { id: string }) {
-  const { db }: any = useContext(DatabaseContext);
-  const relayPool: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
-  const [relays]: any = useLocalStorage('relays');
+  const [relays] = useAtom(relaysAtom);
   const [event, setEvent] = useState(null);
 
-  const insertDB = useCallback(
-    async (event: any) => {
-      // insert to local database
-      await db.execute(
-        'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, is_root) VALUES (?, ?, ?, ?, ?, ?, ?);',
-        [event.id, event.pubkey, event.created_at, event.kind, event.content, JSON.stringify(event.tags), 1]
-      );
-    },
-    [db]
-  );
-
-  const getData = useCallback(async () => {
-    const result = await db.select(`SELECT * FROM cache_notes WHERE id = "${id}"`);
-    return result[0];
-  }, [db, id]);
-
   const fetchEvent = useCallback(() => {
-    relayPool.subscribe(
+    pool.subscribe(
       [
         {
           ids: [id],
@@ -41,7 +27,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
         // update state
         setEvent(event);
         // insert to database
-        insertDB(event);
+        createCacheNote(event);
       },
       undefined,
       undefined,
@@ -49,19 +35,17 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
         unsubscribeOnEose: true,
       }
     );
-  }, [id, insertDB, relayPool, relays]);
+  }, [id, pool, relays]);
 
   useEffect(() => {
-    getData()
-      .then((res) => {
-        if (res) {
-          setEvent(res);
-        } else {
-          fetchEvent();
-        }
-      })
-      .catch(console.error);
-  }, [fetchEvent, getData]);
+    getNoteByID(id).then((res) => {
+      if (res) {
+        setEvent(res);
+      } else {
+        fetchEvent();
+      }
+    });
+  }, [fetchEvent, id]);
 
   if (event) {
     return (

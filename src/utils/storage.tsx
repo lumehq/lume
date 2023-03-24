@@ -25,7 +25,14 @@ export async function getAllRelays() {
 // get active account
 export async function getActiveAccount() {
   const db = await connect();
-  return await db.select(`SELECT * FROM accounts LIMIT 1;`);
+  const result = await db.select(`SELECT * FROM accounts LIMIT 1;`);
+  return result[0];
+}
+
+// get all accounts
+export async function getAccounts() {
+  const db = await connect();
+  return await db.select(`SELECT * FROM accounts`);
 }
 
 // get all follows by account id
@@ -70,4 +77,27 @@ export async function createFollows(data, account, kind) {
 export async function createCacheProfile(id, metadata) {
   const db = await connect();
   return await db.execute('INSERT OR IGNORE INTO cache_profiles (id, metadata) VALUES (?, ?);', [id, metadata]);
+}
+
+// get cache profile
+export async function getCacheProfile(id) {
+  const db = await connect();
+  const result = await db.select(`SELECT metadata FROM cache_profiles WHERE id = "${id}"`);
+  return result[0];
+}
+
+// get note by id
+export async function getNoteByID(id) {
+  const db = await connect();
+  const result = await db.select(`SELECT * FROM cache_notes WHERE id = "${id}"`);
+  return result[0];
+}
+
+// create cache note
+export async function createCacheNote(data) {
+  const db = await connect();
+  return await db.execute(
+    'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, is_root) VALUES (?, ?, ?, ?, ?, ?, ?);',
+    [data.id, data.pubkey, data.created_at, data.kind, data.content, JSON.stringify(data.tags), 0]
+  );
 }
