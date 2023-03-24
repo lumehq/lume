@@ -8,7 +8,7 @@ import destr from 'destr';
 import { memo, useMemo } from 'react';
 import reactStringReplace from 'react-string-replace';
 
-export const NoteContent = memo(function NoteContent({ data }: { data: any }) {
+export const Content = memo(function Content({ data }: { data: any }) {
   const content = useMemo(() => {
     let parsedContent;
     // get data tags

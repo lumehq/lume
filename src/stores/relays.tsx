@@ -4,6 +4,6 @@ import { getAllRelays } from '@utils/storage';
 import { atomWithCache } from 'jotai-cache';
 
 export const relaysAtom = atomWithCache(async () => {
-  const response = isSSR ? null : await getAllRelays();
+  const response = isSSR ? [] : await getAllRelays();
   return response;
 });

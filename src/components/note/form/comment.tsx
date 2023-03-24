@@ -6,6 +6,7 @@ import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
+import destr from 'destr';
 import { useAtom, useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -17,7 +18,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
   const [activeAccount] = useAtom(activeAccountAtom);
 
   const [value, setValue] = useState('');
-  const profile = JSON.parse(activeAccount.metadata);
+  const profile = destr(activeAccount.metadata);
 
   const submitEvent = () => {
     const event: any = {
@@ -39,7 +40,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
         <div>
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
             <ImageWithFallback
-              src={profile.picture}
+              src={profile?.picture}
               alt={activeAccount.id}
               fill={true}
               className="rounded-md object-cover"

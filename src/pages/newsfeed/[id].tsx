@@ -11,6 +11,7 @@ import { relaysAtom } from '@stores/relays';
 import { getNoteByID } from '@utils/storage';
 
 import { useAtomValue } from 'jotai';
+import { GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -26,7 +27,7 @@ export default function Page() {
   const pool: any = useContext(RelayContext);
 
   const router = useRouter();
-  const id = router.query.id;
+  const id = router.query.id || null;
 
   const relays: any = useAtomValue(relaysAtom);
 

@@ -27,8 +27,8 @@ export default function Page() {
   const pool: any = useContext(RelayContext);
 
   const router = useRouter();
-  const privkey: any = router.query.privkey;
-  const pubkey = getPublicKey(privkey);
+  const privkey: any = router.query.privkey || null;
+  const pubkey = privkey ? getPublicKey(privkey) : null;
 
   const relays = useAtomValue(relaysAtom);
   const [profile, setProfile] = useState(null);
@@ -94,7 +94,7 @@ export default function Page() {
                   <div className="flex items-center gap-2">
                     <p className="font-semibold">{profile?.display_name || profile?.name}</p>
                     <span className="leading-tight text-zinc-500">·</span>
-                    <p className="text-zinc-500">@{profile?.username || truncate(pubkey, 16, ' .... ')}</p>
+                    <p className="text-zinc-500">@{profile?.username || (pubkey && truncate(pubkey, 16, ' .... '))}</p>
                   </div>
                   <div className="space-y-3">
                     <div className="grid grid-cols-3 gap-4">

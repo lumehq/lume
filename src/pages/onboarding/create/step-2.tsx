@@ -67,7 +67,7 @@ export default function Page() {
   const pool: any = useContext(RelayContext);
 
   const router = useRouter();
-  const { id, privkey }: any = router.query;
+  const { id, privkey }: any = router.query || '';
 
   const relays = useAtomValue(relaysAtom);
   const [loading, setLoading] = useState(false);

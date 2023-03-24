@@ -1,3 +1,4 @@
+import { isSSR } from '@utils/ssr';
 import { getAllNotes } from '@utils/storage';
 
 import { atom } from 'jotai';
@@ -9,7 +10,7 @@ export const hasNewerNoteAtom = atom(false);
 export const [notesAtom] = atomsWithQuery(() => ({
   queryKey: ['notes'],
   queryFn: async ({ queryKey: [] }) => {
-    const res = await getAllNotes();
+    const res = isSSR ? [] : await getAllNotes();
     return res;
   },
 }));

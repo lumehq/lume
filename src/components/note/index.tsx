@@ -1,4 +1,3 @@
-import { NoteContent } from '@components/note/content';
 import { RootNote } from '@components/note/root';
 
 import destr from 'destr';
@@ -43,8 +42,7 @@ export const Note = memo(function Note({ event }: { event: any }) {
       onClick={(e) => openThread(e)}
       className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
     >
-      <div>{fetchRootEvent()}</div>
-      <NoteContent data={event} />
+      <p>{event.content}</p>
     </div>
   );
 });

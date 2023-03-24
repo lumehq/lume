@@ -1,4 +1,3 @@
-import { NoteContent } from '@components/note/content';
 import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
@@ -51,7 +50,7 @@ export const RootNote = memo(function RootNote({ id }: { id: string }) {
     return (
       <div className="relative pb-5">
         <div className="absolute top-0 left-[21px] h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
-        <NoteContent data={event} />
+        <p>{event.content}</p>
       </div>
     );
   } else {

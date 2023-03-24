@@ -12,7 +12,7 @@ import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 
 
 export default function Page() {
   const router = useRouter();
-  const id: any = router.query.id;
+  const id: any = router.query.id || '';
 
   return (
     <div className="scrollbar-hide h-full w-full overflow-y-auto">
