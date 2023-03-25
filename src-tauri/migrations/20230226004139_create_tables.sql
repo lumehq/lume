@@ -85,7 +85,5 @@ CREATE TABLE
     kind INTEGER NOT NULL DEFAULT 1,
     tags TEXT NOT NULL,
     content TEXT NOT NULL,
-    is_circle INTEGER NOT NULL DEFAULT 0,
-    is_root INTEGER NOT NULL DEFAULT 0,
-    is_reply INTEGER NOT NULL DEFAULT 0
+    parent_id TEXT
   );

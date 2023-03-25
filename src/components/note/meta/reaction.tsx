@@ -12,7 +12,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useEffect, useState } from 'react';
 
-export const LikesCounter = memo(function LikesCounter({
+export const NoteReaction = memo(function NoteReaction({
   count,
   eventID,
   eventPubkey,

@@ -1,9 +1,9 @@
 import { isSSR } from '@utils/ssr';
 import { getActiveAccount } from '@utils/storage';
 
-import { atomWithCache } from 'jotai-cache';
+import { atom } from 'jotai';
 
-export const activeAccountAtom = atomWithCache(async () => {
+export const activeAccountAtom = atom(async () => {
   const response = isSSR ? {} : await getActiveAccount();
   return response;
 });

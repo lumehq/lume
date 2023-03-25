@@ -1,3 +1,5 @@
+import { getParentID } from '@utils/transform';
+
 import Database from 'tauri-plugin-sql-api';
 
 let db: null | Database = null;
@@ -89,7 +91,7 @@ export async function getCacheProfile(id) {
 // get note by id
 export async function getAllNotes() {
   const db = await connect();
-  return await db.select(`SELECT * FROM cache_notes WHERE is_root = 0 ORDER BY created_at DESC LIMIT 1000`);
+  return await db.select(`SELECT * FROM cache_notes GROUP BY parent_id ORDER BY created_at DESC LIMIT 1000`);
 }
 
 // get note by id
@@ -103,7 +105,15 @@ export async function getNoteByID(id) {
 export async function createCacheNote(data) {
   const db = await connect();
   return await db.execute(
-    'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, is_root) VALUES (?, ?, ?, ?, ?, ?, ?);',
-    [data.id, data.pubkey, data.created_at, data.kind, data.content, JSON.stringify(data.tags), 0]
+    'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?);',
+    [
+      data.id,
+      data.pubkey,
+      data.created_at,
+      data.kind,
+      data.content,
+      JSON.stringify(data.tags),
+      getParentID(data.tags, data.id),
+    ]
   );
 }

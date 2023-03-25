@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
 
-export const CommentsCounter = memo(function CommentsCounter({
+export const NoteComment = memo(function NoteComment({
   count,
   eventID,
   eventPubkey,
@@ -79,7 +79,7 @@ export const CommentsCounter = memo(function CommentsCounter({
                 <div className="relative z-10">
                   <UserExtend pubkey={eventPubkey} time={eventTime} />
                 </div>
-                <div className="-mt-4 pl-[60px]">
+                <div className="-mt-5 pl-[52px]">
                   <div className="prose prose-zinc max-w-none break-words leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
                     {eventContent}
                   </div>
@@ -88,7 +88,7 @@ export const CommentsCounter = memo(function CommentsCounter({
                 <div className="absolute top-0 left-[21px] h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
               </div>
               {/* comment form */}
-              <div className="flex gap-4">
+              <div className="flex gap-2">
                 <div>
                   <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
                     <ImageWithFallback

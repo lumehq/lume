@@ -1,7 +1,7 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
-import { Note } from '@components/note';
+import { NoteBase } from '@components/note/base';
 import FormBasic from '@components/note/form/basic';
 
 import { hasNewerNoteAtom, notesAtom } from '@stores/note';
@@ -52,7 +52,7 @@ export default function Page() {
             <div className="absolute top-0 left-0 w-full" style={{ transform: `translateY(${items[0].start}px)` }}>
               {items.map((virtualRow) => (
                 <div key={virtualRow.key} data-index={virtualRow.index} ref={virtualizer.measureElement}>
-                  <Note event={data[virtualRow.index]} />
+                  <NoteBase event={data[virtualRow.index]} />
                 </div>
               ))}
             </div>

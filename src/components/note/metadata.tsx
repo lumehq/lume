@@ -1,5 +1,5 @@
-import { CommentsCounter } from '@components/note/counter/comments';
-import { LikesCounter } from '@components/note/counter/likes';
+import { NoteComment } from '@components/note/meta/comment';
+import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
@@ -62,14 +62,14 @@ export default function NoteMetadata({
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">
-      <CommentsCounter
+      <NoteComment
         count={comments}
         eventID={eventID}
         eventPubkey={eventPubkey}
         eventContent={eventContent}
         eventTime={eventTime}
       />
-      <LikesCounter count={likes} eventID={eventID} eventPubkey={eventPubkey} />
+      <NoteReaction count={likes} eventID={eventID} eventPubkey={eventPubkey} />
     </div>
   );
 }
