@@ -59,8 +59,10 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
   }, [event.content, event.tags]);
 
   const getParent = useMemo(() => {
-    if (event.parent_id !== event.id && !event.content.includes('#[0]')) {
-      return <NoteParent id={event.parent_id} />;
+    if (event.parent_id) {
+      if (event.parent_id !== event.id && !event.content.includes('#[0]')) {
+        return <NoteParent id={event.parent_id} />;
+      }
     }
 
     return;

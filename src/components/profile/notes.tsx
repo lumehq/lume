@@ -1,4 +1,4 @@
-import { Content } from '@components/note/content';
+import { NoteBase } from '@components/note/base';
 import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
@@ -15,17 +15,14 @@ export default function ProfileNotes({ id }: { id: string }) {
 
   useEffect(() => {
     const user = new Author(pool, relays, id);
-    user.text((res) => setData((data) => [...data, res]), 0, 100);
+    user.text((res) => setData((data) => [...data, res]), 100, 0);
   }, [id, pool, relays]);
 
   return (
     <div className="flex flex-col">
       {data.map((item) => (
-        <div
-          key={item.id}
-          className="flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
-        >
-          <Content data={item} />
+        <div key={item.id}>
+          <NoteBase event={item} />
         </div>
       ))}
     </div>

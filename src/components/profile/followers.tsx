@@ -1,4 +1,5 @@
 import { RelayContext } from '@components/relaysProvider';
+import { UserFollow } from '@components/user/follow';
 
 import { relaysAtom } from '@stores/relays';
 
@@ -19,8 +20,8 @@ export default function ProfileFollowers({ id }: { id: string }) {
   }, [id, pool, relays]);
 
   return (
-    <div className="flex flex-col gap-3 py-5">
-      {followers && followers.map((follower, index) => <p key={index}>{follower[1]}</p>)}
+    <div className="flex flex-col gap-3 px-3 py-5">
+      {followers && followers.map((follower) => <UserFollow key={follower[1]} pubkey={follower[1]} />)}
     </div>
   );
 }
