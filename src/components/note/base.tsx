@@ -2,6 +2,7 @@ import NoteMetadata from '@components/note/metadata';
 import { NoteParent } from '@components/note/parent';
 import { ImagePreview } from '@components/note/preview/image';
 import { VideoPreview } from '@components/note/preview/video';
+import { NoteRepost } from '@components/note/repost';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
@@ -10,8 +11,6 @@ import { useRouter } from 'next/router';
 import { memo, useMemo } from 'react';
 import ReactPlayer from 'react-player/lazy';
 import reactStringReplace from 'react-string-replace';
-
-import { NoteRepost } from './repost';
 
 export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
   const router = useRouter();

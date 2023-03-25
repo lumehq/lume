@@ -4,13 +4,18 @@ import { getAllNotes } from '@utils/storage';
 import { atom } from 'jotai';
 import { atomsWithQuery } from 'jotai-tanstack-query';
 
-// usecase: notify user that connector has receive newer note
+// notify user that connector has receive newer note
 export const hasNewerNoteAtom = atom(false);
-// usecase: query notes from database
+// query notes from database
 export const [notesAtom] = atomsWithQuery(() => ({
   queryKey: ['notes'],
   queryFn: async ({ queryKey: [] }) => {
     const res = isSSR ? [] : await getAllNotes();
     return res;
   },
+  refetchInterval: 1000000,
+  refetchOnReconnect: true,
+  refetchOnWindowFocus: true,
+  refetchOnMount: true,
+  keepPreviousData: false,
 }));

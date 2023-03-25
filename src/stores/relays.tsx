@@ -1,9 +1,9 @@
 import { isSSR } from '@utils/ssr';
 import { getAllRelays } from '@utils/storage';
 
-import { atom } from 'jotai';
+import { atomWithCache } from 'jotai-cache';
 
-export const relaysAtom = atom(async () => {
+export const relaysAtom = atomWithCache(async () => {
   const response = isSSR ? [] : await getAllRelays();
   return response;
 });
