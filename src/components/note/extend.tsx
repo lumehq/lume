@@ -54,7 +54,7 @@ export const NoteExtend = memo(function NoteExtend({ event }: { event: any }) {
   }, [event.content, event.tags]);
 
   return (
-    <div className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3">
+    <div className="relative z-10 flex h-min min-h-min w-full select-text flex-col">
       <div className="relative z-10 flex flex-col">
         <UserLarge pubkey={event.pubkey} time={event.created_at} />
         <div className="mt-2">

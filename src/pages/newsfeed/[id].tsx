@@ -61,7 +61,7 @@ export default function Page() {
   }, [id, pool, relays]);
 
   return (
-    <div className="scrollbar-hide flex h-full flex-col gap-2 overflow-y-auto py-5">
+    <div className="scrollbar-hide flex h-full flex-col gap-2 overflow-y-auto py-3">
       <div className="flex h-min min-h-min w-full select-text flex-col px-3">
         {rootEvent && <NoteExtend event={rootEvent} />}
       </div>
@@ -69,7 +69,12 @@ export default function Page() {
         <FormComment eventID={id} />
       </div>
       <div className="flex flex-col">
-        {comments.length > 0 && comments.map((comment) => <p key={comment.id}>{comment.content}</p>)}
+        {comments.length > 0 &&
+          comments.map((comment) => (
+            <p key={comment.id}>
+              {comment.id}-{comment.content}
+            </p>
+          ))}
       </div>
     </div>
   );

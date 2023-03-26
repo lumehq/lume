@@ -1,7 +1,7 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
-import FormBasic from '@components/form/base';
+import FormBase from '@components/form/base';
 import { NoteBase } from '@components/note/base';
 import { Placeholder } from '@components/note/placeholder';
 
@@ -27,7 +27,7 @@ export default function Page() {
   return (
     <div ref={parentRef} className="scrollbar-hide h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
       <div className="relative">
-        <FormBasic />
+        <FormBase />
       </div>
       <Suspense fallback={<Placeholder />}>
         <div>
