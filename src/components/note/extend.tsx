@@ -1,6 +1,7 @@
 import NoteMetadata from '@components/note/metadata';
 import { ImagePreview } from '@components/note/preview/image';
 import { VideoPreview } from '@components/note/preview/video';
+import { NoteRepost } from '@components/note/repost';
 import { UserLarge } from '@components/user/large';
 import { UserMention } from '@components/user/mention';
 
@@ -43,7 +44,7 @@ export const NoteExtend = memo(function NoteExtend({ event }: { event: any }) {
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
         } else if (tags[match][0] === 'e') {
           // note-mentions
-          return <p key={match + i}>note-{tags[match][1]}</p>;
+          return <NoteRepost key={match + i} id={tags[match][1]} />;
         } else {
           return;
         }

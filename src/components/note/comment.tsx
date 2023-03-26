@@ -42,9 +42,6 @@ export const NoteComment = memo(function NoteComment({ event }: { event: any }) 
         if (tags[match][0] === 'p') {
           // @-mentions
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
-        } else if (tags[match][0] === 'e') {
-          // note-mentions
-          return <NoteRepost key={match + i} id={tags[match][1]} />;
         } else {
           return;
         }
