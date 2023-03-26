@@ -1,6 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@emoji-mart/data': ^1.1.2
+  '@emoji-mart/react': ^1.1.1
   '@radix-ui/react-collapsible': ^1.0.2
   '@radix-ui/react-dialog': ^1.0.3
   '@radix-ui/react-dropdown-menu': ^2.0.4
@@ -27,6 +29,7 @@ specifiers:
   csstype: ^3.1.1
   dayjs: ^1.11.7
   destr: ^1.2.2
+  emoji-mart: ^5.5.2
   eslint: ^8.36.0
   eslint-config-next: ^13.2.4
   eslint-config-prettier: ^8.8.0
@@ -58,6 +61,8 @@ specifiers:
   ws: ^8.13.0
 
 dependencies:
+  '@emoji-mart/data': 1.1.2
+  '@emoji-mart/react': 1.1.1_kyrnz3vmphzqyjjk2ivrm6bcsu
   '@radix-ui/react-collapsible': 1.0.2_biqbaboplfbrettd7655fr4n2y
   '@radix-ui/react-dialog': 1.0.3_aen5vu2fkbnw3ssyd5drxdxkh4
   '@radix-ui/react-dropdown-menu': 2.0.4_aen5vu2fkbnw3ssyd5drxdxkh4
@@ -74,6 +79,7 @@ dependencies:
   boring-avatars: 1.7.0
   dayjs: 1.11.7
   destr: 1.2.2
+  emoji-mart: 5.5.2
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   jotai: 2.0.3_react@18.2.0
   jotai-cache: 0.3.0_jotai@2.0.3
@@ -374,6 +380,22 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+
+  /@emoji-mart/data/1.1.2:
+    resolution:
+      { integrity: sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg== }
+    dev: false
+
+  /@emoji-mart/react/1.1.1_kyrnz3vmphzqyjjk2ivrm6bcsu:
+    resolution:
+      { integrity: sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g== }
+    peerDependencies:
+      emoji-mart: ^5.2
+      react: ^16.8 || ^17 || ^18
+    dependencies:
+      emoji-mart: 5.5.2
+      react: 18.2.0
+    dev: false
 
   /@emotion/is-prop-valid/0.8.8:
     resolution:
@@ -2510,6 +2532,11 @@ packages:
   /electron-to-chromium/1.4.340:
     resolution:
       { integrity: sha512-zx8hqumOqltKsv/MF50yvdAlPF9S/4PXbyfzJS6ZGhbddGkRegdwImmfSVqCkEziYzrIGZ/TlrzBND4FysfkDg== }
+
+  /emoji-mart/5.5.2:
+    resolution:
+      { integrity: sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A== }
+    dev: false
 
   /emoji-regex/8.0.0:
     resolution:

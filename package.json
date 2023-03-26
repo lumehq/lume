@@ -12,6 +12,8 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.0.2",
     "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.4",
@@ -28,6 +30,7 @@
     "boring-avatars": "^1.7.0",
     "dayjs": "^1.11.7",
     "destr": "^1.2.2",
+    "emoji-mart": "^5.5.2",
     "framer-motion": "^9.1.7",
     "jotai": "^2.0.3",
     "jotai-cache": "^0.3.0",

@@ -1,8 +1,8 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
+import FormComment from '@components/form/comment';
 import { NoteExtend } from '@components/note/extend';
-import FormComment from '@components/note/form/comment';
 import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';

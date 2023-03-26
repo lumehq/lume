@@ -3,7 +3,10 @@ import { getAllNotes } from '@utils/storage';
 
 import { atom } from 'jotai';
 import { atomsWithQuery } from 'jotai-tanstack-query';
+import { atomWithReset } from 'jotai/utils';
 
+// note content
+export const noteContentAtom = atomWithReset('');
 // notify user that connector has receive newer note
 export const hasNewerNoteAtom = atom(false);
 // query notes from database

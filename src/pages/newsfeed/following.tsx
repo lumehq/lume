@@ -1,8 +1,8 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
+import FormBasic from '@components/form/base';
 import { NoteBase } from '@components/note/base';
-import FormBasic from '@components/note/form/basic';
 import { Placeholder } from '@components/note/placeholder';
 
 import { notesAtom } from '@stores/note';

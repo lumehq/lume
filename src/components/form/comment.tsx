@@ -2,22 +2,25 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
+import { noteContentAtom } from '@stores/note';
 import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
 import destr from 'destr';
 import { useAtom, useAtomValue } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
-export default function FormComment({ eventID }: { eventID: any }) {
+export default function FormComment({ eventID }: { eventID: string }) {
   const pool: any = useContext(RelayContext);
 
   const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
+  const [value, setValue] = useAtom(noteContentAtom);
+  const resetValue = useResetAtom(noteContentAtom);
 
-  const [value, setValue] = useState('');
   const profile = destr(activeAccount.metadata);
 
   const submitEvent = () => {
@@ -32,6 +35,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
     event.sig = signEvent(event, activeAccount.privkey);
 
     pool.publish(event, relays);
+    resetValue;
   };
 
   return (

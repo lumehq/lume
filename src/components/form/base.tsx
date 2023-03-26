@@ -1,14 +1,19 @@
+import EmojiPicker from '@components/form/emojiPicker';
 import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
+import { noteContentAtom } from '@stores/note';
 import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
+
+import ImageIcon from '@assets/icons/image';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
 import * as commands from '@uiw/react-md-editor/lib/commands';
 import { useAtom, useAtomValue } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
 import dynamic from 'next/dynamic';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -17,14 +22,15 @@ const MDEditor = dynamic(() => import('@uiw/react-md-editor').then((mod) => mod.
   ssr: false,
 });
 
-export default function FormBasic() {
+export default function FormBase() {
   const pool: any = useContext(RelayContext);
 
   const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
+  const [value, setValue] = useAtom(noteContentAtom);
+  const resetValue = useResetAtom(noteContentAtom);
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
 
   const pubkey = activeAccount.id;
   const privkey = activeAccount.privkey;
@@ -41,7 +47,7 @@ export default function FormBasic() {
     event.sig = signEvent(event, privkey);
 
     pool.publish(event, relays);
-    setValue('');
+    resetValue;
   };
 
   const postButton = {
@@ -49,9 +55,9 @@ export default function FormBasic() {
     keyCommand: 'post',
     buttonProps: { className: 'cta-btn', 'aria-label': 'Post a message' },
     icon: (
-      <button className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm font-medium shadow-md shadow-fuchsia-900/50 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50">
+      <div className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm font-medium shadow-md shadow-fuchsia-900/50 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50">
         <span className="text-white drop-shadow">Send</span>
-      </button>
+      </div>
     ),
     execute: (state: { text: any }) => {
       if (state.text > 0) {
@@ -82,37 +88,9 @@ export default function FormBasic() {
                   </span>
                 </Dialog.Trigger>
                 <div className="flex items-center gap-2 pl-2">
+                  <EmojiPicker />
                   <span className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4 text-zinc-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
-                      />
-                    </svg>
-                  </span>
-                  <span className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4 text-zinc-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                      />
-                    </svg>
+                    <ImageIcon className="h-4 w-4 text-zinc-400" />
                   </span>
                 </div>
               </div>
