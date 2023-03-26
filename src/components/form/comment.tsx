@@ -2,26 +2,22 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
-import { noteContentAtom } from '@stores/note';
 import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
-import EmojiPicker from '@emoji-mart/react';
-import { ImageIcon } from '@radix-ui/react-icons';
+import { sendNotification } from '@tauri-apps/api/notification';
 import destr from 'destr';
 import { useAtom, useAtomValue } from 'jotai';
-import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
   const pool: any = useContext(RelayContext);
 
   const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
-  const [value, setValue] = useAtom(noteContentAtom);
-  const resetValue = useResetAtom(noteContentAtom);
+  const [value, setValue] = useState('');
 
   const profile = destr(activeAccount.metadata);
 
@@ -36,8 +32,10 @@ export default function FormComment({ eventID }: { eventID: any }) {
     event.id = getEventHash(event);
     event.sig = signEvent(event, activeAccount.privkey);
 
+    // publish note
     pool.publish(event, relays);
-    resetValue;
+    // send notification
+    sendNotification('Comment has been published successfully');
   };
 
   return (

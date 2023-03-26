@@ -8,6 +8,7 @@ import { relaysAtom } from '@stores/relays';
 import { dateToUnix } from '@utils/getDate';
 
 import { ImageIcon, ResetIcon } from '@radix-ui/react-icons';
+import { sendNotification } from '@tauri-apps/api/notification';
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -35,8 +36,12 @@ export default function FormBase() {
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
 
+    // publish note
     pool.publish(event, relays);
-    resetValue;
+    // reset form
+    resetValue();
+    // send notification
+    sendNotification('Note has been published successfully');
   };
 
   return (

@@ -2,6 +2,7 @@ import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
 import FormComment from '@components/form/comment';
+import { NoteComment } from '@components/note/comment';
 import { NoteExtend } from '@components/note/extend';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -50,12 +51,7 @@ export default function Page() {
         <FormComment eventID={id} />
       </div>
       <div className="flex flex-col">
-        {comments.length > 0 &&
-          comments.map((comment) => (
-            <p key={comment.id}>
-              {comment.id}-{comment.content}
-            </p>
-          ))}
+        {comments.length > 0 && comments.map((comment) => <NoteComment key={comment.id} event={comment} />)}
       </div>
     </div>
   );
