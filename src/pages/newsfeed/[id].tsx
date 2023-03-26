@@ -7,7 +7,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
-import { getNoteByID } from '@utils/storage';
+import { getAllCommentNotes, getNoteByID } from '@utils/storage';
 
 import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
@@ -33,31 +33,12 @@ export default function Page() {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    let unsubscribe: () => void;
-
     getNoteByID(id)
       .then((res) => {
-        // update state
         setRootEvent(res);
-        // get all comments
-        unsubscribe = pool.subscribe(
-          [
-            {
-              '#e': [id],
-              kinds: [1],
-            },
-          ],
-          relays,
-          (event: any) => {
-            setComments((comments) => [...comments, event]);
-          }
-        );
+        getAllCommentNotes(id).then((res: any) => setComments(res));
       })
       .catch(console.error);
-
-    return () => {
-      unsubscribe();
-    };
   }, [id, pool, relays]);
 
   return (

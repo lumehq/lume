@@ -85,5 +85,6 @@ CREATE TABLE
     kind INTEGER NOT NULL DEFAULT 1,
     tags TEXT NOT NULL,
     content TEXT NOT NULL,
-    parent_id TEXT
+    parent_id TEXT,
+    parent_comment_id TEXT
   );

@@ -4,6 +4,8 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
+import { createCacheCommentNote } from '@utils/storage';
+
 import { useAtomValue } from 'jotai';
 import { useContext, useEffect, useState } from 'react';
 
@@ -37,7 +39,10 @@ export default function NoteMetadata({
       (event: any) => {
         switch (event.kind) {
           case 1:
+            // update state
             setComments((comments) => (comments += 1));
+            // save comment to database
+            createCacheCommentNote(event, eventID);
             break;
           case 7:
             if (event.content === '🤙' || event.content === '+') {

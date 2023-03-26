@@ -88,7 +88,7 @@ export async function getCacheProfile(id) {
   return result[0];
 }
 
-// get note by id
+// get all notes
 export async function getAllNotes() {
   const db = await connect();
   return await db.select(`SELECT * FROM cache_notes GROUP BY parent_id ORDER BY created_at DESC LIMIT 1000`);
@@ -114,6 +114,32 @@ export async function createCacheNote(data) {
       data.content,
       JSON.stringify(data.tags),
       getParentID(data.tags, data.id),
+    ]
+  );
+}
+
+// get all comment notes
+export async function getAllCommentNotes(eid) {
+  const db = await connect();
+  return await db.select(
+    `SELECT * FROM cache_notes WHERE parent_comment_id = "${eid}" ORDER BY created_at DESC LIMIT 1000`
+  );
+}
+
+// create cache comment note
+export async function createCacheCommentNote(data, eid) {
+  const db = await connect();
+  return await db.execute(
+    'INSERT OR IGNORE INTO cache_notes (id, pubkey, created_at, kind, content, tags, parent_id, parent_comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+    [
+      data.id,
+      data.pubkey,
+      data.created_at,
+      data.kind,
+      data.content,
+      JSON.stringify(data.tags),
+      getParentID(data.tags, data.id),
+      eid,
     ]
   );
 }

@@ -86,7 +86,7 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
 
   if (event) {
     return (
-      <div className="relative mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
+      <div className="relative mt-3 mb-2 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
         <div className="relative z-10 flex flex-col">
           <UserExtend pubkey={event.pubkey} time={event.created_at} />
           <div className="-mt-5 pl-[52px]">
