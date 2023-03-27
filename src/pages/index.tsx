@@ -14,7 +14,7 @@ export default function Page() {
     getAccounts()
       .then((res: any) => {
         if (res.length > 0) {
-          router.push('/newsfeed/following');
+          router.push('/init');
         } else {
           router.push('/onboarding');
         }

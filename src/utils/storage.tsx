@@ -143,3 +143,23 @@ export async function createCacheCommentNote(data, eid) {
     ]
   );
 }
+
+// create cache comment note
+export async function countTotalNotes() {
+  const db = await connect();
+  const result = await db.select('SELECT COUNT(*) AS "total" FROM cache_notes;');
+  return result[0];
+}
+
+// get last login time
+export async function getLastLoginTime() {
+  const db = await connect();
+  const result = await db.select('SELECT setting_value FROM settings WHERE setting_key = "last_login"');
+  return result[0];
+}
+
+// update last login time
+export async function updateLastLoginTime(time) {
+  const db = await connect();
+  return await db.execute(`UPDATE settings SET setting_value = "${time}" WHERE setting_key = "last_login"`);
+}

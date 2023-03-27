@@ -88,3 +88,17 @@ CREATE TABLE
     parent_id TEXT,
     parent_comment_id TEXT
   );
+
+-- create settings
+CREATE TABLE
+  settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    setting_key TEXT NOT NULL,
+    setting_value TEXT NOT NULL
+  );
+
+-- add default setting
+INSERT INTO
+  settings (setting_key, setting_value)
+VALUES
+  ("last_login", "0");
