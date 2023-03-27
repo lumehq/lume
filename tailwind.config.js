@@ -35,6 +35,7 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-conic': 'conic-gradient(var(--tw-gradient-stops))',
+        fade: 'linear-gradient(120deg, #000, transparent 30%, transparent 70%, #000)',
       },
       keyframes: {
         disco: {
