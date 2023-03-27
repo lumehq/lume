@@ -24,13 +24,12 @@ export default function Page() {
 
   const now = useRef(new Date());
   const timer = useRef(null);
-  const unsubscribe = useRef(null);
 
   useEffect(() => {
     countTotalNotes().then((count) => {
       if (count.total === 0) {
         getAllFollowsByID(activeAccount.id).then((follows) => {
-          unsubscribe.current = pool.subscribe(
+          pool.subscribe(
             [
               {
                 kinds: [1],
@@ -47,6 +46,9 @@ export default function Page() {
             undefined,
             () => {
               timer.current = setTimeout(() => router.push('/newsfeed/following'), 3000);
+            },
+            {
+              unsubscribeOnEose: true,
             }
           );
         });
@@ -55,7 +57,7 @@ export default function Page() {
           const parseDate = new Date(time);
 
           getAllFollowsByID(activeAccount.id).then((follows) => {
-            unsubscribe.current = pool.subscribe(
+            pool.subscribe(
               [
                 {
                   kinds: [1],
@@ -72,6 +74,9 @@ export default function Page() {
               undefined,
               () => {
                 timer.current = setTimeout(() => router.push('/newsfeed/following'), 3000);
+              },
+              {
+                unsubscribeOnEose: true,
               }
             );
           });
@@ -80,7 +85,6 @@ export default function Page() {
     });
 
     return () => {
-      unsubscribe.current();
       clearTimeout(timer.current);
     };
   }, [activeAccount.id, pool, relays, router]);

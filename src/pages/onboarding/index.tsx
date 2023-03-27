@@ -93,7 +93,7 @@ export default function Page() {
                       src={tag}
                       alt={tag}
                       fill={true}
-                      className="rounded-md"
+                      className="rounded-md border border-zinc-900"
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
                       priority

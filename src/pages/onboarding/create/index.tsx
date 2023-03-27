@@ -39,8 +39,7 @@ export default function Page() {
       display_name: name,
       name: name,
       username: name.toLowerCase(),
-      picture: 'https://bafybeidfsbrzqbvontmucteomoz2rkrxugu462l5hyhh6uioslkfzzs4oq.ipfs.w3s.link/avatar-11.png',
-      banner: 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg',
+      picture: 'https://void.cat/d/KmypFh2fBdYCEvyJrPiN89',
     }),
     [name]
   );
@@ -122,7 +121,7 @@ export default function Page() {
                   readOnly
                   type={type}
                   value={nsec}
-                  className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
+                  className="relative w-full rounded-lg border border-black/5 py-2.5 pl-3.5 pr-11 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
                 />
                 <button
                   onClick={() => showPrivateKey()}
@@ -140,16 +139,16 @@ export default function Page() {
               <label className="text-sm font-semibold text-zinc-400">Default Profile (you can change it later)</label>
               <div className="relative w-full shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
                 <div className="relative w-full rounded-lg border border-black/5 px-3.5 py-4 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200  dark:shadow-black/10 dark:placeholder:text-zinc-600">
-                  <div className="flex space-x-4">
-                    <div className="relative h-10 w-10 rounded-full">
-                      <Image className="inline-block rounded-full" src={metadata.picture} alt="" fill={true} />
+                  <div className="flex space-x-2">
+                    <div className="relative h-11 w-11 rounded-md">
+                      <Image className="inline-block rounded-md" src={metadata.picture} alt="" fill={true} />
                     </div>
-                    <div className="flex-1 space-y-4 py-1">
-                      <div className="flex items-center gap-2">
+                    <div className="flex-1 space-y-2 py-1">
+                      <div className="flex items-center gap-1">
                         <p className="font-semibold">{metadata.display_name}</p>
                         <p className="text-zinc-400">@{metadata.username}</p>
                       </div>
-                      <div className="space-y-3">
+                      <div className="space-y-1">
                         <div className="grid grid-cols-3 gap-4">
                           <div className="col-span-2 h-2 rounded bg-zinc-700"></div>
                           <div className="col-span-1 h-2 rounded bg-zinc-700"></div>

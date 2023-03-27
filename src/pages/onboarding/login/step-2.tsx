@@ -20,6 +20,7 @@ import {
   ReactPortal,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -32,9 +33,11 @@ export default function Page() {
 
   const relays = useAtomValue(relaysAtom);
   const [profile, setProfile] = useState(null);
+  const [done, setDone] = useState(false);
+  const timer = useRef(null);
 
   useEffect(() => {
-    pool.subscribe(
+    const unsubscribe = pool.subscribe(
       [
         {
           authors: [pubkey],
@@ -61,16 +64,23 @@ export default function Page() {
         }
       },
       undefined,
-      undefined,
+      () => {
+        timer.current = setTimeout(() => setDone(true), 3000);
+      },
       {
         unsubscribeOnEose: true,
       }
     );
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timer.current);
+    };
   }, [pool, privkey, pubkey, relays]);
 
   // submit then redirect to home
   const submit = () => {
-    router.push('/');
+    router.push('/init');
   };
 
   return (
@@ -107,12 +117,30 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <button
-            onClick={() => submit()}
-            className="inline-flex w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
-          >
-            <span className="drop-shadow-lg">Done →</span>
-          </button>
+          <div className="flex items-center justify-center">
+            {done === false ? (
+              <svg
+                className="h-5 w-5 animate-spin text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            ) : (
+              <button
+                onClick={() => submit()}
+                className="inline-flex w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <span className="drop-shadow-lg">Done →</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
