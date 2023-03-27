@@ -8,12 +8,12 @@ import { dateToUnix } from '@utils/getDate';
 import { createCacheNote, getAllFollowsByID, updateLastLoginTime } from '@utils/storage';
 import { pubkeyArray } from '@utils/transform';
 
-import { window } from '@tauri-apps/api';
 import { TauriEvent } from '@tauri-apps/api/event';
+import { appWindow, getCurrent } from '@tauri-apps/api/window';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-export const NoteConnector = memo(function NoteConnector() {
+export default function NoteConnector() {
   const pool: any = useContext(RelayContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
@@ -45,9 +45,9 @@ export const NoteConnector = memo(function NoteConnector() {
 
   useEffect(() => {
     subscribe();
-    window.getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
+    getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
       updateLastLoginTime(now.current);
-      window.appWindow.close();
+      appWindow.close();
     });
   }, [activeAccount.id, pool, relays, setHasNewerNote, subscribe]);
 
@@ -68,4 +68,4 @@ export const NoteConnector = memo(function NoteConnector() {
       </div>
     </>
   );
-});
+}
