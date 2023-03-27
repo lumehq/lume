@@ -14,7 +14,7 @@ export default function EmojiPicker() {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
-          <EmojiIcon className="h-[16.5px] w-[16.5px] text-zinc-400" />
+          <EmojiIcon className="h-4 w-4 text-zinc-400" />
         </button>
       </Popover.Trigger>
       <Popover.Portal>

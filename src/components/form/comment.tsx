@@ -38,7 +38,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
   };
 
   return (
-    <div className="px-5 py-3">
+    <div className="p-3">
       <div className="flex gap-1">
         <div>
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">

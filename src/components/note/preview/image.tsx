@@ -3,7 +3,7 @@ import { memo } from 'react';
 
 export const ImagePreview = memo(function ImagePreview({ url }: { url: string }) {
   return (
-    <div className="relative mt-3 h-full w-full rounded-lg xl:w-2/3">
+    <div className="relative mt-3 mb-2 h-full w-full rounded-lg xl:w-2/3">
       <Image
         src={url}
         alt={url}

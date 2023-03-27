@@ -1,4 +1,5 @@
 import EmojiPicker from '@components/form/emojiPicker';
+import ImagePicker from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
@@ -7,7 +8,7 @@ import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { ImageIcon, ResetIcon } from '@radix-ui/react-icons';
+import { PersonIcon } from '@radix-ui/react-icons';
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -58,17 +59,9 @@ export default function FormBase() {
         <div className="absolute bottom-2 w-full px-2">
           <div className="flex w-full items-center justify-between bg-zinc-800">
             <div className="flex items-center gap-2 divide-x divide-zinc-700">
-              <button
-                onClick={resetValue}
-                className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700"
-              >
-                <ResetIcon className="h-4 w-4 text-zinc-400" />
-              </button>
+              <ImagePicker />
               <div className="flex items-center gap-2 pl-2">
                 <EmojiPicker />
-                <span className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
-                  <ImageIcon className="h-4 w-4 text-zinc-400" />
-                </span>
               </div>
             </div>
             <div className="flex items-center gap-2">
