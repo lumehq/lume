@@ -91,7 +91,7 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
           <UserExtend pubkey={event.pubkey} time={event.created_at} />
           <div className="-mt-5 pl-[52px]">
             <div className="flex flex-col gap-2">
-              <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1 prose-img:mt-2 prose-img:mb-0 prose-video:mt-1 prose-video:mb-0">
+              <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
                 {content}
               </div>
             </div>

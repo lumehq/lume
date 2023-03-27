@@ -18,6 +18,9 @@
         "hide": false,
         "show": false
       },
+      "os": {
+        "all": true
+      },
       "http": {
         "all": true,
         "request": true,
