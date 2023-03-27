@@ -4,7 +4,6 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
-import { dateToUnix } from '@utils/getDate';
 import { createCacheCommentNote } from '@utils/storage';
 
 import { useAtomValue } from 'jotai';
@@ -27,7 +26,6 @@ export default function NoteMetadata({
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(0);
 
-  /*
   useEffect(() => {
     const unsubscribe = pool.subscribe(
       [
@@ -67,7 +65,6 @@ export default function NoteMetadata({
       unsubscribe;
     };
   }, [eventID, eventTime, pool, relays]);
-  */
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">
