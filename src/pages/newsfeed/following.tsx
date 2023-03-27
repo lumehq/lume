@@ -17,8 +17,7 @@ export default function Page() {
 
   const virtualizer = useVirtualizer({
     count: data.length,
-    overscan: 5,
-    estimateSize: () => 600,
+    estimateSize: () => 500,
     getScrollElement: () => parentRef.current,
     getItemKey: (index) => data[index].id,
   });

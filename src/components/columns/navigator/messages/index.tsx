@@ -1,24 +1,9 @@
-import { MessageList } from '@components/columns/navigator/messages/list';
-
-import { activeAccountAtom } from '@stores/account';
-
-import { getAllFollowsByID } from '@utils/storage';
-
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { TriangleUpIcon } from '@radix-ui/react-icons';
-import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function Messages() {
   const [open, setOpen] = useState(true);
-  const [follows, setFollows] = useState([]);
-  const [activeAccount] = useAtom(activeAccountAtom);
-
-  useEffect(() => {
-    getAllFollowsByID(activeAccount.id)
-      .then((res: any) => setFollows(res))
-      .catch(console.error);
-  }, [activeAccount.id]);
 
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen}>
@@ -35,9 +20,7 @@ export default function Messages() {
             Messages
           </h3>
         </Collapsible.Trigger>
-        <Collapsible.Content className="flex flex-col">
-          <MessageList data={follows} />
-        </Collapsible.Content>
+        <Collapsible.Content className="flex flex-col"></Collapsible.Content>
       </div>
     </Collapsible.Root>
   );

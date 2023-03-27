@@ -12,7 +12,7 @@ import { createCacheNote, getNoteByID } from '@utils/storage';
 
 import destr from 'destr';
 import { useAtomValue } from 'jotai';
-import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import reactStringReplace from 'react-string-replace';
 
@@ -21,9 +21,10 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
 
   const relays = useAtomValue(relaysAtom);
   const [event, setEvent] = useState(null);
+  const unsubscribe = useRef(null);
 
   const fetchEvent = useCallback(() => {
-    pool.subscribe(
+    unsubscribe.current = pool.subscribe(
       [
         {
           ids: [id],
@@ -53,6 +54,10 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
         fetchEvent();
       }
     });
+
+    return () => {
+      unsubscribe.current;
+    };
   }, [fetchEvent, id]);
 
   const content = useMemo(() => {

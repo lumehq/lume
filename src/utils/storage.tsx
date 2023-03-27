@@ -91,7 +91,7 @@ export async function getCacheProfile(id) {
 // get all notes
 export async function getAllNotes() {
   const db = await connect();
-  return await db.select(`SELECT * FROM cache_notes GROUP BY parent_id ORDER BY created_at DESC LIMIT 1000`);
+  return await db.select(`SELECT * FROM cache_notes GROUP BY parent_id ORDER BY created_at DESC LIMIT 500`);
 }
 
 // get note by id
@@ -122,7 +122,7 @@ export async function createCacheNote(data) {
 export async function getAllCommentNotes(eid) {
   const db = await connect();
   return await db.select(
-    `SELECT * FROM cache_notes WHERE parent_comment_id = "${eid}" ORDER BY created_at DESC LIMIT 1000`
+    `SELECT * FROM cache_notes WHERE parent_comment_id = "${eid}" ORDER BY created_at DESC LIMIT 500`
   );
 }
 

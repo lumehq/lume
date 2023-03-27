@@ -8,6 +8,7 @@ import { fetch } from '@tauri-apps/api/http';
 import Avatar from 'boring-avatars';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import destr from 'destr';
 import { memo, useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
@@ -26,11 +27,11 @@ export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: str
   useEffect(() => {
     getCacheProfile(pubkey).then((res) => {
       if (res) {
-        setProfile(JSON.parse(res.metadata));
+        setProfile(destr(res.metadata));
       } else {
         fetchProfile(pubkey)
           .then((res: any) => {
-            setProfile(JSON.parse(res.content));
+            setProfile(destr(res.content));
             createCacheProfile(pubkey, res.content);
           })
           .catch(console.error);

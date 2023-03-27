@@ -13,7 +13,17 @@ import LumeSymbol from '@assets/icons/Lume';
 
 import { useAtom, useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useRef } from 'react';
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 export default function Page() {
   const router = useRouter();
@@ -22,72 +32,60 @@ export default function Page() {
   const relays = useAtomValue(relaysAtom);
   const [activeAccount] = useAtom(activeAccountAtom);
 
+  const [done, setDone] = useState(false);
   const now = useRef(new Date());
-  const timer = useRef(null);
+  const unsubscribe = useRef(null);
+
+  const fetchData = useCallback(
+    (since) => {
+      getAllFollowsByID(activeAccount.id).then((follows) => {
+        unsubscribe.current = pool.subscribe(
+          [
+            {
+              kinds: [1],
+              authors: pubkeyArray(follows),
+              since: dateToUnix(since),
+              until: dateToUnix(now.current),
+            },
+          ],
+          relays,
+          (event) => {
+            // insert event to local database
+            createCacheNote(event);
+          },
+          undefined,
+          () => {
+            setDone(true);
+          },
+          {
+            unsubscribeOnEose: true,
+          }
+        );
+      });
+    },
+    [activeAccount.id, pool, relays]
+  );
 
   useEffect(() => {
-    countTotalNotes().then((count) => {
-      if (count.total === 0) {
-        getAllFollowsByID(activeAccount.id).then((follows) => {
-          pool.subscribe(
-            [
-              {
-                kinds: [1],
-                authors: pubkeyArray(follows),
-                since: dateToUnix(hoursAgo(24, now.current)),
-                until: dateToUnix(now.current),
-              },
-            ],
-            relays,
-            (event) => {
-              // insert event to local database
-              createCacheNote(event);
-            },
-            undefined,
-            () => {
-              timer.current = setTimeout(() => router.push('/newsfeed/following'), 3000);
-            },
-            {
-              unsubscribeOnEose: true,
-            }
-          );
-        });
-      } else {
-        getLastLoginTime().then((time) => {
-          const parseDate = new Date(time);
-
-          getAllFollowsByID(activeAccount.id).then((follows) => {
-            pool.subscribe(
-              [
-                {
-                  kinds: [1],
-                  authors: pubkeyArray(follows),
-                  since: dateToUnix(parseDate),
-                  until: dateToUnix(now.current),
-                },
-              ],
-              relays,
-              (event) => {
-                // insert event to local database
-                createCacheNote(event);
-              },
-              undefined,
-              () => {
-                timer.current = setTimeout(() => router.push('/newsfeed/following'), 3000);
-              },
-              {
-                unsubscribeOnEose: true,
-              }
-            );
+    if (!done) {
+      countTotalNotes().then((count) => {
+        if (count.total === 0) {
+          fetchData(hoursAgo(24, now.current));
+        } else {
+          getLastLoginTime().then((time) => {
+            const parseDate = new Date(time.setting_value);
+            fetchData(parseDate);
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      router.push('/newsfeed/following');
+    }
 
     return () => {
-      clearTimeout(timer.current);
+      unsubscribe.current;
     };
-  }, [activeAccount.id, pool, relays, router]);
+  }, [activeAccount.id, done, pool, relays, router, fetchData]);
 
   return (
     <div className="relative h-full overflow-hidden">

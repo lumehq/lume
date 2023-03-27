@@ -5,6 +5,7 @@ import { truncate } from '@utils/truncate';
 
 import { fetch } from '@tauri-apps/api/http';
 import Avatar from 'boring-avatars';
+import destr from 'destr';
 import { memo, useCallback, useEffect, useState } from 'react';
 
 export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
@@ -21,11 +22,11 @@ export const UserMini = memo(function UserMini({ pubkey }: { pubkey: string }) {
   useEffect(() => {
     getCacheProfile(pubkey).then((res) => {
       if (res) {
-        setProfile(JSON.parse(res.metadata));
+        setProfile(destr(res.metadata));
       } else {
         fetchProfile(pubkey)
           .then((res: any) => {
-            setProfile(JSON.parse(res.content));
+            setProfile(destr(res.content));
             createCacheProfile(pubkey, res.content);
           })
           .catch(console.error);

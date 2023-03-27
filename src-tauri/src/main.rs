@@ -7,15 +7,13 @@
 #[macro_use]
 extern crate objc;
 
-use tauri::{Manager, SystemTray, WindowEvent};
+use tauri::{Manager, WindowEvent};
 use tauri_plugin_sql::{Migration, MigrationKind};
 use window_ext::WindowExt;
 
 mod window_ext;
 
 fn main() {
-  let tray = SystemTray::new();
-
   tauri::Builder::default()
     .setup(|app| {
       let main_window = app.get_window("main").unwrap();
@@ -24,7 +22,6 @@ fn main() {
 
       Ok(())
     })
-    .system_tray(tray)
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(

@@ -11,6 +11,7 @@ import CommentIcon from '@assets/icons/comment';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
+import destr from 'destr';
 import { useAtom, useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -38,7 +39,7 @@ export const NoteComment = memo(function NoteComment({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const profile = JSON.parse(activeAccount.metadata);
+  const profile = destr(activeAccount.metadata);
 
   const openThread = () => {
     router.push(`/newsfeed/${eventID}`);

@@ -4,6 +4,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
+import { dateToUnix } from '@utils/getDate';
 import { createCacheCommentNote } from '@utils/storage';
 
 import { useAtomValue } from 'jotai';
@@ -17,7 +18,7 @@ export default function NoteMetadata({
 }: {
   eventID: string;
   eventPubkey: string;
-  eventTime: string;
+  eventTime: any;
   eventContent: any;
 }) {
   const pool: any = useContext(RelayContext);
@@ -26,13 +27,15 @@ export default function NoteMetadata({
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(0);
 
+  /*
   useEffect(() => {
     const unsubscribe = pool.subscribe(
       [
         {
           '#e': [eventID],
-          since: 0,
+          since: parseInt(eventTime),
           kinds: [1, 7],
+          limit: 50,
         },
       ],
       relays,
@@ -53,7 +56,7 @@ export default function NoteMetadata({
             break;
         }
       },
-      undefined,
+      1000,
       undefined,
       {
         unsubscribeOnEose: true,
@@ -61,9 +64,10 @@ export default function NoteMetadata({
     );
 
     return () => {
-      unsubscribe();
+      unsubscribe;
     };
-  }, [eventID, pool, relays]);
+  }, [eventID, eventTime, pool, relays]);
+  */
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">

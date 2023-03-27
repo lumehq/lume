@@ -2,39 +2,44 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { relaysAtom } from '@stores/relays';
 
+import { dateToUnix } from '@utils/getDate';
 import { createFollows } from '@utils/storage';
 import { tagsToArray } from '@utils/transform';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
+import destr from 'destr';
 import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { memo, useContext, useEffect } from 'react';
+import { memo, useContext, useEffect, useRef } from 'react';
 
 export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
   const pool: any = useContext(RelayContext);
   const relays = useAtomValue(relaysAtom);
 
   const router = useRouter();
-  const userData = JSON.parse(user.metadata);
+  const userData = destr(user.metadata);
+
+  const now = useRef(new Date());
 
   const openProfile = () => {
-    router.push(`/users/${user.pubkey}`);
+    router.push(`/users/${user.id}`);
   };
 
   useEffect(() => {
-    pool.subscribe(
+    const unsubscribe = pool.subscribe(
       [
         {
           kinds: [3],
-          authors: [user.pubkey],
+          authors: [user.id],
+          since: dateToUnix(now.current),
         },
       ],
       relays,
       (event: any) => {
         if (event.tags.length > 0) {
-          createFollows(tagsToArray(event.tags), user.pubkey, 0);
+          createFollows(tagsToArray(event.tags), user.id, 0);
         }
       },
       undefined,
@@ -43,7 +48,11 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
         unsubscribeOnEose: true,
       }
     );
-  }, [pool, relays, user.pubkey]);
+
+    return () => {
+      unsubscribe;
+    };
+  }, [pool, relays, user.id]);
 
   return (
     <DropdownMenu.Root>

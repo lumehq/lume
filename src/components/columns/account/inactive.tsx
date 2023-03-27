@@ -1,8 +1,9 @@
+import destr from 'destr';
 import Image from 'next/image';
 import { memo } from 'react';
 
 export const InactiveAccount = memo(function InactiveAccount({ user }: { user: any }) {
-  const userData = JSON.parse(user.metadata);
+  const userData = destr(user.metadata);
 
   const setCurrentUser = () => {
     console.log('clicked');

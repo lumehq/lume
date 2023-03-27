@@ -34,7 +34,6 @@ export default function Page() {
   const relays = useAtomValue(relaysAtom);
   const [profile, setProfile] = useState(null);
   const [done, setDone] = useState(false);
-  const timer = useRef(null);
 
   useEffect(() => {
     const unsubscribe = pool.subscribe(
@@ -65,7 +64,7 @@ export default function Page() {
       },
       undefined,
       () => {
-        timer.current = setTimeout(() => setDone(true), 3000);
+        setDone(true);
       },
       {
         unsubscribeOnEose: true,
@@ -73,8 +72,7 @@ export default function Page() {
     );
 
     return () => {
-      unsubscribe();
-      clearTimeout(timer.current);
+      unsubscribe;
     };
   }, [pool, privkey, pubkey, relays]);
 

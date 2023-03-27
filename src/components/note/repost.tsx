@@ -8,7 +8,7 @@ import { createCacheNote, getNoteByID } from '@utils/storage';
 
 import destr from 'destr';
 import { useAtomValue } from 'jotai';
-import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import reactStringReplace from 'react-string-replace';
 
 export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
@@ -16,9 +16,10 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
 
   const relays = useAtomValue(relaysAtom);
   const [event, setEvent] = useState(null);
+  const unsubscribe = useRef(null);
 
   const fetchEvent = useCallback(() => {
-    pool.subscribe(
+    unsubscribe.current = pool.subscribe(
       [
         {
           ids: [id],
@@ -48,6 +49,10 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
         fetchEvent();
       }
     });
+
+    return () => {
+      unsubscribe.current;
+    };
   }, [fetchEvent, id]);
 
   const content = useMemo(() => {
@@ -100,22 +105,6 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
       </div>
     );
   } else {
-    return (
-      <div className="relative z-10 flex h-min animate-pulse select-text flex-col pb-5">
-        <div className="flex items-start gap-2">
-          <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
-          <div className="flex w-full flex-1 items-start justify-between">
-            <div className="flex w-full items-center justify-between">
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-4 w-16 rounded bg-zinc-700" />
-                <span className="text-zinc-500">·</span>
-                <div className="h-4 w-12 rounded bg-zinc-700" />
-              </div>
-              <div className="h-3 w-3 rounded-full bg-zinc-700" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <div className="mt-2 h-6 animate-pulse select-text flex-col rounded bg-zinc-700 pb-5"></div>;
   }
 });

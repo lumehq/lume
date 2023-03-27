@@ -6,7 +6,6 @@ import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { sendNotification } from '@tauri-apps/api/notification';
 import destr from 'destr';
 import { useAtom, useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -35,7 +34,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
     // publish note
     pool.publish(event, relays);
     // send notification
-    sendNotification('Comment has been published successfully');
+    // sendNotification('Comment has been published successfully');
   };
 
   return (

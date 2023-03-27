@@ -14,15 +14,13 @@
     "allowlist": {
       "all": false,
       "app": {
-        "all": true,
-        "hide": false,
-        "show": false
+        "all": false
       },
       "os": {
         "all": true
       },
       "http": {
-        "all": true,
+        "all": false,
         "request": true,
         "scope": ["https://rbr.bio/*", "https://metadata.uselume.xyz/*"]
       },
@@ -31,12 +29,12 @@
         "open": true
       },
       "clipboard": {
-        "all": true,
+        "all": false,
         "writeText": true,
         "readText": true
       },
       "notification": {
-        "all": true
+        "all": false
       },
       "window": {
         "startDragging": true,

@@ -2,6 +2,7 @@ import { createCacheProfile, getCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
 import { fetch } from '@tauri-apps/api/http';
+import destr from 'destr';
 import { memo, useCallback, useEffect, useState } from 'react';
 
 export const UserMention = memo(function UserMention({ pubkey }: { pubkey: string }) {
@@ -18,11 +19,11 @@ export const UserMention = memo(function UserMention({ pubkey }: { pubkey: strin
   useEffect(() => {
     getCacheProfile(pubkey).then((res) => {
       if (res) {
-        setProfile(JSON.parse(res.metadata));
+        setProfile(destr(res.metadata));
       } else {
         fetchProfile(pubkey)
           .then((res: any) => {
-            setProfile(JSON.parse(res.content));
+            setProfile(destr(res.content));
             createCacheProfile(pubkey, res.content);
           })
           .catch(console.error);
