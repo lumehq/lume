@@ -20,7 +20,6 @@ import {
   ReactPortal,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 
@@ -78,7 +77,7 @@ export default function Page() {
 
   // submit then redirect to home
   const submit = () => {
-    router.push('/init');
+    router.push('/');
   };
 
   return (

@@ -35,6 +35,7 @@ export default function Page() {
   const [done, setDone] = useState(false);
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
+  const timer = useRef(null);
 
   const fetchData = useCallback(
     (since) => {
@@ -55,7 +56,8 @@ export default function Page() {
           },
           undefined,
           () => {
-            setDone(true);
+            // wait for 8 seconds
+            timer.current = setTimeout(() => setDone(true), 8000);
           },
           {
             unsubscribeOnEose: true,
@@ -84,6 +86,7 @@ export default function Page() {
 
     return () => {
       unsubscribe.current;
+      clearTimeout(timer.current);
     };
   }, [activeAccount.id, done, pool, relays, router, fetchData]);
 
