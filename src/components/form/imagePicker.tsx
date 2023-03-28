@@ -30,7 +30,7 @@ export default function ImagePicker() {
           <div>
             <div className="flex flex-col gap-1">
               <label className="text-sm font-semibold text-zinc-200">Image URL</label>
-              <div className="relative mb-1 shrink-0 before:pointer-events-none before:absolute before:-inset-px before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-1 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
+              <div className="relative mb-1 shrink-0 before:pointer-events-none before:absolute before:-inset-px before:rounded-[8px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-1 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
                 <input
                   placeholder="https://..."
                   onKeyDown={handleEnter}

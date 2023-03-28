@@ -1,6 +1,7 @@
 import AccountList from '@components/columns/account/list';
 
 import LumeSymbol from '@assets/icons/Lume';
+
 import { PlusIcon } from '@radix-ui/react-icons';
 import { getVersion } from '@tauri-apps/api/app';
 import Link from 'next/link';
@@ -23,14 +24,14 @@ export default function AccountColumn() {
       <div className="flex flex-col gap-4">
         <Link
           href="/explore"
-          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-zinc-900 hover:bg-zinc-800"
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800"
         >
           <LumeSymbol className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
         </Link>
         <AccountList />
         <Link
           href="/onboarding"
-          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-zinc-600 hover:border-zinc-400"
         >
           <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-200" />
         </Link>

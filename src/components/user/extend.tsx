@@ -47,8 +47,11 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   }, [fetchProfile, pubkey]);
 
   return (
-    <div onClick={(e) => openUserPage(e)} className="group flex items-start gap-2">
-      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1">
+    <div className="group flex items-start gap-2">
+      <div
+        onClick={(e) => openUserPage(e)}
+        className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1"
+      >
         {profile?.picture ? (
           <ImageWithFallback
             src={profile.picture}
@@ -69,7 +72,7 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">
           <div className="flex items-baseline gap-2 text-sm">
-            <span className="font-bold leading-tight group-hover:underline">
+            <span onClick={(e) => openUserPage(e)} className="font-bold leading-tight group-hover:underline">
               {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
             </span>
             <span className="leading-tight text-zinc-500">·</span>

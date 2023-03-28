@@ -28,6 +28,12 @@ module.exports = {
           0 2px 2px rgb(4 4 7 / 45%),
           0 8px 24px rgb(4 4 7 / 60%)
         `,
+        button: `
+          rgba(112, 26, 117, 0.5) 0px 2px 8px,
+          rgb(112, 26, 117) 0px 2px 4px,
+          rgb(112, 26, 117) 0px 0px 0px 1px,
+          rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset
+        `,
       },
       backgroundColor: {
         'near-black': '#07070d',
