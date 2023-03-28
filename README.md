@@ -51,7 +51,7 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 
 ## Features
 
-**Current**: v0.2.0
+**Current**: v0.2.1
 
 - [x] create new key
 - [x] import private key (hex/nsec)
