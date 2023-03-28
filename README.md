@@ -21,7 +21,7 @@
     <i>~ Links will be added once a release is available. ~</i>
   </p>
 </p>
-Lume is an open source cross-platform Nostr client, powered by (<a href="https://tauri.app" target="_blank">Tauri</a>) and Next.js | TailwindCSS. 
+Lume is an open source cross-platform Nostr client, powered by (<a href="https://tauri.app" target="_blank">Tauri</a>) and web-tech. 
 <br/>
 <br/>
 
@@ -32,7 +32,7 @@ Nostr is truly censorship-resistant protocol for social network and messenger ap
 Lume is simple as it is, no more buzzwords
 
 <p align="center">
-  <img src="https://bafybeiczmks7vkylveykhj5xef743wht7cq664mf5gzxb6nf32yol3qgaq.ipfs.w3s.link/app-screenshot.png" alt="App screenshot">
+  <img src="https://void.cat/d/2oaFfzJsjnKNye6fHTpaq2" alt="App screenshot">
   <br />
   <br />
 </p>
@@ -51,38 +51,27 @@ Lume is "an ambitious nostr client", so I don't want to limit it be a part of yo
 
 ## Features
 
-**Current**: v0.1.2-alpha
+**Current**: v0.2.0
 
 - [x] create new key
 - [x] import private key (hex/nsec)
 - [x] followings newsfeed
-- [x] global newsfeed
 - [x] handle note reaction
 - [x] handle note repost
 - [x] handle note have image/video
-- [x] handle note have markdown
+- [x] handle tags (#[x]) in note
+- [x] handle reply note
 - [x] publish a note (support markdown)
 - [x] update profile
 - [x] cache profile to local database
 - [x] offline support
 - [x] implement newsfeed infinite loading
-- [x] native notification
-
-**Next**:
-
-- [ ] handle tags (#[x]) in note
-- [ ] handle reply note
-- [ ] integrate webtorrent
-- [ ] publish a reply
-- [ ] direct message
-- [ ] multi accounts
-- [ ] personal profile page
-- [ ] setting page
-- [ ] windows & linux support
+- [x] personal profile page
+- [x] windows & linux support
 
 ## Roadmap
 
-Public roadmap will be released when Lume reach v0.3.0
+View full roadmap for v0.3.0 [here](https://github.com/users/reyamir/projects/2)
 
 ## Running dev build
 
