@@ -1,6 +1,6 @@
 import BaseLayout from '@layouts/base';
 
-import { LightningBoltIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, LightningBoltIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
@@ -33,6 +33,10 @@ export default function Page() {
     formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<FormValues>({ resolver });
 
+  const goBack = () => {
+    router.back();
+  };
+
   const onSubmit = async (data: any) => {
     let privkey = data['key'];
 
@@ -54,15 +58,22 @@ export default function Page() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid h-full w-full grid-rows-5">
-      <div className="row-span-1 flex items-center justify-center">
+    <div className="grid h-full w-full grid-rows-5">
+      <div className="row-span-1 mx-auto flex w-full max-w-md items-center justify-between">
+        <button
+          onClick={() => goBack()}
+          className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
+        >
+          <ArrowLeftIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300" />
+        </button>
         <div>
           <h1 className="bg-gradient-to-br from-zinc-200 via-white to-zinc-300 bg-clip-text text-3xl font-semibold text-transparent">
             Login with Private Key
           </h1>
         </div>
+        <div></div>
       </div>
-      <div className="row-span-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="row-span-4">
         <div className="mx-auto w-full max-w-md">
           <div className="flex flex-col gap-4">
             <div>
@@ -119,8 +130,8 @@ export default function Page() {
             )}
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }
 
