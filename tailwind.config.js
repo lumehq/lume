@@ -28,6 +28,12 @@ module.exports = {
           0 2px 2px rgb(4 4 7 / 45%),
           0 8px 24px rgb(4 4 7 / 60%)
         `,
+        button: `
+          rgba(112, 26, 117, 0.5) 0px 2px 8px,
+          rgb(112, 26, 117) 0px 2px 4px,
+          rgb(112, 26, 117) 0px 0px 0px 1px,
+          rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset
+        `,
       },
       backgroundColor: {
         'near-black': '#07070d',
@@ -35,6 +41,7 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-conic': 'conic-gradient(var(--tw-gradient-stops))',
+        fade: 'linear-gradient(120deg, #000, transparent 30%, transparent 70%, #000)',
       },
       keyframes: {
         disco: {
@@ -65,6 +72,14 @@ module.exports = {
           from: { opacity: 0, transform: 'translateX(2px)' },
           to: { opacity: 1, transform: 'translateX(0)' },
         },
+        moveBg: {
+          '0%': { backgroundPosition: '50px' },
+          '20%': { backgroundPosition: '150px' },
+          '40%': { backgroundPosition: '250px' },
+          '60%': { backgroundPosition: '350px' },
+          '80%': { backgroundPosition: '450px' },
+          '100%': { backgroundPosition: '550px' },
+        },
       },
       animation: {
         disco: 'disco 1.5s linear infinite',
@@ -74,6 +89,7 @@ module.exports = {
         slideLeftAndFade: 'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade: 'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        moveBg: 'moveBg 3s ease-in-out infinite alternate running forwards',
       },
     },
   },

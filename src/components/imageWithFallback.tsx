@@ -26,10 +26,20 @@ export const ImageWithFallback = memo(function ImageWithFallback({
           size={44}
           name={alt}
           variant="beam"
+          square={true}
           colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
         />
       ) : (
-        <Image alt={alt} onError={setError} src={src} fill={fill} className={className} />
+        <Image
+          src={src}
+          alt={alt}
+          fill={fill}
+          className={className}
+          onError={setError}
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
+          priority
+        />
       )}
     </>
   );

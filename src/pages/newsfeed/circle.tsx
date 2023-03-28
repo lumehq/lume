@@ -1,12 +1,12 @@
 import BaseLayout from '@layouts/base';
-import NewsFeedLayout from '@layouts/newsfeed';
+import WithSidebarLayout from '@layouts/withSidebar';
 
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
 
 export default function Page() {
   return (
-    <div className="h-full w-full">
-      <p>Global</p>
+    <div className="flex h-full w-full items-center justify-center">
+      <p className="text-sm text-zinc-400">Sorry, this feature under development, it will come in the next version</p>
     </div>
   );
 }
@@ -22,7 +22,7 @@ Page.getLayout = function getLayout(
 ) {
   return (
     <BaseLayout>
-      <NewsFeedLayout>{page}</NewsFeedLayout>
+      <WithSidebarLayout>{page}</WithSidebarLayout>
     </BaseLayout>
   );
 };

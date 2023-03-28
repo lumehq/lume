@@ -1,6 +1,6 @@
 [package]
 name = "lume"
-version = "0.1.1"
+version = "0.2.0"
 description = "nostr client"
 authors = ["Ren Amamiya"]
 license = ""
@@ -16,7 +16,7 @@ tauri-build = { version = "1.2", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2", features = ["clipboard-all", "notification-all", "shell-open", "system-tray", "window-start-dragging"] }
+tauri = { version = "1.2", features = ["clipboard-read-text", "clipboard-write-text", "http-request", "os-all", "shell-open", "system-tray", "window-close", "window-start-dragging"] }
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"

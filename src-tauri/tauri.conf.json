@@ -8,25 +8,37 @@
   },
   "package": {
     "productName": "Lume",
-    "version": "0.1.1"
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {
       "all": false,
+      "app": {
+        "all": false
+      },
+      "os": {
+        "all": true
+      },
+      "http": {
+        "all": false,
+        "request": true,
+        "scope": ["https://rbr.bio/*", "https://metadata.uselume.xyz/*"]
+      },
       "shell": {
         "all": false,
         "open": true
       },
       "clipboard": {
-        "all": true,
+        "all": false,
         "writeText": true,
         "readText": true
       },
       "notification": {
-        "all": true
+        "all": false
       },
       "window": {
-        "startDragging": true
+        "startDragging": true,
+        "close": true
       }
     },
     "bundle": {

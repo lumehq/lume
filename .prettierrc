@@ -12,7 +12,9 @@
     "^@layouts/(.*)$",
     "^@pages/(.*)$",
     "^@components/(.*)$",
+    "^@stores/(.*)$",
     "^@utils/(.*)$",
+    "^@assets/(.*)$",
     "<THIRD_PARTY_MODULES>",
     "^[./]"
   ],

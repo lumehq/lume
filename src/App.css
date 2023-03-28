@@ -4,6 +4,13 @@
 
 @import './assets/editor.css';
 
+/* Fixed next/image bug, source: https://nextjs.org/docs/api-reference/next/image */
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading='lazy'] {
+    clip-path: inset(0.6px);
+  }
+}
+
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -22,4 +29,13 @@
 
 .border {
   background-clip: padding-box;
+}
+
+@keyframes loop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }

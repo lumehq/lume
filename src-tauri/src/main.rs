@@ -7,24 +7,21 @@
 #[macro_use]
 extern crate objc;
 
-use tauri::{Manager, SystemTray, WindowEvent};
+use tauri::{Manager, WindowEvent};
 use tauri_plugin_sql::{Migration, MigrationKind};
 use window_ext::WindowExt;
 
 mod window_ext;
 
 fn main() {
-  let tray = SystemTray::new();
-
   tauri::Builder::default()
     .setup(|app| {
       let main_window = app.get_window("main").unwrap();
       // set inset for traffic lights
-      main_window.position_traffic_lights(8.0, 16.0);
+      main_window.position_traffic_lights(8.0, 20.0);
 
       Ok(())
     })
-    .system_tray(tray)
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -41,7 +38,7 @@ fn main() {
     .on_window_event(|e| {
       let apply_offset = || {
         let win = e.window();
-        win.position_traffic_lights(8.0, 16.0);
+        win.position_traffic_lights(8.0, 20.0);
       };
 
       match e.event() {

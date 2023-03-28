@@ -1,52 +1,110 @@
-import { RelayContext } from '@components/contexts/relay';
-import { UserRepost } from '@components/note/atoms/userRepost';
-import { Content } from '@components/note/content';
-import { Placeholder } from '@components/note/placeholder';
+import { RelayContext } from '@components/relaysProvider';
+import { UserExtend } from '@components/user/extend';
+import { UserMention } from '@components/user/mention';
 
-import { LoopIcon } from '@radix-ui/react-icons';
-import useLocalStorage from '@rehooks/local-storage';
-import { memo, useContext, useState } from 'react';
+import { relaysAtom } from '@stores/relays';
 
-export const Repost = memo(function Repost({ root, user }: { root: any; user: string }) {
-  const relayPool: any = useContext(RelayContext);
-  const [relays]: any = useLocalStorage('relays');
-  const [events, setEvents] = useState([]);
+import { createCacheNote, getNoteByID } from '@utils/storage';
 
-  relayPool.subscribe(
-    [
-      {
-        ids: [root[0][1]],
-        since: 0,
-        kinds: [1],
+import destr from 'destr';
+import { useAtomValue } from 'jotai';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import reactStringReplace from 'react-string-replace';
+
+export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
+  const pool: any = useContext(RelayContext);
+
+  const relays = useAtomValue(relaysAtom);
+  const [event, setEvent] = useState(null);
+  const unsubscribe = useRef(null);
+
+  const fetchEvent = useCallback(() => {
+    unsubscribe.current = pool.subscribe(
+      [
+        {
+          ids: [id],
+          kinds: [1],
+        },
+      ],
+      relays,
+      (event: any) => {
+        // update state
+        setEvent(event);
+        // insert to database
+        createCacheNote(event);
       },
-    ],
-    relays,
-    (event: any) => {
-      setEvents((events) => [event, ...events]);
-    },
-    undefined,
-    (events: any, relayURL: any) => {
-      console.log(events, relayURL);
-    }
-  );
+      undefined,
+      undefined,
+      {
+        unsubscribeOnEose: true,
+      }
+    );
+  }, [id, pool, relays]);
 
-  if (events !== null && Object.keys(events).length > 0) {
+  useEffect(() => {
+    getNoteByID(id).then((res) => {
+      if (res) {
+        setEvent(res);
+      } else {
+        fetchEvent();
+      }
+    });
+
+    return () => {
+      unsubscribe.current;
+    };
+  }, [fetchEvent, id]);
+
+  const content = useMemo(() => {
+    let parsedContent = event ? event.content : null;
+
+    if (parsedContent !== null) {
+      // get data tags
+      const tags = destr(event.tags);
+      // handle urls
+      parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => (
+        <a key={match + i} href={match} target="_blank" rel="noreferrer">
+          {match}
+        </a>
+      ));
+      // handle #-hashtags
+      parsedContent = reactStringReplace(parsedContent, /#(\w+)/g, (match, i) => (
+        <span key={match + i} className="cursor-pointer text-fuchsia-500">
+          #{match}
+        </span>
+      ));
+      // handle mentions
+      if (tags.length > 0) {
+        parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
+          if (tags[match][0] === 'p') {
+            // @-mentions
+            return <UserMention key={match + i} pubkey={tags[match][1]} />;
+          } else {
+            return;
+          }
+        });
+      }
+    }
+
+    return parsedContent;
+  }, [event]);
+
+  if (event) {
     return (
-      <div className="flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-6 px-6">
-        <div className="flex items-center gap-1 pl-8 text-sm">
-          <LoopIcon className="h-4 w-4 text-zinc-400" />
-          <div className="ml-2">
-            <UserRepost pubkey={user} />
+      <div className="relative mt-3 mb-2 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
+        <div className="relative z-10 flex flex-col">
+          <UserExtend pubkey={event.pubkey} time={event.created_at} />
+          <div className="-mt-5 pl-[52px]">
+            <div className="flex flex-col gap-2">
+              <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
+                {content}
+              </div>
+            </div>
           </div>
         </div>
-        {events[0].content && <Content data={events[0]} />}
       </div>
     );
   } else {
-    return (
-      <div className="border-b border-zinc-800">
-        <Placeholder />
-      </div>
-    );
+    return <div className="mt-2 h-6 animate-pulse select-text flex-col rounded bg-zinc-700 pb-5"></div>;
   }
 });
