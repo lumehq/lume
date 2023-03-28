@@ -9,8 +9,10 @@ extern crate objc;
 
 use tauri::{Manager, WindowEvent};
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_ext::WindowExt;
 
+#[cfg(target_os = "macos")]
+use window_ext::WindowExt;
+#[cfg(target_os = "macos")]
 mod window_ext;
 
 fn main() {
