@@ -80,6 +80,7 @@
     },
     "windows": [
       {
+        "title": "Lume",
         "theme": "Dark",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
@@ -88,8 +89,8 @@
         "resizable": true,
         "width": 1100,
         "height": 800,
-        "minWidth": 1100,
-        "minHeight": 800
+        "minWidth": 1000,
+        "minHeight": 700
       }
     ]
   }

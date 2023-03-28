@@ -142,7 +142,7 @@ export default function Page() {
           </h3>
         </div>
       </div>
-      <div className="scrollbar-hide row-span-4 h-full w-full overflow-y-auto">
+      <div className="row-span-4 h-full w-full overflow-y-auto">
         <div className="grid grid-cols-4 gap-4 px-8 py-4">
           {list.map((item: { pubkey: string }, index: Key) => (
             <button

@@ -6,7 +6,7 @@ import { relaysAtom } from '@stores/relays';
 
 import { createAccount } from '@utils/storage';
 
-import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -32,6 +32,10 @@ export default function Page() {
   const pubKey = getPublicKey(privKey);
   const npub = nip19.npubEncode(pubKey);
   const nsec = nip19.nsecEncode(privKey);
+
+  const goBack = () => {
+    router.back();
+  };
 
   // auto-generated profile metadata
   const metadata = useMemo(
@@ -94,12 +98,19 @@ export default function Page() {
 
   return (
     <div className="grid h-full w-full grid-rows-5">
-      <div className="row-span-1 flex items-center justify-center">
+      <div className="row-span-1 mx-auto flex w-full max-w-md items-center justify-between">
+        <button
+          onClick={() => goBack()}
+          className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
+        >
+          <ArrowLeftIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300" />
+        </button>
         <div>
           <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
             Create new account
           </h1>
         </div>
+        <div></div>
       </div>
       <div className="row-span-4">
         <div className="mx-auto w-full max-w-md">

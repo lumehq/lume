@@ -105,7 +105,7 @@ export default function Page() {
           <div className="pointer-events-none absolute inset-0 bg-fade" />
         </div>
       </div>
-      <div className="row-span-2 flex w-full flex-col items-center gap-8 overflow-hidden pt-10">
+      <div className="row-span-2 flex w-full flex-col items-center gap-4 overflow-hidden pt-6 min-[1050px]:gap-8 min-[1050px]:pt-10">
         <h1 className="animate-moveBg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-5xl font-bold leading-none text-transparent">
           Let&apos;s start!
         </h1>
