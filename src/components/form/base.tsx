@@ -52,7 +52,7 @@ export default function FormBase() {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             spellCheck={false}
-            placeholder="What's your thought?"
+            placeholder="What's up?"
             className="relative h-32 w-full resize-none rounded-lg border border-black/5 px-3.5 py-3 text-sm shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
           />
         </div>

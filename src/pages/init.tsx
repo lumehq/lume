@@ -101,7 +101,7 @@ export default function Page() {
           <div className="text-center">
             <h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">Loading...</h3>
             <p className="font-medium text-zinc-300 dark:text-zinc-600">
-              Keep calm and waiting, Lume is fetching event...
+              Keep calm as Lume fetches events... &#129305;
             </p>
           </div>
         </div>
