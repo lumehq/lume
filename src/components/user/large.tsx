@@ -7,7 +7,6 @@ import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { fetch } from '@tauri-apps/api/http';
-import Avatar from 'boring-avatars';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import destr from 'destr';

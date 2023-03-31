@@ -1,4 +1,3 @@
-import { PlusIcon } from '@radix-ui/react-icons';
 import dynamic from 'next/dynamic';
 
 const AppActions = dynamic(() => import('@components/appHeader/actions'), {

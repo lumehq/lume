@@ -7,7 +7,6 @@ import { UserMention } from '@components/user/mention';
 
 import destr from 'destr';
 import { memo, useMemo } from 'react';
-import ReactPlayer from 'react-player/lazy';
 import reactStringReplace from 'react-string-replace';
 
 export const NoteExtend = memo(function NoteExtend({ event }: { event: any }) {
@@ -17,10 +16,14 @@ export const NoteExtend = memo(function NoteExtend({ event }: { event: any }) {
     const tags = destr(event.tags);
     // handle urls
     parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
-      if (match.toLowerCase().match(/\.(jpg|jpeg|gif|png|webp)$/)) {
+      if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
         // image url
         return <ImagePreview key={match + i} url={match} />;
-      } else if (ReactPlayer.canPlay(match)) {
+      } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
+        // youtube
+        return <VideoPreview key={match + i} url={match} />;
+      } else if (match.match(/\.(mp4|webm)$/i)) {
+        // video
         return <VideoPreview key={match + i} url={match} />;
       } else {
         return (
@@ -65,7 +68,7 @@ export const NoteExtend = memo(function NoteExtend({ event }: { event: any }) {
             </div>
           </div>
         </div>
-        <div className="mt-5 flex items-center border-t border-b border-zinc-800 py-2">
+        <div className="mt-5 flex items-center border-b border-t border-zinc-800 py-2">
           <NoteMetadata
             eventID={event.id}
             eventPubkey={event.pubkey}

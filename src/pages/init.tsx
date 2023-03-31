@@ -30,8 +30,8 @@ export default function Page() {
   const [pool, relays]: any = useContext(RelayContext);
 
   const activeAccount: any = useAtomValue(activeAccountAtom);
-
   const [done, setDone] = useState(false);
+
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
   const timer = useRef(null);

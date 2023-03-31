@@ -1,9 +1,10 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import { truncate } from '@utils/truncate';
 
-import Avatar from 'boring-avatars';
 import destr from 'destr';
 import Image from 'next/image';
 import { Author } from 'nostr-relaypool';
@@ -33,17 +34,12 @@ export default function ProfileMetadata({ id }: { id: string }) {
         </div>
         <div className="relative -top-8 z-10 px-4">
           <div className="relative h-16 w-16 rounded-lg bg-zinc-900 ring-2 ring-zinc-900">
-            {profile?.picture ? (
-              <ImageWithFallback src={profile.picture} alt={id} fill={true} className="rounded-lg object-cover" />
-            ) : (
-              <Avatar
-                size={64}
-                name={id}
-                variant="beam"
-                square={true}
-                colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
-              />
-            )}
+            <ImageWithFallback
+              src={profile?.picture || DEFAULT_AVATAR}
+              alt={id}
+              fill={true}
+              className="rounded-lg object-cover"
+            />
           </div>
         </div>
       </div>
