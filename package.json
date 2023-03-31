@@ -42,6 +42,7 @@
     "react-hook-form": "^7.43.8",
     "react-player": "^2.12.0",
     "react-string-replace": "^1.1.0",
+    "react-virtuoso": "^4.1.1",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
     "unique-names-generator": "^4.7.1",
     "ws": "^8.13.0"

@@ -52,6 +52,7 @@ specifiers:
   react-hook-form: ^7.43.8
   react-player: ^2.12.0
   react-string-replace: ^1.1.0
+  react-virtuoso: ^4.1.1
   tailwindcss: ^3.2.7
   tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
   typescript: ^4.9.5
@@ -89,6 +90,7 @@ dependencies:
   react-hook-form: 7.43.8_react@18.2.0
   react-player: 2.12.0_react@18.2.0
   react-string-replace: 1.1.0
+  react-virtuoso: 4.1.1_biqbaboplfbrettd7655fr4n2y
   tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/3a8b9a6b244df7512bc5ef8692cebdedbab3ccce
   unique-names-generator: 4.7.1
   ws: 8.13.0
@@ -4512,6 +4514,18 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.5.0
+    dev: false
+
+  /react-virtuoso/4.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      { integrity: sha512-G2lyifG5UIRZI9vgcBt+6OLDL6CO5/O6YiGS+O9z+VNRjVSTioSwfBC7sVSLspYq7iyL60aIXlVqSKVJiSVhlg== }
+    engines: { node: '>=10' }
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18'
+      react-dom: '>=16 || >=17 || >= 18'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react/18.2.0:
