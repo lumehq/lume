@@ -52,12 +52,12 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'pnpm'
-          cache-dependency-path: gui/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - run: cd gui && pnpm install
-      - uses: tauri-apps/tauri-action@feat/platform-config
+      - run: pnpm install
+      - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
