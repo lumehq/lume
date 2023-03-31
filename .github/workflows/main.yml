@@ -4,50 +4,60 @@ on:
     branches:
       - release
 
+env:
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: short
+  RUSTFLAGS: '-W unreachable-pub -W rust-2021-compatibility'
+
 jobs:
   publish-tauri:
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
-
-    runs-on: ${{ matrix.platform }}
+        settings:
+          - platform: 'macos-latest'
+            args: '--target universal-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+          - platform: 'ubuntu-20.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: '--target x86_64-pc-windows-msvc'
+          - platform: 'windows-latest'
+            args: '--target i686-pc-windows-msvc'
+    runs-on: ${{ matrix.settings.platform }}
     steps:
       - uses: actions/checkout@v3
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
+          node-version: 18
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          version: 7
-          run_install: false
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+          targets: aarch64-apple-darwin
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
+        if: matrix.settings.platform == 'ubuntu-20.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: install frontend dependencies
-        run: pnpm install
-      - uses: tauri-apps/tauri-action@v0
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7.x.x
+          run_install: false
+      - name: Setup node and cache for package data
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+          cache-dependency-path: gui/pnpm-lock.yaml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - run: cd gui && pnpm install
+      - uses: tauri-apps/tauri-action@feat/platform-config
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -56,3 +66,5 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
+          #includeDebug: true
+          args: ${{ matrix.settings.args }}
