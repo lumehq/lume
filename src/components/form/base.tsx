@@ -4,21 +4,18 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
 import { noteContentAtom } from '@stores/note';
-import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { PersonIcon } from '@radix-ui/react-icons';
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext } from 'react';
 
 export default function FormBase() {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
 

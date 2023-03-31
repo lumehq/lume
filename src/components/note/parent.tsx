@@ -6,20 +6,15 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
-import { relaysAtom } from '@stores/relays';
-
 import { createCacheNote, getNoteByID } from '@utils/storage';
 
 import destr from 'destr';
-import { useAtomValue } from 'jotai';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import ReactPlayer from 'react-player';
 import reactStringReplace from 'react-string-replace';
 
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
   const [event, setEvent] = useState(null);
   const unsubscribe = useRef(null);
 
@@ -68,10 +63,14 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
       const tags = destr(event.tags);
       // handle urls
       parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
-        if (match.toLowerCase().match(/\.(jpg|jpeg|gif|png|webp)$/)) {
+        if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
           // image url
           return <ImagePreview key={match + i} url={match} />;
-        } else if (ReactPlayer.canPlay(match)) {
+        } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
+          // youtube
+          return <VideoPreview key={match + i} url={match} />;
+        } else if (match.match(/\.(mp4|webm)$/i)) {
+          // video
           return <VideoPreview key={match + i} url={match} />;
         } else {
           return (
@@ -109,7 +108,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   if (event) {
     return (
       <div className="relative pb-5">
-        <div className="absolute top-0 left-[21px] h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
+        <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
         <div className="relative z-10 flex flex-col">
           <UserExtend pubkey={event.pubkey} time={event.created_at} />
           <div className="-mt-5 pl-[52px]">

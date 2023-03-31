@@ -2,7 +2,6 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
 import { hasNewerNoteAtom } from '@stores/note';
-import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 import { createCacheNote, getAllFollowsByID, updateLastLoginTime } from '@utils/storage';
@@ -10,15 +9,14 @@ import { pubkeyArray } from '@utils/transform';
 
 import { TauriEvent } from '@tauri-apps/api/event';
 import { appWindow, getCurrent } from '@tauri-apps/api/window';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export default function NoteConnector() {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const relays = useAtomValue(relaysAtom);
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
 
   const [isOnline] = useState(true);
   const now = useRef(new Date());
@@ -53,7 +51,7 @@ export default function NoteConnector() {
 
   return (
     <>
-      <div className="inline-flex items-center gap-1 rounded-md py-1 px-1.5 hover:bg-zinc-900">
+      <div className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 hover:bg-zinc-900">
         <span className="relative flex h-1.5 w-1.5">
           <span
             className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${

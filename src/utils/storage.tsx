@@ -89,9 +89,19 @@ export async function getCacheProfile(id) {
 }
 
 // get all notes
-export async function getAllNotes() {
+export async function getNotes(time, limit, offset) {
   const db = await connect();
-  return await db.select(`SELECT * FROM cache_notes GROUP BY parent_id ORDER BY created_at DESC LIMIT 500`);
+  return await db.select(
+    `SELECT * FROM cache_notes WHERE created_at <= "${time}" GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}"`
+  );
+}
+
+// get all latest notes
+export async function getLatestNotes(time) {
+  const db = await connect();
+  return await db.select(
+    `SELECT * FROM cache_notes WHERE created_at > "${time}" GROUP BY parent_id ORDER BY created_at DESC`
+  );
 }
 
 // get note by id

@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { platform } from '@tauri-apps/api/os';
 import { useRouter } from 'next/router';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AppActions() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function AppActions() {
     router.reload();
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const getPlatform = async () => {
       const result = await platform();
       setOS(result);

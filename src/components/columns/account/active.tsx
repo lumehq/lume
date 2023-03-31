@@ -1,7 +1,5 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { relaysAtom } from '@stores/relays';
-
 import { dateToUnix } from '@utils/getDate';
 import { createFollows } from '@utils/storage';
 import { tagsToArray } from '@utils/transform';
@@ -10,15 +8,13 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
 import { writeText } from '@tauri-apps/api/clipboard';
 import destr from 'destr';
-import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
 import { memo, useContext, useEffect, useRef } from 'react';
 
 export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
-  const pool: any = useContext(RelayContext);
-  const relays = useAtomValue(relaysAtom);
+  const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
   const userData = destr(user.metadata);
@@ -77,7 +73,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[220px] rounded-md bg-zinc-900/80 p-1.5 shadow-input shadow-black/50 ring-1 ring-zinc-800 backdrop-blur-xl will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+          className="min-w-[220px] rounded-md bg-zinc-900/80 p-1.5 shadow-input shadow-black/50 ring-1 ring-zinc-800 backdrop-blur-xl will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
           side="right"
           sideOffset={5}
           align="start"

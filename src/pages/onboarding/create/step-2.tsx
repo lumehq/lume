@@ -3,13 +3,10 @@ import BaseLayout from '@layouts/base';
 import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
-import { relaysAtom } from '@stores/relays';
-
 import { createFollows } from '@utils/storage';
 
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { createClient } from '@supabase/supabase-js';
-import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import {
@@ -64,12 +61,11 @@ const initialList = [
 ];
 
 export default function Page() {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
   const { id, privkey }: any = router.query || '';
 
-  const relays = useAtomValue(relaysAtom);
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
   const [follows, setFollows] = useState([]);
@@ -110,7 +106,7 @@ export default function Page() {
         if (res === 'ok') {
           // publish to relays
           pool.publish(event, relays);
-          router.push('/');
+          router.replace('/');
         }
       })
       .catch(console.error);

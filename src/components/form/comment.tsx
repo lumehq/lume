@@ -2,20 +2,18 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
-import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
 import destr from 'destr';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
   const [value, setValue] = useState('');
 
   const profile = destr(activeAccount.metadata);

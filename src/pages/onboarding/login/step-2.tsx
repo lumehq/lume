@@ -2,14 +2,11 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { relaysAtom } from '@stores/relays';
-
 import { createAccount, createFollows } from '@utils/storage';
 import { tagsToArray } from '@utils/transform';
 import { truncate } from '@utils/truncate';
 
 import destr from 'destr';
-import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getPublicKey, nip19 } from 'nostr-tools';
@@ -24,13 +21,12 @@ import {
 } from 'react';
 
 export default function Page() {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
   const privkey: any = router.query.privkey || null;
   const pubkey = privkey ? getPublicKey(privkey) : null;
 
-  const relays = useAtomValue(relaysAtom);
   const [profile, setProfile] = useState(null);
   const [done, setDone] = useState(false);
 
@@ -77,7 +73,7 @@ export default function Page() {
 
   // submit then redirect to home
   const submit = () => {
-    router.push('/');
+    router.replace('/');
   };
 
   return (

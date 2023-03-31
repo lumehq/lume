@@ -2,19 +2,15 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
-import { relaysAtom } from '@stores/relays';
-
 import { createCacheNote, getNoteByID } from '@utils/storage';
 
 import destr from 'destr';
-import { useAtomValue } from 'jotai';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import reactStringReplace from 'react-string-replace';
 
 export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
   const [event, setEvent] = useState(null);
   const unsubscribe = useRef(null);
 
@@ -91,7 +87,7 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
 
   if (event) {
     return (
-      <div className="relative mt-3 mb-2 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
+      <div className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
         <div className="relative z-10 flex flex-col">
           <UserExtend pubkey={event.pubkey} time={event.created_at} />
           <div className="-mt-5 pl-[52px]">

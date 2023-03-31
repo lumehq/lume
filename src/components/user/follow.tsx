@@ -1,5 +1,7 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
 
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import { createCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
@@ -30,9 +32,12 @@ export const UserFollow = memo(function UserFollow({ pubkey }: { pubkey: string 
   return (
     <div className="flex items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-full border border-white/10">
-        {profile?.picture && (
-          <ImageWithFallback src={profile.picture} alt={pubkey} fill={true} className="rounded-full object-cover" />
-        )}
+        <ImageWithFallback
+          src={profile?.picture || DEFAULT_AVATAR}
+          alt={pubkey}
+          fill={true}
+          className="rounded-full object-cover"
+        />
       </div>
       <div className="flex w-full flex-1 flex-col items-start text-start">
         <span className="truncate font-medium leading-tight text-zinc-200">

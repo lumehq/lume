@@ -5,11 +5,11 @@ import { activeAccountAtom } from '@stores/account';
 
 import { getAccounts } from '@utils/storage';
 
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function AccountList() {
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
   const [users, setUsers] = useState([]);
 
   const renderAccount = useCallback(

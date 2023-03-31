@@ -7,7 +7,6 @@ import { UserMention } from '@components/user/mention';
 
 import destr from 'destr';
 import { memo, useMemo } from 'react';
-import ReactPlayer from 'react-player/lazy';
 import reactStringReplace from 'react-string-replace';
 
 export const NoteComment = memo(function NoteComment({ event }: { event: any }) {
@@ -17,10 +16,14 @@ export const NoteComment = memo(function NoteComment({ event }: { event: any }) 
     const tags = destr(event.tags);
     // handle urls
     parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
-      if (match.toLowerCase().match(/\.(jpg|jpeg|gif|png|webp)$/)) {
+      if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
         // image url
         return <ImagePreview key={match + i} url={match} />;
-      } else if (ReactPlayer.canPlay(match)) {
+      } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
+        // youtube
+        return <VideoPreview key={match + i} url={match} />;
+      } else if (match.match(/\.(mp4|webm)$/i)) {
+        // video
         return <VideoPreview key={match + i} url={match} />;
       } else {
         return (
@@ -42,6 +45,9 @@ export const NoteComment = memo(function NoteComment({ event }: { event: any }) 
         if (tags[match][0] === 'p') {
           // @-mentions
           return <UserMention key={match + i} pubkey={tags[match][1]} />;
+        } else if (tags[match][0] === 'e') {
+          // note-mentions
+          return <NoteRepost key={match + i} id={tags[match][1]} />;
         } else {
           return;
         }
@@ -52,7 +58,7 @@ export const NoteComment = memo(function NoteComment({ event }: { event: any }) 
   }, [event.content, event.tags]);
 
   return (
-    <div className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20">
+    <div className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20">
       <div className="relative z-10 flex flex-col">
         <UserExtend pubkey={event.pubkey} time={event.created_at} />
         <div className="-mt-5 pl-[52px]">
