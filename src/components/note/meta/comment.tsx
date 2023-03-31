@@ -12,7 +12,7 @@ import CommentIcon from '@assets/icons/comment';
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
 import destr from 'destr';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
@@ -31,10 +31,9 @@ export const NoteComment = memo(function NoteComment({
   eventContent: any;
 }) {
   const router = useRouter();
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount = useAtomValue(activeAccountAtom);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
@@ -81,12 +80,12 @@ export const NoteComment = memo(function NoteComment({
                   <UserExtend pubkey={eventPubkey} time={eventTime} />
                 </div>
                 <div className="-mt-5 pl-[52px]">
-                  <div className="prose prose-zinc max-w-none break-words leading-tight dark:prose-invert prose-headings:mt-3 prose-headings:mb-2 prose-p:m-0 prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
+                  <div className="prose prose-zinc max-w-none break-words leading-tight dark:prose-invert prose-headings:mb-2 prose-headings:mt-3 prose-p:m-0 prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-ul:mt-2 prose-li:my-1">
                     {eventContent}
                   </div>
                 </div>
                 {/* divider */}
-                <div className="absolute top-0 left-[21px] h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
+                <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
               </div>
               {/* comment form */}
               <div className="flex gap-2">

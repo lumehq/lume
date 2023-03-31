@@ -1,13 +1,10 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
-import { relaysAtom } from '@stores/relays';
-
 import { truncate } from '@utils/truncate';
 
 import Avatar from 'boring-avatars';
 import destr from 'destr';
-import { useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
@@ -15,9 +12,7 @@ import { useContext, useEffect, useState } from 'react';
 const DEFAULT_BANNER = 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg';
 
 export default function ProfileMetadata({ id }: { id: string }) {
-  const pool: any = useContext(RelayContext);
-  const relays: any = useAtomValue(relaysAtom);
-
+  const [pool, relays]: any = useContext(RelayContext);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {

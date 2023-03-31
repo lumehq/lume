@@ -6,11 +6,8 @@ import { NoteComment } from '@components/note/comment';
 import { NoteExtend } from '@components/note/extend';
 import { RelayContext } from '@components/relaysProvider';
 
-import { relaysAtom } from '@stores/relays';
-
 import { getAllCommentNotes, getNoteByID } from '@utils/storage';
 
-import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -23,12 +20,10 @@ import {
 } from 'react';
 
 export default function Page() {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
   const id = router.query.id || null;
-
-  const relays: any = useAtomValue(relaysAtom);
 
   const [rootEvent, setRootEvent] = useState(null);
   const [comments, setComments] = useState([]);

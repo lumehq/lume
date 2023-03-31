@@ -1,14 +1,13 @@
 import { RelayContext } from '@components/relaysProvider';
 
 import { activeAccountAtom } from '@stores/account';
-import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
 import LikeIcon from '@assets/icons/like';
 import LikedIcon from '@assets/icons/liked';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useEffect, useState } from 'react';
 
@@ -21,10 +20,9 @@ export const NoteReaction = memo(function NoteReaction({
   eventID: string;
   eventPubkey: string;
 }) {
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount = useAtomValue(activeAccountAtom);
 
   const [isReact, setIsReact] = useState(false);
   const [like, setLike] = useState(0);

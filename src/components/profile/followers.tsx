@@ -1,17 +1,12 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserFollow } from '@components/user/follow';
 
-import { relaysAtom } from '@stores/relays';
-
 import destr from 'destr';
-import { useAtomValue } from 'jotai';
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
 
 export default function ProfileFollowers({ id }: { id: string }) {
-  const pool: any = useContext(RelayContext);
-  const relays: any = useAtomValue(relaysAtom);
-
+  const [pool, relays]: any = useContext(RelayContext);
   const [followers, setFollowers] = useState(null);
 
   useEffect(() => {

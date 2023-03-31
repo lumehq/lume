@@ -2,11 +2,8 @@ import { NoteComment } from '@components/note/meta/comment';
 import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
-import { relaysAtom } from '@stores/relays';
-
 import { createCacheCommentNote } from '@utils/storage';
 
-import { useAtomValue } from 'jotai';
 import { useContext, useEffect, useState } from 'react';
 
 export default function NoteMetadata({
@@ -20,8 +17,7 @@ export default function NoteMetadata({
   eventTime: any;
   eventContent: any;
 }) {
-  const pool: any = useContext(RelayContext);
-  const relays = useAtomValue(relaysAtom);
+  const [pool, relays]: any = useContext(RelayContext);
 
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(0);

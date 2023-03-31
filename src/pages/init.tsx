@@ -11,7 +11,7 @@ import { pubkeyArray } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -27,10 +27,9 @@ import {
 
 export default function Page() {
   const router = useRouter();
-  const pool: any = useContext(RelayContext);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const relays = useAtomValue(relaysAtom);
-  const [activeAccount] = useAtom(activeAccountAtom);
+  const activeAccount = useAtomValue(activeAccountAtom);
 
   const [done, setDone] = useState(false);
   const now = useRef(new Date());
@@ -93,7 +92,7 @@ export default function Page() {
   return (
     <div className="relative h-full overflow-hidden">
       {/* dragging area */}
-      <div data-tauri-drag-region className="absolute top-0 left-0 z-20 h-16 w-full bg-transparent" />
+      <div data-tauri-drag-region className="absolute left-0 top-0 z-20 h-16 w-full bg-transparent" />
       {/* end dragging area */}
       <div className="relative flex h-full flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-2">
