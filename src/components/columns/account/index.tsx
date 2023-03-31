@@ -20,7 +20,7 @@ export default function AccountColumn() {
   }, [getAppVersion]);
 
   return (
-    <div className="flex h-full flex-col items-center justify-between px-2 pt-4 pb-4">
+    <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-4">
       <div className="flex flex-col gap-4">
         <Link
           href="/explore"

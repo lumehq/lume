@@ -73,7 +73,7 @@ export default function Page() {
 
   // submit then redirect to home
   const submit = () => {
-    router.push('/');
+    router.replace('/');
   };
 
   return (

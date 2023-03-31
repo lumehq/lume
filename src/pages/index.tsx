@@ -14,9 +14,9 @@ export default function Page() {
     getAccounts()
       .then((res: any) => {
         if (res.length > 0) {
-          router.push('/init');
+          router.replace('/init');
         } else {
-          router.push('/onboarding');
+          router.replace('/onboarding');
         }
       })
       .catch(console.error);
@@ -25,14 +25,14 @@ export default function Page() {
   return (
     <div className="relative h-full overflow-hidden">
       {/* dragging area */}
-      <div data-tauri-drag-region className="absolute top-0 left-0 z-20 h-16 w-full bg-transparent" />
+      <div data-tauri-drag-region className="absolute left-0 top-0 z-20 h-16 w-full bg-transparent" />
       {/* end dragging area */}
       <div className="relative flex h-full flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <LumeSymbol className="h-16 w-16 text-black dark:text-white" />
           <div className="text-center">
             <h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
-              Here's an interesting fact:
+              Here&apos;s an interesting fact:
             </h3>
             <p className="font-medium text-zinc-300 dark:text-zinc-600">
               Bitcoin and Nostr can be used by anyone, and no one can stop you!

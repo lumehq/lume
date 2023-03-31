@@ -80,7 +80,7 @@ export default function Page() {
         }
       });
     } else {
-      router.push('/newsfeed/following');
+      router.replace('/newsfeed/following');
     }
 
     return () => {

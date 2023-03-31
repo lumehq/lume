@@ -106,7 +106,7 @@ export default function Page() {
         if (res === 'ok') {
           // publish to relays
           pool.publish(event, relays);
-          router.push('/');
+          router.replace('/');
         }
       })
       .catch(console.error);

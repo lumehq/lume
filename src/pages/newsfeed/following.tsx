@@ -78,7 +78,7 @@ export default function Page() {
   return (
     <div className="relative h-full w-full">
       {hasNewerNote && (
-        <div className="absolute top-2 left-1/2 z-50 -translate-x-1/2 transform">
+        <div className="absolute left-1/2 top-2 z-50 -translate-x-1/2 transform">
           <button
             onClick={() => loadLatest()}
             className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 pl-3 pr-3.5 text-sm shadow-md shadow-fuchsia-800/20 active:translate-y-1"

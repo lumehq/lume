@@ -80,7 +80,7 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
   return (
     <div
       onClick={(e) => openThread(e)}
-      className="relative z-10 m-0 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 py-5 px-3 hover:bg-black/20"
+      className="relative z-10 m-0 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
     >
       <>{getParent}</>
       <div className="relative z-10 flex flex-col">
