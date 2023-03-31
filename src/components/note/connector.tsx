@@ -16,7 +16,7 @@ export default function NoteConnector() {
   const [pool, relays]: any = useContext(RelayContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const activeAccount = useAtomValue(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
 
   const [isOnline] = useState(true);
   const now = useRef(new Date());

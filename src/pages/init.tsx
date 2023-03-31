@@ -29,7 +29,7 @@ export default function Page() {
   const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount = useAtomValue(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
 
   const [done, setDone] = useState(false);
   const now = useRef(new Date());

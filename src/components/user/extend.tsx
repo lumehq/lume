@@ -1,11 +1,12 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
 
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import { createCacheProfile, getCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { fetch } from '@tauri-apps/api/http';
-import Avatar from 'boring-avatars';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import destr from 'destr';
@@ -52,22 +53,12 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
         onClick={(e) => openUserPage(e)}
         className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1"
       >
-        {profile?.picture ? (
-          <ImageWithFallback
-            src={profile.picture}
-            alt={pubkey}
-            fill={true}
-            className="rounded-md border border-white/10 object-cover"
-          />
-        ) : (
-          <Avatar
-            size={44}
-            name={pubkey}
-            variant="beam"
-            square={true}
-            colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
-          />
-        )}
+        <ImageWithFallback
+          src={profile?.picture || DEFAULT_AVATAR}
+          alt={pubkey}
+          fill={true}
+          className="rounded-md border border-white/10 object-cover"
+        />
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">

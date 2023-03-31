@@ -1,6 +1,8 @@
-const removeImports = require('next-remove-imports')();
+/**
+ * @type {import('next').NextConfig}
+ */
 
-module.exports = removeImports({
+const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
@@ -9,11 +11,10 @@ module.exports = removeImports({
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    scrollRestoration: true,
-  },
   webpack: (config) => {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;
   },
-});
+};
+
+module.exports = nextConfig;

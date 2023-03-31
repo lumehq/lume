@@ -1,9 +1,12 @@
-import { isSSR } from '@utils/ssr';
-import { getActiveAccount } from '@utils/storage';
+import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
-import { atomWithCache } from 'jotai-cache';
+const createMyJsonStorage = () => {
+  const storage = createJSONStorage(() => localStorage);
+  const getItem = (key) => {
+    const value = storage.getItem(key);
+    return value;
+  };
+  return { ...storage, getItem };
+};
 
-export const activeAccountAtom = atomWithCache(async () => {
-  const response = isSSR ? {} : await getActiveAccount();
-  return response;
-});
+export const activeAccountAtom = atomWithStorage('activeAccount', {}, createMyJsonStorage());

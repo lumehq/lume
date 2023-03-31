@@ -22,7 +22,7 @@ export const NoteReaction = memo(function NoteReaction({
 }) {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount = useAtomValue(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
 
   const [isReact, setIsReact] = useState(false);
   const [like, setLike] = useState(0);

@@ -33,7 +33,7 @@ export const NoteComment = memo(function NoteComment({
   const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount = useAtomValue(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');

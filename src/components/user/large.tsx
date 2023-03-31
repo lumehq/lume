@@ -1,5 +1,7 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
 
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import { createCacheProfile, getCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
@@ -42,22 +44,12 @@ export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: str
   return (
     <div className="flex items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
-        {profile?.picture ? (
-          <ImageWithFallback
-            src={profile.picture}
-            alt={pubkey}
-            fill={true}
-            className="rounded-md border border-white/10 object-cover"
-          />
-        ) : (
-          <Avatar
-            size={44}
-            name={pubkey}
-            variant="beam"
-            square={true}
-            colors={['#FEE2E2', '#FEF3C7', '#F59E0B', '#EC4899', '#D946EF', '#8B5CF6']}
-          />
-        )}
+        <ImageWithFallback
+          src={profile?.picture || DEFAULT_AVATAR}
+          alt={pubkey}
+          fill={true}
+          className="rounded-md border border-white/10 object-cover"
+        />
       </div>
       <div className="w-full flex-1">
         <div className="flex w-full justify-between">

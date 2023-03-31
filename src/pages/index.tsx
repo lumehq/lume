@@ -1,26 +1,33 @@
 import BaseLayout from '@layouts/base';
 
-import { getAccounts } from '@utils/storage';
+import { activeAccountAtom } from '@stores/account';
+
+import { getActiveAccount } from '@utils/storage';
 
 import LumeSymbol from '@assets/icons/Lume';
 
+import { useSetAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect } from 'react';
 
 export default function Page() {
   const router = useRouter();
+  const setActiveAccount = useSetAtom(activeAccountAtom);
 
   useEffect(() => {
-    getAccounts()
+    getActiveAccount()
       .then((res: any) => {
-        if (res.length > 0) {
+        if (res) {
+          // update local storage
+          setActiveAccount(res);
+          // redirect
           router.replace('/init');
         } else {
           router.replace('/onboarding');
         }
       })
       .catch(console.error);
-  }, [router]);
+  }, [router, setActiveAccount]);
 
   return (
     <div className="relative h-full overflow-hidden">

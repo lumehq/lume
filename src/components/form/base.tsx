@@ -15,7 +15,7 @@ import { useContext } from 'react';
 export default function FormBase() {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount = useAtomValue(activeAccountAtom);
+  const activeAccount: any = useAtomValue(activeAccountAtom);
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
 
