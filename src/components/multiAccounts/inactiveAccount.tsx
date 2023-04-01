@@ -11,12 +11,12 @@ export const InactiveAccount = memo(function InactiveAccount({ user }: { user: a
   };
 
   return (
-    <button onClick={() => setCurrentUser()} className="relative h-11 w-11 shrink rounded-md">
+    <button onClick={() => setCurrentUser()} className="relative h-11 w-11 shrink rounded-lg">
       <Image
         src={userData.picture || DEFAULT_AVATAR}
         alt="user's avatar"
         fill={true}
-        className="rounded-md object-cover"
+        className="rounded-lg object-cover"
         priority
       />
     </button>

@@ -56,12 +56,12 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="relative h-11 w-11 rounded-md">
+        <button className="relative h-11 w-11 rounded-lg">
           <Image
             src={userData.picture || DEFAULT_AVATAR}
             alt="user's avatar"
             fill={true}
-            className="rounded-md object-cover"
+            className="rounded-lg object-cover"
             priority
           />
         </button>

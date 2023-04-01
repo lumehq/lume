@@ -38,18 +38,18 @@ export default function MultiAccounts() {
   }, []);
 
   return (
-    <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-4">
+    <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">
       <div className="flex flex-col gap-4">
         <Link
           href="/explore"
-          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800"
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
         >
           <LumeSymbol className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
         </Link>
         <div>{users.map((user) => renderAccount(user))}</div>
         <Link
           href="/onboarding"
-          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-zinc-600 hover:border-zinc-400"
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"
         >
           <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-200" />
         </Link>

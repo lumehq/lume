@@ -2,7 +2,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import { TriangleUpIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
-export default function Chats() {
+export default function Channels() {
   const [open, setOpen] = useState(true);
 
   return (
@@ -16,7 +16,7 @@ export default function Chats() {
           >
             <TriangleUpIcon className="h-4 w-4 text-zinc-700" />
           </div>
-          <h3 className="text-xs font-bold uppercase tracking-wide text-zinc-600">Chats</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-zinc-600">Channels</h3>
         </Collapsible.Trigger>
         <Collapsible.Content></Collapsible.Content>
       </div>
