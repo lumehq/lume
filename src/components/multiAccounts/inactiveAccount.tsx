@@ -1,9 +1,10 @@
-import destr from 'destr';
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import Image from 'next/image';
 import { memo } from 'react';
 
 export const InactiveAccount = memo(function InactiveAccount({ user }: { user: any }) {
-  const userData = destr(user.metadata);
+  const userData = JSON.parse(user.metadata);
 
   const setCurrentUser = () => {
     console.log('clicked');
@@ -11,7 +12,13 @@ export const InactiveAccount = memo(function InactiveAccount({ user }: { user: a
 
   return (
     <button onClick={() => setCurrentUser()} className="relative h-11 w-11 shrink rounded-md">
-      <Image src={userData.picture} alt="user's avatar" fill={true} className="rounded-md object-cover" />
+      <Image
+        src={userData.picture || DEFAULT_AVATAR}
+        alt="user's avatar"
+        fill={true}
+        className="rounded-md object-cover"
+        priority
+      />
     </button>
   );
 });
