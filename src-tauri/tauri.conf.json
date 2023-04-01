@@ -45,6 +45,9 @@
       "active": true,
       "category": "SocialNetworking",
       "copyright": "",
+      "appimage": {
+        "bundleMediaFramework": true
+      },
       "deb": {
         "depends": []
       },
