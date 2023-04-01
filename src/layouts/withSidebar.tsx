@@ -1,6 +1,6 @@
 import AppHeader from '@components/appHeader';
 import MultiAccounts from '@components/multiAccounts';
-import Navigation from '@components/navigator';
+import Navigation from '@components/navigation';
 
 export default function WithSidebarLayout({ children }: { children: React.ReactNode }) {
   return (

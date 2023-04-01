@@ -1,5 +1,5 @@
-import Chats from '@components/navigator/chats';
-import Newsfeed from '@components/navigator/newsfeed';
+import Chats from '@components/navigation/chats';
+import Newsfeed from '@components/navigation/newsfeed';
 
 export default function Navigation() {
   return (
