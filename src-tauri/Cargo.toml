@@ -21,6 +21,7 @@ prisma-client-rust = { git = "https://github.com/Brendonovich/prisma-client-rust
 prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.7", default-features = false, features = ["sqlite", "migrations", "mocking", "specta"] }
 specta = "1.0.0"
 tauri-specta = { version = "1.0.0", features = ["typescript"] }
+tokio = { version = "1.26.0", features = ["macros"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc = "0.2.7"

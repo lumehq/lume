@@ -2,24 +2,27 @@ import BaseLayout from '@layouts/base';
 
 import { activeAccountAtom } from '@stores/account';
 
-import { getActiveAccount } from '@utils/storage';
-
 import LumeSymbol from '@assets/icons/Lume';
 
 import { useSetAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect } from 'react';
 
 export default function Page() {
   const router = useRouter();
   const setActiveAccount = useSetAtom(activeAccountAtom);
 
+  const fetchActiveAccount = useCallback(async () => {
+    const { getAccount } = await import('@utils/bindings');
+    return await getAccount();
+  }, []);
+
   useEffect(() => {
-    getActiveAccount()
+    fetchActiveAccount()
       .then((res: any) => {
-        if (res) {
+        if (res.length > 0) {
           // update local storage
-          setActiveAccount(res);
+          setActiveAccount(res[0]);
           // redirect
           router.replace('/init');
         } else {
@@ -27,7 +30,7 @@ export default function Page() {
         }
       })
       .catch(console.error);
-  }, [router, setActiveAccount]);
+  }, [fetchActiveAccount, setActiveAccount, router]);
 
   return (
     <div className="relative h-full overflow-hidden">

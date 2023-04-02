@@ -9,6 +9,15 @@ export const tagsToArray = (arr) => {
   return newarr;
 };
 
+export const followsTag = (arr) => {
+  const newarr = [];
+  // push item to tags
+  arr.forEach((item) => {
+    arr.push(['p', item]);
+  });
+  return newarr;
+};
+
 export const pubkeyArray = (arr) => {
   const newarr = [];
   // push item to newarr
