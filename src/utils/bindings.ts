@@ -16,11 +16,50 @@ export function createAccount(data: CreateAccountData) {
   return invoke<Account>('create_account', { data });
 }
 
+export function getFollows(data: GetFollowData) {
+  return invoke<Follow[]>('get_follows', { data });
+}
+
 export function createFollow(data: CreateFollowData) {
   return invoke<Follow>('create_follow', { data });
 }
 
-export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
-export type Follow = { id: number; pubkey: string; kind: number; metadata: string; accountId: number };
+export function createNote(data: CreateNoteData) {
+  return invoke<Note>('create_note', { data });
+}
+
+export function getNotes() {
+  return invoke<Note[]>('get_notes');
+}
+
+export function checkNote() {
+  return invoke<Note[]>('check_note');
+}
+
+export type GetFollowData = { account_id: number };
+export type Note = {
+  id: number;
+  eventId: string;
+  pubkey: string;
+  kind: number;
+  tags: string;
+  content: string;
+  parent_id: string;
+  parent_comment_id: string;
+  createdAt: string;
+  accountId: number;
+};
 export type CreateFollowData = { pubkey: string; kind: number; metadata: string; account_id: number };
+export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
+export type CreateNoteData = {
+  event_id: string;
+  pubkey: string;
+  kind: number;
+  tags: string;
+  content: string;
+  parent_id: string;
+  parent_comment_id: string;
+  account_id: number;
+};
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
+export type Follow = { id: number; pubkey: string; kind: number; metadata: string; accountId: number };

@@ -41,7 +41,7 @@ export default function Page() {
   };
 
   // auto-generated profile metadata
-  const metadata = useMemo(
+  const metadata: any = useMemo(
     () => ({
       display_name: name,
       name: name,
@@ -77,7 +77,7 @@ export default function Page() {
     event.sig = signEvent(event, privKey);
 
     // insert to database then broadcast
-    createAccount({ pubkey: pubKey, privkey: privKey, metadata: JSON.stringify(metadata) })
+    createAccount({ pubkey: pubKey, privkey: privKey, metadata: metadata })
       .then((res) => {
         pool.publish(event, relays);
         router.push({

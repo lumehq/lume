@@ -2,6 +2,8 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import { fetchMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
@@ -27,29 +29,34 @@ export default function Page() {
   const privkey: any = router.query.privkey || null;
   const pubkey = privkey ? getPublicKey(privkey) : null;
 
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState({ id: null, metadata: null });
   const [done, setDone] = useState(false);
-
-  const accountId = useRef(null);
 
   const insertAccountToStorage = useCallback(async (pubkey, privkey, metadata) => {
     const { createAccount } = await import('@utils/bindings');
-    createAccount({ pubkey: pubkey, privkey: privkey, metadata: JSON.stringify(metadata) }).then(
-      (res) => (accountId.current = res.id)
-    );
+    createAccount({ pubkey: pubkey, privkey: privkey, metadata: metadata })
+      .then((res) =>
+        setProfile({
+          id: res.id,
+          metadata: JSON.parse(res.metadata),
+        })
+      )
+      .catch(console.error);
   }, []);
 
   const insertFollowsToStorage = useCallback(
     async (tags) => {
       const { createFollow } = await import('@utils/bindings');
-      if (accountId.current !== null) {
+      if (profile?.id !== null) {
         for (const tag of tags) {
           const metadata: any = await fetchMetadata(tag[1], pool, relays);
-          createFollow({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: accountId.current });
+          createFollow({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: profile.id }).catch(
+            console.error
+          );
         }
       }
     },
-    [pool, relays]
+    [pool, profile.id, relays]
   );
 
   useEffect(() => {
@@ -64,7 +71,6 @@ export default function Page() {
       relays,
       (event: any) => {
         if (event.kind === 0) {
-          setProfile(JSON.parse(event.content));
           insertAccountToStorage(pubkey, privkey, event.content);
         } else {
           if (event.tags.length > 0) {
@@ -75,9 +81,6 @@ export default function Page() {
       undefined,
       () => {
         setDone(true);
-      },
-      {
-        unsubscribeOnEose: true,
       }
     );
 
@@ -106,13 +109,20 @@ export default function Page() {
             <div className="w-full rounded-lg bg-zinc-900 p-4 shadow-input ring-1 ring-zinc-800">
               <div className="flex space-x-4">
                 <div className="relative h-10 w-10 rounded-full">
-                  <Image className="inline-block rounded-full" src={profile?.picture} alt="" fill={true} />
+                  <Image
+                    className="inline-block rounded-full"
+                    src={profile.metadata?.picture || DEFAULT_AVATAR}
+                    alt=""
+                    fill={true}
+                  />
                 </div>
                 <div className="flex-1 space-y-4 py-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{profile?.display_name || profile?.name}</p>
+                    <p className="font-semibold">{profile.metadata?.display_name || profile.metadata?.name}</p>
                     <span className="leading-tight text-zinc-500">·</span>
-                    <p className="text-zinc-500">@{profile?.username || (pubkey && truncate(pubkey, 16, ' .... '))}</p>
+                    <p className="text-zinc-500">
+                      @{profile.metadata?.username || (pubkey && truncate(pubkey, 16, ' .... '))}
+                    </p>
                   </div>
                   <div className="space-y-3">
                     <div className="grid grid-cols-3 gap-4">

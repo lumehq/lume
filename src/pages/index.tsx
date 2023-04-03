@@ -1,6 +1,6 @@
 import BaseLayout from '@layouts/base';
 
-import { activeAccountAtom } from '@stores/account';
+import { activeAccountAtom, activeAccountFollowsAtom } from '@stores/account';
 
 import LumeSymbol from '@assets/icons/Lume';
 
@@ -11,16 +11,26 @@ import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCal
 export default function Page() {
   const router = useRouter();
   const setActiveAccount = useSetAtom(activeAccountAtom);
+  const setActiveAccountFollows = useSetAtom(activeAccountFollowsAtom);
 
   const fetchActiveAccount = useCallback(async () => {
     const { getAccount } = await import('@utils/bindings');
     return await getAccount();
   }, []);
 
+  const fetchFollowsByAccount = useCallback(async (id) => {
+    const { getFollows } = await import('@utils/bindings');
+    return await getFollows({ account_id: id });
+  }, []);
+
   useEffect(() => {
     fetchActiveAccount()
       .then((res: any) => {
         if (res.length > 0) {
+          // fetch follows
+          fetchFollowsByAccount(res[0].id).then((follows) => {
+            setActiveAccountFollows(follows);
+          });
           // update local storage
           setActiveAccount(res[0]);
           // redirect
@@ -30,7 +40,7 @@ export default function Page() {
         }
       })
       .catch(console.error);
-  }, [fetchActiveAccount, setActiveAccount, router]);
+  }, [fetchActiveAccount, setActiveAccount, fetchFollowsByAccount, setActiveAccountFollows, router]);
 
   return (
     <div className="relative h-full overflow-hidden">

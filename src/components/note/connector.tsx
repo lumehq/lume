@@ -1,10 +1,10 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { activeAccountAtom } from '@stores/account';
+import { activeAccountAtom, lastLoginAtom } from '@stores/account';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { createCacheNote, getAllFollowsByID, updateLastLoginTime } from '@utils/storage';
+import { createCacheNote, getAllFollowsByID } from '@utils/storage';
 import { pubkeyArray } from '@utils/transform';
 
 import { TauriEvent } from '@tauri-apps/api/event';
@@ -15,6 +15,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 export default function NoteConnector() {
   const [pool, relays]: any = useContext(RelayContext);
 
+  const setLastLoginAtom = useSetAtom(lastLoginAtom);
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
   const activeAccount: any = useAtomValue(activeAccountAtom);
 
@@ -44,7 +45,7 @@ export default function NoteConnector() {
   useEffect(() => {
     subscribe();
     getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-      updateLastLoginTime(now.current);
+      setLastLoginAtom(now.current);
       appWindow.close();
     });
   }, [activeAccount.id, pool, relays, setHasNewerNote, subscribe]);

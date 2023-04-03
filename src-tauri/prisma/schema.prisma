@@ -1,6 +1,6 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:../lume.db"
+  url      = "file:../../lume.db"
 }
 
 generator client {
@@ -37,6 +37,7 @@ model Follow {
 
 model Note {
   id                Int      @id @default(autoincrement())
+  eventId           String   @unique
   pubkey            String
   kind              Int
   tags              String
@@ -47,6 +48,8 @@ model Note {
 
   Account   Account @relation(fields: [accountId], references: [id])
   accountId Int
+
+  @@index([eventId])
 }
 
 model Message {
