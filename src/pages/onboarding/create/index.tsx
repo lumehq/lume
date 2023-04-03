@@ -82,7 +82,7 @@ export default function Page() {
         pool.publish(event, relays);
         router.push({
           pathname: '/onboarding/create/step-2',
-          query: { id: res.id, privkey: res.privkey },
+          query: { id: res.id, pubkey: res.pubkey, privkey: res.privkey },
         });
       })
       .catch(console.error);

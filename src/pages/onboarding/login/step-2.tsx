@@ -2,21 +2,21 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { createAccount, createFollows } from '@utils/storage';
-import { tagsToArray } from '@utils/transform';
+import { fetchMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
-import destr from 'destr';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { getPublicKey, nip19 } from 'nostr-tools';
+import { getPublicKey } from 'nostr-tools';
 import {
   JSXElementConstructor,
   ReactElement,
   ReactFragment,
   ReactPortal,
+  useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -30,6 +30,28 @@ export default function Page() {
   const [profile, setProfile] = useState(null);
   const [done, setDone] = useState(false);
 
+  const accountId = useRef(null);
+
+  const insertAccountToStorage = useCallback(async (pubkey, privkey, metadata) => {
+    const { createAccount } = await import('@utils/bindings');
+    createAccount({ pubkey: pubkey, privkey: privkey, metadata: JSON.stringify(metadata) }).then(
+      (res) => (accountId.current = res.id)
+    );
+  }, []);
+
+  const insertFollowsToStorage = useCallback(
+    async (tags) => {
+      const { createFollow } = await import('@utils/bindings');
+      if (accountId.current !== null) {
+        for (const tag of tags) {
+          const metadata: any = await fetchMetadata(tag[1], pool, relays);
+          createFollow({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: accountId.current });
+        }
+      }
+    },
+    [pool, relays]
+  );
+
   useEffect(() => {
     const unsubscribe = pool.subscribe(
       [
@@ -42,18 +64,11 @@ export default function Page() {
       relays,
       (event: any) => {
         if (event.kind === 0) {
-          const data = {
-            pubkey: pubkey,
-            privkey: privkey,
-            npub: nip19.npubEncode(pubkey),
-            nsec: nip19.nsecEncode(privkey),
-            metadata: event.content,
-          };
-          setProfile(destr(event.content));
-          createAccount(data);
+          setProfile(JSON.parse(event.content));
+          insertAccountToStorage(pubkey, privkey, event.content);
         } else {
           if (event.tags.length > 0) {
-            createFollows(tagsToArray(event.tags), pubkey, 0);
+            insertFollowsToStorage(event.tags);
           }
         }
       },
@@ -69,7 +84,7 @@ export default function Page() {
     return () => {
       unsubscribe;
     };
-  }, [pool, privkey, pubkey, relays]);
+  }, [insertAccountToStorage, insertFollowsToStorage, pool, relays, privkey, pubkey]);
 
   // submit then redirect to home
   const submit = () => {

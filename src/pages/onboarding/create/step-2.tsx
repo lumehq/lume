@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/base';
 import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
+import { fetchMetadata } from '@utils/metadata';
 import { followsTag } from '@utils/transform';
 
 import { CheckCircledIcon } from '@radix-ui/react-icons';
@@ -65,7 +66,7 @@ export default function Page() {
   const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
-  const { id, privkey }: any = router.query || '';
+  const { id, pubkey, privkey }: any = router.query || '';
 
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
@@ -82,24 +83,25 @@ export default function Page() {
     const { createFollow } = await import('@utils/bindings');
     setLoading(true);
 
+    for (const follow of follows) {
+      const metadata: any = await fetchMetadata(follow, pool, relays);
+      createFollow({ pubkey: follow, kind: 0, metadata: metadata.content, account_id: parseInt(id) });
+    }
+
     // build event
     const event: any = {
       content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 3,
-      pubkey: id,
+      pubkey: pubkey,
       tags: followsTag(follows),
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
 
-    follows.forEach((item) => {
-      createFollow({ pubkey: item, kind: 0, metadata: JSON.stringify({}), account_id: id });
-    });
-
     pool.publish(event, relays);
     router.replace('/');
-  }, [follows, id, pool, privkey, relays, router]);
+  }, [follows, id, pool, pubkey, privkey, relays, router]);
 
   useEffect(() => {
     const fetchData = async () => {

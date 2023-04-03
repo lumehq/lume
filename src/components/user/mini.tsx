@@ -1,24 +1,22 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
+import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { getCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
-import { useCallback, useEffect, useState } from 'react';
+import { Author } from 'nostr-relaypool';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 export const UserMini = ({ pubkey }: { pubkey: string }) => {
-  const [profile, setProfile] = useState(null);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const fetchCacheProfile = useCallback(async (id: string) => {
-    const res = await getCacheProfile(id);
-    const data = JSON.parse(res.metadata);
-    setProfile(data);
-  }, []);
+  const [profile, setProfile] = useState(null);
+  const user = useMemo(() => new Author(pool, relays, pubkey), [pubkey, pool, relays]);
 
   useEffect(() => {
-    fetchCacheProfile(pubkey).catch(console.error);
-  }, [fetchCacheProfile, pubkey]);
+    user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
+  }, [user]);
 
   if (profile) {
     return (

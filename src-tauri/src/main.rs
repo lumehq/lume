@@ -43,7 +43,7 @@ struct CreateFollowData {
 #[specta::specta]
 async fn get_account(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
   db.account()
-    .find_many(vec![account::active::equals(true)])
+    .find_many(vec![account::active::equals(false)])
     .exec()
     .await
     .map_err(|_| ())

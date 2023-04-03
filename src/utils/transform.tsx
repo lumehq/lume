@@ -13,7 +13,7 @@ export const followsTag = (arr) => {
   const newarr = [];
   // push item to tags
   arr.forEach((item) => {
-    arr.push(['p', item]);
+    newarr.push(['p', item]);
   });
   return newarr;
 };
