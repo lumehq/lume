@@ -38,7 +38,7 @@ export const NoteReaction = memo(function NoteReaction({
         ['p', eventPubkey],
       ],
       created_at: dateToUnix(),
-      pubkey: activeAccount.id,
+      pubkey: activeAccount.pubkey,
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, activeAccount.privkey);

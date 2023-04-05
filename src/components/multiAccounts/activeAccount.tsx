@@ -19,11 +19,11 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
   const userData = JSON.parse(user.metadata);
 
   const openProfilePage = () => {
-    router.push(`/users/${user.id}`);
+    router.push(`/users/${user.pubkey}`);
   };
 
   const copyPublicKey = async () => {
-    await writeText(nip19.npubEncode(user.id));
+    await writeText(nip19.npubEncode(user.pubkey));
   };
 
   const insertFollowsToStorage = useCallback(
@@ -46,7 +46,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       [
         {
           kinds: [3],
-          authors: [user.id],
+          authors: [user.pubkey],
         },
       ],
       relays,
@@ -65,7 +65,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
     return () => {
       unsubscribe;
     };
-  }, [insertFollowsToStorage, pool, relays, user.id]);
+  }, [insertFollowsToStorage, pool, relays, user.pubkey]);
 
   return (
     <DropdownMenu.Root>

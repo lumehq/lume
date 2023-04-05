@@ -23,7 +23,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
       content: value,
       created_at: dateToUnix(),
       kind: 1,
-      pubkey: activeAccount.id,
+      pubkey: activeAccount.pubkey,
       tags: [['e', eventID]],
     };
     event.id = getEventHash(event);
@@ -42,7 +42,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
             <ImageWithFallback
               src={profile?.picture}
-              alt={activeAccount.id}
+              alt={activeAccount.pubkey}
               fill={true}
               className="rounded-md object-cover"
             />

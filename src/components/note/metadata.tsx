@@ -2,8 +2,6 @@ import { NoteComment } from '@components/note/meta/comment';
 import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
-import { createCacheCommentNote } from '@utils/storage';
-
 import { useContext, useEffect, useState } from 'react';
 
 export default function NoteMetadata({
@@ -39,7 +37,7 @@ export default function NoteMetadata({
             // update state
             setComments((comments) => (comments += 1));
             // save comment to database
-            createCacheCommentNote(event, eventID);
+            // createCacheCommentNote(event, eventID);
             break;
           case 7:
             if (event.content === '🤙' || event.content === '+') {

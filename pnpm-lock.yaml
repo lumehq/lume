@@ -32,7 +32,6 @@ specifiers:
   framer-motion: ^9.1.7
   husky: ^8.0.3
   jotai: ^2.0.3
-  jotai-cache: ^0.3.0
   lint-staged: ^13.2.0
   next: ^13.2.4
   nostr-relaypool: ^0.5.18
@@ -48,7 +47,6 @@ specifiers:
   react-string-replace: ^1.1.0
   react-virtuoso: ^4.1.1
   tailwindcss: ^3.3.1
-  tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
   typescript: ^4.9.5
   unique-names-generator: ^4.7.1
   ws: ^8.13.0
@@ -69,7 +67,6 @@ dependencies:
   emoji-mart: 5.5.2
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   jotai: 2.0.3_react@18.2.0
-  jotai-cache: 0.3.0_jotai@2.0.3
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   nostr-relaypool: 0.5.18_ws@8.13.0
   nostr-tools: 1.8.1
@@ -79,7 +76,6 @@ dependencies:
   react-player: 2.12.0_react@18.2.0
   react-string-replace: 1.1.0
   react-virtuoso: 4.1.1_biqbaboplfbrettd7655fr4n2y
-  tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/3a8b9a6b244df7512bc5ef8692cebdedbab3ccce
   unique-names-generator: 4.7.1
   ws: 8.13.0
 
@@ -3231,15 +3227,6 @@ packages:
     hasBin: true
     dev: true
 
-  /jotai-cache/0.3.0_jotai@2.0.3:
-    resolution:
-      { integrity: sha512-hV6DUD1frRpW0EN8Ss7n4KNaMZRBokQw6KPT3seA4P35QRXctMNUn4pHRlg3hzO+KBPpEZw+fyKlWAqagmuIwQ== }
-    peerDependencies:
-      jotai: '>=1.11.0'
-    dependencies:
-      jotai: 2.0.3_react@18.2.0
-    dev: false
-
   /jotai/2.0.3_react@18.2.0:
     resolution:
       { integrity: sha512-MMjhSPAL3RoeZD9WbObufRT2quThEAEknHHridf2ma8Ml7ZVQmUiHk0ssdbR3F0h3kcwhYqSGJ59OjhPge7RRg== }
@@ -4995,14 +4982,3 @@ packages:
       { integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q== }
     engines: { node: '>=10' }
     dev: true
-
-  github.com/tauri-apps/tauri-plugin-sql/3a8b9a6b244df7512bc5ef8692cebdedbab3ccce:
-    resolution:
-      {
-        tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/3a8b9a6b244df7512bc5ef8692cebdedbab3ccce,
-      }
-    name: tauri-plugin-sql-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.2.0
-    dev: false

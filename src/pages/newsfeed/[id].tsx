@@ -6,8 +6,6 @@ import { NoteComment } from '@components/note/comment';
 import { NoteExtend } from '@components/note/extend';
 import { RelayContext } from '@components/relaysProvider';
 
-import { getAllCommentNotes, getNoteByID } from '@utils/storage';
-
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -29,12 +27,12 @@ export default function Page() {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    getNoteByID(id)
+    /*getNoteByID(id)
       .then((res) => {
         setRootEvent(res);
         getAllCommentNotes(id).then((res: any) => setComments(res));
       })
-      .catch(console.error);
+      .catch(console.error);*/
   }, [id, pool, relays]);
 
   return (

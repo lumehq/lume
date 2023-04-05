@@ -2,12 +2,11 @@ import EmojiPicker from '@components/form/emojiPicker';
 import ImagePicker from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
-import { activeAccountAtom } from '@stores/account';
 import { noteContentAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext } from 'react';
@@ -15,23 +14,21 @@ import { useContext } from 'react';
 export default function FormBase() {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
 
-  const pubkey = activeAccount.id;
-  const privkey = activeAccount.privkey;
-
   const submitEvent = () => {
+    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+
     const event: any = {
       content: value,
       created_at: dateToUnix(),
       kind: 1,
-      pubkey: pubkey,
+      pubkey: activeAccount.pubkey,
       tags: [],
     };
     event.id = getEventHash(event);
-    event.sig = signEvent(event, privkey);
+    event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
     pool.publish(event, relays);
