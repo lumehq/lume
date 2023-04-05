@@ -33,17 +33,17 @@ struct CreateAccountData {
 }
 
 #[derive(Deserialize, Type)]
-struct GetFollowData {
+struct GetPlebData {
   account_id: i32,
 }
 
 #[derive(Deserialize, Type)]
-struct GetFollowPubkeyData {
+struct GetPlebPubkeyData {
   pubkey: String,
 }
 
 #[derive(Deserialize, Type)]
-struct CreateFollowData {
+struct CreatePlebData {
   pubkey: String,
   kind: i32,
   metadata: String,
@@ -102,9 +102,9 @@ async fn create_account(db: DbState<'_>, data: CreateAccountData) -> Result<acco
 
 #[tauri::command]
 #[specta::specta]
-async fn get_follows(db: DbState<'_>, data: GetFollowData) -> Result<Vec<follow::Data>, ()> {
-  db.follow()
-    .find_many(vec![follow::account_id::equals(data.account_id)])
+async fn get_plebs(db: DbState<'_>, data: GetPlebData) -> Result<Vec<pleb::Data>, ()> {
+  db.pleb()
+    .find_many(vec![pleb::account_id::equals(data.account_id)])
     .exec()
     .await
     .map_err(|_| ())
@@ -112,12 +112,12 @@ async fn get_follows(db: DbState<'_>, data: GetFollowData) -> Result<Vec<follow:
 
 #[tauri::command]
 #[specta::specta]
-async fn get_follow_by_pubkey(
+async fn get_pleb_by_pubkey(
   db: DbState<'_>,
-  data: GetFollowPubkeyData,
-) -> Result<Option<follow::Data>, ()> {
-  db.follow()
-    .find_first(vec![follow::pubkey::equals(data.pubkey)])
+  data: GetPlebPubkeyData,
+) -> Result<Option<pleb::Data>, ()> {
+  db.pleb()
+    .find_first(vec![pleb::pubkey::equals(data.pubkey)])
     .exec()
     .await
     .map_err(|_| ())
@@ -125,8 +125,8 @@ async fn get_follow_by_pubkey(
 
 #[tauri::command]
 #[specta::specta]
-async fn create_follow(db: DbState<'_>, data: CreateFollowData) -> Result<follow::Data, ()> {
-  db.follow()
+async fn create_pleb(db: DbState<'_>, data: CreatePlebData) -> Result<pleb::Data, ()> {
+  db.pleb()
     .create(
       data.pubkey,
       data.kind,
@@ -215,9 +215,9 @@ async fn main() {
     collect_types![
       get_accounts,
       create_account,
-      get_follows,
-      get_follow_by_pubkey,
-      create_follow,
+      get_plebs,
+      get_pleb_by_pubkey,
+      create_pleb,
       create_note,
       get_notes,
       get_latest_notes,
@@ -256,9 +256,9 @@ async fn main() {
     .invoke_handler(tauri::generate_handler![
       get_accounts,
       create_account,
-      get_follows,
-      get_follow_by_pubkey,
-      create_follow,
+      get_plebs,
+      get_pleb_by_pubkey,
+      create_pleb,
       create_note,
       get_notes,
       get_latest_notes,

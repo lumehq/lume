@@ -15,8 +15,8 @@ export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) =>
   const [profile, setProfile] = useState(null);
 
   const getCachedMetadata = useCallback(async () => {
-    const { getFollowByPubkey } = await import('@utils/bindings');
-    getFollowByPubkey({ pubkey: pubkey })
+    const { getPlebByPubkey } = await import('@utils/bindings');
+    getPlebByPubkey({ pubkey: pubkey })
       .then((res) => {
         if (res) {
           const metadata = JSON.parse(res.metadata);

@@ -80,12 +80,12 @@ export default function Page() {
 
   // save follows to database then broadcast
   const submit = useCallback(async () => {
-    const { createFollow } = await import('@utils/bindings');
+    const { createPleb } = await import('@utils/bindings');
     setLoading(true);
 
     for (const follow of follows) {
       const metadata: any = await fetchMetadata(follow, pool, relays);
-      createFollow({ pubkey: follow, kind: 0, metadata: metadata.content, account_id: parseInt(id) }).catch(
+      createPleb({ pubkey: follow, kind: 0, metadata: metadata.content, account_id: parseInt(id) }).catch(
         console.error
       );
     }

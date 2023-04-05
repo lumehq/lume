@@ -46,11 +46,11 @@ export default function Page() {
 
   const insertFollowsToStorage = useCallback(
     async (tags) => {
-      const { createFollow } = await import('@utils/bindings');
+      const { createPleb } = await import('@utils/bindings');
       if (profile?.id !== null) {
         for (const tag of tags) {
           const metadata: any = await fetchMetadata(tag[1], pool, relays);
-          createFollow({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: profile.id }).catch(
+          createPleb({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: profile.id }).catch(
             console.error
           );
         }

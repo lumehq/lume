@@ -19,8 +19,8 @@ export default function Page() {
   }, []);
 
   const fetchFollowsByAccount = useCallback(async (id) => {
-    const { getFollows } = await import('@utils/bindings');
-    return await getFollows({ account_id: id });
+    const { getPlebs } = await import('@utils/bindings');
+    return await getPlebs({ account_id: id });
   }, []);
 
   useEffect(() => {

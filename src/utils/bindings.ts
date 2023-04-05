@@ -16,16 +16,16 @@ export function createAccount(data: CreateAccountData) {
   return invoke<Account>('create_account', { data });
 }
 
-export function getFollows(data: GetFollowData) {
-  return invoke<Follow[]>('get_follows', { data });
+export function getPlebs(data: GetPlebData) {
+  return invoke<Pleb[]>('get_plebs', { data });
 }
 
-export function getFollowByPubkey(data: GetFollowPubkeyData) {
-  return invoke<Follow | null>('get_follow_by_pubkey', { data });
+export function getPlebByPubkey(data: GetPlebPubkeyData) {
+  return invoke<Pleb | null>('get_pleb_by_pubkey', { data });
 }
 
-export function createFollow(data: CreateFollowData) {
-  return invoke<Follow>('create_follow', { data });
+export function createPleb(data: CreatePlebData) {
+  return invoke<Pleb>('create_pleb', { data });
 }
 
 export function createNote(data: CreateNoteData) {
@@ -44,7 +44,11 @@ export function getNoteById(data: GetNoteByIdData) {
   return invoke<Note | null>('get_note_by_id', { data });
 }
 
-export type GetFollowData = { account_id: number };
+export type CreatePlebData = { pubkey: string; kind: number; metadata: string; account_id: number };
+export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
+export type GetLatestNoteData = { date: number };
+export type Pleb = { id: number; pubkey: string; kind: number; metadata: string; accountId: number };
+export type GetPlebPubkeyData = { pubkey: string };
 export type Note = {
   id: number;
   eventId: string;
@@ -57,12 +61,8 @@ export type Note = {
   createdAt: number;
   accountId: number;
 };
-export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
-export type GetLatestNoteData = { date: number };
-export type CreateFollowData = { pubkey: string; kind: number; metadata: string; account_id: number };
-export type GetFollowPubkeyData = { pubkey: string };
+export type GetPlebData = { account_id: number };
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
-export type Follow = { id: number; pubkey: string; kind: number; metadata: string; accountId: number };
 export type CreateNoteData = {
   event_id: string;
   pubkey: string;

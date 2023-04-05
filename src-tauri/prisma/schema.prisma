@@ -12,27 +12,29 @@ generator client {
 
 model Account {
   id       Int     @id @default(autoincrement())
-  pubkey   String
+  pubkey   String  @unique
   privkey  String  @unique
   active   Boolean @default(false)
   metadata String
 
   // related
-  follows  Follow[]
+  plebs    Pleb[]
   messages Message[]
   notes    Note[]
 
   @@index([pubkey])
 }
 
-model Follow {
+model Pleb {
   id       Int    @id @default(autoincrement())
-  pubkey   String
+  pubkey   String @unique
   kind     Int
   metadata String
 
   Account   Account @relation(fields: [accountId], references: [id])
   accountId Int
+
+  @@index([pubkey])
 }
 
 model Note {

@@ -28,12 +28,12 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
 
   const insertFollowsToStorage = useCallback(
     async (tags) => {
-      const { createFollow } = await import('@utils/bindings');
+      const { createPleb } = await import('@utils/bindings');
       const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
 
       for (const tag of tags) {
         const metadata: any = await fetchMetadata(tag[1], pool, relays);
-        createFollow({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: activeAccount.id }).catch(
+        createPleb({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: activeAccount.id }).catch(
           console.error
         );
       }
