@@ -1,33 +1,22 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
+import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { createCacheProfile } from '@utils/storage';
 import { truncate } from '@utils/truncate';
 
-import { fetch } from '@tauri-apps/api/http';
-import destr from 'destr';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { Author } from 'nostr-relaypool';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 
 export const UserFollow = memo(function UserFollow({ pubkey }: { pubkey: string }) {
-  const [profile, setProfile] = useState(null);
+  const [pool, relays]: any = useContext(RelayContext);
 
-  const fetchProfile = useCallback(async (id: string) => {
-    const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
-      method: 'GET',
-      timeout: 30,
-    });
-    return res.data;
-  }, []);
+  const [profile, setProfile] = useState(null);
+  const user = useMemo(() => new Author(pool, relays, pubkey), [pubkey, pool, relays]);
 
   useEffect(() => {
-    fetchProfile(pubkey)
-      .then((res: any) => {
-        setProfile(destr(res.content));
-        createCacheProfile(res.pubkey, res.content);
-      })
-      .catch(console.error);
-  }, [fetchProfile, pubkey]);
+    user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
+  }, [user]);
 
   return (
     <div className="flex items-center gap-2">

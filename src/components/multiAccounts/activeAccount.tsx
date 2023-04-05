@@ -2,8 +2,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { createFollows } from '@utils/storage';
-import { tagsToArray } from '@utils/transform';
+import { fetchMetadata } from '@utils/metadata';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
@@ -11,7 +10,7 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
-import { memo, useContext, useEffect } from 'react';
+import { memo, useCallback, useContext, useEffect } from 'react';
 
 export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
   const [pool, relays]: any = useContext(RelayContext);
@@ -27,6 +26,21 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
     await writeText(nip19.npubEncode(user.id));
   };
 
+  const insertFollowsToStorage = useCallback(
+    async (tags) => {
+      const { createFollow } = await import('@utils/bindings');
+      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+
+      for (const tag of tags) {
+        const metadata: any = await fetchMetadata(tag[1], pool, relays);
+        createFollow({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: activeAccount.id }).catch(
+          console.error
+        );
+      }
+    },
+    [pool, relays]
+  );
+
   useEffect(() => {
     const unsubscribe = pool.subscribe(
       [
@@ -38,7 +52,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       relays,
       (event: any) => {
         if (event.tags.length > 0) {
-          createFollows(tagsToArray(event.tags), user.id, 0);
+          insertFollowsToStorage(event.tags);
         }
       },
       undefined,
@@ -51,7 +65,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
     return () => {
       unsubscribe;
     };
-  }, [pool, relays, user.id]);
+  }, [insertFollowsToStorage, pool, relays, user.id]);
 
   return (
     <DropdownMenu.Root>

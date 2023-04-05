@@ -9,19 +9,18 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
 export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: string; time: any }) {
   const [pool, relays]: any = useContext(RelayContext);
-
   const [profile, setProfile] = useState(null);
-  const user = useMemo(() => new Author(pool, relays, pubkey), [pubkey, pool, relays]);
 
   useEffect(() => {
+    const user = new Author(pool, relays, pubkey);
     user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [user]);
+  }, [pool, relays, pubkey]);
 
   return (
     <div className="flex items-center gap-2">

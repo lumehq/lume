@@ -27,7 +27,7 @@ CREATE TABLE "Note" (
     "content" TEXT NOT NULL,
     "parent_id" TEXT NOT NULL,
     "parent_comment_id" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" INTEGER NOT NULL,
     "accountId" INTEGER NOT NULL,
     CONSTRAINT "Note_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -38,7 +38,7 @@ CREATE TABLE "Message" (
     "pubkey" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "tags" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" INTEGER NOT NULL,
     "accountId" INTEGER NOT NULL,
     CONSTRAINT "Message_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

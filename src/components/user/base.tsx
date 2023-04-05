@@ -6,17 +6,17 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { truncate } from '@utils/truncate';
 
 import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
   const [profile, setProfile] = useState(null);
-  const user = useMemo(() => new Author(pool, relays, pubkey), [pubkey, pool, relays]);
 
   useEffect(() => {
+    const user = new Author(pool, relays, pubkey);
     user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [user]);
+  }, [pool, relays, pubkey]);
 
   return (
     <div className="flex items-center gap-2">

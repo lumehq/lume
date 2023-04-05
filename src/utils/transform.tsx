@@ -45,3 +45,16 @@ export const getParentID = (arr, fallback) => {
 
   return parentID;
 };
+
+export const filteredData = (obj) => {
+  const filteredArr = obj.reduce((item, current) => {
+    const x = item.find((item) => item.parent_id === current.parent_id);
+    if (!x) {
+      return item.concat([current]);
+    } else {
+      return item;
+    }
+  }, []);
+
+  return filteredArr;
+};

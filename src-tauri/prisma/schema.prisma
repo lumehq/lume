@@ -36,33 +36,33 @@ model Follow {
 }
 
 model Note {
-  id                Int      @id @default(autoincrement())
-  eventId           String   @unique
+  id                Int    @id @default(autoincrement())
+  eventId           String @unique
   pubkey            String
   kind              Int
   tags              String
   content           String
   parent_id         String
   parent_comment_id String
-  createdAt         DateTime @default(now())
+  createdAt         Int
 
   Account   Account @relation(fields: [accountId], references: [id])
   accountId Int
 
-  @@index([eventId])
+  @@index([eventId, createdAt])
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   pubkey    String
   content   String
   tags      String
-  createdAt DateTime @default(now())
+  createdAt Int
 
   Account   Account @relation(fields: [accountId], references: [id])
   accountId Int
 
-  @@index([pubkey])
+  @@index([pubkey, createdAt])
 }
 
 model Relay {

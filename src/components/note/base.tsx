@@ -63,13 +63,13 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   const getParent = useMemo(() => {
     if (event.parent_id) {
-      if (event.parent_id !== event.id && !event.content.includes('#[0]')) {
+      if (event.parent_id !== event.eventId && !event.content.includes('#[0]')) {
         return <NoteParent id={event.parent_id} />;
       }
     }
 
     return;
-  }, [event.content, event.id, event.parent_id]);
+  }, [event.content, event.eventId, event.parent_id]);
 
   const openThread = (e) => {
     const selection = window.getSelection();
@@ -87,7 +87,7 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
     >
       <>{getParent}</>
       <div className="relative z-10 flex flex-col">
-        <UserExtend pubkey={event.pubkey} time={event.created_at} />
+        <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
         <div className="-mt-5 pl-[52px]">
           <div className="flex flex-col gap-2">
             <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
@@ -97,10 +97,10 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
         </div>
         <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
           <NoteMetadata
-            eventID={event.id}
+            eventID={event.eventId}
             eventPubkey={event.pubkey}
             eventContent={event.content}
-            eventTime={event.created_at}
+            eventTime={event.createdAt || event.created_at}
           />
         </div>
       </div>

@@ -7,7 +7,7 @@
 #[macro_use]
 extern crate objc;
 
-use prisma_client_rust::raw;
+use prisma_client_rust::Direction;
 use tauri::{Manager, WindowEvent};
 #[cfg(target_os = "macos")]
 use window_ext::WindowExt;
@@ -54,12 +54,30 @@ struct CreateNoteData {
   content: String,
   parent_id: String,
   parent_comment_id: String,
+  created_at: i32,
   account_id: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetNoteByIdData {
+  event_id: String,
+}
+
+#[derive(Deserialize, Type)]
+struct GetNoteData {
+  date: i32,
+  limit: i32,
+  offset: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetLatestNoteData {
+  date: i32,
 }
 
 #[tauri::command]
 #[specta::specta]
-async fn get_account(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
+async fn get_accounts(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
   db.account()
     .find_many(vec![account::active::equals(false)])
     .exec()
@@ -120,6 +138,7 @@ async fn create_note(db: DbState<'_>, data: CreateNoteData) -> Result<note::Data
         data.content,
         data.parent_id,
         data.parent_comment_id,
+        data.created_at,
         account::id::equals(data.account_id),
         vec![],
       ),
@@ -132,8 +151,12 @@ async fn create_note(db: DbState<'_>, data: CreateNoteData) -> Result<note::Data
 
 #[tauri::command]
 #[specta::specta]
-async fn get_notes(db: DbState<'_>) -> Result<Vec<note::Data>, ()> {
-  db._query_raw(raw!("SELECT * FROM Note"))
+async fn get_notes(db: DbState<'_>, data: GetNoteData) -> Result<Vec<note::Data>, ()> {
+  db.note()
+    .find_many(vec![note::created_at::lte(data.date)])
+    .order_by(note::created_at::order(Direction::Desc))
+    .take(data.limit.into())
+    .skip(data.offset.into())
     .exec()
     .await
     .map_err(|_| ())
@@ -141,13 +164,28 @@ async fn get_notes(db: DbState<'_>) -> Result<Vec<note::Data>, ()> {
 
 #[tauri::command]
 #[specta::specta]
-async fn check_note(db: DbState<'_>) -> Result<Vec<note::Data>, ()> {
+async fn get_latest_notes(db: DbState<'_>, data: GetLatestNoteData) -> Result<Vec<note::Data>, ()> {
   db.note()
-    .find_many(vec![])
-    .take(5)
+    .find_many(vec![note::created_at::gt(data.date)])
+    .order_by(note::created_at::order(Direction::Desc))
     .exec()
     .await
     .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_note_by_id(db: DbState<'_>, data: GetNoteByIdData) -> Result<Option<note::Data>, ()> {
+  db.note()
+    .find_unique(note::event_id::equals(data.event_id))
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+async fn count_total_notes(db: DbState<'_>) -> Result<i64, ()> {
+  db.note().count(vec![]).exec().await.map_err(|_| ())
 }
 
 #[tokio::main]
@@ -157,13 +195,14 @@ async fn main() {
   #[cfg(debug_assertions)]
   ts::export(
     collect_types![
-      get_account,
+      get_accounts,
       create_account,
       get_follows,
       create_follow,
       create_note,
       get_notes,
-      check_note
+      get_latest_notes,
+      get_note_by_id
     ],
     "../src/utils/bindings.ts",
   )
@@ -196,13 +235,15 @@ async fn main() {
       }
     })
     .invoke_handler(tauri::generate_handler![
-      get_account,
+      get_accounts,
       create_account,
       get_follows,
       create_follow,
       create_note,
       get_notes,
-      check_note
+      get_latest_notes,
+      get_note_by_id,
+      count_total_notes
     ])
     .manage(Arc::new(db))
     .run(tauri::generate_context!())

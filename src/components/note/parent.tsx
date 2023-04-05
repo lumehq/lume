@@ -6,7 +6,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
-import { createCacheNote, getNoteByID } from '@utils/storage';
+import { getParentID } from '@utils/transform';
 
 import destr from 'destr';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -18,7 +18,10 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   const [event, setEvent] = useState(null);
   const unsubscribe = useRef(null);
 
-  const fetchEvent = useCallback(() => {
+  const fetchEvent = useCallback(async () => {
+    const { createNote } = await import('@utils/bindings');
+    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+
     unsubscribe.current = pool.subscribe(
       [
         {
@@ -31,7 +34,19 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
         // update state
         setEvent(event);
         // insert to database
-        createCacheNote(event);
+        const parentID = getParentID(event.tags, event.id);
+        // insert event to local database
+        createNote({
+          event_id: event.id,
+          pubkey: event.pubkey,
+          kind: event.kind,
+          tags: JSON.stringify(event.tags),
+          content: event.content,
+          parent_id: parentID,
+          parent_comment_id: '',
+          created_at: event.created_at,
+          account_id: activeAccount.id,
+        }).catch(console.error);
       },
       undefined,
       undefined,
@@ -41,19 +56,26 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
     );
   }, [id, pool, relays]);
 
+  const checkNoteExist = useCallback(async () => {
+    const { getNoteById } = await import('@utils/bindings');
+    getNoteById({ event_id: id })
+      .then((res) => {
+        if (res) {
+          setEvent(res);
+        } else {
+          fetchEvent();
+        }
+      })
+      .catch(console.error);
+  }, [fetchEvent, id]);
+
   useEffect(() => {
-    getNoteByID(id).then((res) => {
-      if (res) {
-        setEvent(res);
-      } else {
-        fetchEvent();
-      }
-    });
+    checkNoteExist();
 
     return () => {
       unsubscribe.current;
     };
-  }, [fetchEvent, id]);
+  }, [checkNoteExist]);
 
   const content = useMemo(() => {
     let parsedContent = event ? event.content : null;
@@ -110,7 +132,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
       <div className="relative pb-5">
         <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
         <div className="relative z-10 flex flex-col">
-          <UserExtend pubkey={event.pubkey} time={event.created_at} />
+          <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
           <div className="-mt-5 pl-[52px]">
             <div className="flex flex-col gap-2">
               <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
@@ -120,10 +142,10 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
           </div>
           <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
             <NoteMetadata
-              eventID={event.id}
+              eventID={event.eventId}
               eventPubkey={event.pubkey}
               eventContent={event.content}
-              eventTime={event.created_at}
+              eventTime={event.createdAt || event.created_at}
             />
           </div>
         </div>

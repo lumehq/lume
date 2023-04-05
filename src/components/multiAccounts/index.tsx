@@ -1,41 +1,37 @@
 import { ActiveAccount } from '@components/multiAccounts/activeAccount';
 import { InactiveAccount } from '@components/multiAccounts/inactiveAccount';
 
-import { activeAccountAtom } from '@stores/account';
 import { APP_VERSION } from '@stores/constants';
-
-import { getAccounts } from '@utils/storage';
 
 import LumeSymbol from '@assets/icons/Lume';
 
 import { PlusIcon } from '@radix-ui/react-icons';
-import { useAtomValue } from 'jotai';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function MultiAccounts() {
-  const activeAccount: any = useAtomValue(activeAccountAtom);
   const [users, setUsers] = useState([]);
 
-  const renderAccount = useCallback(
-    (user: { id: string }) => {
-      if (user.id === activeAccount.id) {
-        return <ActiveAccount key={user.id} user={user} />;
-      } else {
-        return <InactiveAccount key={user.id} user={user} />;
-      }
-    },
-    [activeAccount.id]
-  );
+  const renderAccount = useCallback((user: { id: string }) => {
+    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+
+    if (user.id === activeAccount.id) {
+      return <ActiveAccount key={user.id} user={user} />;
+    } else {
+      return <InactiveAccount key={user.id} user={user} />;
+    }
+  }, []);
+
+  const fetchAccounts = useCallback(async () => {
+    const { getAccounts } = await import('@utils/bindings');
+    const accounts = await getAccounts();
+    // update state
+    setUsers(accounts);
+  }, []);
 
   useEffect(() => {
-    const fetchAccount = async () => {
-      const result: any = await getAccounts();
-      setUsers(result);
-    };
-
-    fetchAccount().catch(console.error);
-  }, []);
+    fetchAccounts().catch(console.error);
+  }, [fetchAccounts]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">

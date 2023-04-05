@@ -8,7 +8,7 @@ import { Placeholder } from '@components/note/placeholder';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { getLatestNotes, getNotes } from '@utils/storage';
+import { filteredData } from '@utils/transform';
 
 import { ArrowUpIcon } from '@radix-ui/react-icons';
 import { useAtom } from 'jotai';
@@ -48,23 +48,36 @@ export default function Page() {
   );
 
   const initialData = useCallback(async () => {
-    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
-    setData((data) => [...data, ...result]);
+    const { getNotes } = await import('@utils/bindings');
+    const result: any = await getNotes({
+      date: dateToUnix(now.current),
+      limit: limit.current,
+      offset: offset.current,
+    });
+    const filteredResult = filteredData(result);
+    setData((data) => [...data, ...filteredResult]);
   }, []);
 
   const loadMore = useCallback(async () => {
+    const { getNotes } = await import('@utils/bindings');
     offset.current += limit.current;
     // next query
-    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
-    setData((data) => [...data, ...result]);
+    const result: any = await getNotes({
+      date: dateToUnix(now.current),
+      limit: limit.current,
+      offset: offset.current,
+    });
+    const filteredResult = filteredData(result);
+    setData((data) => [...data, ...filteredResult]);
   }, []);
 
   const loadLatest = useCallback(async () => {
-    offset.current += limit.current;
+    const { getLatestNotes } = await import('@utils/bindings');
     // next query
-    const result: any = await getLatestNotes(dateToUnix(now.current));
+    const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
     // update data
-    setData((data) => [...result, ...data]);
+    const filteredResult = filteredData(result);
+    setData((data) => [...data, ...filteredResult]);
     // hide newer trigger
     setHasNewerNote(false);
     // scroll to top

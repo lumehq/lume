@@ -10,16 +10,15 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/router';
 import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
 export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
-  const [pool, relays]: any = useContext(RelayContext);
   const router = useRouter();
+  const [pool, relays]: any = useContext(RelayContext);
 
   const [profile, setProfile] = useState(null);
-  const user = useMemo(() => new Author(pool, relays, pubkey), [pubkey, pool, relays]);
 
   const openUserPage = (e) => {
     e.stopPropagation();
@@ -27,8 +26,9 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
   };
 
   useEffect(() => {
+    const user = new Author(pool, relays, pubkey);
     user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [user]);
+  }, [pool, relays, pubkey]);
 
   return (
     <div className="group flex items-start gap-2">

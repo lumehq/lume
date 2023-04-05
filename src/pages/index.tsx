@@ -14,8 +14,8 @@ export default function Page() {
   const setActiveAccountFollows = useSetAtom(activeAccountFollowsAtom);
 
   const fetchActiveAccount = useCallback(async () => {
-    const { getAccount } = await import('@utils/bindings');
-    return await getAccount();
+    const { getAccounts } = await import('@utils/bindings');
+    return await getAccounts();
   }, []);
 
   const fetchFollowsByAccount = useCallback(async (id) => {

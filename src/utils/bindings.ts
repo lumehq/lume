@@ -8,8 +8,8 @@ declare global {
 
 const invoke = window.__TAURI_INVOKE__;
 
-export function getAccount() {
-  return invoke<Account[]>('get_account');
+export function getAccounts() {
+  return invoke<Account[]>('get_accounts');
 }
 
 export function createAccount(data: CreateAccountData) {
@@ -28,15 +28,20 @@ export function createNote(data: CreateNoteData) {
   return invoke<Note>('create_note', { data });
 }
 
-export function getNotes() {
-  return invoke<Note[]>('get_notes');
+export function getNotes(data: GetNoteData) {
+  return invoke<Note[]>('get_notes', { data });
 }
 
-export function checkNote() {
-  return invoke<Note[]>('check_note');
+export function getLatestNotes(data: GetLatestNoteData) {
+  return invoke<Note[]>('get_latest_notes', { data });
+}
+
+export function getNoteById(data: GetNoteByIdData) {
+  return invoke<Note | null>('get_note_by_id', { data });
 }
 
 export type GetFollowData = { account_id: number };
+export type GetNoteByIdData = { event_id: string };
 export type Note = {
   id: number;
   eventId: string;
@@ -46,9 +51,10 @@ export type Note = {
   content: string;
   parent_id: string;
   parent_comment_id: string;
-  createdAt: string;
+  createdAt: number;
   accountId: number;
 };
+export type GetNoteData = { date: number; limit: number; offset: number };
 export type CreateFollowData = { pubkey: string; kind: number; metadata: string; account_id: number };
 export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
 export type CreateNoteData = {
@@ -59,7 +65,9 @@ export type CreateNoteData = {
   content: string;
   parent_id: string;
   parent_comment_id: string;
+  created_at: number;
   account_id: number;
 };
+export type GetLatestNoteData = { date: number };
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
 export type Follow = { id: number; pubkey: string; kind: number; metadata: string; accountId: number };

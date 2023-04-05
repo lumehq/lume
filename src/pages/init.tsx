@@ -2,14 +2,12 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { activeAccountAtom, activeAccountFollowsAtom, lastLoginAtom } from '@stores/account';
-
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { getParentID, pubkeyArray } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { useAtomValue } from 'jotai';
+import { invoke } from '@tauri-apps/api/tauri';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -27,23 +25,22 @@ export default function Page() {
   const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
-  const activeAccountFollows: any = useAtomValue(activeAccountFollowsAtom);
-  const lastLogin: any = useAtomValue(lastLoginAtom);
-
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
 
   const [eose, setEose] = useState(false);
 
   const fetchData = useCallback(
-    async (since) => {
+    async (since: Date) => {
       const { createNote } = await import('@utils/bindings');
+      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+      const follows = JSON.parse(localStorage.getItem('activeAccountFollows'));
+
       unsubscribe.current = pool.subscribe(
         [
           {
             kinds: [1],
-            authors: pubkeyArray(activeAccountFollows),
+            authors: pubkeyArray(follows),
             since: dateToUnix(since),
             until: dateToUnix(now.current),
           },
@@ -59,7 +56,8 @@ export default function Page() {
             tags: JSON.stringify(event.tags),
             content: event.content,
             parent_id: parentID,
-            parent_comment_id: 'aaa',
+            parent_comment_id: '',
+            created_at: event.created_at,
             account_id: activeAccount.id,
           }).catch(console.error);
         },
@@ -69,22 +67,20 @@ export default function Page() {
         }
       );
     },
-    [activeAccount.id, activeAccountFollows, pool, relays]
+    [pool, relays]
   );
 
   const isNoteExist = useCallback(async () => {
-    const { checkNote } = await import('@utils/bindings');
-    checkNote()
-      .then((res) => {
-        if (res.length === 5) {
-          const parseDate = new Date(lastLogin);
-          fetchData(parseDate);
-        } else {
-          fetchData(hoursAgo(24, now.current));
-        }
-      })
-      .catch(console.error);
-  }, [fetchData, lastLogin]);
+    invoke('count_total_notes').then((res: number) => {
+      if (res > 0) {
+        const lastLogin = JSON.parse(localStorage.getItem('lastLogin'));
+        const parseDate = new Date(lastLogin);
+        fetchData(parseDate);
+      } else {
+        fetchData(hoursAgo(24, now.current));
+      }
+    });
+  }, [fetchData]);
 
   useEffect(() => {
     if (eose === false) {

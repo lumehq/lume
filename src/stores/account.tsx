@@ -11,4 +11,4 @@ const createMyJsonStorage = () => {
 
 export const activeAccountAtom = atomWithStorage('activeAccount', {}, createMyJsonStorage());
 export const activeAccountFollowsAtom = atomWithStorage('activeAccountFollows', [], createMyJsonStorage());
-export const lastLoginAtom = atomWithStorage('lastLoginAtom', [], createMyJsonStorage());
+export const lastLoginAtom = atomWithStorage('lastLogin', [], createMyJsonStorage());
