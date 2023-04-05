@@ -1,23 +1,20 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
-import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { fetch } from '@tauri-apps/api/http';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/router';
-import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
-export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: string; time: any }) {
+export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) => {
   const router = useRouter();
-  const [pool, relays]: any = useContext(RelayContext);
-
   const [profile, setProfile] = useState(null);
 
   const openUserPage = (e) => {
@@ -25,10 +22,36 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
     router.push(`/users/${pubkey}`);
   };
 
+  const fetchMetadata = useCallback(async (pubkey: string) => {
+    const res = await fetch(`https://rbr.bio/${pubkey}/metadata.json`, {
+      method: 'GET',
+      timeout: 5,
+    });
+    return res.data;
+  }, []);
+
+  const getCachedMetadata = useCallback(async () => {
+    const { getFollowByPubkey } = await import('@utils/bindings');
+    getFollowByPubkey({ pubkey: pubkey })
+      .then((res) => {
+        if (res) {
+          const metadata = JSON.parse(res.metadata);
+          setProfile(metadata);
+        } else {
+          fetchMetadata(pubkey).then((res: any) => {
+            if (res.content) {
+              const metadata = JSON.parse(res.content);
+              setProfile(metadata);
+            }
+          });
+        }
+      })
+      .catch(console.error);
+  }, [fetchMetadata, pubkey]);
+
   useEffect(() => {
-    const user = new Author(pool, relays, pubkey);
-    user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [pool, relays, pubkey]);
+    getCachedMetadata().catch(console.error);
+  }, [getCachedMetadata]);
 
   return (
     <div className="group flex items-start gap-2">
@@ -61,4 +84,4 @@ export const UserExtend = memo(function UserExtend({ pubkey, time }: { pubkey: s
       </div>
     </div>
   );
-});
+};

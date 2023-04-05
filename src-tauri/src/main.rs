@@ -38,6 +38,11 @@ struct GetFollowData {
 }
 
 #[derive(Deserialize, Type)]
+struct GetFollowPubkeyData {
+  pubkey: String,
+}
+
+#[derive(Deserialize, Type)]
 struct CreateFollowData {
   pubkey: String,
   kind: i32,
@@ -100,6 +105,19 @@ async fn create_account(db: DbState<'_>, data: CreateAccountData) -> Result<acco
 async fn get_follows(db: DbState<'_>, data: GetFollowData) -> Result<Vec<follow::Data>, ()> {
   db.follow()
     .find_many(vec![follow::account_id::equals(data.account_id)])
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_follow_by_pubkey(
+  db: DbState<'_>,
+  data: GetFollowPubkeyData,
+) -> Result<Option<follow::Data>, ()> {
+  db.follow()
+    .find_first(vec![follow::pubkey::equals(data.pubkey)])
     .exec()
     .await
     .map_err(|_| ())
@@ -198,6 +216,7 @@ async fn main() {
       get_accounts,
       create_account,
       get_follows,
+      get_follow_by_pubkey,
       create_follow,
       create_note,
       get_notes,
@@ -238,6 +257,7 @@ async fn main() {
       get_accounts,
       create_account,
       get_follows,
+      get_follow_by_pubkey,
       create_follow,
       create_note,
       get_notes,

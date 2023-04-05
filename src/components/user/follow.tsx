@@ -1,22 +1,29 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
-import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { truncate } from '@utils/truncate';
 
-import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-export const UserFollow = memo(function UserFollow({ pubkey }: { pubkey: string }) {
-  const [pool, relays]: any = useContext(RelayContext);
-
+export const UserFollow = ({ pubkey }: { pubkey: string }) => {
   const [profile, setProfile] = useState(null);
-  const user = useMemo(() => new Author(pool, relays, pubkey), [pubkey, pool, relays]);
+
+  const getCachedMetadata = useCallback(async () => {
+    const { getFollowByPubkey } = await import('@utils/bindings');
+    getFollowByPubkey({ pubkey: pubkey })
+      .then((res) => {
+        if (res) {
+          const metadata = JSON.parse(res.metadata);
+          setProfile(metadata);
+        }
+      })
+      .catch(console.error);
+  }, [pubkey]);
 
   useEffect(() => {
-    user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [user]);
+    getCachedMetadata().catch(console.error);
+  }, [getCachedMetadata]);
 
   return (
     <div className="flex items-center gap-2">
@@ -36,4 +43,4 @@ export const UserFollow = memo(function UserFollow({ pubkey }: { pubkey: string 
       </div>
     </div>
   );
-});
+};

@@ -42,7 +42,7 @@ export default function Page() {
 
   const computeItemKey = useCallback(
     (index: string | number) => {
-      return data[index].id;
+      return data[index].eventId;
     },
     [data]
   );

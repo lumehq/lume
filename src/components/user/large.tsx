@@ -1,5 +1,4 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
-import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
@@ -8,19 +7,28 @@ import { truncate } from '@utils/truncate';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
-export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: string; time: any }) {
-  const [pool, relays]: any = useContext(RelayContext);
+export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) => {
   const [profile, setProfile] = useState(null);
 
+  const getCachedMetadata = useCallback(async () => {
+    const { getFollowByPubkey } = await import('@utils/bindings');
+    getFollowByPubkey({ pubkey: pubkey })
+      .then((res) => {
+        if (res) {
+          const metadata = JSON.parse(res.metadata);
+          setProfile(metadata);
+        }
+      })
+      .catch(console.error);
+  }, [pubkey]);
+
   useEffect(() => {
-    const user = new Author(pool, relays, pubkey);
-    user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [pool, relays, pubkey]);
+    getCachedMetadata().catch(console.error);
+  }, [getCachedMetadata]);
 
   return (
     <div className="flex items-center gap-2">
@@ -51,4 +59,4 @@ export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: str
       </div>
     </div>
   );
-});
+};

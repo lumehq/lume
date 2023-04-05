@@ -45,7 +45,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
           parent_id: parentID,
           parent_comment_id: '',
           created_at: event.created_at,
-          account_id: activeAccount.pubkey,
+          account_id: activeAccount.id,
         }).catch(console.error);
       },
       undefined,
