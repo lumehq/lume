@@ -2,63 +2,21 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
+import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { fetch } from '@tauri-apps/api/http';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
 export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) => {
-  const router = useRouter();
-  const [profile, setProfile] = useState(null);
-
-  const openUserPage = (e) => {
-    e.stopPropagation();
-    router.push(`/users/${pubkey}`);
-  };
-
-  const fetchMetadata = useCallback(async (pubkey: string) => {
-    const res = await fetch(`https://rbr.bio/${pubkey}/metadata.json`, {
-      method: 'GET',
-      timeout: 5,
-    });
-    return res.data;
-  }, []);
-
-  const getCachedMetadata = useCallback(async () => {
-    const { getPlebByPubkey } = await import('@utils/bindings');
-    getPlebByPubkey({ pubkey: pubkey })
-      .then((res) => {
-        if (res) {
-          const metadata = JSON.parse(res.metadata);
-          setProfile(metadata);
-        } else {
-          fetchMetadata(pubkey).then((res: any) => {
-            if (res.content) {
-              const metadata = JSON.parse(res.content);
-              setProfile(metadata);
-            }
-          });
-        }
-      })
-      .catch(console.error);
-  }, [fetchMetadata, pubkey]);
-
-  useEffect(() => {
-    getCachedMetadata().catch(console.error);
-  }, [getCachedMetadata]);
+  const profile = useMetadata(pubkey);
 
   return (
     <div className="group flex items-start gap-2">
-      <div
-        onClick={(e) => openUserPage(e)}
-        className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1"
-      >
+      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1">
         <ImageWithFallback
           src={profile?.picture || DEFAULT_AVATAR}
           alt={pubkey}
@@ -69,7 +27,7 @@ export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) =
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex w-full justify-between">
           <div className="flex items-baseline gap-2 text-sm">
-            <span onClick={(e) => openUserPage(e)} className="font-bold leading-tight group-hover:underline">
+            <span className="font-bold leading-tight group-hover:underline">
               {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
             </span>
             <span className="leading-tight text-zinc-500">·</span>

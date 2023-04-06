@@ -50,9 +50,13 @@ export default function Page() {
       if (profile?.id !== null) {
         for (const tag of tags) {
           const metadata: any = await fetchMetadata(tag[1], pool, relays);
-          createPleb({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: profile.id }).catch(
-            console.error
-          );
+          createPleb({
+            pleb_id: tag[1] + '-lume' + profile.id.toString(),
+            pubkey: tag[1],
+            kind: 0,
+            metadata: metadata.content,
+            account_id: profile.id,
+          }).catch(console.error);
         }
       }
     },

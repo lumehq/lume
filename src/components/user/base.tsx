@@ -1,22 +1,14 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
-import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
+import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
-import { Author } from 'nostr-relaypool';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
-  const [pool, relays]: any = useContext(RelayContext);
-
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    const user = new Author(pool, relays, pubkey);
-    user.metaData((res) => setProfile(JSON.parse(res.content)), 0);
-  }, [pool, relays, pubkey]);
+  const profile = useMetadata(pubkey);
 
   return (
     <div className="flex items-center gap-2">

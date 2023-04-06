@@ -19,7 +19,7 @@ mod db;
 use db::*;
 use serde::Deserialize;
 use specta::{collect_types, Type};
-use std::sync::Arc;
+use std::{sync::Arc, vec};
 use tauri::State;
 use tauri_specta::ts;
 
@@ -44,6 +44,7 @@ struct GetPlebPubkeyData {
 
 #[derive(Deserialize, Type)]
 struct CreatePlebData {
+  pleb_id: String,
   pubkey: String,
   kind: i32,
   metadata: String,
@@ -126,13 +127,21 @@ async fn get_pleb_by_pubkey(
 #[tauri::command]
 #[specta::specta]
 async fn create_pleb(db: DbState<'_>, data: CreatePlebData) -> Result<pleb::Data, ()> {
+  let pleb_id = data.pleb_id.clone();
+  let metadata = data.metadata.clone();
+
   db.pleb()
-    .create(
-      data.pubkey,
-      data.kind,
-      data.metadata,
-      account::id::equals(data.account_id),
-      vec![],
+    .upsert(
+      pleb::pleb_id::equals(pleb_id),
+      pleb::create(
+        data.pleb_id,
+        data.pubkey,
+        data.kind,
+        data.metadata,
+        account::id::equals(data.account_id),
+        vec![],
+      ),
+      vec![pleb::metadata::set(metadata)],
     )
     .exec()
     .await

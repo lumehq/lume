@@ -2,33 +2,17 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
+import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
 export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) => {
-  const [profile, setProfile] = useState(null);
-
-  const getCachedMetadata = useCallback(async () => {
-    const { getPlebByPubkey } = await import('@utils/bindings');
-    getPlebByPubkey({ pubkey: pubkey })
-      .then((res) => {
-        if (res) {
-          const metadata = JSON.parse(res.metadata);
-          setProfile(metadata);
-        }
-      })
-      .catch(console.error);
-  }, [pubkey]);
-
-  useEffect(() => {
-    getCachedMetadata().catch(console.error);
-  }, [getCachedMetadata]);
+  const profile = useMetadata(pubkey);
 
   return (
     <div className="flex items-center gap-2">

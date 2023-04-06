@@ -71,6 +71,11 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
     return;
   }, [event.content, event.eventId, event.parent_id]);
 
+  const openUserPage = (e) => {
+    e.stopPropagation();
+    router.push(`/users/${event.pubkey}`);
+  };
+
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
@@ -87,7 +92,9 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
     >
       <>{getParent}</>
       <div className="relative z-10 flex flex-col">
-        <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
+        <div onClick={(e) => openUserPage(e)}>
+          <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
+        </div>
         <div className="-mt-5 pl-[52px]">
           <div className="flex flex-col gap-2">
             <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">

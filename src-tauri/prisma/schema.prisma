@@ -27,14 +27,13 @@ model Account {
 
 model Pleb {
   id       Int    @id @default(autoincrement())
-  pubkey   String @unique
+  plebId   String @unique
+  pubkey   String
   kind     Int
   metadata String
 
   Account   Account @relation(fields: [accountId], references: [id])
   accountId Int
-
-  @@index([pubkey])
 }
 
 model Note {

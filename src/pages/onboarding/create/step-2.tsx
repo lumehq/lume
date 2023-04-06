@@ -85,9 +85,13 @@ export default function Page() {
 
     for (const follow of follows) {
       const metadata: any = await fetchMetadata(follow, pool, relays);
-      createPleb({ pubkey: follow, kind: 0, metadata: metadata.content, account_id: parseInt(id) }).catch(
-        console.error
-      );
+      createPleb({
+        pleb_id: follow + '-lume' + id,
+        pubkey: follow,
+        kind: 0,
+        metadata: metadata.content,
+        account_id: parseInt(id),
+      }).catch(console.error);
     }
 
     // build event

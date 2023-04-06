@@ -54,8 +54,7 @@ export default function Page() {
       limit: limit.current,
       offset: offset.current,
     });
-    const filteredResult = filteredData(result);
-    setData((data) => [...data, ...filteredResult]);
+    setData((data) => [...data, ...result]);
   }, []);
 
   const loadMore = useCallback(async () => {
@@ -67,8 +66,7 @@ export default function Page() {
       limit: limit.current,
       offset: offset.current,
     });
-    const filteredResult = filteredData(result);
-    setData((data) => [...data, ...filteredResult]);
+    setData((data) => [...data, ...result]);
   }, []);
 
   const loadLatest = useCallback(async () => {
@@ -76,8 +74,7 @@ export default function Page() {
     // next query
     const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
     // update data
-    const filteredResult = filteredData(result);
-    setData((data) => [...data, ...filteredResult]);
+    setData((data) => [...data, ...result]);
     // hide newer trigger
     setHasNewerNote(false);
     // scroll to top
@@ -103,7 +100,7 @@ export default function Page() {
       )}
       <Virtuoso
         ref={virtuosoRef}
-        data={data}
+        data={filteredData(data)}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         components={COMPONENTS}

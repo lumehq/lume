@@ -33,9 +33,13 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
 
       for (const tag of tags) {
         const metadata: any = await fetchMetadata(tag[1], pool, relays);
-        createPleb({ pubkey: tag[1], kind: 0, metadata: metadata.content, account_id: activeAccount.id }).catch(
-          console.error
-        );
+        createPleb({
+          pleb_id: tag[1] + '-lume' + activeAccount.id.toString(),
+          pubkey: tag[1],
+          kind: 0,
+          metadata: metadata.content,
+          account_id: activeAccount.id,
+        }).catch(console.error);
       }
     },
     [pool, relays]

@@ -44,11 +44,20 @@ export function getNoteById(data: GetNoteByIdData) {
   return invoke<Note | null>('get_note_by_id', { data });
 }
 
-export type CreatePlebData = { pubkey: string; kind: number; metadata: string; account_id: number };
-export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
-export type GetLatestNoteData = { date: number };
-export type Pleb = { id: number; pubkey: string; kind: number; metadata: string; accountId: number };
-export type GetPlebPubkeyData = { pubkey: string };
+export type CreateNoteData = {
+  event_id: string;
+  pubkey: string;
+  kind: number;
+  tags: string;
+  content: string;
+  parent_id: string;
+  parent_comment_id: string;
+  created_at: number;
+  account_id: number;
+};
+export type CreatePlebData = { pleb_id: string; pubkey: string; kind: number; metadata: string; account_id: number };
+export type GetNoteByIdData = { event_id: string };
+export type Pleb = { id: number; plebId: string; pubkey: string; kind: number; metadata: string; accountId: number };
 export type Note = {
   id: number;
   eventId: string;
@@ -61,18 +70,9 @@ export type Note = {
   createdAt: number;
   accountId: number;
 };
+export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
+export type GetPlebPubkeyData = { pubkey: string };
 export type GetPlebData = { account_id: number };
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
-export type CreateNoteData = {
-  event_id: string;
-  pubkey: string;
-  kind: number;
-  tags: string;
-  content: string;
-  parent_id: string;
-  parent_comment_id: string;
-  created_at: number;
-  account_id: number;
-};
-export type GetNoteByIdData = { event_id: string };
+export type GetLatestNoteData = { date: number };
 export type GetNoteData = { date: number; limit: number; offset: number };
