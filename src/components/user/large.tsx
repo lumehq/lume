@@ -16,7 +16,7 @@ export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) =>
 
   return (
     <div className="flex items-center gap-2">
-      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
+      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
         <ImageWithFallback
           src={profile?.picture || DEFAULT_AVATAR}
           alt={pubkey}

@@ -16,12 +16,12 @@ export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) =
 
   return (
     <div className="group flex items-start gap-2">
-      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900 ring-fuchsia-500 ring-offset-1 ring-offset-zinc-900 group-hover:ring-1">
+      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
         <ImageWithFallback
           src={profile?.picture || DEFAULT_AVATAR}
           alt={pubkey}
           fill={true}
-          className="rounded-md border border-white/10 object-cover"
+          className="rounded-md object-cover"
         />
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
