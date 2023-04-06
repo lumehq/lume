@@ -8,7 +8,6 @@ import { Placeholder } from '@components/note/placeholder';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { filteredData } from '@utils/transform';
 
 import { ArrowUpIcon } from '@radix-ui/react-icons';
 import { useAtom } from 'jotai';
@@ -100,7 +99,7 @@ export default function Page() {
       )}
       <Virtuoso
         ref={virtuosoRef}
-        data={filteredData(data)}
+        data={data}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         components={COMPONENTS}

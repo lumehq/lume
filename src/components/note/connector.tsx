@@ -49,9 +49,12 @@ export default function NoteConnector() {
           parent_comment_id: '',
           created_at: event.created_at,
           account_id: activeAccount.id,
-        }).catch(console.error);
-        // notify user reload to get newer note
-        setHasNewerNote(true);
+        })
+          .then(() =>
+            // notify user reload to get newer note
+            setHasNewerNote(true)
+          )
+          .catch(console.error);
       }
     );
   }, [pool, relays, setHasNewerNote]);
