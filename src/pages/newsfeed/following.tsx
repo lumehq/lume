@@ -8,6 +8,7 @@ import { Placeholder } from '@components/note/placeholder';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
+import { filterDuplicateParentID } from '@utils/transform';
 
 import { ArrowUpIcon } from '@radix-ui/react-icons';
 import { useAtom } from 'jotai';
@@ -73,7 +74,11 @@ export default function Page() {
     // next query
     const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
     // update data
-    setData((data) => [...data, ...result]);
+    if (result.length > 0) {
+      setData((data) => [...data, ...result]);
+    } else {
+      setData((data) => [...data, result]);
+    }
     // hide newer trigger
     setHasNewerNote(false);
     // scroll to top
@@ -99,7 +104,7 @@ export default function Page() {
       )}
       <Virtuoso
         ref={virtuosoRef}
-        data={data}
+        data={filterDuplicateParentID(data)}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         components={COMPONENTS}

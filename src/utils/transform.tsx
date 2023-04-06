@@ -46,15 +46,10 @@ export const getParentID = (arr, fallback) => {
   return parentID;
 };
 
-export const filteredData = (obj) => {
-  const filteredArr = obj.reduce((item, current) => {
-    const x = item.find((item) => item.parent_id === current.parent_id);
-    if (!x) {
-      return item.concat([current]);
-    } else {
-      return item;
-    }
-  }, []);
+export const filterDuplicateParentID = (arr) => {
+  const filteredArray = arr.filter(
+    (item, index) => index === arr.findIndex((other) => item.parent_id === other.parent_id)
+  );
 
-  return filteredArr;
+  return filteredArray;
 };
