@@ -93,6 +93,12 @@ Install dependencies
 pnpm install
 ```
 
+Generate prisma database
+
+```
+pnpm init-db
+```
+
 Run development window
 
 ```
