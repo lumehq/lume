@@ -37,6 +37,8 @@ export const MessageList = ({ data }: { data: any }) => {
         initialTopMostItemIndex={data.length - 1}
         alignToBottom={true}
         followOutput={true}
+        overscan={50}
+        increaseViewportBy={{ top: 200, bottom: 200 }}
         className="scrollbar-hide h-full w-full overflow-y-auto"
       />
     </div>

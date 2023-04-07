@@ -1,4 +1,5 @@
 import { ChatListItem } from '@components/chats/chatListItem';
+import { ChatModal } from '@components/chats/chatModal';
 import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -19,7 +20,7 @@ export default function ChatList() {
   const [list, setList] = useState(new Set());
 
   const openSelfChat = () => {
-    router.replace({
+    router.push({
       pathname: '/chats/[pubkey]',
       query: { pubkey: activeAccount.pubkey },
     });
@@ -70,6 +71,7 @@ export default function ChatList() {
       {[...list].map((item: string, index) => (
         <ChatListItem key={index} pubkey={item} />
       ))}
+      <ChatModal />
     </div>
   );
 }

@@ -12,7 +12,7 @@ export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
   const profile = useMetadata(pubkey);
 
   const openChat = () => {
-    router.replace({
+    router.push({
       pathname: '/chats/[pubkey]',
       query: { pubkey: pubkey },
     });
@@ -23,7 +23,7 @@ export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
       onClick={() => openChat()}
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >
-      <div className="relative h-5 w-5 shrink overflow-hidden rounded bg-white">
+      <div className="relative h-5 w-5 shrink overflow-hidden rounded">
         <ImageWithFallback
           src={profile?.picture || DEFAULT_AVATAR}
           alt={pubkey}
