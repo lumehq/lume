@@ -2,32 +2,13 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { createCacheProfile } from '@utils/storage';
+import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
-import { fetch } from '@tauri-apps/api/http';
-import destr from 'destr';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
-  const [profile, setProfile] = useState(null);
-
-  const fetchProfile = useCallback(async (id: string) => {
-    const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
-      method: 'GET',
-      timeout: 30,
-    });
-    return res.data;
-  }, []);
-
-  useEffect(() => {
-    fetchProfile(pubkey)
-      .then((res: any) => {
-        setProfile(destr(res.content));
-        createCacheProfile(res.pubkey, res.content);
-      })
-      .catch(console.error);
-  }, [fetchProfile, pubkey]);
+  const profile = useMetadata(pubkey);
 
   return (
     <div className="flex items-center gap-2">

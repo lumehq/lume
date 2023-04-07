@@ -3,7 +3,6 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
 import { activeAccountAtom } from '@stores/account';
-import { relaysAtom } from '@stores/relays';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -33,11 +32,10 @@ export const NoteComment = memo(function NoteComment({
   const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
-
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
+  const activeAccount: any = useAtomValue(activeAccountAtom);
   const profile = destr(activeAccount.metadata);
 
   const openThread = () => {
@@ -49,7 +47,7 @@ export const NoteComment = memo(function NoteComment({
       content: value,
       created_at: dateToUnix(),
       kind: 1,
-      pubkey: activeAccount.id,
+      pubkey: activeAccount.pubkey,
       tags: [['e', eventID]],
     };
     event.id = getEventHash(event);

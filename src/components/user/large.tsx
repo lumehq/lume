@@ -2,47 +2,21 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { createCacheProfile, getCacheProfile } from '@utils/storage';
+import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { fetch } from '@tauri-apps/api/http';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import destr from 'destr';
-import { memo, useCallback, useEffect, useState } from 'react';
 
 dayjs.extend(relativeTime);
 
-export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: string; time: any }) {
-  const [profile, setProfile] = useState(null);
-
-  const fetchProfile = useCallback(async (id: string) => {
-    const res = await fetch(`https://rbr.bio/${id}/metadata.json`, {
-      method: 'GET',
-      timeout: 30,
-    });
-    return res.data;
-  }, []);
-
-  useEffect(() => {
-    getCacheProfile(pubkey).then((res) => {
-      if (res) {
-        setProfile(destr(res.metadata));
-      } else {
-        fetchProfile(pubkey)
-          .then((res: any) => {
-            setProfile(destr(res.content));
-            createCacheProfile(pubkey, res.content);
-          })
-          .catch(console.error);
-      }
-    });
-  }, [fetchProfile, pubkey]);
+export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) => {
+  const profile = useMetadata(pubkey);
 
   return (
     <div className="flex items-center gap-2">
-      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
+      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
         <ImageWithFallback
           src={profile?.picture || DEFAULT_AVATAR}
           alt={pubkey}
@@ -69,4 +43,4 @@ export const UserLarge = memo(function UserLarge({ pubkey, time }: { pubkey: str
       </div>
     </div>
   );
-});
+};

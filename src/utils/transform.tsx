@@ -9,6 +9,15 @@ export const tagsToArray = (arr) => {
   return newarr;
 };
 
+export const followsTag = (arr) => {
+  const newarr = [];
+  // push item to tags
+  arr.forEach((item) => {
+    newarr.push(['p', item]);
+  });
+  return newarr;
+};
+
 export const pubkeyArray = (arr) => {
   const newarr = [];
   // push item to newarr
@@ -35,4 +44,12 @@ export const getParentID = (arr, fallback) => {
   }
 
   return parentID;
+};
+
+export const filterDuplicateParentID = (arr) => {
+  const filteredArray = arr.filter(
+    (item, index) => index === arr.findIndex((other) => item.parent_id === other.parent_id)
+  );
+
+  return filteredArray;
 };

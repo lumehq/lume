@@ -1,50 +1,65 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { dateToUnix } from '@utils/getDate';
-import { createFollows } from '@utils/storage';
-import { tagsToArray } from '@utils/transform';
+import { DEFAULT_AVATAR } from '@stores/constants';
+
+import { fetchMetadata } from '@utils/metadata';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
 import { writeText } from '@tauri-apps/api/clipboard';
-import destr from 'destr';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
-import { memo, useContext, useEffect, useRef } from 'react';
+import { memo, useCallback, useContext, useEffect } from 'react';
 
 export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
   const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
-  const userData = destr(user.metadata);
-
-  const now = useRef(new Date());
+  const userData = JSON.parse(user.metadata);
 
   const openProfilePage = () => {
-    router.push(`/users/${user.id}`);
+    router.push(`/users/${user.pubkey}`);
   };
 
   const copyPublicKey = async () => {
-    await writeText(nip19.npubEncode(user.id));
+    await writeText(nip19.npubEncode(user.pubkey));
   };
+
+  const insertFollowsToStorage = useCallback(
+    async (tags) => {
+      const { createPleb } = await import('@utils/bindings');
+      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+
+      for (const tag of tags) {
+        const metadata: any = await fetchMetadata(tag[1], pool, relays);
+        createPleb({
+          pleb_id: tag[1] + '-lume' + activeAccount.id.toString(),
+          pubkey: tag[1],
+          kind: 0,
+          metadata: metadata.content,
+          account_id: activeAccount.id,
+        }).catch(console.error);
+      }
+    },
+    [pool, relays]
+  );
 
   useEffect(() => {
     const unsubscribe = pool.subscribe(
       [
         {
           kinds: [3],
-          authors: [user.id],
-          since: dateToUnix(now.current),
+          authors: [user.pubkey],
         },
       ],
       relays,
       (event: any) => {
         if (event.tags.length > 0) {
-          createFollows(tagsToArray(event.tags), user.id, 0);
+          insertFollowsToStorage(event.tags);
         }
       },
-      undefined,
+      20000,
       undefined,
       {
         unsubscribeOnEose: true,
@@ -54,19 +69,17 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
     return () => {
       unsubscribe;
     };
-  }, [pool, relays, user.id]);
+  }, [insertFollowsToStorage, pool, relays, user.pubkey]);
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="relative h-11 w-11 rounded-md">
+        <button className="relative h-11 w-11 rounded-lg">
           <Image
-            src={userData.picture}
+            src={userData.picture || DEFAULT_AVATAR}
             alt="user's avatar"
             fill={true}
-            className="rounded-md object-cover"
-            placeholder="blur"
-            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII="
+            className="rounded-lg object-cover"
             priority
           />
         </button>

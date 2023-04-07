@@ -2,13 +2,20 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { createAccount } from '@utils/storage';
-
 import { ArrowLeftIcon, EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useContext, useMemo, useState } from 'react';
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const config: Config = {
@@ -34,26 +41,14 @@ export default function Page() {
   };
 
   // auto-generated profile metadata
-  const metadata = useMemo(
+  const metadata: any = useMemo(
     () => ({
       display_name: name,
       name: name,
       username: name.toLowerCase(),
-      picture: 'https://void.cat/d/KmypFh2fBdYCEvyJrPiN89',
+      picture: 'https://void.cat/d/KmypFh2fBdYCEvyJrPiN89.webp',
     }),
     [name]
-  );
-
-  // build profile
-  const data = useMemo(
-    () => ({
-      pubkey: pubKey,
-      privkey: privKey,
-      npub: npub,
-      nsec: nsec,
-      metadata: metadata,
-    }),
-    [metadata, npub, nsec, privKey, pubKey]
   );
 
   // toggle privatek key
@@ -66,7 +61,8 @@ export default function Page() {
   };
 
   // create account and broadcast to all relays
-  const submit = () => {
+  const submit = useCallback(async () => {
+    const { createAccount } = await import('@utils/bindings');
     setLoading(true);
 
     // build event
@@ -81,16 +77,16 @@ export default function Page() {
     event.sig = signEvent(event, privKey);
 
     // insert to database then broadcast
-    createAccount(data)
-      .then(() => {
+    createAccount({ pubkey: pubKey, privkey: privKey, metadata: metadata })
+      .then((res) => {
         pool.publish(event, relays);
         router.push({
           pathname: '/onboarding/create/step-2',
-          query: { id: pubKey, privkey: privKey },
+          query: { id: res.id, pubkey: res.pubkey, privkey: res.privkey },
         });
       })
       .catch(console.error);
-  };
+  }, [pool, pubKey, privKey, metadata, relays, router]);
 
   return (
     <div className="grid h-full w-full grid-rows-5">

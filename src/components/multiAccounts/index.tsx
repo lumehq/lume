@@ -1,0 +1,61 @@
+import { ActiveAccount } from '@components/multiAccounts/activeAccount';
+import { InactiveAccount } from '@components/multiAccounts/inactiveAccount';
+
+import { APP_VERSION } from '@stores/constants';
+
+import LumeSymbol from '@assets/icons/Lume';
+
+import { PlusIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
+
+export default function MultiAccounts() {
+  const [users, setUsers] = useState([]);
+
+  const renderAccount = useCallback((user: { pubkey: string }) => {
+    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+
+    if (user.pubkey === activeAccount.pubkey) {
+      return <ActiveAccount key={user.pubkey} user={user} />;
+    } else {
+      return <InactiveAccount key={user.pubkey} user={user} />;
+    }
+  }, []);
+
+  const fetchAccounts = useCallback(async () => {
+    const { getAccounts } = await import('@utils/bindings');
+    const accounts = await getAccounts();
+    // update state
+    setUsers(accounts);
+  }, []);
+
+  useEffect(() => {
+    fetchAccounts().catch(console.error);
+  }, [fetchAccounts]);
+
+  return (
+    <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">
+      <div className="flex flex-col gap-4">
+        <Link
+          href="/explore"
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
+        >
+          <LumeSymbol className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
+        </Link>
+        <div>{users.map((user) => renderAccount(user))}</div>
+        <Link
+          href="/onboarding"
+          className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"
+        >
+          <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-200" />
+        </Link>
+      </div>
+      <div className="flex flex-col gap-0.5 text-center">
+        <span className="animate-moveBg from-fuchsia-300 via-orange-100 to-amber-300 text-sm font-black uppercase leading-tight text-zinc-600 hover:bg-gradient-to-r hover:bg-clip-text hover:text-transparent">
+          Lume
+        </span>
+        <span className="text-xs font-medium text-zinc-700">v{APP_VERSION}</span>
+      </div>
+    </div>
+  );
+}

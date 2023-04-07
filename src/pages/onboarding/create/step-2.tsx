@@ -3,7 +3,8 @@ import BaseLayout from '@layouts/base';
 import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
-import { createFollows } from '@utils/storage';
+import { fetchMetadata } from '@utils/metadata';
+import { followsTag } from '@utils/transform';
 
 import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { createClient } from '@supabase/supabase-js';
@@ -15,6 +16,7 @@ import {
   ReactElement,
   ReactFragment,
   ReactPortal,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -64,7 +66,7 @@ export default function Page() {
   const [pool, relays]: any = useContext(RelayContext);
 
   const router = useRouter();
-  const { id, privkey }: any = router.query || '';
+  const { id, pubkey, privkey }: any = router.query || '';
 
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
@@ -76,41 +78,36 @@ export default function Page() {
     setFollows(arr);
   };
 
-  // build event tags
-  const tags = () => {
-    const arr = [];
-    // push item to tags
-    follows.forEach((item) => {
-      arr.push(['p', item]);
-    });
-    return arr;
-  };
-
   // save follows to database then broadcast
-  const submit = () => {
+  const submit = useCallback(async () => {
+    const { createPleb } = await import('@utils/bindings');
     setLoading(true);
+
+    for (const follow of follows) {
+      const metadata: any = await fetchMetadata(follow, pool, relays);
+      createPleb({
+        pleb_id: follow + '-lume' + id,
+        pubkey: follow,
+        kind: 0,
+        metadata: metadata.content,
+        account_id: parseInt(id),
+      }).catch(console.error);
+    }
 
     // build event
     const event: any = {
       content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 3,
-      pubkey: id,
-      tags: tags(),
+      pubkey: pubkey,
+      tags: followsTag(follows),
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
 
-    createFollows(follows, id, 0)
-      .then((res) => {
-        if (res === 'ok') {
-          // publish to relays
-          pool.publish(event, relays);
-          router.replace('/');
-        }
-      })
-      .catch(console.error);
-  };
+    pool.publish(event, relays);
+    router.replace('/');
+  }, [follows, id, pool, pubkey, privkey, relays, router]);
 
   useEffect(() => {
     const fetchData = async () => {

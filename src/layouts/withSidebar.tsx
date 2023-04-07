@@ -1,6 +1,6 @@
 import AppHeader from '@components/appHeader';
-import AccountColumn from '@components/columns/account';
-import NavigatorColumn from '@components/columns/navigator';
+import MultiAccounts from '@components/multiAccounts';
+import Navigation from '@components/navigation';
 
 export default function WithSidebarLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,11 +13,11 @@ export default function WithSidebarLayout({ children }: { children: React.ReactN
       </div>
       <div className="relative flex min-h-0 w-full flex-1">
         <div className="relative w-[68px] shrink-0 border-r border-zinc-900">
-          <AccountColumn />
+          <MultiAccounts />
         </div>
         <div className="grid w-full grid-cols-4 xl:grid-cols-5">
           <div className="scrollbar-hide col-span-1 overflow-y-auto overflow-x-hidden border-r border-zinc-900">
-            <NavigatorColumn />
+            <Navigation />
           </div>
           <div className="col-span-3 m-3 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20 xl:col-span-2 xl:mr-1.5">
             <div className="h-full w-full rounded-lg">{children}</div>

@@ -2,16 +2,12 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { activeAccountAtom } from '@stores/account';
-import { relaysAtom } from '@stores/relays';
-
 import { dateToUnix, hoursAgo } from '@utils/getDate';
-import { countTotalNotes, createCacheNote, getAllFollowsByID, getLastLoginTime } from '@utils/storage';
-import { pubkeyArray } from '@utils/transform';
+import { getParentID, pubkeyArray } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { useAtomValue } from 'jotai';
+import { invoke } from '@tauri-apps/api/tauri';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -29,65 +25,74 @@ export default function Page() {
   const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
-  const [done, setDone] = useState(false);
-
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
-  const timer = useRef(null);
+
+  const [eose, setEose] = useState(false);
 
   const fetchData = useCallback(
-    (since) => {
-      getAllFollowsByID(activeAccount.id).then((follows) => {
-        unsubscribe.current = pool.subscribe(
-          [
-            {
-              kinds: [1],
-              authors: pubkeyArray(follows),
-              since: dateToUnix(since),
-              until: dateToUnix(now.current),
-            },
-          ],
-          relays,
-          (event) => {
-            // insert event to local database
-            createCacheNote(event);
-          },
-          undefined,
-          () => {
-            // wait for 8 seconds
-            timer.current = setTimeout(() => setDone(true), 8000);
-          },
+    async (since: Date) => {
+      const { createNote } = await import('@utils/bindings');
+      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+      const follows = JSON.parse(localStorage.getItem('activeAccountFollows'));
+
+      unsubscribe.current = pool.subscribe(
+        [
           {
-            unsubscribeOnEose: true,
-          }
-        );
-      });
+            kinds: [1],
+            authors: pubkeyArray(follows),
+            since: dateToUnix(since),
+            until: dateToUnix(now.current),
+          },
+        ],
+        relays,
+        (event) => {
+          const parentID = getParentID(event.tags, event.id);
+          // insert event to local database
+          createNote({
+            event_id: event.id,
+            pubkey: event.pubkey,
+            kind: event.kind,
+            tags: JSON.stringify(event.tags),
+            content: event.content,
+            parent_id: parentID,
+            parent_comment_id: '',
+            created_at: event.created_at,
+            account_id: activeAccount.id,
+          }).catch(console.error);
+        },
+        undefined,
+        () => {
+          setEose(true);
+        }
+      );
     },
-    [activeAccount.id, pool, relays]
+    [pool, relays]
   );
 
+  const isNoteExist = useCallback(async () => {
+    invoke('count_total_notes').then((res: number) => {
+      if (res > 0) {
+        const lastLogin = JSON.parse(localStorage.getItem('lastLogin'));
+        const parseDate = new Date(lastLogin);
+        fetchData(parseDate);
+      } else {
+        fetchData(hoursAgo(24, now.current));
+      }
+    });
+  }, [fetchData]);
+
   useEffect(() => {
-    if (!done) {
-      countTotalNotes().then((count) => {
-        if (count.total === 0) {
-          fetchData(hoursAgo(24, now.current));
-        } else {
-          getLastLoginTime().then((time) => {
-            const parseDate = new Date(time.setting_value);
-            fetchData(parseDate);
-          });
-        }
-      });
+    if (eose === false) {
+      isNoteExist();
     } else {
       router.replace('/newsfeed/following');
     }
 
     return () => {
       unsubscribe.current;
-      clearTimeout(timer.current);
     };
-  }, [activeAccount.id, done, pool, relays, router, fetchData]);
+  }, [router, eose, isNoteExist]);
 
   return (
     <div className="relative h-full overflow-hidden">

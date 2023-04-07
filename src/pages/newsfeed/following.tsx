@@ -8,7 +8,7 @@ import { Placeholder } from '@components/note/placeholder';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { getLatestNotes, getNotes } from '@utils/storage';
+import { filterDuplicateParentID } from '@utils/transform';
 
 import { ArrowUpIcon } from '@radix-ui/react-icons';
 import { useAtom } from 'jotai';
@@ -42,29 +42,43 @@ export default function Page() {
 
   const computeItemKey = useCallback(
     (index: string | number) => {
-      return data[index].id;
+      return data[index].eventId;
     },
     [data]
   );
 
   const initialData = useCallback(async () => {
-    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
+    const { getNotes } = await import('@utils/bindings');
+    const result: any = await getNotes({
+      date: dateToUnix(now.current),
+      limit: limit.current,
+      offset: offset.current,
+    });
     setData((data) => [...data, ...result]);
   }, []);
 
   const loadMore = useCallback(async () => {
+    const { getNotes } = await import('@utils/bindings');
     offset.current += limit.current;
     // next query
-    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
+    const result: any = await getNotes({
+      date: dateToUnix(now.current),
+      limit: limit.current,
+      offset: offset.current,
+    });
     setData((data) => [...data, ...result]);
   }, []);
 
   const loadLatest = useCallback(async () => {
-    offset.current += limit.current;
+    const { getLatestNotes } = await import('@utils/bindings');
     // next query
-    const result: any = await getLatestNotes(dateToUnix(now.current));
+    const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
     // update data
-    setData((data) => [...result, ...data]);
+    if (result.length > 0) {
+      setData((data) => [...data, ...result]);
+    } else {
+      setData((data) => [...data, result]);
+    }
     // hide newer trigger
     setHasNewerNote(false);
     // scroll to top
@@ -90,7 +104,7 @@ export default function Page() {
       )}
       <Virtuoso
         ref={virtuosoRef}
-        data={data}
+        data={filterDuplicateParentID(data)}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         components={COMPONENTS}

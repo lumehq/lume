@@ -1,25 +1,38 @@
 import BaseLayout from '@layouts/base';
 
-import { activeAccountAtom } from '@stores/account';
-
-import { getActiveAccount } from '@utils/storage';
+import { activeAccountAtom, activeAccountFollowsAtom } from '@stores/account';
 
 import LumeSymbol from '@assets/icons/Lume';
 
 import { useSetAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect } from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect } from 'react';
 
 export default function Page() {
   const router = useRouter();
   const setActiveAccount = useSetAtom(activeAccountAtom);
+  const setActiveAccountFollows = useSetAtom(activeAccountFollowsAtom);
+
+  const fetchActiveAccount = useCallback(async () => {
+    const { getAccounts } = await import('@utils/bindings');
+    return await getAccounts();
+  }, []);
+
+  const fetchFollowsByAccount = useCallback(async (id) => {
+    const { getPlebs } = await import('@utils/bindings');
+    return await getPlebs({ account_id: id });
+  }, []);
 
   useEffect(() => {
-    getActiveAccount()
+    fetchActiveAccount()
       .then((res: any) => {
-        if (res) {
+        if (res.length > 0) {
+          // fetch follows
+          fetchFollowsByAccount(res[0].id).then((follows) => {
+            setActiveAccountFollows(follows);
+          });
           // update local storage
-          setActiveAccount(res);
+          setActiveAccount(res[0]);
           // redirect
           router.replace('/init');
         } else {
@@ -27,7 +40,7 @@ export default function Page() {
         }
       })
       .catch(console.error);
-  }, [router, setActiveAccount]);
+  }, [fetchActiveAccount, setActiveAccount, fetchFollowsByAccount, setActiveAccountFollows, router]);
 
   return (
     <div className="relative h-full overflow-hidden">
