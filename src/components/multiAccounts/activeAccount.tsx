@@ -59,7 +59,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
           insertFollowsToStorage(event.tags);
         }
       },
-      undefined,
+      20000,
       undefined,
       {
         unsubscribeOnEose: true,

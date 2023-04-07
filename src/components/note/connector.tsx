@@ -55,7 +55,8 @@ export default function NoteConnector() {
             setHasNewerNote(true)
           )
           .catch(console.error);
-      }
+      },
+      10000
     );
   }, [pool, relays, setHasNewerNote]);
 

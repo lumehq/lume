@@ -35,13 +35,11 @@ export default function Page() {
           kinds: [4],
           authors: [pubkey],
           '#p': [activeAccount.pubkey],
-          since: 0,
         },
         {
           kinds: [4],
           authors: [activeAccount.pubkey],
           '#p': [pubkey],
-          since: 0,
         },
       ],
       relays,
