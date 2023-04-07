@@ -1,9 +1,9 @@
 import { MessageUser } from '@components/chats/user';
 
 import { nip04 } from 'nostr-tools';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-export const Message = ({
+const MessageListItem = ({
   data,
   activeAccountPubkey,
   activeAccountPrivkey,
@@ -47,3 +47,5 @@ export const Message = ({
     </div>
   );
 };
+
+export default memo(MessageListItem);

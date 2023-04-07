@@ -1,4 +1,4 @@
-import { Message } from '@components/chats/message';
+import MessageListItem from '@components/chats/messageListItem';
 
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
@@ -10,7 +10,7 @@ export const MessageList = ({ data }: { data: any }) => {
     (index: string | number) => {
       const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
       return (
-        <Message
+        <MessageListItem
           data={data[index]}
           activeAccountPubkey={activeAccount.pubkey}
           activeAccountPrivkey={activeAccount.privkey}
