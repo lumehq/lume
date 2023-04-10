@@ -82,9 +82,22 @@ struct GetLatestNoteData {
 }
 
 #[derive(Deserialize, Type)]
+struct CreateChatData {
+  pubkey: String,
+  created_at: i32,
+  account_id: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetChatData {
+  account_id: i32,
+}
+
+#[derive(Deserialize, Type)]
 struct CreateChannelData {
   event_id: String,
   content: String,
+  account_id: i32,
 }
 
 #[tauri::command]
@@ -225,7 +238,45 @@ async fn count_total_notes(db: DbState<'_>) -> Result<i64, ()> {
 #[specta::specta]
 async fn create_channel(db: DbState<'_>, data: CreateChannelData) -> Result<channel::Data, ()> {
   db.channel()
-    .create(data.event_id, data.content, vec![])
+    .upsert(
+      channel::event_id::equals(data.event_id.clone()),
+      channel::create(
+        data.event_id,
+        data.content,
+        account::id::equals(data.account_id),
+        vec![],
+      ),
+      vec![],
+    )
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn create_chat(db: DbState<'_>, data: CreateChatData) -> Result<chat::Data, ()> {
+  db.chat()
+    .upsert(
+      chat::pubkey::equals(data.pubkey.clone()),
+      chat::create(
+        data.pubkey,
+        data.created_at,
+        account::id::equals(data.account_id),
+        vec![],
+      ),
+      vec![],
+    )
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_chats(db: DbState<'_>, data: GetChatData) -> Result<Vec<chat::Data>, ()> {
+  db.chat()
+    .find_many(vec![chat::account_id::equals(data.account_id)])
     .exec()
     .await
     .map_err(|_| ())
@@ -247,7 +298,9 @@ async fn main() {
       get_notes,
       get_latest_notes,
       get_note_by_id,
-      create_channel
+      create_channel,
+      create_chat,
+      get_chats
     ],
     "../src/utils/bindings.ts",
   )
@@ -290,7 +343,9 @@ async fn main() {
       get_latest_notes,
       get_note_by_id,
       count_total_notes,
-      create_channel
+      create_channel,
+      create_chat,
+      get_chats
     ])
     .manage(Arc::new(db))
     .run(tauri::generate_context!())

@@ -11,7 +11,7 @@ import { appWindow, getCurrent } from '@tauri-apps/api/window';
 import { useSetAtom } from 'jotai';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-export default function NoteConnector() {
+export default function EventCollector() {
   const [pool, relays]: any = useContext(RelayContext);
 
   const setLastLoginAtom = useSetAtom(lastLoginAtom);
@@ -24,6 +24,9 @@ export default function NoteConnector() {
 
   const subscribe = useCallback(async () => {
     const { createNote } = await import('@utils/bindings');
+    const { createChat } = await import('@utils/bindings');
+    const { createChannel } = await import('@utils/bindings');
+
     const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
     const follows = JSON.parse(localStorage.getItem('activeAccountFollows'));
 
@@ -34,29 +37,47 @@ export default function NoteConnector() {
           authors: pubkeyArray(follows),
           since: dateToUnix(now.current),
         },
+        {
+          kinds: [4],
+          '#p': [activeAccount.pubkey],
+          since: 0,
+        },
+        {
+          kinds: [40],
+          since: 0,
+        },
       ],
       relays,
       (event) => {
-        const parentID = getParentID(event.tags, event.id);
-        // insert event to local database
-        createNote({
-          event_id: event.id,
-          pubkey: event.pubkey,
-          kind: event.kind,
-          tags: JSON.stringify(event.tags),
-          content: event.content,
-          parent_id: parentID,
-          parent_comment_id: '',
-          created_at: event.created_at,
-          account_id: activeAccount.id,
-        })
-          .then(() =>
-            // notify user reload to get newer note
-            setHasNewerNote(true)
-          )
-          .catch(console.error);
-      },
-      10000
+        if (event.kind === 1) {
+          const parentID = getParentID(event.tags, event.id);
+          // insert event to local database
+          createNote({
+            event_id: event.id,
+            pubkey: event.pubkey,
+            kind: event.kind,
+            tags: JSON.stringify(event.tags),
+            content: event.content,
+            parent_id: parentID,
+            parent_comment_id: '',
+            created_at: event.created_at,
+            account_id: activeAccount.id,
+          })
+            .then(() =>
+              // notify user reload to get newer note
+              setHasNewerNote(true)
+            )
+            .catch(console.error);
+        } else if (event.kind === 4) {
+          if (event.pubkey !== activeAccount.pubkey) {
+            createChat({ pubkey: event.pubkey, created_at: event.created_at, account_id: activeAccount.id });
+          }
+        } else if (event.kind === 40) {
+          createChannel({ event_id: event.id, content: event.content, account_id: activeAccount.id });
+        } else {
+          console.error;
+        }
+      }
     );
   }, [pool, relays, setHasNewerNote]);
 

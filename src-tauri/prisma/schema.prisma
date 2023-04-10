@@ -21,6 +21,8 @@ model Account {
   plebs    Pleb[]
   messages Message[]
   notes    Note[]
+  chats    Chat[]
+  channels Channel[]
 
   @@index([pubkey])
 }
@@ -66,10 +68,24 @@ model Message {
   @@index([pubkey, createdAt])
 }
 
+model Chat {
+  id        Int    @id @default(autoincrement())
+  pubkey    String @unique
+  createdAt Int
+
+  Account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  @@index([pubkey])
+}
+
 model Channel {
   id      Int    @id @default(autoincrement())
   eventId String @unique
   content String
+
+  Account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
 
   @@index([eventId])
 }
