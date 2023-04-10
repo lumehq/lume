@@ -100,6 +100,17 @@ struct CreateChannelData {
   account_id: i32,
 }
 
+#[derive(Deserialize, Type)]
+struct GetChannelData {
+  limit: i32,
+  offset: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetActiveChannelData {
+  active: bool,
+}
+
 #[tauri::command]
 #[specta::specta]
 async fn get_accounts(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
@@ -255,6 +266,31 @@ async fn create_channel(db: DbState<'_>, data: CreateChannelData) -> Result<chan
 
 #[tauri::command]
 #[specta::specta]
+async fn get_channels(db: DbState<'_>, data: GetChannelData) -> Result<Vec<channel::Data>, ()> {
+  db.channel()
+    .find_many(vec![])
+    .take(data.limit.into())
+    .skip(data.offset.into())
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_active_channels(
+  db: DbState<'_>,
+  data: GetActiveChannelData,
+) -> Result<Vec<channel::Data>, ()> {
+  db.channel()
+    .find_many(vec![channel::active::equals(data.active)])
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
 async fn create_chat(db: DbState<'_>, data: CreateChatData) -> Result<chat::Data, ()> {
   db.chat()
     .upsert(
@@ -299,6 +335,8 @@ async fn main() {
       get_latest_notes,
       get_note_by_id,
       create_channel,
+      get_channels,
+      get_active_channels,
       create_chat,
       get_chats
     ],
@@ -344,6 +382,8 @@ async fn main() {
       get_note_by_id,
       count_total_notes,
       create_channel,
+      get_channels,
+      get_active_channels,
       create_chat,
       get_chats
     ])

@@ -48,6 +48,14 @@ export function createChannel(data: CreateChannelData) {
   return invoke<Channel>('create_channel', { data });
 }
 
+export function getChannels(data: GetChannelData) {
+  return invoke<Channel[]>('get_channels', { data });
+}
+
+export function getActiveChannels(data: GetActiveChannelData) {
+  return invoke<Channel[]>('get_active_channels', { data });
+}
+
 export function createChat(data: CreateChatData) {
   return invoke<Chat>('create_chat', { data });
 }
@@ -85,11 +93,13 @@ export type GetNoteByIdData = { event_id: string };
 export type Chat = { id: number; pubkey: string; createdAt: number; accountId: number };
 export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
 export type GetChatData = { account_id: number };
+export type GetChannelData = { limit: number; offset: number };
 export type CreateChannelData = { event_id: string; content: string; account_id: number };
 export type GetPlebPubkeyData = { pubkey: string };
-export type Channel = { id: number; eventId: string; content: string; accountId: number };
+export type GetActiveChannelData = { active: boolean };
 export type GetPlebData = { account_id: number };
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
+export type Channel = { id: number; eventId: string; content: string; active: boolean; accountId: number };
 export type GetLatestNoteData = { date: number };
 export type Pleb = { id: number; plebId: string; pubkey: string; kind: number; metadata: string; accountId: number };
 export type GetNoteData = { date: number; limit: number; offset: number };

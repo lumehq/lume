@@ -80,9 +80,10 @@ model Chat {
 }
 
 model Channel {
-  id      Int    @id @default(autoincrement())
-  eventId String @unique
+  id      Int     @id @default(autoincrement())
+  eventId String  @unique
   content String
+  active  Boolean @default(false)
 
   Account   Account @relation(fields: [accountId], references: [id])
   accountId Int
