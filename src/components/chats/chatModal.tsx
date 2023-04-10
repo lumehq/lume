@@ -42,7 +42,10 @@ export const ChatModal = () => {
               <div className="sticky left-0 top-0 flex h-12 w-full shrink-0 items-center justify-between rounded-t-lg border-b border-zinc-800 bg-zinc-950 px-3">
                 <div className="flex items-center gap-2">
                   <Dialog.Close asChild>
-                    <button className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
+                    <button
+                      autoFocus={false}
+                      className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900"
+                    >
                       <Cross1Icon className="h-3 w-3 text-zinc-300" />
                     </button>
                   </Dialog.Close>

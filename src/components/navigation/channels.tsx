@@ -1,3 +1,5 @@
+import ChannelList from '@components/channels/channelList';
+
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { TriangleUpIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
@@ -18,7 +20,9 @@ export default function Channels() {
           </div>
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Channels</h3>
         </Collapsible.Trigger>
-        <Collapsible.Content></Collapsible.Content>
+        <Collapsible.Content>
+          <ChannelList />
+        </Collapsible.Content>
       </div>
     </Collapsible.Root>
   );
