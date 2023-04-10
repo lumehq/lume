@@ -5,10 +5,10 @@ import { dateToUnix } from '@utils/getDate';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross1Icon, PlusIcon } from '@radix-ui/react-icons';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-export const ChannelModal = () => {
+export const CreateChannelModal = () => {
   const [pool, relays]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
 
@@ -18,6 +18,11 @@ export const ChannelModal = () => {
     reset,
     formState: { isDirty, isValid },
   } = useForm();
+
+  const insertChannelToDB = useCallback(async (id, data) => {
+    const { createChannel } = await import('@utils/bindings');
+    return await createChannel({ event_id: id, content: data });
+  }, []);
 
   const onSubmit = (data) => {
     const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
@@ -34,6 +39,8 @@ export const ChannelModal = () => {
 
     // publish channel
     pool.publish(event, relays);
+    // save to database
+    insertChannelToDB(event.id, data);
     // close modal
     setOpen(false);
     // reset form

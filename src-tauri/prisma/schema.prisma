@@ -66,6 +66,14 @@ model Message {
   @@index([pubkey, createdAt])
 }
 
+model Channel {
+  id      Int    @id @default(autoincrement())
+  eventId String @unique
+  content String
+
+  @@index([eventId])
+}
+
 model Relay {
   id     Int     @id @default(autoincrement())
   url    String

@@ -44,6 +44,10 @@ export function getNoteById(data: GetNoteByIdData) {
   return invoke<Note | null>('get_note_by_id', { data });
 }
 
+export function createChannel(data: CreateChannelData) {
+  return invoke<Channel>('create_channel', { data });
+}
+
 export type CreateNoteData = {
   event_id: string;
   pubkey: string;
@@ -55,6 +59,7 @@ export type CreateNoteData = {
   created_at: number;
   account_id: number;
 };
+export type CreateChannelData = { event_id: string; content: string };
 export type CreatePlebData = { pleb_id: string; pubkey: string; kind: number; metadata: string; account_id: number };
 export type GetNoteByIdData = { event_id: string };
 export type Pleb = { id: number; plebId: string; pubkey: string; kind: number; metadata: string; accountId: number };
@@ -71,6 +76,7 @@ export type Note = {
   accountId: number;
 };
 export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
+export type Channel = { id: number; eventId: string; content: string };
 export type GetPlebPubkeyData = { pubkey: string };
 export type GetPlebData = { account_id: number };
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };

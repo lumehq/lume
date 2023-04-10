@@ -81,6 +81,12 @@ struct GetLatestNoteData {
   date: i32,
 }
 
+#[derive(Deserialize, Type)]
+struct CreateChannelData {
+  event_id: String,
+  content: String,
+}
+
 #[tauri::command]
 #[specta::specta]
 async fn get_accounts(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
@@ -215,6 +221,16 @@ async fn count_total_notes(db: DbState<'_>) -> Result<i64, ()> {
   db.note().count(vec![]).exec().await.map_err(|_| ())
 }
 
+#[tauri::command]
+#[specta::specta]
+async fn create_channel(db: DbState<'_>, data: CreateChannelData) -> Result<channel::Data, ()> {
+  db.channel()
+    .create(data.event_id, data.content, vec![])
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
 #[tokio::main]
 async fn main() {
   let db = PrismaClient::_builder().build().await.unwrap();
@@ -230,7 +246,8 @@ async fn main() {
       create_note,
       get_notes,
       get_latest_notes,
-      get_note_by_id
+      get_note_by_id,
+      create_channel
     ],
     "../src/utils/bindings.ts",
   )
@@ -272,7 +289,8 @@ async fn main() {
       get_notes,
       get_latest_notes,
       get_note_by_id,
-      count_total_notes
+      count_total_notes,
+      create_channel
     ])
     .manage(Arc::new(db))
     .run(tauri::generate_context!())
