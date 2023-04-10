@@ -26,7 +26,7 @@ export const NoteComment = memo(function NoteComment({
   count: number;
   eventID: string;
   eventPubkey: string;
-  eventTime: string;
+  eventTime: number;
   eventContent: any;
 }) {
   const router = useRouter();
@@ -68,8 +68,8 @@ export const NoteComment = memo(function NoteComment({
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
-        <Dialog.Content className="fixed inset-0 overflow-y-auto">
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
+        <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center">
             <div className="relative w-full max-w-2xl rounded-lg bg-zinc-900 p-4 text-zinc-100 ring-1 ring-zinc-800">
               {/* root note */}
