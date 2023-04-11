@@ -1,15 +1,15 @@
-import { RelayContext } from '@components/relaysProvider';
+import { fetch } from '@tauri-apps/api/http';
+import { useCallback, useEffect, useState } from 'react';
 
-import { Author } from 'nostr-relaypool';
-import { useCallback, useContext, useEffect, useState } from 'react';
-
-export const fetchMetadata = (pubkey: string, pool: any, relays: any) => {
-  const author = new Author(pool, relays, pubkey);
-  return new Promise((resolve) => author.metaData(resolve, 0));
+export const fetchMetadata = async (pubkey: string) => {
+  const result = await fetch(`https://rbr.bio/${pubkey}/metadata.json`, {
+    method: 'GET',
+    timeout: 5,
+  });
+  return await result.data;
 };
 
 export const useMetadata = (pubkey) => {
-  const [pool, relays]: any = useContext(RelayContext);
   const [profile, setProfile] = useState(null);
 
   const getCachedMetadata = useCallback(async () => {
@@ -20,7 +20,7 @@ export const useMetadata = (pubkey) => {
           const metadata = JSON.parse(res.metadata);
           setProfile(metadata);
         } else {
-          fetchMetadata(pubkey, pool, relays).then((res: any) => {
+          fetchMetadata(pubkey).then((res: any) => {
             if (res.content) {
               const metadata = JSON.parse(res.content);
               setProfile(metadata);
@@ -29,7 +29,7 @@ export const useMetadata = (pubkey) => {
         }
       })
       .catch(console.error);
-  }, [pool, relays, pubkey]);
+  }, [pubkey]);
 
   useEffect(() => {
     getCachedMetadata().catch(console.error);
