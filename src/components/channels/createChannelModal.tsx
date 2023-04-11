@@ -4,6 +4,7 @@ import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross1Icon, PlusIcon } from '@radix-ui/react-icons';
+import useLocalStorage from '@rehooks/local-storage';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,6 +13,8 @@ export const CreateChannelModal = () => {
   const [pool, relays]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
 
+  const [activeAccount]: any = useLocalStorage('activeAccount');
+
   const {
     register,
     handleSubmit,
@@ -19,14 +22,12 @@ export const CreateChannelModal = () => {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const insertChannelToDB = useCallback(async (id, data) => {
+  const insertChannelToDB = useCallback(async (id, data, account) => {
     const { createChannel } = await import('@utils/bindings');
-    return await createChannel({ event_id: id, content: data });
+    return await createChannel({ event_id: id, content: data, account_id: account });
   }, []);
 
   const onSubmit = (data) => {
-    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
-
     const event: any = {
       content: JSON.stringify(data),
       created_at: dateToUnix(),
@@ -40,7 +41,7 @@ export const CreateChannelModal = () => {
     // publish channel
     pool.publish(event, relays);
     // save to database
-    insertChannelToDB(event.id, data);
+    insertChannelToDB(event.id, data, activeAccount.id);
     // close modal
     setOpen(false);
     // reset form

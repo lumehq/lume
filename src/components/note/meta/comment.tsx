@@ -2,16 +2,13 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
-import { activeAccountAtom } from '@stores/account';
-
 import { dateToUnix } from '@utils/getDate';
 
 import CommentIcon from '@assets/icons/comment';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { SizeIcon } from '@radix-ui/react-icons';
-import destr from 'destr';
-import { useAtomValue } from 'jotai';
+import useLocalStorage from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
@@ -35,8 +32,8 @@ export const NoteComment = memo(function NoteComment({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
-  const profile = destr(activeAccount.metadata);
+  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const profile = JSON.parse(activeAccount.metadata);
 
   const openThread = () => {
     router.push(`/newsfeed/${eventID}`);

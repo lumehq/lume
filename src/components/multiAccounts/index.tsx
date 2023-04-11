@@ -6,15 +6,15 @@ import { APP_VERSION } from '@stores/constants';
 import LumeSymbol from '@assets/icons/Lume';
 
 import { PlusIcon } from '@radix-ui/react-icons';
+import useLocalStorage from '@rehooks/local-storage';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function MultiAccounts() {
   const [users, setUsers] = useState([]);
+  const [activeAccount]: any = useLocalStorage('activeAccount');
 
   const renderAccount = useCallback((user: { pubkey: string }) => {
-    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
-
     if (user.pubkey === activeAccount.pubkey) {
       return <ActiveAccount key={user.pubkey} user={user} />;
     } else {

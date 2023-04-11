@@ -1,17 +1,13 @@
 import BaseLayout from '@layouts/base';
 
-import { activeAccountAtom, activeAccountFollowsAtom } from '@stores/account';
-
 import LumeSymbol from '@assets/icons/Lume';
 
-import { useSetAtom } from 'jotai';
+import { writeStorage } from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect } from 'react';
 
 export default function Page() {
   const router = useRouter();
-  const setActiveAccount = useSetAtom(activeAccountAtom);
-  const setActiveAccountFollows = useSetAtom(activeAccountFollowsAtom);
 
   const fetchActiveAccount = useCallback(async () => {
     const { getAccounts } = await import('@utils/bindings');
@@ -29,10 +25,10 @@ export default function Page() {
         if (res.length > 0) {
           // fetch follows
           fetchFollowsByAccount(res[0].id).then((follows) => {
-            setActiveAccountFollows(follows);
+            writeStorage('activeAccountFollows', follows);
           });
           // update local storage
-          setActiveAccount(res[0]);
+          writeStorage('activeAccount', res[0]);
           // redirect
           router.replace('/init');
         } else {
@@ -40,7 +36,7 @@ export default function Page() {
         }
       })
       .catch(console.error);
-  }, [fetchActiveAccount, setActiveAccount, fetchFollowsByAccount, setActiveAccountFollows, router]);
+  }, [fetchActiveAccount, fetchFollowsByAccount, router]);
 
   return (
     <div className="relative h-full overflow-hidden">

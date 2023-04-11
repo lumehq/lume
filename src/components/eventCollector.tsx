@@ -1,11 +1,11 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { lastLoginAtom } from '@stores/account';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 import { getParentID, pubkeyArray } from '@utils/transform';
 
+import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
 import { TauriEvent } from '@tauri-apps/api/event';
 import { appWindow, getCurrent } from '@tauri-apps/api/window';
 import { useSetAtom } from 'jotai';
@@ -14,10 +14,11 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 export default function EventCollector() {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const setLastLoginAtom = useSetAtom(lastLoginAtom);
+  const [isOnline] = useState(true);
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
 
-  const [isOnline] = useState(true);
+  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [follows] = useLocalStorage('activeAccountFollows');
 
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
@@ -26,9 +27,6 @@ export default function EventCollector() {
     const { createNote } = await import('@utils/bindings');
     const { createChat } = await import('@utils/bindings');
     const { createChannel } = await import('@utils/bindings');
-
-    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
-    const follows = JSON.parse(localStorage.getItem('activeAccountFollows'));
 
     unsubscribe.current = pool.subscribe(
       [
@@ -79,19 +77,19 @@ export default function EventCollector() {
         }
       }
     );
-  }, [pool, relays, setHasNewerNote]);
+  }, [activeAccount.id, activeAccount.pubkey, follows, pool, relays, setHasNewerNote]);
 
   useEffect(() => {
     subscribe();
     getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-      setLastLoginAtom(now.current);
+      writeStorage('lastLogin', now.current);
       appWindow.close();
     });
 
     return () => {
       unsubscribe.current;
     };
-  }, [setHasNewerNote, setLastLoginAtom, subscribe]);
+  }, [setHasNewerNote, subscribe]);
 
   return (
     <div className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 hover:bg-zinc-900">

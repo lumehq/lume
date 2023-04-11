@@ -29,20 +29,19 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
   const insertFollowsToStorage = useCallback(
     async (tags) => {
       const { createPleb } = await import('@utils/bindings');
-      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
 
       for (const tag of tags) {
         const metadata: any = await fetchMetadata(tag[1], pool, relays);
         createPleb({
-          pleb_id: tag[1] + '-lume' + activeAccount.id.toString(),
+          pleb_id: tag[1] + '-lume' + user.id.toString(),
           pubkey: tag[1],
           kind: 0,
           metadata: metadata.content,
-          account_id: activeAccount.id,
+          account_id: user.id,
         }).catch(console.error);
       }
     },
-    [pool, relays]
+    [pool, relays, user.id]
   );
 
   useEffect(() => {

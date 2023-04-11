@@ -1,15 +1,13 @@
 import { ChatModalUser } from '@components/chats/chatModalUser';
 
-import { activeAccountAtom } from '@stores/account';
-
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross1Icon, PlusIcon } from '@radix-ui/react-icons';
-import { useAtomValue } from 'jotai';
+import useLocalStorage from '@rehooks/local-storage';
 import { useCallback, useEffect, useState } from 'react';
 
 export const ChatModal = () => {
   const [plebs, setPlebs] = useState([]);
-  const activeAccount: any = useAtomValue(activeAccountAtom);
+  const [activeAccount]: any = useLocalStorage('activeAccount');
 
   const fetchPlebsByAccount = useCallback(async (id) => {
     const { getPlebs } = await import('@utils/bindings');

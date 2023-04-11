@@ -1,14 +1,15 @@
 import MessageListItem from '@components/chats/messageListItem';
 
+import useLocalStorage from '@rehooks/local-storage';
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export const MessageList = ({ data }: { data: any }) => {
+  const [activeAccount]: any = useLocalStorage('activeAccount');
   const virtuosoRef = useRef(null);
 
   const itemContent: any = useCallback(
     (index: string | number) => {
-      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
       return (
         <MessageListItem
           data={data[index]}
@@ -17,7 +18,7 @@ export const MessageList = ({ data }: { data: any }) => {
         />
       );
     },
-    [data]
+    [activeAccount.privkey, activeAccount.pubkey, data]
   );
 
   const computeItemKey = useCallback(

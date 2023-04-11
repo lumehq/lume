@@ -1,22 +1,19 @@
 import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
-import { activeAccountAtom } from '@stores/account';
-
 import { dateToUnix } from '@utils/getDate';
 
-import destr from 'destr';
-import { useAtomValue } from 'jotai';
+import useLocalStorage from '@rehooks/local-storage';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
+  const [activeAccount]: any = useLocalStorage('activeAccount');
   const [value, setValue] = useState('');
 
-  const profile = destr(activeAccount.metadata);
+  const profile = JSON.parse(activeAccount.metadata);
 
   const submitEvent = () => {
     const event: any = {

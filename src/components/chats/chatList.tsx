@@ -2,17 +2,16 @@ import { ChatListItem } from '@components/chats/chatListItem';
 import { ChatModal } from '@components/chats/chatModal';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
-import { activeAccountAtom } from '@stores/account';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useAtomValue } from 'jotai';
+import useLocalStorage from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 export default function ChatList() {
   const router = useRouter();
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
+  const [activeAccount]: any = useLocalStorage('activeAccount');
   const accountProfile = JSON.parse(activeAccount.metadata);
 
   const [list, setList] = useState([]);
