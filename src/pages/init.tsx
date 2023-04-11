@@ -31,9 +31,9 @@ export default function Page() {
 
   const [eose, setEose] = useState(false);
 
-  const [lastLogin] = useLocalStorage('lastLogin');
-  const [activeAccount]: any = useLocalStorage('activeAccount');
-  const [follows] = useLocalStorage('activeAccountFollows');
+  const [lastLogin] = useLocalStorage('lastLogin', '');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [follows] = useLocalStorage('activeAccountFollows', []);
 
   const fetchData = useCallback(
     async (since: Date) => {

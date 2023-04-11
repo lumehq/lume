@@ -12,15 +12,18 @@ import { useCallback, useEffect, useState } from 'react';
 
 export default function MultiAccounts() {
   const [users, setUsers] = useState([]);
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
-  const renderAccount = useCallback((user: { pubkey: string }) => {
-    if (user.pubkey === activeAccount.pubkey) {
-      return <ActiveAccount key={user.pubkey} user={user} />;
-    } else {
-      return <InactiveAccount key={user.pubkey} user={user} />;
-    }
-  }, []);
+  const renderAccount = useCallback(
+    (user: { pubkey: string }) => {
+      if (user.pubkey === activeAccount.pubkey) {
+        return <ActiveAccount key={user.pubkey} user={user} />;
+      } else {
+        return <InactiveAccount key={user.pubkey} user={user} />;
+      }
+    },
+    [activeAccount.pubkey]
+  );
 
   const fetchAccounts = useCallback(async () => {
     const { getAccounts } = await import('@utils/bindings');

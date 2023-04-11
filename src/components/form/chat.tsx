@@ -9,8 +9,9 @@ import { useCallback, useContext, useState } from 'react';
 
 export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
   const [pool, relays]: any = useContext(RelayContext);
+
   const [value, setValue] = useState('');
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
   const encryptMessage = useCallback(
     async (privkey: string) => {

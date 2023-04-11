@@ -13,7 +13,7 @@ export const CreateChannelModal = () => {
   const [pool, relays]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
   const {
     register,

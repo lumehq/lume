@@ -5,7 +5,7 @@ import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export const MessageList = ({ data }: { data: any }) => {
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const virtuosoRef = useRef(null);
 
   const itemContent: any = useCallback(

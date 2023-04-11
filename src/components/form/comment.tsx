@@ -10,7 +10,7 @@ import { useContext, useState } from 'react';
 export default function FormComment({ eventID }: { eventID: any }) {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [value, setValue] = useState('');
 
   const profile = JSON.parse(activeAccount.metadata);

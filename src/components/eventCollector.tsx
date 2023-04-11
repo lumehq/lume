@@ -17,8 +17,8 @@ export default function EventCollector() {
   const [isOnline] = useState(true);
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
-  const [follows] = useLocalStorage('activeAccountFollows');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [follows] = useLocalStorage('activeAccountFollows', []);
 
   const now = useRef(new Date());
   const unsubscribe = useRef(null);

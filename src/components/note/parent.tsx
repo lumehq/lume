@@ -16,7 +16,7 @@ import reactStringReplace from 'react-string-replace';
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [event, setEvent] = useState(null);
 
   const unsubscribe = useRef(null);

@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export const ChatModal = () => {
   const [plebs, setPlebs] = useState([]);
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
   const fetchPlebsByAccount = useCallback(async (id) => {
     const { getPlebs } = await import('@utils/bindings');

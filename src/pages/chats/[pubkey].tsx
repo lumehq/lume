@@ -23,7 +23,7 @@ export default function Page() {
   const router = useRouter();
   const pubkey: any = router.query.pubkey || null;
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {

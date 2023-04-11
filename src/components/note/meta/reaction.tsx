@@ -20,7 +20,7 @@ export const NoteReaction = memo(function NoteReaction({
 }) {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [isReact, setIsReact] = useState(false);
   const [like, setLike] = useState(0);
 

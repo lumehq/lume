@@ -32,8 +32,8 @@ export const NoteComment = memo(function NoteComment({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
-  const profile = JSON.parse(activeAccount.metadata);
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   const openThread = () => {
     router.push(`/newsfeed/${eventID}`);
@@ -87,7 +87,7 @@ export const NoteComment = memo(function NoteComment({
                 <div>
                   <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
                     <ImageWithFallback
-                      src={profile.picture}
+                      src={profile?.picture}
                       alt="user's avatar"
                       fill={true}
                       className="rounded-md object-cover"

@@ -11,7 +11,7 @@ export default function FormChannelMessage({ eventId }: { eventId: string | stri
   const [pool, relays]: any = useContext(RelayContext);
 
   const [value, setValue] = useState('');
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
   const submitEvent = useCallback(() => {
     const event: any = {

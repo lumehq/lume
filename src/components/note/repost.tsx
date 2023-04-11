@@ -12,7 +12,7 @@ import reactStringReplace from 'react-string-replace';
 export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [event, setEvent] = useState(null);
 
   const unsubscribe = useRef(null);
