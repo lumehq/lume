@@ -11,10 +11,9 @@ import { useEffect, useState } from 'react';
 export default function ChatList() {
   const router = useRouter();
 
+  const [list, setList] = useState([]);
   const [activeAccount]: any = useLocalStorage('activeAccount');
   const accountProfile = JSON.parse(activeAccount.metadata);
-
-  const [list, setList] = useState([]);
 
   const openSelfChat = () => {
     router.push({

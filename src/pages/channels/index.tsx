@@ -1,45 +1,28 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
-import { RelayContext } from '@components/relaysProvider';
+import { BrowseChannelItem } from '@components/channels/browseChannelItem';
 
-import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactFragment,
-  ReactPortal,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
 
 export default function Page() {
-  const [pool, relays]: any = useContext(RelayContext);
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = pool.subscribe(
-      [
-        {
-          kinds: [40],
-          since: 0,
-        },
-      ],
-      relays,
-      (event: any) => {
-        setList((list) => [event, ...list]);
-      }
-    );
-
-    return () => {
-      unsubscribe;
+    const fetchChannels = async () => {
+      const { getChannels } = await import('@utils/bindings');
+      return await getChannels({ limit: 100, offset: 0 });
     };
-  }, [pool, relays]);
+
+    fetchChannels()
+      .then((res) => setList(res))
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="h-full w-full overflow-y-auto">
       {list.map((channel) => (
-        <div key={channel.id}>{channel.content}</div>
+        <BrowseChannelItem key={channel.id} data={channel} />
       ))}
     </div>
   );
