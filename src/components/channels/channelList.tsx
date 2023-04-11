@@ -1,9 +1,24 @@
+import { ChannelListItem } from '@components/channels/channelListItem';
 import { CreateChannelModal } from '@components/channels/createChannelModal';
 
 import { GlobeIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function ChannelList() {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    const fetchChannels = async () => {
+      const { getActiveChannels } = await import('@utils/bindings');
+      return await getActiveChannels({ active: true });
+    };
+
+    fetchChannels()
+      .then((res) => setList(res))
+      .catch(console.error);
+  }, []);
+
   return (
     <div className="flex flex-col gap-px">
       <Link
@@ -17,6 +32,9 @@ export default function ChannelList() {
           <h5 className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400">Browse channels</h5>
         </div>
       </Link>
+      {list.map((item) => (
+        <ChannelListItem key={item.id} data={item} />
+      ))}
       <CreateChannelModal />
     </div>
   );

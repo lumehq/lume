@@ -48,6 +48,10 @@ export function createChannel(data: CreateChannelData) {
   return invoke<Channel>('create_channel', { data });
 }
 
+export function updateChannel(data: UpdateChannelData) {
+  return invoke<Channel>('update_channel', { data });
+}
+
 export function getChannels(data: GetChannelData) {
   return invoke<Channel[]>('get_channels', { data });
 }
@@ -96,6 +100,7 @@ export type GetChatData = { account_id: number };
 export type GetChannelData = { limit: number; offset: number };
 export type CreateChannelData = { event_id: string; content: string; account_id: number };
 export type GetPlebPubkeyData = { pubkey: string };
+export type UpdateChannelData = { event_id: string; active: boolean };
 export type GetActiveChannelData = { active: boolean };
 export type GetPlebData = { account_id: number };
 export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
