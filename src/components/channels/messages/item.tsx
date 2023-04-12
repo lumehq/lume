@@ -1,8 +1,8 @@
+import { MuteButton } from '@components/channels/messages/muteButton';
 import { ReplyButton } from '@components/channels/messages/replyButton';
 import { MessageUser } from '@components/chats/messageUser';
 
 import HideIcon from '@assets/icons/hide';
-import MuteIcon from '@assets/icons/mute';
 
 import { memo } from 'react';
 
@@ -25,9 +25,7 @@ const ChannelMessageItem = ({ data }: { data: any }) => {
           <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800">
             <HideIcon className="h-4 w-4 text-zinc-400" />
           </button>
-          <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800">
-            <MuteIcon className="h-4 w-4 text-zinc-400" />
-          </button>
+          <MuteButton pubkey={data.pubkey} />
         </div>
       </div>
     </div>

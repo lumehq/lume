@@ -55,7 +55,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       relays,
       (event: any) => {
         if (event.tags.length > 0) {
-          insertFollowsToStorage(event.tags);
+          //insertFollowsToStorage(event.tags);
         }
       },
       20000,

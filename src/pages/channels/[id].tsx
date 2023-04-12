@@ -7,6 +7,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { channelReplyAtom } from '@stores/channel';
 
+import useLocalStorage from '@rehooks/local-storage';
 import { useResetAtom } from 'jotai/utils';
 import { useRouter } from 'next/router';
 import {
@@ -16,6 +17,7 @@ import {
   ReactPortal,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -26,7 +28,10 @@ export default function Page() {
   const id: string | string[] = router.query.id || null;
 
   const [messages, setMessages] = useState([]);
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const resetChannelReply = useResetAtom(channelReplyAtom);
+
+  const muted = useRef(new Set());
 
   useEffect(() => {
     // reset channel reply
@@ -35,21 +40,32 @@ export default function Page() {
     const unsubscribe = pool.subscribe(
       [
         {
+          authors: [activeAccount.pubkey],
+          kinds: [44],
+          since: 0,
+        },
+        {
           '#e': [id],
-          kinds: [42],
+          kinds: [42, 43],
           since: 0,
         },
       ],
       relays,
       (event: any) => {
-        setMessages((messages) => [event, ...messages]);
+        if (event.kind === 44) {
+          muted.current = muted.current.add(event.tags[0][1]);
+        } else if (event.kind === 42) {
+          if (!muted.current.has(event.pubkey)) {
+            setMessages((messages) => [event, ...messages]);
+          }
+        }
       }
     );
 
     return () => {
       unsubscribe;
     };
-  }, [id, pool, relays, resetChannelReply]);
+  }, [id, pool, relays, activeAccount.pubkey, resetChannelReply]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
