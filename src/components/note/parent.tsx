@@ -8,6 +8,7 @@ import { UserMention } from '@components/user/mention';
 
 import { getParentID } from '@utils/transform';
 
+import useLocalStorage from '@rehooks/local-storage';
 import destr from 'destr';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import reactStringReplace from 'react-string-replace';
@@ -15,12 +16,13 @@ import reactStringReplace from 'react-string-replace';
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [event, setEvent] = useState(null);
+
   const unsubscribe = useRef(null);
 
   const fetchEvent = useCallback(async () => {
     const { createNote } = await import('@utils/bindings');
-    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
 
     unsubscribe.current = pool.subscribe(
       [
@@ -54,7 +56,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
         unsubscribeOnEose: true,
       }
     );
-  }, [id, pool, relays]);
+  }, [activeAccount.id, id, pool, relays]);
 
   const checkNoteExist = useCallback(async () => {
     const { getNoteById } = await import('@utils/bindings');

@@ -1,24 +1,16 @@
-import MessageListItem from '@components/chats/messageListItem';
+import ChannelMessageItem from '@components/channels/messages/item';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-export const MessageList = ({ data }: { data: any }) => {
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+export const ChannelMessages = ({ data }: { data: any }) => {
   const virtuosoRef = useRef(null);
 
   const itemContent: any = useCallback(
     (index: string | number) => {
-      return (
-        <MessageListItem
-          data={data[index]}
-          activeAccountPubkey={activeAccount.pubkey}
-          activeAccountPrivkey={activeAccount.privkey}
-        />
-      );
+      return <ChannelMessageItem data={data[index]} />;
     },
-    [activeAccount.privkey, activeAccount.pubkey, data]
+    [data]
   );
 
   const computeItemKey = useCallback(

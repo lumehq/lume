@@ -4,7 +4,7 @@ const AppActions = dynamic(() => import('@components/appHeader/actions'), {
   ssr: false,
 });
 
-const NoteConnector = dynamic(() => import('@components/note/connector'), {
+const EventCollector = dynamic(() => import('@components/eventCollector'), {
   ssr: false,
 });
 
@@ -15,7 +15,7 @@ export default function AppHeader() {
       <div data-tauri-drag-region className="flex h-full w-full items-center justify-between">
         <div className="flex h-full items-center divide-x divide-zinc-900 px-4 pt-px"></div>
         <div>
-          <NoteConnector />
+          <EventCollector />
         </div>
       </div>
     </div>

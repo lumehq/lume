@@ -7,6 +7,7 @@ import { getParentID, pubkeyArray } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
+import { useLocalStorage } from '@rehooks/local-storage';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useRouter } from 'next/router';
 import {
@@ -30,11 +31,13 @@ export default function Page() {
 
   const [eose, setEose] = useState(false);
 
+  const [lastLogin] = useLocalStorage('lastLogin', '');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [follows] = useLocalStorage('activeAccountFollows', []);
+
   const fetchData = useCallback(
     async (since: Date) => {
       const { createNote } = await import('@utils/bindings');
-      const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
-      const follows = JSON.parse(localStorage.getItem('activeAccountFollows'));
 
       unsubscribe.current = pool.subscribe(
         [
@@ -67,20 +70,19 @@ export default function Page() {
         }
       );
     },
-    [pool, relays]
+    [activeAccount.id, follows, pool, relays]
   );
 
   const isNoteExist = useCallback(async () => {
     invoke('count_total_notes').then((res: number) => {
       if (res > 0) {
-        const lastLogin = JSON.parse(localStorage.getItem('lastLogin'));
         const parseDate = new Date(lastLogin);
         fetchData(parseDate);
       } else {
         fetchData(hoursAgo(24, now.current));
       }
     });
-  }, [fetchData]);
+  }, [fetchData, lastLogin]);
 
   useEffect(() => {
     if (eose === false) {

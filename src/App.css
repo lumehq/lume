@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './assets/editor.css';
-
 /* Fixed next/image bug, source: https://nextjs.org/docs/api-reference/next/image */
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
   img[loading='lazy'] {

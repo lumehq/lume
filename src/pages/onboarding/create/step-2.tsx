@@ -84,7 +84,7 @@ export default function Page() {
     setLoading(true);
 
     for (const follow of follows) {
-      const metadata: any = await fetchMetadata(follow, pool, relays);
+      const metadata: any = await fetchMetadata(follow);
       createPleb({
         pleb_id: follow + '-lume' + id,
         pubkey: follow,

@@ -35,6 +35,7 @@ struct CreateAccountData {
 #[derive(Deserialize, Type)]
 struct GetPlebData {
   account_id: i32,
+  kind: i32,
 }
 
 #[derive(Deserialize, Type)]
@@ -81,6 +82,42 @@ struct GetLatestNoteData {
   date: i32,
 }
 
+#[derive(Deserialize, Type)]
+struct CreateChatData {
+  pubkey: String,
+  created_at: i32,
+  account_id: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetChatData {
+  account_id: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct CreateChannelData {
+  event_id: String,
+  content: String,
+  account_id: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetChannelData {
+  limit: i32,
+  offset: i32,
+}
+
+#[derive(Deserialize, Type)]
+struct GetActiveChannelData {
+  active: bool,
+}
+
+#[derive(Deserialize, Type)]
+struct UpdateChannelData {
+  event_id: String,
+  active: bool,
+}
+
 #[tauri::command]
 #[specta::specta]
 async fn get_accounts(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
@@ -105,7 +142,10 @@ async fn create_account(db: DbState<'_>, data: CreateAccountData) -> Result<acco
 #[specta::specta]
 async fn get_plebs(db: DbState<'_>, data: GetPlebData) -> Result<Vec<pleb::Data>, ()> {
   db.pleb()
-    .find_many(vec![pleb::account_id::equals(data.account_id)])
+    .find_many(vec![
+      pleb::account_id::equals(data.account_id),
+      pleb::kind::equals(data.kind),
+    ])
     .exec()
     .await
     .map_err(|_| ())
@@ -215,6 +255,92 @@ async fn count_total_notes(db: DbState<'_>) -> Result<i64, ()> {
   db.note().count(vec![]).exec().await.map_err(|_| ())
 }
 
+#[tauri::command]
+#[specta::specta]
+async fn create_channel(db: DbState<'_>, data: CreateChannelData) -> Result<channel::Data, ()> {
+  db.channel()
+    .upsert(
+      channel::event_id::equals(data.event_id.clone()),
+      channel::create(
+        data.event_id,
+        data.content,
+        account::id::equals(data.account_id),
+        vec![],
+      ),
+      vec![],
+    )
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn update_channel(db: DbState<'_>, data: UpdateChannelData) -> Result<channel::Data, ()> {
+  db.channel()
+    .update(
+      channel::event_id::equals(data.event_id), // Unique filter
+      vec![channel::active::set(data.active)],  // Vec of updates
+    )
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_channels(db: DbState<'_>, data: GetChannelData) -> Result<Vec<channel::Data>, ()> {
+  db.channel()
+    .find_many(vec![])
+    .take(data.limit.into())
+    .skip(data.offset.into())
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_active_channels(
+  db: DbState<'_>,
+  data: GetActiveChannelData,
+) -> Result<Vec<channel::Data>, ()> {
+  db.channel()
+    .find_many(vec![channel::active::equals(data.active)])
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn create_chat(db: DbState<'_>, data: CreateChatData) -> Result<chat::Data, ()> {
+  db.chat()
+    .upsert(
+      chat::pubkey::equals(data.pubkey.clone()),
+      chat::create(
+        data.pubkey,
+        data.created_at,
+        account::id::equals(data.account_id),
+        vec![],
+      ),
+      vec![],
+    )
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_chats(db: DbState<'_>, data: GetChatData) -> Result<Vec<chat::Data>, ()> {
+  db.chat()
+    .find_many(vec![chat::account_id::equals(data.account_id)])
+    .exec()
+    .await
+    .map_err(|_| ())
+}
+
 #[tokio::main]
 async fn main() {
   let db = PrismaClient::_builder().build().await.unwrap();
@@ -230,7 +356,13 @@ async fn main() {
       create_note,
       get_notes,
       get_latest_notes,
-      get_note_by_id
+      get_note_by_id,
+      create_channel,
+      update_channel,
+      get_channels,
+      get_active_channels,
+      create_chat,
+      get_chats
     ],
     "../src/utils/bindings.ts",
   )
@@ -272,7 +404,13 @@ async fn main() {
       get_notes,
       get_latest_notes,
       get_note_by_id,
-      count_total_notes
+      count_total_notes,
+      create_channel,
+      update_channel,
+      get_channels,
+      get_active_channels,
+      create_chat,
+      get_chats
     ])
     .manage(Arc::new(db))
     .run(tauri::generate_context!())

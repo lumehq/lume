@@ -5,9 +5,7 @@ import { MessageList } from '@components/chats/messageList';
 import FormChat from '@components/form/chat';
 import { RelayContext } from '@components/relaysProvider';
 
-import { activeAccountAtom } from '@stores/account';
-
-import { useAtomValue } from 'jotai';
+import useLocalStorage from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -25,7 +23,7 @@ export default function Page() {
   const router = useRouter();
   const pubkey: any = router.query.pubkey || null;
 
-  const activeAccount: any = useAtomValue(activeAccountAtom);
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {

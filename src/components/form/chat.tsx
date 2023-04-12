@@ -3,12 +3,15 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix } from '@utils/getDate';
 
+import useLocalStorage from '@rehooks/local-storage';
 import { getEventHash, nip04, signEvent } from 'nostr-tools';
 import { useCallback, useContext, useState } from 'react';
 
 export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
   const [pool, relays]: any = useContext(RelayContext);
+
   const [value, setValue] = useState('');
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
   const encryptMessage = useCallback(
     async (privkey: string) => {
@@ -18,7 +21,6 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
   );
 
   const submitEvent = useCallback(() => {
-    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
     encryptMessage(activeAccount.privkey)
       .then((encryptedContent) => {
         const event: any = {
@@ -36,7 +38,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         setValue('');
       })
       .catch(console.error);
-  }, [encryptMessage, receiverPubkey, pool, relays]);
+  }, [encryptMessage, activeAccount.privkey, activeAccount.pubkey, receiverPubkey, pool, relays]);
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

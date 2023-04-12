@@ -44,20 +44,30 @@ export function getNoteById(data: GetNoteByIdData) {
   return invoke<Note | null>('get_note_by_id', { data });
 }
 
-export type CreateNoteData = {
-  event_id: string;
-  pubkey: string;
-  kind: number;
-  tags: string;
-  content: string;
-  parent_id: string;
-  parent_comment_id: string;
-  created_at: number;
-  account_id: number;
-};
-export type CreatePlebData = { pleb_id: string; pubkey: string; kind: number; metadata: string; account_id: number };
-export type GetNoteByIdData = { event_id: string };
-export type Pleb = { id: number; plebId: string; pubkey: string; kind: number; metadata: string; accountId: number };
+export function createChannel(data: CreateChannelData) {
+  return invoke<Channel>('create_channel', { data });
+}
+
+export function updateChannel(data: UpdateChannelData) {
+  return invoke<Channel>('update_channel', { data });
+}
+
+export function getChannels(data: GetChannelData) {
+  return invoke<Channel[]>('get_channels', { data });
+}
+
+export function getActiveChannels(data: GetActiveChannelData) {
+  return invoke<Channel[]>('get_active_channels', { data });
+}
+
+export function createChat(data: CreateChatData) {
+  return invoke<Chat>('create_chat', { data });
+}
+
+export function getChats(data: GetChatData) {
+  return invoke<Chat[]>('get_chats', { data });
+}
+
 export type Note = {
   id: number;
   eventId: string;
@@ -70,9 +80,31 @@ export type Note = {
   createdAt: number;
   accountId: number;
 };
+export type CreateChannelData = { event_id: string; content: string; account_id: number };
+export type CreatePlebData = { pleb_id: string; pubkey: string; kind: number; metadata: string; account_id: number };
+export type Chat = { id: number; pubkey: string; createdAt: number; accountId: number };
 export type Account = { id: number; pubkey: string; privkey: string; active: boolean; metadata: string };
-export type GetPlebPubkeyData = { pubkey: string };
-export type GetPlebData = { account_id: number };
-export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
+export type GetChannelData = { limit: number; offset: number };
 export type GetLatestNoteData = { date: number };
+export type GetPlebData = { account_id: number; kind: number };
+export type CreateAccountData = { pubkey: string; privkey: string; metadata: string };
+export type GetPlebPubkeyData = { pubkey: string };
+export type Channel = { id: number; eventId: string; content: string; active: boolean; accountId: number };
+export type GetChatData = { account_id: number };
+export type CreateNoteData = {
+  event_id: string;
+  pubkey: string;
+  kind: number;
+  tags: string;
+  content: string;
+  parent_id: string;
+  parent_comment_id: string;
+  created_at: number;
+  account_id: number;
+};
+export type UpdateChannelData = { event_id: string; active: boolean };
+export type Pleb = { id: number; plebId: string; pubkey: string; kind: number; metadata: string; accountId: number };
+export type CreateChatData = { pubkey: string; created_at: number; account_id: number };
 export type GetNoteData = { date: number; limit: number; offset: number };
+export type GetActiveChannelData = { active: boolean };
+export type GetNoteByIdData = { event_id: string };

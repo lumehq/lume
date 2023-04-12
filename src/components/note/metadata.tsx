@@ -26,7 +26,7 @@ export default function NoteMetadata({
         {
           '#e': [eventID],
           since: parseInt(eventTime),
-          kinds: [1, 7],
+          kinds: [7],
           limit: 50,
         },
       ],
@@ -48,11 +48,7 @@ export default function NoteMetadata({
             break;
         }
       },
-      1000,
-      undefined,
-      {
-        unsubscribeOnEose: true,
-      }
+      1000
     );
 
     return () => {

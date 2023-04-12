@@ -1,19 +1,17 @@
 import { ChatModalUser } from '@components/chats/chatModalUser';
 
-import { activeAccountAtom } from '@stores/account';
-
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross1Icon, PlusIcon } from '@radix-ui/react-icons';
-import { useAtomValue } from 'jotai';
+import useLocalStorage from '@rehooks/local-storage';
 import { useCallback, useEffect, useState } from 'react';
 
 export const ChatModal = () => {
   const [plebs, setPlebs] = useState([]);
-  const activeAccount: any = useAtomValue(activeAccountAtom);
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
   const fetchPlebsByAccount = useCallback(async (id) => {
     const { getPlebs } = await import('@utils/bindings');
-    return await getPlebs({ account_id: id });
+    return await getPlebs({ account_id: id, kind: 0 });
   }, []);
 
   useEffect(() => {
@@ -42,7 +40,10 @@ export const ChatModal = () => {
               <div className="sticky left-0 top-0 flex h-12 w-full shrink-0 items-center justify-between rounded-t-lg border-b border-zinc-800 bg-zinc-950 px-3">
                 <div className="flex items-center gap-2">
                   <Dialog.Close asChild>
-                    <button className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
+                    <button
+                      autoFocus={false}
+                      className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900"
+                    >
                       <Cross1Icon className="h-3 w-3 text-zinc-300" />
                     </button>
                   </Dialog.Close>

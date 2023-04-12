@@ -6,6 +6,7 @@ import { noteContentAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 
+import useLocalStorage from '@rehooks/local-storage';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -17,9 +18,9 @@ export default function FormBase() {
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
 
-  const submitEvent = () => {
-    const activeAccount = JSON.parse(localStorage.getItem('activeAccount'));
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
+  const submitEvent = () => {
     const event: any = {
       content: value,
       created_at: dateToUnix(),
