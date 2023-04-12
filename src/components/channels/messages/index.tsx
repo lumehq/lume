@@ -1,9 +1,9 @@
-import ChannelMessageItem from '@components/channels/channelMessageItem';
+import ChannelMessageItem from '@components/channels/messages/item';
 
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-export const ChannelMessageList = ({ data }: { data: any }) => {
+export const ChannelMessages = ({ data }: { data: any }) => {
   const virtuosoRef = useRef(null);
 
   const itemContent: any = useCallback(

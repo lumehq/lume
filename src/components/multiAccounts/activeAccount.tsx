@@ -31,7 +31,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       const { createPleb } = await import('@utils/bindings');
 
       for (const tag of tags) {
-        const metadata: any = await fetchMetadata(tag[1], pool, relays);
+        const metadata: any = await fetchMetadata(tag[1]);
         createPleb({
           pleb_id: tag[1] + '-lume' + user.id.toString(),
           pubkey: tag[1],
@@ -41,7 +41,7 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
         }).catch(console.error);
       }
     },
-    [pool, relays, user.id]
+    [user.id]
   );
 
   useEffect(() => {

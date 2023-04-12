@@ -49,7 +49,7 @@ export default function Page() {
       const { createPleb } = await import('@utils/bindings');
       if (profile?.id !== null) {
         for (const tag of tags) {
-          const metadata: any = await fetchMetadata(tag[1], pool, relays);
+          const metadata: any = await fetchMetadata(tag[1]);
           createPleb({
             pleb_id: tag[1] + '-lume' + profile.id.toString(),
             pubkey: tag[1],
@@ -60,7 +60,7 @@ export default function Page() {
         }
       }
     },
-    [pool, profile.id, relays]
+    [profile.id]
   );
 
   useEffect(() => {

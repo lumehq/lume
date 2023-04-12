@@ -1,10 +1,13 @@
 import BaseLayout from '@layouts/base';
 import WithSidebarLayout from '@layouts/withSidebar';
 
-import { ChannelMessageList } from '@components/channels/channelMessageList';
+import { ChannelMessages } from '@components/channels/messages/index';
 import FormChannelMessage from '@components/form/channelMessage';
 import { RelayContext } from '@components/relaysProvider';
 
+import { channelReplyAtom } from '@stores/channel';
+
+import { useResetAtom } from 'jotai/utils';
 import { useRouter } from 'next/router';
 import {
   JSXElementConstructor,
@@ -23,8 +26,12 @@ export default function Page() {
   const id: string | string[] = router.query.id || null;
 
   const [messages, setMessages] = useState([]);
+  const resetChannelReply = useResetAtom(channelReplyAtom);
 
   useEffect(() => {
+    // reset channel reply
+    resetChannelReply();
+    // subscribe event
     const unsubscribe = pool.subscribe(
       [
         {
@@ -42,11 +49,11 @@ export default function Page() {
     return () => {
       unsubscribe;
     };
-  }, [id, pool, relays]);
+  }, [id, pool, relays, resetChannelReply]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <ChannelMessageList data={messages.sort((a, b) => a.created_at - b.created_at)} />
+      <ChannelMessages data={messages.sort((a, b) => a.created_at - b.created_at)} />
       <div className="shrink-0 p-3">
         <FormChannelMessage eventId={id} />
       </div>

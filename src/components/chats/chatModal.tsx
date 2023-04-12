@@ -11,7 +11,7 @@ export const ChatModal = () => {
 
   const fetchPlebsByAccount = useCallback(async (id) => {
     const { getPlebs } = await import('@utils/bindings');
-    return await getPlebs({ account_id: id });
+    return await getPlebs({ account_id: id, kind: 0 });
   }, []);
 
   useEffect(() => {

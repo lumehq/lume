@@ -35,6 +35,7 @@ struct CreateAccountData {
 #[derive(Deserialize, Type)]
 struct GetPlebData {
   account_id: i32,
+  kind: i32,
 }
 
 #[derive(Deserialize, Type)]
@@ -141,7 +142,10 @@ async fn create_account(db: DbState<'_>, data: CreateAccountData) -> Result<acco
 #[specta::specta]
 async fn get_plebs(db: DbState<'_>, data: GetPlebData) -> Result<Vec<pleb::Data>, ()> {
   db.pleb()
-    .find_many(vec![pleb::account_id::equals(data.account_id)])
+    .find_many(vec![
+      pleb::account_id::equals(data.account_id),
+      pleb::kind::equals(data.kind),
+    ])
     .exec()
     .await
     .map_err(|_| ())
