@@ -1,8 +1,7 @@
+import { HideMessageButton } from '@components/channels/messages/hideMessageButton';
 import { MuteButton } from '@components/channels/messages/muteButton';
 import { ReplyButton } from '@components/channels/messages/replyButton';
 import { MessageUser } from '@components/chats/messageUser';
-
-import HideIcon from '@assets/icons/hide';
 
 import { memo } from 'react';
 
@@ -22,9 +21,7 @@ const ChannelMessageItem = ({ data }: { data: any }) => {
       <div className="absolute -top-4 right-4 z-10 hidden group-hover:inline-flex">
         <div className="inline-flex h-7 items-center justify-center gap-1 rounded bg-zinc-900 px-0.5 shadow-md shadow-black/20 ring-1 ring-zinc-800">
           <ReplyButton id={data.id} pubkey={data.pubkey} content={data.content} />
-          <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800">
-            <HideIcon className="h-4 w-4 text-zinc-400" />
-          </button>
+          <HideMessageButton id={data.id} />
           <MuteButton pubkey={data.pubkey} />
         </div>
       </div>

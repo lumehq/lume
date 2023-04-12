@@ -32,6 +32,7 @@ export default function Page() {
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
   const muted = useRef(new Set());
+  const hided = useRef(new Set());
 
   useEffect(() => {
     // reset channel reply
@@ -41,12 +42,12 @@ export default function Page() {
       [
         {
           authors: [activeAccount.pubkey],
-          kinds: [44],
+          kinds: [43, 44],
           since: 0,
         },
         {
           '#e': [id],
-          kinds: [42, 43],
+          kinds: [42],
           since: 0,
         },
       ],
@@ -54,8 +55,14 @@ export default function Page() {
       (event: any) => {
         if (event.kind === 44) {
           muted.current = muted.current.add(event.tags[0][1]);
-        } else if (event.kind === 42) {
-          if (!muted.current.has(event.pubkey)) {
+        } else if (event.kind === 43) {
+          hided.current = hided.current.add(event.tags[0][1]);
+        } else {
+          if (muted.current.has(event.pubkey)) {
+            console.log('muted');
+          } else if (hided.current.has(event.id)) {
+            console.log('hided');
+          } else {
             setMessages((messages) => [event, ...messages]);
           }
         }
