@@ -1,42 +1,177 @@
 import BaseLayout from '@layouts/base';
 
+import { RelayContext } from '@components/relaysProvider';
+
+import { dateToUnix, hoursAgo } from '@utils/getDate';
+import { getParentID, pubkeyArray } from '@utils/transform';
+
 import LumeSymbol from '@assets/icons/Lume';
 
-import { writeStorage } from '@rehooks/local-storage';
+import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
 import { useRouter } from 'next/router';
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useCallback, useEffect } from 'react';
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 export default function Page() {
+  const [pool, relays]: any = useContext(RelayContext);
   const router = useRouter();
+
+  const [lastLogin] = useLocalStorage('lastLogin', new Date());
+
+  const now = useRef(new Date());
+  const eose = useRef(0);
+  const unsubscribe = useRef(null);
 
   const fetchActiveAccount = useCallback(async () => {
     const { getAccounts } = await import('@utils/bindings');
     return await getAccounts();
   }, []);
 
-  const fetchFollowsByAccount = useCallback(async (id) => {
+  const fetchPlebsByAccount = useCallback(async (id: number, kind: number) => {
     const { getPlebs } = await import('@utils/bindings');
-    return await getPlebs({ account_id: id, kind: 0 });
+    return await getPlebs({ account_id: id, kind: kind });
   }, []);
 
+  const totalNotes = useCallback(async () => {
+    const { countTotalNotes } = await import('@utils/commands');
+    return countTotalNotes();
+  }, []);
+
+  const totalChannels = useCallback(async () => {
+    const { countTotalChannels } = await import('@utils/commands');
+    return countTotalChannels();
+  }, []);
+
+  const totalChats = useCallback(async () => {
+    const { countTotalChats } = await import('@utils/commands');
+    return countTotalChats();
+  }, []);
+
+  const fetchData = useCallback(
+    async (account, follows) => {
+      const { createNote } = await import('@utils/bindings');
+      const { createChat } = await import('@utils/bindings');
+      const { createChannel } = await import('@utils/bindings');
+
+      const notes = await totalNotes();
+      const channels = await totalChannels();
+      const chats = await totalChats();
+
+      const query = [];
+      let since: number;
+
+      // kind 1 (notes) query
+      if (notes === 0) {
+        since = dateToUnix(hoursAgo(24, now.current));
+      } else {
+        since = dateToUnix(new Date(lastLogin));
+      }
+      query.push({
+        kinds: [1],
+        authors: follows,
+        since: since,
+        until: dateToUnix(now.current),
+      });
+      // kind 4 (chats) query
+      if (chats === 0) {
+        query.push({
+          kinds: [4],
+          '#p': [account.pubkey],
+          since: 0,
+          until: dateToUnix(now.current),
+        });
+      }
+      // kind 40 (channels) query
+      if (channels === 0) {
+        query.push({
+          kinds: [40],
+          since: 0,
+          until: dateToUnix(now.current),
+        });
+      }
+      // subscribe relays
+      unsubscribe.current = pool.subscribe(
+        query,
+        relays,
+        (event) => {
+          if (event.kind === 1) {
+            const parentID = getParentID(event.tags, event.id);
+            // insert event to local database
+            createNote({
+              event_id: event.id,
+              pubkey: event.pubkey,
+              kind: event.kind,
+              tags: JSON.stringify(event.tags),
+              content: event.content,
+              parent_id: parentID,
+              parent_comment_id: '',
+              created_at: event.created_at,
+              account_id: account.id,
+            }).catch(console.error);
+          } else if (event.kind === 4) {
+            if (event.pubkey !== account.pubkey) {
+              createChat({
+                pubkey: event.pubkey,
+                created_at: event.created_at,
+                account_id: account.id,
+              }).catch(console.error);
+            }
+          } else if (event.kind === 40) {
+            createChannel({ event_id: event.id, content: event.content, account_id: account.id }).catch(console.error);
+          } else {
+            console.error;
+          }
+        },
+        undefined,
+        () => {
+          eose.current += 1;
+          if (eose.current > relays.length / 2) {
+            router.replace('/newsfeed/following');
+          }
+        }
+      );
+    },
+    [router, pool, relays, lastLogin, totalChannels, totalChats, totalNotes]
+  );
+
   useEffect(() => {
+    let account;
+    let follows;
+
     fetchActiveAccount()
       .then((res: any) => {
         if (res.length > 0) {
-          // fetch follows
-          fetchFollowsByAccount(res[0].id).then((follows) => {
-            writeStorage('activeAccountFollows', follows);
-          });
+          account = res[0];
           // update local storage
           writeStorage('activeAccount', res[0]);
-          // redirect
-          router.replace('/init');
+          // fetch plebs, kind 0 = following
+          fetchPlebsByAccount(res[0].id, 0).then((res) => {
+            follows = pubkeyArray(res);
+            writeStorage('activeAccountFollows', res);
+            // fetch data
+            fetchData(account, follows);
+          });
         } else {
           router.replace('/onboarding');
         }
       })
       .catch(console.error);
-  }, [fetchActiveAccount, fetchFollowsByAccount, router]);
+
+    return () => {
+      if (unsubscribe.current) {
+        unsubscribe.current();
+      }
+    };
+  }, [fetchActiveAccount, fetchPlebsByAccount, totalNotes, fetchData, router]);
 
   return (
     <div className="relative h-full overflow-hidden">

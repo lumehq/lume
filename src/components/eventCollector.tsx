@@ -3,11 +3,12 @@ import { RelayContext } from '@components/relaysProvider';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
+import { fetchMetadata } from '@utils/metadata';
 import { getParentID, pubkeyArray } from '@utils/transform';
 
 import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
+import { window } from '@tauri-apps/api';
 import { TauriEvent } from '@tauri-apps/api/event';
-import { appWindow, getCurrent } from '@tauri-apps/api/window';
 import { useSetAtom } from 'jotai';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
@@ -22,6 +23,26 @@ export default function EventCollector() {
 
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
+  const unlisten = useRef(null);
+
+  const createFollowingPlebs = useCallback(
+    async (tags) => {
+      const { createPleb } = await import('@utils/bindings');
+      for (const tag of tags) {
+        const pubkey = tag[1];
+        const metadata: any = await fetchMetadata(pubkey);
+
+        createPleb({
+          pleb_id: pubkey + '-lume' + activeAccount.id.toString(),
+          pubkey: pubkey,
+          kind: 0,
+          metadata: metadata.content,
+          account_id: activeAccount.id,
+        }).catch(console.error);
+      }
+    },
+    [activeAccount.id]
+  );
 
   const subscribe = useCallback(async () => {
     const { createNote } = await import('@utils/bindings');
@@ -36,13 +57,17 @@ export default function EventCollector() {
           since: dateToUnix(now.current),
         },
         {
+          kinds: [3],
+          authors: [activeAccount.pubkey],
+        },
+        {
           kinds: [4],
           '#p': [activeAccount.pubkey],
-          since: 0,
+          since: dateToUnix(now.current),
         },
         {
           kinds: [40],
-          since: 0,
+          since: dateToUnix(now.current),
         },
       ],
       relays,
@@ -66,30 +91,43 @@ export default function EventCollector() {
               setHasNewerNote(true)
             )
             .catch(console.error);
+        } else if (event.kind === 3) {
+          createFollowingPlebs(event.tags);
         } else if (event.kind === 4) {
           if (event.pubkey !== activeAccount.pubkey) {
-            createChat({ pubkey: event.pubkey, created_at: event.created_at, account_id: activeAccount.id });
+            createChat({ pubkey: event.pubkey, created_at: event.created_at, account_id: activeAccount.id }).catch(
+              console.error
+            );
           }
         } else if (event.kind === 40) {
-          createChannel({ event_id: event.id, content: event.content, account_id: activeAccount.id });
+          createChannel({ event_id: event.id, content: event.content, account_id: activeAccount.id }).catch(
+            console.error
+          );
         } else {
           console.error;
         }
       }
     );
-  }, [activeAccount.id, activeAccount.pubkey, follows, pool, relays, setHasNewerNote]);
+  }, [pool, relays, activeAccount.id, activeAccount.pubkey, follows, setHasNewerNote, createFollowingPlebs]);
+
+  const listenWindowClose = useCallback(async () => {
+    unlisten.current = window.getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
+      writeStorage('lastLogin', now.current);
+      window.getCurrent().close();
+    });
+  }, []);
 
   useEffect(() => {
     subscribe();
-    getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-      writeStorage('lastLogin', now.current);
-      appWindow.close();
-    });
+    listenWindowClose();
 
     return () => {
-      unsubscribe.current;
+      if (unsubscribe.current) {
+        unsubscribe.current();
+      }
+      unlisten.current();
     };
-  }, [setHasNewerNote, subscribe]);
+  }, [setHasNewerNote, subscribe, listenWindowClose]);
 
   return (
     <div className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 hover:bg-zinc-900">

@@ -52,7 +52,7 @@ export default function NoteMetadata({
     );
 
     return () => {
-      unsubscribe;
+      unsubscribe();
     };
   }, [eventID, eventTime, pool, relays]);
 

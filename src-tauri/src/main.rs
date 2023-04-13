@@ -256,6 +256,16 @@ async fn count_total_notes(db: DbState<'_>) -> Result<i64, ()> {
 }
 
 #[tauri::command]
+async fn count_total_channels(db: DbState<'_>) -> Result<i64, ()> {
+  db.channel().count(vec![]).exec().await.map_err(|_| ())
+}
+
+#[tauri::command]
+async fn count_total_chats(db: DbState<'_>) -> Result<i64, ()> {
+  db.chat().count(vec![]).exec().await.map_err(|_| ())
+}
+
+#[tauri::command]
 #[specta::specta]
 async fn create_channel(db: DbState<'_>, data: CreateChannelData) -> Result<channel::Data, ()> {
   db.channel()
@@ -405,6 +415,8 @@ async fn main() {
       get_latest_notes,
       get_note_by_id,
       count_total_notes,
+      count_total_channels,
+      count_total_chats,
       create_channel,
       update_channel,
       get_channels,

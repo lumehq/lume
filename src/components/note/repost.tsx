@@ -46,7 +46,7 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
           account_id: activeAccount.id,
         }).catch(console.error);
       },
-      undefined,
+      100,
       undefined,
       {
         unsubscribeOnEose: true,
@@ -71,7 +71,9 @@ export const NoteRepost = memo(function NoteRepost({ id }: { id: string }) {
     checkNoteExist();
 
     return () => {
-      unsubscribe.current;
+      if (unsubscribe.current) {
+        unsubscribe.current();
+      }
     };
   }, [checkNoteExist]);
 

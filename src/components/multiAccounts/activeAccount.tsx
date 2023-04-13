@@ -1,8 +1,4 @@
-import { RelayContext } from '@components/relaysProvider';
-
 import { DEFAULT_AVATAR } from '@stores/constants';
-
-import { fetchMetadata } from '@utils/metadata';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
@@ -10,11 +6,8 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
-import { memo, useCallback, useContext, useEffect } from 'react';
 
-export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }) {
-  const [pool, relays]: any = useContext(RelayContext);
-
+export const ActiveAccount = ({ user }: { user: any }) => {
   const router = useRouter();
   const userData = JSON.parse(user.metadata);
 
@@ -25,50 +18,6 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
   const copyPublicKey = async () => {
     await writeText(nip19.npubEncode(user.pubkey));
   };
-
-  const insertFollowsToStorage = useCallback(
-    async (tags) => {
-      const { createPleb } = await import('@utils/bindings');
-
-      for (const tag of tags) {
-        const metadata: any = await fetchMetadata(tag[1]);
-        createPleb({
-          pleb_id: tag[1] + '-lume' + user.id.toString(),
-          pubkey: tag[1],
-          kind: 0,
-          metadata: metadata.content,
-          account_id: user.id,
-        }).catch(console.error);
-      }
-    },
-    [user.id]
-  );
-
-  useEffect(() => {
-    const unsubscribe = pool.subscribe(
-      [
-        {
-          kinds: [3],
-          authors: [user.pubkey],
-        },
-      ],
-      relays,
-      (event: any) => {
-        if (event.tags.length > 0) {
-          //insertFollowsToStorage(event.tags);
-        }
-      },
-      20000,
-      undefined,
-      {
-        unsubscribeOnEose: true,
-      }
-    );
-
-    return () => {
-      unsubscribe;
-    };
-  }, [insertFollowsToStorage, pool, relays, user.pubkey]);
 
   return (
     <DropdownMenu.Root>
@@ -125,4 +74,4 @@ export const ActiveAccount = memo(function ActiveAccount({ user }: { user: any }
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
   );
-});
+};

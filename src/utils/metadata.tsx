@@ -12,35 +12,20 @@ export const fetchMetadata = async (pubkey: string) => {
 export const useMetadata = (pubkey) => {
   const [profile, setProfile] = useState(null);
 
-  /*
-  const insertPlebToDB = useCallback(async (account, pubkey, metadata) => {
-    const { createPleb } = await import('@utils/bindings');
-    return await createPleb({
-      pleb_id: pubkey + '-lume' + account.toString(),
-      pubkey: pubkey,
-      kind: 1,
-      metadata: metadata,
-      account_id: account,
-    }).catch(console.error);
-  }, []);
-  */
-
   const getCachedMetadata = useCallback(async () => {
     const { getPlebByPubkey } = await import('@utils/bindings');
     getPlebByPubkey({ pubkey: pubkey })
       .then((res) => {
-        if (res) {
+        if (res && res.metadata.length > 0) {
           const metadata = JSON.parse(res.metadata);
           // update state
           setProfile(metadata);
         } else {
           fetchMetadata(pubkey).then((res: any) => {
-            if (res.content) {
+            if (res) {
               const metadata = JSON.parse(res.content);
               // update state
               setProfile(metadata);
-              // save to database
-              // insertPlebToDB(activeAccount.id, pubkey, metadata);
             }
           });
         }
