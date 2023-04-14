@@ -1,8 +1,8 @@
 import { ChatModalUser } from '@components/chats/chatModalUser';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { Cross1Icon, PlusIcon } from '@radix-ui/react-icons';
 import useLocalStorage from '@rehooks/local-storage';
+import { Cancel, Plus } from 'iconoir-react';
 import { useCallback, useEffect, useState } from 'react';
 
 export const ChatModal = () => {
@@ -25,7 +25,7 @@ export const ChatModal = () => {
       <Dialog.Trigger asChild>
         <div className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-950">
           <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900">
-            <PlusIcon className="h-3 w-3 text-zinc-500" />
+            <Plus width={12} height={12} className="text-zinc-500" />
           </div>
           <div>
             <h5 className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400">Add a new chat</h5>
@@ -44,7 +44,7 @@ export const ChatModal = () => {
                       autoFocus={false}
                       className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900"
                     >
-                      <Cross1Icon className="h-3 w-3 text-zinc-300" />
+                      <Cancel width={12} height={12} className="text-zinc-300" />
                     </button>
                   </Dialog.Close>
                   <h5 className="font-semibold leading-none text-zinc-500">New chat</h5>

@@ -6,8 +6,8 @@ import { UserBase } from '@components/user/base';
 import { fetchMetadata } from '@utils/metadata';
 import { followsTag } from '@utils/transform';
 
-import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { createClient } from '@supabase/supabase-js';
+import { CheckCircle } from 'iconoir-react';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import {
@@ -146,7 +146,7 @@ export default function Page() {
               <UserBase pubkey={item.pubkey} />
               {follows.includes(item.pubkey) && (
                 <div>
-                  <CheckCircledIcon className="h-4 w-4 text-green-400" />
+                  <CheckCircle width={16} height={16} className="text-zinc-400" />
                 </div>
               )}
             </button>

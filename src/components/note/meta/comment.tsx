@@ -4,11 +4,9 @@ import { UserExtend } from '@components/user/extend';
 
 import { dateToUnix } from '@utils/getDate';
 
-import CommentIcon from '@assets/icons/comment';
-
 import * as Dialog from '@radix-ui/react-dialog';
-import { SizeIcon } from '@radix-ui/react-icons';
 import useLocalStorage from '@rehooks/local-storage';
+import { MultiBubble, OpenNewWindow } from 'iconoir-react';
 import { useRouter } from 'next/router';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
@@ -59,7 +57,7 @@ export const NoteComment = memo(function NoteComment({
       <Dialog.Trigger asChild>
         <button className="group flex w-16 items-center gap-1 text-sm text-zinc-500">
           <div className="rounded-md p-1 group-hover:bg-zinc-800">
-            <CommentIcon className="h-5 w-5 text-zinc-500" />
+            <MultiBubble width={20} height={20} className="text-zinc-500" />
           </div>
           <span>{count}</span>
         </button>
@@ -111,7 +109,7 @@ export const NoteComment = memo(function NoteComment({
                           onClick={() => openThread()}
                           className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700"
                         >
-                          <SizeIcon className="h-4 w-4 text-zinc-400" />
+                          <OpenNewWindow width={16} height={16} className="text-zinc-400" />
                         </button>
                         <div className="flex items-center gap-2 pl-2"></div>
                       </div>

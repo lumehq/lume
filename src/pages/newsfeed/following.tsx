@@ -10,7 +10,7 @@ import { hasNewerNoteAtom } from '@stores/note';
 import { dateToUnix } from '@utils/getDate';
 import { filterDuplicateParentID } from '@utils/transform';
 
-import { ArrowUpIcon } from '@radix-ui/react-icons';
+import { ArrowUp } from 'iconoir-react';
 import { useAtom } from 'jotai';
 import {
   JSXElementConstructor,
@@ -97,7 +97,7 @@ export default function Page() {
             onClick={() => loadLatest()}
             className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 pl-3 pr-3.5 text-sm shadow-md shadow-fuchsia-800/20 active:translate-y-1"
           >
-            <ArrowUpIcon className="h-3.5 w-3.5" />
+            <ArrowUp width={14} height={14} />
             Load latest
           </button>
         </div>

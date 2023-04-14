@@ -1,8 +1,8 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { AvatarIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons';
 import { writeText } from '@tauri-apps/api/clipboard';
+import { LogOut, ProfileCircle, Settings } from 'iconoir-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
@@ -44,7 +44,7 @@ export const ActiveAccount = ({ user }: { user: any }) => {
             className="group relative flex h-7 select-none items-center rounded-sm px-1 pl-7 text-sm leading-none text-zinc-400 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-800 data-[highlighted]:text-fuchsia-500"
           >
             <div className="absolute left-0 inline-flex w-6 items-center justify-center">
-              <AvatarIcon />
+              <ProfileCircle />
             </div>
             Open profile
           </DropdownMenu.Item>
@@ -60,13 +60,13 @@ export const ActiveAccount = ({ user }: { user: any }) => {
           <DropdownMenu.Separator className="m-1 h-px bg-zinc-700/50" />
           <DropdownMenu.Item className="group relative flex h-7 select-none items-center rounded px-1 pl-7 text-sm leading-none text-zinc-400 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-800 data-[highlighted]:text-fuchsia-500">
             <div className="absolute left-0 inline-flex w-6 items-center justify-center">
-              <GearIcon />
+              <Settings />
             </div>
             Settings
           </DropdownMenu.Item>
           <DropdownMenu.Item className="group relative flex h-7 select-none items-center rounded px-1 pl-7 text-sm leading-none text-zinc-400 outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-zinc-800 data-[highlighted]:text-fuchsia-500">
             <div className="absolute left-0 inline-flex w-6 items-center justify-center">
-              <ExitIcon />
+              <LogOut />
             </div>
             Logout
           </DropdownMenu.Item>

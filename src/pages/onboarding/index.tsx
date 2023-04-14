@@ -1,6 +1,6 @@
 import BaseLayout from '@layouts/base';
 
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowRight } from 'iconoir-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
@@ -115,7 +115,7 @@ export default function Page() {
             className="relative inline-flex h-14 w-64 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 text-lg font-medium ring-1 ring-zinc-800 hover:bg-zinc-800"
           >
             Create new key
-            <ArrowRightIcon className="h-5 w-5" />
+            <ArrowRight width={20} height={20} />
           </Link>
           <Link
             href="/onboarding/login"

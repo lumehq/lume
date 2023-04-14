@@ -1,7 +1,7 @@
 import ChatList from '@components/chats/chatList';
 
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { TriangleUpIcon } from '@radix-ui/react-icons';
+import { NavArrowUp } from 'iconoir-react';
 import { useState } from 'react';
 
 export default function Chats() {
@@ -16,7 +16,7 @@ export default function Chats() {
               open ? 'rotate-180' : ''
             }`}
           >
-            <TriangleUpIcon className="h-4 w-4 text-zinc-700" />
+            <NavArrowUp width={16} height={16} className="text-zinc-700" />
           </div>
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Chats</h3>
         </Collapsible.Trigger>

@@ -1,7 +1,7 @@
 import { noteContentAtom } from '@stores/note';
 
-import { PlusIcon } from '@radix-ui/react-icons';
 import * as Popover from '@radix-ui/react-popover';
+import { Plus } from 'iconoir-react';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
 
@@ -19,12 +19,12 @@ export default function ImagePicker() {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700">
-          <PlusIcon className="h-4 w-4 text-zinc-400" />
+          <Plus width={16} height={16} className="text-zinc-400" />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="w-80 rounded-md bg-zinc-900/80 p-3 shadow-input shadow-black/50 ring-1 ring-zinc-800 backdrop-blur-xl will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+          className="w-80 rounded-md bg-zinc-900/80 p-3 shadow-input shadow-black/50 ring-1 ring-zinc-800 backdrop-blur-xl will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade"
           sideOffset={3}
         >
           <div>

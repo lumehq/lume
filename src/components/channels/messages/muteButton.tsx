@@ -2,11 +2,10 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix } from '@utils/getDate';
 
-import MuteIcon from '@assets/icons/mute';
-
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import useLocalStorage from '@rehooks/local-storage';
+import { MicMute } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
@@ -36,7 +35,7 @@ export const MuteButton = ({ pubkey }: { pubkey: string }) => {
           <AlertDialog.Trigger asChild>
             <Tooltip.Trigger asChild>
               <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800">
-                <MuteIcon className="h-4 w-4 text-zinc-400" />
+                <MicMute width={16} height={16} className="text-zinc-400" />
               </button>
             </Tooltip.Trigger>
           </AlertDialog.Trigger>

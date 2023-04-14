@@ -6,8 +6,8 @@ import { channelReplyAtom } from '@stores/channel';
 
 import { dateToUnix } from '@utils/getDate';
 
-import { Cross1Icon } from '@radix-ui/react-icons';
 import useLocalStorage from '@rehooks/local-storage';
+import { Cancel } from 'iconoir-react';
 import { useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -93,7 +93,7 @@ export default function FormChannelMessage({ eventId }: { eventId: string | stri
               onClick={() => stopReply()}
               className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
             >
-              <Cross1Icon className="h-3 w-3 text-zinc-100" />
+              <Cancel width={12} height={12} className="text-zinc-100" />
             </button>
           </div>
         </div>

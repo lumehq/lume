@@ -7,6 +7,7 @@ import HideIcon from '@assets/icons/hide';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import useLocalStorage from '@rehooks/local-storage';
+import { EyeClose } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
@@ -36,7 +37,7 @@ export const HideMessageButton = ({ id }: { id: string }) => {
           <AlertDialog.Trigger asChild>
             <Tooltip.Trigger asChild>
               <button className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800">
-                <HideIcon className="h-4 w-4 text-zinc-400" />
+                <EyeClose width={16} height={16} className="text-zinc-400" />
               </button>
             </Tooltip.Trigger>
           </AlertDialog.Trigger>

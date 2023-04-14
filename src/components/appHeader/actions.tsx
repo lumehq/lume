@@ -1,7 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { platform } from '@tauri-apps/api/os';
+import { ArrowLeft, ArrowRight, Refresh } from 'iconoir-react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 export default function AppActions() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function AppActions() {
     router.reload();
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const getPlatform = async () => {
       const result = await platform();
       setOS(result);
@@ -34,19 +34,19 @@ export default function AppActions() {
         onClick={() => goBack()}
         className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
       >
-        <ArrowLeftIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300" />
+        <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
       </button>
       <button
         onClick={() => goForward()}
         className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
       >
-        <ArrowRightIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300" />
+        <ArrowRight width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
       </button>
       <button
         onClick={() => reload()}
         className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
       >
-        <ReloadIcon className="h-[14px] w-[14px] text-zinc-500 group-hover:text-zinc-300" />
+        <Refresh width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
       </button>
     </div>
   );

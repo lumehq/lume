@@ -1,6 +1,6 @@
 import BaseLayout from '@layouts/base';
 
-import { ArrowLeftIcon, LightningBoltIcon } from '@radix-ui/react-icons';
+import { ArrowLeft, CableTag } from 'iconoir-react';
 import { useRouter } from 'next/router';
 import { nip19 } from 'nostr-tools';
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react';
@@ -64,7 +64,7 @@ export default function Page() {
           onClick={() => goBack()}
           className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
         >
-          <ArrowLeftIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300" />
+          <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
         </button>
         <div>
           <h1 className="bg-gradient-to-br from-zinc-200 via-white to-zinc-300 bg-clip-text text-3xl font-semibold text-transparent">
@@ -80,7 +80,7 @@ export default function Page() {
               {/* #TODO: add function */}
               <button className="inline-flex w-full transform items-center justify-center gap-1.5 rounded-lg bg-zinc-700 px-3.5 py-2.5 font-medium text-zinc-200 shadow-input ring-1 ring-zinc-600 active:translate-y-1">
                 {/* #TODO: change to nostr connect logo */}
-                <LightningBoltIcon className="h-5 w-5 text-fuchsia-500" />
+                <CableTag width={20} height={20} className="text-fuchsia-500" />
                 <span>Continue with Nostr Connect</span>
               </button>
             </div>

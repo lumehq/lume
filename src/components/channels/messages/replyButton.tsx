@@ -1,8 +1,7 @@
 import { channelReplyAtom } from '@stores/channel';
 
-import ReplyIcon from '@assets/icons/reply';
-
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { Reply } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 
 export const ReplyButton = ({ id, pubkey, content }: { id: string; pubkey: string; content: string }) => {
@@ -20,7 +19,7 @@ export const ReplyButton = ({ id, pubkey, content }: { id: string; pubkey: strin
             onClick={() => createReply()}
             className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800"
           >
-            <ReplyIcon className="h-4 w-4 text-zinc-400" />
+            <Reply width={16} height={16} className="text-zinc-400" />
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>

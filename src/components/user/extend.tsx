@@ -5,9 +5,9 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { MoreHoriz } from 'iconoir-react';
 
 dayjs.extend(relativeTime);
 
@@ -35,7 +35,7 @@ export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) =
           </div>
           <div>
             <button className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800">
-              <DotsHorizontalIcon className="h-3 w-3 text-zinc-500" />
+              <MoreHoriz width={12} height={12} className="text-zinc-500" />
             </button>
           </div>
         </div>

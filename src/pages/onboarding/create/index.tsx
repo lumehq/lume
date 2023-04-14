@@ -2,7 +2,7 @@ import BaseLayout from '@layouts/base';
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { ArrowLeftIcon, EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { ArrowLeft, EyeClose, EyeEmpty } from 'iconoir-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
@@ -95,7 +95,7 @@ export default function Page() {
           onClick={() => goBack()}
           className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
         >
-          <ArrowLeftIcon className="h-4 w-4 text-zinc-500 group-hover:text-zinc-300" />
+          <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
         </button>
         <div>
           <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
@@ -131,9 +131,9 @@ export default function Page() {
                   className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
                 >
                   {type === 'password' ? (
-                    <EyeClosedIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
+                    <EyeClose width={20} height={20} className="text-zinc-500 group-hover:text-zinc-200" />
                   ) : (
-                    <EyeOpenIcon className="h-5 w-5 text-zinc-500 group-hover:text-zinc-200" />
+                    <EyeEmpty width={20} height={20} className="text-zinc-500 group-hover:text-zinc-200" />
                   )}
                 </button>
               </div>

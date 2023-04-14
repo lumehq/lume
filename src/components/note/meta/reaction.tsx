@@ -2,10 +2,8 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix } from '@utils/getDate';
 
-import LikeIcon from '@assets/icons/like';
-import LikedIcon from '@assets/icons/liked';
-
 import useLocalStorage from '@rehooks/local-storage';
+import { Heart } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useEffect, useState } from 'react';
 
@@ -54,7 +52,11 @@ export const NoteReaction = memo(function NoteReaction({
   return (
     <button onClick={(e) => handleLike(e)} className="group flex w-16 items-center gap-1 text-sm text-zinc-500">
       <div className="rounded-md p-1 group-hover:bg-zinc-800">
-        {isReact ? <LikedIcon className="h-5 w-5 text-red-500" /> : <LikeIcon className="h-5 w-5 text-zinc-500" />}
+        {isReact ? (
+          <Heart width={20} height={20} className="fill-red-500" />
+        ) : (
+          <Heart width={20} height={20} className="text-zinc-500" />
+        )}
       </div>
       <span>{like}</span>
     </button>

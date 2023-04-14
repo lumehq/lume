@@ -5,8 +5,8 @@ import { APP_VERSION } from '@stores/constants';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { PlusIcon } from '@radix-ui/react-icons';
 import useLocalStorage from '@rehooks/local-storage';
+import { Plus } from 'iconoir-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -50,7 +50,7 @@ export default function MultiAccounts() {
           href="/onboarding"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"
         >
-          <PlusIcon className="h-4 w-4 text-zinc-400 group-hover:text-zinc-200" />
+          <Plus width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
         </Link>
       </div>
       <div className="flex flex-col gap-0.5 text-center">
