@@ -125,7 +125,9 @@ export default function EventCollector() {
       if (unsubscribe.current) {
         unsubscribe.current();
       }
-      unlisten.current();
+      if (unlisten.current) {
+        unlisten.current;
+      }
     };
   }, [setHasNewerNote, subscribe, listenWindowClose]);
 

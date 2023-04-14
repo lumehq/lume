@@ -18,7 +18,6 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 
 export default function Page() {
@@ -133,9 +132,10 @@ export default function Page() {
         },
         undefined,
         () => {
-          eose.current += 1;
-          if (eose.current > relays.length / 2) {
+          if (eose.current > relays.length - 7) {
             router.replace('/newsfeed/following');
+          } else {
+            eose.current += 1;
           }
         }
       );
