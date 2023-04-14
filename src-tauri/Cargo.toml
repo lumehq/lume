@@ -22,6 +22,7 @@ prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-
 specta = "1.0.0"
 tauri-specta = { version = "1.0.0", features = ["typescript"] }
 tokio = { version = "1.26.0", features = ["macros"] }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc = "0.2.7"

@@ -118,6 +118,12 @@ struct UpdateChannelData {
   active: bool,
 }
 
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+  args: Vec<String>,
+  cwd: String,
+}
+
 #[tauri::command]
 #[specta::specta]
 async fn get_accounts(db: DbState<'_>) -> Result<Vec<account::Data>, ()> {
@@ -425,6 +431,12 @@ async fn main() {
       get_chats
     ])
     .manage(Arc::new(db))
+    .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
+      println!("{}, {argv:?}, {cwd}", app.package_info().name);
+      app
+        .emit_all("single-instance", Payload { args: argv, cwd })
+        .unwrap();
+    }))
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
