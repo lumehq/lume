@@ -2,8 +2,6 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix } from '@utils/getDate';
 
-import HideIcon from '@assets/icons/hide';
-
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import useLocalStorage from '@rehooks/local-storage';
