@@ -5,17 +5,14 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { useMetadata } from '@utils/metadata';
 import { truncate } from '@utils/truncate';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
   const router = useRouter();
   const profile = useMetadata(pubkey);
 
   const openChat = () => {
-    router.push({
-      pathname: '/chats/[pubkey]',
-      query: { pubkey: pubkey },
-    });
+    router.push(`/chats/${pubkey}`);
   };
 
   return (

@@ -1,10 +1,12 @@
+'use client';
+
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { LogOut, ProfileCircle, Settings } from 'iconoir-react';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { nip19 } from 'nostr-tools';
 
 export const ActiveAccount = ({ user }: { user: any }) => {

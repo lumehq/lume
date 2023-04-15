@@ -1,3 +1,5 @@
+'use client';
+
 import ChatList from '@components/chats/chatList';
 
 import * as Collapsible from '@radix-ui/react-collapsible';

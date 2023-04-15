@@ -5,7 +5,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import useLocalStorage from '@rehooks/local-storage';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ChatList() {
@@ -16,10 +16,7 @@ export default function ChatList() {
   const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   const openSelfChat = () => {
-    router.push({
-      pathname: '/chats/[pubkey]',
-      query: { pubkey: activeAccount.pubkey },
-    });
+    router.push(`/chats/${activeAccount.pubkey}`);
   };
 
   useEffect(() => {

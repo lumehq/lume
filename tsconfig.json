@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@pages/*": ["src/pages/*"],
-      "@layouts/*": ["src/layouts/*"],
+      "@app/*": ["src/app/*"],
       "@components/*": ["src/components/*"],
       "@stores/*": ["src/stores/*"],
       "@utils/*": ["src/utils/*"],
@@ -27,7 +26,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "strictNullChecks": false
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

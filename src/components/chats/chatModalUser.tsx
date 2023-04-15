@@ -4,17 +4,14 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { truncate } from '@utils/truncate';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export const ChatModalUser = ({ data }: { data: any }) => {
   const router = useRouter();
   const profile = JSON.parse(data.metadata);
 
   const openNewChat = () => {
-    router.push({
-      pathname: '/chats/[pubkey]',
-      query: { pubkey: data.pubkey },
-    });
+    router.push(`/chats/${data.pubkey}`);
   };
 
   return (

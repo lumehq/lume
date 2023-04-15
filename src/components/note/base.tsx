@@ -7,7 +7,7 @@ import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
 import destr from 'destr';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import reactStringReplace from 'react-string-replace';
 

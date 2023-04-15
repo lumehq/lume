@@ -2,17 +2,14 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export const ChannelListItem = ({ data }: { data: any }) => {
   const router = useRouter();
   const channel = JSON.parse(data.content);
 
   const openChannel = (id: string) => {
-    router.push({
-      pathname: '/channels/[id]',
-      query: { id: id },
-    });
+    router.push(`/channels/${id}`);
   };
 
   return (

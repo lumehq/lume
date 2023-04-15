@@ -7,7 +7,7 @@ import { dateToUnix } from '@utils/getDate';
 import * as Dialog from '@radix-ui/react-dialog';
 import useLocalStorage from '@rehooks/local-storage';
 import { MultiBubble, OpenNewWindow } from 'iconoir-react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { memo, useContext, useState } from 'react';
 

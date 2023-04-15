@@ -1,3 +1,5 @@
+'use client';
+
 import { RelayPool } from 'nostr-relaypool';
 import { createContext, useMemo } from 'react';
 

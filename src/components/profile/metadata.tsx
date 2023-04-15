@@ -1,3 +1,5 @@
+'use client';
+
 import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 

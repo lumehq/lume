@@ -1,3 +1,5 @@
+'use client';
+
 import { NoteBase } from '@components/note/base';
 import { RelayContext } from '@components/relaysProvider';
 

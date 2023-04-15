@@ -1,3 +1,5 @@
+'use client';
+
 import ChannelList from '@components/channels/channelList';
 
 import * as Collapsible from '@radix-ui/react-collapsible';

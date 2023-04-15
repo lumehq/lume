@@ -1,3 +1,5 @@
+'use client';
+
 import { ActiveAccount } from '@components/multiAccounts/activeAccount';
 import { InactiveAccount } from '@components/multiAccounts/inactiveAccount';
 

@@ -9,7 +9,7 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "importOrder": [
-    "^@layouts/(.*)$",
+    "^@app/(.*)$",
     "^@pages/(.*)$",
     "^@components/(.*)$",
     "^@stores/(.*)$",

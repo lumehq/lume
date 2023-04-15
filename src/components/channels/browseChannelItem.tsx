@@ -2,7 +2,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 export const BrowseChannelItem = ({ data }: { data: any }) => {
@@ -11,10 +11,7 @@ export const BrowseChannelItem = ({ data }: { data: any }) => {
 
   const openChannel = useCallback(
     (id: string) => {
-      router.push({
-        pathname: '/channels/[id]',
-        query: { id: id },
-      });
+      router.push(`/channels/${id}`);
     },
     [router]
   );
