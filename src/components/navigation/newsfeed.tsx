@@ -1,8 +1,9 @@
 'use client';
 
+import { ActiveLink } from '@components/activeLink';
+
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { NavArrowUp } from 'iconoir-react';
-import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Newsfeed() {
@@ -22,20 +23,20 @@ export default function Newsfeed() {
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Newsfeed</h3>
         </Collapsible.Trigger>
         <Collapsible.Content className="flex flex-col text-zinc-400">
-          <Link
-            href={`/newsfeed/following`}
-            //activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
+          <ActiveLink
+            href="/newsfeed/following"
+            activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
           >
             <span>Following</span>
-          </Link>
-          <Link
-            href={`/newsfeed/circle`}
-            //activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
+          </ActiveLink>
+          <ActiveLink
+            href="/newsfeed/circle"
+            activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
           >
             <span>Circle</span>
-          </Link>
+          </ActiveLink>
         </Collapsible.Content>
       </div>
     </Collapsible.Root>
