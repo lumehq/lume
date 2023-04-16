@@ -51,8 +51,8 @@ export const CreateChannelModal = () => {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <div className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-950">
-          <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900">
+        <div className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900">
+          <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">
             <Plus width={12} height={12} className="text-zinc-500" />
           </div>
           <div>

@@ -1,21 +1,23 @@
 import MessageListItem from '@components/chats/messageListItem';
+import { Placeholder } from '@components/note/placeholder';
+
+import { sortedChatMessagesAtom } from '@stores/chat';
 
 import useLocalStorage from '@rehooks/local-storage';
+import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-export const MessageList = ({ data }: { data: any }) => {
+export const MessageList = () => {
   const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const virtuosoRef = useRef(null);
+
+  const data = useAtomValue(sortedChatMessagesAtom);
 
   const itemContent: any = useCallback(
     (index: string | number) => {
       return (
-        <MessageListItem
-          data={data[index]}
-          activeAccountPubkey={activeAccount.pubkey}
-          activeAccountPrivkey={activeAccount.privkey}
-        />
+        <MessageListItem data={data[index]} userPubkey={activeAccount.pubkey} userPrivkey={activeAccount.privkey} />
       );
     },
     [activeAccount.privkey, activeAccount.pubkey, data]
@@ -33,6 +35,7 @@ export const MessageList = ({ data }: { data: any }) => {
       <Virtuoso
         ref={virtuosoRef}
         data={data}
+        components={COMPONENTS}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         initialTopMostItemIndex={data.length - 1}
@@ -44,4 +47,9 @@ export const MessageList = ({ data }: { data: any }) => {
       />
     </div>
   );
+};
+
+const COMPONENTS = {
+  EmptyPlaceholder: () => <Placeholder />,
+  ScrollSeekPlaceholder: () => <Placeholder />,
 };

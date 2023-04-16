@@ -25,7 +25,6 @@ export default function EventCollector() {
 
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
-  const unlisten = useRef(null);
 
   const createFollowingPlebs = useCallback(
     async (tags) => {
@@ -115,7 +114,7 @@ export default function EventCollector() {
   }, [pool, relays, activeAccount.id, activeAccount.pubkey, follows, setHasNewerNote, createFollowingPlebs]);
 
   const listenWindowClose = useCallback(async () => {
-    unlisten.current = window.getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
+    window.getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
       writeStorage('lastLogin', now.current);
       window.getCurrent().close();
     });
@@ -128,9 +127,6 @@ export default function EventCollector() {
     return () => {
       if (unsubscribe.current) {
         unsubscribe.current();
-      }
-      if (unlisten.current) {
-        unlisten.current;
       }
     };
   }, [setHasNewerNote, subscribe, listenWindowClose]);

@@ -1,36 +1,11 @@
 import { MessageUser } from '@components/chats/messageUser';
 
-import { nip04 } from 'nostr-tools';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDecryptMessage } from '@utils/hooks/useDecryptMessage';
 
-const MessageListItem = ({
-  data,
-  activeAccountPubkey,
-  activeAccountPrivkey,
-}: {
-  data: any;
-  activeAccountPubkey: string;
-  activeAccountPrivkey: string;
-}) => {
-  const [content, setContent] = useState('');
+import { memo } from 'react';
 
-  const sender = useMemo(() => {
-    const pTag = data.tags.find(([k, v]) => k === 'p' && v && v !== '')[1];
-    if (pTag === activeAccountPubkey) {
-      return data.pubkey;
-    } else {
-      return pTag;
-    }
-  }, [data.pubkey, data.tags, activeAccountPubkey]);
-
-  const decryptContent = useCallback(async () => {
-    const result = await nip04.decrypt(activeAccountPrivkey, sender, data.content);
-    setContent(result);
-  }, [data.content, activeAccountPrivkey, sender]);
-
-  useEffect(() => {
-    decryptContent().catch(console.error);
-  }, [decryptContent]);
+const MessageListItem = ({ data, userPubkey, userPrivkey }: { data: any; userPubkey: string; userPrivkey: string }) => {
+  const content = useDecryptMessage(userPubkey, userPrivkey, data.pubkey, data.tags, data.content);
 
   return (
     <div className="flex h-min min-h-min w-full select-text flex-col px-5 py-2 hover:bg-black/20">

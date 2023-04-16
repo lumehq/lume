@@ -4,17 +4,24 @@ import { MessageList } from '@components/chats/messageList';
 import FormChat from '@components/form/chat';
 import { RelayContext } from '@components/relaysProvider';
 
+import { chatMessagesAtom } from '@stores/chat';
+
 import useLocalStorage from '@rehooks/local-storage';
-import { useContext, useEffect, useState } from 'react';
+import { useSetAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
+import { Suspense, useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { pubkey: string } }) {
   const [pool, relays]: any = useContext(RelayContext);
-
   const [activeAccount]: any = useLocalStorage('activeAccount', {});
-  const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = pool.subscribe(
+  const setChatMessages = useSetAtom(chatMessagesAtom);
+  const resetChatMessages = useResetAtom(chatMessagesAtom);
+
+  const unsubscribe = useRef(null);
+
+  const fetchMessages = useCallback(() => {
+    unsubscribe.current = pool.subscribe(
       [
         {
           kinds: [4],
@@ -29,18 +36,29 @@ export default function Page({ params }: { params: { pubkey: string } }) {
       ],
       relays,
       (event: any) => {
-        setMessages((messages) => [event, ...messages]);
+        setChatMessages((data) => [...data, event]);
       }
     );
+  }, [activeAccount.pubkey, params.pubkey, pool, relays, setChatMessages]);
+
+  useEffect(() => {
+    // reset stored messages
+    resetChatMessages();
+    // fetch messages from relays
+    fetchMessages();
 
     return () => {
-      unsubscribe();
+      if (unsubscribe.current) {
+        unsubscribe.current();
+      }
     };
-  }, [pool, relays, params.pubkey, activeAccount.pubkey]);
+  }, [fetchMessages, resetChatMessages]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <MessageList data={messages.sort((a, b) => a.created_at - b.created_at)} />
+      <Suspense fallback={<>Loading...</>}>
+        <MessageList />
+      </Suspense>
       <div className="shrink-0 p-3">
         <FormChat receiverPubkey={params.pubkey} />
       </div>

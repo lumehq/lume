@@ -3,7 +3,7 @@
 import { ActiveLink } from '@components/activeLink';
 
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { NavArrowUp } from 'iconoir-react';
+import { Bonfire, NavArrowUp, PeopleTag } from 'iconoir-react';
 import { useState } from 'react';
 
 export default function Newsfeed() {
@@ -28,6 +28,7 @@ export default function Newsfeed() {
             activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
           >
+            <PeopleTag width={16} height={16} className="text-zinc-500" />
             <span>Following</span>
           </ActiveLink>
           <ActiveLink
@@ -35,6 +36,7 @@ export default function Newsfeed() {
             activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
           >
+            <Bonfire width={16} height={16} className="text-zinc-500" />
             <span>Circle</span>
           </ActiveLink>
         </Collapsible.Content>

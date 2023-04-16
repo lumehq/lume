@@ -16,14 +16,20 @@ export const useMetadata = (pubkey) => {
   const [profile, setProfile] = useState(null);
 
   const cacheProfile = useMemo(() => {
-    const findInStorage = plebs.find((item) => item.pubkey === pubkey);
+    let metadata = false;
 
-    if (findInStorage !== undefined) {
-      return JSON.parse(findInStorage.metadata);
+    if (pubkey === activeAccount.pubkey) {
+      metadata = JSON.parse(activeAccount.metadata);
     } else {
-      return false;
+      const findInStorage = plebs.find((item) => item.pubkey === pubkey);
+
+      if (findInStorage !== undefined) {
+        metadata = JSON.parse(findInStorage.metadata);
+      }
     }
-  }, [plebs, pubkey]);
+
+    return metadata;
+  }, [plebs, pubkey, activeAccount.pubkey, activeAccount.metadata]);
 
   const insertPlebToDB = useCallback(
     async (pubkey: string, metadata: string) => {
