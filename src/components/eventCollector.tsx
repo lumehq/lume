@@ -32,15 +32,17 @@ export default function EventCollector() {
       const { createPleb } = await import('@utils/bindings');
       for (const tag of tags) {
         const pubkey = tag[1];
-        const metadata: any = await fetchMetadata(pubkey);
-
-        createPleb({
-          pleb_id: pubkey + '-lume' + activeAccount.id.toString(),
-          pubkey: pubkey,
-          kind: 0,
-          metadata: metadata.content,
-          account_id: activeAccount.id,
-        }).catch(console.error);
+        fetchMetadata(pubkey)
+          .then((res: { content: string }) => {
+            createPleb({
+              pleb_id: pubkey + '-lume' + activeAccount.id.toString(),
+              pubkey: pubkey,
+              kind: 0,
+              metadata: res.content,
+              account_id: activeAccount.id,
+            }).catch(console.error);
+          })
+          .catch(console.error);
       }
     },
     [activeAccount.id]

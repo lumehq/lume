@@ -2,7 +2,7 @@ import NoteMetadata from '@components/note/metadata';
 import { NoteParent } from '@components/note/parent';
 import { ImagePreview } from '@components/note/preview/image';
 import { VideoPreview } from '@components/note/preview/video';
-import { NoteRepost } from '@components/note/repost';
+import { NoteQuote } from '@components/note/quote';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
 
@@ -48,10 +48,10 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
       parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
         if (tags[match][0] === 'p') {
           // @-mentions
-          return <UserMention key={match + i} pubkey={tags[match][1]} />;
+          return <UserMention key={tags[match][1]} pubkey={tags[match][1]} />;
         } else if (tags[match][0] === 'e') {
-          // note-mentions
-          return <NoteRepost key={match + i} id={tags[match][1]} />;
+          // note-quotes
+          return <NoteQuote key={tags[match][1]} id={tags[match][1]} />;
         } else {
           return;
         }
@@ -61,10 +61,10 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
     return parsedContent;
   }, [event.content, event.tags]);
 
-  const getParent = useMemo(() => {
+  const parentNote = useMemo(() => {
     if (event.parent_id) {
       if (event.parent_id !== event.eventId && !event.content.includes('#[0]')) {
-        return <NoteParent id={event.parent_id} />;
+        return <NoteParent key={event.parent_id} id={event.parent_id} />;
       }
     }
 
@@ -90,7 +90,7 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
       onClick={(e) => openThread(e)}
       className="relative z-10 m-0 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
     >
-      <>{getParent}</>
+      <>{parentNote}</>
       <div className="relative z-10 flex flex-col">
         <div onClick={(e) => openUserPage(e)}>
           <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />

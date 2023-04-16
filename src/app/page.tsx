@@ -123,7 +123,7 @@ export default function Page() {
         },
         undefined,
         () => {
-          if (eose.current > relays.length - 7) {
+          if (eose.current > relays.length / 2) {
             router.replace('/newsfeed/following');
           } else {
             eose.current += 1;

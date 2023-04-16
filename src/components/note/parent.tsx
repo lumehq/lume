@@ -1,7 +1,7 @@
 import NoteMetadata from '@components/note/metadata';
 import { ImagePreview } from '@components/note/preview/image';
 import { VideoPreview } from '@components/note/preview/video';
-import { NoteRepost } from '@components/note/repost';
+import { NoteQuote } from '@components/note/quote';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 import { UserMention } from '@components/user/mention';
@@ -117,10 +117,10 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
         parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
           if (tags[match][0] === 'p') {
             // @-mentions
-            return <UserMention key={match + i} pubkey={tags[match][1]} />;
+            return <UserMention key={tags[match][1]} pubkey={tags[match][1]} />;
           } else if (tags[match][0] === 'e') {
-            // note-mentions
-            return <NoteRepost key={match + i} id={tags[match][1]} />;
+            // note-quotes
+            return <NoteQuote key={tags[match][1]} id={tags[match][1]} />;
           } else {
             return;
           }

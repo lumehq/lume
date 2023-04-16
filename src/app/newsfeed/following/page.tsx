@@ -4,19 +4,19 @@ import FormBase from '@components/form/base';
 import { NoteBase } from '@components/note/base';
 import { Placeholder } from '@components/note/placeholder';
 
-import { hasNewerNoteAtom } from '@stores/note';
+import { filteredNotesAtom, hasNewerNoteAtom, notesAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { filterDuplicateParentID } from '@utils/transform';
 
 import { ArrowUp } from 'iconoir-react';
-import { useAtom } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useEffect, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function Page() {
-  const [data, setData] = useState([]);
   const [hasNewerNote, setHasNewerNote] = useAtom(hasNewerNoteAtom);
+  const setData = useSetAtom(notesAtom);
+  const data = useAtomValue(filteredNotesAtom);
 
   const virtuosoRef = useRef(null);
   const now = useRef(new Date());
@@ -45,7 +45,7 @@ export default function Page() {
       offset: offset.current,
     });
     setData((data) => [...data, ...result]);
-  }, []);
+  }, [setData]);
 
   const loadMore = useCallback(async () => {
     const { getNotes } = await import('@utils/bindings');
@@ -57,14 +57,14 @@ export default function Page() {
       offset: offset.current,
     });
     setData((data) => [...data, ...result]);
-  }, []);
+  }, [setData]);
 
   const loadLatest = useCallback(async () => {
     const { getLatestNotes } = await import('@utils/bindings');
     // next query
     const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
     // update data
-    if (result.length > 0) {
+    if (Array.isArray(result)) {
       setData((data) => [...data, ...result]);
     } else {
       setData((data) => [...data, result]);
@@ -72,8 +72,8 @@ export default function Page() {
     // hide newer trigger
     setHasNewerNote(false);
     // scroll to top
-    virtuosoRef.current.scrollToIndex({ index: 0 });
-  }, [setHasNewerNote]);
+    virtuosoRef.current.scrollToIndex({ index: -1 });
+  }, [setData, setHasNewerNote]);
 
   useEffect(() => {
     initialData().catch(console.error);
@@ -94,7 +94,7 @@ export default function Page() {
       )}
       <Virtuoso
         ref={virtuosoRef}
-        data={filterDuplicateParentID(data)}
+        data={data}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         components={COMPONENTS}
