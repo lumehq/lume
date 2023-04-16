@@ -9,7 +9,7 @@ import destr from 'destr';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import reactStringReplace from 'react-string-replace';
 
-export const NoteQuote = memo(function NoteRepost({ id }: { id: string }) {
+export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
   const [activeAccount]: any = useLocalStorage('activeAccount', {});

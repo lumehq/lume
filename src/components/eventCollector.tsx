@@ -6,7 +6,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { fetchMetadata } from '@utils/metadata';
+import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { getParentID, pubkeyArray } from '@utils/transform';
 
 import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
@@ -31,7 +31,7 @@ export default function EventCollector() {
       const { createPleb } = await import('@utils/bindings');
       for (const tag of tags) {
         const pubkey = tag[1];
-        fetchMetadata(pubkey)
+        fetchProfileMetadata(pubkey)
           .then((res: { content: string }) => {
             createPleb({
               pleb_id: pubkey + '-lume' + activeAccount.id.toString(),
@@ -55,7 +55,7 @@ export default function EventCollector() {
     unsubscribe.current = pool.subscribe(
       [
         {
-          kinds: [1],
+          kinds: [1, 6],
           authors: pubkeyArray(follows),
           since: dateToUnix(now.current),
         },
@@ -75,39 +75,65 @@ export default function EventCollector() {
       ],
       relays,
       (event) => {
-        if (event.kind === 1) {
-          const parentID = getParentID(event.tags, event.id);
-          // insert event to local database
-          createNote({
-            event_id: event.id,
-            pubkey: event.pubkey,
-            kind: event.kind,
-            tags: JSON.stringify(event.tags),
-            content: event.content,
-            parent_id: parentID,
-            parent_comment_id: '',
-            created_at: event.created_at,
-            account_id: activeAccount.id,
-          })
-            .then(() =>
-              // notify user reload to get newer note
-              setHasNewerNote(true)
-            )
-            .catch(console.error);
-        } else if (event.kind === 3) {
-          createFollowingPlebs(event.tags);
-        } else if (event.kind === 4) {
-          if (event.pubkey !== activeAccount.pubkey) {
-            createChat({ pubkey: event.pubkey, created_at: event.created_at, account_id: activeAccount.id }).catch(
+        switch (event.kind) {
+          // short text note
+          case 1:
+            const parentID = getParentID(event.tags, event.id);
+            createNote({
+              event_id: event.id,
+              pubkey: event.pubkey,
+              kind: event.kind,
+              tags: JSON.stringify(event.tags),
+              content: event.content,
+              parent_id: parentID,
+              parent_comment_id: '',
+              created_at: event.created_at,
+              account_id: activeAccount.id,
+            })
+              .then(() =>
+                // notify user reload to get newer note
+                setHasNewerNote(true)
+              )
+              .catch(console.error);
+            break;
+          // contacts
+          case 3:
+            createFollowingPlebs(event.tags);
+            break;
+          // chat
+          case 4:
+            if (event.pubkey !== activeAccount.pubkey) {
+              createChat({
+                pubkey: event.pubkey,
+                created_at: event.created_at,
+                account_id: activeAccount.id,
+              }).catch(console.error);
+            }
+          // repost
+          case 6:
+            createNote({
+              event_id: event.id,
+              pubkey: event.pubkey,
+              kind: event.kind,
+              tags: JSON.stringify(event.tags),
+              content: event.content,
+              parent_id: '',
+              parent_comment_id: '',
+              created_at: event.created_at,
+              account_id: activeAccount.id,
+            })
+              .then(() =>
+                // notify user reload to get newer note
+                setHasNewerNote(true)
+              )
+              .catch(console.error);
+          // channel
+          case 40:
+            createChannel({ event_id: event.id, content: event.content, account_id: activeAccount.id }).catch(
               console.error
             );
-          }
-        } else if (event.kind === 40) {
-          createChannel({ event_id: event.id, content: event.content, account_id: activeAccount.id }).catch(
-            console.error
-          );
-        } else {
-          console.error;
+          default:
+            break;
         }
       }
     );

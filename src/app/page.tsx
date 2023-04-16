@@ -66,7 +66,7 @@ export default function Page() {
         since = dateToUnix(new Date(lastLogin));
       }
       query.push({
-        kinds: [1],
+        kinds: [1, 6],
         authors: follows,
         since: since,
         until: dateToUnix(now.current),
@@ -93,32 +93,52 @@ export default function Page() {
         query,
         relays,
         (event) => {
-          if (event.kind === 1) {
-            const parentID = getParentID(event.tags, event.id);
-            // insert event to local database
-            createNote({
-              event_id: event.id,
-              pubkey: event.pubkey,
-              kind: event.kind,
-              tags: JSON.stringify(event.tags),
-              content: event.content,
-              parent_id: parentID,
-              parent_comment_id: '',
-              created_at: event.created_at,
-              account_id: account.id,
-            }).catch(console.error);
-          } else if (event.kind === 4) {
-            if (event.pubkey !== account.pubkey) {
-              createChat({
+          switch (event.kind) {
+            // short text note
+            case 1:
+              const parentID = getParentID(event.tags, event.id);
+              // insert event to local database
+              createNote({
+                event_id: event.id,
                 pubkey: event.pubkey,
+                kind: event.kind,
+                tags: JSON.stringify(event.tags),
+                content: event.content,
+                parent_id: parentID,
+                parent_comment_id: '',
                 created_at: event.created_at,
                 account_id: account.id,
               }).catch(console.error);
-            }
-          } else if (event.kind === 40) {
-            createChannel({ event_id: event.id, content: event.content, account_id: account.id }).catch(console.error);
-          } else {
-            console.error;
+              break;
+            // chat
+            case 4:
+              if (event.pubkey !== account.pubkey) {
+                createChat({
+                  pubkey: event.pubkey,
+                  created_at: event.created_at,
+                  account_id: account.id,
+                }).catch(console.error);
+              }
+            // repost
+            case 6:
+              createNote({
+                event_id: event.id,
+                pubkey: event.pubkey,
+                kind: event.kind,
+                tags: JSON.stringify(event.tags),
+                content: event.content,
+                parent_id: '',
+                parent_comment_id: '',
+                created_at: event.created_at,
+                account_id: account.id,
+              }).catch(console.error);
+            // channel
+            case 40:
+              createChannel({ event_id: event.id, content: event.content, account_id: account.id }).catch(
+                console.error
+              );
+            default:
+              break;
           }
         },
         undefined,

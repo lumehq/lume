@@ -2,7 +2,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useMetadata } from '@utils/metadata';
+import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { truncate } from '@utils/truncate';
 
 import dayjs from 'dayjs';
@@ -11,7 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 export const MessageUser = ({ pubkey, time }: { pubkey: string; time: number }) => {
-  const profile = useMetadata(pubkey);
+  const profile = useProfileMetadata(pubkey);
 
   return (
     <div className="group flex items-start gap-3">

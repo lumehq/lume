@@ -2,7 +2,7 @@ import useLocalStorage from '@rehooks/local-storage';
 import { fetch } from '@tauri-apps/api/http';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-export const fetchMetadata = async (pubkey: string) => {
+export const fetchProfileMetadata = async (pubkey: string) => {
   const result = await fetch(`https://rbr.bio/${pubkey}/metadata.json`, {
     method: 'GET',
     timeout: 5,
@@ -10,7 +10,7 @@ export const fetchMetadata = async (pubkey: string) => {
   return await result.data;
 };
 
-export const useMetadata = (pubkey) => {
+export const useProfileMetadata = (pubkey) => {
   const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [plebs] = useLocalStorage('activeAccountFollows', []);
   const [profile, setProfile] = useState(null);
@@ -47,7 +47,7 @@ export const useMetadata = (pubkey) => {
 
   useEffect(() => {
     if (!cacheProfile) {
-      fetchMetadata(pubkey)
+      fetchProfileMetadata(pubkey)
         .then((res: any) => {
           // update state
           setProfile(JSON.parse(res.content));

@@ -3,6 +3,7 @@
 import FormBase from '@components/form/base';
 import { NoteBase } from '@components/note/base';
 import { Placeholder } from '@components/note/placeholder';
+import { NoteQuoteRepost } from '@components/note/quoteRepost';
 
 import { filteredNotesAtom, hasNewerNoteAtom, notesAtom } from '@stores/note';
 
@@ -25,7 +26,14 @@ export default function Page() {
 
   const itemContent: any = useCallback(
     (index: string | number) => {
-      return <NoteBase event={data[index]} />;
+      switch (data[index].kind) {
+        case 1:
+          return <NoteBase event={data[index]} />;
+        case 6:
+          return <NoteQuoteRepost event={data[index]} />;
+        default:
+          break;
+      }
     },
     [data]
   );

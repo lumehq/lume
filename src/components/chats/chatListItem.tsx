@@ -2,14 +2,14 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useMetadata } from '@utils/metadata';
+import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { truncate } from '@utils/truncate';
 
 import { useRouter } from 'next/navigation';
 
 export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
   const router = useRouter();
-  const profile = useMetadata(pubkey);
+  const profile = useProfileMetadata(pubkey);
 
   const openChat = () => {
     router.push(`/chats/${pubkey}`);

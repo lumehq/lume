@@ -1,7 +1,7 @@
-import { useNavigatorOnLine } from '@utils/network';
+import { useNetworkStatus } from '@utils/hooks/useNetworkStatus';
 
 export const NetworkStatusIndicator = () => {
-  const isOnline = useNavigatorOnLine();
+  const isOnline = useNetworkStatus();
 
   return (
     <div className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 hover:bg-zinc-900">

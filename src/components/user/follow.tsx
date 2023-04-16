@@ -2,11 +2,11 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useMetadata } from '@utils/metadata';
+import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { truncate } from '@utils/truncate';
 
 export const UserFollow = ({ pubkey }: { pubkey: string }) => {
-  const profile = useMetadata(pubkey);
+  const profile = useProfileMetadata(pubkey);
 
   return (
     <div className="flex items-center gap-2">

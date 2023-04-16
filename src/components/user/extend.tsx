@@ -2,7 +2,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useMetadata } from '@utils/metadata';
+import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { truncate } from '@utils/truncate';
 
 import dayjs from 'dayjs';
@@ -12,7 +12,7 @@ import { MoreHoriz } from 'iconoir-react';
 dayjs.extend(relativeTime);
 
 export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) => {
-  const profile = useMetadata(pubkey);
+  const profile = useProfileMetadata(pubkey);
 
   return (
     <div className="group flex items-start gap-2">

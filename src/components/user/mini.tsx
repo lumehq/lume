@@ -2,11 +2,11 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useMetadata } from '@utils/metadata';
+import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { truncate } from '@utils/truncate';
 
 export const UserMini = ({ pubkey }: { pubkey: string }) => {
-  const profile = useMetadata(pubkey);
+  const profile = useProfileMetadata(pubkey);
 
   return (
     <div className="group flex items-start gap-1">
