@@ -1,10 +1,16 @@
 import ChannelMessageItem from '@components/channels/messages/item';
+import { Placeholder } from '@components/note/placeholder';
 
+import { sortedChannelMessagesAtom } from '@stores/channel';
+
+import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-export const ChannelMessages = ({ data }: { data: any }) => {
+export const ChannelMessages = () => {
   const virtuosoRef = useRef(null);
+
+  const data = useAtomValue(sortedChannelMessagesAtom);
 
   const itemContent: any = useCallback(
     (index: string | number) => {
@@ -25,6 +31,7 @@ export const ChannelMessages = ({ data }: { data: any }) => {
       <Virtuoso
         ref={virtuosoRef}
         data={data}
+        components={COMPONENTS}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         initialTopMostItemIndex={data.length - 1}
@@ -36,4 +43,9 @@ export const ChannelMessages = ({ data }: { data: any }) => {
       />
     </div>
   );
+};
+
+const COMPONENTS = {
+  EmptyPlaceholder: () => <Placeholder />,
+  ScrollSeekPlaceholder: () => <Placeholder />,
 };

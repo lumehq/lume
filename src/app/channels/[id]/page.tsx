@@ -4,17 +4,19 @@ import { ChannelMessages } from '@components/channels/messages/index';
 import FormChannelMessage from '@components/form/channelMessage';
 import { RelayContext } from '@components/relaysProvider';
 
-import { channelReplyAtom } from '@stores/channel';
+import { channelMessagesAtom, channelReplyAtom } from '@stores/channel';
 
 import useLocalStorage from '@rehooks/local-storage';
+import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { Suspense, useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [pool, relays]: any = useContext(RelayContext);
-
-  const [messages, setMessages] = useState([]);
   const [activeAccount]: any = useLocalStorage('activeAccount', {});
+
+  const setChannelMessages = useSetAtom(channelMessagesAtom);
+  const resetChannelMessages = useResetAtom(channelMessagesAtom);
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
   const muted = useRef(new Set());
@@ -23,6 +25,8 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     // reset channel reply
     resetChannelReply();
+    // reset channel messages
+    resetChannelMessages();
     // subscribe event
     const unsubscribe = pool.subscribe(
       [
@@ -49,7 +53,7 @@ export default function Page({ params }: { params: { id: string } }) {
           } else if (hided.current.has(event.id)) {
             console.log('hided');
           } else {
-            setMessages((messages) => [event, ...messages]);
+            setChannelMessages((messages) => [event, ...messages]);
           }
         }
       }
@@ -58,11 +62,13 @@ export default function Page({ params }: { params: { id: string } }) {
     return () => {
       unsubscribe();
     };
-  }, [pool, relays, activeAccount.pubkey, params.id, resetChannelReply]);
+  }, [pool, relays, activeAccount.pubkey, params.id, setChannelMessages, resetChannelReply, resetChannelMessages]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <ChannelMessages data={messages.sort((a, b) => a.created_at - b.created_at)} />
+      <Suspense fallback={<>Loading...</>}>
+        <ChannelMessages />
+      </Suspense>
       <div className="shrink-0 p-3">
         <FormChannelMessage eventId={params.id} />
       </div>
