@@ -1,21 +1,20 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
-import { UserMention } from '@components/user/mention';
 
+import { contentParser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
 
 import useLocalStorage from '@rehooks/local-storage';
-import destr from 'destr';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import reactStringReplace from 'react-string-replace';
+import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
   const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [event, setEvent] = useState(null);
-
   const unsubscribe = useRef(null);
+
+  const content = contentParser(event.content, event.tags);
 
   const fetchEvent = useCallback(async () => {
     const { createNote } = await import('@utils/bindings');
@@ -46,7 +45,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
           account_id: activeAccount.id,
         }).catch(console.error);
       },
-      100,
+      undefined,
       undefined,
       {
         unsubscribeOnEose: true,
@@ -77,40 +76,6 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
     };
   }, [checkNoteExist]);
 
-  const content = useMemo(() => {
-    let parsedContent = event ? event.content : null;
-
-    if (parsedContent !== null) {
-      // get data tags
-      const tags = destr(event.tags);
-      // handle urls
-      parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => (
-        <a key={match + i} href={match} target="_blank" rel="noreferrer">
-          {match}
-        </a>
-      ));
-      // handle #-hashtags
-      parsedContent = reactStringReplace(parsedContent, /#(\w+)/g, (match, i) => (
-        <span key={match + i} className="cursor-pointer text-fuchsia-500">
-          #{match}
-        </span>
-      ));
-      // handle mentions
-      if (tags.length > 0) {
-        parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
-          if (tags[match][0] === 'p') {
-            // @-mentions
-            return <UserMention key={match + i} pubkey={tags[match][1]} />;
-          } else {
-            return;
-          }
-        });
-      }
-    }
-
-    return parsedContent;
-  }, [event]);
-
   if (event) {
     return (
       <div className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
@@ -118,7 +83,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
           <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
           <div className="-mt-5 pl-[52px]">
             <div className="flex flex-col gap-2">
-              <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
+              <div className="prose prose-zinc max-w-none whitespace-pre-line break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
                 {content}
               </div>
             </div>

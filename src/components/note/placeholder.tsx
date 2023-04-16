@@ -1,8 +1,6 @@
-import { memo } from 'react';
-
-export const Placeholder = memo(function Placeholder() {
+export const Placeholder = () => {
   return (
-    <div className="relative z-10 flex h-min animate-pulse select-text flex-col py-5 px-3">
+    <div className="relative z-10 flex h-min animate-pulse select-text flex-col px-3 py-5">
       <div className="flex items-start gap-2">
         <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
         <div className="flex w-full flex-1 items-start justify-between">
@@ -27,4 +25,4 @@ export const Placeholder = memo(function Placeholder() {
       </div>
     </div>
   );
-});
+};

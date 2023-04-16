@@ -1,29 +1,24 @@
 import NoteMetadata from '@components/note/metadata';
-import { ImagePreview } from '@components/note/preview/image';
-import { VideoPreview } from '@components/note/preview/video';
-import { NoteQuote } from '@components/note/quote';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
-import { UserMention } from '@components/user/mention';
 
+import { contentParser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
 
 import useLocalStorage from '@rehooks/local-storage';
-import destr from 'destr';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import reactStringReplace from 'react-string-replace';
+import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
   const [activeAccount]: any = useLocalStorage('activeAccount', {});
   const [event, setEvent] = useState(null);
-
   const unsubscribe = useRef(null);
+
+  const content = event ? contentParser(event?.content, event.tags) : '';
 
   const fetchEvent = useCallback(async () => {
     const { createNote } = await import('@utils/bindings');
-
     unsubscribe.current = pool.subscribe(
       [
         {
@@ -50,7 +45,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
           account_id: activeAccount.id,
         }).catch(console.error);
       },
-      100,
+      undefined,
       undefined,
       {
         unsubscribeOnEose: true,
@@ -81,56 +76,6 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
     };
   }, [checkNoteExist]);
 
-  const content = useMemo(() => {
-    let parsedContent = event ? event.content : null;
-
-    if (parsedContent !== null) {
-      // get data tags
-      const tags = destr(event.tags);
-      // handle urls
-      parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
-        if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
-          // image url
-          return <ImagePreview key={match + i} url={match} />;
-        } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
-          // youtube
-          return <VideoPreview key={match + i} url={match} />;
-        } else if (match.match(/\.(mp4|webm)$/i)) {
-          // video
-          return <VideoPreview key={match + i} url={match} />;
-        } else {
-          return (
-            <a key={match + i} href={match} target="_blank" rel="noreferrer">
-              {match}
-            </a>
-          );
-        }
-      });
-      // handle #-hashtags
-      parsedContent = reactStringReplace(parsedContent, /#(\w+)/g, (match, i) => (
-        <span key={match + i} className="cursor-pointer text-fuchsia-500">
-          #{match}
-        </span>
-      ));
-      // handle mentions
-      if (tags.length > 0) {
-        parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
-          if (tags[match][0] === 'p') {
-            // @-mentions
-            return <UserMention key={tags[match][1]} pubkey={tags[match][1]} />;
-          } else if (tags[match][0] === 'e') {
-            // note-quotes
-            return <NoteQuote key={tags[match][1]} id={tags[match][1]} />;
-          } else {
-            return;
-          }
-        });
-      }
-    }
-
-    return parsedContent;
-  }, [event]);
-
   if (event) {
     return (
       <div className="relative pb-5">
@@ -139,7 +84,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
           <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
           <div className="-mt-5 pl-[52px]">
             <div className="flex flex-col gap-2">
-              <div className="prose prose-zinc max-w-none break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
+              <div className="prose prose-zinc max-w-none whitespace-pre-line break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
                 {content}
               </div>
             </div>
