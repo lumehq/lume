@@ -1,20 +1,15 @@
+import { ActiveLink } from '@components/activeLink';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useRouter } from 'next/navigation';
-
 export const ChannelListItem = ({ data }: { data: any }) => {
-  const router = useRouter();
   const channel = JSON.parse(data.content);
 
-  const openChannel = (id: string) => {
-    router.push(`/channels/${id}`);
-  };
-
   return (
-    <div
-      onClick={() => openChannel(data.eventId)}
+    <ActiveLink
+      href={`/channels/${data.eventId}`}
+      activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >
       <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded">
@@ -28,6 +23,6 @@ export const ChannelListItem = ({ data }: { data: any }) => {
       <div>
         <h5 className="truncate text-sm font-medium text-zinc-400">{channel.name}</h5>
       </div>
-    </div>
+    </ActiveLink>
   );
 };
