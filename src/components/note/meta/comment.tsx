@@ -9,9 +9,9 @@ import useLocalStorage from '@rehooks/local-storage';
 import { MultiBubble, OpenNewWindow } from 'iconoir-react';
 import { useRouter } from 'next/navigation';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { memo, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
-export const NoteComment = memo(function NoteComment({
+export const NoteComment = ({
   count,
   eventID,
   eventPubkey,
@@ -23,7 +23,7 @@ export const NoteComment = memo(function NoteComment({
   eventPubkey: string;
   eventTime: number;
   eventContent: any;
-}) {
+}) => {
   const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
@@ -132,4 +132,4 @@ export const NoteComment = memo(function NoteComment({
       </Dialog.Portal>
     </Dialog.Root>
   );
-});
+};

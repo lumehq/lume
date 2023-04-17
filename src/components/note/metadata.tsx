@@ -2,9 +2,10 @@ import { NoteComment } from '@components/note/meta/comment';
 import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
-import { useContext, useEffect, useState } from 'react';
+import useLocalStorage from '@rehooks/local-storage';
+import { memo, useContext, useEffect, useState } from 'react';
 
-export default function NoteMetadata({
+export const NoteMetadata = memo(function NoteMetadata({
   eventID,
   eventPubkey,
   eventContent,
@@ -16,8 +17,10 @@ export default function NoteMetadata({
   eventContent: any;
 }) {
   const [pool, relays]: any = useContext(RelayContext);
+  const [activeAccount]: any = useLocalStorage('activeAccount', {});
 
-  const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [comments, setComments] = useState(0);
 
   useEffect(() => {
@@ -26,8 +29,7 @@ export default function NoteMetadata({
         {
           '#e': [eventID],
           since: parseInt(eventTime),
-          kinds: [7],
-          limit: 50,
+          kinds: [1, 7],
         },
       ],
       relays,
@@ -40,21 +42,29 @@ export default function NoteMetadata({
             // createCacheCommentNote(event, eventID);
             break;
           case 7:
+            if (event.pubkey === activeAccount.pubkey) {
+              setLiked(true);
+            }
             if (event.content === '🤙' || event.content === '+') {
-              setLikes((likes) => (likes += 1));
+              setLikeCount((likes) => (likes += 1));
             }
             break;
           default:
             break;
         }
       },
-      1000
+      100,
+      undefined,
+      {
+        unsubscribeOnEose: true,
+        logAllEvents: false,
+      }
     );
 
     return () => {
       unsubscribe();
     };
-  }, [eventID, eventTime, pool, relays]);
+  }, [eventID, eventTime, pool, relays, activeAccount.pubkey]);
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">
@@ -65,7 +75,7 @@ export default function NoteMetadata({
         eventContent={eventContent}
         eventTime={eventTime}
       />
-      <NoteReaction count={likes} eventID={eventID} eventPubkey={eventPubkey} />
+      <NoteReaction count={likeCount} liked={liked} eventID={eventID} eventPubkey={eventPubkey} />
     </div>
   );
-}
+});

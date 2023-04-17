@@ -4,7 +4,7 @@
   "version": "0.2.5",
   "scripts": {
     "dev": "next dev -p 1420",
-    "build": "next build && next export -o dist",
+    "build": "pnpm init-db && next build",
     "tauri": "tauri",
     "init-db": "cd src-tauri/ && cargo prisma generate",
     "prepare": "husky install"

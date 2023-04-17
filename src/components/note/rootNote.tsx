@@ -1,4 +1,4 @@
-import NoteMetadata from '@components/note/metadata';
+import { NoteMetadata } from '@components/note/metadata';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 

@@ -8,7 +8,7 @@ export const RelayContext = createContext({});
 const relays = [
   'wss://relay.damus.io',
   'wss://nostr-pub.wellorder.net',
-  'wss://nostr.bongbong.com',
+  //'wss://nostr.bongbong.com',
   'wss://nostr.zebedee.cloud',
   'wss://nostr.fmt.wiz.biz',
   'wss://relay.snort.social',

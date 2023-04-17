@@ -1,4 +1,4 @@
-import NoteMetadata from '@components/note/metadata';
+import { NoteMetadata } from '@components/note/metadata';
 import { NoteParent } from '@components/note/parent';
 import { UserExtend } from '@components/user/extend';
 
