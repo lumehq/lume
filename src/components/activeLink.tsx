@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSelectedLayoutSegment } from 'next/navigation';
+import { useSelectedLayoutSegments } from 'next/navigation';
 
 export const ActiveLink = ({
   href,
@@ -14,8 +14,8 @@ export const ActiveLink = ({
   activeClassName: string;
   children: React.ReactNode;
 }) => {
-  const segment = useSelectedLayoutSegment();
-  const isActive = href.includes(segment);
+  const segments = useSelectedLayoutSegments();
+  const isActive = href.includes(segments[1]);
 
   return (
     <Link href={href} className={`${className}` + ' ' + (isActive ? `${activeClassName}` : '')}>
