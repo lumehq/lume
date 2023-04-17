@@ -12,9 +12,9 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function Page() {
-  const [pool, relays]: any = useContext(RelayContext);
   const router = useRouter();
 
+  const [pool, relays]: any = useContext(RelayContext);
   const [lastLogin] = useLocalStorage('lastLogin', new Date());
 
   const now = useRef(new Date());
@@ -143,11 +143,15 @@ export default function Page() {
         },
         undefined,
         () => {
-          if (eose.current > relays.length / 2) {
+          if (eose.current > 5) {
             router.replace('/newsfeed/following');
           } else {
             eose.current += 1;
           }
+        },
+        {
+          unsubscribeOnEose: true,
+          logAllEvents: false,
         }
       );
     },
@@ -163,9 +167,9 @@ export default function Page() {
         if (res.length > 0) {
           account = res[0];
           // update local storage
-          writeStorage('activeAccount', res[0]);
+          writeStorage('activeAccount', account);
           // fetch plebs, kind 0 = following
-          fetchPlebsByAccount(res[0].id, 0).then((res) => {
+          fetchPlebsByAccount(account.id, 0).then((res) => {
             follows = pubkeyArray(res);
             writeStorage('activeAccountFollows', res);
             // fetch data
