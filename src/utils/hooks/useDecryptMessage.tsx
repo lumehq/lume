@@ -1,3 +1,5 @@
+import { messageParser } from '@utils/parser';
+
 import { nip04 } from 'nostr-tools';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -30,5 +32,5 @@ export const useDecryptMessage = (
     decrypt().catch(console.error);
   }, [decrypt]);
 
-  return content;
+  return content.length > 0 ? messageParser(content) : '';
 };
