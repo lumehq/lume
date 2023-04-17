@@ -9,6 +9,8 @@ export const NoteQuoteRepost = memo(function NoteQuoteRepost({ event }: { event:
 
     if (event.content.length > 0) {
       note = <RootNote event={JSON.parse(event.content)} />;
+    } else {
+      note = <RootNote event={event.tags[0][1]} />;
     }
 
     return note;

@@ -14,7 +14,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   const [event, setEvent] = useState(null);
   const unsubscribe = useRef(null);
 
-  const content = contentParser(event.content, event.tags);
+  const content = event ? contentParser(event.content, event.tags) : '';
 
   const fetchEvent = useCallback(async () => {
     const { createNote } = await import('@utils/bindings');
