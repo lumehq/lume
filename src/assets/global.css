@@ -20,11 +20,6 @@
   scrollbar-width: none; /* Firefox */
 }
 
-.bg-gradient-radial-page {
-  background: radial-gradient(52.56% 52.56% at 50% 117.61%, #1c1c21 0, rgba(28, 28, 33, 0) 100%),
-    radial-gradient(63.94% 63.94% at 50% 0, #1c1c21 0, rgba(28, 28, 33, 0) 78.13%), #07070d;
-}
-
 .border {
   background-clip: padding-box;
 }

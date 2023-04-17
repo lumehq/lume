@@ -3,11 +3,10 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { MoreHoriz } from 'iconoir-react';
 
 dayjs.extend(relativeTime);
 
@@ -15,7 +14,7 @@ export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) =
   const profile = useProfileMetadata(pubkey);
 
   return (
-    <div className="group flex items-start gap-2">
+    <div className="group flex h-11 items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
         <ImageWithFallback
           src={profile?.picture || DEFAULT_AVATAR}
@@ -25,19 +24,16 @@ export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) =
         />
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
-        <div className="flex w-full justify-between">
-          <div className="flex items-baseline gap-2 text-sm">
-            <span className="font-bold leading-tight group-hover:underline">
-              {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
-            </span>
-            <span className="leading-tight text-zinc-500">·</span>
-            <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-baseline gap-2">
+            <h5 className="text-sm font-semibold leading-none group-hover:underline">
+              {profile?.display_name || profile?.name || shortenKey(pubkey)}
+            </h5>
+            <span className="text-sm leading-none text-zinc-700"></span>
           </div>
-          <div>
-            <button className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800">
-              <MoreHoriz width={12} height={12} className="text-zinc-500" />
-            </button>
-          </div>
+          <span className="text-sm leading-none text-zinc-500">
+            {profile?.nip05 || shortenKey(pubkey)} • {dayjs().to(dayjs.unix(time))}
+          </span>
         </div>
       </div>
     </div>

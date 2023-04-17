@@ -44,12 +44,8 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
         <div onClick={(e) => openUserPage(e)}>
           <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
         </div>
-        <div className="-mt-5 pl-[52px]">
-          <div className="flex flex-col gap-2">
-            <div className="prose	prose-zinc max-w-none whitespace-pre-line break-words text-[15px] leading-tight dark:prose-invert prose-p:m-0 prose-p:text-[15px] prose-p:leading-tight prose-a:font-normal prose-a:text-fuchsia-500 prose-a:no-underline prose-img:m-0 prose-video:m-0">
-              {content}
-            </div>
-          </div>
+        <div className="mt-1 pl-[52px]">
+          <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">{content}</div>
         </div>
         <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
           <NoteMetadata

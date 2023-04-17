@@ -7,7 +7,7 @@ import destr from 'destr';
 import reactStringReplace from 'react-string-replace';
 
 export const contentParser = (noteContent, noteTags) => {
-  let parsedContent = noteContent;
+  let parsedContent = noteContent.trim();
 
   // get data tags
   const tags = destr(noteTags);
@@ -24,7 +24,7 @@ export const contentParser = (noteContent, noteTags) => {
       return <VideoPreview key={match + i} url={match} />;
     } else {
       return (
-        <a key={match + i} href={match} target="_blank" rel="noreferrer">
+        <a key={match + i} href={match} className="cursor-pointer text-fuchsia-500" target="_blank" rel="noreferrer">
           {match}
         </a>
       );
@@ -55,7 +55,7 @@ export const contentParser = (noteContent, noteTags) => {
 };
 
 export const messageParser = (noteContent) => {
-  let parsedContent = noteContent;
+  let parsedContent = noteContent.trim();
 
   // handle urls
   parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
@@ -70,7 +70,7 @@ export const messageParser = (noteContent) => {
       return <VideoPreview key={match + i} url={match} />;
     } else {
       return (
-        <a key={match + i} href={match} target="_blank" rel="noreferrer">
+        <a key={match + i} href={match} className="cursor-pointer text-fuchsia-500" target="_blank" rel="noreferrer">
           {match}
         </a>
       );

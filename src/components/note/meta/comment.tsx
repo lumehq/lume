@@ -6,7 +6,7 @@ import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import useLocalStorage from '@rehooks/local-storage';
-import { MultiBubble, OpenNewWindow } from 'iconoir-react';
+import { ChatLines, OpenNewWindow } from 'iconoir-react';
 import { useRouter } from 'next/navigation';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -57,7 +57,7 @@ export const NoteComment = ({
       <Dialog.Trigger asChild>
         <button className="group flex w-16 items-center gap-1 text-sm text-zinc-500">
           <div className="rounded-md p-1 group-hover:bg-zinc-800">
-            <MultiBubble width={20} height={20} className="text-zinc-500" />
+            <ChatLines width={20} height={20} className="text-zinc-500" />
           </div>
           <span>{count}</span>
         </button>

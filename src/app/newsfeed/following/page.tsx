@@ -73,9 +73,9 @@ export default function Page() {
     const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
     // update data
     if (Array.isArray(result)) {
-      setData((data) => [...data, ...result]);
+      setData((data) => [...result, ...data]);
     } else {
-      setData((data) => [...data, result]);
+      setData((data) => [result, ...data]);
     }
     // hide newer trigger
     setHasNewerNote(false);
