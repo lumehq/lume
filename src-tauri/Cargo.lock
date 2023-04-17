@@ -2398,7 +2398,6 @@ dependencies = [
  "cocoa",
  "objc",
  "prisma-client-rust",
- "prisma-client-rust-cli",
  "serde",
  "serde_json",
  "specta",
@@ -3405,6 +3404,13 @@ name = "precomputed-hash"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "925383efa346730478fb4838dbe9137d2a47675ad789c546d150a6e1dd4ab31c"
+
+[[package]]
+name = "prisma-cli"
+version = "0.1.0"
+dependencies = [
+ "prisma-client-rust-cli",
+]
 
 [[package]]
 name = "prisma-client-rust"
