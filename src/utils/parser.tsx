@@ -1,5 +1,4 @@
 import { ImagePreview } from '@components/note/preview/image';
-import { MessageImagePreview } from '@components/note/preview/messageImage';
 import { VideoPreview } from '@components/note/preview/video';
 import { NoteQuote } from '@components/note/quote';
 import { UserMention } from '@components/user/mention';
@@ -16,7 +15,7 @@ export const contentParser = (noteContent, noteTags) => {
   parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
     if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
       // image url
-      return <ImagePreview key={match + i} url={match} />;
+      return <ImagePreview key={match + i} url={match} size="large" />;
     } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
       // youtube
       return <VideoPreview key={match + i} url={match} />;
@@ -62,7 +61,7 @@ export const messageParser = (noteContent) => {
   parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
     if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
       // image url
-      return <MessageImagePreview key={match + i} url={match} />;
+      return <ImagePreview key={match + i} url={match} size="small" />;
     } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
       // youtube
       return <VideoPreview key={match + i} url={match} />;

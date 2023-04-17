@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player/lazy';
 
 export const VideoPreview = memo(function VideoPreview({ url }: { url: string }) {
   return (
-    <div onClick={(e) => e.stopPropagation()} className="relative mt-3 flex flex-col overflow-hidden rounded-lg">
+    <div onClick={(e) => e.stopPropagation()} className="relative flex flex-col overflow-hidden rounded-lg">
       <ReactPlayer
         url={url}
         controls={true}

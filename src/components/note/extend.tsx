@@ -18,7 +18,7 @@ export const NoteExtend = memo(function NoteExtend({ event }: { event: any }) {
     parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
       if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
         // image url
-        return <ImagePreview key={match + i} url={match} />;
+        return <ImagePreview key={match + i} url={match} size="large" />;
       } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
         // youtube
         return <VideoPreview key={match + i} url={match} />;

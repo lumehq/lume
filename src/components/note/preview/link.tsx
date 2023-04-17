@@ -6,7 +6,7 @@ export default function LinkCard({ data }: { data: any }) {
     <Link
       href={data['url']}
       target={'_blank'}
-      className="relative mt-2 flex flex-col overflow-hidden rounded-lg border border-zinc-700"
+      className="relative flex flex-col overflow-hidden rounded-lg border border-zinc-700"
     >
       <div className="relative aspect-video h-auto w-full">
         <Image src={data['image']} alt="image preview" fill={true} className="object-cover" />
