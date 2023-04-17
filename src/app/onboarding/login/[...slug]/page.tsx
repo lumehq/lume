@@ -4,7 +4,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { fetchMetadata } from '@utils/metadata';
+import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { truncate } from '@utils/truncate';
 
 import Image from 'next/image';
@@ -38,7 +38,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       const { createPleb } = await import('@utils/bindings');
       if (profile?.id !== null) {
         for (const tag of tags) {
-          const metadata: any = await fetchMetadata(tag[1]);
+          const metadata: any = await fetchProfileMetadata(tag[1]);
           createPleb({
             pleb_id: tag[1] + '-lume' + profile.id.toString(),
             pubkey: tag[1],

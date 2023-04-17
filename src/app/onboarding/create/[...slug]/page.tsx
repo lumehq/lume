@@ -3,7 +3,7 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
-import { fetchMetadata } from '@utils/metadata';
+import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { followsTag } from '@utils/transform';
 
 import { createClient } from '@supabase/supabase-js';
@@ -72,7 +72,7 @@ export default function Page({ params }: { params: { id: string; pubkey: string;
     setLoading(true);
 
     for (const follow of follows) {
-      const metadata: any = await fetchMetadata(follow);
+      const metadata: any = await fetchProfileMetadata(follow);
       createPleb({
         pleb_id: follow + '-lume' + params.id,
         pubkey: follow,
