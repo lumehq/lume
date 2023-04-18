@@ -5,7 +5,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -113,9 +113,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
                   <div className="flex items-center gap-2">
                     <p className="font-semibold">{profile.metadata?.display_name || profile.metadata?.name}</p>
                     <span className="leading-tight text-zinc-500">·</span>
-                    <p className="text-zinc-500">
-                      @{profile.metadata?.username || (pubkey && truncate(pubkey, 16, ' .... '))}
-                    </p>
+                    <p className="text-zinc-500">@{profile.metadata?.username || (pubkey && shortenKey(pubkey))}</p>
                   </div>
                   <div className="space-y-3">
                     <div className="grid grid-cols-3 gap-4">

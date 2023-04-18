@@ -3,7 +3,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 export const UserMini = ({ pubkey }: { pubkey: string }) => {
   const profile = useProfileMetadata(pubkey);
@@ -19,7 +19,7 @@ export const UserMini = ({ pubkey }: { pubkey: string }) => {
         />
       </div>
       <span className="text-xs font-medium leading-none text-zinc-500">
-        Replying to {profile?.name || truncate(pubkey, 16, ' .... ')}
+        Replying to {profile?.name || shortenKey(pubkey)}
       </span>
     </div>
   );

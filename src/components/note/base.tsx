@@ -22,7 +22,7 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/users/${event.pubkey}`);
+    router.push(`/nostr/users/${event.pubkey}`);
   };
 
   const openThread = (e) => {

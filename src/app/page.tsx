@@ -144,7 +144,7 @@ export default function Page() {
         undefined,
         () => {
           if (eose.current > 5) {
-            router.replace('/newsfeed/following');
+            router.replace('/nostr/newsfeed/following');
           } else {
             eose.current += 1;
           }

@@ -7,16 +7,17 @@
 #[macro_use]
 extern crate objc;
 
-use prisma_client_rust::Direction;
 use tauri::{Manager, WindowEvent};
 #[cfg(target_os = "macos")]
 use window_ext::WindowExt;
 #[cfg(target_os = "macos")]
 mod window_ext;
 
+#[allow(warnings, unused)]
 mod db;
 
 use db::*;
+use prisma_client_rust::Direction;
 use serde::Deserialize;
 use specta::{collect_types, Type};
 use std::{sync::Arc, vec};

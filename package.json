@@ -31,7 +31,7 @@
     "framer-motion": "^9.1.7",
     "iconoir-react": "^6.6.0",
     "jotai": "^2.0.4",
-    "next": "13.3.1-canary.8",
+    "next": "13.3.1-canary.11",
     "nostr-relaypool": "^0.5.18",
     "nostr-tools": "^1.9.0",
     "react": "^18.2.0",

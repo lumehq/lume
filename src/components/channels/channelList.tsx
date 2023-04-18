@@ -22,7 +22,7 @@ export default function ChannelList() {
   return (
     <div className="flex flex-col gap-px">
       <Link
-        href="/channels"
+        href="/nostr/channels"
         className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
       >
         <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">

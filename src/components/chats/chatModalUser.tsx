@@ -2,7 +2,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 import { useRouter } from 'next/navigation';
 
@@ -29,7 +29,7 @@ export const ChatModalUser = ({ data }: { data: any }) => {
           <span className="truncate text-sm font-semibold leading-tight text-zinc-200">
             {profile?.display_name || profile?.name}
           </span>
-          <span className="text-sm leading-tight text-zinc-400">{truncate(data.pubkey, 16, ' .... ')}</span>
+          <span className="text-sm leading-tight text-zinc-400">{shortenKey(data.pubkey)}</span>
         </div>
       </div>
       <div>

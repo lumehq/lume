@@ -3,7 +3,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -25,7 +25,7 @@ export const UserQuoteRepost = ({ pubkey, time }: { pubkey: string; time: number
       </div>
       <div className="flex items-baseline gap-2 text-sm">
         <h5 className="font-bold leading-tight group-hover:underline">
-          {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')} reposted
+          {profile?.display_name || profile?.name || shortenKey(pubkey)} reposted
         </h5>
         <span className="leading-tight text-zinc-500">·</span>
         <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>

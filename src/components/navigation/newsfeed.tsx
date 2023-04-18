@@ -24,7 +24,7 @@ export default function Newsfeed() {
         </Collapsible.Trigger>
         <Collapsible.Content className="flex flex-col text-zinc-400">
           <ActiveLink
-            href="/newsfeed/following"
+            href="/nostr/newsfeed/following"
             activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
           >
@@ -32,7 +32,7 @@ export default function Newsfeed() {
             <span>Following</span>
           </ActiveLink>
           <ActiveLink
-            href="/newsfeed/circle"
+            href="/nostr/newsfeed/circle"
             activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
           >

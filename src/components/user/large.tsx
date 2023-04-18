@@ -3,7 +3,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -28,10 +28,10 @@ export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) =>
         <div className="flex w-full justify-between">
           <div className="flex flex-col gap-1 text-sm">
             <span className="font-bold leading-tight text-zinc-100">
-              {profile?.display_name || profile?.name || truncate(pubkey, 16, ' .... ')}
+              {profile?.display_name || profile?.name || shortenKey(pubkey)}
             </span>
             <span className="leading-tight text-zinc-400">
-              {profile?.username || truncate(pubkey, 16, ' .... ')} · {dayjs().to(dayjs.unix(time))}
+              {profile?.username || shortenKey(pubkey)} · {dayjs().to(dayjs.unix(time))}
             </span>
           </div>
           <div>

@@ -18,13 +18,13 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
 
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/users/${event.pubkey}`);
+    router.push(`/nostr/users/${event.pubkey}`);
   };
 
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      router.push(`/newsfeed/${event.id}`);
+      router.push(`/nostr/newsfeed/${event.id}`);
     } else {
       e.stopPropagation();
     }

@@ -5,7 +5,7 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 import destr from 'destr';
 import Image from 'next/image';
@@ -51,9 +51,7 @@ export default function ProfileMetadata({ id }: { id: string }) {
             <h3 className="text-lg font-semibold leading-tight text-zinc-100">
               {profile?.display_name || profile?.name}
             </h3>
-            <span className="text-sm leading-tight text-zinc-500">
-              {profile?.username || (id && truncate(id, 16, ' .... '))}
-            </span>
+            <span className="text-sm leading-tight text-zinc-500">{profile?.username || (id && shortenKey(id))}</span>
           </div>
           <div className="prose-sm prose-zinc leading-tight dark:prose-invert">{profile?.about}</div>
         </div>

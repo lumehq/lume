@@ -3,7 +3,7 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { truncate } from '@utils/truncate';
+import { shortenKey } from '@utils/shortenKey';
 
 export const UserFollow = ({ pubkey }: { pubkey: string }) => {
   const profile = useProfileMetadata(pubkey);
@@ -22,7 +22,7 @@ export const UserFollow = ({ pubkey }: { pubkey: string }) => {
         <span className="truncate font-medium leading-tight text-zinc-200">
           {profile?.display_name || profile?.name}
         </span>
-        <span className="text-sm leading-tight text-zinc-400">{truncate(pubkey, 16, ' .... ')}</span>
+        <span className="text-sm leading-tight text-zinc-400">{shortenKey(pubkey)}</span>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export const ActiveAccount = ({ user }: { user: any }) => {
   const userData = JSON.parse(user.metadata);
 
   const openProfilePage = () => {
-    router.push(`/users/${user.pubkey}`);
+    router.push(`/nostr/users/${user.pubkey}`);
   };
 
   const copyPublicKey = async () => {
