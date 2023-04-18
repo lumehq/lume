@@ -15,7 +15,7 @@ const relays = [
   'wss://offchain.pub',
   'wss://relay.current.fyi',
   'wss://nostr.bitcoiner.social',
-  'wss://relay.nostr.info',
+  //'wss://relay.nostr.info',
   'wss://nostr-01.dorafactory.org',
   'wss://nostr.zhongwen.world',
   'wss://nostro.cc',

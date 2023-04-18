@@ -4,7 +4,8 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { followsTag } from '@utils/transform';
+import { createPleb, updateAccount } from '@utils/storage';
+import { arrayToNIP02 } from '@utils/transform';
 
 import { createClient } from '@supabase/supabase-js';
 import { CheckCircle } from 'iconoir-react';
@@ -52,10 +53,13 @@ const initialList = [
   { pubkey: 'ff04a0e6cd80c141b0b55825fed127d4532a6eecdb7e743a38a3c28bf9f44609' },
 ];
 
-export default function Page({ params }: { params: { id: string; pubkey: string; privkey: string } }) {
+export default function Page({ params }: { params: { slug: string } }) {
   const router = useRouter();
-  const [pool, relays]: any = useContext(RelayContext);
 
+  const pubkey = params.slug[0];
+  const privkey = params.slug[1];
+
+  const [pool, relays]: any = useContext(RelayContext);
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
   const [follows, setFollows] = useState([]);
@@ -68,18 +72,17 @@ export default function Page({ params }: { params: { id: string; pubkey: string;
 
   // save follows to database then broadcast
   const submit = useCallback(async () => {
-    const { createPleb } = await import('@utils/bindings');
     setLoading(true);
+    const nip02 = arrayToNIP02(follows);
 
-    for (const follow of follows) {
-      const metadata: any = await fetchProfileMetadata(follow);
-      createPleb({
-        pleb_id: follow + '-lume' + params.id,
-        pubkey: follow,
-        kind: 0,
-        metadata: metadata.content,
-        account_id: parseInt(params.id),
-      }).catch(console.error);
+    // update account's folllows with nip03 tag list
+    updateAccount('follows', nip02, pubkey);
+
+    // create pleb
+    for (const tag of follows) {
+      fetchProfileMetadata(tag)
+        .then((res: any) => createPleb(tag, res.content))
+        .catch(console.error);
     }
 
     // build event
@@ -87,15 +90,17 @@ export default function Page({ params }: { params: { id: string; pubkey: string;
       content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 3,
-      pubkey: params.pubkey,
-      tags: followsTag(follows),
+      pubkey: pubkey,
+      tags: nip02,
     };
+    console.log(event);
     event.id = getEventHash(event);
-    event.sig = signEvent(event, params.privkey);
-
+    event.sig = signEvent(event, privkey);
+    // broadcast
     pool.publish(event, relays);
+    // redirect to splashscreen
     router.replace('/');
-  }, [params.pubkey, params.privkey, params.id, follows, pool, relays, router]);
+  }, [pubkey, privkey, follows, pool, relays, router]);
 
   useEffect(() => {
     const fetchData = async () => {

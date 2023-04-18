@@ -6,51 +6,30 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { shortenKey } from '@utils/shortenKey';
+import { createAccount, createPleb } from '@utils/storage';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getPublicKey } from 'nostr-tools';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function Page({ params }: { params: { privkey: string } }) {
   const router = useRouter();
+
   const [pool, relays]: any = useContext(RelayContext);
-
   const pubkey = useMemo(() => (params.privkey ? getPublicKey(params.privkey) : null), [params.privkey]);
+  const eose = useRef(0);
 
-  const [profile, setProfile] = useState({ id: null, metadata: null });
+  const [profile, setProfile] = useState({ metadata: null });
   const [done, setDone] = useState(false);
 
-  const insertAccountToStorage = useCallback(async (pubkey, privkey, metadata) => {
-    const { createAccount } = await import('@utils/bindings');
-    createAccount({ pubkey: pubkey, privkey: privkey, metadata: metadata })
-      .then((res) =>
-        setProfile({
-          id: res.id,
-          metadata: JSON.parse(res.metadata),
-        })
-      )
-      .catch(console.error);
+  const createPlebs = useCallback(async (tags: string[]) => {
+    for (const tag of tags) {
+      fetchProfileMetadata(tag[1])
+        .then((res: any) => createPleb(tag[1], res))
+        .catch(console.error);
+    }
   }, []);
-
-  const insertFollowsToStorage = useCallback(
-    async (tags) => {
-      const { createPleb } = await import('@utils/bindings');
-      if (profile?.id !== null) {
-        for (const tag of tags) {
-          const metadata: any = await fetchProfileMetadata(tag[1]);
-          createPleb({
-            pleb_id: tag[1] + '-lume' + profile.id.toString(),
-            pubkey: tag[1],
-            kind: 0,
-            metadata: metadata.content,
-            account_id: profile.id,
-          }).catch(console.error);
-        }
-      }
-    },
-    [profile.id]
-  );
 
   useEffect(() => {
     const unsubscribe = pool.subscribe(
@@ -58,29 +37,41 @@ export default function Page({ params }: { params: { privkey: string } }) {
         {
           authors: [pubkey],
           kinds: [0, 3],
-          since: 0,
         },
       ],
       relays,
       (event: any) => {
         if (event.kind === 0) {
-          insertAccountToStorage(pubkey, params.privkey, event.content);
+          // create account
+          createAccount(pubkey, params.privkey, event.content);
+          // update state
+          setProfile({
+            metadata: JSON.parse(event.metadata),
+          });
         } else {
           if (event.tags.length > 0) {
-            insertFollowsToStorage(event.tags);
+            createPlebs(event.tags);
           }
         }
       },
       undefined,
       () => {
-        setDone(true);
+        if (eose.current > 5) {
+          setDone(true);
+        } else {
+          eose.current += 1;
+        }
+      },
+      {
+        unsubscribeOnEose: true,
+        logAllEvents: false,
       }
     );
 
     return () => {
       unsubscribe;
     };
-  }, [insertAccountToStorage, insertFollowsToStorage, pool, relays, pubkey, params.privkey]);
+  }, [pool, relays, pubkey, params.privkey, createPlebs]);
 
   // submit then redirect to home
   const submit = () => {
@@ -90,11 +81,9 @@ export default function Page({ params }: { params: { privkey: string } }) {
   return (
     <div className="grid h-full w-full grid-rows-5">
       <div className="row-span-1 flex items-center justify-center">
-        <div>
-          <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
-            Bringing back your profile...
-          </h1>
-        </div>
+        <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          Bringing back your profile...
+        </h1>
       </div>
       <div className="row-span-4 flex flex-col gap-8">
         <div className="mx-auto w-full max-w-md">

@@ -21,19 +21,19 @@ export async function getActiveAccount() {
 }
 
 // create account
-export async function createAccount(data: { pubkey: string; privkey: string; metadata: string }) {
+export async function createAccount(pubkey: string, privkey: string, metadata: string) {
   const db = await connect();
   return await db.execute('INSERT OR IGNORE INTO accounts (pubkey, privkey, metadata) VALUES (?, ?, ?);', [
-    data.pubkey,
-    data.privkey,
-    data.metadata,
+    pubkey,
+    privkey,
+    metadata,
   ]);
 }
 
 // update account
-export async function updateAccount(column: string, value: string, pubkey: string) {
+export async function updateAccount(column: string, value: string | string[], pubkey: string) {
   const db = await connect();
-  return await db.execute(`UPDATE accounts SET ${column} = "${value}" WHERE pubkey = "${pubkey}";`);
+  return await db.execute(`UPDATE accounts SET ${column} = '${JSON.stringify(value)}' WHERE pubkey = "${pubkey}";`);
 }
 
 // create pleb

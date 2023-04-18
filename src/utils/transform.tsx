@@ -9,13 +9,13 @@ export const tagsToArray = (arr) => {
   return newarr;
 };
 
-export const followsTag = (arr) => {
-  const newarr = [];
-  // push item to tags
+// convert array to NIP-02 tag list
+export const arrayToNIP02 = (arr: string[]) => {
+  const nip03_array = [];
   arr.forEach((item) => {
-    newarr.push(['p', item]);
+    nip03_array.push(['p', item]);
   });
-  return newarr;
+  return nip03_array;
 };
 
 export const pubkeyArray = (arr) => {

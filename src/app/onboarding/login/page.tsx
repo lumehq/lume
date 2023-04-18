@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, CableTag } from 'iconoir-react';
+import { CableTag } from 'iconoir-react';
 import { useRouter } from 'next/navigation';
 import { nip19 } from 'nostr-tools';
 import { Resolver, useForm } from 'react-hook-form';
@@ -32,10 +32,6 @@ export default function Page() {
     formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<FormValues>({ resolver });
 
-  const goBack = () => {
-    router.back();
-  };
-
   const onSubmit = async (data: any) => {
     let privkey = data['key'];
 
@@ -55,19 +51,10 @@ export default function Page() {
 
   return (
     <div className="grid h-full w-full grid-rows-5">
-      <div className="row-span-1 mx-auto flex w-full max-w-md items-center justify-between">
-        <button
-          onClick={() => goBack()}
-          className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
-        >
-          <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
-        </button>
-        <div>
-          <h1 className="bg-gradient-to-br from-zinc-200 via-white to-zinc-300 bg-clip-text text-3xl font-semibold text-transparent">
-            Login with Private Key
-          </h1>
-        </div>
-        <div></div>
+      <div className="row-span-1 mx-auto flex w-full max-w-md items-center justify-center">
+        <h1 className="bg-gradient-to-br from-zinc-200 via-white to-zinc-300 bg-clip-text text-3xl font-semibold text-transparent">
+          Login with Private Key
+        </h1>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="row-span-4">
         <div className="mx-auto w-full max-w-md">

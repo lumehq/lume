@@ -2,7 +2,9 @@
 
 import { RelayContext } from '@components/relaysProvider';
 
-import { ArrowLeft, EyeClose, EyeEmpty } from 'iconoir-react';
+import { createAccount } from '@utils/storage';
+
+import { EyeClose, EyeEmpty } from 'iconoir-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
@@ -20,16 +22,12 @@ export default function Page() {
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
 
-  const [privKey] = useState(() => generatePrivateKey());
-  const [name] = useState(() => uniqueNamesGenerator(config).toString());
+  const privkey = useMemo(() => generatePrivateKey(), []);
+  const name = useMemo(() => uniqueNamesGenerator(config).toString(), []);
 
-  const pubKey = getPublicKey(privKey);
-  const npub = nip19.npubEncode(pubKey);
-  const nsec = nip19.nsecEncode(privKey);
-
-  const goBack = () => {
-    router.back();
-  };
+  const pubkey = getPublicKey(privkey);
+  const npub = nip19.npubEncode(pubkey);
+  const nsec = nip19.nsecEncode(privkey);
 
   // auto-generated profile metadata
   const metadata: any = useMemo(
@@ -53,7 +51,6 @@ export default function Page() {
 
   // create account and broadcast to all relays
   const submit = useCallback(async () => {
-    const { createAccount } = await import('@utils/bindings');
     setLoading(true);
 
     // build event
@@ -61,36 +58,25 @@ export default function Page() {
       content: JSON.stringify(metadata),
       created_at: Math.floor(Date.now() / 1000),
       kind: 0,
-      pubkey: pubKey,
+      pubkey: pubkey,
       tags: [],
     };
     event.id = getEventHash(event);
-    event.sig = signEvent(event, privKey);
-
-    // insert to database then broadcast
-    createAccount({ pubkey: pubKey, privkey: privKey, metadata: metadata })
-      .then((res) => {
-        pool.publish(event, relays);
-        router.push(`/onboarding/create/${res.id}/${res.pubkey}/${res.privkey}`);
-      })
-      .catch(console.error);
-  }, [pool, pubKey, privKey, metadata, relays, router]);
+    event.sig = signEvent(event, privkey);
+    // insert to database
+    createAccount(pubkey, privkey, metadata);
+    // broadcast
+    pool.publish(event, relays);
+    // redirect to next step
+    router.push(`/onboarding/create/${pubkey}/${privkey}`);
+  }, [pool, pubkey, privkey, metadata, relays, router]);
 
   return (
     <div className="grid h-full w-full grid-rows-5">
-      <div className="row-span-1 mx-auto flex w-full max-w-md items-center justify-between">
-        <button
-          onClick={() => goBack()}
-          className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
-        >
-          <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
-        </button>
-        <div>
-          <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
-            Create new account
-          </h1>
-        </div>
-        <div></div>
+      <div className="row-span-1 mx-auto flex w-full max-w-md items-center justify-center">
+        <h1 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-3xl font-medium text-transparent">
+          Create new account
+        </h1>
       </div>
       <div className="row-span-4">
         <div className="mx-auto w-full max-w-md">
