@@ -9,7 +9,7 @@ import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
 export const MessageList = () => {
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
   const virtuosoRef = useRef(null);
 
   const data = useAtomValue(sortedChatMessagesAtom);

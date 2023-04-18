@@ -18,7 +18,7 @@ export default function FormBase() {
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
 
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const submitEvent = () => {
     const event: any = {

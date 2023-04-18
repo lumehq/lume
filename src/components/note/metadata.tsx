@@ -17,7 +17,7 @@ export const NoteMetadata = memo(function NoteMetadata({
   eventContent: any;
 }) {
   const [pool, relays]: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);

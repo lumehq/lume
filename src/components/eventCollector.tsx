@@ -6,8 +6,8 @@ import { RelayContext } from '@components/relaysProvider';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
-import { getParentID, pubkeyArray } from '@utils/transform';
+import { createChannel, createChat, createNote, updateAccount } from '@utils/storage';
+import { getParentID, nip02ToArray } from '@utils/transform';
 
 import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
 import { window } from '@tauri-apps/api';
@@ -17,46 +17,19 @@ import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function EventCollector() {
   const [pool, relays]: any = useContext(RelayContext);
-
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
-  const [follows] = useLocalStorage('activeAccountFollows', []);
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
 
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
 
-  const createFollowingPlebs = useCallback(
-    async (tags) => {
-      const { createPleb } = await import('@utils/bindings');
-      for (const tag of tags) {
-        const pubkey = tag[1];
-        fetchProfileMetadata(pubkey)
-          .then((res: { content: string }) => {
-            createPleb({
-              pleb_id: pubkey + '-lume' + activeAccount.id.toString(),
-              pubkey: pubkey,
-              kind: 0,
-              metadata: res.content,
-              account_id: activeAccount.id,
-            }).catch(console.error);
-          })
-          .catch(console.error);
-      }
-    },
-    [activeAccount.id]
-  );
-
   const subscribe = useCallback(async () => {
-    const { createNote } = await import('@utils/bindings');
-    const { createChat } = await import('@utils/bindings');
-    const { createChannel } = await import('@utils/bindings');
-
     unsubscribe.current = pool.subscribe(
       [
         {
           kinds: [1, 6],
-          authors: pubkeyArray(follows),
+          authors: activeAccount.follows,
           since: dateToUnix(now.current),
         },
         {
@@ -79,65 +52,54 @@ export default function EventCollector() {
           // short text note
           case 1:
             const parentID = getParentID(event.tags, event.id);
-            createNote({
-              event_id: event.id,
-              pubkey: event.pubkey,
-              kind: event.kind,
-              tags: JSON.stringify(event.tags),
-              content: event.content,
-              parent_id: parentID,
-              parent_comment_id: '',
-              created_at: event.created_at,
-              account_id: activeAccount.id,
-            })
-              .then(() =>
-                // notify user reload to get newer note
-                setHasNewerNote(true)
-              )
-              .catch(console.error);
+            createNote(
+              event.id,
+              activeAccount.id,
+              event.pubkey,
+              event.kind,
+              event.tags,
+              event.content,
+              event.created_at,
+              parentID
+            );
+            // notify user reload to get newer note
+            setHasNewerNote(true);
             break;
           // contacts
           case 3:
-            createFollowingPlebs(event.tags);
+            const arr = nip02ToArray(event.tags);
+            // update account's folllows with NIP-02 tag list
+            updateAccount('follows', arr, event.pubkey);
             break;
           // chat
           case 4:
             if (event.pubkey !== activeAccount.pubkey) {
-              createChat({
-                pubkey: event.pubkey,
-                created_at: event.created_at,
-                account_id: activeAccount.id,
-              }).catch(console.error);
+              createChat(activeAccount.id, event.pubkey, event.created_at);
             }
+            break;
           // repost
           case 6:
-            createNote({
-              event_id: event.id,
-              pubkey: event.pubkey,
-              kind: event.kind,
-              tags: JSON.stringify(event.tags),
-              content: event.content,
-              parent_id: '',
-              parent_comment_id: '',
-              created_at: event.created_at,
-              account_id: activeAccount.id,
-            })
-              .then(() =>
-                // notify user reload to get newer note
-                setHasNewerNote(true)
-              )
-              .catch(console.error);
+            createNote(
+              event.id,
+              activeAccount.id,
+              event.pubkey,
+              event.kind,
+              event.tags,
+              event.content,
+              event.created_at,
+              ''
+            );
+            break;
           // channel
           case 40:
-            createChannel({ event_id: event.id, content: event.content, account_id: activeAccount.id }).catch(
-              console.error
-            );
+            createChannel(event.id, event.content, event.created_at);
+            break;
           default:
             break;
         }
       }
     );
-  }, [pool, relays, activeAccount.id, activeAccount.pubkey, follows, setHasNewerNote, createFollowingPlebs]);
+  }, [activeAccount.follows, activeAccount.pubkey, activeAccount.id, pool, relays, setHasNewerNote]);
 
   const listenWindowClose = useCallback(async () => {
     window.getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {

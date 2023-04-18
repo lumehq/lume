@@ -6,14 +6,13 @@ import * as Dialog from '@radix-ui/react-dialog';
 import useLocalStorage from '@rehooks/local-storage';
 import { Cancel, Plus } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const CreateChannelModal = () => {
   const [pool, relays]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
-
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const {
     register,
@@ -21,11 +20,6 @@ export const CreateChannelModal = () => {
     reset,
     formState: { isDirty, isValid },
   } = useForm();
-
-  const insertChannelToDB = useCallback(async (id, data, account) => {
-    const { createChannel } = await import('@utils/bindings');
-    return await createChannel({ event_id: id, content: data, account_id: account });
-  }, []);
 
   const onSubmit = (data) => {
     const event: any = {
@@ -40,8 +34,6 @@ export const CreateChannelModal = () => {
 
     // publish channel
     pool.publish(event, relays);
-    // save to database
-    insertChannelToDB(event.id, data, activeAccount.id);
     // close modal
     setOpen(false);
     // reset form

@@ -73,10 +73,11 @@ export default function Page({ params }: { params: { slug: string } }) {
   // save follows to database then broadcast
   const submit = useCallback(async () => {
     setLoading(true);
+
     const nip02 = arrayToNIP02(follows);
 
-    // update account's folllows with nip03 tag list
-    updateAccount('follows', nip02, pubkey);
+    // update account's folllows with NIP-02 tag list
+    updateAccount('follows', follows, pubkey);
 
     // create pleb
     for (const tag of follows) {
@@ -93,7 +94,6 @@ export default function Page({ params }: { params: { slug: string } }) {
       pubkey: pubkey,
       tags: nip02,
     };
-    console.log(event);
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
     // broadcast

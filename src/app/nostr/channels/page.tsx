@@ -2,18 +2,15 @@
 
 import { BrowseChannelItem } from '@components/channels/browseChannelItem';
 
+import { getChannels } from '@utils/storage';
+
 import { useEffect, useState } from 'react';
 
 export default function Page() {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    const fetchChannels = async () => {
-      const { getChannels } = await import('@utils/bindings');
-      return await getChannels({ limit: 100, offset: 0 });
-    };
-
-    fetchChannels()
+    getChannels(100, 0)
       .then((res) => setList(res))
       .catch(console.error);
   }, []);

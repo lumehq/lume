@@ -8,6 +8,7 @@ import { NoteQuoteRepost } from '@components/note/quoteRepost';
 import { filteredNotesAtom, hasNewerNoteAtom, notesAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
+import { getLatestNotes, getNotes } from '@utils/storage';
 
 import { ArrowUp } from 'iconoir-react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -40,43 +41,28 @@ export default function Page() {
 
   const computeItemKey = useCallback(
     (index: string | number) => {
-      return data[index].eventId;
+      return data[index].event_id;
     },
     [data]
   );
 
   const initialData = useCallback(async () => {
-    const { getNotes } = await import('@utils/bindings');
-    const result: any = await getNotes({
-      date: dateToUnix(now.current),
-      limit: limit.current,
-      offset: offset.current,
-    });
+    const result = await getNotes(dateToUnix(now.current), limit.current, offset.current);
     setData((data) => [...data, ...result]);
   }, [setData]);
 
   const loadMore = useCallback(async () => {
-    const { getNotes } = await import('@utils/bindings');
     offset.current += limit.current;
-    // next query
-    const result: any = await getNotes({
-      date: dateToUnix(now.current),
-      limit: limit.current,
-      offset: offset.current,
-    });
+    // query next page
+    const result = await getNotes(dateToUnix(now.current), limit.current, offset.current);
     setData((data) => [...data, ...result]);
   }, [setData]);
 
   const loadLatest = useCallback(async () => {
-    const { getLatestNotes } = await import('@utils/bindings');
     // next query
-    const result: any = await getLatestNotes({ date: dateToUnix(now.current) });
+    const result = await getLatestNotes(dateToUnix(now.current));
     // update data
-    if (Array.isArray(result)) {
-      setData((data) => [...result, ...data]);
-    } else {
-      setData((data) => [result, ...data]);
-    }
+    setData((data) => [...result, ...data]);
     // hide newer trigger
     setHasNewerNote(false);
     // scroll to top

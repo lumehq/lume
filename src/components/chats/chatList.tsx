@@ -4,6 +4,8 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
+import { getChats } from '@utils/storage';
+
 import useLocalStorage from '@rehooks/local-storage';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -12,7 +14,7 @@ export default function ChatList() {
   const router = useRouter();
 
   const [list, setList] = useState([]);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
   const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   const openSelfChat = () => {
@@ -20,12 +22,7 @@ export default function ChatList() {
   };
 
   useEffect(() => {
-    const fetchChats = async () => {
-      const { getChats } = await import('@utils/bindings');
-      return await getChats({ account_id: activeAccount.id });
-    };
-
-    fetchChats()
+    getChats(activeAccount.id)
       .then((res) => setList(res))
       .catch(console.error);
   }, [activeAccount.id]);

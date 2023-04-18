@@ -13,7 +13,7 @@ import { Suspense, useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { pubkey: string } }) {
   const [pool, relays]: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const setChatMessages = useSetAtom(chatMessagesAtom);
   const resetChatMessages = useResetAtom(chatMessagesAtom);

@@ -13,7 +13,7 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   const parentNote = () => {
     if (event.parent_id) {
-      if (event.parent_id !== event.eventId && !event.content.includes('#[0]')) {
+      if (event.parent_id !== event.event_id && !event.content.includes('#[0]')) {
         return <NoteParent key={event.parent_id} id={event.parent_id} />;
       }
     }
@@ -42,17 +42,17 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
       {parentNote()}
       <div className="relative z-10 flex flex-col">
         <div onClick={(e) => openUserPage(e)}>
-          <UserExtend pubkey={event.pubkey} time={event.createdAt || event.created_at} />
+          <UserExtend pubkey={event.pubkey} time={event.created_at} />
         </div>
         <div className="mt-1 pl-[52px]">
           <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">{content}</div>
         </div>
         <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
           <NoteMetadata
-            eventID={event.eventId}
+            eventID={event.event_id}
             eventPubkey={event.pubkey}
             eventContent={event.content}
-            eventTime={event.createdAt || event.created_at}
+            eventTime={event.created_at}
           />
         </div>
       </div>

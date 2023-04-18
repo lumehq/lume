@@ -6,7 +6,8 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { shortenKey } from '@utils/shortenKey';
-import { createAccount, createPleb } from '@utils/storage';
+import { createAccount, createPleb, updateAccount } from '@utils/storage';
+import { nip02ToArray } from '@utils/transform';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -26,7 +27,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
   const createPlebs = useCallback(async (tags: string[]) => {
     for (const tag of tags) {
       fetchProfileMetadata(tag[1])
-        .then((res: any) => createPleb(tag[1], res))
+        .then((res: any) => createPleb(tag[1], res.content))
         .catch(console.error);
     }
   }, []);
@@ -37,6 +38,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
         {
           authors: [pubkey],
           kinds: [0, 3],
+          since: 0,
         },
       ],
       relays,
@@ -46,11 +48,14 @@ export default function Page({ params }: { params: { privkey: string } }) {
           createAccount(pubkey, params.privkey, event.content);
           // update state
           setProfile({
-            metadata: JSON.parse(event.metadata),
+            metadata: JSON.parse(event.content),
           });
         } else {
           if (event.tags.length > 0) {
             createPlebs(event.tags);
+            const arr = nip02ToArray(event.tags);
+            // update account's folllows with NIP-02 tag list
+            updateAccount('follows', arr, pubkey);
           }
         }
       },

@@ -13,7 +13,7 @@ import { Suspense, useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [pool, relays]: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
   const resetChannelMessages = useResetAtom(channelMessagesAtom);

@@ -11,7 +11,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
   const [pool, relays]: any = useContext(RelayContext);
 
   const [value, setValue] = useState('');
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const encryptMessage = useCallback(
     async (privkey: string) => {

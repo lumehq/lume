@@ -50,12 +50,20 @@ fn main() {
       tauri_plugin_sql::Builder::default()
         .add_migrations(
           "sqlite:lume.db",
-          vec![Migration {
-            version: 20230418013219,
-            description: "initial data",
-            sql: include_str!("../migrations/20230418013219_initial_data.sql"),
-            kind: MigrationKind::Up,
-          }],
+          vec![
+            Migration {
+              version: 20230418013219,
+              description: "initial data",
+              sql: include_str!("../migrations/20230418013219_initial_data.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230418080146,
+              description: "create chats",
+              sql: include_str!("../migrations/20230418080146_create_chats.sql"),
+              kind: MigrationKind::Up,
+            },
+          ],
         )
         .build(),
     )

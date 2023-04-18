@@ -30,7 +30,7 @@ export const NoteComment = ({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
   const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   const openThread = () => {

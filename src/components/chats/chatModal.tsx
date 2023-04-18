@@ -1,24 +1,19 @@
 import { ChatModalUser } from '@components/chats/chatModalUser';
 
+import { getPlebs } from '@utils/storage';
+
 import * as Dialog from '@radix-ui/react-dialog';
-import useLocalStorage from '@rehooks/local-storage';
 import { Cancel, Plus } from 'iconoir-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const ChatModal = () => {
   const [plebs, setPlebs] = useState([]);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
-
-  const fetchPlebsByAccount = useCallback(async (id) => {
-    const { getPlebs } = await import('@utils/bindings');
-    return await getPlebs({ account_id: id, kind: 0 });
-  }, []);
 
   useEffect(() => {
-    fetchPlebsByAccount(activeAccount.id)
+    getPlebs()
       .then((res) => setPlebs(res))
       .catch(console.error);
-  }, [activeAccount.id, fetchPlebsByAccount]);
+  }, []);
 
   return (
     <Dialog.Root>

@@ -17,7 +17,7 @@ export default function FormChannelMessage({ eventId }: { eventId: string | stri
   const [pool, relays]: any = useContext(RelayContext);
 
   const [value, setValue] = useState('');
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const channelReply = useAtomValue(channelReplyAtom);
   const resetChannelReply = useResetAtom(channelReplyAtom);

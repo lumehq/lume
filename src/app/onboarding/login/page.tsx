@@ -2,7 +2,7 @@
 
 import { CableTag } from 'iconoir-react';
 import { useRouter } from 'next/navigation';
-import { nip19 } from 'nostr-tools';
+import { getPublicKey, nip19 } from 'nostr-tools';
 import { Resolver, useForm } from 'react-hook-form';
 
 type FormValues = {
@@ -33,14 +33,15 @@ export default function Page() {
   } = useForm<FormValues>({ resolver });
 
   const onSubmit = async (data: any) => {
-    let privkey = data['key'];
-
-    if (privkey.substring(0, 4) === 'nsec') {
-      privkey = nip19.decode(privkey).data;
-    }
-
     try {
-      router.push(`/onboarding/login/${privkey}`);
+      let privkey = data['key'];
+
+      if (privkey.substring(0, 4) === 'nsec') {
+        privkey = nip19.decode(privkey).data;
+      }
+      if (typeof getPublicKey(privkey) === 'string') {
+        router.push(`/onboarding/login/${privkey}`);
+      }
     } catch (error) {
       setError('key', {
         type: 'custom',
@@ -75,7 +76,7 @@ export default function Page() {
                 <span className="bg-black px-2 text-sm text-zinc-500">or</span>
               </div>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-0.5">
               <div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
                 <input
                   {...register('key', { required: true, minLength: 32 })}
@@ -84,10 +85,10 @@ export default function Page() {
                   className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 text-center shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
                 />
               </div>
-              <span className="text-sm text-red-400">{errors.key && <p>{errors.key.message}</p>}</span>
+              <span className="text-xs text-red-400">{errors.key && <p>{errors.key.message}</p>}</span>
             </div>
           </div>
-          <div className="mt-1 flex h-10 items-center justify-center">
+          <div className="mt-3 flex h-10 items-center justify-center">
             {isSubmitting ? (
               <svg
                 className="h-5 w-5 animate-spin text-white"

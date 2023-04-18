@@ -3,21 +3,10 @@ import { CreateChannelModal } from '@components/channels/createChannelModal';
 
 import { Globe } from 'iconoir-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function ChannelList() {
-  const [list, setList] = useState([]);
-
-  useEffect(() => {
-    const fetchChannels = async () => {
-      const { getActiveChannels } = await import('@utils/bindings');
-      return await getActiveChannels({ active: true });
-    };
-
-    fetchChannels()
-      .then((res) => setList(res))
-      .catch(console.error);
-  }, []);
+  const [list] = useState([]);
 
   return (
     <div className="flex flex-col gap-px">

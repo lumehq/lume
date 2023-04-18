@@ -11,7 +11,7 @@ import { useCallback, useContext } from 'react';
 
 export const HideMessageButton = ({ id }: { id: string }) => {
   const [pool, relays]: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const hideMessage = useCallback(() => {
     const event: any = {

@@ -5,6 +5,8 @@ import { InactiveAccount } from '@components/multiAccounts/inactiveAccount';
 
 import { APP_VERSION } from '@stores/constants';
 
+import { getAccounts } from '@utils/storage';
+
 import LumeSymbol from '@assets/icons/Lume';
 
 import useLocalStorage from '@rehooks/local-storage';
@@ -14,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export default function MultiAccounts() {
   const [users, setUsers] = useState([]);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const renderAccount = useCallback(
     (user: { pubkey: string }) => {
@@ -27,16 +29,11 @@ export default function MultiAccounts() {
     [activeAccount.pubkey]
   );
 
-  const fetchAccounts = useCallback(async () => {
-    const { getAccounts } = await import('@utils/bindings');
-    const accounts = await getAccounts();
-    // update state
-    setUsers(accounts);
-  }, []);
-
   useEffect(() => {
-    fetchAccounts().catch(console.error);
-  }, [fetchAccounts]);
+    getAccounts()
+      .then((res) => setUsers(res))
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">

@@ -11,7 +11,7 @@ import { useCallback, useContext } from 'react';
 
 export const MuteButton = ({ pubkey }: { pubkey: string }) => {
   const [pool, relays]: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('activeAccount', {});
+  const [activeAccount]: any = useLocalStorage('account', {});
 
   const muteUser = useCallback(() => {
     const event: any = {

@@ -1,33 +1,26 @@
 import destr from 'destr';
 
-export const tagsToArray = (arr) => {
-  const newarr = [];
-  // push item to newarr
-  arr.forEach((item) => {
-    newarr.push(item[1]);
+// convert NIP-02 to array of pubkey
+export const nip02ToArray = (tags: string[]) => {
+  const arr = [];
+  tags.forEach((item) => {
+    arr.push(item[1]);
   });
-  return newarr;
+  return arr;
 };
 
 // convert array to NIP-02 tag list
 export const arrayToNIP02 = (arr: string[]) => {
-  const nip03_array = [];
+  const nip02_arr = [];
   arr.forEach((item) => {
-    nip03_array.push(['p', item]);
+    nip02_arr.push(['p', item]);
   });
-  return nip03_array;
+
+  return nip02_arr;
 };
 
-export const pubkeyArray = (arr) => {
-  const newarr = [];
-  // push item to newarr
-  arr.forEach((item) => {
-    newarr.push(item.pubkey);
-  });
-  return newarr;
-};
-
-export const getParentID = (arr, fallback) => {
+// get parent id from event tags
+export const getParentID = (arr: string[], fallback: string) => {
   const tags = destr(arr);
   let parentID = fallback;
 

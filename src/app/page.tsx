@@ -3,8 +3,16 @@
 import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
-import { getActiveAccount } from '@utils/storage';
-import { getParentID, pubkeyArray } from '@utils/transform';
+import {
+  countTotalChannels,
+  countTotalNotes,
+  createChannel,
+  createChat,
+  createNote,
+  getActiveAccount,
+  getPlebs,
+} from '@utils/storage';
+import { getParentID, nip02ToArray } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
@@ -22,48 +30,24 @@ export default function Page() {
   const eose = useRef(0);
   const unsubscribe = useRef(null);
 
-  const fetchPlebsByAccount = useCallback(async (id: number, kind: number) => {
-    const { getPlebs } = await import('@utils/bindings');
-    return await getPlebs({ account_id: id, kind: kind });
-  }, []);
-
-  const totalNotes = useCallback(async () => {
-    const { countTotalNotes } = await import('@utils/commands');
-    return countTotalNotes();
-  }, []);
-
-  const totalChannels = useCallback(async () => {
-    const { countTotalChannels } = await import('@utils/commands');
-    return countTotalChannels();
-  }, []);
-
-  const totalChats = useCallback(async () => {
-    const { countTotalChats } = await import('@utils/commands');
-    return countTotalChats();
-  }, []);
-
   const fetchData = useCallback(
-    async (account) => {
-      const { createNote } = await import('@utils/bindings');
-      const { createChat } = await import('@utils/bindings');
-      const { createChannel } = await import('@utils/bindings');
-
-      const notes = await totalNotes();
-      const channels = await totalChannels();
-      const chats = await totalChats();
+    async (account: { id: number; pubkey: string; chats: string[] }, follows: any) => {
+      const notes = await countTotalNotes();
+      const channels = await countTotalChannels();
+      const chats = account.chats?.length || 0;
 
       const query = [];
       let since: number;
 
       // kind 1 (notes) query
-      if (notes === 0) {
+      if (notes.total === 0) {
         since = dateToUnix(hoursAgo(24, now.current));
       } else {
         since = dateToUnix(new Date(lastLogin));
       }
       query.push({
         kinds: [1, 6],
-        authors: account.follows,
+        authors: JSON.parse(follows),
         since: since,
         until: dateToUnix(now.current),
       });
@@ -77,7 +61,7 @@ export default function Page() {
         });
       }
       // kind 40 (channels) query
-      if (channels === 0) {
+      if (channels.total === 0) {
         query.push({
           kinds: [40],
           since: 0,
@@ -88,51 +72,46 @@ export default function Page() {
       unsubscribe.current = pool.subscribe(
         query,
         relays,
-        (event) => {
+        (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
           switch (event.kind) {
             // short text note
             case 1:
               const parentID = getParentID(event.tags, event.id);
               // insert event to local database
-              createNote({
-                event_id: event.id,
-                pubkey: event.pubkey,
-                kind: event.kind,
-                tags: JSON.stringify(event.tags),
-                content: event.content,
-                parent_id: parentID,
-                parent_comment_id: '',
-                created_at: event.created_at,
-                account_id: account.id,
-              }).catch(console.error);
+              createNote(
+                event.id,
+                account.id,
+                event.pubkey,
+                event.kind,
+                event.tags,
+                event.content,
+                event.created_at,
+                parentID
+              );
               break;
             // chat
             case 4:
               if (event.pubkey !== account.pubkey) {
-                createChat({
-                  pubkey: event.pubkey,
-                  created_at: event.created_at,
-                  account_id: account.id,
-                }).catch(console.error);
+                createChat(account.id, event.pubkey, event.created_at);
               }
+              break;
             // repost
             case 6:
-              createNote({
-                event_id: event.id,
-                pubkey: event.pubkey,
-                kind: event.kind,
-                tags: JSON.stringify(event.tags),
-                content: event.content,
-                parent_id: '',
-                parent_comment_id: '',
-                created_at: event.created_at,
-                account_id: account.id,
-              }).catch(console.error);
+              createNote(
+                event.id,
+                account.id,
+                event.pubkey,
+                event.kind,
+                event.tags,
+                event.content,
+                event.created_at,
+                ''
+              );
+              break;
             // channel
             case 40:
-              createChannel({ event_id: event.id, content: event.content, account_id: account.id }).catch(
-                console.error
-              );
+              createChannel(event.id, event.content, event.created_at);
+              break;
             default:
               break;
           }
@@ -151,18 +130,26 @@ export default function Page() {
         }
       );
     },
-    [router, pool, relays, lastLogin, totalChannels, totalChats, totalNotes]
+    [router, pool, relays, lastLogin]
   );
 
   useEffect(() => {
+    getPlebs()
+      .then((res) => {
+        if (res) {
+          writeStorage('plebs', res);
+        }
+      })
+      .catch(console.error);
+
     getActiveAccount()
       .then((res: any) => {
         if (res) {
           const account = res;
           // update local storage
-          writeStorage('activeAccount', account);
+          writeStorage('account', account);
           // fetch data
-          fetchData(account);
+          fetchData(account, account.follows);
         } else {
           router.replace('/onboarding');
         }
