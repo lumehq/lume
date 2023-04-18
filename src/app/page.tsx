@@ -3,6 +3,7 @@
 import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
+import { getActiveAccount } from '@utils/storage';
 import { getParentID, pubkeyArray } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
@@ -20,11 +21,6 @@ export default function Page() {
   const now = useRef(new Date());
   const eose = useRef(0);
   const unsubscribe = useRef(null);
-
-  const fetchActiveAccount = useCallback(async () => {
-    const { getAccounts } = await import('@utils/bindings');
-    return await getAccounts();
-  }, []);
 
   const fetchPlebsByAccount = useCallback(async (id: number, kind: number) => {
     const { getPlebs } = await import('@utils/bindings');
@@ -47,7 +43,7 @@ export default function Page() {
   }, []);
 
   const fetchData = useCallback(
-    async (account, follows) => {
+    async (account) => {
       const { createNote } = await import('@utils/bindings');
       const { createChat } = await import('@utils/bindings');
       const { createChannel } = await import('@utils/bindings');
@@ -67,7 +63,7 @@ export default function Page() {
       }
       query.push({
         kinds: [1, 6],
-        authors: follows,
+        authors: account.follows,
         since: since,
         until: dateToUnix(now.current),
       });
@@ -159,22 +155,14 @@ export default function Page() {
   );
 
   useEffect(() => {
-    let account;
-    let follows;
-
-    fetchActiveAccount()
+    getActiveAccount()
       .then((res: any) => {
-        if (res.length > 0) {
-          account = res[0];
+        if (res) {
+          const account = res;
           // update local storage
           writeStorage('activeAccount', account);
-          // fetch plebs, kind 0 = following
-          fetchPlebsByAccount(account.id, 0).then((res) => {
-            follows = pubkeyArray(res);
-            writeStorage('activeAccountFollows', res);
-            // fetch data
-            fetchData(account, follows);
-          });
+          // fetch data
+          fetchData(account);
         } else {
           router.replace('/onboarding');
         }
@@ -186,7 +174,7 @@ export default function Page() {
         unsubscribe.current();
       }
     };
-  }, [fetchActiveAccount, fetchPlebsByAccount, totalNotes, fetchData, router]);
+  }, [fetchData, router]);
 
   return (
     <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">
