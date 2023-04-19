@@ -33,7 +33,7 @@
     "jotai": "^2.0.4",
     "next": "13.3.1-canary.14",
     "nostr-relaypool": "^0.5.18",
-    "nostr-tools": "^1.9.0",
+    "nostr-tools": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
