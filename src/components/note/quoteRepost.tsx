@@ -1,6 +1,7 @@
 import { RootNote } from '@components/note/rootNote';
 import { UserQuoteRepost } from '@components/user/quoteRepost';
 
+import destr from 'destr';
 import { memo } from 'react';
 
 export const NoteQuoteRepost = memo(function NoteQuoteRepost({ event }: { event: any }) {
@@ -8,7 +9,10 @@ export const NoteQuoteRepost = memo(function NoteQuoteRepost({ event }: { event:
     let note = null;
 
     if (event.content.length > 0) {
-      note = <RootNote event={JSON.parse(event.content)} />;
+      const content = destr(event.content);
+      if (content) {
+        note = <RootNote event={content} />;
+      }
     } else {
       note = <RootNote event={event.tags[0][1]} />;
     }

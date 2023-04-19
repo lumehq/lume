@@ -15,15 +15,15 @@ export default function ChatList() {
 
   const [list, setList] = useState([]);
   const [activeAccount]: any = useLocalStorage('account', {});
-  const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
+  const profile = JSON.parse(activeAccount.metadata);
 
   const openSelfChat = () => {
-    router.push(`/chats/${activeAccount.pubkey}`);
+    router.push(`/nostr/chats/${activeAccount.pubkey}`);
   };
 
   useEffect(() => {
     getChats(activeAccount.id)
-      .then((res) => setList(res))
+      .then((res: any) => setList(res))
       .catch(console.error);
   }, [activeAccount.id]);
 

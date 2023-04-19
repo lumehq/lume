@@ -38,11 +38,3 @@ export const getParentID = (arr: string[], fallback: string) => {
 
   return parentID;
 };
-
-export const filterDuplicateParentID = (arr) => {
-  const filteredArray = arr.filter(
-    (item, index) => index === arr.findIndex((other) => item.parent_id === other.parent_id)
-  );
-
-  return filteredArray;
-};

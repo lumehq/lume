@@ -37,7 +37,7 @@ export const contentParser = (noteContent, noteTags) => {
     </span>
   ));
   // handle mentions
-  if (tags.length > 0) {
+  if (tags && tags.length > 0) {
     parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match) => {
       if (tags[match][0] === 'p') {
         // @-mentions

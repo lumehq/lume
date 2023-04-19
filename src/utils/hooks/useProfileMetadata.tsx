@@ -12,7 +12,7 @@ export const fetchProfileMetadata = async (pubkey: string) => {
   return await result.data;
 };
 
-export const useProfileMetadata = (pubkey) => {
+export const useProfileMetadata = (pubkey: string) => {
   const [activeAccount]: any = useLocalStorage('account', {});
   const [plebs] = useLocalStorage('plebs', []);
   const [profile, setProfile] = useState(null);

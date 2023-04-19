@@ -36,9 +36,8 @@ export default function Page({ params }: { params: { privkey: string } }) {
     const unsubscribe = pool.subscribe(
       [
         {
-          authors: [pubkey],
           kinds: [0, 3],
-          since: 0,
+          authors: [pubkey],
         },
       ],
       relays,

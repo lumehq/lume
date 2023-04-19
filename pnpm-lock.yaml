@@ -37,7 +37,7 @@ specifiers:
   iconoir-react: ^6.6.0
   jotai: ^2.0.4
   lint-staged: ^13.2.1
-  next: 13.3.1-canary.11
+  next: 13.3.1-canary.14
   nostr-relaypool: ^0.5.18
   nostr-tools: ^1.9.0
   postcss: ^8.4.22
@@ -49,7 +49,7 @@ specifiers:
   react-hook-form: ^7.43.9
   react-player: ^2.12.0
   react-string-replace: ^1.1.0
-  react-virtuoso: ^4.2.1
+  react-virtuoso: ^4.2.2
   tailwindcss: ^3.3.1
   tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
   typescript: ^4.9.5
@@ -75,7 +75,7 @@ dependencies:
   framer-motion: 9.1.7_biqbaboplfbrettd7655fr4n2y
   iconoir-react: 6.6.0_react@18.2.0
   jotai: 2.0.4_react@18.2.0
-  next: 13.3.1-canary.11_biqbaboplfbrettd7655fr4n2y
+  next: 13.3.1-canary.14_biqbaboplfbrettd7655fr4n2y
   nostr-relaypool: 0.5.18_ws@8.13.0
   nostr-tools: 1.9.0
   react: 18.2.0
@@ -83,8 +83,8 @@ dependencies:
   react-hook-form: 7.43.9_react@18.2.0
   react-player: 2.12.0_react@18.2.0
   react-string-replace: 1.1.0
-  react-virtuoso: 4.2.1_biqbaboplfbrettd7655fr4n2y
-  tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/1638a2520ece4570b26c16e344597b295ac77bed
+  react-virtuoso: 4.2.2_biqbaboplfbrettd7655fr4n2y
+  tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/62b21ef24303d80e9905f57b2b6d27efc8677c23
   unique-names-generator: 4.7.1
   ws: 8.13.0
 
@@ -419,9 +419,9 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
 
-  /@next/env/13.3.1-canary.11:
+  /@next/env/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-DMeWYmGjEHW2ztS5/d8SX+19JkZJChd+xZTs6QsWY/mav4KUXqsbKYgidvr4CSmq2cZ7ebNstZSTvJM7FgXwbQ== }
+      { integrity: sha512-A5vhb+P7aLnBzVj7x4mkRobHrQRjJJhdgAKgqhon0sGULH4gq0S34PC19gjLxnYLOPEPYzeU3dM8dciAzy+U8g== }
     dev: false
 
   /@next/eslint-plugin-next/13.3.0:
@@ -431,9 +431,9 @@ packages:
       glob: 7.1.7
     dev: true
 
-  /@next/swc-darwin-arm64/13.3.1-canary.11:
+  /@next/swc-darwin-arm64/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-IrMxnHXziEE0itV8jQE6SSxAg0vwm2uvobXbdsgXo2q96hMjDXnnOP/1QLrqPOip3DfFEoYwyLx1C8P9exMHEA== }
+      { integrity: sha512-aNPlbr+PeabIHHQ5l+wSVQ1wu/Y3OtY33WP9orZlVDxmZdrjpF8fFsTFivhAmYan9F9nV4N/FUwqwXR0svi9/g== }
     engines: { node: '>= 10' }
     cpu: [arm64]
     os: [darwin]
@@ -441,9 +441,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-darwin-x64/13.3.1-canary.11:
+  /@next/swc-darwin-x64/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-zsG6xMFs7YagHz3ZorUJFqgc7X/bqVLlDJ5oDnWXTueMR8P8CgEhE/E+9wDhOEuwF8bjn6S7dSYYoLbAH+RMDQ== }
+      { integrity: sha512-epyeYoqUHIbHpQC7k3wLnF78mRuOmW8ZbzNNWJLN3rvtwaMvRGPvf1EO0xk3G1UeGON4X+S0qrqZVqH9hObwUw== }
     engines: { node: '>= 10' }
     cpu: [x64]
     os: [darwin]
@@ -451,9 +451,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-gnu/13.3.1-canary.11:
+  /@next/swc-linux-arm64-gnu/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-hv5LS+AbbnUxRoPA4vqagzXCUVLUipK3zNCqFHa2Udj7Uvc5j8/OjcUH7qfHtNxVonoCIfpaGnI1k1vtF7mGCw== }
+      { integrity: sha512-d/wK1ijJJm5rU678iodo6w6O8GJOQ5VKCof7VCaiG3Hx+f2M3/XPWNhrS5aWdOtXEa3ptTcAG+HbNrdYW8oJDQ== }
     engines: { node: '>= 10' }
     cpu: [arm64]
     os: [linux]
@@ -461,9 +461,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-musl/13.3.1-canary.11:
+  /@next/swc-linux-arm64-musl/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-AGKZPTl748WpMmUiTd9l+mskgEE7t3QVA+tW3owNYfSP48V/Z/NCwfsuOx9DTtpydZ2L8LWuySEme0AyNsoDWw== }
+      { integrity: sha512-dI3l+WJbGOKb/5IZ6bPEJ/7ie2woDrrk/wwLtp9Sa6jGyk9Maqu2DuEC4uu0C9R+zg62ktqnsgsQz6VM4Fs98A== }
     engines: { node: '>= 10' }
     cpu: [arm64]
     os: [linux]
@@ -471,9 +471,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-gnu/13.3.1-canary.11:
+  /@next/swc-linux-x64-gnu/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-2+N4/xJosn/Tgh0T3K8dSWc/tn/dNMbDpAAAEqDpl4t9lDMssCGGPMNHxK96wc+peXqub5/RbUKb+1N0CbUaow== }
+      { integrity: sha512-6x5pk6ziuPXnHBkrRxLb47tg0eVOLpfnwYGJLTlwUiM9wWHLHIRKP8BGV/zFKhwWYwW/CJS7IL69Ik8xjySSNA== }
     engines: { node: '>= 10' }
     cpu: [x64]
     os: [linux]
@@ -481,9 +481,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-musl/13.3.1-canary.11:
+  /@next/swc-linux-x64-musl/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-MuIXKPPtBAuTX/ls5nOaps7GbDg6AWVXtuR3sEryAgJTAyZdA9nqJ6RGqkdieDSUT2rp/UF8z/vq900F7Pjvqw== }
+      { integrity: sha512-Q2aFwEDaTh6L/WByKZQddVOdrIYaYPy812JqmHkIBhakfLTUIAi+OtC51A821wZVzkTZI81tDSGP7FYJvPB+Lg== }
     engines: { node: '>= 10' }
     cpu: [x64]
     os: [linux]
@@ -491,9 +491,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-arm64-msvc/13.3.1-canary.11:
+  /@next/swc-win32-arm64-msvc/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-GK8B8K2JShn3/DI6bAeKYDP9Jh4eLfFRPOvJ+LnwuCzj+VdSXh9H4S5YZr04eC1EFG6AxkB4JstCkdURLiXGjQ== }
+      { integrity: sha512-dmAB60/gqTto11SgEpZKxbUH09DwKLhmmBthO792V6aGIezXfoH2VzVWv7Hrc+spy8OA3QuTL6NaQZ8EwMSzCQ== }
     engines: { node: '>= 10' }
     cpu: [arm64]
     os: [win32]
@@ -501,9 +501,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-ia32-msvc/13.3.1-canary.11:
+  /@next/swc-win32-ia32-msvc/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-r4tSFS5IO5j0YuIY0BPz/v+x7uQa9DBY9hCtlMDxkC5zZ1x1ESYP/sYMbC6B0PAYlGPbuNEz2EGjOmM+oV4zsQ== }
+      { integrity: sha512-CrDfHmeRBkttwTAy7LNA2ohNiMLfO1AMZkdFwm5UKQIYuwdN7gSwklYciyvsvxxW5ojy+i15n5Tzlisq8uJZsg== }
     engines: { node: '>= 10' }
     cpu: [ia32]
     os: [win32]
@@ -511,9 +511,9 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-x64-msvc/13.3.1-canary.11:
+  /@next/swc-win32-x64-msvc/13.3.1-canary.14:
     resolution:
-      { integrity: sha512-w+SFpBfbxSdrC1fhV7xSecsBwBTDRPtd0PjzkyjdLD5EydHXU37PWGTZLfuD3I0ZN/uNncD8pNTB6YKF/a6L/A== }
+      { integrity: sha512-gAvB6vZq/f8to9bjMwP7GhR6liEdlcvv6NRu7OX6clOvOH8grjH7lcmq5ZFyR2GLxC1XUAz92lKgSWe0425jdw== }
     engines: { node: '>= 10' }
     cpu: [x64]
     os: [win32]
@@ -1119,9 +1119,9 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/postgrest-js/1.5.0_encoding@0.1.13:
+  /@supabase/postgrest-js/1.6.0_encoding@0.1.13:
     resolution:
-      { integrity: sha512-YaU1HBE43Ba+FGmnXuvK+xYeHylkDKd04PYeKDUCoE2bUHoxSDqnjHbOwmLjnusGZi3X1MrFeUH1Wwb4bHYyIg== }
+      { integrity: sha512-HCphMC6KjtoaGcowSlkKRVKBOlNpmKWE2CwoumMwwsfhnRxplIy1zBiIYIL3zIYo/Bm20H/1C6enqjBeTvSwXg== }
     dependencies:
       cross-fetch: 3.1.5_encoding@0.1.13
     transitivePeerDependencies:
@@ -1154,7 +1154,7 @@ packages:
     dependencies:
       '@supabase/functions-js': 2.1.1_encoding@0.1.13
       '@supabase/gotrue-js': 2.22.3_encoding@0.1.13
-      '@supabase/postgrest-js': 1.5.0_encoding@0.1.13
+      '@supabase/postgrest-js': 1.6.0_encoding@0.1.13
       '@supabase/realtime-js': 2.7.2
       '@supabase/storage-js': 2.5.1_encoding@0.1.13
       cross-fetch: 3.1.5_encoding@0.1.13
@@ -1163,9 +1163,9 @@ packages:
       - supports-color
     dev: false
 
-  /@swc/helpers/0.4.14:
+  /@swc/helpers/0.5.0:
     resolution:
-      { integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw== }
+      { integrity: sha512-SjY/p4MmECVVEWspzSRpQEM3sjR17sP8PbGxELWrT+YZMBfiUyt1MRUNjMV23zohwlG2HYtCQOsCwsTHguXkyg== }
     dependencies:
       tslib: 2.5.0
     dev: false
@@ -3591,9 +3591,9 @@ packages:
       { integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ== }
     dev: false
 
-  /next/13.3.1-canary.11_biqbaboplfbrettd7655fr4n2y:
+  /next/13.3.1-canary.14_biqbaboplfbrettd7655fr4n2y:
     resolution:
-      { integrity: sha512-osuYoB5F7Ib+mGR5oeiI2mQzVJPpeZrA7VX2ZSyUl+7ZDPJSgQRcX8m+4rVov5iy0+i1rPSot7Q/alMSqgYNPg== }
+      { integrity: sha512-0fGtqDFoJTVRLBhnFNdU5hTN0u0owXJdUHWbWy4SLrbcZwW5ReYkIkM/xYobBXWMX4eKUibPMnlxR/ooXWC2kQ== }
     engines: { node: '>=14.6.0' }
     hasBin: true
     peerDependencies:
@@ -3613,8 +3613,8 @@ packages:
       sass:
         optional: true
     dependencies:
-      '@next/env': 13.3.1-canary.11
-      '@swc/helpers': 0.4.14
+      '@next/env': 13.3.1-canary.14
+      '@swc/helpers': 0.5.0
       busboy: 1.6.0
       caniuse-lite: 1.0.30001480
       postcss: 8.4.14
@@ -3622,15 +3622,15 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       styled-jsx: 5.1.1_react@18.2.0
     optionalDependencies:
-      '@next/swc-darwin-arm64': 13.3.1-canary.11
-      '@next/swc-darwin-x64': 13.3.1-canary.11
-      '@next/swc-linux-arm64-gnu': 13.3.1-canary.11
-      '@next/swc-linux-arm64-musl': 13.3.1-canary.11
-      '@next/swc-linux-x64-gnu': 13.3.1-canary.11
-      '@next/swc-linux-x64-musl': 13.3.1-canary.11
-      '@next/swc-win32-arm64-msvc': 13.3.1-canary.11
-      '@next/swc-win32-ia32-msvc': 13.3.1-canary.11
-      '@next/swc-win32-x64-msvc': 13.3.1-canary.11
+      '@next/swc-darwin-arm64': 13.3.1-canary.14
+      '@next/swc-darwin-x64': 13.3.1-canary.14
+      '@next/swc-linux-arm64-gnu': 13.3.1-canary.14
+      '@next/swc-linux-arm64-musl': 13.3.1-canary.14
+      '@next/swc-linux-x64-gnu': 13.3.1-canary.14
+      '@next/swc-linux-x64-musl': 13.3.1-canary.14
+      '@next/swc-win32-arm64-msvc': 13.3.1-canary.14
+      '@next/swc-win32-ia32-msvc': 13.3.1-canary.14
+      '@next/swc-win32-x64-msvc': 13.3.1-canary.14
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -4222,9 +4222,9 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /react-virtuoso/4.2.1_biqbaboplfbrettd7655fr4n2y:
+  /react-virtuoso/4.2.2_biqbaboplfbrettd7655fr4n2y:
     resolution:
-      { integrity: sha512-IdbKabxa2Mq6f9m6BflvyzAbUHt0btCSq9rw2omcGAQt7ze80s2y6a2TvmSne1wLd0+75FgMGki2ru/dcAVmSQ== }
+      { integrity: sha512-qF0yULGH7pzIZOpCAike9KssDiWkG3o/ldQGwZpUKMDH8TPyFHUObvT8+wvksz64gdQZqspRWHeCdiAM6sLYyQ== }
     engines: { node: '>=10' }
     peerDependencies:
       react: '>=16 || >=17 || >= 18'
@@ -5063,10 +5063,10 @@ packages:
     engines: { node: '>=10' }
     dev: true
 
-  github.com/tauri-apps/tauri-plugin-sql/1638a2520ece4570b26c16e344597b295ac77bed:
+  github.com/tauri-apps/tauri-plugin-sql/62b21ef24303d80e9905f57b2b6d27efc8677c23:
     resolution:
       {
-        tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/1638a2520ece4570b26c16e344597b295ac77bed,
+        tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/62b21ef24303d80e9905f57b2b6d27efc8677c23,
       }
     name: tauri-plugin-sql-api
     version: 0.0.0

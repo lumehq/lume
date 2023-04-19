@@ -20,6 +20,7 @@ export default function EventCollector() {
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
+  const follows = JSON.parse(activeAccount.follows);
 
   const now = useRef(new Date());
   const unsubscribe = useRef(null);
@@ -29,11 +30,11 @@ export default function EventCollector() {
       [
         {
           kinds: [1, 6],
-          authors: activeAccount.follows,
+          authors: follows,
           since: dateToUnix(now.current),
         },
         {
-          kinds: [3],
+          kinds: [0, 3],
           authors: [activeAccount.pubkey],
         },
         {
@@ -47,8 +48,12 @@ export default function EventCollector() {
         },
       ],
       relays,
-      (event) => {
+      (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
         switch (event.kind) {
+          // metadata
+          case 0:
+            updateAccount('metadata', event.content, event.pubkey);
+            break;
           // short text note
           case 1:
             const parentID = getParentID(event.tags, event.id);

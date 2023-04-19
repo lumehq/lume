@@ -39,7 +39,11 @@ export async function createAccount(pubkey: string, privkey: string, metadata: s
 // update account
 export async function updateAccount(column: string, value: string | string[], pubkey: string) {
   const db = await connect();
-  return await db.execute(`UPDATE accounts SET ${column} = '${JSON.stringify(value)}' WHERE pubkey = "${pubkey}";`);
+  if (Array.isArray(value)) {
+    return await db.execute(`UPDATE accounts SET ${column} = '${JSON.stringify(value)}' WHERE pubkey = "${pubkey}";`);
+  } else {
+    return await db.execute(`UPDATE accounts SET ${column} = "${value}" WHERE pubkey = "${pubkey}";`);
+  }
 }
 
 // get all plebs
@@ -77,7 +81,7 @@ export async function getNotes(time: number, limit: number, offset: number) {
 }
 
 // get note by id
-export async function getNoteByID(event_id) {
+export async function getNoteByID(event_id: string) {
   const db = await connect();
   const result = await db.select(`SELECT * FROM notes WHERE event_id = "${event_id}";`);
   return result[0];
@@ -86,7 +90,7 @@ export async function getNoteByID(event_id) {
 // get all latest notes
 export async function getLatestNotes(time: number) {
   const db = await connect();
-  return await db.select(`SELECT * FROM cache_notes WHERE created_at > "${time}" ORDER BY created_at DESC;`);
+  return await db.select(`SELECT * FROM notes WHERE created_at > "${time}" ORDER BY created_at DESC;`);
 }
 
 // create note

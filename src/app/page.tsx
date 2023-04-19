@@ -12,7 +12,7 @@ import {
   getActiveAccount,
   getPlebs,
 } from '@utils/storage';
-import { getParentID, nip02ToArray } from '@utils/transform';
+import { getParentID } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
@@ -31,10 +31,11 @@ export default function Page() {
   const unsubscribe = useRef(null);
 
   const fetchData = useCallback(
-    async (account: { id: number; pubkey: string; chats: string[] }, follows: any) => {
+    async (account: { id: number; pubkey: string; chats: string[] }, tags: any) => {
       const notes = await countTotalNotes();
       const channels = await countTotalChannels();
       const chats = account.chats?.length || 0;
+      const follows = JSON.parse(tags);
 
       const query = [];
       let since: number;
@@ -47,7 +48,7 @@ export default function Page() {
       }
       query.push({
         kinds: [1, 6],
-        authors: JSON.parse(follows),
+        authors: follows,
         since: since,
         until: dateToUnix(now.current),
       });

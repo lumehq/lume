@@ -31,7 +31,7 @@ export default function MultiAccounts() {
 
   useEffect(() => {
     getAccounts()
-      .then((res) => setUsers(res))
+      .then((res: any) => setUsers(res))
       .catch(console.error);
   }, []);
 

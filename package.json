@@ -31,7 +31,7 @@
     "framer-motion": "^9.1.7",
     "iconoir-react": "^6.6.0",
     "jotai": "^2.0.4",
-    "next": "13.3.1-canary.11",
+    "next": "13.3.1-canary.14",
     "nostr-relaypool": "^0.5.18",
     "nostr-tools": "^1.9.0",
     "react": "^18.2.0",
@@ -39,7 +39,7 @@
     "react-hook-form": "^7.43.9",
     "react-player": "^2.12.0",
     "react-string-replace": "^1.1.0",
-    "react-virtuoso": "^4.2.1",
+    "react-virtuoso": "^4.2.2",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
     "unique-names-generator": "^4.7.1",
     "ws": "^8.13.0"

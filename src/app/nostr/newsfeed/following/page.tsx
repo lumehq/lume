@@ -47,20 +47,20 @@ export default function Page() {
   );
 
   const initialData = useCallback(async () => {
-    const result = await getNotes(dateToUnix(now.current), limit.current, offset.current);
+    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
     setData((data) => [...data, ...result]);
   }, [setData]);
 
   const loadMore = useCallback(async () => {
     offset.current += limit.current;
     // query next page
-    const result = await getNotes(dateToUnix(now.current), limit.current, offset.current);
+    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
     setData((data) => [...data, ...result]);
   }, [setData]);
 
   const loadLatest = useCallback(async () => {
     // next query
-    const result = await getLatestNotes(dateToUnix(now.current));
+    const result: any = await getLatestNotes(dateToUnix(now.current));
     // update data
     setData((data) => [...result, ...data]);
     // hide newer trigger
