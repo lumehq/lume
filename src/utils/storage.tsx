@@ -127,6 +127,12 @@ export async function createChannel(event_id: string, metadata: string, created_
   ]);
 }
 
+// update channel metadata
+export async function updateChannelMetadata(event_id: string, value: string) {
+  const db = await connect();
+  return await db.execute(`UPDATE channels SET metadata = "${value}" WHERE event_id = "${event_id}";`);
+}
+
 // get all chats
 export async function getChats(account_id: number) {
   const db = await connect();
