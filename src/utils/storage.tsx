@@ -39,11 +39,7 @@ export async function createAccount(pubkey: string, privkey: string, metadata: s
 // update account
 export async function updateAccount(column: string, value: string | string[], pubkey: string) {
   const db = await connect();
-  if (Array.isArray(value)) {
-    return await db.execute(`UPDATE accounts SET ${column} = '${JSON.stringify(value)}' WHERE pubkey = "${pubkey}";`);
-  } else {
-    return await db.execute(`UPDATE accounts SET ${column} = "${value}" WHERE pubkey = "${pubkey}";`);
-  }
+  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE pubkey = ?;`, [value, pubkey]);
 }
 
 // get all plebs
@@ -130,7 +126,7 @@ export async function createChannel(event_id: string, metadata: string, created_
 // update channel metadata
 export async function updateChannelMetadata(event_id: string, value: string) {
   const db = await connect();
-  return await db.execute(`UPDATE channels SET metadata = "${value}" WHERE event_id = "${event_id}";`);
+  return await db.execute('UPDATE channels SET metadata = ? WHERE event_id = ?;', [value, event_id]);
 }
 
 // get all chats
