@@ -60,11 +60,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       },
       undefined,
       () => {
-        if (eose.current > 5) {
-          setDone(true);
-        } else {
-          eose.current += 1;
-        }
+        setDone(true);
       },
       {
         unsubscribeOnEose: true,

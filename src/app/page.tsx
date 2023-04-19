@@ -119,11 +119,7 @@ export default function Page() {
         },
         undefined,
         () => {
-          if (eose.current > 5) {
-            router.replace('/nostr/newsfeed/following');
-          } else {
-            eose.current += 1;
-          }
+          router.replace('/nostr/newsfeed/following');
         },
         {
           unsubscribeOnEose: true,
