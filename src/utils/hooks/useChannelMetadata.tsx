@@ -35,8 +35,12 @@ export const useChannelMetadata = (id: string, fallback: string) => {
   }, []);
 
   useEffect(() => {
-    const json = JSON.parse(fallback);
-    setMetadata(json);
+    if (typeof fallback === 'object') {
+      setMetadata(fallback);
+    } else {
+      const json = JSON.parse(fallback);
+      setMetadata(json);
+    }
 
     // fetch kind 41
     fetchMetadata();

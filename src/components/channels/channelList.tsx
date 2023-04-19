@@ -1,15 +1,16 @@
 import { ChannelListItem } from '@components/channels/channelListItem';
 import { CreateChannelModal } from '@components/channels/createChannelModal';
 
-import { Globe } from 'iconoir-react';
-import Link from 'next/link';
+import { DEFAULT_CHANNELS } from '@stores/constants';
+
 import { useState } from 'react';
 
 export default function ChannelList() {
-  const [list] = useState([]);
+  const [list] = useState(DEFAULT_CHANNELS);
 
   return (
     <div className="flex flex-col gap-px">
+      {/*
       <Link
         href="/explore/channels"
         className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
@@ -21,8 +22,9 @@ export default function ChannelList() {
           <h5 className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400">Browse channels</h5>
         </div>
       </Link>
+      */}
       {list.map((item) => (
-        <ChannelListItem key={item.id} data={item} />
+        <ChannelListItem key={item.event_id} data={item} />
       ))}
       <CreateChannelModal />
     </div>

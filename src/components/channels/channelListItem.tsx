@@ -3,8 +3,10 @@ import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
+import { useChannelMetadata } from '@utils/hooks/useChannelMetadata';
+
 export const ChannelListItem = ({ data }: { data: any }) => {
-  const channel = JSON.parse(data.content);
+  const channel = useChannelMetadata(data.event_id, data.metadata);
 
   return (
     <ActiveLink
@@ -21,7 +23,7 @@ export const ChannelListItem = ({ data }: { data: any }) => {
         />
       </div>
       <div>
-        <h5 className="truncate text-sm font-medium text-zinc-400">{channel.name}</h5>
+        <h5 className="truncate text-sm font-medium text-zinc-400">{channel?.name.toLowerCase()}</h5>
       </div>
     </ActiveLink>
   );
