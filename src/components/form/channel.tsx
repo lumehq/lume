@@ -3,6 +3,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserMini } from '@components/user/mini';
 
 import { channelReplyAtom } from '@stores/channel';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -13,7 +14,7 @@ import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext, useState } from 'react';
 
-export default function FormChannelMessage({ eventId }: { eventId: string | string[] }) {
+export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
   const [pool, relays]: any = useContext(RelayContext);
 
   const [value, setValue] = useState('');
@@ -46,7 +47,7 @@ export default function FormChannelMessage({ eventId }: { eventId: string | stri
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, relays);
+    pool.publish(event, FULL_RELAYS);
     // reset state
     setValue('');
     // reset channel reply
@@ -110,10 +111,7 @@ export default function FormChannelMessage({ eventId }: { eventId: string | stri
       />
       <div className="absolute bottom-2 w-full px-2">
         <div className="flex w-full items-center justify-between bg-zinc-800">
-          <div className="flex items-center gap-2 divide-x divide-zinc-700">
-            <ImagePicker />
-            <div className="flex items-center gap-2 pl-2"></div>
-          </div>
+          <div className="flex items-center gap-2 divide-x divide-zinc-700"></div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => submitEvent()}
@@ -127,4 +125,4 @@ export default function FormChannelMessage({ eventId }: { eventId: string | stri
       </div>
     </div>
   );
-}
+};

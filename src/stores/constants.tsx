@@ -6,9 +6,9 @@ export const DEFAULT_CHANNELS = [
   {
     event_id: 'e3cadf5beca1b2af1cddaa41a633679bedf263e3de1eb229c6686c50d85df753',
     metadata: {
-      name: 'lume-general',
+      name: 'Lume General',
       picture: 'https://void.cat/d/UNyxBmAh1MUx5gQTX95jyf.webp',
-      about: 'General channel for Lume',
+      about: 'General discussion about the Lume client',
     },
     created_at: 1681898574,
   },

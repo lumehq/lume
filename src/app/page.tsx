@@ -125,7 +125,7 @@ export default function Page() {
         undefined,
         () => {
           updateLastLogin(dateToUnix(now.current));
-          //timeout.current = setTimeout(() => router.replace('/nostr/newsfeed/following'), 5000);
+          timeout.current = setTimeout(() => router.replace('/nostr/newsfeed/following'), 5000);
         },
         {
           unsubscribeOnEose: true,

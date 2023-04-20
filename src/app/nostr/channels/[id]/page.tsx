@@ -1,16 +1,18 @@
 'use client';
 
 import { ChannelMessages } from '@components/channels/messages/index';
-import FormChannelMessage from '@components/form/channelMessage';
+import { FormChannel } from '@components/form/channel';
 import { RelayContext } from '@components/relaysProvider';
 
 import { channelMessagesAtom, channelReplyAtom } from '@stores/channel';
 import { FULL_RELAYS } from '@stores/constants';
 
+import { dateToUnix, hoursAgo } from '@utils/getDate';
+
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { Suspense, useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [pool]: any = useContext(RelayContext);
@@ -20,6 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const resetChannelMessages = useResetAtom(channelMessagesAtom);
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
+  const now = useRef(new Date());
   const muted = useRef(new Set());
   const hided = useRef(new Set());
 
@@ -34,12 +37,12 @@ export default function Page({ params }: { params: { id: string } }) {
         {
           authors: [activeAccount.pubkey],
           kinds: [43, 44],
-          since: 0,
+          since: dateToUnix(hoursAgo(24, now.current)),
         },
         {
           '#e': [params.id],
           kinds: [42],
-          since: 0,
+          since: dateToUnix(hoursAgo(24, now.current)),
         },
       ],
       FULL_RELAYS,
@@ -67,11 +70,9 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <Suspense fallback={<>Loading...</>}>
-        <ChannelMessages />
-      </Suspense>
+      <ChannelMessages />
       <div className="shrink-0 p-3">
-        <FormChannelMessage eventId={params.id} />
+        <FormChannel eventId={params.id} />
       </div>
     </div>
   );
