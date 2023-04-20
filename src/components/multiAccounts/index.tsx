@@ -39,6 +39,7 @@ export default function MultiAccounts() {
     <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">
       <div className="flex flex-col gap-4">
         <Link
+          prefetch={false}
           href="/explore"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
         >
@@ -46,6 +47,7 @@ export default function MultiAccounts() {
         </Link>
         <div>{users.map((user) => renderAccount(user))}</div>
         <Link
+          prefetch={false}
           href="/onboarding"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"
         >

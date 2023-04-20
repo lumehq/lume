@@ -18,7 +18,7 @@ export const ActiveLink = ({
   const isActive = href.includes(segments[1]);
 
   return (
-    <Link href={href} className={`${className}` + ' ' + (isActive ? `${activeClassName}` : '')}>
+    <Link prefetch={false} href={href} className={`${className}` + ' ' + (isActive ? `${activeClassName}` : '')}>
       {children}
     </Link>
   );

@@ -167,7 +167,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 ></path>
               </svg>
             ) : (
-              <span className="drop-shadow-lg">Done →</span>
+              <span className="drop-shadow-lg">Done! Go to newsfeed</span>
             )}
           </button>
         </div>

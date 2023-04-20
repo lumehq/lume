@@ -27,7 +27,7 @@ export default function Page() {
   const [lastLogin] = useLocalStorage('lastLogin', new Date());
 
   const now = useRef(new Date());
-  const eose = useRef(0);
+  const timeout = useRef(null);
   const unsubscribe = useRef(null);
 
   const fetchData = useCallback(
@@ -119,7 +119,7 @@ export default function Page() {
         },
         undefined,
         () => {
-          router.replace('/nostr/newsfeed/following');
+          timeout.current = setTimeout(() => router.replace('/nostr/newsfeed/following'), 5000);
         },
         {
           unsubscribeOnEose: true,
@@ -157,6 +157,7 @@ export default function Page() {
       if (unsubscribe.current) {
         unsubscribe.current();
       }
+      clearTimeout(timeout.current);
     };
   }, [fetchData, router]);
 

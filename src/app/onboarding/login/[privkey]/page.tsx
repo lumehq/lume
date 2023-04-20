@@ -10,16 +10,14 @@ import { createAccount, createPleb, updateAccount } from '@utils/storage';
 import { nip02ToArray } from '@utils/transform';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { getPublicKey } from 'nostr-tools';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function Page({ params }: { params: { privkey: string } }) {
-  const router = useRouter();
-
   const [pool, relays]: any = useContext(RelayContext);
   const pubkey = useMemo(() => (params.privkey ? getPublicKey(params.privkey) : null), [params.privkey]);
-  const eose = useRef(0);
+  const timeout = useRef(null);
 
   const [profile, setProfile] = useState({ metadata: null });
   const [done, setDone] = useState(false);
@@ -60,7 +58,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       },
       undefined,
       () => {
-        setDone(true);
+        timeout.current = setTimeout(() => setDone(true), 5000);
       },
       {
         unsubscribeOnEose: true,
@@ -70,13 +68,9 @@ export default function Page({ params }: { params: { privkey: string } }) {
 
     return () => {
       unsubscribe;
+      clearTimeout(timeout.current);
     };
   }, [pool, relays, pubkey, params.privkey, createPlebs]);
-
-  // submit then redirect to home
-  const submit = () => {
-    router.replace('/');
-  };
 
   return (
     <div className="grid h-full w-full grid-rows-5">
@@ -131,12 +125,13 @@ export default function Page({ params }: { params: { privkey: string } }) {
                 ></path>
               </svg>
             ) : (
-              <button
-                onClick={() => submit()}
+              <Link
+                prefetch={false}
+                href="/"
                 className="inline-flex w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
               >
-                <span className="drop-shadow-lg">Done →</span>
-              </button>
+                <span className="drop-shadow-lg">Done! Go to newsfeed</span>
+              </Link>
             )}
           </div>
         </div>
