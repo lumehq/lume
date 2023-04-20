@@ -2,7 +2,11 @@
  * @type {import('next').NextConfig}
  */
 
-const nextConfig = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+const nextConfig = withBundleAnalyzer({
   output: 'export',
   swcMinify: false,
   images: {
@@ -19,6 +23,6 @@ const nextConfig = {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;
   },
-};
+});
 
 module.exports = nextConfig;
