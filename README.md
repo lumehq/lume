@@ -1,6 +1,6 @@
 <p align="center">
   <a href="#">
-    
+
   </a>
   <p align="center">
    <img width="150" height="150" src="https://bafybeiascaupgzgxuoercns33vhxhq7c6oibhvxnzenvurgsjdyr4jp3la.ipfs.w3s.link/macos-512.png" alt="Logo">
@@ -21,7 +21,7 @@
     <i>~ Links will be added once a release is available. ~</i>
   </p>
 </p>
-Lume is an open source cross-platform Nostr client, powered by (<a href="https://tauri.app" target="_blank">Tauri</a>) and web-tech. 
+Lume is an open source cross-platform Nostr client, powered by (<a href="https://tauri.app" target="_blank">Tauri</a>) and web-tech.
 <br/>
 <br/>
 
@@ -45,35 +45,7 @@ Everybody runs a client. It can be a native client, a web client, etc. To publis
 
 When Nostr became popular, many clients exist but none of them satisfy me, so I built my own. I don't many experence in develop desktop app before, my background is just strongly in Ruby on Rails, this is also a good opportunity for me to improve my skills.
 
-## Why desktop only?
-
-Lume is "an ambitious nostr client", so I don't want to limit it be a part of your daily web browsing, I want it to be a part of your computer. With a desktop app, I can explore more potentials, and in my opinion, web is broken I don't want to focus on it anymore (I will share more about this opinion later)
-
-## Features
-
-**Current**: v0.2.5
-
-- [x] create new key
-- [x] import private key (hex/nsec)
-- [x] followings newsfeed
-- [x] handle note reaction
-- [x] handle note repost
-- [x] handle note have image/video
-- [x] handle tags (#[x]) in note
-- [x] handle reply note
-- [x] publish a note (support markdown)
-- [x] update profile
-- [x] cache profile to local database
-- [x] offline support
-- [x] implement newsfeed infinite loading
-- [x] personal profile page
-- [x] windows & linux support
-
-## Roadmap
-
-View full roadmap for v0.3.0 [here](https://github.com/users/reyamir/projects/2)
-
-## Running dev build
+## Development
 
 Prerequisites:
 
@@ -83,8 +55,16 @@ Prerequisites:
 
 Clone repo:
 
+Note: always use `canary` branch for development
+
 ```
-git clone https://github.com/reyamir/lume-desktop.git
+git clone -b canary https://github.com/luminous-devs/lume.git
+```
+
+Move to clone folder in previous step
+
+```
+cd lume/
 ```
 
 Install dependencies
@@ -93,14 +73,28 @@ Install dependencies
 pnpm install
 ```
 
-Generate prisma database
-
-```
-pnpm init-db
-```
-
-Run development window
+Run development build
 
 ```
 pnpm tauri dev
 ```
+
+First time launch app, Lume automatically create local database (sqlite) and run migrations, place at `src-tauri/migrations`
+
+```
+Database folder: tauri::api::path::BaseDirectory::App
+MacOS: /Users/<username>/Library/Application Support/com.lume.nu/lume.db
+```
+
+In `splashscreen` page, Lume will check accounts table has any account or not. If not redirect to `/onboarding`. If present, run `subscribe` to fetch events from `DEFAULT_RELAYS`
+
+In `/onboarding` page, user can import old `private key` or create new .If import old key, fetch `kind 0, 3` then insert to accounts table in database .If create new, show to user npub/nsec as well as random profile, then move to pre-follows page. Then redirect back to `splashscreen`
+
+**About Lume event processing**
+
+- Lume is using [nostr-relaypool-ts](https://github.com/adamritter/nostr-relaypool-ts) to interact with relays
+- When user open app, if `total notes in db == 0`, splashscreen `src/app/page.tsx` will fetch all events from 24 hours ago, if above zero, it will fetch all events since `last time` logged
+- When user using app, `event collector` component have role fetch all events since `current time` and save to `database`
+- `event collector` also have role update `last time logged` to local storage when user close the app
+- Newsfeed page `following or circle` will fetch event from `database` then render in `virtuaso` component
+- Lume don't render event directly after get it from relays, event will be saved in database first, and fetch via `sql query`
