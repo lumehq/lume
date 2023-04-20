@@ -63,6 +63,12 @@ fn main() {
               sql: include_str!("../migrations/20230418080146_create_chats.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230420040005,
+              description: "insert last login to settings",
+              sql: include_str!("../migrations/20230420040005_insert_last_login_to_settings.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

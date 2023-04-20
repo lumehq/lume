@@ -144,3 +144,16 @@ export async function createChat(account_id: number, pubkey: string, created_at:
     created_at,
   ]);
 }
+
+// get last login
+export async function getLastLogin() {
+  const db = await connect();
+  const result = await db.select(`SELECT value FROM settings WHERE key = "last_login";`);
+  return result[0]?.value;
+}
+
+// update last login
+export async function updateLastLogin(value: number) {
+  const db = await connect();
+  return await db.execute(`UPDATE settings SET value = ${value} WHERE key = "last_login";`);
+}

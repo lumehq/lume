@@ -9,9 +9,7 @@ import { dateToUnix } from '@utils/getDate';
 import { createChannel, createChat, createNote, updateAccount } from '@utils/storage';
 import { getParentID, nip02ToArray } from '@utils/transform';
 
-import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
-import { window } from '@tauri-apps/api';
-import { TauriEvent } from '@tauri-apps/api/event';
+import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
@@ -23,10 +21,9 @@ export default function EventCollector() {
   const follows = JSON.parse(activeAccount.follows);
 
   const now = useRef(new Date());
-  const unsubscribe = useRef(null);
 
   const subscribe = useCallback(async () => {
-    unsubscribe.current = pool.subscribe(
+    pool.subscribe(
       [
         {
           kinds: [1, 6],
@@ -106,27 +103,9 @@ export default function EventCollector() {
     );
   }, [activeAccount.follows, activeAccount.pubkey, activeAccount.id, pool, relays, setHasNewerNote]);
 
-  const listenWindowClose = useCallback(async () => {
-    window.getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-      writeStorage('lastLogin', now.current);
-      window.getCurrent().close();
-    });
-  }, []);
-
   useEffect(() => {
     subscribe();
-    listenWindowClose();
+  }, [setHasNewerNote, subscribe]);
 
-    return () => {
-      if (unsubscribe.current) {
-        unsubscribe.current();
-      }
-    };
-  }, [setHasNewerNote, subscribe, listenWindowClose]);
-
-  return (
-    <>
-      <NetworkStatusIndicator />
-    </>
-  );
+  return <NetworkStatusIndicator />;
 }

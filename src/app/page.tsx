@@ -10,21 +10,21 @@ import {
   createChat,
   createNote,
   getActiveAccount,
+  getLastLogin,
   getPlebs,
+  updateLastLogin,
 } from '@utils/storage';
 import { getParentID } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import useLocalStorage, { writeStorage } from '@rehooks/local-storage';
+import { writeStorage } from '@rehooks/local-storage';
 import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function Page() {
   const router = useRouter();
-
   const [pool, relays]: any = useContext(RelayContext);
-  const [lastLogin] = useLocalStorage('lastLogin', new Date());
 
   const now = useRef(new Date());
   const timeout = useRef(null);
@@ -32,6 +32,7 @@ export default function Page() {
 
   const fetchData = useCallback(
     async (account: { id: number; pubkey: string; chats: string[] }, tags: any) => {
+      const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
       const channels = await countTotalChannels();
       const chats = account.chats?.length || 0;
@@ -44,7 +45,11 @@ export default function Page() {
       if (notes.total === 0) {
         since = dateToUnix(hoursAgo(24, now.current));
       } else {
-        since = dateToUnix(new Date(lastLogin));
+        if (parseInt(lastLogin) > 0) {
+          since = parseInt(lastLogin);
+        } else {
+          since = dateToUnix(hoursAgo(24, now.current));
+        }
       }
       query.push({
         kinds: [1, 6],
@@ -119,7 +124,8 @@ export default function Page() {
         },
         undefined,
         () => {
-          timeout.current = setTimeout(() => router.replace('/nostr/newsfeed/following'), 5000);
+          updateLastLogin(dateToUnix(now.current));
+          //timeout.current = setTimeout(() => router.replace('/nostr/newsfeed/following'), 5000);
         },
         {
           unsubscribeOnEose: true,
@@ -127,7 +133,7 @@ export default function Page() {
         }
       );
     },
-    [router, pool, relays, lastLogin]
+    [router, pool, relays]
   );
 
   useEffect(() => {
