@@ -24,8 +24,11 @@ export const UserQuoteRepost = ({ pubkey, time }: { pubkey: string; time: number
         />
       </div>
       <div className="flex items-baseline gap-2 text-sm">
-        <h5 className="font-bold leading-tight group-hover:underline">
-          {profile?.display_name || profile?.name || shortenKey(pubkey)} reposted
+        <h5 className="font-semibold leading-tight group-hover:underline">
+          {profile?.display_name || profile?.name || shortenKey(pubkey)}{' '}
+          <span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
+            reposted
+          </span>
         </h5>
         <span className="leading-tight text-zinc-500">·</span>
         <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
