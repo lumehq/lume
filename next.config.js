@@ -4,8 +4,7 @@
 
 const nextConfig = {
   output: 'export',
-  reactStrictMode: false,
-  swcMinify: true,
+  swcMinify: false,
   images: {
     unoptimized: true,
   },

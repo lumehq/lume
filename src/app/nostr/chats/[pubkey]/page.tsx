@@ -5,6 +5,7 @@ import FormChat from '@components/form/chat';
 import { RelayContext } from '@components/relaysProvider';
 
 import { chatMessagesAtom } from '@stores/chat';
+import { FULL_RELAYS } from '@stores/constants';
 
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
@@ -12,7 +13,7 @@ import { useResetAtom } from 'jotai/utils';
 import { Suspense, useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { pubkey: string } }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const [pool]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const setChatMessages = useSetAtom(chatMessagesAtom);
@@ -34,12 +35,12 @@ export default function Page({ params }: { params: { pubkey: string } }) {
           '#p': [params.pubkey],
         },
       ],
-      relays,
+      FULL_RELAYS,
       (event: any) => {
         setChatMessages((data) => [...data, event]);
       }
     );
-  }, [activeAccount.pubkey, params.pubkey, pool, relays, setChatMessages]);
+  }, [activeAccount.pubkey, params.pubkey, pool, setChatMessages]);
 
   useEffect(() => {
     // reset stored messages

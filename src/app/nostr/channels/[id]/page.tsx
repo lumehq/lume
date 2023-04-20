@@ -5,6 +5,7 @@ import FormChannelMessage from '@components/form/channelMessage';
 import { RelayContext } from '@components/relaysProvider';
 
 import { channelMessagesAtom, channelReplyAtom } from '@stores/channel';
+import { FULL_RELAYS } from '@stores/constants';
 
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
@@ -12,7 +13,7 @@ import { useResetAtom } from 'jotai/utils';
 import { Suspense, useContext, useEffect, useRef } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const [pool]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
@@ -41,7 +42,7 @@ export default function Page({ params }: { params: { id: string } }) {
           since: 0,
         },
       ],
-      relays,
+      FULL_RELAYS,
       (event: any) => {
         if (event.kind === 44) {
           muted.current = muted.current.add(event.tags[0][1]);
@@ -62,7 +63,7 @@ export default function Page({ params }: { params: { id: string } }) {
     return () => {
       unsubscribe();
     };
-  }, [pool, relays, activeAccount.pubkey, params.id, setChannelMessages, resetChannelReply, resetChannelMessages]);
+  }, [pool, activeAccount.pubkey, params.id, setChannelMessages, resetChannelReply, resetChannelMessages]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">

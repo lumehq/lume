@@ -22,3 +22,13 @@ export const DEFAULT_CHANNELS = [
     created_at: 1661333723,
   },
 ];
+export const DEFAULT_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band', 'wss://nostr.mutinywallet.com'];
+export const FULL_RELAYS = [
+  'wss://relay.damus.io',
+  'wss://nostr-pub.wellorder.net',
+  'wss://nostr.zebedee.cloud',
+  'wss://nostr.fmt.wiz.biz',
+  'wss://relay.snort.social',
+  'wss://offchain.pub',
+  'wss://relay.current.fyi',
+];

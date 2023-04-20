@@ -78,7 +78,7 @@
       "active": true,
       "endpoints": ["https://releases.lume.nu/{{target}}/{{arch}}/{{current_version}}"],
       "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ2N0U5RjEzRkY3QUVBMTEKUldRUjZuci9FNTkrUnFaYWZhS3ZkMDFpOXhBNHpyT2ZrWUg4SHdFZ3FzY2tCNStibmw0T29TcXQK%",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIyOUI0Qjc1MTBCOUNGNUEKUldSYXo3a1FkVXViSWxYTlhhS0E4UjRIcEkzd04yN1Y0dys4QWY5WjRybEF5eElLcGFXZmJnRzQK",
       "windows": {
         "installMode": "passive"
       }
