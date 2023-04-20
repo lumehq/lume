@@ -16,7 +16,7 @@ tauri-build = { version = "1.2", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2", features = ["clipboard-read-text", "clipboard-write-text", "http-request", "os-all", "shell-open", "system-tray", "updater", "window-close", "window-start-dragging"] }
+tauri = { version = "1.2", features = ["clipboard-read-text", "clipboard-write-text", "dialog-open", "fs-read-dir", "fs-read-file", "http-all", "http-multipart", "os-all", "shell-open", "system-tray", "updater", "window-close", "window-start-dragging"] }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 sqlx-cli = {version = "0.6.3", default-features = false, features = ["sqlite"] }
 

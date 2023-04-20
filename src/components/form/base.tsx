@@ -1,5 +1,4 @@
-import EmojiPicker from '@components/form/emojiPicker';
-import ImagePicker from '@components/form/imagePicker';
+import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
 import { noteContentAtom } from '@stores/note';
@@ -55,9 +54,7 @@ export default function FormBase() {
           <div className="flex w-full items-center justify-between bg-zinc-800">
             <div className="flex items-center gap-2 divide-x divide-zinc-700">
               <ImagePicker />
-              <div className="flex items-center gap-2 pl-2">
-                <EmojiPicker />
-              </div>
+              <div className="flex items-center gap-2 pl-2"></div>
             </div>
             <div className="flex items-center gap-2">
               <button

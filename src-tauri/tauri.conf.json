@@ -20,9 +20,26 @@
         "all": true
       },
       "http": {
-        "all": false,
+        "all": true,
         "request": true,
-        "scope": ["https://rbr.bio/*", "https://metadata.lume.nu/*"]
+        "scope": ["https://rbr.bio/*", "https://void.cat/*", "https://metadata.lume.nu/*"]
+      },
+      "fs": {
+        "all": false,
+        "readFile": true,
+        "readDir": true,
+        "scope": [
+          "$APPDATA/*",
+          "$DATA/*",
+          "$LOCALDATA/*",
+          "$DESKTOP/*",
+          "$DOCUMENT/*",
+          "$DOWNLOAD/*",
+          "$HOME/*",
+          "$PICTURE/*",
+          "$PUBLIC/*",
+          "$VIDEO/*"
+        ]
       },
       "shell": {
         "all": false,
@@ -32,6 +49,10 @@
         "all": false,
         "writeText": true,
         "readText": true
+      },
+      "dialog": {
+        "all": false,
+        "open": true
       },
       "notification": {
         "all": false

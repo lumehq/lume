@@ -111,7 +111,10 @@ export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
       />
       <div className="absolute bottom-2 w-full px-2">
         <div className="flex w-full items-center justify-between bg-zinc-800">
-          <div className="flex items-center gap-2 divide-x divide-zinc-700"></div>
+          <div className="flex items-center gap-2 divide-x divide-zinc-700">
+            <ImagePicker />
+            <div className="flex items-center gap-2 pl-2"></div>
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => submitEvent()}
