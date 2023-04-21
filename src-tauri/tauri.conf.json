@@ -93,7 +93,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "upgrade-insecure-requests"
     },
     "updater": {
       "active": true,

@@ -38,7 +38,9 @@ export const useProfileMetadata = (pubkey: string) => {
   }, []);
 
   useEffect(() => {
-    if (!cacheProfile) {
+    let ignore = false;
+
+    if (!cacheProfile && !ignore) {
       fetchProfileMetadata(pubkey)
         .then((res: any) => {
           // update state
@@ -48,6 +50,10 @@ export const useProfileMetadata = (pubkey: string) => {
         })
         .catch(console.error);
     }
+
+    return () => {
+      ignore = true;
+    };
   }, [cacheProfile, insertPlebToDB, pubkey]);
 
   if (cacheProfile) {
