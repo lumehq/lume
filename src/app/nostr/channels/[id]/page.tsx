@@ -46,7 +46,7 @@ export default function Page({ params }: { params: { id: string } }) {
         },
       ],
       FULL_RELAYS,
-      (event: any) => {
+      (event: { kind: number; tags: string[][]; pubkey: string; id: string }) => {
         if (event.kind === 44) {
           muted.current = muted.current.add(event.tags[0][1]);
         } else if (event.kind === 43) {

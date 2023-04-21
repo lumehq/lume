@@ -23,7 +23,7 @@ export default function EventCollector() {
   const now = useRef(new Date());
 
   const subscribe = useCallback(async () => {
-    pool.subscribe(
+    const unsubscribe = pool.subscribe(
       [
         {
           kinds: [1, 6],
@@ -101,7 +101,11 @@ export default function EventCollector() {
         }
       }
     );
-  }, [activeAccount.follows, activeAccount.pubkey, activeAccount.id, pool, relays, setHasNewerNote]);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [activeAccount.pubkey, activeAccount.id, follows, pool, relays, setHasNewerNote]);
 
   useEffect(() => {
     subscribe();

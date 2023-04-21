@@ -28,17 +28,17 @@ export default function Page() {
 
   const now = useRef(new Date());
   const timeout = useRef(null);
-  const unsubscribe = useRef(null);
 
   const fetchData = useCallback(
     async (account: { id: number; pubkey: string; chats: string[] }, tags: any) => {
       const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
       const channels = await countTotalChannels();
+
       const chats = account.chats?.length || 0;
       const follows = JSON.parse(tags);
-
       const query = [];
+
       let since: number;
 
       // kind 1 (notes) query
@@ -75,7 +75,7 @@ export default function Page() {
         });
       }
       // subscribe relays
-      unsubscribe.current = pool.subscribe(
+      const unsubscribe = pool.subscribe(
         query,
         relays,
         (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
@@ -132,14 +132,20 @@ export default function Page() {
           logAllEvents: false,
         }
       );
+
+      return () => {
+        unsubscribe();
+      };
     },
     [router, pool, relays]
   );
 
   useEffect(() => {
+    let ignore = false;
+
     getPlebs()
       .then((res) => {
-        if (res) {
+        if (res && !ignore) {
           writeStorage('plebs', res);
         }
       })
@@ -147,7 +153,7 @@ export default function Page() {
 
     getActiveAccount()
       .then((res: any) => {
-        if (res) {
+        if (res && !ignore) {
           const account = res;
           // update local storage
           writeStorage('account', account);
@@ -160,9 +166,7 @@ export default function Page() {
       .catch(console.error);
 
     return () => {
-      if (unsubscribe.current) {
-        unsubscribe.current();
-      }
+      ignore = true;
       clearTimeout(timeout.current);
     };
   }, [fetchData, router]);

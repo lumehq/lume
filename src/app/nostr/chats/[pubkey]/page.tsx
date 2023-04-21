@@ -10,7 +10,7 @@ import { FULL_RELAYS } from '@stores/constants';
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { Suspense, useCallback, useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect } from 'react';
 
 export default function Page({ params }: { params: { pubkey: string } }) {
   const [pool]: any = useContext(RelayContext);
@@ -19,10 +19,11 @@ export default function Page({ params }: { params: { pubkey: string } }) {
   const setChatMessages = useSetAtom(chatMessagesAtom);
   const resetChatMessages = useResetAtom(chatMessagesAtom);
 
-  const unsubscribe = useRef(null);
-
-  const fetchMessages = useCallback(() => {
-    unsubscribe.current = pool.subscribe(
+  useEffect(() => {
+    // reset stored messages
+    resetChatMessages();
+    // fetch messages from relays
+    const unsubscribe = pool.subscribe(
       [
         {
           kinds: [4],
@@ -40,26 +41,15 @@ export default function Page({ params }: { params: { pubkey: string } }) {
         setChatMessages((data) => [...data, event]);
       }
     );
-  }, [activeAccount.pubkey, params.pubkey, pool, setChatMessages]);
-
-  useEffect(() => {
-    // reset stored messages
-    resetChatMessages();
-    // fetch messages from relays
-    fetchMessages();
 
     return () => {
-      if (unsubscribe.current) {
-        unsubscribe.current();
-      }
+      unsubscribe();
     };
-  }, [fetchMessages, resetChatMessages]);
+  }, [params.pubkey, activeAccount.pubkey, setChatMessages, pool]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <Suspense fallback={<>Loading...</>}>
-        <MessageList />
-      </Suspense>
+      <MessageList />
       <div className="shrink-0 p-3">
         <FormChat receiverPubkey={params.pubkey} />
       </div>

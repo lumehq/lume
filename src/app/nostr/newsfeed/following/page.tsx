@@ -70,7 +70,15 @@ export default function Page() {
   }, [setData, setHasNewerNote]);
 
   useEffect(() => {
-    initialData().catch(console.error);
+    let initPage = false;
+
+    if (!initPage) {
+      initialData().catch(console.error);
+    }
+
+    return () => {
+      initPage = true;
+    };
   }, [initialData]);
 
   return (

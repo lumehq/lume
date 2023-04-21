@@ -32,25 +32,30 @@ export const useChannelMetadata = (id: string, fallback: string) => {
         logAllEvents: false,
       }
     );
-  }, []);
+  }, [id, pool, relays]);
 
   useEffect(() => {
-    if (typeof fallback === 'object') {
-      setMetadata(fallback);
-    } else {
-      const json = JSON.parse(fallback);
-      setMetadata(json);
+    let ignore = false;
+
+    if (!ignore) {
+      if (typeof fallback === 'object') {
+        setMetadata(fallback);
+      } else {
+        const json = JSON.parse(fallback);
+        setMetadata(json);
+      }
+
+      // fetch kind 41
+      fetchMetadata();
     }
 
-    // fetch kind 41
-    fetchMetadata();
-
     return () => {
+      ignore = true;
       if (unsubscribe.current) {
         unsubscribe.current();
       }
     };
-  }, [fetchMetadata]);
+  }, [fetchMetadata, fallback]);
 
   return metadata;
 };

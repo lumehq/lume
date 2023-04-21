@@ -103,13 +103,21 @@ export default function Page({ params }: { params: { slug: string } }) {
   }, [pubkey, privkey, follows, pool, relays, router]);
 
   useEffect(() => {
+    let ignore = false;
+
     const fetchData = async () => {
       const { data } = await supabase.from('random_users').select('pubkey').limit(28);
       // update state
       setList((list: any) => [...list, ...data]);
     };
 
-    fetchData().catch(console.error);
+    if (!ignore) {
+      fetchData().catch(console.error);
+    }
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (

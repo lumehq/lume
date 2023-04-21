@@ -12,15 +12,16 @@ import { nip02ToArray } from '@utils/transform';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPublicKey } from 'nostr-tools';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export default function Page({ params }: { params: { privkey: string } }) {
   const [pool, relays]: any = useContext(RelayContext);
-  const pubkey = useMemo(() => (params.privkey ? getPublicKey(params.privkey) : null), [params.privkey]);
-  const timeout = useRef(null);
 
   const [profile, setProfile] = useState({ metadata: null });
   const [done, setDone] = useState(false);
+  const timeout = useRef(null);
+
+  const pubkey = getPublicKey(params.privkey);
 
   const createPlebs = useCallback(async (tags: string[]) => {
     for (const tag of tags) {
@@ -67,7 +68,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
     );
 
     return () => {
-      unsubscribe;
+      unsubscribe();
       clearTimeout(timeout.current);
     };
   }, [pool, relays, pubkey, params.privkey, createPlebs]);

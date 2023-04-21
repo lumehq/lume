@@ -4,19 +4,8 @@ import { DEFAULT_AVATAR, DEFAULT_CHANNEL_BANNER } from '@stores/constants';
 
 import { useChannelMetadata } from '@utils/hooks/useChannelMetadata';
 
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
-
 export const BrowseChannelItem = ({ data }: { data: any }) => {
-  const router = useRouter();
   const channel = useChannelMetadata(data.event_id, data.metadata);
-
-  const openChannel = useCallback(
-    (id: string) => {
-      router.push(`/nostr/channels/${id}`);
-    },
-    [router]
-  );
 
   return (
     <div className="h-64 w-full rounded-md bg-zinc-900">

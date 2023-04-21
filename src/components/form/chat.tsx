@@ -13,7 +13,7 @@ import { getEventHash, nip04, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
 export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const [pool]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const [value, setValue] = useAtom(chatContentAtom);
@@ -44,7 +44,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         resetValue();
       })
       .catch(console.error);
-  }, [encryptMessage, activeAccount.privkey, activeAccount.pubkey, receiverPubkey, pool]);
+  }, [encryptMessage, activeAccount.privkey, activeAccount.pubkey, receiverPubkey, resetValue, pool]);
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

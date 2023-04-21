@@ -15,7 +15,7 @@ import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
 export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
-  const [pool, relays]: any = useContext(RelayContext);
+  const [pool]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const [value, setValue] = useAtom(channelContentAtom);
@@ -61,8 +61,8 @@ export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
     activeAccount.privkey,
     eventId,
     resetChannelReply,
+    resetValue,
     pool,
-    relays,
   ]);
 
   const handleEnterPress = (e) => {
