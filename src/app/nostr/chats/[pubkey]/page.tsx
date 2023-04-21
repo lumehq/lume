@@ -10,13 +10,9 @@ import { FULL_RELAYS } from '@stores/constants';
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useContext, useEffect, useRef } from 'react';
 
-export default function Page() {
-  const searchParams = useSearchParams();
-  const pubkey = searchParams.get('pubkey');
-
+export default function Page({ params }: { params: { pubkey: string } }) {
   const [pool]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
@@ -30,13 +26,13 @@ export default function Page() {
       [
         {
           kinds: [4],
-          authors: [pubkey],
+          authors: [params.pubkey],
           '#p': [activeAccount.pubkey],
         },
         {
           kinds: [4],
           authors: [activeAccount.pubkey],
-          '#p': [pubkey],
+          '#p': [params.pubkey],
         },
       ],
       FULL_RELAYS,
@@ -44,7 +40,7 @@ export default function Page() {
         setChatMessages((data) => [...data, event]);
       }
     );
-  }, [activeAccount.pubkey, pubkey, pool, setChatMessages]);
+  }, [activeAccount.pubkey, params.pubkey, pool, setChatMessages]);
 
   useEffect(() => {
     // reset stored messages
@@ -65,7 +61,7 @@ export default function Page() {
         <MessageList />
       </Suspense>
       <div className="shrink-0 p-3">
-        <FormChat receiverPubkey={pubkey} />
+        <FormChat receiverPubkey={params.pubkey} />
       </div>
     </div>
   );

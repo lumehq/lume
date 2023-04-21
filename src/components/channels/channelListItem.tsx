@@ -10,7 +10,7 @@ export const ChannelListItem = ({ data }: { data: any }) => {
 
   return (
     <ActiveLink
-      href={`/nostr/channels?id=${data.event_id}`}
+      href={`/nostr/channels/${data.event_id}`}
       activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >

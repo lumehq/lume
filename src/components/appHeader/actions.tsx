@@ -18,7 +18,7 @@ export default function AppActions() {
   };
 
   const reload = () => {
-    window.location.reload();
+    router.refresh();
   };
 
   useLayoutEffect(() => {
