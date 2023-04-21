@@ -12,9 +12,13 @@ import { dateToUnix, hoursAgo } from '@utils/getDate';
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
+import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useRef } from 'react';
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page() {
+  const searchParams = useSearchParams();
+  const channelID = searchParams.get('id');
+
   const [pool]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
@@ -40,7 +44,7 @@ export default function Page({ params }: { params: { id: string } }) {
           since: dateToUnix(hoursAgo(24, now.current)),
         },
         {
-          '#e': [params.id],
+          '#e': [channelID],
           kinds: [42],
           since: dateToUnix(hoursAgo(24, now.current)),
         },
@@ -66,13 +70,13 @@ export default function Page({ params }: { params: { id: string } }) {
     return () => {
       unsubscribe();
     };
-  }, [pool, activeAccount.pubkey, params.id, setChannelMessages, resetChannelReply, resetChannelMessages]);
+  }, [pool, activeAccount.pubkey, channelID, setChannelMessages, resetChannelReply, resetChannelMessages]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <ChannelMessages />
       <div className="shrink-0 p-3">
-        <FormChannel eventId={params.id} />
+        <FormChannel eventId={channelID} />
       </div>
     </div>
   );

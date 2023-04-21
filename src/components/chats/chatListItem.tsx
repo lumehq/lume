@@ -11,7 +11,7 @@ export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
 
   return (
     <ActiveLink
-      href={`/nostr/chats/${pubkey}`}
+      href={`/nostr/chats?pubkey=${pubkey}`}
       activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >

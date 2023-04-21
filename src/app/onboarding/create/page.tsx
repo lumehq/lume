@@ -68,7 +68,9 @@ export default function Page() {
     // broadcast
     pool.publish(event, relays);
     // redirect to next step
-    router.push(`/onboarding/create/${pubkey}/${privkey}`);
+    router.replace(`/onboarding/create/step-2?pubkey=${pubkey}&privkey=${privkey}`, {
+      forceOptimisticNavigation: true,
+    });
   }, [pool, pubkey, privkey, metadata, relays, router]);
 
   return (

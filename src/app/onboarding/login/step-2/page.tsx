@@ -11,12 +11,16 @@ import { nip02ToArray } from '@utils/transform';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { getPublicKey } from 'nostr-tools';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-export default function Page({ params }: { params: { privkey: string } }) {
+export default function Page() {
+  const searchParams = useSearchParams();
+  const privkey = searchParams.get('privkey');
+
   const [pool, relays]: any = useContext(RelayContext);
-  const pubkey = useMemo(() => (params.privkey ? getPublicKey(params.privkey) : null), [params.privkey]);
+  const pubkey = useMemo(() => (privkey ? getPublicKey(privkey) : null), [privkey]);
   const timeout = useRef(null);
 
   const [profile, setProfile] = useState({ metadata: null });
@@ -42,7 +46,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       (event: any) => {
         if (event.kind === 0) {
           // create account
-          createAccount(pubkey, params.privkey, event.content);
+          createAccount(pubkey, privkey, event.content);
           // update state
           setProfile({
             metadata: JSON.parse(event.content),
@@ -70,7 +74,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       unsubscribe;
       clearTimeout(timeout.current);
     };
-  }, [pool, relays, pubkey, params.privkey, createPlebs]);
+  }, [pool, relays, pubkey, privkey, createPlebs]);
 
   return (
     <div className="grid h-full w-full grid-rows-5">
