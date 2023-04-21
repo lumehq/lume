@@ -6,3 +6,6 @@ export const sortedChatMessagesAtom = atom((get) => {
   const messages = get(chatMessagesAtom);
   return messages.sort((x: { created_at: number }, y: { created_at: number }) => x.created_at - y.created_at);
 });
+
+// chat content
+export const chatContentAtom = atomWithReset('');

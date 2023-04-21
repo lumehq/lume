@@ -9,3 +9,6 @@ export const sortedChannelMessagesAtom = atom((get) => {
   const messages = get(channelMessagesAtom);
   return messages.sort((x: { created_at: number }, y: { created_at: number }) => x.created_at - y.created_at);
 });
+
+// channel message content
+export const channelContentAtom = atomWithReset('');

@@ -1,30 +1,31 @@
-import ImagePicker from '@components/form/imagePicker';
+import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 import { UserMini } from '@components/user/mini';
 
-import { channelReplyAtom } from '@stores/channel';
+import { channelContentAtom, channelReplyAtom } from '@stores/channel';
 import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
 import useLocalStorage from '@rehooks/local-storage';
 import { Cancel } from 'iconoir-react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 
 export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
   const [pool, relays]: any = useContext(RelayContext);
-
-  const [value, setValue] = useState('');
   const [activeAccount]: any = useLocalStorage('account', {});
+
+  const [value, setValue] = useAtom(channelContentAtom);
+  const resetValue = useResetAtom(channelContentAtom);
 
   const channelReply = useAtomValue(channelReplyAtom);
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
   const submitEvent = useCallback(() => {
-    let tags;
+    let tags: any[][];
 
     if (channelReply.id !== null) {
       tags = [
@@ -49,7 +50,7 @@ export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
     // publish note
     pool.publish(event, FULL_RELAYS);
     // reset state
-    setValue('');
+    resetValue();
     // reset channel reply
     resetChannelReply();
   }, [
@@ -112,7 +113,7 @@ export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
       <div className="absolute bottom-2 w-full px-2">
         <div className="flex w-full items-center justify-between bg-zinc-800">
           <div className="flex items-center gap-2 divide-x divide-zinc-700">
-            <ImagePicker />
+            <ImagePicker type="channel" />
             <div className="flex items-center gap-2 pl-2"></div>
           </div>
           <div className="flex items-center gap-2">

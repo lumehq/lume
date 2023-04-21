@@ -1,17 +1,23 @@
-import ImagePicker from '@components/form/imagePicker';
+import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
+
+import { chatContentAtom } from '@stores/chat';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
 import useLocalStorage from '@rehooks/local-storage';
+import { useAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
 import { getEventHash, nip04, signEvent } from 'nostr-tools';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 
 export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
   const [pool, relays]: any = useContext(RelayContext);
-
-  const [value, setValue] = useState('');
   const [activeAccount]: any = useLocalStorage('account', {});
+
+  const [value, setValue] = useAtom(chatContentAtom);
+  const resetValue = useResetAtom(chatContentAtom);
 
   const encryptMessage = useCallback(
     async (privkey: string) => {
@@ -33,12 +39,12 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         event.id = getEventHash(event);
         event.sig = signEvent(event, activeAccount.privkey);
         // publish note
-        pool.publish(event, relays);
+        pool.publish(event, FULL_RELAYS);
         // reset state
-        setValue('');
+        resetValue();
       })
       .catch(console.error);
-  }, [encryptMessage, activeAccount.privkey, activeAccount.pubkey, receiverPubkey, pool, relays]);
+  }, [encryptMessage, activeAccount.privkey, activeAccount.pubkey, receiverPubkey, pool]);
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -62,7 +68,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
       <div className="absolute bottom-2 w-full px-2">
         <div className="flex w-full items-center justify-between bg-zinc-800">
           <div className="flex items-center gap-2 divide-x divide-zinc-700">
-            <ImagePicker />
+            <ImagePicker type="chat" />
             <div className="flex items-center gap-2 pl-2"></div>
           </div>
           <div className="flex items-center gap-2">

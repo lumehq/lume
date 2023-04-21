@@ -1,3 +1,5 @@
+import { channelContentAtom } from '@stores/channel';
+import { chatContentAtom } from '@stores/chat';
 import { noteContentAtom } from '@stores/note';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
@@ -8,9 +10,25 @@ import { Plus } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 
-export const ImagePicker = () => {
+export const ImagePicker = ({ type }: { type: string }) => {
+  let atom;
+
+  switch (type) {
+    case 'note':
+      atom = noteContentAtom;
+      break;
+    case 'chat':
+      atom = chatContentAtom;
+      break;
+    case 'channel':
+      atom = channelContentAtom;
+      break;
+    default:
+      throw new Error('Invalid type');
+  }
+
   const [loading, setLoading] = useState(false);
-  const setNoteContent = useSetAtom(noteContentAtom);
+  const setValue = useSetAtom(atom);
 
   const openFileDialog = async () => {
     const selected: any = await open({
@@ -18,7 +36,7 @@ export const ImagePicker = () => {
       filters: [
         {
           name: 'Image',
-          extensions: ['png', 'jpeg', 'jpg', 'webp', 'avif'],
+          extensions: ['png', 'jpeg', 'jpg', 'gif'],
         },
       ],
     });
@@ -47,7 +65,7 @@ export const ImagePicker = () => {
       });
       const webpImage = 'https://void.cat/d/' + res.data.file.id + '.webp';
 
-      setNoteContent((content) => content + ' ' + webpImage);
+      setValue((content: string) => content + ' ' + webpImage);
       setLoading(false);
     }
   };
