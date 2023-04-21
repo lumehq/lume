@@ -6,11 +6,15 @@ import ProfileMetadata from '@components/profile/metadata';
 import ProfileNotes from '@components/profile/notes';
 
 import * as Tabs from '@radix-ui/react-tabs';
+import { useSearchParams } from 'next/navigation';
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page() {
+  const searchParams = useSearchParams();
+  const pubkey = searchParams.get('pubkey');
+
   return (
     <div className="scrollbar-hide h-full w-full overflow-y-auto">
-      <ProfileMetadata id={params.id} />
+      <ProfileMetadata id={pubkey} />
       <Tabs.Root className="flex w-full flex-col" defaultValue="notes">
         <Tabs.List className="flex border-b border-zinc-800">
           <Tabs.Trigger
@@ -33,13 +37,13 @@ export default function Page({ params }: { params: { id: string } }) {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="notes">
-          <ProfileNotes id={params.id} />
+          <ProfileNotes id={pubkey} />
         </Tabs.Content>
         <Tabs.Content value="followers">
-          <ProfileFollowers id={params.id} />
+          <ProfileFollowers id={pubkey} />
         </Tabs.Content>
         <Tabs.Content value="following">
-          <ProfileFollows id={params.id} />
+          <ProfileFollows id={pubkey} />
         </Tabs.Content>
       </Tabs.Root>
     </div>

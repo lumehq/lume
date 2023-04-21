@@ -9,7 +9,7 @@ import { arrayToNIP02 } from '@utils/transform';
 
 import { createClient } from '@supabase/supabase-js';
 import { CheckCircle } from 'iconoir-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { Key, useCallback, useContext, useEffect, useState } from 'react';
 
@@ -53,11 +53,12 @@ const initialList = [
   { pubkey: 'ff04a0e6cd80c141b0b55825fed127d4532a6eecdb7e743a38a3c28bf9f44609' },
 ];
 
-export default function Page({ params }: { params: { slug: string } }) {
+export default function Page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const pubkey = params.slug[0];
-  const privkey = params.slug[1];
+  const pubkey = searchParams.get('pubkey');
+  const privkey = searchParams.get('privkey');
 
   const [pool, relays]: any = useContext(RelayContext);
   const [loading, setLoading] = useState(false);

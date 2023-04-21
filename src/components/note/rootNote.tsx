@@ -5,7 +5,7 @@ import { UserExtend } from '@components/user/extend';
 import { contentParser } from '@utils/parser';
 
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const RootNote = memo(function RootNote({ event }: { event: any }) {
   const router = useRouter();
@@ -14,17 +14,15 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
   const [data, setData] = useState(null);
   const [content, setContent] = useState('');
 
-  const unsubscribe = useRef(null);
-
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/nostr/users/${event.pubkey}`);
+    router.push(`/nostr/user?pubkey=${event.pubkey}`);
   };
 
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      router.push(`/nostr/newsfeed/${event.id}`);
+      router.push(`/nostr/newsfeed/note?id=${event.parent_id}`);
     } else {
       e.stopPropagation();
     }
@@ -32,7 +30,7 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
 
   const fetchEvent = useCallback(
     async (id: string) => {
-      unsubscribe.current = pool.subscribe(
+      const unsubscribe = pool.subscribe(
         [
           {
             ids: [id],
@@ -50,17 +48,29 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
           unsubscribeOnEose: true,
         }
       );
+
+      return () => {
+        unsubscribe();
+      };
     },
     [pool, relays]
   );
 
   useEffect(() => {
-    if (typeof event === 'object') {
-      setData(event);
-      setContent(contentParser(event.content, event.tags));
-    } else {
-      fetchEvent(event);
+    let ignore = false;
+
+    if (!ignore) {
+      if (typeof event === 'object') {
+        setData(event);
+        setContent(contentParser(event.content, event.tags));
+      } else {
+        fetchEvent(event);
+      }
     }
+
+    return () => {
+      ignore = true;
+    };
   }, [event, fetchEvent]);
 
   if (data) {

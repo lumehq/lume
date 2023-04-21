@@ -18,7 +18,7 @@ export default function ChatList() {
   const profile = JSON.parse(activeAccount.metadata);
 
   const openSelfChat = () => {
-    router.push(`/nostr/chats/${activeAccount.pubkey}`);
+    router.push(`/nostr/chat?pubkey=${activeAccount.pubkey}`);
   };
 
   useEffect(() => {

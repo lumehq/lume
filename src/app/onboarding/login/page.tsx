@@ -40,7 +40,7 @@ export default function Page() {
         privkey = nip19.decode(privkey).data;
       }
       if (typeof getPublicKey(privkey) === 'string') {
-        router.push(`/onboarding/login/${privkey}`);
+        router.push(`/onboarding/login/step-2?privkey=${privkey}`);
       }
     } catch (error) {
       setError('key', {

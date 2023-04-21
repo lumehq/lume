@@ -6,19 +6,18 @@ import { createNote, getNoteByID } from '@utils/storage';
 import { getParentID } from '@utils/transform';
 
 import useLocalStorage from '@rehooks/local-storage';
-import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   const [pool, relays]: any = useContext(RelayContext);
 
   const [activeAccount]: any = useLocalStorage('account', {});
   const [event, setEvent] = useState(null);
-  const unsubscribe = useRef(null);
 
   const content = event ? contentParser(event.content, event.tags) : '';
 
   const fetchEvent = useCallback(async () => {
-    unsubscribe.current = pool.subscribe(
+    const unsubscribe = pool.subscribe(
       [
         {
           ids: [id],
@@ -48,9 +47,13 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
         unsubscribeOnEose: true,
       }
     );
+
+    return () => {
+      unsubscribe();
+    };
   }, [activeAccount.id, id, pool, relays]);
 
-  const checkNoteExist = useCallback(async () => {
+  const checkNoteIsSaved = useCallback(async () => {
     getNoteByID(id)
       .then((res) => {
         if (res) {
@@ -63,14 +66,16 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   }, [fetchEvent, id]);
 
   useEffect(() => {
-    checkNoteExist();
+    let ignore = false;
+
+    if (!ignore) {
+      checkNoteIsSaved();
+    }
 
     return () => {
-      if (unsubscribe.current) {
-        unsubscribe.current();
-      }
+      ignore = true;
     };
-  }, [checkNoteExist]);
+  }, [checkNoteIsSaved]);
 
   if (event) {
     return (

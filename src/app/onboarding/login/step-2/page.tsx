@@ -11,17 +11,20 @@ import { nip02ToArray } from '@utils/transform';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { getPublicKey } from 'nostr-tools';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-export default function Page({ params }: { params: { privkey: string } }) {
-  const [pool, relays]: any = useContext(RelayContext);
+export default function Page() {
+  const searchParams = useSearchParams();
+  const privkey = searchParams.get('privkey');
 
+  const [pool, relays]: any = useContext(RelayContext);
   const [profile, setProfile] = useState({ metadata: null });
   const [done, setDone] = useState(false);
   const timeout = useRef(null);
 
-  const pubkey = getPublicKey(params.privkey);
+  const pubkey = getPublicKey(privkey);
 
   const createPlebs = useCallback(async (tags: string[]) => {
     for (const tag of tags) {
@@ -43,7 +46,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       (event: any) => {
         if (event.kind === 0) {
           // create account
-          createAccount(pubkey, params.privkey, event.content);
+          createAccount(pubkey, privkey, event.content);
           // update state
           setProfile({
             metadata: JSON.parse(event.content),
@@ -71,7 +74,7 @@ export default function Page({ params }: { params: { privkey: string } }) {
       unsubscribe();
       clearTimeout(timeout.current);
     };
-  }, [pool, relays, pubkey, params.privkey, createPlebs]);
+  }, [pool, relays, pubkey, privkey, createPlebs]);
 
   return (
     <div className="grid h-full w-full grid-rows-5">

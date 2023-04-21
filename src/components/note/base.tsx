@@ -22,13 +22,13 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/nostr/users/${event.pubkey}`);
+    router.push(`/nostr/user?pubkey=${event.pubkey}`);
   };
 
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      router.push(`/newsfeed/${event.parent_id}`);
+      router.push(`/nostr/newsfeed/note?id=${event.parent_id}`);
     } else {
       e.stopPropagation();
     }
@@ -37,7 +37,7 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
   return (
     <div
       onClick={(e) => openThread(e)}
-      className="relative z-10 m-0 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
+      className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
     >
       {parentNote()}
       <div className="relative z-10 flex flex-col">
