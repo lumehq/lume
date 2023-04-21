@@ -14,8 +14,6 @@
     "**/*.{js,ts,jsx,tsx}": "eslint --fix"
   },
   "dependencies": {
-    "@emoji-mart/data": "^1.1.2",
-    "@emoji-mart/react": "^1.1.1",
     "@radix-ui/react-alert-dialog": "^1.0.3",
     "@radix-ui/react-collapsible": "^1.0.2",
     "@radix-ui/react-dialog": "^1.0.3",
@@ -24,11 +22,10 @@
     "@radix-ui/react-tabs": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.5",
     "@rehooks/local-storage": "^2.4.4",
-    "@supabase/supabase-js": "^2.20.0",
+    "@supabase/supabase-js": "^2.21.0",
     "@tauri-apps/api": "^1.2.0",
     "dayjs": "^1.11.7",
     "destr": "^1.2.2",
-    "emoji-mart": "^5.5.2",
     "framer-motion": "^9.1.7",
     "iconoir-react": "^6.6.0",
     "jotai": "^2.0.4",
@@ -42,15 +39,14 @@
     "react-string-replace": "^1.1.0",
     "react-virtuoso": "^4.2.2",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
-    "unique-names-generator": "^4.7.1",
-    "ws": "^8.13.0"
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^13.3.0",
     "@tailwindcss/typography": "^0.5.9",
     "@tauri-apps/cli": "^1.2.3",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@types/node": "^18.15.11",
+    "@types/node": "^18.15.13",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
@@ -66,11 +62,12 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
-    "postcss": "^8.4.22",
+    "postcss": "^8.4.23",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.7",
     "prop-types": "^15.8.1",
     "tailwindcss": "^3.3.1",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "ws": "^8.13.0"
   }
 }
