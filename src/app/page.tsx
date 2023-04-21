@@ -125,7 +125,9 @@ export default function Page() {
         undefined,
         () => {
           updateLastLogin(dateToUnix(now.current));
-          timeout.current = setTimeout(() => router.replace('/nostr/newsfeed/following'), 5000);
+          timeout.current = setTimeout(() => {
+            router.replace('/nostr/newsfeed/following', { forceOptimisticNavigation: true });
+          }, 5000);
         },
         {
           unsubscribeOnEose: true,
@@ -160,7 +162,7 @@ export default function Page() {
           // fetch data
           fetchData(account, account.follows);
         } else {
-          router.replace('/onboarding');
+          router.replace('/onboarding', { forceOptimisticNavigation: true });
         }
       })
       .catch(console.error);

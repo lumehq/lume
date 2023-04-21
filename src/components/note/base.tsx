@@ -22,13 +22,13 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/nostr/user?pubkey=${event.pubkey}`);
+    router.push(`/nostr/user?pubkey=${event.pubkey}`, { forceOptimisticNavigation: true });
   };
 
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      router.push(`/nostr/newsfeed/note?id=${event.parent_id}`);
+      router.push(`/nostr/newsfeed/note?id=${event.parent_id}`, { forceOptimisticNavigation: true });
     } else {
       e.stopPropagation();
     }

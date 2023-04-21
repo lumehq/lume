@@ -34,7 +34,7 @@ export const NoteComment = ({
   const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   const openThread = () => {
-    router.push(`/nostr/newsfeed/${eventID}`);
+    router.push(`/nostr/newsfeed/note?id=${eventID}`, { forceOptimisticNavigation: true });
   };
 
   const submitEvent = () => {

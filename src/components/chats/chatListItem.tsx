@@ -1,4 +1,3 @@
-import { ActiveLink } from '@components/activeLink';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
@@ -6,13 +5,15 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { shortenKey } from '@utils/shortenKey';
 
+import Link from 'next/link';
+
 export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
   const profile = useProfileMetadata(pubkey);
 
   return (
-    <ActiveLink
+    <Link
+      prefetch={false}
       href={`/nostr/chat?pubkey=${pubkey}`}
-      activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >
       <div className="relative h-5 w-5 shrink overflow-hidden rounded">
@@ -28,6 +29,6 @@ export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
           {profile?.display_name || profile?.name || shortenKey(pubkey)}
         </h5>
       </div>
-    </ActiveLink>
+    </Link>
   );
 };

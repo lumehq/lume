@@ -1,17 +1,18 @@
-import { ActiveLink } from '@components/activeLink';
 import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useChannelMetadata } from '@utils/hooks/useChannelMetadata';
 
+import Link from 'next/link';
+
 export const ChannelListItem = ({ data }: { data: any }) => {
   const channel = useChannelMetadata(data.event_id, data.metadata);
 
   return (
-    <ActiveLink
+    <Link
+      prefetch={false}
       href={`/nostr/channel?channel-id=${data.event_id}`}
-      activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >
       <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded">
@@ -25,6 +26,6 @@ export const ChannelListItem = ({ data }: { data: any }) => {
       <div>
         <h5 className="truncate text-sm font-medium text-zinc-400">{channel?.name.toLowerCase()}</h5>
       </div>
-    </ActiveLink>
+    </Link>
   );
 };

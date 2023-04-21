@@ -11,7 +11,7 @@ export const ChatModalUser = ({ data }: { data: any }) => {
   const profile = JSON.parse(data.metadata);
 
   const openNewChat = () => {
-    router.push(`/chats/${data.pubkey}`);
+    router.push(`/nostr/chat?pubkey=${data.pubkey}`, { forceOptimisticNavigation: true });
   };
 
   return (
