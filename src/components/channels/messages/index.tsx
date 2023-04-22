@@ -1,15 +1,14 @@
 import ChannelMessageItem from '@components/channels/messages/item';
-import { Placeholder } from '@components/note/placeholder';
 
 import { sortedChannelMessagesAtom } from '@stores/channel';
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { Virtuoso } from 'react-virtuoso';
 
 export const ChannelMessages = () => {
   const virtuosoRef = useRef(null);
-
   const data = useAtomValue(sortedChannelMessagesAtom);
 
   const itemContent: any = useCallback(
@@ -46,6 +45,5 @@ export const ChannelMessages = () => {
 };
 
 const COMPONENTS = {
-  EmptyPlaceholder: () => <Placeholder />,
-  ScrollSeekPlaceholder: () => <Placeholder />,
+  EmptyPlaceholder: () => <Skeleton />,
 };

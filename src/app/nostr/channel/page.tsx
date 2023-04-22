@@ -1,6 +1,6 @@
 'use client';
 
-import { ChannelMessages } from '@components/channels/messages/index';
+import { ChannelMessages } from '@components/channels/messages';
 import { FormChannel } from '@components/form/channel';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -14,6 +14,7 @@ import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useRef } from 'react';
+import useSWRSubscription from 'swr/subscription';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -30,23 +31,18 @@ export default function Page() {
   const muted = useRef(new Set());
   const hided = useRef(new Set());
 
-  useEffect(() => {
-    // reset channel reply
-    resetChannelReply();
-    // reset channel messages
-    resetChannelMessages();
-    // subscribe event
+  useSWRSubscription(id, () => {
     const unsubscribe = pool.subscribe(
       [
         {
           authors: [activeAccount.pubkey],
           kinds: [43, 44],
-          since: dateToUnix(hoursAgo(24, now.current)),
+          since: dateToUnix(hoursAgo(48, now.current)),
         },
         {
           '#e': [id],
           kinds: [42],
-          since: dateToUnix(hoursAgo(24, now.current)),
+          since: dateToUnix(hoursAgo(48, now.current)),
         },
       ],
       FULL_RELAYS,
@@ -61,7 +57,7 @@ export default function Page() {
           } else if (hided.current.has(event.id)) {
             console.log('hided');
           } else {
-            setChannelMessages((messages) => [event, ...messages]);
+            setChannelMessages((prev) => [...prev, event]);
           }
         }
       }
@@ -70,7 +66,22 @@ export default function Page() {
     return () => {
       unsubscribe();
     };
-  }, [pool, id, activeAccount.pubkey, setChannelMessages, resetChannelReply, resetChannelMessages]);
+  });
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (!ignore) {
+      // reset channel reply
+      resetChannelReply();
+      // reset channel messages
+      resetChannelMessages();
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [resetChannelReply, resetChannelMessages]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">

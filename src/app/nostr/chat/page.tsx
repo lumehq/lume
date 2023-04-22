@@ -12,6 +12,7 @@ import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect } from 'react';
+import useSWRSubscription from 'swr/subscription';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -23,10 +24,7 @@ export default function Page() {
   const setChatMessages = useSetAtom(chatMessagesAtom);
   const resetChatMessages = useResetAtom(chatMessagesAtom);
 
-  useEffect(() => {
-    // reset stored messages
-    resetChatMessages();
-    // fetch messages from relays
+  useSWRSubscription(pubkey, () => {
     const unsubscribe = pool.subscribe(
       [
         {
@@ -42,14 +40,26 @@ export default function Page() {
       ],
       FULL_RELAYS,
       (event: any) => {
-        setChatMessages((data) => [...data, event]);
+        setChatMessages((prev) => [...prev, event]);
       }
     );
 
     return () => {
       unsubscribe();
     };
-  }, [pubkey, activeAccount.pubkey, setChatMessages, pool]);
+  });
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (!ignore) {
+      resetChatMessages();
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [resetChatMessages]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
