@@ -1,24 +1,20 @@
-'use client';
-
 import { platform } from '@tauri-apps/api/os';
 import { ArrowLeft, ArrowRight, Refresh } from 'iconoir-react';
-import { useRouter } from 'next/navigation';
 import { useLayoutEffect, useState } from 'react';
 
 export default function AppActions() {
-  const router = useRouter();
   const [os, setOS] = useState('');
 
   const goBack = () => {
-    router.back();
+    window.history.back();
   };
 
   const goForward = () => {
-    router.forward();
+    window.history.forward();
   };
 
   const reload = () => {
-    router.refresh();
+    window.location.reload();
   };
 
   useLayoutEffect(() => {

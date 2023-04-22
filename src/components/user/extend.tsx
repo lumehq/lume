@@ -1,5 +1,3 @@
-import { ImageWithFallback } from '@components/imageWithFallback';
-
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
@@ -16,12 +14,7 @@ export const UserExtend = ({ pubkey, time }: { pubkey: string; time: number }) =
   return (
     <div className="group flex h-11 items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
-        <ImageWithFallback
-          src={profile?.picture || DEFAULT_AVATAR}
-          alt={pubkey}
-          fill={true}
-          className="rounded-md object-cover"
-        />
+        <img src={profile?.picture || DEFAULT_AVATAR} alt={pubkey} className="h-11 w-11 rounded-md object-cover" />
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex flex-col gap-1">

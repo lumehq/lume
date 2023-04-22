@@ -1,5 +1,3 @@
-'use client';
-
 import { RelayContext } from '@components/relaysProvider';
 import { UserFollow } from '@components/user/follow';
 

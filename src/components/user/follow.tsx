@@ -1,5 +1,3 @@
-import { ImageWithFallback } from '@components/imageWithFallback';
-
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
@@ -11,12 +9,7 @@ export const UserFollow = ({ pubkey }: { pubkey: string }) => {
   return (
     <div className="flex items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-full border border-white/10">
-        <ImageWithFallback
-          src={profile?.picture || DEFAULT_AVATAR}
-          alt={pubkey}
-          fill={true}
-          className="rounded-full object-cover"
-        />
+        <img src={profile?.picture || DEFAULT_AVATAR} alt={pubkey} className="h-11 w-11 rounded-full object-cover" />
       </div>
       <div className="flex w-full flex-1 flex-col items-start text-start">
         <span className="truncate font-medium leading-tight text-zinc-200">

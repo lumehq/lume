@@ -1,4 +1,3 @@
-import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
@@ -7,9 +6,9 @@ import { dateToUnix } from '@utils/getDate';
 import * as Dialog from '@radix-ui/react-dialog';
 import useLocalStorage from '@rehooks/local-storage';
 import { ChatLines, OpenNewWindow } from 'iconoir-react';
-import { useRouter } from 'next/navigation';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const NoteComment = ({
   count,
@@ -24,7 +23,6 @@ export const NoteComment = ({
   eventTime: number;
   eventContent: any;
 }) => {
-  const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
   const [open, setOpen] = useState(false);
@@ -34,7 +32,7 @@ export const NoteComment = ({
   const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   const openThread = () => {
-    router.push(`/nostr/newsfeed/note?id=${eventID}`, { forceOptimisticNavigation: true });
+    navigate(`/newsfeed/note?id=${eventID}`);
   };
 
   const submitEvent = () => {
@@ -84,12 +82,7 @@ export const NoteComment = ({
               <div className="flex gap-2">
                 <div>
                   <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
-                    <ImageWithFallback
-                      src={profile?.picture}
-                      alt="user's avatar"
-                      fill={true}
-                      className="rounded-md object-cover"
-                    />
+                    <img src={profile?.picture} alt="user's avatar" className="h-11 w-11 rounded-md object-cover" />
                   </div>
                 </div>
                 <div className="relative h-36 w-full flex-1 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">

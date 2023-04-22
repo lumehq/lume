@@ -1,5 +1,3 @@
-'use client';
-
 import { NetworkStatusIndicator } from '@components/networkStatusIndicator';
 import { RelayContext } from '@components/relaysProvider';
 

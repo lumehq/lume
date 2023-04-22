@@ -1,28 +1,24 @@
-import { ImageWithFallback } from '@components/imageWithFallback';
-
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { shortenKey } from '@utils/shortenKey';
 
-import { useRouter } from 'next/navigation';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const ChatModalUser = ({ data }: { data: any }) => {
-  const router = useRouter();
   const profile = JSON.parse(data.metadata);
 
   const openNewChat = () => {
-    router.push(`/nostr/chat?pubkey=${data.pubkey}`, { forceOptimisticNavigation: true });
+    navigate(`/chat?pubkey=${data.pubkey}`);
   };
 
   return (
     <div className="group flex items-center justify-between px-3 py-2 hover:bg-zinc-800">
       <div className="flex items-center gap-2">
-        <div className="relative h-10 w-10 shrink overflow-hidden rounded-md">
-          <ImageWithFallback
+        <div className="relative h-10 w-10 shrink-0 rounded-md">
+          <img
             src={profile?.picture || DEFAULT_AVATAR}
             alt={data.pubkey}
-            fill={true}
-            className="rounded-md object-cover"
+            className="h-10 w-10 rounded-md object-cover"
           />
         </div>
         <div className="flex w-full flex-1 flex-col items-start text-start">

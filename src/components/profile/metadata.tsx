@@ -1,6 +1,3 @@
-'use client';
-
-import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
@@ -8,7 +5,6 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { shortenKey } from '@utils/shortenKey';
 
 import destr from 'destr';
-import Image from 'next/image';
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
 
@@ -27,21 +23,11 @@ export default function ProfileMetadata({ id }: { id: string }) {
     <>
       <div className="relative">
         <div className="relative h-56 w-full rounded-t-lg bg-zinc-800">
-          <Image
-            src={profile?.banner || DEFAULT_BANNER}
-            alt="user's banner"
-            fill={true}
-            className="h-full w-full object-cover"
-          />
+          <img src={profile?.banner || DEFAULT_BANNER} alt="user's banner" className="h-58 w-full object-cover" />
         </div>
         <div className="relative -top-8 z-10 px-4">
           <div className="relative h-16 w-16 rounded-lg bg-zinc-900 ring-2 ring-zinc-900">
-            <ImageWithFallback
-              src={profile?.picture || DEFAULT_AVATAR}
-              alt={id}
-              fill={true}
-              className="rounded-lg object-cover"
-            />
+            <img src={profile?.picture || DEFAULT_AVATAR} alt={id} className="h-16 w-16 rounded-lg object-cover" />
           </div>
         </div>
       </div>

@@ -1,13 +1,11 @@
 import { ChatListItem } from '@components/chats/chatListItem';
 import { ChatModal } from '@components/chats/chatModal';
-import { ImageWithFallback } from '@components/imageWithFallback';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { getChats } from '@utils/storage';
 
 import useLocalStorage from '@rehooks/local-storage';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function ChatList() {
@@ -33,17 +31,15 @@ export default function ChatList() {
 
   return (
     <div className="flex flex-col gap-px">
-      <Link
-        prefetch={false}
-        href={`/nostr/chat?pubkey=${activeAccount.pubkey}`}
+      <a
+        href={`/chat?pubkey=${activeAccount.pubkey}`}
         className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
       >
-        <div className="relative h-5 w-5 shrink overflow-hidden rounded bg-white">
-          <ImageWithFallback
+        <div className="relative h-5 w-5 shrink rounded bg-white">
+          <img
             src={profile?.picture || DEFAULT_AVATAR}
             alt={activeAccount.pubkey}
-            fill={true}
-            className="rounded object-cover"
+            className="h-5 w-5 rounded object-cover"
           />
         </div>
         <div>
@@ -51,7 +47,7 @@ export default function ChatList() {
             {profile?.display_name || profile?.name} <span className="text-zinc-500">(you)</span>
           </h5>
         </div>
-      </Link>
+      </a>
       {list.map((item) => (
         <ChatListItem key={item.id} pubkey={item.pubkey} />
       ))}

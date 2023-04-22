@@ -4,5 +4,5 @@ import ssr from 'vite-plugin-ssr/plugin';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [react(), ssr(), viteTsconfigPaths()],
+  plugins: [react(), ssr({ prerender: true }), viteTsconfigPaths()],
 });

@@ -1,12 +1,5 @@
-import dynamic from 'next/dynamic';
-
-const AppActions = dynamic(() => import('@components/appHeader/actions'), {
-  ssr: false,
-});
-
-const EventCollector = dynamic(() => import('@components/eventCollector'), {
-  ssr: false,
-});
+import AppActions from '@components/appHeader/actions';
+import EventCollector from '@components/eventCollector';
 
 export default function AppHeader({ collector }: { collector: boolean }) {
   return (
