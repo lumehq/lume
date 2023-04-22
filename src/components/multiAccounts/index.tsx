@@ -40,7 +40,7 @@ export default function MultiAccounts() {
       <div className="flex flex-col gap-4">
         <Link
           prefetch={false}
-          href="/explore"
+          href="/nostr/newsfeed/following"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
         >
           <LumeSymbol className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
