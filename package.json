@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.2.5",
   "scripts": {
-    "dev": "next dev -p 1420",
-    "build": "next build",
+    "dev": "vite",
+    "build": "vite build",
     "tauri": "tauri",
     "add-migrate": "cd src-tauri/ && sqlx migrate add",
     "prepare": "husky install"
@@ -26,10 +26,8 @@
     "@tauri-apps/api": "^1.2.0",
     "dayjs": "^1.11.7",
     "destr": "^1.2.2",
-    "framer-motion": "^9.1.7",
     "iconoir-react": "^6.6.0",
     "jotai": "^2.0.4",
-    "next": "13.3.1",
     "nostr-relaypool": "^0.5.18",
     "nostr-tools": "^1.10.0",
     "react": "^18.2.0",
@@ -44,7 +42,6 @@
     "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^13.3.0",
     "@tailwindcss/typography": "^0.5.9",
     "@tauri-apps/cli": "^1.2.3",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
@@ -53,6 +50,7 @@
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
+    "@vitejs/plugin-react-swc": "^3.3.0",
     "autoprefixer": "^10.4.14",
     "cross-env": "^7.0.3",
     "csstype": "^3.1.2",
@@ -70,6 +68,9 @@
     "prop-types": "^15.8.1",
     "tailwindcss": "^3.3.1",
     "typescript": "^4.9.5",
+    "vite": "^4.3.1",
+    "vite-plugin-ssr": "^0.4.115",
+    "vite-tsconfig-paths": "^4.2.0",
     "ws": "^8.13.0"
   }
 }
