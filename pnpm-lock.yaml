@@ -52,7 +52,6 @@ specifiers:
   tailwindcss: ^3.3.1
   tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
   typescript: ^4.9.5
-  unique-names-generator: ^4.7.1
   vite: ^4.3.1
   vite-plugin-ssr: ^0.4.115
   vite-tsconfig-paths: ^4.2.0
@@ -84,7 +83,6 @@ dependencies:
   react-virtuoso: 4.2.2_biqbaboplfbrettd7655fr4n2y
   swr: 2.1.3_react@18.2.0
   tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/62b21ef24303d80e9905f57b2b6d27efc8677c23
-  unique-names-generator: 4.7.1
 
 devDependencies:
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.1
@@ -5085,12 +5083,6 @@ packages:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
     dev: true
-
-  /unique-names-generator/4.7.1:
-    resolution:
-      { integrity: sha512-lMx9dX+KRmG8sq6gulYYpKWZc9RlGsgBR6aoO8Qsm3qvkSJ+3rAymr+TnV8EDMrIrwuFJ4kruzMWM/OpYzPoow== }
-    engines: { node: '>=8' }
-    dev: false
 
   /update-browserslist-db/1.0.11_browserslist@4.21.5:
     resolution:

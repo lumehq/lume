@@ -6,8 +6,6 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [react(), ssr({ prerender: true }), viteTsconfigPaths()],
   define: {
-    global: {
-      window: {},
-    },
+    global: 'window',
   },
 });

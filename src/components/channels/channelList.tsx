@@ -3,7 +3,6 @@ import { ChannelListItem } from '@components/channels/channelListItem';
 import { DEFAULT_CHANNELS } from '@stores/constants';
 
 import { Plus } from 'iconoir-react';
-import Link from 'next/link';
 import { useState } from 'react';
 
 export default function ChannelList() {
@@ -14,9 +13,8 @@ export default function ChannelList() {
       {list.map((item) => (
         <ChannelListItem key={item.event_id} data={item} />
       ))}
-      <Link
-        prefetch={false}
-        href="/nostr/create-channel"
+      <a
+        href="/create-channel"
         className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
       >
         <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">
@@ -25,7 +23,7 @@ export default function ChannelList() {
         <div>
           <h5 className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400">Add a new channel</h5>
         </div>
-      </Link>
+      </a>
     </div>
   );
 }

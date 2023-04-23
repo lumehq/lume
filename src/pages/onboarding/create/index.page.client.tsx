@@ -6,12 +6,7 @@ import { createAccount } from '@utils/storage';
 import { EyeClose, EyeEmpty } from 'iconoir-react';
 import { generatePrivateKey, getEventHash, getPublicKey, nip19, signEvent } from 'nostr-tools';
 import { useCallback, useContext, useMemo, useState } from 'react';
-import { Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 import { navigate } from 'vite-plugin-ssr/client/router';
-
-const config: Config = {
-  dictionaries: [names],
-};
 
 export function Page() {
   const [pool, relays]: any = useContext(RelayContext);
@@ -20,7 +15,7 @@ export function Page() {
   const [loading, setLoading] = useState(false);
 
   const privkey = useMemo(() => generatePrivateKey(), []);
-  const name = useMemo(() => uniqueNamesGenerator(config).toString(), []);
+  const name = 'Pleb';
 
   const pubkey = getPublicKey(privkey);
   const npub = nip19.npubEncode(pubkey);
