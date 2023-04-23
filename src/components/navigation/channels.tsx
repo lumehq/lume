@@ -22,7 +22,7 @@ export default function Channels() {
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Channels</h3>
         </Collapsible.Trigger>
         <Collapsible.Content>
-          <Suspense fallback={<Skeleton />}>
+          <Suspense fallback={<Skeleton count={2} />}>
             <ChannelList />
           </Suspense>
         </Collapsible.Content>
