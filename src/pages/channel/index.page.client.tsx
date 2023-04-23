@@ -70,18 +70,10 @@ export function Page() {
   });
 
   useEffect(() => {
-    let ignore = false;
-
-    if (!ignore) {
-      // reset channel reply
-      resetChannelReply();
-      // reset channel messages
-      resetChannelMessages();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // reset channel reply
+    resetChannelReply();
+    // reset channel messages
+    resetChannelMessages();
   }, [resetChannelReply, resetChannelMessages]);
 
   return (

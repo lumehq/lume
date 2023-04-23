@@ -1,5 +1,6 @@
 import { RelayContext } from '@components/relaysProvider';
 
+import { defaultChannelsAtom } from '@stores/channel';
 import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
@@ -8,6 +9,7 @@ import { createChannel } from '@utils/storage';
 import * as Dialog from '@radix-ui/react-dialog';
 import useLocalStorage from '@rehooks/local-storage';
 import { Cancel, Plus } from 'iconoir-react';
+import { useSetAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,6 +18,7 @@ export const CreateChannelModal = () => {
   const [pool]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
   const [activeAccount]: any = useLocalStorage('account', {});
+  const setChannel = useSetAtom(defaultChannelsAtom);
 
   const {
     register,
@@ -39,6 +42,15 @@ export const CreateChannelModal = () => {
     pool.publish(event, FULL_RELAYS);
     // insert to database
     createChannel(event.id, event.content, event.created_at);
+    // update jotai state
+    setChannel((prev: any) => [
+      ...prev,
+      {
+        event_id: event.id,
+        metadata: { name: data.name, picture: data.picture, about: data.about },
+        created_at: event.created_at,
+      },
+    ]);
     // close modal
     setOpen(false);
     // reset form

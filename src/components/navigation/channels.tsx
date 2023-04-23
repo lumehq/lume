@@ -2,7 +2,8 @@ import ChannelList from '@components/channels/channelList';
 
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { NavArrowUp } from 'iconoir-react';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 export default function Channels() {
   const [open, setOpen] = useState(true);
@@ -21,7 +22,9 @@ export default function Channels() {
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Channels</h3>
         </Collapsible.Trigger>
         <Collapsible.Content>
-          <ChannelList />
+          <Suspense fallback={<Skeleton />}>
+            <ChannelList />
+          </Suspense>
         </Collapsible.Content>
       </div>
     </Collapsible.Root>

@@ -14,7 +14,7 @@ export default function AppActions() {
   };
 
   return (
-    <div className={`pl-[68px]} flex h-full items-center gap-2`}>
+    <div className={`flex h-full items-center gap-2 pl-[68px]`}>
       <button
         onClick={() => goBack()}
         className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"

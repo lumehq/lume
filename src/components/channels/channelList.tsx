@@ -1,12 +1,16 @@
 import { ChannelListItem } from '@components/channels/channelListItem';
 import { CreateChannelModal } from '@components/channels/createChannelModal';
 
-import { DEFAULT_CHANNELS } from '@stores/constants';
+import { channelsAtom } from '@stores/channel';
+
+import { useAtomValue } from 'jotai';
 
 export default function ChannelList() {
+  const list = useAtomValue(channelsAtom);
+
   return (
     <div className="flex flex-col gap-px">
-      {DEFAULT_CHANNELS.map((item) => (
+      {list.map((item: { event_id: string }) => (
         <ChannelListItem key={item.event_id} data={item} />
       ))}
       <CreateChannelModal />
