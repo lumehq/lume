@@ -4,11 +4,10 @@ import { UserExtend } from '@components/user/extend';
 
 import { contentParser } from '@utils/parser';
 
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
-  const router = useRouter();
   const content = contentParser(event.content, event.tags);
 
   const parentNote = () => {
@@ -22,13 +21,13 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/nostr/user?pubkey=${event.pubkey}`, { forceOptimisticNavigation: true });
+    navigate(`/user?pubkey=${event.pubkey}`);
   };
 
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      router.push(`/nostr/newsfeed/note?id=${event.parent_id}`, { forceOptimisticNavigation: true });
+      navigate(`/newsfeed/note?id=${event.parent_id}`);
     } else {
       e.stopPropagation();
     }

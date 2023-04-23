@@ -1,20 +1,16 @@
-'use client';
-
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { LogOut, ProfileCircle, Settings } from 'iconoir-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { nip19 } from 'nostr-tools';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const ActiveAccount = ({ user }: { user: any }) => {
-  const router = useRouter();
   const userData = JSON.parse(user.metadata);
 
   const openProfilePage = () => {
-    router.push(`/nostr/user?pubkey=${user.pubkey}`, { forceOptimisticNavigation: true });
+    navigate(`/user?pubkey=${user.pubkey}`);
   };
 
   const copyPublicKey = async () => {
@@ -25,12 +21,10 @@ export const ActiveAccount = ({ user }: { user: any }) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button className="relative h-11 w-11 rounded-lg">
-          <Image
+          <img
             src={userData.picture || DEFAULT_AVATAR}
             alt="user's avatar"
-            fill={true}
-            className="rounded-lg object-cover"
-            priority
+            className="h-11 w-11 rounded-lg object-cover"
           />
         </button>
       </DropdownMenu.Trigger>

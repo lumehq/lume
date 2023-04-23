@@ -15,6 +15,7 @@
     "^@stores/(.*)$",
     "^@utils/(.*)$",
     "^@assets/(.*)$",
+    "^@renderer/(.*)$",
     "<THIRD_PARTY_MODULES>",
     "^[./]"
   ],

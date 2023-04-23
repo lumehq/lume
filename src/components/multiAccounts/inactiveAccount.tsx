@@ -1,6 +1,5 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import Image from 'next/image';
 import { memo } from 'react';
 
 export const InactiveAccount = memo(function InactiveAccount({ user }: { user: any }) {
@@ -12,13 +11,7 @@ export const InactiveAccount = memo(function InactiveAccount({ user }: { user: a
 
   return (
     <button onClick={() => setCurrentUser()} className="relative h-11 w-11 shrink rounded-lg">
-      <Image
-        src={userData.picture || DEFAULT_AVATAR}
-        alt="user's avatar"
-        fill={true}
-        className="rounded-lg object-cover"
-        priority
-      />
+      <img src={userData.picture || DEFAULT_AVATAR} alt="user's avatar" className="h-11 w-11 rounded-lg object-cover" />
     </button>
   );
 });

@@ -1,5 +1,3 @@
-'use client';
-
 import { DEFAULT_RELAYS } from '@stores/constants';
 
 import { RelayPool } from 'nostr-relaypool';

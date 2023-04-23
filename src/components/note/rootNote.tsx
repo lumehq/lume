@@ -4,11 +4,10 @@ import { UserExtend } from '@components/user/extend';
 
 import { contentParser } from '@utils/parser';
 
-import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const RootNote = memo(function RootNote({ event }: { event: any }) {
-  const router = useRouter();
   const [pool, relays]: any = useContext(RelayContext);
 
   const [data, setData] = useState(null);
@@ -16,13 +15,13 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
 
   const openUserPage = (e) => {
     e.stopPropagation();
-    router.push(`/nostr/user?pubkey=${event.pubkey}`, { forceOptimisticNavigation: true });
+    navigate(`/user?pubkey=${event.pubkey}`);
   };
 
   const openThread = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      router.push(`/nostr/newsfeed/note?id=${event.parent_id}`, { forceOptimisticNavigation: true });
+      navigate(`/newsfeed/note?id=${event.parent_id}`);
     } else {
       e.stopPropagation();
     }
