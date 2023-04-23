@@ -38,13 +38,13 @@ export const contentParser = (noteContent, noteTags) => {
   ));
   // handle mentions
   if (tags && tags.length > 0) {
-    parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match) => {
+    parsedContent = reactStringReplace(parsedContent, /\#\[(\d+)\]/gm, (match, i) => {
       if (tags[match][0] === 'p') {
         // @-mentions
-        return <UserMention key={tags[match][1]} pubkey={tags[match][1]} />;
+        return <UserMention key={tags[match][1] + i} pubkey={tags[match][1]} />;
       } else if (tags[match][0] === 'e') {
         // note-quotes
-        return <NoteQuote key={tags[match][1]} id={tags[match][1]} />;
+        return <NoteQuote key={tags[match][1] + i} id={tags[match][1]} />;
       } else {
         return;
       }

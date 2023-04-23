@@ -1,8 +1,10 @@
+import { RelayContext } from '@components/relaysProvider';
+
 import { createPleb } from '@utils/storage';
 
 import useLocalStorage from '@rehooks/local-storage';
 import { fetch } from '@tauri-apps/api/http';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 export const fetchProfileMetadata = async (pubkey: string) => {
   const result = await fetch(`https://rbr.bio/${pubkey}/metadata.json`, {
@@ -13,6 +15,7 @@ export const fetchProfileMetadata = async (pubkey: string) => {
 };
 
 export const useProfileMetadata = (pubkey: string) => {
+  const [pool, relays]: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
   const [plebs] = useLocalStorage('plebs', []);
   const [profile, setProfile] = useState(null);
@@ -37,11 +40,16 @@ export const useProfileMetadata = (pubkey: string) => {
     return createPleb(pubkey, metadata);
   }, []);
 
+  const fetchProfileFromRelays = useCallback(async (pubkey: string) => {
+    const result = await pool.fetchAndCacheMetadata(pubkey, relays);
+    return result;
+  }, []);
+
   useEffect(() => {
     let ignore = false;
 
     if (!cacheProfile && !ignore) {
-      fetchProfileMetadata(pubkey)
+      fetchProfileFromRelays(pubkey)
         .then((res: any) => {
           // update state
           setProfile(JSON.parse(res.content));
