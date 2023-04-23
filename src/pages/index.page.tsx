@@ -2,7 +2,6 @@ import { RelayContext } from '@components/relaysProvider';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import {
-  countTotalChannels,
   countTotalNotes,
   createChannel,
   createChat,
@@ -30,7 +29,6 @@ export function Page() {
     async (account: { id: number; pubkey: string; chats: string[] }, tags: any) => {
       const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
-      const channels = await countTotalChannels();
 
       const chats = account.chats?.length || 0;
       const follows = JSON.parse(tags);
@@ -64,6 +62,7 @@ export function Page() {
         });
       }
       // kind 40 (channels) query
+      /*
       if (channels.total === 0) {
         query.push({
           kinds: [40],
@@ -71,6 +70,7 @@ export function Page() {
           until: dateToUnix(now.current),
         });
       }
+       */
       // subscribe relays
       const unsubscribe = pool.subscribe(
         query,
