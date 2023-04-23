@@ -2,12 +2,10 @@ import { createBlobFromFile } from '@utils/createBlobFromFile';
 
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
-import { Plus } from 'iconoir-react';
 import { useState } from 'react';
 
-export const ImagePicker = () => {
+export const AvatarUploader = ({ valueState }: { valueState: any }) => {
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState('');
 
   const openFileDialog = async () => {
     const selected: any = await open({
@@ -44,17 +42,16 @@ export const ImagePicker = () => {
       });
       const webpImage = 'https://void.cat/d/' + res.data.file.id + '.webp';
 
-      setValue(webpImage);
+      valueState(webpImage);
       setLoading(false);
     }
   };
 
-  console.log(value);
-
   return (
     <button
       onClick={() => openFileDialog()}
-      className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700"
+      type="button"
+      className="inline-flex h-6 cursor-pointer items-center justify-center rounded bg-zinc-900 px-3 text-xs font-medium text-zinc-200 ring-1 ring-zinc-800 hover:bg-zinc-700"
     >
       {loading ? (
         <svg
@@ -71,7 +68,7 @@ export const ImagePicker = () => {
           ></path>
         </svg>
       ) : (
-        <Plus width={16} height={16} className="text-zinc-400" />
+        <span className="leading-none">Upload</span>
       )}
     </button>
   );

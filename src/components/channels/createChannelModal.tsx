@@ -1,7 +1,8 @@
+import { AvatarUploader } from '@components/avatarUploader';
 import { RelayContext } from '@components/relaysProvider';
 
 import { defaultChannelsAtom } from '@stores/channel';
-import { FULL_RELAYS } from '@stores/constants';
+import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 import { createChannel } from '@utils/storage';
@@ -11,19 +12,22 @@ import useLocalStorage from '@rehooks/local-storage';
 import { Cancel, Plus } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const CreateChannelModal = () => {
   const [pool]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
   const [activeAccount]: any = useLocalStorage('account', {});
+  const [image, setImage] = useState(DEFAULT_AVATAR);
+
   const setChannel = useSetAtom(defaultChannelsAtom);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { isDirty, isValid },
   } = useForm();
 
@@ -37,6 +41,7 @@ export const CreateChannelModal = () => {
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, activeAccount.privkey);
+    console.log(event);
 
     // publish channel
     pool.publish(event, FULL_RELAYS);
@@ -56,6 +61,10 @@ export const CreateChannelModal = () => {
     // reset form
     reset();
   };
+
+  useEffect(() => {
+    setValue('picture', image);
+  }, [setValue, image]);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -82,6 +91,7 @@ export const CreateChannelModal = () => {
                     </h5>
                     <Dialog.Close asChild>
                       <button
+                        type="button"
                         autoFocus={false}
                         className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-900"
                       >
@@ -97,6 +107,21 @@ export const CreateChannelModal = () => {
               </div>
               <div className="flex h-full w-full flex-col overflow-y-auto px-5 pb-5 pt-3">
                 <form onSubmit={handleSubmit(onSubmit)} className="flex h-full w-full flex-col gap-4">
+                  <input
+                    type={'hidden'}
+                    {...register('picture')}
+                    value={image}
+                    className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                  />
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Picture</label>
+                    <div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
+                      <img src={image} alt="channel picture" className="relative z-10 h-11 w-11 rounded-md" />
+                      <div className="absolute bottom-3 right-3 z-10">
+                        <AvatarUploader valueState={setImage} />
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                       Channel name *
@@ -105,17 +130,6 @@ export const CreateChannelModal = () => {
                       <input
                         type={'text'}
                         {...register('name', { required: true, minLength: 4 })}
-                        spellCheck={false}
-                        className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Picture</label>
-                    <div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
-                      <input
-                        type={'text'}
-                        {...register('picture')}
                         spellCheck={false}
                         className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
                       />
