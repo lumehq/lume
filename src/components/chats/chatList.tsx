@@ -3,31 +3,21 @@ import { ChatModal } from '@components/chats/chatModal';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { getChats } from '@utils/storage';
-
 import useLocalStorage from '@rehooks/local-storage';
-import { useEffect, useState } from 'react';
+
+let list: any = [];
+
+if (typeof window !== 'undefined') {
+  const { getChats } = await import('@utils/storage');
+  const getAccount = window.localStorage.getItem('account');
+  const account = getAccount ? JSON.parse(getAccount) : null;
+
+  list = await getChats(account.id);
+}
 
 export default function ChatList() {
-  const [list, setList] = useState([]);
   const [activeAccount]: any = useLocalStorage('account', {});
   const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
-
-  useEffect(() => {
-    let ignore = false;
-
-    getChats(activeAccount.id)
-      .then((res: any) => {
-        if (!ignore) {
-          setList(res);
-        }
-      })
-      .catch(console.error);
-
-    return () => {
-      ignore = true;
-    };
-  }, [activeAccount.id]);
 
   return (
     <div className="flex flex-col gap-px">

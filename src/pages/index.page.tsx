@@ -123,7 +123,7 @@ export function Page() {
         () => {
           updateLastLogin(dateToUnix(now.current));
           timeout.current = setTimeout(() => {
-            navigate('/newsfeed/following');
+            navigate('/newsfeed/following', { overwriteLastHistoryEntry: true });
           }, 5000);
         },
         {

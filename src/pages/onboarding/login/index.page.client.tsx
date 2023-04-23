@@ -39,7 +39,7 @@ export function Page() {
         privkey = nip19.decode(privkey).data;
       }
       if (typeof getPublicKey(privkey) === 'string') {
-        navigate(`/onboarding/login/step-2?privkey=${privkey}`);
+        navigate(`/onboarding/login/step-2?privkey=${privkey}`, { overwriteLastHistoryEntry: true });
       }
     } catch (error) {
       setError('key', {

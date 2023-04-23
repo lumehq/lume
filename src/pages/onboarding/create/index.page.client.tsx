@@ -60,7 +60,7 @@ export function Page() {
     // broadcast
     pool.publish(event, relays);
     // redirect to next step
-    navigate(`/onboarding/create/step-2?pubkey=${pubkey}&privkey=${privkey}`);
+    navigate(`/onboarding/create/step-2?pubkey=${pubkey}&privkey=${privkey}`, { overwriteLastHistoryEntry: true });
   }, [pool, pubkey, privkey, metadata, relays]);
 
   return (
