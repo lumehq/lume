@@ -14,12 +14,14 @@ import { useSetAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const CreateChannelModal = () => {
   const [pool]: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
   const [activeAccount]: any = useLocalStorage('account', {});
   const [image, setImage] = useState(DEFAULT_AVATAR);
+  const [loading, setLoading] = useState(false);
 
   const setChannel = useSetAtom(defaultChannelsAtom);
 
@@ -32,6 +34,8 @@ export const CreateChannelModal = () => {
   } = useForm();
 
   const onSubmit = (data: any) => {
+    setLoading(true);
+
     const event: any = {
       content: JSON.stringify(data),
       created_at: dateToUnix(),
@@ -41,7 +45,6 @@ export const CreateChannelModal = () => {
     };
     event.id = getEventHash(event);
     event.sig = signEvent(event, activeAccount.privkey);
-    console.log(event);
 
     // publish channel
     pool.publish(event, FULL_RELAYS);
@@ -56,10 +59,14 @@ export const CreateChannelModal = () => {
         created_at: event.created_at,
       },
     ]);
-    // close modal
-    setOpen(false);
     // reset form
     reset();
+    setTimeout(() => {
+      // close modal
+      setOpen(false);
+      // redirect to channel page
+      navigate(`/channel?id=${event.id}`);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -174,9 +181,32 @@ export const CreateChannelModal = () => {
                     <button
                       type="submit"
                       disabled={!isDirty || !isValid}
-                      className="h-11 w-full transform rounded-lg bg-fuchsia-500 font-medium text-white active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
+                      className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
                     >
-                      Create
+                      {loading ? (
+                        <svg
+                          className="h-4 w-4 animate-spin text-black dark:text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      ) : (
+                        'Create channel'
+                      )}
                     </button>
                   </div>
                 </form>
