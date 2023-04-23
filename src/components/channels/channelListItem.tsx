@@ -7,7 +7,7 @@ export const ChannelListItem = ({ data }: { data: any }) => {
 
   return (
     <a
-      href={`channel?id=${data.event_id}`}
+      href={`/channel?id=${data.event_id}`}
       className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
     >
       <div className="relative h-5 w-5 shrink-0 rounded">

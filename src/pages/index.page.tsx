@@ -18,7 +18,7 @@ import LumeSymbol from '@assets/icons/Lume';
 
 import { writeStorage } from '@rehooks/local-storage';
 import { useCallback, useContext, useEffect, useRef } from 'react';
-import { navigate } from 'vite-plugin-ssr/client/router';
+import { navigate, prefetch } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
   const [pool, relays]: any = useContext(RelayContext);
@@ -123,7 +123,8 @@ export function Page() {
         () => {
           updateLastLogin(dateToUnix(now.current));
           timeout.current = setTimeout(() => {
-            navigate('/newsfeed/following', { overwriteLastHistoryEntry: true });
+            prefetch('/newsfeed/following');
+            navigate('/newsfeed/following');
           }, 5000);
         },
         {
@@ -152,6 +153,7 @@ export function Page() {
             // fetch data
             fetchData(account, account.follows);
           } else {
+            prefetch('/onboarding');
             navigate('/onboarding', { overwriteLastHistoryEntry: true });
           }
         })

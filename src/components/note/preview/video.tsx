@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import ReactPlayer from 'react-player/lazy';
+import ReactPlayer from 'react-player';
 
 export const VideoPreview = memo(function VideoPreview({ url }: { url: string }) {
   return (

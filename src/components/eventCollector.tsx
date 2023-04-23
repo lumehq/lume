@@ -13,7 +13,7 @@ import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function EventCollector() {
   const [pool, relays]: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const [activeAccount]: any = useLocalStorage('account', null);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
   const follows = JSON.parse(activeAccount.follows);
@@ -106,7 +106,15 @@ export default function EventCollector() {
   }, [activeAccount.pubkey, activeAccount.id, follows, pool, relays, setHasNewerNote]);
 
   useEffect(() => {
-    subscribe();
+    let ignore = false;
+
+    if (!ignore) {
+      subscribe();
+    }
+
+    return () => {
+      ignore = true;
+    };
   }, [setHasNewerNote, subscribe]);
 
   return <NetworkStatusIndicator />;

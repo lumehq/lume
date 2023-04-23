@@ -6,6 +6,7 @@ export const nip02ToArray = (tags: string[]) => {
   tags.forEach((item) => {
     arr.push(item[1]);
   });
+
   return arr;
 };
 

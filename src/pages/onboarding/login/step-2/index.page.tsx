@@ -10,20 +10,22 @@ import { createAccount, createPleb, updateAccount } from '@utils/storage';
 import { nip02ToArray } from '@utils/transform';
 
 import { getPublicKey } from 'nostr-tools';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
   const pageContext = usePageContext();
   const searchParams = pageContext.urlParsed.search;
 
   const privkey = searchParams.privkey;
-  const pubkey = getPublicKey(privkey);
+  const pubkey = useMemo(() => getPublicKey(privkey), [privkey]);
 
   const [pool, relays]: any = useContext(RelayContext);
   const [profile, setProfile] = useState({ metadata: null });
   const [done, setDone] = useState(false);
 
   const timeout = useRef(null);
+  const nip02 = useRef(null);
 
   const createPlebs = useCallback(async (tags: string[]) => {
     for (const tag of tags) {
@@ -32,6 +34,16 @@ export function Page() {
         .catch(console.error);
     }
   }, []);
+
+  const submit = () => {
+    // update account's folllows with NIP-02 tag list
+    const arr = nip02ToArray(nip02.current);
+    updateAccount('follows', arr, pubkey);
+    // create plebs (saved nostr profile)
+    createPlebs(nip02.current);
+    // redirect to splashscreen
+    navigate('/', { overwriteLastHistoryEntry: true });
+  };
 
   useEffect(() => {
     const unsubscribe = pool.subscribe(
@@ -43,20 +55,20 @@ export function Page() {
       ],
       relays,
       (event: any) => {
-        if (event.kind === 0) {
-          // create account
-          createAccount(pubkey, privkey, event.content);
-          // update state
-          setProfile({
-            metadata: JSON.parse(event.content),
-          });
-        } else {
-          if (event.tags.length > 0) {
-            createPlebs(event.tags);
-            const arr = nip02ToArray(event.tags);
-            // update account's folllows with NIP-02 tag list
-            updateAccount('follows', arr, pubkey);
-          }
+        switch (event.kind) {
+          case 0:
+            // create account
+            createAccount(pubkey, privkey, event.content);
+            // update state
+            setProfile({
+              metadata: JSON.parse(event.content),
+            });
+            break;
+          case 3:
+            nip02.current = event.tags;
+            break;
+          default:
+            break;
         }
       },
       undefined,
@@ -73,7 +85,7 @@ export function Page() {
       unsubscribe();
       clearTimeout(timeout.current);
     };
-  }, [pool, relays, pubkey, privkey, createPlebs]);
+  }, [pool, relays, pubkey, privkey]);
 
   return (
     <OnboardingLayout>
@@ -128,12 +140,12 @@ export function Page() {
                   ></path>
                 </svg>
               ) : (
-                <a
-                  href="/"
+                <button
+                  onClick={() => submit()}
                   className="inline-flex w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 px-3.5 py-2.5 font-medium text-zinc-800 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <span className="drop-shadow-lg">Done! Go to newsfeed</span>
-                </a>
+                </button>
               )}
             </div>
           </div>

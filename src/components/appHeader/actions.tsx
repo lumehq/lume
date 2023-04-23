@@ -1,6 +1,5 @@
-import { platform } from '@tauri-apps/api/os';
 import { ArrowLeft, ArrowRight, Refresh } from 'iconoir-react';
-import { useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function AppActions() {
   const [os, setOS] = useState('');
@@ -17,13 +16,23 @@ export default function AppActions() {
     window.location.reload();
   };
 
-  useLayoutEffect(() => {
-    const getPlatform = async () => {
-      const result = await platform();
-      setOS(result);
-    };
+  const getPlatform = useCallback(async () => {
+    const { platform } = await import('@tauri-apps/api/os');
+    const result = await platform();
 
-    getPlatform().catch(console.error);
+    setOS(result);
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (!ignore) {
+      getPlatform().catch(console.error);
+    }
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (

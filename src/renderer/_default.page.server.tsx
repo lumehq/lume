@@ -7,15 +7,22 @@ import { dangerouslySkipEscape, escapeInject } from 'vite-plugin-ssr/server';
 export const passToClient = ['pageProps'];
 
 export function render(pageContext: PageContextServer) {
-  const { Page, pageProps } = pageContext;
+  let pageHtml: string;
 
-  if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined');
+  if (!pageContext.Page) {
+    // SPA
+    pageHtml = '';
+  } else {
+    // SSR / HTML-only
+    const { Page, pageProps } = pageContext;
+    if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined');
 
-  const pageHtml = ReactDOMServer.renderToString(
-    <Shell pageContext={pageContext}>
-      <Page {...pageProps} />
-    </Shell>
-  );
+    pageHtml = ReactDOMServer.renderToString(
+      <Shell pageContext={pageContext}>
+        <Page {...pageProps} />
+      </Shell>
+    );
+  }
 
   return escapeInject`<!DOCTYPE html>
     <html lang="en" class="dark">

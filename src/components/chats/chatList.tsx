@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 export default function ChatList() {
   const [list, setList] = useState([]);
   const [activeAccount]: any = useLocalStorage('account', {});
-  const profile = JSON.parse(activeAccount.metadata);
+  const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
 
   useEffect(() => {
     let ignore = false;
