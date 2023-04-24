@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "react-refresh"],
   "extends": [
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
@@ -11,6 +11,7 @@
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "warn",
+    "react-refresh/only-export-components": "error",
     "react/no-unknown-property": ["error", { "ignore": ["fetchpriority"] }]
   },
   "ignorePatterns": ["dist", "**/*.js", "**/*.json", "node_modules"]
