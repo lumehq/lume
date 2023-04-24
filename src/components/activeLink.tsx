@@ -16,16 +16,8 @@ export function ActiveLink({
   const pageContext = usePageContext();
   const pathName = pageContext.urlPathname;
 
-  let newClassName = '';
-
-  if (href === pathName) {
-    newClassName = activeClassName;
-  } else {
-    newClassName = '';
-  }
-
   return (
-    <a href={href} className={twMerge(className, newClassName)}>
+    <a href={href} className={twMerge(className, href === pathName ? activeClassName : '')}>
       {children}
     </a>
   );
