@@ -13,6 +13,11 @@ export const DEFAULT_CHANNELS = [
     created_at: 1681898574,
   },
   {
+    event_id: '1abf8948d2fd05dd1836b33b324dca65138b2e80c77b27eeeed4323246efba4d',
+    metadata: { picture: 'https://void.cat/d/MsqUKXXC4SxDfmT2KiHovJ.webp', name: 'Arcade Open R&D', about: '' },
+    created_at: 1682252461,
+  },
+  {
     event_id: '25e5c82273a271cb1a840d0060391a0bf4965cafeb029d5ab55350b418953fbb',
     metadata: {
       about: '',
