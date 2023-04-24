@@ -1,4 +1,4 @@
-import { ActiveLink } from '@components/activeLink';
+import ActiveLink from '@components/activeLink';
 import ChannelList from '@components/channels/channelList';
 import ChatList from '@components/chats/chatList';
 

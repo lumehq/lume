@@ -2,7 +2,7 @@ import { usePageContext } from '@utils/hooks/usePageContext';
 
 import { twMerge } from 'tailwind-merge';
 
-export function ActiveLink({
+export default function ActiveLink({
   href,
   className,
   activeClassName,
