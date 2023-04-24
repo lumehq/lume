@@ -28,7 +28,7 @@ export const HideMessageButton = ({ id }: { id: string }) => {
 
     // publish note
     pool.publish(event, MESSAGE_RELAYS);
-  }, [id, pool, MESSAGE_RELAYS]);
+  }, [activeAccount.pubkey, activeAccount.privkey, id, pool]);
 
   return (
     <AlertDialog.Root>

@@ -35,9 +35,9 @@ export const useProfileMetadata = (pubkey: string) => {
             fetchProfileMetadata(pubkey).then((res: any) => {
               if (res) {
                 // update state
-                setProfile(res);
+                setProfile(JSON.parse(res.content));
                 // insert to db
-                insertPlebToDB(pubkey, JSON.stringify(res));
+                insertPlebToDB(pubkey, res.content);
               }
             });
           }
@@ -48,7 +48,7 @@ export const useProfileMetadata = (pubkey: string) => {
     return () => {
       ignore = true;
     };
-  }, [insertPlebToDB, pubkey]);
+  }, [getProfileFromDB, insertPlebToDB, pubkey]);
 
   return profile;
 };

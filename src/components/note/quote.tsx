@@ -52,7 +52,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
     return () => {
       unsubscribe();
     };
-  }, [id, pool]);
+  }, [activeAccount.id, id, pool]);
 
   const checkNoteIsSaved = useCallback(async () => {
     getNoteByID(id)

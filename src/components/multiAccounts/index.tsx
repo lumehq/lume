@@ -19,13 +19,16 @@ if (typeof window !== 'undefined') {
 export default function MultiAccounts() {
   const activeAccount: any = useContext(AccountContext);
 
-  const renderAccount = useCallback((account: { pubkey: string }) => {
-    if (account.pubkey === activeAccount.pubkey) {
-      return <ActiveAccount key={account.pubkey} user={account} />;
-    } else {
-      return <InactiveAccount key={account.pubkey} user={account} />;
-    }
-  }, []);
+  const renderAccount = useCallback(
+    (account: { pubkey: string }) => {
+      if (account.pubkey === activeAccount.pubkey) {
+        return <ActiveAccount key={account.pubkey} user={account} />;
+      } else {
+        return <InactiveAccount key={account.pubkey} user={account} />;
+      }
+    },
+    [activeAccount.pubkey]
+  );
 
   return (
     <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">

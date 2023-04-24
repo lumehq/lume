@@ -4,7 +4,15 @@ import { useDecryptMessage } from '@utils/hooks/useDecryptMessage';
 
 import { memo } from 'react';
 
-const MessageListItem = ({ data, userPubkey, userPrivkey }: { data: any; userPubkey: string; userPrivkey: string }) => {
+export const MessageListItem = memo(function MessageListItem({
+  data,
+  userPubkey,
+  userPrivkey,
+}: {
+  data: any;
+  userPubkey: string;
+  userPrivkey: string;
+}) {
   const content = useDecryptMessage(userPubkey, userPrivkey, data.pubkey, data.tags, data.content);
 
   return (
@@ -21,6 +29,4 @@ const MessageListItem = ({ data, userPubkey, userPrivkey }: { data: any; userPub
       </div>
     </div>
   );
-};
-
-export default memo(MessageListItem);
+});

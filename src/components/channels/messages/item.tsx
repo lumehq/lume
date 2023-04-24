@@ -7,7 +7,7 @@ import { messageParser } from '@utils/parser';
 
 import { memo } from 'react';
 
-const ChannelMessageItem = ({ data }: { data: any }) => {
+export const ChannelMessageItem = memo(function ChannelMessageItem({ data }: { data: any }) {
   const content = messageParser(data.content);
 
   return (
@@ -31,6 +31,4 @@ const ChannelMessageItem = ({ data }: { data: any }) => {
       </div>
     </div>
   );
-};
-
-export default memo(ChannelMessageItem);
+});

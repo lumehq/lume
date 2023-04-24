@@ -1,5 +1,5 @@
 import { AccountContext } from '@components/accountProvider';
-import MessageListItem from '@components/chats/messageListItem';
+import { MessageListItem } from '@components/chats/messageListItem';
 
 import { sortedChatMessagesAtom } from '@stores/chat';
 
@@ -20,7 +20,7 @@ export default function MessageList() {
         <MessageListItem data={data[index]} userPubkey={activeAccount.pubkey} userPrivkey={activeAccount.privkey} />
       );
     },
-    [data]
+    [activeAccount.privkey, activeAccount.pubkey, data]
   );
 
   const computeItemKey = useCallback(

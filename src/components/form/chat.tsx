@@ -44,7 +44,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         resetValue();
       })
       .catch(console.error);
-  }, [encryptMessage, receiverPubkey, resetValue, pool]);
+  }, [activeAccount.privkey, activeAccount.pubkey, receiverPubkey, pool, resetValue, encryptMessage]);
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

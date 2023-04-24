@@ -1,4 +1,4 @@
-import ChannelMessageItem from '@components/channels/messages/item';
+import { ChannelMessageItem } from '@components/channels/messages/item';
 
 import { sortedChannelMessagesAtom } from '@stores/channel';
 

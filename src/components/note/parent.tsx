@@ -54,7 +54,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
     return () => {
       unsubscribe();
     };
-  }, [id, pool]);
+  }, [activeAccount.id, id, pool]);
 
   const checkNoteIsSaved = useCallback(async () => {
     getNoteByID(id)

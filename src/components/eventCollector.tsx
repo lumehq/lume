@@ -104,7 +104,7 @@ export default function EventCollector() {
     return () => {
       unsubscribe();
     };
-  }, [follows, pool, setHasNewerNote]);
+  }, [activeAccount.id, activeAccount.pubkey, follows, pool, setHasNewerNote]);
 
   useEffect(() => {
     let ignore = false;
