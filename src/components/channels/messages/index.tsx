@@ -7,7 +7,7 @@ import { useCallback, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Virtuoso } from 'react-virtuoso';
 
-export const ChannelMessages = () => {
+export default function ChannelMessages() {
   const virtuosoRef = useRef(null);
   const data = useAtomValue(sortedChannelMessagesAtom);
 
@@ -42,7 +42,7 @@ export const ChannelMessages = () => {
       />
     </div>
   );
-};
+}
 
 const COMPONENTS = {
   EmptyPlaceholder: () => <Skeleton />,

@@ -1,4 +1,3 @@
-import { ChannelMessages } from '@components/channels/messages';
 import { FormChannel } from '@components/form/channel';
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
@@ -12,8 +11,10 @@ import { usePageContext } from '@utils/hooks/usePageContext';
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { useContext, useEffect, useRef } from 'react';
+import { Suspense, lazy, useContext, useRef } from 'react';
 import useSWRSubscription from 'swr/subscription';
+
+const ChannelMessages = lazy(() => import('@components/channels/messages'));
 
 export function Page() {
   const pageContext = usePageContext();
@@ -33,6 +34,11 @@ export function Page() {
   const hided = useRef(new Set());
 
   useSWRSubscription(id, () => {
+    // reset channel reply
+    resetChannelReply();
+    // reset channel messages
+    resetChannelMessages();
+    // subscribe for new messages
     const unsubscribe = pool.subscribe(
       [
         {
@@ -69,17 +75,12 @@ export function Page() {
     };
   });
 
-  useEffect(() => {
-    // reset channel reply
-    resetChannelReply();
-    // reset channel messages
-    resetChannelMessages();
-  }, [resetChannelReply, resetChannelMessages]);
-
   return (
     <NewsfeedLayout>
       <div className="flex h-full w-full flex-col justify-between">
-        <ChannelMessages />
+        <Suspense fallback={<p>Loading...</p>}>
+          <ChannelMessages />
+        </Suspense>
         <div className="shrink-0 p-3">
           <FormChannel eventId={id} />
         </div>

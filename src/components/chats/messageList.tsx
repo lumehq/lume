@@ -8,7 +8,7 @@ import { useCallback, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Virtuoso } from 'react-virtuoso';
 
-export const MessageList = () => {
+export default function MessageList() {
   const virtuosoRef = useRef(null);
   const data = useAtomValue(sortedChatMessagesAtom);
 
@@ -47,7 +47,7 @@ export const MessageList = () => {
       />
     </div>
   );
-};
+}
 
 const COMPONENTS = {
   EmptyPlaceholder: () => <Skeleton />,

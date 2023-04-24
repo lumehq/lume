@@ -1,4 +1,3 @@
-import { MessageList } from '@components/chats/messageList';
 import FormChat from '@components/form/chat';
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
@@ -11,8 +10,10 @@ import { usePageContext } from '@utils/hooks/usePageContext';
 import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { useContext, useEffect } from 'react';
+import { Suspense, lazy, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
+
+const MessageList = lazy(() => import('@components/chats/messageList'));
 
 export function Page() {
   const pageContext = usePageContext();
@@ -27,6 +28,9 @@ export function Page() {
   const resetChatMessages = useResetAtom(chatMessagesAtom);
 
   useSWRSubscription(pubkey, () => {
+    // clear old messages
+    resetChatMessages();
+    // subscribe for next messages
     const unsubscribe = pool.subscribe(
       [
         {
@@ -51,22 +55,12 @@ export function Page() {
     };
   });
 
-  useEffect(() => {
-    let ignore = false;
-
-    if (!ignore) {
-      resetChatMessages();
-    }
-
-    return () => {
-      ignore = true;
-    };
-  }, [resetChatMessages]);
-
   return (
     <NewsfeedLayout>
       <div className="flex h-full w-full flex-col justify-between">
-        <MessageList />
+        <Suspense fallback={<p>Loading...</p>}>
+          <MessageList />
+        </Suspense>
         <div className="shrink-0 p-3">
           <FormChat receiverPubkey={pubkey} />
         </div>
