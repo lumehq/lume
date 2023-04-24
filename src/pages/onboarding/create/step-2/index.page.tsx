@@ -59,8 +59,8 @@ export function Page() {
   const pageContext = usePageContext();
   const searchParams: any = pageContext.urlParsed.search;
 
-  const pubkey = searchParams.pubkey;
-  const privkey = searchParams.privkey;
+  const pubkey = searchParams.pubkey || '';
+  const privkey = searchParams.privkey || '';
 
   const pool: any = useContext(RelayContext);
   const [loading, setLoading] = useState(false);

@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 export const AccountContext = createContext({});
 
-let activeAccount: any = null;
+let activeAccount: any = { id: '', pubkey: '', follows: null, metadata: '' };
 
 if (typeof window !== 'undefined') {
   const { getActiveAccount } = await import('@utils/storage');

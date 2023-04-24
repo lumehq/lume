@@ -17,7 +17,7 @@ export default function EventCollector() {
   const activeAccount: any = useContext(AccountContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const follows = activeAccount ? JSON.parse(activeAccount.follows) : [];
+  const follows = activeAccount.follows ? JSON.parse(activeAccount.follows) : [];
 
   const now = useRef(new Date());
 

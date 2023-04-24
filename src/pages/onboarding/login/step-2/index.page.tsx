@@ -18,7 +18,7 @@ export function Page() {
   const searchParams = pageContext.urlParsed.search;
 
   const privkey = searchParams.privkey;
-  const pubkey = useMemo(() => getPublicKey(privkey), [privkey]);
+  const pubkey = useMemo(() => (privkey ? getPublicKey(privkey) : ''), [privkey]);
 
   const pool: any = useContext(RelayContext);
   const [profile, setProfile] = useState({ metadata: null });

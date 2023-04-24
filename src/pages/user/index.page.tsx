@@ -1,5 +1,3 @@
-'use client';
-
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import ProfileFollowers from '@components/profile/followers';
 import ProfileFollows from '@components/profile/follows';
