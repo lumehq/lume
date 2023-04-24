@@ -1,3 +1,5 @@
+import { ActiveLink } from '@components/activeLink';
+
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { Bonfire, NavArrowUp, PeopleTag } from 'iconoir-react';
 import { useState } from 'react';
@@ -19,22 +21,22 @@ export default function Newsfeed() {
           <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Newsfeed</h3>
         </Collapsible.Trigger>
         <Collapsible.Content className="flex flex-col text-zinc-400">
-          <a
+          <ActiveLink
             href="/newsfeed/following"
-            //activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
+            activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
           >
             <PeopleTag width={16} height={16} className="text-zinc-500" />
             <span>Following</span>
-          </a>
-          <a
+          </ActiveLink>
+          <ActiveLink
             href="/newsfeed/circle"
-            //activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium hover:text-zinc-200"
+            activeClassName="dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800"
           >
             <Bonfire width={16} height={16} className="text-zinc-500" />
             <span>Circle</span>
-          </a>
+          </ActiveLink>
         </Collapsible.Content>
       </div>
     </Collapsible.Root>

@@ -48,6 +48,7 @@ specifiers:
   react-string-replace: ^1.1.0
   react-virtuoso: ^4.3.1
   swr: ^2.1.4
+  tailwind-merge: ^1.12.0
   tailwindcss: ^3.3.1
   tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
   typescript: ^4.9.5
@@ -82,6 +83,7 @@ dependencies:
   react-string-replace: 1.1.0
   react-virtuoso: 4.3.1_biqbaboplfbrettd7655fr4n2y
   swr: 2.1.4_react@18.2.0
+  tailwind-merge: 1.12.0
   tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/62b21ef24303d80e9905f57b2b6d27efc8677c23
 
 devDependencies:
@@ -4431,6 +4433,11 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
+
+  /tailwind-merge/1.12.0:
+    resolution:
+      { integrity: sha512-Y17eDp7FtN1+JJ4OY0Bqv9OA41O+MS8c1Iyr3T6JFLnOgLg3EvcyMKZAnQ8AGyvB5Nxm3t9Xb5Mhe139m8QT/g== }
     dev: false
 
   /tailwindcss/3.3.1_postcss@8.4.23:
