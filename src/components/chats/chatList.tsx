@@ -30,6 +30,8 @@ export default function ChatList() {
             src={profile?.picture || DEFAULT_AVATAR}
             alt={activeAccount.pubkey}
             className="h-5 w-5 rounded object-cover"
+            loading="lazy"
+            fetchpriority="high"
           />
         </div>
         <div>

@@ -19,6 +19,8 @@ export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) =>
           src={profile?.picture || DEFAULT_AVATAR}
           alt={pubkey}
           className="h-11 w-11 rounded-md border border-white/10 object-cover"
+          loading="lazy"
+          fetchpriority="high"
         />
       </div>
       <div className="w-full flex-1">

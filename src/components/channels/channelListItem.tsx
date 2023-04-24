@@ -25,6 +25,8 @@ export const ChannelListItem = ({ data }: { data: any }) => {
           src={channel?.picture || DEFAULT_AVATAR}
           alt={data.event_id}
           className="h-5 w-5 rounded bg-zinc-900 object-cover"
+          loading="lazy"
+          fetchpriority="high"
         />
       </div>
       <div>

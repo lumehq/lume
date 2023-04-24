@@ -22,7 +22,13 @@ export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
       )}
     >
       <div className="relative h-5 w-5 shrink rounded">
-        <img src={profile?.picture || DEFAULT_AVATAR} alt={pubkey} className="h-5 w-5 rounded object-cover" />
+        <img
+          src={profile?.picture || DEFAULT_AVATAR}
+          alt={pubkey}
+          className="h-5 w-5 rounded object-cover"
+          loading="lazy"
+          fetchpriority="high"
+        />
       </div>
       <div>
         <h5 className="text-sm font-medium text-zinc-400">

@@ -14,7 +14,13 @@ export const MessageUser = ({ pubkey, time }: { pubkey: string; time: number }) 
   return (
     <div className="group flex items-start gap-3">
       <div className="relative h-9 w-9 shrink rounded-md">
-        <img src={profile?.picture || DEFAULT_AVATAR} alt={pubkey} className="h-9 w-9 rounded-md object-cover" />
+        <img
+          src={profile?.picture || DEFAULT_AVATAR}
+          alt={pubkey}
+          className="h-9 w-9 rounded-md object-cover"
+          loading="lazy"
+          fetchpriority="high"
+        />
       </div>
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex items-baseline gap-2 text-sm">

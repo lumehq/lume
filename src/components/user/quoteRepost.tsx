@@ -14,7 +14,13 @@ export const UserQuoteRepost = ({ pubkey, time }: { pubkey: string; time: number
   return (
     <div className="group flex items-center gap-2">
       <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
-        <img src={profile?.picture || DEFAULT_AVATAR} alt={pubkey} className="h-11 w-11 rounded-md object-cover" />
+        <img
+          src={profile?.picture || DEFAULT_AVATAR}
+          alt={pubkey}
+          className="h-11 w-11 rounded-md object-cover"
+          loading="lazy"
+          fetchpriority="high"
+        />
       </div>
       <div className="flex items-baseline gap-2 text-sm">
         <h5 className="font-semibold leading-tight group-hover:underline">
