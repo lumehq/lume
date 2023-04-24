@@ -7,17 +7,8 @@ import { updateChannelMetadata } from '@utils/storage';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
 export const useChannelMetadata = (id: string, fallback: any) => {
-  let parseFallback: any;
-
-  if (typeof fallback === 'object') {
-    parseFallback = fallback.metadata;
-  } else {
-    const json = JSON.parse(fallback.metadata);
-    parseFallback = json;
-  }
-
   const pool: any = useContext(RelayContext);
-  const [metadata, setMetadata] = useState(parseFallback);
+  const [metadata, setMetadata] = useState(fallback);
 
   const fetchMetadata = useCallback(() => {
     const unsubscribe = pool.subscribe(
