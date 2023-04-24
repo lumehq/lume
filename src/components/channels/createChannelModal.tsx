@@ -48,8 +48,6 @@ export const CreateChannelModal = () => {
 
     // publish channel
     pool.publish(event, MESSAGE_RELAYS);
-    // insert to database
-    createChannel(event.id, event.content, event.created_at);
     // update jotai state
     setChannel((prev: any) => [
       ...prev,
@@ -62,6 +60,8 @@ export const CreateChannelModal = () => {
     // reset form
     reset();
     setTimeout(() => {
+      // insert to database
+      createChannel(event.id, event.content, event.created_at);
       // close modal
       setOpen(false);
       // redirect to channel page
