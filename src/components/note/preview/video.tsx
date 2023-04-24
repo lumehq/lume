@@ -1,17 +1,11 @@
-import { memo } from 'react';
-import ReactPlayer from 'react-player';
+import { MediaOutlet, MediaPlayer } from '@vidstack/react';
 
-export const VideoPreview = memo(function VideoPreview({ url }: { url: string }) {
+export const VideoPreview = ({ url }: { url: string }) => {
   return (
     <div onClick={(e) => e.stopPropagation()} className="relative mt-2 flex flex-col overflow-hidden rounded-lg">
-      <ReactPlayer
-        url={url}
-        controls={true}
-        volume={0}
-        className="aspect-video w-full xl:w-2/3"
-        width="100%"
-        height="100%"
-      />
+      <MediaPlayer src={url} poster="" controls>
+        <MediaOutlet />
+      </MediaPlayer>
     </div>
   );
-});
+};

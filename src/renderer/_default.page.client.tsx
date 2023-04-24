@@ -3,6 +3,7 @@ import { Shell } from '@renderer/shell';
 import { PageContextClient } from '@renderer/types';
 
 import { Root, createRoot, hydrateRoot } from 'react-dom/client';
+import 'vidstack/styles/defaults.css';
 
 export const clientRouting = true;
 let root: Root;

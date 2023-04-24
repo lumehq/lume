@@ -1,12 +1,13 @@
 import { ImagePreview } from '@components/note/preview/image';
 import { VideoPreview } from '@components/note/preview/video';
+import { YoutubePreview } from '@components/note/preview/youtube';
 import { NoteQuote } from '@components/note/quote';
 import { UserMention } from '@components/user/mention';
 
 import destr from 'destr';
 import reactStringReplace from 'react-string-replace';
 
-export const contentParser = (noteContent, noteTags) => {
+export const contentParser = (noteContent: any, noteTags: any) => {
   let parsedContent = noteContent.trim();
 
   // get data tags
@@ -16,9 +17,9 @@ export const contentParser = (noteContent, noteTags) => {
     if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
       // image url
       return <ImagePreview key={match + i} url={match} size="large" />;
-    } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
+    } else if (match.match(/(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/)) {
       // youtube
-      return <VideoPreview key={match + i} url={match} />;
+      return <YoutubePreview key={match + i} url={match} />;
     } else if (match.match(/\.(mp4|webm)$/i)) {
       // video
       return <VideoPreview key={match + i} url={match} />;
@@ -54,7 +55,7 @@ export const contentParser = (noteContent, noteTags) => {
   return parsedContent;
 };
 
-export const messageParser = (noteContent) => {
+export const messageParser = (noteContent: any) => {
   let parsedContent = noteContent.trim();
 
   // handle urls
@@ -62,9 +63,9 @@ export const messageParser = (noteContent) => {
     if (match.match(/\.(jpg|jpeg|gif|png|webp)$/i)) {
       // image url
       return <ImagePreview key={match + i} url={match} size="small" />;
-    } else if (match.match(/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i)) {
+    } else if (match.match(/(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/)) {
       // youtube
-      return <VideoPreview key={match + i} url={match} />;
+      return <YoutubePreview key={match + i} url={match} />;
     } else if (match.match(/\.(mp4|webm)$/i)) {
       // video
       return <VideoPreview key={match + i} url={match} />;

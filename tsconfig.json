@@ -9,6 +9,7 @@
       "@assets/*": ["src/assets/*"],
       "@renderer/*": ["src/renderer/*"]
     },
+    "types": ["vidstack/globals"],
     "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -23,11 +24,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "strictNullChecks": false
   },
   "include": ["global.d.ts", "**/*.ts", "**/*.tsx"],
