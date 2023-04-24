@@ -6,7 +6,16 @@ import { usePageContext } from '@utils/hooks/usePageContext';
 import { twMerge } from 'tailwind-merge';
 
 export const ChannelListItem = ({ data }: { data: any }) => {
-  const channel = useChannelMetadata(data.event_id, data.metadata);
+  let metadata: any;
+
+  if (typeof data.metadata === 'object') {
+    metadata = data.metadata;
+  } else {
+    const json = JSON.parse(data.metadata);
+    metadata = json;
+  }
+
+  const channel: any = useChannelMetadata(data.event_id, metadata);
   const pageContext = usePageContext();
 
   const searchParams: any = pageContext.urlParsed.search;
@@ -25,8 +34,6 @@ export const ChannelListItem = ({ data }: { data: any }) => {
           src={channel?.picture || DEFAULT_AVATAR}
           alt={data.event_id}
           className="h-5 w-5 rounded bg-zinc-900 object-cover"
-          loading="lazy"
-          fetchpriority="high"
         />
       </div>
       <div>

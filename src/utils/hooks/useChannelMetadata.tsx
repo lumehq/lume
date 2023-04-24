@@ -4,15 +4,14 @@ import { DEFAULT_RELAYS } from '@stores/constants';
 
 import { updateChannelMetadata } from '@utils/storage';
 
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 export const useChannelMetadata = (id: string, fallback: string) => {
   const pool: any = useContext(RelayContext);
-  const [metadata, setMetadata] = useState(null);
-  const unsubscribe = useRef(null);
+  const [metadata, setMetadata] = useState(fallback);
 
   const fetchMetadata = useCallback(() => {
-    unsubscribe.current = pool.subscribe(
+    const unsubscribe = pool.subscribe(
       [
         {
           kinds: [41],
@@ -34,28 +33,22 @@ export const useChannelMetadata = (id: string, fallback: string) => {
         logAllEvents: false,
       }
     );
+
+    return () => {
+      unsubscribe();
+    };
   }, [id, pool]);
 
   useEffect(() => {
     let ignore = false;
 
     if (!ignore) {
-      if (typeof fallback === 'object') {
-        setMetadata(fallback);
-      } else {
-        const json = JSON.parse(fallback);
-        setMetadata(json);
-      }
-
       // fetch kind 41
       fetchMetadata();
     }
 
     return () => {
       ignore = true;
-      if (unsubscribe.current) {
-        unsubscribe.current();
-      }
     };
   }, [fetchMetadata, fallback]);
 
