@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fixed next/image bug, source: https://nextjs.org/docs/api-reference/next/image */
+/* Fixed webkit bug: https://bugs.webkit.org/show_bug.cgi?id=243601 */
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
   img[loading='lazy'] {
-    clip-path: inset(0.6px);
+    clip-path: inset(0.1px);
   }
 }
 
