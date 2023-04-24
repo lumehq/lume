@@ -1,6 +1,7 @@
 import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
 import { noteContentAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
@@ -12,7 +13,7 @@ import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext } from 'react';
 
 export default function FormBase() {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
@@ -31,7 +32,7 @@ export default function FormBase() {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, relays);
+    pool.publish(event, DEFAULT_RELAYS);
     // reset form
     resetValue();
     // send notification

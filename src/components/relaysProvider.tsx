@@ -5,15 +5,13 @@ import { createContext, useMemo } from 'react';
 
 export const RelayContext = createContext({});
 
-const relays = DEFAULT_RELAYS;
-
 export default function RelayProvider({ children }: { children: React.ReactNode }) {
   const pool = useMemo(() => {
     if (typeof window !== 'undefined') {
-      return new RelayPool(relays, { useEventCache: false, logSubscriptions: false });
+      return new RelayPool(DEFAULT_RELAYS, { useEventCache: false, logSubscriptions: false });
     } else {
       return null;
     }
   }, []);
-  return <RelayContext.Provider value={[pool, relays]}>{children}</RelayContext.Provider>;
+  return <RelayContext.Provider value={pool}>{children}</RelayContext.Provider>;
 }

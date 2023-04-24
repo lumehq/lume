@@ -1,18 +1,20 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserFollow } from '@components/user/follow';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import destr from 'destr';
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
 
 export default function ProfileFollowers({ id }: { id: string }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [followers, setFollowers] = useState(null);
 
   useEffect(() => {
-    const user = new Author(pool, relays, id);
+    const user = new Author(pool, DEFAULT_RELAYS, id);
     user.followers((res) => setFollowers(destr(res.tags)), 0, 100);
-  }, [id, pool, relays]);
+  }, [id, pool]);
 
   return (
     <div className="flex flex-col gap-3 px-3 py-5">

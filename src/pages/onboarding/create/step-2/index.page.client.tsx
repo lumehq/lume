@@ -2,6 +2,8 @@ import OnboardingLayout from '@components/layouts/onboarding';
 import { RelayContext } from '@components/relaysProvider';
 import { UserBase } from '@components/user/base';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { usePageContext } from '@utils/hooks/usePageContext';
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
 import { createPleb, updateAccount } from '@utils/storage';
@@ -60,7 +62,7 @@ export function Page() {
   const pubkey = searchParams.pubkey;
   const privkey = searchParams.privkey;
 
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [loading, setLoading] = useState(false);
   const [list, setList]: any = useState(initialList);
   const [follows, setFollows] = useState([]);
@@ -98,10 +100,10 @@ export function Page() {
     event.id = getEventHash(event);
     event.sig = signEvent(event, privkey);
     // broadcast
-    pool.publish(event, relays);
+    pool.publish(event, DEFAULT_RELAYS);
     // redirect to splashscreen
     navigate('/');
-  }, [pubkey, privkey, follows, pool, relays]);
+  }, [pubkey, privkey, follows, pool]);
 
   useEffect(() => {
     let ignore = false;

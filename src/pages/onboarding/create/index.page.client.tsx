@@ -1,6 +1,8 @@
 import OnboardingLayout from '@components/layouts/onboarding';
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { createAccount } from '@utils/storage';
 
 import { EyeClose, EyeEmpty } from 'iconoir-react';
@@ -9,7 +11,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const [type, setType] = useState('password');
   const [loading, setLoading] = useState(false);
@@ -58,10 +60,10 @@ export function Page() {
     // insert to database
     createAccount(pubkey, privkey, metadata);
     // broadcast
-    pool.publish(event, relays);
+    pool.publish(event, DEFAULT_RELAYS);
     // redirect to next step
     navigate(`/onboarding/create/step-2?pubkey=${pubkey}&privkey=${privkey}`, { overwriteLastHistoryEntry: true });
-  }, [pool, pubkey, privkey, metadata, relays]);
+  }, [pool, pubkey, privkey, metadata]);
 
   return (
     <OnboardingLayout>

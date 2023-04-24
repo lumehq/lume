@@ -1,11 +1,13 @@
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { updateChannelMetadata } from '@utils/storage';
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export const useChannelMetadata = (id: string, fallback: string) => {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [metadata, setMetadata] = useState(null);
   const unsubscribe = useRef(null);
 
@@ -17,7 +19,7 @@ export const useChannelMetadata = (id: string, fallback: string) => {
           '#e': [id],
         },
       ],
-      relays,
+      DEFAULT_RELAYS,
       (event: { content: string }) => {
         const json = JSON.parse(event.content);
         // update state
@@ -32,7 +34,7 @@ export const useChannelMetadata = (id: string, fallback: string) => {
         logAllEvents: false,
       }
     );
-  }, [id, pool, relays]);
+  }, [id, pool]);
 
   useEffect(() => {
     let ignore = false;

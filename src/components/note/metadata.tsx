@@ -2,6 +2,8 @@ import { NoteComment } from '@components/note/meta/comment';
 import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import useLocalStorage from '@rehooks/local-storage';
 import { memo, useContext, useEffect, useState } from 'react';
 
@@ -16,7 +18,7 @@ export const NoteMetadata = memo(function NoteMetadata({
   eventTime: any;
   eventContent: any;
 }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const [liked, setLiked] = useState(false);
@@ -32,7 +34,7 @@ export const NoteMetadata = memo(function NoteMetadata({
           kinds: [1, 7],
         },
       ],
-      relays,
+      DEFAULT_RELAYS,
       (event: any) => {
         switch (event.kind) {
           case 1:
@@ -64,7 +66,7 @@ export const NoteMetadata = memo(function NoteMetadata({
     return () => {
       unsubscribe();
     };
-  }, [eventID, eventTime, pool, relays, activeAccount.pubkey]);
+  }, [eventID, eventTime, pool, activeAccount.pubkey]);
 
   return (
     <div className="relative z-10 -ml-1 flex items-center gap-8">

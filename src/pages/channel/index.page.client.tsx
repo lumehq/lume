@@ -4,7 +4,7 @@ import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
 
 import { channelMessagesAtom, channelReplyAtom } from '@stores/channel';
-import { FULL_RELAYS } from '@stores/constants';
+import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
@@ -21,7 +21,7 @@ export function Page() {
 
   const id = searchParams.id;
 
-  const [pool]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
@@ -46,7 +46,7 @@ export function Page() {
           since: dateToUnix(hoursAgo(48, now.current)),
         },
       ],
-      FULL_RELAYS,
+      MESSAGE_RELAYS,
       (event: { kind: number; tags: string[][]; pubkey: string; id: string }) => {
         if (event.kind === 44) {
           muted.current = muted.current.add(event.tags[0][1]);

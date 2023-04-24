@@ -1,7 +1,7 @@
 import OnboardingLayout from '@components/layouts/onboarding';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
+import { DEFAULT_AVATAR, DEFAULT_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
@@ -20,7 +20,7 @@ export function Page() {
   const privkey = searchParams.privkey;
   const pubkey = useMemo(() => getPublicKey(privkey), [privkey]);
 
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [profile, setProfile] = useState({ metadata: null });
   const [done, setDone] = useState(false);
 
@@ -53,7 +53,7 @@ export function Page() {
           authors: [pubkey],
         },
       ],
-      relays,
+      DEFAULT_RELAYS,
       (event: any) => {
         switch (event.kind) {
           case 0:
@@ -85,7 +85,7 @@ export function Page() {
       unsubscribe();
       clearTimeout(timeout.current);
     };
-  }, [pool, relays, pubkey, privkey]);
+  }, [pool, pubkey, privkey]);
 
   return (
     <OnboardingLayout>

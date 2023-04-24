@@ -3,7 +3,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserMini } from '@components/user/mini';
 
 import { channelContentAtom, channelReplyAtom } from '@stores/channel';
-import { FULL_RELAYS } from '@stores/constants';
+import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -15,7 +15,7 @@ import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
 export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
-  const [pool]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const [value, setValue] = useAtom(channelContentAtom);
@@ -48,7 +48,7 @@ export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, FULL_RELAYS);
+    pool.publish(event, MESSAGE_RELAYS);
     // reset state
     resetValue();
     // reset channel reply

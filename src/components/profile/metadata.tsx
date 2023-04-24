@@ -1,6 +1,6 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
+import { DEFAULT_AVATAR, DEFAULT_RELAYS } from '@stores/constants';
 
 import { shortenKey } from '@utils/shortenKey';
 
@@ -11,13 +11,13 @@ import { useContext, useEffect, useState } from 'react';
 const DEFAULT_BANNER = 'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg';
 
 export default function ProfileMetadata({ id }: { id: string }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    const user = new Author(pool, relays, id);
+    const user = new Author(pool, DEFAULT_RELAYS, id);
     user.metaData((res) => setProfile(destr(res.content)), 0);
-  }, [id, pool, relays]);
+  }, [id, pool]);
 
   return (
     <>

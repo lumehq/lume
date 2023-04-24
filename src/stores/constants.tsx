@@ -23,7 +23,7 @@ export const DEFAULT_CHANNELS = [
   },
 ];
 export const DEFAULT_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band', 'wss://nostr.mutinywallet.com'];
-export const FULL_RELAYS = [
+export const MESSAGE_RELAYS = [
   'wss://relay.damus.io',
   'wss://nostr-pub.wellorder.net',
   'wss://nostr.zebedee.cloud',

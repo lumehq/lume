@@ -1,6 +1,8 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { contentParser } from '@utils/parser';
 import { createNote, getNoteByID } from '@utils/storage';
 import { getParentID } from '@utils/transform';
@@ -9,7 +11,7 @@ import useLocalStorage from '@rehooks/local-storage';
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const [activeAccount]: any = useLocalStorage('account', {});
   const [event, setEvent] = useState(null);
@@ -24,7 +26,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
           kinds: [1],
         },
       ],
-      relays,
+      DEFAULT_RELAYS,
       (event: any) => {
         // update state
         setEvent(event);
@@ -51,7 +53,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
     return () => {
       unsubscribe();
     };
-  }, [activeAccount.id, id, pool, relays]);
+  }, [activeAccount.id, id, pool]);
 
   const checkNoteIsSaved = useCallback(async () => {
     getNoteByID(id)

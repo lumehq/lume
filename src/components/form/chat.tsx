@@ -2,7 +2,7 @@ import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
 import { chatContentAtom } from '@stores/chat';
-import { FULL_RELAYS } from '@stores/constants';
+import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -13,7 +13,7 @@ import { getEventHash, nip04, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
 export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
-  const [pool]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const [value, setValue] = useAtom(chatContentAtom);
@@ -39,7 +39,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         event.id = getEventHash(event);
         event.sig = signEvent(event, activeAccount.privkey);
         // publish note
-        pool.publish(event, FULL_RELAYS);
+        pool.publish(event, MESSAGE_RELAYS);
         // reset state
         resetValue();
       })

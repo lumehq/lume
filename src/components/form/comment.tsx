@@ -1,5 +1,6 @@
-import { ImageWithFallback } from '@components/imageWithFallback';
 import { RelayContext } from '@components/relaysProvider';
+
+import { DEFAULT_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -8,7 +9,7 @@ import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const [activeAccount]: any = useLocalStorage('account', {});
   const [value, setValue] = useState('');
@@ -27,7 +28,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, relays);
+    pool.publish(event, DEFAULT_RELAYS);
     // send notification
     // sendNotification('Comment has been published successfully');
   };
@@ -37,12 +38,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
       <div className="flex gap-1">
         <div>
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
-            <ImageWithFallback
-              src={profile?.picture}
-              alt={activeAccount.pubkey}
-              fill={true}
-              className="rounded-md object-cover"
-            />
+            <img src={profile?.picture} alt={activeAccount.pubkey} className="h-11 w-11 rounded-md object-cover" />
           </div>
         </div>
         <div className="relative h-24 w-full flex-1 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">

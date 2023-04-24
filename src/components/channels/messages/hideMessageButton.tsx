@@ -1,5 +1,7 @@
 import { RelayContext } from '@components/relaysProvider';
 
+import { MESSAGE_RELAYS } from '@stores/constants';
+
 import { dateToUnix } from '@utils/getDate';
 
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
@@ -10,7 +12,7 @@ import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
 export const HideMessageButton = ({ id }: { id: string }) => {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const hideMessage = useCallback(() => {
@@ -25,8 +27,8 @@ export const HideMessageButton = ({ id }: { id: string }) => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, relays);
-  }, [id, activeAccount.privkey, activeAccount.pubkey, pool, relays]);
+    pool.publish(event, MESSAGE_RELAYS);
+  }, [id, activeAccount.privkey, activeAccount.pubkey, pool, MESSAGE_RELAYS]);
 
   return (
     <AlertDialog.Root>

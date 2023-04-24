@@ -1,6 +1,8 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
@@ -23,7 +25,7 @@ export const NoteComment = ({
   eventTime: number;
   eventContent: any;
 }) => {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
@@ -46,7 +48,7 @@ export const NoteComment = ({
     event.id = getEventHash(event);
     event.sig = signEvent(event, activeAccount.privkey);
 
-    pool.publish(event, relays);
+    pool.publish(event, DEFAULT_RELAYS);
     setOpen(false);
   };
 

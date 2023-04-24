@@ -2,7 +2,7 @@ import { AvatarUploader } from '@components/avatarUploader';
 import { RelayContext } from '@components/relaysProvider';
 
 import { defaultChannelsAtom } from '@stores/channel';
-import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
+import { DEFAULT_AVATAR, MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 import { createChannel } from '@utils/storage';
@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const CreateChannelModal = () => {
-  const [pool]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [open, setOpen] = useState(false);
   const [activeAccount]: any = useLocalStorage('account', {});
   const [image, setImage] = useState(DEFAULT_AVATAR);
@@ -47,7 +47,7 @@ export const CreateChannelModal = () => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish channel
-    pool.publish(event, FULL_RELAYS);
+    pool.publish(event, MESSAGE_RELAYS);
     // insert to database
     createChannel(event.id, event.content, event.created_at);
     // update jotai state

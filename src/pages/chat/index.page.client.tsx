@@ -4,7 +4,7 @@ import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
 
 import { chatMessagesAtom } from '@stores/chat';
-import { FULL_RELAYS } from '@stores/constants';
+import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
 
@@ -20,7 +20,7 @@ export function Page() {
 
   const pubkey = searchParams.pubkey;
 
-  const [pool]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const setChatMessages = useSetAtom(chatMessagesAtom);
@@ -40,7 +40,7 @@ export function Page() {
           '#p': [pubkey],
         },
       ],
-      FULL_RELAYS,
+      MESSAGE_RELAYS,
       (event: any) => {
         setChatMessages((prev) => [...prev, event]);
       }

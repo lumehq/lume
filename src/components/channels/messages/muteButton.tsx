@@ -1,5 +1,7 @@
 import { RelayContext } from '@components/relaysProvider';
 
+import { MESSAGE_RELAYS } from '@stores/constants';
+
 import { dateToUnix } from '@utils/getDate';
 
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
@@ -7,13 +9,13 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import useLocalStorage from '@rehooks/local-storage';
 import { MicMute } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useCallback, useContext } from 'react';
+import { useContext } from 'react';
 
 export const MuteButton = ({ pubkey }: { pubkey: string }) => {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
-  const muteUser = useCallback(() => {
+  const muteUser = () => {
     const event: any = {
       content: '',
       created_at: dateToUnix(),
@@ -25,8 +27,8 @@ export const MuteButton = ({ pubkey }: { pubkey: string }) => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, relays);
-  }, [pubkey, activeAccount.privkey, activeAccount.pubkey, pool, relays]);
+    pool.publish(event, MESSAGE_RELAYS);
+  };
 
   return (
     <AlertDialog.Root>

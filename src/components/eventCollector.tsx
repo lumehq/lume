@@ -1,6 +1,7 @@
 import { NetworkStatusIndicator } from '@components/networkStatusIndicator';
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
@@ -12,7 +13,7 @@ import { useSetAtom } from 'jotai';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function EventCollector() {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', null);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
@@ -42,7 +43,7 @@ export default function EventCollector() {
           since: dateToUnix(now.current),
         },
       ],
-      relays,
+      DEFAULT_RELAYS,
       (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
         switch (event.kind) {
           // metadata
@@ -103,7 +104,7 @@ export default function EventCollector() {
     return () => {
       unsubscribe();
     };
-  }, [activeAccount.pubkey, activeAccount.id, follows, pool, relays, setHasNewerNote]);
+  }, [activeAccount.pubkey, activeAccount.id, follows, pool, setHasNewerNote]);
 
   useEffect(() => {
     let ignore = false;

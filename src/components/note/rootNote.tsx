@@ -2,13 +2,15 @@ import { NoteMetadata } from '@components/note/metadata';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { contentParser } from '@utils/parser';
 
 import { memo, useCallback, useContext, useEffect, useState } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const RootNote = memo(function RootNote({ event }: { event: any }) {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const [data, setData] = useState(null);
   const [content, setContent] = useState('');
@@ -36,7 +38,7 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
             kinds: [1],
           },
         ],
-        relays,
+        DEFAULT_RELAYS,
         (event: any) => {
           setData(event);
           setContent(contentParser(event.content, event.tags));
@@ -52,7 +54,7 @@ export const RootNote = memo(function RootNote({ event }: { event: any }) {
         unsubscribe();
       };
     },
-    [pool, relays]
+    [pool]
   );
 
   useEffect(() => {

@@ -1,5 +1,7 @@
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import {
   countTotalNotes,
@@ -20,7 +22,7 @@ import { useCallback, useContext, useEffect, useRef } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
 
   const now = useRef(new Date());
   const timeout = useRef(null);
@@ -74,7 +76,7 @@ export function Page() {
       // subscribe relays
       const unsubscribe = pool.subscribe(
         query,
-        relays,
+        DEFAULT_RELAYS,
         (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
           switch (event.kind) {
             // short text note
@@ -136,7 +138,7 @@ export function Page() {
         unsubscribe();
       };
     },
-    [pool, relays]
+    [pool]
   );
 
   useEffect(() => {

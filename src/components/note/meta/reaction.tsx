@@ -1,5 +1,7 @@
 import { RelayContext } from '@components/relaysProvider';
 
+import { DEFAULT_RELAYS } from '@stores/constants';
+
 import { dateToUnix } from '@utils/getDate';
 
 import useLocalStorage from '@rehooks/local-storage';
@@ -18,7 +20,7 @@ export const NoteReaction = ({
   eventID: string;
   eventPubkey: string;
 }) => {
-  const [pool, relays]: any = useContext(RelayContext);
+  const pool: any = useContext(RelayContext);
   const [activeAccount]: any = useLocalStorage('account', {});
 
   const [isReact, setIsReact] = useState(false);
@@ -41,7 +43,7 @@ export const NoteReaction = ({
       event.id = getEventHash(event);
       event.sig = signEvent(event, activeAccount.privkey);
       // publish event to all relays
-      pool.publish(event, relays);
+      pool.publish(event, DEFAULT_RELAYS);
       // update state to change icon to filled heart
       setIsReact(true);
       // update counter
