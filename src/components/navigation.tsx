@@ -1,12 +1,11 @@
 import ActiveLink from '@components/activeLink';
+import ChannelList from '@components/channels/channelList';
 import ChatList from '@components/chats/chatList';
 
 import { Disclosure } from '@headlessui/react';
 import { Bonfire, NavArrowUp, PeopleTag } from 'iconoir-react';
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import Skeleton from 'react-loading-skeleton';
-
-const ChannelList = lazy(() => import('@components/channels/channelList'));
 
 export default function Navigation() {
   return (

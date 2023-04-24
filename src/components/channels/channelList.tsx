@@ -1,12 +1,20 @@
 import { ChannelListItem } from '@components/channels/channelListItem';
 import { CreateChannelModal } from '@components/channels/createChannelModal';
 
-import { channelsAtom } from '@stores/channel';
+import { channelsAtom, defaultChannelsAtom } from '@stores/channel';
 
 import { useAtomValue } from 'jotai';
 
 export default function ChannelList() {
-  const list = useAtomValue(channelsAtom);
+  let atom;
+
+  if (typeof window !== 'undefined') {
+    atom = channelsAtom;
+  } else {
+    atom = defaultChannelsAtom;
+  }
+
+  const list: any = useAtomValue(atom);
 
   return (
     <div className="flex flex-col gap-px">
