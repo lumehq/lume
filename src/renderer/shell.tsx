@@ -1,3 +1,4 @@
+import AccountProvider from '@components/accountProvider';
 import RelayProvider from '@components/relaysProvider';
 
 import { PageContextProvider } from '@utils/hooks/usePageContext';
@@ -10,7 +11,9 @@ export function Shell({ children, pageContext }: { children: React.ReactNode; pa
   return (
     <StrictMode>
       <PageContextProvider pageContext={pageContext}>
-        <RelayProvider>{children}</RelayProvider>
+        <RelayProvider>
+          <AccountProvider>{children}</AccountProvider>
+        </RelayProvider>
       </PageContextProvider>
     </StrictMode>
   );

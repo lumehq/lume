@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { FormChannel } from '@components/form/channel';
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
@@ -8,7 +9,6 @@ import { MESSAGE_RELAYS } from '@stores/constants';
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext, useRef } from 'react';
@@ -23,7 +23,7 @@ export function Page() {
   const id = searchParams.id;
 
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
   const resetChannelMessages = useResetAtom(channelMessagesAtom);

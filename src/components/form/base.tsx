@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -6,7 +7,6 @@ import { noteContentAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -14,11 +14,10 @@ import { useContext } from 'react';
 
 export default function FormBase() {
   const pool: any = useContext(RelayContext);
+  const activeAccount: any = useContext(AccountContext);
 
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
-
-  const [activeAccount]: any = useLocalStorage('account', {});
 
   const submitEvent = () => {
     const event: any = {

@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 
 import { MESSAGE_RELAYS } from '@stores/constants';
@@ -6,14 +7,13 @@ import { dateToUnix } from '@utils/getDate';
 
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import useLocalStorage from '@rehooks/local-storage';
 import { EyeClose } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext } from 'react';
 
 export const HideMessageButton = ({ id }: { id: string }) => {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const hideMessage = useCallback(() => {
     const event: any = {
@@ -28,7 +28,7 @@ export const HideMessageButton = ({ id }: { id: string }) => {
 
     // publish note
     pool.publish(event, MESSAGE_RELAYS);
-  }, [id, activeAccount.privkey, activeAccount.pubkey, pool, MESSAGE_RELAYS]);
+  }, [id, pool, MESSAGE_RELAYS]);
 
   return (
     <AlertDialog.Root>

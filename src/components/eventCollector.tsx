@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { NetworkStatusIndicator } from '@components/networkStatusIndicator';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -8,16 +9,15 @@ import { dateToUnix } from '@utils/getDate';
 import { createChannel, createChat, createNote, updateAccount } from '@utils/storage';
 import { getParentID, nip02ToArray } from '@utils/transform';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default function EventCollector() {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', null);
+  const activeAccount: any = useContext(AccountContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const follows = JSON.parse(activeAccount.follows);
+  const follows = activeAccount ? JSON.parse(activeAccount.follows) : [];
 
   const now = useRef(new Date());
 
@@ -104,7 +104,7 @@ export default function EventCollector() {
     return () => {
       unsubscribe();
     };
-  }, [activeAccount.pubkey, activeAccount.id, follows, pool, setHasNewerNote]);
+  }, [follows, pool, setHasNewerNote]);
 
   useEffect(() => {
     let ignore = false;
@@ -116,7 +116,7 @@ export default function EventCollector() {
     return () => {
       ignore = true;
     };
-  }, [setHasNewerNote, subscribe]);
+  }, [subscribe]);
 
   return <NetworkStatusIndicator />;
 }

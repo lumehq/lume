@@ -48,6 +48,13 @@ export async function getPlebs() {
   return await db.select(`SELECT * FROM plebs ORDER BY created_at DESC;`);
 }
 
+// get pleb by pubkey
+export async function getPleb(pubkey: string) {
+  const db = await connect();
+  const result = await db.select(`SELECT * FROM plebs WHERE pubkey = "${pubkey}"`);
+  return result[0];
+}
+
 // create pleb
 export async function createPleb(pubkey: string, metadata: string) {
   const db = await connect();

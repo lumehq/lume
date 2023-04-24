@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import FormChat from '@components/form/chat';
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
@@ -7,7 +8,6 @@ import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext } from 'react';
@@ -22,7 +22,7 @@ export function Page() {
   const pubkey = searchParams.pubkey;
 
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const setChatMessages = useSetAtom(chatMessagesAtom);
   const resetChatMessages = useResetAtom(chatMessagesAtom);

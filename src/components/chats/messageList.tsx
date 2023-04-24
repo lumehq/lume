@@ -1,18 +1,18 @@
+import { AccountContext } from '@components/accountProvider';
 import MessageListItem from '@components/chats/messageListItem';
 
 import { sortedChatMessagesAtom } from '@stores/chat';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useAtomValue } from 'jotai';
-import { useCallback, useRef } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function MessageList() {
+  const activeAccount: any = useContext(AccountContext);
+
   const virtuosoRef = useRef(null);
   const data = useAtomValue(sortedChatMessagesAtom);
-
-  const [activeAccount]: any = useLocalStorage('account', {});
 
   const itemContent: any = useCallback(
     (index: string | number) => {
@@ -20,7 +20,7 @@ export default function MessageList() {
         <MessageListItem data={data[index]} userPubkey={activeAccount.pubkey} userPrivkey={activeAccount.privkey} />
       );
     },
-    [activeAccount.privkey, activeAccount.pubkey, data]
+    [data]
   );
 
   const computeItemKey = useCallback(

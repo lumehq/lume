@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 
 import { MESSAGE_RELAYS } from '@stores/constants';
@@ -6,14 +7,13 @@ import { dateToUnix } from '@utils/getDate';
 
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import useLocalStorage from '@rehooks/local-storage';
 import { MicMute } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext } from 'react';
 
 export const MuteButton = ({ pubkey }: { pubkey: string }) => {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const muteUser = () => {
     const event: any = {

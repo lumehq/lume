@@ -8,7 +8,6 @@ specifiers:
   '@radix-ui/react-popover': ^1.0.5
   '@radix-ui/react-tabs': ^1.0.3
   '@radix-ui/react-tooltip': ^1.0.5
-  '@rehooks/local-storage': ^2.4.4
   '@supabase/supabase-js': ^2.21.0
   '@tailwindcss/typography': ^0.5.9
   '@tauri-apps/api': ^1.2.0
@@ -66,7 +65,6 @@ dependencies:
   '@radix-ui/react-popover': 1.0.5_g6eqzmexmujy3zvaqhkicj5z64
   '@radix-ui/react-tabs': 1.0.3_biqbaboplfbrettd7655fr4n2y
   '@radix-ui/react-tooltip': 1.0.5_g6eqzmexmujy3zvaqhkicj5z64
-  '@rehooks/local-storage': 2.4.4_react@18.2.0
   '@supabase/supabase-js': 2.21.0_encoding@0.1.13
   '@tauri-apps/api': 1.2.0
   dayjs: 1.11.7
@@ -1162,15 +1160,6 @@ packages:
       { integrity: sha512-d0O68AYy/9oeEy1DdC07bz1/ZXX+DqCskRd3i4JzLSTXwefzaepQrKjXC7aNM8lTHjFLDO0pDgaEiQ7jEk+HVg== }
     dependencies:
       '@babel/runtime': 7.21.0
-    dev: false
-
-  /@rehooks/local-storage/2.4.4_react@18.2.0:
-    resolution:
-      { integrity: sha512-zE+kfOkG59n/1UTxdmbwktIosclr67Nlbf2MzUJ9mNtCSypVscNHeD1qT6JCSo5Pjj8DO893IKWNLJqKKzDL/Q== }
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /@rollup/plugin-virtual/3.0.1:

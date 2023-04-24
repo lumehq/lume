@@ -1,8 +1,7 @@
-import { createPleb } from '@utils/storage';
+import { createPleb, getPleb } from '@utils/storage';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { fetch } from '@tauri-apps/api/http';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const fetchProfileMetadata = async (pubkey: string) => {
   const result = await fetch(`https://rbr.bio/${pubkey}/metadata.json`, {
@@ -13,25 +12,11 @@ export const fetchProfileMetadata = async (pubkey: string) => {
 };
 
 export const useProfileMetadata = (pubkey: string) => {
-  const [activeAccount]: any = useLocalStorage('account', {});
-  const [plebs] = useLocalStorage('plebs', []);
   const [profile, setProfile] = useState(null);
 
-  const cacheProfile = useMemo(() => {
-    let metadata = false;
-
-    if (pubkey === activeAccount.pubkey) {
-      metadata = JSON.parse(activeAccount.metadata);
-    } else {
-      const findInStorage = plebs.find((item) => item.pubkey === pubkey);
-
-      if (findInStorage !== undefined) {
-        metadata = JSON.parse(findInStorage.metadata);
-      }
-    }
-
-    return metadata;
-  }, [plebs, pubkey, activeAccount.pubkey, activeAccount.metadata]);
+  const getProfileFromDB = useCallback(async (pubkey: string) => {
+    return await getPleb(pubkey);
+  }, []);
 
   const insertPlebToDB = useCallback(async (pubkey: string, metadata: string) => {
     return createPleb(pubkey, metadata);
@@ -40,13 +25,22 @@ export const useProfileMetadata = (pubkey: string) => {
   useEffect(() => {
     let ignore = false;
 
-    if (!cacheProfile && !ignore) {
-      fetchProfileMetadata(pubkey)
+    if (!ignore) {
+      getProfileFromDB(pubkey)
         .then((res: any) => {
-          // update state
-          setProfile(JSON.parse(res.content));
-          // save to db
-          insertPlebToDB(pubkey, res.content);
+          if (res) {
+            // update state
+            setProfile(JSON.parse(res.metadata));
+          } else {
+            fetchProfileMetadata(pubkey).then((res: any) => {
+              if (res) {
+                // update state
+                setProfile(res);
+                // insert to db
+                insertPlebToDB(pubkey, JSON.stringify(res));
+              }
+            });
+          }
         })
         .catch(console.error);
     }
@@ -54,11 +48,7 @@ export const useProfileMetadata = (pubkey: string) => {
     return () => {
       ignore = true;
     };
-  }, [cacheProfile, insertPlebToDB, pubkey]);
+  }, [insertPlebToDB, pubkey]);
 
-  if (cacheProfile) {
-    return cacheProfile;
-  } else {
-    return profile;
-  }
+  return profile;
 };

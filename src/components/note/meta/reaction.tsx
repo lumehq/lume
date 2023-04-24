@@ -1,10 +1,10 @@
+import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { Heart } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ export const NoteReaction = ({
   eventPubkey: string;
 }) => {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const [isReact, setIsReact] = useState(false);
   const [like, setLike] = useState(0);

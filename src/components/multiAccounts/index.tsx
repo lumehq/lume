@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { ActiveAccount } from '@components/multiAccounts/activeAccount';
 import { InactiveAccount } from '@components/multiAccounts/inactiveAccount';
 
@@ -5,9 +6,8 @@ import { APP_VERSION } from '@stores/constants';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { Plus } from 'iconoir-react';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 
 let accounts: any = [];
 
@@ -17,18 +17,15 @@ if (typeof window !== 'undefined') {
 }
 
 export default function MultiAccounts() {
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
-  const renderAccount = useCallback(
-    (account: { pubkey: string }) => {
-      if (account.pubkey === activeAccount.pubkey) {
-        return <ActiveAccount key={account.pubkey} user={account} />;
-      } else {
-        return <InactiveAccount key={account.pubkey} user={account} />;
-      }
-    },
-    [activeAccount.pubkey]
-  );
+  const renderAccount = useCallback((account: { pubkey: string }) => {
+    if (account.pubkey === activeAccount.pubkey) {
+      return <ActiveAccount key={account.pubkey} user={account} />;
+    } else {
+      return <InactiveAccount key={account.pubkey} user={account} />;
+    }
+  }, []);
 
   return (
     <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">

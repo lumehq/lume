@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 import { UserMini } from '@components/user/mini';
@@ -7,7 +8,6 @@ import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { Cancel } from 'iconoir-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
@@ -16,7 +16,7 @@ import { useCallback, useContext } from 'react';
 
 export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const [value, setValue] = useAtom(channelContentAtom);
   const resetValue = useResetAtom(channelContentAtom);

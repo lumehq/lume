@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { AvatarUploader } from '@components/avatarUploader';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -8,7 +9,6 @@ import { dateToUnix } from '@utils/getDate';
 import { createChannel } from '@utils/storage';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import useLocalStorage from '@rehooks/local-storage';
 import { Cancel, Plus } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -18,8 +18,9 @@ import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const CreateChannelModal = () => {
   const pool: any = useContext(RelayContext);
+  const activeAccount: any = useContext(AccountContext);
+
   const [open, setOpen] = useState(false);
-  const [activeAccount]: any = useLocalStorage('account', {});
   const [image, setImage] = useState(DEFAULT_AVATAR);
   const [loading, setLoading] = useState(false);
 

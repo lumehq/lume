@@ -1,17 +1,17 @@
+import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
   const pool: any = useContext(RelayContext);
+  const activeAccount: any = useContext(AccountContext);
 
-  const [activeAccount]: any = useLocalStorage('account', {});
   const [value, setValue] = useState('');
 
   const profile = JSON.parse(activeAccount.metadata);

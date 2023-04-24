@@ -10,14 +10,12 @@ import {
   createNote,
   getActiveAccount,
   getLastLogin,
-  getPlebs,
   updateLastLogin,
 } from '@utils/storage';
 import { getParentID } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { writeStorage } from '@rehooks/local-storage';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
@@ -149,20 +147,9 @@ export function Page() {
         .then((res: any) => {
           if (res) {
             const account = res;
-            // update local storage
-            writeStorage('account', account);
-            // fetch data
             fetchData(account, account.follows);
           } else {
             navigate('/onboarding', { overwriteLastHistoryEntry: true });
-          }
-        })
-        .catch(console.error);
-
-      getPlebs()
-        .then((res) => {
-          if (res && !ignore) {
-            writeStorage('plebs', res);
           }
         })
         .catch(console.error);

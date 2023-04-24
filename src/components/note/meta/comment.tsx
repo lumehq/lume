@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
@@ -6,7 +7,6 @@ import { DEFAULT_RELAYS } from '@stores/constants';
 import { dateToUnix } from '@utils/getDate';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import useLocalStorage from '@rehooks/local-storage';
 import { ChatLines, OpenNewWindow } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -26,12 +26,12 @@ export const NoteComment = ({
   eventContent: any;
 }) => {
   const pool: any = useContext(RelayContext);
+  const activeAccount: any = useContext(AccountContext);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const [activeAccount]: any = useLocalStorage('account', {});
-  const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
+  const profile = activeAccount ? JSON.parse(activeAccount.metadata) : null;
 
   const openThread = () => {
     navigate(`/newsfeed/note?id=${eventID}`);

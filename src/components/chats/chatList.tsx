@@ -1,23 +1,23 @@
+import { AccountContext } from '@components/accountProvider';
 import { ChatListItem } from '@components/chats/chatListItem';
 import { ChatModal } from '@components/chats/chatModal';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import useLocalStorage from '@rehooks/local-storage';
+import { useContext } from 'react';
 
 let list: any = [];
 
 if (typeof window !== 'undefined') {
-  const { getChats } = await import('@utils/storage');
-  const getAccount = window.localStorage.getItem('account');
-  const account = getAccount ? JSON.parse(getAccount) : null;
+  const { getChats, getActiveAccount } = await import('@utils/storage');
+  const activeAccount = await getActiveAccount();
 
-  list = await getChats(account.id);
+  list = await getChats(activeAccount.id);
 }
 
 export default function ChatList() {
-  const [activeAccount]: any = useLocalStorage('account', {});
-  const profile = activeAccount.metadata ? JSON.parse(activeAccount.metadata) : null;
+  const activeAccount: any = useContext(AccountContext);
+  const profile = activeAccount ? JSON.parse(activeAccount.metadata) : null;
 
   return (
     <div className="flex flex-col gap-px">
@@ -38,7 +38,7 @@ export default function ChatList() {
           </h5>
         </div>
       </a>
-      {list.map((item) => (
+      {list.map((item: { id: string; pubkey: string }) => (
         <ChatListItem key={item.id} pubkey={item.pubkey} />
       ))}
       <ChatModal />

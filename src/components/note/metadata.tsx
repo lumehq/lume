@@ -1,10 +1,10 @@
+import { AccountContext } from '@components/accountProvider';
 import { NoteComment } from '@components/note/meta/comment';
 import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
 import { DEFAULT_RELAYS } from '@stores/constants';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { memo, useContext, useEffect, useState } from 'react';
 
 export const NoteMetadata = memo(function NoteMetadata({
@@ -19,7 +19,7 @@ export const NoteMetadata = memo(function NoteMetadata({
   eventContent: any;
 }) {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);

@@ -1,3 +1,4 @@
+import { AccountContext } from '@components/accountProvider';
 import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
@@ -6,7 +7,6 @@ import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
-import useLocalStorage from '@rehooks/local-storage';
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, nip04, signEvent } from 'nostr-tools';
@@ -14,7 +14,7 @@ import { useCallback, useContext } from 'react';
 
 export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
   const pool: any = useContext(RelayContext);
-  const [activeAccount]: any = useLocalStorage('account', {});
+  const activeAccount: any = useContext(AccountContext);
 
   const [value, setValue] = useAtom(chatContentAtom);
   const resetValue = useResetAtom(chatContentAtom);
@@ -44,7 +44,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         resetValue();
       })
       .catch(console.error);
-  }, [encryptMessage, activeAccount.privkey, activeAccount.pubkey, receiverPubkey, resetValue, pool]);
+  }, [encryptMessage, receiverPubkey, resetValue, pool]);
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
