@@ -47,12 +47,12 @@ specifiers:
   react-player: ^2.12.0
   react-string-replace: ^1.1.0
   react-virtuoso: ^4.3.1
-  swr: ^2.1.3
+  swr: ^2.1.4
   tailwindcss: ^3.3.1
   tauri-plugin-sql-api: github:tauri-apps/tauri-plugin-sql
   typescript: ^4.9.5
   vite: ^4.3.1
-  vite-plugin-ssr: ^0.4.115
+  vite-plugin-ssr: ^0.4.116
   vite-plugin-top-level-await: ^1.3.0
   vite-tsconfig-paths: ^4.2.0
   ws: ^8.13.0
@@ -81,7 +81,7 @@ dependencies:
   react-player: 2.12.0_react@18.2.0
   react-string-replace: 1.1.0
   react-virtuoso: 4.3.1_biqbaboplfbrettd7655fr4n2y
-  swr: 2.1.3_react@18.2.0
+  swr: 2.1.4_react@18.2.0
   tauri-plugin-sql-api: github.com/tauri-apps/tauri-plugin-sql/62b21ef24303d80e9905f57b2b6d27efc8677c23
 
 devDependencies:
@@ -111,7 +111,7 @@ devDependencies:
   tailwindcss: 3.3.1_postcss@8.4.23
   typescript: 4.9.5
   vite: 4.3.1_@types+node@18.16.0
-  vite-plugin-ssr: 0.4.115_vite@4.3.1
+  vite-plugin-ssr: 0.4.116_vite@4.3.1
   vite-plugin-top-level-await: 1.3.0_vite@4.3.1
   vite-tsconfig-paths: 4.2.0_mzhihm7zd2gyalpll4qoudvuha
   ws: 8.13.0
@@ -4141,9 +4141,9 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup/3.20.7:
+  /rollup/3.21.0:
     resolution:
-      { integrity: sha512-P7E2zezKSLhWnTz46XxjSmInrbOCiul1yf+kJccMxT56vxjHwCbDfoLbiqFgu+WQoo9ij2PkraYaBstgB2prBA== }
+      { integrity: sha512-ANPhVcyeHvYdQMUyCbczy33nbLzI7RzrBje4uvNiTDJGIMtlKoOStmympwr9OtS1LZxiDmE2wvxHyVhoLtf1KQ== }
     engines: { node: '>=14.18.0', npm: '>=8.0.0' }
     hasBin: true
     optionalDependencies:
@@ -4423,9 +4423,9 @@ packages:
     engines: { node: '>= 0.4' }
     dev: true
 
-  /swr/2.1.3_react@18.2.0:
+  /swr/2.1.4_react@18.2.0:
     resolution:
-      { integrity: sha512-g3ApxIM4Fjbd6vvEAlW60hJlKcYxHb+wtehogTygrh6Jsw7wNagv9m4Oj5Gq6zvvZw0tcyhVGL9L0oISvl3sUw== }
+      { integrity: sha512-NG+eu3s3YT7aCnL0BRzsYIh8U0HhzA4II1bNMTUtO5D+N+4+YJpcfLiagFdrt0IbTGCbOiVyzAIMvqOCsk9cQA== }
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -4716,9 +4716,9 @@ packages:
     hasBin: true
     dev: true
 
-  /vite-plugin-ssr/0.4.115_vite@4.3.1:
+  /vite-plugin-ssr/0.4.116_vite@4.3.1:
     resolution:
-      { integrity: sha512-SXoru+rFEwSBgYXvQXzG73nfN8x+MGhlW4pcJI2BX0p6Tei8ys0tyg1yNu1VI95Uux2rBZip6ra/43rvKSNsag== }
+      { integrity: sha512-GtXvlUtwnLdrnfuodJhcs+kV1BXyoUhECjqdoC1pSU+7dRKyU7A9V6NmkT7yPbHu1s8bWSgqC/EP91F4DSt4rA== }
     engines: { node: '>=12.19.0' }
     hasBin: true
     peerDependencies:
@@ -4803,7 +4803,7 @@ packages:
       '@types/node': 18.16.0
       esbuild: 0.17.18
       postcss: 8.4.23
-      rollup: 3.20.7
+      rollup: 3.21.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
