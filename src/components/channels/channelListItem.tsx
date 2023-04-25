@@ -6,15 +6,7 @@ import { usePageContext } from '@utils/hooks/usePageContext';
 import { twMerge } from 'tailwind-merge';
 
 export const ChannelListItem = ({ data }: { data: any }) => {
-  let fallback: any;
-
-  if (typeof data.metadata === 'object') {
-    fallback = data.metadata;
-  } else {
-    fallback = JSON.parse(data.metadata);
-  }
-
-  const channel: any = useChannelMetadata(data.event_id, fallback);
+  const channel: any = useChannelMetadata(data.event_id);
   const pageContext = usePageContext();
 
   const searchParams: any = pageContext.urlParsed.search;

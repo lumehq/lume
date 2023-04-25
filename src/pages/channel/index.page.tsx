@@ -1,4 +1,5 @@
 import { AccountContext } from '@components/accountProvider';
+import { ChannelProfile } from '@components/channels/channelProfile';
 import { FormChannel } from '@components/form/channel';
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
@@ -9,6 +10,7 @@ import { MESSAGE_RELAYS } from '@stores/constants';
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
 
+import { EyeClose, MicMute } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext, useRef } from 'react';
@@ -77,12 +79,27 @@ export function Page() {
 
   return (
     <NewsfeedLayout>
-      <div className="flex h-full w-full flex-col justify-between">
-        <Suspense fallback={<p>Loading...</p>}>
-          <ChannelMessages />
-        </Suspense>
-        <div className="shrink-0 p-3">
-          <FormChannel eventId={id} />
+      <div className="flex h-full flex-col justify-between gap-2">
+        <div className="flex h-11 w-full shrink-0 items-center justify-between">
+          <div>
+            <ChannelProfile id={id} />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900">
+              <EyeClose width={16} height={16} className="text-zinc-400" />
+            </div>
+            <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900">
+              <MicMute width={16} height={16} className="text-zinc-400" />
+            </div>
+          </div>
+        </div>
+        <div className="relative flex w-full flex-1 flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
+          <Suspense fallback={<p>Loading...</p>}>
+            <ChannelMessages />
+          </Suspense>
+          <div className="shrink-0 p-3">
+            <FormChannel eventId={id} />
+          </div>
         </div>
       </div>
     </NewsfeedLayout>

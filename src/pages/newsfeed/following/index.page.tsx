@@ -82,7 +82,7 @@ export function Page() {
 
   return (
     <NewsfeedLayout>
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
         {hasNewerNote && (
           <div className="absolute left-1/2 top-2 z-50 -translate-x-1/2 transform">
             <button

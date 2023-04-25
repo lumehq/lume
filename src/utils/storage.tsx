@@ -120,6 +120,13 @@ export async function getChannels(limit: number, offset: number) {
   return await db.select(`SELECT * FROM channels ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`);
 }
 
+// get channel by id
+export async function getChannel(id: string) {
+  const db = await connect();
+  const result = await db.select(`SELECT * FROM channels WHERE event_id = "${id}";`);
+  return result[0];
+}
+
 // create channel
 export async function createChannel(event_id: string, metadata: string, created_at: number) {
   const db = await connect();

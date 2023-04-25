@@ -57,7 +57,7 @@ export function Page() {
 
   return (
     <NewsfeedLayout>
-      <div className="flex h-full w-full flex-col justify-between">
+      <div className="relative flex h-full w-full flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
         <Suspense fallback={<p>Loading...</p>}>
           <MessageList />
         </Suspense>
