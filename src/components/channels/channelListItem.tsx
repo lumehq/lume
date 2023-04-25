@@ -20,12 +20,8 @@ export const ChannelListItem = ({ data }: { data: any }) => {
         pageID === data.event_id ? 'dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800' : ''
       )}
     >
-      <div className="relative h-5 w-5 shrink-0 rounded">
-        <img
-          src={channel?.picture || DEFAULT_AVATAR}
-          alt={data.event_id}
-          className="h-5 w-5 rounded bg-zinc-900 object-cover"
-        />
+      <div className="relative h-5 w-5 shrink-0 rounded bg-zinc-900">
+        <img src={channel?.picture || DEFAULT_AVATAR} alt={data.event_id} className="h-5 w-5 rounded object-contain" />
       </div>
       <div>
         <h5 className="truncate text-sm font-medium text-zinc-400">{channel?.name}</h5>

@@ -128,13 +128,12 @@ export async function getChannel(id: string) {
 }
 
 // create channel
-export async function createChannel(event_id: string, metadata: string, created_at: number) {
+export async function createChannel(event_id: string, pubkey: string, metadata: string, created_at: number) {
   const db = await connect();
-  return await db.execute('INSERT OR IGNORE INTO channels (event_id, metadata, created_at) VALUES (?, ?, ?);', [
-    event_id,
-    metadata,
-    created_at,
-  ]);
+  return await db.execute(
+    'INSERT OR IGNORE INTO channels (event_id, pubkey, metadata, created_at) VALUES (?, ?, ?, ?);',
+    [event_id, pubkey, metadata, created_at]
+  );
 }
 
 // update channel metadata

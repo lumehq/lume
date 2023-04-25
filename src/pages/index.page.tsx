@@ -5,7 +5,6 @@ import { DEFAULT_RELAYS } from '@stores/constants';
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import {
   countTotalNotes,
-  createChannel,
   createChat,
   createNote,
   getActiveAccount,
@@ -61,16 +60,6 @@ export function Page() {
           until: dateToUnix(now.current),
         });
       }
-      // kind 40 (channels) query
-      /*
-      if (channels.total === 0) {
-        query.push({
-          kinds: [40],
-          since: 0,
-          until: dateToUnix(now.current),
-        });
-      }
-       */
       // subscribe relays
       const unsubscribe = pool.subscribe(
         query,
@@ -110,10 +99,6 @@ export function Page() {
                 event.created_at,
                 ''
               );
-              break;
-            // channel
-            case 40:
-              createChannel(event.id, event.content, event.created_at);
               break;
             default:
               break;

@@ -69,6 +69,18 @@ fn main() {
               sql: include_str!("../migrations/20230420040005_insert_last_login_to_settings.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230425023912,
+              description: "add pubkey to channel",
+              sql: include_str!("../migrations/20230425023912_add_pubkey_to_channel.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230425024708,
+              description: "add default channels",
+              sql: include_str!("../migrations/20230425024708_add_default_channels.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
