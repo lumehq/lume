@@ -1,4 +1,6 @@
+import { AccountContext } from '@components/accountProvider';
 import { ChannelProfile } from '@components/channels/channelProfile';
+import { UpdateChannelModal } from '@components/channels/updateChannelModal';
 import { FormChannel } from '@components/form/channel';
 import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
@@ -10,7 +12,7 @@ import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
 import { arrayObjToPureArr } from '@utils/transform';
 
-import { EyeClose, MicMute } from 'iconoir-react';
+import { EyeClose } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext, useRef } from 'react';
@@ -36,6 +38,7 @@ export function Page() {
   const channelPubkey = searchParams.pubkey;
 
   const pool: any = useContext(RelayContext);
+  const activeAccount: any = useContext(AccountContext);
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
   const resetChannelMessages = useResetAtom(channelMessagesAtom);
@@ -87,9 +90,7 @@ export function Page() {
             <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900">
               <EyeClose width={16} height={16} className="text-zinc-400" />
             </div>
-            <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900">
-              <MicMute width={16} height={16} className="text-zinc-400" />
-            </div>
+            {activeAccount.pubkey === channelPubkey && <UpdateChannelModal id={id} />}
           </div>
         </div>
         <div className="relative flex w-full flex-1 flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
