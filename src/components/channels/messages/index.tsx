@@ -1,10 +1,10 @@
 import { ChannelMessageItem } from '@components/channels/messages/item';
+import { Placeholder } from '@components/note/placeholder';
 
 import { sortedChannelMessagesAtom } from '@stores/channel';
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function ChannelMessages() {
@@ -45,5 +45,5 @@ export default function ChannelMessages() {
 }
 
 const COMPONENTS = {
-  EmptyPlaceholder: () => <Skeleton />,
+  EmptyPlaceholder: () => <Placeholder />,
 };

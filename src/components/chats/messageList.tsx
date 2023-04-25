@@ -1,11 +1,11 @@
 import { AccountContext } from '@components/accountProvider';
 import { MessageListItem } from '@components/chats/messageListItem';
+import { Placeholder } from '@components/note/placeholder';
 
 import { sortedChatMessagesAtom } from '@stores/chat';
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useContext, useRef } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import { Virtuoso } from 'react-virtuoso';
 
 export default function MessageList() {
@@ -50,5 +50,5 @@ export default function MessageList() {
 }
 
 const COMPONENTS = {
-  EmptyPlaceholder: () => <Skeleton />,
+  EmptyPlaceholder: () => <Placeholder />,
 };

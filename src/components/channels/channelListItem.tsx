@@ -1,7 +1,8 @@
+import { DEFAULT_AVATAR } from '@stores/constants';
+
 import { useChannelMetadata } from '@utils/hooks/useChannelMetadata';
 import { usePageContext } from '@utils/hooks/usePageContext';
 
-import Skeleton from 'react-loading-skeleton';
 import { twMerge } from 'tailwind-merge';
 
 export const ChannelListItem = ({ data }: { data: any }) => {
@@ -20,10 +21,10 @@ export const ChannelListItem = ({ data }: { data: any }) => {
       )}
     >
       <div className="relative h-5 w-5 shrink-0 rounded bg-zinc-900">
-        <img src={channel?.picture || <Skeleton />} alt={data.event_id} className="h-5 w-5 rounded object-contain" />
+        <img src={channel?.picture || DEFAULT_AVATAR} alt={data.event_id} className="h-5 w-5 rounded object-contain" />
       </div>
       <div>
-        <h5 className="truncate text-sm font-medium text-zinc-400">{channel?.name || <Skeleton />}</h5>
+        <h5 className="truncate text-sm font-medium text-zinc-400">{channel?.name}</h5>
       </div>
     </a>
   );
