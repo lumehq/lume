@@ -1,7 +1,7 @@
 import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -28,7 +28,7 @@ export default function FormComment({ eventID }: { eventID: any }) {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, DEFAULT_RELAYS);
+    pool.publish(event, WRITEONLY_RELAYS);
     // send notification
     // sendNotification('Comment has been published successfully');
   };

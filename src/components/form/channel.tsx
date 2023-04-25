@@ -4,7 +4,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { UserMini } from '@components/user/mini';
 
 import { channelContentAtom, channelReplyAtom } from '@stores/channel';
-import { MESSAGE_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -48,7 +48,7 @@ export const FormChannel = ({ eventId }: { eventId: string | string[] }) => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, MESSAGE_RELAYS);
+    pool.publish(event, FULL_RELAYS);
     // reset state
     resetValue();
     // reset channel reply

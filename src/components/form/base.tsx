@@ -2,7 +2,7 @@ import { AccountContext } from '@components/accountProvider';
 import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@stores/constants';
 import { noteContentAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
@@ -31,7 +31,7 @@ export default function FormBase() {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, DEFAULT_RELAYS);
+    pool.publish(event, WRITEONLY_RELAYS);
     // reset form
     resetValue();
     // send notification

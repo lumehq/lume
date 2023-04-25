@@ -2,15 +2,13 @@ import { AccountContext } from '@components/accountProvider';
 import { AvatarUploader } from '@components/avatarUploader';
 import { RelayContext } from '@components/relaysProvider';
 
-import { defaultChannelsAtom } from '@stores/channel';
-import { DEFAULT_AVATAR, MESSAGE_RELAYS } from '@stores/constants';
+import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 import { createChannel } from '@utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { Cancel, Plus } from 'iconoir-react';
-import { useSetAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,8 +21,6 @@ export const CreateChannelModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(DEFAULT_AVATAR);
   const [loading, setLoading] = useState(false);
-
-  const setChannel = useSetAtom(defaultChannelsAtom);
 
   const closeModal = () => {
     setIsOpen(false);
@@ -56,21 +52,12 @@ export const CreateChannelModal = () => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish channel
-    pool.publish(event, MESSAGE_RELAYS);
-    // update jotai state
-    setChannel((prev: any) => [
-      ...prev,
-      {
-        event_id: event.id,
-        metadata: { name: data.name, picture: data.picture, about: data.about },
-        created_at: event.created_at,
-      },
-    ]);
+    pool.publish(event, WRITEONLY_RELAYS);
+    // insert to database
+    createChannel(event.id, event.pubkey, event.content, event.created_at);
     // reset form
     reset();
     setTimeout(() => {
-      // insert to database
-      createChannel(event.id, event.content, event.created_at);
       // close modal
       setIsOpen(false);
       // redirect to channel page

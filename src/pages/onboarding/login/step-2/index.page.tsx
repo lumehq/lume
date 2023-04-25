@@ -1,7 +1,7 @@
 import OnboardingLayout from '@components/layouts/onboarding';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_AVATAR, DEFAULT_RELAYS } from '@stores/constants';
+import { DEFAULT_AVATAR, READONLY_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
 import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
@@ -53,7 +53,7 @@ export function Page() {
           authors: [pubkey],
         },
       ],
-      DEFAULT_RELAYS,
+      READONLY_RELAYS,
       (event: any) => {
         switch (event.kind) {
           case 0:

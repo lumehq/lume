@@ -1,7 +1,7 @@
 import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -43,7 +43,7 @@ export const NoteReaction = ({
       event.id = getEventHash(event);
       event.sig = signEvent(event, activeAccount.privkey);
       // publish event to all relays
-      pool.publish(event, DEFAULT_RELAYS);
+      pool.publish(event, WRITEONLY_RELAYS);
       // update state to change icon to filled heart
       setIsReact(true);
       // update counter

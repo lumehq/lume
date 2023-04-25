@@ -1,7 +1,7 @@
 import OnboardingLayout from '@components/layouts/onboarding';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@stores/constants';
 
 import { createAccount } from '@utils/storage';
 
@@ -60,7 +60,7 @@ export function Page() {
     // insert to database
     createAccount(pubkey, privkey, metadata);
     // broadcast
-    pool.publish(event, DEFAULT_RELAYS);
+    pool.publish(event, WRITEONLY_RELAYS);
     // redirect to next step
     navigate(`/onboarding/create/step-2?pubkey=${pubkey}&privkey=${privkey}`, { overwriteLastHistoryEntry: true });
   }, [pool, pubkey, privkey, metadata]);

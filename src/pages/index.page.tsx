@@ -1,6 +1,6 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { MESSAGE_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import {
@@ -69,7 +69,7 @@ export function Page() {
       // subscribe relays
       const unsubscribe = pool.subscribe(
         query,
-        MESSAGE_RELAYS,
+        FULL_RELAYS,
         (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
           switch (event.kind) {
             // short text note

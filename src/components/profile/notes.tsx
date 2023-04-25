@@ -1,7 +1,7 @@
 import { NoteBase } from '@components/note/base';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ export default function ProfileNotes({ id }: { id: string }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const user = new Author(pool, DEFAULT_RELAYS, id);
+    const user = new Author(pool, READONLY_RELAYS, id);
     user.text((res) => setData((data) => [...data, res]), 100, 0);
   }, [id, pool]);
 

@@ -1,7 +1,7 @@
 import { RelayContext } from '@components/relaysProvider';
 import { UserFollow } from '@components/user/follow';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ export default function ProfileFollows({ id }: { id: string }) {
   const [follows, setFollows] = useState(null);
 
   useEffect(() => {
-    const user = new Author(pool, DEFAULT_RELAYS, id);
+    const user = new Author(pool, READONLY_RELAYS, id);
     user.follows((res) => setFollows(res), 0);
   }, [id, pool]);
 

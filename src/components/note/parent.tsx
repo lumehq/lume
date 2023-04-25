@@ -3,7 +3,7 @@ import { NoteMetadata } from '@components/note/metadata';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { contentParser } from '@utils/parser';
 import { createNote, getNoteByID } from '@utils/storage';
@@ -26,7 +26,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
           kinds: [1],
         },
       ],
-      DEFAULT_RELAYS,
+      READONLY_RELAYS,
       (event: any) => {
         // update state
         setEvent(event);

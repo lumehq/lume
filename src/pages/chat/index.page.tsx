@@ -4,7 +4,7 @@ import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
 
 import { chatMessagesAtom } from '@stores/chat';
-import { MESSAGE_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
 
@@ -44,7 +44,7 @@ export function Page() {
           '#p': [pubkey],
         },
       ],
-      MESSAGE_RELAYS,
+      FULL_RELAYS,
       (event: any) => {
         setChatMessages((prev) => [...prev, event]);
       }

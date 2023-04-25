@@ -1,35 +1,22 @@
 export const APP_VERSION = '0.2.5';
+
 export const DEFAULT_AVATAR = 'https://void.cat/d/KmypFh2fBdYCEvyJrPiN89.webp';
+
 export const DEFAULT_CHANNEL_BANNER =
   'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg';
-export const DEFAULT_CHANNELS = [
-  {
-    event_id: 'e3cadf5beca1b2af1cddaa41a633679bedf263e3de1eb229c6686c50d85df753',
-    metadata: {
-      name: 'Lume General',
-      picture: 'https://void.cat/d/UNyxBmAh1MUx5gQTX95jyf.webp',
-      about: 'General discussion about the Lume client',
-    },
-    created_at: 1681898574,
-  },
-  {
-    event_id: '1abf8948d2fd05dd1836b33b324dca65138b2e80c77b27eeeed4323246efba4d',
-    metadata: { picture: 'https://void.cat/d/MsqUKXXC4SxDfmT2KiHovJ.webp', name: 'Arcade Open R&D', about: '' },
-    created_at: 1682252461,
-  },
-  {
-    event_id: '25e5c82273a271cb1a840d0060391a0bf4965cafeb029d5ab55350b418953fbb',
-    metadata: {
-      about: '',
-      name: 'Nostr',
-      picture: 'https://cloudflare-ipfs.com/ipfs/QmTN4Eas9atUULVbEAbUU8cowhtvK7g3t7jfKztY7wc8eP?.png',
-    },
-    created_at: 1661333723,
-  },
-];
-export const DEFAULT_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band', 'wss://nostr.mutinywallet.com'];
-export const MESSAGE_RELAYS = [
+
+// read-only relay list
+export const READONLY_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band'];
+
+// write-only relay list
+export const WRITEONLY_RELAYS = ['wss://nostr.mutinywallet.com', 'wss://relay.nostr.band'];
+
+// full-relay list, used for inital page and chat/channel messages loading
+export const FULL_RELAYS = [
   'wss://relay.damus.io',
+  'wss://nos.lol',
+  'wss://nostr.mom',
+  'wss://relay.plebstr.com',
   'wss://nostr-pub.wellorder.net',
   'wss://nostr.zebedee.cloud',
   'wss://nostr.fmt.wiz.biz',

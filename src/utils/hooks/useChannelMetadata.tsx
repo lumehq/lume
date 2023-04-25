@@ -1,6 +1,6 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { updateChannelMetadata } from '@utils/storage';
 import { getChannel } from '@utils/storage';
@@ -23,7 +23,7 @@ export const useChannelMetadata = (id: string, channelPubkey: string) => {
           kinds: [40],
         },
       ],
-      DEFAULT_RELAYS,
+      READONLY_RELAYS,
       (event: { kind: number; pubkey: string; content: string }) => {
         switch (event.kind) {
           case 41:

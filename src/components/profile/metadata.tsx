@@ -1,6 +1,6 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_AVATAR, DEFAULT_RELAYS } from '@stores/constants';
+import { DEFAULT_AVATAR, READONLY_RELAYS } from '@stores/constants';
 
 import { shortenKey } from '@utils/shortenKey';
 
@@ -15,7 +15,7 @@ export default function ProfileMetadata({ id }: { id: string }) {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    const user = new Author(pool, DEFAULT_RELAYS, id);
+    const user = new Author(pool, READONLY_RELAYS, id);
     user.metaData((res) => setProfile(destr(res.content)), 0);
   }, [id, pool]);
 

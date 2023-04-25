@@ -2,11 +2,11 @@ import { AccountContext } from '@components/accountProvider';
 import { NetworkStatusIndicator } from '@components/networkStatusIndicator';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 import { hasNewerNoteAtom } from '@stores/note';
 
 import { dateToUnix } from '@utils/getDate';
-import { createChannel, createChat, createNote, updateAccount } from '@utils/storage';
+import { createChat, createNote, updateAccount } from '@utils/storage';
 import { getParentID, nip02ToArray } from '@utils/transform';
 
 import { useSetAtom } from 'jotai';
@@ -17,11 +17,10 @@ export default function EventCollector() {
   const activeAccount: any = useContext(AccountContext);
 
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
-  const follows = activeAccount.follows ? JSON.parse(activeAccount.follows) : [];
-
   const now = useRef(new Date());
 
   const subscribe = useCallback(async () => {
+    const follows = activeAccount.follows ? JSON.parse(activeAccount.follows) : [];
     const unsubscribe = pool.subscribe(
       [
         {
@@ -38,12 +37,8 @@ export default function EventCollector() {
           '#p': [activeAccount.pubkey],
           since: dateToUnix(now.current),
         },
-        {
-          kinds: [40],
-          since: dateToUnix(now.current),
-        },
       ],
-      DEFAULT_RELAYS,
+      READONLY_RELAYS,
       (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
         switch (event.kind) {
           // metadata
@@ -91,10 +86,6 @@ export default function EventCollector() {
               ''
             );
             break;
-          // channel
-          case 40:
-            createChannel(event.id, event.content, event.created_at);
-            break;
           default:
             break;
         }
@@ -104,7 +95,7 @@ export default function EventCollector() {
     return () => {
       unsubscribe();
     };
-  }, [activeAccount.id, activeAccount.pubkey, follows, pool, setHasNewerNote]);
+  }, [activeAccount.id, activeAccount.pubkey, activeAccount.follows, pool, setHasNewerNote]);
 
   useEffect(() => {
     let ignore = false;

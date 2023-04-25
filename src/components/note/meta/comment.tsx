@@ -2,7 +2,7 @@ import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 import { UserExtend } from '@components/user/extend';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -56,7 +56,7 @@ export const NoteComment = ({
     event.id = getEventHash(event);
     event.sig = signEvent(event, activeAccount.privkey);
 
-    pool.publish(event, DEFAULT_RELAYS);
+    pool.publish(event, WRITEONLY_RELAYS);
     setIsOpen(false);
   };
 

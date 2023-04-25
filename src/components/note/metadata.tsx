@@ -3,7 +3,7 @@ import { NoteComment } from '@components/note/meta/comment';
 import { NoteReaction } from '@components/note/meta/reaction';
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { memo, useContext, useEffect, useState } from 'react';
 
@@ -34,7 +34,7 @@ export const NoteMetadata = memo(function NoteMetadata({
           kinds: [1, 7],
         },
       ],
-      DEFAULT_RELAYS,
+      READONLY_RELAYS,
       (event: any) => {
         switch (event.kind) {
           case 1:

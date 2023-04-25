@@ -4,7 +4,7 @@ import NewsfeedLayout from '@components/layouts/newsfeed';
 import { RelayContext } from '@components/relaysProvider';
 
 import { channelMessagesAtom, channelReplyAtom } from '@stores/channel';
-import { MESSAGE_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
@@ -59,7 +59,7 @@ export function Page() {
           since: dateToUnix(hoursAgo(48, now.current)),
         },
       ],
-      MESSAGE_RELAYS,
+      FULL_RELAYS,
       (event: { kind: number; tags: string[][]; pubkey: string; id: string }) => {
         if (muted.includes(event.pubkey)) {
           console.log('muted');

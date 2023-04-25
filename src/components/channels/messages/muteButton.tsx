@@ -2,7 +2,7 @@ import { AccountContext } from '@components/accountProvider';
 import { RelayContext } from '@components/relaysProvider';
 import Tooltip from '@components/tooltip';
 
-import { MESSAGE_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -26,7 +26,7 @@ export const MuteButton = ({ pubkey }: { pubkey: string }) => {
     event.sig = signEvent(event, activeAccount.privkey);
 
     // publish note
-    pool.publish(event, MESSAGE_RELAYS);
+    pool.publish(event, WRITEONLY_RELAYS);
   };
 
   return (

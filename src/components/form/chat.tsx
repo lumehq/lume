@@ -3,7 +3,7 @@ import { ImagePicker } from '@components/form/imagePicker';
 import { RelayContext } from '@components/relaysProvider';
 
 import { chatContentAtom } from '@stores/chat';
-import { MESSAGE_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/getDate';
 
@@ -39,7 +39,7 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
         event.id = getEventHash(event);
         event.sig = signEvent(event, activeAccount.privkey);
         // publish note
-        pool.publish(event, MESSAGE_RELAYS);
+        pool.publish(event, FULL_RELAYS);
         // reset state
         resetValue();
       })
