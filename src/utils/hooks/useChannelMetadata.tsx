@@ -7,7 +7,7 @@ import { getChannel } from '@utils/storage';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-export const useChannelMetadata = (id: string) => {
+export const useChannelMetadata = (id: string, channelPubkey: string) => {
   const pool: any = useContext(RelayContext);
   const [metadata, setMetadata] = useState(null);
 
@@ -24,18 +24,22 @@ export const useChannelMetadata = (id: string) => {
         },
       ],
       DEFAULT_RELAYS,
-      (event: { kind: number; content: string }) => {
+      (event: { kind: number; pubkey: string; content: string }) => {
         switch (event.kind) {
           case 41:
-            const json = JSON.parse(event.content);
-            // update state
-            setMetadata(json);
-            // update metadata in database
-            updateChannelMetadata(id, event.content);
+            if (event.pubkey === channelPubkey) {
+              const json = JSON.parse(event.content);
+              // update state
+              setMetadata(json);
+              // update metadata in database
+              updateChannelMetadata(id, event.content);
+            }
             break;
           case 40:
-            // update state
-            setMetadata(JSON.parse(event.content));
+            if (event.pubkey === channelPubkey) {
+              // update state
+              setMetadata(JSON.parse(event.content));
+            }
           default:
             break;
         }
@@ -51,7 +55,7 @@ export const useChannelMetadata = (id: string) => {
     return () => {
       unsubscribe();
     };
-  }, [id, pool]);
+  }, [channelPubkey, id, pool]);
 
   const getChannelFromDB = useCallback(async () => {
     return await getChannel(id);
@@ -62,7 +66,6 @@ export const useChannelMetadata = (id: string) => {
 
     if (!ignore) {
       getChannelFromDB().then((res) => {
-        console.log(res);
         if (res) {
           setMetadata(JSON.parse(res.metadata));
         } else {

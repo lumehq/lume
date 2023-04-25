@@ -23,6 +23,7 @@ export function Page() {
   const searchParams: any = pageContext.urlParsed.search;
 
   const id = searchParams.id;
+  const channelPubkey = searchParams.pubkey;
 
   const pool: any = useContext(RelayContext);
   const activeAccount: any = useContext(AccountContext);
@@ -82,7 +83,7 @@ export function Page() {
       <div className="flex h-full flex-col justify-between gap-2">
         <div className="flex h-11 w-full shrink-0 items-center justify-between">
           <div>
-            <ChannelProfile id={id} />
+            <ChannelProfile id={id} pubkey={channelPubkey} />
           </div>
           <div className="flex items-center gap-2">
             <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900">

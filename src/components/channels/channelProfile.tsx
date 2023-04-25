@@ -4,8 +4,8 @@ import { Copy } from 'iconoir-react';
 import { nip19 } from 'nostr-tools';
 import Skeleton from 'react-loading-skeleton';
 
-export const ChannelProfile = ({ id }: { id: string }) => {
-  const metadata = useChannelMetadata(id);
+export const ChannelProfile = ({ id, pubkey }: { id: string; pubkey: string }) => {
+  const metadata = useChannelMetadata(id, pubkey);
   const noteID = nip19.noteEncode(id);
 
   const copyNoteID = async () => {
