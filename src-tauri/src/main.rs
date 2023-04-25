@@ -81,6 +81,12 @@ fn main() {
               sql: include_str!("../migrations/20230425024708_add_default_channels.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230425050745,
+              description: "create blacklist",
+              sql: include_str!("../migrations/20230425050745_add_blacklist_model.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

@@ -1,9 +1,10 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { DEFAULT_RELAYS } from '@stores/constants';
+import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import {
+  addToBlacklist,
   countTotalNotes,
   createChat,
   createNote,
@@ -29,13 +30,11 @@ export function Page() {
       const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
 
-      const chats = account.chats?.length || 0;
       const follows = JSON.parse(tags);
       const query = [];
 
       let since: number;
 
-      // kind 1 (notes) query
       if (notes.total === 0) {
         since = dateToUnix(hoursAgo(24, now.current));
       } else {
@@ -45,6 +44,8 @@ export function Page() {
           since = dateToUnix(hoursAgo(24, now.current));
         }
       }
+
+      // kind 1 (notes) query
       query.push({
         kinds: [1, 6],
         authors: follows,
@@ -52,18 +53,23 @@ export function Page() {
         until: dateToUnix(now.current),
       });
       // kind 4 (chats) query
-      if (chats === 0) {
-        query.push({
-          kinds: [4],
-          '#p': [account.pubkey],
-          since: 0,
-          until: dateToUnix(now.current),
-        });
-      }
+      query.push({
+        kinds: [4],
+        '#p': [account.pubkey],
+        since: 0,
+        until: dateToUnix(now.current),
+      });
+      // kind 43, 43 (mute user, hide message) query
+      query.push({
+        authors: [account.pubkey],
+        kinds: [43, 44],
+        since: 0,
+        until: dateToUnix(now.current),
+      });
       // subscribe relays
       const unsubscribe = pool.subscribe(
         query,
-        DEFAULT_RELAYS,
+        MESSAGE_RELAYS,
         (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
           switch (event.kind) {
             // short text note
@@ -100,6 +106,16 @@ export function Page() {
                 ''
               );
               break;
+            // hide message (channel only)
+            case 43:
+              if (event.tags[0][0] === 'e') {
+                addToBlacklist(account.id, event.tags[0][1], 43, 1);
+              }
+            // mute user (channel only)
+            case 44:
+              if (event.tags[0][0] === 'p') {
+                addToBlacklist(account.id, event.tags[0][1], 44, 1);
+              }
             default:
               break;
           }

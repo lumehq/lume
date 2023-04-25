@@ -20,6 +20,16 @@ export const arrayToNIP02 = (arr: string[]) => {
   return nip02_arr;
 };
 
+// convert array object to pure array
+export const arrayObjToPureArr = (arr: any) => {
+  const pure_arr = [];
+  arr.forEach((item) => {
+    pure_arr.push(item.content);
+  });
+
+  return pure_arr;
+};
+
 // get parent id from event tags
 export const getParentID = (arr: string[], fallback: string) => {
   const tags = destr(arr);

@@ -170,3 +170,26 @@ export async function updateLastLogin(value: number) {
   const db = await connect();
   return await db.execute(`UPDATE settings SET value = ${value} WHERE key = "last_login";`);
 }
+
+// get blacklist by kind and account id
+export async function getBlacklist(account_id: number, kind: number) {
+  const db = await connect();
+  return await db.select(`SELECT content FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}";`);
+}
+
+// add to blacklist
+export async function addToBlacklist(account_id: number, content: string, kind: number, status?: number) {
+  const db = await connect();
+  return await db.execute('INSERT OR IGNORE INTO blacklist (account_id, content, kind, status) VALUES (?, ?, ?, ?);', [
+    account_id,
+    content,
+    kind,
+    status || 1,
+  ]);
+}
+
+// update item in blacklist
+export async function updateItemInBlacklist(content: string, status: number) {
+  const db = await connect();
+  return await db.execute(`UPDATE blacklist SET status = "${status}" WHERE content = "${content}";`);
+}

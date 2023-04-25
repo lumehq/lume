@@ -1,4 +1,3 @@
-import { AccountContext } from '@components/accountProvider';
 import { ChannelProfile } from '@components/channels/channelProfile';
 import { FormChannel } from '@components/form/channel';
 import NewsfeedLayout from '@components/layouts/newsfeed';
@@ -9,6 +8,7 @@ import { MESSAGE_RELAYS } from '@stores/constants';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
+import { arrayObjToPureArr } from '@utils/transform';
 
 import { EyeClose, MicMute } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
@@ -18,6 +18,16 @@ import useSWRSubscription from 'swr/subscription';
 
 const ChannelMessages = lazy(() => import('@components/channels/messages'));
 
+let mutedList: any = [];
+let hidedList: any = [];
+
+if (typeof window !== 'undefined') {
+  const { getBlacklist, getActiveAccount } = await import('@utils/storage');
+  const activeAccount = await getActiveAccount();
+  hidedList = await getBlacklist(activeAccount.id, 43);
+  mutedList = await getBlacklist(activeAccount.id, 44);
+}
+
 export function Page() {
   const pageContext = usePageContext();
   const searchParams: any = pageContext.urlParsed.search;
@@ -26,15 +36,14 @@ export function Page() {
   const channelPubkey = searchParams.pubkey;
 
   const pool: any = useContext(RelayContext);
-  const activeAccount: any = useContext(AccountContext);
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
   const resetChannelMessages = useResetAtom(channelMessagesAtom);
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
   const now = useRef(new Date());
-  const muted = useRef(new Set());
-  const hided = useRef(new Set());
+  const hided = arrayObjToPureArr(hidedList);
+  const muted = arrayObjToPureArr(mutedList);
 
   useSWRSubscription(id, () => {
     // reset channel reply
@@ -45,11 +54,6 @@ export function Page() {
     const unsubscribe = pool.subscribe(
       [
         {
-          authors: [activeAccount.pubkey],
-          kinds: [43, 44],
-          since: dateToUnix(hoursAgo(48, now.current)),
-        },
-        {
           '#e': [id],
           kinds: [42],
           since: dateToUnix(hoursAgo(48, now.current)),
@@ -57,18 +61,12 @@ export function Page() {
       ],
       MESSAGE_RELAYS,
       (event: { kind: number; tags: string[][]; pubkey: string; id: string }) => {
-        if (event.kind === 44) {
-          muted.current = muted.current.add(event.tags[0][1]);
-        } else if (event.kind === 43) {
-          hided.current = hided.current.add(event.tags[0][1]);
+        if (muted.includes(event.pubkey)) {
+          console.log('muted');
+        } else if (hided.includes(event.id)) {
+          console.log('hided');
         } else {
-          if (muted.current.has(event.pubkey)) {
-            console.log('muted');
-          } else if (hided.current.has(event.id)) {
-            console.log('hided');
-          } else {
-            setChannelMessages((prev) => [...prev, event]);
-          }
+          setChannelMessages((prev) => [...prev, event]);
         }
       }
     );
