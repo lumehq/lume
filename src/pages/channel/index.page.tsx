@@ -1,4 +1,5 @@
 import { AccountContext } from '@components/accountProvider';
+import { ChannelBlackList } from '@components/channels/channelBlackList';
 import { ChannelProfile } from '@components/channels/channelProfile';
 import { UpdateChannelModal } from '@components/channels/updateChannelModal';
 import { FormChannel } from '@components/form/channel';
@@ -12,7 +13,6 @@ import { dateToUnix, hoursAgo } from '@utils/getDate';
 import { usePageContext } from '@utils/hooks/usePageContext';
 import { arrayObjToPureArr } from '@utils/transform';
 
-import { EyeClose } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext, useRef } from 'react';
@@ -21,12 +21,14 @@ import useSWRSubscription from 'swr/subscription';
 const ChannelMessages = lazy(() => import('@components/channels/messages'));
 
 let mutedList: any = [];
-let hidedList: any = [];
+let activeMutedList: any = [];
+let activeHidedList: any = [];
 
 if (typeof window !== 'undefined') {
-  const { getBlacklist, getActiveAccount } = await import('@utils/storage');
+  const { getBlacklist, getActiveBlacklist, getActiveAccount } = await import('@utils/storage');
   const activeAccount = await getActiveAccount();
-  hidedList = await getBlacklist(activeAccount.id, 43);
+  activeHidedList = await getActiveBlacklist(activeAccount.id, 43);
+  activeMutedList = await getActiveBlacklist(activeAccount.id, 44);
   mutedList = await getBlacklist(activeAccount.id, 44);
 }
 
@@ -45,8 +47,8 @@ export function Page() {
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
   const now = useRef(new Date());
-  const hided = arrayObjToPureArr(hidedList);
-  const muted = arrayObjToPureArr(mutedList);
+  const hided = arrayObjToPureArr(activeHidedList);
+  const muted = arrayObjToPureArr(activeMutedList);
 
   useSWRSubscription(id, () => {
     // reset channel reply
@@ -87,9 +89,7 @@ export function Page() {
             <ChannelProfile id={id} pubkey={channelPubkey} />
           </div>
           <div className="flex items-center gap-2">
-            <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900">
-              <EyeClose width={16} height={16} className="text-zinc-400" />
-            </div>
+            <ChannelBlackList blacklist={mutedList} />
             {activeAccount.pubkey === channelPubkey && <UpdateChannelModal id={id} />}
           </div>
         </div>

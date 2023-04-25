@@ -25,6 +25,7 @@ module.exports = {
           inset 0 0 0 0.3px hsl(0deg 0% 100% / 30%),
           0 0 0 0.5px hsl(0deg 0% 100% / 40%);
         `,
+        popover: `0px 0px 7px rgba(0,0,0,0.52)`,
         inner: `
           0 2px 2px rgb(4 4 7 / 45%),
           0 8px 24px rgb(4 4 7 / 60%)

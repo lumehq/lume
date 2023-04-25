@@ -125,8 +125,8 @@ export const UpdateChannelModal = ({ id }: { id: string }) => {
                       </button>
                     </div>
                     <Dialog.Description className="leading-tight text-zinc-400">
-                      Channels are freedom square, everyone can speech freely, no one can stop you or deceive what to
-                      speech
+                      New metadata will be published on all relays, and will be immediately available to all users, so
+                      please carefully.
                     </Dialog.Description>
                   </div>
                 </div>

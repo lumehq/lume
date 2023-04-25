@@ -174,7 +174,15 @@ export async function updateLastLogin(value: number) {
 // get blacklist by kind and account id
 export async function getBlacklist(account_id: number, kind: number) {
   const db = await connect();
-  return await db.select(`SELECT content FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}";`);
+  return await db.select(`SELECT * FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}";`);
+}
+
+// get active blacklist by kind and account id
+export async function getActiveBlacklist(account_id: number, kind: number) {
+  const db = await connect();
+  return await db.select(
+    `SELECT content FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}" AND status = 1;`
+  );
 }
 
 // add to blacklist
