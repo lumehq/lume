@@ -14,6 +14,7 @@
     "**/*.{js,ts,jsx,tsx}": "eslint --fix"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.23.1",
     "@headlessui/react": "^1.7.14",
     "@supabase/supabase-js": "^2.21.0",
     "@tauri-apps/api": "^1.2.0",
