@@ -49,3 +49,12 @@ export const getParentID = (arr: string[], fallback: string) => {
 
   return parentID;
 };
+
+// sort messages by timestamp
+export const sortMessages = (arr: any) => {
+  arr.sort((a, b) => {
+    return b.created_at - a.created_at;
+  });
+
+  return arr;
+};
