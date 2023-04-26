@@ -103,7 +103,7 @@ export function Page() {
                 event.tags,
                 event.content,
                 event.created_at,
-                ''
+                event.id
               );
               break;
             // hide message (channel only)

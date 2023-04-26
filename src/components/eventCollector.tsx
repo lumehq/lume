@@ -83,7 +83,7 @@ export default function EventCollector() {
               event.tags,
               event.content,
               event.created_at,
-              ''
+              event.id
             );
             break;
           default:

@@ -10,7 +10,6 @@ export const Placeholder = () => {
               <span className="text-zinc-500">·</span>
               <div className="h-4 w-12 rounded bg-zinc-700" />
             </div>
-            <div className="h-3 w-3 rounded-full bg-zinc-700" />
           </div>
         </div>
       </div>

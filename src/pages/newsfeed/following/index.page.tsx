@@ -4,113 +4,116 @@ import { NoteBase } from '@components/note/base';
 import { Placeholder } from '@components/note/placeholder';
 import { NoteQuoteRepost } from '@components/note/quoteRepost';
 
-import { filteredNotesAtom, hasNewerNoteAtom, notesAtom } from '@stores/note';
+import { hasNewerNoteAtom } from '@stores/note';
 
-import { dateToUnix } from '@utils/getDate';
-import { getLatestNotes, getNotes } from '@utils/storage';
+import { countTotalNotes, getNotes } from '@utils/storage';
 
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowUp } from 'iconoir-react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useRef } from 'react';
-import { Virtuoso } from 'react-virtuoso';
+import { useAtom } from 'jotai';
+import { useEffect, useRef } from 'react';
+
+const ITEM_PER_PAGE = 20;
+const TIME = Math.floor(Date.now() / 1000);
+
+let totalNotes = 0;
+
+if (typeof window !== 'undefined') {
+  const result = await countTotalNotes();
+  totalNotes = result.total;
+}
 
 export function Page() {
-  const [hasNewerNote, setHasNewerNote] = useAtom(hasNewerNoteAtom);
-  const setData = useSetAtom(notesAtom);
-  const data = useAtomValue(filteredNotesAtom);
+  const [hasNewerNote] = useAtom(hasNewerNoteAtom);
 
-  const virtuosoRef = useRef(null);
-  const now = useRef(new Date());
-  const limit = useRef(20);
-  const offset = useRef(0);
-
-  const itemContent: any = useCallback(
-    (index: string | number) => {
-      switch (data[index].kind) {
-        case 1:
-          return <NoteBase event={data[index]} />;
-        case 6:
-          return <NoteQuoteRepost event={data[index]} />;
-        default:
-          break;
-      }
+  const { status, error, data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage }: any = useInfiniteQuery({
+    queryKey: ['following'],
+    queryFn: async ({ pageParam = 0 }) => {
+      return await getNotes(TIME, ITEM_PER_PAGE, pageParam);
     },
-    [data]
-  );
+    getNextPageParam: (lastPage) => (lastPage.nextCursor <= totalNotes ? lastPage.nextCursor : 'undefined'),
+  });
 
-  const computeItemKey = useCallback(
-    (index: string | number) => {
-      return data[index].event_id;
-    },
-    [data]
-  );
+  const allRows = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
+  const parentRef = useRef();
 
-  const initialData = useCallback(async () => {
-    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
-    setData((data) => [...data, ...result]);
-  }, [setData]);
+  const rowVirtualizer = useVirtualizer({
+    count: hasNextPage ? allRows.length + 1 : allRows.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 400,
+    overscan: 5,
+  });
 
-  const loadMore = useCallback(async () => {
-    offset.current += limit.current;
-    // query next page
-    const result: any = await getNotes(dateToUnix(now.current), limit.current, offset.current);
-    setData((data) => [...data, ...result]);
-  }, [setData]);
-
-  const loadLatest = useCallback(async () => {
-    // next query
-    const result: any = await getLatestNotes(dateToUnix(now.current));
-    // update data
-    setData((data) => [...result, ...data]);
-    // hide newer trigger
-    setHasNewerNote(false);
-    // scroll to top
-    virtuosoRef.current.scrollToIndex({ index: -1 });
-  }, [setData, setHasNewerNote]);
+  const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
   useEffect(() => {
-    let initPage = false;
+    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
 
-    if (!initPage) {
-      initialData().catch(console.error);
+    if (!lastItem) {
+      return;
     }
 
-    return () => {
-      initPage = true;
-    };
-  }, [initialData]);
+    if (lastItem.index >= allRows.length - 1 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchNextPage, allRows.length, rowVirtualizer.getVirtualItems()]);
 
   return (
     <NewsfeedLayout>
       <div className="relative h-full w-full rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
         {hasNewerNote && (
           <div className="absolute left-1/2 top-2 z-50 -translate-x-1/2 transform">
-            <button
-              onClick={() => loadLatest()}
-              className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 pl-3 pr-3.5 text-sm shadow-md shadow-fuchsia-800/20 active:translate-y-1"
-            >
+            <button className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 pl-3 pr-3.5 text-sm shadow-md shadow-fuchsia-800/20 active:translate-y-1">
               <ArrowUp width={14} height={14} />
               Load latest
             </button>
           </div>
         )}
-        <Virtuoso
-          ref={virtuosoRef}
-          data={data}
-          itemContent={itemContent}
-          computeItemKey={computeItemKey}
-          components={COMPONENTS}
-          overscan={200}
-          endReached={loadMore}
-          className="scrollbar-hide h-full w-full overflow-y-auto"
-        />
+        {status === 'loading' ? (
+          <Placeholder />
+        ) : status === 'error' ? (
+          <div>{error.message}</div>
+        ) : (
+          <div ref={parentRef} className="h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
+            <FormBase />
+            <div
+              className="relative w-full"
+              style={{
+                height: `${rowVirtualizer.getTotalSize()}px`,
+              }}
+            >
+              <div
+                className="absolute left-0 top-0 w-full"
+                style={{
+                  transform: `translateY(${itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin}px)`,
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const note = allRows[virtualRow.index];
+                  if (note) {
+                    if (note.kind === 1) {
+                      return (
+                        <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
+                          <NoteBase key={note.event_id} event={note} />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
+                          <NoteQuoteRepost key={note.event_id} event={note} />
+                        </div>
+                      );
+                    }
+                  }
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+        <div>{isFetching && !isFetchingNextPage ? 'Background Updating...' : null}</div>
       </div>
     </NewsfeedLayout>
   );
 }
-
-const COMPONENTS = {
-  Header: () => <FormBase />,
-  EmptyPlaceholder: () => <Placeholder />,
-  ScrollSeekPlaceholder: () => <Placeholder />,
-};

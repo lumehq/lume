@@ -8,7 +8,7 @@ export const NoteQuoteRepost = memo(function NoteQuoteRepost({ event }: { event:
   const rootNote = () => {
     let note = null;
 
-    if (event.content.length > 0) {
+    if (event.content) {
       const content = destr(event.content);
       if (content) {
         note = <RootNote event={content} />;

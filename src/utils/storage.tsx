@@ -78,9 +78,16 @@ export async function countTotalNotes() {
 // get all notes
 export async function getNotes(time: number, limit: number, offset: number) {
   const db = await connect();
-  return await db.select(
-    `SELECT * FROM notes WHERE created_at <= "${time}" ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+
+  const notes: any = { data: null, nextCursor: 0 };
+  const query: any = await db.select(
+    `SELECT * FROM notes WHERE created_at <= "${time}" GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
   );
+
+  notes['data'] = query;
+  notes['nextCursor'] = offset + limit;
+
+  return notes;
 }
 
 // get note by id
@@ -93,7 +100,9 @@ export async function getNoteByID(event_id: string) {
 // get all latest notes
 export async function getLatestNotes(time: number) {
   const db = await connect();
-  return await db.select(`SELECT * FROM notes WHERE created_at > "${time}" ORDER BY created_at DESC;`);
+  return await db.select(
+    `SELECT * FROM notes WHERE created_at > "${time}" GROUP BY parent_id ORDER BY created_at DESC;`
+  );
 }
 
 // create note
