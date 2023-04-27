@@ -87,6 +87,12 @@ fn main() {
               sql: include_str!("../migrations/20230425050745_add_blacklist_model.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230427081017,
+              description: "clean up account",
+              sql: include_str!("../migrations/20230427081017_clean_up_account.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

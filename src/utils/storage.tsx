@@ -16,7 +16,7 @@ export async function connect(): Promise<Database> {
 export async function getActiveAccount() {
   const db = await connect();
   // #TODO: check is_active == true
-  const result = await db.select(`SELECT * FROM accounts LIMIT 1;`);
+  const result = await db.select(`SELECT * FROM accounts WHERE is_active = 1 LIMIT 1;`);
   return result[0];
 }
 
@@ -27,13 +27,18 @@ export async function getAccounts() {
 }
 
 // create account
-export async function createAccount(pubkey: string, privkey: string, metadata: string) {
+export async function createAccount(
+  pubkey: string,
+  privkey: string,
+  metadata: string,
+  follows?: string[][],
+  is_active?: number
+) {
   const db = await connect();
-  return await db.execute('INSERT OR IGNORE INTO accounts (pubkey, privkey, metadata) VALUES (?, ?, ?);', [
-    pubkey,
-    privkey,
-    metadata,
-  ]);
+  return await db.execute(
+    'INSERT OR IGNORE INTO accounts (pubkey, privkey, metadata, follows, is_active) VALUES (?, ?, ?, ?, ?);',
+    [pubkey, privkey, metadata, follows || '', is_active || 0]
+  );
 }
 
 // update account

@@ -1,9 +1,9 @@
 import { AccountContext } from '@lume/shared/accountProvider';
+import LumeIcon from '@lume/shared/icons/lume';
 import { ActiveAccount } from '@lume/shared/multiAccounts/activeAccount';
 import { InactiveAccount } from '@lume/shared/multiAccounts/inactiveAccount';
 import { APP_VERSION } from '@lume/stores/constants';
 
-import LumeSymbol from '@assets/icons/Lume';
 import { Plus } from 'iconoir-react';
 import { useContext } from 'react';
 
@@ -24,7 +24,7 @@ export default function MultiAccounts() {
           href="/explore"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
         >
-          <LumeSymbol className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
+          <LumeIcon className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
         </a>
         {accounts.map((account: { pubkey: string }) => {
           if (account.pubkey === activeAccount.pubkey) {
