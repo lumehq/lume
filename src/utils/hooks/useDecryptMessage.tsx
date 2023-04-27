@@ -1,4 +1,4 @@
-import { messageParser } from '@utils/parser';
+import { messageParser } from '@lume/utils/parser';
 
 import { nip04 } from 'nostr-tools';
 import { useCallback, useEffect, useState } from 'react';

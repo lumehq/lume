@@ -2,12 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/*"],
-      "@components/*": ["src/components/*"],
-      "@stores/*": ["src/stores/*"],
-      "@utils/*": ["src/utils/*"],
-      "@assets/*": ["src/assets/*"],
-      "@renderer/*": ["src/renderer/*"]
+      "@lume/*": ["src/*"]
     },
     "types": ["vidstack/globals"],
     "target": "es2017",

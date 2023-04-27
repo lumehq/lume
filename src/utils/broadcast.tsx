@@ -1,4 +1,4 @@
-import { WRITEONLY_RELAYS } from '@stores/constants';
+import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 
 import { getEventHash, signEvent } from 'nostr-tools';
 

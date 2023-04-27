@@ -1,8 +1,8 @@
-import { ImagePreview } from '@components/note/preview/image';
-import { VideoPreview } from '@components/note/preview/video';
-import { YoutubePreview } from '@components/note/preview/youtube';
-import { NoteQuote } from '@components/note/quote';
-import { UserMention } from '@components/user/mention';
+import { ImagePreview } from '@lume/shared/note/preview/image';
+import { VideoPreview } from '@lume/shared/note/preview/video';
+import { YoutubePreview } from '@lume/shared/note/preview/youtube';
+import { NoteQuote } from '@lume/shared/note/quote';
+import { UserMention } from '@lume/shared/user/mention';
 
 import destr from 'destr';
 import reactStringReplace from 'react-string-replace';

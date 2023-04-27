@@ -1,5 +1,5 @@
-import { Shell } from '@renderer/shell';
-import { PageContextServer } from '@renderer/types';
+import { Shell } from '@lume/renderer/shell';
+import { PageContextServer } from '@lume/renderer/types';
 
 import { StrictMode } from 'react';
 import ReactDOMServer from 'react-dom/server';

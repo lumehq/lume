@@ -1,6 +1,5 @@
-import { RelayContext } from '@components/relaysProvider';
-
-import { READONLY_RELAYS } from '@stores/constants';
+import { RelayContext } from '@lume/shared/relaysProvider';
+import { READONLY_RELAYS } from '@lume/stores/constants';
 
 import { useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';

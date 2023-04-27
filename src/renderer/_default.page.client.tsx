@@ -1,12 +1,14 @@
-import '@renderer/index.css';
-import { Shell } from '@renderer/shell';
-import { PageContextClient } from '@renderer/types';
+import '@lume/renderer/index.css';
+import { Shell } from '@lume/renderer/shell';
+import { PageContextClient } from '@lume/renderer/types';
 
 import { StrictMode } from 'react';
 import { Root, createRoot, hydrateRoot } from 'react-dom/client';
 import 'vidstack/styles/defaults.css';
 
 export const clientRouting = true;
+export const hydrationCanBeAborted = true;
+
 let root: Root;
 
 export async function render(pageContext: PageContextClient) {

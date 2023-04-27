@@ -1,9 +1,7 @@
-import { RelayContext } from '@components/relaysProvider';
-
-import { READONLY_RELAYS } from '@stores/constants';
-
-import { updateChannelMetadata } from '@utils/storage';
-import { getChannel } from '@utils/storage';
+import { RelayContext } from '@lume/shared/relaysProvider';
+import { READONLY_RELAYS } from '@lume/stores/constants';
+import { updateChannelMetadata } from '@lume/utils/storage';
+import { getChannel } from '@lume/utils/storage';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
