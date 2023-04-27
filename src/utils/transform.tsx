@@ -50,6 +50,26 @@ export const getParentID = (arr: string[], fallback: string) => {
   return parentID;
 };
 
+// get parent id from event tags
+export const getQuoteID = (arr: string[]) => {
+  const tags = destr(arr);
+  let quoteID = null;
+
+  if (tags.length > 0) {
+    if (tags[0][0] === 'e') {
+      quoteID = tags[0][1];
+    } else {
+      tags.forEach((tag) => {
+        if (tag[0] === 'e') {
+          quoteID = tag[1];
+        }
+      });
+    }
+  }
+
+  return quoteID;
+};
+
 // sort messages by timestamp
 export const sortMessages = (arr: any) => {
   arr.sort((a, b) => {

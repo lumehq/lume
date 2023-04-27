@@ -1,6 +1,6 @@
 import { RelayContext } from '@components/relaysProvider';
 
-import { FULL_RELAYS } from '@stores/constants';
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix, hoursAgo } from '@utils/getDate';
 import {
@@ -16,17 +16,18 @@ import { getParentID } from '@utils/transform';
 
 import LumeSymbol from '@assets/icons/Lume';
 
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
   const pool: any = useContext(RelayContext);
-
   const now = useRef(new Date());
-  const timeout = useRef(null);
 
-  const fetchData = useCallback(
-    async (account: { id: number; pubkey: string; chats: string[] }, tags: any) => {
+  useEffect(() => {
+    let unsubscribe: () => void;
+    let timeout: any;
+
+    const fetchInitalData = async (account: { pubkey: string; id: number }, tags: string) => {
       const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
 
@@ -52,6 +53,7 @@ export function Page() {
         since: since,
         until: dateToUnix(now.current),
       });
+
       // kind 4 (chats) query
       query.push({
         kinds: [4],
@@ -59,6 +61,7 @@ export function Page() {
         since: 0,
         until: dateToUnix(now.current),
       });
+
       // kind 43, 43 (mute user, hide message) query
       query.push({
         authors: [account.pubkey],
@@ -66,10 +69,11 @@ export function Page() {
         since: 0,
         until: dateToUnix(now.current),
       });
+
       // subscribe relays
-      const unsubscribe = pool.subscribe(
+      unsubscribe = pool.subscribe(
         query,
-        FULL_RELAYS,
+        READONLY_RELAYS,
         (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
           switch (event.kind) {
             // short text note
@@ -123,44 +127,30 @@ export function Page() {
         undefined,
         () => {
           updateLastLogin(dateToUnix(now.current));
-          timeout.current = setTimeout(() => {
+          timeout = setTimeout(() => {
             navigate('/newsfeed/following', { overwriteLastHistoryEntry: true });
           }, 5000);
-        },
-        {
-          unsubscribeOnEose: true,
-          logAllEvents: false,
         }
       );
+    };
 
-      return () => {
-        unsubscribe();
-      };
-    },
-    [pool]
-  );
-
-  useEffect(() => {
-    let ignore = false;
-
-    if (!ignore) {
-      getActiveAccount()
-        .then((res: any) => {
-          if (res) {
-            const account = res;
-            fetchData(account, account.follows);
-          } else {
-            navigate('/onboarding', { overwriteLastHistoryEntry: true });
-          }
-        })
-        .catch(console.error);
-    }
+    getActiveAccount()
+      .then((res: any) => {
+        if (res) {
+          fetchInitalData(res, res.follows);
+        } else {
+          navigate('/onboarding', { overwriteLastHistoryEntry: true });
+        }
+      })
+      .catch(console.error);
 
     return () => {
-      ignore = true;
-      clearTimeout(timeout.current);
+      if (unsubscribe) {
+        unsubscribe();
+      }
+      clearTimeout(timeout);
     };
-  }, [fetchData]);
+  }, []);
 
   return (
     <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">
