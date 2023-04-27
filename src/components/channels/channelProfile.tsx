@@ -1,12 +1,12 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useChannelMetadata } from '@utils/hooks/useChannelMetadata';
+import { useChannelProfile } from '@utils/hooks/useChannelProfile';
 
 import { Copy } from 'iconoir-react';
 import { nip19 } from 'nostr-tools';
 
 export const ChannelProfile = ({ id, pubkey }: { id: string; pubkey: string }) => {
-  const metadata = useChannelMetadata(id, pubkey);
+  const metadata = useChannelProfile(id, pubkey);
   const noteID = id ? nip19.noteEncode(id) : null;
 
   const copyNoteID = async () => {

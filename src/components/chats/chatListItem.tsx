@@ -1,13 +1,13 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
-import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
+import { useProfile } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 
 import { twMerge } from 'tailwind-merge';
 
 export const ChatListItem = ({ pubkey }: { pubkey: string }) => {
-  const profile = useProfileMetadata(pubkey);
+  const profile = useProfile(pubkey);
   const pageContext = usePageContext();
 
   const searchParams: any = pageContext.urlParsed.search;

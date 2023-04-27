@@ -1,6 +1,7 @@
 import { Shell } from '@renderer/shell';
 import { PageContextServer } from '@renderer/types';
 
+import { StrictMode } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { dangerouslySkipEscape, escapeInject } from 'vite-plugin-ssr/server';
 
@@ -18,9 +19,11 @@ export function render(pageContext: PageContextServer) {
     if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined');
 
     pageHtml = ReactDOMServer.renderToString(
-      <Shell pageContext={pageContext}>
-        <Page {...pageProps} />
-      </Shell>
+      <StrictMode>
+        <Shell pageContext={pageContext}>
+          <Page {...pageProps} />
+        </Shell>
+      </StrictMode>
     );
   }
 

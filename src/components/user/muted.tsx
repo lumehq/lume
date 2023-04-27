@@ -1,12 +1,12 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
+import { useProfile } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 
 import { useState } from 'react';
 
 export const UserMuted = ({ data }: { data: any }) => {
-  const profile = useProfileMetadata(data.content);
+  const profile = useProfile(data.content);
   const [status, setStatus] = useState(data.status);
 
   const unmute = async () => {

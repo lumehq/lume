@@ -4,7 +4,7 @@ import { RelayContext } from '@components/relaysProvider';
 import { DEFAULT_AVATAR, READONLY_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
-import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
+import { fetchProfileMetadata } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 import { createAccount, createPleb, updateAccount } from '@utils/storage';
 import { nip02ToArray } from '@utils/transform';

@@ -76,7 +76,7 @@ export function Page() {
         ) : status === 'error' ? (
           <div>{error.message}</div>
         ) : (
-          <div ref={parentRef} className="h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
+          <div ref={parentRef} className="scrollbar-hide h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
             <FormBase />
             <div
               className="relative w-full"

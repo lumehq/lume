@@ -5,7 +5,7 @@ import { UserBase } from '@components/user/base';
 import { WRITEONLY_RELAYS } from '@stores/constants';
 
 import { usePageContext } from '@utils/hooks/usePageContext';
-import { fetchProfileMetadata } from '@utils/hooks/useProfileMetadata';
+import { fetchProfileMetadata } from '@utils/hooks/useProfile';
 import { createPleb, updateAccount } from '@utils/storage';
 import { arrayToNIP02 } from '@utils/transform';
 

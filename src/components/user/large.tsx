@@ -1,6 +1,6 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
+import { useProfile } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 
 import dayjs from 'dayjs';
@@ -10,7 +10,7 @@ import { MoreHoriz } from 'iconoir-react';
 dayjs.extend(relativeTime);
 
 export const UserLarge = ({ pubkey, time }: { pubkey: string; time: number }) => {
-  const profile = useProfileMetadata(pubkey);
+  const profile = useProfile(pubkey);
 
   return (
     <div className="flex items-center gap-2">

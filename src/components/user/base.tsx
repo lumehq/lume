@@ -1,12 +1,12 @@
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useProfileMetadata } from '@utils/hooks/useProfileMetadata';
+import { useProfile } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 
 import { memo } from 'react';
 
 export const UserBase = memo(function UserBase({ pubkey }: { pubkey: string }) {
-  const profile = useProfileMetadata(pubkey);
+  const profile = useProfile(pubkey);
 
   return (
     <div className="flex items-center gap-2">

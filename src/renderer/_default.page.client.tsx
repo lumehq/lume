@@ -2,6 +2,7 @@ import '@renderer/index.css';
 import { Shell } from '@renderer/shell';
 import { PageContextClient } from '@renderer/types';
 
+import { StrictMode } from 'react';
 import { Root, createRoot, hydrateRoot } from 'react-dom/client';
 import 'vidstack/styles/defaults.css';
 
@@ -14,9 +15,11 @@ export async function render(pageContext: PageContextClient) {
   if (!Page) throw new Error('Client-side render() hook expects pageContext.Page to be defined');
 
   const page = (
-    <Shell pageContext={pageContext}>
-      <Page {...pageProps} />
-    </Shell>
+    <StrictMode>
+      <Shell pageContext={pageContext}>
+        <Page {...pageProps} />
+      </Shell>
+    </StrictMode>
   );
 
   const container = document.getElementById('app');
