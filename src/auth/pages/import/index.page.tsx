@@ -43,7 +43,7 @@ export function Page() {
 
       if (typeof getPublicKey(privkey) === 'string') {
         setOnboardingPrivkey((prev) => ({ ...prev, privkey: privkey }));
-        navigate(`/onboarding/import/step-2`);
+        navigate(`/auth/import/step-2`);
       }
     } catch (error) {
       setError('key', {

@@ -2,7 +2,6 @@ import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 import { shortenKey } from '@lume/utils/shortenKey';
 import { createAccount, createPleb } from '@lume/utils/storage';
-import { nip02ToArray } from '@lume/utils/transform';
 
 import { useAtom } from 'jotai';
 import { RelayPool } from 'nostr-relaypool';
@@ -37,7 +36,7 @@ export function Page() {
             setOnboarding((prev) => ({ ...prev, metadata: event.content }));
             break;
           case 3:
-            setOnboarding((prev) => ({ ...prev, follows: nip02ToArray(event.tags) }));
+            setOnboarding((prev) => ({ ...prev, follows: event.tags }));
             break;
           default:
             break;

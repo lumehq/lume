@@ -30,7 +30,7 @@ export function Page() {
   const onSubmit = (data: any) => {
     setLoading(true);
     setOnboarding((prev) => ({ ...prev, metadata: data }));
-    navigate('/onboarding/create/step-3');
+    navigate('/auth/create/step-3');
   };
 
   useEffect(() => {

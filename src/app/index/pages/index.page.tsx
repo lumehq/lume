@@ -125,7 +125,7 @@ export function Page() {
         () => {
           updateLastLogin(dateToUnix(now.current));
           timeout = setTimeout(() => {
-            navigate('/newsfeed/following', { overwriteLastHistoryEntry: true });
+            navigate('/app/newsfeed/following', { overwriteLastHistoryEntry: true });
           }, 5000);
         }
       );
@@ -136,7 +136,7 @@ export function Page() {
         if (res) {
           fetchInitalData(res, res.follows);
         } else {
-          navigate('/onboarding', { overwriteLastHistoryEntry: true });
+          navigate('/auth', { overwriteLastHistoryEntry: true });
         }
       })
       .catch(console.error);

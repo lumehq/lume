@@ -1,4 +1,4 @@
-import User from '@lume/onboarding/components/user';
+import User from '@lume/auth/components/user';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 import { createAccount, createPleb } from '@lume/utils/storage';
