@@ -53,8 +53,9 @@ export function Page() {
     // show loading indicator
     setLoading(true);
 
+    const follows = onboarding.follows.concat([['p', pubkey]]);
     // insert to database
-    createAccount(pubkey, onboarding.privkey, onboarding.metadata, onboarding.follows, 1)
+    createAccount(pubkey, onboarding.privkey, onboarding.metadata, follows, 1)
       .then((res) => {
         if (res) {
           for (const tag of onboarding.follows) {

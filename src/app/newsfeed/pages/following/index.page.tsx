@@ -1,7 +1,7 @@
-import FormBase from '@lume/shared/form/base';
-import { NoteBase } from '@lume/shared/note/base';
-import { Placeholder } from '@lume/shared/note/placeholder';
-import { NoteQuoteRepost } from '@lume/shared/note/quoteRepost';
+import NoteForm from '@lume/app/newsfeed/components/form';
+import { NoteBase } from '@lume/app/newsfeed/components/note/base';
+import { Placeholder } from '@lume/app/newsfeed/components/note/placeholder';
+import { NoteQuoteRepost } from '@lume/app/newsfeed/components/note/quoteRepost';
 import { hasNewerNoteAtom } from '@lume/stores/note';
 import { countTotalNotes, getNotes } from '@lume/utils/storage';
 
@@ -73,7 +73,7 @@ export function Page() {
         <div>{error.message}</div>
       ) : (
         <div ref={parentRef} className="scrollbar-hide h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
-          <FormBase />
+          <NoteForm />
           <div
             className="relative w-full"
             style={{

@@ -1,7 +1,6 @@
-import { NoteMetadata } from '@lume/shared/note/metadata';
-import { NoteParent } from '@lume/shared/note/parent';
-import { UserExtend } from '@lume/shared/user/extend';
-import { contentParser } from '@lume/utils/parser';
+import { contentParser } from '@lume/app/newsfeed/components/contentParser';
+import { NoteParent } from '@lume/app/newsfeed/components/note/parent';
+import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 
 import { memo } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
@@ -40,19 +39,12 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
       {parentNote()}
       <div className="relative z-10 flex flex-col">
         <div onClick={(e) => openUserPage(e)}>
-          <UserExtend pubkey={event.pubkey} time={event.created_at} />
+          <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
         </div>
         <div className="mt-1 pl-[52px]">
           <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">{content}</div>
         </div>
-        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
-          <NoteMetadata
-            eventID={event.event_id}
-            eventPubkey={event.pubkey}
-            eventContent={event.content}
-            eventTime={event.created_at}
-          />
-        </div>
+        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]"></div>
       </div>
     </div>
   );

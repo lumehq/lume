@@ -94,8 +94,9 @@ export function Page() {
   const submit = async () => {
     setLoading(true);
 
+    const followsIncludeSelf = follows.concat([onboarding.pubkey]);
     // insert to database
-    createAccount(onboarding.pubkey, onboarding.privkey, onboarding.metadata, arrayToNIP02(follows), 1)
+    createAccount(onboarding.pubkey, onboarding.privkey, onboarding.metadata, arrayToNIP02(followsIncludeSelf), 1)
       .then((res) => {
         if (res) {
           for (const tag of follows) {

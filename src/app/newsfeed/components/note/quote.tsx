@@ -1,14 +1,12 @@
-import { RelayContext } from '@lume/shared/relaysProvider';
-import { UserExtend } from '@lume/shared/user/extend';
+import { contentParser } from '@lume/app/newsfeed/components/contentParser';
+import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 import { READONLY_RELAYS } from '@lume/stores/constants';
-import { contentParser } from '@lume/utils/parser';
 
-import { memo, useContext } from 'react';
+import { RelayPool } from 'nostr-relaypool';
+import { memo } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
-  const pool: any = useContext(RelayContext);
-
   const { data, error } = useSWRSubscription(
     id
       ? [
@@ -19,6 +17,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
         ]
       : null,
     (key, { next }) => {
+      const pool = new RelayPool(READONLY_RELAYS);
       const unsubscribe = pool.subscribe(
         key,
         READONLY_RELAYS,
@@ -45,7 +44,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
         <div className="h-6 w-full animate-pulse select-text flex-col rounded bg-zinc-800"></div>
       ) : (
         <div className="relative z-10 flex flex-col">
-          <UserExtend pubkey={data.pubkey} time={data.created_at} />
+          <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
             <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
               {contentParser(data.content, data.tags)}

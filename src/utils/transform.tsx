@@ -1,7 +1,7 @@
 import destr from 'destr';
 
 // convert NIP-02 to array of pubkey
-export const nip02ToArray = (tags: string[]) => {
+export const nip02ToArray = (tags: any) => {
   const arr = [];
   tags.forEach((item) => {
     arr.push(item[1]);

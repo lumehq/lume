@@ -1,9 +1,7 @@
-import { AccountContext } from '@lume/shared/accountProvider';
 import { ChannelBlackList } from '@lume/shared/channels/channelBlackList';
 import { ChannelProfile } from '@lume/shared/channels/channelProfile';
 import { UpdateChannelModal } from '@lume/shared/channels/updateChannelModal';
 import { FormChannel } from '@lume/shared/form/channel';
-import { RelayContext } from '@lume/shared/relaysProvider';
 import { channelMessagesAtom, channelReplyAtom } from '@lume/stores/channel';
 import { FULL_RELAYS } from '@lume/stores/constants';
 import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
@@ -12,18 +10,20 @@ import { arrayObjToPureArr } from '@lume/utils/transform';
 
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { Suspense, lazy, useContext, useRef } from 'react';
+import { RelayPool } from 'nostr-relaypool';
+import { Suspense, lazy, useRef } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 const ChannelMessages = lazy(() => import('@lume/shared/channels/messages'));
 
 let mutedList: any = [];
+let activeAccount: any = {};
 let activeMutedList: any = [];
 let activeHidedList: any = [];
 
 if (typeof window !== 'undefined') {
   const { getBlacklist, getActiveBlacklist, getActiveAccount } = await import('@lume/utils/storage');
-  const activeAccount = await getActiveAccount();
+  activeAccount = await getActiveAccount();
   activeHidedList = await getActiveBlacklist(activeAccount.id, 43);
   activeMutedList = await getActiveBlacklist(activeAccount.id, 44);
   mutedList = await getBlacklist(activeAccount.id, 44);
@@ -33,11 +33,8 @@ export function Page() {
   const pageContext = usePageContext();
   const searchParams: any = pageContext.urlParsed.search;
 
-  const id = searchParams.id;
+  const channelID = searchParams.id;
   const channelPubkey = searchParams.pubkey;
-
-  const pool: any = useContext(RelayContext);
-  const activeAccount: any = useContext(AccountContext);
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
   const resetChannelMessages = useResetAtom(channelMessagesAtom);
@@ -47,16 +44,17 @@ export function Page() {
   const hided = arrayObjToPureArr(activeHidedList);
   const muted = arrayObjToPureArr(activeMutedList);
 
-  useSWRSubscription(id, () => {
+  useSWRSubscription(channelID, () => {
     // reset channel reply
     resetChannelReply();
     // reset channel messages
     resetChannelMessages();
     // subscribe for new messages
+    const pool = new RelayPool(FULL_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {
-          '#e': [id],
+          '#e': [channelID],
           kinds: [42],
           since: dateToUnix(hoursAgo(48, now.current)),
         },
@@ -82,11 +80,11 @@ export function Page() {
     <div className="flex h-full flex-col justify-between gap-2">
       <div className="flex h-11 w-full shrink-0 items-center justify-between">
         <div>
-          <ChannelProfile id={id} pubkey={channelPubkey} />
+          <ChannelProfile id={channelID} pubkey={channelPubkey} />
         </div>
         <div className="flex items-center gap-2">
           <ChannelBlackList blacklist={mutedList} />
-          {activeAccount.pubkey === channelPubkey && <UpdateChannelModal id={id} />}
+          {activeAccount.pubkey === channelPubkey && <UpdateChannelModal id={activeAccount} />}
         </div>
       </div>
       <div className="relative flex w-full flex-1 flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
@@ -94,7 +92,7 @@ export function Page() {
           <ChannelMessages />
         </Suspense>
         <div className="shrink-0 p-3">
-          <FormChannel eventId={id} />
+          <FormChannel eventId={channelID} />
         </div>
       </div>
     </div>

@@ -1,24 +1,26 @@
-import { AccountContext } from '@lume/shared/accountProvider';
 import { NetworkStatusIndicator } from '@lume/shared/networkStatusIndicator';
-import { RelayContext } from '@lume/shared/relaysProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { hasNewerNoteAtom } from '@lume/stores/note';
 import { dateToUnix } from '@lume/utils/getDate';
+import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { createChat, createNote, updateAccount } from '@lume/utils/storage';
 import { getParentID, nip02ToArray } from '@lume/utils/transform';
 
 import { useSetAtom } from 'jotai';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { RelayPool } from 'nostr-relaypool';
+import { useRef } from 'react';
+import useSWRSubscription from 'swr/subscription';
 
 export default function EventCollector() {
-  const pool: any = useContext(RelayContext);
-  const activeAccount: any = useContext(AccountContext);
-
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
   const now = useRef(new Date());
 
-  const subscribe = useCallback(async () => {
-    const follows = activeAccount.follows ? JSON.parse(activeAccount.follows) : [];
+  const { account, isLoading, isError } = useActiveAccount();
+
+  useSWRSubscription(!isLoading && !isError ? account : null, () => {
+    const follows = nip02ToArray(JSON.parse(account.follows));
+
+    const pool = new RelayPool(READONLY_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {
@@ -28,16 +30,16 @@ export default function EventCollector() {
         },
         {
           kinds: [0, 3],
-          authors: [activeAccount.pubkey],
+          authors: [account.pubkey],
         },
         {
           kinds: [4],
-          '#p': [activeAccount.pubkey],
+          '#p': [account.pubkey],
           since: dateToUnix(now.current),
         },
       ],
       READONLY_RELAYS,
-      (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
+      (event: any) => {
         switch (event.kind) {
           // metadata
           case 0:
@@ -48,7 +50,7 @@ export default function EventCollector() {
             const parentID = getParentID(event.tags, event.id);
             createNote(
               event.id,
-              activeAccount.id,
+              account.id,
               event.pubkey,
               event.kind,
               event.tags,
@@ -61,21 +63,20 @@ export default function EventCollector() {
             break;
           // contacts
           case 3:
-            const arr = nip02ToArray(event.tags);
             // update account's folllows with NIP-02 tag list
-            updateAccount('follows', arr, event.pubkey);
+            updateAccount('follows', event.tags, event.pubkey);
             break;
           // chat
           case 4:
-            if (event.pubkey !== activeAccount.pubkey) {
-              createChat(activeAccount.id, event.pubkey, event.created_at);
+            if (event.pubkey !== account.pubkey) {
+              createChat(account.id, event.pubkey, event.created_at);
             }
             break;
           // repost
           case 6:
             createNote(
               event.id,
-              activeAccount.id,
+              account.id,
               event.pubkey,
               event.kind,
               event.tags,
@@ -93,19 +94,7 @@ export default function EventCollector() {
     return () => {
       unsubscribe();
     };
-  }, [activeAccount.id, activeAccount.pubkey, activeAccount.follows, pool, setHasNewerNote]);
-
-  useEffect(() => {
-    let ignore = false;
-
-    if (!ignore) {
-      subscribe();
-    }
-
-    return () => {
-      ignore = true;
-    };
-  }, [subscribe]);
+  });
 
   return <NetworkStatusIndicator />;
 }

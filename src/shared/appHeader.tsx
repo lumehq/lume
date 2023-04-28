@@ -45,9 +45,8 @@ export default function AppHeader({ collector }: { collector: boolean }) {
         </button>
       </div>
       <div data-tauri-drag-region className="flex h-full w-full items-center justify-between">
-        <div className="flex h-full items-center divide-x divide-zinc-900 px-4 pt-px">
-          {collector && <EventCollector />}
-        </div>
+        <div className="flex h-full items-center divide-x divide-zinc-900 px-4 pt-px"></div>
+        {collector && <EventCollector />}
       </div>
     </div>
   );
