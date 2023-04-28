@@ -1,0 +1,46 @@
+import { DEFAULT_AVATAR } from '@lume/stores/constants';
+import { usePageContext } from '@lume/utils/hooks/usePageContext';
+import { useProfile } from '@lume/utils/hooks/useProfile';
+import { shortenKey } from '@lume/utils/shortenKey';
+
+import { twMerge } from 'tailwind-merge';
+
+export default function ChatsListItem({ pubkey }: { pubkey: string }) {
+  const pageContext = usePageContext();
+
+  const searchParams: any = pageContext.urlParsed.search;
+  const pagePubkey = searchParams.pubkey;
+
+  const { user, isError, isLoading } = useProfile(pubkey);
+
+  return (
+    <>
+      {isError && <div>error</div>}
+      {isLoading && !user ? (
+        <div className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5">
+          <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
+          <div>
+            <div className="h-2.5 w-full animate-pulse truncate rounded bg-zinc-800 text-sm font-medium"></div>
+          </div>
+        </div>
+      ) : (
+        <a
+          href={`/app/chat?pubkey=${pubkey}`}
+          className={twMerge(
+            'inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900',
+            pagePubkey === pubkey ? 'dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800' : ''
+          )}
+        >
+          <div className="relative h-5 w-5 shrink-0 rounded">
+            <img src={user.picture || DEFAULT_AVATAR} alt={pubkey} className="h-5 w-5 rounded bg-white object-cover" />
+          </div>
+          <div>
+            <h5 className="truncate text-sm font-medium text-zinc-400">
+              {user.display_name || user.name || shortenKey(pubkey)}
+            </h5>
+          </div>
+        </a>
+      )}
+    </>
+  );
+}

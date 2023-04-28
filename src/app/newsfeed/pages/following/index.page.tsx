@@ -3,7 +3,7 @@ import { NoteBase } from '@lume/app/newsfeed/components/note/base';
 import { Placeholder } from '@lume/app/newsfeed/components/note/placeholder';
 import { NoteQuoteRepost } from '@lume/app/newsfeed/components/note/quoteRepost';
 import { hasNewerNoteAtom } from '@lume/stores/note';
-import { countTotalNotes, getNotes } from '@lume/utils/storage';
+import { getNotes } from '@lume/utils/storage';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -14,13 +14,6 @@ import { useEffect, useRef } from 'react';
 const ITEM_PER_PAGE = 20;
 const TIME = Math.floor(Date.now() / 1000);
 
-let totalNotes = 0;
-
-if (typeof window !== 'undefined') {
-  const result = await countTotalNotes();
-  totalNotes = result.total;
-}
-
 export function Page() {
   const [hasNewerNote] = useAtom(hasNewerNoteAtom);
 
@@ -29,7 +22,7 @@ export function Page() {
     queryFn: async ({ pageParam = 0 }) => {
       return await getNotes(TIME, ITEM_PER_PAGE, pageParam);
     },
-    getNextPageParam: (lastPage) => (lastPage.nextCursor <= totalNotes ? lastPage.nextCursor : 'undefined'),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
   const allRows = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];

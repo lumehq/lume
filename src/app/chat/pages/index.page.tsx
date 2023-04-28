@@ -31,11 +31,13 @@ export function Page() {
           kinds: [4],
           authors: [key],
           '#p': [account.pubkey],
+          limit: 20,
         },
         {
           kinds: [4],
           authors: [account.pubkey],
           '#p': [key],
+          limit: 20,
         },
       ],
       FULL_RELAYS,

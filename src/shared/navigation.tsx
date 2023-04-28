@@ -1,4 +1,5 @@
 import ChannelsList from '@lume/app/channel/components/list';
+import ChatsList from '@lume/app/chat/components/list';
 import ActiveLink from '@lume/shared/activeLink';
 
 import { Disclosure } from '@headlessui/react';
@@ -76,7 +77,9 @@ export default function Navigation() {
               </div>
               <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Chats</h3>
             </Disclosure.Button>
-            <Disclosure.Panel></Disclosure.Panel>
+            <Disclosure.Panel>
+              <ChatsList />
+            </Disclosure.Panel>
           </div>
         )}
       </Disclosure>
