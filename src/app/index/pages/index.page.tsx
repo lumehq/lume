@@ -1,153 +1,25 @@
 import LumeIcon from '@lume/shared/icons/lume';
-import { RelayContext } from '@lume/shared/relaysProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
-import {
-  addToBlacklist,
-  countTotalNotes,
-  createChat,
-  createNote,
-  getActiveAccount,
-  getLastLogin,
-  updateLastLogin,
-} from '@lume/utils/storage';
-import { getParentID } from '@lume/utils/transform';
+import { getActiveAccount } from '@lume/utils/storage';
 
-import { useContext, useEffect, useRef } from 'react';
+import useSWR from 'swr';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
+const fetcher = () => getActiveAccount();
+
 export function Page() {
-  const pool: any = useContext(RelayContext);
-  const now = useRef(new Date());
+  const { data, isLoading } = useSWR('account', fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
-  useEffect(() => {
-    let unsubscribe: () => void;
-    let timeout: any;
+  if (!isLoading && !data) {
+    navigate('/auth', { overwriteLastHistoryEntry: true });
+  }
 
-    const fetchInitalData = async (account: { pubkey: string; id: number }, tags: string) => {
-      const lastLogin = await getLastLogin();
-      const notes = await countTotalNotes();
-
-      const follows = JSON.parse(tags);
-      const query = [];
-
-      let since: number;
-
-      if (notes.total === 0) {
-        since = dateToUnix(hoursAgo(24, now.current));
-      } else {
-        if (parseInt(lastLogin) > 0) {
-          since = parseInt(lastLogin);
-        } else {
-          since = dateToUnix(hoursAgo(24, now.current));
-        }
-      }
-
-      // kind 1 (notes) query
-      query.push({
-        kinds: [1, 6],
-        authors: follows,
-        since: since,
-        until: dateToUnix(now.current),
-      });
-
-      // kind 4 (chats) query
-      query.push({
-        kinds: [4],
-        '#p': [account.pubkey],
-        since: 0,
-        until: dateToUnix(now.current),
-      });
-
-      // kind 43, 43 (mute user, hide message) query
-      query.push({
-        authors: [account.pubkey],
-        kinds: [43, 44],
-        since: 0,
-        until: dateToUnix(now.current),
-      });
-
-      // subscribe relays
-      unsubscribe = pool.subscribe(
-        query,
-        READONLY_RELAYS,
-        (event: { kind: number; tags: string[]; id: string; pubkey: string; content: string; created_at: number }) => {
-          switch (event.kind) {
-            // short text note
-            case 1:
-              const parentID = getParentID(event.tags, event.id);
-              // insert event to local database
-              createNote(
-                event.id,
-                account.id,
-                event.pubkey,
-                event.kind,
-                event.tags,
-                event.content,
-                event.created_at,
-                parentID
-              );
-              break;
-            // chat
-            case 4:
-              if (event.pubkey !== account.pubkey) {
-                createChat(account.id, event.pubkey, event.created_at);
-              }
-              break;
-            // repost
-            case 6:
-              createNote(
-                event.id,
-                account.id,
-                event.pubkey,
-                event.kind,
-                event.tags,
-                event.content,
-                event.created_at,
-                event.id
-              );
-              break;
-            // hide message (channel only)
-            case 43:
-              if (event.tags[0][0] === 'e') {
-                addToBlacklist(account.id, event.tags[0][1], 43, 1);
-              }
-            // mute user (channel only)
-            case 44:
-              if (event.tags[0][0] === 'p') {
-                addToBlacklist(account.id, event.tags[0][1], 44, 1);
-              }
-            default:
-              break;
-          }
-        },
-        undefined,
-        () => {
-          updateLastLogin(dateToUnix(now.current));
-          timeout = setTimeout(() => {
-            navigate('/app/newsfeed/following', { overwriteLastHistoryEntry: true });
-          }, 5000);
-        }
-      );
-    };
-
-    getActiveAccount()
-      .then((res: any) => {
-        if (res) {
-          fetchInitalData(res, res.follows);
-        } else {
-          navigate('/auth', { overwriteLastHistoryEntry: true });
-        }
-      })
-      .catch(console.error);
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-      clearTimeout(timeout);
-    };
-  }, [pool]);
+  if (!isLoading && data) {
+    navigate('/app/inital-data', { overwriteLastHistoryEntry: true });
+  }
 
   return (
     <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">

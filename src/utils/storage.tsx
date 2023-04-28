@@ -77,7 +77,7 @@ export async function countTotalChannels() {
 export async function countTotalNotes() {
   const db = await connect();
   const result = await db.select('SELECT COUNT(*) AS "total" FROM notes;');
-  return result[0];
+  return result[0].total;
 }
 
 // get all notes

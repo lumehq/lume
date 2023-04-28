@@ -1,6 +1,5 @@
 import ActiveLink from '@lume/shared/activeLink';
 import ChannelList from '@lume/shared/channels/channelList';
-import ChatList from '@lume/shared/chats/chatList';
 
 import { Disclosure } from '@headlessui/react';
 import { Bonfire, NavArrowUp, PeopleTag } from 'iconoir-react';
@@ -80,9 +79,7 @@ export default function Navigation() {
               </div>
               <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Chats</h3>
             </Disclosure.Button>
-            <Disclosure.Panel>
-              <ChatList />
-            </Disclosure.Panel>
+            <Disclosure.Panel></Disclosure.Panel>
           </div>
         )}
       </Disclosure>

@@ -1,18 +1,8 @@
 import { AccountContext } from '@lume/shared/accountProvider';
-import { ChatListItem } from '@lume/shared/chats/chatListItem';
 import { ChatModal } from '@lume/shared/chats/chatModal';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 
 import { useContext } from 'react';
-
-let list: any = [];
-
-if (typeof window !== 'undefined') {
-  const { getChats, getActiveAccount } = await import('@lume/utils/storage');
-  const activeAccount = await getActiveAccount();
-
-  list = await getChats(activeAccount.id);
-}
 
 export default function ChatList() {
   const activeAccount: any = useContext(AccountContext);
@@ -37,9 +27,6 @@ export default function ChatList() {
           </h5>
         </div>
       </a>
-      {list.map((item: { id: string; pubkey: string }) => (
-        <ChatListItem key={item.id} pubkey={item.pubkey} />
-      ))}
       <ChatModal />
     </div>
   );
