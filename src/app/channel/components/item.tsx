@@ -4,7 +4,7 @@ import { usePageContext } from '@lume/utils/hooks/usePageContext';
 
 import { twMerge } from 'tailwind-merge';
 
-export const ChannelListItem = ({ data }: { data: any }) => {
+export default function ChannelsListItem({ data }: { data: any }) {
   const channel: any = useChannelMetadata(data.event_id, data.pubkey);
   const pageContext = usePageContext();
 
@@ -13,7 +13,7 @@ export const ChannelListItem = ({ data }: { data: any }) => {
 
   return (
     <a
-      href={`/channel?id=${data.event_id}&pubkey=${data.pubkey}`}
+      href={`/app/channel?id=${data.event_id}&pubkey=${data.pubkey}`}
       className={twMerge(
         'inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900',
         pageID === data.event_id ? 'dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800' : ''
@@ -31,4 +31,4 @@ export const ChannelListItem = ({ data }: { data: any }) => {
       </div>
     </a>
   );
-};
+}

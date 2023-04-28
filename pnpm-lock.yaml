@@ -35,8 +35,8 @@ dependencies:
     specifier: ^2.0.4
     version: 2.0.4(react@18.2.0)
   nostr-relaypool:
-    specifier: ^0.5.18
-    version: 0.5.18(ws@8.13.0)
+    specifier: ^0.6.27
+    version: 0.6.27(ws@8.13.0)
   nostr-tools:
     specifier: ^1.10.1
     version: 1.10.1
@@ -53,8 +53,8 @@ dependencies:
     specifier: ^1.1.0
     version: 1.1.0
   react-virtuoso:
-    specifier: ^4.3.1
-    version: 4.3.1(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^4.3.2
+    version: 4.3.2(react-dom@18.2.0)(react@18.2.0)
   react-youtube:
     specifier: ^10.1.0
     version: 10.1.0(react@18.2.0)
@@ -82,8 +82,8 @@ devDependencies:
     specifier: ^4.1.1
     version: 4.1.1(prettier@2.8.8)
   '@types/node':
-    specifier: ^18.16.1
-    version: 18.16.1
+    specifier: ^18.16.2
+    version: 18.16.2
   '@types/react':
     specifier: ^18.2.0
     version: 18.2.0
@@ -101,7 +101,7 @@ devDependencies:
     version: 5.59.1(eslint@8.39.0)(typescript@4.9.5)
   '@vitejs/plugin-react-swc':
     specifier: ^3.3.0
-    version: 3.3.0(vite@4.3.2)
+    version: 3.3.0(vite@4.3.3)
   autoprefixer:
     specifier: ^10.4.14
     version: 10.4.14(postcss@8.4.23)
@@ -127,14 +127,14 @@ devDependencies:
     specifier: ^4.6.0
     version: 4.6.0(eslint@8.39.0)
   eslint-plugin-react-refresh:
-    specifier: ^0.3.4
-    version: 0.3.4(eslint@8.39.0)
+    specifier: ^0.3.5
+    version: 0.3.5(eslint@8.39.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
   lint-staged:
-    specifier: ^13.2.1
-    version: 13.2.1
+    specifier: ^13.2.2
+    version: 13.2.2
   postcss:
     specifier: ^8.4.23
     version: 8.4.23
@@ -154,17 +154,17 @@ devDependencies:
     specifier: ^4.9.5
     version: 4.9.5
   vite:
-    specifier: ^4.3.2
-    version: 4.3.2(@types/node@18.16.1)
+    specifier: ^4.3.3
+    version: 4.3.3(@types/node@18.16.2)
   vite-plugin-ssr:
-    specifier: ^0.4.117
-    version: 0.4.117(vite@4.3.2)
+    specifier: ^0.4.118
+    version: 0.4.118(vite@4.3.3)
   vite-plugin-top-level-await:
     specifier: ^1.3.0
-    version: 1.3.0(vite@4.3.2)
+    version: 1.3.0(vite@4.3.3)
   vite-tsconfig-paths:
     specifier: ^4.2.0
-    version: 4.2.0(typescript@4.9.5)(vite@4.3.2)
+    version: 4.2.0(typescript@4.9.5)(vite@4.3.3)
   ws:
     specifier: ^8.13.0
     version: 8.13.0
@@ -587,9 +587,9 @@ packages:
       { integrity: sha512-EvYTiXet5XqweYGClEmpu3BoxmsQ4hkj3QaYA6qEnigCWffTP3vNRwBReTdrwDwo7OoJ3wM8Uoe9Uk4n+d4hfg== }
     dev: false
 
-  /@floating-ui/dom@1.2.6:
+  /@floating-ui/dom@1.2.7:
     resolution:
-      { integrity: sha512-02vxFDuvuVPs22iJICacezYJyf7zwwOCWkPNkWNBr1U0Qt1cKFYzWvxts0AmqcOQGwt/3KJWcWIgtbUU38keyw== }
+      { integrity: sha512-DyqylONj1ZaBnzj+uBnVfzdjjCkFCL2aA9ESHLyUOGSqb03RpbLMImP1ekIQXYs4KLk9jAjJfZAU8hXfWSahEg== }
     dependencies:
       '@floating-ui/core': 1.2.6
     dev: false
@@ -601,7 +601,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@floating-ui/dom': 1.2.6
+      '@floating-ui/dom': 1.2.7
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -703,9 +703,9 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
 
-  /@maverick-js/signals@5.9.3:
+  /@maverick-js/signals@5.9.4:
     resolution:
-      { integrity: sha512-rqaaetjcqQQXbloejGYyHqN6i+cf2Lp88nw8qx2s86CD0X+1Tl/dq+I53wFM6VK6cvm925fQLszGG24AMSWAaw== }
+      { integrity: sha512-NJizvl2Pk0pWOjB+h0u2k+9pbdcF/zQf3Msohc79cldwhHXbWoPakIAQphrRdxtLUHBM1hm3ZJwVndI+on0+Zg== }
     dev: false
 
   /@noble/hashes@1.2.0:
@@ -789,9 +789,9 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/gotrue-js@2.23.0(encoding@0.1.13):
+  /@supabase/gotrue-js@2.24.0(encoding@0.1.13):
     resolution:
-      { integrity: sha512-N6o+MMGsPDbdiz0R0Oy9GlgefYFjJJvoBduR16s8c1H3yG2jp6jq+pMEP18P1bg7uk2DljEjyBnVN7Wj7SJ2Zw== }
+      { integrity: sha512-ZsH4K5cbMTjfMytXaDYVYs9l9igmlZFxiwXn7J2IP/CklWR5qmLCma+dvat5rccPLITVkN6oAZbKxDzW+pEgCg== }
     dependencies:
       cross-fetch: 3.1.5(encoding@0.1.13)
     transitivePeerDependencies:
@@ -832,7 +832,7 @@ packages:
       { integrity: sha512-FW3ZzBoc4orSgfX0dXrmJoXAcI/hiekmqXTkN64vjtUF2Urp3UjyAf71UTtV9Jl6ejHoe3K++e0+Rg9zKUJh5w== }
     dependencies:
       '@supabase/functions-js': 2.1.1(encoding@0.1.13)
-      '@supabase/gotrue-js': 2.23.0(encoding@0.1.13)
+      '@supabase/gotrue-js': 2.24.0(encoding@0.1.13)
       '@supabase/postgrest-js': 1.6.0(encoding@0.1.13)
       '@supabase/realtime-js': 2.7.2
       '@supabase/storage-js': 2.5.1(encoding@0.1.13)
@@ -1156,9 +1156,9 @@ packages:
       { integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ== }
     dev: true
 
-  /@types/node@18.16.1:
+  /@types/node@18.16.2:
     resolution:
-      { integrity: sha512-DZxSZWXxFfOlx7k7Rv4LAyiMroaxa3Ly/7OOzZO8cBNho0YzAi4qlbrx8W27JGqG57IgR/6J7r+nOJWw6kcvZA== }
+      { integrity: sha512-GQW/JL/5Fz/0I8RpeBG9lKp0+aNcXEaVL71c0D2Q0QHDTFvlYKT7an0onCUXj85anv7b4/WesqdfchLc0jtsCg== }
 
   /@types/phoenix@1.5.6:
     resolution:
@@ -1197,7 +1197,7 @@ packages:
     resolution:
       { integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ== }
     dependencies:
-      '@types/node': 18.16.1
+      '@types/node': 18.16.2
     dev: false
 
   /@types/youtube-player@5.5.7:
@@ -1361,14 +1361,14 @@ packages:
       vidstack: 0.4.5
     dev: false
 
-  /@vitejs/plugin-react-swc@3.3.0(vite@4.3.2):
+  /@vitejs/plugin-react-swc@3.3.0(vite@4.3.3):
     resolution:
       { integrity: sha512-Ycg+n2eyCOTpn/wRy+evVo859+hw7qCj9iaX5CMny6x1fx1Uoq0xBG+a98lFtwLNGfGEnpI0F26YigRuxCRkwg== }
     peerDependencies:
       vite: ^4
     dependencies:
       '@swc/core': 1.3.55
-      vite: 4.3.2(@types/node@18.16.1)
+      vite: 4.3.3(@types/node@18.16.2)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: true
@@ -1593,7 +1593,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001481
-      electron-to-chromium: 1.4.372
+      electron-to-chromium: 1.4.376
       node-releases: 2.0.10
       update-browserslist-db: 1.0.11(browserslist@4.21.5)
     dev: true
@@ -1897,9 +1897,9 @@ packages:
       { integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA== }
     dev: true
 
-  /electron-to-chromium@1.4.372:
+  /electron-to-chromium@1.4.376:
     resolution:
-      { integrity: sha512-MrlFq/j+TYHOjeWsWGYfzevc25HNeJdsF6qaLFrqBTRWZQtWkb1myq/Q2veLWezVaa5OcSZ99CFwTT4aF4Mung== }
+      { integrity: sha512-TFeOKd98TpJzRHkr4Aorn16QkMnuCQuGAE6IZ0wYF+qkbSfMPqjplvRppR02tMUpVxZz8nyBNvVm9lIZsqrbPQ== }
     dev: true
 
   /emoji-regex@8.0.0:
@@ -2088,9 +2088,9 @@ packages:
       eslint: 8.39.0
     dev: true
 
-  /eslint-plugin-react-refresh@0.3.4(eslint@8.39.0):
+  /eslint-plugin-react-refresh@0.3.5(eslint@8.39.0):
     resolution:
-      { integrity: sha512-E0ViBglxSQAERBp6eTj5fPgtCRtDonnbCFiVQBhf4Dto2blJRxg1dFUMdMh7N6ljTI4UwPhHwYDQ3Dyo4m6bwA== }
+      { integrity: sha512-61qNIsc7fo9Pp/mju0J83kzvLm0Bsayu7OQSLEoJxLDCBjIIyb87bkzufoOvdDxLkSlMfkF7UxomC4+eztUBSA== }
     peerDependencies:
       eslint: '>=7'
     dependencies:
@@ -2903,9 +2903,9 @@ packages:
       { integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg== }
     dev: true
 
-  /lint-staged@13.2.1:
+  /lint-staged@13.2.2:
     resolution:
-      { integrity: sha512-8gfzinVXoPfga5Dz/ZOn8I2GOhf81Wvs+KwbEXQn/oWZAvCVS2PivrXfVbFJc93zD16uC0neS47RXHIjXKYZQw== }
+      { integrity: sha512-71gSwXKy649VrSU09s10uAT0rWCcY3aewhMaHyl2N84oBk4Xs9HgxvUp3AYu+bNsK4NrOYYxvSgg7FyGJ+jGcA== }
     engines: { node: ^14.13.1 || >=16.0.0 }
     hasBin: true
     dependencies:
@@ -2942,7 +2942,7 @@ packages:
       log-update: 4.0.0
       p-map: 4.0.0
       rfdc: 1.3.0
-      rxjs: 7.8.0
+      rxjs: 7.8.1
       through: 2.3.8
       wrap-ansi: 7.0.0
     dev: true
@@ -3011,7 +3011,7 @@ packages:
       { integrity: sha512-p8L5V62CV6TmHAngmRAopp231oJKeH77mJja5SsKOfvzrPRoThT/Jo9U0jMRB5iMykqkvyg2J5V5Agn6FPXDWQ== }
     engines: { node: '>=16' }
     dependencies:
-      '@maverick-js/signals': 5.9.3
+      '@maverick-js/signals': 5.9.4
       type-fest: 3.9.0
     dev: false
 
@@ -3150,9 +3150,9 @@ packages:
     engines: { node: '>=0.10.0' }
     dev: true
 
-  /nostr-relaypool@0.5.18(ws@8.13.0):
+  /nostr-relaypool@0.6.27(ws@8.13.0):
     resolution:
-      { integrity: sha512-l3bR034akVSdd/jSOqcj33k1BYaAwqbJMJQFg3cJ/BXPrXy6fPSd4Qye0vuF+MwtqokmLFa68MM8hbfHeOgYtQ== }
+      { integrity: sha512-YtQxb8z9VHsPEQfC4rkxztqyGvWM1kcwiLhp/N8PpZX1+9mJhoIFctgpGxWB1LXhZgRiyJfY5Ml4EklvtWELuw== }
     dependencies:
       '@jest/source-map': 29.4.3
       isomorphic-ws: 5.0.0(ws@8.13.0)
@@ -3591,9 +3591,9 @@ packages:
     engines: { node: '>=0.12.0' }
     dev: false
 
-  /react-virtuoso@4.3.1(react-dom@18.2.0)(react@18.2.0):
+  /react-virtuoso@4.3.2(react-dom@18.2.0)(react@18.2.0):
     resolution:
-      { integrity: sha512-2+V0bvA1fASO+etlBG6YB0uj+StizxP3ecDJXgGW/r2z9AH067ehpJy2TSRiEIGQtDTmJAcmZnZzYVnk7AUmbw== }
+      { integrity: sha512-n51V4fMk36VM6NapfaMbfs4w/IaVodp5asp+rtzlvz0yurG6uVrqA040ke43gpYtoOL6j6TxeXWo4b6GpO9N0A== }
     engines: { node: '>=10' }
     peerDependencies:
       react: '>=16 || >=17 || >= 18'
@@ -3721,9 +3721,9 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
-  /rxjs@7.8.0:
+  /rxjs@7.8.1:
     resolution:
-      { integrity: sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg== }
+      { integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg== }
     dependencies:
       tslib: 2.5.0
     dev: true
@@ -4262,14 +4262,14 @@ packages:
       type-fest: 3.9.0
     dev: false
 
-  /vite-plugin-ssr@0.4.117(vite@4.3.2):
+  /vite-plugin-ssr@0.4.118(vite@4.3.3):
     resolution:
-      { integrity: sha512-jebuK9HGNTpwbNlhIygTmNX8W9ZJTClUv/V5MfvRbVGqL0jGkYbsKKwzRNbUDm5EMqblbFf9mMHt6KSIuh/YJQ== }
+      { integrity: sha512-L1t/4eGraa9wBfkt/EHvTm1l89CVCS1So9XfR7XfufA27WNxpRDD/EkYbd1pOIYMrE3aONNAQEZakVVzu0Xd1g== }
     engines: { node: '>=12.19.0' }
     hasBin: true
     peerDependencies:
       react-streaming: '>=0.3.5'
-      vite: '>=3.0.0'
+      vite: '>=3.1.0'
     peerDependenciesMeta:
       react-streaming:
         optional: true
@@ -4284,10 +4284,10 @@ packages:
       fast-glob: 3.2.12
       picocolors: 1.0.0
       sirv: 2.0.3
-      vite: 4.3.2(@types/node@18.16.1)
+      vite: 4.3.3(@types/node@18.16.2)
     dev: true
 
-  /vite-plugin-top-level-await@1.3.0(vite@4.3.2):
+  /vite-plugin-top-level-await@1.3.0(vite@4.3.3):
     resolution:
       { integrity: sha512-owIfsgWudMlQODWJSwp0sQB3AZZu3qsMygeBjZy8CyjEk6OB9AGd8lHqmgwrcEqgvy9N58lYxSBLVk3/4ejEiA== }
     peerDependencies:
@@ -4296,13 +4296,13 @@ packages:
       '@rollup/plugin-virtual': 3.0.1
       '@swc/core': 1.3.55
       uuid: 9.0.0
-      vite: 4.3.2(@types/node@18.16.1)
+      vite: 4.3.3(@types/node@18.16.2)
     transitivePeerDependencies:
       - '@swc/helpers'
       - rollup
     dev: true
 
-  /vite-tsconfig-paths@4.2.0(typescript@4.9.5)(vite@4.3.2):
+  /vite-tsconfig-paths@4.2.0(typescript@4.9.5)(vite@4.3.3):
     resolution:
       { integrity: sha512-jGpus0eUy5qbbMVGiTxCL1iB9ZGN6Bd37VGLJU39kTDD6ZfULTTb1bcc5IeTWqWJKiWV5YihCaibeASPiGi8kw== }
     peerDependencies:
@@ -4314,15 +4314,15 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 2.1.1(typescript@4.9.5)
-      vite: 4.3.2(@types/node@18.16.1)
+      vite: 4.3.3(@types/node@18.16.2)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@4.3.2(@types/node@18.16.1):
+  /vite@4.3.3(@types/node@18.16.2):
     resolution:
-      { integrity: sha512-9R53Mf+TBoXCYejcL+qFbZde+eZveQLDYd9XgULILLC1a5ZwPaqgmdVpL8/uvw2BM/1TzetWjglwm+3RO+xTyw== }
+      { integrity: sha512-MwFlLBO4udZXd+VBcezo3u8mC77YQk+ik+fbc0GZWGgzfbPP+8Kf0fldhARqvSYmtIWoAJ5BXPClUbMTlqFxrA== }
     engines: { node: ^14.18.0 || >=16.0.0 }
     hasBin: true
     peerDependencies:
@@ -4346,7 +4346,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.16.1
+      '@types/node': 18.16.2
       esbuild: 0.17.18
       postcss: 8.4.23
       rollup: 3.21.0

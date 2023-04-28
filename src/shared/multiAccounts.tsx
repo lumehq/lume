@@ -1,38 +1,40 @@
-import { AccountContext } from '@lume/shared/accountProvider';
+import ActiveAccount from '@lume/shared/accounts/active';
+import InactiveAccount from '@lume/shared/accounts/inactive';
 import LumeIcon from '@lume/shared/icons/lume';
-import { ActiveAccount } from '@lume/shared/multiAccounts/activeAccount';
-import { InactiveAccount } from '@lume/shared/multiAccounts/inactiveAccount';
 import { APP_VERSION } from '@lume/stores/constants';
+import { getAccounts } from '@lume/utils/storage';
 
 import { Plus } from 'iconoir-react';
-import { useContext } from 'react';
+import useSWR from 'swr';
 
-let accounts: any = [];
-
-if (typeof window !== 'undefined') {
-  const { getAccounts } = await import('@lume/utils/storage');
-  accounts = await getAccounts();
-}
+const fetcher = () => getAccounts();
 
 export default function MultiAccounts() {
-  const activeAccount: any = useContext(AccountContext);
+  const { data, error }: any = useSWR('allAccounts', fetcher);
 
   return (
     <div className="flex h-full flex-col items-center justify-between px-2 pb-4 pt-3">
       <div className="flex flex-col gap-3">
         <a
-          href="/explore"
+          href="/app/newsfeed/following"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
         >
           <LumeIcon className="h-6 w-auto text-zinc-400 group-hover:text-zinc-200" />
         </a>
-        {accounts.map((account: { pubkey: string }) => {
-          if (account.pubkey === activeAccount.pubkey) {
-            return <ActiveAccount key={account.pubkey} user={account} />;
-          } else {
-            return <InactiveAccount key={account.pubkey} user={account} />;
-          }
-        })}
+        <>
+          {error && <div>failed to load</div>}
+          {!data ? (
+            <div className="group relative flex h-11 w-11 shrink animate-pulse cursor-pointer items-center justify-center rounded-lg bg-zinc-900"></div>
+          ) : (
+            data.map((account: { is_active: number; pubkey: string }) => {
+              if (account.is_active === 1) {
+                return <ActiveAccount key={account.pubkey} user={account} />;
+              } else {
+                return <InactiveAccount key={account.pubkey} user={account} />;
+              }
+            })
+          )}
+        </>
         <a
           href="/onboarding"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"

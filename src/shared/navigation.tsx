@@ -1,9 +1,8 @@
+import ChannelsList from '@lume/app/channel/components/list';
 import ActiveLink from '@lume/shared/activeLink';
-import ChannelList from '@lume/shared/channels/channelList';
 
 import { Disclosure } from '@headlessui/react';
 import { Bonfire, NavArrowUp, PeopleTag } from 'iconoir-react';
-import { Suspense } from 'react';
 
 export default function Navigation() {
   return (
@@ -58,9 +57,7 @@ export default function Navigation() {
               <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">Channels</h3>
             </Disclosure.Button>
             <Disclosure.Panel>
-              <Suspense fallback={<p>Loading...</p>}>
-                <ChannelList />
-              </Suspense>
+              <ChannelsList />
             </Disclosure.Panel>
           </div>
         )}

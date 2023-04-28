@@ -1,8 +1,8 @@
-import { ImagePreview } from '@lume/app/newsfeed/components/note/preview/image';
-import { VideoPreview } from '@lume/app/newsfeed/components/note/preview/video';
-import { YoutubePreview } from '@lume/app/newsfeed/components/note/preview/youtube';
 import { NoteQuote } from '@lume/app/newsfeed/components/note/quote';
 import { NoteMentionUser } from '@lume/app/newsfeed/components/user/mention';
+import ImagePreview from '@lume/shared/preview/image';
+import VideoPreview from '@lume/shared/preview/video';
+import YoutubePreview from '@lume/shared/preview/youtube';
 
 import destr from 'destr';
 import reactStringReplace from 'react-string-replace';

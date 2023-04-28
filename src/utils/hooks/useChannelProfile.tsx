@@ -1,12 +1,9 @@
-import { RelayContext } from '@lume/shared/relaysProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
+import { FULL_RELAYS } from '@lume/stores/constants';
 
-import { useContext } from 'react';
+import { RelayPool } from 'nostr-relaypool';
 import useSWRSubscription from 'swr/subscription';
 
 export const useChannelProfile = (id: string, channelPubkey: string) => {
-  const pool: any = useContext(RelayContext);
-
   const { data } = useSWRSubscription(
     id
       ? [
@@ -21,9 +18,10 @@ export const useChannelProfile = (id: string, channelPubkey: string) => {
         ]
       : null,
     (key, { next }) => {
+      const pool = new RelayPool(FULL_RELAYS);
       const unsubscribe = pool.subscribe(
         key,
-        READONLY_RELAYS,
+        FULL_RELAYS,
         (event: { kind: number; pubkey: string; content: string }) => {
           switch (event.kind) {
             case 40:
@@ -41,7 +39,6 @@ export const useChannelProfile = (id: string, channelPubkey: string) => {
         undefined,
         {
           unsubscribeOnEose: true,
-          logAllEvents: false,
         }
       );
 

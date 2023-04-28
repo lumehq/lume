@@ -1,20 +1,18 @@
-import { AccountContext } from '@lume/shared/accountProvider';
 import { AvatarUploader } from '@lume/shared/avatarUploader';
-import { RelayContext } from '@lume/shared/relaysProvider';
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
-import { createChannel } from '@lume/utils/storage';
+import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { getChannel, updateChannelMetadata } from '@lume/utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Cancel, Plus } from 'iconoir-react';
+import { Cancel, EditPencil } from 'iconoir-react';
+import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { navigate } from 'vite-plugin-ssr/client/router';
 
-export const CreateChannelModal = () => {
-  const pool: any = useContext(RelayContext);
-  const activeAccount: any = useContext(AccountContext);
+export default function ChannelUpdateModal({ id }: { id: string }) {
+  const { account, isError, isLoading } = useActiveAccount();
 
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(DEFAULT_AVATAR);
@@ -34,33 +32,47 @@ export const CreateChannelModal = () => {
     reset,
     setValue,
     formState: { isDirty, isValid },
-  } = useForm();
+  } = useForm({
+    defaultValues: async () => {
+      const channel = await getChannel(id);
+      if (channel) {
+        const metadata = JSON.parse(channel.metadata);
+        // update image state
+        setImage(metadata.picture);
+        // set default values
+        return metadata;
+      } else {
+        return null;
+      }
+    },
+  });
 
   const onSubmit = (data: any) => {
     setLoading(true);
 
-    const event: any = {
-      content: JSON.stringify(data),
-      created_at: dateToUnix(),
-      kind: 40,
-      pubkey: activeAccount.pubkey,
-      tags: [],
-    };
-    event.id = getEventHash(event);
-    event.sig = signEvent(event, activeAccount.privkey);
+    if (!isError && !isLoading && account) {
+      const pool = new RelayPool(WRITEONLY_RELAYS);
+      const event: any = {
+        content: JSON.stringify(data),
+        created_at: dateToUnix(),
+        kind: 41,
+        pubkey: account.pubkey,
+        tags: [],
+      };
+      event.id = getEventHash(event);
+      event.sig = signEvent(event, account.privkey);
 
-    // publish channel
-    pool.publish(event, WRITEONLY_RELAYS);
-    // insert to database
-    createChannel(event.id, event.pubkey, event.content, event.created_at);
-    // reset form
-    reset();
-    setTimeout(() => {
+      // publish channel
+      pool.publish(event, WRITEONLY_RELAYS);
+      // update channel metadata in database
+      updateChannelMetadata(event.id, event.content);
+      // reset form
+      reset();
       // close modal
       setIsOpen(false);
-      // redirect to channel page
-      navigate(`/channel?id=${event.id}`);
-    }, 2000);
+    } else {
+      console.log('error');
+    }
   };
 
   useEffect(() => {
@@ -72,14 +84,9 @@ export const CreateChannelModal = () => {
       <button
         type="button"
         onClick={() => openModal()}
-        className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
+        className="group inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800"
       >
-        <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">
-          <Plus width={12} height={12} className="text-zinc-500" />
-        </div>
-        <div>
-          <h5 className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400">Add a new channel</h5>
-        </div>
+        <EditPencil width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
       </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -112,7 +119,7 @@ export const CreateChannelModal = () => {
                         as="h3"
                         className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-2xl font-semibold leading-none text-transparent"
                       >
-                        Create channel
+                        Update channel
                       </Dialog.Title>
                       <button
                         type="button"
@@ -124,8 +131,8 @@ export const CreateChannelModal = () => {
                       </button>
                     </div>
                     <Dialog.Description className="leading-tight text-zinc-400">
-                      Channels are freedom square, everyone can speech freely, no one can stop you or deceive what to
-                      speech
+                      New metadata will be published on all relays, and will be immediately available to all users, so
+                      please carefully.
                     </Dialog.Description>
                   </div>
                 </div>
@@ -237,4 +244,4 @@ export const CreateChannelModal = () => {
       </Transition>
     </>
   );
-};
+}

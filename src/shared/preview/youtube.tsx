@@ -5,7 +5,7 @@ function getVideoId(url: string) {
   return regex.exec(url)[3];
 }
 
-export const YoutubePreview = ({ url }: { url: string }) => {
+export default function YoutubePreview({ url }: { url: string }) {
   const id = getVideoId(url);
 
   return (
@@ -13,4 +13,4 @@ export const YoutubePreview = ({ url }: { url: string }) => {
       <YouTube videoId={id} className="aspect-video xl:w-2/3" opts={{ width: '100%', height: '100%' }} />
     </div>
   );
-};
+}

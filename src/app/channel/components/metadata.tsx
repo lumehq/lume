@@ -4,7 +4,7 @@ import { useChannelProfile } from '@lume/utils/hooks/useChannelProfile';
 import { Copy } from 'iconoir-react';
 import { nip19 } from 'nostr-tools';
 
-export const ChannelProfile = ({ id, pubkey }: { id: string; pubkey: string }) => {
+export default function ChannelMetadata({ id, pubkey }: { id: string; pubkey: string }) {
   const metadata = useChannelProfile(id, pubkey);
   const noteID = id ? nip19.noteEncode(id) : null;
 
@@ -37,4 +37,4 @@ export const ChannelProfile = ({ id, pubkey }: { id: string; pubkey: string }) =
       </div>
     </div>
   );
-};
+}

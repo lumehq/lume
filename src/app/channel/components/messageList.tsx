@@ -1,12 +1,11 @@
-import { ChannelMessageItem } from '@lume/shared/channels/messages/item';
-import { Placeholder } from '@lume/shared/note/placeholder';
+import ChannelMessageItem from '@lume/app/channel/components/messages/item';
 import { sortedChannelMessagesAtom } from '@lume/stores/channel';
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-export default function ChannelMessages() {
+export default function ChannelMessageList() {
   const virtuosoRef = useRef(null);
   const data = useAtomValue(sortedChannelMessagesAtom);
 
@@ -29,7 +28,6 @@ export default function ChannelMessages() {
       <Virtuoso
         ref={virtuosoRef}
         data={data}
-        components={COMPONENTS}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         initialTopMostItemIndex={data.length - 1}
@@ -42,7 +40,3 @@ export default function ChannelMessages() {
     </div>
   );
 }
-
-const COMPONENTS = {
-  EmptyPlaceholder: () => <Placeholder />,
-};

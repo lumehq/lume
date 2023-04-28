@@ -1,6 +1,6 @@
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 
-export const ActiveAccount = ({ user }: { user: any }) => {
+export default function ActiveAccount({ user }: { user: any }) {
   const userData = JSON.parse(user.metadata);
 
   return (
@@ -8,4 +8,4 @@ export const ActiveAccount = ({ user }: { user: any }) => {
       <img src={userData.picture || DEFAULT_AVATAR} alt="user's avatar" className="h-11 w-11 rounded-lg object-cover" />
     </button>
   );
-};
+}

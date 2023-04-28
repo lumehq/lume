@@ -4,7 +4,7 @@ import { channelReplyAtom } from '@lume/stores/channel';
 import { Reply } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 
-export const ReplyButton = ({ id, pubkey, content }: { id: string; pubkey: string; content: string }) => {
+export default function MessageReplyButton({ id, pubkey, content }: { id: string; pubkey: string; content: string }) {
   const setChannelReplyAtom = useSetAtom(channelReplyAtom);
 
   const createReply = () => {
@@ -21,4 +21,4 @@ export const ReplyButton = ({ id, pubkey, content }: { id: string; pubkey: strin
       </button>
     </Tooltip>
   );
-};
+}

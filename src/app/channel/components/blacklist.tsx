@@ -1,10 +1,10 @@
-import { UserMuted } from '@lume/shared/user/muted';
+import MutedItem from '@lume/app/channel/components/mutedItem';
 
 import { Popover, Transition } from '@headlessui/react';
 import { MicMute } from 'iconoir-react';
 import { Fragment } from 'react';
 
-export const ChannelBlackList = ({ blacklist }: { blacklist: any }) => {
+export default function ChannelBlackList({ blacklist }: { blacklist: any }) {
   return (
     <Popover className="relative">
       {({ open }) => (
@@ -39,7 +39,7 @@ export const ChannelBlackList = ({ blacklist }: { blacklist: any }) => {
                 </div>
                 <div className="px-3 pb-3 pt-1">
                   {blacklist.map((item: any) => (
-                    <UserMuted key={item.id} data={item} />
+                    <MutedItem key={item.id} data={item} />
                   ))}
                 </div>
               </div>
@@ -49,4 +49,4 @@ export const ChannelBlackList = ({ blacklist }: { blacklist: any }) => {
       )}
     </Popover>
   );
-};
+}
