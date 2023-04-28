@@ -41,7 +41,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
     <div className="relative pb-5">
       {error && <div>failed to load</div>}
       {!data ? (
-        <div className="animated-pulse">
+        <div className="animated-pulse relative z-10">
           <div className="flex items-start gap-2">
             <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
             <div className="flex w-full flex-1 items-start justify-between">

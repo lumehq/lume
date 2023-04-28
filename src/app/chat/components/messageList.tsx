@@ -1,25 +1,22 @@
-import { AccountContext } from '@lume/shared/accountProvider';
-import { MessageListItem } from '@lume/shared/chats/messageListItem';
-import { Placeholder } from '@lume/shared/note/placeholder';
+import { ChatMessageItem } from '@lume/app/chat/components/messages/item';
 import { sortedChatMessagesAtom } from '@lume/stores/chat';
+import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { useAtomValue } from 'jotai';
-import { useCallback, useContext, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-export default function MessageList() {
-  const activeAccount: any = useContext(AccountContext);
+export default function ChatMessageList() {
+  const { account } = useActiveAccount();
 
   const virtuosoRef = useRef(null);
   const data = useAtomValue(sortedChatMessagesAtom);
 
   const itemContent: any = useCallback(
     (index: string | number) => {
-      return (
-        <MessageListItem data={data[index]} userPubkey={activeAccount.pubkey} userPrivkey={activeAccount.privkey} />
-      );
+      return <ChatMessageItem data={data[index]} userPubkey={account.pubkey} userPrivkey={account.privkey} />;
     },
-    [activeAccount.privkey, activeAccount.pubkey, data]
+    [account.privkey, account.pubkey, data]
   );
 
   const computeItemKey = useCallback(
@@ -34,7 +31,6 @@ export default function MessageList() {
       <Virtuoso
         ref={virtuosoRef}
         data={data}
-        components={COMPONENTS}
         itemContent={itemContent}
         computeItemKey={computeItemKey}
         initialTopMostItemIndex={data.length - 1}
@@ -47,7 +43,3 @@ export default function MessageList() {
     </div>
   );
 }
-
-const COMPONENTS = {
-  EmptyPlaceholder: () => <Placeholder />,
-};

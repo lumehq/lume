@@ -1,4 +1,4 @@
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
+import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
 import { useProfile } from '@lume/utils/hooks/useProfile';
 import { shortenKey } from '@lume/utils/shortenKey';
 
@@ -16,7 +16,7 @@ export default function UserReply({ pubkey }: { pubkey: string }) {
         <>
           <div className="relative h-7 w-7 shrink overflow-hidden rounded">
             <img
-              src={user?.picture || DEFAULT_AVATAR}
+              src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
               alt={pubkey}
               className="h-7 w-7 rounded object-cover"
               loading="lazy"

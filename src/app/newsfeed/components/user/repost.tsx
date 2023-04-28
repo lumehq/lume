@@ -1,4 +1,4 @@
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
+import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
 import { useProfile } from '@lume/utils/hooks/useProfile';
 import { shortenKey } from '@lume/utils/shortenKey';
 
@@ -27,7 +27,7 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
         <>
           <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
             <img
-              src={user?.picture || DEFAULT_AVATAR}
+              src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
               alt={pubkey}
               className="h-11 w-11 rounded-md object-cover"
               loading="lazy"

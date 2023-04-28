@@ -1,18 +1,17 @@
-import { AccountContext } from '@lume/shared/accountProvider';
 import { ImagePicker } from '@lume/shared/form/imagePicker';
-import { RelayContext } from '@lume/shared/relaysProvider';
 import { chatContentAtom } from '@lume/stores/chat';
-import { FULL_RELAYS } from '@lume/stores/constants';
+import { FULL_RELAYS, WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
+import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
+import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, nip04, signEvent } from 'nostr-tools';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 
-export default function FormChat({ receiverPubkey }: { receiverPubkey: string }) {
-  const pool: any = useContext(RelayContext);
-  const activeAccount: any = useContext(AccountContext);
+export default function ChatMessageForm({ receiverPubkey }: { receiverPubkey: string }) {
+  const { account, isLoading, isError } = useActiveAccount();
 
   const [value, setValue] = useAtom(chatContentAtom);
   const resetValue = useResetAtom(chatContentAtom);
@@ -24,25 +23,28 @@ export default function FormChat({ receiverPubkey }: { receiverPubkey: string })
     [receiverPubkey, value]
   );
 
-  const submitEvent = useCallback(() => {
-    encryptMessage(activeAccount.privkey)
-      .then((encryptedContent) => {
-        const event: any = {
-          content: encryptedContent,
-          created_at: dateToUnix(),
-          kind: 4,
-          pubkey: activeAccount.pubkey,
-          tags: [['p', receiverPubkey]],
-        };
-        event.id = getEventHash(event);
-        event.sig = signEvent(event, activeAccount.privkey);
-        // publish note
-        pool.publish(event, FULL_RELAYS);
-        // reset state
-        resetValue();
-      })
-      .catch(console.error);
-  }, [activeAccount.privkey, activeAccount.pubkey, receiverPubkey, pool, resetValue, encryptMessage]);
+  const submitEvent = () => {
+    if (!isError && !isLoading && account) {
+      encryptMessage(account.privkey)
+        .then((encryptedContent) => {
+          const pool = new RelayPool(WRITEONLY_RELAYS);
+          const event: any = {
+            content: encryptedContent,
+            created_at: dateToUnix(),
+            kind: 4,
+            pubkey: account.pubkey,
+            tags: [['p', receiverPubkey]],
+          };
+          event.id = getEventHash(event);
+          event.sig = signEvent(event, account.privkey);
+          // publish note
+          pool.publish(event, FULL_RELAYS);
+          // reset state
+          resetValue();
+        })
+        .catch(console.error);
+    }
+  };
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

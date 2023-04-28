@@ -1,13 +1,16 @@
-import { AccountContext } from '@lume/shared/accountProvider';
-import { MessageListItem } from '@lume/shared/chats/messageListItem';
-import FormChat from '@lume/shared/form/chat';
-import { RelayContext } from '@lume/shared/relaysProvider';
+import ChatMessageForm from '@lume/app/chat/components/messages/form';
+import { chatMessagesAtom } from '@lume/stores/chat';
 import { FULL_RELAYS } from '@lume/stores/constants';
+import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
-import { sortMessages } from '@lume/utils/transform';
 
-import { useContext } from 'react';
+import { useSetAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
+import { RelayPool } from 'nostr-relaypool';
+import { Suspense, lazy, useEffect } from 'react';
 import useSWRSubscription from 'swr/subscription';
+
+const ChatMessageList = lazy(() => import('@lume/app/chat/components/messageList'));
 
 export function Page() {
   const pageContext = usePageContext();
@@ -15,68 +18,49 @@ export function Page() {
 
   const pubkey = searchParams.pubkey;
 
-  const pool: any = useContext(RelayContext);
-  const activeAccount: any = useContext(AccountContext);
+  const { account } = useActiveAccount();
 
-  const { data, error } = useSWRSubscription(
-    pubkey
-      ? [
-          {
-            kinds: [4],
-            authors: [pubkey],
-            '#p': [activeAccount.pubkey],
-          },
-          {
-            kinds: [4],
-            authors: [activeAccount.pubkey],
-            '#p': [pubkey],
-          },
-        ]
-      : null,
-    (key, { next }) => {
-      const unsubscribe = pool.subscribe(key, FULL_RELAYS, (event: any) => {
-        next(null, (prev) => (prev ? [event, ...prev] : [event]));
-      });
+  const setChatMessages = useSetAtom(chatMessagesAtom);
+  const resetChatMessages = useResetAtom(chatMessagesAtom);
 
-      return () => {
-        unsubscribe();
-      };
-    }
-  );
+  useSWRSubscription(pubkey ? pubkey : null, (key: string, {}: any) => {
+    const pool = new RelayPool(FULL_RELAYS);
+    const unsubscribe = pool.subscribe(
+      [
+        {
+          kinds: [4],
+          authors: [key],
+          '#p': [account.pubkey],
+        },
+        {
+          kinds: [4],
+          authors: [account.pubkey],
+          '#p': [key],
+        },
+      ],
+      FULL_RELAYS,
+      (event: any) => {
+        setChatMessages((prev) => [...prev, event]);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  });
+
+  useEffect(() => {
+    // reset channel messages
+    resetChatMessages();
+  });
 
   return (
     <div className="relative flex h-full w-full flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
-      <div className="scrollbar-hide flex h-full w-full flex-col-reverse overflow-y-auto">
-        {error && <div>failed to load</div>}
-        {!data ? (
-          <div className="flex h-min min-h-min w-full animate-pulse select-text flex-col px-5 py-2 hover:bg-black/20">
-            <div className="flex flex-col">
-              <div className="group flex items-start gap-3">
-                <div className="bg-zinc relative h-9 w-9 shrink rounded-md bg-zinc-700"></div>
-                <div className="flex w-full flex-1 items-start justify-between">
-                  <div className="flex items-baseline gap-2 text-sm">
-                    <span className="h-2 w-16 bg-zinc-700"></span>
-                  </div>
-                </div>
-              </div>
-              <div className="-mt-[17px] pl-[48px]">
-                <div className="h-3 w-full bg-zinc-700"></div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          sortMessages(data).map((message) => (
-            <MessageListItem
-              key={message.id}
-              data={message}
-              userPubkey={activeAccount.pubkey}
-              userPrivkey={activeAccount.privkey}
-            />
-          ))
-        )}
-      </div>
+      <Suspense fallback={<p>Loading...</p>}>
+        <ChatMessageList />
+      </Suspense>
       <div className="shrink-0 p-3">
-        <FormChat receiverPubkey={pubkey} />
+        <ChatMessageForm receiverPubkey={pubkey} />
       </div>
     </div>
   );
