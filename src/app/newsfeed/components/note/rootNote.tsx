@@ -1,4 +1,5 @@
 import { contentParser } from '@lume/app/newsfeed/components/contentParser';
+import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
@@ -9,7 +10,7 @@ import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const RootNote = memo(function RootNote({ id, fallback }: { id: string; fallback?: any }) {
   const pool: any = useContext(RelayContext);
-  const parseFallback = fallback.length > 0 ? JSON.parse(fallback) : null;
+  const parseFallback = fallback.length > 1 ? JSON.parse(fallback) : null;
 
   const { data, error } = useSWRSubscription(parseFallback ? null : id, (key, { next }) => {
     const unsubscribe = pool.subscribe(
@@ -90,7 +91,9 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
               {contentParser(data.content, data.tags)}
             </div>
           </div>
-          <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]"></div>
+          <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+            <NoteMetadata id={data.event_id} eventPubkey={data.pubkey} />
+          </div>
         </div>
       )}
     </>

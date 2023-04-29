@@ -1,4 +1,5 @@
 import { contentParser } from '@lume/app/newsfeed/components/contentParser';
+import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
@@ -36,7 +37,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
     <div className="relative pb-5">
       {error && <div>failed to load</div>}
       {!data ? (
-        <div className="animated-pulse relative z-10">
+        <div className="animated-pulse">
           <div className="flex items-start gap-2">
             <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
             <div className="flex w-full flex-1 items-start justify-between">
@@ -67,7 +68,9 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
                 {contentParser(data.content, data.tags)}
               </div>
             </div>
-            <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]"></div>
+            <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+              <NoteMetadata id={data.event_id} eventPubkey={data.pubkey} />
+            </div>
           </div>
         </>
       )}

@@ -1,4 +1,5 @@
 import { contentParser } from '@lume/app/newsfeed/components/contentParser';
+import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
 import { NoteParent } from '@lume/app/newsfeed/components/note/parent';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 
@@ -44,7 +45,9 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
         <div className="mt-1 pl-[52px]">
           <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">{content}</div>
         </div>
-        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]"></div>
+        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+          <NoteMetadata id={event.event_id} eventPubkey={event.pubkey} />
+        </div>
       </div>
     </div>
   );
