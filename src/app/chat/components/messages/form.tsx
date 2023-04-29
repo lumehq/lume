@@ -1,16 +1,17 @@
 import { ImagePicker } from '@lume/shared/form/imagePicker';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { chatContentAtom } from '@lume/stores/chat';
-import { FULL_RELAYS, WRITEONLY_RELAYS } from '@lume/stores/constants';
+import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, nip04, signEvent } from 'nostr-tools';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 
 export default function ChatMessageForm({ receiverPubkey }: { receiverPubkey: string }) {
+  const pool: any = useContext(RelayContext);
   const { account, isLoading, isError } = useActiveAccount();
 
   const [value, setValue] = useAtom(chatContentAtom);
@@ -27,7 +28,6 @@ export default function ChatMessageForm({ receiverPubkey }: { receiverPubkey: st
     if (!isError && !isLoading && account) {
       encryptMessage(account.privkey)
         .then((encryptedContent) => {
-          const pool = new RelayPool(WRITEONLY_RELAYS);
           const event: any = {
             content: encryptedContent,
             created_at: dateToUnix(),
@@ -38,7 +38,7 @@ export default function ChatMessageForm({ receiverPubkey }: { receiverPubkey: st
           event.id = getEventHash(event);
           event.sig = signEvent(event, account.privkey);
           // publish note
-          pool.publish(event, FULL_RELAYS);
+          pool.publish(event, WRITEONLY_RELAYS);
           // reset state
           resetValue();
         })

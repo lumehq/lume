@@ -1,5 +1,3 @@
-import EventCollector from '@lume/shared/eventCollector';
-
 import { ArrowLeft, ArrowRight, Refresh } from 'iconoir-react';
 
 let platformName = 'darwin';
@@ -9,7 +7,7 @@ if (typeof window !== 'undefined') {
   platformName = await platform();
 }
 
-export default function AppHeader({ collector }: { collector: boolean }) {
+export default function AppHeader() {
   const goBack = () => {
     window.history.back();
   };
@@ -46,7 +44,6 @@ export default function AppHeader({ collector }: { collector: boolean }) {
       </div>
       <div data-tauri-drag-region className="flex h-full w-full items-center justify-between">
         <div className="flex h-full items-center divide-x divide-zinc-900 px-4 pt-px"></div>
-        {collector && <EventCollector />}
       </div>
     </div>
   );

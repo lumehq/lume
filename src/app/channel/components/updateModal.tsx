@@ -1,4 +1,5 @@
 import { AvatarUploader } from '@lume/shared/avatarUploader';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
@@ -6,12 +7,12 @@ import { getChannel, updateChannelMetadata } from '@lume/utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { Cancel, EditPencil } from 'iconoir-react';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function ChannelUpdateModal({ id }: { id: string }) {
+  const pool: any = useContext(RelayContext);
   const { account, isError, isLoading } = useActiveAccount();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,6 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
     setLoading(true);
 
     if (!isError && !isLoading && account) {
-      const pool = new RelayPool(WRITEONLY_RELAYS);
       const event: any = {
         content: JSON.stringify(data),
         created_at: dateToUnix(),

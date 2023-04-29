@@ -1,18 +1,19 @@
 import ChatMessageForm from '@lume/app/chat/components/messages/form';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { chatMessagesAtom } from '@lume/stores/chat';
-import { FULL_RELAYS } from '@lume/stores/constants';
+import { READONLY_RELAYS } from '@lume/stores/constants';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
 
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { RelayPool } from 'nostr-relaypool';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useContext, useEffect } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 const ChatMessageList = lazy(() => import('@lume/app/chat/components/messageList'));
 
 export function Page() {
+  const pool: any = useContext(RelayContext);
   const pageContext = usePageContext();
   const searchParams: any = pageContext.urlParsed.search;
 
@@ -24,7 +25,6 @@ export function Page() {
   const resetChatMessages = useResetAtom(chatMessagesAtom);
 
   useSWRSubscription(pubkey ? ['chat', pubkey] : null, ([, key], {}: any) => {
-    const pool = new RelayPool(FULL_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {
@@ -40,7 +40,7 @@ export function Page() {
           limit: 20,
         },
       ],
-      FULL_RELAYS,
+      READONLY_RELAYS,
       (event: any) => {
         setChatMessages((prev) => [...prev, event]);
       }

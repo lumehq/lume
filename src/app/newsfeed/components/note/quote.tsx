@@ -1,41 +1,36 @@
 import { contentParser } from '@lume/app/newsfeed/components/contentParser';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 
-import { RelayPool } from 'nostr-relaypool';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
-  const { data, error } = useSWRSubscription(
-    id
-      ? [
-          {
-            ids: [id],
-            kinds: [1],
-          },
-        ]
-      : null,
-    (key, { next }) => {
-      const pool = new RelayPool(READONLY_RELAYS);
-      const unsubscribe = pool.subscribe(
-        key,
-        READONLY_RELAYS,
-        (event: any) => {
-          next(null, event);
-        },
-        undefined,
-        undefined,
-        {
-          unsubscribeOnEose: true,
-        }
-      );
+  const pool: any = useContext(RelayContext);
 
-      return () => {
-        unsubscribe();
-      };
-    }
-  );
+  const { data, error } = useSWRSubscription(id ? id : null, (key, { next }) => {
+    const unsubscribe = pool.subscribe(
+      [
+        {
+          ids: [key],
+        },
+      ],
+      READONLY_RELAYS,
+      (event: any) => {
+        next(null, event);
+      },
+      undefined,
+      undefined,
+      {
+        unsubscribeOnEose: true,
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  });
 
   return (
     <div className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">

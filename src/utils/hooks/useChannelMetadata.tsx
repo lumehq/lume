@@ -1,15 +1,15 @@
+import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { updateChannelMetadata } from '@lume/utils/storage';
 import { getChannel } from '@lume/utils/storage';
 
-import { RelayPool } from 'nostr-relaypool';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 export const useChannelMetadata = (id: string, channelPubkey: string) => {
+  const pool: any = useContext(RelayContext);
   const [metadata, setMetadata] = useState(null);
 
   const fetchFromRelay = useCallback(() => {
-    const pool = new RelayPool(READONLY_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {

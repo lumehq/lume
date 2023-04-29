@@ -3,8 +3,9 @@ import ChannelMembers from '@lume/app/channel/components/members';
 import ChannelMessageForm from '@lume/app/channel/components/messages/form';
 import ChannelMetadata from '@lume/app/channel/components/metadata';
 import ChannelUpdateModal from '@lume/app/channel/components/updateModal';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { channelMessagesAtom, channelReplyAtom } from '@lume/stores/channel';
-import { FULL_RELAYS } from '@lume/stores/constants';
+import { READONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
@@ -12,8 +13,7 @@ import { arrayObjToPureArr } from '@lume/utils/transform';
 
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { RelayPool } from 'nostr-relaypool';
-import { Suspense, lazy, useEffect, useRef } from 'react';
+import { Suspense, lazy, useContext, useEffect, useRef } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 let mutedList: any = [];
@@ -31,6 +31,7 @@ if (typeof window !== 'undefined') {
 const ChannelMessageList = lazy(() => import('@lume/app/channel/components/messageList'));
 
 export function Page() {
+  const pool: any = useContext(RelayContext);
   const pageContext = usePageContext();
   const searchParams: any = pageContext.urlParsed.search;
 
@@ -49,7 +50,6 @@ export function Page() {
 
   useSWRSubscription(channelID ? ['channel', channelID] : null, ([, key], {}: any) => {
     // subscribe to channel
-    const pool = new RelayPool(FULL_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {
@@ -59,8 +59,8 @@ export function Page() {
           limit: 20,
         },
       ],
-      FULL_RELAYS,
-      (event) => {
+      READONLY_RELAYS,
+      (event: { id: string; pubkey: string }) => {
         const message: any = event;
         if (hided.includes(event.id)) {
           message['hide'] = true;

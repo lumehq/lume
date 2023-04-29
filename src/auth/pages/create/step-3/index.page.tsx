@@ -1,4 +1,5 @@
 import User from '@lume/auth/components/user';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 import { createAccount, createPleb } from '@lume/utils/storage';
@@ -6,9 +7,8 @@ import { arrayToNIP02 } from '@lume/utils/transform';
 
 import { CheckCircle } from 'iconoir-react';
 import { useAtom } from 'jotai';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 const initialList = [
@@ -47,6 +47,8 @@ const initialList = [
 ];
 
 export function Page() {
+  const pool: any = useContext(RelayContext);
+
   const [loading, setLoading] = useState(false);
   const [follows, setFollows] = useState([]);
   const [onboarding] = useAtom(onboardingAtom);
@@ -58,7 +60,6 @@ export function Page() {
   };
 
   const broadcastAccount = () => {
-    const pool = new RelayPool(WRITEONLY_RELAYS);
     // build event
     const event: any = {
       content: JSON.stringify(onboarding.metadata),
@@ -74,7 +75,6 @@ export function Page() {
   };
 
   const broadcastContacts = () => {
-    const pool = new RelayPool(WRITEONLY_RELAYS);
     const nip02 = arrayToNIP02(follows);
     // build event
     const event: any = {

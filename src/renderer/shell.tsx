@@ -1,4 +1,4 @@
-import AccountProvider from '@lume/shared/accountProvider';
+import RelayProvider from '@lume/shared/relayProvider';
 import { PageContextProvider } from '@lume/utils/hooks/usePageContext';
 
 import { PageContext } from '@renderer/types';
@@ -14,9 +14,9 @@ export function Shell({ children, pageContext }: { children: React.ReactNode; pa
   return (
     <PageContextProvider pageContext={pageContext}>
       <Layout>
-        <AccountProvider>
+        <RelayProvider>
           <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-        </AccountProvider>
+        </RelayProvider>
       </Layout>
     </PageContextProvider>
   );

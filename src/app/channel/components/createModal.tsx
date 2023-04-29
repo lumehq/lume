@@ -1,4 +1,5 @@
 import { AvatarUploader } from '@lume/shared/avatarUploader';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
@@ -6,14 +7,15 @@ import { createChannel } from '@lume/utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { Cancel, Plus } from 'iconoir-react';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSWRConfig } from 'swr';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export default function ChannelCreateModal() {
+  const pool: any = useContext(RelayContext);
+
   const { account, isError, isLoading } = useActiveAccount();
   const { mutate } = useSWRConfig();
 
@@ -41,7 +43,6 @@ export default function ChannelCreateModal() {
     setLoading(true);
 
     if (!isError && !isLoading && account) {
-      const pool = new RelayPool(WRITEONLY_RELAYS);
       const event: any = {
         content: JSON.stringify(data),
         created_at: dateToUnix(),

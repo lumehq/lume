@@ -1,18 +1,19 @@
+import { RelayContext } from '@lume/shared/relayProvider';
 import Tooltip from '@lume/shared/tooltip';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { MicMute } from 'iconoir-react';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
+import { useContext } from 'react';
 
 export default function MessageMuteButton({ pubkey }: { pubkey: string }) {
+  const pool: any = useContext(RelayContext);
   const { account, isError, isLoading } = useActiveAccount();
 
   const muteUser = () => {
     if (!isError && !isLoading && account) {
-      const pool = new RelayPool(WRITEONLY_RELAYS);
       const event: any = {
         content: '',
         created_at: dateToUnix(),

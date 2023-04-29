@@ -15,18 +15,12 @@ export const METADATA_SERVICE = 'https://us.rbr.bio';
 export const READONLY_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band'];
 
 // write-only relay list
-export const WRITEONLY_RELAYS = ['wss://nostr.mutinywallet.com', 'wss://relay.nostr.band'];
+export const WRITEONLY_RELAYS = ['wss://nostr.mutinywallet.com', 'wss://relay.nostr.band', 'wss://relay.damus.io'];
 
 // full-relay list, used for inital page and chat/channel messages loading
 export const FULL_RELAYS = [
+  'wss://welcome.nostr.wine',
+  'wss://relay.nostr.band',
+  'wss://nostr.mutinywallet.com',
   'wss://relay.damus.io',
-  'wss://nos.lol',
-  'wss://nostr.mom',
-  'wss://relay.plebstr.com',
-  'wss://nostr-pub.wellorder.net',
-  'wss://nostr.zebedee.cloud',
-  'wss://nostr.fmt.wiz.biz',
-  'wss://relay.snort.social',
-  'wss://offchain.pub',
-  'wss://relay.current.fyi',
 ];

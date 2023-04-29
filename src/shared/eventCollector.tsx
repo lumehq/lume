@@ -1,4 +1,5 @@
 import { NetworkStatusIndicator } from '@lume/shared/networkStatusIndicator';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { hasNewerNoteAtom } from '@lume/stores/note';
 import { dateToUnix } from '@lume/utils/getDate';
@@ -7,20 +8,19 @@ import { createChat, createNote, updateAccount } from '@lume/utils/storage';
 import { getParentID, nip02ToArray } from '@lume/utils/transform';
 
 import { useSetAtom } from 'jotai';
-import { RelayPool } from 'nostr-relaypool';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 export default function EventCollector() {
+  const pool: any = useContext(RelayContext);
+
   const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
   const now = useRef(new Date());
 
   const { account, isLoading, isError } = useActiveAccount();
 
-  useSWRSubscription(!isLoading && !isError ? account : null, () => {
-    const follows = nip02ToArray(JSON.parse(account.follows));
-
-    const pool = new RelayPool(READONLY_RELAYS);
+  useSWRSubscription(!isLoading && !isError && account ? ['eventCollector', account] : null, ([, key], {}) => {
+    const follows = nip02ToArray(JSON.parse(key.follows));
     const unsubscribe = pool.subscribe(
       [
         {
@@ -30,11 +30,11 @@ export default function EventCollector() {
         },
         {
           kinds: [0, 3],
-          authors: [account.pubkey],
+          authors: [key.pubkey],
         },
         {
           kinds: [4],
-          '#p': [account.pubkey],
+          '#p': [key.pubkey],
           since: dateToUnix(now.current),
         },
       ],
@@ -68,15 +68,15 @@ export default function EventCollector() {
             break;
           // chat
           case 4:
-            if (event.pubkey !== account.pubkey) {
-              createChat(account.id, event.pubkey, event.created_at);
+            if (event.pubkey !== key.pubkey) {
+              createChat(key.id, event.pubkey, event.created_at);
             }
             break;
           // repost
           case 6:
             createNote(
               event.id,
-              account.id,
+              key.id,
               event.pubkey,
               event.kind,
               event.tags,

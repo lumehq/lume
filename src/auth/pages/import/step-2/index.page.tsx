@@ -1,33 +1,32 @@
-import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
+import { RelayContext } from '@lume/shared/relayProvider';
+import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 import { shortenKey } from '@lume/utils/shortenKey';
 import { createAccount, createPleb } from '@lume/utils/storage';
 
 import { useAtom } from 'jotai';
-import { RelayPool } from 'nostr-relaypool';
 import { getPublicKey } from 'nostr-tools';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import useSWRSubscription from 'swr/subscription';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
+  const pool: any = useContext(RelayContext);
+
   const [loading, setLoading] = useState(false);
   const [onboarding, setOnboarding] = useAtom(onboardingAtom);
   const pubkey = useMemo(() => (onboarding.privkey ? getPublicKey(onboarding.privkey) : ''), [onboarding.privkey]);
 
-  const { data: user, error } = useSWRSubscription(
-    pubkey && !loading
-      ? [
-          {
-            kinds: [0, 3],
-            authors: [pubkey],
-          },
-        ]
-      : null,
-    (key, { next }) => {
-      const pool = new RelayPool(READONLY_RELAYS);
-
-      const unsubscribe = pool.subscribe(key, READONLY_RELAYS, (event: any) => {
+  const { data: user, error } = useSWRSubscription(pubkey && !loading ? pubkey : null, (key, { next }) => {
+    const unsubscribe = pool.subscribe(
+      [
+        {
+          kinds: [0, 3],
+          authors: [key],
+        },
+      ],
+      null,
+      (event: any) => {
         switch (event.kind) {
           case 0:
             // update state
@@ -41,13 +40,13 @@ export function Page() {
           default:
             break;
         }
-      });
+      }
+    );
 
-      return () => {
-        unsubscribe();
-      };
-    }
-  );
+    return () => {
+      unsubscribe();
+    };
+  });
 
   const submit = () => {
     // show loading indicator

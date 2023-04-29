@@ -1,14 +1,15 @@
 import { contentParser } from '@lume/app/newsfeed/components/contentParser';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 
-import { RelayPool } from 'nostr-relaypool';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
+  const pool: any = useContext(RelayContext);
+
   const { data, error } = useSWRSubscription(id ? id : null, (key, { next }) => {
-    const pool = new RelayPool(READONLY_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {

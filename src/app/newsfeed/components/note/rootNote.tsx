@@ -1,17 +1,17 @@
 import { contentParser } from '@lume/app/newsfeed/components/contentParser';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 
-import { RelayPool } from 'nostr-relaypool';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const RootNote = memo(function RootNote({ id, fallback }: { id: string; fallback?: any }) {
+  const pool: any = useContext(RelayContext);
   const parseFallback = fallback.length > 0 ? JSON.parse(fallback) : null;
 
   const { data, error } = useSWRSubscription(parseFallback ? null : id, (key, { next }) => {
-    const pool = new RelayPool(READONLY_RELAYS);
     const unsubscribe = pool.subscribe(
       [
         {

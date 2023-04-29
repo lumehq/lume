@@ -1,17 +1,19 @@
 import UserReply from '@lume/app/channel/components/messages/userReply';
 import { ImagePicker } from '@lume/shared/form/imagePicker';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { channelContentAtom, channelReplyAtom } from '@lume/stores/channel';
-import { FULL_RELAYS, WRITEONLY_RELAYS } from '@lume/stores/constants';
+import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { Cancel } from 'iconoir-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
+import { useContext } from 'react';
 
 export default function ChannelMessageForm({ channelID }: { channelID: string | string[] }) {
+  const pool: any = useContext(RelayContext);
   const { account, isLoading, isError } = useActiveAccount();
 
   const [value, setValue] = useAtom(channelContentAtom);
@@ -34,7 +36,6 @@ export default function ChannelMessageForm({ channelID }: { channelID: string | 
     }
 
     if (!isError && !isLoading && account) {
-      const pool = new RelayPool(WRITEONLY_RELAYS);
       const event: any = {
         content: value,
         created_at: dateToUnix(),
@@ -46,7 +47,7 @@ export default function ChannelMessageForm({ channelID }: { channelID: string | 
       event.sig = signEvent(event, account.privkey);
 
       // publish note
-      pool.publish(event, FULL_RELAYS);
+      pool.publish(event, WRITEONLY_RELAYS);
       // reset state
       resetValue();
       // reset channel reply

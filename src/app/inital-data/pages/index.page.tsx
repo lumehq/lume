@@ -1,5 +1,6 @@
 import LumeIcon from '@lume/shared/icons/lume';
-import { FULL_RELAYS } from '@lume/stores/constants';
+import { RelayContext } from '@lume/shared/relayProvider';
+import { READONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
 import {
   addToBlacklist,
@@ -12,11 +13,11 @@ import {
 } from '@lume/utils/storage';
 import { getParentID, nip02ToArray } from '@lume/utils/transform';
 
-import { RelayPool } from 'nostr-relaypool';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export function Page() {
+  const pool: any = useContext(RelayContext);
   const now = useRef(new Date());
 
   useEffect(() => {
@@ -28,7 +29,6 @@ export function Page() {
       const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
 
-      const pool = new RelayPool(FULL_RELAYS);
       const follows = nip02ToArray(JSON.parse(account.follows));
       const query = [];
 
@@ -71,7 +71,7 @@ export function Page() {
       // subscribe relays
       unsubscribe = pool.subscribe(
         query,
-        FULL_RELAYS,
+        READONLY_RELAYS,
         (event: any) => {
           switch (event.kind) {
             // short text note
@@ -140,7 +140,7 @@ export function Page() {
       }
       clearTimeout(timeout);
     };
-  }, []);
+  }, [pool]);
 
   return (
     <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">

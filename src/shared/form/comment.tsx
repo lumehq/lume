@@ -1,20 +1,19 @@
+import { RelayContext } from '@lume/shared/relayProvider';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 export default function FormComment({ eventID }: { eventID: any }) {
+  const pool: any = useContext(RelayContext);
   const { account } = useActiveAccount();
 
   const [value, setValue] = useState('');
-
   const profile = JSON.parse(account.metadata);
 
   const submitEvent = () => {
-    const pool = new RelayPool(WRITEONLY_RELAYS);
     const event: any = {
       content: value,
       created_at: dateToUnix(),

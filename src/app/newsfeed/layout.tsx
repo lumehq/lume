@@ -10,7 +10,7 @@ export function LayoutNewsfeed({ children }: { children: React.ReactNode }) {
           data-tauri-drag-region
           className="relative h-11 shrink-0 border-b border-zinc-100 bg-white dark:border-zinc-900 dark:bg-black"
         >
-          <AppHeader collector={true} />
+          <AppHeader />
         </div>
         <div className="relative flex min-h-0 w-full flex-1">
           <div className="relative w-[68px] shrink-0 border-r border-zinc-900">

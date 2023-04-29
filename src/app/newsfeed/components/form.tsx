@@ -1,4 +1,5 @@
 import { ImagePicker } from '@lume/shared/form/imagePicker';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { noteContentAtom } from '@lume/stores/note';
 import { dateToUnix } from '@lume/utils/getDate';
@@ -6,17 +7,17 @@ import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
-import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
+import { useContext } from 'react';
 
 export default function NoteForm() {
+  const pool: any = useContext(RelayContext);
   const { account, isLoading, isError } = useActiveAccount();
   const [value, setValue] = useAtom(noteContentAtom);
   const resetValue = useResetAtom(noteContentAtom);
 
   const submitEvent = () => {
     if (!isLoading && !isError && account) {
-      const pool = new RelayPool(WRITEONLY_RELAYS);
       const event: any = {
         content: value,
         created_at: dateToUnix(),
