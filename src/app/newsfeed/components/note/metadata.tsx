@@ -56,9 +56,9 @@ export default function NoteMetadata({ id, eventPubkey }: { id: string; eventPub
       <NoteReply id={id} replies={replies} />
       <NoteLike id={id} pubkey={eventPubkey} likes={likes} />
       <NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
-      <button className="inline-flex w-min items-center gap-1.5">
-        <ZapIcon width={20} height={20} className="text-zinc-400" />
-        <span className="text-sm leading-none text-zinc-400">{0}</span>
+      <button className="group inline-flex w-min items-center gap-1.5">
+        <ZapIcon width={20} height={20} className="text-zinc-400 group-hover:text-orange-400" />
+        <span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">{0}</span>
       </button>
     </div>
   );
