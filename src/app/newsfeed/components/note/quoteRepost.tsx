@@ -13,7 +13,7 @@ export const NoteQuoteRepost = memo(function NoteQuoteRepost({ event }: { event:
         <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
         <NoteRepostUser pubkey={event.pubkey} time={event.created_at} />
       </div>
-      <RootNote id={rootID} />
+      <RootNote id={rootID} fallback={event.content} />
     </div>
   );
 });

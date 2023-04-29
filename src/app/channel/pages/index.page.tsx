@@ -1,4 +1,5 @@
 import ChannelBlackList from '@lume/app/channel/components/blacklist';
+import ChannelMembers from '@lume/app/channel/components/members';
 import ChannelMessageForm from '@lume/app/channel/components/messages/form';
 import ChannelMetadata from '@lume/app/channel/components/metadata';
 import ChannelUpdateModal from '@lume/app/channel/components/updateModal';
@@ -54,7 +55,7 @@ export function Page() {
         {
           '#e': [key],
           kinds: [42],
-          since: dateToUnix(hoursAgo(72, now.current)),
+          since: dateToUnix(hoursAgo(24, now.current)),
           limit: 20,
         },
       ],
@@ -62,7 +63,7 @@ export function Page() {
       (event) => {
         const message: any = event;
         if (hided.includes(event.id)) {
-          message.push({ hide: true });
+          message['hide'] = true;
         }
         if (!muted.includes(event.pubkey)) {
           setChannelMessages((prev) => [...prev, message]);
@@ -89,6 +90,7 @@ export function Page() {
           <ChannelMetadata id={channelID} pubkey={channelPubkey} />
         </div>
         <div className="flex items-center gap-2">
+          <ChannelMembers />
           <ChannelBlackList blacklist={mutedList} />
           {!isLoading && !isError && account ? (
             account.pubkey === channelPubkey && <ChannelUpdateModal id={account.id} />

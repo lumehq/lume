@@ -11,5 +11,12 @@ export const sortedChannelMessagesAtom = atom((get) => {
   return messages.sort((x: { created_at: number }, y: { created_at: number }) => x.created_at - y.created_at);
 });
 
+// channel user list
+export const channelMembersAtom = atom((get) => {
+  const messages = get(channelMessagesAtom);
+  const uniqueMembers = new Set(messages.map((m: { pubkey: string }) => m.pubkey));
+  return uniqueMembers;
+});
+
 // channel message content
 export const channelContentAtom = atomWithReset('');

@@ -21,7 +21,7 @@ export default function ChannelMetadata({ id, pubkey }: { id: string; pubkey: st
         <img
           src={metadata?.picture || DEFAULT_AVATAR}
           alt={id}
-          className="h-8 w-8 rounded bg-zinc-900 object-contain"
+          className="h-8 w-8 rounded bg-zinc-900 object-contain ring-2 ring-zinc-950"
         />
       </div>
       <div className="flex flex-col gap-1">

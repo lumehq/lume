@@ -7,8 +7,6 @@ export const Placeholder = () => {
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-2 text-sm">
               <div className="h-4 w-16 rounded bg-zinc-700" />
-              <span className="text-zinc-500">·</span>
-              <div className="h-4 w-12 rounded bg-zinc-700" />
             </div>
           </div>
         </div>

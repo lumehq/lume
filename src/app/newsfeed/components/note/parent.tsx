@@ -7,35 +7,29 @@ import { memo } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
-  const { data, error } = useSWRSubscription(
-    id
-      ? [
-          {
-            ids: [id],
-            kinds: [1],
-          },
-        ]
-      : null,
-    (key, { next }) => {
-      const pool = new RelayPool(READONLY_RELAYS);
-      const unsubscribe = pool.subscribe(
-        key,
-        READONLY_RELAYS,
-        (event: any) => {
-          next(null, event);
-        },
-        undefined,
-        undefined,
+  const { data, error } = useSWRSubscription(id ? id : null, (key, { next }) => {
+    const pool = new RelayPool(READONLY_RELAYS);
+    const unsubscribe = pool.subscribe(
+      [
         {
-          unsubscribeOnEose: true,
-        }
-      );
+          ids: [key],
+        },
+      ],
+      READONLY_RELAYS,
+      (event: any) => {
+        next(null, event);
+      },
+      undefined,
+      undefined,
+      {
+        unsubscribeOnEose: true,
+      }
+    );
 
-      return () => {
-        unsubscribe();
-      };
-    }
-  );
+    return () => {
+      unsubscribe();
+    };
+  });
 
   return (
     <div className="relative pb-5">
@@ -48,8 +42,6 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-2 text-sm">
                   <div className="h-4 w-16 rounded bg-zinc-700" />
-                  <span className="text-zinc-500">·</span>
-                  <div className="h-4 w-12 rounded bg-zinc-700" />
                 </div>
               </div>
             </div>
