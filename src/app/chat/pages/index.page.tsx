@@ -23,7 +23,7 @@ export function Page() {
   const setChatMessages = useSetAtom(chatMessagesAtom);
   const resetChatMessages = useResetAtom(chatMessagesAtom);
 
-  useSWRSubscription(pubkey ? pubkey : null, (key: string, {}: any) => {
+  useSWRSubscription(pubkey ? ['chat', pubkey] : null, ([, key], {}: any) => {
     const pool = new RelayPool(FULL_RELAYS);
     const unsubscribe = pool.subscribe(
       [

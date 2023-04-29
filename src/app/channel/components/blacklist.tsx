@@ -10,7 +10,7 @@ export default function ChannelBlackList({ blacklist }: { blacklist: any }) {
       {({ open }) => (
         <>
           <Popover.Button
-            className={`group inline-flex h-8 w-8 items-center justify-center rounded-md ring-2 ring-zinc-950 ${
+            className={`group inline-flex h-8 w-8 items-center justify-center rounded-md ring-2 ring-zinc-950 focus:outline-none ${
               open ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-zinc-900 hover:bg-zinc-800'
             }`}
           >

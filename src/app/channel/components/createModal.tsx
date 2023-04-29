@@ -10,10 +10,12 @@ import { RelayPool } from 'nostr-relaypool';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSWRConfig } from 'swr';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
 export default function ChannelCreateModal() {
   const { account, isError, isLoading } = useActiveAccount();
+  const { mutate } = useSWRConfig();
 
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(DEFAULT_AVATAR);
@@ -54,13 +56,15 @@ export default function ChannelCreateModal() {
       pool.publish(event, WRITEONLY_RELAYS);
       // insert to database
       createChannel(event.id, event.pubkey, event.content, event.created_at);
+      // update channe llist
+      mutate('channels');
       // reset form
       reset();
       setTimeout(() => {
         // close modal
         setIsOpen(false);
         // redirect to channel page
-        navigate(`/channel?id=${event.id}`);
+        navigate(`/app/channel?id=${event.id}`);
       }, 2000);
     } else {
       console.log('error');
@@ -204,7 +208,7 @@ export default function ChannelCreateModal() {
                       <button
                         type="submit"
                         disabled={!isDirty || !isValid}
-                        className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
+                        className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white shadow-button active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         {loading ? (
                           <svg

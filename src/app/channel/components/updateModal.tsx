@@ -35,15 +35,11 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
   } = useForm({
     defaultValues: async () => {
       const channel = await getChannel(id);
-      if (channel) {
-        const metadata = JSON.parse(channel.metadata);
-        // update image state
-        setImage(metadata.picture);
-        // set default values
-        return metadata;
-      } else {
-        return null;
-      }
+      const metadata = JSON.parse(channel.metadata);
+      // update image state
+      setImage(metadata.picture);
+      // set default values
+      return metadata;
     },
   });
 
@@ -70,6 +66,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
       reset();
       // close modal
       setIsOpen(false);
+      setLoading(false);
     } else {
       console.log('error');
     }
@@ -84,7 +81,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
       <button
         type="button"
         onClick={() => openModal()}
-        className="group inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800"
+        className="group inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800 focus:outline-none"
       >
         <EditPencil width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
       </button>
@@ -207,7 +204,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
                       <button
                         type="submit"
                         disabled={!isDirty || !isValid}
-                        className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
+                        className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white shadow-button active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         {loading ? (
                           <svg
@@ -231,7 +228,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
                             ></path>
                           </svg>
                         ) : (
-                          'Create channel'
+                          'Update channel'
                         )}
                       </button>
                     </div>

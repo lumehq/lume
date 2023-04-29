@@ -47,7 +47,7 @@ export function Page() {
   const hided = arrayObjToPureArr(activeHidedList);
   const muted = arrayObjToPureArr(activeMutedList);
 
-  useSWRSubscription(channelID ? channelID : null, (key: string, {}: any) => {
+  useSWRSubscription(channelID ? ['channel', channelID] : null, ([, key], {}: any) => {
     // subscribe to channel
     const pool = new RelayPool(FULL_RELAYS);
     const unsubscribe = pool.subscribe(
@@ -93,7 +93,7 @@ export function Page() {
           <ChannelMembers />
           <ChannelBlackList blacklist={mutedList} />
           {!isLoading && !isError && account ? (
-            account.pubkey === channelPubkey && <ChannelUpdateModal id={account.id} />
+            account.pubkey === channelPubkey && <ChannelUpdateModal id={channelID} />
           ) : (
             <></>
           )}

@@ -14,10 +14,10 @@ export const messageParser = (noteContent: any) => {
       return <ImagePreview key={match + i} url={match} size="small" />;
     } else if (match.match(/(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/)) {
       // youtube
-      return <YoutubePreview key={match + i} url={match} />;
+      return <YoutubePreview key={match + i} url={match} size="small" />;
     } else if (match.match(/\.(mp4|webm)$/i)) {
       // video
-      return <VideoPreview key={match + i} url={match} />;
+      return <VideoPreview key={match + i} url={match} size="small" />;
     } else {
       return (
         <a key={match + i} href={match} className="cursor-pointer text-fuchsia-500" target="_blank" rel="noreferrer">
