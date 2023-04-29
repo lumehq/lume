@@ -12,15 +12,15 @@ export const IMGPROXY_URL = 'https://imgproxy.iris.to/insecure';
 export const METADATA_SERVICE = 'https://us.rbr.bio';
 
 // read-only relay list
-export const READONLY_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band'];
+export const READONLY_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band/all', 'wss://relay.damus.io'];
 
 // write-only relay list
 export const WRITEONLY_RELAYS = ['wss://nostr.mutinywallet.com', 'wss://relay.nostr.band', 'wss://relay.damus.io'];
 
-// full-relay list, used for inital page and chat/channel messages loading
+// full-relay list
 export const FULL_RELAYS = [
   'wss://welcome.nostr.wine',
-  'wss://relay.nostr.band',
+  'wss://relay.nostr.band/all',
   'wss://nostr.mutinywallet.com',
   'wss://relay.damus.io',
 ];

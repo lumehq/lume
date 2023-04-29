@@ -14,7 +14,7 @@ export default function ChannelMessageItem({ data }: { data: any }) {
         <div className="-mt-[17px] pl-[48px]">
           <div className="flex flex-col gap-2">
             <div className="whitespace-pre-line break-words break-words text-sm leading-tight">
-              {data.hide ? <span>[hided message]</span> : content}
+              {data.hide ? <span className="italic text-zinc-400">[hided message]</span> : content}
             </div>
           </div>
         </div>
