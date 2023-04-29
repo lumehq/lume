@@ -1,4 +1,6 @@
 import { AvatarUploader } from '@lume/shared/avatarUploader';
+import CancelIcon from '@lume/shared/icons/cancel';
+import PlusIcon from '@lume/shared/icons/plus';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
@@ -6,7 +8,6 @@ import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { createChannel } from '@lume/utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Cancel, Plus } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -84,7 +85,7 @@ export default function ChannelCreateModal() {
         className="group inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900"
       >
         <div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">
-          <Plus width={12} height={12} className="text-zinc-500" />
+          <PlusIcon width={12} height={12} className="text-zinc-500" />
         </div>
         <div>
           <h5 className="text-sm font-medium text-zinc-500 group-hover:text-zinc-400">Add a new channel</h5>
@@ -129,7 +130,7 @@ export default function ChannelCreateModal() {
                         autoFocus={false}
                         className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-900"
                       >
-                        <Cancel width={20} height={20} className="text-zinc-300" />
+                        <CancelIcon width={20} height={20} className="text-zinc-300" />
                       </button>
                     </div>
                     <Dialog.Description className="leading-tight text-zinc-400">

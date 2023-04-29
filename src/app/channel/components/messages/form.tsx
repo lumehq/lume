@@ -1,12 +1,12 @@
 import UserReply from '@lume/app/channel/components/messages/userReply';
 import { ImagePicker } from '@lume/shared/form/imagePicker';
+import CancelIcon from '@lume/shared/icons/cancel';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { channelContentAtom, channelReplyAtom } from '@lume/stores/channel';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
-import { Cancel } from 'iconoir-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -87,7 +87,7 @@ export default function ChannelMessageForm({ channelID }: { channelID: string | 
               onClick={() => stopReply()}
               className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
             >
-              <Cancel width={12} height={12} className="text-zinc-100" />
+              <CancelIcon width={12} height={12} className="text-zinc-100" />
             </button>
           </div>
         </div>

@@ -1,10 +1,10 @@
 import ActiveAccount from '@lume/shared/accounts/active';
 import InactiveAccount from '@lume/shared/accounts/inactive';
 import LumeIcon from '@lume/shared/icons/lume';
+import PlusIcon from '@lume/shared/icons/plus';
 import { APP_VERSION } from '@lume/stores/constants';
 import { getAccounts } from '@lume/utils/storage';
 
-import { Plus } from 'iconoir-react';
 import useSWR from 'swr';
 
 const fetcher = () => getAccounts();
@@ -39,7 +39,7 @@ export default function MultiAccounts() {
           href="/onboarding"
           className="group relative flex h-11 w-11 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 hover:border-zinc-400"
         >
-          <Plus width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
+          <PlusIcon width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
         </a>
       </div>
       <div className="flex flex-col gap-0.5 text-center">

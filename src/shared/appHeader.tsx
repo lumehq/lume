@@ -1,4 +1,6 @@
-import { ArrowLeft, ArrowRight, Refresh } from 'iconoir-react';
+import ArrowLeftIcon from '@lume/shared/icons/arrowLeft';
+import ArrowRightIcon from '@lume/shared/icons/arrowRight';
+import RefreshIcon from '@lume/shared/icons/refresh';
 
 let platformName = 'darwin';
 
@@ -27,19 +29,19 @@ export default function AppHeader() {
           onClick={() => goBack()}
           className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
         >
-          <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
+          <ArrowLeftIcon width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
         </button>
         <button
           onClick={() => goForward()}
           className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
         >
-          <ArrowRight width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
+          <ArrowRightIcon width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
         </button>
         <button
           onClick={() => reload()}
           className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
         >
-          <Refresh width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
+          <RefreshIcon width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
         </button>
       </div>
       <div data-tauri-drag-region className="flex h-full w-full items-center justify-between">

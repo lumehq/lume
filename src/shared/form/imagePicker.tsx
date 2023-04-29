@@ -1,3 +1,4 @@
+import PlusIcon from '@lume/shared/icons/plus';
 import { channelContentAtom } from '@lume/stores/channel';
 import { chatContentAtom } from '@lume/stores/chat';
 import { noteContentAtom } from '@lume/stores/note';
@@ -5,7 +6,6 @@ import { createBlobFromFile } from '@lume/utils/createBlobFromFile';
 
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
-import { Plus } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 
@@ -89,7 +89,7 @@ export const ImagePicker = ({ type }: { type: string }) => {
           ></path>
         </svg>
       ) : (
-        <Plus width={16} height={16} className="text-zinc-400" />
+        <PlusIcon width={16} height={16} className="text-zinc-400" />
       )}
     </button>
   );
