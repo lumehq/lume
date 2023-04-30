@@ -16,7 +16,7 @@ export default function NoteMetadata({ id, eventPubkey }: { id: string; eventPub
   const [likes, setLikes] = useState(0);
   const [reposts, setReposts] = useState(0);
 
-  useSWRSubscription(id ? ['metadata', id] : null, ([, key], {}) => {
+  useSWRSubscription(id ? ['note-metadata', id] : null, ([, key], {}) => {
     const unsubscribe = pool.subscribe(
       [
         {

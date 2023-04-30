@@ -70,10 +70,10 @@ export const getQuoteID = (arr: string[]) => {
   return quoteID;
 };
 
-// sort messages by timestamp
-export const sortMessages = (arr: any) => {
+// sort events by timestamp
+export const sortEvents = (arr: any) => {
   arr.sort((a, b) => {
-    return b.created_at - a.created_at;
+    return a.created_at - b.created_at;
   });
 
   return arr;

@@ -18,15 +18,10 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
     return <></>;
   };
 
-  const openUserPage = (e) => {
-    e.stopPropagation();
-    navigate(`/user?pubkey=${event.pubkey}`);
-  };
-
-  const openThread = (e) => {
+  const openNote = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      navigate(`/newsfeed/note?id=${event.parent_id}`);
+      navigate(`/app/note?id=${event.parent_id}`);
     } else {
       e.stopPropagation();
     }
@@ -34,14 +29,12 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
 
   return (
     <div
-      onClick={(e) => openThread(e)}
+      onClick={(e) => openNote(e)}
       className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
     >
       {parentNote()}
       <div className="relative z-10 flex flex-col">
-        <div onClick={(e) => openUserPage(e)}>
-          <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
-        </div>
+        <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
         <div className="mt-1 pl-[52px]">
           <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">{content}</div>
         </div>

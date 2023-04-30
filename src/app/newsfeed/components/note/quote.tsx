@@ -5,6 +5,7 @@ import { READONLY_RELAYS } from '@lume/stores/constants';
 
 import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
+import { navigate } from 'vite-plugin-ssr/client/router';
 
 export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   const pool: any = useContext(RelayContext);
@@ -32,8 +33,20 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
     };
   });
 
+  const openNote = (e) => {
+    const selection = window.getSelection();
+    if (selection.toString().length === 0) {
+      navigate(`/app/note?id=${id}`);
+    } else {
+      e.stopPropagation();
+    }
+  };
+
   return (
-    <div className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3">
+    <div
+      onClick={(e) => openNote(e)}
+      className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3"
+    >
       {error && <div>failed to load</div>}
       {!data ? (
         <div className="h-6 w-full animate-pulse select-text flex-col rounded bg-zinc-800"></div>

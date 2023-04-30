@@ -69,7 +69,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
               </div>
             </div>
             <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
-              <NoteMetadata id={data.event_id} eventPubkey={data.pubkey} />
+              <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
             </div>
           </div>
         </>

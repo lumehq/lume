@@ -35,10 +35,10 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
     };
   });
 
-  const openThread = (e) => {
+  const openNote = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      navigate(`/newsfeed/note?id=${id}`);
+      navigate(`/app/note?id=${id}`);
     } else {
       e.stopPropagation();
     }
@@ -46,14 +46,16 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
 
   if (parseFallback) {
     return (
-      <div onClick={(e) => openThread(e)} className="relative z-10 flex flex-col">
+      <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
         <NoteDefaultUser pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
         <div className="mt-1 pl-[52px]">
           <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
             {contentParser(parseFallback.content, parseFallback.tags)}
           </div>
         </div>
-        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]"></div>
+        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+          <NoteMetadata id={parseFallback.id} eventPubkey={parseFallback.pubkey} />
+        </div>
       </div>
     );
   }
@@ -84,7 +86,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
           </div>
         </div>
       ) : (
-        <div onClick={(e) => openThread(e)} className="relative z-10 flex flex-col">
+        <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
             <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
@@ -92,7 +94,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
             </div>
           </div>
           <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
-            <NoteMetadata id={data.event_id} eventPubkey={data.pubkey} />
+            <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
           </div>
         </div>
       )}

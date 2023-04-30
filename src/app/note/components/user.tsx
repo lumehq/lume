@@ -7,7 +7,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export default function ChatMessageUser({ pubkey, time }: { pubkey: string; time: number }) {
+export default function NoteReplyUser({ pubkey, time }: { pubkey: string; time: number }) {
   const { user, isError, isLoading } = useProfile(pubkey);
 
   return (
