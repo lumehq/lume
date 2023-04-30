@@ -7,6 +7,9 @@ dependencies:
   '@headlessui/react':
     specifier: ^1.7.14
     version: 1.7.14(react-dom@18.2.0)(react@18.2.0)
+  '@preact/signals-react':
+    specifier: 1.2.2
+    version: 1.2.2(react@18.2.0)
   '@supabase/supabase-js':
     specifier: ^2.21.0
     version: 2.21.0(encoding@0.1.13)
@@ -751,6 +754,22 @@ packages:
     resolution:
       { integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g== }
     dev: true
+
+  /@preact/signals-core@1.3.0:
+    resolution:
+      { integrity: sha512-M+M3ZOtd1dtV/uasyk4SZu1vbfEJ4NeENv0F7F12nijZYedB5wSgbtZcuACyssnTznhF4ctUyrR0dZHuHfyWKA== }
+    dev: false
+
+  /@preact/signals-react@1.2.2(react@18.2.0):
+    resolution:
+      { integrity: sha512-GoESQ9n1bns2FD+8yqH7lBvQMavboKLCNEW+s0hs3Wcp5B1VHvVxwJo6aFs6rpxoh1/q8Tvwbi4vIeehBD2mzA== }
+    peerDependencies:
+      react: 17.x || 18.x
+    dependencies:
+      '@preact/signals-core': 1.3.0
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
 
   /@rollup/plugin-virtual@3.0.1:
     resolution:
