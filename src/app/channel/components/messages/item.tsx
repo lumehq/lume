@@ -20,7 +20,7 @@ export default function ChannelMessageItem({ data }: { data: any }) {
         </div>
       </div>
       <div className="absolute -top-4 right-4 z-10 hidden group-hover:inline-flex">
-        <div className="inline-flex h-7 items-center justify-center gap-1 rounded bg-zinc-900 px-0.5 shadow-md shadow-black/20 ring-1 ring-zinc-800">
+        <div className="inline-flex h-8 items-center justify-center gap-1.5 rounded bg-zinc-900 px-0.5 shadow-md shadow-black/20 ring-1 ring-zinc-800">
           <MessageReplyButton id={data.id} pubkey={data.pubkey} content={data.content} />
           <MessageHideButton id={data.id} />
           <MessageMuteButton pubkey={data.pubkey} />

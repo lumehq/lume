@@ -64,6 +64,8 @@ export function Page() {
         const message: any = event;
         if (hided.includes(event.id)) {
           message['hide'] = true;
+        } else {
+          message['hide'] = false;
         }
         if (!muted.includes(event.pubkey)) {
           setChannelMessages((prev) => [...prev, message]);
@@ -77,10 +79,18 @@ export function Page() {
   });
 
   useEffect(() => {
-    // reset channel reply
-    resetChannelReply();
-    // reset channel messages
-    resetChannelMessages();
+    let ignore = false;
+
+    if (!ignore) {
+      // reset channel reply
+      resetChannelReply();
+      // reset channel messages
+      resetChannelMessages();
+    }
+
+    return () => {
+      ignore = true;
+    };
   });
 
   return (

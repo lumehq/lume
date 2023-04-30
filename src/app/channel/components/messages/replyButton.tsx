@@ -1,7 +1,7 @@
+import ReplyMessageIcon from '@lume/shared/icons/replyMessage';
 import Tooltip from '@lume/shared/tooltip';
 import { channelReplyAtom } from '@lume/stores/channel';
 
-import { Reply } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 
 export default function MessageReplyButton({ id, pubkey, content }: { id: string; pubkey: string; content: string }) {
@@ -12,12 +12,12 @@ export default function MessageReplyButton({ id, pubkey, content }: { id: string
   };
 
   return (
-    <Tooltip message="Reply">
+    <Tooltip message="Reply to message">
       <button
         onClick={() => createReply()}
-        className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-zinc-800"
+        className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
       >
-        <Reply width={16} height={16} className="text-zinc-400" />
+        <ReplyMessageIcon width={16} height={16} className="text-zinc-200" />
       </button>
     </Tooltip>
   );

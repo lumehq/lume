@@ -52,8 +52,16 @@ export function Page() {
   });
 
   useEffect(() => {
-    // reset channel messages
-    resetChatMessages();
+    let ignore = false;
+
+    if (!ignore) {
+      // reset chat messages
+      resetChatMessages();
+    }
+
+    return () => {
+      ignore = true;
+    };
   });
 
   return (

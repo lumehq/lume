@@ -1,7 +1,7 @@
 import MutedItem from '@lume/app/channel/components/mutedItem';
+import MuteIcon from '@lume/shared/icons/mute';
 
 import { Popover, Transition } from '@headlessui/react';
-import { MicMute } from 'iconoir-react';
 import { Fragment } from 'react';
 
 export default function ChannelBlackList({ blacklist }: { blacklist: any }) {
@@ -14,7 +14,7 @@ export default function ChannelBlackList({ blacklist }: { blacklist: any }) {
               open ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-zinc-900 hover:bg-zinc-800'
             }`}
           >
-            <MicMute width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
+            <MuteIcon width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
           </Popover.Button>
           <Transition
             as={Fragment}
