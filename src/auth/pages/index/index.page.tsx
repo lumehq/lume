@@ -1,4 +1,4 @@
-import { ArrowRight } from 'iconoir-react';
+import ArrowRightIcon from '@lume/shared/icons/arrowRight';
 
 const PLEBS = [
   'https://133332.xyz/p.jpg',
@@ -99,7 +99,7 @@ export function Page() {
             className="relative inline-flex h-14 w-64 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 text-lg font-medium ring-1 ring-zinc-800 hover:bg-zinc-800"
           >
             Create new key
-            <ArrowRight width={20} height={20} />
+            <ArrowRightIcon width={20} height={20} />
           </a>
           <a
             href="/auth/import"

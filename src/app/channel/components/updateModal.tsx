@@ -1,4 +1,6 @@
 import { AvatarUploader } from '@lume/shared/avatarUploader';
+import CancelIcon from '@lume/shared/icons/cancel';
+import EditIcon from '@lume/shared/icons/edit';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
@@ -6,7 +8,6 @@ import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { getChannel, updateChannelMetadata } from '@lume/utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Cancel, EditPencil } from 'iconoir-react';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -83,7 +84,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
         onClick={() => openModal()}
         className="group inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800 focus:outline-none"
       >
-        <EditPencil width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
+        <EditIcon width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
       </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -124,7 +125,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
                         autoFocus={false}
                         className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-900"
                       >
-                        <Cancel width={20} height={20} className="text-zinc-300" />
+                        <CancelIcon width={20} height={20} className="text-zinc-300" />
                       </button>
                     </div>
                     <Dialog.Description className="leading-tight text-zinc-400">

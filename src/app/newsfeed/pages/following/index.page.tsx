@@ -7,7 +7,6 @@ import { getNotes } from '@lume/utils/storage';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ArrowUp } from 'iconoir-react';
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 
@@ -55,7 +54,6 @@ export function Page() {
       {hasNewerNote && (
         <div className="absolute left-1/2 top-2 z-50 -translate-x-1/2 transform">
           <button className="inline-flex h-8 transform items-center justify-center gap-1 rounded-full bg-fuchsia-500 pl-3 pr-3.5 text-sm shadow-md shadow-fuchsia-800/20 active:translate-y-1">
-            <ArrowUp width={14} height={14} />
             Load latest
           </button>
         </div>

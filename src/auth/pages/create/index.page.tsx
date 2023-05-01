@@ -1,6 +1,7 @@
+import EyeOffIcon from '@lume/shared/icons/eyeOff';
+import EyeOnIcon from '@lume/shared/icons/eyeOn';
 import { onboardingAtom } from '@lume/stores/onboarding';
 
-import { EyeClose, EyeEmpty } from 'iconoir-react';
 import { useSetAtom } from 'jotai';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useMemo, useState } from 'react';
@@ -60,9 +61,9 @@ export function Page() {
                 className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
               >
                 {type === 'password' ? (
-                  <EyeClose width={20} height={20} className="text-zinc-500 group-hover:text-zinc-200" />
+                  <EyeOffIcon width={20} height={20} className="text-zinc-500 group-hover:text-zinc-200" />
                 ) : (
-                  <EyeEmpty width={20} height={20} className="text-zinc-500 group-hover:text-zinc-200" />
+                  <EyeOnIcon width={20} height={20} className="text-zinc-500 group-hover:text-zinc-200" />
                 )}
               </button>
             </div>

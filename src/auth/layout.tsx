@@ -1,4 +1,5 @@
-import { ArrowLeft, ArrowRight } from 'iconoir-react';
+import ArrowLeftIcon from '@lume/shared/icons/arrowLeft';
+import ArrowRightIcon from '@lume/shared/icons/arrowRight';
 
 let platformName = 'darwin';
 
@@ -29,13 +30,13 @@ export function LayoutOnboarding({ children }: { children: React.ReactNode }) {
                 onClick={() => goBack()}
                 className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
               >
-                <ArrowLeft width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
+                <ArrowLeftIcon width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
               </button>
               <button
                 onClick={() => goForward()}
                 className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"
               >
-                <ArrowRight width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
+                <ArrowRightIcon width={16} height={16} className="text-zinc-500 group-hover:text-zinc-300" />
               </button>
             </div>
           </div>

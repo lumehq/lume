@@ -1,7 +1,7 @@
+import CopyIcon from '@lume/shared/icons/copy';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { useChannelProfile } from '@lume/utils/hooks/useChannelProfile';
 
-import { Copy } from 'iconoir-react';
 import { nip19 } from 'nostr-tools';
 
 export default function ChannelMetadata({ id, pubkey }: { id: string; pubkey: string }) {
@@ -28,7 +28,7 @@ export default function ChannelMetadata({ id, pubkey }: { id: string; pubkey: st
         <div className="flex items-center gap-1">
           <h5 className="truncate text-sm font-medium leading-none text-zinc-100">{metadata?.name}</h5>
           <button onClick={() => copyNoteID()}>
-            <Copy width={14} height={14} className="text-zinc-400" />
+            <CopyIcon width={14} height={14} className="text-zinc-400" />
           </button>
         </div>
         <p className="text-xs leading-none text-zinc-400">

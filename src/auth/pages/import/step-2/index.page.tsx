@@ -1,5 +1,5 @@
 import { RelayContext } from '@lume/shared/relayProvider';
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
+import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 import { shortenKey } from '@lume/utils/shortenKey';
 import { createAccount, createPleb } from '@lume/utils/storage';
@@ -17,7 +17,7 @@ export function Page() {
   const [onboarding, setOnboarding] = useAtom(onboardingAtom);
   const pubkey = useMemo(() => (onboarding.privkey ? getPublicKey(onboarding.privkey) : ''), [onboarding.privkey]);
 
-  const { data: user, error } = useSWRSubscription(pubkey && !loading ? pubkey : null, (key, { next }) => {
+  const { data, error } = useSWRSubscription(pubkey ? pubkey : null, (key, { next }) => {
     const unsubscribe = pool.subscribe(
       [
         {
@@ -25,7 +25,7 @@ export function Page() {
           authors: [key],
         },
       ],
-      null,
+      READONLY_RELAYS,
       (event: any) => {
         switch (event.kind) {
           case 0:
@@ -58,7 +58,7 @@ export function Page() {
       .then((res) => {
         if (res) {
           for (const tag of onboarding.follows) {
-            fetch(`https://rbr.bio/${tag[1]}/metadata.json`)
+            fetch(`https://us.rbr.bio/${tag[1]}/metadata.json`)
               .then((data) => data.json())
               .then((data) => createPleb(tag[1], data ?? ''));
           }
@@ -78,7 +78,7 @@ export function Page() {
         </div>
         <div className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-4">
           {error && <div>Failed to load profile</div>}
-          {!user ? (
+          {!data ? (
             <div className="w-full">
               <div className="flex items-center gap-2">
                 <div className="h-11 w-11 animate-pulse rounded-lg bg-zinc-800"></div>
@@ -93,12 +93,12 @@ export function Page() {
               <div className="flex items-center gap-2">
                 <img
                   className="relative inline-flex h-11 w-11 rounded-lg ring-2 ring-zinc-900"
-                  src={user.picture || DEFAULT_AVATAR}
+                  src={data.picture || DEFAULT_AVATAR}
                   alt={pubkey}
                 />
                 <div>
-                  <h3 className="font-medium leading-none text-zinc-200">{user.display_name || user.name}</h3>
-                  <p className="text-sm text-zinc-400">{user.nip05 || shortenKey(pubkey)}</p>
+                  <h3 className="font-medium leading-none text-zinc-200">{data.display_name || data.name}</h3>
+                  <p className="text-sm text-zinc-400">{data.nip05 || shortenKey(pubkey)}</p>
                 </div>
               </div>
               <button

@@ -1,11 +1,11 @@
 import User from '@lume/auth/components/user';
+import CheckCircleIcon from '@lume/shared/icons/checkCircle';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 import { createAccount, createPleb } from '@lume/utils/storage';
 import { arrayToNIP02 } from '@lume/utils/transform';
 
-import { CheckCircle } from 'iconoir-react';
 import { useAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
@@ -100,7 +100,7 @@ export function Page() {
       .then((res) => {
         if (res) {
           for (const tag of follows) {
-            fetch(`https://rbr.bio/${tag}/metadata.json`)
+            fetch(`https://us.rbr.bio/${tag}/metadata.json`)
               .then((data) => data.json())
               .then((data) => createPleb(tag, data ?? ''));
           }
@@ -140,7 +140,7 @@ export function Page() {
                   <User pubkey={item.pubkey} />
                   {follows.includes(item.pubkey) && (
                     <div>
-                      <CheckCircle width={16} height={16} className="text-green-400" />
+                      <CheckCircleIcon width={16} height={16} className="text-green-400" />
                     </div>
                   )}
                 </button>
