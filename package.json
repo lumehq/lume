@@ -31,7 +31,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-string-replace": "^1.1.0",
-    "react-virtuoso": "^4.3.3",
+    "react-virtuoso": "^4.3.4",
     "react-youtube": "^10.1.0",
     "swr": "^2.1.5",
     "tailwind-merge": "^1.12.0",

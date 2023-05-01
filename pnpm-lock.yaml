@@ -53,8 +53,8 @@ dependencies:
     specifier: ^1.1.0
     version: 1.1.0
   react-virtuoso:
-    specifier: ^4.3.3
-    version: 4.3.3(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^4.3.4
+    version: 4.3.4(react-dom@18.2.0)(react@18.2.0)
   react-youtube:
     specifier: ^10.1.0
     version: 10.1.0(react@18.2.0)
@@ -3600,9 +3600,9 @@ packages:
     engines: { node: '>=0.12.0' }
     dev: false
 
-  /react-virtuoso@4.3.3(react-dom@18.2.0)(react@18.2.0):
+  /react-virtuoso@4.3.4(react-dom@18.2.0)(react@18.2.0):
     resolution:
-      { integrity: sha512-x0DeGmVAVOVaTXRMG7jzrHBwK7+dkt7n0G3tNmZXphQUBgkVBYuZoaJltQeZGFN42++3XvrgwStKCtmzgMJ0lA== }
+      { integrity: sha512-r+zxsUKCLBhjT4925xY7YQz3pVqiJvkxrN8OSBpCd5VBWJCVGt0lpZOVpDQ2nX7yuCELFMuZOiFNCCYSJ1/OHQ== }
     engines: { node: '>=10' }
     peerDependencies:
       react: '>=16 || >=17 || >= 18'
