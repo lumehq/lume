@@ -1,11 +1,11 @@
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
-import { useChannelMetadata } from '@lume/utils/hooks/useChannelMetadata';
+import { useChannelProfile } from '@lume/utils/hooks/useChannelProfile';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
 
 import { twMerge } from 'tailwind-merge';
 
 export default function ChannelsListItem({ data }: { data: any }) {
-  const channel: any = useChannelMetadata(data.event_id, data.pubkey);
+  const channel: any = useChannelProfile(data.event_id, data.pubkey);
   const pageContext = usePageContext();
 
   const searchParams: any = pageContext.urlParsed.search;
