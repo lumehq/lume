@@ -1,5 +1,5 @@
 import NoteForm from '@lume/app/newsfeed/components/form';
-import { NoteBase } from '@lume/app/newsfeed/components/note/base';
+import NoteBase from '@lume/app/newsfeed/components/note/base';
 import { Placeholder } from '@lume/app/newsfeed/components/note/placeholder';
 import { NoteQuoteRepost } from '@lume/app/newsfeed/components/note/quoteRepost';
 import { hasNewerNoteAtom } from '@lume/stores/note';
@@ -10,7 +10,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 
-const ITEM_PER_PAGE = 20;
+const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
 export function Page() {

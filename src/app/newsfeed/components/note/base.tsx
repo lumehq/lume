@@ -3,10 +3,9 @@ import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
 import { NoteParent } from '@lume/app/newsfeed/components/note/parent';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 
-import { memo } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
-export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
+export default function NoteBase({ event }: { event: any }) {
   const content = contentParser(event.content, event.tags);
 
   const parentNote = () => {
@@ -44,4 +43,4 @@ export const NoteBase = memo(function NoteBase({ event }: { event: any }) {
       </div>
     </div>
   );
-});
+}
