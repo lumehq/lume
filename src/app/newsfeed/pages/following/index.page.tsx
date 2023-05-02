@@ -1,7 +1,7 @@
 import NoteForm from '@lume/app/newsfeed/components/form';
-import NoteBase from '@lume/app/newsfeed/components/note/base';
-import { Placeholder } from '@lume/app/newsfeed/components/note/placeholder';
-import { NoteQuoteRepost } from '@lume/app/newsfeed/components/note/quoteRepost';
+import NoteBase from '@lume/app/note/components/base';
+import { Placeholder } from '@lume/app/note/components/placeholder';
+import { NoteQuoteRepost } from '@lume/app/note/components/quoteRepost';
 import { hasNewerNoteAtom } from '@lume/stores/note';
 import { getNotes } from '@lume/utils/storage';
 

@@ -1,4 +1,4 @@
-import NoteReplyForm from '@lume/app/note/components/form';
+import NoteReplyForm from '@lume/app/note/components/formReply';
 import NoteReply from '@lume/app/note/components/reply';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';

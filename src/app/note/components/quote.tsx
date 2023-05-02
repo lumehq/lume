@@ -1,7 +1,7 @@
-import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
 import { noteParser } from '@lume/app/note/components/parser';
 import ImagePreview from '@lume/app/note/components/preview/image';
 import VideoPreview from '@lume/app/note/components/preview/video';
+import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 

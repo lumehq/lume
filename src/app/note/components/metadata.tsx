@@ -1,6 +1,6 @@
-import NoteLike from '@lume/app/newsfeed/components/metadata/like';
-import NoteReply from '@lume/app/newsfeed/components/metadata/reply';
-import NoteRepost from '@lume/app/newsfeed/components/metadata/repost';
+import NoteLike from '@lume/app/note/components/metadata/like';
+import NoteReply from '@lume/app/note/components/metadata/reply';
+import NoteRepost from '@lume/app/note/components/metadata/repost';
 import ZapIcon from '@lume/shared/icons/zap';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';

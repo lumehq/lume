@@ -1,7 +1,9 @@
-import { contentParser } from '@lume/app/newsfeed/components/contentParser';
-import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
-import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import NoteMetadata from '@lume/app/note/components/metadata';
+import { noteParser } from '@lume/app/note/components/parser';
+import ImagePreview from '@lume/app/note/components/preview/image';
+import VideoPreview from '@lume/app/note/components/preview/video';
 import NoteReplies from '@lume/app/note/components/replies';
+import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
@@ -34,6 +36,8 @@ export function Page() {
       unsubscribe();
     };
   });
+
+  const content = !error && data ? noteParser(data) : null;
 
   return (
     <div className="scrollbar-hide h-full w-full overflow-y-auto">
@@ -69,8 +73,18 @@ export function Page() {
                   <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
                   <div className="mt-3">
                     <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-                      {contentParser(data.content, data.tags)}
+                      {content ? content.parsed : ''}
                     </div>
+                    {Array.isArray(content.images) && content.images.length ? (
+                      <ImagePreview urls={content.images} />
+                    ) : (
+                      <></>
+                    )}
+                    {Array.isArray(content.videos) && content.videos.length ? (
+                      <VideoPreview urls={content.videos} />
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
                 <div onClick={(e) => e.stopPropagation()} className="mt-5 border-t border-zinc-800 px-5 py-5">

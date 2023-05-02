@@ -1,8 +1,8 @@
-import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
-import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import NoteMetadata from '@lume/app/note/components/metadata';
 import { noteParser } from '@lume/app/note/components/parser';
 import ImagePreview from '@lume/app/note/components/preview/image';
 import VideoPreview from '@lume/app/note/components/preview/video';
+import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 
@@ -46,7 +46,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
     }
   };
 
-  const content = !error && data ? noteParser(parseFallback) : null;
+  const content = !error && data ? noteParser(data) : null;
 
   if (parseFallback) {
     const contentFallback = noteParser(parseFallback);

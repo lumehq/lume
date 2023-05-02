@@ -1,5 +1,5 @@
-import { RootNote } from '@lume/app/newsfeed/components/note/rootNote';
-import { NoteRepostUser } from '@lume/app/newsfeed/components/user/repost';
+import { RootNote } from '@lume/app/note/components/rootNote';
+import { NoteRepostUser } from '@lume/app/note/components/user/repost';
 import { getQuoteID } from '@lume/utils/transform';
 
 import { memo } from 'react';
