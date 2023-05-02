@@ -1,5 +1,3 @@
-import { messageParser } from '@lume/utils/parser';
-
 import { nip04 } from 'nostr-tools';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -10,7 +8,7 @@ export const useDecryptMessage = (
   eventTags: string[],
   encryptedContent: string
 ) => {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(null);
 
   const extractSenderKey = useCallback(() => {
     const keyInTags = eventTags.find(([k, v]) => k === 'p' && v && v !== '')[1];
@@ -32,5 +30,5 @@ export const useDecryptMessage = (
     decrypt().catch(console.error);
   }, [decrypt]);
 
-  return content.length > 0 ? messageParser(content) : '';
+  return content ? content : '';
 };

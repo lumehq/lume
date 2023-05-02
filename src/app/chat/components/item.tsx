@@ -17,7 +17,7 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
     <>
       {isError && <div>error</div>}
       {isLoading && !user ? (
-        <div className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5">
+        <div className="inline-flex h-8 items-center gap-2.5 rounded-md px-2.5">
           <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
           <div>
             <div className="h-2.5 w-full animate-pulse truncate rounded bg-zinc-800 text-sm font-medium"></div>
@@ -27,7 +27,7 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
         <a
           href={`/app/chat?pubkey=${pubkey}`}
           className={twMerge(
-            'inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900',
+            'group inline-flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:bg-zinc-900',
             pagePubkey === pubkey ? 'dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800' : ''
           )}
         >
@@ -35,7 +35,7 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
             <img src={user.picture || DEFAULT_AVATAR} alt={pubkey} className="h-5 w-5 rounded bg-white object-cover" />
           </div>
           <div>
-            <h5 className="truncate text-sm font-medium text-zinc-400">
+            <h5 className="truncate text-[13px] font-semibold text-zinc-400 group-hover:text-zinc-200">
               {user.display_name || user.name || shortenKey(pubkey)}
             </h5>
           </div>

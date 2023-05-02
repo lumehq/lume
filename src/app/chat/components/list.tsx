@@ -13,24 +13,21 @@ export default function ChatsList() {
 
   return (
     <div className="flex flex-col gap-px">
-      <>
-        <ChatsListSelfItem />
-        {error && <div>failed to fetch</div>}
-        {!chats ? (
-          <>
-            <div className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5">
-              <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
-              <div className="h-3 w-full animate-pulse bg-zinc-800"></div>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5">
-              <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
-              <div className="h-3 w-full animate-pulse bg-zinc-800"></div>
-            </div>
-          </>
-        ) : (
-          chats.map((item: { pubkey: string }) => <ChatsListItem key={item.pubkey} pubkey={item.pubkey} />)
-        )}
-      </>
+      <ChatsListSelfItem />
+      {!chats || error ? (
+        <>
+          <div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
+            <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
+            <div className="h-3 w-full animate-pulse bg-zinc-800"></div>
+          </div>
+          <div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
+            <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
+            <div className="h-3 w-full animate-pulse bg-zinc-800"></div>
+          </div>
+        </>
+      ) : (
+        chats.map((item: { pubkey: string }) => <ChatsListItem key={item.pubkey} pubkey={item.pubkey} />)
+      )}
     </div>
   );
 }

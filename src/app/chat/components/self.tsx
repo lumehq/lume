@@ -18,7 +18,7 @@ export default function ChatsListSelfItem() {
     <>
       {isError && <div>error</div>}
       {isLoading && !account ? (
-        <div className="inline-flex items-center gap-2 rounded-md px-2.5 py-1.5">
+        <div className="inline-flex h-8 items-center gap-2.5 rounded-md px-2.5">
           <div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800"></div>
           <div>
             <div className="h-2.5 w-full animate-pulse truncate rounded bg-zinc-800 text-sm font-medium"></div>
@@ -28,7 +28,7 @@ export default function ChatsListSelfItem() {
         <a
           href={`/app/chat?pubkey=${account.pubkey}`}
           className={twMerge(
-            'inline-flex items-center gap-2 rounded-md px-2.5 py-1.5 hover:bg-zinc-900',
+            'inline-flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:bg-zinc-900',
             pagePubkey === account.pubkey ? 'dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800' : ''
           )}
         >
@@ -40,8 +40,9 @@ export default function ChatsListSelfItem() {
             />
           </div>
           <div>
-            <h5 className="truncate text-sm font-medium text-zinc-400">
-              {profile?.display_name || profile?.name || shortenKey(account.pubkey)} (you)
+            <h5 className="truncate text-[13px] font-semibold text-zinc-400">
+              {profile?.display_name || profile?.name || shortenKey(account.pubkey)}{' '}
+              <span className="text-zinc-500">(you)</span>
             </h5>
           </div>
         </a>
