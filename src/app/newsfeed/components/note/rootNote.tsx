@@ -1,6 +1,8 @@
-import { contentParser } from '@lume/app/newsfeed/components/contentParser';
 import NoteMetadata from '@lume/app/newsfeed/components/note/metadata';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import { noteParser } from '@lume/app/note/components/parser';
+import ImagePreview from '@lume/app/note/components/preview/image';
+import VideoPreview from '@lume/app/note/components/preview/video';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 
@@ -44,14 +46,28 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
     }
   };
 
+  const content = !error && data ? noteParser(parseFallback) : null;
+
   if (parseFallback) {
+    const contentFallback = noteParser(parseFallback);
+
     return (
       <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
         <NoteDefaultUser pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
         <div className="mt-1 pl-[52px]">
           <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-            {contentParser(parseFallback.content, parseFallback.tags)}
+            {contentFallback.parsed}
           </div>
+          {Array.isArray(contentFallback.images) && contentFallback.images.length ? (
+            <ImagePreview urls={contentFallback.images} />
+          ) : (
+            <></>
+          )}
+          {Array.isArray(contentFallback.videos) && contentFallback.videos.length ? (
+            <VideoPreview urls={contentFallback.videos} />
+          ) : (
+            <></>
+          )}
         </div>
         <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
           <NoteMetadata id={parseFallback.id} eventPubkey={parseFallback.pubkey} />
@@ -90,8 +106,10 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
             <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-              {contentParser(data.content, data.tags)}
+              {content ? content.parsed : ''}
             </div>
+            {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
+            {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
           </div>
           <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
             <NoteMetadata id={data.id} eventPubkey={data.pubkey} />

@@ -1,5 +1,7 @@
-import { contentParser } from '@lume/app/newsfeed/components/contentParser';
 import { NoteDefaultUser } from '@lume/app/newsfeed/components/user/default';
+import { noteParser } from '@lume/app/note/components/parser';
+import ImagePreview from '@lume/app/note/components/preview/image';
+import VideoPreview from '@lume/app/note/components/preview/video';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 
@@ -42,6 +44,8 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
     }
   };
 
+  const content = !error && data ? noteParser(data) : null;
+
   return (
     <div
       onClick={(e) => openNote(e)}
@@ -55,8 +59,10 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
             <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-              {contentParser(data.content, data.tags)}
+              {content ? content.parsed : ''}
             </div>
+            {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
+            {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
           </div>
         </div>
       )}

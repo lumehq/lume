@@ -11,10 +11,10 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
   const { user, isError, isLoading } = useProfile(pubkey);
 
   return (
-    <div className="group flex h-11 items-center gap-2">
+    <div className="group relative z-10 flex h-11 items-center gap-2">
       {isError || isLoading ? (
         <>
-          <div className="relative h-11 w-11 shrink animate-pulse overflow-hidden rounded-md bg-white bg-zinc-800"></div>
+          <div className="h-11 w-11 shrink animate-pulse overflow-hidden rounded-md bg-white bg-zinc-800"></div>
           <div className="flex w-full flex-1 items-start justify-between">
             <div className="flex flex-col gap-1">
               <div className="flex items-baseline gap-2">
@@ -26,7 +26,7 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
         </>
       ) : (
         <>
-          <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-white">
+          <div className="h-11 w-11 shrink overflow-hidden rounded-md bg-white">
             <img
               src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
               alt={pubkey}

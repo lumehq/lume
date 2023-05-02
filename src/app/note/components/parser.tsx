@@ -9,9 +9,12 @@ export const noteParser = (event: Event) => {
   const references = parseReferences(event);
   const content = { original: event.content, parsed: event.content, images: [], videos: [], others: [] };
 
+  // remove extra whitespace
+  content.parsed = content.parsed.replace(/\s+/g, ' ').trim();
+
   // handle media
   content.original.match(getURLs)?.forEach((url) => {
-    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/i)) {
+    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/im)) {
       // image url
       content.images.push(url.trim());
       // remove url from original content
@@ -21,7 +24,7 @@ export const noteParser = (event: Event) => {
       content.videos.push(url.trim());
       // remove url from original content
       content.parsed = content.parsed.replace(url, '');
-    } else if (url.match(/\.(mp4|webm|mov)$/i)) {
+    } else if (url.match(/\.(mp4|webm|mov)$/im)) {
       // video
       content.videos.push(url.trim());
       // remove url from original content
@@ -34,13 +37,19 @@ export const noteParser = (event: Event) => {
   // handle note references
   references?.forEach((reference) => {
     if (reference?.profile) {
-      content.parsed.replace(reference.text, `<NoteMentionUser pubkey="${reference.profile.pubkey}" />`);
+      content.parsed = content.parsed.replace(
+        reference.text,
+        `<NoteMentionUser pubkey="${reference.profile.pubkey}" />`
+      );
     }
     if (reference?.event) {
-      content.parsed.replace(reference.text, `<NoteQuote id="${reference.event.id}" />;`);
+      content.parsed = content.parsed.replace(reference.text, `<NoteQuote id="${reference.event.id}" />;`);
     }
     if (reference?.address) {
-      content.parsed.replace(reference.text, `<a href="${reference.address}" target="_blank" />`);
+      content.parsed = content.parsed.replace(
+        reference.text,
+        `<a href="${reference.address}" target="_blank">${reference.address}</>`
+      );
     }
   });
 
