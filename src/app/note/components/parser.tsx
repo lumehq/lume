@@ -57,12 +57,5 @@ export const noteParser = (event: Event) => {
     }
   });
 
-  // make sure no unnessary spaces are left
-  content.parsed.forEach((item: string, index: string) => {
-    if (typeof item === 'string') {
-      content.parsed[index] = item.replace(/^\x20+|\x20+$/gm, '');
-    }
-  });
-
   return content;
 };

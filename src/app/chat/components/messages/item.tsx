@@ -19,7 +19,7 @@ export const ChatMessageItem = memo(function MessageListItem({
       <div className="flex flex-col">
         <ChatMessageUser pubkey={data.pubkey} time={data.created_at} />
         <div className="-mt-[17px] pl-[48px]">
-          <div className="whitespace-pre-line break-words break-words text-sm leading-tight">{content}</div>
+          <div className="whitespace-pre-line break-words text-sm leading-tight">{content}</div>
         </div>
       </div>
     </div>
