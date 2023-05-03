@@ -1,34 +1,28 @@
 import { nip04 } from 'nostr-tools';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useDecryptMessage = (
-  userKey: string,
-  userPriv: string,
-  eventKey: string,
-  eventTags: string[],
-  encryptedContent: string
-) => {
+export const useDecryptMessage = (userKey: string, userPriv: string, data: any) => {
   const [content, setContent] = useState(null);
 
   const extractSenderKey = useCallback(() => {
-    const keyInTags = eventTags.find(([k, v]) => k === 'p' && v && v !== '')[1];
+    const keyInTags = data.tags.find(([k, v]) => k === 'p' && v && v !== '')[1];
     if (keyInTags === userKey) {
-      return eventKey;
+      return data.pubkey;
     } else {
       return keyInTags;
     }
-  }, [eventKey, eventTags, userKey]);
+  }, [data.pubkey, data.tags, userKey]);
 
   const decrypt = useCallback(async () => {
     const senderKey = extractSenderKey();
-    const result = await nip04.decrypt(userPriv, senderKey, encryptedContent);
+    const result = await nip04.decrypt(userPriv, senderKey, data.content);
     // update state with decrypt content
     setContent(result);
-  }, [userPriv, encryptedContent, extractSenderKey]);
+  }, [extractSenderKey, userPriv, data.content]);
 
   useEffect(() => {
     decrypt().catch(console.error);
   }, [decrypt]);
 
-  return content ? content : '';
+  return content ? content : null;
 };

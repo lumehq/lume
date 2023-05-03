@@ -1,4 +1,7 @@
 import ChatMessageUser from '@lume/app/chat/components/messages/user';
+import { noteParser } from '@lume/app/note/components/parser';
+import ImagePreview from '@lume/app/note/components/preview/image';
+import VideoPreview from '@lume/app/note/components/preview/video';
 import { useDecryptMessage } from '@lume/utils/hooks/useDecryptMessage';
 
 import { memo } from 'react';
@@ -12,14 +15,22 @@ export const ChatMessageItem = memo(function MessageListItem({
   userPubkey: string;
   userPrivkey: string;
 }) {
-  const content = useDecryptMessage(userPubkey, userPrivkey, data.pubkey, data.tags, data.content);
+  const decryptedContent = useDecryptMessage(userPubkey, userPrivkey, data);
+  // if we have decrypted content, use it instead of the encrypted content
+  if (decryptedContent) {
+    data['content'] = decryptedContent;
+  }
+  // parse the note content
+  const content = noteParser(data);
 
   return (
     <div className="flex h-min min-h-min w-full select-text flex-col px-5 py-2 hover:bg-black/20">
       <div className="flex flex-col">
         <ChatMessageUser pubkey={data.pubkey} time={data.created_at} />
         <div className="-mt-[17px] pl-[48px]">
-          <div className="whitespace-pre-line break-words text-sm leading-tight">{content}</div>
+          <div className="whitespace-pre-line break-words text-sm leading-tight">{content.parsed}</div>
+          {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
+          {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
         </div>
       </div>
     </div>
