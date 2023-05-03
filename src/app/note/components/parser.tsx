@@ -33,6 +33,14 @@ export const noteParser = (event: Event) => {
       content.videos.push(url);
       // remove url from original content
       content.parsed = content.parsed.replace(url, '');
+    } else {
+      content.parsed = reactStringReplace(content.parsed, url, () => {
+        return (
+          <a key={url} href={url} className="text-fuchsia-500 no-underline hover:text-fuchsia-600 hover:underline">
+            {url}
+          </a>
+        );
+      });
     }
   });
 
