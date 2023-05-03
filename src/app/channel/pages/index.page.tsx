@@ -9,24 +9,26 @@ import { READONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
+import { getActiveBlacklist, getBlacklist } from '@lume/utils/storage';
 import { arrayObjToPureArr } from '@lume/utils/transform';
 
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext, useEffect, useRef } from 'react';
+import useSWR from 'swr';
 import useSWRSubscription from 'swr/subscription';
 
-let mutedList: any = [];
-let activeMutedList: any = [];
-let activeHidedList: any = [];
+const fetchMuted = async ([, id]) => {
+  const res = await getBlacklist(id, 44);
+  const array = arrayObjToPureArr(res);
+  return { original: res, array: array };
+};
 
-if (typeof window !== 'undefined') {
-  const { getBlacklist, getActiveBlacklist, getActiveAccount } = await import('@lume/utils/storage');
-  const activeAccount = await getActiveAccount();
-  activeHidedList = await getActiveBlacklist(activeAccount.id, 43);
-  activeMutedList = await getActiveBlacklist(activeAccount.id, 44);
-  mutedList = await getBlacklist(activeAccount.id, 44);
-}
+const fetchHided = async ([, id]) => {
+  const res = await getActiveBlacklist(id, 43);
+  const array = arrayObjToPureArr(res);
+  return array;
+};
 
 const ChannelMessageList = lazy(() => import('@lume/app/channel/components/messageList'));
 
@@ -39,16 +41,16 @@ export function Page() {
   const channelPubkey = searchParams.pubkey;
 
   const { account, isLoading, isError } = useActiveAccount();
+  const { data: muted } = useSWR(!isLoading && !isError && account ? ['muted', account.id] : null, fetchMuted);
+  const { data: hided } = useSWR(!isLoading && !isError && account ? ['hided', account.id] : null, fetchHided);
 
   const setChannelMessages = useSetAtom(channelMessagesAtom);
   const resetChannelMessages = useResetAtom(channelMessagesAtom);
   const resetChannelReply = useResetAtom(channelReplyAtom);
 
   const now = useRef(new Date());
-  const hided = arrayObjToPureArr(activeHidedList);
-  const muted = arrayObjToPureArr(activeMutedList);
 
-  useSWRSubscription(channelID ? ['channel', channelID] : null, ([, key], {}: any) => {
+  useSWRSubscription(channelID && muted && hided ? ['channel', channelID] : null, ([, key], {}: any) => {
     // subscribe to channel
     const unsubscribe = pool.subscribe(
       [
@@ -67,7 +69,7 @@ export function Page() {
         } else {
           message['hide'] = false;
         }
-        if (!muted.includes(event.pubkey)) {
+        if (!muted.array.includes(event.pubkey)) {
           setChannelMessages((prev) => [...prev, message]);
         }
       }
@@ -101,7 +103,7 @@ export function Page() {
         </div>
         <div className="flex items-center gap-2">
           <ChannelMembers />
-          <ChannelBlackList blacklist={mutedList} />
+          {!muted ? <></> : <ChannelBlackList blacklist={muted.original} />}
           {!isLoading && !isError && account ? (
             account.pubkey === channelPubkey && <ChannelUpdateModal id={channelID} />
           ) : (

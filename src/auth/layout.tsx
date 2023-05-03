@@ -1,14 +1,16 @@
 import ArrowLeftIcon from '@lume/shared/icons/arrowLeft';
 import ArrowRightIcon from '@lume/shared/icons/arrowRight';
 
-let platformName = 'darwin';
+import useSWR from 'swr';
 
-if (typeof window !== 'undefined') {
+const fetcher = async () => {
   const { platform } = await import('@tauri-apps/api/os');
-  platformName = await platform();
-}
+  return await platform();
+};
 
 export function LayoutOnboarding({ children }: { children: React.ReactNode }) {
+  const { data: platform } = useSWR('platform', fetcher);
+
   const goBack = () => {
     window.history.back();
   };
@@ -25,7 +27,7 @@ export function LayoutOnboarding({ children }: { children: React.ReactNode }) {
           className="relative h-11 shrink-0 border border-zinc-100 bg-white dark:border-zinc-900 dark:bg-black"
         >
           <div data-tauri-drag-region className="flex h-full w-full flex-1 items-center px-2">
-            <div className={`flex h-full items-center gap-2 ${platformName === 'darwin' ? 'pl-[68px]' : ''}`}>
+            <div className={`flex h-full items-center gap-2 ${platform === 'darwin' ? 'pl-[68px]' : ''}`}>
               <button
                 onClick={() => goBack()}
                 className="group inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-900"

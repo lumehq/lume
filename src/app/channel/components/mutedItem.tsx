@@ -49,7 +49,7 @@ export default function MutedItem({ data }: { data: any }) {
             </div>
             <div className="flex w-full flex-1 flex-col items-start gap-0.5 text-start">
               <span className="truncate text-sm font-medium leading-none text-zinc-200">
-                {user?.display_name || user?.name}
+                {user?.display_name || user?.name || 'Pleb'}
               </span>
               <span className="text-xs leading-none text-zinc-400">{shortenKey(data.content)}</span>
             </div>

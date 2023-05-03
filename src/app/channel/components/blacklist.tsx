@@ -37,7 +37,7 @@ export default function ChannelBlackList({ blacklist }: { blacklist: any }) {
                     </p>
                   </div>
                 </div>
-                <div className="px-3 pb-3 pt-1">
+                <div className="flex flex-col gap-2 px-3 pb-3 pt-1">
                   {blacklist.map((item: any) => (
                     <MutedItem key={item.id} data={item} />
                   ))}
