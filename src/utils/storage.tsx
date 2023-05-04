@@ -95,6 +95,13 @@ export async function getNotes(time: number, limit: number, offset: number) {
   return notes;
 }
 
+// get all note authors
+export async function getNoteAuthors() {
+  const db = await connect();
+  const result = await db.select(`SELECT DISTINCT pubkey FROM notes ORDER BY created_at DESC`);
+  return result;
+}
+
 // get note by id
 export async function getNoteByID(event_id: string) {
   const db = await connect();

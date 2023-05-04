@@ -22,8 +22,8 @@ export default function ChannelMembers() {
         {miniMembersList.map((member, index) => (
           <MiniMember key={index} pubkey={member} />
         ))}
-        {totalMembers > 0 ? (
-          <div className="inline-block inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 ring-2 ring-zinc-950 transition-all duration-150 ease-in-out group-hover:bg-zinc-800">
+        {totalMembers ? (
+          <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 ring-2 ring-zinc-950 transition-all duration-150 ease-in-out group-hover:bg-zinc-800">
             <span className="text-xs font-medium text-zinc-400 group-hover:text-zinc-200">{totalMembers}</span>
           </div>
         ) : (

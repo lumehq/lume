@@ -126,7 +126,7 @@ export function Page() {
         () => {
           updateLastLogin(dateToUnix(now.current));
           timeout = setTimeout(() => {
-            navigate('/app/newsfeed/following', { overwriteLastHistoryEntry: true });
+            navigate('/app/daily', { overwriteLastHistoryEntry: true });
           }, 5000);
         }
       );
