@@ -1,4 +1,5 @@
 import { AvatarUploader } from '@lume/shared/avatarUploader';
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
 
@@ -54,7 +55,7 @@ export function Page() {
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Avatar</label>
               <div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
-                <img src={image} alt="avatar" className="relative z-10 h-11 w-11 rounded-md" />
+                <Image src={image} alt="avatar" className="relative z-10 h-11 w-11 rounded-md" />
                 <div className="absolute bottom-3 right-3 z-10">
                   <AvatarUploader valueState={setImage} />
                 </div>

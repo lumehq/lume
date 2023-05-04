@@ -1,3 +1,4 @@
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
 import { useProfile } from '@lume/utils/hooks/useProfile';
 import { shortenKey } from '@lume/utils/shortenKey';
@@ -14,7 +15,7 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
     <div className="group relative z-10 flex h-11 items-center gap-2">
       {isError || isLoading ? (
         <>
-          <div className="h-11 w-11 shrink animate-pulse overflow-hidden rounded-md bg-white"></div>
+          <div className="h-11 w-11 shrink animate-pulse overflow-hidden rounded-md"></div>
           <div className="flex w-full flex-1 items-start justify-between">
             <div className="flex flex-col gap-1">
               <div className="flex items-baseline gap-2">
@@ -26,13 +27,11 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
         </>
       ) : (
         <>
-          <div className="h-11 w-11 shrink overflow-hidden rounded-md bg-white">
-            <img
+          <div className="h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
+            <Image
               src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
               alt={pubkey}
               className="h-11 w-11 rounded-md object-cover"
-              loading="lazy"
-              fetchpriority="high"
             />
           </div>
           <div className="flex w-full flex-1 items-start justify-between">

@@ -1,4 +1,5 @@
 import ArrowRightIcon from '@lume/shared/icons/arrowRight';
+import { Image } from '@lume/shared/image';
 
 const PLEBS = [
   'https://133332.xyz/p.jpg',
@@ -81,7 +82,7 @@ export function Page() {
                 .slice(0, PLEBS_PER_ROW)
                 .map((tag) => (
                   <div key={tag} className="relative mr-4 h-11 w-11 gap-2 rounded-md bg-zinc-900 shadow-xl">
-                    <img src={tag} alt={tag} className="h-11 w-11 rounded-md border border-zinc-900" />
+                    <Image src={tag} alt={tag} className="h-11 w-11 rounded-md border border-zinc-900" />
                   </div>
                 ))}
             </InfiniteLoopSlider>

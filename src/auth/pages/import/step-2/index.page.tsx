@@ -1,3 +1,4 @@
+import { Image } from '@lume/shared/image';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
 import { onboardingAtom } from '@lume/stores/onboarding';
@@ -91,7 +92,7 @@ export function Page() {
           ) : (
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
-                <img
+                <Image
                   className="relative inline-flex h-11 w-11 rounded-lg ring-2 ring-zinc-900"
                   src={data.picture || DEFAULT_AVATAR}
                   alt={pubkey}

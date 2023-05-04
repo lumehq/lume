@@ -1,3 +1,4 @@
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { useProfile } from '@lume/utils/hooks/useProfile';
 import { shortenKey } from '@lume/utils/shortenKey';
@@ -40,11 +41,10 @@ export default function MutedItem({ data }: { data: any }) {
         <>
           <div className="flex items-center gap-1.5">
             <div className="relative h-9 w-9 shrink rounded-md">
-              <img
+              <Image
                 src={user?.picture || DEFAULT_AVATAR}
                 alt={data.content}
                 className="h-9 w-9 rounded-md object-cover"
-                loading="lazy"
               />
             </div>
             <div className="flex w-full flex-1 flex-col items-start gap-0.5 text-start">

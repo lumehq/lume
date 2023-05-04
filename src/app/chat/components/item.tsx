@@ -1,3 +1,4 @@
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
 import { useProfile } from '@lume/utils/hooks/useProfile';
@@ -32,7 +33,11 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
           )}
         >
           <div className="relative h-5 w-5 shrink-0 rounded">
-            <img src={user.picture || DEFAULT_AVATAR} alt={pubkey} className="h-5 w-5 rounded bg-white object-cover" />
+            <Image
+              src={user.picture || DEFAULT_AVATAR}
+              alt={pubkey}
+              className="h-5 w-5 rounded bg-white object-cover"
+            />
           </div>
           <div>
             <h5 className="truncate text-[13px] font-semibold text-zinc-400 group-hover:text-zinc-200">

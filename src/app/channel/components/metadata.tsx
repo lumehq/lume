@@ -1,4 +1,5 @@
 import CopyIcon from '@lume/shared/icons/copy';
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { useChannelProfile } from '@lume/utils/hooks/useChannelProfile';
 
@@ -18,7 +19,7 @@ export default function ChannelMetadata({ id, pubkey }: { id: string; pubkey: st
   return (
     <div className="inline-flex items-center gap-2">
       <div className="relative shrink-0 rounded-md">
-        <img
+        <Image
           src={metadata?.picture || DEFAULT_AVATAR}
           alt={id}
           className="h-8 w-8 rounded bg-zinc-900 object-contain ring-2 ring-zinc-950"

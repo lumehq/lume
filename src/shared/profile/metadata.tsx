@@ -1,4 +1,5 @@
-import { RelayContext } from '@lume/shared/relaysProvider';
+import { Image } from '@lume/shared/image';
+import { RelayContext } from '@lume/shared/relayProvider';
 import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
 import { shortenKey } from '@lume/utils/shortenKey';
 
@@ -21,11 +22,11 @@ export default function ProfileMetadata({ id }: { id: string }) {
     <>
       <div className="relative">
         <div className="relative h-56 w-full rounded-t-lg bg-zinc-800">
-          <img src={profile?.banner || DEFAULT_BANNER} alt="user's banner" className="h-58 w-full object-cover" />
+          <Image src={profile?.banner || DEFAULT_BANNER} alt="user's banner" className="h-58 w-full object-cover" />
         </div>
         <div className="relative -top-8 z-10 px-4">
           <div className="relative h-16 w-16 rounded-lg bg-zinc-900 ring-2 ring-zinc-900">
-            <img src={profile?.picture || DEFAULT_AVATAR} alt={id} className="h-16 w-16 rounded-lg object-cover" />
+            <Image src={profile?.picture || DEFAULT_AVATAR} alt={id} className="h-16 w-16 rounded-lg object-cover" />
           </div>
         </div>
       </div>

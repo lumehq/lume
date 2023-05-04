@@ -1,4 +1,5 @@
 import ReplyIcon from '@lume/shared/icons/reply';
+import { Image } from '@lume/shared/image';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { WRITEONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix } from '@lume/utils/getDate';
@@ -87,7 +88,7 @@ export default function NoteReply({ id, replies }: { id: string; replies: number
                 <div className="flex gap-2">
                   <div>
                     <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
-                      <img src={profile?.picture} alt="user's avatar" className="h-11 w-11 rounded-md object-cover" />
+                      <Image src={profile?.picture} alt="user's avatar" className="h-11 w-11 rounded-md object-cover" />
                     </div>
                   </div>
                   <div className="relative h-24 w-full flex-1 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">

@@ -1,3 +1,4 @@
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
 import { useProfile } from '@lume/utils/hooks/useProfile';
 import { shortenKey } from '@lume/utils/shortenKey';
@@ -24,12 +25,10 @@ export default function NoteReplyUser({ pubkey, time }: { pubkey: string; time: 
       ) : (
         <>
           <div className="relative h-9 w-9 shrink rounded-md">
-            <img
+            <Image
               src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
               alt={pubkey}
               className="h-9 w-9 rounded-md object-cover"
-              loading="lazy"
-              decoding="async"
             />
           </div>
           <div className="flex w-full flex-1 items-start justify-between">

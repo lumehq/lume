@@ -1,3 +1,4 @@
+import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR } from '@lume/stores/constants';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
@@ -33,7 +34,7 @@ export default function ChatsListSelfItem() {
           )}
         >
           <div className="relative h-5 w-5 shrink-0 rounded">
-            <img
+            <Image
               src={profile?.picture || DEFAULT_AVATAR}
               alt={account.pubkey}
               className="h-5 w-5 rounded bg-white object-cover"
