@@ -61,7 +61,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
     const contentFallback = noteParser(parseFallback);
 
     return (
-      <div onClick={(e) => openNote(e)} className="flex flex-col">
+      <div onClick={(e) => openNote(e)} className="flex flex-col px-3 pb-5 pt-2">
         <NoteDefaultUser pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
         <div className="mt-1 pl-[52px]">
           <NoteContent content={contentFallback} />
@@ -72,7 +72,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
   }
 
   return (
-    <div onClick={(e) => openNote(e)} className="flex flex-col">
+    <div onClick={(e) => openNote(e)} className="flex flex-col px-3 pb-5 pt-2">
       {data ? (
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />

@@ -12,7 +12,7 @@ export const NoteContent = ({ content }: { content: any }) => {
       <ReactMarkdown
         remarkPlugins={[[remarkGfm]]}
         linkTarget="_blank"
-        className="prose prose-zinc max-w-none break-words dark:prose-invert prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:leading-tight prose-a:text-fuchsia-500 prose-a:no-underline prose-a:hover:text-fuchsia-600 prose-a:hover:underline prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight"
+        className="prose prose-zinc max-w-none break-words dark:prose-invert prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:leading-tight prose-a:text-fuchsia-500 prose-a:no-underline hover:prose-a:text-fuchsia-600 hover:prose-a:underline prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight"
         components={{
           h5: ({ ...props }) => <NoteMentionUser pubkey={props.content} />,
           h6: ({ ...props }) => <NoteQuote id={props.content} />,
