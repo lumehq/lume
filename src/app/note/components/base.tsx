@@ -19,18 +19,17 @@ export default function NoteBase({ event }: { event: any }) {
   };
 
   return (
-    <div
-      onClick={(e) => openNote(e)}
-      className="relative z-10 flex h-min min-h-min w-full select-text flex-col border-b border-zinc-800 px-3 py-5 hover:bg-black/20"
-    >
-      {event.parent_id && event.parent_id !== event.event_id && (
-        <NoteParent key={event.parent_id} id={event.parent_id} />
-      )}
-      <div className="relative z-10 flex flex-col">
-        <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
-        <div className="mt-1 pl-[52px]">
-          <NoteContent content={content} />
-          <NoteMetadata id={event.event_id} eventPubkey={event.pubkey} />
+    <div onClick={(e) => openNote(e)} className="h-min w-full select-text px-3 py-1.5">
+      <div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-5 shadow-input shadow-black/20">
+        {event.parent_id && event.parent_id !== event.event_id && (
+          <NoteParent key={event.parent_id} id={event.parent_id} />
+        )}
+        <div className="flex flex-col">
+          <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
+          <div className="mt-1 pl-[52px]">
+            <NoteContent content={content} />
+            <NoteMetadata id={event.event_id} eventPubkey={event.pubkey} />
+          </div>
         </div>
       </div>
     </div>

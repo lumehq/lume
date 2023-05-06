@@ -56,7 +56,7 @@ export default function NoteReply({ id, replies }: { id: string; replies: number
   return (
     <>
       <button type="button" onClick={() => openModal()} className="group inline-flex w-min items-center gap-1.5">
-        <ReplyIcon width={20} height={20} className="text-zinc-400 group-hover:text-green-400" />
+        <ReplyIcon width={16} height={16} className="text-zinc-400 group-hover:text-green-400" />
         <span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">{count}</span>
       </button>
       <Transition appear show={isOpen} as={Fragment}>

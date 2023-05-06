@@ -44,7 +44,7 @@ export default function NoteLike({ id, pubkey, likes }: { id: string; pubkey: st
 
   return (
     <button type="button" onClick={(e) => submitEvent(e)} className="group inline-flex w-min items-center gap-1.5">
-      <LikeIcon width={20} height={20} className="text-zinc-400 group-hover:text-rose-400" />
+      <LikeIcon width={16} height={16} className="text-zinc-400 group-hover:text-rose-400" />
       <span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">{count}</span>
     </button>
   );

@@ -47,22 +47,17 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   };
 
   return (
-    <div
-      onClick={(e) => openNote(e)}
-      className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3"
-    >
-      <div className="relative z-10 flex flex-col">
-        {data ? (
-          <>
-            <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-            <div className="mt-1 pl-[52px]">
-              <NoteContent content={content} />
-            </div>
-          </>
-        ) : (
-          <Skeleton baseColor="#27272a" containerClassName="flex-1" />
-        )}
-      </div>
+    <div onClick={(e) => openNote(e)} className="mb-2 mt-3 flex flex-col rounded-lg border border-zinc-800 p-2 py-3">
+      {data ? (
+        <>
+          <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
+          <div className="mt-1 pl-[52px]">
+            <NoteContent content={content} />
+          </div>
+        </>
+      ) : (
+        <Skeleton baseColor="#27272a" containerClassName="flex-1" />
+      )}
     </div>
   );
 });

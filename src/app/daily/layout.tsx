@@ -20,7 +20,7 @@ export function LayoutNewsfeed({ children }: { children: React.ReactNode }) {
             <div className="scrollbar-hide col-span-1 overflow-y-auto overflow-x-hidden border-r border-zinc-900">
               <Navigation />
             </div>
-            <div className="col-span-3 m-3 overflow-hidden xl:col-span-4">{children}</div>
+            <div className="col-span-3 overflow-hidden xl:col-span-4">{children}</div>
           </div>
         </div>
       </div>

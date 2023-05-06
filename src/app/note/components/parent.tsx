@@ -38,21 +38,18 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   const content = !error && data ? noteParser(data) : null;
 
   return (
-    <div className="relative pb-5">
-      <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
-      <div className="relative z-10 flex flex-col">
-        {data ? (
-          <>
-            <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-            <div className="mt-1 pl-[52px]">
-              <NoteContent content={content} />
-              <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
-            </div>
-          </>
-        ) : (
-          <Skeleton baseColor="#27272a" containerClassName="flex-1" />
-        )}
-      </div>
+    <div className="flex flex-col pb-5">
+      {data ? (
+        <>
+          <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
+          <div className="mt-1 pl-[52px]">
+            <NoteContent content={content} />
+            <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
+          </div>
+        </>
+      ) : (
+        <Skeleton baseColor="#27272a" containerClassName="flex-1" />
+      )}
     </div>
   );
 });

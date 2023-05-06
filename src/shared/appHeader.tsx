@@ -17,7 +17,7 @@ export default function AppHeader() {
 
   return (
     <div data-tauri-drag-region className="flex h-full w-full flex-1 items-center px-2">
-      <div className="flex w-full items-center justify-center gap-2">
+      <div data-tauri-drag-region className="flex w-full items-center justify-center gap-2">
         <div className="flex h-full items-center gap-2">
           <button
             onClick={() => goBack()}
