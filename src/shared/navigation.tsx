@@ -18,7 +18,7 @@ export default function Navigation() {
         </div>
         <div className="flex flex-col text-zinc-400">
           <ActiveLink
-            href="/app/newsfeed/following"
+            href="/app/daily"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-semibold hover:text-zinc-200"
             activeClassName=""
           >
