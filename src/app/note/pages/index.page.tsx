@@ -1,12 +1,12 @@
 import NoteMetadata from '@lume/app/note/components/metadata';
-import { noteParser } from '@lume/app/note/components/parser';
 import ImagePreview from '@lume/app/note/components/preview/image';
 import VideoPreview from '@lume/app/note/components/preview/video';
-import NoteReplies from '@lume/app/note/components/replies';
+import RepliesList from '@lume/app/note/components/replies/list';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { usePageContext } from '@lume/utils/hooks/usePageContext';
+import { noteParser } from '@lume/utils/parser';
 
 import { useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
@@ -94,7 +94,7 @@ export function Page() {
             </>
           )}
         </div>
-        <NoteReplies id={noteID} />
+        <RepliesList id={noteID} />
       </div>
     </div>
   );

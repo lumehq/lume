@@ -1,5 +1,5 @@
-import NoteReplyForm from '@lume/app/note/components/formReply';
-import NoteReply from '@lume/app/note/components/reply';
+import NoteReplyForm from '@lume/app/note/components/replies/form';
+import Reply from '@lume/app/note/components/replies/item';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { sortEvents } from '@lume/utils/transform';
@@ -7,7 +7,7 @@ import { sortEvents } from '@lume/utils/transform';
 import { useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
-export default function NoteReplies({ id }: { id: string }) {
+export default function RepliesList({ id }: { id: string }) {
   const pool: any = useContext(RelayContext);
 
   const { data, error } = useSWRSubscription(id ? ['note-replies', id] : null, ([, key], { next }) => {
@@ -53,7 +53,7 @@ export default function NoteReplies({ id }: { id: string }) {
             </div>
           ) : (
             sortEvents(data).map((event: any) => {
-              return <NoteReply key={event.id} data={event} />;
+              return <Reply key={event.id} data={event} />;
             })
           )}
         </div>

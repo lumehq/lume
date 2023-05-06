@@ -6,9 +6,10 @@ const getURLs = new RegExp(
 );
 
 export const noteParser = (event: Event) => {
-  const content: { original: string; parsed: any; images: string[]; videos: string[] } = {
+  const content: { original: string; parsed: any; notes: string[]; images: string[]; videos: string[] } = {
     original: event.content,
     parsed: event.content,
+    notes: [],
     images: [],
     videos: [],
   };
@@ -31,19 +32,21 @@ export const noteParser = (event: Event) => {
     }
   });
 
+  // extract note mention
+  content.original.match(/^(nostr:)?(note1|nevent1).*$/gm)?.forEach((item) => {
+    content.notes.push(item);
+    // remove url from original content
+    content.parsed = content.parsed.toString().replace(item, '');
+  });
+
   // map hashtag to em
   content.original.match(/#(\w+)(?!:\/\/)/gi)?.forEach((item) => {
     content.parsed = content.parsed.replace(item, `*${item}*`);
   });
 
-  // map note mention to h6
-  content.original.match(/^(nostr:)?(note1|nevent1).*$/gm)?.forEach((item) => {
-    content.parsed = content.parsed.replace(item, `###### ${item}`);
-  });
-
-  // map profile mention to h5
+  // map profile mention to h6 (markdown)
   content.original.match(/^(nostr:)?(nprofile1|npub1).*$/gm)?.forEach((item) => {
-    content.parsed = content.parsed.replace(item, `##### ${item}`);
+    content.parsed = content.parsed.replace(item, `###### ${item}`);
   });
 
   return content;

@@ -1,11 +1,9 @@
-import { ContentMarkdown } from '@lume/app/note/components/markdown';
+import { NoteContent } from '@lume/app/note/components/content';
 import NoteMetadata from '@lume/app/note/components/metadata';
-import { noteParser } from '@lume/app/note/components/parser';
-import ImagePreview from '@lume/app/note/components/preview/image';
-import VideoPreview from '@lume/app/note/components/preview/video';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
+import { noteParser } from '@lume/utils/parser';
 
 import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
@@ -65,19 +63,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
       <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
         <NoteDefaultUser pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
         <div className="mt-1 pl-[52px]">
-          <ContentMarkdown content={contentFallback.parsed} />
-          {Array.isArray(contentFallback.images) && contentFallback.images.length ? (
-            <ImagePreview urls={contentFallback.images} />
-          ) : (
-            <></>
-          )}
-          {Array.isArray(contentFallback.videos) && contentFallback.videos.length ? (
-            <VideoPreview urls={contentFallback.videos} />
-          ) : (
-            <></>
-          )}
-        </div>
-        <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+          <NoteContent content={contentFallback} />
           <NoteMetadata id={parseFallback.id} eventPubkey={parseFallback.pubkey} />
         </div>
       </div>
@@ -113,11 +99,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
         <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
-            <ContentMarkdown content={content.parsed} />
-            {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
-            {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
-          </div>
-          <div onClick={(e) => e.stopPropagation()} className="mt-5 pl-[52px]">
+            <NoteContent content={content} />
             <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
           </div>
         </div>

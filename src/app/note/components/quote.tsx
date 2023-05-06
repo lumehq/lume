@@ -1,10 +1,8 @@
-import { ContentMarkdown } from '@lume/app/note/components/markdown';
-import { noteParser } from '@lume/app/note/components/parser';
-import ImagePreview from '@lume/app/note/components/preview/image';
-import VideoPreview from '@lume/app/note/components/preview/video';
+import { NoteContent } from '@lume/app/note/components/content';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
+import { noteParser } from '@lume/utils/parser';
 
 import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
@@ -36,6 +34,8 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
     };
   });
 
+  const content = !error && data ? noteParser(data) : null;
+
   const openNote = (e) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
@@ -44,8 +44,6 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
       e.stopPropagation();
     }
   };
-
-  const content = !error && data ? noteParser(data) : null;
 
   return (
     <div
@@ -59,9 +57,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
         <div className="relative z-10 flex flex-col">
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
-            <ContentMarkdown content={content.parsed} />
-            {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
-            {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
+            <NoteContent content={content} />
           </div>
         </div>
       )}
