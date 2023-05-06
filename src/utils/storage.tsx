@@ -23,7 +23,7 @@ export async function getActiveAccount() {
 // get all accounts
 export async function getAccounts() {
   const db = await connect();
-  return await db.select(`SELECT * FROM accounts ORDER BY created_at DESC;`);
+  return await db.select(`SELECT * FROM accounts WHERE is_active = 0 ORDER BY created_at DESC;`);
 }
 
 // create account
