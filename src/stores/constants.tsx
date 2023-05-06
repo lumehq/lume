@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.2.5';
+export const APP_VERSION = '1.0.0';
 
 export const DEFAULT_AVATAR = 'https://void.cat/d/KmypFh2fBdYCEvyJrPiN89.webp';
 
