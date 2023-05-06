@@ -20,7 +20,7 @@ export default function NoteBase({ event }: { event: any }) {
 
   return (
     <div onClick={(e) => openNote(e)} className="h-min w-full select-text px-3 py-1.5">
-      <div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-5 shadow-input shadow-black/20">
+      <div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 pt-3 shadow-input shadow-black/20">
         {event.parent_id && event.parent_id !== event.event_id && (
           <NoteParent key={event.parent_id} id={event.parent_id} />
         )}

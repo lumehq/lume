@@ -51,7 +51,7 @@ export default function NoteMetadata({ id, eventPubkey }: { id: string; eventPub
   });
 
   return (
-    <div className="mt-5 flex items-center gap-16 border-t border-zinc-800 pt-5">
+    <div className="mt-4 flex h-12 items-center gap-16 border-t border-zinc-800/50">
       <NoteReply id={id} replies={replies} />
       <NoteLike id={id} pubkey={eventPubkey} likes={likes} />
       <NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />

@@ -38,7 +38,8 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
   const content = !error && data ? noteParser(data) : null;
 
   return (
-    <div className="flex flex-col pb-5">
+    <div className="relative flex flex-col pb-6">
+      <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
       {data ? (
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />

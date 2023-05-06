@@ -13,7 +13,7 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
 
   return (
     <div className="group flex items-center gap-2">
-      <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-900">
+      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
         <Image
           src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
           alt={pubkey}
@@ -28,7 +28,7 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
           </span>
         </h5>
         <span className="leading-tight text-zinc-500">·</span>
-        <span className="text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
+        <span className="text-zinc-500">{dayjs().to(dayjs.unix(time), true)}</span>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ export default function NoteReplyUser({ pubkey, time }: { pubkey: string; time: 
 
   return (
     <div className="group flex items-start gap-3">
-      <div className="relative h-9 w-9 shrink rounded-md">
+      <div className="relative h-9 w-9 shrink-0 rounded-md">
         <Image
           src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
           alt={pubkey}
@@ -26,7 +26,7 @@ export default function NoteReplyUser({ pubkey, time }: { pubkey: string; time: 
             {user?.display_name || user?.name || shortenKey(pubkey)}
           </span>
           <span className="leading-none text-zinc-500">·</span>
-          <span className="leading-none text-zinc-500">{dayjs().to(dayjs.unix(time))}</span>
+          <span className="leading-none text-zinc-500">{dayjs().to(dayjs.unix(time), true)}</span>
         </div>
       </div>
     </div>
