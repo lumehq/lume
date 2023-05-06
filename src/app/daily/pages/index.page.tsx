@@ -45,48 +45,51 @@ export function Page() {
   }, [fetchNextPage, allRows.length, rowVirtualizer.getVirtualItems()]);
 
   return (
-    <div className="relative h-full w-full rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
-      {status === 'loading' ? (
-        <Placeholder />
-      ) : status === 'error' ? (
-        <div>{error.message}</div>
-      ) : (
-        <div ref={parentRef} className="scrollbar-hide h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
-          <div
-            className="relative w-full"
-            style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
-            }}
-          >
+    <div className="flex h-full flex-col justify-between gap-4">
+      <div className="flex h-11 w-full shrink-0 items-center justify-between border-b border-zinc-800"></div>
+      <div className="relative flex w-full flex-1 flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
+        {status === 'loading' ? (
+          <Placeholder />
+        ) : status === 'error' ? (
+          <div>{error.message}</div>
+        ) : (
+          <div ref={parentRef} className="scrollbar-hide h-full w-full overflow-y-auto" style={{ contain: 'strict' }}>
             <div
-              className="absolute left-0 top-0 w-full"
+              className="relative w-full"
               style={{
-                transform: `translateY(${itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin}px)`,
+                height: `${rowVirtualizer.getTotalSize()}px`,
               }}
             >
-              {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const note = allRows[virtualRow.index];
-                if (note) {
-                  if (note.kind === 1) {
-                    return (
-                      <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
-                        <NoteBase key={note.event_id} event={note} />
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
-                        <NoteQuoteRepost key={note.event_id} event={note} />
-                      </div>
-                    );
+              <div
+                className="absolute left-0 top-0 w-full"
+                style={{
+                  transform: `translateY(${itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin}px)`,
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const note = allRows[virtualRow.index];
+                  if (note) {
+                    if (note.kind === 1) {
+                      return (
+                        <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
+                          <NoteBase key={note.event_id} event={note} />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
+                          <NoteQuoteRepost key={note.event_id} event={note} />
+                        </div>
+                      );
+                    }
                   }
-                }
-              })}
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      <div>{isFetching && !isFetchingNextPage ? <Placeholder /> : null}</div>
+        )}
+        <div>{isFetching && !isFetchingNextPage ? <Placeholder /> : null}</div>
+      </div>
     </div>
   );
 }

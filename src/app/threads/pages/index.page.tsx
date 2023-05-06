@@ -1,3 +1,7 @@
-export default function Page() {
-  return <></>;
+export function Page() {
+  return (
+    <div>
+      <p>MySpace</p>
+    </div>
+  );
 }
