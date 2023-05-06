@@ -10,9 +10,18 @@ import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
+function isJSON(str: string) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 export const RootNote = memo(function RootNote({ id, fallback }: { id: string; fallback?: any }) {
   const pool: any = useContext(RelayContext);
-  const parseFallback = fallback.length > 1 ? JSON.parse(fallback) : null;
+  const parseFallback = isJSON(fallback) ? JSON.parse(fallback) : null;
 
   const { data, error } = useSWRSubscription(parseFallback ? null : id, (key, { next }) => {
     const unsubscribe = pool.subscribe(

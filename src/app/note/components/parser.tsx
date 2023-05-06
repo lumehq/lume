@@ -23,16 +23,16 @@ export const noteParser = (event: Event) => {
     // make sure url is trimmed
     const url = item.trim();
 
-    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/gim)) {
+    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/i)) {
       // image url
       content.images.push(url);
       // remove url from original content
-      content.parsed = content.parsed.replace(url, '');
+      content.parsed = content.parsed.toString().replace(url, '');
     } else if (url.match(/\.(mp4|webm|mov)$/i)) {
       // video
       content.videos.push(url);
       // remove url from original content
-      content.parsed = content.parsed.replace(url, '');
+      content.parsed = content.parsed.toString().replace(url, '');
     } else {
       content.parsed = reactStringReplace(content.parsed, url, () => {
         return (
@@ -62,6 +62,13 @@ export const noteParser = (event: Event) => {
       content.parsed = reactStringReplace(content.parsed, reference.text, () => {
         return <NoteQuote key={reference.event.id} id={reference.event.id} />;
       });
+    }
+  });
+
+  // remove extra spaces
+  content.parsed.forEach((item, index) => {
+    if (typeof item === 'string') {
+      content.parsed[index] = item.replace(/\s{2,}/g, ' ');
     }
   });
 

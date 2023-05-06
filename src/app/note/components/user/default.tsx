@@ -15,7 +15,7 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
     <div className="group relative z-10 flex h-11 items-center gap-2">
       {isError || isLoading ? (
         <>
-          <div className="h-11 w-11 shrink animate-pulse overflow-hidden rounded-md"></div>
+          <div className="h-11 w-11 shrink animate-pulse overflow-hidden rounded-md bg-zinc-800"></div>
           <div className="flex w-full flex-1 items-start justify-between">
             <div className="flex flex-col gap-1">
               <div className="flex items-baseline gap-2">
