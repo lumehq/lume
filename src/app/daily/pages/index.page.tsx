@@ -1,11 +1,11 @@
 import NoteBase from '@lume/app/note/components/base';
-import { Placeholder } from '@lume/app/note/components/placeholder';
 import { NoteQuoteRepost } from '@lume/app/note/components/quoteRepost';
 import { getNotes } from '@lume/utils/storage';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useEffect, useRef } from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
@@ -49,7 +49,7 @@ export function Page() {
       <div className="flex h-11 w-full shrink-0 items-center justify-between border-b border-zinc-800"></div>
       <div className="relative flex w-full flex-1 flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
         {status === 'loading' ? (
-          <Placeholder />
+          <Skeleton count={5} containerClassName="flex-1" />
         ) : status === 'error' ? (
           <div>{error.message}</div>
         ) : (
@@ -88,7 +88,13 @@ export function Page() {
             </div>
           </div>
         )}
-        <div>{isFetching && !isFetchingNextPage ? <Placeholder /> : null}</div>
+        <div>
+          {isFetching && !isFetchingNextPage ? (
+            <div className="px-3 py-5">
+              <Skeleton count={3} containerClassName="flex-1" />
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );

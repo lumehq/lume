@@ -4,6 +4,7 @@ import { PageContextClient } from '@lume/renderer/types';
 
 import { StrictMode } from 'react';
 import { Root, createRoot, hydrateRoot } from 'react-dom/client';
+import 'react-loading-skeleton/dist/skeleton.css';
 import 'vidstack/styles/defaults.css';
 
 export const clientRouting = true;

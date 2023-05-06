@@ -5,6 +5,7 @@ import { READONLY_RELAYS } from '@lume/stores/constants';
 import { noteParser } from '@lume/utils/parser';
 
 import { memo, useContext } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import useSWRSubscription from 'swr/subscription';
 import { navigate } from 'vite-plugin-ssr/client/router';
 
@@ -50,17 +51,18 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
       onClick={(e) => openNote(e)}
       className="relative mb-2 mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-2 py-3"
     >
-      {error && <div>failed to load</div>}
-      {!data ? (
-        <div className="h-6 w-full animate-pulse select-text flex-col rounded bg-zinc-800"></div>
-      ) : (
-        <div className="relative z-10 flex flex-col">
-          <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-          <div className="mt-1 pl-[52px]">
-            <NoteContent content={content} />
-          </div>
-        </div>
-      )}
+      <div className="relative z-10 flex flex-col">
+        {data ? (
+          <>
+            <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
+            <div className="mt-1 pl-[52px]">
+              <NoteContent content={content} />
+            </div>
+          </>
+        ) : (
+          <Skeleton baseColor="#27272a" containerClassName="flex-1" />
+        )}
+      </div>
     </div>
   );
 });
