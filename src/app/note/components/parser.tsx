@@ -1,8 +1,4 @@
-import { NoteQuote } from '@lume/app/note/components/quote';
-import { NoteMentionUser } from '@lume/app/note/components/user/mention';
-
-import { Event, parseReferences } from 'nostr-tools';
-import reactStringReplace from 'react-string-replace';
+import { Event } from 'nostr-tools';
 
 const getURLs = new RegExp(
   '(^|[ \t\r\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal|wss|ws):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))',
@@ -10,7 +6,6 @@ const getURLs = new RegExp(
 );
 
 export const noteParser = (event: Event) => {
-  const references = parseReferences(event);
   const content: { original: string; parsed: any; images: string[]; videos: string[] } = {
     original: event.content,
     parsed: event.content,
@@ -33,43 +28,22 @@ export const noteParser = (event: Event) => {
       content.videos.push(url);
       // remove url from original content
       content.parsed = content.parsed.toString().replace(url, '');
-    } else {
-      content.parsed = reactStringReplace(content.parsed, url, () => {
-        return (
-          <a key={url} href={url} className="text-fuchsia-500 no-underline hover:text-fuchsia-600 hover:underline">
-            {url}
-          </a>
-        );
-      });
     }
   });
 
-  // handle hashtag
-  content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
-    <span key={match + i} className="cursor-pointer text-fuchsia-500 hover:text-fuchsia-600">
-      #{match}
-    </span>
-  ));
-
-  // handle note references
-  references?.forEach((reference) => {
-    if (reference?.profile) {
-      content.parsed = reactStringReplace(content.parsed, reference.text, () => {
-        return <NoteMentionUser key={reference.profile.pubkey} pubkey={reference.profile.pubkey} />;
-      });
-    }
-    if (reference?.event) {
-      content.parsed = reactStringReplace(content.parsed, reference.text, () => {
-        return <NoteQuote key={reference.event.id} id={reference.event.id} />;
-      });
-    }
+  // map hashtag to em
+  content.original.match(/#(\w+)(?!:\/\/)/gi)?.forEach((item) => {
+    content.parsed = content.parsed.replace(item, `*${item}*`);
   });
 
-  // remove extra spaces
-  content.parsed.forEach((item, index) => {
-    if (typeof item === 'string') {
-      content.parsed[index] = item.replace(/\s{2,}/g, ' ');
-    }
+  // map note mention to h6
+  content.original.match(/^(nostr:)?(note1|nevent1).*$/gm)?.forEach((item) => {
+    content.parsed = content.parsed.replace(item, `###### ${item}`);
+  });
+
+  // map profile mention to h5
+  content.original.match(/^(nostr:)?(nprofile1|npub1).*$/gm)?.forEach((item) => {
+    content.parsed = content.parsed.replace(item, `##### ${item}`);
   });
 
   return content;

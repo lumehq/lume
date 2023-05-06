@@ -1,3 +1,4 @@
+import { ContentMarkdown } from '@lume/app/note/components/markdown';
 import NoteMetadata from '@lume/app/note/components/metadata';
 import { noteParser } from '@lume/app/note/components/parser';
 import ImagePreview from '@lume/app/note/components/preview/image';
@@ -64,9 +65,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
       <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
         <NoteDefaultUser pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
         <div className="mt-1 pl-[52px]">
-          <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-            {contentFallback.parsed}
-          </div>
+          <ContentMarkdown content={contentFallback.parsed} />
           {Array.isArray(contentFallback.images) && contentFallback.images.length ? (
             <ImagePreview urls={contentFallback.images} />
           ) : (
@@ -114,9 +113,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
         <div onClick={(e) => openNote(e)} className="relative z-10 flex flex-col">
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
-            <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-              {content ? content.parsed : ''}
-            </div>
+            <ContentMarkdown content={content.parsed} />
             {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
             {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
           </div>

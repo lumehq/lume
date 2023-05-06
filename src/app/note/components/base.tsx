@@ -1,3 +1,4 @@
+import { ContentMarkdown } from '@lume/app/note/components/markdown';
 import NoteMetadata from '@lume/app/note/components/metadata';
 import { NoteParent } from '@lume/app/note/components/parent';
 import { noteParser } from '@lume/app/note/components/parser';
@@ -32,9 +33,7 @@ export default function NoteBase({ event }: { event: any }) {
       <div className="relative z-10 flex flex-col">
         <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
         <div className="mt-1 pl-[52px]">
-          <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-            {content.parsed}
-          </div>
+          <ContentMarkdown content={content.parsed} />
           {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
           {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
         </div>

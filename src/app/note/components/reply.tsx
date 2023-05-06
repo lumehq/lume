@@ -1,4 +1,5 @@
 import { noteParser } from '@lume/app/note/components//parser';
+import { ContentMarkdown } from '@lume/app/note/components/markdown';
 import ImagePreview from '@lume/app/note/components/preview/image';
 import VideoPreview from '@lume/app/note/components/preview/video';
 import NoteReplyUser from '@lume/app/note/components/user/reply';
@@ -11,7 +12,7 @@ export default function NoteReply({ data }: { data: any }) {
       <div className="flex flex-col">
         <NoteReplyUser pubkey={data.pubkey} time={data.created_at} />
         <div className="-mt-[17px] pl-[48px]">
-          <div className="whitespace-pre-line break-words text-sm leading-tight">{content.parsed}</div>
+          <ContentMarkdown content={content.parsed} />
           {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
           {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
         </div>

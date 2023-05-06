@@ -1,3 +1,4 @@
+import { ContentMarkdown } from '@lume/app/note/components/markdown';
 import { noteParser } from '@lume/app/note/components/parser';
 import ImagePreview from '@lume/app/note/components/preview/image';
 import VideoPreview from '@lume/app/note/components/preview/video';
@@ -58,9 +59,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
         <div className="relative z-10 flex flex-col">
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[52px]">
-            <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-              {content ? content.parsed : ''}
-            </div>
+            <ContentMarkdown content={content.parsed} />
             {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
             {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
           </div>
