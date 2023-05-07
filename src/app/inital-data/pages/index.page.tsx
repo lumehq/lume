@@ -4,6 +4,7 @@ import { READONLY_RELAYS } from '@lume/stores/constants';
 import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
 import {
   addToBlacklist,
+  countTotalLongNotes,
   countTotalNotes,
   createChat,
   createNote,
@@ -28,19 +29,31 @@ export function Page() {
       const account = await getActiveAccount();
       const lastLogin = await getLastLogin();
       const notes = await countTotalNotes();
+      const longNotes = await countTotalLongNotes();
 
       const follows = nip02ToArray(JSON.parse(account.follows));
       const query = [];
 
-      let since: number;
+      let sinceNotes: number;
+      let sinceLongNotes: number;
 
       if (notes === 0) {
-        since = dateToUnix(hoursAgo(24, now.current));
+        sinceNotes = dateToUnix(hoursAgo(48, now.current));
       } else {
         if (parseInt(lastLogin) > 0) {
-          since = parseInt(lastLogin);
+          sinceNotes = parseInt(lastLogin);
         } else {
-          since = dateToUnix(hoursAgo(24, now.current));
+          sinceNotes = dateToUnix(hoursAgo(48, now.current));
+        }
+      }
+
+      if (longNotes === 0) {
+        sinceLongNotes = 0;
+      } else {
+        if (parseInt(lastLogin) > 0) {
+          sinceLongNotes = parseInt(lastLogin);
+        } else {
+          sinceLongNotes = 0;
         }
       }
 
@@ -48,7 +61,7 @@ export function Page() {
       query.push({
         kinds: [1, 6],
         authors: follows,
-        since: since,
+        since: sinceNotes,
         until: dateToUnix(now.current),
       });
 
@@ -65,6 +78,13 @@ export function Page() {
         authors: [account.pubkey],
         kinds: [43, 44],
         since: 0,
+        until: dateToUnix(now.current),
+      });
+
+      // kind 30023 (long post) query
+      query.push({
+        kinds: [30023],
+        since: sinceLongNotes,
         until: dateToUnix(now.current),
       });
 
@@ -113,11 +133,27 @@ export function Page() {
               if (event.tags[0][0] === 'e') {
                 addToBlacklist(account.id, event.tags[0][1], 43, 1);
               }
+              break;
             // mute user (channel only)
             case 44:
               if (event.tags[0][0] === 'p') {
                 addToBlacklist(account.id, event.tags[0][1], 44, 1);
               }
+              break;
+            // long post
+            case 30023:
+              // insert event to local database
+              createNote(
+                event.id,
+                account.id,
+                event.pubkey,
+                event.kind,
+                event.tags,
+                event.content,
+                event.created_at,
+                ''
+              );
+              break;
             default:
               break;
           }

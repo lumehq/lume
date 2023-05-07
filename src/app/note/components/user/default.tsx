@@ -5,6 +5,7 @@ import { shortenKey } from '@lume/utils/shortenKey';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Skeleton from 'react-loading-skeleton';
 
 dayjs.extend(relativeTime);
 
@@ -24,7 +25,7 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
             <h5 className="text-sm font-semibold leading-none group-hover:underline">
-              {user?.display_name || shortenKey(pubkey)}
+              {user?.display_name || user?.name || <Skeleton />}
             </h5>
           </div>
           <div className="flex items-baseline gap-1.5 text-sm leading-none text-zinc-500">

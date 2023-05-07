@@ -1,10 +1,10 @@
 import { Image } from '@lume/shared/image';
 import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
 import { useProfile } from '@lume/utils/hooks/useProfile';
-import { shortenKey } from '@lume/utils/shortenKey';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Skeleton from 'react-loading-skeleton';
 
 dayjs.extend(relativeTime);
 
@@ -22,8 +22,9 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
       </div>
       <div className="flex items-baseline gap-2 text-sm">
         <h5 className="font-semibold leading-tight group-hover:underline">
-          {user?.display_name || user?.name || shortenKey(pubkey)}{' '}
+          {user?.display_name || user?.name || <Skeleton />}
           <span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
+            {' '}
             reposted
           </span>
         </h5>

@@ -76,7 +76,14 @@ export async function countTotalChannels() {
 // count total notes
 export async function countTotalNotes() {
   const db = await connect();
-  const result = await db.select('SELECT COUNT(*) AS "total" FROM notes;');
+  const result = await db.select('SELECT COUNT(*) AS "total" FROM notes WHERE kind IN (1, 6);');
+  return result[0].total;
+}
+
+// count total notes
+export async function countTotalLongNotes() {
+  const db = await connect();
+  const result = await db.select('SELECT COUNT(*) AS "total" FROM notes WHERE kind = 30023;');
   return result[0].total;
 }
 
@@ -86,7 +93,22 @@ export async function getNotes(time: number, limit: number, offset: number) {
 
   const notes: any = { data: null, nextCursor: 0 };
   const query: any = await db.select(
-    `SELECT * FROM notes WHERE created_at <= "${time}" GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+    `SELECT * FROM notes WHERE created_at <= "${time}" AND kind IN (1, 6) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+  );
+
+  notes['data'] = query;
+  notes['nextCursor'] = offset + limit;
+
+  return notes;
+}
+
+// get all long notes
+export async function getLongNotes(time: number, limit: number, offset: number) {
+  const db = await connect();
+
+  const notes: any = { data: null, nextCursor: 0 };
+  const query: any = await db.select(
+    `SELECT * FROM notes WHERE created_at <= "${time}" AND kind = 30023 GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
   );
 
   notes['data'] = query;
