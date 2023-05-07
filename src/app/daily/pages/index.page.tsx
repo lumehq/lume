@@ -1,5 +1,5 @@
 import { Header } from '@lume/app/daily/components/header';
-import NoteBase from '@lume/app/note/components/base';
+import { NoteBase } from '@lume/app/note/components/base';
 import { NoteQuoteRepost } from '@lume/app/note/components/quoteRepost';
 import { getNotes } from '@lume/utils/storage';
 

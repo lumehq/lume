@@ -1,6 +1,5 @@
+import { NoteContent } from '@lume/app/note/components/content';
 import NoteMetadata from '@lume/app/note/components/metadata';
-import ImagePreview from '@lume/app/note/components/preview/image';
-import VideoPreview from '@lume/app/note/components/preview/video';
 import RepliesList from '@lume/app/note/components/replies/list';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
@@ -67,31 +66,15 @@ export function Page() {
               </div>
             </div>
           ) : (
-            <>
-              <div className="relative z-10 flex flex-col">
-                <div className="px-5 pt-5">
-                  <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-                  <div className="mt-3">
-                    <div className="whitespace-pre-line break-words text-[15px] leading-tight text-zinc-100">
-                      {content ? content.parsed : ''}
-                    </div>
-                    {Array.isArray(content.images) && content.images.length ? (
-                      <ImagePreview urls={content.images} />
-                    ) : (
-                      <></>
-                    )}
-                    {Array.isArray(content.videos) && content.videos.length ? (
-                      <VideoPreview urls={content.videos} />
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </div>
-                <div onClick={(e) => e.stopPropagation()} className="mt-5 border-t border-zinc-800 px-5 py-5">
+            <div className="relative z-10 flex flex-col">
+              <div className="px-3 pt-3">
+                <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
+                <div className="mt-3">
+                  <NoteContent content={content} />
                   <NoteMetadata id={noteID} eventPubkey={data.pubkey} />
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
         <RepliesList id={noteID} />
