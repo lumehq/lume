@@ -1,3 +1,4 @@
+import { Header } from '@lume/app/daily/components/header';
 import NoteBase from '@lume/app/note/components/base';
 import { NoteQuoteRepost } from '@lume/app/note/components/quoteRepost';
 import { getNotes } from '@lume/utils/storage';
@@ -50,7 +51,9 @@ export function Page() {
       className="scrollbar-hide flex h-full flex-col justify-between gap-1.5 overflow-y-auto"
       style={{ contain: 'strict' }}
     >
-      <div className="flex h-11 w-full shrink-0 items-center justify-between border-b border-zinc-800"></div>
+      <div className="flex h-11 w-full shrink-0 items-center justify-between border-b border-zinc-900 px-3">
+        <Header />
+      </div>
       <div className="flex-1">
         {status === 'loading' ? (
           <Skeleton count={5} containerClassName="flex-1" />
