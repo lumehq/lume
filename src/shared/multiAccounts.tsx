@@ -17,7 +17,7 @@ export default function MultiAccounts() {
   return (
     <div className="flex h-full flex-col items-center justify-between pb-4 pt-3">
       <div className="flex flex-col items-center">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           <>
             {!activeAccount ? (
               <div className="group relative flex h-10 w-10 shrink animate-pulse cursor-pointer items-center justify-center rounded-lg bg-zinc-900"></div>

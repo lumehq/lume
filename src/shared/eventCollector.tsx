@@ -1,4 +1,4 @@
-import { NetworkStatusIndicator } from '@lume/shared/networkStatusIndicator';
+import HeartBeatIcon from '@lume/shared/icons/heartbeat';
 import { RelayContext } from '@lume/shared/relayProvider';
 import { READONLY_RELAYS } from '@lume/stores/constants';
 import { hasNewerNoteAtom } from '@lume/stores/note';
@@ -20,12 +20,13 @@ export default function EventCollector() {
   const { account, isLoading, isError } = useActiveAccount();
 
   useSWRSubscription(!isLoading && !isError && account ? ['eventCollector', account] : null, ([, key], {}) => {
-    const follows = nip02ToArray(JSON.parse(key.follows));
+    const follows = JSON.parse(key.follows);
+    const followsAsArray = nip02ToArray(follows);
     const unsubscribe = pool.subscribe(
       [
         {
           kinds: [1, 6],
-          authors: follows,
+          authors: followsAsArray,
           since: dateToUnix(now.current),
         },
         {
@@ -35,6 +36,10 @@ export default function EventCollector() {
         {
           kinds: [4],
           '#p': [key.pubkey],
+          since: dateToUnix(now.current),
+        },
+        {
+          kinds: [30023],
           since: dateToUnix(now.current),
         },
       ],
@@ -85,6 +90,11 @@ export default function EventCollector() {
               event.id
             );
             break;
+          // long post
+          case 30023:
+            // insert event to local database
+            createNote(event.id, account.id, event.pubkey, event.kind, event.tags, event.content, event.created_at, '');
+            break;
           default:
             break;
         }
@@ -96,5 +106,9 @@ export default function EventCollector() {
     };
   });
 
-  return <NetworkStatusIndicator />;
+  return (
+    <div className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200">
+      <HeartBeatIcon width={14} height={14} />
+    </div>
+  );
 }

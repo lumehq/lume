@@ -35,7 +35,7 @@ export const noteParser = (event: Event) => {
 
   // map hashtag to em
   content.original.match(/#(\w+)(?!:\/\/)/g)?.forEach((item) => {
-    content.parsed = content.parsed.replace(item, `[${item}](https://primal.net/search/${item})`);
+    content.parsed = content.parsed.replace(item, ` [${item}](https://primal.net/search/${item})`);
   });
 
   // handle nostr mention

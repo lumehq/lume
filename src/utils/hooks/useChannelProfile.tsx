@@ -20,7 +20,7 @@ export const useChannelProfile = (id: string, channelPubkey: string) => {
 
   const { data: cache, isLoading } = useSWR(['channel-cache-profile', id], fetcher);
   const { data, error } = useSWRSubscription(
-    !isLoading && !cache ? ['channel-profile', id] : null,
+    !isLoading && cache ? ['channel-profile', id] : null,
     ([, key], { next }) => {
       // subscribe to channel
       const unsubscribe = pool.subscribe(

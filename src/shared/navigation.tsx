@@ -1,6 +1,8 @@
 import ChannelsList from '@lume/app/channel/components/list';
 import ChatsList from '@lume/app/chat/components/list';
 import ActiveLink from '@lume/shared/activeLink';
+import EventCollector from '@lume/shared/eventCollector';
+import ComposeIcon from '@lume/shared/icons/compose';
 import MyspaceIcon from '@lume/shared/icons/myspace';
 import NavArrowDownIcon from '@lume/shared/icons/navArrowDown';
 import ThreadsIcon from '@lume/shared/icons/threads';
@@ -10,7 +12,14 @@ import { Disclosure } from '@headlessui/react';
 
 export default function Navigation() {
   return (
-    <div className="relative flex h-full flex-col gap-3 overflow-hidden pt-3">
+    <div className="relative flex h-full flex-col gap-3 pt-1.5">
+      <div className="flex h-11 items-center justify-between px-3.5">
+        <button className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600">
+          <ComposeIcon width={14} height={14} />
+          Compose
+        </button>
+        <EventCollector />
+      </div>
       {/* Newsfeed */}
       <div className="flex flex-col gap-0.5 px-1.5">
         <div className="px-2.5">
