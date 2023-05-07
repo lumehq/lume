@@ -1,15 +1,16 @@
 import CancelIcon from '@lume/shared/icons/cancel';
 import PlusIcon from '@lume/shared/icons/plus';
-import { getNoteAuthors } from '@lume/utils/storage';
 
+//import { getNoteAuthors } from '@lume/utils/storage';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
-import useSWR from 'swr';
 
-const fetcher = () => getNoteAuthors();
+//import useSWR from 'swr';
+
+//const fetcher = () => getNoteAuthors();
 
 export const CreateViewModal = () => {
-  const { data, error }: any = useSWR('authors', fetcher);
+  //const { data, error }: any = useSWR('authors', fetcher);
   const [isOpen, setIsOpen] = useState(false);
 
   const closeModal = () => {
@@ -80,10 +81,7 @@ export const CreateViewModal = () => {
                     </Dialog.Description>
                   </div>
                 </div>
-                <div className="flex h-full w-full flex-col overflow-y-auto pb-5 pt-3">
-                  {error && <>failed to fetch</>}
-                  {!data ? <>loading...</> : data.map((author) => <div key={author.id}>{author.pubkey}</div>)}
-                </div>
+                <div className="flex h-full w-full flex-col overflow-y-auto pb-5 pt-3"></div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
