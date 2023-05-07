@@ -20,12 +20,12 @@ export const noteParser = (event: Event) => {
     // make sure url is trimmed
     const url = item.trim();
 
-    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/i)) {
+    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
       // image url
       content.images.push(url);
       // remove url from original content
       content.parsed = content.parsed.replace(url, '');
-    } else if (url.match(/\.(mp4|webm|mov)$/i)) {
+    } else if (url.match(/\.(mp4|webm|mov|ogv|avi|mp3)$/)) {
       // video
       content.videos.push(url);
       // remove url from original content
@@ -34,8 +34,8 @@ export const noteParser = (event: Event) => {
   });
 
   // map hashtag to em
-  content.original.match(/#(\w+)(?!:\/\/)/gi)?.forEach((item) => {
-    content.parsed = content.parsed.replace(item, `[${item}](https://snort.social/search/#${item})`);
+  content.original.match(/#(\w+)(?!:\/\/)/g)?.forEach((item) => {
+    content.parsed = content.parsed.replace(item, `[${item}](https://primal.net/search/${item})`);
   });
 
   // handle nostr mention

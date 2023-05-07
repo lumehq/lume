@@ -9,7 +9,7 @@ import { memo, useContext } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import useSWRSubscription from 'swr/subscription';
 
-export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
+export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const pool: any = useContext(RelayContext);
 
   const { data, error } = useSWRSubscription(id ? id : null, (key, { next }) => {
@@ -38,10 +38,7 @@ export const NoteQuote = memo(function NoteQuote({ id }: { id: string }) {
   const content = !error && data ? noteParser(data) : null;
 
   return (
-    <NoteWrapper
-      href={`/app/note?id=${id}`}
-      className="mb-2 mt-3 flex flex-col rounded-lg border border-zinc-800 p-2 py-3"
-    >
+    <NoteWrapper href={`/app/note?id=${id}`} className="mt-3 rounded-lg border border-zinc-800 px-3 py-3">
       {data ? (
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
