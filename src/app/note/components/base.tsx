@@ -15,7 +15,7 @@ export const NoteBase = ({ event }: { event: any }) => {
         {event.parent_id && event.parent_id !== event.event_id && <NoteParent id={event.parent_id} />}
         <div className="flex flex-col">
           <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
-          <div className="mt-1 pl-[52px]">
+          <div className="mt-3 pl-[46px]">
             <NoteContent content={content} />
             <NoteMetadata id={event.event_id} eventPubkey={event.pubkey} />
           </div>

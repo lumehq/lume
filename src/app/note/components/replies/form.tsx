@@ -36,7 +36,7 @@ export default function NoteReplyForm({ id }: { id: string }) {
   };
 
   return (
-    <div className="flex gap-3 px-3 py-4">
+    <div className="flex gap-2.5 px-3 py-4">
       <div>
         <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md">
           <Image src={profile?.picture} alt={account?.pubkey} className="h-9 w-9 rounded-md object-cover" />

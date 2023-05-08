@@ -12,7 +12,7 @@ export default function NoteReplyUser({ pubkey, time }: { pubkey: string; time: 
   const { user } = useProfile(pubkey);
 
   return (
-    <div className="group flex items-start gap-3">
+    <div className="group flex items-start gap-2.5">
       <div className="relative h-9 w-9 shrink-0 rounded-md">
         <Image
           src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}

@@ -76,7 +76,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
       {data ? (
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-          <div className="mt-1 pl-[52px]">
+          <div className="mt-3 pl-[46px]">
             <NoteContent content={content} />
             <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
           </div>

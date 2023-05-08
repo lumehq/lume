@@ -42,8 +42,7 @@ export function Page() {
     <div className="scrollbar-hide h-full w-full overflow-y-auto">
       <div className="p-3">
         <div className="relative w-full rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
-          {error && <div>failed to load</div>}
-          {!data ? (
+          {!data && error ? (
             <div className="animated-pulse p-3">
               <div className="flex items-start gap-2">
                 <div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />

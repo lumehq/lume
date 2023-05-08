@@ -39,11 +39,11 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
 
   return (
     <div className="relative flex flex-col pb-6">
-      <div className="absolute left-[21px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
+      <div className="absolute left-[16px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600"></div>
       {data ? (
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-          <div className="mt-1 pl-[52px]">
+          <div className="mt-3 pl-[46px]">
             <NoteContent content={content} />
             <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
           </div>

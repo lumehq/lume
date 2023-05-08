@@ -13,14 +13,14 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
 
   return (
     <div className="group flex items-center gap-2">
-      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
+      <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-zinc-900">
         <Image
           src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}
           alt={pubkey}
-          className="h-11 w-11 rounded-md object-cover"
+          className="h-9 w-9 rounded-md object-cover"
         />
       </div>
-      <div className="flex items-baseline gap-2 text-sm">
+      <div className="flex items-baseline gap-1.5 text-sm">
         <h5 className="font-semibold leading-tight group-hover:underline">
           {user?.display_name || user?.name || <Skeleton />}
           <span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
