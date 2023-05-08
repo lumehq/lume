@@ -36,6 +36,12 @@ module.exports = {
           rgb(74, 4, 78) 0px 0px 0px 1px,
           rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset
         `,
+        'mini-button': `
+          rgba(13, 16, 23, 0.36) 0px 2px 8px,
+          rgba(13, 16, 23, 0.36) 0px 2px 4px,
+          rgba(13, 16, 23, 0.36) 0px 0px 0px 1px,
+          rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset
+        `,
       },
       backgroundColor: {
         'near-black': '#07070d',
