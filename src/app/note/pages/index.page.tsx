@@ -1,4 +1,4 @@
-import { NoteContent } from '@lume/app/note/components/content';
+import { Kind1 } from '@lume/app/note/components/kind1';
 import NoteMetadata from '@lume/app/note/components/metadata';
 import RepliesList from '@lume/app/note/components/replies/list';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
@@ -69,7 +69,7 @@ export function Page() {
               <div className="px-3 pt-3">
                 <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
                 <div className="mt-3">
-                  <NoteContent content={content} />
+                  <Kind1 content={content} />
                   <NoteMetadata id={noteID} eventPubkey={data.pubkey} />
                 </div>
               </div>

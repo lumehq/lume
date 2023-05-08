@@ -1,6 +1,6 @@
 export const NoteSkeleton = () => {
   return (
-    <div className="flex h-min flex-col">
+    <div className="flex h-min flex-col pb-3">
       <div className="flex items-center gap-2.5">
         <div className="relative h-9 w-9 shrink overflow-hidden rounded-md bg-zinc-700" />
         <div className="flex flex-col gap-0.5">

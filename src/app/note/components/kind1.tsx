@@ -6,7 +6,7 @@ import VideoPreview from '@lume/app/note/components/preview/video';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export const NoteContent = ({ content }: { content: any }) => {
+export const Kind1 = ({ content }: { content: any }) => {
   return (
     <>
       <ReactMarkdown
@@ -21,10 +21,10 @@ export const NoteContent = ({ content }: { content: any }) => {
       </ReactMarkdown>
       {Array.isArray(content.images) && content.images.length ? <ImagePreview urls={content.images} /> : <></>}
       {Array.isArray(content.videos) && content.videos.length ? <VideoPreview urls={content.videos} /> : <></>}
-      {!Array.isArray(content.notes) && !content.notes.length ? (
-        <></>
-      ) : (
+      {Array.isArray(content.notes) && content.notes.length ? (
         content.notes.map((note: string) => <MentionNote key={note} id={note} />)
+      ) : (
+        <></>
       )}
     </>
   );

@@ -1,4 +1,5 @@
-import { NoteContent } from '@lume/app/note/components/content';
+import { Kind1 } from '@lume/app/note/components/kind1';
+import { Kind1063 } from '@lume/app/note/components/kind1063';
 import NoteMetadata from '@lume/app/note/components/metadata';
 import { NoteParent } from '@lume/app/note/components/parent';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
@@ -25,7 +26,8 @@ export const NoteBase = ({ event }: { event: any }) => {
         <div className="flex flex-col">
           <NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
           <div className="mt-3 pl-[46px]">
-            <NoteContent content={content} />
+            {event.kind === 1 && <Kind1 content={content} />}
+            {event.kind === 1063 && <Kind1063 metadata={event.tags} />}
             <NoteMetadata id={event.event_id} eventPubkey={event.pubkey} />
           </div>
         </div>

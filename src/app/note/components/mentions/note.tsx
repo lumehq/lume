@@ -1,5 +1,5 @@
-import { NoteContent } from '@lume/app/note/components/content';
-import NoteFile from '@lume/app/note/components/file';
+import { Kind1 } from '@lume/app/note/components/kind1';
+import { Kind1063 } from '@lume/app/note/components/kind1063';
 import { NoteSkeleton } from '@lume/app/note/components/skeleton';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { NoteWrapper } from '@lume/app/note/components/wrapper';
@@ -45,8 +45,8 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-1 pl-[46px]">
-            {kind1 && <NoteContent content={kind1} />}
-            {kind1063 && <NoteFile url={kind1063[0][1]} />}
+            {kind1 && <Kind1 content={kind1} />}
+            {kind1063 && <Kind1063 metadata={kind1063} />}
           </div>
         </>
       ) : (

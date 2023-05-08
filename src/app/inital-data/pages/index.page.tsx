@@ -59,7 +59,7 @@ export function Page() {
 
       // kind 1 (notes) query
       query.push({
-        kinds: [1, 6],
+        kinds: [1, 6, 1063],
         authors: follows,
         since: sinceNotes,
         until: dateToUnix(now.current),
@@ -139,6 +139,18 @@ export function Page() {
               if (event.tags[0][0] === 'p') {
                 addToBlacklist(account.id, event.tags[0][1], 44, 1);
               }
+              break;
+            case 1063:
+              createNote(
+                event.id,
+                account.id,
+                event.pubkey,
+                event.kind,
+                event.tags,
+                event.content,
+                event.created_at,
+                ''
+              );
               break;
             // long post
             case 30023:

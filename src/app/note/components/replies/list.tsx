@@ -17,7 +17,7 @@ export default function RepliesList({ id }: { id: string }) {
         {
           '#e': [key],
           since: 0,
-          kinds: [1],
+          kinds: [1, 1063],
           limit: 20,
         },
       ],

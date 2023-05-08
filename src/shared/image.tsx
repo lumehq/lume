@@ -5,5 +5,7 @@ export const Image = (props) => {
     event.currentTarget.src = DEFAULT_AVATAR;
   };
 
-  return <img {...props} loading="lazy" decoding="async" onError={addImageFallback} />;
+  return (
+    <img {...props} loading="lazy" decoding="async" onError={addImageFallback} style={{ contentVisibility: 'auto' }} />
+  );
 };

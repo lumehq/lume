@@ -93,7 +93,7 @@ export async function getNotes(time: number, limit: number, offset: number) {
 
   const notes: any = { data: null, nextCursor: 0 };
   const query: any = await db.select(
-    `SELECT * FROM notes WHERE created_at <= "${time}" AND kind IN (1, 6) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+    `SELECT * FROM notes WHERE created_at <= "${time}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
   );
 
   notes['data'] = query;
