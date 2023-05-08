@@ -1,4 +1,5 @@
 import { NoteContent } from '@lume/app/note/components/content';
+import NoteFile from '@lume/app/note/components/file';
 import NoteMetadata from '@lume/app/note/components/metadata';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
@@ -35,7 +36,8 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
     };
   });
 
-  const content = !error && data ? noteParser(data) : null;
+  const kind1 = !error && data?.kind === 1 ? noteParser(data) : null;
+  const kind1063 = !error && data?.kind === 1063 ? data.tags : null;
 
   return (
     <div className="relative flex flex-col pb-6">
@@ -44,7 +46,8 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-3 pl-[46px]">
-            <NoteContent content={content} />
+            {kind1 && <NoteContent content={kind1} />}
+            {kind1063 && <NoteFile url={kind1063[0][1]} />}
             <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
           </div>
         </>

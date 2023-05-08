@@ -36,7 +36,7 @@ export const getParentID = (arr: string[], fallback: string) => {
   let parentID = fallback;
 
   if (tags.length > 0) {
-    if (tags[0][0] === 'e' || tags[0][2] === 'root' || tags[0][3] === 'root') {
+    if (tags[0][0] === 'e') {
       parentID = tags[0][1];
     } else {
       tags.forEach((tag) => {
@@ -48,6 +48,19 @@ export const getParentID = (arr: string[], fallback: string) => {
   }
 
   return parentID;
+};
+
+// check id present in event tags
+export const isTagsIncludeID = (id: string, arr: string[]) => {
+  const tags = destr(arr);
+
+  if (tags.length > 0) {
+    if (tags[0][1] === id) {
+      return true;
+    }
+  } else {
+    return false;
+  }
 };
 
 // get parent id from event tags

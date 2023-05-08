@@ -12,7 +12,7 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
   const { user } = useProfile(pubkey);
 
   return (
-    <div className="group flex items-center gap-2">
+    <div className="group flex items-center gap-2.5">
       <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-zinc-900">
         <Image
           src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${user?.picture ? user.picture : DEFAULT_AVATAR}`}

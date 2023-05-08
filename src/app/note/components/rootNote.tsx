@@ -1,4 +1,5 @@
 import { NoteContent } from '@lume/app/note/components/content';
+import NoteFile from '@lume/app/note/components/file';
 import NoteMetadata from '@lume/app/note/components/metadata';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { RelayContext } from '@lume/shared/relayProvider';
@@ -55,7 +56,8 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
     }
   };
 
-  const content = !error && data ? noteParser(data) : null;
+  const kind1 = !error && data?.kind === 1 ? noteParser(data) : null;
+  const kind1063 = !error && data?.kind === 1063 ? data.tags : null;
 
   if (parseFallback) {
     const contentFallback = noteParser(parseFallback);
@@ -63,7 +65,7 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
     return (
       <div onClick={(e) => openNote(e)} className="flex flex-col px-3">
         <NoteDefaultUser pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
-        <div className="mt-1 pl-[52px]">
+        <div className="mt-3 pl-[46px]">
           <NoteContent content={contentFallback} />
           <NoteMetadata id={parseFallback.id} eventPubkey={parseFallback.pubkey} />
         </div>
@@ -77,7 +79,8 @@ export const RootNote = memo(function RootNote({ id, fallback }: { id: string; f
         <>
           <NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
           <div className="mt-3 pl-[46px]">
-            <NoteContent content={content} />
+            {kind1 && <NoteContent content={kind1} />}
+            {kind1063 && <NoteFile url={kind1063[0][1]} />}
             <NoteMetadata id={data.id} eventPubkey={data.pubkey} />
           </div>
         </>
