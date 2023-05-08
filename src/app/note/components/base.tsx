@@ -6,8 +6,10 @@ import { NoteWrapper } from '@lume/app/note/components/wrapper';
 import { noteParser } from '@lume/utils/parser';
 import { isTagsIncludeID } from '@lume/utils/transform';
 
+import { useMemo } from 'react';
+
 export const NoteBase = ({ event }: { event: any }) => {
-  const content = noteParser(event);
+  const content = useMemo(() => noteParser(event), [event]);
   const checkParentID = isTagsIncludeID(event.parent_id, event.tags);
 
   const href = event.parent_id ? `/app/note?id=${event.parent_id}` : `/app/note?id=${event.event_id}`;

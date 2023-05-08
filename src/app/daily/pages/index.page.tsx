@@ -1,12 +1,12 @@
 import { Header } from '@lume/app/daily/components/header';
 import { NoteBase } from '@lume/app/note/components/base';
 import { NoteQuoteRepost } from '@lume/app/note/components/quoteRepost';
+import { NoteSkeleton } from '@lume/app/note/components/skeleton';
 import { getNotes } from '@lume/utils/storage';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useEffect, useRef } from 'react';
-import Skeleton from 'react-loading-skeleton';
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
@@ -56,7 +56,11 @@ export function Page() {
       </div>
       <div className="flex-1">
         {status === 'loading' ? (
-          <Skeleton count={5} containerClassName="flex-1" />
+          <div className="px-3 py-1.5">
+            <div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+              <NoteSkeleton />
+            </div>
+          </div>
         ) : status === 'error' ? (
           <div>{error.message}</div>
         ) : (
@@ -95,8 +99,10 @@ export function Page() {
         )}
         <div>
           {isFetching && !isFetchingNextPage ? (
-            <div className="px-3 py-5">
-              <Skeleton count={3} containerClassName="flex-1" />
+            <div className="px-3 py-1.5">
+              <div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+                <NoteSkeleton />
+              </div>
             </div>
           ) : null}
         </div>

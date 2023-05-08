@@ -4,7 +4,6 @@ import { useProfile } from '@lume/utils/hooks/useProfile';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import Skeleton from 'react-loading-skeleton';
 
 dayjs.extend(relativeTime);
 
@@ -22,7 +21,7 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
       </div>
       <div className="flex items-baseline gap-1.5 text-sm">
         <h5 className="font-semibold leading-tight group-hover:underline">
-          {user?.display_name || user?.name || <Skeleton />}
+          {user?.display_name || user?.name || <div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700"></div>}
           <span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
             {' '}
             reposted

@@ -23,7 +23,7 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
       <div className="flex w-full flex-1 items-start justify-between">
         <div className="flex flex-col gap-0.5">
           <h5 className="text-sm font-semibold leading-none group-hover:underline">
-            {user?.display_name || user?.name || <div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-800"></div>}
+            {user?.display_name || user?.name || <div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700"></div>}
           </h5>
           <div className="flex items-baseline gap-1.5 text-sm leading-none text-zinc-500">
             <span>{user?.nip05 || shortenKey(pubkey)}</span>

@@ -1,5 +1,6 @@
 import { NoteContent } from '@lume/app/note/components/content';
 import NoteFile from '@lume/app/note/components/file';
+import { NoteSkeleton } from '@lume/app/note/components/skeleton';
 import { NoteDefaultUser } from '@lume/app/note/components/user/default';
 import { NoteWrapper } from '@lume/app/note/components/wrapper';
 import { RelayContext } from '@lume/shared/relayProvider';
@@ -7,7 +8,6 @@ import { READONLY_RELAYS } from '@lume/stores/constants';
 import { noteParser } from '@lume/utils/parser';
 
 import { memo, useContext } from 'react';
-import Skeleton from 'react-loading-skeleton';
 import useSWRSubscription from 'swr/subscription';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
@@ -50,7 +50,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
           </div>
         </>
       ) : (
-        <Skeleton baseColor="#27272a" containerClassName="flex-1" />
+        <NoteSkeleton />
       )}
     </NoteWrapper>
   );
