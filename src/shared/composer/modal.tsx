@@ -1,15 +1,22 @@
-import { ComposeUser } from '@lume/shared/composer/user';
+import { Post } from '@lume/shared/composer/types/post';
+import { User } from '@lume/shared/composer/user';
 import CancelIcon from '@lume/shared/icons/cancel';
 import ChevronDownIcon from '@lume/shared/icons/chevronDown';
 import ChevronRightIcon from '@lume/shared/icons/chevronRight';
 import ComposeIcon from '@lume/shared/icons/compose';
+import { composerAtom } from '@lume/stores/composer';
 import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
 
 import { Dialog, Transition } from '@headlessui/react';
+import { useAtom } from 'jotai';
 import { Fragment, useState } from 'react';
 
-export const ComposerModal = () => {
+import PlusCircleIcon from '../icons/plusCircle';
+
+export function ComposerModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [composer] = useAtom(composerAtom);
+
   const { account, isLoading, isError } = useActiveAccount();
 
   const closeModal = () => {
@@ -56,11 +63,14 @@ export const ComposerModal = () => {
               <Dialog.Panel className="relative h-min w-full max-w-xl rounded-lg border border-zinc-800 bg-zinc-900">
                 <div className="flex items-center justify-between px-4 py-4">
                   <div className="flex items-center gap-2">
-                    <div>{!isLoading && !isError && account && <ComposeUser data={account} />}</div>
+                    <div>{!isLoading && !isError && account && <User data={account} />}</div>
                     <span>
                       <ChevronRightIcon width={14} height={14} className="text-zinc-500" />
                     </span>
-                    <button className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-xs font-medium text-zinc-400 shadow-mini-button">
+                    <button
+                      autoFocus={false}
+                      className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-xs font-medium text-zinc-400 shadow-mini-button"
+                    >
                       Post
                       <ChevronDownIcon width={14} height={14} />
                     </button>
@@ -69,7 +79,25 @@ export const ComposerModal = () => {
                     <CancelIcon width={16} height={16} className="text-zinc-500" />
                   </div>
                 </div>
-                <div className="px-4 pb-4"></div>
+                <div className="flex h-full flex-col px-4 pb-4">
+                  <div className="flex h-full w-full gap-2">
+                    <div className="flex w-8 shrink-0 items-center justify-center">
+                      <div className="h-full w-[2px] bg-zinc-800"></div>
+                    </div>
+                    {composer.type === 'post' && <Post />}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <button className="inline-flex h-8 w-8 items-center justify-center rounded">
+                      <PlusCircleIcon width={20} height={20} className="text-zinc-500" />
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-3.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -77,4 +105,4 @@ export const ComposerModal = () => {
       </Transition>
     </>
   );
-};
+}
