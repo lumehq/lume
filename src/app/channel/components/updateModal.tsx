@@ -9,7 +9,7 @@ import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@stores/constants';
 
 import { dateToUnix } from '@utils/date';
 import { useActiveAccount } from '@utils/hooks/useActiveAccount';
-import { getChannel, updateChannelMetadata } from '@utils/storage';
+import { getChannel } from '@utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { getEventHash, signEvent } from 'nostr-tools';
@@ -58,15 +58,13 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
         created_at: dateToUnix(),
         kind: 41,
         pubkey: account.pubkey,
-        tags: [],
+        tags: [['e', id]],
       };
       event.id = getEventHash(event);
       event.sig = signEvent(event, account.privkey);
 
       // publish channel
       pool.publish(event, WRITEONLY_RELAYS);
-      // update channel metadata in database
-      updateChannelMetadata(event.id, event.content);
       // reset form
       reset();
       // close modal

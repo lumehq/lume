@@ -19,7 +19,12 @@ export default function ChannelsListItem({ data }: { data: any }) {
         pageID === data.event_id ? 'dark:bg-zinc-900 dark:text-zinc-100 hover:dark:bg-zinc-800' : ''
       )}
     >
-      <div className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">
+      <div
+        className={twMerge(
+          'inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800',
+          pageID === data.event_id ? 'dark:bg-zinc-800 group-hover:dark:bg-zinc-700' : ''
+        )}
+      >
         <span className="text-xs text-zinc-200">#</span>
       </div>
       <div>

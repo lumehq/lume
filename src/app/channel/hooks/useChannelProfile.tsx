@@ -2,10 +2,10 @@ import { RelayContext } from '@shared/relayProvider';
 
 import { READONLY_RELAYS } from '@stores/constants';
 
-import { getChannel } from '@utils/storage';
+import { getChannel, updateChannelMetadata } from '@utils/storage';
 
 import { useContext } from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import useSWRSubscription from 'swr/subscription';
 
 const fetcher = async ([, id]) => {
@@ -20,39 +20,37 @@ const fetcher = async ([, id]) => {
 export function useChannelProfile(id: string, channelPubkey: string) {
   const pool: any = useContext(RelayContext);
 
-  const { data: cache, isLoading } = useSWR(['channel-cache-profile', id], fetcher);
-  const { data, error } = useSWRSubscription(
-    !isLoading && cache ? ['channel-profile', id] : null,
-    ([, key], { next }) => {
-      // subscribe to channel
-      const unsubscribe = pool.subscribe(
-        [
-          {
-            '#e': [key],
-            authors: [channelPubkey],
-            kinds: [41],
-          },
-        ],
-        READONLY_RELAYS,
-        (event: { content: string }) => {
-          next(null, JSON.parse(event.content));
-        },
-        undefined,
-        undefined,
+  const { mutate } = useSWRConfig();
+  const { data, isLoading } = useSWR(['channel-metadata', id], fetcher);
+
+  useSWRSubscription(!isLoading && data ? ['channel-metadata', id] : null, ([, key], {}) => {
+    // subscribe to channel
+    const unsubscribe = pool.subscribe(
+      [
         {
-          unsubscribeOnEose: true,
-        }
-      );
+          '#e': [key],
+          authors: [channelPubkey],
+          kinds: [41],
+        },
+      ],
+      READONLY_RELAYS,
+      (event: { content: string }) => {
+        // update in local database
+        updateChannelMetadata(key, event.content);
+        // revaildate
+        mutate(['channel-metadata', key]);
+      },
+      undefined,
+      undefined,
+      {
+        unsubscribeOnEose: true,
+      }
+    );
 
-      return () => {
-        unsubscribe();
-      };
-    }
-  );
+    return () => {
+      unsubscribe();
+    };
+  });
 
-  if (!data || error) {
-    return cache;
-  } else {
-    return data;
-  }
+  return data;
 }
