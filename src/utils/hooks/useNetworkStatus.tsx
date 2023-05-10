@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const getOnLineStatus = () =>
   typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
 
-export const useNetworkStatus = () => {
+export function useNetworkStatus() {
   const [status, setStatus] = useState(getOnLineStatus());
 
   const setOnline = () => setStatus(true);
@@ -20,4 +20,4 @@ export const useNetworkStatus = () => {
   }, []);
 
   return status;
-};
+}

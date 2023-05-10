@@ -1,7 +1,7 @@
 import { autoUpdate, offset, shift, useFloating, useFocus, useHover, useInteractions } from '@floating-ui/react';
 import { useState } from 'react';
 
-export default function Tooltip({ children, message }: { children: React.ReactNode; message: string }) {
+export function Tooltip({ children, message }: { children: React.ReactNode; message: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { x, y, strategy, refs, context } = useFloating({

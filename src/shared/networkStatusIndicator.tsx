@@ -1,6 +1,6 @@
 import { useNetworkStatus } from '@lume/utils/hooks/useNetworkStatus';
 
-export const NetworkStatusIndicator = () => {
+export function NetworkStatusIndicator() {
   const isOnline = useNetworkStatus();
 
   return (
@@ -18,4 +18,4 @@ export const NetworkStatusIndicator = () => {
       <p className="text-xs font-medium text-zinc-500">{isOnline ? 'Online' : 'Offline'}</p>
     </div>
   );
-};
+}

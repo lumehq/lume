@@ -9,7 +9,7 @@ import { Body, fetch } from '@tauri-apps/api/http';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 
-export const ImagePicker = ({ type }: { type: string }) => {
+export function ImagePicker({ type }: { type: string }) {
   let atom;
 
   switch (type) {
@@ -93,4 +93,4 @@ export const ImagePicker = ({ type }: { type: string }) => {
       )}
     </button>
   );
-};
+}

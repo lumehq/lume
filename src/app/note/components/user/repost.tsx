@@ -7,7 +7,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number }) => {
+export function NoteRepostUser({ pubkey, time }: { pubkey: string; time: number }) {
   const { user } = useProfile(pubkey);
 
   return (
@@ -32,4 +32,4 @@ export const NoteRepostUser = ({ pubkey, time }: { pubkey: string; time: number 
       </div>
     </div>
   );
-};
+}

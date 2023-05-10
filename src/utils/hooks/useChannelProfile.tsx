@@ -15,7 +15,7 @@ const fetcher = async ([, id]) => {
   }
 };
 
-export const useChannelProfile = (id: string, channelPubkey: string) => {
+export function useChannelProfile(id: string, channelPubkey: string) {
   const pool: any = useContext(RelayContext);
 
   const { data: cache, isLoading } = useSWR(['channel-cache-profile', id], fetcher);
@@ -53,4 +53,4 @@ export const useChannelProfile = (id: string, channelPubkey: string) => {
   } else {
     return data;
   }
-};
+}

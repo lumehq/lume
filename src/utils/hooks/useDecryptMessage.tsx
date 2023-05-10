@@ -1,7 +1,7 @@
 import { nip04 } from 'nostr-tools';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useDecryptMessage = (userKey: string, userPriv: string, data: any) => {
+export function useDecryptMessage(userKey: string, userPriv: string, data: any) {
   const [content, setContent] = useState(null);
 
   const extractSenderKey = useCallback(() => {
@@ -25,4 +25,4 @@ export const useDecryptMessage = (userKey: string, userPriv: string, data: any) 
   }, [decrypt]);
 
   return content ? content : null;
-};
+}

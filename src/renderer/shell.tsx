@@ -1,5 +1,5 @@
 import { PageContext } from '@lume/renderer/types';
-import RelayProvider from '@lume/shared/relayProvider';
+import { RelayProvider } from '@lume/shared/relayProvider';
 import { PageContextProvider } from '@lume/utils/hooks/usePageContext';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

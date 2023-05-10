@@ -1,4 +1,4 @@
-export const NoteSkeleton = () => {
+export function NoteSkeleton() {
   return (
     <div className="flex h-min flex-col pb-3">
       <div className="flex items-center gap-2.5">
@@ -17,4 +17,4 @@ export const NoteSkeleton = () => {
       </div>
     </div>
   );
-};
+}

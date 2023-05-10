@@ -8,7 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number }) => {
+export function NoteDefaultUser({ pubkey, time }: { pubkey: string; time: number }) {
   const { user } = useProfile(pubkey);
 
   return (
@@ -34,4 +34,4 @@ export const NoteDefaultUser = ({ pubkey, time }: { pubkey: string; time: number
       </div>
     </div>
   );
-};
+}

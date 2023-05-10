@@ -6,7 +6,7 @@ import VideoPreview from '@lume/app/note/components/preview/video';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-export const Kind1 = ({ content }: { content: any }) => {
+export function Kind1({ content }: { content: any }) {
   return (
     <>
       <ReactMarkdown
@@ -28,4 +28,4 @@ export const Kind1 = ({ content }: { content: any }) => {
       )}
     </>
   );
-};
+}

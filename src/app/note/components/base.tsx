@@ -9,7 +9,7 @@ import { isTagsIncludeID } from '@lume/utils/transform';
 
 import { useMemo } from 'react';
 
-export const NoteBase = ({ event }: { event: any }) => {
+export function NoteBase({ event }: { event: any }) {
   const content = useMemo(() => noteParser(event), [event]);
   const checkParentID = isTagsIncludeID(event.parent_id, event.tags);
 
@@ -34,4 +34,4 @@ export const NoteBase = ({ event }: { event: any }) => {
       </div>
     </NoteWrapper>
   );
-};
+}

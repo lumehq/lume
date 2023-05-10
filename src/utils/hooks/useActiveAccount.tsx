@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 const fetcher = () => getActiveAccount();
 
-export const useActiveAccount = () => {
+export function useActiveAccount() {
   const { data, error, isLoading } = useSWR('activeAcount', fetcher);
 
   return {
@@ -12,4 +12,4 @@ export const useActiveAccount = () => {
     isLoading,
     isError: error,
   };
-};
+}

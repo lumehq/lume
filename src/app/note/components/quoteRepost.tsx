@@ -3,7 +3,7 @@ import { NoteRepostUser } from '@lume/app/note/components/user/repost';
 import { NoteWrapper } from '@lume/app/note/components/wrapper';
 import { getQuoteID } from '@lume/utils/transform';
 
-export const NoteQuoteRepost = ({ event }: { event: any }) => {
+export function NoteQuoteRepost({ event }: { event: any }) {
   const rootID = getQuoteID(event.tags);
 
   return (
@@ -17,4 +17,4 @@ export const NoteQuoteRepost = ({ event }: { event: any }) => {
       </div>
     </NoteWrapper>
   );
-};
+}

@@ -1,16 +1,10 @@
 import CancelIcon from '@lume/shared/icons/cancel';
 import PlusIcon from '@lume/shared/icons/plus';
 
-//import { getNoteAuthors } from '@lume/utils/storage';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 
-//import useSWR from 'swr';
-
-//const fetcher = () => getNoteAuthors();
-
-export const CreateViewModal = () => {
-  //const { data, error }: any = useSWR('authors', fetcher);
+export function CreateViewModal() {
   const [isOpen, setIsOpen] = useState(false);
 
   const closeModal = () => {
@@ -89,4 +83,4 @@ export const CreateViewModal = () => {
       </Transition>
     </>
   );
-};
+}

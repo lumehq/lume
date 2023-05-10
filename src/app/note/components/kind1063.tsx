@@ -4,7 +4,7 @@ function isImage(url: string) {
   return /\.(jpg|jpeg|gif|png|webp|avif)$/.test(url);
 }
 
-export const Kind1063 = ({ metadata }: { metadata: string[] }) => {
+export function Kind1063({ metadata }: { metadata: string[] }) {
   const url = metadata[0][1];
 
   return (
@@ -12,4 +12,4 @@ export const Kind1063 = ({ metadata }: { metadata: string[] }) => {
       {isImage(url) && <Image src={url} alt="image" className="h-auto w-full rounded-lg object-cover" />}
     </div>
   );
-};
+}

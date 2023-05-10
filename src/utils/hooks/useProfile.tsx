@@ -22,7 +22,7 @@ const fetcher = async (pubkey: string) => {
   }
 };
 
-export const useProfile = (pubkey: string) => {
+export function useProfile(pubkey: string) {
   const { data, error, isLoading } = useSWR(pubkey, fetcher);
 
   return {
@@ -30,4 +30,4 @@ export const useProfile = (pubkey: string) => {
     isLoading,
     isError: error,
   };
-};
+}

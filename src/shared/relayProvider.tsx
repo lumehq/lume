@@ -12,6 +12,6 @@ const pool = new RelayPool(FULL_RELAYS, {
   logSubscriptions: false,
 });
 
-export default function RelayProvider({ children }: { children: React.ReactNode }) {
+export function RelayProvider({ children }: { children: React.ReactNode }) {
   return <RelayContext.Provider value={pool}>{children}</RelayContext.Provider>;
 }

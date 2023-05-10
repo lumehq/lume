@@ -4,7 +4,7 @@ import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
 import { useState } from 'react';
 
-export const AvatarUploader = ({ valueState }: { valueState: any }) => {
+export function AvatarUploader({ valueState }: { valueState: any }) {
   const [loading, setLoading] = useState(false);
 
   const openFileDialog = async () => {
@@ -72,4 +72,4 @@ export const AvatarUploader = ({ valueState }: { valueState: any }) => {
       )}
     </button>
   );
-};
+}

@@ -5,7 +5,7 @@ const getURLs = new RegExp(
   'gmi'
 );
 
-export const noteParser = (event: Event) => {
+export function noteParser(event: Event) {
   const references = parseReferences(event);
   const content: { original: string; parsed: any; notes: string[]; images: string[]; videos: string[] } = {
     original: event.content,
@@ -54,4 +54,4 @@ export const noteParser = (event: Event) => {
   });
 
   return content;
-};
+}
