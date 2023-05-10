@@ -1,7 +1,7 @@
-import { MentionNote } from '@lume/app/note/components/mentions/note';
-import { MentionUser } from '@lume/app/note/components/mentions/user';
-import ImagePreview from '@lume/app/note/components/preview/image';
-import VideoPreview from '@lume/app/note/components/preview/video';
+import { MentionNote } from '@app/note/components/mentions/note';
+import { MentionUser } from '@app/note/components/mentions/user';
+import ImagePreview from '@app/note/components/preview/image';
+import VideoPreview from '@app/note/components/preview/video';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

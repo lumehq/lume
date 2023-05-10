@@ -1,7 +1,8 @@
-import { AvatarUploader } from '@lume/shared/avatarUploader';
-import { Image } from '@lume/shared/image';
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
-import { onboardingAtom } from '@lume/stores/onboarding';
+import { AvatarUploader } from '@shared/avatarUploader';
+import { Image } from '@shared/image';
+
+import { DEFAULT_AVATAR } from '@stores/constants';
+import { onboardingAtom } from '@stores/onboarding';
 
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';

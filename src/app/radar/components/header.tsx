@@ -1,4 +1,4 @@
-import { CreateViewModal } from '@lume/app/daily/components/views/createModal';
+import { CreateViewModal } from '@app/radar/components/views/createModal';
 
 export function Header() {
   return (

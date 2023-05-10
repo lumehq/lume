@@ -1,8 +1,9 @@
-import ChatMessageUser from '@lume/app/chat/components/messages/user';
-import ImagePreview from '@lume/app/note/components/preview/image';
-import VideoPreview from '@lume/app/note/components/preview/video';
-import { useDecryptMessage } from '@lume/utils/hooks/useDecryptMessage';
-import { noteParser } from '@lume/utils/parser';
+import ChatMessageUser from '@app/chat/components/messages/user';
+import { useDecryptMessage } from '@app/chat/hooks/useDecryptMessage';
+import ImagePreview from '@app/note/components/preview/image';
+import VideoPreview from '@app/note/components/preview/video';
+
+import { noteParser } from '@utils/parser';
 
 import { memo } from 'react';
 

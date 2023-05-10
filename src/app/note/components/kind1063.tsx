@@ -1,4 +1,4 @@
-import { Image } from '@lume/shared/image';
+import { Image } from '@shared/image';
 
 function isImage(url: string) {
   return /\.(jpg|jpeg|gif|png|webp|avif)$/.test(url);

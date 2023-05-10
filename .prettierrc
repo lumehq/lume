@@ -9,7 +9,6 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "importOrder": [
-    "^@lume/(.*)$",
     "^@app/(.*)$",
     "^@shared/(.*)$",
     "^@icons/(.*)$",

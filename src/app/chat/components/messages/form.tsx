@@ -1,9 +1,11 @@
-import { ImagePicker } from '@lume/shared/form/imagePicker';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { chatContentAtom } from '@lume/stores/chat';
-import { WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { ImagePicker } from '@shared/form/imagePicker';
+import { RelayContext } from '@shared/relayProvider';
+
+import { chatContentAtom } from '@stores/chat';
+import { WRITEONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { useAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';

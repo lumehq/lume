@@ -1,16 +1,19 @@
-import ChannelBlackList from '@lume/app/channel/components/blacklist';
-import ChannelMembers from '@lume/app/channel/components/members';
-import ChannelMessageForm from '@lume/app/channel/components/messages/form';
-import ChannelMetadata from '@lume/app/channel/components/metadata';
-import ChannelUpdateModal from '@lume/app/channel/components/updateModal';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { channelMessagesAtom, channelReplyAtom } from '@lume/stores/channel';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
-import { usePageContext } from '@lume/utils/hooks/usePageContext';
-import { getActiveBlacklist, getBlacklist } from '@lume/utils/storage';
-import { arrayObjToPureArr } from '@lume/utils/transform';
+import ChannelBlackList from '@app/channel/components/blacklist';
+import ChannelMembers from '@app/channel/components/members';
+import ChannelMessageForm from '@app/channel/components/messages/form';
+import ChannelMetadata from '@app/channel/components/metadata';
+import ChannelUpdateModal from '@app/channel/components/updateModal';
+
+import { RelayContext } from '@shared/relayProvider';
+
+import { channelMessagesAtom, channelReplyAtom } from '@stores/channel';
+import { READONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix, getHourAgo } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
+import { usePageContext } from '@utils/hooks/usePageContext';
+import { getActiveBlacklist, getBlacklist } from '@utils/storage';
+import { arrayObjToPureArr } from '@utils/transform';
 
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
@@ -30,7 +33,7 @@ const fetchHided = async ([, id]) => {
   return array;
 };
 
-const ChannelMessageList = lazy(() => import('@lume/app/channel/components/messageList'));
+const ChannelMessageList = lazy(() => import('@app/channel/components/messageList'));
 
 export function Page() {
   const pool: any = useContext(RelayContext);
@@ -57,7 +60,7 @@ export function Page() {
         {
           '#e': [key],
           kinds: [42],
-          since: dateToUnix(hoursAgo(24, now.current)),
+          since: dateToUnix(getHourAgo(24, now.current)),
           limit: 20,
         },
       ],

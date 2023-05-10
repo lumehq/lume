@@ -1,9 +1,12 @@
-import NoteLike from '@lume/app/note/components/metadata/like';
-import NoteReply from '@lume/app/note/components/metadata/reply';
-import NoteRepost from '@lume/app/note/components/metadata/repost';
-import ZapIcon from '@lume/shared/icons/zap';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
+import NoteLike from '@app/note/components/metadata/like';
+import NoteReply from '@app/note/components/metadata/reply';
+import NoteRepost from '@app/note/components/metadata/repost';
+
+import { RelayContext } from '@shared/relayProvider';
+
+import ZapIcon from '@icons/zap';
+
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { useContext, useState } from 'react';
 import useSWRSubscription from 'swr/subscription';

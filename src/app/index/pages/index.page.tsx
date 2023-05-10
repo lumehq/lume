@@ -1,4 +1,4 @@
-import { getActiveAccount } from '@lume/utils/storage';
+import { getActiveAccount } from '@utils/storage';
 
 import useSWR from 'swr';
 import { navigate } from 'vite-plugin-ssr/client/router';

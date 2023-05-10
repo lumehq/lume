@@ -1,9 +1,9 @@
-import { Shell } from '@lume/renderer/shell';
-import { PageContextServer } from '@lume/renderer/types';
-
 import { StrictMode } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { dangerouslySkipEscape, escapeInject } from 'vite-plugin-ssr/server';
+
+import { Shell } from './shell';
+import { PageContextServer } from './types';
 
 export const passToClient = ['pageProps'];
 

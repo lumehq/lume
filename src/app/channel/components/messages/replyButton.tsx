@@ -1,6 +1,8 @@
-import ReplyMessageIcon from '@lume/shared/icons/replyMessage';
-import { Tooltip } from '@lume/shared/tooltip';
-import { channelReplyAtom } from '@lume/stores/channel';
+import { Tooltip } from '@shared/tooltip';
+
+import ReplyMessageIcon from '@icons/replyMessage';
+
+import { channelReplyAtom } from '@stores/channel';
 
 import { useSetAtom } from 'jotai';
 

@@ -1,8 +1,11 @@
-import RepostIcon from '@lume/shared/icons/repost';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { RelayContext } from '@shared/relayProvider';
+
+import RepostIcon from '@icons/repost';
+
+import { WRITEONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useEffect, useState } from 'react';

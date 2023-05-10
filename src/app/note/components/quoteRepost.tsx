@@ -1,7 +1,8 @@
-import { RootNote } from '@lume/app/note/components/rootNote';
-import { NoteRepostUser } from '@lume/app/note/components/user/repost';
-import { NoteWrapper } from '@lume/app/note/components/wrapper';
-import { getQuoteID } from '@lume/utils/transform';
+import { RootNote } from '@app/note/components/rootNote';
+import { NoteRepostUser } from '@app/note/components/user/repost';
+import { NoteWrapper } from '@app/note/components/wrapper';
+
+import { getQuoteID } from '@utils/transform';
 
 export function NoteQuoteRepost({ event }: { event: any }) {
   const rootID = getQuoteID(event.tags);

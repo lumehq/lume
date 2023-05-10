@@ -1,6 +1,7 @@
-import EyeOffIcon from '@lume/shared/icons/eyeOff';
-import EyeOnIcon from '@lume/shared/icons/eyeOn';
-import { onboardingAtom } from '@lume/stores/onboarding';
+import EyeOffIcon from '@icons/eyeOff';
+import EyeOnIcon from '@icons/eyeOn';
+
+import { onboardingAtom } from '@stores/onboarding';
 
 import { useSetAtom } from 'jotai';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';

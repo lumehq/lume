@@ -1,8 +1,11 @@
-import NoteReplyForm from '@lume/app/note/components/replies/form';
-import Reply from '@lume/app/note/components/replies/item';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { sortEvents } from '@lume/utils/transform';
+import NoteReplyForm from '@app/note/components/replies/form';
+import Reply from '@app/note/components/replies/item';
+
+import { RelayContext } from '@shared/relayProvider';
+
+import { READONLY_RELAYS } from '@stores/constants';
+
+import { sortEvents } from '@utils/transform';
 
 import { useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';

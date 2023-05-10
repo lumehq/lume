@@ -1,5 +1,6 @@
-import MiniMember from '@lume/app/channel/components/miniMember';
-import { channelMembersAtom } from '@lume/stores/channel';
+import MiniMember from '@app/channel/components/miniMember';
+
+import { channelMembersAtom } from '@stores/channel';
 
 import { useAtomValue } from 'jotai';
 

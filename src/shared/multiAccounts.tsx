@@ -1,9 +1,12 @@
-import ActiveAccount from '@lume/shared/accounts/active';
-import InactiveAccount from '@lume/shared/accounts/inactive';
-import BellIcon from '@lume/shared/icons/bell';
-import PlusIcon from '@lume/shared/icons/plus';
-import { APP_VERSION } from '@lume/stores/constants';
-import { getAccounts, getActiveAccount } from '@lume/utils/storage';
+import ActiveAccount from '@shared/accounts/active';
+import InactiveAccount from '@shared/accounts/inactive';
+
+import BellIcon from '@icons/bell';
+import PlusIcon from '@icons/plus';
+
+import { APP_VERSION } from '@stores/constants';
+
+import { getAccounts, getActiveAccount } from '@utils/storage';
 
 import useSWR from 'swr';
 

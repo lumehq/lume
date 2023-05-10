@@ -1,5 +1,6 @@
-import { Image } from '@lume/shared/image';
-import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
+import { Image } from '@shared/image';
+
+import { DEFAULT_AVATAR, IMGPROXY_URL } from '@stores/constants';
 
 export function User({ data }: { data: any }) {
   const metadata = JSON.parse(data.metadata);

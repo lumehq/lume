@@ -1,11 +1,12 @@
-import { Kind1 } from '@lume/app/note/components/kind1';
-import { Kind1063 } from '@lume/app/note/components/kind1063';
-import NoteMetadata from '@lume/app/note/components/metadata';
-import { NoteParent } from '@lume/app/note/components/parent';
-import { NoteDefaultUser } from '@lume/app/note/components/user/default';
-import { NoteWrapper } from '@lume/app/note/components/wrapper';
-import { noteParser } from '@lume/utils/parser';
-import { isTagsIncludeID } from '@lume/utils/transform';
+import { Kind1 } from '@app/note/components/kind1';
+import { Kind1063 } from '@app/note/components/kind1063';
+import NoteMetadata from '@app/note/components/metadata';
+import { NoteParent } from '@app/note/components/parent';
+import { NoteDefaultUser } from '@app/note/components/user/default';
+import { NoteWrapper } from '@app/note/components/wrapper';
+
+import { noteParser } from '@utils/parser';
+import { isTagsIncludeID } from '@utils/transform';
 
 import { useMemo } from 'react';
 

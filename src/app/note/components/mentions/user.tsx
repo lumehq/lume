@@ -1,5 +1,5 @@
-import { useProfile } from '@lume/utils/hooks/useProfile';
-import { shortenKey } from '@lume/utils/shortenKey';
+import { useProfile } from '@utils/hooks/useProfile';
+import { shortenKey } from '@utils/shortenKey';
 
 export function MentionUser(props: { children: any[] }) {
   const pubkey = props.children[0];

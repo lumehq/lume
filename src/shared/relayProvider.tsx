@@ -1,4 +1,4 @@
-import { FULL_RELAYS } from '@lume/stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { RelayPool } from 'nostr-relaypool';
 import { createContext } from 'react';

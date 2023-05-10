@@ -1,5 +1,6 @@
-import ArrowRightIcon from '@lume/shared/icons/arrowRight';
-import { Image } from '@lume/shared/image';
+import { Image } from '@shared/image';
+
+import ArrowRightIcon from '@icons/arrowRight';
 
 const PLEBS = [
   'https://133332.xyz/p.jpg',

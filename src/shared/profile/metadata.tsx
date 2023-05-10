@@ -1,7 +1,9 @@
-import { Image } from '@lume/shared/image';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
-import { shortenKey } from '@lume/utils/shortenKey';
+import { Image } from '@shared/image';
+import { RelayContext } from '@shared/relayProvider';
+
+import { DEFAULT_AVATAR, READONLY_RELAYS } from '@stores/constants';
+
+import { shortenKey } from '@utils/shortenKey';
 
 import destr from 'destr';
 import { Author } from 'nostr-relaypool';

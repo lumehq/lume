@@ -1,7 +1,9 @@
-import { Image } from '@lume/shared/image';
-import { DEFAULT_AVATAR, IMGPROXY_URL } from '@lume/stores/constants';
-import { useProfile } from '@lume/utils/hooks/useProfile';
-import { shortenKey } from '@lume/utils/shortenKey';
+import { Image } from '@shared/image';
+
+import { DEFAULT_AVATAR, IMGPROXY_URL } from '@stores/constants';
+
+import { useProfile } from '@utils/hooks/useProfile';
+import { shortenKey } from '@utils/shortenKey';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';

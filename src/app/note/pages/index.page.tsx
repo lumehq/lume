@@ -1,11 +1,14 @@
-import { Kind1 } from '@lume/app/note/components/kind1';
-import NoteMetadata from '@lume/app/note/components/metadata';
-import RepliesList from '@lume/app/note/components/replies/list';
-import { NoteDefaultUser } from '@lume/app/note/components/user/default';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { usePageContext } from '@lume/utils/hooks/usePageContext';
-import { noteParser } from '@lume/utils/parser';
+import { Kind1 } from '@app/note/components/kind1';
+import NoteMetadata from '@app/note/components/metadata';
+import RepliesList from '@app/note/components/replies/list';
+import { NoteDefaultUser } from '@app/note/components/user/default';
+
+import { RelayContext } from '@shared/relayProvider';
+
+import { READONLY_RELAYS } from '@stores/constants';
+
+import { usePageContext } from '@utils/hooks/usePageContext';
+import { noteParser } from '@utils/parser';
 
 import { useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';

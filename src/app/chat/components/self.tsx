@@ -1,8 +1,10 @@
-import { Image } from '@lume/shared/image';
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
-import { usePageContext } from '@lume/utils/hooks/usePageContext';
-import { shortenKey } from '@lume/utils/shortenKey';
+import { Image } from '@shared/image';
+
+import { DEFAULT_AVATAR } from '@stores/constants';
+
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
+import { usePageContext } from '@utils/hooks/usePageContext';
+import { shortenKey } from '@utils/shortenKey';
 
 import { twMerge } from 'tailwind-merge';
 

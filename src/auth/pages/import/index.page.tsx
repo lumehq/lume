@@ -1,4 +1,4 @@
-import { onboardingAtom } from '@lume/stores/onboarding';
+import { onboardingAtom } from '@stores/onboarding';
 
 import { useSetAtom } from 'jotai';
 import { getPublicKey, nip19 } from 'nostr-tools';

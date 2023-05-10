@@ -1,11 +1,14 @@
-import { Post } from '@lume/shared/composer/types/post';
-import { User } from '@lume/shared/composer/user';
-import CancelIcon from '@lume/shared/icons/cancel';
-import ChevronDownIcon from '@lume/shared/icons/chevronDown';
-import ChevronRightIcon from '@lume/shared/icons/chevronRight';
-import ComposeIcon from '@lume/shared/icons/compose';
-import { composerAtom } from '@lume/stores/composer';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { Post } from '@shared/composer/types/post';
+import { User } from '@shared/composer/user';
+
+import CancelIcon from '@icons/cancel';
+import ChevronDownIcon from '@icons/chevronDown';
+import ChevronRightIcon from '@icons/chevronRight';
+import ComposeIcon from '@icons/compose';
+
+import { composerAtom } from '@stores/composer';
+
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { useAtom } from 'jotai';

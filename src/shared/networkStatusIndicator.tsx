@@ -1,4 +1,4 @@
-import { useNetworkStatus } from '@lume/utils/hooks/useNetworkStatus';
+import { useNetworkStatus } from '@utils/hooks/useNetworkStatus';
 
 export function NetworkStatusIndicator() {
   const isOnline = useNetworkStatus();

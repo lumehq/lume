@@ -1,5 +1,6 @@
-import { useChannelProfile } from '@lume/utils/hooks/useChannelProfile';
-import { usePageContext } from '@lume/utils/hooks/usePageContext';
+import { useChannelProfile } from '@app/channel/hooks/useChannelProfile';
+
+import { usePageContext } from '@utils/hooks/usePageContext';
 
 import { twMerge } from 'tailwind-merge';
 

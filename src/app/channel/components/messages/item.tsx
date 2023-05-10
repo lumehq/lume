@@ -1,8 +1,9 @@
-import MessageHideButton from '@lume/app/channel/components/messages/hideButton';
-import MessageMuteButton from '@lume/app/channel/components/messages/muteButton';
-import MessageReplyButton from '@lume/app/channel/components/messages/replyButton';
-import ChannelMessageUser from '@lume/app/channel/components/messages/user';
-import { noteParser } from '@lume/utils/parser';
+import MessageHideButton from '@app/channel/components/messages/hideButton';
+import MessageMuteButton from '@app/channel/components/messages/muteButton';
+import MessageReplyButton from '@app/channel/components/messages/replyButton';
+import ChannelMessageUser from '@app/channel/components/messages/user';
+
+import { noteParser } from '@utils/parser';
 
 import { useMemo } from 'react';
 

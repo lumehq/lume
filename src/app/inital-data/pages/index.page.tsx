@@ -1,7 +1,10 @@
-import LumeIcon from '@lume/shared/icons/lume';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix, hoursAgo } from '@lume/utils/getDate';
+import { RelayContext } from '@shared/relayProvider';
+
+import LumeIcon from '@icons/lume';
+
+import { READONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix, getHourAgo } from '@utils/date';
 import {
   addToBlacklist,
   countTotalLongNotes,
@@ -11,8 +14,8 @@ import {
   getActiveAccount,
   getLastLogin,
   updateLastLogin,
-} from '@lume/utils/storage';
-import { getParentID, nip02ToArray } from '@lume/utils/transform';
+} from '@utils/storage';
+import { getParentID, nip02ToArray } from '@utils/transform';
 
 import { useContext, useEffect, useRef } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
@@ -38,12 +41,12 @@ export function Page() {
       let sinceLongNotes: number;
 
       if (notes === 0) {
-        sinceNotes = dateToUnix(hoursAgo(48, now.current));
+        sinceNotes = dateToUnix(getHourAgo(48, now.current));
       } else {
         if (parseInt(lastLogin) > 0) {
           sinceNotes = parseInt(lastLogin);
         } else {
-          sinceNotes = dateToUnix(hoursAgo(48, now.current));
+          sinceNotes = dateToUnix(getHourAgo(48, now.current));
         }
       }
 
@@ -174,7 +177,7 @@ export function Page() {
         () => {
           updateLastLogin(dateToUnix(now.current));
           timeout = setTimeout(() => {
-            navigate('/app/daily', { overwriteLastHistoryEntry: true });
+            navigate('/app/radar', { overwriteLastHistoryEntry: true });
           }, 5000);
         }
       );

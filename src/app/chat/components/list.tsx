@@ -1,7 +1,8 @@
-import ChatsListItem from '@lume/app/chat/components/item';
-import ChatsListSelfItem from '@lume/app/chat/components/self';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
-import { getChats } from '@lume/utils/storage';
+import ChatsListItem from '@app/chat/components/item';
+import ChatsListSelfItem from '@app/chat/components/self';
+
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
+import { getChats } from '@utils/storage';
 
 import useSWR from 'swr';
 

@@ -1,16 +1,19 @@
-import ChatMessageForm from '@lume/app/chat/components/messages/form';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { chatMessagesAtom } from '@lume/stores/chat';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
-import { usePageContext } from '@lume/utils/hooks/usePageContext';
+import ChatMessageForm from '@app/chat/components/messages/form';
+
+import { RelayContext } from '@shared/relayProvider';
+
+import { chatMessagesAtom } from '@stores/chat';
+import { READONLY_RELAYS } from '@stores/constants';
+
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
+import { usePageContext } from '@utils/hooks/usePageContext';
 
 import { useSetAtom } from 'jotai';
 import { useResetAtom } from 'jotai/utils';
 import { Suspense, lazy, useContext, useEffect } from 'react';
 import useSWRSubscription from 'swr/subscription';
 
-const ChatMessageList = lazy(() => import('@lume/app/chat/components/messageList'));
+const ChatMessageList = lazy(() => import('@app/chat/components/messageList'));
 
 export function Page() {
   const pool: any = useContext(RelayContext);

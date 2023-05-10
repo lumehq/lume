@@ -1,4 +1,4 @@
-import { Image } from '@lume/shared/image';
+import { Image } from '@shared/image';
 
 export default function ImagePreview({ urls }: { urls: string[] }) {
   return (

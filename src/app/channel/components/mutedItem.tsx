@@ -1,7 +1,9 @@
-import { Image } from '@lume/shared/image';
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
-import { useProfile } from '@lume/utils/hooks/useProfile';
-import { shortenKey } from '@lume/utils/shortenKey';
+import { Image } from '@shared/image';
+
+import { DEFAULT_AVATAR } from '@stores/constants';
+
+import { useProfile } from '@utils/hooks/useProfile';
+import { shortenKey } from '@utils/shortenKey';
 
 import { useState } from 'react';
 
@@ -10,7 +12,7 @@ export default function MutedItem({ data }: { data: any }) {
   const [status, setStatus] = useState(data.status);
 
   const unmute = async () => {
-    const { updateItemInBlacklist } = await import('@lume/utils/storage');
+    const { updateItemInBlacklist } = await import('@utils/storage');
     const res = await updateItemInBlacklist(data.content, 0);
     if (res) {
       setStatus(0);
@@ -18,7 +20,7 @@ export default function MutedItem({ data }: { data: any }) {
   };
 
   const mute = async () => {
-    const { updateItemInBlacklist } = await import('@lume/utils/storage');
+    const { updateItemInBlacklist } = await import('@utils/storage');
     const res = await updateItemInBlacklist(data.content, 1);
     if (res) {
       setStatus(1);

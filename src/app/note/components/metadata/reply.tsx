@@ -1,9 +1,12 @@
-import ReplyIcon from '@lume/shared/icons/reply';
-import { Image } from '@lume/shared/image';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { Image } from '@shared/image';
+import { RelayContext } from '@shared/relayProvider';
+
+import ReplyIcon from '@icons/reply';
+
+import { WRITEONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { getEventHash, signEvent } from 'nostr-tools';

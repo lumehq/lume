@@ -1,5 +1,5 @@
-import CancelIcon from '@lume/shared/icons/cancel';
-import PlusIcon from '@lume/shared/icons/plus';
+import CancelIcon from '@icons/cancel';
+import PlusIcon from '@icons/plus';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';

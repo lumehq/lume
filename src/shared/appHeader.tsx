@@ -1,6 +1,6 @@
-import ArrowLeftIcon from '@lume/shared/icons/arrowLeft';
-import ArrowRightIcon from '@lume/shared/icons/arrowRight';
-import RefreshIcon from '@lume/shared/icons/refresh';
+import ArrowLeftIcon from '@icons/arrowLeft';
+import ArrowRightIcon from '@icons/arrowRight';
+import RefreshIcon from '@icons/refresh';
 
 export default function AppHeader() {
   const goBack = () => {

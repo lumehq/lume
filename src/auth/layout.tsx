@@ -1,5 +1,5 @@
-import ArrowLeftIcon from '@lume/shared/icons/arrowLeft';
-import ArrowRightIcon from '@lume/shared/icons/arrowRight';
+import ArrowLeftIcon from '@icons/arrowLeft';
+import ArrowRightIcon from '@icons/arrowRight';
 
 import useSWR from 'swr';
 

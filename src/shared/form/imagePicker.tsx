@@ -1,8 +1,10 @@
-import PlusIcon from '@lume/shared/icons/plus';
-import { channelContentAtom } from '@lume/stores/channel';
-import { chatContentAtom } from '@lume/stores/chat';
-import { noteContentAtom } from '@lume/stores/note';
-import { createBlobFromFile } from '@lume/utils/createBlobFromFile';
+import PlusIcon from '@icons/plus';
+
+import { channelContentAtom } from '@stores/channel';
+import { chatContentAtom } from '@stores/chat';
+import { noteContentAtom } from '@stores/note';
+
+import { createBlobFromFile } from '@utils/createBlobFromFile';
 
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';

@@ -1,11 +1,15 @@
-import UserReply from '@lume/app/channel/components/messages/userReply';
-import { ImagePicker } from '@lume/shared/form/imagePicker';
-import CancelIcon from '@lume/shared/icons/cancel';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { channelContentAtom, channelReplyAtom } from '@lume/stores/channel';
-import { WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import UserReply from '@app/channel/components/messages/userReply';
+
+import { ImagePicker } from '@shared/form/imagePicker';
+import { RelayContext } from '@shared/relayProvider';
+
+import CancelIcon from '@icons/cancel';
+
+import { channelContentAtom, channelReplyAtom } from '@stores/channel';
+import { WRITEONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { useAtom, useAtomValue } from 'jotai';
 import { useResetAtom } from 'jotai/utils';

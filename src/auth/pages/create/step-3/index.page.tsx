@@ -1,15 +1,19 @@
-import User from '@lume/auth/components/user';
-import CheckCircleIcon from '@lume/shared/icons/checkCircle';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { onboardingAtom } from '@lume/stores/onboarding';
-import { createAccount, createPleb } from '@lume/utils/storage';
-import { arrayToNIP02 } from '@lume/utils/transform';
+import { RelayContext } from '@shared/relayProvider';
+
+import CheckCircleIcon from '@icons/checkCircle';
+
+import { WRITEONLY_RELAYS } from '@stores/constants';
+import { onboardingAtom } from '@stores/onboarding';
+
+import { createAccount, createPleb } from '@utils/storage';
+import { arrayToNIP02 } from '@utils/transform';
 
 import { useAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
+
+import User from '../../../components/user';
 
 const initialList = [
   { pubkey: '82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2' },

@@ -1,10 +1,11 @@
-import { PageContext } from '@lume/renderer/types';
-import { RelayProvider } from '@lume/shared/relayProvider';
-import { PageContextProvider } from '@lume/utils/hooks/usePageContext';
+import { RelayProvider } from '@shared/relayProvider';
+
+import { PageContextProvider } from '@utils/hooks/usePageContext';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { LayoutDefault } from './layoutDefault';
+import { PageContext } from './types';
 
 const queryClient = new QueryClient();
 

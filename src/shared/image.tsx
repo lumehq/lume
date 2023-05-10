@@ -1,4 +1,4 @@
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
+import { DEFAULT_AVATAR } from '@stores/constants';
 
 export function Image(props) {
   const addImageFallback = (event) => {

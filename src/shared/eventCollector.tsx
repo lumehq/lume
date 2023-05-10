@@ -1,11 +1,14 @@
-import HeartBeatIcon from '@lume/shared/icons/heartbeat';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { hasNewerNoteAtom } from '@lume/stores/note';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
-import { createChat, createNote, updateAccount } from '@lume/utils/storage';
-import { getParentID, nip02ToArray } from '@lume/utils/transform';
+import { RelayContext } from '@shared/relayProvider';
+
+import HeartBeatIcon from '@icons/heartbeat';
+
+import { READONLY_RELAYS } from '@stores/constants';
+import { hasNewerNoteAtom } from '@stores/note';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
+import { createChat, createNote, updateAccount } from '@utils/storage';
+import { getParentID, nip02ToArray } from '@utils/transform';
 
 import { useSetAtom } from 'jotai';
 import { useContext, useRef } from 'react';

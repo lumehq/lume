@@ -1,6 +1,7 @@
-import { RelayContext } from '@lume/shared/relaysProvider';
-import { UserFollow } from '@lume/shared/user/follow';
-import { READONLY_RELAYS } from '@lume/stores/constants';
+import { RelayContext } from '@shared/relaysProvider';
+import { UserFollow } from '@shared/user/follow';
+
+import { READONLY_RELAYS } from '@stores/constants';
 
 import destr from 'destr';
 import { Author } from 'nostr-relaypool';

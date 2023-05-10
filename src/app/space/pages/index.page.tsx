@@ -1,7 +1,7 @@
 export function Page() {
   return (
     <div>
-      <p>MySpace</p>
+      <p>Space</p>
     </div>
   );
 }

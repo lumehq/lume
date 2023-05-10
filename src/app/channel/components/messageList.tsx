@@ -1,6 +1,8 @@
-import ChannelMessageItem from '@lume/app/channel/components/messages/item';
-import { sortedChannelMessagesAtom } from '@lume/stores/channel';
-import { hoursAgo } from '@lume/utils/getDate';
+import ChannelMessageItem from '@app/channel/components/messages/item';
+
+import { sortedChannelMessagesAtom } from '@stores/channel';
+
+import { getHourAgo } from '@utils/date';
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';
@@ -39,7 +41,7 @@ export default function ChannelMessageList() {
               </div>
               <div className="relative flex justify-center">
                 <div className="inline-flex items-center gap-x-1.5 rounded-full bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-400 shadow-sm ring-1 ring-inset ring-zinc-800">
-                  {hoursAgo(24, now.current).toLocaleDateString('en-US', {
+                  {getHourAgo(24, now.current).toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',

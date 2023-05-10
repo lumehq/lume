@@ -1,12 +1,15 @@
-import { AvatarUploader } from '@lume/shared/avatarUploader';
-import CancelIcon from '@lume/shared/icons/cancel';
-import EditIcon from '@lume/shared/icons/edit';
-import { Image } from '@lume/shared/image';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
-import { getChannel, updateChannelMetadata } from '@lume/utils/storage';
+import { AvatarUploader } from '@shared/avatarUploader';
+import { Image } from '@shared/image';
+import { RelayContext } from '@shared/relayProvider';
+
+import CancelIcon from '@icons/cancel';
+import EditIcon from '@icons/edit';
+
+import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
+import { getChannel, updateChannelMetadata } from '@utils/storage';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { getEventHash, signEvent } from 'nostr-tools';

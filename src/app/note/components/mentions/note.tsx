@@ -1,11 +1,14 @@
-import { Kind1 } from '@lume/app/note/components/kind1';
-import { Kind1063 } from '@lume/app/note/components/kind1063';
-import { NoteSkeleton } from '@lume/app/note/components/skeleton';
-import { NoteDefaultUser } from '@lume/app/note/components/user/default';
-import { NoteWrapper } from '@lume/app/note/components/wrapper';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
-import { noteParser } from '@lume/utils/parser';
+import { Kind1 } from '@app/note/components/kind1';
+import { Kind1063 } from '@app/note/components/kind1063';
+import { NoteSkeleton } from '@app/note/components/skeleton';
+import { NoteDefaultUser } from '@app/note/components/user/default';
+import { NoteWrapper } from '@app/note/components/wrapper';
+
+import { RelayContext } from '@shared/relayProvider';
+
+import { READONLY_RELAYS } from '@stores/constants';
+
+import { noteParser } from '@utils/parser';
 
 import { memo, useContext } from 'react';
 import useSWRSubscription from 'swr/subscription';

@@ -1,12 +1,14 @@
-import ChannelsList from '@lume/app/channel/components/list';
-import ChatsList from '@lume/app/chat/components/list';
-import ActiveLink from '@lume/shared/activeLink';
-import { ComposerModal } from '@lume/shared/composer/modal';
-import EventCollector from '@lume/shared/eventCollector';
-import MyspaceIcon from '@lume/shared/icons/myspace';
-import NavArrowDownIcon from '@lume/shared/icons/navArrowDown';
-import ThreadsIcon from '@lume/shared/icons/threads';
-import WorldIcon from '@lume/shared/icons/world';
+import ChannelsList from '@app/channel/components/list';
+import ChatsList from '@app/chat/components/list';
+
+import ActiveLink from '@shared/activeLink';
+import { ComposerModal } from '@shared/composer/modal';
+import EventCollector from '@shared/eventCollector';
+
+import MyspaceIcon from '@icons/myspace';
+import NavArrowDownIcon from '@icons/navArrowDown';
+import ThreadsIcon from '@icons/threads';
+import WorldIcon from '@icons/world';
 
 import { Disclosure } from '@headlessui/react';
 
@@ -24,14 +26,14 @@ export default function Navigation() {
         </div>
         <div className="flex flex-col text-zinc-400">
           <ActiveLink
-            href="/app/daily"
+            href="/app/radar"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-semibold hover:text-zinc-200"
             activeClassName=""
           >
             <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
               <WorldIcon width={12} height={12} className="text-zinc-200" />
             </span>
-            <span>Daily</span>
+            <span>Radar</span>
           </ActiveLink>
           <ActiveLink
             href="/app/threads"
@@ -44,14 +46,14 @@ export default function Navigation() {
             <span>Threads</span>
           </ActiveLink>
           <ActiveLink
-            href="/app/myspace"
+            href="/app/space"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-semibold hover:text-zinc-200"
             activeClassName=""
           >
             <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
               <MyspaceIcon width={12} height={12} className="text-zinc-200" />
             </span>
-            <span>MySpace</span>
+            <span>Space</span>
           </ActiveLink>
         </div>
       </div>

@@ -1,6 +1,7 @@
-import { Kind1 } from '@lume/app/note/components/kind1';
-import NoteReplyUser from '@lume/app/note/components/user/reply';
-import { noteParser } from '@lume/utils/parser';
+import { Kind1 } from '@app/note/components/kind1';
+import NoteReplyUser from '@app/note/components/user/reply';
+
+import { noteParser } from '@utils/parser';
 
 export default function Reply({ data }: { data: any }) {
   const content = noteParser(data);

@@ -1,4 +1,4 @@
-import { createBlobFromFile } from '@lume/utils/createBlobFromFile';
+import { createBlobFromFile } from '@utils/createBlobFromFile';
 
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';

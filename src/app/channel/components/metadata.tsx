@@ -1,7 +1,10 @@
-import CopyIcon from '@lume/shared/icons/copy';
-import { Image } from '@lume/shared/image';
-import { DEFAULT_AVATAR } from '@lume/stores/constants';
-import { useChannelProfile } from '@lume/utils/hooks/useChannelProfile';
+import { useChannelProfile } from '@app/channel/hooks/useChannelProfile';
+
+import { Image } from '@shared/image';
+
+import CopyIcon from '@icons/copy';
+
+import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { nip19 } from 'nostr-tools';
 

@@ -1,5 +1,6 @@
-import { METADATA_SERVICE } from '@lume/stores/constants';
-import { createPleb, getPleb } from '@lume/utils/storage';
+import { METADATA_SERVICE } from '@stores/constants';
+
+import { createPleb, getPleb } from '@utils/storage';
 
 import useSWR from 'swr';
 

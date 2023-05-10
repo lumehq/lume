@@ -1,11 +1,14 @@
-import CancelIcon from '@lume/shared/icons/cancel';
-import HideIcon from '@lume/shared/icons/hide';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { Tooltip } from '@lume/shared/tooltip';
-import { channelMessagesAtom } from '@lume/stores/channel';
-import { WRITEONLY_RELAYS } from '@lume/stores/constants';
-import { dateToUnix } from '@lume/utils/getDate';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { RelayContext } from '@shared/relayProvider';
+import { Tooltip } from '@shared/tooltip';
+
+import CancelIcon from '@icons/cancel';
+import HideIcon from '@icons/hide';
+
+import { channelMessagesAtom } from '@stores/channel';
+import { WRITEONLY_RELAYS } from '@stores/constants';
+
+import { dateToUnix } from '@utils/date';
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { useAtom } from 'jotai';

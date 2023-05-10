@@ -1,8 +1,9 @@
-import { Header } from '@lume/app/daily/components/header';
-import { NoteBase } from '@lume/app/note/components/base';
-import { NoteQuoteRepost } from '@lume/app/note/components/quoteRepost';
-import { NoteSkeleton } from '@lume/app/note/components/skeleton';
-import { getNotes } from '@lume/utils/storage';
+import { NoteBase } from '@app/note/components/base';
+import { NoteQuoteRepost } from '@app/note/components/quoteRepost';
+import { NoteSkeleton } from '@app/note/components/skeleton';
+import { Header } from '@app/radar/components/header';
+
+import { getNotes } from '@utils/storage';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';

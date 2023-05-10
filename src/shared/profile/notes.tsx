@@ -1,6 +1,7 @@
-import { NoteBase } from '@lume/shared/note/base';
-import { RelayContext } from '@lume/shared/relaysProvider';
-import { READONLY_RELAYS } from '@lume/stores/constants';
+import { NoteBase } from '@shared/note/base';
+import { RelayContext } from '@shared/relaysProvider';
+
+import { READONLY_RELAYS } from '@stores/constants';
 
 import { Author } from 'nostr-relaypool';
 import { useContext, useEffect, useState } from 'react';

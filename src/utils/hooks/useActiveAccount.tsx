@@ -1,4 +1,4 @@
-import { getActiveAccount } from '@lume/utils/storage';
+import { getActiveAccount } from '@utils/storage';
 
 import useSWR from 'swr';
 

@@ -1,6 +1,7 @@
-import ChannelCreateModal from '@lume/app/channel/components/createModal';
-import ChannelsListItem from '@lume/app/channel/components/item';
-import { getChannels } from '@lume/utils/storage';
+import ChannelCreateModal from '@app/channel/components/createModal';
+import ChannelsListItem from '@app/channel/components/item';
+
+import { getChannels } from '@utils/storage';
 
 import useSWR from 'swr';
 

@@ -1,6 +1,8 @@
-import { ChatMessageItem } from '@lume/app/chat/components/messages/item';
-import { sortedChatMessagesAtom } from '@lume/stores/chat';
-import { useActiveAccount } from '@lume/utils/hooks/useActiveAccount';
+import { ChatMessageItem } from '@app/chat/components/messages/item';
+
+import { sortedChatMessagesAtom } from '@stores/chat';
+
+import { useActiveAccount } from '@utils/hooks/useActiveAccount';
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useRef } from 'react';

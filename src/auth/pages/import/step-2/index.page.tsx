@@ -1,9 +1,11 @@
-import { Image } from '@lume/shared/image';
-import { RelayContext } from '@lume/shared/relayProvider';
-import { DEFAULT_AVATAR, READONLY_RELAYS } from '@lume/stores/constants';
-import { onboardingAtom } from '@lume/stores/onboarding';
-import { shortenKey } from '@lume/utils/shortenKey';
-import { createAccount, createPleb } from '@lume/utils/storage';
+import { Image } from '@shared/image';
+import { RelayContext } from '@shared/relayProvider';
+
+import { DEFAULT_AVATAR, READONLY_RELAYS } from '@stores/constants';
+import { onboardingAtom } from '@stores/onboarding';
+
+import { shortenKey } from '@utils/shortenKey';
+import { createAccount, createPleb } from '@utils/storage';
 
 import { useAtom } from 'jotai';
 import { getPublicKey } from 'nostr-tools';

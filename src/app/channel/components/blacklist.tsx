@@ -1,5 +1,6 @@
-import MutedItem from '@lume/app/channel/components/mutedItem';
-import MuteIcon from '@lume/shared/icons/mute';
+import MutedItem from '@app/channel/components/mutedItem';
+
+import MuteIcon from '@icons/mute';
 
 import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
