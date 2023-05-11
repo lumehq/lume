@@ -1,3 +1,5 @@
+import User from '@app/auth/components/user';
+
 import { RelayContext } from '@shared/relayProvider';
 
 import CheckCircleIcon from '@icons/checkCircle';
@@ -12,8 +14,6 @@ import { useAtom } from 'jotai';
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useContext, useState } from 'react';
 import { navigate } from 'vite-plugin-ssr/client/router';
-
-import User from '../../../components/user';
 
 const initialList = [
   { pubkey: '82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2' },

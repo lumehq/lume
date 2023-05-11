@@ -177,7 +177,7 @@ export function Page() {
         () => {
           updateLastLogin(dateToUnix(now.current));
           timeout = setTimeout(() => {
-            navigate('/app/radar', { overwriteLastHistoryEntry: true });
+            navigate('/app/today', { overwriteLastHistoryEntry: true });
           }, 5000);
         }
       );

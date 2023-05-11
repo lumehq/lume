@@ -31,6 +31,8 @@
     "react-markdown": "^8.0.7",
     "react-virtuoso": "^4.3.5",
     "remark-gfm": "^3.0.1",
+    "slate": "^0.94.1",
+    "slate-react": "^0.94.0",
     "swr": "^2.1.5",
     "tailwind-merge": "^1.12.0",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",

@@ -1,7 +1,7 @@
 import { NoteBase } from '@app/note/components/base';
 import { NoteQuoteRepost } from '@app/note/components/quoteRepost';
 import { NoteSkeleton } from '@app/note/components/skeleton';
-import { Header } from '@app/radar/components/header';
+import { Header } from '@app/today/components/header';
 
 import { getNotes } from '@utils/storage';
 
