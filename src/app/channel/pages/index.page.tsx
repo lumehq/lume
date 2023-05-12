@@ -41,7 +41,7 @@ export function Page() {
   const searchParams: any = pageContext.urlParsed.search;
 
   const channelID = searchParams.id;
-  const channelPubkey = searchParams.pubkey;
+  const channelPubkey = searchParams.channelpub;
 
   const { account, isLoading, isError } = useActiveAccount();
   const { data: muted } = useSWR(!isLoading && !isError && account ? ['muted', account.id] : null, fetchMuted);

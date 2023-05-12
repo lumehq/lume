@@ -28,7 +28,7 @@ export default function Navigation() {
           <ActiveLink
             href="/app/today"
             className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-semibold hover:text-zinc-200"
-            activeClassName=""
+            activeClassName="bg-zinc-900/50 hover:bg-zinc-900"
           >
             <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
               <WorldIcon width={12} height={12} className="text-zinc-200" />
