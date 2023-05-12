@@ -14,8 +14,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useAtom } from 'jotai';
 import { Fragment, useState } from 'react';
 
-import PlusCircleIcon from '../icons/plusCircle';
-
 export function ComposerModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [composer] = useAtom(composerAtom);
@@ -78,29 +76,14 @@ export function ComposerModal() {
                       <ChevronDownIcon width={14} height={14} />
                     </button>
                   </div>
-                  <div>
+                  <div
+                    onClick={closeModal}
+                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center hover:bg-zinc-800"
+                  >
                     <CancelIcon width={16} height={16} className="text-zinc-500" />
                   </div>
                 </div>
-                <div className="flex h-full flex-col px-4 pb-4">
-                  <div className="flex h-full w-full gap-2">
-                    <div className="flex w-8 shrink-0 items-center justify-center">
-                      <div className="h-full w-[2px] bg-zinc-800"></div>
-                    </div>
-                    {composer.type === 'post' && <Post />}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <button className="inline-flex h-8 w-8 items-center justify-center rounded">
-                      <PlusCircleIcon width={20} height={20} className="text-zinc-500" />
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-3.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600"
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
+                {composer.type === 'post' && account && <Post pubkey={account.pubkey} privkey={account.privkey} />}
               </Dialog.Panel>
             </Transition.Child>
           </div>

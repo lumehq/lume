@@ -1,3 +1,3 @@
-import { atomWithReset } from 'jotai/utils';
+import { atom } from 'jotai';
 
-export const composerAtom = atomWithReset({ type: 'post', content: '' });
+export const composerAtom = atom({ type: 'post' });

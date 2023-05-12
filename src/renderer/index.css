@@ -24,6 +24,10 @@
   background-clip: padding-box;
 }
 
+span[data-slate-placeholder] {
+  @apply top-0;
+}
+
 @keyframes loop {
   0% {
     transform: translateX(0);
