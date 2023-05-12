@@ -1,4 +1,5 @@
 import { ImageUploader } from '@shared/composer/imageUploader';
+import TrashIcon from '@shared/icons/trash';
 import { RelayContext } from '@shared/relayProvider';
 
 import { WRITEONLY_RELAYS } from '@stores/constants';
@@ -7,29 +8,65 @@ import { dateToUnix } from '@utils/date';
 
 import { getEventHash, signEvent } from 'nostr-tools';
 import { useCallback, useContext, useMemo, useState } from 'react';
-import { Node, createEditor } from 'slate';
+import { Node, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
-import { Editable, Slate, withReact } from 'slate-react';
+import { Editable, ReactEditor, Slate, useSlateStatic, withReact } from 'slate-react';
 
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-];
+const withImages = (editor) => {
+  const { isVoid } = editor;
+
+  editor.isVoid = (element) => {
+    return element.type === 'image' ? true : isVoid(element);
+  };
+
+  return editor;
+};
+
+const ImagePreview = ({ attributes, children, element }: { attributes: any; children: any; element: any }) => {
+  const editor: any = useSlateStatic();
+  const path = ReactEditor.findPath(editor, element);
+
+  return (
+    <figure {...attributes} className="m-0 mt-3">
+      {children}
+      <div contentEditable={false} className="relative">
+        <img src={element.url} className="m-0 h-auto w-full rounded-md" />
+        <button
+          onClick={() => Transforms.removeNodes(editor, { at: path })}
+          className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center gap-0.5 rounded bg-zinc-800 text-xs font-medium text-zinc-400 shadow-mini-button hover:bg-zinc-700"
+        >
+          <TrashIcon width={14} height={14} className="text-zinc-100" />
+        </button>
+      </div>
+    </figure>
+  );
+};
 
 export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
   const pool: any = useContext(RelayContext);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  const [content, setContent] = useState(null);
+
+  const editor = useMemo(() => withReact(withImages(withHistory(createEditor()))), []);
+  const [content, setContent] = useState<Node[]>([
+    {
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+  ]);
 
   const serialize = useCallback((nodes: Node[]) => {
     return nodes.map((n) => Node.string(n)).join('\n');
   }, []);
 
   const submit = () => {
+    // serialize content
+    const serializedContent = serialize(content);
+    console.log(serializedContent);
+
     const event: any = {
-      content: content,
+      content: serializedContent,
       created_at: dateToUnix(),
       kind: 1,
       pubkey: pubkey,
@@ -40,35 +77,33 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 
     // publish note
     pool.publish(event, WRITEONLY_RELAYS);
-    // reset form
-    setContent('');
   };
 
-  return (
-    <Slate
-      editor={editor}
-      value={initialValue}
-      onChange={(value) => {
-        const isAstChange = editor.operations.some((op) => 'set_selection' !== op.type);
-        if (isAstChange) {
-          const content = serialize(value);
-          setContent(content);
+  const renderElement = useCallback((props: any) => {
+    switch (props.element.type) {
+      case 'image':
+        if (props.element.url) {
+          return <ImagePreview {...props} />;
         }
-      }}
-    >
+      default:
+        return <p {...props.attributes}>{props.children}</p>;
+    }
+  }, []);
+
+  return (
+    <Slate editor={editor} value={content} onChange={setContent}>
       <div className="flex h-full flex-col px-4 pb-4">
         <div className="flex h-full w-full gap-2">
           <div className="flex w-8 shrink-0 items-center justify-center">
             <div className="h-full w-[2px] bg-zinc-800"></div>
           </div>
-          <div className="prose prose-zinc relative w-full max-w-none select-text break-words dark:prose-invert prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-500 prose-a:no-underline hover:prose-a:text-fuchsia-600 hover:prose-a:underline prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight">
+          <div className="prose prose-zinc relative h-max w-full max-w-none select-text break-words pb-3 dark:prose-invert prose-p:mb-0.5 prose-p:mt-0 prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-500 prose-a:no-underline hover:prose-a:text-fuchsia-600 hover:prose-a:underline prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight">
             <Editable
+              autoFocus
               placeholder="What's on your mind?"
-              autoCapitalize="false"
-              autoCorrect="false"
               spellCheck="false"
-              autoFocus={true}
-              className="min-h-20 mb-3 h-20"
+              className="!min-h-[86px]"
+              renderElement={renderElement}
             />
           </div>
         </div>
@@ -76,6 +111,7 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
           <ImageUploader />
           <button
             type="button"
+            autoFocus={false}
             onClick={submit}
             className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-3.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600"
           >

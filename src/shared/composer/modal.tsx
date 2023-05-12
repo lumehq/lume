@@ -32,8 +32,9 @@ export function ComposerModal() {
     <>
       <button
         type="button"
+        autoFocus={false}
         onClick={() => openModal()}
-        className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600"
+        className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600 focus:outline-none"
       >
         <ComposeIcon width={14} height={14} />
         Compose
@@ -68,17 +69,14 @@ export function ComposerModal() {
                     <span>
                       <ChevronRightIcon width={14} height={14} className="text-zinc-500" />
                     </span>
-                    <button
-                      autoFocus={false}
-                      className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-xs font-medium text-zinc-400 shadow-mini-button"
-                    >
-                      Post
+                    <div className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-xs font-medium text-zinc-400 shadow-mini-button">
+                      New Post
                       <ChevronDownIcon width={14} height={14} />
-                    </button>
+                    </div>
                   </div>
                   <div
                     onClick={closeModal}
-                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center hover:bg-zinc-800"
+                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded hover:bg-zinc-800"
                   >
                     <CancelIcon width={16} height={16} className="text-zinc-500" />
                   </div>

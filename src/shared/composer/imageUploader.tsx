@@ -3,8 +3,9 @@ import PlusCircleIcon from '@shared/icons/plusCircle';
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 
 import { open } from '@tauri-apps/api/dialog';
+import { listen } from '@tauri-apps/api/event';
 import { Body, fetch } from '@tauri-apps/api/http';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 
@@ -13,30 +14,14 @@ export function ImageUploader() {
   const [loading, setLoading] = useState(false);
 
   const insertImage = (editor, url) => {
-    const text = { text: url };
-    const image = { type: 'image', url, children: [text] };
+    const image = { type: 'image', url, children: [{ text: url }] };
     Transforms.insertNodes(editor, image);
   };
 
-  const openFileDialog = async () => {
-    const selected: any = await open({
-      multiple: false,
-      filters: [
-        {
-          name: 'Image',
-          extensions: ['png', 'jpeg', 'jpg', 'gif'],
-        },
-      ],
-    });
-    if (Array.isArray(selected)) {
-      // user selected multiple files
-    } else if (selected === null) {
-      // user cancelled the selection
-    } else {
-      setLoading(true);
-
-      const filename = selected.split('/').pop();
-      const file = await createBlobFromFile(selected);
+  const uploadToVoidCat = useCallback(
+    async (filepath) => {
+      const filename = filepath.split('/').pop();
+      const file = await createBlobFromFile(filepath);
       const buf = await file.arrayBuffer();
 
       try {
@@ -68,12 +53,52 @@ export function ImageUploader() {
           console.log('There was an error', error);
         }
       }
+    },
+    [editor]
+  );
+
+  const openFileDialog = async () => {
+    const selected: any = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'Image',
+          extensions: ['png', 'jpeg', 'jpg', 'gif'],
+        },
+      ],
+    });
+    if (Array.isArray(selected)) {
+      // user selected multiple files
+    } else if (selected === null) {
+      // user cancelled the selection
+    } else {
+      setLoading(true);
+      // upload file
+      uploadToVoidCat(selected);
     }
   };
+
+  useEffect(() => {
+    async function initFileDrop() {
+      const unlisten = await listen('tauri://file-drop', (event) => {
+        // set loading state
+        setLoading(true);
+        // upload file
+        uploadToVoidCat(event.payload[0]);
+      });
+
+      return () => {
+        unlisten();
+      };
+    }
+
+    initFileDrop();
+  }, [uploadToVoidCat]);
 
   return (
     <button
       type="button"
+      autoFocus={false}
       onClick={() => openFileDialog()}
       className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-zinc-800"
     >
