@@ -1,1 +1,1 @@
-export { LayoutOnboarding as Layout } from './layout';
+export { LayoutOnboarding as Layout } from "./layout";

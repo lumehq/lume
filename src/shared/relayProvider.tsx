@@ -1,17 +1,17 @@
-import { FULL_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from "@stores/constants";
 
-import { RelayPool } from 'nostr-relaypool';
-import { createContext } from 'react';
+import { RelayPool } from "nostr-relaypool";
+import { createContext } from "react";
 
 export const RelayContext = createContext({});
 
 const pool = new RelayPool(FULL_RELAYS, {
-  useEventCache: false,
-  subscriptionCache: true,
-  logErrorsAndNotices: false,
-  logSubscriptions: false,
+	useEventCache: false,
+	subscriptionCache: true,
+	logErrorsAndNotices: false,
+	logSubscriptions: false,
 });
 
 export function RelayProvider({ children }: { children: React.ReactNode }) {
-  return <RelayContext.Provider value={pool}>{children}</RelayContext.Provider>;
+	return <RelayContext.Provider value={pool}>{children}</RelayContext.Provider>;
 }

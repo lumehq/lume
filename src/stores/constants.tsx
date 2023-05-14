@@ -1,26 +1,34 @@
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = "1.0.0";
 
-export const DEFAULT_AVATAR = 'https://void.cat/d/KmypFh2fBdYCEvyJrPiN89.webp';
+export const DEFAULT_AVATAR = "https://void.cat/d/KmypFh2fBdYCEvyJrPiN89.webp";
 
 export const DEFAULT_CHANNEL_BANNER =
-  'https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg';
+	"https://bafybeiacwit7hjmdefqggxqtgh6ht5dhth7ndptwn2msl5kpkodudsr7py.ipfs.w3s.link/banner-1.jpg";
 
 // img proxy
-export const IMGPROXY_URL = 'https://imgproxy.iris.to/insecure';
+export const IMGPROXY_URL = "https://imgproxy.iris.to/insecure";
 
 // metadata service
-export const METADATA_SERVICE = 'https://us.rbr.bio';
+export const METADATA_SERVICE = "https://us.rbr.bio";
 
 // read-only relay list
-export const READONLY_RELAYS = ['wss://welcome.nostr.wine', 'wss://relay.nostr.band/all', 'wss://relay.damus.io'];
+export const READONLY_RELAYS = [
+	"wss://welcome.nostr.wine",
+	"wss://relay.nostr.band/all",
+	"wss://relay.damus.io",
+];
 
 // write-only relay list
-export const WRITEONLY_RELAYS = ['wss://nostr.mutinywallet.com', 'wss://relay.nostr.band', 'wss://relay.damus.io'];
+export const WRITEONLY_RELAYS = [
+	"wss://nostr.mutinywallet.com",
+	"wss://relay.nostr.band",
+	"wss://relay.damus.io",
+];
 
 // full-relay list
 export const FULL_RELAYS = [
-  'wss://welcome.nostr.wine',
-  'wss://relay.nostr.band/all',
-  'wss://nostr.mutinywallet.com',
-  'wss://relay.damus.io',
+	"wss://welcome.nostr.wine",
+	"wss://relay.nostr.band/all",
+	"wss://nostr.mutinywallet.com",
+	"wss://relay.damus.io",
 ];

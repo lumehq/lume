@@ -1,1 +1,1 @@
-export { LayoutNewsfeed as Layout } from './layout';
+export { LayoutNewsfeed as Layout } from "./layout";

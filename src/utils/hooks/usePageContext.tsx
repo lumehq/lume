@@ -1,23 +1,23 @@
 // `usePageContext` allows us to access `pageContext` in any React component.
 // See https://vite-plugin-ssr.com/pageContext-anywhere
-import type { PageContext } from '@renderer/types';
+import type { PageContext } from "@renderer/types";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
 const Context = createContext<PageContext>(undefined as any);
 
 export function PageContextProvider({
-  pageContext,
-  children,
+	pageContext,
+	children,
 }: {
-  pageContext: PageContext;
-  children: React.ReactNode;
+	pageContext: PageContext;
+	children: React.ReactNode;
 }) {
-  return <Context.Provider value={pageContext}>{children}</Context.Provider>;
+	return <Context.Provider value={pageContext}>{children}</Context.Provider>;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function usePageContext() {
-  const pageContext = useContext(Context);
-  return pageContext;
+	const pageContext = useContext(Context);
+	return pageContext;
 }

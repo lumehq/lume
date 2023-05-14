@@ -1,3 +1,8 @@
-import { atom } from 'jotai';
+import { atom } from "jotai";
 
-export const onboardingAtom = atom({ pubkey: null, privkey: null, metadata: null, follows: null });
+export const onboardingAtom = atom({
+	pubkey: null,
+	privkey: null,
+	metadata: null,
+	follows: null,
+});

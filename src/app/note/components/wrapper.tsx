@@ -1,26 +1,26 @@
-import { navigate } from 'vite-plugin-ssr/client/router';
+import { navigate } from "vite-plugin-ssr/client/router";
 
 export function NoteWrapper({
-  children,
-  href,
-  className,
+	children,
+	href,
+	className,
 }: {
-  children: React.ReactNode;
-  href: string;
-  className: string;
+	children: React.ReactNode;
+	href: string;
+	className: string;
 }) {
-  const openThread = (event: any, href: string) => {
-    const selection = window.getSelection();
-    if (selection.toString().length === 0) {
-      navigate(href, { keepScrollPosition: true });
-    } else {
-      event.stopPropagation();
-    }
-  };
+	const openThread = (event: any, href: string) => {
+		const selection = window.getSelection();
+		if (selection.toString().length === 0) {
+			navigate(href, { keepScrollPosition: true });
+		} else {
+			event.stopPropagation();
+		}
+	};
 
-  return (
-    <div onClick={(event) => openThread(event, href)} className={className}>
-      {children}
-    </div>
-  );
+	return (
+		<div onKeyDown={(event) => openThread(event, href)} className={className}>
+			{children}
+		</div>
+	);
 }

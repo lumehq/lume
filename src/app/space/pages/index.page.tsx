@@ -1,7 +1,7 @@
 export function Page() {
-  return (
-    <div>
-      <p>Space</p>
-    </div>
-  );
+	return (
+		<div>
+			<p>Space</p>
+		</div>
+	);
 }

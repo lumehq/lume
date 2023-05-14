@@ -1,1 +1,1 @@
-export { LayoutChat as Layout } from './layout';
+export { LayoutChat as Layout } from "./layout";

@@ -1,1 +1,1 @@
-export { LayoutChannel as Layout } from './layout';
+export { LayoutChannel as Layout } from "./layout";

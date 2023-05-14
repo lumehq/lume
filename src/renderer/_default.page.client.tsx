@@ -1,10 +1,10 @@
-import { StrictMode } from 'react';
-import { Root, createRoot, hydrateRoot } from 'react-dom/client';
-import 'vidstack/styles/defaults.css';
+import { StrictMode } from "react";
+import { Root, createRoot, hydrateRoot } from "react-dom/client";
+import "vidstack/styles/defaults.css";
 
-import './index.css';
-import { Shell } from './shell';
-import { PageContextClient } from './types';
+import "./index.css";
+import { Shell } from "./shell";
+import { PageContextClient } from "./types";
 
 export const clientRouting = true;
 export const hydrationCanBeAborted = true;
@@ -12,27 +12,30 @@ export const hydrationCanBeAborted = true;
 let root: Root;
 
 export async function render(pageContext: PageContextClient) {
-  const { Page, pageProps } = pageContext;
+	const { Page, pageProps } = pageContext;
 
-  if (!Page) throw new Error('Client-side render() hook expects pageContext.Page to be defined');
+	if (!Page)
+		throw new Error(
+			"Client-side render() hook expects pageContext.Page to be defined",
+		);
 
-  const page = (
-    <StrictMode>
-      <Shell pageContext={pageContext}>
-        <Page {...pageProps} />
-      </Shell>
-    </StrictMode>
-  );
+	const page = (
+		<StrictMode>
+			<Shell pageContext={pageContext}>
+				<Page {...pageProps} />
+			</Shell>
+		</StrictMode>
+	);
 
-  const container = document.getElementById('app');
-  // SPA
-  if (container.innerHTML === '' || !pageContext.isHydration) {
-    if (!root) {
-      root = createRoot(container);
-    }
-    root.render(page);
-    // SSR
-  } else {
-    root = hydrateRoot(container, page);
-  }
+	const container = document.getElementById("app");
+	// SPA
+	if (container.innerHTML === "" || !pageContext.isHydration) {
+		if (!root) {
+			root = createRoot(container);
+		}
+		root.render(page);
+		// SSR
+	} else {
+		root = hydrateRoot(container, page);
+	}
 }
