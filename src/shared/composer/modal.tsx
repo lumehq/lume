@@ -50,7 +50,7 @@ export function ComposerModal() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-md data-[state=open]:animate-overlayShow" />
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-md" />
           </Transition.Child>
           <div className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
             <Transition.Child
@@ -76,7 +76,7 @@ export function ComposerModal() {
                   </div>
                   <div
                     onClick={closeModal}
-                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded hover:bg-zinc-800"
+                    className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
                   >
                     <CancelIcon width={16} height={16} className="text-zinc-500" />
                   </div>

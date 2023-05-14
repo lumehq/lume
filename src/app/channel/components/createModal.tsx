@@ -106,7 +106,7 @@ export default function ChannelCreateModal() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-md data-[state=open]:animate-overlayShow" />
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-md" />
           </Transition.Child>
           <div className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
             <Transition.Child
@@ -202,7 +202,7 @@ export default function ChannelCreateModal() {
                       <div>
                         <button
                           disabled
-                          className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-zinc-900 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:ring-offset-2"
+                          className="relative inline-flex h-6 w-11 flex-shrink-0  rounded-full border-2 border-transparent bg-zinc-900 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:ring-offset-2"
                           role="switch"
                           aria-checked="false"
                         >

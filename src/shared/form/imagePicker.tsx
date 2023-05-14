@@ -74,7 +74,7 @@ export function ImagePicker({ type }: { type: string }) {
   return (
     <button
       onClick={() => openFileDialog()}
-      className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-zinc-700"
+      className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-700"
     >
       {loading ? (
         <svg

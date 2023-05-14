@@ -77,7 +77,7 @@ export default function MessageHideButton({ id }: { id: string }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-md data-[state=open]:animate-overlayShow" />
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-md" />
           </Transition.Child>
           <div className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
             <Transition.Child

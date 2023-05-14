@@ -100,7 +100,7 @@ export function ImageUploader() {
       type="button"
       autoFocus={false}
       onClick={() => openFileDialog()}
-      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-zinc-800"
+      className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-zinc-800"
     >
       {loading ? (
         <svg

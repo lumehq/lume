@@ -9,6 +9,14 @@
   }
 }
 
+a {
+  @apply cursor-default;
+}
+
+button {
+  @apply cursor-default focus:outline-none;
+}
+
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

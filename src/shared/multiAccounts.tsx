@@ -23,7 +23,7 @@ export default function MultiAccounts() {
         <div className="flex flex-col gap-2">
           <>
             {!activeAccount ? (
-              <div className="group relative flex h-10 w-10 shrink animate-pulse cursor-pointer items-center justify-center rounded-lg bg-zinc-900"></div>
+              <div className="group relative flex h-10 w-10 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900"></div>
             ) : (
               <ActiveAccount user={activeAccount} />
             )}
@@ -31,7 +31,7 @@ export default function MultiAccounts() {
           <div>
             <button
               type="button"
-              className="group relative flex h-10 w-10 shrink cursor-pointer items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
+              className="group relative flex h-10 w-10 shrink items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
             >
               <BellIcon width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
             </button>
@@ -41,7 +41,7 @@ export default function MultiAccounts() {
         <div className="flex flex-col gap-3">
           <>
             {!accounts ? (
-              <div className="group relative flex h-10 w-10 shrink animate-pulse cursor-pointer items-center justify-center rounded-lg bg-zinc-900"></div>
+              <div className="group relative flex h-10 w-10 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900"></div>
             ) : (
               accounts.map((account: { is_active: number; pubkey: string }) => (
                 <InactiveAccount key={account.pubkey} user={account} />
@@ -50,7 +50,7 @@ export default function MultiAccounts() {
           </>
           <button
             type="button"
-            className="group relative flex h-10 w-10 shrink cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-transparent hover:border-zinc-600"
+            className="group relative flex h-10 w-10 shrink items-center justify-center rounded-lg border-2 border-dashed border-transparent hover:border-zinc-600"
           >
             <PlusIcon width={16} height={16} className="text-zinc-400 group-hover:text-zinc-200" />
           </button>
