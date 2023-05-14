@@ -1,4 +1,3 @@
-import NoteLike from "@app/note/components/metadata/like";
 import NoteReply from "@app/note/components/metadata/reply";
 import NoteRepost from "@app/note/components/metadata/repost";
 
@@ -19,7 +18,6 @@ export default function NoteMetadata({
 
 	const [replies, setReplies] = useState(0);
 	const [reposts, setReposts] = useState(0);
-	const [likes, setLikes] = useState(0);
 
 	useSWRSubscription(id ? ["note-metadata", id] : null, ([, key]) => {
 		const unsubscribe = pool.subscribe(
@@ -27,7 +25,7 @@ export default function NoteMetadata({
 				{
 					"#e": [key],
 					since: 0,
-					kinds: [1, 6, 7],
+					kinds: [1, 6],
 					limit: 20,
 				},
 			],
@@ -39,11 +37,6 @@ export default function NoteMetadata({
 						break;
 					case 6:
 						setReposts((reposts) => reposts + 1);
-						break;
-					case 7:
-						if (event.content === "🤙" || event.content === "+") {
-							setLikes((likes) => likes + 1);
-						}
 						break;
 					default:
 						break;
@@ -59,7 +52,6 @@ export default function NoteMetadata({
 	return (
 		<div className="mt-4 flex h-12 items-center gap-16 border-t border-zinc-800/50">
 			<NoteReply id={id} replies={replies} />
-			<NoteLike id={id} pubkey={eventPubkey} likes={likes} />
 			<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
 			<button
 				type="button"

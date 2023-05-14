@@ -19,7 +19,11 @@ export function NoteWrapper({
 	};
 
 	return (
-		<div onKeyDown={(event) => openThread(event, href)} className={className}>
+		<div
+			onClick={(event) => openThread(event, href)}
+			onKeyDown={(event) => openThread(event, href)}
+			className={className}
+		>
 			{children}
 		</div>
 	);

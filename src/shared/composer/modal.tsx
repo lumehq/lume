@@ -82,6 +82,7 @@ export function ComposerModal() {
 										</div>
 									</div>
 									<div
+										onClick={closeModal}
 										onKeyDown={closeModal}
 										className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
 									>

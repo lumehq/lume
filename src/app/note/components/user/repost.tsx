@@ -55,6 +55,7 @@ export function NoteRepostUser({
 			>
 				<Popover.Panel className="absolute left-0 top-8 z-10 mt-3 w-screen max-w-sm px-4 sm:px-0 lg:max-w-3xl">
 					<div
+						onClick={(e) => e.stopPropagation()}
 						onKeyDown={(e) => e.stopPropagation()}
 						className="w-full max-w-xs overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 shadow-input ring-1 ring-black ring-opacity-5"
 					>
