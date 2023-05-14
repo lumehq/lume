@@ -53,7 +53,7 @@ export default function NoteRepost({
 		<button
 			type="button"
 			onClick={(e) => submitEvent(e)}
-			className="group inline-flex w-min items-center gap-1.5"
+			className="group inline-flex items-center gap-1.5"
 		>
 			<RepostIcon
 				width={16}

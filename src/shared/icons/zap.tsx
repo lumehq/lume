@@ -5,15 +5,18 @@ export default function ZapIcon(
 ) {
 	return (
 		<svg
+			width={24}
+			height={24}
 			viewBox="0 0 24 24"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			{...props}
 		>
 			<path
-				d="M20.25 8.75H13.25V1.75L3.75 15.0473H10.75V22.25L20.25 8.75Z"
+				d="M3.75 12.75L8.75 2.75H18L15.25 8.25H21.25L6.75 21.25L8.89706 12.75H3.75Z"
 				stroke="currentColor"
 				strokeWidth={1.5}
+				strokeLinecap="round"
 				strokeLinejoin="round"
 			/>
 		</svg>

@@ -3,10 +3,9 @@ import NoteRepost from "@app/note/components/metadata/repost";
 
 import { RelayContext } from "@shared/relayProvider";
 
-import ZapIcon from "@icons/zap";
-
+import NoteZap from "@app/note/components/metadata/zap";
 import { READONLY_RELAYS } from "@stores/constants";
-
+import { decode } from "light-bolt11-decoder";
 import { useContext, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 
@@ -18,6 +17,7 @@ export default function NoteMetadata({
 
 	const [replies, setReplies] = useState(0);
 	const [reposts, setReposts] = useState(0);
+	const [zaps, setZaps] = useState(0);
 
 	useSWRSubscription(id ? ["note-metadata", id] : null, ([, key]) => {
 		const unsubscribe = pool.subscribe(
@@ -25,7 +25,7 @@ export default function NoteMetadata({
 				{
 					"#e": [key],
 					since: 0,
-					kinds: [1, 6],
+					kinds: [1, 6, 9735],
 					limit: 20,
 				},
 			],
@@ -38,6 +38,17 @@ export default function NoteMetadata({
 					case 6:
 						setReposts((reposts) => reposts + 1);
 						break;
+					case 9735: {
+						const bolt11 = event.tags.find((tag) => tag[0] === "bolt11")[1];
+						if (bolt11) {
+							const decoded = decode(bolt11);
+							const amount = decoded.sections.find(
+								(item) => item.name === "amount",
+							);
+							setZaps(amount.value / 1000);
+						}
+						break;
+					}
 					default:
 						break;
 				}
@@ -53,19 +64,7 @@ export default function NoteMetadata({
 		<div className="mt-4 flex h-12 items-center gap-16 border-t border-zinc-800/50">
 			<NoteReply id={id} replies={replies} />
 			<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
-			<button
-				type="button"
-				className="group inline-flex w-min items-center gap-1.5"
-			>
-				<ZapIcon
-					width={20}
-					height={20}
-					className="text-zinc-400 group-hover:text-orange-400"
-				/>
-				<span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">
-					{0}
-				</span>
-			</button>
+			<NoteZap zaps={zaps} />
 		</div>
 	);
 }

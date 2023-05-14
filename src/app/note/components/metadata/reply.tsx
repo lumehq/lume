@@ -64,7 +64,7 @@ export default function NoteReply({
 			<button
 				type="button"
 				onClick={() => openModal()}
-				className="group inline-flex w-min items-center gap-1.5"
+				className="group inline-flex items-center gap-1.5"
 			>
 				<ReplyIcon
 					width={16}
