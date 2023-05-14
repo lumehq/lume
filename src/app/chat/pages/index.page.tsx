@@ -27,7 +27,7 @@ export function Page() {
   const setChatMessages = useSetAtom(chatMessagesAtom);
   const resetChatMessages = useResetAtom(chatMessagesAtom);
 
-  useSWRSubscription(pubkey ? ['chat', pubkey] : null, ([, key], {}: any) => {
+  useSWRSubscription(account ? ['chat', pubkey] : null, ([, key], {}: any) => {
     const unsubscribe = pool.subscribe(
       [
         {

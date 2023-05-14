@@ -53,7 +53,7 @@ export function Page() {
 
   const now = useRef(new Date());
 
-  useSWRSubscription(channelID && muted && hided ? ['channel', channelID] : null, ([, key], {}: any) => {
+  useSWRSubscription(account && channelID && muted && hided ? ['channel', channelID] : null, ([, key], {}: any) => {
     // subscribe to channel
     const unsubscribe = pool.subscribe(
       [
