@@ -14,6 +14,15 @@ import { useSetAtom } from "jotai";
 import { useContext, useRef } from "react";
 import useSWRSubscription from "swr/subscription";
 
+function isJSON(str: string) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 export default function EventCollector() {
 	const pool: any = useContext(RelayContext);
 
@@ -97,19 +106,23 @@ export default function EventCollector() {
 							);
 							break;
 						// long post
-						case 30023:
-							// insert event to local database
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								"",
-							);
+						case 30023: {
+							const verifyMetadata = isJSON(event.tags);
+							if (verifyMetadata) {
+								// insert event to local database
+								createNote(
+									event.id,
+									account.id,
+									event.pubkey,
+									event.kind,
+									event.tags,
+									event.content,
+									event.created_at,
+									"",
+								);
+							}
 							break;
+						}
 						default:
 							break;
 					}

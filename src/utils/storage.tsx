@@ -132,7 +132,7 @@ export async function getLongNotes(
 
 	const notes: any = { data: null, nextCursor: 0 };
 	const query: any = await db.select(
-		`SELECT * FROM notes WHERE created_at <= "${time}" AND kind = 30023 GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
+		`SELECT * FROM notes WHERE created_at <= "${time}" AND kind = 30023 ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
 	);
 
 	notes["data"] = query;

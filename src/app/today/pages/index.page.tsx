@@ -55,7 +55,6 @@ export function Page() {
 		) {
 			fetchNextPage();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fetchNextPage, allRows.length, rowVirtualizer.getVirtualItems()]);
 
 	return (

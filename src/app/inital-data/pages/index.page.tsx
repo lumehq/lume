@@ -20,6 +20,15 @@ import { getParentID, nip02ToArray } from "@utils/transform";
 import { useContext, useEffect, useRef } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
+function isJSON(str: string) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 export function Page() {
 	const pool: any = useContext(RelayContext);
 	const now = useRef(new Date());
@@ -157,19 +166,23 @@ export function Page() {
 							);
 							break;
 						// long post
-						case 30023:
+						case 30023: {
 							// insert event to local database
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								"",
-							);
+							const verifyMetadata = isJSON(event.tags);
+							if (verifyMetadata) {
+								createNote(
+									event.id,
+									account.id,
+									event.pubkey,
+									event.kind,
+									event.tags,
+									event.content,
+									event.created_at,
+									"",
+								);
+							}
 							break;
+						}
 						default:
 							break;
 					}
