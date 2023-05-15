@@ -7,6 +7,9 @@ dependencies:
   '@headlessui/react':
     specifier: ^1.7.14
     version: 1.7.14(react-dom@18.2.0)(react@18.2.0)
+  '@nostr-connect/connect':
+    specifier: ^0.4.0
+    version: 0.4.0(react@18.2.0)
   '@tanstack/react-query':
     specifier: ^4.29.5
     version: 4.29.5(react-dom@18.2.0)(react@18.2.0)
@@ -493,6 +496,17 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@nostr-connect/connect@0.4.0(react@18.2.0):
+    resolution: {integrity: sha512-N8ubuLQb85veXK35XGlt+vI9JljhODKj3NRMfUTFuA3kNDpzW8ZRtGzIAPifrL9uZ8VNjAaU5fa7lMOHpMca0w==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      events: 3.3.0
+      nostr-tools: 1.10.1
+      react: 18.2.0
+    dev: false
 
   /@polka/url@1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
@@ -1304,6 +1318,11 @@ packages:
   /escape-string-regexp@5.0.0:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
+    dev: false
+
+  /events@3.3.0:
+    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
+    engines: {node: '>=0.8.x'}
     dev: false
 
   /execa@7.1.1:

@@ -43,7 +43,7 @@ export function Page() {
 
 			if (typeof getPublicKey(privkey) === "string") {
 				setOnboardingPrivkey((prev) => ({ ...prev, privkey: privkey }));
-				navigate("/auth/import/step-2");
+				navigate("/app/auth/import/step-2");
 			}
 		} catch (error) {
 			setError("key", {
@@ -63,10 +63,9 @@ export function Page() {
 				</div>
 				<div className="flex flex-col gap-4">
 					<div>
-						{/* #TODO: add function */}
 						<button
 							type="button"
-							className="inline-flex w-full transform items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 py-2.5 font-medium text-zinc-400 active:translate-y-1"
+							className="inline-flex w-full transform items-center justify-center gap-1.5 rounded-lg bg-zinc-900 ring-1 ring-zinc-800 px-3.5 py-2.5 font-medium text-zinc-400 active:translate-y-1"
 						>
 							<div className="inline-flex items-center rounded-md bg-zinc-400/10 px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-zinc-400/20">
 								<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">

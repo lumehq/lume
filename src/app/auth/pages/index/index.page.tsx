@@ -112,14 +112,14 @@ export function Page() {
 				</h1>
 				<div className="mt-4 flex flex-col items-center gap-1.5">
 					<a
-						href="/auth/create"
+						href="/app/auth/create"
 						className="relative inline-flex h-14 w-64 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 text-lg font-medium ring-1 ring-zinc-800 hover:bg-zinc-800"
 					>
 						Create new key
 						<ArrowRightIcon width={20} height={20} />
 					</a>
 					<a
-						href="/auth/import"
+						href="/app/auth/import"
 						className="inline-flex h-14 w-64 items-center justify-center gap-2 rounded-full px-6 text-base font-medium text-zinc-300 hover:bg-zinc-800"
 					>
 						Login with private key

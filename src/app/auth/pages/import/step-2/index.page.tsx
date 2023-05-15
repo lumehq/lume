@@ -67,7 +67,7 @@ export function Page() {
 			.then((res) => {
 				if (res) {
 					for (const tag of onboarding.follows) {
-						fetch(`https://us.rbr.bio/${tag[1]}/metadata.json`)
+						fetch(`https://rbr.bio/${tag[1]}/metadata.json`)
 							.then((data) => data.json())
 							.then((data) => createPleb(tag[1], data ?? ""));
 					}

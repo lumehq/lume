@@ -28,7 +28,7 @@ export function Page() {
 
 	const submit = () => {
 		setOnboarding((prev) => ({ ...prev, pubkey: pubkey, privkey: privkey }));
-		navigate("/auth/create/step-2");
+		navigate("/app/auth/create/step-2");
 	};
 
 	return (

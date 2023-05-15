@@ -13,7 +13,7 @@ export function Page() {
 	});
 
 	if (!isLoading && !data) {
-		navigate("/auth", { overwriteLastHistoryEntry: true });
+		navigate("/app/auth", { overwriteLastHistoryEntry: true });
 	}
 
 	if (!isLoading && data) {
@@ -21,6 +21,6 @@ export function Page() {
 	}
 
 	return (
-		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white" />
+		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-100" />
 	);
 }
