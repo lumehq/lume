@@ -8,6 +8,15 @@ import { useEffect, useRef } from "react";
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
+function isJSON(str: string) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 export function Page() {
 	const {
 		status,
@@ -56,7 +65,7 @@ export function Page() {
 	return (
 		<div
 			ref={parentRef}
-			className="scrollbar-hide flex h-full flex-col justify-between gap-1.5 overflow-y-auto"
+			className="scrollbar-hide h-full overflow-y-auto"
 			style={{ contain: "strict" }}
 		>
 			{status === "loading" ? (
@@ -69,7 +78,7 @@ export function Page() {
 				<div>{error.message}</div>
 			) : (
 				<div
-					className="relative w-full"
+					className="relative w-full mt-2"
 					style={{
 						height: `${rowVirtualizer.getTotalSize()}px`,
 					}}
@@ -84,7 +93,7 @@ export function Page() {
 					>
 						{rowVirtualizer.getVirtualItems().map((virtualRow) => {
 							const note = allRows[virtualRow.index];
-							if (note) {
+							if (note && isJSON(note.tags)) {
 								return (
 									<div
 										key={virtualRow.index}
