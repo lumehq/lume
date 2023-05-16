@@ -7,6 +7,7 @@ import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
+import { compactNumber } from "@utils/number";
 import { getEventHash, signEvent } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 
@@ -53,7 +54,7 @@ export default function NoteRepost({
 		<button
 			type="button"
 			onClick={(e) => submitEvent(e)}
-			className="group inline-flex items-center gap-1.5"
+			className="w-20 group inline-flex items-center gap-1.5"
 		>
 			<RepostIcon
 				width={16}
@@ -61,7 +62,7 @@ export default function NoteRepost({
 				className="text-zinc-400 group-hover:text-blue-400"
 			/>
 			<span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">
-				{count}
+				{compactNumber.format(count)}
 			</span>
 		</button>
 	);

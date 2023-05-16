@@ -4,6 +4,8 @@ import NoteRepost from "@app/note/components/metadata/repost";
 import { RelayContext } from "@shared/relayProvider";
 
 import NoteZap from "@app/note/components/metadata/zap";
+import PlusIcon from "@shared/icons/plus";
+import { Tooltip } from "@shared/tooltip";
 import { READONLY_RELAYS } from "@stores/constants";
 import { decode } from "light-bolt11-decoder";
 import { useContext, useState } from "react";
@@ -61,10 +63,20 @@ export default function NoteMetadata({
 	});
 
 	return (
-		<div className="mt-4 flex h-12 items-center gap-16 border-t border-zinc-800/50">
-			<NoteReply id={id} replies={replies} />
-			<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
-			<NoteZap zaps={zaps} />
+		<div className="mt-4 flex h-12 items-center justify-between border-t border-zinc-800/50">
+			<div className="flex items-center gap-16">
+				<NoteReply id={id} replies={replies} />
+				<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
+				<NoteZap zaps={zaps} />
+			</div>
+			<Tooltip message="Save to Space">
+				<button
+					type="button"
+					className="inline-flex w-4 h-4 rounded justify-center items-center gap-1 hover:bg-zinc-800"
+				>
+					<PlusIcon className="w-3 h-3 text-zinc-400" />
+				</button>
+			</Tooltip>
 		</div>
 	);
 }

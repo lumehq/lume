@@ -9,6 +9,7 @@ import { dateToUnix } from "@utils/date";
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
 import { Dialog, Transition } from "@headlessui/react";
+import { compactNumber } from "@utils/number";
 import { getEventHash, signEvent } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 
@@ -64,7 +65,7 @@ export default function NoteReply({
 			<button
 				type="button"
 				onClick={() => openModal()}
-				className="group inline-flex items-center gap-1.5"
+				className="w-20 group inline-flex items-center gap-1.5"
 			>
 				<ReplyIcon
 					width={16}
@@ -72,7 +73,7 @@ export default function NoteReply({
 					className="text-zinc-400 group-hover:text-green-400"
 				/>
 				<span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">
-					{count}
+					{compactNumber.format(count)}
 				</span>
 			</button>
 			<Transition appear show={isOpen} as={Fragment}>

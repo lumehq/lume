@@ -1,11 +1,8 @@
 import ZapIcon from "@shared/icons/zap";
-import { useEffect, useMemo, useState } from "react";
+import { compactNumber } from "@utils/number";
+import { useEffect, useState } from "react";
 
 export default function NoteZap({ zaps }: { zaps: number }) {
-	const formatter = useMemo(
-		() => Intl.NumberFormat("en", { notation: "compact" }),
-		[],
-	);
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
@@ -20,7 +17,7 @@ export default function NoteZap({ zaps }: { zaps: number }) {
 				className="text-zinc-400 group-hover:text-orange-400"
 			/>
 			<span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">
-				{formatter.format(count)} sats
+				{compactNumber.format(count)} sats
 			</span>
 		</button>
 	);
