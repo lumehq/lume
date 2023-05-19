@@ -13,17 +13,11 @@ export function LayoutChat({ children }: { children: React.ReactNode }) {
 					<AppHeader />
 				</div>
 				<div className="relative flex min-h-0 w-full flex-1">
-					<div className="relative w-[68px] shrink-0 border-r border-zinc-900">
+					<div className="relative flex flex-row flex-wrap shrink-0">
 						<MultiAccounts />
+						<Navigation />
 					</div>
-					<div className="grid w-full grid-cols-4 xl:grid-cols-5">
-						<div className="scrollbar-hide col-span-1 overflow-y-auto overflow-x-hidden border-r border-zinc-900">
-							<Navigation />
-						</div>
-						<div className="col-span-3 m-3 overflow-hidden xl:col-span-4">
-							{children}
-						</div>
-					</div>
+					<div className="w-full h-full">{children}</div>
 				</div>
 			</div>
 		</div>

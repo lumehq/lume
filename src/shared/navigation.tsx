@@ -14,7 +14,7 @@ import { Disclosure } from "@headlessui/react";
 
 export default function Navigation() {
 	return (
-		<div className="relative flex h-full flex-col gap-3 pt-1.5">
+		<div className="flex w-[232px] h-full flex-col gap-3 pt-1.5">
 			<div className="flex h-11 items-center justify-between px-3.5">
 				<ComposerModal />
 				<EventCollector />
@@ -28,14 +28,14 @@ export default function Navigation() {
 				</div>
 				<div className="flex flex-col text-zinc-400">
 					<ActiveLink
-						href="/app/today"
+						href="/app/space"
 						className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-semibold hover:text-zinc-200"
 						activeClassName="bg-zinc-900/50 hover:bg-zinc-900"
 					>
 						<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
 							<WorldIcon width={12} height={12} className="text-zinc-200" />
 						</span>
-						<span>Today</span>
+						<span>Space</span>
 					</ActiveLink>
 					<ActiveLink
 						href="/app/threads"
@@ -46,16 +46,6 @@ export default function Navigation() {
 							<ThreadsIcon width={12} height={12} className="text-zinc-200" />
 						</span>
 						<span>Threads</span>
-					</ActiveLink>
-					<ActiveLink
-						href="/app/space"
-						className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-semibold hover:text-zinc-200"
-						activeClassName=""
-					>
-						<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
-							<MyspaceIcon width={12} height={12} className="text-zinc-200" />
-						</span>
-						<span>Space</span>
 					</ActiveLink>
 				</div>
 			</div>

@@ -191,7 +191,7 @@ export function Page() {
 				() => {
 					updateLastLogin(dateToUnix(now.current));
 					timeout = setTimeout(() => {
-						navigate("/app/today", { overwriteLastHistoryEntry: true });
+						navigate("/app/space", { overwriteLastHistoryEntry: true });
 					}, 5000);
 				},
 			);

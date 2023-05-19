@@ -1,4 +1,4 @@
-import { CreateViewModal } from "@app/today/components/views/createModal";
+import { CreateViewModal } from "@app/space/components/views/createModal";
 
 export function Header() {
 	return (

@@ -18,7 +18,7 @@ export default function MultiAccounts() {
 	const { data: activeAccount }: any = useSWR("activeAccount", fetcher);
 
 	return (
-		<div className="flex h-full flex-col items-center justify-between pb-4 pt-3">
+		<div className="flex shrink-0 w-[68px] h-full flex-col items-center justify-between border-r border-zinc-900 pb-4 pt-3">
 			<div className="flex flex-col items-center">
 				<div className="flex flex-col gap-2">
 					<>

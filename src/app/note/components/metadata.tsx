@@ -14,7 +14,10 @@ import useSWRSubscription from "swr/subscription";
 export default function NoteMetadata({
 	id,
 	eventPubkey,
-}: { id: string; eventPubkey: string }) {
+}: {
+	id: string;
+	eventPubkey: string;
+}) {
 	const pool: any = useContext(RelayContext);
 
 	const [replies, setReplies] = useState(0);
@@ -63,20 +66,10 @@ export default function NoteMetadata({
 	});
 
 	return (
-		<div className="mt-4 flex h-12 items-center justify-between border-t border-zinc-800/50">
-			<div className="flex items-center gap-16">
-				<NoteReply id={id} replies={replies} />
-				<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
-				<NoteZap zaps={zaps} />
-			</div>
-			<Tooltip message="Save to Space">
-				<button
-					type="button"
-					className="inline-flex w-4 h-4 rounded justify-center items-center gap-1 hover:bg-zinc-800"
-				>
-					<PlusIcon className="w-3 h-3 text-zinc-400" />
-				</button>
-			</Tooltip>
+		<div className="mt-4 flex h-12 items-center gap-4 border-t border-zinc-800/50">
+			<NoteReply id={id} replies={replies} />
+			<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
+			<NoteZap zaps={zaps} />
 		</div>
 	);
 }
