@@ -29,7 +29,7 @@ export function NoteRepostUser({
 					className="h-9 w-9 rounded-md object-cover"
 				/>
 			</Popover.Button>
-			<div className="flex items-baseline gap-1.5 text-sm">
+			<div className="flex items-baseline gap-1.5 text-base">
 				<h5 className="font-semibold leading-tight group-hover:underline">
 					{user?.display_name || user?.name || (
 						<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
@@ -69,17 +69,17 @@ export function NoteRepostUser({
 							/>
 							<div className="flex w-full flex-1 flex-col gap-2">
 								<div className="inline-flex w-2/3 flex-col gap-0.5">
-									<h5 className="text-sm font-semibold leading-none">
+									<h5 className="text-base font-semibold leading-none">
 										{user?.display_name || user?.name || (
 											<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
 										)}
 									</h5>
-									<span className="truncate text-sm leading-none text-zinc-500">
+									<span className="truncate text-base leading-none text-zinc-500">
 										{user?.nip05 || shortenKey(pubkey)}
 									</span>
 								</div>
 								<div>
-									<p className="line-clamp-3 text-sm leading-tight text-zinc-100">
+									<p className="line-clamp-3 text-base leading-tight text-white">
 										{user?.about}
 									</p>
 								</div>
@@ -88,13 +88,13 @@ export function NoteRepostUser({
 						<div className="flex items-center gap-2 px-3 py-3">
 							<a
 								href={`/app/user?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-sm font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
 							>
 								View full profile
 							</a>
 							<a
 								href={`/app/chat?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-sm font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
 							>
 								Message
 							</a>

@@ -13,7 +13,7 @@ export default function UserReply({ pubkey }: { pubkey: string }) {
 			{isError || isLoading ? (
 				<>
 					<div className="relative h-7 w-7 shrink animate-pulse overflow-hidden rounded bg-zinc-800" />
-					<span className="h-2 w-10 animate-pulse rounded bg-zinc-800 text-xs font-medium leading-none text-zinc-500" />
+					<span className="h-2 w-10 animate-pulse rounded bg-zinc-800 text-base font-medium leading-none text-zinc-500" />
 				</>
 			) : (
 				<>
@@ -26,7 +26,7 @@ export default function UserReply({ pubkey }: { pubkey: string }) {
 							className="h-7 w-7 rounded object-cover"
 						/>
 					</div>
-					<span className="text-xs font-medium leading-none text-zinc-500">
+					<span className="text-base font-medium leading-none text-zinc-500">
 						Replying to {user?.name || shortenKey(pubkey)}
 					</span>
 				</>

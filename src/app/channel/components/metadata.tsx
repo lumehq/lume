@@ -33,14 +33,14 @@ export default function ChannelMetadata({
 			</div>
 			<div className="flex flex-col gap-1">
 				<div className="flex items-center gap-1">
-					<h5 className="truncate text-sm font-medium leading-none text-zinc-100">
+					<h5 className="truncate text-base font-medium leading-none text-white">
 						{metadata?.name}
 					</h5>
 					<button type="button" onClick={() => copyNoteID()}>
 						<CopyIcon width={14} height={14} className="text-zinc-400" />
 					</button>
 				</div>
-				<p className="text-xs leading-none text-zinc-400">
+				<p className="text-base leading-none text-zinc-400">
 					{metadata?.about || (noteID && `${noteID.substring(0, 24)}...`)}
 				</p>
 			</div>

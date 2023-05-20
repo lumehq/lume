@@ -17,7 +17,7 @@ export function User({ data }: { data: any }) {
 					loading="auto"
 				/>
 			</div>
-			<h5 className="text-sm font-semibold leading-none text-zinc-100">
+			<h5 className="text-base font-semibold leading-none text-white">
 				{metadata?.display_name || metadata?.name || (
 					<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
 				)}

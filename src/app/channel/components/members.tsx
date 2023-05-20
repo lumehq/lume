@@ -24,7 +24,7 @@ export default function ChannelMembers() {
 				))}
 				{totalMembers ? (
 					<div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-900 ring-2 ring-zinc-950 transition-all duration-150 ease-in-out group-hover:bg-zinc-800">
-						<span className="text-xs font-medium text-zinc-400 group-hover:text-zinc-200">
+						<span className="text-base font-medium text-zinc-400 group-hover:text-white">
 							{totalMembers}
 						</span>
 					</div>
@@ -32,7 +32,7 @@ export default function ChannelMembers() {
 					<div>
 						<button
 							type="button"
-							className="inline-flex h-8 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm text-white shadow-button"
+							className="inline-flex h-8 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-base text-white shadow-button"
 						>
 							Invite
 						</button>

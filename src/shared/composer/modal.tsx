@@ -33,7 +33,7 @@ export function ComposerModal() {
 			<button
 				type="button"
 				onClick={() => openModal()}
-				className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-xs font-medium text-zinc-200 shadow-button hover:bg-fuchsia-600 focus:outline-none"
+				className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-sm font-medium text-white shadow-button hover:bg-fuchsia-600 focus:outline-none"
 			>
 				<ComposeIcon width={14} height={14} />
 				Compose
@@ -76,7 +76,7 @@ export function ComposerModal() {
 												className="text-zinc-500"
 											/>
 										</span>
-										<div className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-xs font-medium text-zinc-400 shadow-mini-button">
+										<div className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-base font-medium text-zinc-400 shadow-mini-button">
 											New Post
 											<ChevronDownIcon width={14} height={14} />
 										</div>

@@ -57,9 +57,7 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-2xl font-semibold text-zinc-200">
-						Import your key
-					</h1>
+					<h1 className="text-xl font-semibold text-white">Import your key</h1>
 				</div>
 				<div className="flex flex-col gap-4">
 					<div>
@@ -67,7 +65,7 @@ export function Page() {
 							type="button"
 							className="inline-flex w-full transform items-center justify-center gap-1.5 rounded-lg bg-zinc-900 ring-1 ring-zinc-800 px-3.5 py-2.5 font-medium text-zinc-400 active:translate-y-1"
 						>
-							<div className="inline-flex items-center rounded-md bg-zinc-400/10 px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-zinc-400/20">
+							<div className="inline-flex items-center rounded-md bg-zinc-400/10 px-2 py-0.5 text-base font-medium ring-1 ring-inset ring-zinc-400/20">
 								<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
 									Coming soon
 								</span>
@@ -80,7 +78,9 @@ export function Page() {
 							<div className="w-full border-t border-zinc-800" />
 						</div>
 						<div className="relative flex justify-center">
-							<span className="bg-zinc-950 px-2 text-sm text-zinc-500">or</span>
+							<span className="bg-zinc-950 px-2 text-base text-zinc-500">
+								or
+							</span>
 						</div>
 					</div>
 					<form
@@ -93,10 +93,10 @@ export function Page() {
 									{...register("key", { required: true, minLength: 32 })}
 									type={"password"}
 									placeholder="Paste private key here..."
-									className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 text-center shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+									className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 text-center shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
 							</div>
-							<span className="text-xs text-red-400">
+							<span className="text-base text-red-400">
 								{errors.key && <p>{errors.key.message}</p>}
 							</span>
 						</div>

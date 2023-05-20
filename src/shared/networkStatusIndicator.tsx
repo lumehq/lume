@@ -17,7 +17,7 @@ export function NetworkStatusIndicator() {
 					}`}
 				/>
 			</div>
-			<p className="text-xs font-medium text-zinc-500">
+			<p className="text-base font-medium text-zinc-500">
 				{isOnline ? "Online" : "Offline"}
 			</p>
 		</div>

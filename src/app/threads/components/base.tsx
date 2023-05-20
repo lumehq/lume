@@ -17,7 +17,7 @@ export function ThreadBase({ event }: { event: any }) {
 				<div className="px-3 py-3">
 					<div className="flex flex-row gap-2">
 						<div className="flex-1">
-							<h3 className="text-zinc-100 text-xl font-semibold">{title}</h3>
+							<h3 className="text-white text-lg font-semibold">{title}</h3>
 							<div className="mt-2 prose prose-zinc max-w-none select-text break-words dark:prose-invert prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-500 prose-a:no-underline hover:prose-a:text-fuchsia-600 hover:prose-a:underline prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight">
 								<p>{summary}</p>
 							</div>

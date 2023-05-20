@@ -44,10 +44,10 @@ export default function ProfileMetadata({ id }: { id: string }) {
 			<div className="-mt-4 mb-8 px-4">
 				<div>
 					<div className="mb-3 flex flex-col">
-						<h3 className="text-lg font-semibold leading-tight text-zinc-100">
+						<h3 className="text-lg font-semibold leading-tight text-white">
 							{profile?.display_name || profile?.name}
 						</h3>
-						<span className="text-sm leading-tight text-zinc-500">
+						<span className="text-base leading-tight text-zinc-500">
 							{profile?.username || (id && shortenKey(id))}
 						</span>
 					</div>

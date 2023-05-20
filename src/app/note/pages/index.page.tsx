@@ -54,7 +54,7 @@ export function Page() {
 								<div className="relative h-11 w-11 shrink overflow-hidden rounded-md bg-zinc-700" />
 								<div className="flex w-full flex-1 items-start justify-between">
 									<div className="flex w-full items-center justify-between">
-										<div className="flex items-center gap-2 text-sm">
+										<div className="flex items-center gap-2 text-base">
 											<div className="h-4 w-16 rounded bg-zinc-700" />
 										</div>
 									</div>

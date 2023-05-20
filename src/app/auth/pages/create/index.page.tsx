@@ -35,25 +35,25 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-2xl font-semibold text-zinc-200">
+					<h1 className="text-xl font-semibold text-white">
 						Lume is auto-generated key for you
 					</h1>
 				</div>
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-1">
-						<label className="text-sm font-semibold text-zinc-400">
+						<label className="text-base font-semibold text-zinc-400">
 							Public Key
 						</label>
 						<div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
 							<input
 								readOnly
 								value={npub}
-								className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
+								className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-600"
 							/>
 						</div>
 					</div>
 					<div className="flex flex-col gap-1">
-						<label className="text-sm font-semibold text-zinc-400">
+						<label className="text-base font-semibold text-zinc-400">
 							Private Key
 						</label>
 						<div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
@@ -61,7 +61,7 @@ export function Page() {
 								readOnly
 								type={type}
 								value={nsec}
-								className="relative w-full rounded-lg border border-black/5 py-2.5 pl-3.5 pr-11 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-600"
+								className="relative w-full rounded-lg border border-black/5 py-2.5 pl-3.5 pr-11 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-600"
 							/>
 							<button
 								type="button"
@@ -72,13 +72,13 @@ export function Page() {
 									<EyeOffIcon
 										width={20}
 										height={20}
-										className="text-zinc-500 group-hover:text-zinc-200"
+										className="text-zinc-500 group-hover:text-white"
 									/>
 								) : (
 									<EyeOnIcon
 										width={20}
 										height={20}
-										className="text-zinc-500 group-hover:text-zinc-200"
+										className="text-zinc-500 group-hover:text-white"
 									/>
 								)}
 							</button>

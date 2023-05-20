@@ -22,7 +22,7 @@ export function CreateViewModal() {
 				onClick={openModal}
 				className="inline-flex h-11 items-center overflow-hidden border-b border-transparent hover:bg-zinc-900"
 			>
-				<span className="inline-flex items-center gap-1 px-2 text-sm font-medium text-zinc-500">
+				<span className="inline-flex items-center gap-1 px-2 text-base font-medium text-zinc-500">
 					<PlusIcon width={14} height={14} />
 					View
 				</span>
@@ -56,7 +56,7 @@ export function CreateViewModal() {
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"
-												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-xl font-semibold leading-none text-transparent"
+												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-lg font-semibold leading-none text-transparent"
 											>
 												Create a view
 											</Dialog.Title>
@@ -72,7 +72,7 @@ export function CreateViewModal() {
 												/>
 											</button>
 										</div>
-										<Dialog.Description className="text-sm leading-tight text-zinc-400">
+										<Dialog.Description className="text-base leading-tight text-zinc-400">
 											View is specific feature help you pin who you want to see
 											in your feed. You can add maximum 5 people in a view.
 										</Dialog.Description>

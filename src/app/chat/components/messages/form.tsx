@@ -66,7 +66,7 @@ export default function ChatMessageForm({
 					onKeyDown={handleEnterPress}
 					spellCheck={false}
 					placeholder="Message"
-					className="relative h-24 w-full resize-none rounded-lg border border-black/5 px-3.5 py-3 text-sm shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+					className="relative h-24 w-full resize-none rounded-lg border border-black/5 px-3.5 py-3 text-base shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 				/>
 			</div>
 			<div className="absolute bottom-2 w-full px-2">
@@ -80,7 +80,7 @@ export default function ChatMessageForm({
 							type="button"
 							onClick={() => submitEvent()}
 							disabled={value.length === 0 ? true : false}
-							className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm font-medium shadow-button hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+							className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-base font-medium shadow-button hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							Send
 						</button>

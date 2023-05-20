@@ -220,7 +220,7 @@ export function Page() {
 					<div className="flex flex-col items-center gap-2">
 						<LumeIcon className="h-16 w-16 text-black dark:text-white" />
 						<div className="text-center">
-							<h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
+							<h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-white">
 								Here&apos;s an interesting fact:
 							</h3>
 							<p className="font-medium text-zinc-300 dark:text-zinc-600">

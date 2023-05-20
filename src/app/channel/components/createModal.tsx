@@ -126,7 +126,7 @@ export default function ChannelCreateModal() {
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"
-												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-2xl font-semibold leading-none text-transparent"
+												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-xl font-semibold leading-none text-transparent"
 											>
 												Create channel
 											</Dialog.Title>
@@ -157,10 +157,10 @@ export default function ChannelCreateModal() {
 											type={"hidden"}
 											{...register("picture")}
 											value={image}
-											className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+											className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 										/>
 										<div className="flex flex-col gap-1">
-											<label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 												Picture
 											</label>
 											<div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
@@ -175,7 +175,7 @@ export default function ChannelCreateModal() {
 											</div>
 										</div>
 										<div className="flex flex-col gap-1">
-											<label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 												Channel name *
 											</label>
 											<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
@@ -186,35 +186,35 @@ export default function ChannelCreateModal() {
 														minLength: 4,
 													})}
 													spellCheck={false}
-													className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+													className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 												/>
 											</div>
 										</div>
 										<div className="flex flex-col gap-1">
-											<label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 												Description
 											</label>
 											<div className="relative h-20 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
 												<textarea
 													{...register("about")}
 													spellCheck={false}
-													className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+													className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 												/>
 											</div>
 										</div>
 										<div className="flex h-14 items-center justify-between gap-1 rounded-lg bg-zinc-800 px-4 py-2">
 											<div className="flex flex-col gap-0.5">
 												<div className="inline-flex items-center gap-1">
-													<span className="text-sm font-bold leading-none text-zinc-200">
+													<span className="text-base font-bold leading-none text-white">
 														Make Private
 													</span>
-													<div className="inline-flex items-center rounded-md bg-zinc-400/10 px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-zinc-400/20">
+													<div className="inline-flex items-center rounded-md bg-zinc-400/10 px-2 py-0.5 text-base font-medium ring-1 ring-inset ring-zinc-400/20">
 														<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
 															Coming soon
 														</span>
 													</div>
 												</div>
-												<p className="text-sm leading-none text-zinc-400">
+												<p className="text-base leading-none text-zinc-400">
 													Private channels can only be viewed by member
 												</p>
 											</div>

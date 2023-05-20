@@ -72,7 +72,7 @@ export default function NoteReply({
 					height={16}
 					className="text-zinc-400 group-hover:text-green-400"
 				/>
-				<span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">
+				<span className="text-base leading-none text-zinc-400 group-hover:text-white">
 					{compactNumber.format(count)}
 				</span>
 			</button>
@@ -118,7 +118,7 @@ export default function NoteReply({
 												name="content"
 												onChange={(e) => setValue(e.target.value)}
 												placeholder="Send your comment"
-												className="relative h-24 w-full resize-none rounded-md border border-black/5 px-3.5 py-3 text-sm shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+												className="relative h-24 w-full resize-none rounded-md border border-black/5 px-3.5 py-3 text-base shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 												spellCheck={false}
 											/>
 										</div>
@@ -132,7 +132,7 @@ export default function NoteReply({
 														type="button"
 														onClick={() => submitEvent()}
 														disabled={value.length === 0 ? true : false}
-														className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm font-medium shadow-md shadow-fuchsia-900/50 hover:bg-fuchsia-600"
+														className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-base font-medium shadow-md shadow-fuchsia-900/50 hover:bg-fuchsia-600"
 													>
 														<span className="text-white drop-shadow">Send</span>
 													</button>

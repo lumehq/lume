@@ -8,7 +8,6 @@ export function Image(props) {
 	return (
 		<img
 			{...props}
-			loading="lazy"
 			decoding="async"
 			onError={addImageFallback}
 			alt="lume default img"

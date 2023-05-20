@@ -28,8 +28,8 @@ export default function NoteReplyUser({
 				/>
 			</div>
 			<div className="flex w-full flex-1 items-start justify-between">
-				<div className="flex items-baseline gap-2 text-sm">
-					<span className="font-semibold leading-none text-zinc-200 group-hover:underline">
+				<div className="flex items-baseline gap-2 text-base">
+					<span className="font-semibold leading-none text-white group-hover:underline">
 						{user?.display_name || user?.name || shortenKey(pubkey)}
 					</span>
 					<span className="leading-none text-zinc-500">·</span>

@@ -29,7 +29,7 @@ export const ChatMessageItem = memo(function MessageListItem({
 			<div className="flex flex-col">
 				<ChatMessageUser pubkey={data.pubkey} time={data.created_at} />
 				<div className="-mt-[17px] pl-[48px]">
-					<div className="whitespace-pre-line break-words text-sm leading-tight">
+					<div className="whitespace-pre-line break-words text-base leading-tight">
 						{content.parsed}
 					</div>
 					{Array.isArray(content.images) && content.images.length ? (

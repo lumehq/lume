@@ -86,7 +86,7 @@ export default function ChannelMessageForm({
 						<div className="flex w-full flex-col">
 							<UserReply pubkey={channelReply.pubkey} />
 							<div className="-mt-3.5 pl-[32px]">
-								<div className="text-xs text-zinc-200">
+								<div className="text-base text-white">
 									{channelReply.content}
 								</div>
 							</div>
@@ -96,7 +96,7 @@ export default function ChannelMessageForm({
 							onClick={() => stopReply()}
 							className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
 						>
-							<CancelIcon width={12} height={12} className="text-zinc-100" />
+							<CancelIcon width={12} height={12} className="text-white" />
 						</button>
 					</div>
 				</div>
@@ -109,7 +109,7 @@ export default function ChannelMessageForm({
 				placeholder="Message"
 				className={`relative ${
 					channelReply.id ? "h-36 pt-16" : "h-24 pt-3"
-				} w-full resize-none rounded-lg border border-black/5 px-3.5 pb-3 text-sm shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500`}
+				} w-full resize-none rounded-lg border border-black/5 px-3.5 pb-3 text-base shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500`}
 			/>
 			<div className="absolute bottom-2 w-full px-2">
 				<div className="flex w-full items-center justify-between bg-zinc-800">
@@ -122,7 +122,7 @@ export default function ChannelMessageForm({
 							type="button"
 							onClick={() => submitEvent()}
 							disabled={value.length === 0 ? true : false}
-							className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-sm font-medium shadow-button hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+							className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-base font-medium shadow-button hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							Send
 						</button>

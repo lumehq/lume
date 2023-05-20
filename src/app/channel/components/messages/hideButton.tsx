@@ -66,7 +66,7 @@ export default function MessageHideButton({ id }: { id: string }) {
 					onClick={openModal}
 					className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
 				>
-					<HideIcon width={16} height={16} className="text-zinc-200" />
+					<HideIcon width={16} height={16} className="text-white" />
 				</button>
 			</Tooltip>
 			<Transition appear show={isOpen} as={Fragment}>
@@ -98,7 +98,7 @@ export default function MessageHideButton({ id }: { id: string }) {
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"
-												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-2xl font-semibold leading-none text-transparent"
+												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-xl font-semibold leading-none text-transparent"
 											>
 												Are you sure!
 											</Dialog.Title>
@@ -124,14 +124,14 @@ export default function MessageHideButton({ id }: { id: string }) {
 										<button
 											type="button"
 											onClick={closeModal}
-											className="inline-flex h-9 items-center justify-center rounded-md px-2 text-sm font-medium text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+											className="inline-flex h-9 items-center justify-center rounded-md px-2 text-base font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white"
 										>
 											Cancel
 										</button>
 										<button
 											type="button"
 											onClick={() => hideMessage()}
-											className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-2 text-sm font-medium text-zinc-100 hover:bg-red-600"
+											className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-2 text-base font-medium text-white hover:bg-red-600"
 										>
 											Confirm
 										</button>

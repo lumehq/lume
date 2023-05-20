@@ -24,7 +24,7 @@ export default function MessageReplyButton({
 				onClick={() => createReply()}
 				className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
 			>
-				<ReplyMessageIcon width={16} height={16} className="text-zinc-200" />
+				<ReplyMessageIcon width={16} height={16} className="text-white" />
 			</button>
 		</Tooltip>
 	);

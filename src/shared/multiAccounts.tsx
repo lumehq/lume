@@ -36,7 +36,7 @@ export default function MultiAccounts() {
 							<BellIcon
 								width={16}
 								height={16}
-								className="text-zinc-400 group-hover:text-zinc-200"
+								className="text-zinc-400 group-hover:text-white"
 							/>
 						</button>
 					</div>
@@ -61,16 +61,16 @@ export default function MultiAccounts() {
 						<PlusIcon
 							width={16}
 							height={16}
-							className="text-zinc-400 group-hover:text-zinc-200"
+							className="text-zinc-400 group-hover:text-white"
 						/>
 					</button>
 				</div>
 			</div>
 			<div className="flex flex-col gap-0.5 text-center">
-				<span className="text-sm font-black uppercase leading-tight text-zinc-600">
+				<span className="text-base font-black uppercase leading-tight text-zinc-600">
 					Lume
 				</span>
-				<span className="text-xs font-medium text-zinc-700">
+				<span className="text-base font-medium text-zinc-700">
 					v{APP_VERSION}
 				</span>
 			</div>

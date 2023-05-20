@@ -60,7 +60,7 @@ export default function NoteLike({
 				height={16}
 				className="text-zinc-400 group-hover:text-rose-400"
 			/>
-			<span className="text-sm leading-none text-zinc-400 group-hover:text-zinc-200">
+			<span className="text-base leading-none text-zinc-400 group-hover:text-white">
 				{count}
 			</span>
 		</button>

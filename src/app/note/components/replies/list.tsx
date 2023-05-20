@@ -51,7 +51,7 @@ export default function RepliesList({ id }: { id: string }) {
 						<div className="flex gap-2 px-3 py-4">
 							<div className="relative h-9 w-9 shrink animate-pulse rounded-md bg-zinc-800" />
 							<div className="flex w-full flex-1 flex-col justify-center gap-1">
-								<div className="flex items-baseline gap-2 text-sm">
+								<div className="flex items-baseline gap-2 text-base">
 									<div className="h-2.5 w-20 animate-pulse rounded-sm bg-zinc-800" />
 								</div>
 								<div className="h-4 w-44 animate-pulse rounded-sm bg-zinc-800" />

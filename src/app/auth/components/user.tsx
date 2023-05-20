@@ -20,10 +20,10 @@ export default function User({ pubkey }: { pubkey: string }) {
 				/>
 			</div>
 			<div className="flex w-full flex-1 flex-col items-start text-start">
-				<span className="truncate font-medium leading-tight text-zinc-200">
+				<span className="truncate font-medium leading-tight text-white">
 					{user?.display_name || user?.name}
 				</span>
-				<span className="text-sm leading-tight text-zinc-400">
+				<span className="text-base leading-tight text-zinc-400">
 					{user?.nip05?.toLowerCase() || shortenKey(pubkey)}
 				</span>
 			</div>

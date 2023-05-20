@@ -16,7 +16,7 @@ export default function ChannelMessageItem({ data }: { data: any }) {
 				<ChannelMessageUser pubkey={data.pubkey} time={data.created_at} />
 				<div className="-mt-[17px] pl-[48px]">
 					<div className="flex flex-col gap-2">
-						<div className="whitespace-pre-line break-words text-sm leading-tight">
+						<div className="whitespace-pre-line break-words text-base leading-tight">
 							{data.hide ? (
 								<span className="italic text-zinc-400">[hided message]</span>
 							) : (

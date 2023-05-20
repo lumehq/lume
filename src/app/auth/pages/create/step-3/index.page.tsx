@@ -197,13 +197,13 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-2xl font-semibold text-zinc-200">
+					<h1 className="text-xl font-semibold text-white">
 						Personalized your newsfeed
 					</h1>
 				</div>
 				<div className="flex flex-col gap-4">
 					<div className="w-full rounded-lg border border-zinc-800 bg-zinc-900">
-						<div className="inline-flex h-10 w-full items-center gap-1 border-b border-zinc-800 px-4 text-sm font-medium text-zinc-400">
+						<div className="inline-flex h-10 w-full items-center gap-1 border-b border-zinc-800 px-4 text-base font-medium text-zinc-400">
 							Follow at least
 							<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text font-bold text-transparent">
 								{follows.length}/10

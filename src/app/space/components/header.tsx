@@ -7,7 +7,7 @@ export function Header() {
 				type="button"
 				className="from-zinc-90 inline-flex h-11 items-center overflow-hidden border-b border-fuchsia-500 hover:bg-zinc-900"
 			>
-				<span className="px-2 text-sm font-semibold text-zinc-300">
+				<span className="px-2 text-base font-semibold text-zinc-300">
 					Following
 				</span>
 			</button>

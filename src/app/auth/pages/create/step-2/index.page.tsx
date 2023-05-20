@@ -43,7 +43,7 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-2xl font-semibold text-zinc-200">
+					<h1 className="text-xl font-semibold text-white">
 						Create your profile
 					</h1>
 				</div>
@@ -56,10 +56,10 @@ export function Page() {
 							type={"hidden"}
 							{...register("picture")}
 							value={image}
-							className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+							className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 						/>
 						<div className="flex flex-col gap-1">
-							<label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+							<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 								Avatar
 							</label>
 							<div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
@@ -74,7 +74,7 @@ export function Page() {
 							</div>
 						</div>
 						<div className="flex flex-col gap-1">
-							<label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+							<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 								Display Name *
 							</label>
 							<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
@@ -85,19 +85,19 @@ export function Page() {
 										minLength: 4,
 									})}
 									spellCheck={false}
-									className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+									className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
 							</div>
 						</div>
 						<div className="flex flex-col gap-1">
-							<label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+							<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 								About
 							</label>
 							<div className="relative h-20 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
 								<textarea
 									{...register("about")}
 									spellCheck={false}
-									className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+									className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
 							</div>
 						</div>

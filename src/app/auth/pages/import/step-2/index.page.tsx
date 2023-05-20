@@ -86,7 +86,7 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-2xl font-semibold">
+					<h1 className="text-xl font-semibold">
 						{loading ? "Creating..." : "Continue with"}
 					</h1>
 				</div>
@@ -111,10 +111,10 @@ export function Page() {
 									alt={pubkey}
 								/>
 								<div>
-									<h3 className="font-medium leading-none text-zinc-200">
+									<h3 className="font-medium leading-none text-white">
 										{data.display_name || data.name}
 									</h3>
-									<p className="text-sm text-zinc-400">
+									<p className="text-base text-zinc-400">
 										{data.nip05 || shortenKey(pubkey)}
 									</p>
 								</div>
