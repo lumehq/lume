@@ -19,29 +19,24 @@ export function NoteDefaultUser({
 	const { user } = useProfile(pubkey);
 
 	return (
-		<Popover className="relative flex items-center gap-2.5">
-			<Popover.Button className="h-9 w-9 shrink-0 overflow-hidden rounded-md bg-zinc-900">
+		<Popover className="relative flex items-start gap-3">
+			<Popover.Button className="h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
 				<Image
 					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
 						user?.picture ? user.picture : DEFAULT_AVATAR
 					}`}
 					alt={pubkey}
-					className="h-9 w-9 object-cover"
+					className="h-11 w-11 object-cover"
 				/>
 			</Popover.Button>
-			<div className="flex w-full flex-1 items-start justify-between">
-				<div className="flex flex-col gap-0.5">
-					<h5 className="text-base font-semibold leading-none">
-						{user?.display_name || user?.name || (
-							<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
-						)}
-					</h5>
-					<div className="flex items-baseline gap-1.5 text-base leading-none text-zinc-500">
-						<span>{user?.nip05 || shortenKey(pubkey)}</span>
-						<span>•</span>
-						<span>{dayjs().to(dayjs.unix(time), true)}</span>
-					</div>
-				</div>
+			<div className="flex flex-wrap items-baseline gap-1">
+				<h5 className="text-base font-semibold leading-none">
+					{user?.nip05 || user?.name || shortenKey(pubkey)}
+				</h5>
+				<span className="leading-none text-zinc-500">·</span>
+				<span className="leading-none text-zinc-500">
+					{dayjs().to(dayjs.unix(time), true)}
+				</span>
 			</div>
 			<Transition
 				as={Fragment}

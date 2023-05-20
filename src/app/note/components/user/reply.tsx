@@ -18,19 +18,19 @@ export default function NoteReplyUser({
 
 	return (
 		<div className="group flex items-start gap-2.5">
-			<div className="relative h-9 w-9 shrink-0 rounded-md">
+			<div className="relative h-11 w-11 shrink-0 rounded-md">
 				<Image
 					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
 						user?.picture ? user.picture : DEFAULT_AVATAR
 					}`}
 					alt={pubkey}
-					className="h-9 w-9 rounded-md object-cover"
+					className="h-11 w-11 rounded-md object-cover"
 				/>
 			</div>
 			<div className="flex w-full flex-1 items-start justify-between">
 				<div className="flex items-baseline gap-2 text-base">
 					<span className="font-semibold leading-none text-white group-hover:underline">
-						{user?.display_name || user?.name || shortenKey(pubkey)}
+						{user?.nip05 || user?.name || shortenKey(pubkey)}
 					</span>
 					<span className="leading-none text-zinc-500">·</span>
 					<span className="leading-none text-zinc-500">

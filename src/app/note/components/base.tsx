@@ -29,7 +29,7 @@ export function NoteBase({ event }: { event: any }) {
 				)}
 				<div className="flex flex-col">
 					<NoteDefaultUser pubkey={event.pubkey} time={event.created_at} />
-					<div className="mt-3 pl-[46px]">
+					<div className="-mt-5 pl-[48px]">
 						{event.kind === 1 && <Kind1 content={content} />}
 						{event.kind === 1063 && <Kind1063 metadata={event.tags} />}
 						<NoteMetadata id={event.event_id} eventPubkey={event.pubkey} />

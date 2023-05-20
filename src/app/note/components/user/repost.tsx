@@ -19,28 +19,26 @@ export function NoteRepostUser({
 	const { user } = useProfile(pubkey);
 
 	return (
-		<Popover className="relative flex items-center gap-2.5">
-			<Popover.Button className="h-9 w-9 shrink-0 overflow-hidden rounded-md bg-zinc-900">
+		<Popover className="relative flex items-start gap-3">
+			<Popover.Button className="h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
 				<Image
 					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
 						user?.picture ? user.picture : DEFAULT_AVATAR
 					}`}
 					alt={pubkey}
-					className="h-9 w-9 rounded-md object-cover"
+					className="h-11 w-11 rounded-md object-cover"
 				/>
 			</Popover.Button>
-			<div className="flex items-baseline gap-1.5 text-base">
-				<h5 className="font-semibold leading-tight group-hover:underline">
-					{user?.display_name || user?.name || (
-						<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
-					)}
+			<div className="flex flex-wrap items-baseline gap-1">
+				<h5 className="text-base font-semibold leading-none">
+					{user?.nip05 || user?.name || shortenKey(pubkey)}
 					<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
 						{" "}
 						reposted
 					</span>
 				</h5>
-				<span className="leading-tight text-zinc-500">·</span>
-				<span className="text-zinc-500">
+				<span className="leading-none text-zinc-500">·</span>
+				<span className="leading-none text-zinc-500">
 					{dayjs().to(dayjs.unix(time), true)}
 				</span>
 			</div>

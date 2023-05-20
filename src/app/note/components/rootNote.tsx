@@ -81,7 +81,7 @@ export const RootNote = memo(function RootNote({
 					pubkey={parseFallback.pubkey}
 					time={parseFallback.created_at}
 				/>
-				<div className="mt-3 pl-[46px]">
+				<div className="-mt-5 pl-[48px]">
 					<Kind1 content={contentFallback} />
 					<NoteMetadata
 						id={parseFallback.id}
@@ -101,7 +101,7 @@ export const RootNote = memo(function RootNote({
 			{data ? (
 				<>
 					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-					<div className="mt-3 pl-[46px]">
+					<div className="-mt-5 pl-[48px]">
 						{kind1 && <Kind1 content={kind1} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}
 						<NoteMetadata id={data.id} eventPubkey={data.pubkey} />
