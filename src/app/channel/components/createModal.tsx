@@ -92,7 +92,7 @@ export default function ChannelCreateModal() {
 					<PlusIcon width={12} height={12} className="text-zinc-500" />
 				</div>
 				<div>
-					<h5 className="text-[13px] font-semibold text-zinc-500 group-hover:text-zinc-400">
+					<h5 className="font-semibold text-zinc-400 group-hover:text-zinc-200">
 						Add a new channel
 					</h5>
 				</div>

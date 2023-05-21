@@ -45,7 +45,7 @@ export default function ChatsListSelfItem() {
 						/>
 					</div>
 					<div>
-						<h5 className="truncate font-medium text-zinc-400">
+						<h5 className="truncate font-medium text-zinc-200">
 							{profile?.nip05 || profile?.name || shortenKey(account.pubkey)}{" "}
 							<span className="text-zinc-600">(you)</span>
 						</h5>

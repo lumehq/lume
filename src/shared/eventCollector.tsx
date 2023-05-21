@@ -136,8 +136,8 @@ export default function EventCollector() {
 	);
 
 	return (
-		<div className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-400 hover:bg-zinc-900 hover:text-white">
-			<HeartBeatIcon width={14} height={14} />
+		<div className="inline-flex h-6 w-6 items-center justify-center rounded text-green-400 hover:bg-zinc-900 hover:text-white">
+			<HeartBeatIcon width={16} height={16} />
 		</div>
 	);
 }

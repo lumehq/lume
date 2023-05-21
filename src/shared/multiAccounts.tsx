@@ -18,7 +18,7 @@ export default function MultiAccounts() {
 	const { data: activeAccount }: any = useSWR("activeAccount", fetcher);
 
 	return (
-		<div className="flex shrink-0 w-[68px] h-full flex-col items-center justify-between border-r border-zinc-900 pb-4 pt-3">
+		<div className="flex shrink-0 w-[68px] h-full flex-col items-center justify-between border-r border-zinc-900 pb-4 pt-11">
 			<div className="flex flex-col items-center">
 				<div className="flex flex-col gap-2">
 					<>
@@ -31,7 +31,7 @@ export default function MultiAccounts() {
 					<div>
 						<button
 							type="button"
-							className="group relative flex h-10 w-10 shrink items-center justify-center rounded-lg bg-zinc-900 hover:bg-zinc-800"
+							className="group relative flex h-11 w-11 shrink items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800"
 						>
 							<BellIcon
 								width={16}

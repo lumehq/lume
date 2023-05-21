@@ -11,7 +11,7 @@ export default function ChannelsList() {
 	const { data, error }: any = useSWR("channels", fetcher);
 
 	return (
-		<div className="flex flex-col gap-px">
+		<div className="flex flex-col gap-1">
 			{!data || error ? (
 				<>
 					<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">

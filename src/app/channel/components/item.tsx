@@ -32,7 +32,7 @@ export default function ChannelsListItem({ data }: { data: any }) {
 				<span className="text-base text-white">#</span>
 			</div>
 			<div>
-				<h5 className="truncate font-medium text-zinc-400">{channel?.name}</h5>
+				<h5 className="truncate font-medium text-zinc-200">{channel?.name}</h5>
 			</div>
 		</a>
 	);

@@ -58,73 +58,76 @@ export function Page() {
 	}, [fetchNextPage, allRows.length, rowVirtualizer.getVirtualItems()]);
 
 	return (
-		<div
-			ref={parentRef}
-			className="scrollbar-hide flex h-full flex-col justify-between gap-1.5 overflow-y-auto"
-			style={{ contain: "strict" }}
-		>
-			<div className="pt-1.5">
-				{status === "loading" ? (
-					<div className="px-3 py-1.5">
-						<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
-							<NoteSkeleton />
-						</div>
-					</div>
-				) : status === "error" ? (
-					<div>{error.message}</div>
-				) : (
-					<div
-						className="relative w-full"
-						style={{
-							height: `${rowVirtualizer.getTotalSize()}px`,
-						}}
-					>
-						<div
-							className="absolute left-0 top-0 w-full"
-							style={{
-								transform: `translateY(${
-									itemsVirtualizer[0].start -
-									rowVirtualizer.options.scrollMargin
-								}px)`,
-							}}
-						>
-							{rowVirtualizer.getVirtualItems().map((virtualRow) => {
-								const note = allRows[virtualRow.index];
-								if (note) {
-									if (note.kind === 1) {
-										return (
-											<div
-												key={virtualRow.index}
-												data-index={virtualRow.index}
-												ref={rowVirtualizer.measureElement}
-											>
-												<NoteBase key={note.event_id} event={note} />
-											</div>
-										);
-									} else {
-										return (
-											<div
-												key={virtualRow.index}
-												data-index={virtualRow.index}
-												ref={rowVirtualizer.measureElement}
-											>
-												<NoteQuoteRepost key={note.event_id} event={note} />
-											</div>
-										);
-									}
-								}
-							})}
-						</div>
-					</div>
-				)}
-				<div>
-					{isFetching && !isFetchingNextPage ? (
+		<div className="h-full w-full flex flex-nowrap overflow-x-auto">
+			<div className="shrink-0 w-[420px] border-r border-zinc-900">
+				<div className="h-11 w-full inline-flex items-center justify-center border-b border-zinc-900">
+					<h3 className="font-semibold text-zinc-100">Following</h3>
+				</div>
+				<div
+					ref={parentRef}
+					className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 overflow-y-auto"
+					style={{ contain: "strict" }}
+				>
+					{status === "loading" ? (
 						<div className="px-3 py-1.5">
 							<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 								<NoteSkeleton />
 							</div>
 						</div>
-					) : null}
+					) : (
+						<div
+							className="relative w-full"
+							style={{
+								height: `${rowVirtualizer.getTotalSize()}px`,
+							}}
+						>
+							<div
+								className="absolute left-0 top-0 w-full"
+								style={{
+									transform: `translateY(${
+										itemsVirtualizer[0].start -
+										rowVirtualizer.options.scrollMargin
+									}px)`,
+								}}
+							>
+								{rowVirtualizer.getVirtualItems().map((virtualRow) => {
+									const note = allRows[virtualRow.index];
+									if (note) {
+										if (note.kind === 1) {
+											return (
+												<div
+													key={virtualRow.index}
+													data-index={virtualRow.index}
+													ref={rowVirtualizer.measureElement}
+												>
+													<NoteBase key={note.event_id} event={note} />
+												</div>
+											);
+										} else {
+											return (
+												<div
+													key={virtualRow.index}
+													data-index={virtualRow.index}
+													ref={rowVirtualizer.measureElement}
+												>
+													<NoteQuoteRepost key={note.event_id} event={note} />
+												</div>
+											);
+										}
+									}
+								})}
+							</div>
+						</div>
+					)}
+					<div>
+						{isFetching && !isFetchingNextPage && (
+							<div className="px-3 py-1.5">
+								<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+									<NoteSkeleton />
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

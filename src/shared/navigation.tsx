@@ -1,23 +1,19 @@
 import ChannelsList from "@app/channel/components/list";
 import ChatsList from "@app/chat/components/list";
-
-import ActiveLink from "@shared/activeLink";
-import { ComposerModal } from "@shared/composer/modal";
-import EventCollector from "@shared/eventCollector";
-
-import MyspaceIcon from "@icons/myspace";
+import { Disclosure } from "@headlessui/react";
 import NavArrowDownIcon from "@icons/navArrowDown";
 import ThreadsIcon from "@icons/threads";
 import WorldIcon from "@icons/world";
-
-import { Disclosure } from "@headlessui/react";
+import ActiveLink from "@shared/activeLink";
+import AppHeader from "@shared/appHeader";
+import { ComposerModal } from "@shared/composer/modal";
 
 export default function Navigation() {
 	return (
-		<div className="flex w-[232px] h-full flex-col gap-3 pt-1.5">
-			<div className="flex h-11 items-center justify-between px-3.5">
+		<div className="flex w-[232px] h-full flex-col gap-3 border-r border-zinc-900">
+			<AppHeader />
+			<div className="flex h-8 px-3.5">
 				<ComposerModal />
-				<EventCollector />
 			</div>
 			{/* Newsfeed */}
 			<div className="flex flex-col gap-0.5 px-1.5">
@@ -26,10 +22,10 @@ export default function Navigation() {
 						Feeds
 					</h3>
 				</div>
-				<div className="flex flex-col text-zinc-400">
+				<div className="flex flex-col gap-1">
 					<ActiveLink
 						href="/app/space"
-						className="flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:text-white"
+						className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-zinc-200 hover:text-white"
 						activeClassName="bg-zinc-900/50 hover:bg-zinc-900"
 					>
 						<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
@@ -39,7 +35,7 @@ export default function Navigation() {
 					</ActiveLink>
 					<ActiveLink
 						href="/app/threads"
-						className="flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:text-white"
+						className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-zinc-200 hover:text-white"
 						activeClassName=""
 					>
 						<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">

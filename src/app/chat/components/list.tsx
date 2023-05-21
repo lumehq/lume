@@ -16,7 +16,7 @@ export default function ChatsList() {
 	);
 
 	return (
-		<div className="flex flex-col gap-px">
+		<div className="flex flex-col gap-1">
 			<ChatsListSelfItem />
 			{!chats || error ? (
 				<>

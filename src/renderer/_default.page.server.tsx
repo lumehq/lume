@@ -36,7 +36,7 @@ export function render(pageContext: PageContextServer) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body class="cursor-default select-none overflow-hidden font-sans antialiased">
+      <body class="cursor-default select-none overflow-hidden font-sans antialiased bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-white">
         <div id="app">${dangerouslySkipEscape(pageHtml)}</div>
       </body>
     </html>`;

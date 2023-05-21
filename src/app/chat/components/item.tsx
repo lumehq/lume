@@ -44,7 +44,7 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
 						/>
 					</div>
 					<div>
-						<h5 className="truncate font-medium text-zinc-400 group-hover:text-white">
+						<h5 className="truncate font-medium text-zinc-200 group-hover:text-white">
 							{user.nip05 || user.name || shortenKey(pubkey)}
 						</h5>
 					</div>
