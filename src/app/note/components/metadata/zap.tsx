@@ -11,13 +11,8 @@ export default function NoteZap({ zaps }: { zaps: number }) {
 
 	return (
 		<button type="button" className="group inline-flex items-center gap-1.5">
-			<ZapIcon
-				width={16}
-				height={16}
-				className="text-zinc-400 group-hover:text-orange-400"
-			/>
 			<span className="text-base leading-none text-zinc-400 group-hover:text-white">
-				{compactNumber.format(count)} sats
+				{compactNumber.format(count)} sats zapped
 			</span>
 		</button>
 	);

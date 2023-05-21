@@ -5,6 +5,7 @@ import { RelayContext } from "@shared/relayProvider";
 
 import NoteZap from "@app/note/components/metadata/zap";
 import PlusIcon from "@shared/icons/plus";
+import ZapIcon from "@shared/icons/zap";
 import { Tooltip } from "@shared/tooltip";
 import { READONLY_RELAYS } from "@stores/constants";
 import { decode } from "light-bolt11-decoder";
@@ -66,10 +67,19 @@ export default function NoteMetadata({
 	});
 
 	return (
-		<div className="mt-4 flex h-12 items-center gap-4 border-t border-zinc-800/50">
-			<NoteReply id={id} replies={replies} />
-			<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
+		<div className="flex flex-col gap-2 mt-5">
 			<NoteZap zaps={zaps} />
+			<div className="inline-flex items-center gap-2 w-full h-10 border-t border-zinc-800">
+				<NoteReply id={id} replies={replies} />
+				<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
+				<button
+					type="button"
+					className="ml-auto inline-flex items-center gap-1 text-sm px-2 py-1 rounded bg-zinc-800 text-zinc-300 hover:text-orange-500 hover:bg-orange-100"
+				>
+					<ZapIcon className="w-4 h-4" />
+					Zap
+				</button>
+			</div>
 		</div>
 	);
 }

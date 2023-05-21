@@ -30,13 +30,13 @@ export function NoteRepostUser({
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
-				<h5 className="text-base font-semibold leading-none">
+				<h5 className="max-w-[10rem] text-base font-semibold leading-none truncate">
 					{user?.nip05 || user?.name || shortenKey(pubkey)}
-					<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
-						{" "}
-						reposted
-					</span>
 				</h5>
+				<span className="font-semibold leading-none text-fuchsia-500">
+					{" "}
+					reposted
+				</span>
 				<span className="leading-none text-zinc-500">·</span>
 				<span className="leading-none text-zinc-500">
 					{dayjs().to(dayjs.unix(time), true)}

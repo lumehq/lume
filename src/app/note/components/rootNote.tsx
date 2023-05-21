@@ -75,7 +75,7 @@ export const RootNote = memo(function RootNote({
 			<div
 				onClick={(e) => openNote(e)}
 				onKeyDown={(e) => openNote(e)}
-				className="flex flex-col px-3"
+				className="flex flex-col px-5"
 			>
 				<NoteDefaultUser
 					pubkey={parseFallback.pubkey}
@@ -96,7 +96,7 @@ export const RootNote = memo(function RootNote({
 		<div
 			onClick={(e) => openNote(e)}
 			onKeyDown={(e) => openNote(e)}
-			className="flex flex-col px-3"
+			className="flex flex-col px-5"
 		>
 			{data ? (
 				<>

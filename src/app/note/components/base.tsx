@@ -20,7 +20,7 @@ export function NoteBase({ event }: { event: any }) {
 
 	return (
 		<NoteWrapper href={href} className="h-min w-full px-3 py-1.5">
-			<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 pt-3 shadow-input shadow-black/20">
+			<div className="rounded-md bg-zinc-900 px-5 pt-5">
 				{event.parent_id &&
 				(event.parent_id !== event.event_id || checkParentID) ? (
 					<NoteParent id={event.parent_id} />

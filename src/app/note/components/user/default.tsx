@@ -30,7 +30,7 @@ export function NoteDefaultUser({
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
-				<h5 className="text-base font-semibold leading-none">
+				<h5 className="max-w-[15rem] text-base font-semibold leading-none truncate">
 					{user?.nip05 || user?.name || shortenKey(pubkey)}
 				</h5>
 				<span className="leading-none text-zinc-500">·</span>
