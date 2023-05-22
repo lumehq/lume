@@ -93,6 +93,12 @@ fn main() {
               sql: include_str!("../migrations/20230427081017_clean_up_account.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230521092300,
+              description: "create block",
+              sql: include_str!("../migrations/20230521092300_add_block_model.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

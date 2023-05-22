@@ -126,7 +126,7 @@ export default function ChannelCreateModal() {
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"
-												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-xl font-semibold leading-none text-transparent"
+												className="text-xl font-semibold leading-none text-white"
 											>
 												Create channel
 											</Dialog.Title>
@@ -142,7 +142,7 @@ export default function ChannelCreateModal() {
 												/>
 											</button>
 										</div>
-										<Dialog.Description className="leading-tight text-zinc-400">
+										<Dialog.Description className="leading-tight text-zinc-300">
 											Channels are freedom square, everyone can speech freely,
 											no one can stop you or deceive what to speech
 										</Dialog.Description>

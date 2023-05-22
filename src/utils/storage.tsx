@@ -122,6 +122,26 @@ export async function getNotes(time: number, limit: number, offset: number) {
 	return notes;
 }
 
+// get all notes by authors
+export async function getNotesByAuthor(
+	pubkey: string,
+	time: number,
+	limit: number,
+	offset: number,
+) {
+	const db = await connect();
+
+	const notes: any = { data: null, nextCursor: 0 };
+	const query: any = await db.select(
+		`SELECT * FROM notes WHERE created_at <= "${time}" AND pubkey == "${pubkey}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
+	);
+
+	notes["data"] = query;
+	notes["nextCursor"] = offset + limit;
+
+	return notes;
+}
+
 // get all long notes
 export async function getLongNotes(
 	time: number,
@@ -298,5 +318,13 @@ export async function updateItemInBlacklist(content: string, status: number) {
 	const db = await connect();
 	return await db.execute(
 		`UPDATE blacklist SET status = "${status}" WHERE content = "${content}";`,
+	);
+}
+
+// get all blocks
+export async function getBlocks(account_id: number) {
+	const db = await connect();
+	return await db.select(
+		`SELECT * FROM blocks WHERE account_id <= "${account_id}";`,
 	);
 }

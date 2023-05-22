@@ -53,7 +53,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 			{data ? (
 				<>
 					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-					<div className="mt-1 pl-[46px]">
+					<div className="-mt-5 pl-[49px]">
 						{kind1 && <Kind1 content={kind1} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}
 					</div>
