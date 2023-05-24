@@ -12,14 +12,12 @@ export const METADATA_SERVICE = "https://rbr.bio";
 export const READONLY_RELAYS = [
 	"wss://welcome.nostr.wine",
 	"wss://relay.nostr.band/all",
-	"wss://relay.damus.io",
 ];
 
 // write-only relay list
 export const WRITEONLY_RELAYS = [
 	"wss://nostr.mutinywallet.com",
 	"wss://relay.nostr.band",
-	"wss://relay.damus.io",
 ];
 
 // full-relay list
@@ -27,5 +25,4 @@ export const FULL_RELAYS = [
 	"wss://welcome.nostr.wine",
 	"wss://relay.nostr.band/all",
 	"wss://nostr.mutinywallet.com",
-	"wss://relay.damus.io",
 ];

@@ -328,3 +328,17 @@ export async function getBlocks(account_id: number) {
 		`SELECT * FROM blocks WHERE account_id <= "${account_id}";`,
 	);
 }
+
+// create block
+export async function createBlock(
+	account_id: number,
+	kind: number,
+	title: string,
+	content: any,
+) {
+	const db = await connect();
+	return await db.execute(
+		"INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);",
+		[account_id, kind, title, content],
+	);
+}
