@@ -1,10 +1,7 @@
 import { Image } from "@shared/image";
-
-import { DEFAULT_AVATAR, IMGPROXY_URL } from "@stores/constants";
-
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -20,9 +17,7 @@ export default function NoteReplyUser({
 		<div className="group flex items-start gap-2.5">
 			<div className="relative h-11 w-11 shrink-0 rounded-md">
 				<Image
-					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
-						user?.picture ? user.picture : DEFAULT_AVATAR
-					}`}
+					src={user?.picture || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-11 w-11 rounded-md object-cover"
 				/>

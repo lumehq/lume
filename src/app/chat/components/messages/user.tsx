@@ -1,10 +1,7 @@
 import { Image } from "@shared/image";
-
-import { DEFAULT_AVATAR, IMGPROXY_URL } from "@stores/constants";
-
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -31,9 +28,7 @@ export default function ChatMessageUser({
 				<>
 					<div className="relative h-9 w-9 shrink rounded-md">
 						<Image
-							src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
-								user?.picture ? user.picture : DEFAULT_AVATAR
-							}`}
+							src={user?.picture || DEFAULT_AVATAR}
 							alt={pubkey}
 							className="h-9 w-9 rounded-md object-cover"
 						/>

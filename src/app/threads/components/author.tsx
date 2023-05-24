@@ -1,5 +1,5 @@
 import { Image } from "@shared/image";
-import { DEFAULT_AVATAR, IMGPROXY_URL } from "@stores/constants";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
 import dayjs from "dayjs";
@@ -14,9 +14,7 @@ export function ThreadAuthor({
 		<div className="relative flex items-center gap-2.5">
 			<div className="h-9 w-9 shrink-0 overflow-hidden rounded-md bg-zinc-900">
 				<Image
-					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
-						user?.picture ? user.picture : DEFAULT_AVATAR
-					}`}
+					src={user?.picture || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-9 w-9 object-cover"
 				/>

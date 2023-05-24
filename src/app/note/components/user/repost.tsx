@@ -1,11 +1,8 @@
+import { Popover, Transition } from "@headlessui/react";
 import { Image } from "@shared/image";
-
-import { DEFAULT_AVATAR, IMGPROXY_URL } from "@stores/constants";
-
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-
-import { Popover, Transition } from "@headlessui/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Fragment } from "react";
@@ -22,9 +19,7 @@ export function NoteRepostUser({
 		<Popover className="relative flex items-start gap-3">
 			<Popover.Button className="h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
 				<Image
-					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
-						user?.picture ? user.picture : DEFAULT_AVATAR
-					}`}
+					src={user?.picture || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-11 w-11 rounded-md object-cover"
 				/>
@@ -59,9 +54,7 @@ export function NoteRepostUser({
 					>
 						<div className="flex items-start gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
-								src={`${IMGPROXY_URL}/rs:fit:200:200/plain/${
-									user?.picture ? user.picture : DEFAULT_AVATAR
-								}`}
+								src={user?.picture || DEFAULT_AVATAR}
 								alt={pubkey}
 								className="h-14 w-14 shrink-0 rounded-lg object-cover"
 							/>

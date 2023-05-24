@@ -60,29 +60,6 @@ export function Page() {
 					<h1 className="text-xl font-semibold text-white">Import your key</h1>
 				</div>
 				<div className="flex flex-col gap-4">
-					<div>
-						<button
-							type="button"
-							className="inline-flex w-full transform items-center justify-center gap-1.5 rounded-lg bg-zinc-900 ring-1 ring-zinc-800 px-3.5 py-2.5 font-medium text-zinc-400 active:translate-y-1"
-						>
-							<div className="inline-flex items-center rounded-md bg-zinc-400/10 px-2 py-0.5 text-base font-medium ring-1 ring-inset ring-zinc-400/20">
-								<span className="bg-gradient-to-r from-fuchsia-300 via-orange-100 to-amber-300 bg-clip-text text-transparent">
-									Coming soon
-								</span>
-							</div>
-							<span>Continue with Nostr Connect</span>
-						</button>
-					</div>
-					<div className="relative">
-						<div className="absolute inset-0 flex items-center">
-							<div className="w-full border-t border-zinc-800" />
-						</div>
-						<div className="relative flex justify-center">
-							<span className="bg-zinc-950 px-2 text-base text-zinc-500">
-								or
-							</span>
-						</div>
-					</div>
 					<form
 						onSubmit={handleSubmit(onSubmit)}
 						className="flex flex-col gap-3"

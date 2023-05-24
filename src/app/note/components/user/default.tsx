@@ -1,11 +1,8 @@
+import { Popover, Transition } from "@headlessui/react";
 import { Image } from "@shared/image";
-
-import { DEFAULT_AVATAR, IMGPROXY_URL } from "@stores/constants";
-
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-
-import { Popover, Transition } from "@headlessui/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Fragment } from "react";
@@ -22,15 +19,13 @@ export function NoteDefaultUser({
 		<Popover className="relative flex items-start gap-3">
 			<Popover.Button className="h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
 				<Image
-					src={`${IMGPROXY_URL}/rs:fit:100:100/plain/${
-						user?.picture ? user.picture : DEFAULT_AVATAR
-					}`}
+					src={user?.picture || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-11 w-11 object-cover"
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
-				<h5 className="max-w-[15rem] text-base font-semibold leading-none truncate">
+				<h5 className="max-w-[10rem] text-base font-semibold leading-none truncate">
 					{user?.nip05 || user?.name || shortenKey(pubkey)}
 				</h5>
 				<span className="leading-none text-zinc-500">·</span>
@@ -55,9 +50,7 @@ export function NoteDefaultUser({
 					>
 						<div className="flex items-start gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
-								src={`${IMGPROXY_URL}/rs:fit:200:200/plain/${
-									user?.picture ? user.picture : DEFAULT_AVATAR
-								}`}
+								src={user?.picture || DEFAULT_AVATAR}
 								alt={pubkey}
 								className="h-14 w-14 shrink-0 rounded-lg object-cover"
 							/>
