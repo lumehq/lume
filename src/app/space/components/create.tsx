@@ -1,24 +1,27 @@
+import { BlockImageUploader } from "./imageUploader";
 import { Dialog, Transition } from "@headlessui/react";
 import CancelIcon from "@icons/cancel";
 import PlusIcon from "@icons/plus";
+import { Image } from "@shared/image";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-import { createBlock } from "@utils/storage";
-import { Fragment, useState } from "react";
+import { createBlock, getPlebs } from "@utils/storage";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
+
+const fetcher = () => getPlebs();
 
 export function CreateBlockModal() {
-	const {
-		register,
-		handleSubmit,
-		reset,
-		setValue,
-		formState: { isDirty, isValid },
-	} = useForm();
+	const { account } = useActiveAccount();
+	const { register, handleSubmit, reset, watch, setValue } = useForm();
+	const { data: plebs } = useSWR("plebs", fetcher);
 
+	const [image, setImage] = useState(DEFAULT_AVATAR);
 	const [isOpen, setIsOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	const { account } = useActiveAccount();
+	const kind = watch("kind");
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -40,6 +43,10 @@ export function CreateBlockModal() {
 			setLoading(false);
 		});
 	};
+
+	useEffect(() => {
+		setValue("content", image);
+	}, [setValue, image]);
 
 	return (
 		<>
@@ -116,7 +123,7 @@ export function CreateBlockModal() {
 											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 												Type *
 											</label>
-											<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
+											<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[6px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
 												<input
 													type={"text"}
 													{...register("kind", {
@@ -129,9 +136,9 @@ export function CreateBlockModal() {
 										</div>
 										<div className="flex flex-col gap-1">
 											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
-												Block Title *
+												Title *
 											</label>
-											<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
+											<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[6px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
 												<input
 													type={"text"}
 													{...register("title", {
@@ -147,15 +154,28 @@ export function CreateBlockModal() {
 											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
 												Content *
 											</label>
-											<div className="relative h-20 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
-												<textarea
-													{...register("content", {
-														required: true,
-													})}
-													spellCheck={false}
-													className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
-												/>
-											</div>
+											{kind === "1" ? (
+												<div className="relative h-20 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[6px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
+													<textarea
+														{...register("content", {
+															required: true,
+														})}
+														spellCheck={false}
+														className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+													/>
+												</div>
+											) : (
+												<div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
+													<Image
+														src={image}
+														alt="block featured image"
+														className="relative z-10 h-11 w-11 rounded-md"
+													/>
+													<div className="absolute bottom-3 right-3 z-10">
+														<BlockImageUploader valueState={setImage} />
+													</div>
+												</div>
+											)}
 										</div>
 										<div>
 											<button

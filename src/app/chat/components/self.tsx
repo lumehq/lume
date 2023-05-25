@@ -44,11 +44,11 @@ export default function ChatsListSelfItem() {
 							className="h-5 w-5 rounded bg-white object-cover"
 						/>
 					</div>
-					<div>
-						<h5 className="truncate font-medium text-zinc-200">
-							{profile?.nip05 || profile?.name || shortenKey(account.pubkey)}{" "}
-							<span className="text-zinc-600">(you)</span>
+					<div className="inline-flex items-baseline">
+						<h5 className="max-w-[9rem] truncate font-medium text-zinc-200">
+							{profile?.nip05 || profile?.name || shortenKey(account.pubkey)}
 						</h5>
+						<span className="text-zinc-600">(you)</span>
 					</div>
 				</a>
 			)}
