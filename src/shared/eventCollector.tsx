@@ -44,7 +44,7 @@ export default function EventCollector() {
 						since: dateToUnix(now.current),
 					},
 					{
-						kinds: [0, 3],
+						kinds: [3],
 						authors: [key.pubkey],
 					},
 					{
@@ -60,10 +60,6 @@ export default function EventCollector() {
 				READONLY_RELAYS,
 				(event: any) => {
 					switch (event.kind) {
-						// metadata
-						case 0:
-							updateAccount("metadata", event.content, event.pubkey);
-							break;
 						// short text note
 						case 1: {
 							const parentID = getParentID(event.tags, event.id);
@@ -82,15 +78,21 @@ export default function EventCollector() {
 							break;
 						}
 						// contacts
-						case 3:
+						case 3: {
+							const follows = nip02ToArray(event.tags);
 							// update account's folllows with NIP-02 tag list
-							updateAccount("follows", event.tags, event.pubkey);
+							updateAccount("follows", follows, event.pubkey);
 							break;
+						}
 						// chat
 						case 4:
-							if (event.pubkey !== key.pubkey) {
-								createChat(key.id, event.pubkey, event.created_at);
-							}
+							createChat(
+								event.id,
+								key.pubkey,
+								event.pubkey,
+								event.content,
+								event.created_at,
+							);
 							break;
 						// repost
 						case 6:

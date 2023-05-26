@@ -11,7 +11,7 @@ import useSWRSubscription from "swr/subscription";
 const fetcher = async ([, id]) => {
 	const result = await getChannel(id);
 	if (result) {
-		return JSON.parse(result.metadata);
+		return result;
 	} else {
 		return null;
 	}

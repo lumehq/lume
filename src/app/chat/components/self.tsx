@@ -15,7 +15,6 @@ export default function ChatsListSelfItem() {
 	const pagePubkey = searchParams.pubkey;
 
 	const { account, isLoading, isError } = useActiveAccount();
-	const profile = account ? JSON.parse(account.metadata) : null;
 
 	return (
 		<>
@@ -39,14 +38,14 @@ export default function ChatsListSelfItem() {
 				>
 					<div className="relative h-5 w-5 shrink-0 rounded">
 						<Image
-							src={profile?.picture || DEFAULT_AVATAR}
+							src={account?.picture || DEFAULT_AVATAR}
 							alt={account.pubkey}
 							className="h-5 w-5 rounded bg-white object-cover"
 						/>
 					</div>
 					<div className="inline-flex items-baseline">
 						<h5 className="max-w-[9rem] truncate font-medium text-zinc-200">
-							{profile?.nip05 || profile?.name || shortenKey(account.pubkey)}
+							{account?.nip05 || account?.name || shortenKey(account.pubkey)}
 						</h5>
 						<span className="text-zinc-600">(you)</span>
 					</div>

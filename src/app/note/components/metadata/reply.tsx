@@ -10,7 +10,7 @@ import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { compactNumber } from "@utils/number";
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 
 export default function NoteReply({
@@ -24,7 +24,6 @@ export default function NoteReply({
 	const [value, setValue] = useState("");
 
 	const { account, isLoading, isError } = useActiveAccount();
-	const profile = account ? JSON.parse(account.metadata) : null;
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -44,7 +43,7 @@ export default function NoteReply({
 				tags: [["e", id]],
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 
 			// publish event
 			pool.publish(event, WRITEONLY_RELAYS);
@@ -106,7 +105,7 @@ export default function NoteReply({
 									<div>
 										<div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
 											<Image
-												src={profile?.picture}
+												src={account?.picture}
 												alt="user's avatar"
 												className="h-11 w-11 rounded-md object-cover"
 											/>

@@ -9,7 +9,7 @@ import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
 import { useAtom } from "jotai";
 import { useResetAtom } from "jotai/utils";
-import { getEventHash, nip04, signEvent } from "nostr-tools";
+import { getEventHash, getSignature, nip04 } from "nostr-tools";
 import { useCallback, useContext } from "react";
 
 export default function ChatMessageForm({
@@ -40,7 +40,7 @@ export default function ChatMessageForm({
 						tags: [["p", receiverPubkey]],
 					};
 					event.id = getEventHash(event);
-					event.sig = signEvent(event, account.privkey);
+					event.sig = getSignature(event, account.privkey);
 					// publish note
 					pool.publish(event, WRITEONLY_RELAYS);
 					// reset state

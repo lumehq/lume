@@ -1,23 +1,15 @@
-import { getActiveAccount } from "@utils/storage";
-
-import useSWR from "swr";
+import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { navigate } from "vite-plugin-ssr/client/router";
 
-const fetcher = () => getActiveAccount();
-
 export function Page() {
-	const { data, isLoading } = useSWR("account", fetcher, {
-		revalidateIfStale: false,
-		revalidateOnFocus: false,
-		revalidateOnReconnect: false,
-	});
+	const { account, isLoading } = useActiveAccount();
 
-	if (!isLoading && !data) {
+	if (!isLoading && !account) {
 		navigate("/app/auth", { overwriteLastHistoryEntry: true });
 	}
 
-	if (!isLoading && data) {
-		navigate("/app/inital-data", { overwriteLastHistoryEntry: true });
+	if (!isLoading && account) {
+		navigate("/app/prefetch", { overwriteLastHistoryEntry: true });
 	}
 
 	return (

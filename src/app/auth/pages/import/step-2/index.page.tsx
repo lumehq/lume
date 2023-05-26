@@ -1,85 +1,55 @@
-import { Image } from "@shared/image";
+import { User } from "@app/auth/components/user";
 import { RelayContext } from "@shared/relayProvider";
-
-import { DEFAULT_AVATAR, READONLY_RELAYS } from "@stores/constants";
-import { onboardingAtom } from "@stores/onboarding";
-
-import { shortenKey } from "@utils/shortenKey";
-import { createAccount, createPleb } from "@utils/storage";
-
-import { useAtom } from "jotai";
-import { getPublicKey } from "nostr-tools";
-import { useContext, useMemo, useState } from "react";
+import { READONLY_RELAYS } from "@stores/constants";
+import { useActiveAccount } from "@utils/hooks/useActiveAccount";
+import { updateAccount } from "@utils/storage";
+import { nip02ToArray } from "@utils/transform";
+import { useContext, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
 
+	const { account } = useActiveAccount();
+
 	const [loading, setLoading] = useState(false);
-	const [onboarding, setOnboarding] = useAtom(onboardingAtom);
-	const pubkey = useMemo(
-		() => (onboarding.privkey ? getPublicKey(onboarding.privkey) : ""),
-		[onboarding.privkey],
-	);
+	const [follows, setFollows] = useState([]);
 
-	const { data, error } = useSWRSubscription(
-		pubkey ? pubkey : null,
-		(key, { next }) => {
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						kinds: [0, 3],
-						authors: [key],
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					switch (event.kind) {
-						case 0:
-							// update state
-							next(null, JSON.parse(event.content));
-							// create account
-							setOnboarding((prev) => ({ ...prev, metadata: event.content }));
-							break;
-						case 3:
-							setOnboarding((prev) => ({ ...prev, follows: event.tags }));
-							break;
-						default:
-							break;
-					}
+	useSWRSubscription(account ? account.pubkey : null, (key: string) => {
+		const unsubscribe = pool.subscribe(
+			[
+				{
+					kinds: [3],
+					authors: [key],
 				},
-			);
+			],
+			READONLY_RELAYS,
+			(event: any) => {
+				setFollows(event.tags);
+			},
+		);
 
-			return () => {
-				unsubscribe();
-			};
-		},
-	);
+		return () => {
+			unsubscribe();
+		};
+	});
 
 	const submit = () => {
 		// show loading indicator
 		setLoading(true);
 
-		const follows = onboarding.follows.concat([["p", pubkey]]);
-		// insert to database
-		createAccount(pubkey, onboarding.privkey, onboarding.metadata, follows, 1)
-			.then((res) => {
-				if (res) {
-					for (const tag of onboarding.follows) {
-						fetch(`https://rbr.bio/${tag[1]}/metadata.json`)
-							.then((data) => data.json())
-							.then((data) => createPleb(tag[1], data ?? ""));
-					}
-					setTimeout(
-						() => navigate("/", { overwriteLastHistoryEntry: true }),
-						2000,
-					);
-				} else {
-					console.error();
-				}
-			})
-			.catch(console.error);
+		// follows as list
+		const followsList = nip02ToArray(follows);
+
+		// update account follows
+		updateAccount("follows", followsList, account.pubkey);
+
+		// redirect to home
+		setTimeout(
+			() => navigate("/app/prefetch", { overwriteLastHistoryEntry: true }),
+			2000,
+		);
 	};
 
 	return (
@@ -91,8 +61,7 @@ export function Page() {
 					</h1>
 				</div>
 				<div className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-4">
-					{error && <div>Failed to load profile</div>}
-					{!data ? (
+					{!account ? (
 						<div className="w-full">
 							<div className="flex items-center gap-2">
 								<div className="h-11 w-11 animate-pulse rounded-lg bg-zinc-800" />
@@ -104,21 +73,7 @@ export function Page() {
 						</div>
 					) : (
 						<div className="flex flex-col gap-3">
-							<div className="flex items-center gap-2">
-								<Image
-									className="relative inline-flex h-11 w-11 rounded-lg ring-2 ring-zinc-900"
-									src={data.picture || DEFAULT_AVATAR}
-									alt={pubkey}
-								/>
-								<div>
-									<h3 className="font-medium leading-none text-white">
-										{data.display_name || data.name}
-									</h3>
-									<p className="text-base text-zinc-400">
-										{data.nip05 || shortenKey(pubkey)}
-									</p>
-								</div>
-							</div>
+							<User pubkey={account.pubkey} />
 							<button
 								type="button"
 								onClick={() => submit()}

@@ -1,11 +1,9 @@
 import { Image } from "@shared/image";
-
 import { DEFAULT_AVATAR } from "@stores/constants";
-
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
 
-export default function User({ pubkey }: { pubkey: string }) {
+export function User({ pubkey }: { pubkey: string }) {
 	const { user } = useProfile(pubkey);
 
 	return (
@@ -15,7 +13,6 @@ export default function User({ pubkey }: { pubkey: string }) {
 					src={user?.picture || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-11 w-11 rounded-md object-cover"
-					loading="lazy"
 					decoding="async"
 				/>
 			</div>

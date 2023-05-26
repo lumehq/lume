@@ -1,23 +1,18 @@
-import { RelayContext } from "@shared/relayProvider";
-
 import LumeIcon from "@icons/lume";
-
+import { RelayContext } from "@shared/relayProvider";
 import { READONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix, getHourAgo } from "@utils/date";
+import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import {
 	addToBlacklist,
-	countTotalLongNotes,
 	countTotalNotes,
 	createChat,
 	createNote,
-	getActiveAccount,
 	getLastLogin,
-	updateLastLogin,
 } from "@utils/storage";
-import { getParentID, nip02ToArray } from "@utils/transform";
-
-import { useContext, useEffect, useRef } from "react";
+import { getParentID } from "@utils/transform";
+import { useCallback, useContext, useRef } from "react";
+import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 function isJSON(str: string) {
@@ -29,79 +24,68 @@ function isJSON(str: string) {
 	return true;
 }
 
+let lastLogin: string;
+let totalNotes: number;
+
+if (typeof window !== "undefined") {
+	lastLogin = await getLastLogin();
+	totalNotes = await countTotalNotes();
+}
+
 export function Page() {
 	const pool: any = useContext(RelayContext);
+
 	const now = useRef(new Date());
+	const eose = useRef(0);
 
-	useEffect(() => {
-		let unsubscribe: () => void;
-		let timeout: any;
+	const { account, isLoading, isError } = useActiveAccount();
 
-		const fetchInitalData = async () => {
-			const account = await getActiveAccount();
-			const lastLogin = await getLastLogin();
-			const notes = await countTotalNotes();
-			const longNotes = await countTotalLongNotes();
+	const getQuery = useCallback(() => {
+		const query = [];
+		const follows = JSON.parse(account.follows);
 
-			const follows = nip02ToArray(JSON.parse(account.follows));
-			const query = [];
+		let queryNoteSince: number;
+		let querySince: number;
 
-			let sinceNotes: number;
-			let sinceLongNotes: number;
-
-			if (notes === 0) {
-				sinceNotes = dateToUnix(getHourAgo(48, now.current));
+		if (totalNotes === 0) {
+			queryNoteSince = dateToUnix(getHourAgo(48, now.current));
+		} else {
+			if (parseInt(lastLogin) > 0) {
+				queryNoteSince = parseInt(lastLogin);
 			} else {
-				if (parseInt(lastLogin) > 0) {
-					sinceNotes = parseInt(lastLogin);
-				} else {
-					sinceNotes = dateToUnix(getHourAgo(48, now.current));
-				}
+				queryNoteSince = dateToUnix(getHourAgo(48, now.current));
 			}
+		}
 
-			if (longNotes === 0) {
-				sinceLongNotes = 0;
-			} else {
-				if (parseInt(lastLogin) > 0) {
-					sinceLongNotes = parseInt(lastLogin);
-				} else {
-					sinceLongNotes = 0;
-				}
-			}
+		// kind 1 (notes) query
+		query.push({
+			kinds: [1, 6, 1063],
+			authors: follows,
+			since: queryNoteSince,
+		});
 
-			// kind 1 (notes) query
-			query.push({
-				kinds: [1, 6, 1063],
-				authors: follows,
-				since: sinceNotes,
-				until: dateToUnix(now.current),
-			});
+		// kind 4 (chats) query
+		query.push({
+			kinds: [4],
+			"#p": [account.pubkey],
+			since: querySince,
+		});
 
-			// kind 4 (chats) query
-			query.push({
-				kinds: [4],
-				"#p": [account.pubkey],
-				since: 0,
-				until: dateToUnix(now.current),
-			});
+		// kind 43, 43 (mute user, hide message) query
+		query.push({
+			authors: [account.pubkey],
+			kinds: [43, 44],
+			since: querySince,
+		});
 
-			// kind 43, 43 (mute user, hide message) query
-			query.push({
-				authors: [account.pubkey],
-				kinds: [43, 44],
-				since: 0,
-				until: dateToUnix(now.current),
-			});
+		return query;
+	}, [account.follows]);
 
-			// kind 30023 (long post) query
-			query.push({
-				kinds: [30023],
-				since: sinceLongNotes,
-				until: dateToUnix(now.current),
-			});
-
-			// subscribe relays
-			unsubscribe = pool.subscribe(
+	useSWRSubscription(
+		!isLoading && !isError && account ? "prefetch" : null,
+		() => {
+			const query = getQuery();
+			const unsubscribe = pool.subscribe(
 				query,
 				READONLY_RELAYS,
 				(event: any) => {
@@ -124,9 +108,13 @@ export function Page() {
 						}
 						// chat
 						case 4:
-							if (event.pubkey !== account.pubkey) {
-								createChat(account.id, event.pubkey, event.created_at);
-							}
+							createChat(
+								event.id,
+								account.pubkey,
+								event.pubkey,
+								event.content,
+								event.created_at,
+							);
 							break;
 						// repost
 						case 6:
@@ -165,47 +153,24 @@ export function Page() {
 								"",
 							);
 							break;
-						// long post
-						case 30023: {
-							// insert event to local database
-							const verifyMetadata = isJSON(event.tags);
-							if (verifyMetadata) {
-								createNote(
-									event.id,
-									account.id,
-									event.pubkey,
-									event.kind,
-									event.tags,
-									event.content,
-									event.created_at,
-									"",
-								);
-							}
-							break;
-						}
 						default:
 							break;
 					}
 				},
 				undefined,
 				() => {
-					updateLastLogin(dateToUnix(now.current));
-					timeout = setTimeout(() => {
+					eose.current += 1;
+					if (eose.current === READONLY_RELAYS.length) {
 						navigate("/app/space", { overwriteLastHistoryEntry: true });
-					}, 5000);
+					}
 				},
 			);
-		};
 
-		fetchInitalData().catch(console.error);
-
-		return () => {
-			if (unsubscribe) {
+			return () => {
 				unsubscribe();
-			}
-			clearTimeout(timeout);
-		};
-	}, [pool]);
+			};
+		},
+	);
 
 	return (
 		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">

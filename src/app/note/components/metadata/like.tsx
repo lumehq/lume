@@ -7,7 +7,7 @@ import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 
 export default function NoteLike({
@@ -35,7 +35,7 @@ export default function NoteLike({
 				pubkey: account.pubkey,
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 			// publish event to all relays
 			pool.publish(event, WRITEONLY_RELAYS);
 			// update state

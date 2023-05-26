@@ -1,3 +1,4 @@
+import { nip19 } from "nostr-tools";
 import Database from "tauri-plugin-sql-api";
 
 let db: null | Database = null;
@@ -15,10 +16,7 @@ export async function connect(): Promise<Database> {
 // get active account
 export async function getActiveAccount() {
 	const db = await connect();
-	// #TODO: check is_active == true
-	const result = await db.select(
-		"SELECT * FROM accounts WHERE is_active = 1 LIMIT 1;",
-	);
+	const result = await db.select("SELECT * FROM accounts WHERE is_active = 1;");
 	return result[0];
 }
 
@@ -32,16 +30,16 @@ export async function getAccounts() {
 
 // create account
 export async function createAccount(
+	npub: string,
 	pubkey: string,
 	privkey: string,
-	metadata: string,
 	follows?: string[][],
 	is_active?: number,
 ) {
 	const db = await connect();
 	return await db.execute(
-		"INSERT OR IGNORE INTO accounts (pubkey, privkey, metadata, follows, is_active) VALUES (?, ?, ?, ?, ?);",
-		[pubkey, privkey, metadata, follows || "", is_active || 0],
+		"INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, follows, is_active) VALUES (?, ?, ?, ?, ?);",
+		[npub, pubkey, privkey, follows || "", is_active || 0],
 	);
 }
 
@@ -65,20 +63,47 @@ export async function getPlebs() {
 }
 
 // get pleb by pubkey
-export async function getPleb(pubkey: string) {
+export async function getPleb(npub: string) {
 	const db = await connect();
-	const result = await db.select(
-		`SELECT * FROM plebs WHERE pubkey = "${pubkey}"`,
-	);
-	return result[0];
+	const result = await db.select(`SELECT * FROM plebs WHERE npub = "${npub}";`);
+
+	if (result) {
+		return result[0];
+	} else {
+		return null;
+	}
 }
 
 // create pleb
-export async function createPleb(pubkey: string, metadata: string) {
+export async function createPleb(key: string, json: any) {
 	const db = await connect();
+	const data = JSON.parse(json.content);
+
+	let npub: string;
+
+	if (key.substring(0, 4) === "npub") {
+		npub = key;
+	} else {
+		npub = nip19.npubEncode(key);
+	}
+
 	return await db.execute(
-		"INSERT OR IGNORE INTO plebs (pubkey, metadata) VALUES (?, ?);",
-		[pubkey, metadata],
+		"INSERT OR REPLACE INTO plebs (npub, display_name, name, username, about, bio, website, picture, banner, nip05, lud06, lud16, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+		[
+			npub,
+			data.display_name || data.displayName,
+			data.name,
+			data.username,
+			data.about,
+			data.bio,
+			data.website,
+			data.picture || data.image,
+			data.banner,
+			data.nip05,
+			data.lud06,
+			data.lud16,
+			data.created_at,
+		],
 	);
 }
 
@@ -239,30 +264,34 @@ export async function createChannel(
 // update channel metadata
 export async function updateChannelMetadata(event_id: string, value: string) {
 	const db = await connect();
+	const data = JSON.parse(value);
+
 	return await db.execute(
-		"UPDATE channels SET metadata = ? WHERE event_id = ?;",
-		[value, event_id],
+		"UPDATE channels SET name = ?, picture = ?, about = ? WHERE event_id = ?;",
+		[data.name, data.picture, data.about, event_id],
 	);
 }
 
 // get all chats
-export async function getChats(account_id: number) {
+export async function getChatsByPubkey(pubkey: string) {
 	const db = await connect();
 	return await db.select(
-		`SELECT * FROM chats WHERE account_id <= "${account_id}" ORDER BY created_at DESC;`,
+		`SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${pubkey}" ORDER BY created_at DESC;`,
 	);
 }
 
 // create chat
 export async function createChat(
-	account_id: number,
-	pubkey: string,
+	event_id: string,
+	receiver_pubkey: string,
+	sender_pubkey: string,
+	content: string,
 	created_at: number,
 ) {
 	const db = await connect();
 	return await db.execute(
-		"INSERT OR IGNORE INTO chats (account_id, pubkey, created_at) VALUES (?, ?, ?);",
-		[account_id, pubkey, created_at],
+		"INSERT OR IGNORE INTO chats (event_id, receiver_pubkey, sender_pubkey, content, created_at) VALUES (?, ?, ?, ?, ?);",
+		[event_id, receiver_pubkey, sender_pubkey, content, created_at],
 	);
 }
 

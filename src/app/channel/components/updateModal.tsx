@@ -12,7 +12,7 @@ import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { getChannel } from "@utils/storage";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -61,7 +61,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
 				tags: [["e", id]],
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 
 			// publish channel
 			pool.publish(event, WRITEONLY_RELAYS);

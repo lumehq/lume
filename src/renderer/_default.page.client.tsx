@@ -1,10 +1,9 @@
-import { StrictMode } from "react";
-import { Root, createRoot, hydrateRoot } from "react-dom/client";
-import "vidstack/styles/defaults.css";
-
 import "./index.css";
 import { Shell } from "./shell";
 import { PageContextClient } from "./types";
+import { StrictMode } from "react";
+import { Root, createRoot, hydrateRoot } from "react-dom/client";
+import "vidstack/styles/defaults.css";
 
 export const clientRouting = true;
 export const hydrationCanBeAborted = true;

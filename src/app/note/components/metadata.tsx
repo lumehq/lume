@@ -1,7 +1,6 @@
 import NoteReply from "@app/note/components/metadata/reply";
 import NoteRepost from "@app/note/components/metadata/repost";
 import NoteZap from "@app/note/components/metadata/zap";
-import ZapIcon from "@shared/icons/zap";
 import { RelayContext } from "@shared/relayProvider";
 import { READONLY_RELAYS } from "@stores/constants";
 import { decode } from "light-bolt11-decoder";

@@ -12,7 +12,7 @@ import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { useAtom } from "jotai";
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useState } from "react";
 
 export default function MessageMuteButton({ pubkey }: { pubkey: string }) {
@@ -40,7 +40,7 @@ export default function MessageMuteButton({ pubkey }: { pubkey: string }) {
 				tags: [["p", pubkey]],
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 
 			// publish note
 			pool.publish(event, WRITEONLY_RELAYS);

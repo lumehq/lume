@@ -38,14 +38,14 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
 				>
 					<div className="relative h-5 w-5 shrink-0 rounded">
 						<Image
-							src={user.picture || DEFAULT_AVATAR}
+							src={user?.picture || DEFAULT_AVATAR}
 							alt={pubkey}
 							className="h-5 w-5 rounded bg-white object-cover"
 						/>
 					</div>
 					<div>
 						<h5 className="max-w-[9rem] truncate font-medium text-zinc-200 group-hover:text-white">
-							{user.nip05 || user.name || shortenKey(pubkey)}
+							{user?.nip05 || user.name || shortenKey(pubkey)}
 						</h5>
 					</div>
 				</a>

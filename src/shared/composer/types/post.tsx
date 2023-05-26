@@ -6,7 +6,7 @@ import { WRITEONLY_RELAYS } from "@stores/constants";
 
 import { dateToUnix } from "@utils/date";
 
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Node, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
@@ -91,7 +91,7 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 			tags: [],
 		};
 		event.id = getEventHash(event);
-		event.sig = signEvent(event, privkey);
+		event.sig = getSignature(event, privkey);
 
 		// publish note
 		pool.publish(event, WRITEONLY_RELAYS);

@@ -1,15 +1,16 @@
 import { Image } from "@shared/image";
 
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useProfile } from "@utils/hooks/useProfile";
 
-export default function ActiveAccount({ user }: { user: any }) {
-	const userData = JSON.parse(user.metadata);
+export default function ActiveAccount({ data }: { data: any }) {
+	const { user } = useProfile(data.npub);
 
 	return (
 		<button type="button" className="relative h-11 w-11 overflow-hidden">
 			<Image
-				src={userData.picture || DEFAULT_AVATAR}
-				alt="user's avatar"
+				src={user?.picture || DEFAULT_AVATAR}
+				alt={data.npub}
 				className="h-11 w-11 rounded-md object-cover"
 			/>
 		</button>

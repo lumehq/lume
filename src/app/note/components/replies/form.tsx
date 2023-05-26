@@ -6,15 +6,14 @@ import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
 export default function NoteReplyForm({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
-	const { account, isLoading, isError } = useActiveAccount();
 
+	const { account, isLoading, isError } = useActiveAccount();
 	const [value, setValue] = useState("");
-	const profile = account ? JSON.parse(account.metadata) : null;
 
 	const submitEvent = () => {
 		if (!isLoading && !isError && account) {
@@ -26,7 +25,7 @@ export default function NoteReplyForm({ id }: { id: string }) {
 				tags: [["e", id]],
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 
 			// publish note
 			pool.publish(event, WRITEONLY_RELAYS);
@@ -42,7 +41,7 @@ export default function NoteReplyForm({ id }: { id: string }) {
 			<div>
 				<div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md">
 					<Image
-						src={profile?.picture}
+						src={account?.picture}
 						alt={account?.pubkey}
 						className="h-9 w-9 rounded-md object-cover"
 					/>

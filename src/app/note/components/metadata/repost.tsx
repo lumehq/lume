@@ -8,7 +8,7 @@ import { dateToUnix } from "@utils/date";
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
 import { compactNumber } from "@utils/number";
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 
 export default function NoteRepost({
@@ -36,7 +36,7 @@ export default function NoteRepost({
 				pubkey: account.pubkey,
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 			// publish event to all relays
 			pool.publish(event, WRITEONLY_RELAYS);
 			// update state

@@ -1,5 +1,4 @@
 import { getActiveAccount } from "@utils/storage";
-
 import useSWR from "swr";
 
 const fetcher = () => getActiveAccount();

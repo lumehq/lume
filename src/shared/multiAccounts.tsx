@@ -25,7 +25,7 @@ export default function MultiAccounts() {
 						{!activeAccount ? (
 							<div className="group relative flex h-10 w-10 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900" />
 						) : (
-							<ActiveAccount user={activeAccount} />
+							<ActiveAccount data={activeAccount} />
 						)}
 					</>
 					<div>
@@ -49,7 +49,7 @@ export default function MultiAccounts() {
 						) : (
 							accounts.map(
 								(account: { is_active: number; pubkey: string }) => (
-									<InactiveAccount key={account.pubkey} user={account} />
+									<InactiveAccount key={account.pubkey} data={account} />
 								),
 							)
 						)}

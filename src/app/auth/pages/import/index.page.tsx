@@ -1,6 +1,4 @@
-import { onboardingAtom } from "@stores/onboarding";
-
-import { useSetAtom } from "jotai";
+import { createAccount } from "@utils/storage";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { Resolver, useForm } from "react-hook-form";
 import { navigate } from "vite-plugin-ssr/client/router";
@@ -24,8 +22,6 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 export function Page() {
-	const setOnboardingPrivkey = useSetAtom(onboardingAtom);
-
 	const {
 		register,
 		setError,
@@ -42,8 +38,14 @@ export function Page() {
 			}
 
 			if (typeof getPublicKey(privkey) === "string") {
-				setOnboardingPrivkey((prev) => ({ ...prev, privkey: privkey }));
-				navigate("/app/auth/import/step-2");
+				const pubkey = getPublicKey(privkey);
+				const npub = nip19.npubEncode(pubkey);
+
+				const account = await createAccount(npub, pubkey, privkey, null, 1);
+
+				if (account) {
+					navigate("/app/auth/import/step-2");
+				}
 			}
 		} catch (error) {
 			setError("key", {

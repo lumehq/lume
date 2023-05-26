@@ -1,17 +1,11 @@
-import User from "@app/auth/components/user";
-
-import { RelayContext } from "@shared/relayProvider";
-
+import { User } from "@app/auth/components/user";
 import CheckCircleIcon from "@icons/checkCircle";
-
+import { RelayContext } from "@shared/relayProvider";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-import { onboardingAtom } from "@stores/onboarding";
-
-import { createAccount, createPleb } from "@utils/storage";
+import { useActiveAccount } from "@utils/hooks/useActiveAccount";
+import { updateAccount } from "@utils/storage";
 import { arrayToNIP02 } from "@utils/transform";
-
-import { useAtom } from "jotai";
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
@@ -117,9 +111,10 @@ const initialList = [
 export function Page() {
 	const pool: any = useContext(RelayContext);
 
+	const { account } = useActiveAccount();
+
 	const [loading, setLoading] = useState(false);
 	const [follows, setFollows] = useState([]);
-	const [onboarding] = useAtom(onboardingAtom);
 
 	// toggle follow state
 	const toggleFollow = (pubkey: string) => {
@@ -129,68 +124,37 @@ export function Page() {
 		setFollows(arr);
 	};
 
-	const broadcastAccount = () => {
-		// build event
-		const event: any = {
-			content: JSON.stringify(onboarding.metadata),
-			created_at: Math.floor(Date.now() / 1000),
-			kind: 0,
-			pubkey: onboarding.pubkey,
-			tags: [],
-		};
-		event.id = getEventHash(event);
-		event.sig = signEvent(event, onboarding.privkey);
-		// broadcast
-		pool.publish(event, WRITEONLY_RELAYS);
-	};
-
-	const broadcastContacts = () => {
-		const nip02 = arrayToNIP02(follows);
-		// build event
-		const event: any = {
-			content: "",
-			created_at: Math.floor(Date.now() / 1000),
-			kind: 3,
-			pubkey: onboarding.pubkey,
-			tags: nip02,
-		};
-		event.id = getEventHash(event);
-		event.sig = signEvent(event, onboarding.privkey);
-		// broadcast
-		pool.publish(event, WRITEONLY_RELAYS);
-	};
-
 	// save follows to database then broadcast
 	const submit = async () => {
 		setLoading(true);
 
-		const followsIncludeSelf = follows.concat([onboarding.pubkey]);
-		// insert to database
-		createAccount(
-			onboarding.pubkey,
-			onboarding.privkey,
-			onboarding.metadata,
-			arrayToNIP02(followsIncludeSelf),
-			1,
-		)
-			.then((res) => {
-				if (res) {
-					for (const tag of follows) {
-						fetch(`https://us.rbr.bio/${tag}/metadata.json`)
-							.then((data) => data.json())
-							.then((data) => createPleb(tag, data ?? ""));
-					}
-					broadcastAccount();
-					broadcastContacts();
-					setTimeout(
-						() => navigate("/", { overwriteLastHistoryEntry: true }),
-						2000,
-					);
-				} else {
-					console.error();
-				}
-			})
-			.catch(console.error);
+		// update account follows
+		updateAccount("follows", follows, account.pubkey);
+
+		const tags = arrayToNIP02(follows);
+
+		const event: any = {
+			content: "",
+			created_at: Math.floor(Date.now() / 1000),
+			kind: 3,
+			pubkey: account.pubkey,
+			tags: tags,
+		};
+
+		event.id = getEventHash(event);
+		event.sig = getSignature(event, account.privkey);
+
+		// publish
+		pool.publish(event, WRITEONLY_RELAYS);
+
+		// redirect to step 3
+		setTimeout(
+			() =>
+				navigate("/app/prefetch", {
+					overwriteLastHistoryEntry: true,
+				}),
+			2000,
+		);
 	};
 
 	return (

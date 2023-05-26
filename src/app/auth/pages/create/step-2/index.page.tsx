@@ -1,38 +1,53 @@
 import { AvatarUploader } from "@shared/avatarUploader";
 import { Image } from "@shared/image";
-
-import { DEFAULT_AVATAR } from "@stores/constants";
-import { onboardingAtom } from "@stores/onboarding";
-
-import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { RelayContext } from "@shared/relayProvider";
+import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
+import { useActiveAccount } from "@utils/hooks/useActiveAccount";
+import { getEventHash, getSignature } from "nostr-tools";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
+	const pool: any = useContext(RelayContext);
+
+	const { account } = useActiveAccount();
+
 	const [image, setImage] = useState(DEFAULT_AVATAR);
 	const [loading, setLoading] = useState(false);
-	const [onboarding, setOnboarding] = useAtom(onboardingAtom);
 
 	const {
 		register,
 		handleSubmit,
 		setValue,
 		formState: { isDirty, isValid },
-	} = useForm({
-		defaultValues: async () => {
-			if (onboarding.metadata) {
-				return onboarding.metadata;
-			} else {
-				return null;
-			}
-		},
-	});
+	} = useForm();
 
 	const onSubmit = (data: any) => {
 		setLoading(true);
-		setOnboarding((prev) => ({ ...prev, metadata: data }));
-		navigate("/app/auth/create/step-3");
+
+		const event: any = {
+			content: JSON.stringify(data),
+			created_at: Math.floor(Date.now() / 1000),
+			kind: 0,
+			pubkey: account.pubkey,
+			tags: [],
+		};
+
+		event.id = getEventHash(event);
+		event.sig = getSignature(event, account.privkey);
+
+		// publish
+		pool.publish(event, WRITEONLY_RELAYS);
+
+		// redirect to step 3
+		setTimeout(
+			() =>
+				navigate("/app/auth/create/step-3", {
+					overwriteLastHistoryEntry: true,
+				}),
+			2000,
+		);
 	};
 
 	useEffect(() => {

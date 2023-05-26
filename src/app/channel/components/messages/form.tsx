@@ -13,7 +13,7 @@ import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 
 import { useAtom, useAtomValue } from "jotai";
 import { useResetAtom } from "jotai/utils";
-import { getEventHash, signEvent } from "nostr-tools";
+import { getEventHash, getSignature } from "nostr-tools";
 import { useContext } from "react";
 
 export default function ChannelMessageForm({
@@ -50,7 +50,7 @@ export default function ChannelMessageForm({
 				tags: tags,
 			};
 			event.id = getEventHash(event);
-			event.sig = signEvent(event, account.privkey);
+			event.sig = getSignature(event, account.privkey);
 
 			// publish note
 			pool.publish(event, WRITEONLY_RELAYS);

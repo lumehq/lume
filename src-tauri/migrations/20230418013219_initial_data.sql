@@ -6,13 +6,11 @@
 CREATE TABLE
   accounts (
     id INTEGER NOT NULL PRIMARY KEY,
+    npub TEXT NOT NULL UNIQUE,
     pubkey TEXT NOT NULL UNIQUE,
     privkey TEXT NOT NULL,
+    follows JSON,
     is_active INTEGER NOT NULL DEFAULT 0,
-    follows TEXT,
-    channels TEXT,
-    chats TEXT,
-    metadata TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -20,8 +18,18 @@ CREATE TABLE
 CREATE TABLE
   plebs (
     id INTEGER NOT NULL PRIMARY KEY,
-    pubkey TEXT NOT NULL UNIQUE,
-    metadata TEXT,
+    npub TEXT NOT NULL UNIQUE,
+    display_name TEXT,
+    name TEXT,
+    username TEXT,
+    about TEXT,
+    bio TEXT,
+    website TEXT,
+    picture TEXT,
+    banner TEXT,
+    nip05 TEXT,
+    lud06 TEXT,
+    lud16 TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -33,10 +41,11 @@ CREATE TABLE
     account_id INTEGER NOT NULL,
     pubkey TEXT NOT NULL,
     kind INTEGER NOT NULL DEFAULT 1,
-    tags TEXT NOT NULL,
+    tags JSON,
     content TEXT NOT NULL,
     created_at INTEGER NOT NULL,
     parent_id TEXT,
+    parent_comment_id TEXT,
     FOREIGN KEY (account_id) REFERENCES accounts (id)
   );
 
@@ -45,7 +54,9 @@ CREATE TABLE
   channels (
     id INTEGER NOT NULL PRIMARY KEY,
     event_id TEXT NOT NULL UNIQUE,
-    metadata TEXT NOT NULL,
+    name TEXT,
+    about TEXT,
+    picture TEXT,
     created_at INTEGER NOT NULL
   );
 

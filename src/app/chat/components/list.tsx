@@ -2,16 +2,17 @@ import ChatsListItem from "@app/chat/components/item";
 import ChatsListSelfItem from "@app/chat/components/self";
 
 import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-import { getChats } from "@utils/storage";
+import { getChatsByPubkey } from "@utils/storage";
 
 import useSWR from "swr";
 
-const fetcher = ([, account]) => getChats(account);
+const fetcher = ([, pubkey]) => getChatsByPubkey(pubkey);
 
 export default function ChatsList() {
 	const { account, isLoading, isError } = useActiveAccount();
+
 	const { data: chats, error }: any = useSWR(
-		!isLoading && !isError && account ? ["chats", account] : null,
+		!isLoading && !isError && account ? ["chats", account.pubkey] : null,
 		fetcher,
 	);
 
@@ -30,8 +31,8 @@ export default function ChatsList() {
 					</div>
 				</>
 			) : (
-				chats.map((item: { pubkey: string }) => (
-					<ChatsListItem key={item.pubkey} pubkey={item.pubkey} />
+				chats.map((item) => (
+					<ChatsListItem key={item.sender_pubkey} pubkey={item.sender_pubkey} />
 				))
 			)}
 		</div>

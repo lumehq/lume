@@ -1,16 +1,12 @@
 import EyeOffIcon from "@icons/eyeOff";
 import EyeOnIcon from "@icons/eyeOn";
-
-import { onboardingAtom } from "@stores/onboarding";
-
-import { useSetAtom } from "jotai";
+import { createAccount } from "@utils/storage";
 import { generatePrivateKey, getPublicKey, nip19 } from "nostr-tools";
 import { useMemo, useState } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
 	const [type, setType] = useState("password");
-	const setOnboarding = useSetAtom(onboardingAtom);
 	const privkey = useMemo(() => generatePrivateKey(), []);
 
 	const pubkey = getPublicKey(privkey);
@@ -26,9 +22,12 @@ export function Page() {
 		}
 	};
 
-	const submit = () => {
-		setOnboarding((prev) => ({ ...prev, pubkey: pubkey, privkey: privkey }));
-		navigate("/app/auth/create/step-2");
+	const submit = async () => {
+		const account = await createAccount(npub, pubkey, privkey, null, 1);
+
+		if (account) {
+			navigate("/app/auth/create/step-2");
+		}
 	};
 
 	return (
