@@ -1,39 +1,34 @@
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-
+import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
 export default function NoteReplyForm({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
 
-	const { account, isLoading, isError } = useActiveAccount();
 	const [value, setValue] = useState("");
 
 	const submitEvent = () => {
-		if (!isLoading && !isError && account) {
-			const event: any = {
-				content: value,
-				created_at: dateToUnix(),
-				kind: 1,
-				pubkey: account.pubkey,
-				tags: [["e", id]],
-			};
-			event.id = getEventHash(event);
-			event.sig = getSignature(event, account.privkey);
+		const event: any = {
+			content: value,
+			created_at: dateToUnix(),
+			kind: 1,
+			pubkey: account.pubkey,
+			tags: [["e", id]],
+		};
 
-			// publish note
-			pool.publish(event, WRITEONLY_RELAYS);
-			// reset form
-			setValue("");
-		} else {
-			console.log("error");
-		}
+		event.id = getEventHash(event);
+		event.sig = getSignature(event, account.privkey);
+
+		// publish note
+		pool.publish(event, WRITEONLY_RELAYS);
+
+		// reset form
+		setValue("");
 	};
 
 	return (

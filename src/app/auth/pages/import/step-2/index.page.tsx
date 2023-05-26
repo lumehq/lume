@@ -1,18 +1,19 @@
 import { User } from "@app/auth/components/user";
 import { RelayContext } from "@shared/relayProvider";
+import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { updateAccount } from "@utils/storage";
 import { nip02ToArray } from "@utils/transform";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
 
-	const { account } = useActiveAccount();
-
+	const [account, fetchAccount, updateFollows] = useActiveAccount(
+		(state: any) => [state.account, state.fetch, state.updateFollows],
+	);
 	const [loading, setLoading] = useState(false);
 	const [follows, setFollows] = useState([]);
 
@@ -42,8 +43,11 @@ export function Page() {
 		// follows as list
 		const followsList = nip02ToArray(follows);
 
-		// update account follows
+		// update account follows in database
 		updateAccount("follows", followsList, account.pubkey);
+
+		// update account follows in store
+		updateFollows(JSON.stringify(followsList));
 
 		// redirect to home
 		setTimeout(
@@ -51,6 +55,10 @@ export function Page() {
 			2000,
 		);
 	};
+
+	useEffect(() => {
+		fetchAccount();
+	}, [fetchAccount]);
 
 	return (
 		<div className="flex h-full w-full items-center justify-center">

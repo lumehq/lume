@@ -1,24 +1,18 @@
-import { Post } from "@shared/composer/types/post";
-import { User } from "@shared/composer/user";
-
+import { Dialog, Transition } from "@headlessui/react";
 import CancelIcon from "@icons/cancel";
 import ChevronDownIcon from "@icons/chevronDown";
 import ChevronRightIcon from "@icons/chevronRight";
 import ComposeIcon from "@icons/compose";
-
-import { composerAtom } from "@stores/composer";
-
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
-import { Dialog, Transition } from "@headlessui/react";
-import { useAtom } from "jotai";
+import { Post } from "@shared/composer/types/post";
+import { User } from "@shared/composer/user";
+import { useActiveAccount } from "@stores/accounts";
 import { Fragment, useState } from "react";
 
 export function ComposerModal() {
 	const [isOpen, setIsOpen] = useState(false);
-	const [composer] = useAtom(composerAtom);
+	const [composer] = useState({ type: "post" });
 
-	const { account, isLoading, isError } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -64,11 +58,7 @@ export function ComposerModal() {
 							<Dialog.Panel className="relative h-min w-full max-w-xl rounded-lg border border-zinc-800 bg-zinc-900">
 								<div className="flex items-center justify-between px-4 py-4">
 									<div className="flex items-center gap-2">
-										<div>
-											{!isLoading && !isError && account && (
-												<User data={account} />
-											)}
-										</div>
+										<div>{account && <User data={account} />}</div>
 										<span>
 											<ChevronRightIcon
 												width={14}

@@ -3,19 +3,15 @@ import { Dialog, Transition } from "@headlessui/react";
 import CancelIcon from "@icons/cancel";
 import PlusIcon from "@icons/plus";
 import { Image } from "@shared/image";
+import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-import { createBlock, getPlebs } from "@utils/storage";
+import { createBlock } from "@utils/storage";
 import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import useSWR from "swr";
-
-const fetcher = () => getPlebs();
 
 export function CreateBlockModal() {
-	const { account } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 	const { register, handleSubmit, reset, watch, setValue } = useForm();
-	const { data: plebs } = useSWR("plebs", fetcher);
 
 	const [image, setImage] = useState(DEFAULT_AVATAR);
 	const [isOpen, setIsOpen] = useState(false);

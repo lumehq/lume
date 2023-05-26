@@ -3,18 +3,14 @@ import ChannelMembers from "@app/channel/components/members";
 import ChannelMessageForm from "@app/channel/components/messages/form";
 import ChannelMetadata from "@app/channel/components/metadata";
 import ChannelUpdateModal from "@app/channel/components/updateModal";
-
 import { RelayContext } from "@shared/relayProvider";
-
+import { useActiveAccount } from "@stores/accounts";
 import { channelMessagesAtom, channelReplyAtom } from "@stores/channel";
 import { READONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix, getHourAgo } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { getActiveBlacklist, getBlacklist } from "@utils/storage";
 import { arrayObjToPureArr } from "@utils/transform";
-
 import { useSetAtom } from "jotai";
 import { useResetAtom } from "jotai/utils";
 import { Suspense, lazy, useContext, useEffect, useRef } from "react";
@@ -39,19 +35,20 @@ const ChannelMessageList = lazy(
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
+	const account: any = useActiveAccount((state: any) => state.account);
+
 	const pageContext = usePageContext();
 	const searchParams: any = pageContext.urlParsed.search;
 
 	const channelID = searchParams.id;
 	const channelPubkey = searchParams.channelpub;
 
-	const { account, isLoading, isError } = useActiveAccount();
 	const { data: muted } = useSWR(
-		!isLoading && !isError && account ? ["muted", account.id] : null,
+		account ? ["muted", account.id] : null,
 		fetchMuted,
 	);
 	const { data: hided } = useSWR(
-		!isLoading && !isError && account ? ["hided", account.id] : null,
+		account ? ["hided", account.id] : null,
 		fetchHided,
 	);
 
@@ -118,7 +115,7 @@ export function Page() {
 				<div className="flex items-center gap-2">
 					<ChannelMembers />
 					{!muted ? <></> : <ChannelBlackList blacklist={muted.original} />}
-					{!isLoading && !isError && account ? (
+					{account ? (
 						account.pubkey === channelPubkey && (
 							<ChannelUpdateModal id={channelID} />
 						)

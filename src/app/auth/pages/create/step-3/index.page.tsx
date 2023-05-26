@@ -1,8 +1,8 @@
 import { User } from "@app/auth/components/user";
 import CheckCircleIcon from "@icons/checkCircle";
 import { RelayContext } from "@shared/relayProvider";
+import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { updateAccount } from "@utils/storage";
 import { arrayToNIP02 } from "@utils/transform";
 import { getEventHash, getSignature } from "nostr-tools";
@@ -111,8 +111,10 @@ const initialList = [
 export function Page() {
 	const pool: any = useContext(RelayContext);
 
-	const { account } = useActiveAccount();
-
+	const [account, updateFollows] = useActiveAccount((state: any) => [
+		state.account,
+		state.updateFollows,
+	]);
 	const [loading, setLoading] = useState(false);
 	const [follows, setFollows] = useState([]);
 
@@ -128,8 +130,11 @@ export function Page() {
 	const submit = async () => {
 		setLoading(true);
 
-		// update account follows
+		// update account follows in database
 		updateAccount("follows", follows, account.pubkey);
+
+		// update account follows in state
+		updateFollows(JSON.stringify(follows));
 
 		const tags = arrayToNIP02(follows);
 

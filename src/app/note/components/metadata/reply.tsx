@@ -1,14 +1,10 @@
+import { Dialog, Transition } from "@headlessui/react";
+import ReplyIcon from "@icons/reply";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-
-import ReplyIcon from "@icons/reply";
-
+import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
-import { Dialog, Transition } from "@headlessui/react";
 import { compactNumber } from "@utils/number";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
@@ -18,12 +14,11 @@ export default function NoteReply({
 	replies,
 }: { id: string; replies: number }) {
 	const pool: any = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
 
 	const [count, setCount] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
 	const [value, setValue] = useState("");
-
-	const { account, isLoading, isError } = useActiveAccount();
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -34,25 +29,24 @@ export default function NoteReply({
 	};
 
 	const submitEvent = () => {
-		if (!isLoading && !isError && account) {
-			const event: any = {
-				content: value,
-				created_at: dateToUnix(),
-				kind: 1,
-				pubkey: account.pubkey,
-				tags: [["e", id]],
-			};
-			event.id = getEventHash(event);
-			event.sig = getSignature(event, account.privkey);
+		const event: any = {
+			content: value,
+			created_at: dateToUnix(),
+			kind: 1,
+			pubkey: account.pubkey,
+			tags: [["e", id]],
+		};
 
-			// publish event
-			pool.publish(event, WRITEONLY_RELAYS);
-			// close modal
-			setIsOpen(false);
-			setCount(count + 1);
-		} else {
-			console.log("error");
-		}
+		event.id = getEventHash(event);
+		event.sig = getSignature(event, account.privkey);
+
+		// publish event
+		pool.publish(event, WRITEONLY_RELAYS);
+
+		// close modal
+		setIsOpen(false);
+		// increment replies
+		setCount(count + 1);
 	};
 
 	useEffect(() => {

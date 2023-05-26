@@ -1,18 +1,19 @@
 import ChannelCreateModal from "@app/channel/components/createModal";
 import ChannelsListItem from "@app/channel/components/item";
-
-import { getChannels } from "@utils/storage";
-
-import useSWR from "swr";
-
-const fetcher = () => getChannels(10, 0);
+import { useChannels } from "@stores/channels";
+import { useEffect } from "react";
 
 export default function ChannelsList() {
-	const { data, error }: any = useSWR("channels", fetcher);
+	const channels = useChannels((state: any) => state.channels);
+	const fetchChannels = useChannels((state: any) => state.fetch);
+
+	useEffect(() => {
+		fetchChannels();
+	}, [fetchChannels]);
 
 	return (
 		<div className="flex flex-col gap-1">
-			{!data || error ? (
+			{!channels ? (
 				<>
 					<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
 						<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
@@ -24,7 +25,7 @@ export default function ChannelsList() {
 					</div>
 				</>
 			) : (
-				data.map((item: { event_id: string }) => (
+				channels.map((item: { event_id: string }) => (
 					<ChannelsListItem key={item.event_id} data={item} />
 				))
 			)}

@@ -1,16 +1,11 @@
 import UserReply from "@app/channel/components/messages/userReply";
-
+import CancelIcon from "@icons/cancel";
 import { ImagePicker } from "@shared/form/imagePicker";
 import { RelayContext } from "@shared/relayProvider";
-
-import CancelIcon from "@icons/cancel";
-
+import { useActiveAccount } from "@stores/accounts";
 import { channelContentAtom, channelReplyAtom } from "@stores/channel";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
 import { useAtom, useAtomValue } from "jotai";
 import { useResetAtom } from "jotai/utils";
 import { getEventHash, getSignature } from "nostr-tools";
@@ -20,7 +15,7 @@ export default function ChannelMessageForm({
 	channelID,
 }: { channelID: string | string[] }) {
 	const pool: any = useContext(RelayContext);
-	const { account, isLoading, isError } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const [value, setValue] = useAtom(channelContentAtom);
 	const resetValue = useResetAtom(channelContentAtom);
@@ -41,7 +36,7 @@ export default function ChannelMessageForm({
 			tags = [["e", channelID, "", "root"]];
 		}
 
-		if (!isError && !isLoading && account) {
+		if (account) {
 			const event: any = {
 				content: value,
 				created_at: dateToUnix(),
@@ -49,11 +44,13 @@ export default function ChannelMessageForm({
 				pubkey: account.pubkey,
 				tags: tags,
 			};
+
 			event.id = getEventHash(event);
 			event.sig = getSignature(event, account.privkey);
 
 			// publish note
 			pool.publish(event, WRITEONLY_RELAYS);
+
 			// reset state
 			resetValue();
 			// reset channel reply

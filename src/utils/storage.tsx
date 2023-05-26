@@ -272,11 +272,22 @@ export async function updateChannelMetadata(event_id: string, value: string) {
 	);
 }
 
-// get all chats
+// get all chats by pubkey
 export async function getChatsByPubkey(pubkey: string) {
 	const db = await connect();
 	return await db.select(
 		`SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${pubkey}" ORDER BY created_at DESC;`,
+	);
+}
+
+// get chat messages
+export async function getChatMessages(
+	receiver_pubkey: string,
+	sender_pubkey: string,
+) {
+	const db = await connect();
+	return await db.select(
+		`SELECT * FROM chats WHERE receiver_pubkey = "${receiver_pubkey}" AND sender_pubkey = "${sender_pubkey}" ORDER BY created_at ASC;`,
 	);
 }
 

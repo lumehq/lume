@@ -1,24 +1,20 @@
+import { Dialog, Transition } from "@headlessui/react";
+import CancelIcon from "@icons/cancel";
+import EditIcon from "@icons/edit";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-
-import CancelIcon from "@icons/cancel";
-import EditIcon from "@icons/edit";
-
+import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { getChannel } from "@utils/storage";
-
-import { Dialog, Transition } from "@headlessui/react";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function ChannelUpdateModal({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
-	const { account, isError, isLoading } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [image, setImage] = useState(DEFAULT_AVATAR);
@@ -52,7 +48,7 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
-		if (!isError && !isLoading && account) {
+		if (account) {
 			const event: any = {
 				content: JSON.stringify(data),
 				created_at: dateToUnix(),
@@ -60,11 +56,13 @@ export default function ChannelUpdateModal({ id }: { id: string }) {
 				pubkey: account.pubkey,
 				tags: [["e", id]],
 			};
+
 			event.id = getEventHash(event);
 			event.sig = getSignature(event, account.privkey);
 
 			// publish channel
 			pool.publish(event, WRITEONLY_RELAYS);
+
 			// reset form
 			reset();
 			// close modal

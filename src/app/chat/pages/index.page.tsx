@@ -1,13 +1,9 @@
 import ChatMessageForm from "@app/chat/components/messages/form";
-
 import { RelayContext } from "@shared/relayProvider";
-
+import { useActiveAccount } from "@stores/accounts";
 import { chatMessagesAtom } from "@stores/chat";
 import { READONLY_RELAYS } from "@stores/constants";
-
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { usePageContext } from "@utils/hooks/usePageContext";
-
 import { useSetAtom } from "jotai";
 import { useResetAtom } from "jotai/utils";
 import { Suspense, lazy, useContext, useEffect } from "react";
@@ -17,12 +13,11 @@ const ChatMessageList = lazy(() => import("@app/chat/components/messageList"));
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
+
 	const pageContext = usePageContext();
 	const searchParams: any = pageContext.urlParsed.search;
-
 	const pubkey = searchParams.pubkey;
-
-	const { account } = useActiveAccount();
 
 	const setChatMessages = useSetAtom(chatMessagesAtom);
 	const resetChatMessages = useResetAtom(chatMessagesAtom);

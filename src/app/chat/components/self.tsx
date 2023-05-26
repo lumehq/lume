@@ -1,11 +1,8 @@
 import { Image } from "@shared/image";
-
+import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
-
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { shortenKey } from "@utils/shortenKey";
-
 import { twMerge } from "tailwind-merge";
 
 export default function ChatsListSelfItem() {
@@ -14,12 +11,11 @@ export default function ChatsListSelfItem() {
 	const searchParams: any = pageContext.urlParsed.search;
 	const pagePubkey = searchParams.pubkey;
 
-	const { account, isLoading, isError } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	return (
 		<>
-			{isError && <div>error</div>}
-			{isLoading && !account ? (
+			{!account ? (
 				<div className="inline-flex h-8 items-center gap-2.5 rounded-md px-2.5">
 					<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
 					<div>

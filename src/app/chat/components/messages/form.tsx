@@ -1,12 +1,9 @@
 import { ImagePicker } from "@shared/form/imagePicker";
 import { RelayContext } from "@shared/relayProvider";
-
+import { useActiveAccount } from "@stores/accounts";
 import { chatContentAtom } from "@stores/chat";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
 import { useAtom } from "jotai";
 import { useResetAtom } from "jotai/utils";
 import { getEventHash, getSignature, nip04 } from "nostr-tools";
@@ -16,7 +13,7 @@ export default function ChatMessageForm({
 	receiverPubkey,
 }: { receiverPubkey: string }) {
 	const pool: any = useContext(RelayContext);
-	const { account, isLoading, isError } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const [value, setValue] = useAtom(chatContentAtom);
 	const resetValue = useResetAtom(chatContentAtom);
@@ -29,25 +26,23 @@ export default function ChatMessageForm({
 	);
 
 	const submitEvent = () => {
-		if (!isError && !isLoading && account) {
-			encryptMessage(account.privkey)
-				.then((encryptedContent) => {
-					const event: any = {
-						content: encryptedContent,
-						created_at: dateToUnix(),
-						kind: 4,
-						pubkey: account.pubkey,
-						tags: [["p", receiverPubkey]],
-					};
-					event.id = getEventHash(event);
-					event.sig = getSignature(event, account.privkey);
-					// publish note
-					pool.publish(event, WRITEONLY_RELAYS);
-					// reset state
-					resetValue();
-				})
-				.catch(console.error);
-		}
+		encryptMessage(account.privkey)
+			.then((encryptedContent) => {
+				const event: any = {
+					content: encryptedContent,
+					created_at: dateToUnix(),
+					kind: 4,
+					pubkey: account.pubkey,
+					tags: [["p", receiverPubkey]],
+				};
+				event.id = getEventHash(event);
+				event.sig = getSignature(event, account.privkey);
+				// publish note
+				pool.publish(event, WRITEONLY_RELAYS);
+				// reset state
+				resetValue();
+			})
+			.catch(console.error);
 	};
 
 	const handleEnterPress = (e) => {

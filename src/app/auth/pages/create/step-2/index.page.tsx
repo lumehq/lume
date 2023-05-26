@@ -1,8 +1,8 @@
 import { AvatarUploader } from "@shared/avatarUploader";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
+import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,8 +11,10 @@ import { navigate } from "vite-plugin-ssr/client/router";
 export function Page() {
 	const pool: any = useContext(RelayContext);
 
-	const { account } = useActiveAccount();
-
+	const [account, fetchAccount] = useActiveAccount((state: any) => [
+		state.account,
+		state.fetch,
+	]);
 	const [image, setImage] = useState(DEFAULT_AVATAR);
 	const [loading, setLoading] = useState(false);
 
@@ -49,6 +51,10 @@ export function Page() {
 			2000,
 		);
 	};
+
+	useEffect(() => {
+		fetchAccount();
+	}, [fetchAccount]);
 
 	useEffect(() => {
 		setValue("picture", image);

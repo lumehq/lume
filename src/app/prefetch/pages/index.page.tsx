@@ -1,8 +1,8 @@
 import LumeIcon from "@icons/lume";
 import { RelayContext } from "@shared/relayProvider";
+import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
 import { dateToUnix, getHourAgo } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import {
 	addToBlacklist,
 	countTotalNotes,
@@ -15,15 +15,6 @@ import { useCallback, useContext, useRef } from "react";
 import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
-function isJSON(str: string) {
-	try {
-		JSON.parse(str);
-	} catch (e) {
-		return false;
-	}
-	return true;
-}
-
 let lastLogin: string;
 let totalNotes: number;
 
@@ -34,11 +25,10 @@ if (typeof window !== "undefined") {
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
 
 	const now = useRef(new Date());
 	const eose = useRef(0);
-
-	const { account, isLoading, isError } = useActiveAccount();
 
 	const getQuery = useCallback(() => {
 		const query = [];
@@ -79,98 +69,95 @@ export function Page() {
 		});
 
 		return query;
-	}, [account.follows]);
+	}, [account]);
 
-	useSWRSubscription(
-		!isLoading && !isError && account ? "prefetch" : null,
-		() => {
-			const query = getQuery();
-			const unsubscribe = pool.subscribe(
-				query,
-				READONLY_RELAYS,
-				(event: any) => {
-					switch (event.kind) {
-						// short text note
-						case 1: {
-							const parentID = getParentID(event.tags, event.id);
-							// insert event to local database
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								parentID,
-							);
-							break;
+	useSWRSubscription(account ? "prefetch" : null, () => {
+		const query = getQuery();
+		const unsubscribe = pool.subscribe(
+			query,
+			READONLY_RELAYS,
+			(event: any) => {
+				switch (event.kind) {
+					// short text note
+					case 1: {
+						const parentID = getParentID(event.tags, event.id);
+						// insert event to local database
+						createNote(
+							event.id,
+							account.id,
+							event.pubkey,
+							event.kind,
+							event.tags,
+							event.content,
+							event.created_at,
+							parentID,
+						);
+						break;
+					}
+					// chat
+					case 4:
+						createChat(
+							event.id,
+							account.pubkey,
+							event.pubkey,
+							event.content,
+							event.created_at,
+						);
+						break;
+					// repost
+					case 6:
+						createNote(
+							event.id,
+							account.id,
+							event.pubkey,
+							event.kind,
+							event.tags,
+							event.content,
+							event.created_at,
+							event.id,
+						);
+						break;
+					// hide message (channel only)
+					case 43:
+						if (event.tags[0][0] === "e") {
+							addToBlacklist(account.id, event.tags[0][1], 43, 1);
 						}
-						// chat
-						case 4:
-							createChat(
-								event.id,
-								account.pubkey,
-								event.pubkey,
-								event.content,
-								event.created_at,
-							);
-							break;
-						// repost
-						case 6:
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								event.id,
-							);
-							break;
-						// hide message (channel only)
-						case 43:
-							if (event.tags[0][0] === "e") {
-								addToBlacklist(account.id, event.tags[0][1], 43, 1);
-							}
-							break;
-						// mute user (channel only)
-						case 44:
-							if (event.tags[0][0] === "p") {
-								addToBlacklist(account.id, event.tags[0][1], 44, 1);
-							}
-							break;
-						case 1063:
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								"",
-							);
-							break;
-						default:
-							break;
-					}
-				},
-				undefined,
-				() => {
-					eose.current += 1;
-					if (eose.current === READONLY_RELAYS.length) {
-						navigate("/app/space", { overwriteLastHistoryEntry: true });
-					}
-				},
-			);
+						break;
+					// mute user (channel only)
+					case 44:
+						if (event.tags[0][0] === "p") {
+							addToBlacklist(account.id, event.tags[0][1], 44, 1);
+						}
+						break;
+					case 1063:
+						createNote(
+							event.id,
+							account.id,
+							event.pubkey,
+							event.kind,
+							event.tags,
+							event.content,
+							event.created_at,
+							"",
+						);
+						break;
+					default:
+						break;
+				}
+			},
+			undefined,
+			() => {
+				eose.current += 1;
+				if (eose.current === READONLY_RELAYS.length) {
+					navigate("/app/space", { overwriteLastHistoryEntry: true });
+				}
+			},
+		);
 
-			return () => {
-				unsubscribe();
-			};
-		},
-	);
+		return () => {
+			unsubscribe();
+		};
+	});
 
 	return (
 		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">

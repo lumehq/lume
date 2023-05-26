@@ -1,28 +1,21 @@
+import { Dialog, Transition } from "@headlessui/react";
+import CancelIcon from "@icons/cancel";
+import PlusIcon from "@icons/plus";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-
-import CancelIcon from "@icons/cancel";
-import PlusIcon from "@icons/plus";
-
+import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
 import { createChannel } from "@utils/storage";
-
-import { Dialog, Transition } from "@headlessui/react";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSWRConfig } from "swr";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export default function ChannelCreateModal() {
 	const pool: any = useContext(RelayContext);
-
-	const { account, isError, isLoading } = useActiveAccount();
-	const { mutate } = useSWRConfig();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [image, setImage] = useState(DEFAULT_AVATAR);
@@ -47,7 +40,7 @@ export default function ChannelCreateModal() {
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
-		if (!isError && !isLoading && account) {
+		if (account) {
 			const event: any = {
 				content: JSON.stringify(data),
 				created_at: dateToUnix(),
@@ -62,8 +55,6 @@ export default function ChannelCreateModal() {
 			pool.publish(event, WRITEONLY_RELAYS);
 			// insert to database
 			createChannel(event.id, event.pubkey, event.content, event.created_at);
-			// update channe llist
-			mutate("channels");
 			// reset form
 			reset();
 			setTimeout(() => {

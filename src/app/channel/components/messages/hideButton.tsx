@@ -1,23 +1,19 @@
-import { RelayContext } from "@shared/relayProvider";
-import { Tooltip } from "@shared/tooltip";
-
+import { Dialog, Transition } from "@headlessui/react";
 import CancelIcon from "@icons/cancel";
 import HideIcon from "@icons/hide";
-
+import { RelayContext } from "@shared/relayProvider";
+import { Tooltip } from "@shared/tooltip";
+import { useActiveAccount } from "@stores/accounts";
 import { channelMessagesAtom } from "@stores/channel";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
-import { Dialog, Transition } from "@headlessui/react";
 import { useAtom } from "jotai";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useState } from "react";
 
 export default function MessageHideButton({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
-	const { account, isError, isLoading } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [messages, setMessages] = useAtom(channelMessagesAtom);
@@ -31,7 +27,7 @@ export default function MessageHideButton({ id }: { id: string }) {
 	};
 
 	const hideMessage = () => {
-		if (!isError && !isLoading && account) {
+		if (account) {
 			const event: any = {
 				content: "",
 				created_at: dateToUnix(),
@@ -44,13 +40,16 @@ export default function MessageHideButton({ id }: { id: string }) {
 
 			// publish note
 			pool.publish(event, WRITEONLY_RELAYS);
+
 			// update local state
 			const cloneMessages = [...messages];
 			const targetMessage = cloneMessages.findIndex(
 				(message) => message.id === id,
 			);
+
 			cloneMessages[targetMessage]["hide"] = true;
 			setMessages(cloneMessages);
+
 			// close modal
 			closeModal();
 		} else {

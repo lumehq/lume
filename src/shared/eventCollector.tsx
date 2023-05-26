@@ -1,141 +1,119 @@
-import { RelayContext } from "@shared/relayProvider";
-
 import HeartBeatIcon from "@icons/heartbeat";
-
+import { RelayContext } from "@shared/relayProvider";
+import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
 import { hasNewerNoteAtom } from "@stores/note";
-
+import { TauriEvent } from "@tauri-apps/api/event";
+import { appWindow, getCurrent } from "@tauri-apps/api/window";
 import { dateToUnix } from "@utils/date";
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-import { createChat, createNote, updateAccount } from "@utils/storage";
+import {
+	createChat,
+	createNote,
+	updateAccount,
+	updateLastLogin,
+} from "@utils/storage";
 import { getParentID, nip02ToArray } from "@utils/transform";
-
 import { useSetAtom } from "jotai";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import useSWRSubscription from "swr/subscription";
-
-function isJSON(str: string) {
-	try {
-		JSON.parse(str);
-	} catch (e) {
-		return false;
-	}
-	return true;
-}
 
 export default function EventCollector() {
 	const pool: any = useContext(RelayContext);
 
 	const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
+
+	const account = useActiveAccount((state: any) => state.account);
 	const now = useRef(new Date());
 
-	const { account, isLoading, isError } = useActiveAccount();
-
-	useSWRSubscription(
-		!isLoading && !isError && account ? ["eventCollector", account] : null,
-		([, key]) => {
-			const follows = JSON.parse(key.follows);
-			const followsAsArray = nip02ToArray(follows);
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						kinds: [1, 6],
-						authors: followsAsArray,
-						since: dateToUnix(now.current),
-					},
-					{
-						kinds: [3],
-						authors: [key.pubkey],
-					},
-					{
-						kinds: [4],
-						"#p": [key.pubkey],
-						since: dateToUnix(now.current),
-					},
-					{
-						kinds: [30023],
-						since: dateToUnix(now.current),
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					switch (event.kind) {
-						// short text note
-						case 1: {
-							const parentID = getParentID(event.tags, event.id);
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								parentID,
-							);
-							// notify user reload to get newer note
-							setHasNewerNote(true);
-							break;
-						}
-						// contacts
-						case 3: {
-							const follows = nip02ToArray(event.tags);
-							// update account's folllows with NIP-02 tag list
-							updateAccount("follows", follows, event.pubkey);
-							break;
-						}
-						// chat
-						case 4:
-							createChat(
-								event.id,
-								key.pubkey,
-								event.pubkey,
-								event.content,
-								event.created_at,
-							);
-							break;
-						// repost
-						case 6:
-							createNote(
-								event.id,
-								key.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								event.id,
-							);
-							break;
-						// long post
-						case 30023: {
-							const verifyMetadata = isJSON(event.tags);
-							if (verifyMetadata) {
-								// insert event to local database
-								createNote(
-									event.id,
-									account.id,
-									event.pubkey,
-									event.kind,
-									event.tags,
-									event.content,
-									event.created_at,
-									"",
-								);
-							}
-							break;
-						}
-						default:
-							break;
-					}
+	useSWRSubscription(account ? "eventCollector" : null, () => {
+		const follows = JSON.parse(account.follows);
+		const unsubscribe = pool.subscribe(
+			[
+				{
+					kinds: [1, 6],
+					authors: follows,
+					since: dateToUnix(now.current),
 				},
-			);
+				{
+					kinds: [3],
+					authors: [account.pubkey],
+				},
+				{
+					kinds: [4],
+					"#p": [account.pubkey],
+					since: dateToUnix(now.current),
+				},
+			],
+			READONLY_RELAYS,
+			(event: any) => {
+				switch (event.kind) {
+					// short text note
+					case 1: {
+						const parentID = getParentID(event.tags, event.id);
+						createNote(
+							event.id,
+							account.id,
+							event.pubkey,
+							event.kind,
+							event.tags,
+							event.content,
+							event.created_at,
+							parentID,
+						);
+						// notify user reload to get newer note
+						setHasNewerNote(true);
+						break;
+					}
+					// contacts
+					case 3: {
+						const follows = nip02ToArray(event.tags);
+						// update account's folllows with NIP-02 tag list
+						updateAccount("follows", follows, event.pubkey);
+						break;
+					}
+					// chat
+					case 4:
+						createChat(
+							event.id,
+							account.pubkey,
+							event.pubkey,
+							event.content,
+							event.created_at,
+						);
+						break;
+					// repost
+					case 6:
+						createNote(
+							event.id,
+							account.id,
+							event.pubkey,
+							event.kind,
+							event.tags,
+							event.content,
+							event.created_at,
+							event.id,
+						);
+						break;
+					default:
+						break;
+				}
+			},
+		);
 
-			return () => {
-				unsubscribe();
-			};
-		},
-	);
+		return () => {
+			unsubscribe();
+		};
+	});
+
+	useEffect(() => {
+		// listen window close event
+		getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
+			// update last login time
+			updateLastLogin(dateToUnix(now.current));
+			// close window
+			appWindow.close();
+		});
+	}, []);
 
 	return (
 		<div className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-500 hover:bg-zinc-900 hover:text-green-500">

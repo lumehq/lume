@@ -1,15 +1,12 @@
 import { ChatMessageItem } from "@app/chat/components/messages/item";
-
+import { useActiveAccount } from "@stores/accounts";
 import { sortedChatMessagesAtom } from "@stores/chat";
-
-import { useActiveAccount } from "@utils/hooks/useActiveAccount";
-
 import { useAtomValue } from "jotai";
 import { useCallback, useRef } from "react";
 import { Virtuoso } from "react-virtuoso";
 
 export default function ChatMessageList() {
-	const { account } = useActiveAccount();
+	const account = useActiveAccount((state: any) => state.account);
 
 	const virtuosoRef = useRef(null);
 	const data = useAtomValue(sortedChatMessagesAtom);
