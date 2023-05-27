@@ -70,7 +70,7 @@ export function FollowingBlock() {
 			>
 				{status === "loading" ? (
 					<div className="px-3 py-1.5">
-						<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />
 						</div>
 					</div>
@@ -122,7 +122,7 @@ export function FollowingBlock() {
 				<div>
 					{isFetching && !isFetchingNextPage && (
 						<div className="px-3 py-1.5">
-							<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+							<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 								<NoteSkeleton />
 							</div>
 						</div>

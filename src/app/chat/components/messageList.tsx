@@ -1,44 +1,39 @@
 import { ChatMessageItem } from "@app/chat/components/messages/item";
 import { useActiveAccount } from "@stores/accounts";
-import { sortedChatMessagesAtom } from "@stores/chat";
-import { useAtomValue } from "jotai";
+import { useChatMessages } from "@stores/chats";
 import { useCallback, useRef } from "react";
 import { Virtuoso } from "react-virtuoso";
 
-export default function ChatMessageList() {
+export function ChatMessageList() {
 	const account = useActiveAccount((state: any) => state.account);
+	const messages = useChatMessages((state: any) => state.messages);
 
 	const virtuosoRef = useRef(null);
-	const data = useAtomValue(sortedChatMessagesAtom);
 
 	const itemContent: any = useCallback(
 		(index: string | number) => {
 			return (
-				<ChatMessageItem
-					data={data[index]}
-					userPubkey={account.pubkey}
-					userPrivkey={account.privkey}
-				/>
+				<ChatMessageItem data={messages[index]} userPrivkey={account.privkey} />
 			);
 		},
-		[account.privkey, account.pubkey, data],
+		[account.privkey, account.pubkey, messages],
 	);
 
 	const computeItemKey = useCallback(
 		(index: string | number) => {
-			return data[index].id;
+			return messages[index].id;
 		},
-		[data],
+		[messages],
 	);
 
 	return (
 		<div className="h-full w-full">
 			<Virtuoso
 				ref={virtuosoRef}
-				data={data}
+				data={messages}
 				itemContent={itemContent}
 				computeItemKey={computeItemKey}
-				initialTopMostItemIndex={data.length - 1}
+				initialTopMostItemIndex={messages.length - 1}
 				alignToBottom={true}
 				followOutput={true}
 				overscan={50}

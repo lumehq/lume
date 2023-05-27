@@ -5,7 +5,7 @@ import NavArrowDownIcon from "@icons/navArrowDown";
 import ThreadsIcon from "@icons/threads";
 import WorldIcon from "@icons/world";
 import ActiveLink from "@shared/activeLink";
-import AppHeader from "@shared/appHeader";
+import { AppHeader } from "@shared/appHeader";
 import { ComposerModal } from "@shared/composer/modal";
 
 export default function Navigation() {

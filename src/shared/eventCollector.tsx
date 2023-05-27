@@ -2,9 +2,6 @@ import HeartBeatIcon from "@icons/heartbeat";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
-import { hasNewerNoteAtom } from "@stores/note";
-import { TauriEvent } from "@tauri-apps/api/event";
-import { appWindow, getCurrent } from "@tauri-apps/api/window";
 import { dateToUnix } from "@utils/date";
 import {
 	createChat,
@@ -13,14 +10,11 @@ import {
 	updateLastLogin,
 } from "@utils/storage";
 import { getParentID, nip02ToArray } from "@utils/transform";
-import { useSetAtom } from "jotai";
 import { useContext, useEffect, useRef } from "react";
 import useSWRSubscription from "swr/subscription";
 
 export default function EventCollector() {
 	const pool: any = useContext(RelayContext);
-
-	const setHasNewerNote = useSetAtom(hasNewerNoteAtom);
 
 	const account = useActiveAccount((state: any) => state.account);
 	const now = useRef(new Date());
@@ -60,8 +54,6 @@ export default function EventCollector() {
 							event.created_at,
 							parentID,
 						);
-						// notify user reload to get newer note
-						setHasNewerNote(true);
 						break;
 					}
 					// contacts
@@ -78,6 +70,7 @@ export default function EventCollector() {
 							account.pubkey,
 							event.pubkey,
 							event.content,
+							event.tags,
 							event.created_at,
 						);
 						break;
@@ -106,13 +99,20 @@ export default function EventCollector() {
 	});
 
 	useEffect(() => {
-		// listen window close event
-		getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-			// update last login time
-			updateLastLogin(dateToUnix(now.current));
-			// close window
-			appWindow.close();
-		});
+		async function initWindowEvent() {
+			const { TauriEvent } = await import("@tauri-apps/api/event");
+			const { appWindow, getCurrent } = await import("@tauri-apps/api/window");
+
+			// listen window close event
+			getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
+				// update last login time
+				updateLastLogin(dateToUnix(now.current));
+				// close window
+				appWindow.close();
+			});
+		}
+
+		initWindowEvent().catch(console.error);
 	}, []);
 
 	return (

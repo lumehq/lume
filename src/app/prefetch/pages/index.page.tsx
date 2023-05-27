@@ -61,6 +61,13 @@ export function Page() {
 			since: querySince,
 		});
 
+		// kind 4 (chats) query
+		query.push({
+			kinds: [4],
+			authors: [account.pubkey],
+			since: querySince,
+		});
+
 		// kind 43, 43 (mute user, hide message) query
 		query.push({
 			authors: [account.pubkey],
@@ -95,15 +102,29 @@ export function Page() {
 						break;
 					}
 					// chat
-					case 4:
-						createChat(
-							event.id,
-							account.pubkey,
-							event.pubkey,
-							event.content,
-							event.created_at,
-						);
+					case 4: {
+						if (event.pubkey === account.pubkey) {
+							const receiver = event.tags.find((t) => t[0] === "p")[1];
+							createChat(
+								event.id,
+								event.pubkey,
+								receiver,
+								event.content,
+								event.tags,
+								event.created_at,
+							);
+						} else {
+							createChat(
+								event.id,
+								event.pubkey,
+								account.pubkey,
+								event.content,
+								event.tags,
+								event.created_at,
+							);
+						}
 						break;
+					}
 					// repost
 					case 6:
 						createNote(

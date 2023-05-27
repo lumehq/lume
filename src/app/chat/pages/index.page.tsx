@@ -1,15 +1,14 @@
-import ChatMessageForm from "@app/chat/components/messages/form";
+import { ChatSidebar } from "../components/sidebar";
+import { ChatMessageList } from "@app/chat/components/messageList";
+import { ChatMessageForm } from "@app/chat/components/messages/form";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { chatMessagesAtom } from "@stores/chat";
+import { useChatMessages } from "@stores/chats";
 import { READONLY_RELAYS } from "@stores/constants";
+import { dateToUnix } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
-import { useSetAtom } from "jotai";
-import { useResetAtom } from "jotai/utils";
-import { Suspense, lazy, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import useSWRSubscription from "swr/subscription";
-
-const ChatMessageList = lazy(() => import("@app/chat/components/messageList"));
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
@@ -19,8 +18,10 @@ export function Page() {
 	const searchParams: any = pageContext.urlParsed.search;
 	const pubkey = searchParams.pubkey;
 
-	const setChatMessages = useSetAtom(chatMessagesAtom);
-	const resetChatMessages = useResetAtom(chatMessagesAtom);
+	const [fetchMessages, addMessage] = useChatMessages((state: any) => [
+		state.fetch,
+		state.add,
+	]);
 
 	useSWRSubscription(account ? ["chat", pubkey] : null, ([, key]) => {
 		const unsubscribe = pool.subscribe(
@@ -29,18 +30,18 @@ export function Page() {
 					kinds: [4],
 					authors: [key],
 					"#p": [account.pubkey],
-					limit: 20,
-				},
-				{
-					kinds: [4],
-					authors: [account.pubkey],
-					"#p": [key],
-					limit: 20,
+					since: dateToUnix(),
 				},
 			],
 			READONLY_RELAYS,
 			(event: any) => {
-				setChatMessages((prev) => [...prev, event]);
+				addMessage({
+					receiver_pubkey: account.pubkey,
+					sender_pubkey: event.pubkey,
+					content: event.content,
+					tags: event.tags,
+					created_at: event.created_at,
+				});
 			},
 		);
 
@@ -50,25 +51,37 @@ export function Page() {
 	});
 
 	useEffect(() => {
-		let ignore = false;
-
-		if (!ignore) {
-			// reset chat messages
-			resetChatMessages();
-		}
-
-		return () => {
-			ignore = true;
-		};
-	});
+		fetchMessages(account.pubkey, pubkey);
+	}, [pubkey]);
 
 	return (
-		<div className="relative flex h-full w-full flex-col justify-between rounded-lg border border-zinc-800 bg-zinc-900 shadow-input shadow-black/20">
-			<Suspense fallback={<p>Loading...</p>}>
-				<ChatMessageList />
-			</Suspense>
-			<div className="shrink-0 p-3">
-				<ChatMessageForm receiverPubkey={pubkey} />
+		<div className="h-full w-full grid grid-cols-3">
+			<div className="col-span-2 flex flex-col justify-between border-r border-zinc-900">
+				<div
+					data-tauri-drag-region
+					className="h-11 w-full shrink-0 inline-flex items-center justify-center border-b border-zinc-900"
+				>
+					<h3 className="font-semibold text-zinc-100">Encrypted Chat</h3>
+				</div>
+				<div className="w-full flex-1 p-3">
+					<div className="flex h-full flex-col justify-between rounded-md bg-zinc-900 shadow-input shadow-black/20">
+						<ChatMessageList />
+						<div className="shrink-0 px-5 p-3 border-t border-zinc-800">
+							<ChatMessageForm
+								receiverPubkey={pubkey}
+								userPubkey={account.pubkey}
+								userPrivkey={account.privkey}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="col-span-1">
+				<div
+					data-tauri-drag-region
+					className="h-11 w-full shrink-0 inline-flex items-center justify-center border-b border-zinc-900"
+				/>
+				<ChatSidebar pubkey={pubkey} />
 			</div>
 		</div>
 	);

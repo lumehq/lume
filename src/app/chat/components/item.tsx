@@ -1,19 +1,18 @@
 import { Image } from "@shared/image";
-
+import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
-
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-
 import { twMerge } from "tailwind-merge";
 
-export default function ChatsListItem({ pubkey }: { pubkey: string }) {
+export function ChatsListItem({ pubkey }: { pubkey: string }) {
 	const pageContext = usePageContext();
 
 	const searchParams: any = pageContext.urlParsed.search;
 	const pagePubkey = searchParams.pubkey;
 
+	const account = useActiveAccount((state: any) => state.account);
 	const { user, isError, isLoading } = useProfile(pubkey);
 
 	return (
@@ -43,10 +42,13 @@ export default function ChatsListItem({ pubkey }: { pubkey: string }) {
 							className="h-5 w-5 rounded bg-white object-cover"
 						/>
 					</div>
-					<div>
+					<div className="inline-flex items-baseline gap-1">
 						<h5 className="max-w-[9rem] truncate font-medium text-zinc-200 group-hover:text-white">
 							{user?.nip05 || user.name || shortenKey(pubkey)}
 						</h5>
+						{account?.pubkey === pubkey && (
+							<span className="text-zinc-500">(you)</span>
+						)}
 					</div>
 				</a>
 			)}

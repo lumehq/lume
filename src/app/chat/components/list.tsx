@@ -1,5 +1,4 @@
-import ChatsListItem from "@app/chat/components/item";
-import ChatsListSelfItem from "@app/chat/components/self";
+import { ChatsListItem } from "@app/chat/components/item";
 import { useActiveAccount } from "@stores/accounts";
 import { useChats } from "@stores/chats";
 import { useEffect } from "react";
@@ -16,7 +15,6 @@ export default function ChatsList() {
 
 	return (
 		<div className="flex flex-col gap-1">
-			<ChatsListSelfItem />
 			{!chats ? (
 				<>
 					<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
@@ -29,7 +27,7 @@ export default function ChatsList() {
 					</div>
 				</>
 			) : (
-				chats.map((item) => (
+				chats.map((item: { sender_pubkey: string }) => (
 					<ChatsListItem key={item.sender_pubkey} pubkey={item.sender_pubkey} />
 				))
 			)}

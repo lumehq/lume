@@ -7,5 +7,6 @@ CREATE TABLE
     receiver_pubkey INTEGER NOT NULL,
     sender_pubkey TEXT NOT NULL,
     content TEXT NOT NULL,
+    tags JSON,
     created_at INTEGER NOT NULL
   );

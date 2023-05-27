@@ -297,12 +297,13 @@ export async function createChat(
 	receiver_pubkey: string,
 	sender_pubkey: string,
 	content: string,
+	tags: string[][],
 	created_at: number,
 ) {
 	const db = await connect();
 	return await db.execute(
-		"INSERT OR IGNORE INTO chats (event_id, receiver_pubkey, sender_pubkey, content, created_at) VALUES (?, ?, ?, ?, ?);",
-		[event_id, receiver_pubkey, sender_pubkey, content, created_at],
+		"INSERT OR IGNORE INTO chats (event_id, receiver_pubkey, sender_pubkey, content, tags, created_at) VALUES (?, ?, ?, ?, ?, ?);",
+		[event_id, receiver_pubkey, sender_pubkey, content, tags, created_at],
 	);
 }
 

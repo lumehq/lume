@@ -1,26 +1,14 @@
 import ArrowLeftIcon from "@icons/arrowLeft";
 import ArrowRightIcon from "@icons/arrowRight";
 import EventCollector from "@shared/eventCollector";
-import useSWR from "swr";
 
-const fetcher = async () => {
-	const { platform } = await import("@tauri-apps/api/os");
-	return await platform();
-};
-
-export default function AppHeader() {
-	const { data: platform } = useSWR("platform", fetcher);
-
+export function AppHeader() {
 	const goBack = () => {
 		window.history.back();
 	};
 
 	const goForward = () => {
 		window.history.forward();
-	};
-
-	const reload = () => {
-		window.location.reload();
 	};
 
 	return (
