@@ -33,15 +33,15 @@ export function Page() {
 	const getQuery = useCallback(() => {
 		const query = [];
 		const follows = JSON.parse(account.follows);
+		const last = parseInt(lastLogin);
 
 		let queryNoteSince: number;
-		let querySince: number;
 
 		if (totalNotes === 0) {
 			queryNoteSince = dateToUnix(getHourAgo(48, now.current));
 		} else {
 			if (parseInt(lastLogin) > 0) {
-				queryNoteSince = parseInt(lastLogin);
+				queryNoteSince = last;
 			} else {
 				queryNoteSince = dateToUnix(getHourAgo(48, now.current));
 			}
@@ -58,21 +58,21 @@ export function Page() {
 		query.push({
 			kinds: [4],
 			"#p": [account.pubkey],
-			since: querySince,
+			since: last,
 		});
 
 		// kind 4 (chats) query
 		query.push({
 			kinds: [4],
 			authors: [account.pubkey],
-			since: querySince,
+			since: last,
 		});
 
 		// kind 43, 43 (mute user, hide message) query
 		query.push({
 			authors: [account.pubkey],
 			kinds: [43, 44],
-			since: querySince,
+			since: last,
 		});
 
 		return query;
@@ -107,8 +107,8 @@ export function Page() {
 							const receiver = event.tags.find((t) => t[0] === "p")[1];
 							createChat(
 								event.id,
-								event.pubkey,
 								receiver,
+								event.pubkey,
 								event.content,
 								event.tags,
 								event.created_at,
@@ -116,8 +116,8 @@ export function Page() {
 						} else {
 							createChat(
 								event.id,
-								event.pubkey,
 								account.pubkey,
+								event.pubkey,
 								event.content,
 								event.tags,
 								event.created_at,

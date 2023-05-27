@@ -12,7 +12,7 @@ export const useChats = create((set) => ({
 export const useChatMessages = create((set) => ({
 	messages: [],
 	fetch: async (receiver_pubkey: string, sender_pubkey: string) => {
-		const response = await getChatMessages(receiver_pubkey, sender_pubkey);
+		const response: any = await getChatMessages(receiver_pubkey, sender_pubkey);
 		set({ messages: response });
 	},
 	add: (message: any) => {

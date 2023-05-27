@@ -1,7 +1,6 @@
 import PlusIcon from "@icons/plus";
 
 import { channelContentAtom } from "@stores/channel";
-import { chatContentAtom } from "@stores/chat";
 
 import { createBlobFromFile } from "@utils/createBlobFromFile";
 
@@ -14,9 +13,6 @@ export function ImagePicker({ type }: { type: string }) {
 	let atom;
 
 	switch (type) {
-		case "chat":
-			atom = chatContentAtom;
-			break;
 		case "channel":
 			atom = channelContentAtom;
 			break;

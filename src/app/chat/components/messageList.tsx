@@ -13,7 +13,11 @@ export function ChatMessageList() {
 	const itemContent: any = useCallback(
 		(index: string | number) => {
 			return (
-				<ChatMessageItem data={messages[index]} userPrivkey={account.privkey} />
+				<ChatMessageItem
+					data={messages[index]}
+					userPubkey={account.pubkey}
+					userPrivkey={account.privkey}
+				/>
 			);
 		},
 		[account.privkey, account.pubkey, messages],

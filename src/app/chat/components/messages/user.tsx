@@ -35,7 +35,7 @@ export function ChatMessageUser({
 					</div>
 					<div className="flex w-full flex-1 items-start justify-between">
 						<div className="flex items-baseline gap-2 text-base">
-							<span className="font-semibold leading-none text-white group-hover:underline">
+							<span className="font-semibold leading-none text-zinc-200 group-hover:underline">
 								{user?.nip05 || user?.name || shortenKey(pubkey)}
 							</span>
 							<span className="leading-none text-zinc-500">·</span>

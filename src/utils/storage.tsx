@@ -286,9 +286,19 @@ export async function getChatMessages(
 	sender_pubkey: string,
 ) {
 	const db = await connect();
-	return await db.select(
-		`SELECT * FROM chats WHERE receiver_pubkey = "${receiver_pubkey}" AND sender_pubkey = "${sender_pubkey}" ORDER BY created_at ASC;`,
+	const sender: any = await db.select(
+		`SELECT * FROM chats WHERE sender_pubkey = "${sender_pubkey}" AND receiver_pubkey = "${receiver_pubkey}";`,
 	);
+	const receiver: any = await db.select(
+		`SELECT * FROM chats WHERE sender_pubkey = "${receiver_pubkey}" AND receiver_pubkey = "${sender_pubkey}";`,
+	);
+
+	const result = [...sender, ...receiver].sort(
+		(x: { created_at: number }, y: { created_at: number }) =>
+			x.created_at - y.created_at,
+	);
+
+	return result;
 }
 
 // create chat

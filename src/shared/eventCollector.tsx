@@ -3,21 +3,14 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import {
-	createChat,
-	createNote,
-	updateAccount,
-	updateLastLogin,
-} from "@utils/storage";
+import { createChat, createNote, updateAccount } from "@utils/storage";
 import { getParentID, nip02ToArray } from "@utils/transform";
-import { useContext, useEffect, useRef } from "react";
+import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
 export default function EventCollector() {
 	const pool: any = useContext(RelayContext);
-
 	const account = useActiveAccount((state: any) => state.account);
-	const now = useRef(new Date());
 
 	useSWRSubscription(account ? "eventCollector" : null, () => {
 		const follows = JSON.parse(account.follows);
@@ -26,7 +19,7 @@ export default function EventCollector() {
 				{
 					kinds: [1, 6],
 					authors: follows,
-					since: dateToUnix(now.current),
+					since: dateToUnix(),
 				},
 				{
 					kinds: [3],
@@ -35,7 +28,12 @@ export default function EventCollector() {
 				{
 					kinds: [4],
 					"#p": [account.pubkey],
-					since: dateToUnix(now.current),
+					since: dateToUnix(),
+				},
+				{
+					kinds: [4],
+					authors: [account.pubkey],
+					since: dateToUnix(),
 				},
 			],
 			READONLY_RELAYS,
@@ -64,16 +62,29 @@ export default function EventCollector() {
 						break;
 					}
 					// chat
-					case 4:
-						createChat(
-							event.id,
-							account.pubkey,
-							event.pubkey,
-							event.content,
-							event.tags,
-							event.created_at,
-						);
+					case 4: {
+						if (event.pubkey === account.pubkey) {
+							const receiver = event.tags.find((t) => t[0] === "p")[1];
+							createChat(
+								event.id,
+								receiver,
+								event.pubkey,
+								event.content,
+								event.tags,
+								event.created_at,
+							);
+						} else {
+							createChat(
+								event.id,
+								account.pubkey,
+								event.pubkey,
+								event.content,
+								event.tags,
+								event.created_at,
+							);
+						}
 						break;
+					}
 					// repost
 					case 6:
 						createNote(
@@ -97,23 +108,6 @@ export default function EventCollector() {
 			unsubscribe();
 		};
 	});
-
-	useEffect(() => {
-		async function initWindowEvent() {
-			const { TauriEvent } = await import("@tauri-apps/api/event");
-			const { appWindow, getCurrent } = await import("@tauri-apps/api/window");
-
-			// listen window close event
-			getCurrent().listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-				// update last login time
-				updateLastLogin(dateToUnix(now.current));
-				// close window
-				appWindow.close();
-			});
-		}
-
-		initWindowEvent().catch(console.error);
-	}, []);
 
 	return (
 		<div className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-500 hover:bg-zinc-900 hover:text-green-500">
