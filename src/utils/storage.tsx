@@ -286,12 +286,17 @@ export async function getChatMessages(
 	sender_pubkey: string,
 ) {
 	const db = await connect();
+	let receiver = [];
+
 	const sender: any = await db.select(
 		`SELECT * FROM chats WHERE sender_pubkey = "${sender_pubkey}" AND receiver_pubkey = "${receiver_pubkey}";`,
 	);
-	const receiver: any = await db.select(
-		`SELECT * FROM chats WHERE sender_pubkey = "${receiver_pubkey}" AND receiver_pubkey = "${sender_pubkey}";`,
-	);
+
+	if (receiver_pubkey !== sender_pubkey) {
+		receiver = await db.select(
+			`SELECT * FROM chats WHERE sender_pubkey = "${receiver_pubkey}" AND receiver_pubkey = "${sender_pubkey}";`,
+		);
+	}
 
 	const result = [...sender, ...receiver].sort(
 		(x: { created_at: number }, y: { created_at: number }) =>

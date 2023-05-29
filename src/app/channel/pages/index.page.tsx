@@ -1,8 +1,8 @@
 import ChannelBlackList from "@app/channel/components/blacklist";
-import ChannelMembers from "@app/channel/components/members";
+import { ChannelMembers } from "@app/channel/components/members";
 import { ChannelMessageList } from "@app/channel/components/messageList";
 import ChannelMessageForm from "@app/channel/components/messages/form";
-import ChannelMetadata from "@app/channel/components/metadata";
+import { ChannelMetadata } from "@app/channel/components/metadata";
 import ChannelUpdateModal from "@app/channel/components/updateModal";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -66,14 +66,23 @@ export function Page() {
 				READONLY_RELAYS,
 				(event: { id: string; pubkey: string }) => {
 					const message: any = event;
+
+					// handle hide message
 					if (hided.includes(event.id)) {
 						message["hide"] = true;
 					} else {
 						message["hide"] = false;
 					}
-					if (!muted.array.includes(event.pubkey)) {
-						addMessage(message);
+
+					// handle mute user
+					if (muted.array.includes(event.pubkey)) {
+						message["mute"] = true;
+					} else {
+						message["mute"] = false;
 					}
+
+					// add to store
+					addMessage(message);
 				},
 			);
 
@@ -101,23 +110,17 @@ export function Page() {
 					</div>
 				</div>
 			</div>
-			<div className="col-span-1">
+			<div className="col-span-1 flex flex-col">
 				<div
 					data-tauri-drag-region
 					className="h-11 w-full shrink-0 inline-flex items-center justify-center border-b border-zinc-900"
 				/>
-				<div>
+				<div className="p-3 flex flex-col gap-3">
 					<ChannelMetadata id={channelID} pubkey={channelPubkey} />
-				</div>
-				<div className="flex items-center gap-2">
 					<ChannelMembers />
-					{!muted ? <></> : <ChannelBlackList blacklist={muted.original} />}
-					{account ? (
-						account.pubkey === channelPubkey && (
-							<ChannelUpdateModal id={channelID} />
-						)
-					) : (
-						<></>
+					{muted && <ChannelBlackList blacklist={muted.original} />}
+					{account && account.pubkey === channelPubkey && (
+						<ChannelUpdateModal id={channelID} />
 					)}
 				</div>
 			</div>

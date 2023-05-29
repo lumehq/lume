@@ -8,7 +8,7 @@ import { DEFAULT_AVATAR } from "@stores/constants";
 
 import { nip19 } from "nostr-tools";
 
-export default function ChannelMetadata({
+export function ChannelMetadata({
 	id,
 	pubkey,
 }: { id: string; pubkey: string }) {
@@ -23,24 +23,24 @@ export default function ChannelMetadata({
 	};
 
 	return (
-		<div className="inline-flex items-center gap-2">
-			<div className="relative shrink-0 rounded-md">
+		<div className="flex flex-col gap-2">
+			<div className="relative shrink-0 rounded-md h-11 w-11">
 				<Image
 					src={metadata?.picture || DEFAULT_AVATAR}
 					alt={id}
-					className="h-8 w-8 rounded bg-zinc-900 object-contain ring-2 ring-zinc-950"
+					className="h-11 w-11 rounded-md object-contain bg-zinc-900"
 				/>
 			</div>
-			<div className="flex flex-col gap-1">
-				<div className="flex items-center gap-1">
-					<h5 className="truncate text-base font-medium leading-none text-white">
+			<div className="flex flex-col gap-2">
+				<div className="inline-flex items-center gap-1">
+					<h5 className="leading-none text-lg font-semibold">
 						{metadata?.name}
 					</h5>
 					<button type="button" onClick={() => copyNoteID()}>
 						<CopyIcon width={14} height={14} className="text-zinc-400" />
 					</button>
 				</div>
-				<p className="text-base leading-none text-zinc-400">
+				<p className="leading-tight text-zinc-400">
 					{metadata?.about || (noteID && `${noteID.substring(0, 24)}...`)}
 				</p>
 			</div>

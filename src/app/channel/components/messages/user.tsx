@@ -10,11 +10,14 @@ dayjs.extend(relativeTime);
 export function ChannelMessageUser({
 	pubkey,
 	time,
-}: { pubkey: string; time: number }) {
+}: {
+	pubkey: string;
+	time: number;
+}) {
 	const { user, isError, isLoading } = useProfile(pubkey);
 
 	return (
-		<div className="group flex items-start gap-3">
+		<div className="flex items-start gap-3">
 			{isError || isLoading ? (
 				<>
 					<div className="relative h-11 w-11 shrink animate-pulse rounded-md bg-zinc-800" />
@@ -35,7 +38,7 @@ export function ChannelMessageUser({
 					</div>
 					<div className="flex w-full flex-1 items-start justify-between">
 						<div className="flex items-baseline gap-2 text-base">
-							<span className="font-semibold leading-none text-white group-hover:underline">
+							<span className="font-semibold leading-none text-white">
 								{user?.nip05 || user?.name || shortenKey(pubkey)}
 							</span>
 							<span className="leading-none text-zinc-500">·</span>

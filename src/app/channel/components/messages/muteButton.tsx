@@ -4,18 +4,17 @@ import MuteIcon from "@icons/mute";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
 import { useActiveAccount } from "@stores/accounts";
-import { channelMessagesAtom } from "@stores/channel";
+import { useChannelMessages } from "@stores/channels";
 import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { useAtom } from "jotai";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useState } from "react";
 
-export default function MessageMuteButton({ pubkey }: { pubkey: string }) {
+export function MessageMuteButton({ pubkey }: { pubkey: string }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
+	const mute = useChannelMessages((state: any) => state.muteUser);
 
-	const [messages, setMessages] = useAtom(channelMessagesAtom);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const closeModal = () => {
@@ -27,31 +26,25 @@ export default function MessageMuteButton({ pubkey }: { pubkey: string }) {
 	};
 
 	const muteUser = () => {
-		if (account) {
-			const event: any = {
-				content: "",
-				created_at: dateToUnix(),
-				kind: 44,
-				pubkey: account.pubkey,
-				tags: [["p", pubkey]],
-			};
-			event.id = getEventHash(event);
-			event.sig = getSignature(event, account.privkey);
+		const event: any = {
+			content: "",
+			created_at: dateToUnix(),
+			kind: 44,
+			pubkey: account.pubkey,
+			tags: [["p", pubkey]],
+		};
 
-			// publish note
-			pool.publish(event, WRITEONLY_RELAYS);
+		event.id = getEventHash(event);
+		event.sig = getSignature(event, account.privkey);
 
-			// update local state
-			const cloneMessages = [...messages];
-			const finalMessages = cloneMessages.filter(
-				(message) => message.pubkey !== pubkey,
-			);
-			setMessages(finalMessages);
-			// close modal
-			closeModal();
-		} else {
-			console.log("error");
-		}
+		// publish note
+		pool.publish(event, WRITEONLY_RELAYS);
+
+		// update state
+		mute(pubkey);
+
+		// close modal
+		closeModal();
 	};
 
 	return (

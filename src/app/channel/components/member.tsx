@@ -4,7 +4,7 @@ import { DEFAULT_AVATAR } from "@stores/constants";
 
 import { useProfile } from "@utils/hooks/useProfile";
 
-export default function MiniMember({ pubkey }: { pubkey: string }) {
+export function Member({ pubkey }: { pubkey: string }) {
 	const { user, isError, isLoading } = useProfile(pubkey);
 
 	return (

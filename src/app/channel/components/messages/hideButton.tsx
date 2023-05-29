@@ -4,19 +4,18 @@ import HideIcon from "@icons/hide";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
 import { useActiveAccount } from "@stores/accounts";
-import { channelMessagesAtom } from "@stores/channel";
+import { useChannelMessages } from "@stores/channels";
 import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { useAtom } from "jotai";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useState } from "react";
 
-export default function MessageHideButton({ id }: { id: string }) {
+export function MessageHideButton({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
+	const hide = useChannelMessages((state: any) => state.hideMessage);
 
 	const [isOpen, setIsOpen] = useState(false);
-	const [messages, setMessages] = useAtom(channelMessagesAtom);
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -27,34 +26,25 @@ export default function MessageHideButton({ id }: { id: string }) {
 	};
 
 	const hideMessage = () => {
-		if (account) {
-			const event: any = {
-				content: "",
-				created_at: dateToUnix(),
-				kind: 43,
-				pubkey: account.pubkey,
-				tags: [["e", id]],
-			};
-			event.id = getEventHash(event);
-			event.sig = getSignature(event, account.privkey);
+		const event: any = {
+			content: "",
+			created_at: dateToUnix(),
+			kind: 43,
+			pubkey: account.pubkey,
+			tags: [["e", id]],
+		};
 
-			// publish note
-			pool.publish(event, WRITEONLY_RELAYS);
+		event.id = getEventHash(event);
+		event.sig = getSignature(event, account.privkey);
 
-			// update local state
-			const cloneMessages = [...messages];
-			const targetMessage = cloneMessages.findIndex(
-				(message) => message.id === id,
-			);
+		// publish note
+		pool.publish(event, WRITEONLY_RELAYS);
 
-			cloneMessages[targetMessage]["hide"] = true;
-			setMessages(cloneMessages);
+		// update state
+		hide(id);
 
-			// close modal
-			closeModal();
-		} else {
-			console.log("error");
-		}
+		// close modal
+		closeModal();
 	};
 
 	return (

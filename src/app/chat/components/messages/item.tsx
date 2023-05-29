@@ -1,5 +1,6 @@
 import { ChatMessageUser } from "@app/chat/components/messages/user";
 import { useDecryptMessage } from "@app/chat/hooks/useDecryptMessage";
+import { MentionNote } from "@app/note/components/mentions/note";
 import ImagePreview from "@app/note/components/preview/image";
 import VideoPreview from "@app/note/components/preview/video";
 import { noteParser } from "@utils/parser";
@@ -37,6 +38,13 @@ export const ChatMessageItem = memo(function ChatMessageItem({
 					)}
 					{Array.isArray(content.videos) && content.videos.length ? (
 						<VideoPreview urls={content.videos} />
+					) : (
+						<></>
+					)}
+					{Array.isArray(content.notes) && content.notes.length ? (
+						content.notes.map((note: string) => (
+							<MentionNote key={note} id={note} />
+						))
 					) : (
 						<></>
 					)}

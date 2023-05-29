@@ -9,6 +9,7 @@ export function ChannelMessageList() {
 	const virtuosoRef = useRef(null);
 
 	const messages = useChannelMessages((state: any) => state.messages);
+	const sorted = messages;
 
 	const itemContent: any = useCallback(
 		(index: string | number) => {
@@ -33,10 +34,7 @@ export function ChannelMessageList() {
 				components={{
 					Header: () => (
 						<div className="relative py-4">
-							<div
-								className="absolute inset-0 flex items-center"
-								aria-hidden="true"
-							>
+							<div className="absolute inset-0 flex items-center">
 								<div className="w-full border-t border-zinc-800" />
 							</div>
 							<div className="relative flex justify-center">

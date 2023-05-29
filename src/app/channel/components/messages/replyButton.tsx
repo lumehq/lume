@@ -1,20 +1,16 @@
-import { Tooltip } from "@shared/tooltip";
-
 import ReplyMessageIcon from "@icons/replyMessage";
+import { Tooltip } from "@shared/tooltip";
+import { useChannelMessages } from "@stores/channels";
 
-import { channelReplyAtom } from "@stores/channel";
-
-import { useSetAtom } from "jotai";
-
-export default function MessageReplyButton({
+export function MessageReplyButton({
 	id,
 	pubkey,
 	content,
 }: { id: string; pubkey: string; content: string }) {
-	const setChannelReplyAtom = useSetAtom(channelReplyAtom);
+	const openReply = useChannelMessages((state: any) => state.openReply);
 
 	const createReply = () => {
-		setChannelReplyAtom({ id: id, pubkey: pubkey, content: content });
+		openReply(id, pubkey, content);
 	};
 
 	return (
