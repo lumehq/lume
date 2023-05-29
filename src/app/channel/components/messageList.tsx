@@ -1,37 +1,34 @@
-import ChannelMessageItem from "@app/channel/components/messages/item";
-
-import { sortedChannelMessagesAtom } from "@stores/channel";
-
+import { ChannelMessageItem } from "@app/channel/components/messages/item";
+import { useChannelMessages } from "@stores/channels";
 import { getHourAgo } from "@utils/date";
-
-import { useAtomValue } from "jotai";
 import { useCallback, useRef } from "react";
 import { Virtuoso } from "react-virtuoso";
 
-export default function ChannelMessageList() {
+export function ChannelMessageList() {
 	const now = useRef(new Date());
 	const virtuosoRef = useRef(null);
-	const data = useAtomValue(sortedChannelMessagesAtom);
+
+	const messages = useChannelMessages((state: any) => state.messages);
 
 	const itemContent: any = useCallback(
 		(index: string | number) => {
-			return <ChannelMessageItem data={data[index]} />;
+			return <ChannelMessageItem data={messages[index]} />;
 		},
-		[data],
+		[messages],
 	);
 
 	const computeItemKey = useCallback(
 		(index: string | number) => {
-			return data[index].id;
+			return messages[index].id;
 		},
-		[data],
+		[messages],
 	);
 
 	return (
 		<div className="h-full w-full">
 			<Virtuoso
 				ref={virtuosoRef}
-				data={data}
+				data={messages}
 				itemContent={itemContent}
 				components={{
 					Header: () => (
@@ -66,7 +63,7 @@ export default function ChannelMessageList() {
 					),
 				}}
 				computeItemKey={computeItemKey}
-				initialTopMostItemIndex={data.length - 1}
+				initialTopMostItemIndex={messages.length - 1}
 				alignToBottom={true}
 				followOutput={true}
 				overscan={50}

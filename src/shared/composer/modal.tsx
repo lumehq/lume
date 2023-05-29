@@ -58,7 +58,7 @@ export function ComposerModal() {
 							<Dialog.Panel className="relative h-min w-full max-w-xl rounded-lg border border-zinc-800 bg-zinc-900">
 								<div className="flex items-center justify-between px-4 py-4">
 									<div className="flex items-center gap-2">
-										<div>{account && <User data={account} />}</div>
+										<div>{account && <User pubkey={account.pubkey} />}</div>
 										<span>
 											<ChevronRightIcon
 												width={14}

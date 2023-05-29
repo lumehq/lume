@@ -4,7 +4,7 @@ import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 
 export default function ActiveAccount({ data }: { data: any }) {
-	const { user } = useProfile(data.npub);
+	const { user } = useProfile(data.pubkey);
 
 	return (
 		<button type="button" className="relative h-11 w-11 overflow-hidden">

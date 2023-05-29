@@ -1,28 +1,24 @@
 import MessageHideButton from "@app/channel/components/messages/hideButton";
 import MessageMuteButton from "@app/channel/components/messages/muteButton";
 import MessageReplyButton from "@app/channel/components/messages/replyButton";
-import ChannelMessageUser from "@app/channel/components/messages/user";
-
+import { ChannelMessageUser } from "@app/channel/components/messages/user";
 import { noteParser } from "@utils/parser";
-
 import { useMemo } from "react";
 
-export default function ChannelMessageItem({ data }: { data: any }) {
+export function ChannelMessageItem({ data }: { data: any }) {
 	const content = useMemo(() => noteParser(data), [data]);
 
 	return (
-		<div className="group relative flex h-min min-h-min w-full select-text flex-col px-5 py-2 hover:bg-black/20">
+		<div className="group relative flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
 			<div className="flex flex-col">
 				<ChannelMessageUser pubkey={data.pubkey} time={data.created_at} />
-				<div className="-mt-[17px] pl-[48px]">
-					<div className="flex flex-col gap-2">
-						<div className="whitespace-pre-line break-words text-base leading-tight">
-							{data.hide ? (
-								<span className="italic text-zinc-400">[hided message]</span>
-							) : (
-								content.parsed
-							)}
-						</div>
+				<div className="-mt-[20px] pl-[49px]">
+					<div className="whitespace-pre-line break-words text-base leading-tight">
+						{data.hide ? (
+							<span className="italic text-zinc-400">[hided message]</span>
+						) : (
+							content.parsed
+						)}
 					</div>
 				</div>
 			</div>

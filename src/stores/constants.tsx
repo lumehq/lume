@@ -20,6 +20,9 @@ export const WRITEONLY_RELAYS = [
 	"wss://relay.nostr.band",
 ];
 
+// metadata relay
+export const METADATA_RELAY = ["wss://relay.nostr.band"];
+
 // full-relay list
 export const FULL_RELAYS = [
 	"wss://welcome.nostr.wine",

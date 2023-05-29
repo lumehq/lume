@@ -1,7 +1,10 @@
-import { METADATA_SERVICE } from "@stores/constants";
+import { RelayContext } from "@shared/relayProvider";
+import { METADATA_RELAY } from "@stores/constants";
 import { createPleb, getPleb } from "@utils/storage";
 import { nip19 } from "nostr-tools";
+import { useContext } from "react";
 import useSWR from "swr";
+import useSWRSubscription from "swr/subscription";
 
 const fetcher = async (key: string) => {
 	let npub: string;
@@ -18,30 +21,56 @@ const fetcher = async (key: string) => {
 	if (result && result.created_at + 86400 < current) {
 		return result;
 	} else {
-		const res = await fetch(`${METADATA_SERVICE}/${key}/metadata.json`);
-
-		if (!res.ok) {
-			return null;
-		}
-
-		const json = await res.json();
-		const saveToDB = await createPleb(key, json);
-
-		if (saveToDB) {
-			return JSON.parse(json.content);
-		}
+		return null;
 	}
 };
 
 export function useProfile(key: string) {
-	const { data, error, isLoading } = useSWR(key, fetcher, {
+	const pool: any = useContext(RelayContext);
+
+	const {
+		data: cache,
+		error,
+		isLoading,
+	} = useSWR(key, fetcher, {
 		revalidateIfStale: false,
 		revalidateOnFocus: false,
 		revalidateOnReconnect: true,
 	});
 
+	const { data: newest } = useSWRSubscription(
+		cache ? null : key,
+		(_, { next }) => {
+			const unsubscribe = pool.subscribe(
+				[
+					{
+						authors: [key],
+						kinds: [0],
+					},
+				],
+				METADATA_RELAY,
+				(event: { content: string }) => {
+					const content = JSON.parse(event.content);
+					// update state
+					next(null, content);
+					// save to database
+					createPleb(key, event);
+				},
+				undefined,
+				undefined,
+				{
+					unsubscribeOnEose: true,
+				},
+			);
+
+			return () => {
+				unsubscribe();
+			};
+		},
+	);
+
 	return {
-		user: data,
+		user: newest ? newest : cache,
 		isLoading,
 		isError: error,
 	};

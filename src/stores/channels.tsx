@@ -9,8 +9,9 @@ export const useChannels = create((set) => ({
 	},
 }));
 
-export const useChannelMessage = create((set) => ({
+export const useChannelMessages = create((set) => ({
 	messages: [],
+	replyTo: null,
 	add: (message: any) => {
 		set((state: any) => ({ messages: [...state.messages, message] }));
 	},

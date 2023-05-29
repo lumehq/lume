@@ -44,7 +44,7 @@ export function ChatsListItem({ pubkey }: { pubkey: string }) {
 					</div>
 					<div className="inline-flex items-baseline gap-1">
 						<h5 className="max-w-[9rem] truncate font-medium text-zinc-200 group-hover:text-white">
-							{user?.nip05 || user.name || shortenKey(pubkey)}
+							{user?.nip05 || user?.name || shortenKey(pubkey)}
 						</h5>
 						{account?.pubkey === pubkey && (
 							<span className="text-zinc-500">(you)</span>
