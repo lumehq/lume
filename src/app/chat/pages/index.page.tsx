@@ -18,9 +18,10 @@ export function Page() {
 	const searchParams: any = pageContext.urlParsed.search;
 	const pubkey = searchParams.pubkey;
 
-	const [fetchMessages, addMessage] = useChatMessages((state: any) => [
+	const [fetchMessages, addMessage, clear] = useChatMessages((state: any) => [
 		state.fetch,
 		state.add,
+		state.clear,
 	]);
 
 	useSWRSubscription(account ? ["chat", pubkey] : null, ([, key]) => {
@@ -52,6 +53,10 @@ export function Page() {
 
 	useEffect(() => {
 		fetchMessages(account.pubkey, pubkey);
+
+		return () => {
+			clear();
+		};
 	}, [pubkey]);
 
 	return (

@@ -37,7 +37,10 @@ export function Page() {
 	const channelPubkey = searchParams.channelpub;
 
 	const account: any = useActiveAccount((state: any) => state.account);
-	const addMessage = useChannelMessages((state: any) => state.add);
+	const [addMessage, clear] = useChannelMessages((state: any) => [
+		state.add,
+		state.clear,
+	]);
 
 	const { data: muted } = useSWR(
 		account ? ["muted", account.id] : null,
@@ -88,6 +91,7 @@ export function Page() {
 
 			return () => {
 				unsubscribe();
+				clear();
 			};
 		},
 	);

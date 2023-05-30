@@ -7,22 +7,22 @@ export default function UserReply({ pubkey }: { pubkey: string }) {
 	const { user, isError, isLoading } = useProfile(pubkey);
 
 	return (
-		<div className="group flex items-start gap-1">
+		<div className="group flex items-start gap-2">
 			{isError || isLoading ? (
 				<>
-					<div className="relative h-7 w-7 shrink animate-pulse overflow-hidden rounded bg-zinc-800" />
+					<div className="relative h-9 w-9 shrink animate-pulse overflow-hidden rounded bg-zinc-800" />
 					<span className="h-2 w-10 animate-pulse rounded bg-zinc-800 text-base font-medium leading-none text-zinc-500" />
 				</>
 			) : (
 				<>
-					<div className="relative h-7 w-7 shrink overflow-hidden rounded">
+					<div className="relative h-9 w-9 shrink overflow-hidden rounded">
 						<Image
 							src={user?.picture || DEFAULT_AVATAR}
 							alt={pubkey}
-							className="h-7 w-7 rounded object-cover"
+							className="h-9 w-9 rounded object-cover"
 						/>
 					</div>
-					<span className="text-base font-medium leading-none text-zinc-500">
+					<span className="text-sm font-medium leading-none text-zinc-500">
 						Replying to {user?.name || shortenKey(pubkey)}
 					</span>
 				</>

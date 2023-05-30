@@ -18,4 +18,7 @@ export const useChatMessages = create((set) => ({
 	add: (message: any) => {
 		set((state: any) => ({ messages: [...state.messages, message] }));
 	},
+	clear: () => {
+		set(() => ({ messages: [] }));
+	},
 }));

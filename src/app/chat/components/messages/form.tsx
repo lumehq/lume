@@ -69,6 +69,17 @@ export function ChatMessageForm({
 				placeholder="Message"
 				className="relative h-11 w-full resize-none rounded-md px-5 !outline-none bg-zinc-800 placeholder:text-zinc-500"
 			/>
+			<div className="absolute right-2 top-0 h-11">
+				<div className="h-full flex items-center justify-end">
+					<button
+						type="button"
+						onClick={submit}
+						className="inline-flex items-center gap-1 text-zinc-500 leading-none"
+					>
+						Send
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 }

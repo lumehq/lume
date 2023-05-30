@@ -13,7 +13,6 @@ export const useChannels = create((set) => ({
 export const useChannelMessages = create(
 	immer((set) => ({
 		messages: [],
-		members: new Set(),
 		replyTo: { id: null, pubkey: null, content: null },
 		add: (message: any) => {
 			set((state: any) => ({ messages: [...state.messages, message] }));
@@ -35,6 +34,12 @@ export const useChannelMessages = create(
 				const target = state.messages.findIndex((m) => m.pubkey === pubkey);
 				state.messages[target]["mute"] = true;
 			});
+		},
+		clear: () => {
+			set(() => ({
+				messages: [],
+				replyTo: { id: null, pubkey: null, content: null },
+			}));
 		},
 	})),
 );

@@ -9,7 +9,6 @@ export function ChannelMessageList() {
 	const virtuosoRef = useRef(null);
 
 	const messages = useChannelMessages((state: any) => state.messages);
-	const sorted = messages;
 
 	const itemContent: any = useCallback(
 		(index: string | number) => {
