@@ -1,7 +1,5 @@
 import { useChannelProfile } from "@app/channel/hooks/useChannelProfile";
-
 import { usePageContext } from "@utils/hooks/usePageContext";
-
 import { twMerge } from "tailwind-merge";
 
 export function ChannelsListItem({ data }: { data: any }) {

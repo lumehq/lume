@@ -18,11 +18,11 @@ export function Page() {
 	const searchParams: any = pageContext.urlParsed.search;
 	const pubkey = searchParams.pubkey;
 
-	const [fetchMessages, addMessage, clear] = useChatMessages((state: any) => [
+	const [fetchMessages, clear] = useChatMessages((state: any) => [
 		state.fetch,
-		state.add,
 		state.clear,
 	]);
+	const addMessage = useChatMessages((state: any) => state.add);
 
 	useSWRSubscription(account ? ["chat", pubkey] : null, ([, key]) => {
 		const unsubscribe = pool.subscribe(

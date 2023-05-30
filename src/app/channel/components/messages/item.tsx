@@ -3,8 +3,8 @@ import { MessageMuteButton } from "@app/channel/components/messages/muteButton";
 import { MessageReplyButton } from "@app/channel/components/messages/replyButton";
 import { ChannelMessageUser } from "@app/channel/components/messages/user";
 import { MentionNote } from "@app/note/components/mentions/note";
-import ImagePreview from "@app/note/components/preview/image";
-import VideoPreview from "@app/note/components/preview/video";
+import { ImagePreview } from "@app/note/components/preview/image";
+import { VideoPreview } from "@app/note/components/preview/video";
 import { noteParser } from "@utils/parser";
 import { useMemo, useState } from "react";
 

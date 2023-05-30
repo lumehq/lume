@@ -1,4 +1,3 @@
-import { AppHeader } from "@shared/appHeader";
 import { MultiAccounts } from "@shared/multiAccounts";
 import { Navigation } from "@shared/navigation";
 

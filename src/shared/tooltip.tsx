@@ -42,7 +42,7 @@ export function Tooltip({
 			{isOpen && (
 				<div
 					ref={refs.setFloating}
-					className="w-max select-none rounded-md bg-zinc-800 px-4 py-2 text-base font-medium leading-none text-white"
+					className="w-max select-none rounded-md bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm font-medium leading-none text-zinc-100"
 					style={{
 						position: strategy,
 						top: y ?? 0,

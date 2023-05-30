@@ -1,3 +1,5 @@
+import { EnterIcon } from "@shared/icons";
+import { MediaUploader } from "@shared/mediaUploader";
 import { RelayContext } from "@shared/relayProvider";
 import { useChatMessages } from "@stores/chats";
 import { WRITEONLY_RELAYS } from "@stores/constants";
@@ -60,7 +62,7 @@ export function ChatMessageForm({
 	};
 
 	return (
-		<div className="relative h-11 w-full overflow-hidden">
+		<div className="relative h-11 w-full">
 			<input
 				value={value}
 				onChange={(e) => setValue(e.target.value)}
@@ -70,12 +72,14 @@ export function ChatMessageForm({
 				className="relative h-11 w-full resize-none rounded-md px-5 !outline-none bg-zinc-800 placeholder:text-zinc-500"
 			/>
 			<div className="absolute right-2 top-0 h-11">
-				<div className="h-full flex items-center justify-end">
+				<div className="h-full flex gap-3 items-center justify-end text-zinc-500">
+					<MediaUploader setState={setValue} />
 					<button
 						type="button"
 						onClick={submit}
-						className="inline-flex items-center gap-1 text-zinc-500 leading-none"
+						className="inline-flex items-center gap-1 text-sm leading-none"
 					>
+						<EnterIcon width={14} height={14} className="" />
 						Send
 					</button>
 				</div>
