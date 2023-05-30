@@ -1,5 +1,5 @@
-import MultiAccounts from "@shared/multiAccounts";
-import Navigation from "@shared/navigation";
+import { MultiAccounts } from "@shared/multiAccounts";
+import { Navigation } from "@shared/navigation";
 
 export function LayoutChat({ children }: { children: React.ReactNode }) {
 	return (

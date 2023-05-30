@@ -1,6 +1,5 @@
+import { ArrowRightIcon } from "@shared/icons";
 import { Image } from "@shared/image";
-
-import ArrowRightIcon from "@icons/arrowRight";
 
 const PLEBS = [
 	"https://133332.xyz/p.jpg",

@@ -1,10 +1,8 @@
-import PlusCircleIcon from "@shared/icons/plusCircle";
-
-import { createBlobFromFile } from "@utils/createBlobFromFile";
-
+import { PlusCircleIcon } from "@shared/icons";
 import { open } from "@tauri-apps/api/dialog";
 import { listen } from "@tauri-apps/api/event";
 import { Body, fetch } from "@tauri-apps/api/http";
+import { createBlobFromFile } from "@utils/createBlobFromFile";
 import { useCallback, useEffect, useState } from "react";
 import { Transforms } from "slate";
 import { useSlateStatic } from "slate-react";

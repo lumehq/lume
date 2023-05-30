@@ -1,11 +1,7 @@
 import { useChannelProfile } from "@app/channel/hooks/useChannelProfile";
-
+import { CopyIcon } from "@shared/icons";
 import { Image } from "@shared/image";
-
-import CopyIcon from "@icons/copy";
-
 import { DEFAULT_AVATAR } from "@stores/constants";
-
 import { nip19 } from "nostr-tools";
 
 export function ChannelMetadata({

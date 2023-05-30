@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function MuteIcon(
+export function MuteIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

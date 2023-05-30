@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function EditIcon(
+export function EditIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

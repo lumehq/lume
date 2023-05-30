@@ -1,11 +1,8 @@
 import { ImageUploader } from "@shared/composer/imageUploader";
-import TrashIcon from "@shared/icons/trash";
+import { TrashIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
-
 import { WRITEONLY_RELAYS } from "@stores/constants";
-
 import { dateToUnix } from "@utils/date";
-
 import { getEventHash, getSignature } from "nostr-tools";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Node, Transforms, createEditor } from "slate";

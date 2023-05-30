@@ -1,13 +1,10 @@
 import { Image } from "@shared/image";
-
 import { DEFAULT_AVATAR } from "@stores/constants";
-
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-
 import { useState } from "react";
 
-export default function MutedItem({ data }: { data: any }) {
+export function MutedItem({ data }: { data: any }) {
 	const { user, isError, isLoading } = useProfile(data.content);
 	const [status, setStatus] = useState(data.status);
 

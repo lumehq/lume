@@ -1,6 +1,6 @@
 import { Image } from "@shared/image";
 
-export default function ImagePreview({ urls }: { urls: string[] }) {
+export function ImagePreview({ urls }: { urls: string[] }) {
 	return (
 		<div className="mt-3 grid h-full w-full grid-cols-3">
 			<div className="col-span-3">

@@ -1,4 +1,4 @@
-import LikeIcon from "@icons/like";
+import { LikeIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
@@ -6,7 +6,7 @@ import { dateToUnix } from "@utils/date";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 
-export default function NoteLike({
+export function NoteLike({
 	id,
 	pubkey,
 	likes,

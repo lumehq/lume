@@ -1,9 +1,9 @@
-import ChannelBlackList from "@app/channel/components/blacklist";
+import { ChannelBlackList } from "@app/channel/components/blacklist";
 import { ChannelMembers } from "@app/channel/components/members";
 import { ChannelMessageList } from "@app/channel/components/messageList";
-import ChannelMessageForm from "@app/channel/components/messages/form";
+import { ChannelMessageForm } from "@app/channel/components/messages/form";
 import { ChannelMetadata } from "@app/channel/components/metadata";
-import ChannelUpdateModal from "@app/channel/components/updateModal";
+import { ChannelUpdateModal } from "@app/channel/components/updateModal";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";

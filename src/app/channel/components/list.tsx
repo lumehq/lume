@@ -1,9 +1,9 @@
-import ChannelCreateModal from "@app/channel/components/createModal";
-import ChannelsListItem from "@app/channel/components/item";
+import { ChannelCreateModal } from "@app/channel/components/createModal";
+import { ChannelsListItem } from "@app/channel/components/item";
 import { useChannels } from "@stores/channels";
 import { useEffect } from "react";
 
-export default function ChannelsList() {
+export function ChannelsList() {
 	const channels = useChannels((state: any) => state.channels);
 	const fetchChannels = useChannels((state: any) => state.fetch);
 

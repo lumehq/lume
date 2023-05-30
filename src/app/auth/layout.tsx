@@ -1,6 +1,4 @@
-import ArrowLeftIcon from "@icons/arrowLeft";
-import ArrowRightIcon from "@icons/arrowRight";
-
+import { ArrowLeftIcon, ArrowRightIcon } from "@shared/icons";
 import useSWR from "swr";
 
 const fetcher = async () => {

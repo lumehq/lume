@@ -1,11 +1,9 @@
-import MutedItem from "@app/channel/components/mutedItem";
-
-import MuteIcon from "@icons/mute";
-
+import { MutedItem } from "@app/channel/components/mutedItem";
 import { Popover, Transition } from "@headlessui/react";
+import { MuteIcon } from "@shared/icons";
 import { Fragment } from "react";
 
-export default function ChannelBlackList({ blacklist }: { blacklist: any }) {
+export function ChannelBlackList({ blacklist }: { blacklist: any }) {
 	return (
 		<Popover className="relative">
 			{({ open }) => (

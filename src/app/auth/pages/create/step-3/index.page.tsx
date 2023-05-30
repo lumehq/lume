@@ -1,5 +1,5 @@
 import { User } from "@app/auth/components/user";
-import CheckCircleIcon from "@icons/checkCircle";
+import { CheckCircleIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";

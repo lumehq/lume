@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import CancelIcon from "@icons/cancel";
-import MuteIcon from "@icons/mute";
+import { CancelIcon, MuteIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
 import { useActiveAccount } from "@stores/accounts";

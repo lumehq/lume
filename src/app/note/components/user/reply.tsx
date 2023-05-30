@@ -7,7 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-export default function NoteReplyUser({
+export function NoteReplyUser({
 	pubkey,
 	time,
 }: { pubkey: string; time: number }) {

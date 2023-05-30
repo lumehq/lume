@@ -1,4 +1,4 @@
-import LumeIcon from "@icons/lume";
+import { LumeIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";

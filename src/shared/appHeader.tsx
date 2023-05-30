@@ -1,6 +1,5 @@
-import ArrowLeftIcon from "@icons/arrowLeft";
-import ArrowRightIcon from "@icons/arrowRight";
-import EventCollector from "@shared/eventCollector";
+import { EventCollector } from "@shared/eventCollector";
+import { ArrowLeftIcon, ArrowRightIcon } from "@shared/icons";
 
 export function AppHeader() {
 	const goBack = () => {

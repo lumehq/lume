@@ -1,5 +1,5 @@
-import UserReply from "@app/channel/components/messages/userReply";
-import CancelIcon from "@icons/cancel";
+import { UserReply } from "@app/channel/components/messages/userReply";
+import { CancelIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
@@ -8,9 +8,7 @@ import { dateToUnix } from "@utils/date";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
-export default function ChannelMessageForm({
-	channelID,
-}: { channelID: string }) {
+export function ChannelMessageForm({ channelID }: { channelID: string }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 

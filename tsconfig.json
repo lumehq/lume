@@ -4,7 +4,6 @@
     "paths": {
       "@app/*": ["src/app/*"],
       "@shared/*": ["src/shared/*"],
-      "@icons/*": ["src/shared/icons/*"],
       "@stores/*": ["src/stores/*"],
       "@utils/*": ["src/utils/*"]
     },

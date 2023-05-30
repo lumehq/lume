@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
-import CancelIcon from "@icons/cancel";
-import EditIcon from "@icons/edit";
 import { AvatarUploader } from "@shared/avatarUploader";
+import { CancelIcon, EditIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -12,7 +11,7 @@ import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-export default function ChannelUpdateModal({ id }: { id: string }) {
+export function ChannelUpdateModal({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 

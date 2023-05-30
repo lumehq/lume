@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function ZapIcon(
+export function ZapIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

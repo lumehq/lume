@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function BellIcon(
+export function BellIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

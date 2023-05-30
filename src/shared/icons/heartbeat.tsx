@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function HeartBeatIcon(
+export function HeartBeatIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function ReplyMessageIcon(
+export function ReplyMessageIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

@@ -6,7 +6,7 @@ import { dateToUnix } from "@utils/date";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
-export default function NoteReplyForm({ id }: { id: string }) {
+export function NoteReplyForm({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 

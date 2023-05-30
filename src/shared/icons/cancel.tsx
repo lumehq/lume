@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function CancelIcon(
+export function CancelIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

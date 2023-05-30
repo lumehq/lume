@@ -1,8 +1,7 @@
-import ZapIcon from "@shared/icons/zap";
 import { compactNumber } from "@utils/number";
 import { useEffect, useState } from "react";
 
-export default function NoteZap({ zaps }: { zaps: number }) {
+export function NoteZap({ zaps }: { zaps: number }) {
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {

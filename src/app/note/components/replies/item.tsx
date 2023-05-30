@@ -1,9 +1,8 @@
 import { Kind1 } from "@app/note/components/kind1";
-import NoteReplyUser from "@app/note/components/user/reply";
-
+import { NoteReplyUser } from "@app/note/components/user/reply";
 import { noteParser } from "@utils/parser";
 
-export default function Reply({ data }: { data: any }) {
+export function Reply({ data }: { data: any }) {
 	const content = noteParser(data);
 
 	return (

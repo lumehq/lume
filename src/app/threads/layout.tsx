@@ -1,5 +1,5 @@
-import MultiAccounts from "@shared/multiAccounts";
-import Navigation from "@shared/navigation";
+import { MultiAccounts } from "@shared/multiAccounts";
+import { Navigation } from "@shared/navigation";
 
 export function LayoutNewsfeed({ children }: { children: React.ReactNode }) {
 	return (

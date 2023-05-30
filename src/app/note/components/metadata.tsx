@@ -1,13 +1,13 @@
-import NoteReply from "@app/note/components/metadata/reply";
-import NoteRepost from "@app/note/components/metadata/repost";
-import NoteZap from "@app/note/components/metadata/zap";
+import { NoteReply } from "@app/note/components/metadata/reply";
+import { NoteRepost } from "@app/note/components/metadata/repost";
+import { NoteZap } from "@app/note/components/metadata/zap";
 import { RelayContext } from "@shared/relayProvider";
 import { READONLY_RELAYS } from "@stores/constants";
 import { decode } from "light-bolt11-decoder";
 import { useContext, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 
-export default function NoteMetadata({
+export function NoteMetadata({
 	id,
 	eventPubkey,
 }: {

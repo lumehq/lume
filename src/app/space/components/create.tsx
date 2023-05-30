@@ -1,7 +1,6 @@
 import { BlockImageUploader } from "./imageUploader";
 import { Dialog, Transition } from "@headlessui/react";
-import CancelIcon from "@icons/cancel";
-import PlusIcon from "@icons/plus";
+import { CancelIcon, PlusIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";

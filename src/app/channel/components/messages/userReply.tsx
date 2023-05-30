@@ -3,7 +3,7 @@ import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
 
-export default function UserReply({ pubkey }: { pubkey: string }) {
+export function UserReply({ pubkey }: { pubkey: string }) {
 	const { user, isError, isLoading } = useProfile(pubkey);
 
 	return (

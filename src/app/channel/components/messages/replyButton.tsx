@@ -1,4 +1,4 @@
-import ReplyMessageIcon from "@icons/replyMessage";
+import { ReplyMessageIcon } from "@shared/icons";
 import { Tooltip } from "@shared/tooltip";
 import { useChannelMessages } from "@stores/channels";
 

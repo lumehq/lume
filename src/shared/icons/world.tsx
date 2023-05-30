@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function WorldIcon(
+export function WorldIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

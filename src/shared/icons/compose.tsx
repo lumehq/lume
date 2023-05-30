@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function ComposeIcon(
+export function ComposeIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

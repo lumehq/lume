@@ -4,7 +4,7 @@ import { usePageContext } from "@utils/hooks/usePageContext";
 
 import { twMerge } from "tailwind-merge";
 
-export default function ChannelsListItem({ data }: { data: any }) {
+export function ChannelsListItem({ data }: { data: any }) {
 	const channel: any = useChannelProfile(data.event_id, data.pubkey);
 	const pageContext = usePageContext();
 

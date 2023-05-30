@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function RefreshIcon(
+export function RefreshIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function ArrowLeftIcon(
+export function ArrowLeftIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

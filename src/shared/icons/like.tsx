@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function LikeIcon(
+export function LikeIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

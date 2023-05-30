@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function CheckCircleIcon(
+export function CheckCircleIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

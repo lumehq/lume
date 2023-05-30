@@ -1,4 +1,4 @@
-import RepostIcon from "@icons/repost";
+import { RepostIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
@@ -7,7 +7,7 @@ import { compactNumber } from "@utils/number";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 
-export default function NoteRepost({
+export function NoteRepost({
 	id,
 	pubkey,
 	reposts,

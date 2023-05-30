@@ -1,5 +1,4 @@
-import EyeOffIcon from "@icons/eyeOff";
-import EyeOnIcon from "@icons/eyeOn";
+import { EyeOffIcon, EyeOnIcon } from "@shared/icons";
 import { createAccount } from "@utils/storage";
 import { generatePrivateKey, getPublicKey, nip19 } from "nostr-tools";
 import { useMemo, useState } from "react";

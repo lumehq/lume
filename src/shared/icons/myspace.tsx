@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function MyspaceIcon(
+export function MyspaceIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

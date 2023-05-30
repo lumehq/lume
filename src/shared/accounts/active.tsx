@@ -1,9 +1,8 @@
 import { Image } from "@shared/image";
-
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 
-export default function ActiveAccount({ data }: { data: any }) {
+export function ActiveAccount({ data }: { data: any }) {
 	const { user } = useProfile(data.pubkey);
 
 	return (

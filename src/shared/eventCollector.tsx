@@ -1,4 +1,4 @@
-import HeartBeatIcon from "@icons/heartbeat";
+import { HeartBeatIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
@@ -8,7 +8,7 @@ import { getParentID, nip02ToArray } from "@utils/transform";
 import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
-export default function EventCollector() {
+export function EventCollector() {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 

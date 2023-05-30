@@ -1,15 +1,11 @@
 import { Kind1 } from "@app/note/components/kind1";
 import { Kind1063 } from "@app/note/components/kind1063";
-import NoteMetadata from "@app/note/components/metadata";
+import { NoteMetadata } from "@app/note/components/metadata";
 import { NoteSkeleton } from "@app/note/components/skeleton";
 import { NoteDefaultUser } from "@app/note/components/user/default";
-
 import { RelayContext } from "@shared/relayProvider";
-
 import { READONLY_RELAYS } from "@stores/constants";
-
 import { noteParser } from "@utils/parser";
-
 import { memo, useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";

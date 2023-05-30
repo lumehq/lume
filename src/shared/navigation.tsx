@@ -1,14 +1,12 @@
-import ChannelsList from "@app/channel/components/list";
-import ChatsList from "@app/chat/components/list";
+import { ChannelsList } from "@app/channel/components/list";
+import { ChatsList } from "@app/chat/components/list";
 import { Disclosure } from "@headlessui/react";
-import NavArrowDownIcon from "@icons/navArrowDown";
-import ThreadsIcon from "@icons/threads";
-import WorldIcon from "@icons/world";
-import ActiveLink from "@shared/activeLink";
+import { ActiveLink } from "@shared/activeLink";
 import { AppHeader } from "@shared/appHeader";
 import { ComposerModal } from "@shared/composer/modal";
+import { NavArrowDownIcon, ThreadsIcon, WorldIcon } from "@shared/icons";
 
-export default function Navigation() {
+export function Navigation() {
 	return (
 		<div className="flex w-[232px] h-full flex-col gap-3 border-r border-zinc-900">
 			<AppHeader />

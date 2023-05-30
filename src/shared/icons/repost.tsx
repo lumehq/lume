@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function RepostIcon(
+export function RepostIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

@@ -1,16 +1,12 @@
-import NoteReplyForm from "@app/note/components/replies/form";
-import Reply from "@app/note/components/replies/item";
-
+import { NoteReplyForm } from "@app/note/components/replies/form";
+import { Reply } from "@app/note/components/replies/item";
 import { RelayContext } from "@shared/relayProvider";
-
 import { READONLY_RELAYS } from "@stores/constants";
-
 import { sortEvents } from "@utils/transform";
-
 import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
-export default function RepliesList({ id }: { id: string }) {
+export function RepliesList({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
 
 	const { data, error } = useSWRSubscription(

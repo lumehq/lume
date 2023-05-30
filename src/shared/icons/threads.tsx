@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function ThreadsIcon(
+export function ThreadsIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

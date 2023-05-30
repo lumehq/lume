@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function NavArrowDownIcon(
+export function NavArrowDownIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

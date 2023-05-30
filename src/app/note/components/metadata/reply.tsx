@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import ReplyIcon from "@icons/reply";
+import { ReplyIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -9,10 +9,7 @@ import { compactNumber } from "@utils/number";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 
-export default function NoteReply({
-	id,
-	replies,
-}: { id: string; replies: number }) {
+export function NoteReply({ id, replies }: { id: string; replies: number }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 

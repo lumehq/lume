@@ -1,6 +1,6 @@
-import AppHeader from "@shared/appHeader";
-import MultiAccounts from "@shared/multiAccounts";
-import Navigation from "@shared/navigation";
+import { AppHeader } from "@shared/appHeader";
+import { MultiAccounts } from "@shared/multiAccounts";
+import { Navigation } from "@shared/navigation";
 
 export function LayoutNewsfeed({ children }: { children: React.ReactNode }) {
 	return (

@@ -3,7 +3,7 @@ import { useActiveAccount } from "@stores/accounts";
 import { useChats } from "@stores/chats";
 import { useEffect } from "react";
 
-export default function ChatsList() {
+export function ChatsList() {
 	const account = useActiveAccount((state: any) => state.account);
 	const chats = useChats((state: any) => state.chats);
 	const fetchChats = useChats((state: any) => state.fetch);

@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
-import CancelIcon from "@icons/cancel";
-import PlusIcon from "@icons/plus";
 import { AvatarUploader } from "@shared/avatarUploader";
+import { CancelIcon, PlusIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -13,7 +12,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { navigate } from "vite-plugin-ssr/client/router";
 
-export default function ChannelCreateModal() {
+export function ChannelCreateModal() {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 

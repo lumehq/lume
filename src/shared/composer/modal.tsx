@@ -1,10 +1,12 @@
 import { Dialog, Transition } from "@headlessui/react";
-import CancelIcon from "@icons/cancel";
-import ChevronDownIcon from "@icons/chevronDown";
-import ChevronRightIcon from "@icons/chevronRight";
-import ComposeIcon from "@icons/compose";
 import { Post } from "@shared/composer/types/post";
 import { User } from "@shared/composer/user";
+import {
+	CancelIcon,
+	ChevronDownIcon,
+	ChevronRightIcon,
+	ComposeIcon,
+} from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
 import { Fragment, useState } from "react";
 

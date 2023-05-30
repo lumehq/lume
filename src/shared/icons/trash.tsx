@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function TrashIcon(
+export function TrashIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (

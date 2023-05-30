@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import CancelIcon from "@icons/cancel";
-import HideIcon from "@icons/hide";
+import { CancelIcon, HideIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
 import { useActiveAccount } from "@stores/accounts";
