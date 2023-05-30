@@ -11,6 +11,6 @@ export async function sendNativeNotification(content: string) {
 		permissionGranted = permission === "granted";
 	}
 	if (permissionGranted) {
-		sendNotification({ title: "TAURI", body: content });
+		sendNotification({ title: "Lume", body: content });
 	}
 }

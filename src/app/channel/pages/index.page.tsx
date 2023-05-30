@@ -96,6 +96,8 @@ export function Page() {
 		},
 	);
 
+	if (!account) return <div>Fuck SSR</div>;
+
 	return (
 		<div className="h-full w-full grid grid-cols-3">
 			<div className="col-span-2 flex flex-col justify-between border-r border-zinc-900">

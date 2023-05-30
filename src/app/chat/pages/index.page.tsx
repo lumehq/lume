@@ -24,7 +24,7 @@ export function Page() {
 	]);
 	const addMessage = useChatMessages((state: any) => state.add);
 
-	useSWRSubscription(account ? ["chat", pubkey] : null, ([, key]) => {
+	useSWRSubscription(account && pubkey ? ["chat", pubkey] : null, ([, key]) => {
 		const unsubscribe = pool.subscribe(
 			[
 				{
@@ -58,6 +58,8 @@ export function Page() {
 			clear();
 		};
 	}, [pubkey]);
+
+	if (!account) return <div>Fuck SSR</div>;
 
 	return (
 		<div className="h-full w-full grid grid-cols-3">

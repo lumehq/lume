@@ -8,24 +8,23 @@ import {
 	countTotalNotes,
 	createChat,
 	createNote,
-	getLastLogin,
 } from "@utils/storage";
 import { getParentID } from "@utils/transform";
 import { useCallback, useContext, useRef } from "react";
 import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
-let lastLogin: string;
 let totalNotes: number;
-
 if (typeof window !== "undefined") {
-	lastLogin = await getLastLogin();
 	totalNotes = await countTotalNotes();
 }
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
+	const [account, lastLogin] = useActiveAccount((state: any) => [
+		state.account,
+		state.lastLogin,
+	]);
 
 	const now = useRef(new Date());
 	const eose = useRef(0);
@@ -33,15 +32,14 @@ export function Page() {
 	const getQuery = useCallback(() => {
 		const query = [];
 		const follows = JSON.parse(account.follows);
-		const last = parseInt(lastLogin);
 
 		let queryNoteSince: number;
 
 		if (totalNotes === 0) {
 			queryNoteSince = dateToUnix(getHourAgo(48, now.current));
 		} else {
-			if (parseInt(lastLogin) > 0) {
-				queryNoteSince = last;
+			if (lastLogin > 0) {
+				queryNoteSince = lastLogin;
 			} else {
 				queryNoteSince = dateToUnix(getHourAgo(48, now.current));
 			}
@@ -58,21 +56,21 @@ export function Page() {
 		query.push({
 			kinds: [4],
 			"#p": [account.pubkey],
-			since: last,
+			since: lastLogin,
 		});
 
 		// kind 4 (chats) query
 		query.push({
 			kinds: [4],
 			authors: [account.pubkey],
-			since: last,
+			since: lastLogin,
 		});
 
 		// kind 43, 43 (mute user, hide message) query
 		query.push({
 			authors: [account.pubkey],
 			kinds: [43, 44],
-			since: last,
+			since: lastLogin,
 		});
 
 		return query;
