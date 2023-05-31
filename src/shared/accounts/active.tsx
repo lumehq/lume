@@ -1,6 +1,7 @@
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
+import { useChats } from "@stores/chats";
 import { DEFAULT_AVATAR, READONLY_RELAYS } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
@@ -10,6 +11,7 @@ import useSWRSubscription from "swr/subscription";
 export function ActiveAccount({ data }: { data: any }) {
 	const pool: any = useContext(RelayContext);
 	const lastLogin = useActiveAccount((state: any) => state.lastLogin);
+	const addChat = useChats((state: any) => state.add);
 
 	const { user } = useProfile(data.pubkey);
 
@@ -22,12 +24,20 @@ export function ActiveAccount({ data }: { data: any }) {
 					{
 						"#p": [key],
 						since: lastLogin,
-						limit: 20,
 					},
 				],
 				READONLY_RELAYS,
 				(event) => {
-					sendNativeNotification(event.content);
+					switch (event.kind) {
+						case 4:
+							// update state
+							addChat(event.pubkey);
+							// send native notifiation
+							sendNativeNotification(event.content);
+							break;
+						default:
+							break;
+					}
 				},
 			);
 
