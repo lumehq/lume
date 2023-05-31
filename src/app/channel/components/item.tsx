@@ -29,8 +29,15 @@ export function ChannelsListItem({ data }: { data: any }) {
 			>
 				<span className="text-base text-white">#</span>
 			</div>
-			<div>
+			<div className="w-full inline-flex items-center justify-between">
 				<h5 className="truncate font-medium text-zinc-200">{channel?.name}</h5>
+				<div className="flex items-center">
+					{data.new_messages && (
+						<span className="inline-flex items-center justify-center rounded bg-fuchsia-400/10 w-8 px-1 py-1 text-xs font-medium text-fuchsia-500 ring-1 ring-inset ring-fuchsia-400/20">
+							{data.new_messages}
+						</span>
+					)}
+				</div>
 			</div>
 		</a>
 	);

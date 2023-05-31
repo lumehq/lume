@@ -29,9 +29,11 @@ export function ChatsList() {
 					</div>
 				</>
 			) : (
-				chats.map((item) => (
-					<ChatsListItem key={item.sender_pubkey} data={item} />
-				))
+				chats.map((item) => {
+					if (account.pubkey !== item.sender_pubkey) {
+						return <ChatsListItem key={item.sender_pubkey} data={item} />;
+					}
+				})
 			)}
 		</div>
 	);

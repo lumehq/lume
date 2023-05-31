@@ -2,13 +2,36 @@ import { getChannels } from "@utils/storage";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-export const useChannels = create((set) => ({
-	channels: [],
-	fetch: async () => {
-		const response = await getChannels(10, 0);
-		set({ channels: response });
-	},
-}));
+export const useChannels = create(
+	immer((set) => ({
+		channels: [],
+		fetch: async () => {
+			const response = await getChannels(10, 0);
+			set({ channels: response });
+		},
+		add: (event) => {
+			set((state) => {
+				const target = state.channels.findIndex(
+					(m: { event_id: string }) => m.event_id === event.id,
+				);
+				if (target !== -1) {
+					state.channels[target]["new_messages"] =
+						state.channels[target]["new_messages"] + 1 || 1;
+				} else {
+					state.channels.push({ event_id: event.id, ...event });
+				}
+			});
+		},
+		clearBubble: (id: string) => {
+			set((state) => {
+				const target = state.channels.findIndex(
+					(m: { event_id: string }) => m.event_id === id,
+				);
+				state.channels[target]["new_messages"] = 0;
+			});
+		},
+	})),
+);
 
 export const useChannelMessages = create(
 	immer((set) => ({

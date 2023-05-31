@@ -1,8 +1,10 @@
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
+import { useChannels } from "@stores/channels";
 import { useChats } from "@stores/chats";
 import { DEFAULT_AVATAR, READONLY_RELAYS } from "@stores/constants";
+import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
 import { useContext } from "react";
@@ -10,8 +12,16 @@ import useSWRSubscription from "swr/subscription";
 
 export function ActiveAccount({ data }: { data: any }) {
 	const pool: any = useContext(RelayContext);
+	const pageContext = usePageContext();
+	const pathnames: any = pageContext.urlParsed.pathname;
+
+	const notChatPage = pathnames.includes("/chat") ? false : true;
+	const notChannelPage = pathnames.includes("/channel") ? false : true;
+	const notSpacePage = pathnames.includes("/space") ? false : true;
+
 	const lastLogin = useActiveAccount((state: any) => state.lastLogin);
-	const addChat = useChats((state: any) => state.add);
+	const notifyChat = useChats((state: any) => state.add);
+	const notifyChannel = useChannels((state: any) => state.add);
 
 	const { user } = useProfile(data.pubkey);
 
@@ -29,11 +39,23 @@ export function ActiveAccount({ data }: { data: any }) {
 				READONLY_RELAYS,
 				(event) => {
 					switch (event.kind) {
+						case 1:
+							break;
 						case 4:
-							// update state
-							addChat(event.pubkey);
-							// send native notifiation
-							sendNativeNotification(event.content);
+							if (notChatPage) {
+								// update state
+								notifyChat(event.pubkey);
+								// send native notifiation
+								sendNativeNotification("You've received new message");
+							}
+							break;
+						case 42:
+							if (notChannelPage) {
+								// update state
+								notifyChannel(event);
+								// send native notifiation
+								sendNativeNotification(event.content);
+							}
 							break;
 						default:
 							break;
