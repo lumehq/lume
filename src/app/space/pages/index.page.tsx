@@ -1,14 +1,19 @@
-import { FeedBlock } from "../components/feed";
+import { FeedBlock } from "@app/space/components/blocks/feed";
+import { FollowingBlock } from "@app/space/components/blocks/following";
+import { ImageBlock } from "@app/space/components/blocks/image";
 import { CreateBlockModal } from "@app/space/components/create";
-import { FollowingBlock } from "@app/space/components/following";
-import { ImageBlock } from "@app/space/components/image";
+import { useActiveAccount } from "@stores/accounts";
 import { getBlocks } from "@utils/storage";
 import useSWR from "swr";
 
-const fetcher = ([, id]) => getBlocks(1);
+const fetcher = ([, id]) => getBlocks(id);
 
 export function Page() {
-	const { data }: any = useSWR("blocks", fetcher);
+	const account = useActiveAccount((state: any) => state.account);
+	const { data }: any = useSWR(
+		account ? ["blocks", account.id] : null,
+		fetcher,
+	);
 
 	return (
 		<div className="h-full w-full flex flex-nowrap overflow-x-auto overflow-y-hidden">

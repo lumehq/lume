@@ -7,7 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-export function NoteReplyUser({
+export function NoteQuoteUser({
 	pubkey,
 	time,
 }: {
@@ -17,12 +17,12 @@ export function NoteReplyUser({
 	const { user } = useProfile(pubkey);
 
 	return (
-		<div className="group flex items-start gap-2.5">
-			<div className="relative h-11 w-11 shrink-0 rounded-md">
+		<div className="group flex items-center gap-2">
+			<div className="relative h-6 w-6 shrink-0 rounded">
 				<Image
 					src={user?.picture || DEFAULT_AVATAR}
 					alt={pubkey}
-					className="h-11 w-11 rounded-md object-cover"
+					className="h-6 w-6 rounded object-cover"
 				/>
 			</div>
 			<div className="flex w-full flex-1 items-start justify-between">

@@ -1,5 +1,9 @@
 import destr from "destr";
 
+export function truncateContent(str, n) {
+	return str.length > n ? `${str.slice(0, n - 1)}&hellip;` : str;
+}
+
 // convert NIP-02 to array of pubkey
 export function nip02ToArray(tags: any) {
 	const arr = [];

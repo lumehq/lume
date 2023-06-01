@@ -7,11 +7,15 @@ html {
 }
 
 a {
-  @apply cursor-default;
+  @apply cursor-default no-underline !important;
 }
 
 button {
   @apply cursor-default focus:outline-none;
+}
+
+.markdown {
+  @apply prose prose-zinc max-w-none select-text break-words dark:prose-invert prose-p:mt-0 prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-500 hover:prose-a:text-fuchsia-600 prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight;
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */

@@ -41,10 +41,7 @@ export function noteParser(event: Event) {
 
 	// map hashtag to em
 	content.original.match(/#(\w+)(?!:\/\/)/g)?.forEach((item) => {
-		content.parsed = content.parsed.replace(
-			item,
-			` [${item}](https://primal.net/search/${item})`,
-		);
+		content.parsed = content.parsed.replace(item, `[${item}](/search/${item})`);
 	});
 
 	// handle nostr mention
@@ -58,7 +55,10 @@ export function noteParser(event: Event) {
 		}
 
 		if (profile) {
-			content.parsed = content.parsed.replace(item.text, `*${profile.pubkey}*`);
+			content.parsed = content.parsed.replace(
+				item.text,
+				`[${profile.pubkey}](/user?pubkey=${profile.pubkey})`,
+			);
 		}
 	});
 

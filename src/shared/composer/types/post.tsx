@@ -29,7 +29,11 @@ const ImagePreview = ({
 	attributes,
 	children,
 	element,
-}: { attributes: any; children: any; element: any }) => {
+}: {
+	attributes: any;
+	children: any;
+	element: any;
+}) => {
 	const editor: any = useSlateStatic();
 	const path = ReactEditor.findPath(editor, element);
 
@@ -112,7 +116,7 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 					<div className="flex w-8 shrink-0 items-center justify-center">
 						<div className="h-full w-[2px] bg-zinc-800" />
 					</div>
-					<div className="prose prose-zinc relative h-max w-full max-w-none select-text break-words pb-3 dark:prose-invert prose-p:mb-0.5 prose-p:mt-0 prose-p:text-[15px] prose-p:leading-tight prose-a:text-[15px] prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-500 prose-a:no-underline hover:prose-a:text-fuchsia-600 hover:prose-a:underline prose-ol:mb-1 prose-ul:mb-1 prose-li:text-[15px] prose-li:leading-tight">
+					<div className="markdown">
 						<Editable
 							autoFocus
 							placeholder="What's on your mind?"

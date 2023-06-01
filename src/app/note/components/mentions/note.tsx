@@ -1,7 +1,7 @@
 import { Kind1 } from "@app/note/components/kind1";
 import { Kind1063 } from "@app/note/components/kind1063";
 import { NoteSkeleton } from "@app/note/components/skeleton";
-import { NoteDefaultUser } from "@app/note/components/user/default";
+import { NoteQuoteUser } from "@app/note/components/user/quote";
 import { NoteWrapper } from "@app/note/components/wrapper";
 import { RelayContext } from "@shared/relayProvider";
 import { READONLY_RELAYS } from "@stores/constants";
@@ -44,13 +44,13 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 	return (
 		<NoteWrapper
 			href={`/app/note?id=${id}`}
-			className="mt-3 rounded-lg border border-zinc-800 px-3 py-3"
+			className="mt-3 rounded-lg border border-zinc-800 px-3 pt-3"
 		>
 			{data ? (
 				<>
-					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-					<div className="-mt-5 pl-[49px]">
-						{kind1 && <Kind1 content={kind1} />}
+					<NoteQuoteUser pubkey={data.pubkey} time={data.created_at} />
+					<div className="mt-2">
+						{kind1 && <Kind1 content={kind1} truncate={true} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}
 					</div>
 				</>
