@@ -55,7 +55,7 @@
         "open": true
       },
       "notification": {
-        "all": false
+        "all": true
       },
       "window": {
         "startDragging": true,
