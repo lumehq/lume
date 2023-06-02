@@ -1,7 +1,7 @@
+import { AddBlock } from "@app/space/components/add";
 import { FeedBlock } from "@app/space/components/blocks/feed";
 import { FollowingBlock } from "@app/space/components/blocks/following";
 import { ImageBlock } from "@app/space/components/blocks/image";
-import { CreateBlockModal } from "@app/space/components/create";
 import { useActiveAccount } from "@stores/accounts";
 import { getBlocks } from "@utils/storage";
 import useSWR from "swr";
@@ -16,7 +16,7 @@ export function Page() {
 	);
 
 	return (
-		<div className="h-full w-full flex flex-nowrap overflow-x-auto overflow-y-hidden">
+		<div className="h-full w-full flex flex-nowrap overflow-x-auto overflow-y-hidden scrollbar-hide">
 			<FollowingBlock />
 			{data
 				? data.map((block: any) =>
@@ -27,9 +27,9 @@ export function Page() {
 						),
 				  )
 				: null}
-			<div className="shrink-0 w-[360px] border-r border-zinc-900">
+			<div className="shrink-0 w-[90px]">
 				<div className="w-full h-full inline-flex items-center justify-center">
-					<CreateBlockModal />
+					<AddBlock />
 				</div>
 			</div>
 			<div className="shrink-0 w-[360px]" />
