@@ -116,7 +116,7 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 					<div className="flex w-8 shrink-0 items-center justify-center">
 						<div className="h-full w-[2px] bg-zinc-800" />
 					</div>
-					<div className="markdown">
+					<div className="w-full markdown">
 						<Editable
 							autoFocus
 							placeholder="What's on your mind?"

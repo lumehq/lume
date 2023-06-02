@@ -29,7 +29,7 @@ export function ChannelMessageUser({
 				</>
 			) : (
 				<>
-					<div className="relative h-11 w-11 shrink rounded-md">
+					<div className="relative h-11 w-11 shrink-0 rounded-md">
 						<Image
 							src={user?.picture || DEFAULT_AVATAR}
 							alt={pubkey}
@@ -38,7 +38,7 @@ export function ChannelMessageUser({
 					</div>
 					<div className="flex w-full flex-1 items-start justify-between">
 						<div className="flex items-baseline gap-2 text-base">
-							<span className="font-semibold leading-none text-white">
+							<span className="max-w-[10rem] truncate font-semibold leading-none text-white">
 								{user?.nip05 || user?.name || shortenKey(pubkey)}
 							</span>
 							<span className="leading-none text-zinc-500">·</span>

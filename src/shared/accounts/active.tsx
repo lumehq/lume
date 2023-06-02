@@ -17,7 +17,7 @@ export function ActiveAccount({ data }: { data: any }) {
 
 	const notChatPage = pathnames.includes("/chat") ? false : true;
 	const notChannelPage = pathnames.includes("/channel") ? false : true;
-	const notSpacePage = pathnames.includes("/space") ? false : true;
+	// const notSpacePage = pathnames.includes("/space") ? false : true;
 
 	const lastLogin = useActiveAccount((state: any) => state.lastLogin);
 	const notifyChat = useChats((state: any) => state.add);

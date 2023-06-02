@@ -27,7 +27,7 @@ export function NoteReplyUser({
 			</div>
 			<div className="flex w-full flex-1 items-start justify-between">
 				<div className="flex items-baseline gap-2 text-base">
-					<span className="font-semibold leading-none text-white">
+					<span className="max-w-[10rem] truncate font-semibold leading-none text-white">
 						{user?.nip05 || user?.name || shortenKey(pubkey)}
 					</span>
 					<span className="leading-none text-zinc-500">·</span>

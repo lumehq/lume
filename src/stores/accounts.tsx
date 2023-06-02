@@ -55,9 +55,7 @@ export const useActiveAccount = create(
 						const target = state.blocks.findIndex(
 							(b: { id: string }) => b.id === id,
 						);
-						if (target) {
-							state.blocks.splice(target, 1);
-						}
+						state.blocks.splice(target, 1);
 					});
 				},
 				updateFollows: (list: any) => {

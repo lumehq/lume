@@ -22,7 +22,7 @@ export function UserReply({ pubkey }: { pubkey: string }) {
 							className="h-9 w-9 rounded object-cover"
 						/>
 					</div>
-					<span className="text-sm font-medium leading-none text-zinc-500">
+					<span className="max-w-[10rem] truncate text-sm font-medium leading-none text-zinc-500">
 						Replying to {user?.name || shortenKey(pubkey)}
 					</span>
 				</>

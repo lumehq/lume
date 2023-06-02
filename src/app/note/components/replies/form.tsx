@@ -3,6 +3,7 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
+import { useProfile } from "@utils/hooks/useProfile";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
@@ -10,6 +11,7 @@ export function NoteReplyForm({ id }: { id: string }) {
 	const pool: any = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
+	const { user } = useProfile(account.pubkey);
 	const [value, setValue] = useState("");
 
 	const submitEvent = () => {
@@ -32,12 +34,12 @@ export function NoteReplyForm({ id }: { id: string }) {
 	};
 
 	return (
-		<div className="flex gap-2.5 px-3 py-4">
+		<div className="flex gap-2.5 py-4">
 			<div>
 				<div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md">
 					<Image
-						src={account?.picture}
-						alt={account?.pubkey}
+						src={user?.picture}
+						alt={id}
 						className="h-9 w-9 rounded-md object-cover"
 					/>
 				</div>
