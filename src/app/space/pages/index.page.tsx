@@ -3,23 +3,22 @@ import { FeedBlock } from "@app/space/components/blocks/feed";
 import { FollowingBlock } from "@app/space/components/blocks/following";
 import { ImageBlock } from "@app/space/components/blocks/image";
 import { useActiveAccount } from "@stores/accounts";
-import { getBlocks } from "@utils/storage";
-import useSWR from "swr";
-
-const fetcher = ([, id]) => getBlocks(id);
+import { useEffect } from "react";
 
 export function Page() {
-	const account = useActiveAccount((state: any) => state.account);
-	const { data }: any = useSWR(
-		account ? ["blocks", account.id] : null,
-		fetcher,
-	);
+	const blocks = useActiveAccount((state: any) => state.blocks);
+	const fetchBlocks = useActiveAccount((state: any) => state.fetchBlocks);
+
+	useEffect(() => {
+		if (blocks !== null) return;
+		fetchBlocks();
+	}, [fetchBlocks]);
 
 	return (
 		<div className="h-full w-full flex flex-nowrap overflow-x-auto overflow-y-hidden scrollbar-hide">
 			<FollowingBlock />
-			{data
-				? data.map((block: any) =>
+			{blocks
+				? blocks.map((block: any) =>
 						block.kind === 0 ? (
 							<ImageBlock key={block.id} params={block} />
 						) : (

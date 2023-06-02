@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 export const useChats = create(
-	immer((set: any, get: any) => ({
+	immer((set: any) => ({
 		chats: [],
 		fetch: async (pubkey: string) => {
 			const response: any = await getChatsByPubkey(pubkey);

@@ -386,7 +386,7 @@ export async function getBlocks(account_id: number) {
 }
 
 // create block
-export async function createBlock(
+export async function addBlockToDB(
 	account_id: number,
 	kind: number,
 	title: string,
@@ -397,4 +397,9 @@ export async function createBlock(
 		"INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);",
 		[account_id, kind, title, content],
 	);
+}
+
+export async function removeBlockFromDB(id: string) {
+	const db = await connect();
+	return await db.execute(`DELETE FROM blocks WHERE id = "${id}";`);
 }

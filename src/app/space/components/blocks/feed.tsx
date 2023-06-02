@@ -1,6 +1,8 @@
 import { NoteBase } from "@app/note/components/base";
 import { NoteQuoteRepost } from "@app/note/components/quoteRepost";
 import { NoteSkeleton } from "@app/note/components/skeleton";
+import { CancelIcon } from "@shared/icons";
+import { useActiveAccount } from "@stores/accounts";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { getNotesByAuthor } from "@utils/storage";
@@ -10,6 +12,8 @@ const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
 export function FeedBlock({ params }: { params: any }) {
+	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
+
 	const {
 		status,
 		data,
@@ -58,13 +62,25 @@ export function FeedBlock({ params }: { params: any }) {
 		}
 	}, [fetchNextPage, allRows.length, rowVirtualizer.getVirtualItems()]);
 
+	const close = () => {
+		removeBlock(params.id);
+	};
+
 	return (
 		<div className="shrink-0 w-[420px] border-r border-zinc-900">
 			<div
 				data-tauri-drag-region
-				className="h-11 w-full inline-flex items-center justify-center border-b border-zinc-900"
+				className="h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"
 			>
+				<div className="w-9 h-6" />
 				<h3 className="font-semibold text-zinc-100">{params.title}</h3>
+				<button
+					type="button"
+					onClick={() => close()}
+					className="inline-flex h-6 w-9 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800"
+				>
+					<CancelIcon width={14} height={14} className="text-zinc-500" />
+				</button>
 			</div>
 			<div
 				ref={parentRef}

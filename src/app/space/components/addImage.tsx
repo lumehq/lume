@@ -8,14 +8,16 @@ import { open } from "@tauri-apps/api/dialog";
 import { Body, fetch } from "@tauri-apps/api/http";
 import { createBlobFromFile } from "@utils/createBlobFromFile";
 import { dateToUnix } from "@utils/date";
-import { createBlock } from "@utils/storage";
 import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function AddImageBlock({ parentState }: { parentState: any }) {
 	const pool: any = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
+	const [account, addBlock] = useActiveAccount((state: any) => [
+		state.account,
+		state.addBlock,
+	]);
 
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(true);
@@ -97,8 +99,6 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 			tags: tags.current,
 		};
 
-		console.log(event);
-
 		event.id = getEventHash(event);
 		event.sig = getSignature(event, account.privkey);
 
@@ -106,7 +106,7 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 		pool.publish(event, WRITEONLY_RELAYS);
 
 		// insert to database
-		createBlock(account.id, 0, data.title, data.content);
+		addBlock(0, data.title, data.content);
 
 		setTimeout(() => {
 			setLoading(false);

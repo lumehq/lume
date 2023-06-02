@@ -7,7 +7,7 @@ import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function AddFeedBlock({ parentState }: { parentState: any }) {
-	const account = useActiveAccount((state: any) => state.account);
+	const addBlock = useActiveAccount((state: any) => state.addBlock);
 
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(true);
@@ -36,7 +36,7 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 		}
 
 		// insert to database
-		createBlock(account.id, 1, data.title, pubkey);
+		addBlock(1, data.title, pubkey);
 
 		setTimeout(() => {
 			setLoading(false);
