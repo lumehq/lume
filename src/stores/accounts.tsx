@@ -22,6 +22,12 @@ export const useActiveAccount = create(
 					const response = await createAccount(npub, pubkey, privkey, null, 1);
 					if (response) {
 						const activeAccount = await getActiveAccount();
+						await addBlockToDB(
+							activeAccount.id,
+							0,
+							"Freedom Awaits",
+							"https://void.cat/d/88M2kWHtjZLRtdyfAajHbu.webp",
+						);
 						set({
 							account: activeAccount,
 						});

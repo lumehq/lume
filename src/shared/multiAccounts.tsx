@@ -51,7 +51,7 @@ export function MultiAccounts() {
 					</>
 					<button
 						type="button"
-						className="group relative flex h-10 w-10 shrink items-center justify-center rounded-lg border-2 border-dashed border-transparent hover:border-zinc-600"
+						className="group relative flex h-10 w-10 shrink items-center justify-center rounded-md border border-dashed border-transparent hover:border-zinc-600"
 					>
 						<PlusIcon
 							width={16}

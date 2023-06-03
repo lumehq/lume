@@ -113,12 +113,12 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 							leaveTo="opacity-0 scale-95"
 						>
 							<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border border-zinc-800 bg-zinc-900">
-								<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-6">
+								<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
 									<div className="flex flex-col gap-2">
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"
-												className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text text-xl font-semibold leading-none text-transparent"
+												className="text-lg font-semibold leading-none text-white"
 											>
 												Update channel
 											</Dialog.Title>
@@ -134,7 +134,7 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 												/>
 											</button>
 										</div>
-										<Dialog.Description className="leading-tight text-zinc-400">
+										<Dialog.Description className="text-sm leading-tight text-zinc-400">
 											New metadata will be published on all relays, and will be
 											immediately available to all users, so please carefully.
 										</Dialog.Description>
@@ -152,7 +152,7 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 											className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 										/>
 										<div className="flex flex-col gap-1">
-											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
+											<label className="text-sm font-medium uppercase tracking-wider text-zinc-400">
 												Picture
 											</label>
 											<div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
@@ -167,7 +167,7 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 											</div>
 										</div>
 										<div className="flex flex-col gap-1">
-											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
+											<label className="text-sm font-medium uppercase tracking-wider text-zinc-400">
 												Channel name *
 											</label>
 											<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
@@ -183,7 +183,7 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 											</div>
 										</div>
 										<div className="flex flex-col gap-1">
-											<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
+											<label className="text-sm font-medium uppercase tracking-wider text-zinc-400">
 												Description
 											</label>
 											<div className="relative h-20 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">

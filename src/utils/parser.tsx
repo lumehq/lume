@@ -55,10 +55,7 @@ export function noteParser(event: Event) {
 		}
 
 		if (profile) {
-			content.parsed = content.parsed.replace(
-				item.text,
-				`[${profile.pubkey}](/user?pubkey=${profile.pubkey})`,
-			);
+			content.parsed = content.parsed.replace(item.text, `*${profile.pubkey}*`);
 		}
 	});
 

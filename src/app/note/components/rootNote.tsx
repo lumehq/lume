@@ -77,7 +77,7 @@ export const RootNote = memo(function RootNote({
 					pubkey={parseFallback.pubkey}
 					time={parseFallback.created_at}
 				/>
-				<div className="-mt-5 pl-[48px]">
+				<div className="-mt-5 pl-[49px]">
 					<Kind1 content={contentFallback} />
 					<NoteMetadata
 						id={parseFallback.id}
@@ -97,9 +97,24 @@ export const RootNote = memo(function RootNote({
 			{data ? (
 				<>
 					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
-					<div className="-mt-5 pl-[48px]">
+					<div className="-mt-5 pl-[49px]">
 						{kind1 && <Kind1 content={kind1} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}
+						{!kind1 && !kind1063 && (
+							<div className="flex flex-col gap-2">
+								<div className="px-2 py-2 inline-flex flex-col gap-1 bg-zinc-800 rounded-md">
+									<span className="text-zinc-500 text-sm font-medium leading-none">
+										Kind: {data.kind}
+									</span>
+									<p className="text-fuchsia-500 text-sm leading-none">
+										Lume isn't fully support this kind in newsfeed
+									</p>
+								</div>
+								<div className="markdown">
+									<p>{data.content}</p>
+								</div>
+							</div>
+						)}
 						<NoteMetadata id={data.id} eventPubkey={data.pubkey} />
 					</div>
 				</>

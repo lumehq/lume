@@ -1,14 +1,21 @@
 import { Image } from "@shared/image";
+import useEmblaCarousel from "embla-carousel-react";
 
 export function ImagePreview({ urls }: { urls: string[] }) {
+	const [emblaRef] = useEmblaCarousel();
+
 	return (
-		<div className="mt-3 grid h-full w-full grid-cols-3">
-			<div className="col-span-3">
-				<Image
-					src={urls[0]}
-					alt="image"
-					className="h-auto w-full rounded-lg object-cover"
-				/>
+		<div ref={emblaRef} className="mt-3 overflow-hidden">
+			<div className="flex">
+				{urls.map((url) => (
+					<div className="mr-2 min-w-0 grow-0 shrink-0 basis-full">
+						<Image
+							src={url}
+							alt="image"
+							className="h-auto w-full rounded-lg object-cover"
+						/>
+					</div>
+				))}
 			</div>
 		</div>
 	);

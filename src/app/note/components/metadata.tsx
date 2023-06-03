@@ -62,7 +62,7 @@ export function NoteMetadata({
 	});
 
 	return (
-		<div className="inline-flex items-center gap-2 w-full h-14 mt-5 border-t border-zinc-800">
+		<div className="inline-flex items-center gap-2 w-full h-12 mt-4">
 			<NoteReply id={id} replies={replies} />
 			<NoteRepost id={id} pubkey={eventPubkey} reposts={reposts} />
 			<div className="ml-auto">

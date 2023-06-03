@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { CancelIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
-import { createBlock } from "@utils/storage";
 import { nip19 } from "nostr-tools";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -72,7 +71,7 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 						leaveTo="opacity-0 scale-95"
 					>
 						<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border border-zinc-800 bg-zinc-900">
-							<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-6">
+							<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
 								<div className="flex flex-col gap-2">
 									<div className="flex items-center justify-between">
 										<Dialog.Title

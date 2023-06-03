@@ -44,7 +44,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 	return (
 		<NoteWrapper
 			href={`/app/note?id=${id}`}
-			className="mt-3 rounded-lg border border-zinc-800 px-3 pt-3"
+			className="mt-3 rounded-lg border border-zinc-800 px-3 py-3"
 		>
 			{data ? (
 				<>
@@ -52,6 +52,21 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 					<div className="mt-2">
 						{kind1 && <Kind1 content={kind1} truncate={true} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}
+						{!kind1 && !kind1063 && (
+							<div className="flex flex-col gap-2">
+								<div className="px-2 py-2 inline-flex flex-col gap-1 bg-zinc-800 rounded-md">
+									<span className="text-zinc-500 text-sm font-medium leading-none">
+										Kind: {data.kind}
+									</span>
+									<p className="text-fuchsia-500 text-sm leading-none">
+										Lume isn't fully support this kind in newsfeed
+									</p>
+								</div>
+								<div className="markdown">
+									<p>{data.content}</p>
+								</div>
+							</div>
+						)}
 					</div>
 				</>
 			) : (
