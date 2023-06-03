@@ -6,19 +6,23 @@ export function Page() {
 	const fetchLastLogin = useActiveAccount((state: any) => state.fetchLastLogin);
 	const fetchAccount = useActiveAccount((state: any) => state.fetch);
 	const account = useActiveAccount((state: any) => state.account);
-
-	if (!account && typeof window !== "undefined") {
-		navigate("/app/auth", { overwriteLastHistoryEntry: true });
-	}
-
-	if (account && typeof window !== "undefined") {
-		navigate("/app/prefetch", { overwriteLastHistoryEntry: true });
-	}
+	const lastLogin = useActiveAccount((state: any) => state.lastLogin);
 
 	useEffect(() => {
-		fetchAccount();
-		fetchLastLogin();
-	}, [fetchAccount, fetchLastLogin]);
+		if (!account) {
+			navigate("/app/auth", { overwriteLastHistoryEntry: true });
+		}
+
+		if (account) {
+			navigate("/app/prefetch", { overwriteLastHistoryEntry: true });
+		}
+		if (account === null) {
+			fetchAccount();
+		}
+		if (lastLogin === null) {
+			fetchLastLogin();
+		}
+	}, [fetchAccount, fetchLastLogin, account, lastLogin]);
 
 	return (
 		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white" />

@@ -3,7 +3,6 @@ import { CheckCircleIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { WRITEONLY_RELAYS } from "@stores/constants";
-import { updateAccount } from "@utils/storage";
 import { arrayToNIP02 } from "@utils/transform";
 import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
@@ -130,11 +129,8 @@ export function Page() {
 	const submit = async () => {
 		setLoading(true);
 
-		// update account follows in database
-		updateAccount("follows", follows, account.pubkey);
-
-		// update account follows in state
-		updateFollows(JSON.stringify(follows));
+		// update account follows
+		updateFollows(follows);
 
 		const tags = arrayToNIP02(follows);
 
@@ -155,7 +151,7 @@ export function Page() {
 		// redirect to step 3
 		setTimeout(
 			() =>
-				navigate("/app/prefetch", {
+				navigate("/", {
 					overwriteLastHistoryEntry: true,
 				}),
 			2000,

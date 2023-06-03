@@ -60,6 +60,12 @@
       "window": {
         "startDragging": true,
         "close": true
+      },
+      "process": {
+        "all": false,
+        "exit": false,
+        "relaunch": true,
+        "relaunchDangerousAllowSymlinkMacos": false
       }
     },
     "bundle": {

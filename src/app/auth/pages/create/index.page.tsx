@@ -1,10 +1,12 @@
 import { EyeOffIcon, EyeOnIcon } from "@shared/icons";
-import { createAccount } from "@utils/storage";
+import { useActiveAccount } from "@stores/accounts";
 import { generatePrivateKey, getPublicKey, nip19 } from "nostr-tools";
 import { useMemo, useState } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
+	const createAccount = useActiveAccount((state: any) => state.create);
+
 	const [type, setType] = useState("password");
 	const privkey = useMemo(() => generatePrivateKey(), []);
 
@@ -22,11 +24,8 @@ export function Page() {
 	};
 
 	const submit = async () => {
-		const account = await createAccount(npub, pubkey, privkey, null, 1);
-
-		if (account) {
-			navigate("/app/auth/create/step-2");
-		}
+		createAccount(npub, pubkey, privkey, null, 1);
+		navigate("/app/auth/create/step-2");
 	};
 
 	return (

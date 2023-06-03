@@ -225,7 +225,7 @@ export async function createNote(
 ) {
 	const db = await connect();
 	return await db.execute(
-		"INSERT OR IGNORE INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+		"INSERT INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
 		[event_id, account_id, pubkey, kind, tags, content, created_at, parent_id],
 	);
 }

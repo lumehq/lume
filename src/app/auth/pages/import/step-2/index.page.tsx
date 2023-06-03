@@ -1,31 +1,31 @@
 import { User } from "@app/auth/components/user";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { READONLY_RELAYS } from "@stores/constants";
-import { updateAccount } from "@utils/storage";
+import { METADATA_RELAY } from "@stores/constants";
 import { nip02ToArray } from "@utils/transform";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
 
-	const [account, fetchAccount, updateFollows] = useActiveAccount(
-		(state: any) => [state.account, state.fetch, state.updateFollows],
-	);
+	const [account, updateFollows] = useActiveAccount((state: any) => [
+		state.account,
+		state.updateFollows,
+	]);
 	const [loading, setLoading] = useState(false);
-	const [follows, setFollows] = useState([]);
+	const [follows, setFollows] = useState(null);
 
-	useSWRSubscription(account ? account.pubkey : null, (key: string) => {
+	useSWRSubscription(account ? ["follows", account.pubkey] : null, () => {
 		const unsubscribe = pool.subscribe(
 			[
 				{
 					kinds: [3],
-					authors: [key],
+					authors: [account.pubkey],
 				},
 			],
-			READONLY_RELAYS,
+			METADATA_RELAY,
 			(event: any) => {
 				setFollows(event.tags);
 			},
@@ -43,22 +43,12 @@ export function Page() {
 		// follows as list
 		const followsList = nip02ToArray(follows);
 
-		// update account follows in database
-		updateAccount("follows", followsList, account.pubkey);
-
 		// update account follows in store
-		updateFollows(JSON.stringify(followsList));
+		updateFollows(followsList);
 
 		// redirect to home
-		setTimeout(
-			() => navigate("/app/prefetch", { overwriteLastHistoryEntry: true }),
-			2000,
-		);
+		setTimeout(() => navigate("/", { overwriteLastHistoryEntry: true }), 2000);
 	};
-
-	useEffect(() => {
-		fetchAccount();
-	}, [fetchAccount]);
 
 	return (
 		<div className="flex h-full w-full items-center justify-center">

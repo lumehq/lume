@@ -10,11 +10,8 @@ import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
 	const pool: any = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
 
-	const [account, fetchAccount] = useActiveAccount((state: any) => [
-		state.account,
-		state.fetch,
-	]);
 	const [image, setImage] = useState(DEFAULT_AVATAR);
 	const [loading, setLoading] = useState(false);
 
@@ -51,10 +48,6 @@ export function Page() {
 			2000,
 		);
 	};
-
-	useEffect(() => {
-		fetchAccount();
-	}, [fetchAccount]);
 
 	useEffect(() => {
 		setValue("picture", image);

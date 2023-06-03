@@ -1,4 +1,4 @@
-import { createAccount } from "@utils/storage";
+import { useActiveAccount } from "@stores/accounts";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { Resolver, useForm } from "react-hook-form";
 import { navigate } from "vite-plugin-ssr/client/router";
@@ -22,6 +22,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 export function Page() {
+	const createAccount = useActiveAccount((state: any) => state.create);
 	const {
 		register,
 		setError,
@@ -41,11 +42,8 @@ export function Page() {
 				const pubkey = getPublicKey(privkey);
 				const npub = nip19.npubEncode(pubkey);
 
-				const account = await createAccount(npub, pubkey, privkey, null, 1);
-
-				if (account) {
-					navigate("/app/auth/import/step-2");
-				}
+				createAccount(npub, pubkey, privkey, null, 1);
+				navigate("/app/auth/import/step-2");
 			}
 		} catch (error) {
 			setError("key", {

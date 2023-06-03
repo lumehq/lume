@@ -19,6 +19,15 @@ if (typeof window !== "undefined") {
 	totalNotes = await countTotalNotes();
 }
 
+function isJSON(str: string) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 export function Page() {
 	const pool: any = useContext(RelayContext);
 	const [account, lastLogin] = useActiveAccount((state: any) => [
@@ -73,10 +82,17 @@ export function Page() {
 			since: lastLogin,
 		});
 
+		// long post
+		query.push({
+			kinds: [30023],
+			since: lastLogin,
+		});
+
 		return query;
 	}, [account]);
 
 	useSWRSubscription(account ? "prefetch" : null, () => {
+		console.log("data prefetching... ", account.pubkey);
 		const query = getQuery();
 		const unsubscribe = pool.subscribe(
 			query,
@@ -148,6 +164,7 @@ export function Page() {
 							addToBlacklist(account.id, event.tags[0][1], 44, 1);
 						}
 						break;
+					// file metadata
 					case 1063:
 						createNote(
 							event.id,
@@ -157,9 +174,26 @@ export function Page() {
 							event.tags,
 							event.content,
 							event.created_at,
-							"",
+							event.id,
 						);
 						break;
+					// long post
+					case 30023: {
+						const verifyMetadata = isJSON(event.tags);
+						if (verifyMetadata) {
+							createNote(
+								event.id,
+								account.id,
+								event.pubkey,
+								event.kind,
+								event.tags,
+								event.content,
+								event.created_at,
+								"",
+							);
+						}
+						break;
+					}
 					default:
 						break;
 				}
@@ -168,7 +202,10 @@ export function Page() {
 			() => {
 				eose.current += 1;
 				if (eose.current === READONLY_RELAYS.length) {
-					navigate("/app/space", { overwriteLastHistoryEntry: true });
+					setTimeout(
+						() => navigate("/app/space", { overwriteLastHistoryEntry: true }),
+						2000,
+					);
 				}
 			},
 		);

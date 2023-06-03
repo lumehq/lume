@@ -1,9 +1,11 @@
 import {
 	addBlockToDB,
+	createAccount,
 	getActiveAccount,
 	getBlocks,
 	getLastLogin,
 	removeBlockFromDB,
+	updateAccount,
 } from "@utils/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -15,7 +17,16 @@ export const useActiveAccount = create(
 			(set: any, get: any) => ({
 				account: null,
 				blocks: null,
-				lastLogin: 0,
+				lastLogin: null,
+				create: async (npub: string, pubkey: string, privkey: string) => {
+					const response = await createAccount(npub, pubkey, privkey, null, 1);
+					if (response) {
+						const activeAccount = await getActiveAccount();
+						set({
+							account: activeAccount,
+						});
+					}
+				},
 				fetch: async () => {
 					const response = await getActiveAccount();
 					set({ account: response });
@@ -59,8 +70,12 @@ export const useActiveAccount = create(
 					});
 				},
 				updateFollows: (list: any) => {
+					const account = get().account;
+					// update db
+					updateAccount("follows", list, account.pubkey);
+					// update state
 					set((state: any) => ({
-						account: { ...state.account, follows: list },
+						account: { ...state.account, follows: JSON.stringify(list) },
 					}));
 				},
 			}),
