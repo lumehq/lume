@@ -38,13 +38,7 @@ export function ChatMessageForm({
 		pool.publish(event, WRITEONLY_RELAYS);
 
 		// add message to store
-		addMessage({
-			receiver_pubkey: receiverPubkey,
-			sender_pubkey: event.pubkey,
-			content: event.content,
-			tags: event.tags,
-			created_at: event.created_at,
-		});
+		addMessage(receiverPubkey, event);
 
 		// reset state
 		setValue("");

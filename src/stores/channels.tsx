@@ -38,7 +38,7 @@ export const useChannelMessages = create(
 		messages: [],
 		replyTo: { id: null, pubkey: null, content: null },
 		add: (message: any) => {
-			set((state: any) => ({ messages: [...state.messages, message] }));
+			set((state: any) => ({ messages: [message, ...state.messages] }));
 		},
 		openReply: (id: string, pubkey: string, content: string) => {
 			set(() => ({ replyTo: { id, pubkey, content } }));

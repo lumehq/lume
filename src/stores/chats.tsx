@@ -1,4 +1,4 @@
-import { getChatMessages, getChatsByPubkey } from "@utils/storage";
+import { createChat, getChatMessages, getChatsByPubkey } from "@utils/storage";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -9,7 +9,7 @@ export const useChats = create(
 			const response: any = await getChatsByPubkey(pubkey);
 			set({ chats: response });
 		},
-		add: (pubkey: string) => {
+		add: async (pubkey: string) => {
 			set((state) => {
 				const target = state.chats.findIndex(
 					(m: { sender_pubkey: string }) => m.sender_pubkey === pubkey,
@@ -39,8 +39,23 @@ export const useChatMessages = create((set) => ({
 		const response: any = await getChatMessages(receiver_pubkey, sender_pubkey);
 		set({ messages: response });
 	},
-	add: (message: any) => {
-		set((state: any) => ({ messages: [...state.messages, message] }));
+	add: async (receiver: string, event: any) => {
+		const save = await createChat(
+			event.id,
+			receiver,
+			event.pubkey,
+			event.content,
+			event.tags,
+			event.created_at,
+		);
+		if (save) {
+			set((state: any) => ({
+				messages: [
+					...state.messages,
+					{ ...event, sender_pubkey: event.pubkey, receiver_pubkey: receiver },
+				],
+			}));
+		}
 	},
 	clear: () => {
 		set(() => ({ messages: [] }));

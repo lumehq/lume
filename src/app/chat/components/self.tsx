@@ -27,7 +27,7 @@ export function ChatsListSelfItem({ data }: { data: any }) {
 					href={`/app/chat?pubkey=${data.pubkey}`}
 					className={twMerge(
 						"group inline-flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:bg-zinc-900",
-						pagePubkey === data.sender_pubkey
+						pagePubkey === data.pubkey
 							? "dark:bg-zinc-900 dark:text-white hover:dark:bg-zinc-800"
 							: "",
 					)}

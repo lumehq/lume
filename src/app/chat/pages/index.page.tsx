@@ -22,34 +22,31 @@ export function Page() {
 		state.fetch,
 		state.clear,
 	]);
-	const addMessage = useChatMessages((state: any) => state.add);
+	const add = useChatMessages((state: any) => state.add);
 
-	useSWRSubscription(account && pubkey ? ["chat", pubkey] : null, ([, key]) => {
-		const unsubscribe = pool.subscribe(
-			[
-				{
-					kinds: [4],
-					authors: [key],
-					"#p": [account.pubkey],
-					since: dateToUnix(),
+	useSWRSubscription(
+		account.pubkey !== pubkey ? ["chat", pubkey] : null,
+		() => {
+			const unsubscribe = pool.subscribe(
+				[
+					{
+						kinds: [4],
+						authors: [pubkey],
+						"#p": [account.pubkey],
+						since: dateToUnix(),
+					},
+				],
+				READONLY_RELAYS,
+				(event: any) => {
+					add(account.pubkey, event);
 				},
-			],
-			READONLY_RELAYS,
-			(event: any) => {
-				addMessage({
-					receiver_pubkey: account.pubkey,
-					sender_pubkey: event.pubkey,
-					content: event.content,
-					tags: event.tags,
-					created_at: event.created_at,
-				});
-			},
-		);
+			);
 
-		return () => {
-			unsubscribe();
-		};
-	});
+			return () => {
+				unsubscribe();
+			};
+		},
+	);
 
 	useEffect(() => {
 		fetchMessages(account.pubkey, pubkey);
@@ -57,7 +54,7 @@ export function Page() {
 		return () => {
 			clear();
 		};
-	}, [pubkey]);
+	}, [pubkey, fetchMessages]);
 
 	if (!account) return <div>Fuck SSR</div>;
 

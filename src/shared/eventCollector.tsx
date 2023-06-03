@@ -3,8 +3,8 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { READONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { createChat, createNote, updateAccount } from "@utils/storage";
-import { getParentID, nip02ToArray } from "@utils/transform";
+import { createNote } from "@utils/storage";
+import { getParentID } from "@utils/transform";
 import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
@@ -19,20 +19,6 @@ export function EventCollector() {
 				{
 					kinds: [1, 6],
 					authors: follows,
-					since: dateToUnix(),
-				},
-				{
-					kinds: [3],
-					authors: [account.pubkey],
-				},
-				{
-					kinds: [4],
-					"#p": [account.pubkey],
-					since: dateToUnix(),
-				},
-				{
-					kinds: [4],
-					authors: [account.pubkey],
 					since: dateToUnix(),
 				},
 			],
@@ -52,37 +38,6 @@ export function EventCollector() {
 							event.created_at,
 							parentID,
 						);
-						break;
-					}
-					// contacts
-					case 3: {
-						const follows = nip02ToArray(event.tags);
-						// update account's folllows with NIP-02 tag list
-						updateAccount("follows", follows, event.pubkey);
-						break;
-					}
-					// chat
-					case 4: {
-						if (event.pubkey === account.pubkey) {
-							const receiver = event.tags.find((t) => t[0] === "p")[1];
-							createChat(
-								event.id,
-								receiver,
-								event.pubkey,
-								event.content,
-								event.tags,
-								event.created_at,
-							);
-						} else {
-							createChat(
-								event.id,
-								account.pubkey,
-								event.pubkey,
-								event.content,
-								event.tags,
-								event.created_at,
-							);
-						}
 						break;
 					}
 					// repost

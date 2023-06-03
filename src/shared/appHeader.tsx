@@ -1,4 +1,3 @@
-import { EventCollector } from "@shared/eventCollector";
 import { ArrowLeftIcon, ArrowRightIcon } from "@shared/icons";
 
 export function AppHeader() {
@@ -39,7 +38,6 @@ export function AppHeader() {
 					/>
 				</button>
 			</div>
-			<EventCollector />
 		</div>
 	);
 }

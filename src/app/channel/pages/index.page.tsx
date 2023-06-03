@@ -55,12 +55,12 @@ export function Page() {
 
 	useSWRSubscription(
 		account && channelID && muted && hided ? ["channel", channelID] : null,
-		([, key]) => {
+		() => {
 			// subscribe to channel
 			const unsubscribe = pool.subscribe(
 				[
 					{
-						"#e": [key],
+						"#e": [channelID],
 						kinds: [42],
 						since: dateToUnix(getHourAgo(24, now.current)),
 						limit: 20,

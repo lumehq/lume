@@ -2,6 +2,7 @@ import { MessageHideButton } from "@app/channel/components/messages/hideButton";
 import { MessageMuteButton } from "@app/channel/components/messages/muteButton";
 import { MessageReplyButton } from "@app/channel/components/messages/replyButton";
 import { ChannelMessageUser } from "@app/channel/components/messages/user";
+import { ChannelMessageUserMute } from "@app/channel/components/messages/userMute";
 import { MentionNote } from "@app/note/components/mentions/note";
 import { ImagePreview } from "@app/note/components/preview/image";
 import { VideoPreview } from "@app/note/components/preview/video";
@@ -16,7 +17,12 @@ export function ChannelMessageItem({ data }: { data: any }) {
 		setHide((prev) => !prev);
 	};
 
-	if (data.mute) return null;
+	if (data.mute)
+		return (
+			<div className="group relative flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
+				<ChannelMessageUserMute pubkey={data.pubkey} />
+			</div>
+		);
 
 	return (
 		<div className="group relative flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
