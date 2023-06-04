@@ -13,12 +13,14 @@ export function noteParser(event: Event) {
 		notes: string[];
 		images: string[];
 		videos: string[];
+		links: string[];
 	} = {
 		original: event.content,
 		parsed: event.content,
 		notes: [],
 		images: [],
 		videos: [],
+		links: [],
 	};
 
 	// handle media
@@ -36,10 +38,15 @@ export function noteParser(event: Event) {
 			content.videos.push(url);
 			// remove url from original content
 			content.parsed = content.parsed.replace(url, "");
+		} else {
+			// push to store
+			content.links.push(url);
+			// remove url from original content
+			content.parsed = content.parsed.replace(url, "");
 		}
 	});
 
-	// map hashtag to em
+	// map hashtag to link
 	content.original.match(/#(\w+)(?!:\/\/)/g)?.forEach((item) => {
 		content.parsed = content.parsed.replace(item, `[${item}](/search/${item})`);
 	});
@@ -47,13 +54,6 @@ export function noteParser(event: Event) {
 	// handle nostr mention
 	references.forEach((item) => {
 		const profile = item.profile;
-		const event = item.event;
-
-		if (event) {
-			content.notes.push(event.id);
-			content.parsed = content.parsed.replace(item.text, "");
-		}
-
 		if (profile) {
 			content.parsed = content.parsed.replace(item.text, `*${profile.pubkey}*`);
 		}

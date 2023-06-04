@@ -3,43 +3,15 @@ import { Kind1063 } from "@app/note/components/kind1063";
 import { NoteSkeleton } from "@app/note/components/skeleton";
 import { NoteQuoteUser } from "@app/note/components/user/quote";
 import { NoteWrapper } from "@app/note/components/wrapper";
-import { RelayContext } from "@shared/relayProvider";
-import { READONLY_RELAYS } from "@stores/constants";
+import { useEvent } from "@utils/hooks/useEvent";
 import { noteParser } from "@utils/parser";
-import { memo, useContext } from "react";
-import useSWRSubscription from "swr/subscription";
+import { memo } from "react";
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
-	const pool: any = useContext(RelayContext);
+	const data = useEvent(id);
 
-	const { data, error } = useSWRSubscription(
-		id ? id : null,
-		(key, { next }) => {
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						ids: [key],
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					next(null, event);
-				},
-				undefined,
-				undefined,
-				{
-					unsubscribeOnEose: true,
-				},
-			);
-
-			return () => {
-				unsubscribe();
-			};
-		},
-	);
-
-	const kind1 = !error && data?.kind === 1 ? noteParser(data) : null;
-	const kind1063 = !error && data?.kind === 1063 ? data.tags : null;
+	const kind1 = data?.kind === 1 ? noteParser(data) : null;
+	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (
 		<NoteWrapper

@@ -1,3 +1,4 @@
+import { LinkPreview } from "./preview/link";
 import { MentionNote } from "@app/note/components/mentions/note";
 import { MentionUser } from "@app/note/components/mentions/user";
 import { ImagePreview } from "@app/note/components/preview/image";
@@ -29,6 +30,11 @@ export function Kind1({
 			)}
 			{Array.isArray(content.videos) && content.videos.length ? (
 				<VideoPreview urls={content.videos} />
+			) : (
+				<></>
+			)}
+			{Array.isArray(content.links) && content.links.length ? (
+				<LinkPreview urls={content.links} />
 			) : (
 				<></>
 			)}
