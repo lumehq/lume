@@ -11,7 +11,12 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 			{isLoading && !data ? (
 				<p>Loading...</p>
 			) : (
-				<a href={urls[0]} className="flex flex-col">
+				<a
+					className="flex flex-col"
+					href={urls[0]}
+					target="_blank"
+					rel="noreferrer"
+				>
 					<Image
 						src={data["og:image"]}
 						alt={urls[0]}

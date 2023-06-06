@@ -5,7 +5,7 @@ export function ImagePreview({ urls }: { urls: string[] }) {
 		<div className="mt-3 overflow-hidden">
 			<div className="flex flex-col gap-2">
 				{urls.map((url) => (
-					<div key={url} className="mr-2 min-w-0 grow-0 shrink-0 basis-full">
+					<div key={url} className="min-w-0 grow-0 shrink-0 basis-full">
 						<Image
 							src={url}
 							alt="image"
