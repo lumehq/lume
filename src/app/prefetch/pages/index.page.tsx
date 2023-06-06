@@ -15,17 +15,9 @@ import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 let totalNotes: number;
+
 if (typeof window !== "undefined") {
 	totalNotes = await countTotalNotes();
-}
-
-function isJSON(str: string) {
-	try {
-		JSON.parse(str);
-	} catch (e) {
-		return false;
-	}
-	return true;
 }
 
 export function Page() {
@@ -92,7 +84,7 @@ export function Page() {
 	}, [account]);
 
 	useSWRSubscription(account ? "prefetch" : null, () => {
-		console.log("data prefetching... ", account.pubkey);
+		let timeout: string | number | NodeJS.Timeout;
 		const query = getQuery();
 		const unsubscribe = pool.subscribe(
 			query,
@@ -178,22 +170,18 @@ export function Page() {
 						);
 						break;
 					// long post
-					case 30023: {
-						const verifyMetadata = isJSON(event.tags);
-						if (verifyMetadata) {
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-								"",
-							);
-						}
+					case 30023:
+						createNote(
+							event.id,
+							account.id,
+							event.pubkey,
+							event.kind,
+							event.tags,
+							event.content,
+							event.created_at,
+							event.id,
+						);
 						break;
-					}
 					default:
 						break;
 				}
@@ -202,7 +190,7 @@ export function Page() {
 			() => {
 				eose.current += 1;
 				if (eose.current === READONLY_RELAYS.length) {
-					setTimeout(
+					timeout = setTimeout(
 						() => navigate("/app/space", { overwriteLastHistoryEntry: true }),
 						2000,
 					);
@@ -212,6 +200,7 @@ export function Page() {
 
 		return () => {
 			unsubscribe();
+			clearTimeout(timeout);
 		};
 	});
 
