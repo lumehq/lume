@@ -7,9 +7,6 @@ dependencies:
   '@headlessui/react':
     specifier: ^1.7.15
     version: 1.7.15(react-dom@18.2.0)(react@18.2.0)
-  '@tanstack/react-query':
-    specifier: ^4.29.12
-    version: 4.29.12(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-virtual':
     specifier: 3.0.0-beta.54
     version: 3.0.0-beta.54(react@18.2.0)
@@ -25,9 +22,6 @@ dependencies:
   destr:
     specifier: ^1.2.2
     version: 1.2.2
-  embla-carousel-react:
-    specifier: 8.0.0-rc06
-    version: 8.0.0-rc06(react@18.2.0)
   immer:
     specifier: ^10.0.2
     version: 10.0.2
@@ -106,8 +100,8 @@ devDependencies:
     specifier: ^5.5.7
     version: 5.5.7
   '@vitejs/plugin-react-swc':
-    specifier: ^3.3.1
-    version: 3.3.1(vite@4.3.9)
+    specifier: ^3.3.2
+    version: 3.3.2(vite@4.3.9)
   autoprefixer:
     specifier: ^10.4.14
     version: 10.4.14(postcss@8.4.24)
@@ -710,28 +704,6 @@ packages:
       tailwindcss: 3.3.2
     dev: true
 
-  /@tanstack/query-core@4.29.11:
-    resolution: {integrity: sha512-8C+hF6SFAb/TlFZyS9FItgNwrw4PMa7YeX+KQYe2ZAiEz6uzg6yIr+QBzPkUwZ/L0bXvGd1sufTm3wotoz+GwQ==}
-    dev: false
-
-  /@tanstack/react-query@4.29.12(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-zhcN6+zF6cxprxhTHQajHGlvxgK8npnp9uLe9yaWhGc6sYcPWXzyO4raL4HomUzQOPzu3jLvkriJQ7BOrDM8vA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@tanstack/query-core': 4.29.11
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
-
   /@tanstack/react-virtual@3.0.0-beta.54(react@18.2.0):
     resolution: {integrity: sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==}
     peerDependencies:
@@ -925,8 +897,8 @@ packages:
       vidstack: 0.4.5
     dev: false
 
-  /@vitejs/plugin-react-swc@3.3.1(vite@4.3.9):
-    resolution: {integrity: sha512-ZoYjGxMniXP7X+5ry/W1tpY7w0OeLUEsBF5RHFPmAhpgwwNWie8OF4056MRXRi9QgvYYoZPDzdOXGK3wlCoTfQ==}
+  /@vitejs/plugin-react-swc@3.3.2(vite@4.3.9):
+    resolution: {integrity: sha512-VJFWY5sfoZerQRvJrh518h3AcQt6f/yTuWn4/TRB+dqmYU0NX1qz7qM5Wfd+gOQqUzQW4gxKqKN3KpE/P3+zrA==}
     peerDependencies:
       vite: ^4
     dependencies:
@@ -1015,7 +987,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.7
-      caniuse-lite: 1.0.30001492
+      caniuse-lite: 1.0.30001495
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1055,8 +1027,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001492
-      electron-to-chromium: 1.4.419
+      caniuse-lite: 1.0.30001495
+      electron-to-chromium: 1.4.421
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.7)
     dev: true
@@ -1076,8 +1048,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite@1.0.30001492:
-    resolution: {integrity: sha512-2efF8SAZwgAX1FJr87KWhvuJxnGJKOnctQa8xLOskAXNXq8oiuqgl6u1kk3fFpsp3GgvzlRjiK1sl63hNtFADw==}
+  /caniuse-lite@1.0.30001495:
+    resolution: {integrity: sha512-F6x5IEuigtUfU5ZMQK2jsy5JqUUlEFRVZq8bO2a+ysq5K7jD6PPc9YXZj78xDNS3uNchesp1Jw47YXEqr+Viyg==}
     dev: true
 
   /ccount@2.0.1:
@@ -1255,31 +1227,9 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.419:
-    resolution: {integrity: sha512-jdie3RiEgygvDTyS2sgjq71B36q2cDSBfPlwzUyuOrfYTNoYWyBxxjGJV/HAu3A2hB0Y+HesvCVkVAFoCKwCSw==}
+  /electron-to-chromium@1.4.421:
+    resolution: {integrity: sha512-wZOyn3s/aQOtLGAwXMZfteQPN68kgls2wDAnYOA8kCjBvKVrW5RwmWVspxJYTqrcN7Y263XJVsC66VCIGzDO3g==}
     dev: true
-
-  /embla-carousel-react@8.0.0-rc06(react@18.2.0):
-    resolution: {integrity: sha512-aZfVqTptCA6uq3VLPFXLKGSkxVdoiNjQa1sjVOJc+9FL6pbwImaVR0oL7jA0kfW9l67XoQOEOq1gRiImbYr/Ew==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.1 || ^18.0.0
-    dependencies:
-      embla-carousel: 8.0.0-rc06
-      embla-carousel-reactive-utils: 8.0.0-rc06(embla-carousel@8.0.0-rc06)
-      react: 18.2.0
-    dev: false
-
-  /embla-carousel-reactive-utils@8.0.0-rc06(embla-carousel@8.0.0-rc06):
-    resolution: {integrity: sha512-AlTrD9eh8aNlDsSjnEOM15Z9f4vQVgG+ULLMSl3BfWdqYvxsbinRcVQd2Buj3KlNq3pH7pm20G63CEz1h8p/Ig==}
-    peerDependencies:
-      embla-carousel: 8.0.0-rc06
-    dependencies:
-      embla-carousel: 8.0.0-rc06
-    dev: false
-
-  /embla-carousel@8.0.0-rc06:
-    resolution: {integrity: sha512-Dq27CG9OgZjKxK+JJS3uyEW4dwQ3oVkvlTHEP17idVnP8vmuhi4WtGe4UVGj8m0O2WASR4kNu4efFXkF7u6A+g==}
-    dev: false
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -2508,8 +2458,8 @@ packages:
     resolution: {integrity: sha512-V2hovdzFbOi77/WajaSMXk2OLm+xNIeQdMMuB7icj7bk6zi2F8GGAxigcnDFpJHbNyNcgyJDiP+8nOrY5cZGrA==}
     dev: true
 
-  /rollup@3.23.0:
-    resolution: {integrity: sha512-h31UlwEi7FHihLe1zbk+3Q7z1k/84rb9BSwmBSr/XjOCEaBJ2YyedQDuM0t/kfOS0IxM+vk1/zI9XxYj9V+NJQ==}
+  /rollup@3.23.1:
+    resolution: {integrity: sha512-ybRdFVHOoljGEFILHLd2g/qateqUdjE6YS41WXq4p3C/WwD3xtWxV4FYWETA1u9TeXQc5K8L8zHE5d/scOvrOQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3062,7 +3012,7 @@ packages:
       '@types/node': 18.16.16
       esbuild: 0.17.19
       postcss: 8.4.24
-      rollup: 3.23.0
+      rollup: 3.23.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

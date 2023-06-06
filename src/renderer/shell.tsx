@@ -1,13 +1,10 @@
 import { LayoutDefault } from "./layoutDefault";
 import { PageContext } from "./types";
 import { RelayProvider } from "@shared/relayProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { dateToUnix } from "@utils/date";
 import { PageContextProvider } from "@utils/hooks/usePageContext";
 import { updateLastLogin } from "@utils/storage";
 import { useEffect } from "react";
-
-const queryClient = new QueryClient();
 
 export function Shell({
 	children,
@@ -37,11 +34,7 @@ export function Shell({
 	return (
 		<PageContextProvider pageContext={pageContext}>
 			<RelayProvider>
-				<Layout>
-					<QueryClientProvider client={queryClient}>
-						{children}
-					</QueryClientProvider>
-				</Layout>
+				<Layout>{children}</Layout>
 			</RelayProvider>
 		</PageContextProvider>
 	);

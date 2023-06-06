@@ -1,5 +1,6 @@
 import { MultiAccounts } from "@shared/multiAccounts";
 import { Navigation } from "@shared/navigation";
+import { SWRConfig } from "swr";
 
 export function LayoutSpace({ children }: { children: React.ReactNode }) {
 	return (
@@ -8,7 +9,9 @@ export function LayoutSpace({ children }: { children: React.ReactNode }) {
 				<MultiAccounts />
 				<Navigation />
 			</div>
-			<div className="w-full h-full">{children}</div>
+			<div className="w-full h-full">
+				<SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
+			</div>
 		</div>
 	);
 }

@@ -3,47 +3,44 @@ import { NoteQuoteRepost } from "@app/note/components/quoteRepost";
 import { NoteSkeleton } from "@app/note/components/skeleton";
 import { CancelIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { getNotesByAuthor } from "@utils/storage";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import useSWRInfinite from "swr/infinite";
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
+const fetcher = async ([pubkey, offset]) =>
+	getNotesByAuthor(pubkey, TIME, ITEM_PER_PAGE, offset);
+
 export function FeedBlock({ params }: { params: any }) {
 	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
 
-	const {
-		status,
-		data,
-		fetchNextPage,
-		hasNextPage,
-		isFetching,
-		isFetchingNextPage,
-	}: any = useInfiniteQuery({
-		queryKey: [params.title],
-		queryFn: async ({ pageParam = 0 }) => {
-			return await getNotesByAuthor(
-				params.content,
-				TIME,
-				ITEM_PER_PAGE,
-				pageParam,
-			);
-		},
-		getNextPageParam: (lastPage) => lastPage.nextCursor,
-	});
+	const close = () => {
+		removeBlock(params.id);
+	};
 
-	const allRows = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
+	const getKey = (pageIndex, previousPageData) => {
+		if (previousPageData && !previousPageData.data) return null;
+		if (pageIndex === 0) return [params.content, 0];
+		return [params.content, previousPageData.nextCursor];
+	};
+
+	const { data, isLoading, size, setSize } = useSWRInfinite(getKey, fetcher);
+
+	const notes = useMemo(
+		() => (data ? data.flatMap((d) => d.data) : []),
+		[data],
+	);
+
 	const parentRef = useRef();
-
 	const rowVirtualizer = useVirtualizer({
-		count: hasNextPage ? allRows.length + 1 : allRows.length,
+		count: notes.length,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => 400,
 		overscan: 2,
 	});
-
 	const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
 	useEffect(() => {
@@ -53,18 +50,10 @@ export function FeedBlock({ params }: { params: any }) {
 			return;
 		}
 
-		if (
-			lastItem.index >= allRows.length - 1 &&
-			hasNextPage &&
-			!isFetchingNextPage
-		) {
-			fetchNextPage();
+		if (lastItem.index >= notes.length - 1) {
+			setSize(size + 1);
 		}
-	}, [fetchNextPage, allRows.length, rowVirtualizer.getVirtualItems()]);
-
-	const close = () => {
-		removeBlock(params.id);
-	};
+	}, [notes.length, rowVirtualizer.getVirtualItems()]);
 
 	return (
 		<div className="shrink-0 w-[420px] border-r border-zinc-900">
@@ -87,7 +76,7 @@ export function FeedBlock({ params }: { params: any }) {
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
-				{status === "loading" ? (
+				{!data || isLoading ? (
 					<div className="px-3 py-1.5">
 						<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />
@@ -110,7 +99,7 @@ export function FeedBlock({ params }: { params: any }) {
 							}}
 						>
 							{rowVirtualizer.getVirtualItems().map((virtualRow) => {
-								const note = allRows[virtualRow.index];
+								const note = notes[virtualRow.index];
 								if (note) {
 									if (note.kind === 1) {
 										return (
@@ -138,15 +127,6 @@ export function FeedBlock({ params }: { params: any }) {
 						</div>
 					</div>
 				)}
-				<div>
-					{isFetching && !isFetchingNextPage && (
-						<div className="px-3 py-1.5">
-							<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
-								<NoteSkeleton />
-							</div>
-						</div>
-					)}
-				</div>
 			</div>
 		</div>
 	);
