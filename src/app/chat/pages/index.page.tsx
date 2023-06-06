@@ -24,29 +24,26 @@ export function Page() {
 	]);
 	const add = useChatMessages((state: any) => state.add);
 
-	useSWRSubscription(
-		account.pubkey !== pubkey ? ["chat", pubkey] : null,
-		() => {
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						kinds: [4],
-						authors: [pubkey],
-						"#p": [account.pubkey],
-						since: dateToUnix(),
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					add(account.pubkey, event);
+	useSWRSubscription(account !== pubkey ? ["chat", pubkey] : null, () => {
+		const unsubscribe = pool.subscribe(
+			[
+				{
+					kinds: [4],
+					authors: [pubkey],
+					"#p": [account.pubkey],
+					since: dateToUnix(),
 				},
-			);
+			],
+			READONLY_RELAYS,
+			(event: any) => {
+				add(account.pubkey, event);
+			},
+		);
 
-			return () => {
-				unsubscribe();
-			};
-		},
-	);
+		return () => {
+			unsubscribe();
+		};
+	});
 
 	useEffect(() => {
 		fetchMessages(account.pubkey, pubkey);
