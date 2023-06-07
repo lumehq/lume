@@ -74,12 +74,6 @@ export function Page() {
 			since: lastLogin,
 		});
 
-		// long post
-		query.push({
-			kinds: [30023],
-			since: lastLogin,
-		});
-
 		return query;
 	}, [account]);
 
@@ -158,19 +152,6 @@ export function Page() {
 						break;
 					// file metadata
 					case 1063:
-						createNote(
-							event.id,
-							account.id,
-							event.pubkey,
-							event.kind,
-							event.tags,
-							event.content,
-							event.created_at,
-							event.id,
-						);
-						break;
-					// long post
-					case 30023:
 						createNote(
 							event.id,
 							account.id,

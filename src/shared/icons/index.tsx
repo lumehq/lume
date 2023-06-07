@@ -20,7 +20,7 @@ export * from "./like";
 export * from "./lume";
 export * from "./media";
 export * from "./mute";
-export * from "./myspace";
+export * from "./space";
 export * from "./navArrowDown";
 export * from "./plus";
 export * from "./plusCircle";
