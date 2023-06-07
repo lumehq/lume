@@ -1,3 +1,4 @@
+import { getParentID } from "@utils/transform";
 import { nip19 } from "nostr-tools";
 import Database from "tauri-plugin-sql-api";
 
@@ -221,12 +222,41 @@ export async function createNote(
 	tags: string[],
 	content: string,
 	created_at: number,
-	parent_id: string,
 ) {
 	const db = await connect();
+	const parentID = getParentID(tags, event_id);
 	return await db.execute(
 		"INSERT INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-		[event_id, account_id, pubkey, kind, tags, content, created_at, parent_id],
+		[event_id, account_id, pubkey, kind, tags, content, created_at, parentID],
+	);
+}
+
+// create reply note
+export async function createReplyNote(
+	event_id: string,
+	account_id: number,
+	pubkey: string,
+	kind: number,
+	tags: string[],
+	content: string,
+	created_at: number,
+	parent_comment_id: string,
+) {
+	const db = await connect();
+	const parentID = getParentID(tags, event_id);
+	return await db.execute(
+		"INSERT INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id, parent_comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+		[
+			event_id,
+			account_id,
+			pubkey,
+			kind,
+			tags,
+			content,
+			created_at,
+			parentID,
+			parent_comment_id,
+		],
 	);
 }
 

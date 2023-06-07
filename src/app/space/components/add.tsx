@@ -33,13 +33,13 @@ export function AddBlock() {
 					leaveFrom="transform opacity-100 scale-100"
 					leaveTo="transform opacity-0 scale-95"
 				>
-					<Menu.Items className="absolute mt-2 right-1/2 transform translate-x-1/2 w-56 origin-top-right rounded-md bg-zinc-900 ring-1 ring-zinc-800 focus:outline-none">
+					<Menu.Items className="absolute mt-2 right-1/2 transform translate-x-1/2 w-56 origin-top-right rounded-md bg-zinc-900/80 backdrop-blur-md focus:outline-none">
 						<div className="px-1 py-1">
 							<Menu.Item>
 								<button
 									type="button"
 									onClick={() => openAddImageModal()}
-									className="group flex w-full items-center rounded-md hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 px-2 py-2 text-sm"
+									className="group flex w-full items-center rounded-md hover:bg-zinc-700/50 text-zinc-300 hover:text-zinc-100 px-2 py-2 text-sm"
 								>
 									<ImageIcon width={15} height={15} className="mr-2" />
 									Add image
@@ -49,7 +49,7 @@ export function AddBlock() {
 								<button
 									type="button"
 									onClick={() => openAddFeedModal()}
-									className="group flex w-full items-center rounded-md hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 px-2 py-2 text-sm"
+									className="group flex w-full items-center rounded-md hover:bg-zinc-700/50 text-zinc-300 hover:text-zinc-100 px-2 py-2 text-sm"
 								>
 									<FeedIcon width={15} height={15} className="mr-2" />
 									Add feed

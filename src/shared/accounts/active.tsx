@@ -4,14 +4,18 @@ import { useActiveAccount } from "@stores/accounts";
 import { useChannels } from "@stores/channels";
 import { useChatMessages, useChats } from "@stores/chats";
 import { DEFAULT_AVATAR, READONLY_RELAYS } from "@stores/constants";
+import { dateToUnix } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
+import { createNote } from "@utils/storage";
 import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
 export function ActiveAccount({ data }: { data: any }) {
 	const pool: any = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
+
 	const pageContext = usePageContext();
 	const pathname: any = pageContext.urlParsed.pathname;
 
@@ -27,11 +31,17 @@ export function ActiveAccount({ data }: { data: any }) {
 	const { user } = useProfile(data.pubkey);
 
 	useSWRSubscription(
-		user && lastLogin > 0 ? ["account", data.pubkey] : null,
+		user && lastLogin > 0 ? ["activeAccount", data.pubkey] : null,
 		() => {
+			const follows = JSON.parse(account.follows);
 			// subscribe to channel
 			const unsubscribe = pool.subscribe(
 				[
+					{
+						kinds: [1, 6],
+						authors: follows,
+						since: dateToUnix(),
+					},
 					{
 						"#p": [data.pubkey],
 						since: lastLogin,
@@ -41,7 +51,18 @@ export function ActiveAccount({ data }: { data: any }) {
 				(event) => {
 					switch (event.kind) {
 						case 1:
+						case 6: {
+							createNote(
+								event.id,
+								account.id,
+								event.pubkey,
+								event.kind,
+								event.tags,
+								event.content,
+								event.created_at,
+							);
 							break;
+						}
 						case 4:
 							if (!isChatPage) {
 								// save

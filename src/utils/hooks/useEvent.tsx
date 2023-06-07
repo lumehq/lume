@@ -35,7 +35,6 @@ export function useEvent(id: string) {
 						event.tags,
 						event.content,
 						event.created_at,
-						parentID,
 					);
 					// update state
 					next(null, event);
