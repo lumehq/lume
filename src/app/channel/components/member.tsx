@@ -12,7 +12,7 @@ export function Member({ pubkey }: { pubkey: string }) {
 			) : (
 				<Image
 					className="inline-block h-8 w-8 rounded-md bg-white ring-2 ring-zinc-950 transition-all duration-150 ease-in-out"
-					src={user?.picture || DEFAULT_AVATAR}
+					src={user?.image || DEFAULT_AVATAR}
 					alt={user?.pubkey || "user avatar"}
 				/>
 			)}

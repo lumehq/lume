@@ -1,9 +1,8 @@
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { ImageUploader } from "@shared/composer/imageUploader";
 import { TrashIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { getEventHash, getSignature } from "nostr-tools";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Node, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
@@ -59,12 +58,13 @@ const ImagePreview = ({
 };
 
 export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 
 	const editor = useMemo(
 		() => withReact(withImages(withHistory(createEditor()))),
 		[],
 	);
+
 	const [content, setContent] = useState<Node[]>([
 		{
 			children: [
@@ -82,20 +82,19 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 	const submit = () => {
 		// serialize content
 		const serializedContent = serialize(content);
-		console.log(serializedContent);
 
-		const event: any = {
-			content: serializedContent,
-			created_at: dateToUnix(),
-			kind: 1,
-			pubkey: pubkey,
-			tags: [],
-		};
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, privkey);
+		const signer = new NDKPrivateKeySigner(privkey);
+		ndk.signer = signer;
 
-		// publish note
-		pool.publish(event, WRITEONLY_RELAYS);
+		const event = new NDKEvent(ndk);
+		event.kind = 1;
+		event.content = serializedContent;
+		event.created_at = dateToUnix();
+		event.pubkey = pubkey;
+		event.tags = [];
+
+		// publish event
+		event.publish();
 	};
 
 	const renderElement = useCallback((props: any) => {

@@ -14,7 +14,7 @@ export function MentionUser(props: { children: any[] }) {
 
 	return (
 		<span className="text-fuchsia-500">
-			@{user?.name || user?.display_name || shortenKey(pubkey)}
+			@{user?.name || user?.displayName || shortenKey(pubkey)}
 		</span>
 	);
 }

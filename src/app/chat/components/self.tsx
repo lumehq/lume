@@ -34,7 +34,7 @@ export function ChatsListSelfItem({ data }: { data: any }) {
 				>
 					<div className="relative h-5 w-5 shrink-0 rounded">
 						<Image
-							src={user?.picture || DEFAULT_AVATAR}
+							src={user?.image || DEFAULT_AVATAR}
 							alt={data.pubkey}
 							className="h-5 w-5 rounded bg-white object-cover"
 						/>

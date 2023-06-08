@@ -9,7 +9,7 @@ export function User({ pubkey }: { pubkey: string }) {
 		<div className="flex items-center gap-2">
 			<div className="h-8 w-8 shrink-0 overflow-hidden rounded bg-zinc-900">
 				<Image
-					src={user?.picture || DEFAULT_AVATAR}
+					src={user?.image || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-8 w-8 object-cover"
 					loading="auto"

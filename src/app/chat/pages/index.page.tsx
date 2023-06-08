@@ -4,14 +4,13 @@ import { ChatMessageForm } from "@app/chat/components/messages/form";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChatMessages } from "@stores/chats";
-import { READONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { useContext, useEffect } from "react";
 import useSWRSubscription from "swr/subscription";
 
 export function Page() {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const pageContext = usePageContext();
@@ -25,23 +24,19 @@ export function Page() {
 	const add = useChatMessages((state: any) => state.add);
 
 	useSWRSubscription(account !== pubkey ? ["chat", pubkey] : null, () => {
-		const unsubscribe = pool.subscribe(
-			[
-				{
-					kinds: [4],
-					authors: [pubkey],
-					"#p": [account.pubkey],
-					since: dateToUnix(),
-				},
-			],
-			READONLY_RELAYS,
-			(event: any) => {
-				add(account.pubkey, event);
-			},
-		);
+		const sub = ndk.subscribe({
+			kinds: [4],
+			authors: [pubkey],
+			"#p": [account.pubkey],
+			since: dateToUnix(),
+		});
+
+		sub.addListener("event", (event: any) => {
+			add(account.pubkey, event);
+		});
 
 		return () => {
-			unsubscribe();
+			sub.stop();
 		};
 	});
 

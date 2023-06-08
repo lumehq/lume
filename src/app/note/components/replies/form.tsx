@@ -1,32 +1,29 @@
-import { Image } from "@shared/image";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { useProfile } from "@utils/hooks/useProfile";
-import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
 export function NoteReplyForm({ id }: { id: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [value, setValue] = useState("");
 
 	const submitEvent = () => {
-		const event: any = {
-			content: value,
-			created_at: dateToUnix(),
-			kind: 1,
-			pubkey: account.pubkey,
-			tags: [["e", id]],
-		};
+		const signer = new NDKPrivateKeySigner(account.privkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = value;
+		event.kind = 1;
+		event.created_at = dateToUnix();
+		event.pubkey = account.pubkey;
+		event.tags = [["e", id]];
 
-		// publish note
-		pool.publish(event, WRITEONLY_RELAYS);
+		// publish event
+		event.publish();
 
 		// reset form
 		setValue("");

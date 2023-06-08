@@ -9,7 +9,7 @@ export function InactiveAccount({ data }: { data: any }) {
 	return (
 		<div className="relative h-11 w-11 shrink rounded-md">
 			<Image
-				src={user?.picture || DEFAULT_AVATAR}
+				src={user?.image || DEFAULT_AVATAR}
 				alt={data.npub}
 				className="h-11 w-11 rounded-lg object-cover"
 			/>

@@ -1,10 +1,9 @@
 import { User } from "@app/auth/components/user";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CheckCircleIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { arrayToNIP02 } from "@utils/transform";
-import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
@@ -108,7 +107,7 @@ const initialList = [
 ];
 
 export function Page() {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 
 	const [account, updateFollows] = useActiveAccount((state: any) => [
 		state.account,
@@ -129,33 +128,34 @@ export function Page() {
 	const submit = async () => {
 		setLoading(true);
 
-		// update account follows
-		updateFollows(follows);
+		try {
+			const tags = arrayToNIP02(follows);
+			const signer = new NDKPrivateKeySigner(account.privkey);
+			ndk.signer = signer;
 
-		const tags = arrayToNIP02(follows);
+			const event = new NDKEvent(ndk);
+			// build event
+			event.content = "";
+			event.kind = 3;
+			event.pubkey = account.pubkey;
+			event.tags = tags;
+			// publish event
+			event.publish();
 
-		const event: any = {
-			content: "",
-			created_at: Math.floor(Date.now() / 1000),
-			kind: 3,
-			pubkey: account.pubkey,
-			tags: tags,
-		};
+			// update account follows
+			updateFollows(follows);
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
-
-		// publish
-		pool.publish(event, WRITEONLY_RELAYS);
-
-		// redirect to step 3
-		setTimeout(
-			() =>
-				navigate("/", {
-					overwriteLastHistoryEntry: true,
-				}),
-			2000,
-		);
+			// redirect to step 3
+			setTimeout(
+				() =>
+					navigate("/", {
+						overwriteLastHistoryEntry: true,
+					}),
+				2000,
+			);
+		} catch {
+			console.log("error");
+		}
 	};
 
 	return (

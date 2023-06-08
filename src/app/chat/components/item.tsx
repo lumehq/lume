@@ -34,7 +34,7 @@ export function ChatsListItem({ data }: { data: any }) {
 				>
 					<div className="relative h-5 w-5 shrink-0 rounded">
 						<Image
-							src={user?.picture || DEFAULT_AVATAR}
+							src={user?.image || DEFAULT_AVATAR}
 							alt={data.sender_pubkey}
 							className="h-5 w-5 rounded bg-white object-cover"
 						/>
@@ -42,7 +42,9 @@ export function ChatsListItem({ data }: { data: any }) {
 					<div className="w-full inline-flex items-center justify-between">
 						<div className="inline-flex items-baseline gap-1">
 							<h5 className="max-w-[9rem] truncate font-medium text-zinc-200 group-hover:text-white">
-								{user?.nip05 || user?.name || shortenKey(data.sender_pubkey)}
+								{user?.nip05 ||
+									user?.displayName ||
+									shortenKey(data.sender_pubkey)}
 							</h5>
 						</div>
 						<div className="flex items-center">

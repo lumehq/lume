@@ -20,7 +20,7 @@ export function NoteQuoteUser({
 		<div className="group flex items-center gap-2">
 			<div className="relative h-6 w-6 shrink-0 rounded">
 				<Image
-					src={user?.picture || DEFAULT_AVATAR}
+					src={user?.image || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-6 w-6 rounded object-cover"
 				/>

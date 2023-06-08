@@ -3,17 +3,15 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannels } from "@stores/channels";
 import { useChatMessages, useChats } from "@stores/chats";
-import { DEFAULT_AVATAR, READONLY_RELAYS } from "@stores/constants";
-import { dateToUnix } from "@utils/date";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
-import { createNote } from "@utils/storage";
 import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
 export function ActiveAccount({ data }: { data: any }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const pageContext = usePageContext();
@@ -35,60 +33,38 @@ export function ActiveAccount({ data }: { data: any }) {
 		() => {
 			const follows = JSON.parse(account.follows);
 			// subscribe to channel
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						kinds: [1, 6],
-						authors: follows,
-						since: dateToUnix(),
-					},
-					{
-						"#p": [data.pubkey],
-						since: lastLogin,
-					},
-				],
-				READONLY_RELAYS,
-				(event) => {
-					switch (event.kind) {
-						case 1:
-						case 6: {
-							createNote(
-								event.id,
-								account.id,
-								event.pubkey,
-								event.kind,
-								event.tags,
-								event.content,
-								event.created_at,
-							);
-							break;
+			const sub = ndk.subscribe({
+				"#p": [data.pubkey],
+				since: lastLogin,
+			});
+
+			sub.addListener("event", (event) => {
+				switch (event.kind) {
+					case 4:
+						if (!isChatPage) {
+							// save
+							saveChat(data.pubkey, event);
+							// update state
+							notifyChat(event.pubkey);
+							// send native notifiation
+							sendNativeNotification("You've received new message");
 						}
-						case 4:
-							if (!isChatPage) {
-								// save
-								saveChat(data.pubkey, event);
-								// update state
-								notifyChat(event.pubkey);
-								// send native notifiation
-								sendNativeNotification("You've received new message");
-							}
-							break;
-						case 42:
-							if (!isChannelPage) {
-								// update state
-								notifyChannel(event);
-								// send native notifiation
-								sendNativeNotification(event.content);
-							}
-							break;
-						default:
-							break;
-					}
-				},
-			);
+						break;
+					case 42:
+						if (!isChannelPage) {
+							// update state
+							notifyChannel(event);
+							// send native notifiation
+							sendNativeNotification(event.content);
+						}
+						break;
+					default:
+						break;
+				}
+			});
 
 			return () => {
-				unsubscribe();
+				sub.stop();
 			};
 		},
 	);
@@ -96,7 +72,7 @@ export function ActiveAccount({ data }: { data: any }) {
 	return (
 		<button type="button" className="relative h-11 w-11 overflow-hidden">
 			<Image
-				src={user?.picture || DEFAULT_AVATAR}
+				src={user?.image || DEFAULT_AVATAR}
 				alt={data.npub}
 				className="h-11 w-11 rounded-md object-cover"
 			/>

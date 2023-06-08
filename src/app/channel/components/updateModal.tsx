@@ -1,18 +1,18 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { CancelIcon, EditIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { getChannel } from "@utils/storage";
-import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function ChannelUpdateModal({ id }: { id: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,7 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 			const channel = await getChannel(id);
 			const metadata = JSON.parse(channel.metadata);
 			// update image state
-			setImage(metadata.picture);
+			setImage(metadata.image);
 			// set default values
 			return metadata;
 		},
@@ -47,28 +47,28 @@ export function ChannelUpdateModal({ id }: { id: string }) {
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
-		if (account) {
-			const event: any = {
-				content: JSON.stringify(data),
-				created_at: dateToUnix(),
-				kind: 41,
-				pubkey: account.pubkey,
-				tags: [["e", id]],
-			};
+		try {
+			const signer = new NDKPrivateKeySigner(account.privkey);
+			ndk.signer = signer;
 
-			event.id = getEventHash(event);
-			event.sig = getSignature(event, account.privkey);
+			const event = new NDKEvent(ndk);
+			// build event
+			event.content = JSON.stringify(data);
+			event.kind = 41;
+			event.created_at = dateToUnix();
+			event.pubkey = account.pubkey;
+			event.tags = [["e", id]];
 
-			// publish channel
-			pool.publish(event, WRITEONLY_RELAYS);
+			// publish event
+			event.publish();
 
 			// reset form
 			reset();
+
 			// close modal
 			setIsOpen(false);
-			setLoading(false);
-		} else {
-			console.log("error");
+		} catch (e) {
+			console.log("error: ", e);
 		}
 	};
 

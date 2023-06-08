@@ -3,8 +3,8 @@ import { Kind1063 } from "@app/note/components/kind1063";
 import { NoteMetadata } from "@app/note/components/metadata";
 import { NoteSkeleton } from "@app/note/components/skeleton";
 import { NoteDefaultUser } from "@app/note/components/user/default";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
-import { READONLY_RELAYS } from "@stores/constants";
 import { noteParser } from "@utils/parser";
 import { memo, useContext } from "react";
 import useSWRSubscription from "swr/subscription";
@@ -23,31 +23,22 @@ export const RootNote = memo(function RootNote({
 	id,
 	fallback,
 }: { id: string; fallback?: any }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const parseFallback = isJSON(fallback) ? JSON.parse(fallback) : null;
 
 	const { data, error } = useSWRSubscription(
 		parseFallback ? null : id,
 		(key, { next }) => {
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						ids: [key],
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					next(null, event);
-				},
-				undefined,
-				undefined,
-				{
-					unsubscribeOnEose: true,
-				},
-			);
+			const sub = ndk.subscribe({
+				ids: [key],
+			});
+
+			sub.addListener("event", (event: NDKEvent) => {
+				next(null, event);
+			});
 
 			return () => {
-				unsubscribe();
+				sub.stop();
 			};
 		},
 	);

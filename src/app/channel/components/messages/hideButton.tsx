@@ -1,16 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon, HideIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useState } from "react";
 
 export function MessageHideButton({ id }: { id: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 	const hide = useChannelMessages((state: any) => state.hideMessage);
 
@@ -25,19 +24,19 @@ export function MessageHideButton({ id }: { id: string }) {
 	};
 
 	const hideMessage = () => {
-		const event: any = {
-			content: "",
-			created_at: dateToUnix(),
-			kind: 43,
-			pubkey: account.pubkey,
-			tags: [["e", id]],
-		};
+		const signer = new NDKPrivateKeySigner(account.privkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = "";
+		event.kind = 43;
+		event.created_at = dateToUnix();
+		event.pubkey = account.pubkey;
+		event.tags = [["e", id]];
 
-		// publish note
-		pool.publish(event, WRITEONLY_RELAYS);
+		// publish event
+		event.publish();
 
 		// update state
 		hide(id);

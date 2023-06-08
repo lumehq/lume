@@ -1,16 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { ReplyIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { compactNumber } from "@utils/number";
-import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 
 export function NoteReply({ id, replies }: { id: string; replies: number }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [count, setCount] = useState(0);
@@ -26,19 +25,19 @@ export function NoteReply({ id, replies }: { id: string; replies: number }) {
 	};
 
 	const submitEvent = () => {
-		const event: any = {
-			content: value,
-			created_at: dateToUnix(),
-			kind: 1,
-			pubkey: account.pubkey,
-			tags: [["e", id]],
-		};
+		const signer = new NDKPrivateKeySigner(account.privkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = value;
+		event.kind = 1;
+		event.created_at = dateToUnix();
+		event.pubkey = account.pubkey;
+		event.tags = [["e", id]];
 
 		// publish event
-		pool.publish(event, WRITEONLY_RELAYS);
+		event.publish();
 
 		// close modal
 		setIsOpen(false);
@@ -96,7 +95,7 @@ export function NoteReply({ id, replies }: { id: string; replies: number }) {
 									<div>
 										<div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-white/10">
 											<Image
-												src={account?.picture}
+												src={account?.image}
 												alt="user's avatar"
 												className="h-11 w-11 rounded-md object-cover"
 											/>

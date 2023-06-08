@@ -19,17 +19,16 @@ CREATE TABLE
   plebs (
     id INTEGER NOT NULL PRIMARY KEY,
     npub TEXT NOT NULL UNIQUE,
-    display_name TEXT,
     name TEXT,
-    username TEXT,
-    about TEXT,
-    bio TEXT,
-    website TEXT,
-    picture TEXT,
+    displayName TEXT,
+    image TEXT,
     banner TEXT,
+    bio TEXT,
     nip05 TEXT,
     lud06 TEXT,
     lud16 TEXT,
+    about TEXT,
+    zapService TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 

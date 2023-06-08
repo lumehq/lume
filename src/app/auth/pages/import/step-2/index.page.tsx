@@ -1,53 +1,41 @@
 import { User } from "@app/auth/components/user";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { METADATA_RELAY } from "@stores/constants";
-import { nip02ToArray } from "@utils/transform";
+import { setToArray } from "@utils/transform";
 import { useContext, useState } from "react";
-import useSWRSubscription from "swr/subscription";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 
+	const [loading, setLoading] = useState(false);
 	const [account, updateFollows] = useActiveAccount((state: any) => [
 		state.account,
 		state.updateFollows,
 	]);
-	const [loading, setLoading] = useState(false);
-	const [follows, setFollows] = useState(null);
 
-	useSWRSubscription(account ? ["follows", account.pubkey] : null, () => {
-		const unsubscribe = pool.subscribe(
-			[
-				{
-					kinds: [3],
-					authors: [account.pubkey],
-				},
-			],
-			METADATA_RELAY,
-			(event: any) => {
-				setFollows(event.tags);
-			},
-		);
-
-		return () => {
-			unsubscribe();
-		};
-	});
-
-	const submit = () => {
+	const submit = async () => {
 		// show loading indicator
 		setLoading(true);
 
-		// follows as list
-		const followsList = nip02ToArray(follows);
+		try {
+			const user = ndk.getUser({ hexpubkey: account.pubkey });
+			const follows = await user.follows();
 
-		// update account follows in store
-		updateFollows(followsList);
+			// follows as list
+			const followsList = setToArray(follows);
 
-		// redirect to home
-		setTimeout(() => navigate("/", { overwriteLastHistoryEntry: true }), 2000);
+			// update account follows in store
+			updateFollows(followsList);
+
+			// redirect to home
+			setTimeout(
+				() => navigate("/", { overwriteLastHistoryEntry: true }),
+				2000,
+			);
+		} catch {
+			console.log("error");
+		}
 	};
 
 	return (

@@ -3,6 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
+      "@libs/*": ["src/libs/*"],
       "@shared/*": ["src/shared/*"],
       "@stores/*": ["src/stores/*"],
       "@utils/*": ["src/utils/*"]

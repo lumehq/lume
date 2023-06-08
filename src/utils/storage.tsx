@@ -1,3 +1,4 @@
+import { NDKTag, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { getParentID } from "@utils/transform";
 import { nip19 } from "nostr-tools";
 import Database from "tauri-plugin-sql-api";
@@ -76,10 +77,9 @@ export async function getPleb(npub: string) {
 }
 
 // create pleb
-export async function createPleb(key: string, json: any) {
+export async function createPleb(key: string, data: NDKUserProfile) {
 	const db = await connect();
-	const data = JSON.parse(json.content);
-
+	const now = Math.floor(Date.now() / 1000);
 	let npub: string;
 
 	if (key.substring(0, 4) === "npub") {
@@ -89,21 +89,20 @@ export async function createPleb(key: string, json: any) {
 	}
 
 	return await db.execute(
-		"INSERT OR REPLACE INTO plebs (npub, display_name, name, username, about, bio, website, picture, banner, nip05, lud06, lud16, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+		"INSERT OR REPLACE INTO plebs (npub, name, displayName, image, banner, bio, nip05, lud06, lud16, about, zapService, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
 		[
 			npub,
-			data.display_name || data.displayName,
 			data.name,
-			data.username,
-			data.about,
-			data.bio,
-			data.website,
-			data.picture || data.image,
+			data.displayName,
+			data.image,
 			data.banner,
+			data.bio,
 			data.nip05,
 			data.lud06,
 			data.lud16,
-			data.created_at,
+			data.about,
+			data.zapService,
+			now,
 		],
 	);
 }
@@ -216,39 +215,41 @@ export async function getLatestNotes(time: number) {
 // create note
 export async function createNote(
 	event_id: string,
-	account_id: number,
 	pubkey: string,
 	kind: number,
-	tags: string[],
+	tags: any,
 	content: string,
 	created_at: number,
 ) {
 	const db = await connect();
+	const account = await getActiveAccount();
 	const parentID = getParentID(tags, event_id);
+
 	return await db.execute(
-		"INSERT INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-		[event_id, account_id, pubkey, kind, tags, content, created_at, parentID],
+		"INSERT OR IGNORE INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+		[event_id, account.id, pubkey, kind, tags, content, created_at, parentID],
 	);
 }
 
 // create reply note
 export async function createReplyNote(
 	event_id: string,
-	account_id: number,
 	pubkey: string,
 	kind: number,
-	tags: string[],
+	tags: any,
 	content: string,
 	created_at: number,
 	parent_comment_id: string,
 ) {
 	const db = await connect();
+	const account = await getActiveAccount();
 	const parentID = getParentID(tags, event_id);
+
 	return await db.execute(
-		"INSERT INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id, parent_comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+		"INSERT OR IGNORE INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id, parent_comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
 		[
 			event_id,
-			account_id,
+			account.id,
 			pubkey,
 			kind,
 			tags,
@@ -298,7 +299,7 @@ export async function updateChannelMetadata(event_id: string, value: string) {
 
 	return await db.execute(
 		"UPDATE channels SET name = ?, picture = ?, about = ? WHERE event_id = ?;",
-		[data.name, data.picture, data.about, event_id],
+		[data.name, data.image, data.about, event_id],
 	);
 }
 

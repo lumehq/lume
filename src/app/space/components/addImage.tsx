@@ -1,24 +1,23 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { CancelIcon, ImageIcon } from "@shared/icons";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { CancelIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { open } from "@tauri-apps/api/dialog";
 import { Body, fetch } from "@tauri-apps/api/http";
 import { createBlobFromFile } from "@utils/createBlobFromFile";
 import { dateToUnix } from "@utils/date";
-import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function AddImageBlock({ parentState }: { parentState: any }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
+
 	const [account, addBlock] = useActiveAccount((state: any) => [
 		state.account,
 		state.addBlock,
 	]);
-
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(true);
 	const [image, setImage] = useState("");
@@ -91,19 +90,19 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
-		const event: any = {
-			content: data.title,
-			created_at: dateToUnix(),
-			kind: 1063,
-			pubkey: account.pubkey,
-			tags: tags.current,
-		};
+		const signer = new NDKPrivateKeySigner(account.privkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = data.title;
+		event.kind = 1063;
+		event.created_at = dateToUnix();
+		event.pubkey = account.pubkey;
+		event.tags = tags.current;
 
-		// publish channel
-		pool.publish(event, WRITEONLY_RELAYS);
+		// publish event
+		event.publish();
 
 		// insert to database
 		addBlock(0, data.title, data.content);

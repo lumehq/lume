@@ -41,14 +41,14 @@ export function MutedItem({ data }: { data: any }) {
 					<div className="flex items-center gap-1.5">
 						<div className="relative h-9 w-9 shrink rounded-md">
 							<Image
-								src={user?.picture || DEFAULT_AVATAR}
+								src={user?.image || DEFAULT_AVATAR}
 								alt={data.content}
 								className="h-9 w-9 rounded-md object-cover"
 							/>
 						</div>
 						<div className="flex w-full flex-1 flex-col items-start gap-0.5 text-start">
 							<span className="truncate text-base font-medium leading-none text-white">
-								{user?.display_name || user?.name || "Pleb"}
+								{user?.displayName || user?.name || "Pleb"}
 							</span>
 							<span className="text-base leading-none text-zinc-400">
 								{shortenKey(data.content)}

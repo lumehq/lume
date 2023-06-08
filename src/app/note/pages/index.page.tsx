@@ -2,41 +2,19 @@ import { Kind1 } from "@app/note/components/kind1";
 import { NoteMetadata } from "@app/note/components/metadata";
 import { RepliesList } from "@app/note/components/replies/list";
 import { NoteDefaultUser } from "@app/note/components/user/default";
-import { RelayContext } from "@shared/relayProvider";
-import { READONLY_RELAYS } from "@stores/constants";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { noteParser } from "@utils/parser";
-import { useContext } from "react";
-import useSWRSubscription from "swr/subscription";
+import { getNoteByID } from "@utils/storage";
+import useSWR from "swr";
+
+const fetcher = ([, id]) => getNoteByID(id);
 
 export function Page() {
-	const pool: any = useContext(RelayContext);
 	const pageContext = usePageContext();
 	const searchParams: any = pageContext.urlParsed.search;
-
 	const noteID = searchParams.id;
 
-	const { data, error } = useSWRSubscription(
-		noteID ? ["note", noteID] : null,
-		([, key], { next }) => {
-			// subscribe to note
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						ids: [key],
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					next(null, event);
-				},
-			);
-
-			return () => {
-				unsubscribe();
-			};
-		},
-	);
+	const { data, error } = useSWR(["note", noteID], fetcher);
 
 	const content = !error && data ? noteParser(data) : null;
 

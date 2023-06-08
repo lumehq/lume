@@ -1,15 +1,14 @@
 import { UserReply } from "@app/channel/components/messages/userReply";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useState } from "react";
 
 export function ChannelMessageForm({ channelID }: { channelID: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [value, setValue] = useState("");
@@ -31,19 +30,20 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
 			tags = [["e", channelID, "", "root"]];
 		}
 
-		const event: any = {
-			content: value,
-			created_at: dateToUnix(),
-			kind: 42,
-			pubkey: account.pubkey,
-			tags: tags,
-		};
+		const signer = new NDKPrivateKeySigner(account.privkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = value;
+		event.kind = 42;
+		event.created_at = dateToUnix();
+		event.pubkey = account.pubkey;
+		event.tags = tags;
 
-		// publish note
-		pool.publish(event, WRITEONLY_RELAYS);
+		// publish event
+		event.publish();
+
 		// reset state
 		setValue("");
 	};

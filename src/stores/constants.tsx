@@ -28,4 +28,7 @@ export const FULL_RELAYS = [
 	"wss://welcome.nostr.wine",
 	"wss://relay.nostr.band",
 	"wss://relay.damus.io",
+	"wss://relay.snort.social",
+	"wss://relayable.org",
+	"wss://nostr.mutinywallet.com",
 ];

@@ -1,34 +1,35 @@
 import { NoteReplyForm } from "@app/note/components/replies/form";
 import { Reply } from "@app/note/components/replies/item";
+import { NostrEvent } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
-import { READONLY_RELAYS } from "@stores/constants";
 import { sortEvents } from "@utils/transform";
 import { useContext } from "react";
 import useSWRSubscription from "swr/subscription";
 
 export function RepliesList({ id }: { id: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 
 	const { data, error } = useSWRSubscription(
 		id ? ["note-replies", id] : null,
 		([, key], { next }) => {
 			// subscribe to note
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						"#e": [key],
-						kinds: [1],
-						limit: 20,
-					},
-				],
-				READONLY_RELAYS,
-				(event: any) => {
-					next(null, (prev: any) => (prev ? [...prev, event] : [event]));
+			const sub = ndk.subscribe(
+				{
+					"#e": [key],
+					kinds: [1],
+					limit: 20,
+				},
+				{
+					closeOnEose: true,
 				},
 			);
 
+			sub.addListener("event", (event: NostrEvent) => {
+				next(null, (prev: any) => (prev ? [...prev, event] : [event]));
+			});
+
 			return () => {
-				unsubscribe();
+				sub.stop();
 			};
 		},
 	);

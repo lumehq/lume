@@ -7,7 +7,6 @@ import { ChannelUpdateModal } from "@app/channel/components/updateModal";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
-import { READONLY_RELAYS } from "@stores/constants";
 import { dateToUnix, getHourAgo } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { getActiveBlacklist, getBlacklist } from "@utils/storage";
@@ -29,7 +28,7 @@ const fetchHided = async ([, id]) => {
 };
 
 export function Page() {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 
 	const pageContext = usePageContext();
 	const searchParams: any = pageContext.urlParsed.search;
@@ -57,40 +56,36 @@ export function Page() {
 		account && channelID && muted && hided ? ["channel", channelID] : null,
 		() => {
 			// subscribe to channel
-			const unsubscribe = pool.subscribe(
-				[
-					{
-						"#e": [channelID],
-						kinds: [42],
-						since: dateToUnix(getHourAgo(24, now.current)),
-						limit: 20,
-					},
-				],
-				READONLY_RELAYS,
-				(event: { id: string; pubkey: string }) => {
-					const message: any = event;
+			const sub = ndk.subscribe({
+				"#e": [channelID],
+				kinds: [42],
+				since: dateToUnix(getHourAgo(24, now.current)),
+				limit: 20,
+			});
 
-					// handle hide message
-					if (hided.includes(event.id)) {
-						message["hide"] = true;
-					} else {
-						message["hide"] = false;
-					}
+			sub.addListener("event", (event: { id: string; pubkey: string }) => {
+				const message: any = event;
 
-					// handle mute user
-					if (muted.array.includes(event.pubkey)) {
-						message["mute"] = true;
-					} else {
-						message["mute"] = false;
-					}
+				// handle hide message
+				if (hided.includes(event.id)) {
+					message["hide"] = true;
+				} else {
+					message["hide"] = false;
+				}
 
-					// add to store
-					addMessage(message);
-				},
-			);
+				// handle mute user
+				if (muted.array.includes(event.pubkey)) {
+					message["mute"] = true;
+				} else {
+					message["mute"] = false;
+				}
+
+				// add to store
+				addMessage(message);
+			});
 
 			return () => {
-				unsubscribe();
+				sub.stop();
 				clear();
 			};
 		},

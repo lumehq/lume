@@ -1,15 +1,15 @@
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
-import { getEventHash, getSignature } from "nostr-tools";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function Page() {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [image, setImage] = useState(DEFAULT_AVATAR);
@@ -25,28 +25,30 @@ export function Page() {
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
-		const event: any = {
-			content: JSON.stringify(data),
-			created_at: Math.floor(Date.now() / 1000),
-			kind: 0,
-			pubkey: account.pubkey,
-			tags: [],
-		};
+		try {
+			const signer = new NDKPrivateKeySigner(account.privkey);
+			ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+			const event = new NDKEvent(ndk);
+			// build event
+			event.content = JSON.stringify(data);
+			event.kind = 0;
+			event.pubkey = account.pubkey;
+			event.tags = [];
+			// publish event
+			event.publish();
 
-		// publish
-		pool.publish(event, WRITEONLY_RELAYS);
-
-		// redirect to step 3
-		setTimeout(
-			() =>
-				navigate("/app/auth/create/step-3", {
-					overwriteLastHistoryEntry: true,
-				}),
-			2000,
-		);
+			// redirect to step 3
+			setTimeout(
+				() =>
+					navigate("/app/auth/create/step-3", {
+						overwriteLastHistoryEntry: true,
+					}),
+				2000,
+			);
+		} catch {
+			console.log("error");
+		}
 	};
 
 	useEffect(() => {
@@ -94,7 +96,7 @@ export function Page() {
 							<div className="relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
 								<input
 									type={"text"}
-									{...register("display_name", {
+									{...register("displayName", {
 										required: true,
 										minLength: 4,
 									})}
@@ -105,11 +107,11 @@ export function Page() {
 						</div>
 						<div className="flex flex-col gap-1">
 							<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
-								About
+								Bio
 							</label>
 							<div className="relative h-20 w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
 								<textarea
-									{...register("about")}
+									{...register("bio")}
 									spellCheck={false}
 									className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
@@ -119,7 +121,7 @@ export function Page() {
 							<button
 								type="submit"
 								disabled={!isDirty || !isValid}
-								className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-white shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
+								className="inline-flex h-10 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 px-3.5 font-medium text-white shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
 							>
 								{loading ? (
 									<svg

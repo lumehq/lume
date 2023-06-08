@@ -24,7 +24,7 @@ export function ChannelMessageUserMute({
 				<>
 					<div className="relative h-11 w-11 shrink-0 rounded-md">
 						<Image
-							src={user?.picture || DEFAULT_AVATAR}
+							src={user?.image || DEFAULT_AVATAR}
 							alt={pubkey}
 							className="h-11 w-11 rounded-md object-cover"
 						/>

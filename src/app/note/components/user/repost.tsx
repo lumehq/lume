@@ -19,7 +19,7 @@ export function NoteRepostUser({
 		<Popover className="relative flex items-start gap-3">
 			<Popover.Button className="h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
 				<Image
-					src={user?.picture || DEFAULT_AVATAR}
+					src={user?.image || DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-11 w-11 rounded-md object-cover"
 				/>
@@ -54,14 +54,14 @@ export function NoteRepostUser({
 					>
 						<div className="flex items-start gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
-								src={user?.picture || DEFAULT_AVATAR}
+								src={user?.image || DEFAULT_AVATAR}
 								alt={pubkey}
 								className="h-14 w-14 shrink-0 rounded-lg object-cover"
 							/>
 							<div className="flex w-full flex-1 flex-col gap-2">
 								<div className="inline-flex w-2/3 flex-col gap-0.5">
 									<h5 className="text-base font-semibold leading-none">
-										{user?.display_name || user?.name || (
+										{user?.displayName || user?.name || (
 											<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
 										)}
 									</h5>

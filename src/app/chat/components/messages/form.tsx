@@ -1,10 +1,10 @@
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { EnterIcon } from "@shared/icons";
 import { MediaUploader } from "@shared/mediaUploader";
 import { RelayContext } from "@shared/relayProvider";
 import { useChatMessages } from "@stores/chats";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { getEventHash, getSignature, nip04 } from "nostr-tools";
+import { nip04 } from "nostr-tools";
 import { useCallback, useContext, useState } from "react";
 
 export function ChatMessageForm({
@@ -12,8 +12,9 @@ export function ChatMessageForm({
 	userPubkey,
 	userPrivkey,
 }: { receiverPubkey: string; userPubkey: string; userPrivkey: string }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const addMessage = useChatMessages((state: any) => state.add);
+
 	const [value, setValue] = useState("");
 
 	const encryptMessage = useCallback(async () => {
@@ -23,19 +24,19 @@ export function ChatMessageForm({
 	const submit = async () => {
 		const message = await encryptMessage();
 
-		const event: any = {
-			content: message,
-			created_at: dateToUnix(),
-			kind: 4,
-			pubkey: userPubkey,
-			tags: [["p", receiverPubkey]],
-		};
+		const signer = new NDKPrivateKeySigner(userPrivkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, userPrivkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = message;
+		event.kind = 4;
+		event.created_at = dateToUnix();
+		event.pubkey = userPubkey;
+		event.tags = [["p", receiverPubkey]];
 
-		// publish message
-		pool.publish(event, WRITEONLY_RELAYS);
+		// publish event
+		event.publish();
 
 		// add message to store
 		addMessage(receiverPubkey, event);

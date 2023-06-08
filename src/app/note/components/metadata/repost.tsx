@@ -1,10 +1,9 @@
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { RepostIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { WRITEONLY_RELAYS } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { compactNumber } from "@utils/number";
-import { getEventHash, getSignature } from "nostr-tools";
 import { useContext, useEffect, useState } from "react";
 
 export function NoteRepost({
@@ -12,7 +11,7 @@ export function NoteRepost({
 	pubkey,
 	reposts,
 }: { id: string; pubkey: string; reposts: number }) {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [count, setCount] = useState(0);
@@ -20,22 +19,22 @@ export function NoteRepost({
 	const submitEvent = (e: any) => {
 		e.stopPropagation();
 
-		const event: any = {
-			content: "",
-			kind: 6,
-			tags: [
-				["e", id],
-				["p", pubkey],
-			],
-			created_at: dateToUnix(),
-			pubkey: account.pubkey,
-		};
+		const signer = new NDKPrivateKeySigner(account.privkey);
+		ndk.signer = signer;
 
-		event.id = getEventHash(event);
-		event.sig = getSignature(event, account.privkey);
+		const event = new NDKEvent(ndk);
+		// build event
+		event.content = "";
+		event.kind = 6;
+		event.created_at = dateToUnix();
+		event.pubkey = account.pubkey;
+		event.tags = [
+			["e", id],
+			["p", pubkey],
+		];
 
-		// publish event to all relays
-		pool.publish(event, WRITEONLY_RELAYS);
+		// publish event
+		event.publish();
 
 		// update state
 		setCount(count + 1);

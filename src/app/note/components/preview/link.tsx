@@ -17,11 +17,13 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 					target="_blank"
 					rel="noreferrer"
 				>
-					<Image
-						src={data["og:image"]}
-						alt={urls[0]}
-						className="w-full h-auto border-t-lg object-cover"
-					/>
+					{data["og:image"] && (
+						<Image
+							src={data["og:image"]}
+							alt={urls[0]}
+							className="w-full h-auto border-t-lg object-cover"
+						/>
+					)}
 					<div className="flex flex-col gap-2 px-3 py-3">
 						<h5 className="leading-none font-medium text-zinc-200">
 							{data["og:title"]}

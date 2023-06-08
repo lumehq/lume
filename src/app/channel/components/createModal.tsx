@@ -1,19 +1,19 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { CancelIcon, PlusIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
-import { DEFAULT_AVATAR, WRITEONLY_RELAYS } from "@stores/constants";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
 import { createChannel } from "@utils/storage";
-import { getEventHash, getSignature } from "nostr-tools";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { navigate } from "vite-plugin-ssr/client/router";
 
 export function ChannelCreateModal() {
-	const pool: any = useContext(RelayContext);
+	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -39,20 +39,20 @@ export function ChannelCreateModal() {
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
-		if (account) {
-			const event: any = {
-				content: JSON.stringify(data),
-				created_at: dateToUnix(),
-				kind: 40,
-				pubkey: account.pubkey,
-				tags: [],
-			};
+		try {
+			const signer = new NDKPrivateKeySigner(account.privkey);
+			ndk.signer = signer;
 
-			event.id = getEventHash(event);
-			event.sig = getSignature(event, account.privkey);
+			const event = new NDKEvent(ndk);
+			// build event
+			event.content = JSON.stringify(data);
+			event.kind = 40;
+			event.created_at = dateToUnix();
+			event.pubkey = account.pubkey;
+			event.tags = [];
 
-			// publish channel
-			pool.publish(event, WRITEONLY_RELAYS);
+			// publish event
+			event.publish();
 
 			// insert to database
 			createChannel(event.id, event.pubkey, event.content, event.created_at);
@@ -65,9 +65,9 @@ export function ChannelCreateModal() {
 				setIsOpen(false);
 				// redirect to channel page
 				navigate(`/app/channel?id=${event.id}`);
-			}, 2000);
-		} else {
-			console.log("error");
+			}, 1000);
+		} catch (e) {
+			console.log("error: ", e);
 		}
 	};
 

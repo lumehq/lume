@@ -1,7 +1,18 @@
 import destr from "destr";
+import { nip19 } from "nostr-tools";
 
 export function truncateContent(str, n) {
 	return str.length > n ? `${str.slice(0, n - 1)}&hellip;` : str;
+}
+
+export function setToArray(tags: any) {
+	const newArray = [];
+	tags.forEach((item) => {
+		const hexpubkey = nip19.decode(item.npub).data;
+		newArray.push(hexpubkey);
+	});
+
+	return newArray;
 }
 
 // convert NIP-02 to array of pubkey
