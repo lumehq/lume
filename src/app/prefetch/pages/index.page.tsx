@@ -1,14 +1,10 @@
+import { prefetchEvents } from "@libs/ndk";
 import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { LumeIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { dateToUnix, getHourAgo } from "@utils/date";
-import {
-	addToBlacklist,
-	countTotalNotes,
-	createChat,
-	createNote,
-} from "@utils/storage";
+import { countTotalNotes, createNote } from "@utils/storage";
 import { useContext, useEffect, useRef } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 
@@ -48,7 +44,7 @@ export function Page() {
 				since: queryNoteSince,
 			};
 
-			const events = await ndk.fetchEvents(filter);
+			const events = await prefetchEvents(ndk, filter);
 			events.forEach((event) => {
 				createNote(
 					event.id,
@@ -66,91 +62,6 @@ export function Page() {
 		}
 	}
 
-	async function fetchChannelBlacklist() {
-		try {
-			const filter: NDKFilter = {
-				authors: [account.pubkey],
-				kinds: [43, 44],
-				since: lastLogin,
-			};
-
-			const events = await ndk.fetchEvents(filter);
-			events.forEach((event) => {
-				switch (event.kind) {
-					case 43:
-						if (event.tags[0][0] === "e") {
-							addToBlacklist(account.id, event.tags[0][1], 43, 1);
-						}
-						break;
-					case 44:
-						if (event.tags[0][0] === "p") {
-							addToBlacklist(account.id, event.tags[0][1], 44, 1);
-						}
-						break;
-					default:
-						break;
-				}
-			});
-
-			return true;
-		} catch (e) {
-			console.log("error: ", e);
-		}
-	}
-
-	async function fetchReceiveMessages() {
-		try {
-			const filter: NDKFilter = {
-				kinds: [4],
-				"#p": [account.pubkey],
-				since: lastLogin,
-			};
-
-			const events = await ndk.fetchEvents(filter);
-			events.forEach((event) => {
-				createChat(
-					event.id,
-					account.pubkey,
-					event.pubkey,
-					event.content,
-					event.tags,
-					event.created_at,
-				);
-			});
-
-			return true;
-		} catch (e) {
-			console.log("error: ", e);
-		}
-	}
-
-	async function fetchSendMessages() {
-		try {
-			const filter: NDKFilter = {
-				kinds: [4],
-				authors: [account.pubkey],
-				since: lastLogin,
-			};
-
-			const events = await ndk.fetchEvents(filter);
-			events.forEach((event) => {
-				const receiver = event.tags.find((t) => t[0] === "p")[1];
-				createChat(
-					event.id,
-					receiver,
-					account.pubkey,
-					event.content,
-					event.tags,
-					event.created_at,
-				);
-			});
-
-			return true;
-		} catch (e) {
-			console.log("error: ", e);
-		}
-	}
-
 	useEffect(() => {
 		async function prefetch() {
 			const notes = await fetchNotes();
@@ -158,7 +69,6 @@ export function Page() {
 				navigate("/app/space", { overwriteLastHistoryEntry: true });
 			}
 		}
-
 		prefetch();
 	}, []);
 

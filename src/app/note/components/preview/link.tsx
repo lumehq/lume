@@ -8,7 +8,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 	return (
 		<div className="mt-3 overflow-hidden rounded-lg bg-zinc-800">
 			{error && <p>failed to load</p>}
-			{isLoading && !data ? (
+			{isLoading || !data ? (
 				<p>Loading...</p>
 			) : (
 				<a

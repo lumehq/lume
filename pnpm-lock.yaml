@@ -8,8 +8,8 @@ dependencies:
     specifier: ^1.7.15
     version: 1.7.15(react-dom@18.2.0)(react@18.2.0)
   '@nostr-dev-kit/ndk':
-    specifier: ^0.4.4
-    version: 0.4.4(typescript@4.9.5)
+    specifier: ^0.4.5
+    version: 0.4.5(typescript@4.9.5)
   '@tanstack/react-virtual':
     specifier: 3.0.0-beta.54
     version: 3.0.0-beta.54(react@18.2.0)
@@ -35,8 +35,8 @@ dependencies:
     specifier: ^0.6.28
     version: 0.6.28(ws@8.13.0)
   nostr-tools:
-    specifier: ^1.11.1
-    version: 1.11.1
+    specifier: ^1.11.2
+    version: 1.11.2
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -71,8 +71,8 @@ dependencies:
     specifier: ^2.1.5
     version: 2.1.5(react@18.2.0)
   tailwind-merge:
-    specifier: ^1.13.0
-    version: 1.13.0
+    specifier: ^1.13.1
+    version: 1.13.1
   tauri-plugin-sql-api:
     specifier: github:tauri-apps/tauri-plugin-sql
     version: github.com/tauri-apps/tauri-plugin-sql/312c4d39ac5eb1c6c75e8ecee1c4bc89ed799675
@@ -161,23 +161,23 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /@babel/code-frame@7.21.4:
-    resolution: {integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==}
+  /@babel/code-frame@7.22.5:
+    resolution: {integrity: sha512-Xmwn266vad+6DAqEB2A6V/CcZVp62BbwVmcOJc2RPuwih1kw02TjQvWVWlcKGbBPd+8/0V5DEkOcizRGYsspYQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/highlight': 7.18.6
+      '@babel/highlight': 7.22.5
     dev: false
 
-  /@babel/helper-validator-identifier@7.19.1:
-    resolution: {integrity: sha512-awrNfaMtnHUr653GgGEs++LlAvW6w+DcPrOliSMXWCKo597CwL5Acf/wWdNkf/tfEQE3mjkeD1YOVZOUV/od1w==}
+  /@babel/helper-validator-identifier@7.22.5:
+    resolution: {integrity: sha512-aJXu+6lErq8ltp+JhkJUfk1MTGyuA4v7f3pA+BJ5HLfNC6nAQ0Cpi9uOquUj8Hehg0aUiHzWQbOVJGao6ztBAQ==}
     engines: {node: '>=6.9.0'}
     dev: false
 
-  /@babel/highlight@7.18.6:
-    resolution: {integrity: sha512-u7stbOuYjaPezCuLj29hNW1v64M2Md2qupEKP1fHc7WdOA3DgLh37suiSrZYY7haUB7iBeQZ9P1uiRF359do3g==}
+  /@babel/highlight@7.22.5:
+    resolution: {integrity: sha512-BSKlD1hgnedS5XRnGOljZawtag7H1yPfQp0tdNJCHoH6AZ+Pcm9VvkrK59/Yy593Ypg0zMxH2BxD1VPYUQ7UIw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/helper-validator-identifier': 7.19.1
+      '@babel/helper-validator-identifier': 7.22.5
       chalk: 2.4.2
       js-tokens: 4.0.0
     dev: false
@@ -566,8 +566,8 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@nostr-dev-kit/ndk@0.4.4(typescript@4.9.5):
-    resolution: {integrity: sha512-hzXWAlUO1LEmHv3W0Nj0gLmbpZ0gC4WmtDFKdOMnKkFMno0bMobGk8S4hrHHTThigA+OHtkjkPl1vr8fx+a03w==}
+  /@nostr-dev-kit/ndk@0.4.5(typescript@4.9.5):
+    resolution: {integrity: sha512-iiWWOHjejt5uBKh0q38hN/jBM2rJsgZn3T0fe9AwQCRTm2PkXYDbfT5uYz+VHaovkJx8WLYeV4Ol9nz4p7b8aA==}
     dependencies:
       '@noble/secp256k1': 2.0.0
       '@scure/base': 1.1.1
@@ -583,7 +583,7 @@ packages:
       eventemitter3: 5.0.1
       light-bolt11-decoder: 3.0.0
       node-fetch: 3.3.1
-      nostr-tools: 1.11.1
+      nostr-tools: 1.11.2
       tsd: 0.28.1
       typedoc: 0.24.8(typescript@4.9.5)
       utf8-buffer: 1.0.0
@@ -3507,14 +3507,14 @@ packages:
     dependencies:
       '@jest/source-map': 29.4.3
       isomorphic-ws: 5.0.0(ws@8.13.0)
-      nostr-tools: 1.11.1
+      nostr-tools: 1.11.2
       safe-stable-stringify: 2.4.3
     transitivePeerDependencies:
       - ws
     dev: false
 
-  /nostr-tools@1.11.1:
-    resolution: {integrity: sha512-b8BpCiD3wxjBZwrn0wc+CkVj6/7s4sQxp+Az7UkCG80mJu7xTspZsOoUP/geBNwZVYETzEwj+CPBvW8WIP8mBQ==}
+  /nostr-tools@1.11.2:
+    resolution: {integrity: sha512-ezN+QwPlFTRZLjstUJw9xacI7/rKKOn18bRitKcArj5YFLaxA2xDIvkryapYZ1IBsJzFYcODmygKIrHdZXsJjw==}
     dependencies:
       '@noble/curves': 1.0.0
       '@noble/hashes': 1.3.0
@@ -3672,7 +3672,7 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
     dependencies:
-      '@babel/code-frame': 7.21.4
+      '@babel/code-frame': 7.22.5
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
@@ -4472,8 +4472,8 @@ packages:
     resolution: {integrity: sha512-qCN98uP7i9z0fIS4amQ5zbGBOq+OSigYeGvPy7NDk8Y9yncqDZ9pRPgfsc2PJIVM9RrJj7GIfuRgmjoUU9zTHQ==}
     dev: false
 
-  /tailwind-merge@1.13.0:
-    resolution: {integrity: sha512-mUTmDbcU+IhOvJ0c42eLQ/nRkvolTqfpVaVQRSxfJAv9TabS6Y2zW/1wKpKLdKzyL3Gh8j6NTLl6MWNmvOM6kA==}
+  /tailwind-merge@1.13.1:
+    resolution: {integrity: sha512-tRtRN22TDokGi2TuYSvuHQuuW6BJ/zlUEG+iYpAQ9i66msc/0eU/+HPccbPnNNH0mCPp0Ob8thaC8Uy9CxHitQ==}
     dev: false
 
   /tailwindcss@3.3.2:
