@@ -1,5 +1,5 @@
 import { prefetchEvents } from "@libs/ndk";
-import { countTotalNotes, createNote } from "@libs/storage";
+import { countTotalNotes, createChat, createNote } from "@libs/storage";
 import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { LumeIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
@@ -62,11 +62,50 @@ export function Page() {
 		}
 	}
 
+	async function fetchChats() {
+		try {
+			const sendFilter: NDKFilter = {
+				kinds: [4],
+				authors: [account.pubkey],
+				since: lastLogin,
+			};
+			const receiveFilter: NDKFilter = {
+				kinds: [4],
+				"#p": [account.pubkey],
+				since: lastLogin,
+			};
+
+			const sendMessages = await prefetchEvents(ndk, sendFilter);
+			const receiveMessages = await prefetchEvents(ndk, receiveFilter);
+			const events = [...sendMessages, ...receiveMessages];
+
+			events.forEach((event) => {
+				const receiverPubkey =
+					event.tags.find((t) => t[0] === "p")[1] || account.pubkey;
+				createChat(
+					event.id,
+					receiverPubkey,
+					event.pubkey,
+					event.content,
+					event.tags,
+					event.created_at,
+				);
+			});
+
+			return true;
+		} catch (e) {
+			console.log("error: ", e);
+		}
+	}
+
 	useEffect(() => {
 		async function prefetch() {
 			const notes = await fetchNotes();
 			if (notes) {
-				navigate("/app/space", { overwriteLastHistoryEntry: true });
+				const chats = await fetchChats();
+				if (chats) {
+					navigate("/app/space", { overwriteLastHistoryEntry: true });
+				}
 			}
 		}
 		prefetch();

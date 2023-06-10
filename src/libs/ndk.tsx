@@ -2,8 +2,6 @@ import NDK, {
 	NDKConstructorParams,
 	NDKEvent,
 	NDKFilter,
-	NDKFilterOptions,
-	NDKRelaySet,
 } from "@nostr-dev-kit/ndk";
 import { FULL_RELAYS } from "@stores/constants";
 
@@ -37,7 +35,7 @@ export async function prefetchEvents(
 		});
 
 		relaySetSubscription.on("eose", () => {
-			setTimeout(() => resolve(new Set(events.values())), 2000);
+			setTimeout(() => resolve(new Set(events.values())), 3000);
 		});
 	});
 }
