@@ -2,9 +2,9 @@ import { Kind1 } from "@app/note/components/kind1";
 import { NoteMetadata } from "@app/note/components/metadata";
 import { RepliesList } from "@app/note/components/replies/list";
 import { NoteDefaultUser } from "@app/note/components/user/default";
+import { getNoteByID } from "@libs/storage";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { noteParser } from "@utils/parser";
-import { getNoteByID } from "@utils/storage";
 import useSWR from "swr";
 
 const fetcher = ([, id]) => getNoteByID(id);

@@ -1,4 +1,4 @@
-import { getChannels } from "@utils/storage";
+import { getChannels } from "@libs/storage";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 

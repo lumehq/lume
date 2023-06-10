@@ -1,8 +1,8 @@
 import { NoteBase } from "@app/note/components/base";
 import { NoteQuoteRepost } from "@app/note/components/quoteRepost";
 import { NoteSkeleton } from "@app/note/components/skeleton";
+import { getNotes } from "@libs/storage";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { getNotes } from "@utils/storage";
 import { useEffect, useMemo, useRef } from "react";
 import useSWRInfinite from "swr/infinite";
 

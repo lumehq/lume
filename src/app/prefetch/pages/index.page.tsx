@@ -1,10 +1,10 @@
 import { prefetchEvents } from "@libs/ndk";
+import { countTotalNotes, createNote } from "@libs/storage";
 import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { LumeIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { dateToUnix, getHourAgo } from "@utils/date";
-import { countTotalNotes, createNote } from "@utils/storage";
 import { useContext, useEffect, useRef } from "react";
 import { navigate } from "vite-plugin-ssr/client/router";
 

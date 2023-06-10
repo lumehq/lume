@@ -1,6 +1,6 @@
+import { createPleb, getPleb } from "@libs/storage";
 import NDK from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
-import { createPleb, getPleb } from "@utils/storage";
 import { nip19 } from "nostr-tools";
 import { useContext } from "react";
 import useSWR from "swr";

@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { getChannel } from "@libs/storage";
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { CancelIcon, EditIcon } from "@shared/icons";
@@ -7,7 +8,6 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
-import { getChannel } from "@utils/storage";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 

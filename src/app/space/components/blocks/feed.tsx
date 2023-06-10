@@ -1,10 +1,10 @@
 import { NoteBase } from "@app/note/components/base";
 import { NoteQuoteRepost } from "@app/note/components/quoteRepost";
 import { NoteSkeleton } from "@app/note/components/skeleton";
+import { getNotesByAuthor } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { getNotesByAuthor } from "@utils/storage";
 import { useEffect, useMemo, useRef } from "react";
 import useSWRInfinite from "swr/infinite";
 

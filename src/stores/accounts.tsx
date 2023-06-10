@@ -6,7 +6,7 @@ import {
 	getLastLogin,
 	removeBlockFromDB,
 	updateAccount,
-} from "@utils/storage";
+} from "@libs/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

@@ -1,5 +1,5 @@
+import { getChannel, updateChannelMetadata } from "@libs/storage";
 import { RelayContext } from "@shared/relayProvider";
-import { getChannel, updateChannelMetadata } from "@utils/storage";
 import { useContext } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRSubscription from "swr/subscription";

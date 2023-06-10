@@ -1,10 +1,10 @@
 import { NoteReply } from "@app/note/components/metadata/reply";
 import { NoteRepost } from "@app/note/components/metadata/repost";
 import { NoteZap } from "@app/note/components/metadata/zap";
+import { createReplyNote } from "@libs/storage";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { NDKSubscription } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
-import { createReplyNote } from "@utils/storage";
 import { decode } from "light-bolt11-decoder";
 import { useContext, useState } from "react";
 import useSWRSubscription from "swr/subscription";

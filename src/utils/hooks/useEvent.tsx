@@ -1,5 +1,5 @@
+import { createNote, getNoteByID } from "@libs/storage";
 import { RelayContext } from "@shared/relayProvider";
-import { createNote, getNoteByID } from "@utils/storage";
 import { useContext } from "react";
 import useSWR from "swr";
 

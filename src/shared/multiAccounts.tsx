@@ -1,8 +1,8 @@
+import { getAccounts, getActiveAccount } from "@libs/storage";
 import { ActiveAccount } from "@shared/accounts/active";
 import { InactiveAccount } from "@shared/accounts/inactive";
 import { BellIcon, PlusIcon } from "@shared/icons";
 import { APP_VERSION } from "@stores/constants";
-import { getAccounts, getActiveAccount } from "@utils/storage";
 import useSWR from "swr";
 
 const allFetcher = () => getAccounts();

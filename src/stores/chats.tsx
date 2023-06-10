@@ -1,4 +1,4 @@
-import { createChat, getChatMessages, getChatsByPubkey } from "@utils/storage";
+import { createChat, getChatMessages, getChatsByPubkey } from "@libs/storage";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
