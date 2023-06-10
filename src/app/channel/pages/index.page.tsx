@@ -5,6 +5,7 @@ import { ChannelMessageForm } from "@app/channel/components/messages/form";
 import { ChannelMetadata } from "@app/channel/components/metadata";
 import { ChannelUpdateModal } from "@app/channel/components/updateModal";
 import { getActiveBlacklist, getBlacklist } from "@libs/storage";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
@@ -63,8 +64,8 @@ export function Page() {
 				limit: 20,
 			});
 
-			sub.addListener("event", (event: { id: string; pubkey: string }) => {
-				const message: any = event;
+			sub.addListener("event", (event: NDKEvent) => {
+				const message: NDKEvent = event;
 
 				// handle hide message
 				if (hided.includes(event.id)) {
