@@ -4,7 +4,7 @@ import { Navigation } from "@shared/navigation";
 export function LayoutChat({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="flex w-screen h-screen">
-			<div className="relative flex flex-row flex-wrap shrink-0">
+			<div className="relative flex flex-row shrink-0">
 				<MultiAccounts />
 				<Navigation />
 			</div>

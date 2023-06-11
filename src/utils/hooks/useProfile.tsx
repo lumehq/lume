@@ -33,7 +33,7 @@ export function useProfile(key: string) {
 	const { data, error, isLoading } = useSWR(["profile", ndk, key], fetcher, {
 		revalidateIfStale: false,
 		revalidateOnFocus: false,
-		revalidateOnReconnect: true,
+		revalidateOnReconnect: false,
 	});
 
 	return {

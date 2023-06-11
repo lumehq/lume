@@ -37,7 +37,10 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
 								</div>
 							</div>
 						)}
-						<NoteMetadata id={data.id} eventPubkey={data.pubkey} />
+						<NoteMetadata
+							id={data.event_id || data.id}
+							eventPubkey={data.pubkey}
+						/>
 					</div>
 				</>
 			) : (

@@ -5,7 +5,7 @@ import { SWRConfig } from "swr";
 export function LayoutSpace({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="flex w-screen h-screen">
-			<div className="relative flex flex-row flex-wrap shrink-0">
+			<div className="relative flex flex-row shrink-0">
 				<MultiAccounts />
 				<Navigation />
 			</div>

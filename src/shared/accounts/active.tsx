@@ -4,7 +4,6 @@ import { useActiveAccount } from "@stores/accounts";
 import { useChannels } from "@stores/channels";
 import { useChatMessages, useChats } from "@stores/chats";
 import { DEFAULT_AVATAR } from "@stores/constants";
-import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
 import { useContext } from "react";
@@ -12,14 +11,6 @@ import useSWRSubscription from "swr/subscription";
 
 export function ActiveAccount({ data }: { data: any }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
-
-	const pageContext = usePageContext();
-	const pathname: any = pageContext.urlParsed.pathname;
-
-	const isChatPage = pathname.includes("/chat");
-	const isChannelPage = pathname.includes("/channel");
-	// const notSpacePage = pathnames.includes("/space") ? false : true;
 
 	const lastLogin = useActiveAccount((state: any) => state.lastLogin);
 	const notifyChat = useChats((state: any) => state.add);
@@ -28,46 +19,46 @@ export function ActiveAccount({ data }: { data: any }) {
 
 	const { user } = useProfile(data.pubkey);
 
-	useSWRSubscription(
-		user && lastLogin > 0 ? ["activeAccount", data.pubkey] : null,
-		() => {
-			const follows = JSON.parse(account.follows);
-			// subscribe to channel
-			const sub = ndk.subscribe({
+	useSWRSubscription(user ? ["activeAccount", data.pubkey] : null, () => {
+		const since = lastLogin > 0 ? lastLogin : Math.floor(Date.now() / 1000);
+		// subscribe to channel
+		const sub = ndk.subscribe(
+			{
+				kinds: [4, 42],
 				"#p": [data.pubkey],
-				since: lastLogin,
-			});
+				since: since,
+			},
+			{
+				closeOnEose: false,
+			},
+		);
 
-			sub.addListener("event", (event) => {
-				switch (event.kind) {
-					case 4:
-						if (!isChatPage) {
-							// save
-							saveChat(data.pubkey, event);
-							// update state
-							notifyChat(event.pubkey);
-							// send native notifiation
-							sendNativeNotification("You've received new message");
-						}
-						break;
-					case 42:
-						if (!isChannelPage) {
-							// update state
-							notifyChannel(event);
-							// send native notifiation
-							sendNativeNotification(event.content);
-						}
-						break;
-					default:
-						break;
-				}
-			});
+		sub.addListener("event", (event) => {
+			console.log(event);
+			switch (event.kind) {
+				case 4:
+					// save
+					saveChat(data.pubkey, event);
+					// update state
+					notifyChat(event.pubkey);
+					// send native notifiation
+					sendNativeNotification("You've received new message");
+					break;
+				case 42:
+					// update state
+					notifyChannel(event);
+					// send native notifiation
+					sendNativeNotification(event.content);
+					break;
+				default:
+					break;
+			}
+		});
 
-			return () => {
-				sub.stop();
-			};
-		},
-	);
+		return () => {
+			sub.stop();
+		};
+	});
 
 	return (
 		<button type="button" className="relative h-11 w-11 overflow-hidden">
