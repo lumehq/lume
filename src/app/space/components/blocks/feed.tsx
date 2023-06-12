@@ -1,6 +1,6 @@
-import { NoteBase } from "@app/note/components/base";
-import { NoteQuoteRepost } from "@app/note/components/quoteRepost";
-import { NoteSkeleton } from "@app/note/components/skeleton";
+import { NoteBase } from "@app/space/components/notes/base";
+import { NoteQuoteRepost } from "@app/space/components/notes/quoteRepost";
+import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { getNotesByAuthor } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
@@ -73,7 +73,7 @@ export function FeedBlock({ params }: { params: any }) {
 			</div>
 			<div
 				ref={parentRef}
-				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 overflow-y-auto"
+				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
 				{!data || isLoading ? (
@@ -108,7 +108,11 @@ export function FeedBlock({ params }: { params: any }) {
 												data-index={virtualRow.index}
 												ref={rowVirtualizer.measureElement}
 											>
-												<NoteBase key={note.event_id} event={note} />
+												<NoteBase
+													key={note.event_id}
+													block={params.id}
+													event={note}
+												/>
 											</div>
 										);
 									} else {
@@ -118,7 +122,11 @@ export function FeedBlock({ params }: { params: any }) {
 												data-index={virtualRow.index}
 												ref={rowVirtualizer.measureElement}
 											>
-												<NoteQuoteRepost key={note.event_id} event={note} />
+												<NoteQuoteRepost
+													key={note.event_id}
+													block={params.id}
+													event={note}
+												/>
 											</div>
 										);
 									}

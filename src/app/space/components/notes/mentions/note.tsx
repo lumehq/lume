@@ -1,8 +1,8 @@
-import { Kind1 } from "@app/note/components/kind1";
-import { Kind1063 } from "@app/note/components/kind1063";
-import { NoteSkeleton } from "@app/note/components/skeleton";
-import { NoteQuoteUser } from "@app/note/components/user/quote";
-import { NoteWrapper } from "@app/note/components/wrapper";
+import { Kind1 } from "@app/space/components/notes/kind1";
+import { Kind1063 } from "@app/space/components/notes/kind1063";
+import { NoteSkeleton } from "@app/space/components/notes/skeleton";
+import { NoteWrapper } from "@app/space/components/notes/wrapper";
+import { NoteQuoteUser } from "@app/space/components/user/quote";
 import { useEvent } from "@utils/hooks/useEvent";
 import { noteParser } from "@utils/parser";
 import { memo } from "react";

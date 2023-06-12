@@ -9,7 +9,14 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 		<div className="mt-3 overflow-hidden rounded-lg bg-zinc-800">
 			{error && <p>failed to load</p>}
 			{isLoading || !data ? (
-				<p>Loading...</p>
+				<div className="flex flex-col">
+					<div className="w-full h-16 bg-zinc-700 animate-pulse" />
+					<div className="flex flex-col gap-2 px-3 py-3">
+						<div className="w-2/3 h-3 rounded bg-zinc-700 animate-pulse" />
+						<div className="w-3/4 h-3 rounded bg-zinc-700 animate-pulse" />
+						<div className="mt-2.5 w-1/3 h-2 rounded bg-zinc-700 animate-pulse" />
+					</div>
+				</div>
 			) : (
 				<a
 					className="flex flex-col"

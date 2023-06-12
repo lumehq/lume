@@ -1,14 +1,18 @@
-import { RootNote } from "@app/note/components/rootNote";
-import { NoteRepostUser } from "@app/note/components/user/repost";
-import { NoteWrapper } from "@app/note/components/wrapper";
+import { RootNote } from "@app/space/components/notes/rootNote";
+import { NoteWrapper } from "@app/space/components/notes/wrapper";
+import { NoteRepostUser } from "@app/space/components/user/repost";
 import { getQuoteID } from "@utils/transform";
 
-export function NoteQuoteRepost({ event }: { event: any }) {
+export function NoteQuoteRepost({
+	block,
+	event,
+}: { block: number; event: any }) {
 	const rootID = getQuoteID(event.tags);
 
 	return (
 		<NoteWrapper
-			href={`/app/note?id=${rootID}`}
+			thread={rootID}
+			block={block}
 			className="h-min w-full px-3 py-1.5"
 		>
 			<div className="rounded-md bg-zinc-900">

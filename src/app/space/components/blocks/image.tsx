@@ -20,7 +20,7 @@ export function ImageBlock({ params }: { params: any }) {
 				<button
 					type="button"
 					onClick={() => close()}
-					className="inline-flex h-6 w-9 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800"
+					className="inline-flex h-7 w-7 shrink items-center justify-center rounded bg-zinc-900 hover:bg-zinc-800"
 				>
 					<CancelIcon width={14} height={14} className="text-zinc-500" />
 				</button>

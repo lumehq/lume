@@ -1,25 +1,27 @@
-import { Kind1 } from "@app/note/components/kind1";
-import { Kind1063 } from "@app/note/components/kind1063";
-import { NoteMetadata } from "@app/note/components/metadata";
-import { NoteParent } from "@app/note/components/parent";
-import { NoteDefaultUser } from "@app/note/components/user/default";
-import { NoteWrapper } from "@app/note/components/wrapper";
+import { Kind1 } from "@app/space/components/notes/kind1";
+import { Kind1063 } from "@app/space/components/notes/kind1063";
+import { NoteMetadata } from "@app/space/components/notes/metadata";
+import { NoteParent } from "@app/space/components/notes/parent";
+import { NoteWrapper } from "@app/space/components/notes/wrapper";
+import { NoteDefaultUser } from "@app/space/components/user/default";
 
 import { noteParser } from "@utils/parser";
 import { isTagsIncludeID } from "@utils/transform";
 
 import { useMemo } from "react";
 
-export function NoteBase({ event }: { event: any }) {
+export function NoteBase({ block, event }: { block: number; event: any }) {
 	const content = useMemo(() => noteParser(event), [event]);
 	const checkParentID = isTagsIncludeID(event.parent_id, event.tags);
 
-	const href = event.parent_id
-		? `/app/note?id=${event.parent_id}`
-		: `/app/note?id=${event.event_id}`;
+	const threadID = event.parent_id ? event.parent_id : event.event_id;
 
 	return (
-		<NoteWrapper href={href} className="h-min w-full px-3 py-1.5">
+		<NoteWrapper
+			thread={threadID}
+			block={block}
+			className="h-min w-full px-3 py-1.5"
+		>
 			<div className="rounded-md bg-zinc-900 px-5 pt-5">
 				{event.parent_id &&
 				(event.parent_id !== event.event_id || checkParentID) ? (

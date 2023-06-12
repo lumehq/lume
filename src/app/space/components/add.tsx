@@ -59,7 +59,6 @@ export function AddBlock() {
 					</Menu.Items>
 				</Transition>
 			</Menu>
-
 			{imageModal && <AddImageBlock parentState={setImageModal} />}
 			{feedModal && <AddFeedBlock parentState={setFeedModal} />}
 		</>

@@ -6,13 +6,13 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { dateToUnix } from "@utils/date";
 import { compactNumber } from "@utils/number";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 
 export function NoteReply({ id, replies }: { id: string; replies: number }) {
 	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
-	const [count, setCount] = useState(0);
+	const [count, setCount] = useState(replies);
 	const [isOpen, setIsOpen] = useState(false);
 	const [value, setValue] = useState("");
 
@@ -44,10 +44,6 @@ export function NoteReply({ id, replies }: { id: string; replies: number }) {
 		// increment replies
 		setCount(count + 1);
 	};
-
-	useEffect(() => {
-		setCount(replies);
-	}, [replies]);
 
 	return (
 		<>

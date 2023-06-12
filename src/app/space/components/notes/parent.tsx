@@ -1,8 +1,8 @@
-import { Kind1 } from "@app/note/components/kind1";
-import { Kind1063 } from "@app/note/components/kind1063";
-import { NoteMetadata } from "@app/note/components/metadata";
-import { NoteSkeleton } from "@app/note/components/skeleton";
-import { NoteDefaultUser } from "@app/note/components/user/default";
+import { Kind1 } from "@app/space/components/notes/kind1";
+import { Kind1063 } from "@app/space/components/notes/kind1063";
+import { NoteMetadata } from "@app/space/components/notes/metadata";
+import { NoteSkeleton } from "@app/space/components/notes/skeleton";
+import { NoteDefaultUser } from "@app/space/components/user/default";
 import { useEvent } from "@utils/hooks/useEvent";
 import { noteParser } from "@utils/parser";
 import { memo } from "react";

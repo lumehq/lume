@@ -1,6 +1,6 @@
-import { Kind1 } from "@app/note/components/kind1";
-import { NoteMetadata } from "@app/note/components/metadata";
-import { NoteReplyUser } from "@app/note/components/user/reply";
+import { Kind1 } from "@app/space/components/notes/kind1";
+import { NoteMetadata } from "@app/space/components/notes/metadata";
+import { NoteReplyUser } from "@app/space/components/user/reply";
 import { noteParser } from "@utils/parser";
 
 export function Reply({ data }: { data: any }) {

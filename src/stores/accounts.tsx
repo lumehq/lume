@@ -46,6 +46,27 @@ export const useActiveAccount = create(
 					const response = await getBlocks(account.id);
 					set({ blocks: response });
 				},
+				addTempBlock: (
+					block: number,
+					kind: number,
+					title: string,
+					content: string,
+				) => {
+					const account = get().account;
+					const target = get().blocks.findIndex(
+						(b: { id: number }) => b.id === block,
+					);
+					// update state
+					set((state: any) => {
+						state.blocks.splice(target, 0, {
+							id: account.id + kind,
+							account_id: account.id,
+							kind,
+							title,
+							content,
+						});
+					});
+				},
 				addBlock: (kind: number, title: string, content: string) => {
 					const account = get().account;
 					// add to db
@@ -64,9 +85,11 @@ export const useActiveAccount = create(
 						],
 					}));
 				},
-				removeBlock: (id: string) => {
-					// remove from db
-					removeBlockFromDB(id);
+				removeBlock: (id: string, db?: false) => {
+					if (db) {
+						// remove from db
+						removeBlockFromDB(id);
+					}
 					// update state
 					set((state: any) => {
 						const target = state.blocks.findIndex(

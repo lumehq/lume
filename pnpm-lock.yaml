@@ -1322,7 +1322,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.7
-      caniuse-lite: 1.0.30001498
+      caniuse-lite: 1.0.30001500
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1364,7 +1364,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001498
+      caniuse-lite: 1.0.30001500
       electron-to-chromium: 1.4.427
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.7)
@@ -1414,8 +1414,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /caniuse-lite@1.0.30001498:
-    resolution: {integrity: sha512-LFInN2zAwx3ANrGCDZ5AKKJroHqNKyjXitdV5zRIVIaQlXKj3GmxUKagoKsjqUfckpAObPCEWnk5EeMlyMWcgw==}
+  /caniuse-lite@1.0.30001500:
+    resolution: {integrity: sha512-wSpY0RQnEwFwVZ063ggl3M4ALRP9OSknL0enldDEydIGzuShbtuWwaedB/RfkxsGF3P0kf1Tnv/nTtJEbjzc4Q==}
     dev: true
 
   /ccount@2.0.1:
@@ -4022,8 +4022,8 @@ packages:
       glob: 7.2.3
     dev: false
 
-  /rollup@3.24.1:
-    resolution: {integrity: sha512-REHe5dx30ERBRFS0iENPHy+t6wtSEYkjrhwNsLyh3qpRaZ1+aylvMUdMBUHWUD/RjjLmLzEvY8Z9XRlpcdIkHA==}
+  /rollup@3.25.1:
+    resolution: {integrity: sha512-tywOR+rwIt5m2ZAWSe5AIJcTat8vGlnPFAv15ycCrw33t6iFsXZ6mzHVFh2psSjxQPmI+xgzMZZizUAukBI4aQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -4852,7 +4852,7 @@ packages:
       '@types/node': 18.16.17
       esbuild: 0.17.19
       postcss: 8.4.24
-      rollup: 3.24.1
+      rollup: 3.25.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

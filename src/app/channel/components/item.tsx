@@ -21,13 +21,13 @@ export function ChannelsListItem({ data }: { data: any }) {
 		>
 			<div
 				className={twMerge(
-					"inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800",
+					"inline-flex shrink-0 h-5 w-5 items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800",
 					pageID === data.event_id
 						? "dark:bg-zinc-800 group-hover:dark:bg-zinc-700"
 						: "",
 				)}
 			>
-				<span className="text-base text-white">#</span>
+				<span className="text-xs text-zinc-100">#</span>
 			</div>
 			<div className="w-full inline-flex items-center justify-between">
 				<h5 className="truncate font-medium text-zinc-200">{channel?.name}</h5>

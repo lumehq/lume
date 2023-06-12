@@ -1,0 +1,42 @@
+import { Reply } from "@app/space/components/notes/replies/item";
+import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
+import { RelayContext } from "@shared/relayProvider";
+import { useContext } from "react";
+import useSWR from "swr";
+
+const fetcher = async ([, ndk, id]) => {
+	const filter: NDKFilter = {
+		"#e": [id],
+		kinds: [1],
+	};
+	const events = await ndk.fetchEvents(filter);
+	return [...events];
+};
+
+export function RepliesList({ id }: { id: string }) {
+	const ndk = useContext(RelayContext);
+	const { data } = useSWR(["note-replies", ndk, id], fetcher);
+
+	return (
+		<div className="mt-5">
+			<div className="mb-2">
+				<h5 className="text-lg font-semibold text-zinc-300">Replies</h5>
+			</div>
+			<div className="flex flex-col">
+				{!data ? (
+					<div className="flex gap-2 px-3 py-4">
+						<div className="relative h-9 w-9 shrink animate-pulse rounded-md bg-zinc-800" />
+						<div className="flex w-full flex-1 flex-col justify-center gap-1">
+							<div className="flex items-baseline gap-2 text-base">
+								<div className="h-2.5 w-20 animate-pulse rounded-sm bg-zinc-800" />
+							</div>
+							<div className="h-4 w-44 animate-pulse rounded-sm bg-zinc-800" />
+						</div>
+					</div>
+				) : (
+					data.map((event: NDKEvent) => <Reply key={event.id} data={event} />)
+				)}
+			</div>
+		</div>
+	);
+}

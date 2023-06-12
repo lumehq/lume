@@ -1,6 +1,6 @@
-import { NoteBase } from "@app/note/components/base";
-import { NoteQuoteRepost } from "@app/note/components/quoteRepost";
-import { NoteSkeleton } from "@app/note/components/skeleton";
+import { NoteBase } from "@app/space/components/notes/base";
+import { NoteQuoteRepost } from "@app/space/components/notes/quoteRepost";
+import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { getNotes } from "@libs/storage";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useMemo, useRef } from "react";
@@ -11,7 +11,7 @@ const TIME = Math.floor(Date.now() / 1000);
 
 const fetcher = async ([, offset]) => getNotes(TIME, ITEM_PER_PAGE, offset);
 
-export function FollowingBlock() {
+export function FollowingBlock({ block }: { block: number }) {
 	const getKey = (pageIndex, previousPageData) => {
 		if (previousPageData && !previousPageData.data) return null;
 		if (pageIndex === 0) return ["following", 0];
@@ -56,7 +56,7 @@ export function FollowingBlock() {
 			</div>
 			<div
 				ref={parentRef}
-				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 overflow-y-auto"
+				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
 				{!data || isLoading ? (
@@ -91,7 +91,11 @@ export function FollowingBlock() {
 												data-index={virtualRow.index}
 												ref={rowVirtualizer.measureElement}
 											>
-												<NoteBase key={note.event_id} event={note} />
+												<NoteBase
+													key={note.event_id}
+													block={block}
+													event={note}
+												/>
 											</div>
 										);
 									} else {
@@ -101,7 +105,11 @@ export function FollowingBlock() {
 												data-index={virtualRow.index}
 												ref={rowVirtualizer.measureElement}
 											>
-												<NoteQuoteRepost key={note.event_id} event={note} />
+												<NoteQuoteRepost
+													key={note.event_id}
+													block={block}
+													event={note}
+												/>
 											</div>
 										);
 									}

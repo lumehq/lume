@@ -4,7 +4,7 @@ import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { dateToUnix } from "@utils/date";
 import { compactNumber } from "@utils/number";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 export function NoteRepost({
 	id,
@@ -14,7 +14,7 @@ export function NoteRepost({
 	const ndk = useContext(RelayContext);
 	const account = useActiveAccount((state: any) => state.account);
 
-	const [count, setCount] = useState(0);
+	const [count, setCount] = useState(reposts);
 
 	const submitEvent = (e: any) => {
 		e.stopPropagation();
@@ -39,10 +39,6 @@ export function NoteRepost({
 		// update state
 		setCount(count + 1);
 	};
-
-	useEffect(() => {
-		setCount(reposts);
-	}, [reposts]);
 
 	return (
 		<button
