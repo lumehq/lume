@@ -68,7 +68,11 @@ export function NoteMetadata({
 	const { data } = useSWR(["note-metadata", ndk, id], fetcher);
 
 	return (
-		<div className="inline-flex items-center gap-2 w-full h-12 mt-4">
+		<div
+			onClick={(e) => e.stopPropagation()}
+			onKeyDown={(e) => e.stopPropagation()}
+			className="inline-flex items-center gap-2 w-full h-12 mt-4"
+		>
 			{!data ? (
 				<>
 					<div className="w-20 group inline-flex items-center gap-1.5">

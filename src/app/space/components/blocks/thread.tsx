@@ -1,6 +1,7 @@
 import { Kind1 } from "@app/space/components/notes/kind1";
 import { Kind1063 } from "@app/space/components/notes/kind1063";
 import { NoteMetadata } from "@app/space/components/notes/metadata";
+import { NoteReplyForm } from "@app/space/components/notes/replies/form";
 import { RepliesList } from "@app/space/components/notes/replies/list";
 import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { NoteDefaultUser } from "@app/space/components/user/default";
@@ -53,6 +54,9 @@ export function ThreadBlock({ params }: { params: any }) {
 								{data.kind === 1063 && <Kind1063 metadata={data.tags} />}
 								<NoteMetadata id={params.content} eventPubkey={data.pubkey} />
 							</div>
+						</div>
+						<div className="mt-3 bg-zinc-900 rounded-md">
+							<NoteReplyForm id={data.id} />
 						</div>
 					</div>
 				)}

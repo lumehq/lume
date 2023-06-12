@@ -33,6 +33,12 @@ export function RepliesList({ id }: { id: string }) {
 							<div className="h-4 w-44 animate-pulse rounded-sm bg-zinc-800" />
 						</div>
 					</div>
+				) : data.length === 0 ? (
+					<div className="px=3">
+						<div className="w-full h-24 flex items-center justify-center rounded-md bg-zinc-900">
+							<p className="text-zinc-300 font-medium">No replies...</p>
+						</div>
+					</div>
 				) : (
 					data.map((event: NDKEvent) => <Reply key={event.id} data={event} />)
 				)}

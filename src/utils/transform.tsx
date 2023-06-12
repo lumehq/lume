@@ -87,11 +87,7 @@ export function getQuoteID(arr: string[]) {
 		if (tags[0][0] === "e") {
 			quoteID = tags[0][1];
 		} else {
-			tags.forEach((tag) => {
-				if (tag[0] === "e") {
-					quoteID = tag[1];
-				}
-			});
+			quoteID = tags.find((t) => t[0] === "e")?.[1];
 		}
 	}
 
