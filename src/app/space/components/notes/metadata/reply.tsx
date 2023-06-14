@@ -50,7 +50,7 @@ export function NoteReply({ id, replies }: { id: string; replies: number }) {
 			<button
 				type="button"
 				onClick={() => openModal()}
-				className="w-20 group inline-flex items-center gap-1.5"
+				className="w-14 group inline-flex items-center gap-1.5"
 			>
 				<ReplyIcon
 					width={16}

@@ -44,7 +44,7 @@ export function NoteRepost({
 		<button
 			type="button"
 			onClick={(e) => submitEvent(e)}
-			className="w-20 group inline-flex items-center gap-1.5"
+			className="w-14 group inline-flex items-center gap-1.5"
 		>
 			<RepostIcon
 				width={16}

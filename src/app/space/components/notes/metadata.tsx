@@ -3,7 +3,7 @@ import { NoteRepost } from "@app/space/components/notes/metadata/repost";
 import { NoteZap } from "@app/space/components/notes/metadata/zap";
 import { createReplyNote } from "@libs/storage";
 import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
-import { LoaderIcon, ReplyIcon, RepostIcon } from "@shared/icons";
+import { LoaderIcon, ReplyIcon, RepostIcon, ZapIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { decode } from "light-bolt11-decoder";
 import { useContext } from "react";
@@ -99,17 +99,24 @@ export function NoteMetadata({
 							className="animate-spin text-black dark:text-white"
 						/>
 					</div>
-					<div className="ml-auto">
-						<div className="w-10 h-4 bg-zinc-800 rounded animate-pulse" />
+					<div className="w-20 group inline-flex items-center gap-1.5">
+						<ZapIcon
+							width={16}
+							height={16}
+							className="text-zinc-400 group-hover:text-green-400"
+						/>
+						<LoaderIcon
+							width={16}
+							height={16}
+							className="animate-spin text-black dark:text-white"
+						/>
 					</div>
 				</>
 			) : (
 				<>
 					<NoteReply id={id} replies={data.replies} />
 					<NoteRepost id={id} pubkey={eventPubkey} reposts={data.reposts} />
-					<div className="ml-auto">
-						<NoteZap zaps={data.zap} />
-					</div>
+					<NoteZap zaps={data.zap} />
 				</>
 			)}
 		</div>

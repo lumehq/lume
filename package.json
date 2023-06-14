@@ -15,7 +15,7 @@
   "dependencies": {
     "@floating-ui/react": "^0.23.1",
     "@headlessui/react": "^1.7.15",
-    "@nostr-dev-kit/ndk": "^0.4.6",
+    "@nostr-dev-kit/ndk": "^0.5.1",
     "@tanstack/react-virtual": "3.0.0-beta.54",
     "@tauri-apps/api": "^1.3.0",
     "@vidstack/react": "^0.4.5",
@@ -43,9 +43,9 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "@tauri-apps/cli": "^1.3.1",
-    "@types/node": "^18.16.17",
-    "@types/react": "^18.2.11",
-    "@types/react-dom": "^18.2.4",
+    "@types/node": "^18.16.18",
+    "@types/react": "^18.2.12",
+    "@types/react-dom": "^18.2.5",
     "@types/youtube-player": "^5.5.7",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "autoprefixer": "^10.4.14",
