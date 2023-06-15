@@ -15,7 +15,8 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
 	return (
 		<NoteWrapper
-			href={`/app/note?id=${id}`}
+			thread={id}
+			block={1}
 			className="mt-3 rounded-lg border border-zinc-800 px-3 py-3"
 		>
 			{data ? (

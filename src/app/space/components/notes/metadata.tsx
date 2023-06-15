@@ -71,7 +71,7 @@ export function NoteMetadata({
 		<div
 			onClick={(e) => e.stopPropagation()}
 			onKeyDown={(e) => e.stopPropagation()}
-			className="inline-flex items-center gap-2 w-full h-12 mt-4"
+			className="inline-flex items-center gap-2 w-full h-12"
 		>
 			{!data ? (
 				<>
