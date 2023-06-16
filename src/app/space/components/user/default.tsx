@@ -12,7 +12,10 @@ dayjs.extend(relativeTime);
 export function NoteDefaultUser({
 	pubkey,
 	time,
-}: { pubkey: string; time: number }) {
+}: {
+	pubkey: string;
+	time: number;
+}) {
 	const { user } = useProfile(pubkey);
 
 	return (
@@ -75,13 +78,13 @@ export function NoteDefaultUser({
 						<div className="flex items-center gap-2 px-3 py-3">
 							<a
 								href={`/app/user?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 hover:bg-zinc-700 text-base font-medium"
 							>
 								View full profile
 							</a>
 							<a
 								href={`/app/chat?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 hover:bg-zinc-700 text-base font-medium"
 							>
 								Message
 							</a>

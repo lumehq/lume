@@ -1,10 +1,15 @@
 import { NoteBase } from "@app/space/components/notes/base";
 import { NoteQuoteRepost } from "@app/space/components/notes/quoteRepost";
 import { NoteSkeleton } from "@app/space/components/notes/skeleton";
-import { getNotes } from "@libs/storage";
+import { createNote, getNotes } from "@libs/storage";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { RelayContext } from "@shared/relayProvider";
+import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useEffect, useMemo, useRef } from "react";
+import { dateToUnix } from "@utils/date";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import useSWRInfinite from "swr/infinite";
+import useSWRSubscription from "swr/subscription";
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
@@ -12,13 +17,42 @@ const TIME = Math.floor(Date.now() / 1000);
 const fetcher = async ([, offset]) => getNotes(TIME, ITEM_PER_PAGE, offset);
 
 export function FollowingBlock({ block }: { block: number }) {
+	const ndk = useContext(RelayContext);
+	const account = useActiveAccount((state: any) => state.account);
+
 	const getKey = (pageIndex, previousPageData) => {
 		if (previousPageData && !previousPageData.data) return null;
 		if (pageIndex === 0) return ["following", 0];
 		return ["following", previousPageData.nextCursor];
 	};
 
+	// fetch initial notes
 	const { data, isLoading, size, setSize } = useSWRInfinite(getKey, fetcher);
+	// fetch live notes
+	useSWRSubscription(account ? "eventCollector" : null, () => {
+		const follows = JSON.parse(account.follows);
+		const sub = ndk.subscribe({
+			kinds: [1, 6],
+			authors: follows,
+			since: dateToUnix(),
+		});
+
+		sub.addListener("event", (event: NDKEvent) => {
+			// save note
+			createNote(
+				event.id,
+				event.pubkey,
+				event.kind,
+				event.tags,
+				event.content,
+				event.created_at,
+			);
+		});
+
+		return () => {
+			sub.stop();
+		};
+	});
 
 	const notes = useMemo(
 		() => (data ? data.flatMap((d) => d.data) : []),
@@ -26,12 +60,14 @@ export function FollowingBlock({ block }: { block: number }) {
 	);
 
 	const parentRef = useRef();
+
 	const rowVirtualizer = useVirtualizer({
 		count: notes.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: () => 400,
+		estimateSize: () => 500,
 		overscan: 2,
 	});
+
 	const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
 	useEffect(() => {
@@ -46,6 +82,26 @@ export function FollowingBlock({ block }: { block: number }) {
 		}
 	}, [notes.length, rowVirtualizer.getVirtualItems()]);
 
+	const renderItem = (index: string | number) => {
+		const note = notes[index];
+
+		if (!note) return;
+
+		if (note.kind === 1) {
+			return (
+				<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
+					<NoteBase block={block} event={note} />
+				</div>
+			);
+		} else {
+			return (
+				<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
+					<NoteQuoteRepost block={block} event={note} />
+				</div>
+			);
+		}
+	};
+
 	return (
 		<div className="shrink-0 w-[420px] border-r border-zinc-900">
 			<div
@@ -59,7 +115,14 @@ export function FollowingBlock({ block }: { block: number }) {
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
-				{!data || isLoading ? (
+				{isLoading && (
+					<div className="px-3 py-1.5">
+						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+							<NoteSkeleton />
+						</div>
+					</div>
+				)}
+				{!data ? (
 					<div className="px-3 py-1.5">
 						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />
@@ -81,40 +144,9 @@ export function FollowingBlock({ block }: { block: number }) {
 								}px)`,
 							}}
 						>
-							{rowVirtualizer.getVirtualItems().map((virtualRow) => {
-								const note = notes[virtualRow.index];
-								if (note) {
-									if (note.kind === 1) {
-										return (
-											<div
-												key={virtualRow.index}
-												data-index={virtualRow.index}
-												ref={rowVirtualizer.measureElement}
-											>
-												<NoteBase
-													key={note.event_id}
-													block={block}
-													event={note}
-												/>
-											</div>
-										);
-									} else {
-										return (
-											<div
-												key={virtualRow.index}
-												data-index={virtualRow.index}
-												ref={rowVirtualizer.measureElement}
-											>
-												<NoteQuoteRepost
-													key={note.event_id}
-													block={block}
-													event={note}
-												/>
-											</div>
-										);
-									}
-								}
-							})}
+							{rowVirtualizer
+								.getVirtualItems()
+								.map((virtualRow) => renderItem(virtualRow.index))}
 						</div>
 					</div>
 				)}

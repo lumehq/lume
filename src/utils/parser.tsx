@@ -1,12 +1,15 @@
-import { Event, parseReferences } from "nostr-tools";
+import { MentionUser } from "@app/space/components/notes/mentions/user";
+import destr from "destr";
+import getUrls from "get-urls";
+import { parseReferences } from "nostr-tools";
+import reactStringReplace from "react-string-replace";
 
-const getURLs = new RegExp(
-	"(^|[ \t\r\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal|wss|ws):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))",
-	"gmi",
-);
+export function parser(event: any) {
+	event.tags = destr(event.tags);
 
-export function noteParser(event: Event) {
 	const references = parseReferences(event);
+	const urls = getUrls(event.content);
+
 	const content: {
 		original: string;
 		parsed: any;
@@ -23,11 +26,14 @@ export function noteParser(event: Event) {
 		links: [],
 	};
 
-	// handle media
-	content.original.match(getURLs)?.forEach((item) => {
-		// make sure url is trimmed
-		const url = item.trim();
+	// remove unnecessary whitespaces
+	content.parsed = content.parsed.replace(/\s{2,}/g, " ");
 
+	// remove unnecessary linebreak
+	content.parsed = content.parsed.replace(/(\r\n|\r|\n){2,}/g, "$1\n");
+
+	// parse urls
+	urls?.forEach((url: string) => {
 		if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
 			// image url
 			content.images.push(url);
@@ -46,18 +52,35 @@ export function noteParser(event: Event) {
 		}
 	});
 
-	// map hashtag to link
-	content.original.match(/#(\w+)(?!:\/\/)/g)?.forEach((item) => {
-		content.parsed = content.parsed.replace(item, `[${item}](/search/${item})`);
-	});
-
-	// handle nostr mention
-	references.forEach((item) => {
+	// parse nostr
+	references?.forEach((item) => {
 		const profile = item.profile;
+		const event = item.event;
+		if (event) {
+			content.notes.push(event.id);
+			content.parsed = reactStringReplace(content.parsed, item.text, () => (
+				<></>
+			));
+		}
 		if (profile) {
-			content.parsed = content.parsed.replace(item.text, `*${profile.pubkey}*`);
+			content.parsed = reactStringReplace(
+				content.parsed,
+				item.text,
+				(match, i) => <MentionUser key={match + i} pubkey={profile.pubkey} />,
+			);
 		}
 	});
+
+	// parse hashtag
+	content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
+		<a
+			key={match + i}
+			href={`/search/${match}`}
+			className="text-fuchsia-500 hover:text-fuchsia-600 no-underline font-normal"
+		>
+			#{match}
+		</a>
+	));
 
 	return content;
 }

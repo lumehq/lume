@@ -8,7 +8,7 @@ import { NoteDefaultUser } from "@app/space/components/user/default";
 import { getNoteByID } from "@libs/storage";
 import { ArrowLeftIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
-import { noteParser } from "@utils/parser";
+import { parser } from "@utils/parser";
 import useSWR from "swr";
 
 const fetcher = ([, id]) => getNoteByID(id);
@@ -16,7 +16,7 @@ const fetcher = ([, id]) => getNoteByID(id);
 export function ThreadBlock({ params }: { params: any }) {
 	const { data } = useSWR(["thread", params.content], fetcher);
 	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
-	const content = data ? noteParser(data) : null;
+	const content = data ? parser(data) : null;
 
 	const close = () => {
 		removeBlock(params.id, false);

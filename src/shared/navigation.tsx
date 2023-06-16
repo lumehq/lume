@@ -4,7 +4,12 @@ import { Disclosure } from "@headlessui/react";
 import { ActiveLink } from "@shared/activeLink";
 import { AppHeader } from "@shared/appHeader";
 import { ComposerModal } from "@shared/composer/modal";
-import { NavArrowDownIcon, SpaceIcon, WorldIcon } from "@shared/icons";
+import {
+	NavArrowDownIcon,
+	SpaceIcon,
+	TrendingIcon,
+	WorldIcon,
+} from "@shared/icons";
 
 export function Navigation() {
 	return (
@@ -30,7 +35,7 @@ export function Navigation() {
 							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
 								<SpaceIcon width={12} height={12} className="text-white" />
 							</span>
-							<span className="font-medium">Space</span>
+							<span className="font-medium">Spaces</span>
 						</ActiveLink>
 						<ActiveLink
 							href="/app/trending"
@@ -38,7 +43,7 @@ export function Navigation() {
 							activeClassName="bg-zinc-900/50 hover:bg-zinc-900"
 						>
 							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
-								<WorldIcon width={12} height={12} className="text-white" />
+								<TrendingIcon width={12} height={12} className="text-white" />
 							</span>
 							<span className="font-medium">Trending</span>
 						</ActiveLink>

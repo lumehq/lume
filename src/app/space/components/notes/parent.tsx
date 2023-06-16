@@ -4,13 +4,13 @@ import { NoteMetadata } from "@app/space/components/notes/metadata";
 import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { NoteDefaultUser } from "@app/space/components/user/default";
 import { useEvent } from "@utils/hooks/useEvent";
-import { noteParser } from "@utils/parser";
+import { parser } from "@utils/parser";
 import { memo } from "react";
 
 export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
 	const data = useEvent(id);
 
-	const kind1 = data?.kind === 1 ? noteParser(data) : null;
+	const kind1 = data?.kind === 1 ? parser(data) : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (

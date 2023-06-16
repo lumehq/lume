@@ -33,4 +33,5 @@ export * from "./trash";
 export * from "./world";
 export * from "./zap";
 export * from "./loader";
+export * from "./trending";
 // @endindex

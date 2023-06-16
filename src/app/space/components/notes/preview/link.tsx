@@ -19,7 +19,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 				</div>
 			) : (
 				<a
-					className="flex flex-col"
+					className="flex flex-col rounded-lg border border-transparent hover:border-fuchsia-900"
 					href={urls[0]}
 					target="_blank"
 					rel="noreferrer"

@@ -34,7 +34,6 @@ export function ActiveAccount({ data }: { data: any }) {
 		);
 
 		sub.addListener("event", (event) => {
-			console.log(event);
 			switch (event.kind) {
 				case 4:
 					// save

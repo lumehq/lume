@@ -1,10 +1,7 @@
 import { ZapIcon } from "@shared/icons";
 import { compactNumber } from "@utils/number";
-import { useState } from "react";
 
 export function NoteZap({ zaps }: { zaps: number }) {
-	const [count] = useState(zaps);
-
 	return (
 		<button
 			type="button"
@@ -16,7 +13,7 @@ export function NoteZap({ zaps }: { zaps: number }) {
 				className="text-zinc-400 group-hover:text-blue-400"
 			/>
 			<span className="text-base leading-none text-zinc-400 group-hover:text-white">
-				{compactNumber.format(count)}
+				{compactNumber.format(zaps)}
 			</span>
 		</button>
 	);

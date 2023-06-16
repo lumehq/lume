@@ -3,7 +3,7 @@ import { useDecryptMessage } from "@app/chat/hooks/useDecryptMessage";
 import { MentionNote } from "@app/space/components/notes/mentions/note";
 import { ImagePreview } from "@app/space/components/notes/preview/image";
 import { VideoPreview } from "@app/space/components/notes/preview/video";
-import { noteParser } from "@utils/parser";
+import { parser } from "@utils/parser";
 import { memo } from "react";
 
 export const ChatMessageItem = memo(function ChatMessageItem({
@@ -21,7 +21,7 @@ export const ChatMessageItem = memo(function ChatMessageItem({
 		data["content"] = decryptedContent;
 	}
 	// parse the note content
-	const content = noteParser(data);
+	const content = parser(data);
 
 	return (
 		<div className="flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">

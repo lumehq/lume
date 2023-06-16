@@ -6,11 +6,11 @@ import { ChannelMessageUserMute } from "@app/channel/components/messages/userMut
 import { MentionNote } from "@app/space/components/notes/mentions/note";
 import { ImagePreview } from "@app/space/components/notes/preview/image";
 import { VideoPreview } from "@app/space/components/notes/preview/video";
-import { noteParser } from "@utils/parser";
+import { parser } from "@utils/parser";
 import { useMemo, useState } from "react";
 
 export function ChannelMessageItem({ data }: { data: any }) {
-	const content = useMemo(() => noteParser(data), [data]);
+	const content = useMemo(() => parser(data), [data]);
 	const [hide, setHide] = useState(data.hide);
 
 	const toggleHide = () => {

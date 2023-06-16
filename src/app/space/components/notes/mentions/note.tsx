@@ -4,13 +4,13 @@ import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { NoteWrapper } from "@app/space/components/notes/wrapper";
 import { NoteQuoteUser } from "@app/space/components/user/quote";
 import { useEvent } from "@utils/hooks/useEvent";
-import { noteParser } from "@utils/parser";
+import { parser } from "@utils/parser";
 import { memo } from "react";
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 	const data = useEvent(id);
 
-	const kind1 = data?.kind === 1 ? noteParser(data) : null;
+	const kind1 = data?.kind === 1 ? parser(data) : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (

@@ -60,20 +60,18 @@ const fetcher = async ([, ndk, id]) => {
 export function NoteMetadata({
 	id,
 	eventPubkey,
+	currentBlock,
 }: {
 	id: string;
 	eventPubkey: string;
+	currentBlock?: number;
 }) {
 	const ndk = useContext(RelayContext);
-	const { data } = useSWR(["note-metadata", ndk, id], fetcher);
+	const { data, isLoading } = useSWR(["note-metadata", ndk, id], fetcher);
 
 	return (
-		<div
-			onClick={(e) => e.stopPropagation()}
-			onKeyDown={(e) => e.stopPropagation()}
-			className="inline-flex items-center gap-2 w-full h-12"
-		>
-			{!data ? (
+		<div className="inline-flex items-center w-full h-12 mt-4">
+			{!data || isLoading ? (
 				<>
 					<div className="w-20 group inline-flex items-center gap-1.5">
 						<ReplyIcon
@@ -82,8 +80,8 @@ export function NoteMetadata({
 							className="text-zinc-400 group-hover:text-green-400"
 						/>
 						<LoaderIcon
-							width={16}
-							height={16}
+							width={12}
+							height={12}
 							className="animate-spin text-black dark:text-white"
 						/>
 					</div>
@@ -94,8 +92,8 @@ export function NoteMetadata({
 							className="text-zinc-400 group-hover:text-green-400"
 						/>
 						<LoaderIcon
-							width={16}
-							height={16}
+							width={12}
+							height={12}
 							className="animate-spin text-black dark:text-white"
 						/>
 					</div>
@@ -106,15 +104,19 @@ export function NoteMetadata({
 							className="text-zinc-400 group-hover:text-green-400"
 						/>
 						<LoaderIcon
-							width={16}
-							height={16}
+							width={12}
+							height={12}
 							className="animate-spin text-black dark:text-white"
 						/>
 					</div>
 				</>
 			) : (
 				<>
-					<NoteReply id={id} replies={data.replies} />
+					<NoteReply
+						id={id}
+						replies={data.replies}
+						currentBlock={currentBlock}
+					/>
 					<NoteRepost id={id} pubkey={eventPubkey} reposts={data.reposts} />
 					<NoteZap zaps={data.zap} />
 				</>

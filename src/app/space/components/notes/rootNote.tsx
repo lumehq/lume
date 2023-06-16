@@ -5,10 +5,9 @@ import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { NoteDefaultUser } from "@app/space/components/user/default";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
-import { noteParser } from "@utils/parser";
+import { parser } from "@utils/parser";
 import { memo, useContext } from "react";
 import useSWRSubscription from "swr/subscription";
-import { navigate } from "vite-plugin-ssr/client/router";
 
 function isJSON(str: string) {
 	try {
@@ -22,7 +21,8 @@ function isJSON(str: string) {
 export const RootNote = memo(function RootNote({
 	id,
 	fallback,
-}: { id: string; fallback?: any }) {
+	currentBlock,
+}: { id: string; fallback?: any; currentBlock?: number }) {
 	const ndk = useContext(RelayContext);
 	const parseFallback = isJSON(fallback) ? JSON.parse(fallback) : null;
 
@@ -43,27 +43,14 @@ export const RootNote = memo(function RootNote({
 		},
 	);
 
-	const openNote = (e) => {
-		const selection = window.getSelection();
-		if (selection.toString().length === 0) {
-			navigate(`/app/note?id=${id}`);
-		} else {
-			e.stopPropagation();
-		}
-	};
-
-	const kind1 = !error && data?.kind === 1 ? noteParser(data) : null;
+	const kind1 = !error && data?.kind === 1 ? parser(data) : null;
 	const kind1063 = !error && data?.kind === 1063 ? data.tags : null;
 
 	if (parseFallback) {
-		const contentFallback = noteParser(parseFallback);
+		const contentFallback = parser(parseFallback);
 
 		return (
-			<div
-				onClick={(e) => openNote(e)}
-				onKeyDown={(e) => openNote(e)}
-				className="flex flex-col px-5"
-			>
+			<div className="flex flex-col px-5">
 				<NoteDefaultUser
 					pubkey={parseFallback.pubkey}
 					time={parseFallback.created_at}
@@ -73,6 +60,7 @@ export const RootNote = memo(function RootNote({
 					<NoteMetadata
 						id={parseFallback.id}
 						eventPubkey={parseFallback.pubkey}
+						currentBlock={currentBlock}
 					/>
 				</div>
 			</div>
@@ -80,11 +68,7 @@ export const RootNote = memo(function RootNote({
 	}
 
 	return (
-		<div
-			onClick={(e) => openNote(e)}
-			onKeyDown={(e) => openNote(e)}
-			className="flex flex-col px-5"
-		>
+		<div className="flex flex-col px-5">
 			{data ? (
 				<>
 					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
@@ -106,7 +90,11 @@ export const RootNote = memo(function RootNote({
 								</div>
 							</div>
 						)}
-						<NoteMetadata id={data.id} eventPubkey={data.pubkey} />
+						<NoteMetadata
+							id={data.id}
+							eventPubkey={data.pubkey}
+							currentBlock={currentBlock}
+						/>
 					</div>
 				</>
 			) : (
