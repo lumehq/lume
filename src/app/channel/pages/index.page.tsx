@@ -1,98 +1,98 @@
-import { ChannelBlackList } from "@app/channel/components/blacklist";
+import { ChannelMessageItem } from "../components/messages/item";
 import { ChannelMembers } from "@app/channel/components/members";
-import { ChannelMessageList } from "@app/channel/components/messageList";
 import { ChannelMessageForm } from "@app/channel/components/messages/form";
 import { ChannelMetadata } from "@app/channel/components/metadata";
-import { ChannelUpdateModal } from "@app/channel/components/updateModal";
-import { getActiveBlacklist, getBlacklist } from "@libs/storage";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
-import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { dateToUnix, getHourAgo } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
-import { arrayObjToPureArr } from "@utils/transform";
-import { useContext, useRef } from "react";
-import useSWR from "swr";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import useSWRSubscription from "swr/subscription";
 
-const fetchMuted = async ([, id]) => {
-	const res = await getBlacklist(id, 44);
-	const array = arrayObjToPureArr(res);
-	return { original: res, array: array };
-};
-
-const fetchHided = async ([, id]) => {
-	const res = await getActiveBlacklist(id, 43);
-	const array = arrayObjToPureArr(res);
-	return array;
-};
+const now = new Date();
+const since = dateToUnix(getHourAgo(24, now));
 
 export function Page() {
 	const ndk = useContext(RelayContext);
-
 	const pageContext = usePageContext();
+
 	const searchParams: any = pageContext.urlParsed.search;
 	const channelID = searchParams.id;
-	const channelPubkey = searchParams.channelpub;
 
-	const account: any = useActiveAccount((state: any) => state.account);
-	const [addMessage, clear] = useChannelMessages((state: any) => [
-		state.add,
-		state.clear,
-	]);
+	const [messages, addMessage, fetchMessages, clearMessages]: any =
+		useChannelMessages((state: any) => [
+			state.messages,
+			state.addMessage,
+			state.fetch,
+			state.clear,
+		]);
 
-	const { data: muted } = useSWR(
-		account ? ["muted", account.id] : null,
-		fetchMuted,
-	);
-	const { data: hided } = useSWR(
-		account ? ["hided", account.id] : null,
-		fetchHided,
-	);
+	useSWRSubscription(["channelMessagesSubscribe", channelID], () => {
+		// subscribe to channel
+		const sub = ndk.subscribe({
+			"#e": [channelID],
+			kinds: [42],
+			since: dateToUnix(),
+		});
 
-	const now = useRef(new Date());
+		sub.addListener("event", (event) => {
+			addMessage(event);
+		});
 
-	useSWRSubscription(
-		account && channelID && muted && hided ? ["channel", channelID] : null,
-		() => {
-			// subscribe to channel
-			const sub = ndk.subscribe({
-				"#e": [channelID],
-				kinds: [42],
-				since: dateToUnix(getHourAgo(24, now.current)),
-				limit: 20,
-			});
+		return () => {
+			sub.stop();
+		};
+	});
 
-			sub.addListener("event", (event: NDKEvent) => {
-				const message: NDKEvent = event;
+	useEffect(() => {
+		fetchMessages(ndk, channelID, since);
+		return () => {
+			clearMessages();
+		};
+	}, [fetchMessages]);
 
-				// handle hide message
-				if (hided.includes(event.id)) {
-					message["hide"] = true;
-				} else {
-					message["hide"] = false;
-				}
+	const count = messages.length;
+	const reverseIndex = useCallback((index) => count - 1 - index, [count]);
+	const parentRef = useRef();
+	const virtualizerRef = useRef(null);
 
-				// handle mute user
-				if (muted.array.includes(event.pubkey)) {
-					message["mute"] = true;
-				} else {
-					message["mute"] = false;
-				}
+	if (
+		virtualizerRef.current &&
+		count !== virtualizerRef.current.options.count
+	) {
+		const delta = count - virtualizerRef.current.options.count;
+		const nextOffset = virtualizerRef.current.scrollOffset + delta * 200;
 
-				// add to store
-				addMessage(message);
-			});
+		virtualizerRef.current.scrollOffset = nextOffset;
+		virtualizerRef.current.scrollToOffset(nextOffset, { align: "start" });
+	}
 
-			return () => {
-				sub.stop();
-				clear();
-			};
-		},
-	);
+	const virtualizer = useVirtualizer({
+		count,
+		getScrollElement: () => parentRef.current,
+		estimateSize: () => 200,
+		getItemKey: useCallback(
+			(index) => messages[reverseIndex(index)].id,
+			[messages, reverseIndex],
+		),
+		overscan: 5,
+		scrollMargin: 50,
+	});
 
-	if (!account) return <div>Fuck SSR</div>;
+	useEffect(() => {
+		virtualizerRef.current = virtualizer;
+	}, []);
+
+	const items = virtualizer.getVirtualItems();
+
+	const [paddingTop, paddingBottom] =
+		items.length > 0
+			? [
+					Math.max(0, items[0].start - virtualizer.options.scrollMargin),
+					Math.max(0, virtualizer.getTotalSize() - items[items.length - 1].end),
+			  ]
+			: [0, 0];
 
 	return (
 		<div className="h-full w-full grid grid-cols-3">
@@ -104,9 +104,41 @@ export function Page() {
 					<h3 className="font-semibold text-zinc-100">Public Channel</h3>
 				</div>
 				<div className="w-full flex-1 p-3">
-					<div className="flex h-full flex-col justify-between rounded-md bg-zinc-900 shadow-input shadow-black/20">
-						<ChannelMessageList />
-						<div className="inline-flex shrink-0 p-3">
+					<div className="flex h-full flex-col justify-between rounded-md bg-zinc-900">
+						<div
+							ref={parentRef}
+							className="scrollbar-hide overflow-y-auto h-full w-full"
+							style={{ contain: "strict" }}
+						>
+							{!messages ? (
+								<p>Loading...</p>
+							) : (
+								<div
+									style={{
+										overflowAnchor: "none",
+										paddingTop,
+										paddingBottom,
+									}}
+								>
+									{items.map((item) => {
+										const index = reverseIndex(item.index);
+										const message = messages[index];
+
+										return (
+											<div
+												key={item.key}
+												data-index={item.index}
+												data-reverse-index={index}
+												ref={virtualizer.measureElement}
+											>
+												<ChannelMessageItem data={message} />
+											</div>
+										);
+									})}
+								</div>
+							)}
+						</div>
+						<div className="w-full inline-flex shrink-0 border-t border-zinc-800">
 							<ChannelMessageForm channelID={channelID} />
 						</div>
 					</div>
@@ -118,12 +150,8 @@ export function Page() {
 					className="h-11 w-full shrink-0 inline-flex items-center justify-center border-b border-zinc-900"
 				/>
 				<div className="p-3 flex flex-col gap-3">
-					<ChannelMetadata id={channelID} pubkey={channelPubkey} />
+					<ChannelMetadata id={channelID} />
 					<ChannelMembers />
-					{muted && <ChannelBlackList blacklist={muted.original} />}
-					{account && account.pubkey === channelPubkey && (
-						<ChannelUpdateModal id={channelID} />
-					)}
 				</div>
 			</div>
 		</div>

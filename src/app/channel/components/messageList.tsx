@@ -28,7 +28,7 @@ export function ChannelMessageList() {
 		<div className="h-full w-full">
 			<Virtuoso
 				ref={virtuosoRef}
-				data={messages}
+				data={[]}
 				itemContent={itemContent}
 				components={{
 					Header: () => (

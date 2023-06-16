@@ -29,8 +29,8 @@ export function Navigation() {
 					<div className="flex flex-col gap-1">
 						<ActiveLink
 							href="/app/space"
-							className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-zinc-200 hover:text-white"
-							activeClassName="bg-zinc-900/50 hover:bg-zinc-900"
+							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
+							activeClassName="bg-zinc-900/50"
 						>
 							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
 								<SpaceIcon width={12} height={12} className="text-white" />
@@ -39,8 +39,8 @@ export function Navigation() {
 						</ActiveLink>
 						<ActiveLink
 							href="/app/trending"
-							className="flex h-8 items-center gap-2.5 rounded-md px-2.5 text-zinc-200 hover:text-white"
-							activeClassName="bg-zinc-900/50 hover:bg-zinc-900"
+							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
+							activeClassName="bg-zinc-900/50"
 						>
 							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
 								<TrendingIcon width={12} height={12} className="text-white" />

@@ -3,7 +3,7 @@ import { usePageContext } from "@utils/hooks/usePageContext";
 import { twMerge } from "tailwind-merge";
 
 export function ChannelsListItem({ data }: { data: any }) {
-	const channel: any = useChannelProfile(data.event_id, data.pubkey);
+	const channel: any = useChannelProfile(data.event_id);
 	const pageContext = usePageContext();
 
 	const searchParams: any = pageContext.urlParsed.search;
@@ -11,20 +11,16 @@ export function ChannelsListItem({ data }: { data: any }) {
 
 	return (
 		<a
-			href={`/app/channel?id=${data.event_id}&channelpub=${data.pubkey}`}
+			href={`/app/channel?id=${data.event_id}`}
 			className={twMerge(
-				"group inline-flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:bg-zinc-900",
-				pageID === data.event_id
-					? "dark:bg-zinc-900 dark:text-white hover:dark:bg-zinc-800"
-					: "",
+				"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
+				pageID === data.event_id ? "bg-zinc-900 text-white" : "",
 			)}
 		>
 			<div
 				className={twMerge(
-					"inline-flex shrink-0 h-5 w-5 items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800",
-					pageID === data.event_id
-						? "dark:bg-zinc-800 group-hover:dark:bg-zinc-700"
-						: "",
+					"inline-flex shrink-0 h-5 w-5 items-center justify-center rounded bg-zinc-900",
+					pageID === data.event_id ? "bg-zinc-800" : "",
 				)}
 			>
 				<span className="text-xs text-zinc-100">#</span>

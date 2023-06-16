@@ -11,7 +11,7 @@ import { useMemo } from "react";
 export function NoteBase({
 	event,
 	block,
-	metadata,
+	metadata = true,
 }: { event: LumeEvent; block?: number; metadata?: boolean }) {
 	const content = useMemo(() => parser(event), [event]);
 	const checkParentID = isTagsIncludeID(event.parent_id, event.tags);

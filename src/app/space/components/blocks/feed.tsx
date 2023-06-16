@@ -18,7 +18,7 @@ export function FeedBlock({ params }: { params: any }) {
 	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
 
 	const close = () => {
-		removeBlock(params.id);
+		removeBlock(params.id, true);
 	};
 
 	const getKey = (pageIndex, previousPageData) => {

@@ -16,12 +16,12 @@ export function ChatsList() {
 
 	if (!account)
 		return (
-			<div className="flex flex-col">
-				<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
+			<div className="flex flex-col gap-0.5">
+				<div className="inline-flex h-9 items-center gap-2 rounded-md px-2.5">
 					<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
 					<div className="h-3 w-full rounded-sm animate-pulse bg-zinc-800" />
 				</div>
-				<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
+				<div className="inline-flex h-9 items-center gap-2 rounded-md px-2.5">
 					<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
 					<div className="h-3 w-full rounded-sm animate-pulse bg-zinc-800" />
 				</div>
@@ -29,15 +29,15 @@ export function ChatsList() {
 		);
 
 	return (
-		<div className="flex flex-col gap-1">
+		<div className="flex flex-col gap-0.5">
 			<ChatsListSelfItem data={account} />
 			{!chats ? (
 				<>
-					<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
+					<div className="inline-flex h-9 items-center gap-2 rounded-md px-2.5">
 						<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
 						<div className="h-3 w-full rounded-sm animate-pulse bg-zinc-800" />
 					</div>
-					<div className="inline-flex h-8 items-center gap-2 rounded-md px-2.5">
+					<div className="inline-flex h-9 items-center gap-2 rounded-md px-2.5">
 						<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
 						<div className="h-3 w-full rounded-sm animate-pulse bg-zinc-800" />
 					</div>

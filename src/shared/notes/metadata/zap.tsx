@@ -5,7 +5,7 @@ export function NoteZap({ zaps }: { zaps: number }) {
 	return (
 		<button
 			type="button"
-			className="w-14 group inline-flex items-center gap-1.5"
+			className="w-20 group inline-flex items-center gap-1.5"
 		>
 			<ZapIcon
 				width={16}

@@ -80,15 +80,13 @@ export function ChannelCreateModal() {
 			<button
 				type="button"
 				onClick={() => openModal()}
-				className="group inline-flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:bg-zinc-900"
+				className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5"
 			>
-				<div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800">
+				<div className="inline-flex h-5 w-5 shrink items-center justify-center rounded bg-zinc-900">
 					<PlusIcon width={12} height={12} className="text-zinc-500" />
 				</div>
 				<div>
-					<h5 className="font-semibold text-zinc-400 group-hover:text-zinc-200">
-						Add a new channel
-					</h5>
+					<h5 className="font-medium text-zinc-400">Add a new channel</h5>
 				</div>
 			</button>
 			<Transition appear show={isOpen} as={Fragment}>

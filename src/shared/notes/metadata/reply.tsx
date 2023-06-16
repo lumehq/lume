@@ -22,7 +22,7 @@ export function NoteReply({
 		<button
 			type="button"
 			onClick={(e) => openThread(e, id)}
-			className="w-14 group inline-flex items-center gap-1.5"
+			className="w-20 group inline-flex items-center gap-1.5"
 		>
 			<ReplyIcon
 				width={16}

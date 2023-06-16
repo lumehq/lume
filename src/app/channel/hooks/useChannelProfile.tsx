@@ -1,7 +1,7 @@
 import { getChannel, updateChannelMetadata } from "@libs/storage";
 import { RelayContext } from "@shared/relayProvider";
 import { useContext } from "react";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import useSWRSubscription from "swr/subscription";
 
 const fetcher = async ([, id]) => {
@@ -13,39 +13,33 @@ const fetcher = async ([, id]) => {
 	}
 };
 
-export function useChannelProfile(id: string, channelPubkey: string) {
+export function useChannelProfile(id: string) {
 	const ndk = useContext(RelayContext);
+	const { data, mutate } = useSWR(["channel-metadata", id], fetcher);
 
-	const { mutate } = useSWRConfig();
-	const { data, isLoading } = useSWR(["channel-metadata", id], fetcher);
+	useSWRSubscription(data ? ["channel-metadata", id] : null, () => {
+		// subscribe to channel
+		const sub = ndk.subscribe(
+			{
+				"#e": [id],
+				kinds: [41],
+			},
+			{
+				closeOnEose: true,
+			},
+		);
 
-	useSWRSubscription(
-		!isLoading && data ? ["channel-metadata", id] : null,
-		([, key]) => {
-			// subscribe to channel
-			const sub = ndk.subscribe(
-				{
-					"#e": [key],
-					authors: [channelPubkey],
-					kinds: [41],
-				},
-				{
-					closeOnEose: true,
-				},
-			);
+		sub.addListener("event", (event: { content: string }) => {
+			// update in local database
+			updateChannelMetadata(id, event.content);
+			// revaildate
+			mutate();
+		});
 
-			sub.addListener("event", (event: { content: string }) => {
-				// update in local database
-				updateChannelMetadata(key, event.content);
-				// revaildate
-				mutate(["channel-metadata", key]);
-			});
-
-			return () => {
-				sub.stop();
-			};
-		},
-	);
+		return () => {
+			sub.stop();
+		};
+	});
 
 	return data;
 }

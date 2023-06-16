@@ -16,7 +16,7 @@ export function ChatsListItem({ data }: { data: any }) {
 		<>
 			{isError && <div>error</div>}
 			{isLoading && !user ? (
-				<div className="inline-flex h-8 items-center gap-2.5 rounded-md px-2.5">
+				<div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
 					<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
 					<div>
 						<div className="h-2.5 w-full animate-pulse truncate rounded bg-zinc-800 text-base font-medium" />
@@ -26,10 +26,8 @@ export function ChatsListItem({ data }: { data: any }) {
 				<a
 					href={`/app/chat?pubkey=${data.sender_pubkey}`}
 					className={twMerge(
-						"group inline-flex h-8 items-center gap-2.5 rounded-md px-2.5 hover:bg-zinc-900",
-						pagePubkey === data.sender_pubkey
-							? "dark:bg-zinc-900 dark:text-white hover:dark:bg-zinc-800"
-							: "",
+						"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
+						pagePubkey === data.sender_pubkey ? "bg-zinc-900 text-white" : "",
 					)}
 				>
 					<div className="relative h-5 w-5 shrink-0 rounded">
@@ -41,7 +39,7 @@ export function ChatsListItem({ data }: { data: any }) {
 					</div>
 					<div className="w-full inline-flex items-center justify-between">
 						<div className="inline-flex items-baseline gap-1">
-							<h5 className="max-w-[9rem] truncate font-medium text-zinc-200 group-hover:text-white">
+							<h5 className="max-w-[9rem] truncate font-medium text-zinc-200">
 								{user?.nip05 ||
 									user?.displayName ||
 									shortenKey(data.sender_pubkey)}

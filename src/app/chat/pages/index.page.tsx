@@ -61,7 +61,7 @@ export function Page() {
 					<h3 className="font-semibold text-zinc-100">Encrypted Chat</h3>
 				</div>
 				<div className="w-full flex-1 p-3">
-					<div className="flex h-full flex-col justify-between rounded-md bg-zinc-900 shadow-input shadow-black/20">
+					<div className="flex h-full flex-col justify-between rounded-md bg-zinc-900">
 						<ChatMessageList />
 						<div className="shrink-0 px-5 p-3 border-t border-zinc-800">
 							<ChatMessageForm

@@ -299,7 +299,7 @@ export async function updateChannelMetadata(event_id: string, value: string) {
 
 	return await db.execute(
 		"UPDATE channels SET name = ?, picture = ?, about = ? WHERE event_id = ?;",
-		[data.name, data.image, data.about, event_id],
+		[data.name, data.picture, data.about, event_id],
 	);
 }
 

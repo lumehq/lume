@@ -4,11 +4,8 @@ import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { nip19 } from "nostr-tools";
 
-export function ChannelMetadata({
-	id,
-	pubkey,
-}: { id: string; pubkey: string }) {
-	const metadata = useChannelProfile(id, pubkey);
+export function ChannelMetadata({ id }: { id: string }) {
+	const metadata = useChannelProfile(id);
 	const noteID = id ? nip19.noteEncode(id) : null;
 
 	const copyNoteID = async () => {
@@ -22,7 +19,7 @@ export function ChannelMetadata({
 		<div className="flex flex-col gap-2">
 			<div className="relative shrink-0 rounded-md h-11 w-11">
 				<Image
-					src={metadata?.image || DEFAULT_AVATAR}
+					src={metadata?.picture || DEFAULT_AVATAR}
 					alt={id}
 					className="h-11 w-11 rounded-md object-contain bg-zinc-900"
 				/>

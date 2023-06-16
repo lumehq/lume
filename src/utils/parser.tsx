@@ -58,9 +58,7 @@ export function parser(event: any) {
 		const event = item.event;
 		if (event) {
 			content.notes.push(event.id);
-			content.parsed = reactStringReplace(content.parsed, item.text, () => (
-				<></>
-			));
+			content.parsed = content.parsed.replace(item.text, "");
 		}
 		if (profile) {
 			content.parsed = reactStringReplace(

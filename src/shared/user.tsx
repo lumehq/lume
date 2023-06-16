@@ -56,11 +56,7 @@ export function User({
 				leaveTo="opacity-0 translate-y-1"
 			>
 				<Popover.Panel className="absolute left-0 top-8 z-10 mt-3 w-screen max-w-sm px-4 sm:px-0 lg:max-w-3xl">
-					<div
-						onClick={(e) => e.stopPropagation()}
-						onKeyDown={(e) => e.stopPropagation()}
-						className="w-full max-w-xs overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 shadow-input ring-1 ring-black ring-opacity-5"
-					>
+					<div className="w-full max-w-xs overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 shadow-input ring-1 ring-black ring-opacity-5">
 						<div className="flex items-start gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
 								src={user?.image || DEFAULT_AVATAR}
@@ -90,7 +86,7 @@ export function User({
 								href={`/app/user?pubkey=${pubkey}`}
 								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
 							>
-								View full profile
+								View profile
 							</a>
 							<a
 								href={`/app/chat?pubkey=${pubkey}`}
