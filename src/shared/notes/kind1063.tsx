@@ -1,10 +1,11 @@
+import { NDKTag } from "@nostr-dev-kit/ndk";
 import { Image } from "@shared/image";
 
 function isImage(url: string) {
 	return /\.(jpg|jpeg|gif|png|webp|avif)$/.test(url);
 }
 
-export function Kind1063({ metadata }: { metadata: string[] }) {
+export function Kind1063({ metadata }: { metadata: NDKTag[] }) {
 	const url = metadata[0][1];
 
 	return (

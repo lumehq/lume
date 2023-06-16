@@ -1,8 +1,8 @@
-import { NoteBase } from "@app/space/components/notes/base";
-import { NoteQuoteRepost } from "@app/space/components/notes/quoteRepost";
-import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { createNote, getNotes } from "@libs/storage";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { NoteBase } from "@shared/notes/base";
+import { NoteQuoteRepost } from "@shared/notes/quoteRepost";
+import { NoteSkeleton } from "@shared/notes/skeleton";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";

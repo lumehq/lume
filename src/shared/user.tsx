@@ -9,29 +9,38 @@ import { Fragment } from "react";
 
 dayjs.extend(relativeTime);
 
-export function NoteRepostUser({
+export function User({
 	pubkey,
 	time,
-}: { pubkey: string; time: number }) {
+	size,
+	repost,
+}: { pubkey: string; time: number; size?: string; repost?: boolean }) {
 	const { user } = useProfile(pubkey);
+
+	const avatarWidth = size === "small" ? "w-6" : "w-11";
+	const avatarHeight = size === "small" ? "h-6" : "h-11";
 
 	return (
 		<Popover className="relative flex items-start gap-3">
-			<Popover.Button className="h-11 w-11 shrink-0 overflow-hidden rounded-md bg-zinc-900">
+			<Popover.Button
+				className={`${avatarWidth} ${avatarHeight} shrink-0 overflow-hidden rounded-md bg-zinc-900`}
+			>
 				<Image
 					src={user?.image || DEFAULT_AVATAR}
 					alt={pubkey}
-					className="h-11 w-11 rounded-md object-cover"
+					className={`${avatarWidth} ${avatarHeight} rounded-md object-cover`}
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
 				<h5 className="max-w-[10rem] text-base font-semibold leading-none truncate">
 					{user?.nip05 || user?.name || shortenKey(pubkey)}
 				</h5>
-				<span className="font-semibold leading-none text-fuchsia-500">
-					{" "}
-					reposted
-				</span>
+				{repost && (
+					<span className="font-semibold leading-none text-fuchsia-500">
+						{" "}
+						reposted
+					</span>
+				)}
 				<span className="leading-none text-zinc-500">·</span>
 				<span className="leading-none text-zinc-500">
 					{dayjs().to(dayjs.unix(time), true)}

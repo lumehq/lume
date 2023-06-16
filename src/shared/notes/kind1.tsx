@@ -1,7 +1,7 @@
 import { LinkPreview } from "./preview/link";
-import { MentionNote } from "@app/space/components/notes/mentions/note";
-import { ImagePreview } from "@app/space/components/notes/preview/image";
-import { VideoPreview } from "@app/space/components/notes/preview/video";
+import { MentionNote } from "@shared/notes/mentions/note";
+import { ImagePreview } from "@shared/notes/preview/image";
+import { VideoPreview } from "@shared/notes/preview/video";
 import { truncateContent } from "@utils/transform";
 
 export function Kind1({
@@ -10,7 +10,7 @@ export function Kind1({
 }: { content: any; truncate?: boolean }) {
 	return (
 		<>
-			<div className="select-text whitespace-pre-line break-words text-base leading-tight text-zinc-100">
+			<div className="select-text whitespace-pre-line break-words text-base text-zinc-100">
 				{truncate ? truncateContent(content.parsed, 120) : content.parsed}
 			</div>
 			{Array.isArray(content.images) && content.images.length ? (

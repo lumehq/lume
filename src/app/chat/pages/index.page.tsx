@@ -6,6 +6,7 @@ import { useActiveAccount } from "@stores/accounts";
 import { useChatMessages } from "@stores/chats";
 import { dateToUnix } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
+import { LumeEvent } from "@utils/types";
 import { useContext, useEffect } from "react";
 import useSWRSubscription from "swr/subscription";
 
@@ -31,7 +32,7 @@ export function Page() {
 			since: dateToUnix(),
 		});
 
-		sub.addListener("event", (event: any) => {
+		sub.addListener("event", (event: LumeEvent) => {
 			add(account.pubkey, event);
 		});
 

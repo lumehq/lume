@@ -28,7 +28,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 						<Image
 							src={data["og:image"]}
 							alt={urls[0]}
-							className="w-full h-auto border-t-lg object-cover"
+							className="w-full h-auto object-cover rounded-t-lg"
 						/>
 					)}
 					<div className="flex flex-col gap-2 px-3 py-3">

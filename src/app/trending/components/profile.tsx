@@ -22,8 +22,6 @@ export function Profile({ data }: { data: any }) {
 			</div>
 		);
 
-	console.log(userStats);
-
 	return (
 		<div className="rounded-md bg-zinc-900 px-5 py-5">
 			<div className="flex items-center gap-2">

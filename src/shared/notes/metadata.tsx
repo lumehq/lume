@@ -1,9 +1,9 @@
-import { NoteReply } from "@app/space/components/notes/metadata/reply";
-import { NoteRepost } from "@app/space/components/notes/metadata/repost";
-import { NoteZap } from "@app/space/components/notes/metadata/zap";
 import { createReplyNote } from "@libs/storage";
 import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
 import { LoaderIcon, ReplyIcon, RepostIcon, ZapIcon } from "@shared/icons";
+import { NoteReply } from "@shared/notes/metadata/reply";
+import { NoteRepost } from "@shared/notes/metadata/repost";
+import { NoteZap } from "@shared/notes/metadata/zap";
 import { RelayContext } from "@shared/relayProvider";
 import { decode } from "light-bolt11-decoder";
 import { useContext } from "react";
@@ -70,7 +70,7 @@ export function NoteMetadata({
 	const { data, isLoading } = useSWR(["note-metadata", ndk, id], fetcher);
 
 	return (
-		<div className="inline-flex items-center w-full h-12 mt-4">
+		<div className="inline-flex items-center w-full h-12 mt-2">
 			{!data || isLoading ? (
 				<>
 					<div className="w-20 group inline-flex items-center gap-1.5">

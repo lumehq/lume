@@ -3,9 +3,9 @@ import { MessageMuteButton } from "@app/channel/components/messages/muteButton";
 import { MessageReplyButton } from "@app/channel/components/messages/replyButton";
 import { ChannelMessageUser } from "@app/channel/components/messages/user";
 import { ChannelMessageUserMute } from "@app/channel/components/messages/userMute";
-import { MentionNote } from "@app/space/components/notes/mentions/note";
-import { ImagePreview } from "@app/space/components/notes/preview/image";
-import { VideoPreview } from "@app/space/components/notes/preview/video";
+import { MentionNote } from "@shared/notes/mentions/note";
+import { ImagePreview } from "@shared/notes/preview/image";
+import { VideoPreview } from "@shared/notes/preview/video";
 import { parser } from "@utils/parser";
 import { useMemo, useState } from "react";
 

@@ -1,8 +1,8 @@
 import { ChatMessageUser } from "@app/chat/components/messages/user";
 import { useDecryptMessage } from "@app/chat/hooks/useDecryptMessage";
-import { MentionNote } from "@app/space/components/notes/mentions/note";
-import { ImagePreview } from "@app/space/components/notes/preview/image";
-import { VideoPreview } from "@app/space/components/notes/preview/video";
+import { MentionNote } from "@shared/notes/mentions/note";
+import { ImagePreview } from "@shared/notes/preview/image";
+import { VideoPreview } from "@shared/notes/preview/video";
 import { parser } from "@utils/parser";
 import { memo } from "react";
 

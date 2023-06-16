@@ -1,5 +1,5 @@
-import { Reply } from "@app/space/components/notes/replies/item";
 import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
+import { Reply } from "@shared/notes/replies/item";
 import { RelayContext } from "@shared/relayProvider";
 import { useContext } from "react";
 import useSWR from "swr";

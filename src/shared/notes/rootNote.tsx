@@ -1,10 +1,10 @@
-import { Kind1 } from "@app/space/components/notes/kind1";
-import { Kind1063 } from "@app/space/components/notes/kind1063";
-import { NoteMetadata } from "@app/space/components/notes/metadata";
-import { NoteSkeleton } from "@app/space/components/notes/skeleton";
-import { NoteDefaultUser } from "@app/space/components/user/default";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { Kind1 } from "@shared/notes/kind1";
+import { Kind1063 } from "@shared/notes/kind1063";
+import { NoteMetadata } from "@shared/notes/metadata";
+import { NoteSkeleton } from "@shared/notes/skeleton";
 import { RelayContext } from "@shared/relayProvider";
+import { User } from "@shared/user";
 import { parser } from "@utils/parser";
 import { memo, useContext } from "react";
 import useSWRSubscription from "swr/subscription";
@@ -51,10 +51,7 @@ export const RootNote = memo(function RootNote({
 
 		return (
 			<div className="flex flex-col px-5">
-				<NoteDefaultUser
-					pubkey={parseFallback.pubkey}
-					time={parseFallback.created_at}
-				/>
+				<User pubkey={parseFallback.pubkey} time={parseFallback.created_at} />
 				<div className="-mt-5 pl-[49px]">
 					<Kind1 content={contentFallback} />
 					<NoteMetadata
@@ -71,7 +68,7 @@ export const RootNote = memo(function RootNote({
 		<div className="flex flex-col px-5">
 			{data ? (
 				<>
-					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
+					<User pubkey={data.pubkey} time={data.created_at} />
 					<div className="-mt-5 pl-[49px]">
 						{kind1 && <Kind1 content={kind1} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}

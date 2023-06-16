@@ -1,3 +1,4 @@
+import { NDKTag } from "@nostr-dev-kit/ndk";
 import destr from "destr";
 import { nip19 } from "nostr-tools";
 
@@ -66,7 +67,7 @@ export function getParentID(arr: string[], fallback: string) {
 }
 
 // check id present in event tags
-export function isTagsIncludeID(id: string, arr: string[]) {
+export function isTagsIncludeID(id: string, arr: NDKTag[]) {
 	const tags = destr(arr);
 
 	if (tags.length > 0) {
@@ -79,7 +80,7 @@ export function isTagsIncludeID(id: string, arr: string[]) {
 }
 
 // get parent id from event tags
-export function getQuoteID(arr: string[]) {
+export function getQuoteID(arr: NDKTag[]) {
 	const tags = destr(arr);
 	let quoteID = null;
 

@@ -1,4 +1,4 @@
-import { MentionUser } from "@app/space/components/notes/mentions/user";
+import { MentionUser } from "@shared/notes/mentions/user";
 import destr from "destr";
 import getUrls from "get-urls";
 import { parseReferences } from "nostr-tools";

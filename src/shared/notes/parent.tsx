@@ -1,8 +1,8 @@
-import { Kind1 } from "@app/space/components/notes/kind1";
-import { Kind1063 } from "@app/space/components/notes/kind1063";
-import { NoteMetadata } from "@app/space/components/notes/metadata";
-import { NoteSkeleton } from "@app/space/components/notes/skeleton";
-import { NoteDefaultUser } from "@app/space/components/user/default";
+import { Kind1 } from "@shared/notes/kind1";
+import { Kind1063 } from "@shared/notes/kind1063";
+import { NoteMetadata } from "@shared/notes/metadata";
+import { NoteSkeleton } from "@shared/notes/skeleton";
+import { User } from "@shared/user";
 import { useEvent } from "@utils/hooks/useEvent";
 import { parser } from "@utils/parser";
 import { memo } from "react";
@@ -18,7 +18,7 @@ export const NoteParent = memo(function NoteParent({ id }: { id: string }) {
 			<div className="absolute left-[18px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
 			{data ? (
 				<>
-					<NoteDefaultUser pubkey={data.pubkey} time={data.created_at} />
+					<User pubkey={data.pubkey} time={data.created_at} />
 					<div className="-mt-5 pl-[49px]">
 						{kind1 && <Kind1 content={kind1} />}
 						{kind1063 && <Kind1063 metadata={kind1063} />}

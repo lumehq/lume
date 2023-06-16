@@ -1,8 +1,8 @@
-import { NoteBase } from "@app/space/components/notes/base";
-import { NoteQuoteRepost } from "@app/space/components/notes/quoteRepost";
-import { NoteSkeleton } from "@app/space/components/notes/skeleton";
 import { getNotesByAuthor } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
+import { NoteBase } from "@shared/notes/base";
+import { NoteQuoteRepost } from "@shared/notes/quoteRepost";
+import { NoteSkeleton } from "@shared/notes/skeleton";
 import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useMemo, useRef } from "react";

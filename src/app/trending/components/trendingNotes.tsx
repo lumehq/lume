@@ -1,12 +1,13 @@
 import { Profile } from "@app/trending/components/profile";
+import { NoteBase } from "@shared/notes/base";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-export function TrendingProfiles() {
+export function TrendingNotes() {
 	const { data, error } = useSWR(
-		"https://api.nostr.band/v0/trending/profiles",
+		"https://api.nostr.band/v0/trending/notes",
 		fetcher,
 	);
 
@@ -27,9 +28,9 @@ export function TrendingProfiles() {
 						</div>
 					</div>
 				) : (
-					<div className="relative w-full flex flex-col gap-3 px-3 pt-1.5">
-						{data.profiles.map((item) => (
-							<Profile key={item.pubkey} data={item} />
+					<div className="relative w-full flex flex-col pt-1.5">
+						{data.notes.map((item) => (
+							<NoteBase key={item.id} event={item.event} metadata={false} />
 						))}
 					</div>
 				)}
