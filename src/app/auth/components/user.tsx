@@ -17,7 +17,7 @@ export function User({ pubkey }: { pubkey: string }) {
 				/>
 			</div>
 			<div className="flex w-full flex-1 flex-col items-start text-start">
-				<span className="truncate font-medium leading-tight text-white">
+				<span className="truncate font-medium leading-tight text-zinc-100">
 					{user?.displayName || user?.name}
 				</span>
 				<span className="text-base leading-tight text-zinc-400">

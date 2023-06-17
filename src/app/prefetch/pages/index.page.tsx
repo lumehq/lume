@@ -158,7 +158,7 @@ export function Page() {
 	}, []);
 
 	return (
-		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-white">
+		<div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-100">
 			<div className="relative h-full overflow-hidden">
 				<div
 					data-tauri-drag-region
@@ -166,9 +166,9 @@ export function Page() {
 				/>
 				<div className="relative flex h-full flex-col items-center justify-center">
 					<div className="flex flex-col items-center gap-2">
-						<LumeIcon className="h-16 w-16 text-black dark:text-white" />
+						<LumeIcon className="h-16 w-16 text-black dark:text-zinc-100" />
 						<div className="text-center">
-							<h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-white">
+							<h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
 								Here&apos;s an interesting fact:
 							</h3>
 							<p className="font-medium text-zinc-300 dark:text-zinc-600">
@@ -179,7 +179,7 @@ export function Page() {
 					</div>
 					<div className="absolute bottom-16 left-1/2 -translate-x-1/2 transform">
 						<svg
-							className="h-5 w-5 animate-spin text-black dark:text-white"
+							className="h-5 w-5 animate-spin text-black dark:text-zinc-100"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
 							viewBox="0 0 24 24"

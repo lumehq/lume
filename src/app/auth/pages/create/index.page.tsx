@@ -32,7 +32,7 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-xl font-semibold text-white">
+					<h1 className="text-xl font-semibold text-zinc-100">
 						Lume is auto-generated key for you
 					</h1>
 				</div>
@@ -45,7 +45,7 @@ export function Page() {
 							<input
 								readOnly
 								value={npub}
-								className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-600"
+								className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-600"
 							/>
 						</div>
 					</div>
@@ -58,7 +58,7 @@ export function Page() {
 								readOnly
 								type={type}
 								value={nsec}
-								className="relative w-full rounded-lg border border-black/5 py-2.5 pl-3.5 pr-11 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-600"
+								className="relative w-full rounded-lg border border-black/5 py-2.5 pl-3.5 pr-11 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-600"
 							/>
 							<button
 								type="button"
@@ -69,13 +69,13 @@ export function Page() {
 									<EyeOffIcon
 										width={20}
 										height={20}
-										className="text-zinc-500 group-hover:text-white"
+										className="text-zinc-500 group-hover:text-zinc-100"
 									/>
 								) : (
 									<EyeOnIcon
 										width={20}
 										height={20}
-										className="text-zinc-500 group-hover:text-white"
+										className="text-zinc-500 group-hover:text-zinc-100"
 									/>
 								)}
 							</button>
@@ -84,7 +84,7 @@ export function Page() {
 					<button
 						type="button"
 						onClick={() => submit()}
-						className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-white shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
+						className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
 					>
 						<span>Continue →</span>
 					</button>

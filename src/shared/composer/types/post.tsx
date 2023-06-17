@@ -50,7 +50,7 @@ const ImagePreview = ({
 					onClick={() => Transforms.removeNodes(editor, { at: path })}
 					className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center gap-0.5 rounded bg-zinc-800 text-base font-medium text-zinc-400 shadow-mini-button hover:bg-zinc-700"
 				>
-					<TrashIcon width={14} height={14} className="text-white" />
+					<TrashIcon width={14} height={14} className="text-zinc-100" />
 				</button>
 			</div>
 		</figure>
@@ -130,7 +130,7 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 					<button
 						type="button"
 						onClick={submit}
-						className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-3.5 text-base font-medium text-white shadow-button hover:bg-fuchsia-600"
+						className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-3.5 text-base font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600"
 					>
 						Post
 					</button>

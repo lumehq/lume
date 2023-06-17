@@ -76,7 +76,7 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
 							onClick={() => stopReply()}
 							className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
 						>
-							<CancelIcon width={12} height={12} className="text-white" />
+							<CancelIcon width={12} height={12} className="text-zinc-100" />
 						</button>
 					</div>
 				</div>

@@ -54,11 +54,11 @@ export function AvatarUploader({ valueState }: { valueState: any }) {
 		<button
 			onClick={() => openFileDialog()}
 			type="button"
-			className="inline-flex h-6 items-center justify-center rounded bg-zinc-900 px-3 text-base font-medium text-white ring-1 ring-zinc-800 hover:bg-zinc-700"
+			className="inline-flex h-6 items-center justify-center rounded bg-zinc-900 px-3 text-base font-medium text-zinc-100 ring-1 ring-zinc-800 hover:bg-zinc-700"
 		>
 			{loading ? (
 				<svg
-					className="h-4 w-4 animate-spin text-black dark:text-white"
+					className="h-4 w-4 animate-spin text-black dark:text-zinc-100"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"

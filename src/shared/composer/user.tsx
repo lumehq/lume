@@ -15,7 +15,7 @@ export function User({ pubkey }: { pubkey: string }) {
 					loading="auto"
 				/>
 			</div>
-			<h5 className="text-base font-semibold leading-none text-white">
+			<h5 className="text-base font-semibold leading-none text-zinc-100">
 				{user?.nip05 || user?.name || (
 					<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
 				)}

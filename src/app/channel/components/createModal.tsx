@@ -118,7 +118,7 @@ export function ChannelCreateModal() {
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"
-												className="text-lg font-semibold leading-none text-white"
+												className="text-lg font-semibold leading-none text-zinc-100"
 											>
 												Create channel
 											</Dialog.Title>
@@ -149,7 +149,7 @@ export function ChannelCreateModal() {
 											type={"hidden"}
 											{...register("picture")}
 											value={image}
-											className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+											className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 										/>
 										<div className="flex flex-col gap-1">
 											<label className="text-sm font-medium uppercase tracking-wider text-zinc-400">
@@ -178,7 +178,7 @@ export function ChannelCreateModal() {
 														minLength: 4,
 													})}
 													spellCheck={false}
-													className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+													className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 												/>
 											</div>
 										</div>
@@ -190,13 +190,13 @@ export function ChannelCreateModal() {
 												<textarea
 													{...register("about")}
 													spellCheck={false}
-													className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+													className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 												/>
 											</div>
 										</div>
 										<div className="flex h-20 items-center justify-between gap-1 rounded-lg bg-zinc-800 px-4 py-2">
 											<div className="flex flex-col gap-1">
-												<span className="font-semibold leading-none text-white">
+												<span className="font-semibold leading-none text-zinc-100">
 													Encrypted
 												</span>
 												<p className="w-4/5 text-sm leading-none text-zinc-400">
@@ -220,11 +220,11 @@ export function ChannelCreateModal() {
 											<button
 												type="submit"
 												disabled={!isDirty || !isValid}
-												className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white shadow-button active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
+												className="inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-zinc-100 shadow-button active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
 											>
 												{loading ? (
 													<svg
-														className="h-4 w-4 animate-spin text-black dark:text-white"
+														className="h-4 w-4 animate-spin text-black dark:text-zinc-100"
 														xmlns="http://www.w3.org/2000/svg"
 														fill="none"
 														viewBox="0 0 24 24"

@@ -31,7 +31,7 @@ export function MultiAccounts() {
 							<BellIcon
 								width={16}
 								height={16}
-								className="text-zinc-400 group-hover:text-white"
+								className="text-zinc-400 group-hover:text-zinc-100"
 							/>
 						</button>
 					</div>
@@ -56,7 +56,7 @@ export function MultiAccounts() {
 						<PlusIcon
 							width={16}
 							height={16}
-							className="text-zinc-400 group-hover:text-white"
+							className="text-zinc-400 group-hover:text-zinc-100"
 						/>
 					</button>
 				</div>

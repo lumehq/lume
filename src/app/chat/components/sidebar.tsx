@@ -4,7 +4,7 @@ import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
 
 export function ChatSidebar({ pubkey }: { pubkey: string }) {
-	const { user, isError, isLoading } = useProfile(pubkey);
+	const { user } = useProfile(pubkey);
 
 	return (
 		<div className="px-3 py-2">

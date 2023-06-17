@@ -29,7 +29,7 @@ export function ComposerModal() {
 			<button
 				type="button"
 				onClick={() => openModal()}
-				className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-sm font-medium text-white shadow-button hover:bg-fuchsia-600 focus:outline-none"
+				className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-sm font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 focus:outline-none"
 			>
 				<ComposeIcon width={14} height={14} />
 				Compose

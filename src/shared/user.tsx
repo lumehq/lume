@@ -32,7 +32,7 @@ export function User({
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
-				<h5 className="max-w-[10rem] text-base font-semibold leading-none truncate">
+				<h5 className="text-zinc-200 max-w-[10rem] font-medium leading-none truncate">
 					{user?.nip05 || user?.name || shortenKey(pubkey)}
 				</h5>
 				{repost && (
@@ -75,7 +75,7 @@ export function User({
 									</span>
 								</div>
 								<div>
-									<p className="line-clamp-3 text-base leading-tight text-white">
+									<p className="line-clamp-3 text-base leading-tight text-zinc-100">
 										{user?.about}
 									</p>
 								</div>

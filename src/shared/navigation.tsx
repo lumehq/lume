@@ -33,7 +33,7 @@ export function Navigation() {
 							activeClassName="bg-zinc-900/50"
 						>
 							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
-								<SpaceIcon width={12} height={12} className="text-white" />
+								<SpaceIcon width={12} height={12} className="text-zinc-100" />
 							</span>
 							<span className="font-medium">Spaces</span>
 						</ActiveLink>
@@ -43,7 +43,11 @@ export function Navigation() {
 							activeClassName="bg-zinc-900/50"
 						>
 							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
-								<TrendingIcon width={12} height={12} className="text-white" />
+								<TrendingIcon
+									width={12}
+									height={12}
+									className="text-zinc-100"
+								/>
 							</span>
 							<span className="font-medium">Trending</span>
 						</ActiveLink>

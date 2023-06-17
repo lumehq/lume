@@ -40,7 +40,7 @@ export function NoteReplyForm({ id }: { id: string }) {
 					name="content"
 					onChange={(e) => setValue(e.target.value)}
 					placeholder="Reply to this thread..."
-					className="relative h-20 w-full resize-none rounded-md px-5 py-5 text-base bg-transparent !outline-none placeholder:text-zinc-400 dark:text-white dark:placeholder:text-zinc-500"
+					className="relative h-20 w-full resize-none rounded-md px-5 py-5 text-base bg-transparent !outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
 					spellCheck={false}
 				/>
 			</div>

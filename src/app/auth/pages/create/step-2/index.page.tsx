@@ -59,7 +59,7 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-xl font-semibold text-white">
+					<h1 className="text-xl font-semibold text-zinc-100">
 						Create your profile
 					</h1>
 				</div>
@@ -72,7 +72,7 @@ export function Page() {
 							type={"hidden"}
 							{...register("picture")}
 							value={image}
-							className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+							className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 						/>
 						<div className="flex flex-col gap-1">
 							<label className="text-base font-semibold uppercase tracking-wider text-zinc-400">
@@ -101,7 +101,7 @@ export function Page() {
 										minLength: 4,
 									})}
 									spellCheck={false}
-									className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+									className="relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
 							</div>
 						</div>
@@ -113,7 +113,7 @@ export function Page() {
 								<textarea
 									{...register("bio")}
 									spellCheck={false}
-									className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+									className="relative h-20 w-full resize-none rounded-lg border border-black/5 px-3 py-2 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
 							</div>
 						</div>
@@ -121,11 +121,11 @@ export function Page() {
 							<button
 								type="submit"
 								disabled={!isDirty || !isValid}
-								className="inline-flex h-10 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 px-3.5 font-medium text-white shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
+								className="inline-flex h-10 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 px-3.5 font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
 							>
 								{loading ? (
 									<svg
-										className="h-4 w-4 animate-spin text-black dark:text-white"
+										className="h-4 w-4 animate-spin text-black dark:text-zinc-100"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
 										viewBox="0 0 24 24"

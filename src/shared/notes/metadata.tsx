@@ -82,7 +82,7 @@ export function NoteMetadata({
 						<LoaderIcon
 							width={12}
 							height={12}
-							className="animate-spin text-black dark:text-white"
+							className="animate-spin text-black dark:text-zinc-100"
 						/>
 					</div>
 					<div className="w-20 group inline-flex items-center gap-1.5">
@@ -94,7 +94,7 @@ export function NoteMetadata({
 						<LoaderIcon
 							width={12}
 							height={12}
-							className="animate-spin text-black dark:text-white"
+							className="animate-spin text-black dark:text-zinc-100"
 						/>
 					</div>
 					<div className="w-20 group inline-flex items-center gap-1.5">
@@ -106,7 +106,7 @@ export function NoteMetadata({
 						<LoaderIcon
 							width={12}
 							height={12}
-							className="animate-spin text-black dark:text-white"
+							className="animate-spin text-black dark:text-zinc-100"
 						/>
 					</div>
 				</>

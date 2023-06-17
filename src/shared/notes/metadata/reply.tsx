@@ -29,7 +29,7 @@ export function NoteReply({
 				height={16}
 				className="text-zinc-400 group-hover:text-green-400"
 			/>
-			<span className="text-base leading-none text-zinc-400 group-hover:text-white">
+			<span className="text-base leading-none text-zinc-400 group-hover:text-zinc-100">
 				{compactNumber.format(replies)}
 			</span>
 		</button>

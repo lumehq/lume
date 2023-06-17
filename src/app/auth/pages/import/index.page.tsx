@@ -57,7 +57,9 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-xl font-semibold text-white">Import your key</h1>
+					<h1 className="text-xl font-semibold text-zinc-100">
+						Import your key
+					</h1>
 				</div>
 				<div className="flex flex-col gap-4">
 					<form
@@ -70,7 +72,7 @@ export function Page() {
 									{...register("key", { required: true, minLength: 32 })}
 									type={"password"}
 									placeholder="Paste private key here..."
-									className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 text-center shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+									className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 text-center shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
 								/>
 							</div>
 							<span className="text-base text-red-400">
@@ -80,7 +82,7 @@ export function Page() {
 						<div className="flex h-9 items-center justify-center">
 							{isSubmitting ? (
 								<svg
-									className="h-5 w-5 animate-spin text-white"
+									className="h-5 w-5 animate-spin text-zinc-100"
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
 									viewBox="0 0 24 24"
@@ -104,7 +106,7 @@ export function Page() {
 								<button
 									type="submit"
 									disabled={!isDirty || !isValid}
-									className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-white shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
+									className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
 								>
 									<span className="drop-shadow-lg">Continue →</span>
 								</button>

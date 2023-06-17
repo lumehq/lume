@@ -51,7 +51,7 @@ export function NoteRepost({
 				height={16}
 				className="text-zinc-400 group-hover:text-blue-400"
 			/>
-			<span className="text-base leading-none text-zinc-400 group-hover:text-white">
+			<span className="text-base leading-none text-zinc-400 group-hover:text-zinc-100">
 				{compactNumber.format(count)}
 			</span>
 		</button>

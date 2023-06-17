@@ -1,12 +1,12 @@
-import { ChatMessageUser } from "@app/chat/components/messages/user";
 import { useDecryptMessage } from "@app/chat/hooks/useDecryptMessage";
 import { MentionNote } from "@shared/notes/mentions/note";
 import { ImagePreview } from "@shared/notes/preview/image";
+import { LinkPreview } from "@shared/notes/preview/link";
 import { VideoPreview } from "@shared/notes/preview/video";
+import { User } from "@shared/user";
 import { parser } from "@utils/parser";
-import { memo } from "react";
 
-export const ChatMessageItem = memo(function ChatMessageItem({
+export function ChatMessageItem({
 	data,
 	userPubkey,
 	userPrivkey,
@@ -26,11 +26,11 @@ export const ChatMessageItem = memo(function ChatMessageItem({
 	return (
 		<div className="flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
 			<div className="flex flex-col">
-				<ChatMessageUser pubkey={data.sender_pubkey} time={data.created_at} />
+				<User pubkey={data.sender_pubkey} time={data.created_at} />
 				<div className="-mt-[20px] pl-[49px]">
-					<div className="whitespace-pre-line break-words text-base text-zinc-100 leading-tight">
-						{content.parsed || ""}
-					</div>
+					<p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
+						{content.parsed}
+					</p>
 					{Array.isArray(content.images) && content.images.length ? (
 						<ImagePreview urls={content.images} />
 					) : (
@@ -38,6 +38,11 @@ export const ChatMessageItem = memo(function ChatMessageItem({
 					)}
 					{Array.isArray(content.videos) && content.videos.length ? (
 						<VideoPreview urls={content.videos} />
+					) : (
+						<></>
+					)}
+					{Array.isArray(content.links) && content.links.length ? (
+						<LinkPreview urls={content.links} />
 					) : (
 						<></>
 					)}
@@ -52,4 +57,4 @@ export const ChatMessageItem = memo(function ChatMessageItem({
 			</div>
 		</div>
 	);
-});
+}

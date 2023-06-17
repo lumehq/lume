@@ -162,7 +162,7 @@ export function Page() {
 		<div className="flex h-full w-full items-center justify-center">
 			<div className="mx-auto w-full max-w-md">
 				<div className="mb-8 text-center">
-					<h1 className="text-xl font-semibold text-white">
+					<h1 className="text-xl font-semibold text-zinc-100">
 						Personalized your newsfeed
 					</h1>
 				</div>
@@ -201,11 +201,11 @@ export function Page() {
 						<button
 							type="button"
 							onClick={() => submit()}
-							className="inline-flex h-10 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 px-3.5 font-medium text-white shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
+							className="inline-flex h-10 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 px-3.5 font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
 						>
 							{loading === true ? (
 								<svg
-									className="h-5 w-5 animate-spin text-white"
+									className="h-5 w-5 animate-spin text-zinc-100"
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
 									viewBox="0 0 24 24"

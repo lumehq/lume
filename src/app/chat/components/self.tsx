@@ -26,7 +26,7 @@ export function ChatsListSelfItem({ data }: { data: any }) {
 					href={`/app/chat?pubkey=${data.pubkey}`}
 					className={twMerge(
 						"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
-						pagePubkey === data.pubkey ? "bg-zinc-900 text-white" : "",
+						pagePubkey === data.pubkey ? "bg-zinc-900 text-zinc-100" : "",
 					)}
 				>
 					<div className="relative h-5 w-5 shrink-0 rounded">

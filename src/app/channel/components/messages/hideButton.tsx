@@ -111,14 +111,14 @@ export function MessageHideButton({ id }: { id: string }) {
 										<button
 											type="button"
 											onClick={closeModal}
-											className="inline-flex h-9 items-center justify-center rounded-md px-2 text-base font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white"
+											className="inline-flex h-9 items-center justify-center rounded-md px-2 text-base font-medium text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
 										>
 											Cancel
 										</button>
 										<button
 											type="button"
 											onClick={() => hideMessage()}
-											className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-2 text-base font-medium text-white hover:bg-red-600"
+											className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-2 text-base font-medium text-zinc-100 hover:bg-red-600"
 										>
 											Confirm
 										</button>

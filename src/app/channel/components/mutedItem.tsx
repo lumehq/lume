@@ -47,7 +47,7 @@ export function MutedItem({ data }: { data: any }) {
 							/>
 						</div>
 						<div className="flex w-full flex-1 flex-col items-start gap-0.5 text-start">
-							<span className="truncate text-base font-medium leading-none text-white">
+							<span className="truncate text-base font-medium leading-none text-zinc-100">
 								{user?.displayName || user?.name || "Pleb"}
 							</span>
 							<span className="text-base leading-none text-zinc-400">

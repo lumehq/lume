@@ -14,7 +14,7 @@ export function ChannelsListItem({ data }: { data: any }) {
 			href={`/app/channel?id=${data.event_id}`}
 			className={twMerge(
 				"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
-				pageID === data.event_id ? "bg-zinc-900 text-white" : "",
+				pageID === data.event_id ? "bg-zinc-900 text-zinc-100" : "",
 			)}
 		>
 			<div
