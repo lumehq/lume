@@ -8,12 +8,12 @@ export function Member({ pubkey }: { pubkey: string }) {
 	return (
 		<>
 			{isError || isLoading ? (
-				<div className="h-8 w-8 animate-pulse rounded-md bg-zinc-800" />
+				<div className="h-7 w-7 animate-pulse rounded bg-zinc-800" />
 			) : (
 				<Image
-					className="inline-block h-8 w-8 rounded-md bg-white ring-2 ring-zinc-950 transition-all duration-150 ease-in-out"
+					className="inline-block h-7 w-7 rounded"
 					src={user?.image || DEFAULT_AVATAR}
-					alt={user?.pubkey || "user avatar"}
+					alt={pubkey}
 				/>
 			)}
 		</>

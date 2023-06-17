@@ -112,7 +112,7 @@ export function Page() {
 				/>
 				<div className="p-3 flex flex-col gap-3">
 					<ChannelMetadata id={channelID} />
-					<ChannelMembers />
+					<ChannelMembers id={channelID} />
 				</div>
 			</div>
 		</div>

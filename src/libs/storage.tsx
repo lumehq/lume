@@ -328,6 +328,14 @@ export async function getChannelMessages(channel_id: string) {
 	);
 }
 
+// get channel users
+export async function getChannelUsers(channel_id: string) {
+	const db = await connect();
+	return await db.select(
+		`SELECT DISTINCT pubkey FROM channel_messages WHERE channel_id = "${channel_id}";`,
+	);
+}
+
 // get all chats by pubkey
 export async function getChatsByPubkey(pubkey: string) {
 	const db = await connect();
