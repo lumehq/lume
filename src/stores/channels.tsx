@@ -1,5 +1,9 @@
-import { getChannels } from "@libs/storage";
-import NDK, { NDKFilter } from "@nostr-dev-kit/ndk";
+import {
+	createChannelMessage,
+	getChannelMessages,
+	getChannels,
+} from "@libs/storage";
+import { LumeEvent } from "@utils/types";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -38,19 +42,28 @@ export const useChannelMessages = create(
 	immer((set) => ({
 		messages: [],
 		replyTo: { id: null, pubkey: null, content: null },
-		fetch: async (ndk: NDK, id: string, since: number) => {
-			const filter: NDKFilter = {
-				"#e": [id],
-				kinds: [42],
-				since: since,
-			};
-			const events = await ndk.fetchEvents(filter);
-			const array = [...events];
-			set({ messages: array });
+		fetch: async (id: string) => {
+			const events = await getChannelMessages(id);
+			set({ messages: events });
 		},
-		add: (message: any) => {
+		add: (id, event: LumeEvent) => {
 			set((state: any) => {
-				state.messages.push(message);
+				createChannelMessage(
+					id,
+					event.id,
+					event.pubkey,
+					event.kind,
+					event.content,
+					event.tags,
+					event.created_at,
+				);
+				state.messages.push({
+					event_id: event.id,
+					channel_id: id,
+					hide: 0,
+					mute: 0,
+					...event,
+				});
 			});
 		},
 		openReply: (id: string, pubkey: string, content: string) => {

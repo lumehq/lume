@@ -53,7 +53,7 @@ export function MessageHideButton({ id }: { id: string }) {
 					onClick={openModal}
 					className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
 				>
-					<HideIcon width={16} height={16} className="text-white" />
+					<HideIcon width={16} height={16} className="text-zinc-200" />
 				</button>
 			</Tooltip>
 			<Transition appear show={isOpen} as={Fragment}>

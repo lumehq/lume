@@ -5,7 +5,7 @@ export function VideoPreview({ urls }: { urls: string[] }) {
 		<div
 			onClick={(e) => e.stopPropagation()}
 			onKeyDown={(e) => e.stopPropagation()}
-			className="relative mt-2 flex w-full flex-col overflow-hidden rounded-lg bg-zinc-950"
+			className="relative mt-3 max-w-[420px] flex w-full flex-col overflow-hidden rounded-lg bg-zinc-950"
 		>
 			<MediaPlayer src={urls[0]} poster="" controls>
 				<MediaOutlet />

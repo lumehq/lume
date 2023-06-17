@@ -1,6 +1,7 @@
 import { UserReply } from "@app/channel/components/messages/userReply";
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
-import { CancelIcon } from "@shared/icons";
+import { CancelIcon, EnterIcon } from "@shared/icons";
+import { MediaUploader } from "@shared/mediaUploader";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
@@ -17,7 +18,7 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
 		state.closeReply,
 	]);
 
-	const submitEvent = () => {
+	const submit = () => {
 		let tags: string[][];
 
 		if (replyTo.id !== null) {
@@ -51,7 +52,7 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
 	const handleEnterPress = (e) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
-			submitEvent();
+			submit();
 		}
 	};
 
@@ -60,11 +61,7 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
 	};
 
 	return (
-		<div
-			className={`relative ${
-				replyTo.id ? "h-36" : "h-24"
-			} w-full overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[6px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20`}
-		>
+		<div className={`relative w-full ${replyTo.id ? "h-36" : "h-24"}`}>
 			{replyTo.id && (
 				<div className="absolute left-0 top-0 z-10 h-16 w-full p-[2px]">
 					<div className="flex h-full w-full items-center justify-between rounded-t-md border-b border-zinc-700/70 bg-zinc-900 px-3">
@@ -92,23 +89,19 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
 				placeholder="Message"
 				className={`relative ${
 					replyTo.id ? "h-36 pt-16" : "h-24 pt-3"
-				} w-full resize-none rounded-lg border border-black/5 px-3.5 pb-3 text-base shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500`}
+				} w-full resize-none rounded-md px-5 !outline-none bg-zinc-800 placeholder:text-zinc-500`}
 			/>
-			<div className="absolute bottom-2 w-full px-2">
-				<div className="flex w-full items-center justify-between bg-zinc-800">
-					<div className="flex items-center gap-2 divide-x divide-zinc-700">
-						<div className="flex items-center gap-2 pl-2" />
-					</div>
-					<div className="flex items-center gap-2">
-						<button
-							type="button"
-							onClick={() => submitEvent()}
-							disabled={value.length === 0 ? true : false}
-							className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-base font-medium shadow-button hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							Send
-						</button>
-					</div>
+			<div className="absolute right-2 bottom-0 h-11">
+				<div className="h-full flex gap-3 items-center justify-end text-zinc-500">
+					<MediaUploader setState={setValue} />
+					<button
+						type="button"
+						onClick={submit}
+						className="inline-flex items-center gap-1 text-sm leading-none"
+					>
+						<EnterIcon width={14} height={14} className="" />
+						Send
+					</button>
 				</div>
 			</div>
 		</div>

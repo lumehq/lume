@@ -1,5 +1,11 @@
 import { prefetchEvents } from "@libs/ndk";
-import { countTotalNotes, createChat, createNote } from "@libs/storage";
+import {
+	countTotalNotes,
+	createChannelMessage,
+	createChat,
+	createNote,
+	getChannels,
+} from "@libs/storage";
 import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { LumeIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
@@ -98,12 +104,52 @@ export function Page() {
 		}
 	}
 
+	async function fetchChannelMessages() {
+		try {
+			const ids = [];
+			const channels: any = await getChannels(10, 0);
+			channels.forEach((channel) => {
+				ids.push(channel.event_id);
+			});
+
+			const since =
+				lastLogin === 0 ? dateToUnix(getHourAgo(48, now.current)) : lastLogin;
+
+			const filter: NDKFilter = {
+				"#e": ids,
+				kinds: [42],
+				since: since,
+			};
+
+			const events = await prefetchEvents(ndk, filter);
+			events.forEach((event) => {
+				const channel_id = event.tags[0][1];
+				if (channel_id) {
+					createChannelMessage(
+						channel_id,
+						event.id,
+						event.pubkey,
+						event.kind,
+						event.content,
+						event.tags,
+						event.created_at,
+					);
+				}
+			});
+
+			return true;
+		} catch (e) {
+			console.log("error: ", e);
+		}
+	}
+
 	useEffect(() => {
 		async function prefetch() {
 			const notes = await fetchNotes();
 			if (notes) {
 				const chats = await fetchChats();
-				if (chats) {
+				const channels = await fetchChannelMessages();
+				if (chats && channels) {
 					navigate("/app/space", { overwriteLastHistoryEntry: true });
 				}
 			}

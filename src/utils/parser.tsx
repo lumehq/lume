@@ -4,8 +4,19 @@ import getUrls from "get-urls";
 import { parseReferences } from "nostr-tools";
 import reactStringReplace from "react-string-replace";
 
+function isJsonString(str) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
 export function parser(event: any) {
-	event.tags = destr(event.tags);
+	if (isJsonString(event.tags)) {
+		event["tags"] = destr(event.tags);
+	}
 
 	const references = parseReferences(event);
 	const urls = getUrls(event.content);

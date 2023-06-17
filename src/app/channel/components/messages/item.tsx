@@ -2,22 +2,22 @@ import { MessageHideButton } from "@app/channel/components/messages/hideButton";
 import { MessageMuteButton } from "@app/channel/components/messages/muteButton";
 import { MessageReplyButton } from "@app/channel/components/messages/replyButton";
 import { ChannelMessageUser } from "@app/channel/components/messages/user";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { MentionNote } from "@shared/notes/mentions/note";
 import { ImagePreview } from "@shared/notes/preview/image";
+import { LinkPreview } from "@shared/notes/preview/link";
 import { VideoPreview } from "@shared/notes/preview/video";
 import { parser } from "@utils/parser";
-import { useMemo } from "react";
+import { LumeEvent } from "@utils/types";
 
-export function ChannelMessageItem({ data }: { data: NDKEvent }) {
-	const content = useMemo(() => parser(data), [data]);
+export function ChannelMessageItem({ data }: { data: LumeEvent }) {
+	const content = parser(data);
 
 	return (
 		<div className="group relative flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
 			<div className="flex flex-col">
 				<ChannelMessageUser pubkey={data.pubkey} time={data.created_at} />
 				<div className="-mt-[20px] pl-[49px]">
-					<p className="whitespace-pre-line break-words text-base leading-tight">
+					<p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
 						{content.parsed}
 					</p>
 					{Array.isArray(content.images) && content.images.length ? (
@@ -27,6 +27,11 @@ export function ChannelMessageItem({ data }: { data: NDKEvent }) {
 					)}
 					{Array.isArray(content.videos) && content.videos.length ? (
 						<VideoPreview urls={content.videos} />
+					) : (
+						<></>
+					)}
+					{Array.isArray(content.links) && content.links.length ? (
+						<LinkPreview urls={content.links} />
 					) : (
 						<></>
 					)}

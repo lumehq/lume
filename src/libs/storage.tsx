@@ -303,6 +303,31 @@ export async function updateChannelMetadata(event_id: string, value: string) {
 	);
 }
 
+// create channel messages
+export async function createChannelMessage(
+	channel_id: string,
+	event_id: string,
+	pubkey: string,
+	kind: number,
+	content: string,
+	tags: string[][],
+	created_at: number,
+) {
+	const db = await connect();
+	return await db.execute(
+		"INSERT OR IGNORE INTO channel_messages (channel_id, event_id, pubkey, kind, content, tags, created_at) VALUES (?, ?, ?, ?, ?, ?, ?);",
+		[channel_id, event_id, pubkey, kind, content, tags, created_at],
+	);
+}
+
+// get channel messages by channel id
+export async function getChannelMessages(channel_id: string) {
+	const db = await connect();
+	return await db.select(
+		`SELECT * FROM channel_messages WHERE channel_id = "${channel_id}" ORDER BY created_at ASC;`,
+	);
+}
+
 // get all chats by pubkey
 export async function getChatsByPubkey(pubkey: string) {
 	const db = await connect();

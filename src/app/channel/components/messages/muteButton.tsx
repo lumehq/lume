@@ -53,7 +53,7 @@ export function MessageMuteButton({ pubkey }: { pubkey: string }) {
 					onClick={() => openModal()}
 					className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
 				>
-					<MuteIcon width={16} height={16} className="text-white" />
+					<MuteIcon width={16} height={16} className="text-zinc-200" />
 				</button>
 			</Tooltip>
 			<Transition appear show={isOpen} as={Fragment}>

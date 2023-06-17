@@ -29,25 +29,6 @@ OR IGNORE INTO channels (
 )
 VALUES
   (
-    "42224859763652914db53052103f0b744df79dfc4efef7e950fc0802fc3df3c5",
-    "460c25e682fda7832b52d1f22d3d22b3176d972f60dcdc3212ed8c92ef85065c",
-    "Amethyst Users",
-    "General discussion about the Amethyst Nostr client for Android",
-    "https://nostr.build/i/5970.png",
-    1674092111
-  );
-
-INSERT
-OR IGNORE INTO channels (
-  event_id,
-  pubkey,
-  name,
-  about,
-  picture,
-  created_at
-)
-VALUES
-  (
     "25e5c82273a271cb1a840d0060391a0bf4965cafeb029d5ab55350b418953fbb",
     "ed1d0e1f743a7d19aa2dfb0162df73bacdbc699f67cc55bb91a98c35f7deac69",
     "Nostr",

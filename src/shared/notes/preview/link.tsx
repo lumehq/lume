@@ -6,7 +6,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 	const { data, error, isLoading } = useOpenGraph(urls[0]);
 
 	return (
-		<div className="mt-3 overflow-hidden rounded-lg bg-zinc-800">
+		<div className="mt-3 max-w-[420px] overflow-hidden rounded-lg bg-zinc-800">
 			{error && <p>failed to load</p>}
 			{isLoading || !data ? (
 				<div className="flex flex-col">
