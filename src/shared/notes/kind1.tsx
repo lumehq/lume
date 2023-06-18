@@ -10,8 +10,12 @@ export function Kind1({
 }: { content: any; truncate?: boolean }) {
 	return (
 		<>
-			<div className="select-text whitespace-pre-line break-words text-base text-zinc-100">
-				{truncate ? truncateContent(content.original, 100) : content.parsed}
+			<div
+				className={`select-text whitespace-pre-line break-words text-base text-zinc-100 ${
+					truncate ? "line-clamp-3" : ""
+				}`}
+			>
+				{content.parsed}
 			</div>
 			{Array.isArray(content.images) && content.images.length ? (
 				<ImagePreview urls={content.images} />

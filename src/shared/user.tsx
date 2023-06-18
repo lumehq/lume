@@ -27,12 +27,14 @@ export function User({
 			}`}
 		>
 			<Popover.Button
-				className={`${avatarWidth} ${avatarHeight} shrink-0 overflow-hidden rounded-md bg-zinc-900`}
+				className={`${avatarWidth} ${avatarHeight} shrink-0 overflow-hidden`}
 			>
 				<Image
 					src={user?.image || DEFAULT_AVATAR}
 					alt={pubkey}
-					className={`${avatarWidth} ${avatarHeight} rounded-md object-cover`}
+					className={`${avatarWidth} ${avatarHeight} ${
+						size === "small" ? "rounded" : "rounded-md"
+					} object-cover`}
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">

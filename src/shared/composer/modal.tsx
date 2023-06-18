@@ -8,33 +8,31 @@ import {
 	ComposeIcon,
 } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
-import { Fragment, useState } from "react";
+import { useComposer } from "@stores/composer";
+import { Fragment } from "react";
 
-export function ComposerModal() {
-	const [isOpen, setIsOpen] = useState(false);
-	const [composer] = useState({ type: "post" });
-
+export function Composer() {
 	const account = useActiveAccount((state: any) => state.account);
+	const [toggle, open] = useComposer((state: any) => [
+		state.toggleModal,
+		state.open,
+	]);
 
 	const closeModal = () => {
-		setIsOpen(false);
-	};
-
-	const openModal = () => {
-		setIsOpen(true);
+		toggle(false);
 	};
 
 	return (
 		<>
 			<button
 				type="button"
-				onClick={() => openModal()}
+				onClick={() => toggle(true)}
 				className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-sm font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 focus:outline-none"
 			>
 				<ComposeIcon width={14} height={14} />
 				Compose
 			</button>
-			<Transition appear show={isOpen} as={Fragment}>
+			<Transition appear show={open} as={Fragment}>
 				<Dialog as="div" className="relative z-10" onClose={closeModal}>
 					<Transition.Child
 						as={Fragment}
@@ -68,7 +66,7 @@ export function ComposerModal() {
 												className="text-zinc-500"
 											/>
 										</span>
-										<div className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-base font-medium text-zinc-400 shadow-mini-button">
+										<div className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-sm font-medium text-zinc-400">
 											New Post
 											<ChevronDownIcon width={14} height={14} />
 										</div>
@@ -85,9 +83,7 @@ export function ComposerModal() {
 										/>
 									</div>
 								</div>
-								{composer.type === "post" && account && (
-									<Post pubkey={account.pubkey} privkey={account.privkey} />
-								)}
+								<Post pubkey={account.pubkey} privkey={account.privkey} />
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>

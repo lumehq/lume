@@ -3,21 +3,19 @@ import { ChatsList } from "@app/chat/components/list";
 import { Disclosure } from "@headlessui/react";
 import { ActiveLink } from "@shared/activeLink";
 import { AppHeader } from "@shared/appHeader";
-import { ComposerModal } from "@shared/composer/modal";
-import {
-	NavArrowDownIcon,
-	SpaceIcon,
-	TrendingIcon,
-	WorldIcon,
-} from "@shared/icons";
+import { Composer } from "@shared/composer/modal";
+import { NavArrowDownIcon, SpaceIcon, TrendingIcon } from "@shared/icons";
+import { useComposer } from "@stores/composer";
 
 export function Navigation() {
+	const toggle = useComposer((state: any) => state.toggleModal);
+
 	return (
 		<div className="flex w-[232px] flex-col gap-3 border-r border-zinc-900">
 			<AppHeader />
 			<div className="flex flex-col gap-3 h-full overflow-y-auto scrollbar-hide">
 				<div className="inlin-lflex h-8 px-3.5">
-					<ComposerModal />
+					<Composer />
 				</div>
 				{/* Newsfeed */}
 				<div className="flex flex-col gap-0.5 px-1.5">

@@ -1,7 +1,9 @@
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { ImageUploader } from "@shared/composer/imageUploader";
 import { TrashIcon } from "@shared/icons";
+import { MentionNote } from "@shared/notes/mentions/note";
 import { RelayContext } from "@shared/relayProvider";
+import { useComposer } from "@stores/composer";
 import { dateToUnix } from "@utils/date";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Node, Transforms, createEditor } from "slate";
@@ -59,7 +61,10 @@ const ImagePreview = ({
 
 export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 	const ndk = useContext(RelayContext);
-
+	const [repost, toggle] = useComposer((state: any) => [
+		state.repost,
+		state.toggle,
+	]);
 	const editor = useMemo(
 		() => withReact(withImages(withHistory(createEditor()))),
 		[],
@@ -87,14 +92,25 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 		ndk.signer = signer;
 
 		const event = new NDKEvent(ndk);
-		event.kind = 1;
 		event.content = serializedContent;
 		event.created_at = dateToUnix();
 		event.pubkey = pubkey;
-		event.tags = [];
+		if (repost.id && repost.pubkey) {
+			event.kind = 6;
+			event.tags = [
+				["e", repost.id],
+				["p", repost.pubkey],
+			];
+		} else {
+			event.kind = 1;
+			event.tags = [];
+		}
 
 		// publish event
 		event.publish();
+
+		// close modal
+		toggle(false);
 	};
 
 	const renderElement = useCallback((props: any) => {
@@ -115,17 +131,20 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 					<div className="flex w-8 shrink-0 items-center justify-center">
 						<div className="h-full w-[2px] bg-zinc-800" />
 					</div>
-					<div className="w-full markdown">
+					<div className="w-full">
 						<Editable
 							autoFocus
 							placeholder="What's on your mind?"
 							spellCheck="false"
-							className="!min-h-[86px]"
+							className={`${
+								repost.id ? "!min-h-42" : "!min-h-[86px]"
+							} markdown`}
 							renderElement={renderElement}
 						/>
+						{repost.id && <MentionNote id={repost.id} />}
 					</div>
 				</div>
-				<div className="flex items-center justify-between">
+				<div className="mt-4 flex items-center justify-between">
 					<ImageUploader />
 					<button
 						type="button"

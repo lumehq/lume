@@ -36,7 +36,7 @@ export function ChatsListItem({ data }: { data: any }) {
 						<Image
 							src={user?.image || DEFAULT_AVATAR}
 							alt={data.sender_pubkey}
-							className="h-5 w-5 rounded bg-white object-cover"
+							className="h-5 w-5 rounded object-cover"
 						/>
 					</div>
 					<div className="w-full inline-flex items-center justify-between">
