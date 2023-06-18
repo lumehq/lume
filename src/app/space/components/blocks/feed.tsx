@@ -56,7 +56,7 @@ export function FeedBlock({ params }: { params: any }) {
 	}, [notes.length, rowVirtualizer.getVirtualItems()]);
 
 	return (
-		<div className="shrink-0 w-[420px] border-r border-zinc-900">
+		<div className="shrink-0 w-[400px] border-r border-zinc-900">
 			<div
 				data-tauri-drag-region
 				className="h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"

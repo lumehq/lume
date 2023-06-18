@@ -107,7 +107,7 @@ export function Page() {
 	async function fetchChannelMessages() {
 		try {
 			const ids = [];
-			const channels: any = await getChannels(10, 0);
+			const channels: any = await getChannels();
 			channels.forEach((channel) => {
 				ids.push(channel.event_id);
 			});

@@ -21,7 +21,11 @@ export function User({
 	const avatarHeight = size === "small" ? "h-6" : "h-11";
 
 	return (
-		<Popover className="relative flex items-start gap-3">
+		<Popover
+			className={`relative flex gap-3 ${
+				size === "small" ? "items-center" : "items-start"
+			}`}
+		>
 			<Popover.Button
 				className={`${avatarWidth} ${avatarHeight} shrink-0 overflow-hidden rounded-md bg-zinc-900`}
 			>
@@ -32,7 +36,11 @@ export function User({
 				/>
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
-				<h5 className="text-zinc-200 max-w-[10rem] font-medium leading-none truncate">
+				<h5
+					className={`text-zinc-200 font-medium leading-none truncate ${
+						size === "small" ? "max-w-[7rem]" : "max-w-[10rem]"
+					}`}
+				>
 					{user?.nip05 || user?.name || shortenKey(pubkey)}
 				</h5>
 				{repost && (

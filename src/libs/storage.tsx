@@ -262,11 +262,9 @@ export async function createReplyNote(
 }
 
 // get all channels
-export async function getChannels(limit: number, offset: number) {
+export async function getChannels() {
 	const db = await connect();
-	return await db.select(
-		`SELECT * FROM channels ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
-	);
+	return await db.select("SELECT * FROM channels ORDER BY created_at DESC;");
 }
 
 // get channel by id

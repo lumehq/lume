@@ -11,7 +11,7 @@ export const useChannels = create(
 	immer((set) => ({
 		channels: [],
 		fetch: async () => {
-			const response = await getChannels(10, 0);
+			const response = await getChannels();
 			set({ channels: response });
 		},
 		add: (event) => {

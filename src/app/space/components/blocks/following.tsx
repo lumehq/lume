@@ -103,7 +103,7 @@ export function FollowingBlock({ block }: { block: number }) {
 	};
 
 	return (
-		<div className="shrink-0 w-[420px] border-r border-zinc-900">
+		<div className="shrink-0 w-[400px] border-r border-zinc-900">
 			<div
 				data-tauri-drag-region
 				className="h-11 w-full inline-flex items-center justify-center border-b border-zinc-900"

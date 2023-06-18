@@ -10,7 +10,7 @@ export function ImageBlock({ params }: { params: any }) {
 	};
 
 	return (
-		<div className="shrink-0 w-[360px] flex-col flex border-r border-zinc-900">
+		<div className="shrink-0 w-[350px] flex-col flex border-r border-zinc-900">
 			<div
 				data-tauri-drag-region
 				className="h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"

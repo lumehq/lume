@@ -1,133 +1,141 @@
 {
-  "build": {
-    "beforeDevCommand": "pnpm dev",
-    "beforeBuildCommand": "pnpm build",
-    "devPath": "http://localhost:3000",
-    "distDir": "../dist/client",
-    "withGlobalTauri": true
-  },
-  "package": {
-    "productName": "Lume",
-    "version": "1.0.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "app": {
-        "all": false
-      },
-      "os": {
-        "all": true
-      },
-      "http": {
-        "all": true,
-        "request": true,
-        "scope": ["https://void.cat/*", "https://skrape.dev/*"]
-      },
-      "fs": {
-        "all": false,
-        "readFile": true,
-        "readDir": true,
-        "scope": [
-          "$APPDATA/*",
-          "$DATA/*",
-          "$LOCALDATA/*",
-          "$DESKTOP/*",
-          "$DOCUMENT/*",
-          "$DOWNLOAD/*",
-          "$HOME/*",
-          "$PICTURE/*",
-          "$PUBLIC/*",
-          "$VIDEO/*"
-        ]
-      },
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "clipboard": {
-        "all": false,
-        "writeText": true,
-        "readText": true
-      },
-      "dialog": {
-        "all": false,
-        "open": true
-      },
-      "notification": {
-        "all": true
-      },
-      "window": {
-        "startDragging": true,
-        "close": true
-      },
-      "process": {
-        "all": false,
-        "exit": false,
-        "relaunch": true,
-        "relaunchDangerousAllowSymlinkMacos": false
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "SocialNetworking",
-      "copyright": "",
-      "appimage": {
-        "bundleMediaFramework": true
-      },
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
-      "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-      "identifier": "com.lume.nu",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
-    },
-    "security": {
-      "csp": "upgrade-insecure-requests"
-    },
-    "updater": {
-      "active": true,
-      "endpoints": ["https://releases.lume.nu/{{target}}/{{arch}}/{{current_version}}"],
-      "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIyOUI0Qjc1MTBCOUNGNUEKUldSYXo3a1FkVXViSWxYTlhhS0E4UjRIcEkzd04yN1Y0dys4QWY5WjRybEF5eElLcGFXZmJnRzQK",
-      "windows": {
-        "installMode": "passive"
-      }
-    },
-    "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
-    "windows": [
-      {
-        "title": "Lume",
-        "theme": "Dark",
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "transparent": false,
-        "fullscreen": false,
-        "resizable": true,
-        "width": 1100,
-        "height": 800,
-        "minWidth": 800,
-        "minHeight": 700
-      }
-    ]
-  }
+	"build": {
+		"beforeDevCommand": "pnpm dev",
+		"beforeBuildCommand": "pnpm build",
+		"devPath": "http://localhost:3000",
+		"distDir": "../dist/client",
+		"withGlobalTauri": true
+	},
+	"package": {
+		"productName": "Lume",
+		"version": "1.0.0"
+	},
+	"tauri": {
+		"allowlist": {
+			"all": false,
+			"app": {
+				"all": false
+			},
+			"os": {
+				"all": true
+			},
+			"http": {
+				"all": true,
+				"request": true,
+				"scope": ["https://void.cat/*", "https://skrape.dev/*"]
+			},
+			"fs": {
+				"all": false,
+				"readFile": true,
+				"readDir": true,
+				"scope": [
+					"$APPDATA/*",
+					"$DATA/*",
+					"$LOCALDATA/*",
+					"$DESKTOP/*",
+					"$DOCUMENT/*",
+					"$DOWNLOAD/*",
+					"$HOME/*",
+					"$PICTURE/*",
+					"$PUBLIC/*",
+					"$VIDEO/*"
+				]
+			},
+			"shell": {
+				"all": false,
+				"open": true
+			},
+			"clipboard": {
+				"all": false,
+				"writeText": true,
+				"readText": true
+			},
+			"dialog": {
+				"all": false,
+				"open": true
+			},
+			"notification": {
+				"all": true
+			},
+			"window": {
+				"startDragging": true,
+				"close": true
+			},
+			"process": {
+				"all": false,
+				"exit": false,
+				"relaunch": true,
+				"relaunchDangerousAllowSymlinkMacos": false
+			}
+		},
+		"bundle": {
+			"active": true,
+			"category": "SocialNetworking",
+			"copyright": "",
+			"appimage": {
+				"bundleMediaFramework": true
+			},
+			"deb": {
+				"depends": []
+			},
+			"externalBin": [],
+			"icon": [
+				"icons/32x32.png",
+				"icons/128x128.png",
+				"icons/128x128@2x.png",
+				"icons/icon.icns",
+				"icons/icon.ico"
+			],
+			"identifier": "com.lume.nu",
+			"longDescription": "",
+			"macOS": {
+				"entitlements": null,
+				"exceptionDomain": "",
+				"frameworks": [],
+				"providerShortName": null,
+				"signingIdentity": null
+			},
+			"resources": [],
+			"shortDescription": "",
+			"targets": "all",
+			"windows": {
+				"certificateThumbprint": null,
+				"digestAlgorithm": "sha256",
+				"timestampUrl": ""
+			}
+		},
+		"security": {
+			"csp": "upgrade-insecure-requests"
+		},
+		"updater": {
+			"active": true,
+			"endpoints": [
+				"https://releases.lume.nu/{{target}}/{{arch}}/{{current_version}}"
+			],
+			"dialog": true,
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIyOUI0Qjc1MTBCOUNGNUEKUldSYXo3a1FkVXViSWxYTlhhS0E4UjRIcEkzd04yN1Y0dys4QWY5WjRybEF5eElLcGFXZmJnRzQK",
+			"windows": {
+				"installMode": "passive"
+			}
+		},
+		"systemTray": {
+			"iconPath": "icons/icon.png",
+			"iconAsTemplate": true
+		},
+		"windows": [
+			{
+				"title": "Lume",
+				"theme": "Dark",
+				"titleBarStyle": "Overlay",
+				"hiddenTitle": true,
+				"transparent": false,
+				"fullscreen": false,
+				"resizable": true,
+				"width": 1080,
+				"height": 800,
+				"minWidth": 1080,
+				"minHeight": 720
+			}
+		]
+	}
 }
