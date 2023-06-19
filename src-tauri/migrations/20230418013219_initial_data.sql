@@ -44,7 +44,6 @@ CREATE TABLE
     content TEXT NOT NULL,
     created_at INTEGER NOT NULL,
     parent_id TEXT,
-    parent_comment_id TEXT,
     FOREIGN KEY (account_id) REFERENCES accounts (id)
   );
 

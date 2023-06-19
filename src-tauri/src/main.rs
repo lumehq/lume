@@ -99,6 +99,12 @@ fn main() {
               sql: include_str!("../migrations/20230617003135_add_channel_messages.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230619082415,
+              description: "add replies",
+              sql: include_str!("../migrations/20230619082415_add_replies.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

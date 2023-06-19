@@ -61,7 +61,7 @@ export function ThreadBlock({ params }: { params: any }) {
 					</div>
 				)}
 				<div className="px-3">
-					<RepliesList id={params.content} />
+					<RepliesList parent_id={params.content} />
 				</div>
 			</div>
 		</div>

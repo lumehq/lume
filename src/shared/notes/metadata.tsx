@@ -25,13 +25,13 @@ const fetcher = async ([, ndk, id]) => {
 			case 1:
 				replies += 1;
 				createReplyNote(
+					id,
 					event.id,
 					event.pubkey,
 					event.kind,
 					event.tags,
 					event.content,
 					event.created_at,
-					id,
 				);
 				break;
 			case 6:

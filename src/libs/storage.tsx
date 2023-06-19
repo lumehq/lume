@@ -123,15 +123,6 @@ export async function countTotalNotes() {
 	return result[0].total;
 }
 
-// count total notes
-export async function countTotalLongNotes() {
-	const db = await connect();
-	const result = await db.select(
-		'SELECT COUNT(*) AS "total" FROM notes WHERE kind = 30023;',
-	);
-	return result[0].total;
-}
-
 // get all notes
 export async function getNotes(time: number, limit: number, offset: number) {
 	const db = await connect();
@@ -167,34 +158,6 @@ export async function getNotesByAuthor(
 	return notes;
 }
 
-// get all long notes
-export async function getLongNotes(
-	time: number,
-	limit: number,
-	offset: number,
-) {
-	const db = await connect();
-
-	const notes: any = { data: null, nextCursor: 0 };
-	const query: any = await db.select(
-		`SELECT * FROM notes WHERE created_at <= "${time}" AND kind = 30023 ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
-	);
-
-	notes["data"] = query;
-	notes["nextCursor"] = offset + limit;
-
-	return notes;
-}
-
-// get all note authors
-export async function getNoteAuthors() {
-	const db = await connect();
-	const result = await db.select(
-		"SELECT DISTINCT pubkey FROM notes ORDER BY created_at DESC",
-	);
-	return result;
-}
-
 // get note by id
 export async function getNoteByID(event_id: string) {
 	const db = await connect();
@@ -202,14 +165,6 @@ export async function getNoteByID(event_id: string) {
 		`SELECT * FROM notes WHERE event_id = "${event_id}";`,
 	);
 	return result[0];
-}
-
-// get all latest notes
-export async function getLatestNotes(time: number) {
-	const db = await connect();
-	return await db.select(
-		`SELECT * FROM notes WHERE created_at > "${time}" GROUP BY parent_id ORDER BY created_at DESC;`,
-	);
 }
 
 // create note
@@ -231,33 +186,28 @@ export async function createNote(
 	);
 }
 
+// get note replies
+export async function getReplies(parent_id: string) {
+	const db = await connect();
+	return await db.select(
+		`SELECT * FROM replies WHERE parent_id = "${parent_id}" ORDER BY created_at DESC;`,
+	);
+}
+
 // create reply note
 export async function createReplyNote(
+	parent_id: string,
 	event_id: string,
 	pubkey: string,
 	kind: number,
 	tags: any,
 	content: string,
 	created_at: number,
-	parent_comment_id: string,
 ) {
 	const db = await connect();
-	const account = await getActiveAccount();
-	const parentID = getParentID(tags, event_id);
-
 	return await db.execute(
-		"INSERT OR IGNORE INTO notes (event_id, account_id, pubkey, kind, tags, content, created_at, parent_id, parent_comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-		[
-			event_id,
-			account.id,
-			pubkey,
-			kind,
-			tags,
-			content,
-			created_at,
-			parentID,
-			parent_comment_id,
-		],
+		"INSERT OR IGNORE INTO replies (parent_id, event_id, pubkey, kind, tags, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?);",
+		[parent_id, event_id, pubkey, kind, tags, content, created_at],
 	);
 }
 

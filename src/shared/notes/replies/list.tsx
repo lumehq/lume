@@ -1,22 +1,13 @@
-import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
+import { getReplies } from "@libs/storage";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { EmptyIcon } from "@shared/icons";
 import { Reply } from "@shared/notes/replies/item";
-import { RelayContext } from "@shared/relayProvider";
-import { useContext } from "react";
 import useSWR from "swr";
 
-const fetcher = async ([, ndk, id]) => {
-	const filter: NDKFilter = {
-		"#e": [id],
-		kinds: [1],
-	};
-	const events = await ndk.fetchEvents(filter);
-	return [...events];
-};
+const fetcher = ([, id]) => getReplies(id);
 
-export function RepliesList({ id }: { id: string }) {
-	const ndk = useContext(RelayContext);
-	const { data } = useSWR(["note-replies", ndk, id], fetcher);
+export function RepliesList({ parent_id }: { parent_id: string }) {
+	const { data }: any = useSWR(["note-replies", parent_id], fetcher);
 
 	return (
 		<div className="mt-5">
