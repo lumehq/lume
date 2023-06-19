@@ -65,27 +65,27 @@ export function User({
 				leaveFrom="opacity-100 translate-y-0"
 				leaveTo="opacity-0 translate-y-1"
 			>
-				<Popover.Panel className="absolute left-0 top-8 z-10 mt-3 w-screen max-w-sm px-4 sm:px-0 lg:max-w-3xl">
-					<div className="w-full max-w-xs overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 shadow-input ring-1 ring-black ring-opacity-5">
-						<div className="flex items-start gap-2.5 border-b border-zinc-800 px-3 py-3">
+				<Popover.Panel className="absolute left-0 top-10 z-50 mt-3">
+					<div className="w-full max-w-xs overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md">
+						<div className="flex gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
 								src={user?.image || DEFAULT_AVATAR}
 								alt={pubkey}
-								className="h-14 w-14 shrink-0 rounded-lg object-cover"
+								className="h-11 w-11 shrink-0 rounded-lg object-cover"
 							/>
-							<div className="flex w-full flex-1 flex-col gap-2">
-								<div className="inline-flex w-2/3 flex-col gap-0.5">
-									<h5 className="text-base font-semibold leading-none">
+							<div className="flex-1 flex flex-col gap-2">
+								<div className="inline-flex flex-col gap-1">
+									<h5 className="font-semibold leading-none">
 										{user?.displayName || user?.name || (
 											<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
 										)}
 									</h5>
-									<span className="truncate text-base leading-none text-zinc-500">
+									<span className="max-w-[15rem] text-sm truncate leading-none text-zinc-500">
 										{user?.nip05 || shortenKey(pubkey)}
 									</span>
 								</div>
 								<div>
-									<p className="line-clamp-3 text-base leading-tight text-zinc-100">
+									<p className="line-clamp-3 break-words text-sm leading-tight text-zinc-100">
 										{user?.about}
 									</p>
 								</div>
@@ -94,13 +94,13 @@ export function User({
 						<div className="flex items-center gap-2 px-3 py-3">
 							<a
 								href={`/app/user?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 hover:bg-fuchsia-500 text-sm font-medium"
 							>
 								View profile
 							</a>
 							<a
 								href={`/app/chat?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 text-base font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 hover:bg-fuchsia-500 text-sm font-medium"
 							>
 								Message
 							</a>
