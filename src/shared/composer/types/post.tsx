@@ -1,4 +1,5 @@
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { Button } from "@shared/button";
 import { ImageUploader } from "@shared/composer/imageUploader";
 import { TrashIcon } from "@shared/icons";
 import { MentionNote } from "@shared/notes/mentions/note";
@@ -146,13 +147,9 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 				</div>
 				<div className="mt-4 flex items-center justify-between">
 					<ImageUploader />
-					<button
-						type="button"
-						onClick={submit}
-						className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-3.5 text-base font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600"
-					>
-						Post
-					</button>
+					<Button onClick={() => submit} preset="publish">
+						Publish
+					</Button>
 				</div>
 			</div>
 		</Slate>

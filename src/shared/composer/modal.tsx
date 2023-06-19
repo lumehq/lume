@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { Button } from "@shared/button";
 import { Post } from "@shared/composer/types/post";
 import { User } from "@shared/composer/user";
 import {
@@ -24,14 +25,10 @@ export function Composer() {
 
 	return (
 		<>
-			<button
-				type="button"
-				onClick={() => toggle(true)}
-				className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-2.5 text-sm font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 focus:outline-none"
-			>
+			<Button onClick={() => toggle(true)} preset="small">
 				<ComposeIcon width={14} height={14} />
 				Compose
-			</button>
+			</Button>
 			<Transition appear show={open} as={Fragment}>
 				<Dialog as="div" className="relative z-10" onClose={closeModal}>
 					<Transition.Child
@@ -66,7 +63,7 @@ export function Composer() {
 												className="text-zinc-500"
 											/>
 										</span>
-										<div className="inline-flex h-6 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-sm font-medium text-zinc-400">
+										<div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-sm font-medium text-zinc-400">
 											New Post
 											<ChevronDownIcon width={14} height={14} />
 										</div>
@@ -83,7 +80,9 @@ export function Composer() {
 										/>
 									</div>
 								</div>
-								<Post pubkey={account.pubkey} privkey={account.privkey} />
+								{account && (
+									<Post pubkey={account.pubkey} privkey={account.privkey} />
+								)}
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>

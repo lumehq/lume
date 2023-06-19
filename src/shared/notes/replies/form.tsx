@@ -1,4 +1,5 @@
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { Button } from "@shared/button";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -40,18 +41,18 @@ export function NoteReplyForm({ id }: { id: string }) {
 					name="content"
 					onChange={(e) => setValue(e.target.value)}
 					placeholder="Reply to this thread..."
-					className="relative h-20 w-full resize-none rounded-md px-5 py-5 text-base bg-transparent !outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+					className="relative h-20 w-full resize-none rounded-md px-5 py-3 text-base bg-transparent !outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
 					spellCheck={false}
 				/>
 			</div>
 			<div className="border-t border-zinc-800 w-full py-3 px-5">
 				<div className="flex w-full items-center justify-between">
 					<div className="inline-flex items-center gap-2">
-						<div className="relative h-8 w-8 shrink-0 rounded">
+						<div className="relative h-9 w-9 shrink-0 rounded">
 							<Image
 								src={user?.image || DEFAULT_AVATAR}
 								alt={account.npub}
-								className="h-8 w-8 rounded bg-white object-cover"
+								className="h-9 w-9 rounded-md bg-white object-cover"
 							/>
 						</div>
 						<div>
@@ -64,14 +65,13 @@ export function NoteReplyForm({ id }: { id: string }) {
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
-						<button
-							type="button"
+						<Button
 							onClick={() => submitEvent()}
 							disabled={value.length === 0 ? true : false}
-							className="inline-flex h-8 w-16 items-center justify-center rounded-md bg-fuchsia-500 px-4 text-base font-medium hover:bg-fuchsia-600 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+							preset="publish"
 						>
 							Reply
-						</button>
+						</Button>
 					</div>
 				</div>
 			</div>

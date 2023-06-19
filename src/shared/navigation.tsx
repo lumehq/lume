@@ -13,7 +13,7 @@ export function Navigation() {
 	return (
 		<div className="flex w-[232px] flex-col gap-3 border-r border-zinc-900">
 			<AppHeader />
-			<div className="flex flex-col gap-3 h-full overflow-y-auto scrollbar-hide">
+			<div className="flex flex-col gap-5 h-full overflow-y-auto scrollbar-hide">
 				<div className="inlin-lflex h-8 px-3.5">
 					<Composer />
 				</div>
