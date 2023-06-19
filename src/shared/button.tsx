@@ -9,7 +9,7 @@ export function Button({
 }: {
 	preset: "small" | "publish" | "large";
 	children: ReactNode;
-	disabled: boolean;
+	disabled?: boolean;
 	onClick?: () => void;
 }) {
 	let preClass: string;

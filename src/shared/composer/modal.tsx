@@ -10,7 +10,9 @@ import {
 } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
 import { useComposer } from "@stores/composer";
-import { Fragment } from "react";
+import { COMPOSE_SHORTCUT } from "@stores/shortcuts";
+import { register } from "@tauri-apps/api/globalShortcut";
+import { Fragment, useEffect } from "react";
 
 export function Composer() {
 	const account = useActiveAccount((state: any) => state.account);
@@ -22,6 +24,16 @@ export function Composer() {
 	const closeModal = () => {
 		toggle(false);
 	};
+
+	const registerShortcut = async () => {
+		await register(COMPOSE_SHORTCUT, () => {
+			toggle(true);
+		});
+	};
+
+	useEffect(() => {
+		registerShortcut();
+	}, [registerShortcut]);
 
 	return (
 		<>
