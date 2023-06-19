@@ -1,8 +1,7 @@
-import { LinkPreview } from "./preview/link";
 import { MentionNote } from "@shared/notes/mentions/note";
 import { ImagePreview } from "@shared/notes/preview/image";
+import { LinkPreview } from "@shared/notes/preview/link";
 import { VideoPreview } from "@shared/notes/preview/video";
-import { truncateContent } from "@utils/transform";
 
 export function Kind1({
 	content,
@@ -11,7 +10,7 @@ export function Kind1({
 	return (
 		<>
 			<div
-				className={`select-text whitespace-pre-line break-words text-base text-zinc-100 ${
+				className={`select-text break-words text-base text-zinc-100 ${
 					truncate ? "line-clamp-3" : ""
 				}`}
 			>

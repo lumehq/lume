@@ -4,12 +4,43 @@ import { ChannelMessageForm } from "@app/channel/components/messages/form";
 import { ChannelMetadata } from "@app/channel/components/metadata";
 import { RelayContext } from "@shared/relayProvider";
 import { useChannelMessages } from "@stores/channels";
-import { dateToUnix } from "@utils/date";
+import { dateToUnix, getHourAgo } from "@utils/date";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { LumeEvent } from "@utils/types";
 import { useCallback, useContext, useEffect, useRef } from "react";
 import { Virtuoso } from "react-virtuoso";
 import useSWRSubscription from "swr/subscription";
+
+const now = new Date();
+
+const Header = (
+	<div className="relative py-4">
+		<div className="absolute inset-0 flex items-center">
+			<div className="w-full border-t border-zinc-800" />
+		</div>
+		<div className="relative flex justify-center">
+			<div className="inline-flex items-center gap-x-1.5 rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-medium text-zinc-400 shadow-sm ring-1 ring-inset ring-zinc-800">
+				{getHourAgo(24, now).toLocaleDateString("en-US", {
+					weekday: "long",
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+				})}
+			</div>
+		</div>
+	</div>
+);
+
+const Empty = (
+	<div className="flex flex-col gap-1 text-center">
+		<h3 className="text-base font-semibold leading-none text-white">
+			Nothing to see here yet
+		</h3>
+		<p className="text-base leading-none text-zinc-400">
+			Be the first to share a message in this channel.
+		</p>
+	</div>
+);
 
 export function Page() {
 	const ndk = useContext(RelayContext);
@@ -97,6 +128,10 @@ export function Page() {
 								overscan={50}
 								increaseViewportBy={{ top: 200, bottom: 200 }}
 								className="scrollbar-hide overflow-y-auto h-full w-full"
+								components={{
+									Header: () => Header,
+									EmptyPlaceholder: () => Empty,
+								}}
 							/>
 						)}
 						<div className="w-full inline-flex shrink-0 px-5 py-3 border-t border-zinc-800">

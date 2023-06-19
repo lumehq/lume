@@ -1,4 +1,5 @@
 import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
+import { EmptyIcon } from "@shared/icons";
 import { Reply } from "@shared/notes/replies/item";
 import { RelayContext } from "@shared/relayProvider";
 import { useContext } from "react";
@@ -35,8 +36,11 @@ export function RepliesList({ id }: { id: string }) {
 					</div>
 				) : data.length === 0 ? (
 					<div className="px=3">
-						<div className="w-full h-24 flex items-center justify-center rounded-md bg-zinc-900">
-							<p className="text-zinc-300 font-medium">No replies...</p>
+						<div className="w-full flex items-center justify-center rounded-md bg-zinc-900">
+							<div className="py-6 flex flex-col items-center justify-center gap-2">
+								<EmptyIcon width={56} height={56} />
+								<p className="text-zinc-500 text-sm font-medium">No replies</p>
+							</div>
 						</div>
 					</div>
 				) : (
