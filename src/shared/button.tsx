@@ -16,7 +16,7 @@ export function Button({
 	switch (preset) {
 		case "small":
 			preClass =
-				"w-min h-9 px-4 bg-zinc-900 rounded-md text-sm font-medium text-zinc-100 hover:bg-fuchsia-600";
+				"w-min h-9 px-4 bg-fuchsia-500 rounded-md text-sm font-medium text-zinc-100 hover:bg-fuchsia-600";
 			break;
 		case "publish":
 			preClass =

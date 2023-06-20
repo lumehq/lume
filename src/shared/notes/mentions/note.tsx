@@ -1,5 +1,5 @@
-import { Kind1 } from "@shared/notes/kind1";
-import { Kind1063 } from "@shared/notes/kind1063";
+import { Kind1 } from "@shared/notes/contents/kind1";
+import { Kind1063 } from "@shared/notes/contents/kind1063";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { User } from "@shared/user";
 import { useEvent } from "@utils/hooks/useEvent";

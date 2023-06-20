@@ -1,7 +1,7 @@
 import { getNoteByID } from "@libs/storage";
 import { ArrowLeftIcon } from "@shared/icons";
-import { Kind1 } from "@shared/notes/kind1";
-import { Kind1063 } from "@shared/notes/kind1063";
+import { Kind1 } from "@shared/notes/contents/kind1";
+import { Kind1063 } from "@shared/notes/contents/kind1063";
 import { NoteMetadata } from "@shared/notes/metadata";
 import { NoteReplyForm } from "@shared/notes/replies/form";
 import { RepliesList } from "@shared/notes/replies/list";

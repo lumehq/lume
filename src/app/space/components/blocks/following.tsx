@@ -1,7 +1,6 @@
 import { createNote, getNotes } from "@libs/storage";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
-import { NoteBase } from "@shared/notes/base";
-import { NoteQuoteRepost } from "@shared/notes/quoteRepost";
+import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -86,20 +85,11 @@ export function FollowingBlock({ block }: { block: number }) {
 		const note = notes[index];
 
 		if (!note) return;
-
-		if (note.kind === 1) {
-			return (
-				<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
-					<NoteBase block={block} event={note} />
-				</div>
-			);
-		} else {
-			return (
-				<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
-					<NoteQuoteRepost block={block} event={note} />
-				</div>
-			);
-		}
+		return (
+			<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
+				<Note event={note} block={block} />
+			</div>
+		);
 	};
 
 	return (

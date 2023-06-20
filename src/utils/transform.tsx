@@ -80,7 +80,7 @@ export function isTagsIncludeID(id: string, arr: NDKTag[]) {
 }
 
 // get parent id from event tags
-export function getQuoteID(arr: NDKTag[]) {
+export function getRepostID(arr: NDKTag[]) {
 	const tags = destr(arr);
 	let quoteID = null;
 

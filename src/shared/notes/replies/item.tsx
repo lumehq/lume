@@ -1,4 +1,4 @@
-import { Kind1 } from "@shared/notes/kind1";
+import { Kind1 } from "@shared/notes/contents/kind1";
 import { NoteMetadata } from "@shared/notes/metadata";
 import { User } from "@shared/user";
 import { parser } from "@utils/parser";

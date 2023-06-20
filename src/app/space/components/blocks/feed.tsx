@@ -1,7 +1,6 @@
 import { getNotesByAuthor } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
-import { NoteBase } from "@shared/notes/base";
-import { NoteQuoteRepost } from "@shared/notes/quoteRepost";
+import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -101,35 +100,15 @@ export function FeedBlock({ params }: { params: any }) {
 							{rowVirtualizer.getVirtualItems().map((virtualRow) => {
 								const note = notes[virtualRow.index];
 								if (note) {
-									if (note.kind === 1) {
-										return (
-											<div
-												key={virtualRow.index}
-												data-index={virtualRow.index}
-												ref={rowVirtualizer.measureElement}
-											>
-												<NoteBase
-													key={note.event_id}
-													block={params.id}
-													event={note}
-												/>
-											</div>
-										);
-									} else {
-										return (
-											<div
-												key={virtualRow.index}
-												data-index={virtualRow.index}
-												ref={rowVirtualizer.measureElement}
-											>
-												<NoteQuoteRepost
-													key={note.event_id}
-													block={params.id}
-													event={note}
-												/>
-											</div>
-										);
-									}
+									return (
+										<div
+											key={virtualRow.index}
+											data-index={virtualRow.index}
+											ref={rowVirtualizer.measureElement}
+										>
+											<Note event={note} block={params.id} />
+										</div>
+									);
 								}
 							})}
 						</div>

@@ -35,4 +35,5 @@ export * from "./zap";
 export * from "./loader";
 export * from "./trending";
 export * from "./empty";
+export * from "./cmd";
 // @endindex

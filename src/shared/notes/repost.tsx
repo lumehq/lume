@@ -5,19 +5,21 @@ import { NoteSkeleton } from "@shared/notes/skeleton";
 import { User } from "@shared/user";
 import { useEvent } from "@utils/hooks/useEvent";
 import { parser } from "@utils/parser";
+import { getRepostID } from "@utils/transform";
+import { LumeEvent } from "@utils/types";
 
-export function NoteParent({
-	id,
+export function Repost({
+	event,
 	currentBlock,
-}: { id: string; currentBlock: number }) {
-	const data = useEvent(id);
+}: { event: LumeEvent; currentBlock?: number }) {
+	const repostID = getRepostID(event.tags);
+	const data = useEvent(repostID);
 
 	const kind1 = data?.kind === 1 ? parser(data) : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (
-		<div className="relative overflow-hidden flex flex-col pb-6">
-			<div className="absolute left-[18px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
+		<div className="relative overflow-hidden flex flex-col mt-12 pb-6">
 			{data ? (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} />

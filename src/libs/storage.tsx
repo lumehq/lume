@@ -206,8 +206,8 @@ export async function createReplyNote(
 ) {
 	const db = await connect();
 	return await db.execute(
-		"INSERT OR IGNORE INTO replies (parent_id, event_id, pubkey, kind, tags, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?);",
-		[parent_id, event_id, pubkey, kind, tags, content, created_at],
+		"INSERT OR IGNORE INTO replies (event_id, parent_id, pubkey, kind, tags, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?);",
+		[event_id, parent_id, pubkey, kind, tags, content, created_at],
 	);
 }
 

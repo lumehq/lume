@@ -1,5 +1,4 @@
-import { Profile } from "@app/trending/components/profile";
-import { NoteBase } from "@shared/notes/base";
+import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import useSWR from "swr";
 
@@ -30,7 +29,7 @@ export function TrendingNotes() {
 				) : (
 					<div className="relative w-full flex flex-col pt-1.5">
 						{data.notes.map((item) => (
-							<NoteBase key={item.id} event={item.event} metadata={false} />
+							<Note key={item.id} event={item.event} />
 						))}
 					</div>
 				)}
