@@ -46,7 +46,7 @@ export function Profile({ data }: { data: any }) {
 				</p>
 			</div>
 			<div className="mt-8">
-				{error && <p>Failed to fetch</p>}
+				{error && <p>Failed to fetch user stats</p>}
 				{!userStats ? (
 					<p>Loading...</p>
 				) : (

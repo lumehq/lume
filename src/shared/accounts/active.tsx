@@ -24,7 +24,7 @@ export function ActiveAccount({ data }: { data: any }) {
 		// subscribe to channel
 		const sub = ndk.subscribe(
 			{
-				kinds: [4, 42],
+				kinds: [1, 4, 42],
 				"#p": [data.pubkey],
 				since: since,
 			},
@@ -35,6 +35,10 @@ export function ActiveAccount({ data }: { data: any }) {
 
 		sub.addListener("event", (event) => {
 			switch (event.kind) {
+				case 1:
+					// send native notifiation
+					sendNativeNotification("Someone mention you");
+					break;
 				case 4:
 					// save
 					saveChat(data.pubkey, event);

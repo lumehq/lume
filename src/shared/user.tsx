@@ -66,7 +66,7 @@ export function User({
 				leaveTo="opacity-0 translate-y-1"
 			>
 				<Popover.Panel className="absolute left-0 top-10 z-50 mt-3">
-					<div className="w-full max-w-xs overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md">
+					<div className="w-full max-w-xs overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/90 backdrop-blur-lg">
 						<div className="flex gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
 								src={user?.image || DEFAULT_AVATAR}
@@ -94,13 +94,13 @@ export function User({
 						<div className="flex items-center gap-2 px-3 py-3">
 							<a
 								href={`/app/user?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 hover:bg-fuchsia-500 text-sm font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-700 hover:bg-fuchsia-500 text-sm font-medium"
 							>
 								View profile
 							</a>
 							<a
 								href={`/app/chat?pubkey=${pubkey}`}
-								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-800 hover:bg-fuchsia-500 text-sm font-medium"
+								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-700 hover:bg-fuchsia-500 text-sm font-medium"
 							>
 								Message
 							</a>
