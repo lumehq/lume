@@ -11,8 +11,8 @@ import {
 import { useActiveAccount } from "@stores/accounts";
 import { useComposer } from "@stores/composer";
 import { COMPOSE_SHORTCUT } from "@stores/shortcuts";
-import { isRegistered, register } from "@tauri-apps/api/globalShortcut";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export function Composer() {
 	const account = useActiveAccount((state: any) => state.account);
@@ -25,18 +25,7 @@ export function Composer() {
 		toggle(false);
 	};
 
-	const registerShortcut = async () => {
-		const isShortcutRegistered = await isRegistered(COMPOSE_SHORTCUT);
-		if (!isShortcutRegistered) {
-			await register(COMPOSE_SHORTCUT, () => {
-				toggle(true);
-			});
-		}
-	};
-
-	useEffect(() => {
-		registerShortcut();
-	}, []);
+	useHotkeys(COMPOSE_SHORTCUT, () => toggle(true));
 
 	return (
 		<>

@@ -1,1 +1,1 @@
-export const COMPOSE_SHORTCUT = "CommandOrControl+N";
+export const COMPOSE_SHORTCUT = "meta+n";

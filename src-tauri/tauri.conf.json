@@ -22,7 +22,11 @@
 			"http": {
 				"all": true,
 				"request": true,
-				"scope": ["https://void.cat/*", "https://skrape.dev/*"]
+				"scope": [
+					"https://void.cat/*",
+					"https://skrape.dev/*",
+					"https://lume.nu/*"
+				]
 			},
 			"fs": {
 				"all": false,
@@ -66,9 +70,6 @@
 				"exit": false,
 				"relaunch": true,
 				"relaunchDangerousAllowSymlinkMacos": false
-			},
-			"globalShortcut": {
-				"all": true
 			}
 		},
 		"bundle": {

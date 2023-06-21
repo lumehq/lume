@@ -1,3 +1,4 @@
+import { LoaderIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { Resolver, useForm } from "react-hook-form";
@@ -67,50 +68,28 @@ export function Page() {
 						className="flex flex-col gap-3"
 					>
 						<div className="flex flex-col gap-0.5">
-							<div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
-								<input
-									{...register("key", { required: true, minLength: 32 })}
-									type={"password"}
-									placeholder="Paste private key here..."
-									className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 text-center shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
-								/>
-							</div>
+							<input
+								{...register("key", { required: true, minLength: 32 })}
+								type={"password"}
+								placeholder="Paste private key here..."
+								className="relative w-full rounded-lg px-3 py-3 !outline-none bg-zinc-800 text-zinc-100 placeholder:text-zinc-500"
+							/>
 							<span className="text-base text-red-400">
 								{errors.key && <p>{errors.key.message}</p>}
 							</span>
 						</div>
-						<div className="flex h-9 items-center justify-center">
-							{isSubmitting ? (
-								<svg
-									className="h-5 w-5 animate-spin text-zinc-100"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-								>
-									<title id="loading">Loading</title>
-									<circle
-										className="opacity-25"
-										cx="12"
-										cy="12"
-										r="10"
-										stroke="currentColor"
-										strokeWidth="4"
-									/>
-									<path
-										className="opacity-75"
-										fill="currentColor"
-										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-									/>
-								</svg>
-							) : (
-								<button
-									type="submit"
-									disabled={!isDirty || !isValid}
-									className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
-								>
-									<span className="drop-shadow-lg">Continue →</span>
-								</button>
-							)}
+						<div className="flex items-center justify-center">
+							<button
+								type="submit"
+								disabled={!isDirty || !isValid}
+								className="inline-flex items-center justify-center h-11 w-full bg-fuchsia-500 rounded-md font-medium text-zinc-100 hover:bg-fuchsia-600"
+							>
+								{isSubmitting ? (
+									<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+								) : (
+									"Continue →"
+								)}
+							</button>
 						</div>
 					</form>
 				</div>

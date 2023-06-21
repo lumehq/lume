@@ -17,7 +17,7 @@ export function Page() {
 	const ndk = useContext(RelayContext);
 	const pageContext = usePageContext();
 	const searchParams: any = pageContext.urlParsed.search;
-	const pubkey = searchParams.pubkey;
+	const pubkey = searchParams.pubkey || "";
 
 	const { user } = useProfile(pubkey);
 	const { data: userStats, error } = useSWR(

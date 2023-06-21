@@ -1,3 +1,4 @@
+import { Button } from "@shared/button";
 import { EyeOffIcon, EyeOnIcon } from "@shared/icons";
 import { useActiveAccount } from "@stores/accounts";
 import { generatePrivateKey, getPublicKey, nip19 } from "nostr-tools";
@@ -41,24 +42,22 @@ export function Page() {
 						<label className="text-base font-semibold text-zinc-400">
 							Public Key
 						</label>
-						<div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
-							<input
-								readOnly
-								value={npub}
-								className="relative w-full rounded-lg border border-black/5 px-3.5 py-2.5 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-600"
-							/>
-						</div>
+						<input
+							readOnly
+							value={npub}
+							className="relative w-full rounded-lg py-3 pl-3.5 pr-11 !outline-none placeholder:text-zinc-400 bg-zinc-800 text-zinc-100"
+						/>
 					</div>
 					<div className="flex flex-col gap-1">
 						<label className="text-base font-semibold text-zinc-400">
 							Private Key
 						</label>
-						<div className="relative shrink-0 before:pointer-events-none before:absolute before:-inset-1 before:rounded-[11px] before:border before:border-blue-500 before:opacity-0 before:ring-2 before:ring-blue-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[7px] after:shadow-highlight after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-blue-500/100 dark:focus-within:after:shadow-blue-500/20">
+						<div className="relative">
 							<input
 								readOnly
 								type={type}
 								value={nsec}
-								className="relative w-full rounded-lg border border-black/5 py-2.5 pl-3.5 pr-11 shadow-input shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-600"
+								className="relative w-full rounded-lg py-3 pl-3.5 pr-11 !outline-none placeholder:text-zinc-400 bg-zinc-800 text-zinc-100"
 							/>
 							<button
 								type="button"
@@ -81,13 +80,9 @@ export function Page() {
 							</button>
 						</div>
 					</div>
-					<button
-						type="button"
-						onClick={() => submit()}
-						className="w-full transform rounded-lg bg-fuchsia-500 px-3.5 py-2.5 font-medium text-zinc-100 shadow-button hover:bg-fuchsia-600 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-70"
-					>
-						<span>Continue →</span>
-					</button>
+					<Button preset="large" onClick={() => submit()}>
+						Continue →
+					</Button>
 				</div>
 			</div>
 		</div>

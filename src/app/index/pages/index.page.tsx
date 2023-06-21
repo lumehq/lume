@@ -9,18 +9,17 @@ export function Page() {
 	const lastLogin = useActiveAccount((state: any) => state.lastLogin);
 
 	useEffect(() => {
-		if (!account) {
-			navigate("/app/auth", { overwriteLastHistoryEntry: true });
-		}
-
-		if (account) {
-			navigate("/app/prefetch", { overwriteLastHistoryEntry: true });
-		}
 		if (account === null) {
 			fetchAccount();
 		}
 		if (lastLogin === null) {
 			fetchLastLogin();
+		}
+		if (!account) {
+			navigate("/app/auth", { overwriteLastHistoryEntry: true });
+		}
+		if (account) {
+			navigate("/app/prefetch", { overwriteLastHistoryEntry: true });
 		}
 	}, [fetchAccount, fetchLastLogin, account, lastLogin]);
 

@@ -10,7 +10,7 @@ export function Kind1({
 	return (
 		<>
 			<div
-				className={`select-text break-words text-base text-zinc-100 ${
+				className={`select-text whitespace-pre-line	break-words text-base text-zinc-100 ${
 					truncate ? "line-clamp-3" : ""
 				}`}
 			>

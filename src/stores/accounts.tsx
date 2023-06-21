@@ -15,9 +15,13 @@ export const useActiveAccount = create(
 	immer(
 		persist(
 			(set: any, get: any) => ({
+				tempProfile: {},
 				account: null,
 				blocks: null,
 				lastLogin: null,
+				createTempProfile: (data: any) => {
+					set({ tempProfile: data });
+				},
 				create: async (npub: string, pubkey: string, privkey: string) => {
 					const response = await createAccount(npub, pubkey, privkey, null, 1);
 					if (response) {
@@ -25,8 +29,8 @@ export const useActiveAccount = create(
 						await addBlockToDB(
 							activeAccount.id,
 							0,
-							"Freedom Awaits",
-							"https://void.cat/d/88M2kWHtjZLRtdyfAajHbu.webp",
+							"Lume ❤️ You",
+							"https://void.cat/d/5FdJcBP5ZXKAjYqV8hpcp3",
 						);
 						set({
 							account: activeAccount,

@@ -24,7 +24,7 @@ export function Button({
 			break;
 		case "large":
 			preClass =
-				"h-11 w-full bg-fuchsia-500 rounded-md text-sm font-medium text-zinc-100 hover:bg-fuchsia-600";
+				"h-11 w-full bg-fuchsia-500 rounded-md font-medium text-zinc-100 hover:bg-fuchsia-600";
 			break;
 		default:
 			break;
