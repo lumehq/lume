@@ -17,7 +17,8 @@ export function UserReply({ pubkey }: { pubkey: string }) {
 				<>
 					<div className="relative h-9 w-9 shrink overflow-hidden rounded">
 						<Image
-							src={user?.image || DEFAULT_AVATAR}
+							src={user?.image}
+							fallback={DEFAULT_AVATAR}
 							alt={pubkey}
 							className="h-9 w-9 rounded object-cover"
 						/>

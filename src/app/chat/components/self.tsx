@@ -32,7 +32,8 @@ export function ChatsListSelfItem({ data }: { data: any }) {
 				>
 					<div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 						<Image
-							src={user?.image || DEFAULT_AVATAR}
+							src={user?.image}
+							fallback={DEFAULT_AVATAR}
 							alt={data.pubkey}
 							className="h-6 w-6 rounded bg-white object-cover"
 						/>

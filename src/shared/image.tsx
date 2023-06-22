@@ -1,15 +1,19 @@
-import { DEFAULT_AVATAR } from "@stores/constants";
+import { ImgHTMLAttributes } from "react";
 
-export function Image(props, fallback?) {
-	const addImageFallback = (event: { currentTarget: { src: string } }) => {
-		event.currentTarget.src = fallback || DEFAULT_AVATAR;
-	};
+interface Props extends ImgHTMLAttributes<any> {
+	fallback: string;
+}
 
+export function Image({ src, fallback, ...props }: Props) {
 	return (
 		<img
 			{...props}
+			src={src || fallback}
+			onError={({ currentTarget }) => {
+				currentTarget.onerror = null;
+				currentTarget.src = fallback;
+			}}
 			decoding="async"
-			onError={addImageFallback}
 			alt="lume default img"
 			style={{ contentVisibility: "auto" }}
 		/>

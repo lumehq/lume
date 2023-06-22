@@ -27,7 +27,8 @@ export function Profile({ data }: { data: any }) {
 			<div className="flex items-center gap-2">
 				<div className="w-12 h-12 shrink-0">
 					<Image
-						src={profile.picture || DEFAULT_AVATAR}
+						src={profile.picture}
+						fallback={DEFAULT_AVATAR}
 						className="w-12 h-12 object-cover rounded"
 					/>
 				</div>

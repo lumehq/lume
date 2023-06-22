@@ -1,7 +1,7 @@
-import { CancelIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { TitleBar } from "@shared/titleBar";
 import { useActiveAccount } from "@stores/accounts";
+import { DEFAULT_AVATAR } from "@stores/constants";
 
 export function ImageBlock({ params }: { params: any }) {
 	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
@@ -16,6 +16,7 @@ export function ImageBlock({ params }: { params: any }) {
 			<div className="w-full flex-1 p-3">
 				<Image
 					src={params.content}
+					fallback={DEFAULT_AVATAR}
 					alt={params.title}
 					className="w-full h-full object-cover rounded-md"
 				/>

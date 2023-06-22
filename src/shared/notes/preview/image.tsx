@@ -8,6 +8,7 @@ export function ImagePreview({ urls }: { urls: string[] }) {
 					<div key={url} className="min-w-0 grow-0 shrink-0 basis-full">
 						<Image
 							src={url}
+							fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW"
 							alt="image"
 							className="h-auto w-full rounded-lg object-cover"
 						/>

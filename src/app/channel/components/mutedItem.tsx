@@ -41,7 +41,8 @@ export function MutedItem({ data }: { data: any }) {
 					<div className="flex items-center gap-1.5">
 						<div className="relative h-9 w-9 shrink rounded-md">
 							<Image
-								src={user?.image || DEFAULT_AVATAR}
+								src={user?.image}
+								fallback={DEFAULT_AVATAR}
 								alt={data.content}
 								className="h-9 w-9 rounded-md object-cover"
 							/>

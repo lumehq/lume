@@ -66,6 +66,7 @@ export function Page() {
 							<div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
 								<Image
 									src={image}
+									fallback={DEFAULT_AVATAR}
 									alt="avatar"
 									className="relative z-10 h-11 w-11 rounded-md"
 								/>

@@ -22,7 +22,8 @@ export function User({ pubkey }: { pubkey: string }) {
 		<div className="flex items-center gap-2">
 			<div className="relative h-11 w-11 shrink rounded-md">
 				<Image
-					src={user.image || DEFAULT_AVATAR}
+					src={user.image}
+					fallback={DEFAULT_AVATAR}
 					alt={pubkey}
 					className="h-11 w-11 rounded-md object-cover"
 					decoding="async"

@@ -12,7 +12,8 @@ export function Member({ pubkey }: { pubkey: string }) {
 			) : (
 				<Image
 					className="inline-block h-7 w-7 rounded"
-					src={user?.image || DEFAULT_AVATAR}
+					src={user?.image}
+					fallback={DEFAULT_AVATAR}
 					alt={pubkey}
 				/>
 			)}

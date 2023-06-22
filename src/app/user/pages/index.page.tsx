@@ -88,7 +88,8 @@ export function Page() {
 			/>
 			<div className="w-full h-56 bg-zinc-100">
 				<Image
-					src={user?.banner || "https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"}
+					src={user?.banner}
+					fallback="https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"
 					alt={"banner"}
 					className="w-full h-full object-cover"
 				/>
@@ -96,7 +97,8 @@ export function Page() {
 			<div className="w-full px-5 -mt-7">
 				<div>
 					<Image
-						src={user?.image || DEFAULT_AVATAR}
+						src={user?.image}
+						fallback={DEFAULT_AVATAR}
 						alt={pubkey}
 						className="w-14 h-14 rounded-md ring-2 ring-black"
 					/>

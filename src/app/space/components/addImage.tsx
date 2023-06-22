@@ -4,6 +4,7 @@ import { CancelIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
+import { DEFAULT_AVATAR } from "@stores/constants";
 import { open } from "@tauri-apps/api/dialog";
 import { Body, fetch } from "@tauri-apps/api/http";
 import { createBlobFromFile } from "@utils/createBlobFromFile";
@@ -206,6 +207,7 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 										<div className="relative inline-flex h-56 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
 											<Image
 												src={image}
+												fallback={DEFAULT_AVATAR}
 												alt="content"
 												className="relative z-10 max-h-[156px] h-auto w-[150px] object-cover rounded-md"
 											/>

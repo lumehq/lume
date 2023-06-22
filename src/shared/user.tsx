@@ -31,7 +31,8 @@ export function User({
 				className={`${avatarWidth} ${avatarHeight} shrink-0 overflow-hidden`}
 			>
 				<Image
-					src={user?.image || DEFAULT_AVATAR}
+					src={user?.image}
+					fallback={DEFAULT_AVATAR}
 					alt={pubkey}
 					className={`${avatarWidth} ${avatarHeight} ${
 						size === "small" ? "rounded" : "rounded-md"
@@ -70,10 +71,10 @@ export function User({
 					<div className="w-full max-w-xs overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/90 backdrop-blur-lg">
 						<div className="flex gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
-								src={user?.image || DEFAULT_AVATAR}
+								src={user?.image}
+								fallback={DEFAULT_AVATAR}
 								alt={pubkey}
 								className="h-11 w-11 shrink-0 rounded-lg object-cover"
-								fallback={DEFAULT_AVATAR}
 							/>
 							<div className="flex-1 flex flex-col gap-2">
 								<div className="inline-flex flex-col gap-1">

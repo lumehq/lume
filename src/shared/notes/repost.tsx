@@ -19,7 +19,7 @@ export function Repost({
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (
-		<div className="relative overflow-hidden flex flex-col mt-12 pb-6">
+		<div className="relative overflow-hidden flex flex-col mt-12">
 			{data ? (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} />

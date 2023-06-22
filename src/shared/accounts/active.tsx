@@ -67,7 +67,8 @@ export function ActiveAccount({ data }: { data: any }) {
 	return (
 		<button type="button" className="relative inline-block h-9 w-9">
 			<Image
-				src={user?.image || DEFAULT_AVATAR}
+				src={user?.image}
+				fallback={DEFAULT_AVATAR}
 				alt={data.npub}
 				className="h-9 w-9 rounded object-cover"
 			/>

@@ -19,7 +19,8 @@ export function ChannelMetadata({ id }: { id: string }) {
 		<div className="flex flex-col gap-2">
 			<div className="relative shrink-0 rounded-md h-11 w-11">
 				<Image
-					src={metadata?.picture || DEFAULT_AVATAR}
+					src={metadata?.picture}
+					fallback={DEFAULT_AVATAR}
 					alt={id}
 					className="h-11 w-11 rounded-md object-contain bg-zinc-900"
 				/>

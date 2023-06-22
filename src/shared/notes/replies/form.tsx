@@ -50,7 +50,8 @@ export function NoteReplyForm({ id }: { id: string }) {
 					<div className="inline-flex items-center gap-2">
 						<div className="relative h-9 w-9 shrink-0 rounded">
 							<Image
-								src={user?.image || DEFAULT_AVATAR}
+								src={user?.image}
+								fallback={DEFAULT_AVATAR}
 								alt={account.npub}
 								className="h-9 w-9 rounded-md bg-white object-cover"
 							/>
