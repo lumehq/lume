@@ -55,7 +55,7 @@ export function Navigation() {
 				<Disclosure defaultOpen={true}>
 					{({ open }) => (
 						<div className="flex flex-col gap-0.5 px-1.5">
-							<Disclosure.Button className="flex items-center gap-1 px-2.5">
+							<Disclosure.Button className="flex items-center gap-1 px-3">
 								<div
 									className={`inline-flex h-5 w-5 transform items-center justify-center transition-transform duration-150 ease-in-out ${
 										open ? "" : "rotate-180"
@@ -81,7 +81,7 @@ export function Navigation() {
 				<Disclosure defaultOpen={true}>
 					{({ open }) => (
 						<div className="flex flex-col gap-0.5 px-1.5 pb-6">
-							<Disclosure.Button className="flex items-center gap-1 px-2.5">
+							<Disclosure.Button className="flex items-center gap-1 px-3">
 								<div
 									className={`inline-flex h-5 w-5 transform items-center justify-center transition-transform duration-150 ease-in-out ${
 										open ? "" : "rotate-180"

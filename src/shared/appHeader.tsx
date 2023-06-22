@@ -1,6 +1,17 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@shared/icons";
+import useSWR from "swr";
+
+const fetcher = async () => {
+	const { platform } = await import("@tauri-apps/api/os");
+	return platform();
+};
 
 export function AppHeader() {
+	const { data: platform } = useSWR(
+		typeof window !== "undefined" ? "platform" : null,
+		fetcher,
+	);
+
 	const goBack = () => {
 		window.history.back();
 	};
@@ -12,7 +23,9 @@ export function AppHeader() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="flex h-11 w-full items-center justify-between border-b border-zinc-900 px-3 gap-2.5"
+			className={`flex h-11 w-full px-3 border-b border-zinc-900 items-center ${
+				platform === "darwin" ? "justify-end" : "justify-start"
+			}`}
 		>
 			<div className="flex gap-2.5">
 				<button

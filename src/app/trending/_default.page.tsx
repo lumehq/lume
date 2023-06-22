@@ -1,1 +1,1 @@
-export { LayoutTrending as Layout } from "./layout";
+export { DefaultLayout as Layout } from "@shared/layout";
