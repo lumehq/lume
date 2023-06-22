@@ -101,14 +101,7 @@ export function FollowingBlock({ block }: { block: number }) {
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
-				{isLoading && (
-					<div className="px-3 py-1.5">
-						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
-							<NoteSkeleton />
-						</div>
-					</div>
-				)}
-				{!data ? (
+				{!data || isLoading ? (
 					<div className="px-3 py-1.5">
 						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />

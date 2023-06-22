@@ -12,7 +12,7 @@ export function ChannelsList() {
 	}, [fetchChannels]);
 
 	return (
-		<div className="flex flex-col gap-0.5">
+		<div className="flex flex-col">
 			{!channels ? (
 				<>
 					<div className="inline-flex h-9 items-center gap-2 rounded-md px-2.5">

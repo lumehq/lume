@@ -13,11 +13,7 @@ export function DefaultLayout({ children }: { children: React.ReactNode }) {
 	);
 
 	return (
-		<div
-			className={`flex w-screen h-screen ${
-				platform === "darwin" ? "flex-row" : "flex-row-reverse"
-			}`}
-		>
+		<div className="flex w-screen h-screen">
 			<div className="relative flex flex-row shrink-0">
 				<Navigation reverse={platform !== "darwin"} />
 			</div>

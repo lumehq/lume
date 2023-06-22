@@ -26,7 +26,7 @@ export function Navigation({ reverse }: { reverse?: boolean }) {
 							Feeds
 						</h3>
 					</div>
-					<div className="flex flex-col gap-1">
+					<div className="flex flex-col">
 						<ActiveLink
 							href="/app/space"
 							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
