@@ -1,14 +1,8 @@
 import { DEFAULT_AVATAR } from "@stores/constants";
-import { ClassAttributes, ImgHTMLAttributes, JSX } from "react";
 
-export function Image(
-	props: JSX.IntrinsicAttributes &
-		ClassAttributes<HTMLImageElement> &
-		ImgHTMLAttributes<HTMLImageElement>,
-	fallback = undefined,
-) {
+export function Image(props, fallback?) {
 	const addImageFallback = (event: { currentTarget: { src: string } }) => {
-		event.currentTarget.src = fallback ? fallback : DEFAULT_AVATAR;
+		event.currentTarget.src = fallback || DEFAULT_AVATAR;
 	};
 
 	return (

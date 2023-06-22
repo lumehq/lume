@@ -1,4 +1,5 @@
 import { User } from "@app/auth/components/user";
+import { Button } from "@shared/button";
 import { LoaderIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
@@ -47,7 +48,7 @@ export function Page() {
 						{loading ? "Creating..." : "Continue with"}
 					</h1>
 				</div>
-				<div className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+				<div className="w-full rounded-xl border-t border-zinc-800/50 bg-zinc-900 p-4">
 					{!account ? (
 						<div className="w-full">
 							<div className="flex items-center gap-2">
@@ -61,17 +62,13 @@ export function Page() {
 					) : (
 						<div className="flex flex-col gap-3">
 							<User pubkey={account.pubkey} />
-							<button
-								type="button"
-								onClick={() => submit()}
-								className="inline-flex items-center justify-center h-11 w-full bg-fuchsia-500 rounded-md font-medium text-zinc-100 hover:bg-fuchsia-600"
-							>
+							<Button preset="large" onClick={() => submit()}>
 								{loading ? (
 									<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
 								) : (
 									"Continue →"
 								)}
-							</button>
+							</Button>
 						</div>
 					)}
 				</div>

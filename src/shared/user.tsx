@@ -73,6 +73,7 @@ export function User({
 								src={user?.image || DEFAULT_AVATAR}
 								alt={pubkey}
 								className="h-11 w-11 shrink-0 rounded-lg object-cover"
+								fallback={DEFAULT_AVATAR}
 							/>
 							<div className="flex-1 flex flex-col gap-2">
 								<div className="inline-flex flex-col gap-1">

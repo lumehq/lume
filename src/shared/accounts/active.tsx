@@ -1,4 +1,5 @@
 import { Image } from "@shared/image";
+import { NetworkStatusIndicator } from "@shared/networkStatusIndicator";
 import { RelayContext } from "@shared/relayProvider";
 import { useActiveAccount } from "@stores/accounts";
 import { useChannels } from "@stores/channels";
@@ -64,12 +65,13 @@ export function ActiveAccount({ data }: { data: any }) {
 	});
 
 	return (
-		<button type="button" className="relative h-11 w-11 overflow-hidden">
+		<button type="button" className="relative inline-block h-9 w-9">
 			<Image
 				src={user?.image || DEFAULT_AVATAR}
 				alt={data.npub}
-				className="h-11 w-11 rounded-md object-cover"
+				className="h-9 w-9 rounded object-cover"
 			/>
+			<NetworkStatusIndicator />
 		</button>
 	);
 }

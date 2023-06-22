@@ -5,15 +5,17 @@ import { ActiveLink } from "@shared/activeLink";
 import { AppHeader } from "@shared/appHeader";
 import { Composer } from "@shared/composer/modal";
 import { NavArrowDownIcon, SpaceIcon, TrendingIcon } from "@shared/icons";
-import { useComposer } from "@stores/composer";
+import { MultiAccounts } from "@shared/multiAccounts";
 
-export function Navigation() {
-	const toggle = useComposer((state: any) => state.toggleModal);
-
+export function Navigation({ reverse }: { reverse?: boolean }) {
 	return (
-		<div className="flex w-[232px] flex-col gap-3 border-r border-zinc-900">
-			<AppHeader />
-			<div className="flex flex-col gap-5 overflow-y-auto scrollbar-hide">
+		<div
+			className={`relative flex w-[232px] flex-col gap-3 ${
+				reverse ? "border-l" : "border-r"
+			} border-zinc-900`}
+		>
+			<AppHeader reverse={reverse} />
+			<div className="pb-20 flex flex-col gap-5 overflow-y-auto scrollbar-hide">
 				<div className="inlin-lflex h-8 px-3.5">
 					<Composer />
 				</div>
@@ -103,6 +105,9 @@ export function Navigation() {
 						</div>
 					)}
 				</Disclosure>
+			</div>
+			<div className="absolute bottom-2 left-0 px-8 w-full">
+				<MultiAccounts />
 			</div>
 		</div>
 	);

@@ -19,7 +19,7 @@ export function DefaultLayout({ children }: { children: React.ReactNode }) {
 			}`}
 		>
 			<div className="relative flex flex-row shrink-0">
-				<Navigation />
+				<Navigation reverse={platform !== "darwin"} />
 			</div>
 			<div className="w-full h-full">{children}</div>
 		</div>

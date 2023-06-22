@@ -10,8 +10,8 @@ export function User({ pubkey }: { pubkey: string }) {
 		return (
 			<div className="flex items-center gap-2">
 				<div className="relative h-11 w-11 shrink-0 rounded-md bg-zinc-800 animate-pulse" />
-				<div className="flex w-full flex-1 flex-col items-start text-start">
-					<span className="w-full h-3 rounded bg-zinc-800 animate-pulse" />
+				<div className="flex w-full flex-1 flex-col items-start gap-1 text-start">
+					<span className="w-full h-4 rounded bg-zinc-800 animate-pulse" />
 					<span className="w-1/2 h-3 rounded bg-zinc-800 animate-pulse" />
 				</div>
 			</div>

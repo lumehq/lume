@@ -1,5 +1,6 @@
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { ArrowRightCircleIcon } from "@shared/icons/arrowRightCircle";
+import { Link } from "@shared/link";
 import { RelayContext } from "@shared/relayProvider";
 import { User } from "@shared/user";
 import { useActiveAccount } from "@stores/accounts";
@@ -95,12 +96,12 @@ export function Page() {
 						<span>Publish</span>
 						<ArrowRightCircleIcon className="w-5 h-5" />
 					</button>
-					<a
+					<Link
 						href="/"
 						className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-6 text-sm font-medium text-zinc-200"
 					>
 						Skip for now
-					</a>
+					</Link>
 				</div>
 			</div>
 		</div>
