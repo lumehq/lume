@@ -13,7 +13,7 @@ export function Navigation() {
 	return (
 		<div className="flex w-[232px] flex-col gap-3 border-r border-zinc-900">
 			<AppHeader />
-			<div className="flex flex-col gap-5 h-full overflow-y-auto scrollbar-hide">
+			<div className="flex flex-col gap-5 overflow-y-auto scrollbar-hide">
 				<div className="inlin-lflex h-8 px-3.5">
 					<Composer />
 				</div>
@@ -30,7 +30,7 @@ export function Navigation() {
 							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
 							activeClassName="bg-zinc-900/50"
 						>
-							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
+							<span className="inline-flex h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 								<SpaceIcon width={12} height={12} className="text-zinc-100" />
 							</span>
 							<span className="font-medium">Spaces</span>
@@ -40,7 +40,7 @@ export function Navigation() {
 							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
 							activeClassName="bg-zinc-900/50"
 						>
-							<span className="inline-flex h-5 w-5 items-center justify-center rounded bg-zinc-900">
+							<span className="inline-flex h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 								<TrendingIcon
 									width={12}
 									height={12}

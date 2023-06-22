@@ -3,6 +3,7 @@ import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { RelayContext } from "@shared/relayProvider";
+import { TitleBar } from "@shared/titleBar";
 import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { dateToUnix } from "@utils/date";
@@ -94,12 +95,7 @@ export function FollowingBlock({ block }: { block: number }) {
 
 	return (
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
-			<div
-				data-tauri-drag-region
-				className="h-11 w-full inline-flex items-center justify-center border-b border-zinc-900"
-			>
-				<h3 className="font-semibold text-zinc-100">Following</h3>
-			</div>
+			<TitleBar title="Circle" />
 			<div
 				ref={parentRef}
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"

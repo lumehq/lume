@@ -6,6 +6,7 @@ import { NoteMetadata } from "@shared/notes/metadata";
 import { NoteReplyForm } from "@shared/notes/replies/form";
 import { RepliesList } from "@shared/notes/replies/list";
 import { NoteSkeleton } from "@shared/notes/skeleton";
+import { TitleBar } from "@shared/titleBar";
 import { User } from "@shared/user";
 import { useActiveAccount } from "@stores/accounts";
 import { parser } from "@utils/parser";
@@ -24,20 +25,7 @@ export function ThreadBlock({ params }: { params: any }) {
 
 	return (
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
-			<div
-				data-tauri-drag-region
-				className="h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"
-			>
-				<button
-					type="button"
-					onClick={() => close()}
-					className="inline-flex h-7 w-7 shrink items-center justify-center rounded bg-zinc-900 hover:bg-zinc-800"
-				>
-					<ArrowLeftIcon width={14} height={14} className="text-zinc-500" />
-				</button>
-				<h3 className="font-semibold text-zinc-100">{params.title}</h3>
-				<div className="w-9 h-6" />
-			</div>
+			<TitleBar title={params.title} onClick={() => close()} />
 			<div className="scrollbar-hide flex w-full h-full flex-col gap-1.5 pt-1.5 pb-20 overflow-y-auto">
 				{!data ? (
 					<div className="px-3 py-1.5">

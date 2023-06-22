@@ -2,6 +2,7 @@ import { getNotesByAuthor } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
+import { TitleBar } from "@shared/titleBar";
 import { useActiveAccount } from "@stores/accounts";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useMemo, useRef } from "react";
@@ -56,20 +57,7 @@ export function FeedBlock({ params }: { params: any }) {
 
 	return (
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
-			<div
-				data-tauri-drag-region
-				className="h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"
-			>
-				<div className="w-9 h-6" />
-				<h3 className="font-semibold text-zinc-100">{params.title}</h3>
-				<button
-					type="button"
-					onClick={() => close()}
-					className="inline-flex h-6 w-9 shrink items-center justify-center rounded bg-zinc-900 group-hover:bg-zinc-800"
-				>
-					<CancelIcon width={14} height={14} className="text-zinc-500" />
-				</button>
-			</div>
+			<TitleBar title={params.title} onClick={() => close()} />
 			<div
 				ref={parentRef}
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"

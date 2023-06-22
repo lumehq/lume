@@ -1,4 +1,5 @@
 import { useChannelProfile } from "@app/channel/hooks/useChannelProfile";
+import { Link } from "@shared/link";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +11,7 @@ export function ChannelsListItem({ data }: { data: any }) {
 	const pageID = searchParams.id;
 
 	return (
-		<a
+		<Link
 			href={`/app/channel?id=${data.event_id}`}
 			className={twMerge(
 				"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
@@ -19,7 +20,7 @@ export function ChannelsListItem({ data }: { data: any }) {
 		>
 			<div
 				className={twMerge(
-					"inline-flex shrink-0 h-5 w-5 items-center justify-center rounded bg-zinc-900",
+					"inline-flex shrink-0 h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900",
 					pageID === data.event_id ? "bg-zinc-800" : "",
 				)}
 			>
@@ -35,6 +36,6 @@ export function ChannelsListItem({ data }: { data: any }) {
 					)}
 				</div>
 			</div>
-		</a>
+		</Link>
 	);
 }

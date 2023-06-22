@@ -63,10 +63,12 @@ export function Page() {
 				</div>
 				<div className="w-full border-t border-zinc-800/50 bg-zinc-900 rounded-xl">
 					<div className="h-min w-full px-5 py-3">
-						<User
-							pubkey={account.pubkey}
-							time={Math.floor(Date.now() / 1000)}
-						/>
+						{account && (
+							<User
+								pubkey={account.pubkey}
+								time={Math.floor(Date.now() / 1000)}
+							/>
+						)}
 						<div className="-mt-6 pl-[49px] select-text whitespace-pre-line	break-words text-base text-zinc-100">
 							<p>Running Lume, fighting for better future</p>
 							<p>

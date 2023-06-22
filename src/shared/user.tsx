@@ -1,5 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import { Image } from "@shared/image";
+import { Link } from "@shared/link";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
@@ -92,18 +93,18 @@ export function User({
 							</div>
 						</div>
 						<div className="flex items-center gap-2 px-3 py-3">
-							<a
+							<Link
 								href={`/app/user?pubkey=${pubkey}`}
 								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-700 hover:bg-fuchsia-500 text-sm font-medium"
 							>
 								View profile
-							</a>
-							<a
+							</Link>
+							<Link
 								href={`/app/chat?pubkey=${pubkey}`}
 								className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-zinc-700 hover:bg-fuchsia-500 text-sm font-medium"
 							>
 								Message
-							</a>
+							</Link>
 						</div>
 					</div>
 				</Popover.Panel>

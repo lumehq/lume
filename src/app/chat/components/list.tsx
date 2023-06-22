@@ -1,4 +1,5 @@
 import { ChatsListItem } from "@app/chat/components/item";
+import { NewMessageModal } from "@app/chat/components/modal";
 import { ChatsListSelfItem } from "@app/chat/components/self";
 import { useActiveAccount } from "@stores/accounts";
 import { useChats } from "@stores/chats";
@@ -49,6 +50,7 @@ export function ChatsList() {
 					}
 				})
 			)}
+			<NewMessageModal />
 		</div>
 	);
 }

@@ -1,4 +1,5 @@
 import { Image } from "@shared/image";
+import { Link } from "@shared/link";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
@@ -17,13 +18,13 @@ export function ChatsListItem({ data }: { data: any }) {
 			{isError && <div>error</div>}
 			{isLoading && !user ? (
 				<div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
-					<div className="relative h-5 w-5 shrink-0 animate-pulse rounded bg-zinc-800" />
+					<div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
 					<div>
 						<div className="h-2.5 w-full animate-pulse truncate rounded bg-zinc-800 text-base font-medium" />
 					</div>
 				</div>
 			) : (
-				<a
+				<Link
 					href={`/app/chat?pubkey=${data.sender_pubkey}`}
 					className={twMerge(
 						"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
@@ -32,11 +33,11 @@ export function ChatsListItem({ data }: { data: any }) {
 							: "",
 					)}
 				>
-					<div className="relative h-5 w-5 shrink-0 rounded">
+					<div className="inline-flex shrink-0 h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 						<Image
 							src={user?.image || DEFAULT_AVATAR}
 							alt={data.sender_pubkey}
-							className="h-5 w-5 rounded object-cover"
+							className="h-6 w-6 rounded object-cover"
 						/>
 					</div>
 					<div className="w-full inline-flex items-center justify-between">
@@ -55,7 +56,7 @@ export function ChatsListItem({ data }: { data: any }) {
 							)}
 						</div>
 					</div>
-				</a>
+				</Link>
 			)}
 		</>
 	);

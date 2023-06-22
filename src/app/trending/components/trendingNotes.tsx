@@ -1,5 +1,6 @@
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
+import { TitleBar } from "@shared/titleBar";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
@@ -12,12 +13,7 @@ export function TrendingNotes() {
 
 	return (
 		<div className="shrink-0 w-[360px] flex-col flex border-r border-zinc-900">
-			<div
-				data-tauri-drag-region
-				className="h-11 w-full flex items-center justify-center px-3 border-b border-zinc-900"
-			>
-				<h3 className="font-semibold text-zinc-100">Trending Profiles</h3>
-			</div>
+			<TitleBar title="Trending Posts" />
 			<div className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto">
 				{error && <p>Failed to load...</p>}
 				{!data ? (

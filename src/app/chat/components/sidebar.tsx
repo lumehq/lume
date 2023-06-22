@@ -2,9 +2,16 @@ import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
+import { nip19 } from "nostr-tools";
+import { navigate } from "vite-plugin-ssr/client/router";
 
 export function ChatSidebar({ pubkey }: { pubkey: string }) {
 	const { user } = useProfile(pubkey);
+
+	const viewProfile = () => {
+		const pubkey = nip19.decode(user.npub).data;
+		navigate(`/app/user?pubkey=${pubkey}`);
+	};
 
 	return (
 		<div className="px-3 py-2">
@@ -27,12 +34,13 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
 					</div>
 					<div>
 						<p className="leading-tight">{user?.bio || user?.about}</p>
-						<a
-							href={`/app/user?npub=${user.npub}`}
+						<button
+							type="button"
+							onClick={() => viewProfile()}
 							className="mt-3 inline-flex w-full h-10 items-center justify-center rounded-md bg-zinc-900 hover:bg-zinc-800 text-sm text-zinc-300 hover:text-zinc-100 font-medium"
 						>
 							View full profile
-						</a>
+						</button>
 					</div>
 				</div>
 			</div>

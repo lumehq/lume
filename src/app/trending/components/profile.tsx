@@ -35,7 +35,7 @@ export function Profile({ data }: { data: any }) {
 					<h3 className="max-w-[15rem] truncate font-semibold text-zinc-100 leading-none">
 						{profile.display_name || profile.name}
 					</h3>
-					<p className="text-sm text-zinc-400 leading-none">
+					<p className="max-w-[10rem] truncate text-sm text-zinc-400 leading-none">
 						{profile.nip05 || shortenKey(data.pubkey)}
 					</p>
 				</div>

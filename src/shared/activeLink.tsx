@@ -1,3 +1,4 @@
+import { Link } from "@shared/link";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { twMerge } from "tailwind-merge";
 
@@ -16,11 +17,11 @@ export function ActiveLink({
 	const pathName = pageContext.urlPathname;
 
 	return (
-		<a
+		<Link
 			href={href}
 			className={twMerge(className, href === pathName ? activeClassName : "")}
 		>
 			{children}
-		</a>
+		</Link>
 	);
 }

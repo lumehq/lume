@@ -1,3 +1,4 @@
+import { Link } from "@shared/link";
 import { MentionUser } from "@shared/notes/mentions/user";
 import destr from "destr";
 import getUrls from "get-urls";
@@ -82,13 +83,13 @@ export function parser(event: any) {
 
 	// parse hashtag
 	content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
-		<a
+		<Link
 			key={match + i}
 			href={`/search/${match}`}
 			className="text-fuchsia-500 hover:text-fuchsia-600 no-underline font-normal"
 		>
 			#{match}
-		</a>
+		</Link>
 	));
 
 	return content;
