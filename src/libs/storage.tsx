@@ -18,8 +18,14 @@ export async function connect(): Promise<Database> {
 // get active account
 export async function getActiveAccount() {
 	const db = await connect();
-	const result = await db.select("SELECT * FROM accounts WHERE is_active = 1;");
-	return result[0];
+	const result: any = await db.select(
+		"SELECT * FROM accounts WHERE is_active = 1;",
+	);
+	if (result.length > 0) {
+		return result[0];
+	} else {
+		return null;
+	}
 }
 
 // get all accounts
@@ -189,9 +195,10 @@ export async function createNote(
 // get note replies
 export async function getReplies(parent_id: string) {
 	const db = await connect();
-	return await db.select(
+	const result: any = await db.select(
 		`SELECT * FROM replies WHERE parent_id = "${parent_id}" ORDER BY created_at DESC;`,
 	);
+	return result;
 }
 
 // create reply note
@@ -214,7 +221,10 @@ export async function createReplyNote(
 // get all channels
 export async function getChannels() {
 	const db = await connect();
-	return await db.select("SELECT * FROM channels ORDER BY created_at DESC;");
+	const result: any = await db.select(
+		"SELECT * FROM channels ORDER BY created_at DESC;",
+	);
+	return result;
 }
 
 // get channel by id
@@ -230,13 +240,15 @@ export async function getChannel(id: string) {
 export async function createChannel(
 	event_id: string,
 	pubkey: string,
-	metadata: string,
+	name: string,
+	picture: string,
+	about: string,
 	created_at: number,
 ) {
 	const db = await connect();
 	return await db.execute(
-		"INSERT OR IGNORE INTO channels (event_id, pubkey, metadata, created_at) VALUES (?, ?, ?, ?);",
-		[event_id, pubkey, metadata, created_at],
+		"INSERT OR IGNORE INTO channels (event_id, pubkey, name, picture, about, created_at) VALUES (?, ?, ?, ?, ?, ?);",
+		[event_id, pubkey, name, picture, about, created_at],
 	);
 }
 
@@ -279,17 +291,19 @@ export async function getChannelMessages(channel_id: string) {
 // get channel users
 export async function getChannelUsers(channel_id: string) {
 	const db = await connect();
-	return await db.select(
+	const result: any = await db.select(
 		`SELECT DISTINCT pubkey FROM channel_messages WHERE channel_id = "${channel_id}";`,
 	);
+	return result;
 }
 
 // get all chats by pubkey
 export async function getChatsByPubkey(pubkey: string) {
 	const db = await connect();
-	return await db.select(
+	const result: any = await db.select(
 		`SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${pubkey}" ORDER BY created_at DESC;`,
 	);
+	return result;
 }
 
 // get chat messages
@@ -390,11 +404,13 @@ export async function updateItemInBlacklist(content: string, status: number) {
 }
 
 // get all blocks
-export async function getBlocks(account_id: number) {
+export async function getBlocks() {
 	const db = await connect();
-	return await db.select(
-		`SELECT * FROM blocks WHERE account_id <= "${account_id}";`,
+	const activeAccount = await getActiveAccount();
+	const result: any = await db.select(
+		`SELECT * FROM blocks WHERE account_id <= "${activeAccount.id}";`,
 	);
+	return result;
 }
 
 // create block

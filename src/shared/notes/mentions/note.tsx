@@ -3,18 +3,19 @@ import { Kind1063 } from "@shared/notes/contents/kind1063";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { User } from "@shared/user";
 import { useEvent } from "@utils/hooks/useEvent";
-import { parser } from "@utils/parser";
 import { memo } from "react";
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
-	const data = useEvent(id);
+	const { status, data, isFetching } = useEvent(id);
 
-	const kind1 = data?.kind === 1 ? parser(data) : null;
+	const kind1 = data?.kind === 1 ? data.content : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (
 		<div className="mt-3 rounded-lg border border-zinc-800 px-3 py-3">
-			{data ? (
+			{isFetching || status === "loading" ? (
+				<NoteSkeleton />
+			) : (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} size="small" />
 					<div className="mt-2">
@@ -37,8 +38,6 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 						)}
 					</div>
 				</>
-			) : (
-				<NoteSkeleton />
 			)}
 		</div>
 	);

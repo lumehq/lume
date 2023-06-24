@@ -1,28 +1,49 @@
 import { OPENGRAPH_KEY } from "@stores/constants";
+import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/api/http";
-import useSWR from "swr";
-
-const fetcher = async (url: string) => {
-	const result = await fetch(url, {
-		method: "GET",
-		timeout: 20,
-	});
-	if (result.ok) {
-		return result.data;
-	} else {
-		return null;
-	}
-};
 
 export function useOpenGraph(url: string) {
-	const { data, error, isLoading } = useSWR(
-		`https://skrape.dev/api/opengraph/?url=${url}&key=${OPENGRAPH_KEY}`,
-		fetcher,
+	const { status, data, error, isFetching } = useQuery(
+		["preview", url],
+		async () => {
+			const result = await fetch(
+				`https://skrape.dev/api/opengraph/?url=${url}&key=${OPENGRAPH_KEY}`,
+				{
+					method: "GET",
+					timeout: 10,
+				},
+			);
+			if (result.ok) {
+				if (Object.keys(result.data).length === 0) {
+					const origin = new URL(url).origin;
+					const result = await fetch(
+						`https://skrape.dev/api/opengraph/?url=${origin}&key=${OPENGRAPH_KEY}`,
+						{
+							method: "GET",
+							timeout: 10,
+						},
+					);
+					if (result.ok) {
+						return result.data;
+					}
+				} else {
+					return result.data;
+				}
+			} else {
+				return null;
+			}
+		},
+		{
+			refetchOnWindowFocus: false,
+			refetchOnMount: false,
+			refetchOnReconnect: false,
+		},
 	);
 
 	return {
-		data: data,
-		error: error,
-		isLoading: isLoading,
+		status,
+		data,
+		error,
+		isFetching,
 	};
 }

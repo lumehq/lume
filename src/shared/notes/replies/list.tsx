@@ -2,12 +2,12 @@ import { getReplies } from "@libs/storage";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { EmptyIcon } from "@shared/icons";
 import { Reply } from "@shared/notes/replies/item";
-import useSWR from "swr";
-
-const fetcher = ([, id]) => getReplies(id);
+import { useQuery } from "@tanstack/react-query";
 
 export function RepliesList({ parent_id }: { parent_id: string }) {
-	const { data }: any = useSWR(["note-replies", parent_id], fetcher);
+	const { data } = useQuery(["replies", parent_id], async () => {
+		return await getReplies(parent_id);
+	});
 
 	return (
 		<div className="mt-5">

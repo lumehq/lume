@@ -3,20 +3,21 @@ import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon, EnterIcon } from "@shared/icons";
 import { MediaUploader } from "@shared/mediaUploader";
 import { RelayContext } from "@shared/relayProvider";
-import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { useContext, useState } from "react";
 
 export function ChannelMessageForm({ channelID }: { channelID: string }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
 
 	const [value, setValue] = useState("");
 	const [replyTo, closeReply] = useChannelMessages((state: any) => [
 		state.replyTo,
 		state.closeReply,
 	]);
+
+	const { account } = useAccount();
 
 	const submit = () => {
 		let tags: string[][];

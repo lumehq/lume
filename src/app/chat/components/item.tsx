@@ -1,22 +1,16 @@
 import { Image } from "@shared/image";
-import { Link } from "@shared/link";
 import { DEFAULT_AVATAR } from "@stores/constants";
-import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
+import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export function ChatsListItem({ data }: { data: any }) {
-	const pageContext = usePageContext();
-	const searchParams: any = pageContext.urlParsed.search;
-	const pagePubkey = searchParams.pubkey;
-
-	const { user, isError, isLoading } = useProfile(data.sender_pubkey);
+	const { status, user, isFetching } = useProfile(data.sender_pubkey);
 
 	return (
 		<>
-			{isError && <div>error</div>}
-			{isLoading && !user ? (
+			{status === "loading" && isFetching ? (
 				<div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
 					<div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
 					<div>
@@ -24,14 +18,14 @@ export function ChatsListItem({ data }: { data: any }) {
 					</div>
 				</div>
 			) : (
-				<Link
-					href={`/app/chat?pubkey=${data.sender_pubkey}`}
-					className={twMerge(
-						"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
-						pagePubkey === data.sender_pubkey
-							? "bg-zinc-900 text-zinc-100"
-							: "",
-					)}
+				<NavLink
+					to={`/app/chat/${data.sender_pubkey}`}
+					className={({ isActive }) =>
+						twMerge(
+							"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
+							isActive ? "bg-zinc-900/50 text-zinc-100" : "",
+						)
+					}
 				>
 					<div className="inline-flex shrink-0 h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 						<Image
@@ -57,7 +51,7 @@ export function ChatsListItem({ data }: { data: any }) {
 							)}
 						</div>
 					</div>
-				</Link>
+				</NavLink>
 			)}
 		</>
 	);

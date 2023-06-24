@@ -1,13 +1,14 @@
 import { ChannelsList } from "@app/channel/components/list";
 import { ChatsList } from "@app/chat/components/list";
 import { Disclosure } from "@headlessui/react";
-import { ActiveLink } from "@shared/activeLink";
 import { AppHeader } from "@shared/appHeader";
 import { Composer } from "@shared/composer/modal";
 import { NavArrowDownIcon, SpaceIcon, TrendingIcon } from "@shared/icons";
 import { MultiAccounts } from "@shared/multiAccounts";
+import { NavLink } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
-export function Navigation({ reverse }: { reverse?: boolean }) {
+export function Navigation({ reverse = false }: { reverse?: boolean }) {
 	return (
 		<div
 			className={`relative flex w-[232px] flex-col gap-3 ${
@@ -27,20 +28,28 @@ export function Navigation({ reverse }: { reverse?: boolean }) {
 						</h3>
 					</div>
 					<div className="flex flex-col">
-						<ActiveLink
-							href="/app/space"
-							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
-							activeClassName="bg-zinc-900/50"
+						<NavLink
+							to="/app/space"
+							className={({ isActive }) =>
+								twMerge(
+									"flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200",
+									isActive ? "bg-zinc-900/50" : "",
+								)
+							}
 						>
 							<span className="inline-flex h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 								<SpaceIcon width={12} height={12} className="text-zinc-100" />
 							</span>
 							<span className="font-medium">Spaces</span>
-						</ActiveLink>
-						<ActiveLink
-							href="/app/trending"
-							className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200"
-							activeClassName="bg-zinc-900/50"
+						</NavLink>
+						<NavLink
+							to="/app/trending"
+							className={({ isActive }) =>
+								twMerge(
+									"flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200",
+									isActive ? "bg-zinc-900/50" : "",
+								)
+							}
 						>
 							<span className="inline-flex h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 								<TrendingIcon
@@ -50,7 +59,7 @@ export function Navigation({ reverse }: { reverse?: boolean }) {
 								/>
 							</span>
 							<span className="font-medium">Trending</span>
-						</ActiveLink>
+						</NavLink>
 					</div>
 				</div>
 				{/* Channels */}

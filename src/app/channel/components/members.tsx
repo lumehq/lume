@@ -1,11 +1,14 @@
 import { Member } from "@app/channel/components/member";
 import { getChannelUsers } from "@libs/storage";
-import useSWR from "swr";
-
-const fetcher = ([, id]) => getChannelUsers(id);
+import { useQuery } from "@tanstack/react-query";
 
 export function ChannelMembers({ id }: { id: string }) {
-	const { data, isLoading }: any = useSWR(["channel-members", id], fetcher);
+	const { status, data, isFetching } = useQuery(
+		["channel-members", id],
+		async () => {
+			return await getChannelUsers(id);
+		},
+	);
 
 	return (
 		<div className="mt-3">
@@ -13,8 +16,7 @@ export function ChannelMembers({ id }: { id: string }) {
 				Members
 			</h5>
 			<div className="mt-3 w-full flex flex-wrap gap-1.5">
-				{isLoading && <p>Loading...</p>}
-				{!data ? (
+				{status === "loading" || isFetching ? (
 					<p>Loading...</p>
 				) : (
 					data.map((member: { pubkey: string }) => (

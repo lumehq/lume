@@ -5,20 +5,24 @@ import { AvatarUploader } from "@shared/avatarUploader";
 import { CancelIcon, LoaderIcon, PlusIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { navigate } from "vite-plugin-ssr/client/router";
+import { useNavigate } from "react-router-dom";
 
 export function ChannelCreateModal() {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
 
 	const [isOpen, setIsOpen] = useState(false);
-	const [image, setImage] = useState(DEFAULT_AVATAR);
 	const [loading, setLoading] = useState(false);
+	const [image, setImage] = useState(DEFAULT_AVATAR);
+
+	const { account } = useAccount();
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -35,6 +39,21 @@ export function ChannelCreateModal() {
 		setValue,
 		formState: { isDirty, isValid },
 	} = useForm();
+
+	const addChannel = useMutation({
+		mutationFn: (event: any) =>
+			createChannel(
+				event.id,
+				event.pubkey,
+				event.name,
+				event.picture,
+				event.about,
+				event.created_at,
+			),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["channels"] });
+		},
+	});
 
 	const onSubmit = (data: any) => {
 		setLoading(true);
@@ -55,7 +74,12 @@ export function ChannelCreateModal() {
 			event.publish();
 
 			// insert to database
-			createChannel(event.id, event.pubkey, event.content, event.created_at);
+			addChannel.mutate({
+				...event,
+				name: data.name,
+				picture: data.picture,
+				about: data.about,
+			});
 
 			// reset form
 			reset();
@@ -64,7 +88,7 @@ export function ChannelCreateModal() {
 				// close modal
 				setIsOpen(false);
 				// redirect to channel page
-				navigate(`/app/channel?id=${event.id}`);
+				navigate(`/app/channel/${event.id}`);
 			}, 1000);
 		} catch (e) {
 			console.log("error: ", e);

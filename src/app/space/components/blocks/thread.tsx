@@ -1,5 +1,4 @@
 import { getNoteByID } from "@libs/storage";
-import { ArrowLeftIcon } from "@shared/icons";
 import { Kind1 } from "@shared/notes/contents/kind1";
 import { Kind1063 } from "@shared/notes/contents/kind1063";
 import { NoteMetadata } from "@shared/notes/metadata";
@@ -9,15 +8,19 @@ import { NoteSkeleton } from "@shared/notes/skeleton";
 import { TitleBar } from "@shared/titleBar";
 import { User } from "@shared/user";
 import { useActiveAccount } from "@stores/accounts";
+import { useQuery } from "@tanstack/react-query";
 import { parser } from "@utils/parser";
-import useSWR from "swr";
-
-const fetcher = ([, id]) => getNoteByID(id);
 
 export function ThreadBlock({ params }: { params: any }) {
-	const { data } = useSWR(["thread", params.content], fetcher);
-	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
+	const { status, data, isFetching } = useQuery(
+		["thread", params.content],
+		async () => {
+			return await getNoteByID(params.content);
+		},
+	);
+
 	const content = data ? parser(data) : null;
+	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
 
 	const close = () => {
 		removeBlock(params.id, false);
@@ -27,7 +30,7 @@ export function ThreadBlock({ params }: { params: any }) {
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
 			<TitleBar title={params.title} onClick={() => close()} />
 			<div className="scrollbar-hide flex w-full h-full flex-col gap-1.5 pt-1.5 pb-20 overflow-y-auto">
-				{!data ? (
+				{status === "loading" || isFetching ? (
 					<div className="px-3 py-1.5">
 						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />

@@ -1,68 +1,44 @@
 import { createNote, getNotes } from "@libs/storage";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { NDKEvent, NDKFilter, NDKSubscription } from "@nostr-dev-kit/ndk";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { RelayContext } from "@shared/relayProvider";
 import { TitleBar } from "@shared/titleBar";
 import { useActiveAccount } from "@stores/accounts";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { dateToUnix } from "@utils/date";
-import { useContext, useEffect, useMemo, useRef } from "react";
-import useSWRInfinite from "swr/infinite";
-import useSWRSubscription from "swr/subscription";
+import { useAccount } from "@utils/hooks/useAccount";
+import { useContext, useEffect, useRef } from "react";
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
-const fetcher = async ([, offset]) => getNotes(TIME, ITEM_PER_PAGE, offset);
-
 export function FollowingBlock({ block }: { block: number }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
 
-	const getKey = (pageIndex, previousPageData) => {
-		if (previousPageData && !previousPageData.data) return null;
-		if (pageIndex === 0) return ["following", 0];
-		return ["following", previousPageData.nextCursor];
-	};
+	const { account } = useAccount();
 
-	// fetch initial notes
-	const { data, isLoading, size, setSize } = useSWRInfinite(getKey, fetcher);
-	// fetch live notes
-	useSWRSubscription(account ? "eventCollector" : null, () => {
-		const follows = JSON.parse(account.follows);
-		const sub = ndk.subscribe({
-			kinds: [1, 6],
-			authors: follows,
-			since: dateToUnix(),
-		});
-
-		sub.addListener("event", (event: NDKEvent) => {
-			// save note
-			createNote(
-				event.id,
-				event.pubkey,
-				event.kind,
-				event.tags,
-				event.content,
-				event.created_at,
-			);
-		});
-
-		return () => {
-			sub.stop();
-		};
+	const {
+		status,
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isFetching,
+		isFetchingNextPage,
+	}: any = useInfiniteQuery({
+		queryKey: ["newsfeed-circle"],
+		queryFn: async ({ pageParam = 0 }) => {
+			return await getNotes(TIME, ITEM_PER_PAGE, pageParam);
+		},
+		getNextPageParam: (lastPage) => lastPage.nextCursor,
 	});
 
-	const notes = useMemo(
-		() => (data ? data.flatMap((d) => d.data) : []),
-		[data],
-	);
-
+	const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
 	const parentRef = useRef();
 
 	const rowVirtualizer = useVirtualizer({
-		count: notes.length,
+		count: hasNextPage ? notes.length + 1 : notes.length,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => 500,
 		overscan: 2,
@@ -77,10 +53,43 @@ export function FollowingBlock({ block }: { block: number }) {
 			return;
 		}
 
-		if (lastItem.index >= notes.length - 1) {
-			setSize(size + 1);
+		if (
+			lastItem.index >= notes.length - 1 &&
+			hasNextPage &&
+			!isFetchingNextPage
+		) {
+			fetchNextPage();
 		}
-	}, [notes.length, rowVirtualizer.getVirtualItems()]);
+	}, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
+
+	useEffect(() => {
+		let sub: NDKSubscription;
+
+		if (account) {
+			const follows = JSON.parse(account.follows);
+			const filter: NDKFilter = {
+				kinds: [1, 6],
+				authors: follows,
+				since: dateToUnix(),
+			};
+
+			sub = ndk.subscribe(filter);
+			sub.addListener("event", (event: NDKEvent) => {
+				createNote(
+					event.id,
+					event.pubkey,
+					event.kind,
+					event.tags,
+					event.content,
+					event.created_at,
+				);
+			});
+		}
+
+		return () => {
+			sub.stop();
+		};
+	}, [account]);
 
 	const renderItem = (index: string | number) => {
 		const note = notes[index];
@@ -101,7 +110,7 @@ export function FollowingBlock({ block }: { block: number }) {
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
-				{!data || isLoading ? (
+				{status === "loading" ? (
 					<div className="px-3 py-1.5">
 						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />
@@ -126,6 +135,13 @@ export function FollowingBlock({ block }: { block: number }) {
 							{rowVirtualizer
 								.getVirtualItems()
 								.map((virtualRow) => renderItem(virtualRow.index))}
+						</div>
+					</div>
+				)}
+				{isFetching && !isFetchingNextPage && (
+					<div className="px-3 py-1.5">
+						<div className="rounded-md bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+							<NoteSkeleton />
 						</div>
 					</div>
 				)}

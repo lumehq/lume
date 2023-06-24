@@ -10,8 +10,9 @@ import { useContext, useState } from "react";
 
 export function NoteReplyForm({ id }: { id: string }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
-	const { user } = useProfile(account.npub);
+	const account = useActiveAccount((state) => state.account);
+
+	const { status, user } = useProfile(account.npub);
 
 	const [value, setValue] = useState("");
 
@@ -46,35 +47,41 @@ export function NoteReplyForm({ id }: { id: string }) {
 				/>
 			</div>
 			<div className="border-t border-zinc-800 w-full py-3 px-5">
-				<div className="flex w-full items-center justify-between">
-					<div className="inline-flex items-center gap-2">
-						<div className="relative h-9 w-9 shrink-0 rounded">
-							<Image
-								src={user?.image}
-								fallback={DEFAULT_AVATAR}
-								alt={account.npub}
-								className="h-9 w-9 rounded-md bg-white object-cover"
-							/>
+				{status === "loading" ? (
+					<div>
+						<p>Loading...</p>
+					</div>
+				) : (
+					<div className="flex w-full items-center justify-between">
+						<div className="inline-flex items-center gap-2">
+							<div className="relative h-9 w-9 shrink-0 rounded">
+								<Image
+									src={user?.image}
+									fallback={DEFAULT_AVATAR}
+									alt={account.npub}
+									className="h-9 w-9 rounded-md bg-white object-cover"
+								/>
+							</div>
+							<div>
+								<p className="mb-px leading-none text-sm text-zinc-400">
+									Reply as
+								</p>
+								<p className="leading-none text-sm font-medium text-zinc-100">
+									{user?.nip05 || user?.name}
+								</p>
+							</div>
 						</div>
-						<div>
-							<p className="mb-px leading-none text-sm text-zinc-400">
-								Reply as
-							</p>
-							<p className="leading-none text-sm font-medium text-zinc-100">
-								{user?.nip05 || user?.name}
-							</p>
+						<div className="flex items-center gap-2">
+							<Button
+								onClick={() => submitEvent()}
+								disabled={value.length === 0 ? true : false}
+								preset="publish"
+							>
+								Reply
+							</Button>
 						</div>
 					</div>
-					<div className="flex items-center gap-2">
-						<Button
-							onClick={() => submitEvent()}
-							disabled={value.length === 0 ? true : false}
-							preset="publish"
-						>
-							Reply
-						</Button>
-					</div>
-				</div>
+				)}
 			</div>
 		</div>
 	);

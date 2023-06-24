@@ -1,12 +1,15 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@shared/icons";
+import { useNavigate } from "react-router-dom";
 
 export function AppHeader({ reverse }: { reverse?: boolean }) {
+	const navigate = useNavigate();
+
 	const goBack = () => {
-		window.history.back();
+		navigate(-1);
 	};
 
 	const goForward = () => {
-		window.history.forward();
+		navigate(1);
 	};
 
 	return (

@@ -1,8 +1,8 @@
-import { Link } from "@shared/link";
 import { MentionUser } from "@shared/notes/mentions/user";
 import destr from "destr";
 import getUrls from "get-urls";
 import { parseReferences } from "nostr-tools";
+import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
 function isJsonString(str) {
@@ -50,17 +50,33 @@ export function parser(event: any) {
 			// image url
 			content.images.push(url);
 			// remove url from original content
-			content.parsed = content.parsed.replace(url, "");
+			content.parsed = reactStringReplace(content.parsed, url, () => null);
 		} else if (url.match(/\.(mp4|webm|mov|ogv|avi|mp3)$/)) {
 			// video
 			content.videos.push(url);
 			// remove url from original content
-			content.parsed = content.parsed.replace(url, "");
+			content.parsed = reactStringReplace(content.parsed, url, () => null);
 		} else {
-			// push to store
-			content.links.push(url);
-			// remove url from original content
-			content.parsed = content.parsed.replace(url, "");
+			if (content.links.length < 1) {
+				// push to store
+				content.links.push(url);
+				// remove url from original content
+				content.parsed = reactStringReplace(content.parsed, url, () => null);
+			} else {
+				content.parsed = reactStringReplace(
+					content.parsed,
+					/#(\w+)/g,
+					(match, i) => (
+						<Link
+							key={match + i}
+							to={match}
+							className="text-fuchsia-500 hover:text-fuchsia-600 no-underline font-normal"
+						>
+							{match}
+						</Link>
+					),
+				);
+			}
 		}
 	});
 
@@ -70,7 +86,11 @@ export function parser(event: any) {
 		const event = item.event;
 		if (event) {
 			content.notes.push(event.id);
-			content.parsed = content.parsed.replace(item.text, "");
+			content.parsed = reactStringReplace(
+				content.parsed,
+				item.text,
+				() => null,
+			);
 		}
 		if (profile) {
 			content.parsed = reactStringReplace(
@@ -85,7 +105,7 @@ export function parser(event: any) {
 	content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
 		<Link
 			key={match + i}
-			href={`/search/${match}`}
+			to={`/search/${match}`}
 			className="text-fuchsia-500 hover:text-fuchsia-600 no-underline font-normal"
 		>
 			#{match}

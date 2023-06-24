@@ -2,16 +2,19 @@ import { Dialog, Transition } from "@headlessui/react";
 import { getPlebs } from "@libs/storage";
 import { CancelIcon, PlusIcon } from "@shared/icons";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useQuery } from "@tanstack/react-query";
 import { nip19 } from "nostr-tools";
 import { Fragment, useState } from "react";
-import useSWR from "swr";
-import { navigate } from "vite-plugin-ssr/client/router";
-
-const fetcher = () => getPlebs();
+import { useNavigate } from "react-router-dom";
 
 export function NewMessageModal() {
+	const navigate = useNavigate();
+
+	const { status, data, isFetching }: any = useQuery(["plebs"], async () => {
+		return await getPlebs();
+	});
+
 	const [isOpen, setIsOpen] = useState(false);
-	const { data, isLoading }: any = useSWR("plebs", fetcher);
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -23,7 +26,7 @@ export function NewMessageModal() {
 
 	const openChat = (npub: string) => {
 		const pubkey = nip19.decode(npub).data;
-		navigate(`/app/chat?pubkey=${pubkey}`);
+		navigate(`/app/chat/${pubkey}`);
 	};
 
 	return (
@@ -92,8 +95,7 @@ export function NewMessageModal() {
 									</div>
 								</div>
 								<div className="h-[500px] flex flex-col pb-5 overflow-y-auto">
-									{isLoading && <p>Loading...</p>}
-									{!data ? (
+									{status === "loading" || isFetching ? (
 										<p>Loading...</p>
 									) : (
 										data.map((pleb) => (

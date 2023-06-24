@@ -1,18 +1,14 @@
 import { getNotesByAuthor } from "@libs/storage";
-import { CancelIcon } from "@shared/icons";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { TitleBar } from "@shared/titleBar";
 import { useActiveAccount } from "@stores/accounts";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useEffect, useMemo, useRef } from "react";
-import useSWRInfinite from "swr/infinite";
+import { useEffect, useRef } from "react";
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
-
-const fetcher = async ([pubkey, offset]) =>
-	getNotesByAuthor(pubkey, TIME, ITEM_PER_PAGE, offset);
 
 export function FeedBlock({ params }: { params: any }) {
 	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
@@ -21,26 +17,36 @@ export function FeedBlock({ params }: { params: any }) {
 		removeBlock(params.id, true);
 	};
 
-	const getKey = (pageIndex, previousPageData) => {
-		if (previousPageData && !previousPageData.data) return null;
-		if (pageIndex === 0) return [params.content, 0];
-		return [params.content, previousPageData.nextCursor];
-	};
+	const {
+		status,
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isFetching,
+		isFetchingNextPage,
+	}: any = useInfiniteQuery({
+		queryKey: ["newsfeed", params.content],
+		queryFn: async ({ pageParam = 0 }) => {
+			return await getNotesByAuthor(
+				params.content,
+				TIME,
+				ITEM_PER_PAGE,
+				pageParam,
+			);
+		},
+		getNextPageParam: (lastPage) => lastPage.nextCursor,
+	});
 
-	const { data, isLoading, size, setSize } = useSWRInfinite(getKey, fetcher);
-
-	const notes = useMemo(
-		() => (data ? data.flatMap((d) => d.data) : []),
-		[data],
-	);
-
+	const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
 	const parentRef = useRef();
+
 	const rowVirtualizer = useVirtualizer({
-		count: notes.length,
+		count: hasNextPage ? notes.length + 1 : notes.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: () => 400,
+		estimateSize: () => 500,
 		overscan: 2,
 	});
+
 	const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
 	useEffect(() => {
@@ -50,10 +56,25 @@ export function FeedBlock({ params }: { params: any }) {
 			return;
 		}
 
-		if (lastItem.index >= notes.length - 1) {
-			setSize(size + 1);
+		if (
+			lastItem.index >= notes.length - 1 &&
+			hasNextPage &&
+			!isFetchingNextPage
+		) {
+			fetchNextPage();
 		}
-	}, [notes.length, rowVirtualizer.getVirtualItems()]);
+	}, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
+
+	const renderItem = (index: string | number) => {
+		const note = notes[index];
+
+		if (!note) return;
+		return (
+			<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
+				<Note event={note} block={params.id} />
+			</div>
+		);
+	};
 
 	return (
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
@@ -63,7 +84,7 @@ export function FeedBlock({ params }: { params: any }) {
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
-				{!data || isLoading ? (
+				{status === "loading" || isFetching ? (
 					<div className="px-3 py-1.5">
 						<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
 							<NoteSkeleton />
@@ -85,20 +106,9 @@ export function FeedBlock({ params }: { params: any }) {
 								}px)`,
 							}}
 						>
-							{rowVirtualizer.getVirtualItems().map((virtualRow) => {
-								const note = notes[virtualRow.index];
-								if (note) {
-									return (
-										<div
-											key={virtualRow.index}
-											data-index={virtualRow.index}
-											ref={rowVirtualizer.measureElement}
-										>
-											<Note event={note} block={params.id} />
-										</div>
-									);
-								}
-							})}
+							{rowVirtualizer
+								.getVirtualItems()
+								.map((virtualRow) => renderItem(virtualRow.index))}
 						</div>
 					</div>
 				)}

@@ -3,14 +3,15 @@ import { DEFAULT_AVATAR } from "@stores/constants";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
 import { nip19 } from "nostr-tools";
-import { navigate } from "vite-plugin-ssr/client/router";
+import { useNavigate } from "react-router-dom";
 
 export function ChatSidebar({ pubkey }: { pubkey: string }) {
+	const navigate = useNavigate();
 	const { user } = useProfile(pubkey);
 
 	const viewProfile = () => {
 		const pubkey = nip19.decode(user.npub).data;
-		navigate(`/app/user?pubkey=${pubkey}`);
+		navigate(`/app/user/${pubkey}`);
 	};
 
 	return (

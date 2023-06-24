@@ -15,7 +15,8 @@ import { Fragment } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export function Composer() {
-	const account = useActiveAccount((state: any) => state.account);
+	const account = useActiveAccount((state) => state.account);
+
 	const [toggle, open] = useComposer((state: any) => [
 		state.toggleModal,
 		state.open,

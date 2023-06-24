@@ -4,21 +4,22 @@ import { NoteMetadata } from "@shared/notes/metadata";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { User } from "@shared/user";
 import { useEvent } from "@utils/hooks/useEvent";
-import { parser } from "@utils/parser";
 
 export function NoteParent({
 	id,
 	currentBlock,
 }: { id: string; currentBlock: number }) {
-	const data = useEvent(id);
+	const { status, data, isFetching } = useEvent(id);
 
-	const kind1 = data?.kind === 1 ? parser(data) : null;
+	const kind1 = data?.kind === 1 ? data.content : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (
 		<div className="relative overflow-hidden flex flex-col pb-6">
 			<div className="absolute left-[18px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
-			{data ? (
+			{isFetching || status === "loading" ? (
+				<NoteSkeleton />
+			) : (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} />
 					<div className="-mt-5 pl-[49px]">
@@ -46,8 +47,6 @@ export function NoteParent({
 						/>
 					</div>
 				</>
-			) : (
-				<NoteSkeleton />
 			)}
 		</div>
 	);

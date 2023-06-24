@@ -1,29 +1,20 @@
 import { useChannelProfile } from "@app/channel/hooks/useChannelProfile";
-import { Link } from "@shared/link";
-import { usePageContext } from "@utils/hooks/usePageContext";
+import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export function ChannelsListItem({ data }: { data: any }) {
-	const channel: any = useChannelProfile(data.event_id);
-	const pageContext = usePageContext();
-
-	const searchParams: any = pageContext.urlParsed.search;
-	const pageID = searchParams.id;
-
+	const channel = useChannelProfile(data.event_id);
 	return (
-		<Link
-			href={`/app/channel?id=${data.event_id}`}
-			className={twMerge(
-				"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
-				pageID === data.event_id ? "bg-zinc-900 text-zinc-100" : "",
-			)}
+		<NavLink
+			to={`/app/channel/${data.event_id}`}
+			className={({ isActive }) =>
+				twMerge(
+					"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",
+					isActive ? "bg-zinc-900/50 text-zinc-100" : "",
+				)
+			}
 		>
-			<div
-				className={twMerge(
-					"inline-flex shrink-0 h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900",
-					pageID === data.event_id ? "bg-zinc-800" : "",
-				)}
-			>
+			<div className="inline-flex shrink-0 h-6 w-6 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
 				<span className="text-xs text-zinc-100">#</span>
 			</div>
 			<div className="w-full inline-flex items-center justify-between">
@@ -36,6 +27,6 @@ export function ChannelsListItem({ data }: { data: any }) {
 					)}
 				</div>
 			</div>
-		</Link>
+		</NavLink>
 	);
 }

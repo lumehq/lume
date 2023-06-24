@@ -1,16 +1,20 @@
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useQuery } from "@tanstack/react-query";
 import { compactNumber } from "@utils/number";
 import { shortenKey } from "@utils/shortenKey";
-import useSWR from "swr";
-
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export function Profile({ data }: { data: any }) {
-	const { data: userStats, error } = useSWR(
-		`https://api.nostr.band/v0/stats/profile/${data.pubkey}`,
-		fetcher,
-	);
+	const {
+		status,
+		data: userStats,
+		isFetching,
+	} = useQuery(["user-stats", data.pubkey], async () => {
+		const res = await fetch(
+			`https://api.nostr.band/v0/stats/profile/${data.pubkey}`,
+		);
+		return res.json();
+	});
 
 	const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
 	const profile = embedProfile;
@@ -47,8 +51,7 @@ export function Profile({ data }: { data: any }) {
 				</p>
 			</div>
 			<div className="mt-8">
-				{error && <p>Failed to fetch user stats</p>}
-				{!userStats ? (
+				{status === "loading" || isFetching ? (
 					<p>Loading...</p>
 				) : (
 					<div className="w-full flex items-center gap-8">

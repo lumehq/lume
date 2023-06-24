@@ -1,18 +1,19 @@
 import { Transition } from "@headlessui/react";
-import { getAccounts, getActiveAccount } from "@libs/storage";
+import { getActiveAccount } from "@libs/storage";
 import { ActiveAccount } from "@shared/accounts/active";
-import { InactiveAccount } from "@shared/accounts/inactive";
-import { PlusIcon, VerticalDotsIcon } from "@shared/icons";
-import { Link } from "@shared/link";
+import { VerticalDotsIcon } from "@shared/icons";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import useSWR from "swr";
-
-const allFetcher = () => getAccounts();
-const fetcher = () => getActiveAccount();
+import { Link } from "react-router-dom";
 
 export function MultiAccounts() {
-	const { data: accounts }: any = useSWR("allAccounts", allFetcher);
-	const { data: activeAccount }: any = useSWR("activeAccount", fetcher);
+	const {
+		status,
+		data: activeAccount,
+		isFetching,
+	} = useQuery(["activeAccount"], async () => {
+		return await getActiveAccount();
+	});
 
 	const [open, setOpen] = useState(false);
 
@@ -24,28 +25,11 @@ export function MultiAccounts() {
 		<div className="flex flex-col gap-2 rounded-xl p-2 border-t border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					{!activeAccount ? (
+					{status === "loading" || isFetching ? (
 						<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900" />
 					) : (
 						<ActiveAccount data={activeAccount} />
 					)}
-					{!accounts ? (
-						<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900" />
-					) : (
-						accounts.map((account: { is_active: number; pubkey: string }) => (
-							<InactiveAccount key={account.pubkey} data={account} />
-						))
-					)}
-					<button
-						type="button"
-						className="group relative flex h-9 w-9 shrink items-center justify-center rounded border border-dashed border-zinc-600 hover:border-zinc-400"
-					>
-						<PlusIcon
-							width={16}
-							height={16}
-							className="text-zinc-400 group-hover:text-zinc-100"
-						/>
-					</button>
 				</div>
 				<button
 					type="button"
@@ -66,13 +50,13 @@ export function MultiAccounts() {
 				className="flex flex-col items-start justify-start gap-1 pt-1.5 border-t border-zinc-800 transform"
 			>
 				<Link
-					href="/app/settings"
+					to="/app/settings"
 					className="w-full py-2 px-2 rounded hover:bg-zinc-800 text-zinc-100 text-start text-sm"
 				>
 					Settings
 				</Link>
 				<Link
-					href="/app/logout"
+					to="/app/logout"
 					className="w-full py-2 px-2 rounded hover:bg-zinc-800 text-zinc-100 text-start text-sm"
 				>
 					Logout

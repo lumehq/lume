@@ -4,7 +4,6 @@ import { NoteMetadata } from "@shared/notes/metadata";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { User } from "@shared/user";
 import { useEvent } from "@utils/hooks/useEvent";
-import { parser } from "@utils/parser";
 import { getRepostID } from "@utils/transform";
 import { LumeEvent } from "@utils/types";
 
@@ -13,14 +12,16 @@ export function Repost({
 	currentBlock,
 }: { event: LumeEvent; currentBlock?: number }) {
 	const repostID = getRepostID(event.tags);
-	const data = useEvent(repostID);
+	const { status, data, isFetching } = useEvent(repostID);
 
-	const kind1 = data?.kind === 1 ? parser(data) : null;
+	const kind1 = data?.kind === 1 ? data.content : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
 
 	return (
 		<div className="relative overflow-hidden flex flex-col mt-12">
-			{data ? (
+			{isFetching || status === "loading" ? (
+				<NoteSkeleton />
+			) : (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} />
 					<div className="-mt-5 pl-[49px]">
@@ -48,8 +49,6 @@ export function Repost({
 						/>
 					</div>
 				</>
-			) : (
-				<NoteSkeleton />
 			)}
 		</div>
 	);
