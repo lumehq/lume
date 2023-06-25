@@ -3,17 +3,18 @@ import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon, MuteIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
-import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment, useContext, useState } from "react";
 
 export function MessageMuteButton({ pubkey }: { pubkey: string }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
 	const mute = useChannelMessages((state: any) => state.muteUser);
 
 	const [isOpen, setIsOpen] = useState(false);
+
+	const { account } = useAccount();
 
 	const closeModal = () => {
 		setIsOpen(false);

@@ -1,18 +1,25 @@
+import { createBlock } from "@libs/storage";
 import { ReplyIcon } from "@shared/icons";
-import { useActiveAccount } from "@stores/accounts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { compactNumber } from "@utils/number";
 
 export function NoteReply({
 	id,
 	replies,
-	currentBlock,
 }: { id: string; replies: number; currentBlock?: number }) {
-	const addTempBlock = useActiveAccount((state: any) => state.addTempBlock);
+	const queryClient = useQueryClient();
+
+	const block = useMutation({
+		mutationFn: (data: any) => createBlock(data.kind, data.title, data.content),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["blocks"] });
+		},
+	});
 
 	const openThread = (event: any, thread: string) => {
 		const selection = window.getSelection();
 		if (selection.toString().length === 0) {
-			addTempBlock(currentBlock, 2, "Thread", thread);
+			block.mutate({ kind: 2, title: "Thread", content: thread });
 		} else {
 			event.stopPropagation();
 		}

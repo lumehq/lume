@@ -7,6 +7,7 @@ export function ChannelsListItem({ data }: { data: any }) {
 	return (
 		<NavLink
 			to={`/app/channel/${data.event_id}`}
+			preventScrollReset={true}
 			className={({ isActive }) =>
 				twMerge(
 					"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",

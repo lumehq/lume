@@ -15,7 +15,7 @@ export function ChannelMessageItem({ data }: { data: LumeEvent }) {
 	return (
 		<div className="group relative flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
 			<div className="flex flex-col">
-				<User pubkey={data.pubkey} time={data.created_at} />
+				<User pubkey={data.pubkey} time={data.created_at} isChat={true} />
 				<div className="-mt-[20px] pl-[49px]">
 					<p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
 						{content.parsed}

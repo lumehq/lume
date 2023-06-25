@@ -1,27 +1,28 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { createBlock } from "@libs/storage";
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { open } from "@tauri-apps/api/dialog";
 import { Body, fetch } from "@tauri-apps/api/http";
 import { createBlobFromFile } from "@utils/createBlobFromFile";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function AddImageBlock({ parentState }: { parentState: any }) {
 	const ndk = useContext(RelayContext);
+	const queryClient = useQueryClient();
 
-	const [account, addBlock] = useActiveAccount((state: any) => [
-		state.account,
-		state.addBlock,
-	]);
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(true);
 	const [image, setImage] = useState("");
+
+	const { account } = useAccount();
 
 	const tags = useRef(null);
 
@@ -88,6 +89,13 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 		}
 	};
 
+	const block = useMutation({
+		mutationFn: (data: any) => createBlock(data.kind, data.title, data.content),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["blocks"] });
+		},
+	});
+
 	const onSubmit = (data: any) => {
 		setLoading(true);
 
@@ -105,8 +113,8 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 		// publish event
 		event.publish();
 
-		// insert to database
-		addBlock(0, data.title, data.content);
+		// mutate
+		block.mutate({ kind: 0, title: data.title, content: data.content });
 
 		setTimeout(() => {
 			setLoading(false);
@@ -114,7 +122,7 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 			reset();
 			// close modal
 			closeModal();
-		}, 1000);
+		}, 1200);
 	};
 
 	useEffect(() => {
@@ -145,7 +153,7 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 						leaveFrom="opacity-100 scale-100"
 						leaveTo="opacity-0 scale-95"
 					>
-						<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border border-zinc-800 bg-zinc-900">
+						<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-xl border-t border-zinc-800/50 bg-zinc-900">
 							<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
 								<div className="flex flex-col gap-2">
 									<div className="flex items-center justify-between">
@@ -177,7 +185,7 @@ export function AddImageBlock({ parentState }: { parentState: any }) {
 							<div className="flex h-full w-full flex-col overflow-y-auto px-5 pb-5 pt-3">
 								<form
 									onSubmit={handleSubmit(onSubmit)}
-									className="flex h-full w-full flex-col gap-4"
+									className="flex h-full w-full flex-col gap-4 mb-0"
 								>
 									<input
 										type={"hidden"}

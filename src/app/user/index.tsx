@@ -1,10 +1,10 @@
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useQuery } from "@tanstack/react-query";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { usePageContext } from "@utils/hooks/usePageContext";
 import { useProfile } from "@utils/hooks/useProfile";
 import { compactNumber } from "@utils/number";
@@ -18,6 +18,7 @@ export function UserScreen() {
 	const searchParams: any = pageContext.urlParsed.search;
 	const pubkey = searchParams.pubkey || "";
 
+	const { account } = useAccount();
 	const { user } = useProfile(pubkey);
 	const { data: userStats, error } = useQuery(["user", pubkey], async () => {
 		const res = await fetch(
@@ -28,7 +29,6 @@ export function UserScreen() {
 		}
 	});
 
-	const account = useActiveAccount((state: any) => state.account);
 	const follows = account ? JSON.parse(account.follows) : [];
 
 	const follow = (pubkey: string) => {

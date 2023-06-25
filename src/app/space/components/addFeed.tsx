@@ -1,12 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { createBlock } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
-import { useActiveAccount } from "@stores/accounts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAccount } from "@utils/hooks/useAccount";
 import { nip19 } from "nostr-tools";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function AddFeedBlock({ parentState }: { parentState: any }) {
-	const addBlock = useActiveAccount((state: any) => state.addBlock);
+	const queryClient = useQueryClient();
+	const { account } = useAccount();
 
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(true);
@@ -17,6 +20,13 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 		// update parent state
 		parentState(false);
 	};
+
+	const block = useMutation({
+		mutationFn: (data: any) => createBlock(data.kind, data.title, data.content),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["blocks"] });
+		},
+	});
 
 	const {
 		register,
@@ -35,7 +45,7 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 		}
 
 		// insert to database
-		addBlock(1, data.title, pubkey);
+		block.mutate({ kind: 1, title: data.title, content: pubkey });
 
 		setTimeout(() => {
 			setLoading(false);
@@ -43,7 +53,7 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 			reset();
 			// close modal
 			closeModal();
-		}, 1000);
+		}, 1200);
 	};
 
 	return (
@@ -70,7 +80,7 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 						leaveFrom="opacity-100 scale-100"
 						leaveTo="opacity-0 scale-95"
 					>
-						<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border border-zinc-800 bg-zinc-900">
+						<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-xl border-t border-zinc-800/50 bg-zinc-900">
 							<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
 								<div className="flex flex-col gap-2">
 									<div className="flex items-center justify-between">
@@ -102,7 +112,7 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 							<div className="flex h-full w-full flex-col overflow-y-auto px-5 pb-5 pt-3">
 								<form
 									onSubmit={handleSubmit(onSubmit)}
-									className="flex h-full w-full flex-col gap-4"
+									className="flex h-full w-full flex-col gap-4 mb-0"
 								>
 									<div className="flex flex-col gap-1">
 										<label className="text-sm font-medium uppercase tracking-wider text-zinc-400">

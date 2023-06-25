@@ -167,7 +167,7 @@ export function ChannelCreateModal() {
 								<div className="flex h-full w-full flex-col overflow-y-auto px-5 pb-5 pt-3">
 									<form
 										onSubmit={handleSubmit(onSubmit)}
-										className="flex h-full w-full flex-col gap-4"
+										className="flex h-full w-full flex-col gap-4 mb-0"
 									>
 										<input
 											type={"hidden"}

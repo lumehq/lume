@@ -6,10 +6,13 @@ import { useOnboarding } from "@stores/onboarding";
 import { Body, fetch } from "@tauri-apps/api/http";
 import { useAccount } from "@utils/hooks/useAccount";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function CreateStep3Screen() {
 	const ndk = useContext(RelayContext);
 	const profile = useOnboarding((state: any) => state.profile);
+	const navigate = useNavigate();
+
 	const { account } = useAccount();
 
 	const [username, setUsername] = useState("");
@@ -48,6 +51,7 @@ export function CreateStep3Screen() {
 				event.publish();
 
 				// redirect to step 4
+				navigate("/auth/create/step-4", { replace: true });
 			}
 		} catch (error) {
 			setLoading(false);

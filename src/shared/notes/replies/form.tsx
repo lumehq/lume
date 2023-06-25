@@ -2,16 +2,16 @@ import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { Button } from "@shared/button";
 import { Image } from "@shared/image";
 import { RelayContext } from "@shared/relayProvider";
-import { useActiveAccount } from "@stores/accounts";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { useProfile } from "@utils/hooks/useProfile";
 import { useContext, useState } from "react";
 
 export function NoteReplyForm({ id }: { id: string }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state) => state.account);
 
+	const { account } = useAccount();
 	const { status, user } = useProfile(account.npub);
 
 	const [value, setValue] = useState("");

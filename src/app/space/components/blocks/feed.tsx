@@ -1,9 +1,12 @@
-import { getNotesByAuthor } from "@libs/storage";
+import { getNotesByAuthor, removeBlock } from "@libs/storage";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { TitleBar } from "@shared/titleBar";
-import { useActiveAccount } from "@stores/accounts";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+	useInfiniteQuery,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
 
@@ -11,12 +14,7 @@ const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
 export function FeedBlock({ params }: { params: any }) {
-	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
-
-	const close = () => {
-		removeBlock(params.id, true);
-	};
-
+	const queryClient = useQueryClient();
 	const {
 		status,
 		data,
@@ -65,6 +63,13 @@ export function FeedBlock({ params }: { params: any }) {
 		}
 	}, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
 
+	const block = useMutation({
+		mutationFn: (id: string) => removeBlock(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["blocks"] });
+		},
+	});
+
 	const renderItem = (index: string | number) => {
 		const note = notes[index];
 
@@ -78,7 +83,7 @@ export function FeedBlock({ params }: { params: any }) {
 
 	return (
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
-			<TitleBar title={params.title} onClick={() => close()} />
+			<TitleBar title={params.title} onClick={() => block.mutate(params.id)} />
 			<div
 				ref={parentRef}
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"

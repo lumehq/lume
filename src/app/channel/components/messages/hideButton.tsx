@@ -3,17 +3,18 @@ import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon, HideIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
 import { Tooltip } from "@shared/tooltip";
-import { useActiveAccount } from "@stores/accounts";
 import { useChannelMessages } from "@stores/channels";
 import { dateToUnix } from "@utils/date";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment, useContext, useState } from "react";
 
 export function MessageHideButton({ id }: { id: string }) {
 	const ndk = useContext(RelayContext);
-	const account = useActiveAccount((state: any) => state.account);
 	const hide = useChannelMessages((state: any) => state.hideMessage);
 
 	const [isOpen, setIsOpen] = useState(false);
+
+	const { account } = useAccount();
 
 	const closeModal = () => {
 		setIsOpen(false);

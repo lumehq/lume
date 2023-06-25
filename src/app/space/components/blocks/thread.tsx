@@ -1,4 +1,4 @@
-import { getNoteByID } from "@libs/storage";
+import { getNoteByID, removeBlock } from "@libs/storage";
 import { Kind1 } from "@shared/notes/contents/kind1";
 import { Kind1063 } from "@shared/notes/contents/kind1063";
 import { NoteMetadata } from "@shared/notes/metadata";
@@ -7,11 +7,12 @@ import { RepliesList } from "@shared/notes/replies/list";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { TitleBar } from "@shared/titleBar";
 import { User } from "@shared/user";
-import { useActiveAccount } from "@stores/accounts";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { parser } from "@utils/parser";
 
 export function ThreadBlock({ params }: { params: any }) {
+	const queryClient = useQueryClient();
+
 	const { status, data, isFetching } = useQuery(
 		["thread", params.content],
 		async () => {
@@ -19,16 +20,18 @@ export function ThreadBlock({ params }: { params: any }) {
 		},
 	);
 
-	const content = data ? parser(data) : null;
-	const removeBlock = useActiveAccount((state: any) => state.removeBlock);
+	const block = useMutation({
+		mutationFn: (id: string) => removeBlock(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["blocks"] });
+		},
+	});
 
-	const close = () => {
-		removeBlock(params.id, false);
-	};
+	const content = data ? parser(data) : null;
 
 	return (
 		<div className="shrink-0 w-[400px] border-r border-zinc-900">
-			<TitleBar title={params.title} onClick={() => close()} />
+			<TitleBar title={params.title} onClick={() => block.mutate(params.id)} />
 			<div className="scrollbar-hide flex w-full h-full flex-col gap-1.5 pt-1.5 pb-20 overflow-y-auto">
 				{status === "loading" || isFetching ? (
 					<div className="px-3 py-1.5">

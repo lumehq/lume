@@ -109,29 +109,31 @@ export function ChannelScreen() {
 				>
 					<h3 className="font-semibold text-zinc-100">Public Channel</h3>
 				</div>
-				<div className="w-full flex-1 p-3">
-					<div className="flex h-full flex-col justify-between rounded-md bg-zinc-900">
-						{!messages ? (
-							<p>Loading...</p>
-						) : (
-							<Virtuoso
-								ref={virtuosoRef}
-								data={messages}
-								itemContent={itemContent}
-								computeItemKey={computeItemKey}
-								initialTopMostItemIndex={messages.length - 1}
-								alignToBottom={true}
-								followOutput={true}
-								overscan={50}
-								increaseViewportBy={{ top: 200, bottom: 200 }}
-								className="scrollbar-hide overflow-y-auto h-full w-full"
-								components={{
-									Header: () => Header,
-									EmptyPlaceholder: () => Empty,
-								}}
-							/>
-						)}
-						<div className="w-full inline-flex shrink-0 px-5 py-3 border-t border-zinc-800">
+				<div className="w-full h-full flex-1 p-3">
+					<div className="h-full flex flex-col justify-between rounded-xl border-t border-zinc-800/50 bg-zinc-900 overflow-hidden">
+						<div className="flex-1 w-full h-full">
+							{!messages ? (
+								<p>Loading...</p>
+							) : (
+								<Virtuoso
+									ref={virtuosoRef}
+									data={messages}
+									itemContent={itemContent}
+									computeItemKey={computeItemKey}
+									initialTopMostItemIndex={messages.length - 1}
+									alignToBottom={true}
+									followOutput={true}
+									overscan={50}
+									increaseViewportBy={{ top: 200, bottom: 200 }}
+									className="scrollbar-hide overflow-y-auto"
+									components={{
+										Header: () => Header,
+										EmptyPlaceholder: () => Empty,
+									}}
+								/>
+							)}
+						</div>
+						<div className="shrink-0 px-5 p-3 rounded-b-xl border-t border-zinc-800 bg-zinc-900 z-50">
 							<ChannelMessageForm channelID={id} />
 						</div>
 					</div>

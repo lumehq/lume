@@ -20,6 +20,7 @@ export function ChatsListItem({ data }: { data: any }) {
 			) : (
 				<NavLink
 					to={`/app/chat/${data.sender_pubkey}`}
+					preventScrollReset={true}
 					className={({ isActive }) =>
 						twMerge(
 							"inline-flex h-9 items-center gap-2.5 rounded-md px-2.5",

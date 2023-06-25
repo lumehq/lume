@@ -8,14 +8,14 @@ import {
 	ChevronRightIcon,
 	ComposeIcon,
 } from "@shared/icons";
-import { useActiveAccount } from "@stores/accounts";
 import { useComposer } from "@stores/composer";
 import { COMPOSE_SHORTCUT } from "@stores/shortcuts";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export function Composer() {
-	const account = useActiveAccount((state) => state.account);
+	const { account } = useAccount();
 
 	const [toggle, open] = useComposer((state: any) => [
 		state.toggleModal,

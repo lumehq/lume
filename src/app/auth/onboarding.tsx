@@ -1,10 +1,11 @@
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { LoaderIcon } from "@shared/icons";
 import { ArrowRightCircleIcon } from "@shared/icons/arrowRightCircle";
 import { RelayContext } from "@shared/relayProvider";
 import { User } from "@shared/user";
 import { dateToUnix } from "@utils/date";
 import { useAccount } from "@utils/hooks/useAccount";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export function OnboardingScreen() {
@@ -12,9 +13,12 @@ export function OnboardingScreen() {
 	const navigate = useNavigate();
 
 	const { status, account } = useAccount();
+	const [loading, setLoading] = useState(false);
 
 	const publish = async () => {
 		try {
+			setLoading(true);
+
 			const event = new NDKEvent(ndk);
 			const signer = new NDKPrivateKeySigner(account.privkey);
 			ndk.signer = signer;
@@ -30,7 +34,7 @@ export function OnboardingScreen() {
 			event.publish();
 
 			// redirect to home
-			navigate("/", { replace: true });
+			setTimeout(() => navigate("/", { replace: true }), 1200);
 		} catch (error) {
 			console.log(error);
 		}
@@ -80,9 +84,15 @@ export function OnboardingScreen() {
 						onClick={() => publish()}
 						className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg px-6 font-medium text-zinc-100 bg-fuchsia-500 hover:bg-fuchsia-600"
 					>
-						<span className="w-5" />
-						<span>Publish</span>
-						<ArrowRightCircleIcon className="w-5 h-5" />
+						{loading ? (
+							<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+						) : (
+							<>
+								<span className="w-5" />
+								<span>Publish</span>
+								<ArrowRightCircleIcon className="w-5 h-5" />
+							</>
+						)}
 					</button>
 					<Link
 						to="/"

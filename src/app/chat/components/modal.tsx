@@ -94,7 +94,7 @@ export function NewMessageModal() {
 										</Dialog.Description>
 									</div>
 								</div>
-								<div className="h-[500px] flex flex-col pb-5 overflow-y-auto">
+								<div className="h-[500px] flex flex-col pb-5 overflow-x-hidden overflow-y-auto">
 									{status === "loading" || isFetching ? (
 										<p>Loading...</p>
 									) : (

@@ -131,8 +131,6 @@ export function CreateStep4Screen() {
 			updateAccount("follows", follows, account.pubkey),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["currentAccount"] });
-			// redirect to next step
-			navigate("/auth/onboarding", { replace: true });
 		},
 	});
 
@@ -156,6 +154,9 @@ export function CreateStep4Screen() {
 
 			// update
 			update.mutate(follows);
+
+			// redirect to next step
+			setTimeout(() => navigate("/auth/onboarding", { replace: true }), 1200);
 		} catch {
 			console.log("error");
 		}

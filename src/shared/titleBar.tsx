@@ -7,7 +7,7 @@ export function TitleBar({
 	return (
 		<div
 			data-tauri-drag-region
-			className="group overflow-hidden h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"
+			className="group overflow-hidden shrink-0 h-11 w-full flex items-center justify-between px-3 border-b border-zinc-900"
 		>
 			<div className="w-6" />
 			<h3 className="text-sm font-medium text-zinc-200">{title}</h3>

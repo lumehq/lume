@@ -1,22 +1,27 @@
 import { Popover, Transition } from "@headlessui/react";
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { formatCreatedAt } from "@utils/createdAt";
 import { useProfile } from "@utils/hooks/useProfile";
 import { shortenKey } from "@utils/shortenKey";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-
-dayjs.extend(relativeTime);
 
 export function User({
 	pubkey,
 	time,
 	size,
 	repost,
-}: { pubkey: string; time: number; size?: string; repost?: boolean }) {
+	isChat = false,
+}: {
+	pubkey: string;
+	time: number;
+	size?: string;
+	repost?: boolean;
+	isChat?: boolean;
+}) {
 	const { user } = useProfile(pubkey);
+	const createdAt = formatCreatedAt(time, isChat);
 
 	const avatarWidth = size === "small" ? "w-6" : "w-11";
 	const avatarHeight = size === "small" ? "h-6" : "h-11";
@@ -54,9 +59,7 @@ export function User({
 					</span>
 				)}
 				<span className="leading-none text-zinc-500">·</span>
-				<span className="leading-none text-zinc-500">
-					{dayjs().to(dayjs.unix(time), true)}
-				</span>
+				<span className="leading-none text-zinc-500">{createdAt}</span>
 			</div>
 			<Transition
 				as={Fragment}

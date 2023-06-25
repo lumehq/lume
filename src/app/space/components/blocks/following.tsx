@@ -4,7 +4,6 @@ import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { RelayContext } from "@shared/relayProvider";
 import { TitleBar } from "@shared/titleBar";
-import { useActiveAccount } from "@stores/accounts";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { dateToUnix } from "@utils/date";
@@ -63,17 +62,16 @@ export function FollowingBlock({ block }: { block: number }) {
 	}, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
 
 	useEffect(() => {
-		let sub: NDKSubscription;
+		const follows = account ? JSON.parse(account.follows) : [];
 
-		if (account) {
-			const follows = JSON.parse(account.follows);
-			const filter: NDKFilter = {
-				kinds: [1, 6],
-				authors: follows,
-				since: dateToUnix(),
-			};
+		const filter: NDKFilter = {
+			kinds: [1, 6],
+			authors: follows,
+			since: dateToUnix(),
+		};
 
-			sub = ndk.subscribe(filter);
+		const sub = account ? ndk.subscribe(filter) : null;
+		if (sub) {
 			sub.addListener("event", (event: NDKEvent) => {
 				createNote(
 					event.id,
@@ -87,7 +85,9 @@ export function FollowingBlock({ block }: { block: number }) {
 		}
 
 		return () => {
-			sub.stop();
+			if (sub) {
+				sub.stop();
+			}
 		};
 	}, [account]);
 

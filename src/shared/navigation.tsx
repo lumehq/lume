@@ -30,6 +30,7 @@ export function Navigation({ reverse = false }: { reverse?: boolean }) {
 					<div className="flex flex-col">
 						<NavLink
 							to="/app/space"
+							preventScrollReset={true}
 							className={({ isActive }) =>
 								twMerge(
 									"flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200",
@@ -44,6 +45,7 @@ export function Navigation({ reverse = false }: { reverse?: boolean }) {
 						</NavLink>
 						<NavLink
 							to="/app/trending"
+							preventScrollReset={true}
 							className={({ isActive }) =>
 								twMerge(
 									"flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200",

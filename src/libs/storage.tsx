@@ -414,20 +414,16 @@ export async function getBlocks() {
 }
 
 // create block
-export async function addBlockToDB(
-	account_id: number,
-	kind: number,
-	title: string,
-	content: any,
-) {
+export async function createBlock(kind: number, title: string, content: any) {
 	const db = await connect();
+	const activeAccount = await getActiveAccount();
 	return await db.execute(
 		"INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);",
-		[account_id, kind, title, content],
+		[activeAccount.id, kind, title, content],
 	);
 }
 
-export async function removeBlockFromDB(id: string) {
+export async function removeBlock(id: string) {
 	const db = await connect();
 	return await db.execute(`DELETE FROM blocks WHERE id = "${id}";`);
 }

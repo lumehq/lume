@@ -1,4 +1,4 @@
-import { createAccount } from "@libs/storage";
+import { createAccount, createBlock } from "@libs/storage";
 import { LoaderIcon } from "@shared/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPublicKey, nip19 } from "nostr-tools";
@@ -31,6 +31,11 @@ export function ImportStep1Screen() {
 		mutationFn: (data: any) =>
 			createAccount(data.npub, data.pubkey, data.privkey, null, 1),
 		onSuccess: () => {
+			createBlock(
+				0,
+				"Preserve your freedom",
+				"https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv",
+			);
 			queryClient.invalidateQueries({ queryKey: ["currentAccount"] });
 			// redirect to next step
 			navigate("/auth/import/step-2", { replace: true });
