@@ -5,8 +5,7 @@ import { createContext } from "react";
 
 export const RelayContext = createContext<NDK>(null);
 
-const ndk = new NDK({ explicitRelayUrls: FULL_RELAYS });
-await ndk.connect();
+const ndk = await initNDK(FULL_RELAYS);
 
 export function RelayProvider({ children }: { children: React.ReactNode }) {
 	return <RelayContext.Provider value={ndk}>{children}</RelayContext.Provider>;

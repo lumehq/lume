@@ -2,6 +2,7 @@ import { createAccount, createBlock } from "@libs/storage";
 import { LoaderIcon } from "@shared/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPublicKey, nip19 } from "nostr-tools";
+import { useState } from "react";
 import { Resolver, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -27,18 +28,14 @@ export function ImportStep1Screen() {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
+	const [loading, setLoading] = useState(false);
+
 	const account = useMutation({
-		mutationFn: (data: any) =>
-			createAccount(data.npub, data.pubkey, data.privkey, null, 1),
-		onSuccess: () => {
-			createBlock(
-				0,
-				"Preserve your freedom",
-				"https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv",
-			);
-			queryClient.invalidateQueries({ queryKey: ["currentAccount"] });
-			// redirect to next step
-			navigate("/auth/import/step-2", { replace: true });
+		mutationFn: (data: any) => {
+			return createAccount(data.npub, data.pubkey, data.privkey, null, 1);
+		},
+		onSuccess: (data: any) => {
+			queryClient.setQueryData(["currentAccount"], data);
 		},
 	});
 
@@ -46,13 +43,14 @@ export function ImportStep1Screen() {
 		register,
 		setError,
 		handleSubmit,
-		formState: { errors, isDirty, isValid, isSubmitting },
+		formState: { errors, isDirty, isValid },
 	} = useForm<FormValues>({ resolver });
 
 	const onSubmit = async (data: any) => {
 		try {
-			let privkey = data["key"];
+			setLoading(true);
 
+			let privkey = data["key"];
 			if (privkey.substring(0, 4) === "nsec") {
 				privkey = nip19.decode(privkey).data;
 			}
@@ -69,6 +67,12 @@ export function ImportStep1Screen() {
 					follows: null,
 					is_active: 1,
 				});
+
+				// redirect to step 2
+				setTimeout(
+					() => navigate("/auth/import/step-2", { replace: true }),
+					1200,
+				);
 			}
 		} catch (error) {
 			setError("key", {
@@ -102,7 +106,7 @@ export function ImportStep1Screen() {
 							disabled={!isDirty || !isValid}
 							className="inline-flex items-center justify-center h-11 w-full bg-fuchsia-500 rounded-md font-medium text-zinc-100 hover:bg-fuchsia-600"
 						>
-							{isSubmitting ? (
+							{loading ? (
 								<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
 							) : (
 								"Continue →"

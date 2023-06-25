@@ -345,7 +345,7 @@ export async function getLinkPreview(text: string) {
 	const fetchUrl = text;
 	const options: FetchOptions = {
 		method: "GET",
-		timeout: 30,
+		timeout: 5,
 		responseType: ResponseType.Text,
 	};
 

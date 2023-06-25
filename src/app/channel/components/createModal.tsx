@@ -41,15 +41,16 @@ export function ChannelCreateModal() {
 	} = useForm();
 
 	const addChannel = useMutation({
-		mutationFn: (event: any) =>
-			createChannel(
+		mutationFn: (event: any) => {
+			return createChannel(
 				event.id,
 				event.pubkey,
 				event.name,
 				event.picture,
 				event.about,
 				event.created_at,
-			),
+			);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["channels"] });
 		},

@@ -45,10 +45,19 @@ export async function createAccount(
 	is_active?: number,
 ) {
 	const db = await connect();
-	return await db.execute(
+	const res = await db.execute(
 		"INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, follows, is_active) VALUES (?, ?, ?, ?, ?);",
 		[npub, pubkey, privkey, follows || "", is_active || 0],
 	);
+	if (res) {
+		await createBlock(
+			0,
+			"Preserve your freedom",
+			"https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv",
+		);
+	}
+	const getAccount = await getActiveAccount();
+	return getAccount;
 }
 
 // update account
@@ -408,7 +417,7 @@ export async function getBlocks() {
 	const db = await connect();
 	const activeAccount = await getActiveAccount();
 	const result: any = await db.select(
-		`SELECT * FROM blocks WHERE account_id <= "${activeAccount.id}";`,
+		`SELECT * FROM blocks WHERE account_id = "${activeAccount.id}" ORDER BY created_at DESC;`,
 	);
 	return result;
 }

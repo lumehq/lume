@@ -18,12 +18,11 @@ export function ImportStep2Screen() {
 	const { status, account } = useAccount();
 
 	const update = useMutation({
-		mutationFn: (follows: any) =>
-			updateAccount("follows", follows, account.pubkey),
+		mutationFn: (follows: any) => {
+			return updateAccount("follows", follows, account.pubkey);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["currentAccount"] });
-			// redirect to next step
-			navigate("/auth/onboarding", { replace: true });
 		},
 	});
 
@@ -40,10 +39,15 @@ export function ImportStep2Screen() {
 
 			// update
 			update.mutate(followsList);
+
+			// redirect to next step
+			setTimeout(() => navigate("/auth/onboarding", { replace: true }), 1200);
 		} catch {
 			console.log("error");
 		}
 	};
+
+	console.log(account);
 
 	return (
 		<div className="mx-auto w-full max-w-md">

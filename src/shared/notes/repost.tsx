@@ -14,9 +14,6 @@ export function Repost({
 	const repostID = getRepostID(event.tags);
 	const { status, data, isFetching } = useEvent(repostID);
 
-	const kind1 = data?.kind === 1 ? data.content : null;
-	const kind1063 = data?.kind === 1063 ? data.tags : null;
-
 	return (
 		<div className="relative overflow-hidden flex flex-col mt-12">
 			{isFetching || status === "loading" ? (
@@ -24,10 +21,10 @@ export function Repost({
 			) : (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} />
-					<div className="-mt-5 pl-[49px]">
-						{kind1 && <Kind1 content={kind1} />}
-						{kind1063 && <Kind1063 metadata={kind1063} />}
-						{!kind1 && !kind1063 && (
+					<div className="z-10 relative -mt-6 pl-[49px]">
+						{data.kind === 1 && <Kind1 content={data.content} />}
+						{data.kind === 1063 && <Kind1063 metadata={data.tags} />}
+						{data.kind !== 1 && data.kind !== 1063 && (
 							<div className="flex flex-col gap-2">
 								<div className="px-2 py-2 inline-flex flex-col gap-1 bg-zinc-800 rounded-md">
 									<span className="text-zinc-500 text-sm font-medium leading-none">

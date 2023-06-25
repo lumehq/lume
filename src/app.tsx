@@ -18,8 +18,6 @@ import { TrendingScreen } from "@app/trending";
 import { AppLayout } from "@shared/appLayout";
 import { AuthLayout } from "@shared/authLayout";
 import { Protected } from "@shared/protected";
-import { RelayProvider } from "@shared/relayProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -74,18 +72,12 @@ const router = createBrowserRouter([
 	},
 ]);
 
-const queryClient = new QueryClient();
-
 export default function App() {
 	return (
-		<QueryClientProvider client={queryClient}>
-			<RelayProvider>
-				<RouterProvider
-					router={router}
-					fallbackElement={<p>Loading..</p>}
-					future={{ v7_startTransition: true }}
-				/>
-			</RelayProvider>
-		</QueryClientProvider>
+		<RouterProvider
+			router={router}
+			fallbackElement={<p>Loading..</p>}
+			future={{ v7_startTransition: true }}
+		/>
 	);
 }

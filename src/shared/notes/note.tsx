@@ -71,7 +71,7 @@ export function Note({ event, block }: Note) {
 						time={event.created_at}
 						repost={isRepost}
 					/>
-					<div className="-mt-5 pl-[49px]">
+					<div className="z-10 relative -mt-6 pl-[49px]">
 						{renderContent}
 						{!isRepost && (
 							<NoteMetadata

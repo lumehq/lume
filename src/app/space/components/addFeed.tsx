@@ -2,14 +2,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { createBlock } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAccount } from "@utils/hooks/useAccount";
 import { nip19 } from "nostr-tools";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function AddFeedBlock({ parentState }: { parentState: any }) {
 	const queryClient = useQueryClient();
-	const { account } = useAccount();
 
 	const [loading, setLoading] = useState(false);
 	const [isOpen, setIsOpen] = useState(true);
@@ -22,7 +20,9 @@ export function AddFeedBlock({ parentState }: { parentState: any }) {
 	};
 
 	const block = useMutation({
-		mutationFn: (data: any) => createBlock(data.kind, data.title, data.content),
+		mutationFn: (data: any) => {
+			return createBlock(data.kind, data.title, data.content);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["blocks"] });
 		},

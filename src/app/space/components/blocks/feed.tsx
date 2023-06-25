@@ -64,7 +64,9 @@ export function FeedBlock({ params }: { params: any }) {
 	}, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
 
 	const block = useMutation({
-		mutationFn: (id: string) => removeBlock(id),
+		mutationFn: (id: string) => {
+			return removeBlock(id);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["blocks"] });
 		},

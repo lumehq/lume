@@ -127,8 +127,9 @@ export function CreateStep4Screen() {
 	};
 
 	const update = useMutation({
-		mutationFn: (follows: any) =>
-			updateAccount("follows", follows, account.pubkey),
+		mutationFn: (follows: any) => {
+			return updateAccount("follows", follows, account.pubkey);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["currentAccount"] });
 		},

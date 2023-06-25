@@ -21,7 +21,9 @@ export function ThreadBlock({ params }: { params: any }) {
 	);
 
 	const block = useMutation({
-		mutationFn: (id: string) => removeBlock(id),
+		mutationFn: (id: string) => {
+			return removeBlock(id);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["blocks"] });
 		},

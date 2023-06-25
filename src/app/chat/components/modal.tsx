@@ -26,6 +26,7 @@ export function NewMessageModal() {
 
 	const openChat = (npub: string) => {
 		const pubkey = nip19.decode(npub).data;
+		closeModal();
 		navigate(`/app/chat/${pubkey}`);
 	};
 
@@ -110,10 +111,10 @@ export function NewMessageModal() {
 														className="w-9 h-9 shrink-0 object-cover rounded"
 													/>
 													<div className="inline-flex flex-col gap-1">
-														<h3 className="leading-none font-medium text-zinc-100">
+														<h3 className="leading-none max-w-[15rem] font-medium text-zinc-100">
 															{pleb.display_name || pleb.name}
 														</h3>
-														<span className="leading-none text-sm text-zinc-400">
+														<span className="leading-none max-w-[10rem] text-sm text-zinc-400">
 															{pleb.nip05 ||
 																pleb.npub.substring(0, 16).concat("...")}
 														</span>

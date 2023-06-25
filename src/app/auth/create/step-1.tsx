@@ -1,6 +1,6 @@
 import { createAccount, createBlock } from "@libs/storage";
 import { Button } from "@shared/button";
-import { EyeOffIcon, EyeOnIcon } from "@shared/icons";
+import { EyeOffIcon, EyeOnIcon, LoaderIcon } from "@shared/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { generatePrivateKey, getPublicKey, nip19 } from "nostr-tools";
 import { useMemo, useState } from "react";
@@ -11,6 +11,7 @@ export function CreateStep1Screen() {
 	const queryClient = useQueryClient();
 
 	const [type, setType] = useState("password");
+	const [loading, setLoading] = useState(false);
 
 	const privkey = useMemo(() => generatePrivateKey(), []);
 	const pubkey = getPublicKey(privkey);
@@ -27,21 +28,17 @@ export function CreateStep1Screen() {
 	};
 
 	const account = useMutation({
-		mutationFn: (data: any) =>
-			createAccount(data.npub, data.pubkey, data.privkey, null, 1),
-		onSuccess: () => {
-			createBlock(
-				0,
-				"Preserve your freedom",
-				"https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv",
-			);
-			queryClient.invalidateQueries({ queryKey: ["currentAccount"] });
-			// redirect to next step
-			navigate("/auth/create/step-2", { replace: true });
+		mutationFn: (data: any) => {
+			return createAccount(data.npub, data.pubkey, data.privkey, null, 1);
+		},
+		onSuccess: (data: any) => {
+			queryClient.setQueryData(["currentAccount"], data);
 		},
 	});
 
-	const submit = async () => {
+	const submit = () => {
+		setLoading(true);
+
 		account.mutate({
 			npub,
 			pubkey,
@@ -49,6 +46,9 @@ export function CreateStep1Screen() {
 			follows: null,
 			is_active: 1,
 		});
+
+		// redirect to next step
+		setTimeout(() => navigate("/auth/create/step-2", { replace: true }), 1200);
 	};
 
 	return (
@@ -102,7 +102,11 @@ export function CreateStep1Screen() {
 					</div>
 				</div>
 				<Button preset="large" onClick={() => submit()}>
-					Continue →
+					{loading ? (
+						<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+					) : (
+						"Continue →"
+					)}
 				</Button>
 			</div>
 		</div>

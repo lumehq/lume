@@ -16,7 +16,9 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 	const queryClient = useQueryClient();
 
 	const block = useMutation({
-		mutationFn: (data: any) => createBlock(data.kind, data.title, data.content),
+		mutationFn: (data: any) => {
+			return createBlock(data.kind, data.title, data.content);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["blocks"] });
 		},
