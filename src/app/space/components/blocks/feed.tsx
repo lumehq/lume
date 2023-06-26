@@ -1,4 +1,4 @@
-import { getNotesByAuthor, removeBlock } from "@libs/storage";
+import { getNotesByAuthors, removeBlock } from "@libs/storage";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
 import { TitleBar } from "@shared/titleBar";
@@ -25,7 +25,7 @@ export function FeedBlock({ params }: { params: any }) {
 	}: any = useInfiniteQuery({
 		queryKey: ["newsfeed", params.content],
 		queryFn: async ({ pageParam = 0 }) => {
-			return await getNotesByAuthor(
+			return await getNotesByAuthors(
 				params.content,
 				TIME,
 				ITEM_PER_PAGE,
@@ -91,9 +91,9 @@ export function FeedBlock({ params }: { params: any }) {
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
 				style={{ contain: "strict" }}
 			>
-				{status === "loading" || isFetching ? (
+				{status === "loading" ? (
 					<div className="px-3 py-1.5">
-						<div className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-3 shadow-input shadow-black/20">
+						<div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
 							<NoteSkeleton />
 						</div>
 					</div>
@@ -116,6 +116,13 @@ export function FeedBlock({ params }: { params: any }) {
 							{rowVirtualizer
 								.getVirtualItems()
 								.map((virtualRow) => renderItem(virtualRow.index))}
+						</div>
+					</div>
+				)}
+				{isFetching && !isFetchingNextPage && (
+					<div className="px-3 py-1.5">
+						<div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+							<NoteSkeleton />
 						</div>
 					</div>
 				)}

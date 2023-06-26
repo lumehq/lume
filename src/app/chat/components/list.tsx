@@ -27,6 +27,7 @@ export function ChatsList() {
 
 	return (
 		<div className="flex flex-col">
+			<NewMessageModal />
 			{account ? (
 				<ChatsListSelfItem data={account} />
 			) : (
@@ -59,7 +60,6 @@ export function ChatsList() {
 					<div className="h-3 w-full rounded-sm animate-pulse bg-zinc-800" />
 				</div>
 			)}
-			<NewMessageModal />
 		</div>
 	);
 }

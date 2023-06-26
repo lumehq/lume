@@ -135,12 +135,14 @@ export async function countTotalNotes() {
 	const result = await db.select(
 		'SELECT COUNT(*) AS "total" FROM notes WHERE kind IN (1, 6);',
 	);
-	return result[0].total;
+	return parseInt(result[0].total);
 }
 
 // get all notes
 export async function getNotes(time: number, limit: number, offset: number) {
 	const db = await connect();
+	const totalNotes = await countTotalNotes();
+	const nextCursor = offset + limit;
 
 	const notes: any = { data: null, nextCursor: 0 };
 	const query: any = await db.select(
@@ -148,19 +150,22 @@ export async function getNotes(time: number, limit: number, offset: number) {
 	);
 
 	notes["data"] = query;
-	notes["nextCursor"] = offset + limit;
+	notes["nextCursor"] =
+		Math.round(totalNotes / nextCursor) > 1 ? nextCursor : undefined;
 
 	return notes;
 }
 
-// get all notes by authors
-export async function getNotesByAuthor(
+// get all notes by pubkey
+export async function getNotesByPubkey(
 	pubkey: string,
 	time: number,
 	limit: number,
 	offset: number,
 ) {
 	const db = await connect();
+	const totalNotes = await countTotalNotes();
+	const nextCursor = offset + limit;
 
 	const notes: any = { data: null, nextCursor: 0 };
 	const query: any = await db.select(
@@ -168,7 +173,33 @@ export async function getNotesByAuthor(
 	);
 
 	notes["data"] = query;
-	notes["nextCursor"] = offset + limit;
+	notes["nextCursor"] =
+		Math.round(totalNotes / nextCursor) > 1 ? nextCursor : undefined;
+
+	return notes;
+}
+
+// get all notes by authors
+export async function getNotesByAuthors(
+	authors: string,
+	time: number,
+	limit: number,
+	offset: number,
+) {
+	const db = await connect();
+	const totalNotes = await countTotalNotes();
+	const nextCursor = offset + limit;
+	const array = JSON.parse(authors);
+	const finalArray = `'${array.join("','")}'`;
+
+	const notes: any = { data: null, nextCursor: 0 };
+	const query: any = await db.select(
+		`SELECT * FROM notes WHERE created_at <= "${time}" AND pubkey IN (${finalArray}) AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
+	);
+
+	notes["data"] = query;
+	notes["nextCursor"] =
+		Math.round(totalNotes / nextCursor) > 1 ? nextCursor : undefined;
 
 	return notes;
 }

@@ -144,8 +144,8 @@ export function Root() {
 			const notes = await fetchNotes();
 			if (notes) {
 				const chats = await fetchChats();
-				const channels = await fetchChannelMessages();
-				if (chats && channels) {
+				// const channels = await fetchChannelMessages();
+				if (chats) {
 					navigate("/app/space", { replace: true });
 				}
 			}

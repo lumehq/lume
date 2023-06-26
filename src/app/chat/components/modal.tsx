@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 export function NewMessageModal() {
 	const navigate = useNavigate();
 
-	const { status, data, isFetching }: any = useQuery(["plebs"], async () => {
+	const { status, data }: any = useQuery(["plebs"], async () => {
 		return await getPlebs();
 	});
 
@@ -96,7 +96,7 @@ export function NewMessageModal() {
 									</div>
 								</div>
 								<div className="h-[500px] flex flex-col pb-5 overflow-x-hidden overflow-y-auto">
-									{status === "loading" || isFetching ? (
+									{status === "loading" ? (
 										<p>Loading...</p>
 									) : (
 										data.map((pleb) => (
@@ -111,10 +111,10 @@ export function NewMessageModal() {
 														className="w-9 h-9 shrink-0 object-cover rounded"
 													/>
 													<div className="inline-flex flex-col gap-1">
-														<h3 className="leading-none max-w-[15rem] font-medium text-zinc-100">
+														<h3 className="leading-none max-w-[15rem] line-clamp-1 font-medium text-zinc-100">
 															{pleb.display_name || pleb.name}
 														</h3>
-														<span className="leading-none max-w-[10rem] text-sm text-zinc-400">
+														<span className="leading-none max-w-[10rem] line-clamp-1 text-sm text-zinc-400">
 															{pleb.nip05 ||
 																pleb.npub.substring(0, 16).concat("...")}
 														</span>

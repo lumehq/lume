@@ -64,7 +64,7 @@ export function Navigation({ reverse = false }: { reverse?: boolean }) {
 						</NavLink>
 					</div>
 				</div>
-				{/* Channels */}
+				{/* Channels
 				<Disclosure defaultOpen={true}>
 					{({ open }) => (
 						<div className="flex flex-col gap-0.5 px-1.5">
@@ -90,6 +90,7 @@ export function Navigation({ reverse = false }: { reverse?: boolean }) {
 						</div>
 					)}
 				</Disclosure>
+				 */}
 				{/* Chats */}
 				<Disclosure defaultOpen={true}>
 					{({ open }) => (

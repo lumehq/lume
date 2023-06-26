@@ -21,7 +21,10 @@ export function ImageBlock({ params }: { params: any }) {
 		<div className="shrink-0 w-[350px] h-full flex flex-col justify-between border-r border-zinc-900">
 			<div className="relative flex-1 w-full h-full p-3 overflow-hidden">
 				<div className="absolute top-3 left-0 w-full h-16 px-3">
-					<div className="h-16 rounded-t-xl overflow-hidden flex items-center justify-end px-5">
+					<div className="h-16 rounded-t-xl overflow-hidden flex items-center justify-between px-5">
+						<h3 className="text-white font-medium drop-shadow-lg">
+							{params.title}
+						</h3>
 						<button
 							type="button"
 							onClick={() => block.mutate(params.id)}

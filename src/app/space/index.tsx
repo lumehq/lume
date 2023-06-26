@@ -65,12 +65,12 @@ export function SpaceScreen() {
 					</div>
 				</div>
 			)}
-			<div className="shrink-0 w-[90px]">
+			<div className="shrink-0 w-[350px] flex-col flex border-r border-zinc-900">
 				<div className="w-full h-full inline-flex items-center justify-center">
 					<AddBlock />
 				</div>
 			</div>
-			<div className="shrink-0 w-[360px]" />
+			<div className="shrink-0 w-[350px]" />
 		</div>
 	);
 }

@@ -29,8 +29,10 @@ export function RepliesList({ parent_id }: { parent_id: string }) {
 					<div className="px=3">
 						<div className="w-full flex items-center justify-center rounded-md bg-zinc-900">
 							<div className="py-6 flex flex-col items-center justify-center gap-2">
-								<EmptyIcon width={56} height={56} />
-								<p className="text-zinc-500 text-sm font-medium">No replies</p>
+								<h3 className="text-3xl">👋</h3>
+								<p className="leading-none text-zinc-400">
+									Share your thought on it...
+								</p>
 							</div>
 						</div>
 					</div>

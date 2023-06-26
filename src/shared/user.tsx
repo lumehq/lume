@@ -33,14 +33,14 @@ export function User({
 			}`}
 		>
 			<Popover.Button
-				className={`${avatarWidth} ${avatarHeight} shrink-0 overflow-hidden`}
+				className={`${avatarWidth} ${avatarHeight} relative z-10 bg-zinc-900 shrink-0 overflow-hidden`}
 			>
 				<Image
 					src={user?.image}
 					fallback={DEFAULT_AVATAR}
 					alt={pubkey}
 					className={`${avatarWidth} ${avatarHeight} ${
-						size === "small" ? "rounded" : "rounded-md"
+						size === "small" ? "rounded" : "rounded-lg"
 					} object-cover`}
 				/>
 			</Popover.Button>

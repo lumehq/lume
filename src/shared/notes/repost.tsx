@@ -15,7 +15,8 @@ export function Repost({
 	const { status, data, isFetching } = useEvent(repostID);
 
 	return (
-		<div className="relative overflow-hidden flex flex-col mt-12">
+		<div className="relative flex flex-col mt-12">
+			<div className="absolute left-[18px] -top-10 h-[50px] w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
 			{isFetching || status === "loading" ? (
 				<NoteSkeleton />
 			) : (
@@ -34,7 +35,7 @@ export function Repost({
 										Lume isn't fully support this kind in newsfeed
 									</p>
 								</div>
-								<div className="markdown">
+								<div className="select-text whitespace-pre-line	break-words text-base text-zinc-100">
 									<p>{data.content || data.toString()}</p>
 								</div>
 							</div>

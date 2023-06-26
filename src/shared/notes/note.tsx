@@ -53,7 +53,7 @@ export function Note({ event, block }: Note) {
 								Lume isn't fully support this kind in newsfeed
 							</p>
 						</div>
-						<div className="markdown">
+						<div className="select-text whitespace-pre-line	break-words text-base text-zinc-100">
 							<p>{event.content}</p>
 						</div>
 					</div>
@@ -63,7 +63,7 @@ export function Note({ event, block }: Note) {
 
 	return (
 		<div className="h-min w-full px-3 py-1.5">
-			<div className="rounded-md bg-zinc-900 px-5 pt-5">
+			<div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 pt-3">
 				{renderParent}
 				<div className="flex flex-col">
 					<User

@@ -4,9 +4,14 @@ export function VideoPreview({ urls }: { urls: string[] }) {
 	return (
 		<div className="relative mt-3 max-w-[420px] flex w-full flex-col gap-2">
 			{urls.map((url) => (
-				<div key={url} className="aspect-video">
-					<ReactPlayer url={url} width="100%" height="100%" />
-				</div>
+				<ReactPlayer
+					key={url}
+					url={url}
+					width="100%"
+					className="w-full h-auto border border-zinc-800/50 rounded-lg"
+					controls={true}
+					pip={true}
+				/>
 			))}
 		</div>
 	);

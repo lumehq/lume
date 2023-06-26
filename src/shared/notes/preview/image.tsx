@@ -10,7 +10,7 @@ export function ImagePreview({ urls }: { urls: string[] }) {
 							src={url}
 							fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW"
 							alt="image"
-							className="h-auto w-full rounded-lg object-cover"
+							className="h-auto w-full border border-zinc-800/50 rounded-lg object-cover"
 						/>
 					</div>
 				))}

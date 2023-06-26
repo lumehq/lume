@@ -32,7 +32,7 @@ export function NoteParent({
 										Lume isn't fully support this kind in newsfeed
 									</p>
 								</div>
-								<div className="markdown">
+								<div className="select-text whitespace-pre-line	break-words text-base text-zinc-100">
 									<p>{data.content || data.toString()}</p>
 								</div>
 							</div>
