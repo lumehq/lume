@@ -15,13 +15,14 @@ export function ChatsList() {
 	} = useQuery(
 		["chats"],
 		async () => {
-			return await getChatsByPubkey(account.pubkey);
+			const chats = await getChatsByPubkey(account.pubkey);
+			const sorted = chats.sort(
+				(a, b) => parseInt(a.new_messages) - parseInt(b.new_messages),
+			);
+			return sorted;
 		},
 		{
 			enabled: account ? true : false,
-			refetchOnWindowFocus: false,
-			refetchOnMount: false,
-			refetchOnReconnect: false,
 		},
 	);
 

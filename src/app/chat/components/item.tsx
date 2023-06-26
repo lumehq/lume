@@ -45,7 +45,7 @@ export function ChatsListItem({ data }: { data: any }) {
 							</h5>
 						</div>
 						<div className="flex items-center">
-							{data.new_messages && (
+							{data.new_messages > 0 && (
 								<span className="inline-flex items-center justify-center rounded bg-fuchsia-400/10 w-8 px-1 py-1 text-xs font-medium text-fuchsia-500 ring-1 ring-inset ring-fuchsia-400/20">
 									{data.new_messages}
 								</span>

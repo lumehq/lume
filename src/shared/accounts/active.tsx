@@ -1,30 +1,55 @@
-import { getLastLogin } from "@libs/storage";
+import { createChat, getLastLogin } from "@libs/storage";
 import { Image } from "@shared/image";
 import { NetworkStatusIndicator } from "@shared/networkStatusIndicator";
 import { RelayContext } from "@shared/relayProvider";
-import { useChannels } from "@stores/channels";
-import { useChats } from "@stores/chats";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
+import { produce } from "immer";
 import { useContext, useEffect } from "react";
 
 const lastLogin = await getLastLogin();
 
 export function ActiveAccount({ data }: { data: any }) {
 	const ndk = useContext(RelayContext);
-
-	const notifyChat = useChats((state: any) => state.add);
-	const notifyChannel = useChannels((state: any) => state.add);
+	const queryClient = useQueryClient();
 
 	const { status, user } = useProfile(data.pubkey);
 
+	const chat = useMutation({
+		mutationFn: (data: any) => {
+			return createChat(
+				data.id,
+				data.receiver_pubkey,
+				data.sender_pubkey,
+				data.content,
+				data.tags,
+				data.created_at,
+			);
+		},
+		onSuccess: (data: any) => {
+			const prev = queryClient.getQueryData(["chats"]);
+			const next = produce(prev, (draft: any) => {
+				const target = draft.findIndex(
+					(m: { sender_pubkey: string }) => m.sender_pubkey === data,
+				);
+				if (target !== -1) {
+					draft[target]["new_messages"] =
+						draft[target]["new_messages"] + 1 || 1;
+				} else {
+					draft.push({ sender_pubkey: data, new_messages: 1 });
+				}
+			});
+			queryClient.setQueryData(["chats"], next);
+		},
+	});
+
 	useEffect(() => {
 		const since = lastLogin > 0 ? lastLogin : Math.floor(Date.now() / 1000);
-		// subscribe to channel
 		const sub = ndk.subscribe(
 			{
-				kinds: [1, 4, 42],
+				kinds: [1, 4],
 				"#p": [data.pubkey],
 				since: since,
 			},
@@ -41,15 +66,16 @@ export function ActiveAccount({ data }: { data: any }) {
 					break;
 				case 4:
 					// update state
-					notifyChat(event.pubkey);
+					chat.mutate({
+						id: event.id,
+						receiver_pubkey: data.pubkey,
+						sender_pubkey: event.pubkey,
+						content: event.content,
+						tags: event.tags,
+						created_at: event.created_at,
+					});
 					// send native notifiation
 					sendNativeNotification("You've received new message");
-					break;
-				case 42:
-					// update state
-					notifyChannel(event);
-					// send native notifiation
-					sendNativeNotification(event.content);
 					break;
 				default:
 					break;

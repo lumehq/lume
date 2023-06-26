@@ -343,7 +343,8 @@ export async function getChatsByPubkey(pubkey: string) {
 	const result: any = await db.select(
 		`SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${pubkey}" ORDER BY created_at DESC;`,
 	);
-	return result;
+	const newArr: any = result.map((v) => ({ ...v, new_messages: 0 }));
+	return newArr;
 }
 
 // get chat messages
@@ -382,10 +383,11 @@ export async function createChat(
 	created_at: number,
 ) {
 	const db = await connect();
-	return await db.execute(
+	await db.execute(
 		"INSERT OR IGNORE INTO chats (event_id, receiver_pubkey, sender_pubkey, content, tags, created_at) VALUES (?, ?, ?, ?, ?, ?);",
 		[event_id, receiver_pubkey, sender_pubkey, content, tags, created_at],
 	);
+	return sender_pubkey;
 }
 
 // get last login
