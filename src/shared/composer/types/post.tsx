@@ -1,12 +1,10 @@
-import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { usePublish } from "@libs/ndk";
 import { Button } from "@shared/button";
 import { ImageUploader } from "@shared/composer/imageUploader";
 import { TrashIcon } from "@shared/icons";
 import { MentionNote } from "@shared/notes/mentions/note";
-import { RelayContext } from "@shared/relayProvider";
 import { useComposer } from "@stores/composer";
-import { dateToUnix } from "@utils/date";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Node, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
 import {
@@ -61,7 +59,7 @@ const ImagePreview = ({
 };
 
 export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
-	const ndk = useContext(RelayContext);
+	const publish = usePublish();
 	const [repost, toggle] = useComposer((state: any) => [
 		state.repost,
 		state.toggle,
@@ -86,29 +84,24 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 	}, []);
 
 	const submit = () => {
-		// serialize content
-		const serializedContent = serialize(content);
-
-		const signer = new NDKPrivateKeySigner(privkey);
-		ndk.signer = signer;
-
-		const event = new NDKEvent(ndk);
-		event.content = serializedContent;
-		event.created_at = dateToUnix();
-		event.pubkey = pubkey;
+		let tags: string[][] = [];
+		let kind: number;
 		if (repost.id && repost.pubkey) {
-			event.kind = 6;
-			event.tags = [
+			kind = 6;
+			tags = [
 				["e", repost.id],
 				["p", repost.pubkey],
 			];
 		} else {
-			event.kind = 1;
-			event.tags = [];
+			kind = 1;
+			tags = [];
 		}
 
-		// publish event
-		event.publish();
+		// serialize content
+		const serializedContent = serialize(content);
+
+		// publish message
+		publish({ content: serializedContent, kind, tags });
 
 		// close modal
 		toggle(false);

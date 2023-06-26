@@ -1,37 +1,29 @@
-import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { usePublish } from "@libs/ndk";
 import { LoaderIcon } from "@shared/icons";
 import { ArrowRightCircleIcon } from "@shared/icons/arrowRightCircle";
-import { RelayContext } from "@shared/relayProvider";
 import { User } from "@shared/user";
-import { dateToUnix } from "@utils/date";
 import { useAccount } from "@utils/hooks/useAccount";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export function OnboardingScreen() {
-	const ndk = useContext(RelayContext);
+	const publish = usePublish();
 	const navigate = useNavigate();
 
 	const { status, account } = useAccount();
 	const [loading, setLoading] = useState(false);
 
-	const publish = async () => {
+	const submit = async () => {
 		try {
 			setLoading(true);
 
-			const event = new NDKEvent(ndk);
-			const signer = new NDKPrivateKeySigner(account.privkey);
-			ndk.signer = signer;
-
-			event.content =
-				"Running Lume, fighting for better future, join us here: https://lume.nu";
-			event.created_at = dateToUnix();
-			event.pubkey = account.pubkey;
-			event.kind = 1;
-			event.tags = [];
-
 			// publish event
-			event.publish();
+			publish({
+				content:
+					"Running Lume, fighting for better future, join us here: https://lume.nu",
+				kind: 1,
+				tags: [],
+			});
 
 			// redirect to home
 			setTimeout(() => navigate("/", { replace: true }), 1200);
@@ -81,7 +73,7 @@ export function OnboardingScreen() {
 				<div className="mt-4 w-full flex flex-col gap-2">
 					<button
 						type="button"
-						onClick={() => publish()}
+						onClick={() => submit()}
 						className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg px-6 font-medium text-zinc-100 bg-fuchsia-500 hover:bg-fuchsia-600"
 					>
 						{loading ? (

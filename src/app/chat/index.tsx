@@ -1,14 +1,18 @@
 import { ChatMessageForm } from "@app/chat/components/messages/form";
 import { ChatMessageItem } from "@app/chat/components/messages/item";
 import { ChatSidebar } from "@app/chat/components/sidebar";
-import { getChatMessages } from "@libs/storage";
-import { useQuery } from "@tanstack/react-query";
+import { createChat, getChatMessages } from "@libs/storage";
+import { NDKSubscription } from "@nostr-dev-kit/ndk";
+import { RelayContext } from "@shared/relayProvider";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAccount } from "@utils/hooks/useAccount";
-import { useCallback, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 
 export function ChatScreen() {
+	const ndk = useContext(RelayContext);
+	const queryClient = useQueryClient();
 	const virtuosoRef = useRef(null);
 
 	const { pubkey } = useParams();
@@ -42,6 +46,51 @@ export function ChatScreen() {
 		},
 		[data],
 	);
+
+	const chat = useMutation({
+		mutationFn: (data: any) => {
+			return createChat(
+				data.id,
+				data.receiver_pubkey,
+				data.sender_pubkey,
+				data.content,
+				data.tags,
+				data.created_at,
+			);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["chat", pubkey] });
+		},
+	});
+
+	useEffect(() => {
+		const sub: NDKSubscription = ndk.subscribe(
+			{
+				kinds: [4],
+				authors: [account.pubkey],
+				"#p": [pubkey],
+				since: Math.floor(Date.now() / 1000),
+			},
+			{
+				closeOnEose: false,
+			},
+		);
+
+		sub.addListener("event", (event) => {
+			chat.mutate({
+				id: event.id,
+				receiver_pubkey: pubkey,
+				sender_pubkey: event.pubkey,
+				content: event.content,
+				tags: event.tags,
+				created_at: event.created_at,
+			});
+		});
+
+		return () => {
+			sub.stop();
+		};
+	}, [pubkey]);
 
 	return (
 		<div className="h-full w-full grid grid-cols-3">

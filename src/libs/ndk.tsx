@@ -2,8 +2,13 @@ import NDK, {
 	NDKConstructorParams,
 	NDKEvent,
 	NDKFilter,
+	NDKKind,
+	NDKPrivateKeySigner,
 } from "@nostr-dev-kit/ndk";
+import { RelayContext } from "@shared/relayProvider";
 import { FULL_RELAYS } from "@stores/constants";
+import { useAccount } from "@utils/hooks/useAccount";
+import { useContext } from "react";
 
 export async function initNDK(
 	relays?: string[],
@@ -38,4 +43,32 @@ export async function prefetchEvents(
 			setTimeout(() => resolve(new Set(events.values())), 5000);
 		});
 	});
+}
+
+export function usePublish() {
+	const { account } = useAccount();
+	const ndk = useContext(RelayContext);
+
+	if (!ndk.signer) {
+		const signer = new NDKPrivateKeySigner(account?.privkey);
+		ndk.signer = signer;
+	}
+
+	function publish({
+		content,
+		kind,
+		tags,
+	}: { content: string; kind: NDKKind; tags: string[][] }) {
+		const event = new NDKEvent(ndk);
+
+		event.content = content;
+		event.kind = kind;
+		event.created_at = Math.floor(Date.now() / 1000);
+		event.pubkey = account.pubkey;
+		event.tags = tags;
+
+		event.publish();
+	}
+
+	return publish;
 }

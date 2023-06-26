@@ -46,7 +46,7 @@ export function User({
 			</Popover.Button>
 			<div className="flex flex-wrap items-baseline gap-1">
 				<h5
-					className={`text-zinc-200 font-medium leading-none truncate ${
+					className={`text-zinc-100 font-semibold leading-none truncate ${
 						size === "small" ? "max-w-[7rem]" : "max-w-[10rem]"
 					}`}
 				>

@@ -1,15 +1,13 @@
-import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { usePublish } from "@libs/ndk";
 import { Button } from "@shared/button";
 import { Image } from "@shared/image";
-import { RelayContext } from "@shared/relayProvider";
 import { DEFAULT_AVATAR } from "@stores/constants";
-import { dateToUnix } from "@utils/date";
 import { useAccount } from "@utils/hooks/useAccount";
 import { useProfile } from "@utils/hooks/useProfile";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 export function NoteReplyForm({ id }: { id: string }) {
-	const ndk = useContext(RelayContext);
+	const publish = usePublish();
 
 	const { account } = useAccount();
 	const { status, user } = useProfile(account.npub);
@@ -17,19 +15,10 @@ export function NoteReplyForm({ id }: { id: string }) {
 	const [value, setValue] = useState("");
 
 	const submitEvent = () => {
-		const signer = new NDKPrivateKeySigner(account.privkey);
-		ndk.signer = signer;
-
-		const event = new NDKEvent(ndk);
-		// build event
-		event.content = value;
-		event.kind = 1;
-		event.created_at = dateToUnix();
-		event.pubkey = account.pubkey;
-		event.tags = [["e", id]];
+		const tags = [["e", id]];
 
 		// publish event
-		event.publish();
+		publish({ content: value, kind: 1, tags });
 
 		// reset form
 		setValue("");

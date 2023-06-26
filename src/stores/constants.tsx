@@ -66,5 +66,7 @@ export const OPENGRAPH = {
 export const FULL_RELAYS = [
 	"wss://relay.damus.io",
 	"wss://relay.nostr.band/all",
+	"wss://relayable.org",
+	"wss://nostr.mutinywallet.com",
 	"wss://relay.nostrgraph.net",
 ];
