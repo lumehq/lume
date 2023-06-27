@@ -4,6 +4,7 @@ import { ImageUploader } from "@shared/composer/imageUploader";
 import { TrashIcon } from "@shared/icons";
 import { MentionNote } from "@shared/notes/mentions/note";
 import { useComposer } from "@stores/composer";
+import { FULL_RELAYS } from "@stores/constants";
 import { useCallback, useMemo, useState } from "react";
 import { Node, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
@@ -44,7 +45,7 @@ const ImagePreview = ({
 				<img
 					alt={element.url}
 					src={element.url}
-					className="m-0 h-auto w-full rounded-md"
+					className="m-0 h-auto max-h-[300px] w-full rounded-md object-cover"
 				/>
 				<button
 					type="button"
@@ -58,11 +59,11 @@ const ImagePreview = ({
 	);
 };
 
-export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
+export function Post() {
 	const publish = usePublish();
-	const [repost, toggle] = useComposer((state: any) => [
+	const [repost, toggle] = useComposer((state) => [
 		state.repost,
-		state.toggle,
+		state.toggleModal,
 	]);
 	const editor = useMemo(
 		() => withReact(withImages(withHistory(createEditor()))),
@@ -86,10 +87,11 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 	const submit = () => {
 		let tags: string[][] = [];
 		let kind: number;
+
 		if (repost.id && repost.pubkey) {
 			kind = 6;
 			tags = [
-				["e", repost.id],
+				["e", repost.id, FULL_RELAYS[0], "root"],
 				["p", repost.pubkey],
 			];
 		} else {
@@ -140,7 +142,7 @@ export function Post({ pubkey, privkey }: { pubkey: string; privkey: string }) {
 				</div>
 				<div className="mt-4 flex items-center justify-between">
 					<ImageUploader />
-					<Button onClick={() => submit} preset="publish">
+					<Button onClick={() => submit()} preset="publish">
 						Publish
 					</Button>
 				</div>

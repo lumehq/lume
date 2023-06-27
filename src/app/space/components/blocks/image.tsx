@@ -1,7 +1,6 @@
 import { removeBlock } from "@libs/storage";
 import { CancelIcon } from "@shared/icons";
 import { Image } from "@shared/image";
-import { TitleBar } from "@shared/titleBar";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

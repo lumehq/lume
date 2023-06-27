@@ -1,6 +1,9 @@
 import { Image } from "@shared/image";
 
-export function ImagePreview({ urls }: { urls: string[] }) {
+export function ImagePreview({
+	urls,
+	truncate,
+}: { urls: string[]; truncate?: boolean }) {
 	return (
 		<div className="mt-3 max-w-[420px] overflow-hidden">
 			<div className="flex flex-col gap-2">
@@ -10,7 +13,9 @@ export function ImagePreview({ urls }: { urls: string[] }) {
 							src={url}
 							fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW"
 							alt="image"
-							className="h-auto w-full border border-zinc-800/50 rounded-lg object-cover"
+							className={`${
+								truncate ? "h-auto max-h-[300px]" : "h-auto"
+							} w-full border border-zinc-800/50 rounded-lg object-cover`}
 						/>
 					</div>
 				))}

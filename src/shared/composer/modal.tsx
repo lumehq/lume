@@ -17,7 +17,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 export function Composer() {
 	const { account } = useAccount();
 
-	const [toggle, open] = useComposer((state: any) => [
+	const [toggle, open] = useComposer((state) => [
 		state.toggleModal,
 		state.open,
 	]);
@@ -57,7 +57,7 @@ export function Composer() {
 							leaveFrom="opacity-100 scale-100"
 							leaveTo="opacity-0 scale-95"
 						>
-							<Dialog.Panel className="relative h-min w-full max-w-xl rounded-lg border border-zinc-800 bg-zinc-900">
+							<Dialog.Panel className="relative h-min w-full max-w-xl rounded-xl border-t border-zinc-800/50 bg-zinc-900">
 								<div className="flex items-center justify-between px-4 py-4">
 									<div className="flex items-center gap-2">
 										<div>{account && <User pubkey={account.pubkey} />}</div>
@@ -85,9 +85,7 @@ export function Composer() {
 										/>
 									</div>
 								</div>
-								{account && (
-									<Post pubkey={account.pubkey} privkey={account.privkey} />
-								)}
+								{account && <Post />}
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>

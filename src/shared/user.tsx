@@ -33,7 +33,7 @@ export function User({
 			}`}
 		>
 			<Popover.Button
-				className={`${avatarWidth} ${avatarHeight} relative z-50 bg-zinc-900 shrink-0 overflow-hidden`}
+				className={`${avatarWidth} ${avatarHeight} relative z-10 bg-zinc-900 shrink-0 overflow-hidden`}
 			>
 				<Image
 					src={user?.image}

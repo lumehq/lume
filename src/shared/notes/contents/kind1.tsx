@@ -17,7 +17,7 @@ export function Kind1({
 				{content.parsed}
 			</div>
 			{Array.isArray(content.images) && content.images.length ? (
-				<ImagePreview urls={content.images} />
+				<ImagePreview urls={content.images} truncate={truncate} />
 			) : (
 				<></>
 			)}

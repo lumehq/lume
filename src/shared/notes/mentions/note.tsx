@@ -57,7 +57,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 										Lume isn't fully support this kind in newsfeed
 									</p>
 								</div>
-								<div className="markdown">
+								<div className="select-text whitespace-pre-line	break-words text-base text-zinc-100">
 									<p>{data.content}</p>
 								</div>
 							</div>

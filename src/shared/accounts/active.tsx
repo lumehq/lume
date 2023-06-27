@@ -88,20 +88,18 @@ export function ActiveAccount({ data }: { data: any }) {
 	}, []);
 
 	if (status === "loading") {
-		return <div className="w-9 h-9 rounded bg-zinc-800 animate-pulse" />;
+		return <div className="w-9 h-9 rounded-md bg-zinc-800 animate-pulse" />;
 	}
 
 	return (
-		<div className="inline-flex items-center gap-2">
-			<div className="relative inline-block h-9 w-9">
-				<Image
-					src={user.image}
-					fallback={DEFAULT_AVATAR}
-					alt={data.npub}
-					className="h-9 w-9 rounded object-cover"
-				/>
-				<NetworkStatusIndicator />
-			</div>
+		<div className="relative inline-block h-9 w-9">
+			<Image
+				src={user.image}
+				fallback={DEFAULT_AVATAR}
+				alt={data.npub}
+				className="h-9 w-9 rounded-md object-cover"
+			/>
+			<NetworkStatusIndicator />
 		</div>
 	);
 }

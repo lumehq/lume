@@ -1,10 +1,9 @@
-import { ChannelsList } from "@app/channel/components/list";
 import { ChatsList } from "@app/chat/components/list";
 import { Disclosure } from "@headlessui/react";
 import { AppHeader } from "@shared/appHeader";
 import { Composer } from "@shared/composer/modal";
 import { NavArrowDownIcon, SpaceIcon, TrendingIcon } from "@shared/icons";
-import { MultiAccounts } from "@shared/multiAccounts";
+import { LumeBar } from "@shared/lumeBar";
 import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -118,8 +117,8 @@ export function Navigation({ reverse = false }: { reverse?: boolean }) {
 					)}
 				</Disclosure>
 			</div>
-			<div className="absolute bottom-2 left-0 px-8 w-full">
-				<MultiAccounts />
+			<div className="absolute bottom-3 left-0 px-8 w-full">
+				<LumeBar />
 			</div>
 		</div>
 	);

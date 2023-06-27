@@ -2,11 +2,12 @@ import { Transition } from "@headlessui/react";
 import { getActiveAccount } from "@libs/storage";
 import { ActiveAccount } from "@shared/accounts/active";
 import { VerticalDotsIcon } from "@shared/icons";
+import { RelayManager } from "@shared/relayManager";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export function MultiAccounts() {
+export function LumeBar() {
 	const { status, data: activeAccount } = useQuery(
 		["activeAccount"],
 		async () => {
@@ -25,10 +26,11 @@ export function MultiAccounts() {
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					{status === "loading" ? (
-						<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900" />
+						<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-md bg-zinc-900" />
 					) : (
 						<ActiveAccount data={activeAccount} />
 					)}
+					<RelayManager />
 				</div>
 				<button
 					type="button"

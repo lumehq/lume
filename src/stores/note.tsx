@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 interface NoteState {
 	hasNewNote: boolean;
-	toggleHasNewNote: (by: boolean) => void;
+	toggleHasNewNote: (status: boolean) => void;
 }
 
 export const useNote = create<NoteState>((set) => ({

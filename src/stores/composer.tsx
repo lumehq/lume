@@ -1,9 +1,18 @@
 import { create } from "zustand";
 
-export const useComposer = create((set) => ({
+interface ComposerState {
+	open: boolean;
+	reply: null;
+	repost: { id: string; pubkey: string };
+	toggleModal: (status: boolean) => void;
+	setRepost: (id: string, pubkey: string) => void;
+	clearRepost: () => void;
+}
+
+export const useComposer = create<ComposerState>((set) => ({
 	open: false,
-	repost: { id: null, pubkey: null },
 	reply: null,
+	repost: { id: null, pubkey: null },
 	toggleModal: (status: boolean) => {
 		set({ open: status });
 		if (!status) {
