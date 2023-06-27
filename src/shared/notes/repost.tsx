@@ -12,12 +12,12 @@ export function Repost({
 	currentBlock,
 }: { event: LumeEvent; currentBlock?: number }) {
 	const repostID = getRepostID(event.tags);
-	const { status, data, isFetching } = useEvent(repostID);
+	const { status, data } = useEvent(repostID);
 
 	return (
 		<div className="relative flex flex-col mt-12">
 			<div className="absolute left-[18px] -top-10 h-[50px] w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
-			{isFetching || status === "loading" ? (
+			{status === "loading" ? (
 				<NoteSkeleton />
 			) : (
 				<>

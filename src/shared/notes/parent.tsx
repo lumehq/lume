@@ -9,12 +9,12 @@ export function NoteParent({
 	id,
 	currentBlock,
 }: { id: string; currentBlock: number }) {
-	const { status, data, isFetching } = useEvent(id);
+	const { status, data } = useEvent(id);
 
 	return (
 		<div className="relative overflow-hidden flex flex-col pb-6">
 			<div className="absolute left-[18px] top-0 h-full w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
-			{isFetching || status === "loading" ? (
+			{status === "loading" ? (
 				<NoteSkeleton />
 			) : (
 				<>

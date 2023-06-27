@@ -12,7 +12,7 @@ export function Reply({ data }: { data: any }) {
 				<User pubkey={data.pubkey} time={data.created_at} />
 				<div className="-mt-[20px] pl-[50px]">
 					<Kind1 content={content} />
-					<NoteMetadata id={data.id} eventPubkey={data.pubkey} />
+					<NoteMetadata id={data.event_id} eventPubkey={data.pubkey} />
 				</div>
 			</div>
 		</div>

@@ -8,7 +8,7 @@ import { useEvent } from "@utils/hooks/useEvent";
 import { memo } from "react";
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
-	const { status, data, isFetching } = useEvent(id);
+	const { status, data } = useEvent(id);
 
 	const kind1 = data?.kind === 1 ? data.content : null;
 	const kind1063 = data?.kind === 1063 ? data.tags : null;
@@ -39,7 +39,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 			onKeyDown={(e) => openThread(e, id)}
 			className="mt-3 rounded-lg bg-zinc-800 border-t border-zinc-700/50 px-3 py-3"
 		>
-			{isFetching || status === "loading" ? (
+			{status === "loading" ? (
 				<NoteSkeleton />
 			) : (
 				<>

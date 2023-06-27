@@ -20,6 +20,6 @@ root.render(
 		<RelayProvider>
 			<App />
 		</RelayProvider>
-		<ReactQueryDevtools initialIsOpen={false} />
+		<ReactQueryDevtools initialIsOpen={false} position="top-right" />
 	</QueryClientProvider>,
 );

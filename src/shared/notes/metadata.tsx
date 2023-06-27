@@ -19,60 +19,57 @@ export function NoteMetadata({
 	currentBlock?: number;
 }) {
 	const ndk = useContext(RelayContext);
-	const { status, data, isFetching } = useQuery(
-		["note-metadata", id],
-		async () => {
-			let replies = 0;
-			let reposts = 0;
-			let zap = 0;
+	const { status, data } = useQuery(["note-metadata", id], async () => {
+		let replies = 0;
+		let reposts = 0;
+		let zap = 0;
 
-			const filter: NDKFilter = {
-				"#e": [id],
-				kinds: [1, 6, 9735],
-			};
+		const filter: NDKFilter = {
+			"#e": [id],
+			kinds: [1, 6, 9735],
+		};
 
-			const events = await ndk.fetchEvents(filter);
-			events.forEach((event: NDKEvent) => {
-				switch (event.kind) {
-					case 1:
-						replies += 1;
-						createReplyNote(
-							id,
-							event.id,
-							event.pubkey,
-							event.kind,
-							event.tags,
-							event.content,
-							event.created_at,
+		const events = await ndk.fetchEvents(filter);
+		events.forEach((event: NDKEvent) => {
+			switch (event.kind) {
+				case 1:
+					replies += 1;
+					createReplyNote(
+						id,
+						event.id,
+						event.pubkey,
+						event.kind,
+						event.tags,
+						event.content,
+						event.created_at,
+					);
+					break;
+				case 6:
+					reposts += 1;
+					break;
+				case 9735: {
+					const bolt11 = event.tags.find((tag) => tag[0] === "bolt11")[1];
+					if (bolt11) {
+						const decoded = decode(bolt11);
+						const amount = decoded.sections.find(
+							(item) => item.name === "amount",
 						);
-						break;
-					case 6:
-						reposts += 1;
-						break;
-					case 9735: {
-						const bolt11 = event.tags.find((tag) => tag[0] === "bolt11")[1];
-						if (bolt11) {
-							const decoded = decode(bolt11);
-							const amount = decoded.sections.find(
-								(item) => item.name === "amount",
-							);
-							const sats = amount.value / 1000;
-							zap += sats;
-						}
-						break;
+						const sats = amount.value / 1000;
+						zap += sats;
 					}
-					default:
-						break;
+					break;
 				}
-			});
+				default:
+					break;
+			}
+		});
 
-			return { replies, reposts, zap };
-		},
-	);
+		return { replies, reposts, zap };
+	});
 
 	return (
 		<div className="inline-flex items-center w-full h-12 mt-2">
-			{status === "loading" || isFetching ? (
+			{status === "loading" ? (
 				<>
 					<div className="w-20 group inline-flex items-center gap-1.5">
 						<ReplyIcon

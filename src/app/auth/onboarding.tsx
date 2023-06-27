@@ -77,7 +77,11 @@ export function OnboardingScreen() {
 						className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg px-6 font-medium text-zinc-100 bg-fuchsia-500 hover:bg-fuchsia-600"
 					>
 						{loading ? (
-							<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+							<>
+								<span className="w-5" />
+								<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+								<span className="w-5" />
+							</>
 						) : (
 							<>
 								<span className="w-5" />

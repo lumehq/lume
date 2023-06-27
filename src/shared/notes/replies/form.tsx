@@ -14,7 +14,7 @@ export function NoteReplyForm({ id }: { id: string }) {
 
 	const [value, setValue] = useState("");
 
-	const submitEvent = () => {
+	const submit = () => {
 		const tags = [["e", id]];
 
 		// publish event
@@ -28,7 +28,7 @@ export function NoteReplyForm({ id }: { id: string }) {
 		<div className="flex flex-col">
 			<div className="relative w-full flex-1 overflow-hidden">
 				<textarea
-					name="content"
+					value={value}
 					onChange={(e) => setValue(e.target.value)}
 					placeholder="Reply to this thread..."
 					className="relative h-20 w-full resize-none rounded-md px-5 py-3 text-base bg-transparent !outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
@@ -62,7 +62,7 @@ export function NoteReplyForm({ id }: { id: string }) {
 						</div>
 						<div className="flex items-center gap-2">
 							<Button
-								onClick={() => submitEvent()}
+								onClick={() => submit()}
 								disabled={value.length === 0 ? true : false}
 								preset="publish"
 							>

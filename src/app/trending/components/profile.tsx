@@ -5,16 +5,15 @@ import { compactNumber } from "@utils/number";
 import { shortenKey } from "@utils/shortenKey";
 
 export function Profile({ data }: { data: any }) {
-	const {
-		status,
-		data: userStats,
-		isFetching,
-	} = useQuery(["user-stats", data.pubkey], async () => {
-		const res = await fetch(
-			`https://api.nostr.band/v0/stats/profile/${data.pubkey}`,
-		);
-		return res.json();
-	});
+	const { status, data: userStats } = useQuery(
+		["user-stats", data.pubkey],
+		async () => {
+			const res = await fetch(
+				`https://api.nostr.band/v0/stats/profile/${data.pubkey}`,
+			);
+			return res.json();
+		},
+	);
 
 	const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
 	const profile = embedProfile;
@@ -51,7 +50,7 @@ export function Profile({ data }: { data: any }) {
 				</p>
 			</div>
 			<div className="mt-8">
-				{status === "loading" || isFetching ? (
+				{status === "loading" ? (
 					<p>Loading...</p>
 				) : (
 					<div className="w-full flex items-center gap-8">

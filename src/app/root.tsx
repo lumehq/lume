@@ -28,22 +28,18 @@ export function Root() {
 	async function fetchNotes() {
 		try {
 			const follows = JSON.parse(account.follows);
-			let queryNoteSince: number;
+			let since: number;
 
-			if (totalNotes === 0) {
-				queryNoteSince = dateToUnix(getHourAgo(48, now.current));
+			if (totalNotes === 0 || lastLogin === 0) {
+				since = dateToUnix(getHourAgo(48, now.current));
 			} else {
-				if (lastLogin > 0) {
-					queryNoteSince = lastLogin;
-				} else {
-					queryNoteSince = dateToUnix(getHourAgo(48, now.current));
-				}
+				since = lastLogin;
 			}
 
 			const filter: NDKFilter = {
 				kinds: [1, 6],
 				authors: follows,
-				since: queryNoteSince,
+				since: since,
 			};
 
 			const events = await prefetchEvents(ndk, filter);

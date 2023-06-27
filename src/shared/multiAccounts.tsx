@@ -7,13 +7,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function MultiAccounts() {
-	const {
-		status,
-		data: activeAccount,
-		isFetching,
-	} = useQuery(["activeAccount"], async () => {
-		return await getActiveAccount();
-	});
+	const { status, data: activeAccount } = useQuery(
+		["activeAccount"],
+		async () => {
+			return await getActiveAccount();
+		},
+	);
 
 	const [open, setOpen] = useState(false);
 
@@ -25,7 +24,7 @@ export function MultiAccounts() {
 		<div className="flex flex-col gap-2 rounded-xl p-2 border-t border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					{status === "loading" || isFetching ? (
+					{status === "loading" ? (
 						<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-lg bg-zinc-900" />
 					) : (
 						<ActiveAccount data={activeAccount} />

@@ -15,25 +15,19 @@ const TIME = Math.floor(Date.now() / 1000);
 
 export function FeedBlock({ params }: { params: any }) {
 	const queryClient = useQueryClient();
-	const {
-		status,
-		data,
-		fetchNextPage,
-		hasNextPage,
-		isFetching,
-		isFetchingNextPage,
-	}: any = useInfiniteQuery({
-		queryKey: ["newsfeed", params.content],
-		queryFn: async ({ pageParam = 0 }) => {
-			return await getNotesByAuthors(
-				params.content,
-				TIME,
-				ITEM_PER_PAGE,
-				pageParam,
-			);
-		},
-		getNextPageParam: (lastPage) => lastPage.nextCursor,
-	});
+	const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage }: any =
+		useInfiniteQuery({
+			queryKey: ["newsfeed", params.content],
+			queryFn: async ({ pageParam = 0 }) => {
+				return await getNotesByAuthors(
+					params.content,
+					TIME,
+					ITEM_PER_PAGE,
+					pageParam,
+				);
+			},
+			getNextPageParam: (lastPage) => lastPage.nextCursor,
+		});
 
 	const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
 	const parentRef = useRef();
@@ -119,7 +113,7 @@ export function FeedBlock({ params }: { params: any }) {
 						</div>
 					</div>
 				)}
-				{isFetching && !isFetchingNextPage && (
+				{isFetchingNextPage && (
 					<div className="px-3 py-1.5">
 						<div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
 							<NoteSkeleton />

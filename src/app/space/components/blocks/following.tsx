@@ -1,30 +1,31 @@
-import { createNote, getNotes } from "@libs/storage";
-import { NDKEvent, NDKFilter, NDKSubscription } from "@nostr-dev-kit/ndk";
+import { useNewsfeed } from "@app/space/hooks/useNewsfeed";
+import { getNotes } from "@libs/storage";
 import { Note } from "@shared/notes/note";
 import { NoteSkeleton } from "@shared/notes/skeleton";
-import { RelayContext } from "@shared/relayProvider";
 import { TitleBar } from "@shared/titleBar";
+import { useNote } from "@stores/note";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { dateToUnix } from "@utils/date";
-import { useAccount } from "@utils/hooks/useAccount";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const ITEM_PER_PAGE = 10;
 const TIME = Math.floor(Date.now() / 1000);
 
 export function FollowingBlock({ block }: { block: number }) {
-	const ndk = useContext(RelayContext);
-
-	const { account } = useAccount();
+	// subscribe for live update
+	useNewsfeed();
+	const [hasNewNote, toggleHasNewNote] = useNote((state) => [
+		state.hasNewNote,
+		state.toggleHasNewNote,
+	]);
 
 	const {
 		status,
 		data,
 		fetchNextPage,
 		hasNextPage,
-		isFetching,
 		isFetchingNextPage,
+		refetch,
 	}: any = useInfiniteQuery({
 		queryKey: ["newsfeed-circle"],
 		queryFn: async ({ pageParam = 0 }) => {
@@ -61,39 +62,17 @@ export function FollowingBlock({ block }: { block: number }) {
 		}
 	}, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
 
-	useEffect(() => {
-		const follows = account ? JSON.parse(account.follows) : [];
-
-		const filter: NDKFilter = {
-			kinds: [1, 6],
-			authors: follows,
-			since: dateToUnix(),
-		};
-
-		const sub = account ? ndk.subscribe(filter) : null;
-		if (sub) {
-			sub.addListener("event", (event: NDKEvent) => {
-				createNote(
-					event.id,
-					event.pubkey,
-					event.kind,
-					event.tags,
-					event.content,
-					event.created_at,
-				);
-			});
-		}
-
-		return () => {
-			if (sub) {
-				sub.stop();
-			}
-		};
-	}, [account]);
+	const refreshFirstPage = () => {
+		// refetch
+		refetch({ refetchPage: (page, index) => index === 0 });
+		// scroll to top
+		rowVirtualizer.scrollToIndex(1);
+		// stop notify
+		toggleHasNewNote(false);
+	};
 
 	const renderItem = (index: string | number) => {
 		const note = notes[index];
-
 		if (!note) return;
 		return (
 			<div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
@@ -103,8 +82,19 @@ export function FollowingBlock({ block }: { block: number }) {
 	};
 
 	return (
-		<div className="shrink-0 w-[400px] border-r border-zinc-900">
+		<div className="shrink-0 relative w-[400px] border-r border-zinc-900">
 			<TitleBar title="Circle" />
+			{hasNewNote && (
+				<div className="z-50 absolute top-12 left-1/2 transform -translate-x-1/2">
+					<button
+						type="button"
+						onClick={() => refreshFirstPage()}
+						className="inline-flex items-center justify-center w-min px-3.5 py-1.5 rounded-full bg-fuchsia-500 hover:bg-fuchsia-600 border border-fuchsia-800/50 text-sm"
+					>
+						Newest
+					</button>
+				</div>
+			)}
 			<div
 				ref={parentRef}
 				className="scrollbar-hide flex w-full h-full flex-col justify-between gap-1.5 pt-1.5 pb-20 overflow-y-auto"
@@ -138,7 +128,7 @@ export function FollowingBlock({ block }: { block: number }) {
 						</div>
 					</div>
 				)}
-				{isFetching && !isFetchingNextPage && (
+				{isFetchingNextPage && (
 					<div className="px-3 py-1.5">
 						<div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
 							<NoteSkeleton />
