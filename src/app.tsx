@@ -15,6 +15,7 @@ import { ErrorScreen } from "@app/error";
 import { Root } from "@app/root";
 import { SpaceScreen } from "@app/space";
 import { TrendingScreen } from "@app/trending";
+import { UserScreen } from "@app/user";
 import { AppLayout } from "@shared/appLayout";
 import { AuthLayout } from "@shared/authLayout";
 import { Protected } from "@shared/protected";
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
 		children: [
 			{ path: "space", element: <SpaceScreen /> },
 			{ path: "trending", element: <TrendingScreen /> },
+			{ path: "user/:pubkey", element: <UserScreen /> },
 			{ path: "chat/:pubkey", element: <ChatScreen /> },
 			{ path: "channel/:id", element: <ChannelScreen /> },
 		],

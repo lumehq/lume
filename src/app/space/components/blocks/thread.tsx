@@ -55,7 +55,7 @@ export function ThreadBlock({ params }: { params: any }) {
 							</div>
 						</div>
 						<div className="mt-3 bg-zinc-900 rounded-md">
-							<NoteReplyForm id={params.content} />
+							<NoteReplyForm rootID={params.content} />
 						</div>
 					</div>
 				)}

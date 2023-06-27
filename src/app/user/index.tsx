@@ -1,57 +1,50 @@
-import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import { usePublish } from "@libs/ndk";
 import { Image } from "@shared/image";
-import { RelayContext } from "@shared/relayProvider";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useQuery } from "@tanstack/react-query";
-import { dateToUnix } from "@utils/date";
-import { useAccount } from "@utils/hooks/useAccount";
-import { usePageContext } from "@utils/hooks/usePageContext";
+import { useFollows } from "@utils/hooks/useFollows";
 import { useProfile } from "@utils/hooks/useProfile";
 import { compactNumber } from "@utils/number";
 import { shortenKey } from "@utils/shortenKey";
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 export function UserScreen() {
-	const ndk = useContext(RelayContext);
-	const pageContext = usePageContext();
-	const searchParams: any = pageContext.urlParsed.search;
-	const pubkey = searchParams.pubkey || "";
+	const publish = usePublish();
+	const [followed, setFollowed] = useState(false);
 
-	const { account } = useAccount();
+	const { pubkey } = useParams();
 	const { user } = useProfile(pubkey);
-	const { data: userStats, error } = useQuery(["user", pubkey], async () => {
+	const { status: followsStatus, follows } = useFollows();
+	const {
+		status: userStatsStatus,
+		data: userStats,
+		error,
+	} = useQuery(["user", pubkey], async () => {
 		const res = await fetch(
 			`https://api.nostr.band/v0/stats/profile/${pubkey}`,
 		);
-		if (res.ok) {
-			return await res.json();
+		if (!res.ok) {
+			throw new Error("Error");
 		}
+		return await res.json();
 	});
-
-	const follows = account ? JSON.parse(account.follows) : [];
 
 	const follow = (pubkey: string) => {
 		try {
 			const followsAsSet = new Set(follows);
 			followsAsSet.add(pubkey);
 
-			const signer = new NDKPrivateKeySigner(account.privkey);
-			ndk.signer = signer;
-
 			const tags = [];
 			followsAsSet.forEach((item) => {
 				tags.push(["p", item]);
 			});
 
-			const event = new NDKEvent(ndk);
-			event.content = "";
-			event.created_at = dateToUnix();
-			event.pubkey = pubkey;
-			event.kind = 3;
-			event.tags = tags;
 			// publish event
-			event.publish();
+			publish({ content: "", kind: 3, tags: tags });
+
+			// update state
+			setFollowed(true);
 		} catch (error) {
 			console.log(error);
 		}
@@ -62,26 +55,28 @@ export function UserScreen() {
 			const followsAsSet = new Set(follows);
 			followsAsSet.delete(pubkey);
 
-			const signer = new NDKPrivateKeySigner(account.privkey);
-			ndk.signer = signer;
-
 			const tags = [];
 			followsAsSet.forEach((item) => {
 				tags.push(["p", item]);
 			});
 
-			const event = new NDKEvent(ndk);
-			event.content = "";
-			event.created_at = dateToUnix();
-			event.pubkey = pubkey;
-			event.kind = 3;
-			event.tags = tags;
 			// publish event
-			event.publish();
+			publish({ content: "", kind: 3, tags: tags });
+
+			// update state
+			setFollowed(false);
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
+	useEffect(() => {
+		if (followsStatus === "success" && follows) {
+			if (follows.includes(pubkey)) {
+				setFollowed(true);
+			}
+		}
+	}, [followsStatus]);
 
 	return (
 		<div className="h-full w-full">
@@ -119,7 +114,7 @@ export function UserScreen() {
 				</div>
 				<div className="mt-8">
 					{error && <p>Failed to fetch user stats</p>}
-					{!userStats ? (
+					{userStatsStatus === "loading" ? (
 						<p>Loading...</p>
 					) : (
 						<div className="w-full flex items-center gap-10">
@@ -166,7 +161,14 @@ export function UserScreen() {
 						</div>
 					)}
 					<div className="mt-6 flex items-center gap-2">
-						{follows.includes(pubkey) ? (
+						{followsStatus === "loading" ? (
+							<button
+								type="button"
+								className="inline-flex w-44 h-10 items-center justify-center rounded-md bg-zinc-900 hover:bg-fuchsia-500 text-sm font-medium"
+							>
+								Loading...
+							</button>
+						) : followed ? (
 							<button
 								type="button"
 								onClick={() => unfollow(pubkey)}

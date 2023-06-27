@@ -1,12 +1,12 @@
 import { usePublish } from "@libs/ndk";
 import { Button } from "@shared/button";
 import { Image } from "@shared/image";
-import { DEFAULT_AVATAR } from "@stores/constants";
+import { DEFAULT_AVATAR, FULL_RELAYS } from "@stores/constants";
 import { useAccount } from "@utils/hooks/useAccount";
 import { useProfile } from "@utils/hooks/useProfile";
 import { useState } from "react";
 
-export function NoteReplyForm({ id }: { id: string }) {
+export function NoteReplyForm({ rootID }: { rootID: string }) {
 	const publish = usePublish();
 
 	const { account } = useAccount();
@@ -15,7 +15,7 @@ export function NoteReplyForm({ id }: { id: string }) {
 	const [value, setValue] = useState("");
 
 	const submit = () => {
-		const tags = [["e", id]];
+		const tags = [["e", rootID, FULL_RELAYS[0], "root"]];
 
 		// publish event
 		publish({ content: value, kind: 1, tags });
