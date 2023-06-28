@@ -112,7 +112,7 @@ export function NewMessageModal() {
 													/>
 													<div className="inline-flex flex-col gap-1">
 														<h3 className="leading-none max-w-[15rem] line-clamp-1 font-medium text-zinc-100">
-															{pleb.display_name || pleb.name}
+															{pleb.displayName || pleb.name}
 														</h3>
 														<span className="leading-none max-w-[10rem] line-clamp-1 text-sm text-zinc-400">
 															{pleb.nip05 ||

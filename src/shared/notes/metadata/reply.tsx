@@ -1,36 +1,19 @@
-import { createBlock } from "@libs/storage";
 import { ReplyIcon } from "@shared/icons";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useComposer } from "@stores/composer";
 import { compactNumber } from "@utils/number";
 
 export function NoteReply({
 	id,
+	rootID,
+	pubkey,
 	replies,
-}: { id: string; replies: number; currentBlock?: number }) {
-	const queryClient = useQueryClient();
-
-	const block = useMutation({
-		mutationFn: (data: any) => {
-			return createBlock(data.kind, data.title, data.content);
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["blocks"] });
-		},
-	});
-
-	const openThread = (event: any, thread: string) => {
-		const selection = window.getSelection();
-		if (selection.toString().length === 0) {
-			block.mutate({ kind: 2, title: "Thread", content: thread });
-		} else {
-			event.stopPropagation();
-		}
-	};
+}: { id: string; rootID?: string; pubkey: string; replies: number }) {
+	const setReply = useComposer((state) => state.setReply);
 
 	return (
 		<button
 			type="button"
-			onClick={(e) => openThread(e, id)}
+			onClick={() => setReply(id, rootID, pubkey)}
 			className="w-20 group inline-flex items-center gap-1.5"
 		>
 			<ReplyIcon

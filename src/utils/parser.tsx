@@ -2,10 +2,11 @@ import { MentionUser } from "@shared/notes/mentions/user";
 import destr from "destr";
 import getUrls from "get-urls";
 import { parseReferences } from "nostr-tools";
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
-function isJsonString(str) {
+function isJsonString(str: string) {
 	try {
 		JSON.parse(str);
 	} catch (e) {
@@ -24,7 +25,7 @@ export function parser(event: any) {
 
 	const content: {
 		original: string;
-		parsed: any;
+		parsed: ReactNode[];
 		notes: string[];
 		images: string[];
 		videos: string[];
@@ -39,9 +40,11 @@ export function parser(event: any) {
 	};
 
 	// remove unnecessary whitespaces
+	// @ts-ignore
 	content.parsed = content.parsed.replace(/\s{2,}/g, " ");
 
 	// remove unnecessary linebreak
+	// @ts-ignore
 	content.parsed = content.parsed.replace(/(\r\n|\r|\n){2,}/g, "$1\n");
 
 	// parse urls

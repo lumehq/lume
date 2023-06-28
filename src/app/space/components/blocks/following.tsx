@@ -83,7 +83,7 @@ export function FollowingBlock({ block }: { block: number }) {
 
 	return (
 		<div className="shrink-0 relative w-[400px] border-r border-zinc-900">
-			<TitleBar title="Circle" />
+			<TitleBar title="Your Circle" />
 			{hasNewNote && (
 				<div className="z-50 absolute top-12 left-1/2 transform -translate-x-1/2">
 					<button

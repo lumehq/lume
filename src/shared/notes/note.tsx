@@ -18,7 +18,7 @@ export function Note({ event, block }: Note) {
 
 	const renderParent = useMemo(() => {
 		if (!isRepost && event.parent_id && event.parent_id !== event.event_id) {
-			return <NoteParent id={event.parent_id} currentBlock={block} />;
+			return <NoteParent id={event.parent_id} />;
 		} else {
 			return null;
 		}
@@ -26,7 +26,7 @@ export function Note({ event, block }: Note) {
 
 	const renderRepost = useMemo(() => {
 		if (isRepost) {
-			return <Repost event={event} currentBlock={block} />;
+			return <Repost event={event} />;
 		} else {
 			return null;
 		}
@@ -71,13 +71,13 @@ export function Note({ event, block }: Note) {
 						time={event.created_at}
 						repost={isRepost}
 					/>
-					<div className="relative -mt-6 pl-[49px]">
+					<div className="-mt-6 pl-[49px]">
 						{renderContent}
 						{!isRepost && (
 							<NoteMetadata
 								id={event.event_id}
+								rootID={event.parent_id}
 								eventPubkey={event.pubkey}
-								currentBlock={block || 1}
 							/>
 						)}
 					</div>

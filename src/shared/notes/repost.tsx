@@ -7,10 +7,7 @@ import { useEvent } from "@utils/hooks/useEvent";
 import { getRepostID } from "@utils/transform";
 import { LumeEvent } from "@utils/types";
 
-export function Repost({
-	event,
-	currentBlock,
-}: { event: LumeEvent; currentBlock?: number }) {
+export function Repost({ event }: { event: LumeEvent }) {
 	const repostID = getRepostID(event.tags);
 	const { status, data } = useEvent(repostID);
 
@@ -19,10 +16,10 @@ export function Repost({
 			<div className="absolute left-[18px] -top-10 h-[50px] w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
 			{status === "loading" ? (
 				<NoteSkeleton />
-			) : (
+			) : status === "success" ? (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} />
-					<div className="z-10 relative -mt-6 pl-[49px]">
+					<div className="-mt-6 pl-[49px]">
 						{data.kind === 1 && <Kind1 content={data.content} />}
 						{data.kind === 1063 && <Kind1063 metadata={data.tags} />}
 						{data.kind !== 1 && data.kind !== 1063 && (
@@ -43,10 +40,11 @@ export function Repost({
 						<NoteMetadata
 							id={data.event_id || data.id}
 							eventPubkey={data.pubkey}
-							currentBlock={currentBlock}
 						/>
 					</div>
 				</>
+			) : (
+				<p>Failed to fetch event</p>
 			)}
 		</div>
 	);

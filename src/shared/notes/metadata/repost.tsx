@@ -7,7 +7,7 @@ export function NoteRepost({
 	pubkey,
 	reposts,
 }: { id: string; pubkey: string; reposts: number }) {
-	const setRepost = useComposer((state: any) => state.setRepost);
+	const setRepost = useComposer((state) => state.setRepost);
 
 	return (
 		<button

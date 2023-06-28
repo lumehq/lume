@@ -157,26 +157,13 @@ export async function getNotes(time: number, limit: number, offset: number) {
 }
 
 // get all notes by pubkey
-export async function getNotesByPubkey(
-	pubkey: string,
-	time: number,
-	limit: number,
-	offset: number,
-) {
+export async function getNotesByPubkey(pubkey: string) {
 	const db = await connect();
-	const totalNotes = await countTotalNotes();
-	const nextCursor = offset + limit;
-
-	const notes: any = { data: null, nextCursor: 0 };
-	const query: any = await db.select(
-		`SELECT * FROM notes WHERE created_at <= "${time}" AND pubkey == "${pubkey}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
+	const res: any = await db.select(
+		`SELECT * FROM notes WHERE pubkey == "${pubkey}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC;`,
 	);
 
-	notes["data"] = query;
-	notes["nextCursor"] =
-		Math.round(totalNotes / nextCursor) > 1 ? nextCursor : undefined;
-
-	return notes;
+	return res;
 }
 
 // get all notes by authors

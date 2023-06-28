@@ -11,12 +11,12 @@ import { useContext } from "react";
 
 export function NoteMetadata({
 	id,
+	rootID,
 	eventPubkey,
-	currentBlock,
 }: {
 	id: string;
+	rootID?: string;
 	eventPubkey: string;
-	currentBlock?: number;
 }) {
 	const ndk = useContext(RelayContext);
 	const { status, data } = useQuery(["note-metadata", id], async () => {
@@ -112,8 +112,9 @@ export function NoteMetadata({
 				<>
 					<NoteReply
 						id={id}
+						rootID={rootID}
+						pubkey={eventPubkey}
 						replies={data.replies}
-						currentBlock={currentBlock}
 					/>
 					<NoteRepost id={id} pubkey={eventPubkey} reposts={data.reposts} />
 					<NoteZap zaps={data.zap} />

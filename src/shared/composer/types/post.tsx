@@ -61,15 +61,16 @@ const ImagePreview = ({
 
 export function Post() {
 	const publish = usePublish();
-	const [repost, toggle] = useComposer((state) => [
-		state.repost,
-		state.toggleModal,
-	]);
 	const editor = useMemo(
 		() => withReact(withImages(withHistory(createEditor()))),
 		[],
 	);
 
+	const [repost, reply, toggle] = useComposer((state) => [
+		state.repost,
+		state.reply,
+		state.toggleModal,
+	]);
 	const [content, setContent] = useState<Node[]>([
 		{
 			children: [
@@ -84,6 +85,18 @@ export function Post() {
 		return nodes.map((n) => Node.string(n)).join("\n");
 	}, []);
 
+	const getRef = () => {
+		if (repost.id) {
+			return repost.id;
+		} else if (reply.id) {
+			return reply.id;
+		} else {
+			return null;
+		}
+	};
+
+	const refID = getRef();
+
 	const submit = () => {
 		let tags: string[][] = [];
 		let kind: number;
@@ -94,6 +107,20 @@ export function Post() {
 				["e", repost.id, FULL_RELAYS[0], "root"],
 				["p", repost.pubkey],
 			];
+		} else if (reply.id && reply.pubkey) {
+			kind = 1;
+			if (reply.root && reply.root !== reply.id) {
+				tags = [
+					["e", reply.id, FULL_RELAYS[0], "root"],
+					["e", reply.root, FULL_RELAYS[0], "reply"],
+					["p", reply.pubkey],
+				];
+			} else {
+				tags = [
+					["e", reply.id, FULL_RELAYS[0], "root"],
+					["p", reply.pubkey],
+				];
+			}
 		} else {
 			kind = 1;
 			tags = [];
@@ -130,14 +157,14 @@ export function Post() {
 					<div className="w-full">
 						<Editable
 							autoFocus
-							placeholder="What's on your mind?"
+							placeholder={
+								refID ? "Share your thoughts on it" : "What's on your mind?"
+							}
 							spellCheck="false"
-							className={`${
-								repost.id ? "!min-h-42" : "!min-h-[86px]"
-							} markdown`}
+							className={`${refID ? "!min-h-42" : "!min-h-[86px]"} markdown`}
 							renderElement={renderElement}
 						/>
-						{repost.id && <MentionNote id={repost.id} />}
+						{refID && <MentionNote id={refID} />}
 					</div>
 				</div>
 				<div className="mt-4 flex items-center justify-between">

@@ -20,11 +20,30 @@ export function User({
 	repost?: boolean;
 	isChat?: boolean;
 }) {
-	const { user } = useProfile(pubkey);
+	const { status, user } = useProfile(pubkey);
 	const createdAt = formatCreatedAt(time, isChat);
 
 	const avatarWidth = size === "small" ? "w-6" : "w-11";
 	const avatarHeight = size === "small" ? "h-6" : "h-11";
+
+	if (status === "loading") {
+		return (
+			<div
+				className={`relative flex gap-3 ${
+					size === "small" ? "items-center" : "items-start"
+				}`}
+			>
+				<div
+					className={`${avatarWidth} ${avatarHeight}  ${
+						size === "small" ? "rounded" : "rounded-lg"
+					} relative z-10 bg-zinc-800 animate-pulse shrink-0 overflow-hidden`}
+				/>
+				<div className="flex flex-wrap items-baseline gap-1">
+					<div className="w-36 h-3.5 rounded bg-zinc-800 animate-pulse" />
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<Popover
@@ -47,10 +66,10 @@ export function User({
 			<div className="flex flex-wrap items-baseline gap-1">
 				<h5
 					className={`text-zinc-100 font-semibold leading-none truncate ${
-						size === "small" ? "max-w-[7rem]" : "max-w-[10rem]"
+						size === "small" ? "max-w-[8rem]" : "max-w-[15rem]"
 					}`}
 				>
-					{user?.nip05 || user?.name || shortenKey(pubkey)}
+					{user?.nip05 || user?.name || user?.displayName || shortenKey(pubkey)}
 				</h5>
 				{repost && (
 					<span className="font-semibold leading-none text-fuchsia-500">
@@ -70,8 +89,8 @@ export function User({
 				leaveFrom="opacity-100 translate-y-0"
 				leaveTo="opacity-0 translate-y-1"
 			>
-				<Popover.Panel className="absolute left-0 top-10 z-50 mt-3">
-					<div className="w-full max-w-xs overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/90 backdrop-blur-lg">
+				<Popover.Panel className="absolute z-50 top-10 mt-3">
+					<div className="w-[250px] overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/90 backdrop-blur-lg">
 						<div className="flex gap-2.5 border-b border-zinc-800 px-3 py-3">
 							<Image
 								src={user?.image}
@@ -81,7 +100,7 @@ export function User({
 							/>
 							<div className="flex-1 flex flex-col gap-2">
 								<div className="inline-flex flex-col gap-1">
-									<h5 className="font-semibold leading-none">
+									<h5 className="font-semibold text-sm leading-none">
 										{user?.displayName || user?.name || (
 											<div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
 										)}
@@ -91,7 +110,7 @@ export function User({
 									</span>
 								</div>
 								<div>
-									<p className="line-clamp-3 break-words text-sm leading-tight text-zinc-100">
+									<p className="line-clamp-3 break-words leading-tight text-zinc-100">
 										{user?.about}
 									</p>
 								</div>

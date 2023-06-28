@@ -8,12 +8,8 @@ import { useEvent } from "@utils/hooks/useEvent";
 import { memo } from "react";
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
-	const { status, data } = useEvent(id);
-
-	const kind1 = data?.kind === 1 ? data.content : null;
-	const kind1063 = data?.kind === 1063 ? data.tags : null;
-
 	const queryClient = useQueryClient();
+	const { status, data } = useEvent(id);
 
 	const block = useMutation({
 		mutationFn: (data: any) => {
@@ -37,17 +33,19 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 		<div
 			onClick={(e) => openThread(e, id)}
 			onKeyDown={(e) => openThread(e, id)}
-			className="mt-3 rounded-lg bg-zinc-800 border-t border-zinc-700/50 px-3 py-3"
+			className="mt-3 rounded-lg bg-zinc-800/50 border-t border-zinc-700/50 px-3 py-3"
 		>
 			{status === "loading" ? (
 				<NoteSkeleton />
-			) : (
+			) : status === "success" ? (
 				<>
 					<User pubkey={data.pubkey} time={data.created_at} size="small" />
 					<div className="mt-2">
-						{kind1 && <Kind1 content={kind1} truncate={true} />}
-						{kind1063 && <Kind1063 metadata={kind1063} />}
-						{!kind1 && !kind1063 && (
+						{data.kind === 1 && (
+							<Kind1 content={data.content} truncate={true} />
+						)}
+						{data.kind === 1063 && <Kind1063 metadata={data.tags} />}
+						{data.kind !== 1 && data.kind !== 1063 && (
 							<div className="flex flex-col gap-2">
 								<div className="px-2 py-2 inline-flex flex-col gap-1 bg-zinc-800 rounded-md">
 									<span className="text-zinc-500 text-sm font-medium leading-none">
@@ -64,6 +62,8 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 						)}
 					</div>
 				</>
+			) : (
+				<p>Failed to fetch event</p>
 			)}
 		</div>
 	);

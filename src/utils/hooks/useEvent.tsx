@@ -11,7 +11,9 @@ export function useEvent(id: string) {
 		async () => {
 			const result = await getNoteByID(id);
 			if (result) {
-				result["content"] = parser(result);
+				if (result.kind === 1 || result.kind === 1063) {
+					result["content"] = parser(result);
+				}
 				return result;
 			} else {
 				const event = await ndk.fetchEvent(id);
@@ -24,8 +26,10 @@ export function useEvent(id: string) {
 					event.created_at,
 				);
 				event["event_id"] = event.id;
-				// @ts-ignore
-				event["content"] = parser(event);
+				if (event.kind === 1 || event.kind === 1063) {
+					// @ts-ignore
+					event["content"] = parser(event);
+				}
 				return event;
 			}
 		},

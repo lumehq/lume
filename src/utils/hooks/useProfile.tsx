@@ -23,11 +23,13 @@ export function useProfile(id: string) {
 		const current = Math.floor(Date.now() / 1000);
 		const result = await getPleb(npub);
 
-		if (result && result.created_at + 86400 > current) {
+		if (result && parseInt(result.created_at) + 86400 >= current) {
+			console.log("cache", result);
 			return result;
 		} else {
 			const user = ndk.getUser({ npub });
 			await user.fetchProfile();
+			console.log("new", user);
 			await createPleb(id, user.profile);
 
 			return user.profile;
