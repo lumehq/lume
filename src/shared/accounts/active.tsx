@@ -8,6 +8,7 @@ import { useProfile } from "@utils/hooks/useProfile";
 import { sendNativeNotification } from "@utils/notification";
 import { produce } from "immer";
 import { useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const lastLogin = await getLastLogin();
 
@@ -92,7 +93,10 @@ export function ActiveAccount({ data }: { data: any }) {
 	}
 
 	return (
-		<div className="relative inline-block h-9 w-9">
+		<Link
+			to={`/app/user/${data.pubkey}`}
+			className="relative inline-block h-9 w-9"
+		>
 			<Image
 				src={user.image}
 				fallback={DEFAULT_AVATAR}
@@ -100,6 +104,6 @@ export function ActiveAccount({ data }: { data: any }) {
 				className="h-9 w-9 rounded-md object-cover"
 			/>
 			<NetworkStatusIndicator />
-		</div>
+		</Link>
 	);
 }

@@ -24,12 +24,10 @@ export function useProfile(id: string) {
 		const result = await getPleb(npub);
 
 		if (result && parseInt(result.created_at) + 86400 >= current) {
-			console.log("cache", result);
 			return result;
 		} else {
 			const user = ndk.getUser({ npub });
 			await user.fetchProfile();
-			console.log("new", user);
 			await createPleb(id, user.profile);
 
 			return user.profile;

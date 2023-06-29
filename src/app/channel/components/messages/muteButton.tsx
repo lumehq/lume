@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CancelIcon, MuteIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
-import { Tooltip } from "@shared/tooltip";
+import { Tooltip } from "@shared/tooltip_dep";
 import { useChannelMessages } from "@stores/channels";
 import { dateToUnix } from "@utils/date";
 import { useAccount } from "@utils/hooks/useAccount";

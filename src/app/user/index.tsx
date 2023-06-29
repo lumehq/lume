@@ -1,9 +1,11 @@
 import { UserFeed } from "@app/user/components/feed";
 import { UserMetadata } from "@app/user/components/metadata";
 import { Tab } from "@headlessui/react";
+import { EditProfileModal } from "@shared/editProfileModal";
 import { ThreadsIcon, ZapIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useAccount } from "@utils/hooks/useAccount";
 import { useProfile } from "@utils/hooks/useProfile";
 import { useSocial } from "@utils/hooks/useSocial";
 import { shortenKey } from "@utils/shortenKey";
@@ -13,6 +15,7 @@ import { Link, useParams } from "react-router-dom";
 export function UserScreen() {
 	const { pubkey } = useParams();
 	const { user } = useProfile(pubkey);
+	const { account } = useAccount();
 	const { status, userFollows, follow, unfollow } = useSocial();
 
 	const [followed, setFollowed] = useState(false);
@@ -116,6 +119,8 @@ export function UserScreen() {
 								>
 									<ZapIcon className="w-5 h-5" />
 								</button>
+								<span className="inline-flex mx-2 w-px h-4 bg-zinc-900" />
+								{account && account.pubkey === pubkey && <EditProfileModal />}
 							</div>
 						</div>
 						<div className="flex flex-col gap-8">

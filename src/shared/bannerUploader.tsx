@@ -4,7 +4,7 @@ import { Body, fetch } from "@tauri-apps/api/http";
 import { createBlobFromFile } from "@utils/createBlobFromFile";
 import { useState } from "react";
 
-export function AvatarUploader({ setPicture }: { setPicture: any }) {
+export function BannerUploader({ setBanner }: { setBanner: any }) {
 	const [loading, setLoading] = useState(false);
 
 	const openFileDialog = async () => {
@@ -46,7 +46,7 @@ export function AvatarUploader({ setPicture }: { setPicture: any }) {
 			const image = `https://void.cat/d/${res.data.file.id}.jpg`;
 
 			// update parent state
-			setPicture(image);
+			setBanner(image);
 
 			// disable loader
 			setLoading(false);
@@ -60,9 +60,9 @@ export function AvatarUploader({ setPicture }: { setPicture: any }) {
 			className="w-full h-full inline-flex items-center justify-center bg-zinc-900/40"
 		>
 			{loading ? (
-				<LoaderIcon className="h-6 w-6 animate-spintext-zinc-100" />
+				<LoaderIcon className="h-8 w-8 animate-spintext-zinc-100" />
 			) : (
-				<PlusIcon className="h-6 w-6 text-zinc-100" />
+				<PlusIcon className="h-8 w-8 text-zinc-100" />
 			)}
 		</button>
 	);

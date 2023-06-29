@@ -8,7 +8,6 @@
       "@stores/*": ["src/stores/*"],
       "@utils/*": ["src/utils/*"]
     },
-    "types": ["vidstack/globals"],
     "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -25,6 +24,6 @@
     "jsx": "preserve",
     "strictNullChecks": false
   },
-  "include": ["global.d.ts", "**/*.ts", "**/*.tsx", "src/main.tsx"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist", "src-tauri"]
 }

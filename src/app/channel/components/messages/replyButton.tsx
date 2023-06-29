@@ -1,5 +1,5 @@
 import { ReplyMessageIcon } from "@shared/icons";
-import { Tooltip } from "@shared/tooltip";
+import { Tooltip } from "@shared/tooltip_dep";
 import { useChannelMessages } from "@stores/channels";
 
 export function MessageReplyButton({
