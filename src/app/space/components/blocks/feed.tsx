@@ -11,7 +11,6 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
 
 const ITEM_PER_PAGE = 10;
-const TIME = Math.floor(Date.now() / 1000);
 
 export function FeedBlock({ params }: { params: any }) {
 	const queryClient = useQueryClient();
@@ -21,7 +20,6 @@ export function FeedBlock({ params }: { params: any }) {
 			queryFn: async ({ pageParam = 0 }) => {
 				return await getNotesByAuthors(
 					params.content,
-					TIME,
 					ITEM_PER_PAGE,
 					pageParam,
 				);

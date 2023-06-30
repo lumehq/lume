@@ -1,4 +1,3 @@
-import { createReplyNote } from "./storage";
 import NDK, {
 	NDKConstructorParams,
 	NDKEvent,
@@ -15,21 +14,10 @@ export async function initNDK(relays?: string[]): Promise<NDK> {
 	const opts: NDKConstructorParams = {};
 	const defaultRelays = new Set(relays || FULL_RELAYS);
 
-	/*
-	for (const relay of defaultRelays) {
-		const url = new URL(relay);
-		url.protocol = url.protocol = url.protocol.replace("wss", "https");
-		const res = await fetch(url.href, { method: "HEAD", timeout: 5 });
-		if (!res.ok) {
-			defaultRelays.delete(relay);
-		}
-	}
-	*/
-
 	opts.explicitRelayUrls = [...defaultRelays];
 
 	const ndk = new NDK(opts);
-	await ndk.connect();
+	await ndk.connect(500);
 
 	return ndk;
 }
@@ -57,15 +45,10 @@ export async function prefetchEvents(
 }
 
 export function usePublish() {
-	const { account } = useAccount();
 	const ndk = useContext(RelayContext);
+	const { account } = useAccount();
 
-	if (!ndk.signer) {
-		const signer = new NDKPrivateKeySigner(account?.privkey);
-		ndk.signer = signer;
-	}
-
-	const publish = ({
+	const publish = async ({
 		content,
 		kind,
 		tags,
@@ -73,8 +56,9 @@ export function usePublish() {
 		content: string;
 		kind: NDKKind;
 		tags: string[][];
-	}): NDKEvent => {
+	}): Promise<NDKEvent> => {
 		const event = new NDKEvent(ndk);
+		const signer = new NDKPrivateKeySigner(account.privkey);
 
 		event.content = content;
 		event.kind = kind;
@@ -82,7 +66,8 @@ export function usePublish() {
 		event.pubkey = account.pubkey;
 		event.tags = tags;
 
-		event.publish();
+		await event.sign(signer);
+		await event.publish();
 
 		return event;
 	};

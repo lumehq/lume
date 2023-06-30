@@ -1,37 +1,50 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { usePublish } from "@libs/ndk";
-import { getPleb } from "@libs/storage";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { AvatarUploader } from "@shared/avatarUploader";
 import { BannerUploader } from "@shared/bannerUploader";
-import { CancelIcon, LoaderIcon } from "@shared/icons";
+import {
+	CancelIcon,
+	CheckCircleIcon,
+	LoaderIcon,
+	UnverifiedIcon,
+} from "@shared/icons";
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
+import { useQueryClient } from "@tanstack/react-query";
+import { fetch } from "@tauri-apps/api/http";
 import { useAccount } from "@utils/hooks/useAccount";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function EditProfileModal() {
+	const queryClient = useQueryClient();
 	const publish = usePublish();
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [picture, setPicture] = useState(DEFAULT_AVATAR);
-	const [banner, setBanner] = useState(null);
+	const [banner, setBanner] = useState("");
+	const [nip05, setNIP05] = useState({ verified: false, text: "" });
 
 	const { account } = useAccount();
 	const {
 		register,
 		handleSubmit,
 		reset,
-		formState: { isValid },
+		setError,
+		formState: { isValid, errors },
 	} = useForm({
 		defaultValues: async () => {
-			const res = await getPleb(account.npub);
-			if (res.picture) {
+			const res: any = queryClient.getQueryData(["user", account.pubkey]);
+			if (res.image) {
 				setPicture(res.image);
 			}
 			if (res.banner) {
 				setBanner(res.banner);
+			}
+			if (res.nip05) {
+				setNIP05((prev) => ({ ...prev, text: res.nip05 }));
 			}
 			return res;
 		},
@@ -45,24 +58,72 @@ export function EditProfileModal() {
 		setIsOpen(true);
 	};
 
-	const onSubmit = (data: any) => {
+	const verifyNIP05 = async (data: string) => {
+		if (data) {
+			const url = data.split("@");
+			const username = url[0];
+			const service = url[1];
+			const verifyURL = `https://${service}/.well-known/nostr.json?name=${username}`;
+
+			const res: any = await fetch(verifyURL, {
+				method: "GET",
+				timeout: 30,
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+				},
+			});
+
+			if (!res.ok) return false;
+			if (res.data.names[username] === account.pubkey) {
+				setNIP05((prev) => ({ ...prev, verified: true }));
+				return true;
+			} else {
+				return false;
+			}
+		}
+	};
+
+	const onSubmit = async (data: any) => {
 		// start loading
 		setLoading(true);
 
-		// publish
-		const event = publish({
-			content: JSON.stringify({
-				...data,
-				display_name: data.name,
-				bio: data.about,
-				image: data.picture,
-			}),
-			kind: 0,
-			tags: [],
-		});
+		let event: NDKEvent;
 
-		if (event) {
+		const content = {
+			...data,
+			username: data.name,
+			display_name: data.name,
+			bio: data.about,
+			image: data.picture,
+		};
+
+		if (data.nip05) {
+			const verify = await verifyNIP05(data.nip05);
+			if (verify) {
+				event = await publish({
+					content: JSON.stringify({ ...content, nip05: data.nip05 }),
+					kind: 0,
+					tags: [],
+				});
+			} else {
+				setNIP05((prev) => ({ ...prev, verified: false }));
+				setError("nip05", {
+					type: "manual",
+					message: "Can't verify your Lume ID / NIP-05, please check again",
+				});
+			}
+		} else {
+			event = await publish({
+				content: JSON.stringify(content),
+				kind: 0,
+				tags: [],
+			});
+		}
+
+		if (event.id) {
 			setTimeout(() => {
+				// invalid cache
+				queryClient.invalidateQueries(["user", account.pubkey]);
 				// reset form
 				reset();
 				// reset state
@@ -71,8 +132,16 @@ export function EditProfileModal() {
 				setPicture(DEFAULT_AVATAR);
 				setBanner(null);
 			}, 1200);
+		} else {
+			setLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		if (!nip05.verified && /\S+@\S+\.\S+/.test(nip05.text)) {
+			verifyNIP05(nip05.text);
+		}
+	}, [nip05.text]);
 
 	return (
 		<>
@@ -178,6 +247,39 @@ export function EditProfileModal() {
 													spellCheck={false}
 													className="relative h-10 w-full rounded-lg px-3 py-2 !outline-none bg-zinc-800 text-zinc-100 placeholder:text-zinc-500"
 												/>
+											</div>
+											<div className="flex flex-col gap-1">
+												<label className="text-sm font-semibold uppercase tracking-wider text-zinc-400">
+													Lume ID / NIP-05
+												</label>
+												<div className="relative">
+													<input
+														{...register("nip05", {
+															required: true,
+															minLength: 4,
+														})}
+														spellCheck={false}
+														className="relative h-10 w-full rounded-lg px-3 py-2 !outline-none bg-zinc-800 text-zinc-100 placeholder:text-zinc-500"
+													/>
+													<div className="absolute top-1/2 right-2 transform -translate-y-1/2">
+														{nip05.verified ? (
+															<span className="inline-flex items-center gap-1 rounded h-6 px-2 bg-green-500 text-sm font-medium">
+																<CheckCircleIcon className="w-4 h-4 text-white" />
+																Verified
+															</span>
+														) : (
+															<span className="inline-flex items-center gap-1 rounded h-6 px-2 bg-red-500 text-sm font-medium">
+																<UnverifiedIcon className="w-4 h-4 text-white" />
+																Unverified
+															</span>
+														)}
+													</div>
+													{errors.nip05 && (
+														<p className="mt-1 text-sm text-red-400">
+															{errors.nip05.message.toString()}
+														</p>
+													)}
+												</div>
 											</div>
 											<div className="flex flex-col gap-1">
 												<label className="text-sm font-semibold uppercase tracking-wider text-zinc-400">

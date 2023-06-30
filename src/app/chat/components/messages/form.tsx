@@ -20,7 +20,7 @@ export function ChatMessageForm({
 		const tags = [["p", receiverPubkey]];
 
 		// publish message
-		publish({ content: message, kind: 4, tags });
+		await publish({ content: message, kind: 4, tags });
 
 		// reset state
 		setValue("");

@@ -9,7 +9,6 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
 
 const ITEM_PER_PAGE = 10;
-const TIME = Math.floor(Date.now() / 1000);
 
 export function FollowingBlock({ block }: { block: number }) {
 	// subscribe for live update
@@ -29,7 +28,7 @@ export function FollowingBlock({ block }: { block: number }) {
 	}: any = useInfiniteQuery({
 		queryKey: ["newsfeed-circle"],
 		queryFn: async ({ pageParam = 0 }) => {
-			return await getNotes(TIME, ITEM_PER_PAGE, pageParam);
+			return await getNotes(ITEM_PER_PAGE, pageParam);
 		},
 		getNextPageParam: (lastPage) => lastPage.nextCursor,
 	});
@@ -64,7 +63,7 @@ export function FollowingBlock({ block }: { block: number }) {
 
 	const refreshFirstPage = () => {
 		// refetch
-		refetch({ refetchPage: (page, index) => index === 0 });
+		refetch({ refetchPage: (_, index: number) => index === 0 });
 		// scroll to top
 		rowVirtualizer.scrollToIndex(1);
 		// stop notify

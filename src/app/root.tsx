@@ -6,6 +6,7 @@ import {
 	createNote,
 	getChannels,
 	getLastLogin,
+	updateLastLogin,
 } from "@libs/storage";
 import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { LoaderIcon, LumeIcon } from "@shared/icons";
@@ -142,6 +143,7 @@ export function Root() {
 				const chats = await fetchChats();
 				// const channels = await fetchChannelMessages();
 				if (chats) {
+					await updateLastLogin(dateToUnix());
 					navigate("/app/space", { replace: true });
 				}
 			}

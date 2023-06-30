@@ -1,20 +1,16 @@
+import { User } from "@app/auth/components/user";
 import { Dialog, Transition } from "@headlessui/react";
-import { getPlebs } from "@libs/storage";
 import { CancelIcon, PlusIcon } from "@shared/icons";
-import { DEFAULT_AVATAR } from "@stores/constants";
-import { useQuery } from "@tanstack/react-query";
-import { nip19 } from "nostr-tools";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function NewMessageModal() {
 	const navigate = useNavigate();
-
-	const { status, data }: any = useQuery(["plebs"], async () => {
-		return await getPlebs();
-	});
-
 	const [isOpen, setIsOpen] = useState(false);
+
+	const { status, account } = useAccount();
+	const follows = account ? JSON.parse(account.follows) : [];
 
 	const closeModal = () => {
 		setIsOpen(false);
@@ -24,8 +20,7 @@ export function NewMessageModal() {
 		setIsOpen(true);
 	};
 
-	const openChat = (npub: string) => {
-		const pubkey = nip19.decode(npub).data;
+	const openChat = (pubkey: string) => {
 		closeModal();
 		navigate(`/app/chat/${pubkey}`);
 	};
@@ -99,31 +94,16 @@ export function NewMessageModal() {
 									{status === "loading" ? (
 										<p>Loading...</p>
 									) : (
-										data.map((pleb) => (
+										follows.map((follow) => (
 											<div
-												key={pleb.npub}
+												key={follow}
 												className="group flex items-center justify-between px-4 py-3 hover:bg-zinc-800"
 											>
-												<div className="flex items-center gap-2">
-													<img
-														alt={pleb.npub}
-														src={pleb.image || DEFAULT_AVATAR}
-														className="w-9 h-9 shrink-0 object-cover rounded"
-													/>
-													<div className="inline-flex flex-col gap-1">
-														<h3 className="leading-none max-w-[15rem] line-clamp-1 font-medium text-zinc-100">
-															{pleb.displayName || pleb.name}
-														</h3>
-														<span className="leading-none max-w-[10rem] line-clamp-1 text-sm text-zinc-400">
-															{pleb.nip05 ||
-																pleb.npub.substring(0, 16).concat("...")}
-														</span>
-													</div>
-												</div>
+												<User pubkey={follow} />
 												<div>
 													<button
 														type="button"
-														onClick={() => openChat(pleb.npub)}
+														onClick={() => openChat(follow)}
 														className="inline-flex text-sm w-max px-3 py-1.5 rounded border-t border-zinc-600/50 bg-zinc-700 hover:bg-fuchsia-500 transform translate-x-20 group-hover:translate-x-0 transition-transform ease-in-out duration-150"
 													>
 														Chat

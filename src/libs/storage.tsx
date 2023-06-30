@@ -1,6 +1,4 @@
-import { NDKTag, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { getParentID } from "@utils/transform";
-import { nip19 } from "nostr-tools";
 import Database from "tauri-plugin-sql-api";
 
 let db: null | Database = null;
@@ -73,55 +71,6 @@ export async function updateAccount(
 	);
 }
 
-// get all plebs
-export async function getPlebs() {
-	const db = await connect();
-	return await db.select("SELECT * FROM plebs ORDER BY created_at DESC;");
-}
-
-// get pleb by pubkey
-export async function getPleb(npub: string) {
-	const db = await connect();
-	const result = await db.select(`SELECT * FROM plebs WHERE npub = "${npub}";`);
-
-	if (result) {
-		return result[0];
-	} else {
-		return null;
-	}
-}
-
-// create pleb
-export async function createPleb(key: string, data: NDKUserProfile) {
-	const db = await connect();
-	const now = Math.floor(Date.now() / 1000);
-	let npub: string;
-
-	if (key.substring(0, 4) === "npub") {
-		npub = key;
-	} else {
-		npub = nip19.npubEncode(key);
-	}
-
-	return await db.execute(
-		"INSERT OR REPLACE INTO plebs (npub, name, displayName, image, banner, bio, nip05, lud06, lud16, about, zapService, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-		[
-			npub,
-			data.name,
-			data.displayName,
-			data.image,
-			data.banner,
-			data.bio,
-			data.nip05,
-			data.lud06,
-			data.lud16,
-			data.about,
-			data.zapService,
-			now,
-		],
-	);
-}
-
 // count total notes
 export async function countTotalChannels() {
 	const db = await connect();
@@ -139,14 +88,14 @@ export async function countTotalNotes() {
 }
 
 // get all notes
-export async function getNotes(time: number, limit: number, offset: number) {
+export async function getNotes(limit: number, offset: number) {
 	const db = await connect();
 	const totalNotes = await countTotalNotes();
 	const nextCursor = offset + limit;
 
 	const notes: any = { data: null, nextCursor: 0 };
 	const query: any = await db.select(
-		`SELECT * FROM notes WHERE created_at <= "${time}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
+		`SELECT * FROM notes WHERE kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
 	);
 
 	notes["data"] = query;
@@ -169,7 +118,6 @@ export async function getNotesByPubkey(pubkey: string) {
 // get all notes by authors
 export async function getNotesByAuthors(
 	authors: string,
-	time: number,
 	limit: number,
 	offset: number,
 ) {
@@ -181,7 +129,7 @@ export async function getNotesByAuthors(
 
 	const notes: any = { data: null, nextCursor: 0 };
 	const query: any = await db.select(
-		`SELECT * FROM notes WHERE created_at <= "${time}" AND pubkey IN (${finalArray}) AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
+		`SELECT * FROM notes WHERE pubkey IN (${finalArray}) AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`,
 	);
 
 	notes["data"] = query;

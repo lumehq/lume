@@ -97,7 +97,7 @@ export function Post() {
 
 	const refID = getRef();
 
-	const submit = () => {
+	const submit = async () => {
 		let tags: string[][] = [];
 		let kind: number;
 
@@ -130,7 +130,7 @@ export function Post() {
 		const serializedContent = serialize(content);
 
 		// publish message
-		publish({ content: serializedContent, kind, tags });
+		await publish({ content: serializedContent, kind, tags });
 
 		// close modal
 		toggle(false);

@@ -24,6 +24,9 @@ export function useSocial() {
 		},
 		{
 			enabled: account ? true : false,
+			refetchOnReconnect: false,
+			refetchOnMount: false,
+			refetchOnWindowFocus: false,
 		},
 	);
 
