@@ -60,7 +60,7 @@ export function BannerUploader({ setBanner }: { setBanner: any }) {
 			className="w-full h-full inline-flex items-center justify-center bg-zinc-900/40"
 		>
 			{loading ? (
-				<LoaderIcon className="h-8 w-8 animate-spintext-zinc-100" />
+				<LoaderIcon className="h-8 w-8 animate-spin text-zinc-100" />
 			) : (
 				<PlusIcon className="h-8 w-8 text-zinc-100" />
 			)}

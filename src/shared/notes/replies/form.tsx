@@ -2,16 +2,16 @@ import { usePublish } from "@libs/ndk";
 import { Button } from "@shared/button";
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR, FULL_RELAYS } from "@stores/constants";
-import { useAccount } from "@utils/hooks/useAccount";
 import { useProfile } from "@utils/hooks/useProfile";
+import { shortenKey } from "@utils/shortenKey";
 import { useState } from "react";
 
-export function NoteReplyForm({ rootID }: { rootID: string }) {
+export function NoteReplyForm({
+	rootID,
+	userPubkey,
+}: { rootID: string; userPubkey: string }) {
 	const publish = usePublish();
-
-	const { account } = useAccount();
-	const { status, user } = useProfile(account.npub);
-
+	const { status, user } = useProfile(userPubkey);
 	const [value, setValue] = useState("");
 
 	const submit = () => {
@@ -45,9 +45,9 @@ export function NoteReplyForm({ rootID }: { rootID: string }) {
 						<div className="inline-flex items-center gap-2">
 							<div className="relative h-9 w-9 shrink-0 rounded">
 								<Image
-									src={user?.image}
+									src={user.image}
 									fallback={DEFAULT_AVATAR}
-									alt={account.npub}
+									alt={userPubkey}
 									className="h-9 w-9 rounded-md bg-white object-cover"
 								/>
 							</div>
@@ -56,7 +56,7 @@ export function NoteReplyForm({ rootID }: { rootID: string }) {
 									Reply as
 								</p>
 								<p className="leading-none text-sm font-medium text-zinc-100">
-									{user?.nip05 || user?.name}
+									{user.nip05 || user.name || shortenKey(userPubkey)}
 								</p>
 							</div>
 						</div>

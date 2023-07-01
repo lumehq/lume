@@ -60,7 +60,7 @@ export function AvatarUploader({ setPicture }: { setPicture: any }) {
 			className="w-full h-full inline-flex items-center justify-center bg-zinc-900/40"
 		>
 			{loading ? (
-				<LoaderIcon className="h-6 w-6 animate-spintext-zinc-100" />
+				<LoaderIcon className="h-6 w-6 animate-spin text-zinc-100" />
 			) : (
 				<PlusIcon className="h-6 w-6 text-zinc-100" />
 			)}

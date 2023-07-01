@@ -3,13 +3,13 @@ import { updateAccount } from "@libs/storage";
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { CheckCircleIcon, LoaderIcon } from "@shared/icons";
 import { RelayContext } from "@shared/relayProvider";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAccount } from "@utils/hooks/useAccount";
 import { arrayToNIP02 } from "@utils/transform";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const initialList = [
+const INITIAL_LIST = [
 	{
 		pubkey: "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2",
 	},
@@ -117,6 +117,13 @@ export function CreateStep4Screen() {
 	const [follows, setFollows] = useState([]);
 
 	const { account } = useAccount();
+	const { status, data } = useQuery(["trending-profiles"], async () => {
+		const res = await fetch("https://api.nostr.band/v0/trending/profiles");
+		if (!res.ok) {
+			throw new Error("Error");
+		}
+		return res.json();
+	});
 
 	// toggle follow state
 	const toggleFollow = (pubkey: string) => {
@@ -140,7 +147,7 @@ export function CreateStep4Screen() {
 		try {
 			setLoading(true);
 
-			const tags = arrayToNIP02(follows);
+			const tags = arrayToNIP02([...follows, account.pubkey]);
 			const signer = new NDKPrivateKeySigner(account.privkey);
 			ndk.signer = signer;
 
@@ -154,7 +161,7 @@ export function CreateStep4Screen() {
 			event.publish();
 
 			// update
-			update.mutate(follows);
+			update.mutate([...follows, account.pubkey]);
 
 			// redirect to next step
 			setTimeout(() => navigate("/auth/onboarding", { replace: true }), 1200);
@@ -162,6 +169,8 @@ export function CreateStep4Screen() {
 			console.log("error");
 		}
 	};
+
+	const list = data ? data.profiles.concat(INITIAL_LIST) : [];
 
 	return (
 		<div className="mx-auto w-full max-w-md">
@@ -179,27 +188,34 @@ export function CreateStep4Screen() {
 						</span>{" "}
 						plebs
 					</div>
-					<div className="scrollbar-hide flex h-96 flex-col overflow-y-auto py-2">
-						{initialList.map((item: { pubkey: string }, index: number) => (
-							<button
-								key={`item-${index}`}
-								type="button"
-								onClick={() => toggleFollow(item.pubkey)}
-								className="inline-flex transform items-center justify-between bg-zinc-900 px-4 py-2 hover:bg-zinc-800 active:translate-y-1"
-							>
-								<User pubkey={item.pubkey} />
-								{follows.includes(item.pubkey) && (
-									<div>
-										<CheckCircleIcon
-											width={16}
-											height={16}
-											className="text-green-400"
+					{status === "loading" ? (
+						<div className="py-2 px-4 w-full h-11 inline-flex items-center justify-center">
+							<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+						</div>
+					) : (
+						<div className="scrollbar-hide flex h-96 flex-col overflow-y-auto py-2">
+							{list.map(
+								(item: { pubkey: string; profile: { content: string } }) => (
+									<button
+										key={item.pubkey}
+										type="button"
+										onClick={() => toggleFollow(item.pubkey)}
+										className="inline-flex transform items-center justify-between bg-zinc-900 px-4 py-2 hover:bg-zinc-800 active:translate-y-1"
+									>
+										<User
+											pubkey={item.pubkey}
+											fallback={item.profile?.content}
 										/>
-									</div>
-								)}
-							</button>
-						))}
-					</div>
+										{follows.includes(item.pubkey) && (
+											<div>
+												<CheckCircleIcon className="w-4 h-4 text-green-400" />
+											</div>
+										)}
+									</button>
+								),
+							)}
+						</div>
+					)}
 				</div>
 				{follows.length >= 10 && (
 					<button

@@ -1,8 +1,9 @@
+import { NDKUser } from "@nostr-dev-kit/ndk";
 import { RelayContext } from "@shared/relayProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 
-export function useProfile(pubkey: string) {
+export function useProfile(pubkey: string, fallback?: string) {
 	const ndk = useContext(RelayContext);
 	const {
 		status,
@@ -12,10 +13,15 @@ export function useProfile(pubkey: string) {
 	} = useQuery(
 		["user", pubkey],
 		async () => {
-			const user = ndk.getUser({ hexpubkey: pubkey });
-			await user.fetchProfile();
+			if (fallback) {
+				const profile = JSON.parse(fallback);
+				return profile;
+			} else {
+				const user = ndk.getUser({ hexpubkey: pubkey });
+				await user.fetchProfile();
 
-			return user.profile;
+				return user.profile;
+			}
 		},
 		{
 			staleTime: Infinity,

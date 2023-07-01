@@ -38,7 +38,7 @@ export function ImportStep2Screen() {
 			const followsList = setToArray(follows);
 
 			// update
-			update.mutate(followsList);
+			update.mutate([...followsList, account.pubkey]);
 
 			// redirect to next step
 			setTimeout(() => navigate("/auth/onboarding", { replace: true }), 1200);
@@ -46,8 +46,6 @@ export function ImportStep2Screen() {
 			console.log("error");
 		}
 	};
-
-	console.log(account);
 
 	return (
 		<div className="mx-auto w-full max-w-md">

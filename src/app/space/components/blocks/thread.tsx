@@ -9,6 +9,7 @@ import { NoteSkeleton } from "@shared/notes/skeleton";
 import { TitleBar } from "@shared/titleBar";
 import { User } from "@shared/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAccount } from "@utils/hooks/useAccount";
 import { parser } from "@utils/parser";
 
 export function ThreadBlock({ params }: { params: any }) {
@@ -16,6 +17,7 @@ export function ThreadBlock({ params }: { params: any }) {
 
 	const queryClient = useQueryClient();
 
+	const { account } = useAccount();
 	const { status, data } = useQuery(["thread", params.content], async () => {
 		const res = await getNoteByID(params.content);
 		res["content"] = parser(res);
@@ -55,7 +57,12 @@ export function ThreadBlock({ params }: { params: any }) {
 							</div>
 						</div>
 						<div className="mt-3 bg-zinc-900 rounded-md">
-							<NoteReplyForm rootID={params.content} />
+							{account && (
+								<NoteReplyForm
+									rootID={params.content}
+									userPubkey={account.pubkey}
+								/>
+							)}
 						</div>
 					</div>
 				)}
