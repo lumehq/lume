@@ -12,9 +12,7 @@ export function ChatsListItem({ data }: { data: any }) {
 		return (
 			<div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
 				<div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
-				<div>
-					<div className="h-2.5 w-2/3 animate-pulse truncate rounded bg-zinc-800 text-base font-medium" />
-				</div>
+				<div className="h-2.5 w-2/3 animate-pulse rounded bg-zinc-800" />
 			</div>
 		);
 	}
@@ -40,10 +38,10 @@ export function ChatsListItem({ data }: { data: any }) {
 			</div>
 			<div className="w-full inline-flex items-center justify-between">
 				<div className="inline-flex items-baseline gap-1">
-					<h5 className="max-w-[9rem] truncate font-medium text-zinc-200">
+					<h5 className="max-w-[10rem] truncate font-medium text-zinc-200">
 						{user?.nip05 ||
-							user?.displayName ||
 							user?.name ||
+							user?.displayName ||
 							shortenKey(data.sender_pubkey)}
 					</h5>
 				</div>

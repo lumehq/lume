@@ -13,12 +13,17 @@ import { ChannelScreen } from "@app/channel";
 import { ChatScreen } from "@app/chat";
 import { ErrorScreen } from "@app/error";
 import { Root } from "@app/root";
+import { AccountSettingsScreen } from "@app/settings/account";
+import { GeneralSettingsScreen } from "@app/settings/general";
+import { ShortcutsSettingsScreen } from "@app/settings/shortcuts";
+import { UpdateSettingsScreen } from "@app/settings/update";
 import { SpaceScreen } from "@app/space";
 import { TrendingScreen } from "@app/trending";
 import { UserScreen } from "@app/user";
 import { AppLayout } from "@shared/appLayout";
 import { AuthLayout } from "@shared/authLayout";
 import { Protected } from "@shared/protected";
+import { SettingsLayout } from "@shared/settingsLayout";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -70,6 +75,20 @@ const router = createBrowserRouter([
 			{ path: "user/:pubkey", element: <UserScreen /> },
 			{ path: "chat/:pubkey", element: <ChatScreen /> },
 			{ path: "channel/:id", element: <ChannelScreen /> },
+		],
+	},
+	{
+		path: "/settings",
+		element: (
+			<Protected>
+				<SettingsLayout />
+			</Protected>
+		),
+		children: [
+			{ path: "general", element: <GeneralSettingsScreen /> },
+			{ path: "shortcuts", element: <ShortcutsSettingsScreen /> },
+			{ path: "account", element: <AccountSettingsScreen /> },
+			{ path: "update", element: <UpdateSettingsScreen /> },
 		],
 	},
 ]);

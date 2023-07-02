@@ -16,6 +16,7 @@
 		"@floating-ui/react": "^0.23.1",
 		"@headlessui/react": "^1.7.15",
 		"@nostr-dev-kit/ndk": "0.6.0",
+		"@radix-ui/react-popover": "^1.0.6",
 		"@radix-ui/react-tooltip": "^1.0.6",
 		"@tanstack/react-query": "^4.29.19",
 		"@tanstack/react-virtual": "3.0.0-beta.54",

@@ -145,7 +145,7 @@ export function UserScreen() {
 										} font-medium inline-flex items-center gap-2 h-10 border-t`}
 									>
 										<ThreadsIcon className="w-4 h-4" />
-										Posts
+										Activities from 48 hours ago
 									</button>
 								)}
 							</Tab>

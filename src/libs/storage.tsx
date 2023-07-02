@@ -400,7 +400,21 @@ export async function createBlock(kind: number, title: string, content: any) {
 	);
 }
 
+// remove block
 export async function removeBlock(id: string) {
 	const db = await connect();
 	return await db.execute(`DELETE FROM blocks WHERE id = "${id}";`);
+}
+
+// logout
+export async function removeAll() {
+	const db = await connect();
+	await db.execute(`UPDATE settings SET value = "0" WHERE key = "last_login";`);
+	await db.execute("DELETE FROM replies;");
+	await db.execute("DELETE FROM notes;");
+	await db.execute("DELETE FROM blacklist;");
+	await db.execute("DELETE FROM blocks;");
+	await db.execute("DELETE FROM chats;");
+	await db.execute("DELETE FROM accounts;");
+	return true;
 }

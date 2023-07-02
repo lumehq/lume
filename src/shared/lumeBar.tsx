@@ -1,68 +1,30 @@
-import { Transition } from "@headlessui/react";
-import { getActiveAccount } from "@libs/storage";
 import { ActiveAccount } from "@shared/accounts/active";
-import { VerticalDotsIcon } from "@shared/icons";
-import { RelayManager } from "@shared/relayManager";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { SettingsIcon } from "@shared/icons";
+import { Logout } from "@shared/logout";
+import { Notification } from "@shared/notification";
+import { useAccount } from "@utils/hooks/useAccount";
 import { Link } from "react-router-dom";
 
 export function LumeBar() {
-	const { status, data: activeAccount } = useQuery(
-		["activeAccount"],
-		async () => {
-			return await getActiveAccount();
-		},
-	);
-
-	const [open, setOpen] = useState(false);
-
-	const toggleMenu = () => {
-		setOpen((isOpen) => !isOpen);
-	};
+	const { status, account } = useAccount();
 
 	return (
-		<div className="flex flex-col gap-2 rounded-xl p-2 border-t border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md">
+		<div className="rounded-xl p-2 border-t border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md">
 			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-2">
-					{status === "loading" ? (
-						<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-md bg-zinc-900" />
-					) : (
-						<ActiveAccount data={activeAccount} />
-					)}
-					<RelayManager />
-				</div>
-				<button
-					type="button"
-					onClick={() => toggleMenu()}
-					className="inline-flex items-center justify-center w-5 h-5 rounded hover:bg-zinc-800"
+				{status === "loading" ? (
+					<div className="group relative flex h-9 w-9 shrink animate-pulse items-center justify-center rounded-md bg-zinc-900" />
+				) : (
+					<ActiveAccount data={account} />
+				)}
+				<Notification />
+				<Link
+					to="/settings/general"
+					className="inline-flex items-center justify-center w-9 h-9 rounded-md border-t bg-zinc-800 border-zinc-700/50 transform active:translate-y-1"
 				>
-					<VerticalDotsIcon className="w-4 h-4 text-zinc-100" />
-				</button>
+					<SettingsIcon className="w-4 h-4 text-zinc-400" />
+				</Link>
+				<Logout />
 			</div>
-			<Transition
-				show={open}
-				enter="transition-transform ease-in-out duration-75"
-				enterFrom="translate-y-16"
-				enterTo="translate-y-0"
-				leave="transition-transform ease-in-out duration-150"
-				leaveFrom="translate-y-0"
-				leaveTo="translate-y-16"
-				className="flex flex-col items-start justify-start gap-1 pt-1.5 border-t border-zinc-800 transform"
-			>
-				<Link
-					to="/app/settings"
-					className="w-full py-2 px-2 rounded hover:bg-zinc-800 text-zinc-100 text-start text-sm"
-				>
-					Settings
-				</Link>
-				<Link
-					to="/app/logout"
-					className="w-full py-2 px-2 rounded hover:bg-zinc-800 text-zinc-100 text-start text-sm"
-				>
-					Logout
-				</Link>
-			</Transition>
 		</div>
 	);
 }

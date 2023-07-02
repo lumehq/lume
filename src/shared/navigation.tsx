@@ -7,14 +7,10 @@ import { LumeBar } from "@shared/lumeBar";
 import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
-export function Navigation({ reverse = false }: { reverse?: boolean }) {
+export function Navigation() {
 	return (
-		<div
-			className={`relative flex w-[232px] flex-col gap-3 ${
-				reverse ? "border-l" : "border-r"
-			} border-zinc-900`}
-		>
-			<AppHeader reverse={reverse} />
+		<div className="relative flex w-[232px] flex-col gap-3 border-r border-zinc-900">
+			<AppHeader />
 			<div className="pb-20 flex flex-col gap-5 overflow-y-auto scrollbar-hide">
 				<div className="inlin-lflex h-8 px-3.5">
 					<Composer />
@@ -117,7 +113,7 @@ export function Navigation({ reverse = false }: { reverse?: boolean }) {
 					)}
 				</Disclosure>
 			</div>
-			<div className="absolute bottom-3 left-0 px-8 w-full">
+			<div className="absolute bottom-3 left-0 px-10 w-full">
 				<LumeBar />
 			</div>
 		</div>

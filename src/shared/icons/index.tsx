@@ -39,4 +39,6 @@ export * from "./cmd";
 export * from "./verticalDots";
 export * from "./signal";
 export * from "./unverified";
+export * from "./settings";
+export * from "./logout";
 // @endindex
