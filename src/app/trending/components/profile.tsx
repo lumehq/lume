@@ -1,3 +1,4 @@
+import { FollowIcon, LoaderIcon, UnfollowIcon } from "@shared/icons";
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useQuery } from "@tanstack/react-query";
@@ -23,12 +24,10 @@ export function Profile({ data }: { data: any }) {
 
 	const [followed, setFollowed] = useState(false);
 
-
 	const followUser = (pubkey: string) => {
 		try {
 			follow(pubkey);
-
-			// // update state
+			// update state
 			setFollowed(true);
 		} catch (error) {
 			console.log(error);
@@ -38,14 +37,12 @@ export function Profile({ data }: { data: any }) {
 	const unfollowUser = (pubkey: string) => {
 		try {
 			unfollow(pubkey);
-
-			// // update state
+			// update state
 			setFollowed(false);
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
 
 	useEffect(() => {
 		if (status === "success" && userFollows) {
@@ -86,14 +83,26 @@ export function Profile({ data }: { data: any }) {
 					{socialStatus === "loading" ? (
 						<button
 							type="button"
-							className="inline-flex w-36 h-10 items-center justify-center rounded-md bg-zinc-900 hover:bg-fuchsia-500 text-sm font-medium"
+							className="inline-flex w-8 h-8 items-center justify-center rounded-md bg-zinc-900 hover:bg-fuchsia-500"
 						>
-							Loading...
+							<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
 						</button>
 					) : followed ? (
-					<button type="button" onClick={() => unfollowUser(data.pubkey)}>Unfollow</button>
+						<button
+							type="button"
+							onClick={() => unfollowUser(data.pubkey)}
+							className="inline-flex w-8 h-8 items-center justify-center rounded-md text-zinc-400 bg-zinc-800 hover:bg-fuchsia-500 hover:text-white"
+						>
+							<UnfollowIcon className="w-4 h-4" />
+						</button>
 					) : (
-					<button type="button" onClick={() => followUser(data.pubkey)}>Follow</button>
+						<button
+							type="button"
+							onClick={() => followUser(data.pubkey)}
+							className="inline-flex w-8 h-8 items-center justify-center rounded-md text-zinc-400 bg-zinc-800 hover:bg-fuchsia-500 hover:text-white"
+						>
+							<FollowIcon className="w-4 h-4" />
+						</button>
 					)}
 				</div>
 			</div>

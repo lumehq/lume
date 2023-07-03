@@ -66,7 +66,7 @@ export function User({
 			<div className="flex flex-wrap items-baseline gap-1">
 				<h5
 					className={`text-zinc-100 font-semibold leading-none truncate ${
-						size === "small" ? "max-w-[8rem]" : "max-w-[15rem]"
+						size === "small" ? "max-w-[8rem]" : "max-w-[12rem]"
 					}`}
 				>
 					{user?.nip05 || user?.name || user?.displayName || shortenKey(pubkey)}
