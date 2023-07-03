@@ -115,5 +115,8 @@ export function parser(event: any) {
 		</Link>
 	));
 
+	// clean array
+	content.parsed = content.parsed.filter((el) => el !== "\n");
+
 	return content;
 }

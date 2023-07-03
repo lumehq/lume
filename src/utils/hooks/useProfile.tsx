@@ -24,7 +24,6 @@ export function useProfile(pubkey: string, fallback?: string) {
 			}
 		},
 		{
-			staleTime: Infinity,
 			refetchOnWindowFocus: false,
 			refetchOnReconnect: false,
 		},
