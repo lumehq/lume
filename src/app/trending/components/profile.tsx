@@ -1,8 +1,10 @@
 import { Image } from "@shared/image";
 import { DEFAULT_AVATAR } from "@stores/constants";
 import { useQuery } from "@tanstack/react-query";
+import { useSocial } from "@utils/hooks/useSocial";
 import { compactNumber } from "@utils/number";
 import { shortenKey } from "@utils/shortenKey";
+import { useEffect, useState } from "react";
 
 export function Profile({ data }: { data: any }) {
 	const { status, data: userStats } = useQuery(
@@ -17,6 +19,41 @@ export function Profile({ data }: { data: any }) {
 
 	const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
 	const profile = embedProfile;
+	const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
+
+	const [followed, setFollowed] = useState(false);
+
+
+	const followUser = (pubkey: string) => {
+		try {
+			follow(pubkey);
+
+			// // update state
+			setFollowed(true);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const unfollowUser = (pubkey: string) => {
+		try {
+			unfollow(pubkey);
+
+			// // update state
+			setFollowed(false);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+
+	useEffect(() => {
+		if (status === "success" && userFollows) {
+			if (userFollows.includes(data.pubkey)) {
+				setFollowed(true);
+			}
+		}
+	}, [status]);
 
 	if (!profile)
 		return (
@@ -46,7 +83,18 @@ export function Profile({ data }: { data: any }) {
 					</div>
 				</div>
 				<div className="inline-flex items-center gap-2">
-					<button type="button">Follow</button>
+					{socialStatus === "loading" ? (
+						<button
+							type="button"
+							className="inline-flex w-36 h-10 items-center justify-center rounded-md bg-zinc-900 hover:bg-fuchsia-500 text-sm font-medium"
+						>
+							Loading...
+						</button>
+					) : followed ? (
+					<button type="button" onClick={() => unfollowUser(data.pubkey)}>Unfollow</button>
+					) : (
+					<button type="button" onClick={() => followUser(data.pubkey)}>Follow</button>
+					)}
 				</div>
 			</div>
 			<div className="mt-2">
