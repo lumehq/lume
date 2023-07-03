@@ -24,7 +24,7 @@ export function TrendingProfiles() {
 						</div>
 					</div>
 				) : (
-					<div className="relative w-full flex flex-col gap-3 px-3 pt-1.5">
+					<div className="relative w-full flex flex-col gap-3 px-3 pt-3">
 						{data.profiles.map((item) => (
 							<Profile key={item.pubkey} data={item} />
 						))}

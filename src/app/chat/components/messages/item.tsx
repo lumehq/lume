@@ -35,28 +35,13 @@ export function ChatMessageItem({
 					<p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
 						{content.parsed}
 					</p>
-					{Array.isArray(content.images) && content.images.length ? (
-						<ImagePreview urls={content.images} />
-					) : (
-						<></>
-					)}
-					{Array.isArray(content.videos) && content.videos.length ? (
-						<VideoPreview urls={content.videos} />
-					) : (
-						<></>
-					)}
-					{Array.isArray(content.links) && content.links.length ? (
-						<LinkPreview urls={content.links} />
-					) : (
-						<></>
-					)}
-					{Array.isArray(content.notes) && content.notes.length ? (
+					{content.images.length > 0 && <ImagePreview urls={content.images} />}
+					{content.videos.length > 0 && <VideoPreview urls={content.videos} />}
+					{content.links.length > 0 && <LinkPreview urls={content.links} />}
+					{content.notes.length > 0 &&
 						content.notes.map((note: string) => (
 							<MentionNote key={note} id={note} />
-						))
-					) : (
-						<></>
-					)}
+						))}
 				</div>
 			</div>
 		</div>

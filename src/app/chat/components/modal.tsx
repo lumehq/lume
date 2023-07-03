@@ -1,6 +1,6 @@
 import { User } from "@app/auth/components/user";
 import { Dialog, Transition } from "@headlessui/react";
-import { CancelIcon, PlusIcon } from "@shared/icons";
+import { CancelIcon, LoaderIcon, PlusIcon } from "@shared/icons";
 import { useAccount } from "@utils/hooks/useAccount";
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -92,7 +92,9 @@ export function NewMessageModal() {
 								</div>
 								<div className="h-[500px] flex flex-col pb-5 overflow-x-hidden overflow-y-auto">
 									{status === "loading" ? (
-										<p>Loading...</p>
+										<div className="px-4 py-3 inline-flex items-center justify-center">
+											<LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
+										</div>
 									) : (
 										follows.map((follow) => (
 											<div
