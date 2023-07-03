@@ -19,7 +19,7 @@ export function Profile({ data }: { data: any }) {
 
 	const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
 	const profile = embedProfile;
-	const { userFollows, follow, unfollow } = useSocial();
+	const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
 
 	const [followed, setFollowed] = useState(false);
 
@@ -83,7 +83,18 @@ export function Profile({ data }: { data: any }) {
 					</div>
 				</div>
 				<div className="inline-flex items-center gap-2">
-					{!followed ? (<button type="button" onClick={() => followUser(data.pubkey)} >Follow</button>): (<button type="button" onClick={() => unfollowUser(data.pubkey)} >Unfollow</button>)}
+					{socialStatus === "loading" ? (
+						<button
+							type="button"
+							className="inline-flex w-36 h-10 items-center justify-center rounded-md bg-zinc-900 hover:bg-fuchsia-500 text-sm font-medium"
+						>
+							Loading...
+						</button>
+					) : followed ? (
+					<button type="button" onClick={() => unfollowUser(data.pubkey)}>Unfollow</button>
+					) : (
+					<button type="button" onClick={() => followUser(data.pubkey)}>Follow</button>
+					)}
 				</div>
 			</div>
 			<div className="mt-2">
