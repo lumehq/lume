@@ -8,7 +8,8 @@ export function VideoPreview({ urls }: { urls: string[] }) {
 					key={url}
 					url={url}
 					width="100%"
-					className="w-full h-auto border border-zinc-800/50 rounded-lg"
+					height="auto"
+					className="!h-auto object-fill rounded-lg overflow-hidden"
 					controls={true}
 					pip={true}
 				/>

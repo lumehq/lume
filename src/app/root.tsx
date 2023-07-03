@@ -143,7 +143,8 @@ export function Root() {
 				const chats = await fetchChats();
 				// const channels = await fetchChannelMessages();
 				if (chats) {
-					await updateLastLogin(dateToUnix());
+					const now = Math.floor(Date.now() / 1000);
+					await updateLastLogin(now);
 					navigate("/app/space", { replace: true });
 				}
 			}

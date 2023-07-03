@@ -9,6 +9,7 @@ extern crate objc;
 
 use tauri::{Manager, WindowEvent};
 use tauri_plugin_sql::{Migration, MigrationKind};
+use tauri_plugin_autostart::MacosLauncher;
 
 #[cfg(target_os = "macos")]
 use window_ext::WindowExt;
@@ -109,6 +110,7 @@ fn main() {
         )
         .build(),
     )
+    .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec!["--flag1", "--flag2"])))
     .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
       println!("{}, {argv:?}, {cwd}", app.package_info().name);
       app

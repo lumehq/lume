@@ -16,7 +16,6 @@ import { Root } from "@app/root";
 import { AccountSettingsScreen } from "@app/settings/account";
 import { GeneralSettingsScreen } from "@app/settings/general";
 import { ShortcutsSettingsScreen } from "@app/settings/shortcuts";
-import { UpdateSettingsScreen } from "@app/settings/update";
 import { SpaceScreen } from "@app/space";
 import { TrendingScreen } from "@app/trending";
 import { UserScreen } from "@app/user";
@@ -88,7 +87,6 @@ const router = createBrowserRouter([
 			{ path: "general", element: <GeneralSettingsScreen /> },
 			{ path: "shortcuts", element: <ShortcutsSettingsScreen /> },
 			{ path: "account", element: <AccountSettingsScreen /> },
-			{ path: "update", element: <UpdateSettingsScreen /> },
 		],
 	},
 ]);

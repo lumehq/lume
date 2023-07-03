@@ -49,17 +49,6 @@ export function SettingsLayout() {
 								>
 									<span className="font-medium">Account</span>
 								</NavLink>
-								<NavLink
-									to="/settings/update"
-									className={({ isActive }) =>
-										twMerge(
-											"flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200",
-											isActive ? "bg-zinc-900/50" : "",
-										)
-									}
-								>
-									<span className="font-medium">Update</span>
-								</NavLink>
 							</div>
 						</div>
 					</div>

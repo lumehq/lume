@@ -325,13 +325,34 @@ export async function createChat(
 	return sender_pubkey;
 }
 
+// get setting
+export async function getSetting(key: string) {
+	const db = await connect();
+	const result = await db.select(
+		`SELECT value FROM settings WHERE key = "${key}";`,
+	);
+	return result[0]?.value;
+}
+
+// update setting
+export async function updateSetting(key: string, value: string | number) {
+	const db = await connect();
+	return await db.execute(
+		`UPDATE settings SET value = "${value}" WHERE key = "${key}";`,
+	);
+}
+
 // get last login
 export async function getLastLogin() {
 	const db = await connect();
 	const result = await db.select(
 		`SELECT value FROM settings WHERE key = "last_login";`,
 	);
-	return result[0]?.value;
+	if (result[0]) {
+		return parseInt(result[0].value);
+	} else {
+		return 0;
+	}
 }
 
 // update last login

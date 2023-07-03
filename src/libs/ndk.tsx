@@ -39,7 +39,7 @@ export async function prefetchEvents(
 		});
 
 		relaySetSubscription.on("eose", () => {
-			setTimeout(() => resolve(new Set(events.values())), 1200);
+			setTimeout(() => resolve(new Set(events.values())), 3000);
 		});
 	});
 }

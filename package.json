@@ -41,6 +41,7 @@
 		"slate-history": "^0.93.0",
 		"slate-react": "^0.94.2",
 		"tailwind-merge": "^1.13.2",
+		"tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1",
 		"tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
 		"zustand": "^4.3.8"
 	},
