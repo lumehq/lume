@@ -184,6 +184,15 @@ export async function createReplyNote(
   );
 }
 
+// get all pubkeys in db
+export async function getAllPubkeys() {
+  const db = await connect();
+  const notes: any = await db.select('SELECT DISTINCT pubkey FROM notes');
+  const replies: any = await db.select('SELECT DISTINCT pubkey FROM replies');
+  const chats: any = await db.select('SELECT DISTINCT sender_pubkey FROM chats');
+  return [...notes, ...replies, ...chats];
+}
+
 // get all channels
 export async function getChannels() {
   const db = await connect();

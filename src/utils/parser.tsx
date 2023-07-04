@@ -1,22 +1,22 @@
 import destr from 'destr';
 import getUrls from 'get-urls';
-import { parseReferences } from 'nostr-tools';
+import { Event, parseReferences } from 'nostr-tools';
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
 import { MentionUser } from '@shared/notes/mentions/user';
 
-function isJsonString(str: string) {
+function isJsonString(str: string[][] | string) {
   try {
-    JSON.parse(str);
+    if (typeof str === 'string') JSON.parse(str);
   } catch (e) {
     return false;
   }
   return true;
 }
 
-export function parser(event: any) {
+export function parser(event: Event) {
   if (isJsonString(event.tags)) {
     event['tags'] = destr(event.tags);
   }
@@ -26,7 +26,7 @@ export function parser(event: any) {
 
   const content: {
     original: string;
-    parsed: ReactNode[];
+    parsed: string | ReactNode[];
     notes: string[];
     images: string[];
     videos: string[];
@@ -40,39 +40,30 @@ export function parser(event: any) {
     links: [],
   };
 
-  // remove unnecessary whitespaces
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  content.parsed = content.parsed.replace(/\s{2,}/g, ' ');
-
-  // remove unnecessary linebreak
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  content.parsed = content.parsed.replace(/(\r\n|\r|\n){2,}/g, '$1\n');
-
   // parse urls
   urls?.forEach((url: string) => {
     if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
       // image url
       content.images.push(url);
       // remove url from original content
-      content.parsed = reactStringReplace(content.parsed, url, () => null);
+      content.parsed = reactStringReplace(content.parsed, url, () => '');
     } else if (url.match(/\.(mp4|webm|mov|ogv|avi|mp3)$/)) {
       // video
       content.videos.push(url);
       // remove url from original content
-      content.parsed = reactStringReplace(content.parsed, url, () => null);
+      content.parsed = reactStringReplace(content.parsed, url, () => '');
     } else {
       if (content.links.length < 1) {
         // push to store
         content.links.push(url);
         // remove url from original content
-        content.parsed = reactStringReplace(content.parsed, url, () => null);
+        content.parsed = reactStringReplace(content.parsed, url, () => '');
       } else {
-        content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
+        content.parsed = reactStringReplace(content.parsed, url, (match, i) => (
           <Link
             key={match + i}
             to={match}
+            target="_blank"
             className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
           >
             {match}
@@ -99,17 +90,18 @@ export function parser(event: any) {
 
   // parse hashtag
   content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
-    <Link
+    <span
       key={match + i}
-      to={`/search/${match}`}
       className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
     >
       #{match}
-    </Link>
+    </span>
   ));
 
   // clean array
-  content.parsed = content.parsed.filter((el) => el !== '\n');
+  content.parsed = content.parsed.filter(
+    (el) => el !== '\n' && el !== '\n\n' && el !== '\n'
+  );
 
   return content;
 }

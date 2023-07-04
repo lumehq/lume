@@ -1,14 +1,14 @@
-import { NDKFilter } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+import { useQueryClient } from '@tanstack/react-query';
 import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { prefetchEvents } from '@libs/ndk';
 import {
   countTotalNotes,
-  createChannelMessage,
   createChat,
   createNote,
-  getChannels,
+  getAllPubkeys,
   getLastLogin,
   updateLastLogin,
 } from '@libs/storage';
@@ -21,10 +21,12 @@ import { useAccount } from '@utils/hooks/useAccount';
 
 const totalNotes = await countTotalNotes();
 const lastLogin = await getLastLogin();
+const users = await getAllPubkeys();
 
 export function Root() {
   const ndk = useContext(RelayContext);
   const now = useRef(new Date());
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { status, account } = useAccount();
@@ -99,6 +101,34 @@ export function Root() {
     }
   }
 
+  async function fetchUsersProfile() {
+    const authors = [];
+
+    users.forEach((user) => {
+      if (user.sender_pubkey) {
+        authors.push(user.sender_pubkey);
+      } else {
+        authors.push(user.pubkey);
+      }
+    });
+
+    const filter: NDKFilter = {
+      authors: authors,
+      kinds: [0],
+    };
+
+    const events = await ndk.fetchEvents(filter);
+    console.log('authors', events);
+
+    events.forEach((event: NDKEvent) => {
+      const profile = JSON.parse(event.content);
+      profile['image'] = profile.picture;
+      queryClient.setQueryData(['user', event.pubkey], profile);
+    });
+
+    return true;
+  }
+
   /*
   async function fetchChannelMessages() {
     try {
@@ -144,8 +174,9 @@ export function Root() {
       const notes = await fetchNotes();
       if (notes) {
         const chats = await fetchChats();
+        const users = await fetchUsersProfile();
         // const channels = await fetchChannelMessages();
-        if (chats) {
+        if (chats && users) {
           const now = Math.floor(Date.now() / 1000);
           await updateLastLogin(now);
           navigate('/app/space', { replace: true });
