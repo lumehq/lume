@@ -178,7 +178,7 @@ export function AddImageBlock() {
 						>
 							<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-xl border-t border-zinc-800/50 bg-zinc-900">
 								<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
-									<div className="flex flex-col gap-2">
+									<div className="flex flex-col gap-1">
 										<div className="flex items-center justify-between">
 											<Dialog.Title
 												as="h3"

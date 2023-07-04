@@ -21,7 +21,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
 			const filter: NDKFilter = {
 				"#p": [pubkey],
 				kinds: [1, 6, 7, 9735],
-				since: dateToUnix(getHourAgo(100, now.current)),
+				since: dateToUnix(getHourAgo(48, now.current)),
 			};
 			const events = await ndk.fetchEvents(filter);
 			return [...events];
@@ -118,26 +118,38 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
 						>
 							<Dialog.Panel className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border-t border-zinc-800/50 bg-zinc-900">
 								<div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
-									<div className="flex items-center justify-between">
-										<Dialog.Title
-											as="h3"
-											className="text-lg font-semibold leading-none text-zinc-100"
-										>
-											24 hours ago
-										</Dialog.Title>
-										<button
-											type="button"
-											onClick={closeModal}
-											className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-900"
-										>
-											<CancelIcon className="w-5 h-5 text-zinc-300" />
-										</button>
+									<div className="flex flex-col gap-1">
+										<div className="flex items-center justify-between">
+											<Dialog.Title
+												as="h3"
+												className="text-lg font-semibold leading-none text-zinc-100"
+											>
+												Notification
+											</Dialog.Title>
+											<button
+												type="button"
+												onClick={closeModal}
+												className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-900"
+											>
+												<CancelIcon className="w-5 h-5 text-zinc-300" />
+											</button>
+										</div>
+										<Dialog.Description className="text-sm leading-tight text-zinc-400">
+											All things happen when you rest in 48 hours ago
+										</Dialog.Description>
 									</div>
 								</div>
 								<div className="h-[500px] flex flex-col pb-5 overflow-x-hidden overflow-y-auto">
 									{status === "loading" ? (
 										<div className="px-4 py-3 inline-flex items-center justify-center">
 											<LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
+										</div>
+									) : data.length < 1 ? (
+										<div className="flex flex-col items-center justify-center w-full h-full">
+											<p className="text-4xl mb-1">🎉</p>
+											<p className="text-zinc-500 font-medium">
+												Yo!, you've no new notifications
+											</p>
 										</div>
 									) : (
 										data.map((event) => renderItem(event))
