@@ -13,6 +13,7 @@ import { WelcomeScreen } from '@app/auth/welcome';
 import { ChannelScreen } from '@app/channel';
 import { ChatScreen } from '@app/chat';
 import { ErrorScreen } from '@app/error';
+import { NoteScreen } from '@app/note';
 import { Root } from '@app/root';
 import { AccountSettingsScreen } from '@app/settings/account';
 import { GeneralSettingsScreen } from '@app/settings/general';
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
     children: [
       { path: 'space', element: <SpaceScreen /> },
       { path: 'trending', element: <TrendingScreen /> },
+      { path: 'note/:id', element: <NoteScreen /> },
       { path: 'user/:pubkey', element: <UserScreen /> },
       { path: 'chat/:pubkey', element: <ChatScreen /> },
       { path: 'channel/:id', element: <ChannelScreen /> },

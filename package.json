@@ -12,11 +12,10 @@
     "format": "prettier ./src --write"
   },
   "lint-staged": {
-    "src/*.{ts, tsx}": "eslint --fix",
-    "src/*.{ts, tsx, css, md, html, json}": "prettier --cache --write"
+    "**/*.{ts, tsx}": "eslint --fix",
+    "**/*.{ts, tsx, css, md, html, json}": "prettier --cache --write"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.23.1",
     "@headlessui/react": "^1.7.15",
     "@nostr-dev-kit/ndk": "0.6.0",
     "@radix-ui/react-popover": "^1.0.6",

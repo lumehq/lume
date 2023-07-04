@@ -4,7 +4,6 @@ import { Fragment, useContext, useState } from 'react';
 
 import { CancelIcon, MuteIcon } from '@shared/icons';
 import { RelayContext } from '@shared/relayProvider';
-import { Tooltip } from '@shared/tooltip_dep';
 
 import { useChannelMessages } from '@stores/channels';
 
@@ -51,15 +50,13 @@ export function MessageMuteButton({ pubkey }: { pubkey: string }) {
 
   return (
     <>
-      <Tooltip message="Mute this user">
-        <button
-          type="button"
-          onClick={() => openModal()}
-          className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
-        >
-          <MuteIcon width={16} height={16} className="text-zinc-200" />
-        </button>
-      </Tooltip>
+      <button
+        type="button"
+        onClick={() => openModal()}
+        className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-800"
+      >
+        <MuteIcon width={16} height={16} className="text-zinc-200" />
+      </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child

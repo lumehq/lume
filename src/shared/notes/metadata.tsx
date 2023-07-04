@@ -81,12 +81,7 @@ export function NoteMetadata({
   });
 
   const openThread = (thread: string) => {
-    const selection = window.getSelection();
-    if (selection.toString().length === 0) {
-      block.mutate({ kind: 2, title: 'Thread', content: thread });
-    } else {
-      event.stopPropagation();
-    }
+    block.mutate({ kind: 2, title: 'Thread', content: thread });
   };
 
   if (status === 'loading') {

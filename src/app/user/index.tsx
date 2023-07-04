@@ -143,13 +143,18 @@ export function UserScreen() {
                   <button
                     type="button"
                     className={`${
-                      selected
-                        ? 'border-fuchsia-500 text-fuchsia-500'
-                        : 'border-transparent text-zinc-200'
-                    } inline-flex h-10 items-center gap-2 border-t font-medium`}
+                      selected ? 'border-fuchsia-500' : 'border-transparent'
+                    } inline-flex h-16 items-start gap-2 border-t pt-4 font-medium`}
                   >
-                    <ThreadsIcon className="h-4 w-4" />
-                    Activities from 48 hours ago
+                    <ThreadsIcon className="h-3.5 w-3.5" />
+                    <div className="flex flex-col justify-start gap-0.5 text-start">
+                      <p className="text-sm font-medium leading-none text-zinc-200">
+                        Activities
+                      </p>
+                      <span className="text-sm leading-none text-zinc-500">
+                        48 hours ago
+                      </span>
+                    </div>
                   </button>
                 )}
               </Tab>
