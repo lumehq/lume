@@ -1,13 +1,13 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface NoteState {
-	hasNewNote: boolean;
-	toggleHasNewNote: (status: boolean) => void;
+  hasNewNote: boolean;
+  toggleHasNewNote: (status: boolean) => void;
 }
 
 export const useNote = create<NoteState>((set) => ({
-	hasNewNote: false,
-	toggleHasNewNote: (status: boolean) => {
-		set({ hasNewNote: status });
-	},
+  hasNewNote: false,
+  toggleHasNewNote: (status: boolean) => {
+    set({ hasNewNote: status });
+  },
 }));
