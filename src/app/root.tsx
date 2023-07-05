@@ -66,6 +66,33 @@ export function Root() {
     }
   }
 
+  async function fetchUsersProfile() {
+    const authors = [];
+
+    users.forEach((user) => {
+      if (user.sender_pubkey) {
+        authors.push(user.sender_pubkey);
+      } else {
+        authors.push(user.pubkey);
+      }
+    });
+
+    const filter: NDKFilter = {
+      authors: authors,
+      kinds: [0],
+    };
+
+    const events = await ndk.fetchEvents(filter);
+
+    events.forEach((event: NDKEvent) => {
+      const profile = JSON.parse(event.content);
+      profile['image'] = profile.picture;
+      queryClient.setQueryData(['user', event.pubkey], profile);
+    });
+
+    return true;
+  }
+
   async function fetchChats() {
     try {
       const sendFilter: NDKFilter = {
@@ -99,34 +126,6 @@ export function Root() {
     } catch (e) {
       console.log('error: ', e);
     }
-  }
-
-  async function fetchUsersProfile() {
-    const authors = [];
-
-    users.forEach((user) => {
-      if (user.sender_pubkey) {
-        authors.push(user.sender_pubkey);
-      } else {
-        authors.push(user.pubkey);
-      }
-    });
-
-    const filter: NDKFilter = {
-      authors: authors,
-      kinds: [0],
-    };
-
-    const events = await ndk.fetchEvents(filter);
-    console.log('authors', events);
-
-    events.forEach((event: NDKEvent) => {
-      const profile = JSON.parse(event.content);
-      profile['image'] = profile.picture;
-      queryClient.setQueryData(['user', event.pubkey], profile);
-    });
-
-    return true;
   }
 
   /*
@@ -172,15 +171,12 @@ export function Root() {
   useEffect(() => {
     async function prefetch() {
       const notes = await fetchNotes();
-      if (notes) {
-        const chats = await fetchChats();
-        const users = await fetchUsersProfile();
-        // const channels = await fetchChannelMessages();
-        if (chats && users) {
-          const now = Math.floor(Date.now() / 1000);
-          await updateLastLogin(now);
-          navigate('/app/space', { replace: true });
-        }
+      const chats = await fetchChats();
+      const users = await fetchUsersProfile();
+      if (notes && users && chats) {
+        const now = Math.floor(Date.now() / 1000);
+        await updateLastLogin(now);
+        navigate('/app/space', { replace: true });
       }
     }
 

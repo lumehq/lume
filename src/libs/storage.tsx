@@ -269,10 +269,11 @@ export async function getChannelUsers(channel_id: string) {
 }
 
 // get all chats by pubkey
-export async function getChatsByPubkey(pubkey: string) {
+export async function getChats() {
   const db = await connect();
+  const account = await getActiveAccount();
   const result: any = await db.select(
-    `SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${pubkey}" ORDER BY created_at DESC;`
+    `SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${account.pubkey}" ORDER BY created_at DESC;`
   );
   const newArr: any = result.map((v) => ({ ...v, new_messages: 0 }));
   return newArr;

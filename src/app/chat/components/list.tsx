@@ -4,30 +4,23 @@ import { ChatsListItem } from '@app/chat/components/item';
 import { NewMessageModal } from '@app/chat/components/modal';
 import { ChatsListSelfItem } from '@app/chat/components/self';
 
-import { getChatsByPubkey } from '@libs/storage';
+import { getChats } from '@libs/storage';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function ChatsList() {
   const { account } = useAccount();
-
   const {
     status,
     data: chats,
     isFetching,
-  } = useQuery(
-    ['chats'],
-    async () => {
-      const chats = await getChatsByPubkey(account.pubkey);
-      const sorted = chats.sort(
-        (a, b) => parseInt(a.new_messages) - parseInt(b.new_messages)
-      );
-      return sorted;
-    },
-    {
-      enabled: account ? true : false,
-    }
-  );
+  } = useQuery(['chats'], async () => {
+    const chats = await getChats();
+    const sorted = chats.sort(
+      (a, b) => parseInt(a.new_messages) - parseInt(b.new_messages)
+    );
+    return sorted;
+  });
 
   if (status === 'loading') {
     return (
