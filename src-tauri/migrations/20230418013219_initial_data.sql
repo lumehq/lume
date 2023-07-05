@@ -48,3 +48,12 @@ CREATE TABLE
     value TEXT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
+
+-- create metadata table
+CREATE TABLE
+  metadata (
+    id TEXT NOT NULL PRIMARY KEY,
+    pubkey TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );

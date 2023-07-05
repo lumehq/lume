@@ -17,7 +17,9 @@ export function CacheTimeSetting() {
   return (
     <div className="inline-flex items-center justify-between px-5 py-4">
       <div className="flex flex-col gap-1">
-        <span className="font-medium leading-none text-zinc-200">Cache time</span>
+        <span className="font-medium leading-none text-zinc-200">
+          Cache time (milliseconds)
+        </span>
         <span className="text-sm leading-none text-zinc-400">
           The length of time before inactive data gets removed from the cache
         </span>
