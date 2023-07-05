@@ -111,8 +111,8 @@
 			"active": true,
 			"dialog": true,
 			"endpoints": [
-				"https://releases.lume.nu/v1/{{target}}/{{arch}}/{{current_version}}",
-				"https://releases.lume.nu/{{target}}/{{current_version}}"
+				"https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
+				"https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
 			],
 			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
 			"windows": {
