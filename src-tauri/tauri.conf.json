@@ -109,10 +109,11 @@
 		},
 		"updater": {
 			"active": true,
-			"endpoints": [
-				"https://releases.lume.nu/{{target}}/{{arch}}/{{current_version}}"
-			],
 			"dialog": true,
+			"endpoints": [
+				"https://releases.lume.nu/v1/{{target}}/{{arch}}/{{current_version}}",
+				"https://releases.lume.nu/{{target}}/{{current_version}}"
+			],
 			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
 			"windows": {
 				"installMode": "passive"
