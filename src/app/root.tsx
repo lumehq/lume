@@ -1,5 +1,4 @@
-import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
-import { useQueryClient } from '@tanstack/react-query';
+import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +7,6 @@ import {
   countTotalNotes,
   createChat,
   createNote,
-  getAllPubkeys,
   getLastLogin,
   updateLastLogin,
 } from '@libs/storage';
@@ -21,12 +19,10 @@ import { useAccount } from '@utils/hooks/useAccount';
 
 const totalNotes = await countTotalNotes();
 const lastLogin = await getLastLogin();
-const users = await getAllPubkeys();
 
 export function Root() {
   const ndk = useContext(RelayContext);
   const now = useRef(new Date());
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { status, account } = useAccount();
@@ -49,8 +45,8 @@ export function Root() {
       };
 
       const events = await prefetchEvents(ndk, filter);
-      events.forEach((event) => {
-        createNote(
+      for (const event of events) {
+        await createNote(
           event.id,
           event.pubkey,
           event.kind,
@@ -58,39 +54,12 @@ export function Root() {
           event.content,
           event.created_at
         );
-      });
+      }
 
       return true;
     } catch (e) {
       console.log('error: ', e);
     }
-  }
-
-  async function fetchUsersProfile() {
-    const authors = [];
-
-    users.forEach((user) => {
-      if (user.sender_pubkey) {
-        authors.push(user.sender_pubkey);
-      } else {
-        authors.push(user.pubkey);
-      }
-    });
-
-    const filter: NDKFilter = {
-      authors: authors,
-      kinds: [0],
-    };
-
-    const events = await ndk.fetchEvents(filter);
-
-    events.forEach((event: NDKEvent) => {
-      const profile = JSON.parse(event.content);
-      profile['image'] = profile.picture;
-      queryClient.setQueryData(['user', event.pubkey], profile);
-    });
-
-    return true;
   }
 
   async function fetchChats() {
@@ -108,11 +77,11 @@ export function Root() {
 
       const sendMessages = await prefetchEvents(ndk, sendFilter);
       const receiveMessages = await prefetchEvents(ndk, receiveFilter);
-      const events = [...sendMessages, ...receiveMessages];
 
-      events.forEach((event) => {
+      const events = [...sendMessages, ...receiveMessages];
+      for (const event of events) {
         const receiverPubkey = event.tags.find((t) => t[0] === 'p')[1] || account.pubkey;
-        createChat(
+        await createChat(
           event.id,
           receiverPubkey,
           event.pubkey,
@@ -120,7 +89,7 @@ export function Root() {
           event.tags,
           event.created_at
         );
-      });
+      }
 
       return true;
     } catch (e) {
@@ -172,8 +141,7 @@ export function Root() {
     async function prefetch() {
       const notes = await fetchNotes();
       const chats = await fetchChats();
-      const users = await fetchUsersProfile();
-      if (notes && users && chats) {
+      if (notes && chats) {
         const now = Math.floor(Date.now() / 1000);
         await updateLastLogin(now);
         navigate('/app/space', { replace: true });

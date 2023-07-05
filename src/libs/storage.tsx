@@ -1,3 +1,4 @@
+import { NDKUserProfile } from '@nostr-dev-kit/ndk';
 import Database from 'tauri-plugin-sql-api';
 
 import { getParentID } from '@utils/transform';
@@ -425,4 +426,25 @@ export async function removeAll() {
   await db.execute('DELETE FROM chats;');
   await db.execute('DELETE FROM accounts;');
   return true;
+}
+
+// create metadata
+export async function createMetadata(id: string, pubkey: string, content: string) {
+  const db = await connect();
+  const now = Math.floor(Date.now() / 1000);
+  return await db.execute(
+    'INSERT OR REPLACE INTO metadata (id, pubkey, content, created_at) VALUES (?, ?, ?, ?);',
+    [id, pubkey, content, now]
+  );
+}
+
+// get metadata
+export async function getUserMetadata(pubkey: string) {
+  const db = await connect();
+  const result = await db.select(`SELECT content FROM metadata WHERE id = "${pubkey}";`);
+  if (result[0]) {
+    return JSON.parse(result[0].content);
+  } else {
+    return null;
+  }
 }
