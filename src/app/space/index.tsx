@@ -30,7 +30,7 @@ export function SpaceScreen() {
 
   return (
     <div className="scrollbar-hide flex h-full w-full flex-nowrap overflow-x-auto overflow-y-hidden">
-      <FollowingBlock block={1} />
+      <FollowingBlock />
       {status === 'loading' ? (
         <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
           <div
@@ -43,7 +43,7 @@ export function SpaceScreen() {
           </div>
         </div>
       ) : (
-        blocks.map((block: any) => {
+        blocks.map((block: { kind: number; id: string }) => {
           switch (block.kind) {
             case 0:
               return <ImageBlock key={block.id} params={block} />;

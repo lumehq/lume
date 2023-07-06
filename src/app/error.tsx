@@ -1,7 +1,12 @@
 import { useRouteError } from 'react-router-dom';
 
+interface IRouteError {
+  statusText: string;
+  message: string;
+}
+
 export function ErrorScreen() {
-  const error: any = useRouteError();
+  const error = useRouteError() as IRouteError;
 
   return (
     <div className="flex h-full w-full items-center justify-center">

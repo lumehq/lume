@@ -12,7 +12,7 @@ const ITEM_PER_PAGE = 10;
 
 export function FeedBlock({ params }: { params: any }) {
   const queryClient = useQueryClient();
-  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage }: any =
+  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed', params.content],
       queryFn: async ({ pageParam = 0 }) => {
@@ -60,7 +60,7 @@ export function FeedBlock({ params }: { params: any }) {
     if (!note) return;
     return (
       <div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
-        <Note event={note} block={params.id} />
+        <Note event={note} />
       </div>
     );
   };
