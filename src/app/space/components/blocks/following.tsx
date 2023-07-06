@@ -14,15 +14,16 @@ import { useNote } from '@stores/note';
 
 const ITEM_PER_PAGE = 10;
 
-export function FollowingBlock({ block }: { block: number }) {
+export function FollowingBlock() {
   // subscribe for live update
   useNewsfeed();
+  // notify user that new note is arrive
   const [hasNewNote, toggleHasNewNote] = useNote((state) => [
     state.hasNewNote,
     state.toggleHasNewNote,
   ]);
 
-  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch }: any =
+  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
     useInfiniteQuery({
       queryKey: ['newsfeed-circle'],
       queryFn: async ({ pageParam = 0 }) => {
@@ -68,8 +69,12 @@ export function FollowingBlock({ block }: { block: number }) {
     const note = notes[index];
     if (!note) return;
     return (
-      <div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
-        <Note event={note} block={block} />
+      <div
+        key={note.event_id || note.id}
+        data-index={index}
+        ref={rowVirtualizer.measureElement}
+      >
+        <Note event={note} />
       </div>
     );
   };
