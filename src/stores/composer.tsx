@@ -17,10 +17,6 @@ export const useComposer = create<ComposerState>((set) => ({
   repost: { id: null, pubkey: null },
   toggleModal: (status: boolean) => {
     set({ open: status });
-    if (!status) {
-      set({ repost: { id: null, pubkey: null } });
-      set({ reply: { id: null, root: null, pubkey: null } });
-    }
   },
   setReply: (id: string, root: string, pubkey: string) => {
     set({ reply: { id: id, root: root, pubkey: pubkey } });

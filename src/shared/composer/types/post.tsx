@@ -130,7 +130,7 @@ export function Post() {
     toggle(false);
   };
 
-  const renderElement = useCallback((props: any) => {
+  const renderElement = useCallback((props) => {
     switch (props.element.type) {
       case 'image':
         if (props.element.url) {
@@ -153,7 +153,9 @@ export function Post() {
             <Editable
               placeholder={refID ? 'Share your thoughts on it' : "What's on your mind?"}
               spellCheck="false"
-              className={`${refID ? '!min-h-42' : '!min-h-[86px]'} markdown`}
+              className={`${
+                refID ? '!min-h-42' : '!min-h-[86px]'
+              } markdown max-h-[500px] overflow-y-auto`}
               renderElement={renderElement}
             />
             {refID && <MentionNote id={refID} />}
