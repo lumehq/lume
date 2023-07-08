@@ -27,7 +27,7 @@ export function TrendingNotes() {
         ) : (
           <div className="relative flex w-full flex-col pt-1.5">
             {data.notes.map((item) => (
-              <Note key={item.id} event={item.event} />
+              <Note key={item.id} event={item.event} skipMetadata={true} />
             ))}
           </div>
         )}

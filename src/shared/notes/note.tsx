@@ -12,9 +12,10 @@ import { LumeEvent } from '@utils/types';
 
 interface Note {
   event: LumeEvent;
+  skipMetadata?: boolean;
 }
 
-export function Note({ event }: Note) {
+export function Note({ event, skipMetadata = false }: Note) {
   const isRepost = event.kind === 6;
 
   const renderParent = useMemo(() => {
@@ -70,12 +71,14 @@ export function Note({ event }: Note) {
           <User pubkey={event.pubkey} time={event.created_at} repost={isRepost} />
           <div className="-mt-6 pl-[49px]">
             {renderContent}
-            {!isRepost && (
+            {!isRepost && !skipMetadata ? (
               <NoteMetadata
                 id={event.event_id}
                 rootID={event.parent_id}
                 eventPubkey={event.pubkey}
               />
+            ) : (
+              <div className={isRepost ? 'h-0' : 'h-3'} />
             )}
           </div>
         </div>
