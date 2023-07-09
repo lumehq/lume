@@ -7,6 +7,7 @@
 #[macro_use]
 extern crate objc;
 
+// use rand::distributions::{Alphanumeric, DistString};
 use tauri::{Manager, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -121,8 +122,13 @@ fn main() {
           ..Default::default()
         };
 
-        let key = argon2::hash_raw(password.as_ref(), b"SALT_TODO", &config)
-          .expect("failed to hash password");
+        // let salt = Alphanumeric.sample_string(&mut rand::thread_rng(), 12);
+        let key = argon2::hash_raw(
+          password.as_ref(),
+          b"LUME_NEED_RUST_DEVELOPER_HELP_MAKE_SALT_RANDOM",
+          &config,
+        )
+        .expect("failed to hash password");
 
         key.to_vec()
       })

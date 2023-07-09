@@ -1,87 +1,139 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '@app/auth/components/user';
+import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
-import { useNDK } from '@libs/ndk/provider';
-import { updateAccount } from '@libs/storage';
+import { useOnboarding } from '@stores/onboarding';
+import { useStronghold } from '@stores/stronghold';
 
-import { Button } from '@shared/button';
-import { LoaderIcon } from '@shared/icons';
+import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
-import { useAccount } from '@utils/hooks/useAccount';
-import { setToArray } from '@utils/transform';
+type FormValues = {
+  password: string;
+};
+
+const resolver: Resolver<FormValues> = async (values) => {
+  return {
+    values: values.password ? values : {},
+    errors: !values.password
+      ? {
+          password: {
+            type: 'required',
+            message: 'This is required.',
+          },
+        }
+      : {},
+  };
+};
 
 export function ImportStep2Screen() {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const setPassword = useStronghold((state) => state.setPassword);
 
+  const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
+  const [pubkey, privkey] = useOnboarding((state) => [state.pubkey, state.privkey]);
 
-  const { ndk } = useNDK();
-  const { status, account } = useAccount();
+  const { save } = useSecureStorage();
 
-  const update = useMutation({
-    mutationFn: (follows: any) => {
-      return updateAccount('follows', follows, account.pubkey);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentAccount'] });
-    },
-  });
+  // toggle private key
+  const showPassword = () => {
+    if (passwordInput === 'password') {
+      setPasswordInput('text');
+    } else {
+      setPasswordInput('password');
+    }
+  };
 
-  const submit = async () => {
-    try {
-      // show loading indicator
-      setLoading(true);
+  const {
+    register,
+    setError,
+    handleSubmit,
+    formState: { errors, isDirty, isValid },
+  } = useForm<FormValues>({ resolver });
 
-      const user = ndk.getUser({ hexpubkey: account.pubkey });
-      const follows = await user.follows();
+  const onSubmit = async (data: { [x: string]: string }) => {
+    setLoading(true);
+    if (data.password.length > 3) {
+      // add password to local state
+      setPassword(data.password);
 
-      // follows as list
-      const followsList = setToArray(follows);
-
-      // update
-      update.mutate([...followsList, account.pubkey]);
+      // save privkey to secure storage
+      await save(pubkey, privkey);
 
       // redirect to next step
-      setTimeout(() => navigate('/auth/onboarding', { replace: true }), 1200);
-    } catch {
-      console.log('error');
+      navigate('/auth/import/step-3', { replace: true });
+    } else {
+      setLoading(false);
+      setError('password', {
+        type: 'custom',
+        message: 'Password is required and must be greater than 3, please check again',
+      });
     }
   };
 
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold">
-          {loading ? 'Creating...' : 'Continue with'}
+        <h1 className="text-xl font-semibold text-zinc-100">
+          Set password to secure your key
         </h1>
       </div>
-      <div className="w-full rounded-xl border-t border-zinc-800/50 bg-zinc-900 p-4">
-        {status === 'loading' ? (
-          <div className="w-full">
-            <div className="flex items-center gap-2">
-              <div className="h-11 w-11 animate-pulse rounded-lg bg-zinc-800" />
-              <div>
-                <div className="mb-1 h-4 w-16 animate-pulse rounded bg-zinc-800" />
-                <div className="h-3 w-36 animate-pulse rounded bg-zinc-800" />
-              </div>
+      <div className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <div className="relative">
+              <input
+                {...register('password', { required: true })}
+                type={passwordInput}
+                className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+              />
+              <button
+                type="button"
+                onClick={() => showPassword()}
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+              >
+                {passwordInput === 'password' ? (
+                  <EyeOffIcon
+                    width={20}
+                    height={20}
+                    className="text-zinc-500 group-hover:text-zinc-100"
+                  />
+                ) : (
+                  <EyeOnIcon
+                    width={20}
+                    height={20}
+                    className="text-zinc-500 group-hover:text-zinc-100"
+                  />
+                )}
+              </button>
             </div>
+            <div className="text-sm text-zinc-500">
+              <p>
+                Password is use to secure your key store in local machine, when you move
+                to other clients, you just need to copy your private key as nsec or
+                hexstring
+              </p>
+            </div>
+            <span className="text-sm text-red-400">
+              {errors.password && <p>{errors.password.message}</p>}
+            </span>
           </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            <User pubkey={account.pubkey} />
-            <Button preset="large" onClick={() => submit()}>
+          <div className="flex items-center justify-center">
+            <button
+              type="submit"
+              disabled={!isDirty || !isValid}
+              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600"
+            >
               {loading ? (
                 <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
               ) : (
                 'Continue →'
               )}
-            </Button>
+            </button>
           </div>
-        )}
+        </form>
       </div>
     </div>
   );

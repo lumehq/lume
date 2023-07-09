@@ -8,11 +8,17 @@ import { createAccount } from '@libs/storage';
 import { Button } from '@shared/button';
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
+import { useOnboarding } from '@stores/onboarding';
+
 export function CreateStep1Screen() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [type, setType] = useState('password');
+  const [setPubkey, setPrivkey] = useOnboarding((state) => [
+    state.setPubkey,
+    state.setPrivkey,
+  ]);
+  const [privkeyInput, setPrivkeyInput] = useState('password');
   const [loading, setLoading] = useState(false);
 
   const privkey = useMemo(() => generatePrivateKey(), []);
@@ -22,10 +28,10 @@ export function CreateStep1Screen() {
 
   // toggle private key
   const showPrivateKey = () => {
-    if (type === 'password') {
-      setType('text');
+    if (privkeyInput === 'password') {
+      setPrivkeyInput('text');
     } else {
-      setType('password');
+      setPrivkeyInput('password');
     }
   };
 
@@ -33,11 +39,10 @@ export function CreateStep1Screen() {
     mutationFn: (data: {
       npub: string;
       pubkey: string;
-      privkey: string;
       follows: null | string[][];
       is_active: number;
     }) => {
-      return createAccount(data.npub, data.pubkey, data.privkey, null, 1);
+      return createAccount(data.npub, data.pubkey, null, 1);
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['currentAccount'], data);
@@ -47,10 +52,12 @@ export function CreateStep1Screen() {
   const submit = () => {
     setLoading(true);
 
+    setPubkey(pubkey);
+    setPrivkey(privkey);
+
     account.mutate({
       npub,
       pubkey,
-      privkey,
       follows: null,
       is_active: 1,
     });
@@ -80,7 +87,7 @@ export function CreateStep1Screen() {
           <div className="relative">
             <input
               readOnly
-              type={type}
+              type={privkeyInput}
               value={nsec}
               className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
             />
@@ -89,7 +96,7 @@ export function CreateStep1Screen() {
               onClick={() => showPrivateKey()}
               className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
             >
-              {type === 'password' ? (
+              {privkeyInput === 'password' ? (
                 <EyeOffIcon
                   width={20}
                   height={20}

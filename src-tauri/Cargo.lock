@@ -2452,6 +2452,7 @@ version = "1.0.1"
 dependencies = [
  "cocoa",
  "objc",
+ "rand 0.8.5",
  "rust-argon2",
  "serde",
  "serde_json",
@@ -2461,7 +2462,6 @@ dependencies = [
  "tauri-plugin-autostart",
  "tauri-plugin-single-instance",
  "tauri-plugin-sql",
- "tauri-plugin-store",
  "tauri-plugin-stronghold",
 ]
 
@@ -4845,18 +4845,6 @@ dependencies = [
  "thiserror",
  "time",
  "tokio",
-]
-
-[[package]]
-name = "tauri-plugin-store"
-version = "0.0.0"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#0d0ed7b9075ee21f37d787217fba3ef0784b2449"
-dependencies = [
- "log",
- "serde",
- "serde_json",
- "tauri",
- "thiserror",
 ]
 
 [[package]]
