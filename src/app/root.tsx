@@ -2,8 +2,8 @@ import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { prefetchEvents } from '@libs/ndk';
 import { useNDK } from '@libs/ndk/provider';
+import { prefetchEvents } from '@libs/ndk/utils';
 import {
   countTotalNotes,
   createChat,

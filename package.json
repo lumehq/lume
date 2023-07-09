@@ -46,6 +46,7 @@
     "tailwind-merge": "^1.13.2",
     "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
+    "tauri-plugin-stronghold-api": "github:tauri-apps/tauri-plugin-stronghold#v1",
     "zustand": "^4.3.9"
   },
   "devDependencies": {

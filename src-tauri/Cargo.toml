@@ -20,7 +20,9 @@ tauri = { version = "1.2", features = [ "clipboard-read-text", "clipboard-write-
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-sqlx-cli = {version = "0.6.3", default-features = false, features = ["sqlite"] }
+tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+sqlx-cli = {version = "0.7.0", default-features = false, features = ["sqlite"] }
+rust-argon2 = "1.0"
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"
