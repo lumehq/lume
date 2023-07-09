@@ -12,7 +12,7 @@ export function usePublish() {
   const { account } = useAccount();
   const { load } = useSecureStorage();
 
-  const privkey = useStronghold((state) => state.privkey);
+  const cachePrivkey = useStronghold((state) => state.privkey);
 
   const publish = async ({
     content,
@@ -20,13 +20,18 @@ export function usePublish() {
     tags,
   }: {
     content: string;
-    kind: NDKKind;
+    kind: NDKKind | number;
     tags: string[][];
   }): Promise<NDKEvent> => {
-    const securePrivkey = await load(account.pubkey);
+    let privkey: string;
+    if (cachePrivkey) {
+      privkey = cachePrivkey;
+    } else {
+      privkey = await load(account.pubkey);
+    }
 
     const event = new NDKEvent(ndk);
-    const signer = new NDKPrivateKeySigner(privkey ? privkey : securePrivkey);
+    const signer = new NDKPrivateKeySigner(privkey);
 
     event.content = content;
     event.kind = kind;

@@ -19,9 +19,11 @@ import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function AddImageBlock() {
   const queryClient = useQueryClient();
+  const publish = usePublish();
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -107,22 +109,11 @@ export function AddImageBlock() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
 
-    const signer = new NDKPrivateKeySigner(account.privkey);
-    ndk.signer = signer;
-
-    const event = new NDKEvent(ndk);
-    // build event
-    event.content = data.title;
-    event.kind = 1063;
-    event.created_at = dateToUnix();
-    event.pubkey = account.pubkey;
-    event.tags = tags.current;
-
-    // publish event
-    event.publish();
+    // publish file metedata
+    await publish({ content: data.title, kind: 1063, tags: tags.current });
 
     // mutate
     block.mutate({ kind: 0, title: data.title, content: data.content });

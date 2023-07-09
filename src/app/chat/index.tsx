@@ -11,6 +11,8 @@ import { ChatSidebar } from '@app/chat/components/sidebar';
 import { useNDK } from '@libs/ndk/provider';
 import { createChat, getChatMessages } from '@libs/storage';
 
+import { useStronghold } from '@stores/stronghold';
+
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function ChatScreen() {
@@ -30,13 +32,15 @@ export function ChatScreen() {
     }
   );
 
+  const userPrivkey = useStronghold((state) => state.privkey);
+
   const itemContent: any = useCallback(
     (index: string | number) => {
       return (
         <ChatMessageItem
           data={data[index]}
           userPubkey={account.pubkey}
-          userPrivkey={account.privkey}
+          userPrivkey={userPrivkey}
         />
       );
     },
@@ -131,7 +135,7 @@ export function ChatScreen() {
               <ChatMessageForm
                 receiverPubkey={pubkey}
                 userPubkey={account.pubkey}
-                userPrivkey={account.privkey}
+                userPrivkey={userPrivkey}
               />
             </div>
           </div>
