@@ -5,12 +5,12 @@ import { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createChannel } from '@libs/storage';
 
 import { AvatarUploader } from '@shared/avatarUploader';
 import { CancelIcon, LoaderIcon, PlusIcon } from '@shared/icons';
 import { Image } from '@shared/image';
-import { RelayContext } from '@shared/relayProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
@@ -18,7 +18,7 @@ import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function ChannelCreateModal() {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 

@@ -6,7 +6,7 @@ import { ChannelMembers } from '@app/channel/components/members';
 import { ChannelMessageForm } from '@app/channel/components/messages/form';
 import { ChannelMetadata } from '@app/channel/components/metadata';
 
-import { RelayContext } from '@shared/relayProvider';
+import { useNDK } from '@libs/ndk/provider';
 
 import { useChannelMessages } from '@stores/channels';
 
@@ -47,7 +47,7 @@ const Empty = (
 );
 
 export function ChannelScreen() {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const virtuosoRef = useRef(null);
 
   const { id } = useParams();

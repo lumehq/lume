@@ -50,8 +50,8 @@ export function User({
 
   return (
     <Popover
-      className={`relative flex gap-3 ${
-        size === 'small' ? 'items-center' : 'items-start'
+      className={`relative flex ${
+        size === 'small' ? 'items-center gap-2' : 'items-start gap-3'
       }`}
     >
       <Popover.Button

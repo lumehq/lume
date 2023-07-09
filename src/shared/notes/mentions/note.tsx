@@ -45,7 +45,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       ) : status === 'success' ? (
         <>
           <User pubkey={data.pubkey} time={data.created_at} size="small" />
-          <div className="mt-2">
+          <div>
             {data.kind === 1 && <Kind1 content={data.content} truncate={true} />}
             {data.kind === 1063 && <Kind1063 metadata={data.tags} />}
             {data.kind !== 1 && data.kind !== 1063 && (

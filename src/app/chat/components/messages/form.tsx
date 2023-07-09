@@ -1,10 +1,10 @@
 import { nip04 } from 'nostr-tools';
 import { useCallback, useState } from 'react';
 
-import { usePublish } from '@libs/ndk';
-
 import { EnterIcon } from '@shared/icons';
 import { MediaUploader } from '@shared/mediaUploader';
+
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function ChatMessageForm({
   receiverPubkey,

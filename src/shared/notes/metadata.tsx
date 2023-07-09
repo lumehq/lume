@@ -2,8 +2,8 @@ import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { decode } from 'light-bolt11-decoder';
-import { useContext } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createBlock, createReplyNote } from '@libs/storage';
 
 import { LoaderIcon, ReplyIcon, RepostIcon, ZapIcon } from '@shared/icons';
@@ -11,7 +11,6 @@ import { ThreadIcon } from '@shared/icons/thread';
 import { NoteReply } from '@shared/notes/metadata/reply';
 import { NoteRepost } from '@shared/notes/metadata/repost';
 import { NoteZap } from '@shared/notes/metadata/zap';
-import { RelayContext } from '@shared/relayProvider';
 
 export function NoteMetadata({
   id,
@@ -22,9 +21,9 @@ export function NoteMetadata({
   rootID?: string;
   eventPubkey: string;
 }) {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
 
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['note-metadata', id], async () => {
     let replies = 0;
     let reposts = 0;

@@ -1,15 +1,15 @@
 import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { Note } from '@shared/notes/note';
-import { RelayContext } from '@shared/relayProvider';
 
 import { dateToUnix, getHourAgo } from '@utils/date';
 import { LumeEvent } from '@utils/types';
 
 export function UserFeed({ pubkey }: { pubkey: string }) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['user-feed', pubkey], async () => {
     const now = new Date();
     const filter: NDKFilter = {

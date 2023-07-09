@@ -2,8 +2,9 @@ import { Dialog, Transition } from '@headlessui/react';
 import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { Fragment, useContext, useState } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
+
 import { CancelIcon, MuteIcon } from '@shared/icons';
-import { RelayContext } from '@shared/relayProvider';
 
 import { useChannelMessages } from '@stores/channels';
 
@@ -11,7 +12,7 @@ import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function MessageMuteButton({ pubkey }: { pubkey: string }) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const mute = useChannelMessages((state: any) => state.muteUser);
 
   const [isOpen, setIsOpen] = useState(false);

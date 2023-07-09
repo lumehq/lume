@@ -3,9 +3,10 @@ import { useContext, useState } from 'react';
 
 import { UserReply } from '@app/channel/components/messages/userReply';
 
+import { useNDK } from '@libs/ndk/provider';
+
 import { CancelIcon, EnterIcon } from '@shared/icons';
 import { MediaUploader } from '@shared/mediaUploader';
-import { RelayContext } from '@shared/relayProvider';
 
 import { useChannelMessages } from '@stores/channels';
 
@@ -13,7 +14,7 @@ import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function ChannelMessageForm({ channelID }: { channelID: string }) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
 
   const [value, setValue] = useState('');
   const [replyTo, closeReply] = useChannelMessages((state: any) => [

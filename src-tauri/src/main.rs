@@ -7,9 +7,10 @@
 #[macro_use]
 extern crate objc;
 
+// use rand::distributions::{Alphanumeric, DistString};
 use tauri::{Manager, WindowEvent};
-use tauri_plugin_sql::{Migration, MigrationKind};
 use tauri_plugin_autostart::MacosLauncher;
+use tauri_plugin_sql::{Migration, MigrationKind};
 
 #[cfg(target_os = "macos")]
 use window_ext::WindowExt;
@@ -110,7 +111,33 @@ fn main() {
         )
         .build(),
     )
-    .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec!["--flag1", "--flag2"])))
+    .plugin(
+      tauri_plugin_stronghold::Builder::new(|password| {
+        let config = argon2::Config {
+          lanes: 2,
+          mem_cost: 50_000,
+          time_cost: 30,
+          thread_mode: argon2::ThreadMode::from_threads(2),
+          variant: argon2::Variant::Argon2id,
+          ..Default::default()
+        };
+
+        // let salt = Alphanumeric.sample_string(&mut rand::thread_rng(), 12);
+        let key = argon2::hash_raw(
+          password.as_ref(),
+          b"LUME_NEED_RUST_DEVELOPER_HELP_MAKE_SALT_RANDOM",
+          &config,
+        )
+        .expect("failed to hash password");
+
+        key.to_vec()
+      })
+      .build(),
+    )
+    .plugin(tauri_plugin_autostart::init(
+      MacosLauncher::LaunchAgent,
+      Some(vec!["--flag1", "--flag2"]),
+    ))
     .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
       println!("{}, {argv:?}, {cwd}", app.package_info().name);
       app

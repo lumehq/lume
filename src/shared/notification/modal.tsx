@@ -1,22 +1,21 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { Fragment, useContext, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { BellIcon, CancelIcon, LoaderIcon } from '@shared/icons';
-import { RelayContext } from '@shared/relayProvider';
+import { NotificationUser } from '@shared/notification/user';
 import { User } from '@shared/user';
 
 import { dateToUnix, getHourAgo } from '@utils/date';
 
-import { NotificationUser } from './user';
-
 export function NotificationModal({ pubkey }: { pubkey: string }) {
-  const ndk = useContext(RelayContext);
   const now = useRef(new Date());
-
   const [isOpen, setIsOpen] = useState(false);
 
+  const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['user-notification', pubkey],
     async () => {

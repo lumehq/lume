@@ -1,15 +1,15 @@
 import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createReplyNote } from '@libs/storage';
 
-import { RelayContext } from '@shared/relayProvider';
-
 export function useLiveThread(id: string) {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
   const now = useRef(Math.floor(Date.now() / 1000));
+
+  const { ndk } = useNDK();
 
   const thread = useMutation({
     mutationFn: (data: NDKEvent) => {

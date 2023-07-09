@@ -5,10 +5,13 @@ import { CreateStep1Screen } from '@app/auth/create/step-1';
 import { CreateStep2Screen } from '@app/auth/create/step-2';
 import { CreateStep3Screen } from '@app/auth/create/step-3';
 import { CreateStep4Screen } from '@app/auth/create/step-4';
+import { CreateStep5Screen } from '@app/auth/create/step-5';
 import { AuthImportScreen } from '@app/auth/import';
 import { ImportStep1Screen } from '@app/auth/import/step-1';
 import { ImportStep2Screen } from '@app/auth/import/step-2';
+import { ImportStep3Screen } from '@app/auth/import/step-3';
 import { OnboardingScreen } from '@app/auth/onboarding';
+import { UnlockScreen } from '@app/auth/unlock';
 import { WelcomeScreen } from '@app/auth/welcome';
 import { ChannelScreen } from '@app/channel';
 import { ChatScreen } from '@app/chat';
@@ -51,6 +54,7 @@ const router = createBrowserRouter([
         children: [
           { path: '', element: <ImportStep1Screen /> },
           { path: 'step-2', element: <ImportStep2Screen /> },
+          { path: 'step-3', element: <ImportStep3Screen /> },
         ],
       },
       {
@@ -61,8 +65,10 @@ const router = createBrowserRouter([
           { path: 'step-2', element: <CreateStep2Screen /> },
           { path: 'step-3', element: <CreateStep3Screen /> },
           { path: 'step-4', element: <CreateStep4Screen /> },
+          { path: 'step-5', element: <CreateStep5Screen /> },
         ],
       },
+      { path: 'unlock', element: <UnlockScreen /> },
     ],
   },
   {

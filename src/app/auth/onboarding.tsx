@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { usePublish } from '@libs/ndk';
-
 import { LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 import { User } from '@shared/user';
 
 import { useAccount } from '@utils/hooks/useAccount';
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function OnboardingScreen() {
   const publish = usePublish();
