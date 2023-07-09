@@ -1,4 +1,3 @@
-import { getPublicKey } from 'nostr-tools';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -30,10 +29,13 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 export function UnlockScreen() {
   const navigate = useNavigate();
-  const setPassword = useStronghold((state) => state.setPassword);
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
+  const [setPrivkey, setPassword] = useStronghold((state) => [
+    state.setPrivkey,
+    state.setPassword,
+  ]);
 
   const { account } = useAccount();
   const { load } = useSecureStorage();
@@ -61,22 +63,12 @@ export function UnlockScreen() {
       setPassword(data.password);
 
       // load private in secure storage
-      const privkey = await load(account.pubkey, data.password);
-
-      if (!privkey) {
-        setLoading(false);
-        setError('password', {
-          type: 'custom',
-          message: "Can't get private key",
-        });
-      }
-
-      const tempPubkey = getPublicKey(privkey);
-
-      if (tempPubkey === account.pubkey) {
-        // redirect to next step
+      try {
+        const privkey = await load(account.pubkey, data.password);
+        setPrivkey(privkey);
+        // redirect to home
         navigate('/', { replace: true });
-      } else {
+      } catch {
         setLoading(false);
         setError('password', {
           type: 'custom',

@@ -2,6 +2,8 @@ import { NDKEvent, NDKKind, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 
 import { useNDK } from '@libs/ndk/provider';
 
+import { useStronghold } from '@stores/stronghold';
+
 import { useAccount } from '@utils/hooks/useAccount';
 import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
@@ -9,6 +11,8 @@ export function usePublish() {
   const { ndk } = useNDK();
   const { account } = useAccount();
   const { load } = useSecureStorage();
+
+  const privkey = useStronghold((state) => state.privkey);
 
   const publish = async ({
     content,
@@ -19,10 +23,10 @@ export function usePublish() {
     kind: NDKKind;
     tags: string[][];
   }): Promise<NDKEvent> => {
-    const privkey = await load(account.pubkey);
+    const securePrivkey = await load(account.pubkey);
 
     const event = new NDKEvent(ndk);
-    const signer = new NDKPrivateKeySigner(privkey);
+    const signer = new NDKPrivateKeySigner(privkey ? privkey : securePrivkey);
 
     event.content = content;
     event.kind = kind;
