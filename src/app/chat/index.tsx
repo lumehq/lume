@@ -1,6 +1,6 @@
 import { NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
@@ -8,17 +8,16 @@ import { ChatMessageForm } from '@app/chat/components/messages/form';
 import { ChatMessageItem } from '@app/chat/components/messages/item';
 import { ChatSidebar } from '@app/chat/components/sidebar';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createChat, getChatMessages } from '@libs/storage';
-
-import { RelayContext } from '@shared/relayProvider';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function ChatScreen() {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
   const virtuosoRef = useRef(null);
 
+  const { ndk } = useNDK();
   const { pubkey } = useParams();
   const { account } = useAccount();
   const { status, data } = useQuery(

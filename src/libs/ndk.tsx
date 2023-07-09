@@ -5,9 +5,8 @@ import NDK, {
   NDKKind,
   NDKPrivateKeySigner,
 } from '@nostr-dev-kit/ndk';
-import { useContext } from 'react';
 
-import { RelayContext } from '@shared/relayProvider';
+import { useNDK } from '@libs/ndk/provider';
 
 import { FULL_RELAYS } from '@stores/constants';
 
@@ -45,35 +44,4 @@ export async function prefetchEvents(
       setTimeout(() => resolve(new Set(events.values())), 3000);
     });
   });
-}
-
-export function usePublish() {
-  const ndk = useContext(RelayContext);
-  const { account } = useAccount();
-
-  const publish = async ({
-    content,
-    kind,
-    tags,
-  }: {
-    content: string;
-    kind: NDKKind;
-    tags: string[][];
-  }): Promise<NDKEvent> => {
-    const event = new NDKEvent(ndk);
-    const signer = new NDKPrivateKeySigner(account.privkey);
-
-    event.content = content;
-    event.kind = kind;
-    event.created_at = Math.floor(Date.now() / 1000);
-    event.pubkey = account.pubkey;
-    event.tags = tags;
-
-    await event.sign(signer);
-    await event.publish();
-
-    return event;
-  };
-
-  return publish;
 }

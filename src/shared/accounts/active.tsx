@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { produce } from 'immer';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createChat, getLastLogin } from '@libs/storage';
 
 import { Image } from '@shared/image';
 import { NetworkStatusIndicator } from '@shared/networkStatusIndicator';
-import { RelayContext } from '@shared/relayProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
@@ -17,9 +17,9 @@ import { sendNativeNotification } from '@utils/notification';
 const lastLogin = await getLastLogin();
 
 export function ActiveAccount({ data }: { data: any }) {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
 
+  const { ndk } = useNDK();
   const { status, user } = useProfile(data.pubkey);
 
   const chat = useMutation({

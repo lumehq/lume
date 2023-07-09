@@ -3,15 +3,15 @@ import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
-import { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createBlock } from '@libs/storage';
 
 import { CancelIcon, CommandIcon } from '@shared/icons';
 import { Image } from '@shared/image';
-import { RelayContext } from '@shared/relayProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
@@ -21,13 +21,13 @@ import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function AddImageBlock() {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState('');
 
+  const { ndk } = useNDK();
   const { account } = useAccount();
 
   const tags = useRef(null);

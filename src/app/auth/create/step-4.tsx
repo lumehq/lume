@@ -1,10 +1,11 @@
 import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
+import { useNDK } from '@libs/ndk/provider';
 import { updateAccount } from '@libs/storage';
 
 import { CheckCircleIcon, LoaderIcon } from '@shared/icons';
@@ -113,13 +114,13 @@ const INITIAL_LIST = [
 ];
 
 export function CreateStep4Screen() {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [follows, setFollows] = useState([]);
 
+  const { ndk } = useNDK();
   const { account } = useAccount();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');

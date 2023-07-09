@@ -3,8 +3,6 @@ import { Node, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, useSlateStatic, withReact } from 'slate-react';
 
-import { usePublish } from '@libs/ndk';
-
 import { Button } from '@shared/button';
 import { ImageUploader } from '@shared/composer/imageUploader';
 import { CancelIcon, TrashIcon } from '@shared/icons';
@@ -12,6 +10,8 @@ import { MentionNote } from '@shared/notes/mentions/note';
 
 import { useComposer } from '@stores/composer';
 import { FULL_RELAYS } from '@stores/constants';
+
+import { usePublish } from '@utils/hooks/usePublish';
 
 const withImages = (editor) => {
   const { isVoid } = editor;

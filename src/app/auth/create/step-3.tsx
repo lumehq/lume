@@ -1,21 +1,22 @@
 import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { Body, fetch } from '@tauri-apps/api/http';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { Button } from '@shared/button';
 import { LoaderIcon } from '@shared/icons';
-import { RelayContext } from '@shared/relayProvider';
 
 import { useOnboarding } from '@stores/onboarding';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function CreateStep3Screen() {
-  const ndk = useContext(RelayContext);
   const profile = useOnboarding((state: any) => state.profile);
   const navigate = useNavigate();
 
+  const { ndk } = useNDK();
   const { account } = useAccount();
 
   const [username, setUsername] = useState('');

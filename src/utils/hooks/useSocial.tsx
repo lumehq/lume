@@ -1,22 +1,19 @@
 import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useContext } from 'react';
 
-import { usePublish } from '@libs/ndk';
+import { useNDK } from '@libs/ndk/provider';
 import { createNote } from '@libs/storage';
 
-import { RelayContext } from '@shared/relayProvider';
-
 import { dateToUnix, getHourAgo } from '@utils/date';
+import { useAccount } from '@utils/hooks/useAccount';
+import { usePublish } from '@utils/hooks/usePublish';
 import { nip02ToArray } from '@utils/transform';
 
-import { useAccount } from './useAccount';
-
 export function useSocial() {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
   const publish = usePublish();
 
+  const { ndk } = useNDK();
   const { account } = useAccount();
   const { status, data: userFollows } = useQuery(
     ['userFollows', account.pubkey],

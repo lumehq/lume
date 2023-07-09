@@ -1,11 +1,10 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 
-import { usePublish } from '@libs/ndk';
-
 import { RepostIcon } from '@shared/icons';
 
 import { FULL_RELAYS } from '@stores/constants';
 
+import { usePublish } from '@utils/hooks/usePublish';
 import { compactNumber } from '@utils/number';
 
 export function NoteRepost({

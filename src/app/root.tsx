@@ -1,8 +1,9 @@
 import { NDKFilter } from '@nostr-dev-kit/ndk';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { prefetchEvents } from '@libs/ndk';
+import { useNDK } from '@libs/ndk/provider';
 import {
   countTotalNotes,
   createChat,
@@ -12,7 +13,6 @@ import {
 } from '@libs/storage';
 
 import { LoaderIcon, LumeIcon } from '@shared/icons';
-import { RelayContext } from '@shared/relayProvider';
 
 import { dateToUnix, getHourAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
@@ -21,10 +21,10 @@ const totalNotes = await countTotalNotes();
 const lastLogin = await getLastLogin();
 
 export function Root() {
-  const ndk = useContext(RelayContext);
   const now = useRef(new Date());
   const navigate = useNavigate();
 
+  const { ndk } = useNDK();
   const { status, account } = useAccount();
 
   async function fetchNotes() {

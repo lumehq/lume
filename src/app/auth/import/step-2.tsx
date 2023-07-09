@@ -1,24 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
+import { useNDK } from '@libs/ndk/provider';
 import { updateAccount } from '@libs/storage';
 
 import { Button } from '@shared/button';
 import { LoaderIcon } from '@shared/icons';
-import { RelayContext } from '@shared/relayProvider';
 
 import { useAccount } from '@utils/hooks/useAccount';
 import { setToArray } from '@utils/transform';
 
 export function ImportStep2Screen() {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+
+  const { ndk } = useNDK();
   const { status, account } = useAccount();
 
   const update = useMutation({
