@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +31,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 export function MigrateScreen() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [passwordInput, setPasswordInput] = useState('password');
@@ -76,6 +78,8 @@ export function MigrateScreen() {
       // load private in secure storage
       try {
         await save(account.pubkey, account.privkey, data.password);
+        // clear cache
+        await queryClient.invalidateQueries(['currentAccount']);
         // redirect to home
         navigate('/', { replace: true });
       } catch {
