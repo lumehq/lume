@@ -7,6 +7,8 @@ import reactStringReplace from 'react-string-replace';
 
 import { MentionUser } from '@shared/notes/mentions/user';
 
+import { LumeEvent } from '@utils/types';
+
 function isJsonString(str: string[][] | string) {
   try {
     if (typeof str === 'string') JSON.parse(str);
@@ -16,24 +18,24 @@ function isJsonString(str: string[][] | string) {
   return true;
 }
 
-export function parser(event: Event) {
+export function parser(event: LumeEvent) {
   if (isJsonString(event.tags)) {
     event['tags'] = destr(event.tags);
   }
 
-  const references = parseReferences(event);
+  const references = parseReferences(event as Event);
   const urls = getUrls(event.content);
 
   const content: {
     original: string;
-    parsed: string | ReactNode[];
+    parsed: ReactNode[];
     notes: string[];
     images: string[];
     videos: string[];
     links: string[];
   } = {
     original: event.content,
-    parsed: event.content,
+    parsed: [event.content],
     notes: [],
     images: [],
     videos: [],

@@ -1,42 +1,39 @@
+import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createMetadata, getUserMetadata } from '@libs/storage';
 
-import { RelayContext } from '@shared/relayProvider';
-
 export function useProfile(pubkey: string, fallback?: string) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const {
     status,
     data: user,
     error,
     isFetching,
-  } = useQuery(
-    ['user', pubkey],
-    async () => {
-      if (!fallback) {
-        const current = Math.floor(Date.now() / 1000);
-        const cache = await getUserMetadata(pubkey);
-        if (cache && parseInt(cache.created_at) + 86400 >= current) {
-          console.log('use cache', cache);
-          return cache;
-        } else {
-          const user = ndk.getUser({ hexpubkey: pubkey });
-          await user.fetchProfile();
-          await createMetadata(pubkey, pubkey, JSON.stringify(user.profile));
-          return user.profile;
-        }
+  } = useQuery(['user', pubkey], async () => {
+    if (!fallback) {
+      const current = Math.floor(Date.now() / 1000);
+      const cache = await getUserMetadata(pubkey);
+      if (cache && parseInt(cache.created_at) + 86400 >= current) {
+        return cache;
       } else {
-        const profile = JSON.parse(fallback);
-        return profile;
+        const filter: NDKFilter = { kinds: [0], authors: [pubkey] };
+        const events = await ndk.fetchEvents(filter);
+        const latest = [...events].slice(-1)[0];
+        if (latest) {
+          await createMetadata(pubkey, pubkey, latest.content);
+          return JSON.parse(latest.content);
+        } else {
+          await createMetadata(pubkey, pubkey, [...events][0].content);
+          return JSON.parse([...events][0].content);
+        }
       }
-    },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+    } else {
+      const profile = JSON.parse(fallback);
+      return profile;
     }
-  );
+  });
 
   return { status, user, error, isFetching };
 }

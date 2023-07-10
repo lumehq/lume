@@ -1,17 +1,29 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 
-export const useOnboarding = create(
-  persist(
-    (set) => ({
-      profile: {},
-      createProfile: (data) => {
-        set({ profile: data });
-      },
-    }),
-    {
-      name: 'onboarding',
-      storage: createJSONStorage(() => sessionStorage),
-    }
-  )
-);
+interface OnboardingState {
+  profile: { [x: string]: string };
+  pubkey: string;
+  privkey: string;
+  createProfile: (data: { [x: string]: string }) => void;
+  setPubkey: (pubkey: string) => void;
+  setPrivkey: (privkey: string) => void;
+  clearPrivkey: (privkey: string) => void;
+}
+
+export const useOnboarding = create<OnboardingState>((set) => ({
+  profile: {},
+  pubkey: '',
+  privkey: '',
+  createProfile: (data: { [x: string]: string }) => {
+    set({ profile: data });
+  },
+  setPubkey: (pubkey: string) => {
+    set({ pubkey: pubkey });
+  },
+  setPrivkey: (privkey: string) => {
+    set({ privkey: privkey });
+  },
+  clearPrivkey: () => {
+    set({ privkey: '' });
+  },
+}));

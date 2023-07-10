@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
 import { getChannel, updateChannelMetadata } from '@libs/storage';
 
-import { RelayContext } from '@shared/relayProvider';
-
 export function useChannelProfile(id: string) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const { data } = useQuery(['channel-metadata', id], async () => {
     return await getChannel(id);
   });

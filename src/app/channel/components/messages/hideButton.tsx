@@ -1,9 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useState } from 'react';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { CancelIcon, HideIcon } from '@shared/icons';
-import { RelayContext } from '@shared/relayProvider';
 
 import { useChannelMessages } from '@stores/channels';
 
@@ -11,7 +12,7 @@ import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function MessageHideButton({ id }: { id: string }) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const hide = useChannelMessages((state: any) => state.hideMessage);
 
   const [isOpen, setIsOpen] = useState(false);

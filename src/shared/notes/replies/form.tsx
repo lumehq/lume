@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
-import { usePublish } from '@libs/ndk';
-
 import { Button } from '@shared/button';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
+import { usePublish } from '@utils/hooks/usePublish';
 import { shortenKey } from '@utils/shortenKey';
 
 export function NoteReplyForm({

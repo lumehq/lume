@@ -15,7 +15,7 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
       <div className="flex flex-col gap-3">
         <div className="relative h-11 w-11 shrink rounded-md">
           <Image
-            src={user?.image}
+            src={user?.picture || user?.image}
             fallback={DEFAULT_AVATAR}
             alt={pubkey}
             className="h-11 w-11 rounded-md object-cover"

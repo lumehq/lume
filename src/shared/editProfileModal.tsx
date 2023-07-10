@@ -5,8 +5,6 @@ import { fetch } from '@tauri-apps/api/http';
 import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { usePublish } from '@libs/ndk';
-
 import { AvatarUploader } from '@shared/avatarUploader';
 import { BannerUploader } from '@shared/bannerUploader';
 import { CancelIcon, CheckCircleIcon, LoaderIcon, UnverifiedIcon } from '@shared/icons';
@@ -15,6 +13,7 @@ import { Image } from '@shared/image';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useAccount } from '@utils/hooks/useAccount';
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function EditProfileModal() {
   const queryClient = useQueryClient();

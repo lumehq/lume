@@ -1,21 +1,21 @@
 import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createNote } from '@libs/storage';
-
-import { RelayContext } from '@shared/relayProvider';
 
 import { useNote } from '@stores/note';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function useNewsfeed() {
-  const ndk = useContext(RelayContext);
   const sub = useRef(null);
   const now = useRef(Math.floor(Date.now() / 1000));
-  const toggleHasNewNote = useNote((state) => state.toggleHasNewNote);
 
+  const { ndk } = useNDK();
   const { status, account } = useAccount();
+
+  const toggleHasNewNote = useNote((state) => state.toggleHasNewNote);
 
   useEffect(() => {
     if (status === 'success' && account) {

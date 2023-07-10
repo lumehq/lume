@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useNewsfeed } from '@app/space/hooks/useNewsfeed';
 
@@ -102,6 +103,24 @@ export function FollowingBlock() {
           <div className="px-3 py-1.5">
             <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
               <NoteSkeleton />
+            </div>
+          </div>
+        ) : itemsVirtualizer.length === 0 ? (
+          <div className="px-3 py-1.5">
+            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-center text-sm text-zinc-300">
+                  You not have any posts to see yet
+                  <br />
+                  Follow more people to have more fun.
+                </p>
+                <Link
+                  to="/app/trending"
+                  className="inline-flex w-max rounded bg-fuchsia-500 px-2.5 py-1.5 text-sm hover:bg-fuchsia-600"
+                >
+                  Trending
+                </Link>
+              </div>
             </div>
           </div>
         ) : (

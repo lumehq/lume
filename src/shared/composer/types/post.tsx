@@ -3,15 +3,15 @@ import { Node, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, useSlateStatic, withReact } from 'slate-react';
 
-import { usePublish } from '@libs/ndk';
-
 import { Button } from '@shared/button';
 import { ImageUploader } from '@shared/composer/imageUploader';
-import { TrashIcon } from '@shared/icons';
+import { CancelIcon, TrashIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes/mentions/note';
 
 import { useComposer } from '@stores/composer';
 import { FULL_RELAYS } from '@stores/constants';
+
+import { usePublish } from '@utils/hooks/usePublish';
 
 const withImages = (editor) => {
   const { isVoid } = editor;
@@ -60,9 +60,9 @@ export function Post() {
   const publish = usePublish();
   const editor = useMemo(() => withReact(withImages(withHistory(createEditor()))), []);
 
-  const [repost, reply, toggle] = useComposer((state) => [
-    state.repost,
+  const [reply, clearReply, toggle] = useComposer((state) => [
     state.reply,
+    state.clearReply,
     state.toggleModal,
   ]);
   const [content, setContent] = useState<Node[]>([
@@ -79,30 +79,14 @@ export function Post() {
     return nodes.map((n) => Node.string(n)).join('\n');
   }, []);
 
-  const getRef = () => {
-    if (repost.id) {
-      return repost.id;
-    } else if (reply.id) {
-      return reply.id;
-    } else {
-      return null;
-    }
+  const removeReply = () => {
+    clearReply();
   };
-
-  const refID = getRef();
 
   const submit = async () => {
     let tags: string[][] = [];
-    let kind: number;
 
-    if (repost.id && repost.pubkey) {
-      kind = 6;
-      tags = [
-        ['e', repost.id, FULL_RELAYS[0], 'root'],
-        ['p', repost.pubkey],
-      ];
-    } else if (reply.id && reply.pubkey) {
-      kind = 1;
+    if (reply.id && reply.pubkey) {
       if (reply.root && reply.root !== reply.id) {
         tags = [
           ['e', reply.id, FULL_RELAYS[0], 'root'],
@@ -116,7 +100,6 @@ export function Post() {
         ];
       }
     } else {
-      kind = 1;
       tags = [];
     }
 
@@ -124,13 +107,13 @@ export function Post() {
     const serializedContent = serialize(content);
 
     // publish message
-    await publish({ content: serializedContent, kind, tags });
+    await publish({ content: serializedContent, kind: 1, tags });
 
     // close modal
     toggle(false);
   };
 
-  const renderElement = useCallback((props: any) => {
+  const renderElement = useCallback((props) => {
     switch (props.element.type) {
       case 'image':
         if (props.element.url) {
@@ -151,12 +134,28 @@ export function Post() {
           </div>
           <div className="w-full">
             <Editable
-              placeholder={refID ? 'Share your thoughts on it' : "What's on your mind?"}
+              placeholder={
+                reply.id ? 'Share your thoughts on it' : "What's on your mind?"
+              }
               spellCheck="false"
-              className={`${refID ? '!min-h-42' : '!min-h-[86px]'} markdown`}
+              className={`${
+                reply.id ? '!min-h-42' : '!min-h-[86px]'
+              } markdown max-h-[500px] overflow-y-auto`}
               renderElement={renderElement}
             />
-            {refID && <MentionNote id={refID} />}
+            {reply.id && (
+              <div className="relative">
+                <MentionNote id={reply.id} />
+                <button
+                  type="button"
+                  onClick={() => removeReply()}
+                  className="absolute right-3 top-3 inline-flex h-6 w-max items-center justify-center gap-2 rounded bg-zinc-800 px-2 hover:bg-zinc-700"
+                >
+                  <CancelIcon className="h-4 w-4 text-zinc-100" />
+                  <span className="text-sm">Stop reply</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="mt-4 flex items-center justify-between">

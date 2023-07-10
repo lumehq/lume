@@ -2,11 +2,15 @@ import { useState } from 'react';
 
 import { EyeOffIcon, EyeOnIcon } from '@shared/icons';
 
+import { useStronghold } from '@stores/stronghold';
+
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function AccountSettingsScreen() {
   const { status, account } = useAccount();
   const [type, setType] = useState('password');
+
+  const privkey = useStronghold((state) => state.privkey);
 
   const showPrivateKey = () => {
     if (type === 'password') {
@@ -56,7 +60,7 @@ export function AccountSettingsScreen() {
                   <input
                     readOnly
                     type={type}
-                    value={account.privkey}
+                    value={privkey}
                     className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
                   />
                   <button

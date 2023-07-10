@@ -38,14 +38,13 @@ export async function getAccounts() {
 export async function createAccount(
   npub: string,
   pubkey: string,
-  privkey: string,
   follows?: string[][],
   is_active?: number
 ) {
   const db = await connect();
   const res = await db.execute(
     'INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, follows, is_active) VALUES (?, ?, ?, ?, ?);',
-    [npub, pubkey, privkey, follows || '', is_active || 0]
+    [npub, pubkey, 'privkey is stored in secure storage', follows || '', is_active || 0]
   );
   if (res) {
     await createBlock(
@@ -447,4 +446,13 @@ export async function getUserMetadata(pubkey: string) {
   } else {
     return null;
   }
+}
+
+// delete privkey
+export async function removePrivkey() {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  return await db.execute(
+    `UPDATE accounts SET privkey = "privkey is stored in secure storage" WHERE id = "${activeAccount.id}";`
+  );
 }

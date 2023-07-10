@@ -2,9 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRoot } from 'react-dom/client';
 
+import { NDKProvider } from '@libs/ndk/provider';
 import { getSetting } from '@libs/storage';
-
-import { RelayProvider } from '@shared/relayProvider';
 
 import App from './app';
 
@@ -23,9 +22,9 @@ const root = createRoot(container);
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <RelayProvider>
+    <NDKProvider>
       <App />
-    </RelayProvider>
+    </NDKProvider>
     <ReactQueryDevtools initialIsOpen={false} position="top-right" />
   </QueryClientProvider>
 );

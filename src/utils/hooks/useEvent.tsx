@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createNote, getNoteByID } from '@libs/storage';
-
-import { RelayContext } from '@shared/relayProvider';
 
 import { parser } from '@utils/parser';
 
 export function useEvent(id: string) {
-  const ndk = useContext(RelayContext);
+  const { ndk } = useNDK();
   const { status, data, error, isFetching } = useQuery(
     ['note', id],
     async () => {

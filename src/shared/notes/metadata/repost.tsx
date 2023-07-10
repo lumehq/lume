@@ -2,8 +2,9 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 
 import { RepostIcon } from '@shared/icons';
 
-import { useComposer } from '@stores/composer';
+import { FULL_RELAYS } from '@stores/constants';
 
+import { usePublish } from '@utils/hooks/usePublish';
 import { compactNumber } from '@utils/number';
 
 export function NoteRepost({
@@ -15,13 +16,21 @@ export function NoteRepost({
   pubkey: string;
   reposts: number;
 }) {
-  const setRepost = useComposer((state) => state.setRepost);
+  const publish = usePublish();
+
+  const submit = async () => {
+    const tags = [
+      ['e', id, FULL_RELAYS[0], 'root'],
+      ['p', pubkey],
+    ];
+    await publish({ content: '', kind: 6, tags: tags });
+  };
 
   return (
     <Tooltip.Root delayDuration={150}>
       <button
         type="button"
-        onClick={() => setRepost(id, pubkey)}
+        onClick={() => submit()}
         className="group group inline-flex h-6 w-20 items-center gap-1.5"
       >
         <Tooltip.Trigger asChild>

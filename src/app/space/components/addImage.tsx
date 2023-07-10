@@ -3,15 +3,15 @@ import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
-import { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { useNDK } from '@libs/ndk/provider';
 import { createBlock } from '@libs/storage';
 
 import { CancelIcon, CommandIcon } from '@shared/icons';
 import { Image } from '@shared/image';
-import { RelayContext } from '@shared/relayProvider';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
@@ -19,15 +19,17 @@ import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 import { dateToUnix } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function AddImageBlock() {
-  const ndk = useContext(RelayContext);
   const queryClient = useQueryClient();
+  const publish = usePublish();
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState('');
 
+  const { ndk } = useNDK();
   const { account } = useAccount();
 
   const tags = useRef(null);
@@ -107,22 +109,11 @@ export function AddImageBlock() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
 
-    const signer = new NDKPrivateKeySigner(account.privkey);
-    ndk.signer = signer;
-
-    const event = new NDKEvent(ndk);
-    // build event
-    event.content = data.title;
-    event.kind = 1063;
-    event.created_at = dateToUnix();
-    event.pubkey = account.pubkey;
-    event.tags = tags.current;
-
-    // publish event
-    event.publish();
+    // publish file metedata
+    await publish({ content: data.title, kind: 1063, tags: tags.current });
 
     // mutate
     block.mutate({ kind: 0, title: data.title, content: data.content });
