@@ -60,7 +60,7 @@ export function ImportStep2Screen() {
       setPassword(data.password);
 
       // save privkey to secure storage
-      await save(pubkey, privkey);
+      await save(pubkey, privkey, data.password);
 
       // redirect to next step
       navigate('/auth/import/step-3', { replace: true });

@@ -71,7 +71,7 @@ export function UserScreen() {
       <div className="-mt-7 w-full">
         <div className="px-5">
           <Image
-            src={user?.image}
+            src={user?.picture || user?.image}
             fallback={DEFAULT_AVATAR}
             alt={pubkey}
             className="h-14 w-14 rounded-md ring-2 ring-black"

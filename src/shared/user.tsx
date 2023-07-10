@@ -58,7 +58,7 @@ export function User({
         className={`${avatarWidth} ${avatarHeight} relative z-10 shrink-0 overflow-hidden bg-zinc-900`}
       >
         <Image
-          src={user?.image}
+          src={user?.picture || user?.image}
           fallback={DEFAULT_AVATAR}
           alt={pubkey}
           className={`${avatarWidth} ${avatarHeight} ${
@@ -93,7 +93,7 @@ export function User({
           <div className="w-[250px] overflow-hidden rounded-md border border-zinc-800/50 bg-zinc-900/90 backdrop-blur-lg">
             <div className="flex gap-2.5 border-b border-zinc-800 px-3 py-3">
               <Image
-                src={user?.image}
+                src={user?.picture || user?.image}
                 fallback={DEFAULT_AVATAR}
                 alt={pubkey}
                 className="h-11 w-11 shrink-0 rounded-lg object-cover"

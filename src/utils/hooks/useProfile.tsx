@@ -1,3 +1,4 @@
+import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -17,10 +18,16 @@ export function useProfile(pubkey: string, fallback?: string) {
       if (cache && parseInt(cache.created_at) + 86400 >= current) {
         return cache;
       } else {
-        const user = ndk.getUser({ hexpubkey: pubkey });
-        await user.fetchProfile();
-        await createMetadata(pubkey, pubkey, JSON.stringify(user.profile));
-        return user.profile;
+        const filter: NDKFilter = { kinds: [0], authors: [pubkey] };
+        const events = await ndk.fetchEvents(filter);
+        const latest = [...events].slice(-1)[0];
+        if (latest) {
+          await createMetadata(pubkey, pubkey, latest.content);
+          return JSON.parse(latest.content);
+        } else {
+          await createMetadata(pubkey, pubkey, [...events][0].content);
+          return JSON.parse([...events][0].content);
+        }
       }
     } else {
       const profile = JSON.parse(fallback);
