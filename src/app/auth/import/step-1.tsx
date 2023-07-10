@@ -9,6 +9,7 @@ import { createAccount } from '@libs/storage';
 import { LoaderIcon } from '@shared/icons';
 
 import { useOnboarding } from '@stores/onboarding';
+import { useStronghold } from '@stores/stronghold';
 
 type FormValues = {
   privkey: string;
@@ -31,11 +32,9 @@ const resolver: Resolver<FormValues> = async (values) => {
 export function ImportStep1Screen() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const setPrivkey = useStronghold((state) => state.setPrivkey);
+  const setPubkey = useOnboarding((state) => state.setPubkey);
 
-  const [setPubkey, setPrivkey] = useOnboarding((state) => [
-    state.setPubkey,
-    state.setPrivkey,
-  ]);
   const [loading, setLoading] = useState(false);
 
   const account = useMutation({
@@ -74,6 +73,7 @@ export function ImportStep1Screen() {
 
         // use for onboarding process only
         setPubkey(pubkey);
+        // add stronghold state
         setPrivkey(privkey);
 
         // add account to local database

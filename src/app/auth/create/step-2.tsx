@@ -29,11 +29,15 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 export function CreateStep2Screen() {
   const navigate = useNavigate();
-  const setPassword = useStronghold((state) => state.setPassword);
 
-  const [pubkey, privkey] = useOnboarding((state) => [state.pubkey, state.privkey]);
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
+  const [privkey, setPassword] = useStronghold((state) => [
+    state.privkey,
+    state.setPassword,
+  ]);
+
+  const pubkey = useOnboarding((state) => state.privkey);
 
   const { save } = useSecureStorage();
 

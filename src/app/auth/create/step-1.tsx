@@ -9,15 +9,14 @@ import { Button } from '@shared/button';
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useOnboarding } from '@stores/onboarding';
+import { useStronghold } from '@stores/stronghold';
 
 export function CreateStep1Screen() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const setPrivkey = useStronghold((state) => state.setPrivkey);
+  const setPubkey = useOnboarding((state) => state.setPubkey);
 
-  const [setPubkey, setPrivkey] = useOnboarding((state) => [
-    state.setPubkey,
-    state.setPrivkey,
-  ]);
   const [privkeyInput, setPrivkeyInput] = useState('password');
   const [loading, setLoading] = useState(false);
 

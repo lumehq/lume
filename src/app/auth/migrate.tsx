@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { removePrivkey } from '@libs/storage';
 
-import { CheckCircleIcon, EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
+import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -35,13 +35,14 @@ export function MigrateScreen() {
   const navigate = useNavigate();
 
   const [passwordInput, setPasswordInput] = useState('password');
-  const [passwordStep, setPasswordStep] = useState({ loading: false, done: false });
-  const [privkeyStep, setPrivkeyStep] = useState({ loading: false, done: false });
+  const [loading, setLoading] = useState(false);
+  const [setPassword, setPrivkey] = useStronghold((state) => [
+    state.setPassword,
+    state.setPrivkey,
+  ]);
 
   const { account } = useAccount();
   const { save } = useSecureStorage();
-
-  const setPassword = useStronghold((state) => state.setPassword);
 
   // toggle private key
   const showPassword = () => {
@@ -49,16 +50,6 @@ export function MigrateScreen() {
       setPasswordInput('text');
     } else {
       setPasswordInput('password');
-    }
-  };
-
-  const clearPrivkey = async () => {
-    setPrivkeyStep((prev) => ({ ...prev, loading: true }));
-    const res = await removePrivkey();
-    if (res) {
-      setPrivkeyStep({ done: true, loading: false });
-    } else {
-      setPrivkeyStep((prev) => ({ ...prev, loading: false }));
     }
   };
 
@@ -70,27 +61,32 @@ export function MigrateScreen() {
   } = useForm<FormValues>({ resolver });
 
   const onSubmit = async (data: { [x: string]: string }) => {
-    setPasswordStep((prev) => ({ ...prev, loading: true }));
+    setLoading(true);
     if (data.password.length > 3) {
       // add password to local state
       setPassword(data.password);
 
       // load private in secure storage
       try {
+        // save privkey to secure storage
         await save(account.pubkey, account.privkey, data.password);
+        // add privkey to state
+        setPrivkey(account.privkey);
+        // remove privkey in db
+        await removePrivkey();
         // clear cache
         await queryClient.invalidateQueries(['currentAccount']);
         // redirect to home
         navigate('/', { replace: true });
       } catch {
-        setPasswordStep((prev) => ({ ...prev, loading: false }));
+        setLoading(false);
         setError('password', {
           type: 'custom',
           message: 'Wrong password',
         });
       }
     } else {
-      setPasswordStep((prev) => ({ ...prev, loading: false }));
+      setLoading(false);
       setError('password', {
         type: 'custom',
         message: 'Password is required and must be greater than 3',
@@ -109,53 +105,25 @@ export function MigrateScreen() {
         <div className="w-full rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
           <div className="flex flex-col gap-4">
             <div>
-              <h3 className="font-medium text-zinc-200">
-                Remove plaintext privkey store in local database
-              </h3>
               <div className="mt-1">
                 <p className="text-sm text-zinc-400">
                   You&apos;re using old Lume version which store your private key as
                   plaintext in database, this is huge security risk.
                 </p>
-                <p className="mt-2 text-sm text-zinc-400">To secure your private key</p>
-                <ul className="mt-2 list-outside list-disc pl-5 text-sm text-zinc-400">
-                  <li>Firstly, click button below to remove it from local database</li>
-                  <li>
-                    Then set password and Lume will put your private key in secure storage
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-3">
-                <div className="relative">
-                  <input
-                    readOnly
-                    value={privkeyStep.done ? 'Nothing to see here' : account.privkey}
-                    className="relative w-full rounded-lg bg-zinc-800 px-3 py-3 text-zinc-100 !outline-none placeholder:text-zinc-500"
-                  />
-                  <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center rounded-lg bg-black/10 backdrop-blur-sm">
-                    {privkeyStep.done ? (
-                      privkeyStep.loading ? (
-                        <LoaderIcon className="h-4 w-4 animate-spin text-zinc-100" />
-                      ) : (
-                        <CheckCircleIcon className="h-5 w-5 text-green-500" />
-                      )
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => clearPrivkey()}
-                        className="inline-flex w-max items-center justify-center rounded bg-fuchsia-500 px-2.5 py-1.5 text-sm hover:bg-fuchsia-600"
-                      >
-                        Click to remove
-                      </button>
-                    )}
-                  </div>
-                </div>
+                <p className="mt-2 text-sm text-zinc-400">
+                  To secure your private key, please set a password and Lume will put your
+                  private key in secure storage.
+                </p>
+                <p className="mt-2 text-sm text-zinc-400">
+                  It is not possible to start the app without applying this step, it is
+                  easy and fast!
+                </p>
               </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mb-0">
               <div className="flex flex-col gap-1">
                 <span className="font-medium text-zinc-200">
-                  Set password to protect your key
+                  Set a password to protect your key
                 </span>
                 <div className="relative">
                   <input
@@ -189,19 +157,17 @@ export function MigrateScreen() {
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                {privkeyStep.done && (
-                  <button
-                    type="submit"
-                    disabled={!isDirty || !isValid}
-                    className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
-                  >
-                    {passwordStep.loading ? (
-                      <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
-                    ) : (
-                      'Continue →'
-                    )}
-                  </button>
-                )}
+                <button
+                  type="submit"
+                  disabled={!isDirty || !isValid}
+                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  {loading ? (
+                    <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                  ) : (
+                    'Continue →'
+                  )}
+                </button>
               </div>
             </form>
           </div>
