@@ -30,30 +30,33 @@ export function Root() {
   async function fetchNotes() {
     try {
       const follows = JSON.parse(account.follows);
-      let since: number;
 
-      if (totalNotes === 0 || lastLogin === 0) {
-        since = dateToUnix(getHourAgo(48, now.current));
-      } else {
-        since = lastLogin;
-      }
+      if (follows.length > 0) {
+        let since: number;
 
-      const filter: NDKFilter = {
-        kinds: [1, 6],
-        authors: follows,
-        since: since,
-      };
+        if (totalNotes === 0 || lastLogin === 0) {
+          since = dateToUnix(getHourAgo(48, now.current));
+        } else {
+          since = lastLogin;
+        }
 
-      const events = await prefetchEvents(ndk, filter);
-      for (const event of events) {
-        await createNote(
-          event.id,
-          event.pubkey,
-          event.kind,
-          event.tags,
-          event.content,
-          event.created_at
-        );
+        const filter: NDKFilter = {
+          kinds: [1, 6],
+          authors: follows,
+          since: since,
+        };
+
+        const events = await prefetchEvents(ndk, filter);
+        for (const event of events) {
+          await createNote(
+            event.id,
+            event.pubkey,
+            event.kind,
+            event.tags,
+            event.content,
+            event.created_at
+          );
+        }
       }
 
       return true;
@@ -69,6 +72,7 @@ export function Root() {
         authors: [account.pubkey],
         since: lastLogin,
       };
+
       const receiveFilter: NDKFilter = {
         kinds: [4],
         '#p': [account.pubkey],

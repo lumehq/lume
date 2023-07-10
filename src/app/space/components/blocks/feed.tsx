@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 import { getNotesByAuthors, removeBlock } from '@libs/storage';
 
@@ -77,6 +78,16 @@ export function FeedBlock({ params }: { params: any }) {
           <div className="px-3 py-1.5">
             <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
               <NoteSkeleton />
+            </div>
+          </div>
+        ) : itemsVirtualizer.length === 0 ? (
+          <div className="px-3 py-1.5">
+            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-center text-sm text-zinc-300">
+                  Not found any posts from last 48 hours
+                </p>
+              </div>
             </div>
           </div>
         ) : (
