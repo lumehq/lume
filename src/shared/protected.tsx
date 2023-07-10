@@ -13,6 +13,10 @@ export function Protected({ children }: { children: ReactNode }) {
     return <Navigate to="/auth/welcome" replace />;
   }
 
+  if (status === 'success' && account && account.privkey.length > 35) {
+    return <Navigate to="/auth/migrate" replace />;
+  }
+
   if (status === 'success' && account && !password) {
     return <Navigate to="/auth/unlock" replace />;
   }

@@ -10,6 +10,7 @@ import { AuthImportScreen } from '@app/auth/import';
 import { ImportStep1Screen } from '@app/auth/import/step-1';
 import { ImportStep2Screen } from '@app/auth/import/step-2';
 import { ImportStep3Screen } from '@app/auth/import/step-3';
+import { MigrateScreen } from '@app/auth/migrate';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { UnlockScreen } from '@app/auth/unlock';
 import { WelcomeScreen } from '@app/auth/welcome';
@@ -69,6 +70,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: 'unlock', element: <UnlockScreen /> },
+      { path: 'migrate', element: <MigrateScreen /> },
     ],
   },
   {

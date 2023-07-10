@@ -447,3 +447,12 @@ export async function getUserMetadata(pubkey: string) {
     return null;
   }
 }
+
+// delete privkey
+export async function removePrivkey() {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  return await db.execute(
+    `UPDATE accounts SET privkey = "privkey is stored in secure storage" WHERE id = "${activeAccount.id}";`
+  );
+}
