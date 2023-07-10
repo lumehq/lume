@@ -163,7 +163,7 @@ export function CreateStep5Screen() {
     }
   };
 
-  const list = data ? data.profiles.concat(INITIAL_LIST) : [];
+  const list = data ? data.profiles.concat(INITIAL_LIST) : INITIAL_LIST;
 
   return (
     <div className="mx-auto w-full max-w-md">
