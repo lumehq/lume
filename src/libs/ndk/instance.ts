@@ -1,15 +1,18 @@
 // source: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
+import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
+import { NostrFetcher, normalizeRelayUrls } from 'nostr-fetch';
 import { useEffect, useState } from 'react';
 
 import { getSetting } from '@libs/storage';
 
 const setting = await getSetting('relays');
-const relays = JSON.parse(setting);
+const relays = normalizeRelayUrls(JSON.parse(setting));
 
 export const NDKInstance = () => {
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>(relays);
+  const [fetcher, setFetcher] = useState<NostrFetcher>(undefined);
 
   useEffect(() => {
     loadNdk(relays);
@@ -26,11 +29,13 @@ export const NDKInstance = () => {
 
     setNDK(ndkInstance);
     setRelayUrls(explicitRelayUrls);
+    setFetcher(NostrFetcher.withCustomPool(ndkAdapter(ndkInstance)));
   }
 
   return {
     ndk,
     relayUrls,
+    fetcher,
     loadNdk,
   };
 };

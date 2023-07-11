@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -9,29 +9,26 @@ import { BellIcon, CancelIcon, LoaderIcon } from '@shared/icons';
 import { NotificationUser } from '@shared/notification/user';
 import { User } from '@shared/user';
 
-import { dateToUnix, getHourAgo } from '@utils/date';
+import { nHoursAgo } from '@utils/date';
+import { LumeEvent } from '@utils/types';
 
 export function NotificationModal({ pubkey }: { pubkey: string }) {
-  const now = useRef(new Date());
   const [isOpen, setIsOpen] = useState(false);
 
-  const { ndk } = useNDK();
+  const { fetcher, relayUrls } = useNDK();
   const { status, data } = useQuery(
-    ['user-notification', pubkey],
+    ['notification', pubkey],
     async () => {
-      const filter: NDKFilter = {
-        '#p': [pubkey],
-        kinds: [1, 6, 7, 9735],
-        since: dateToUnix(getHourAgo(48, now.current)),
-      };
-      const events = await ndk.fetchEvents(filter);
-      return [...events];
+      const events = await fetcher.fetchAllEvents(
+        relayUrls,
+        { '#p': [pubkey], kinds: [1, 6, 7, 9735] },
+        { since: nHoursAgo(48) },
+        { sort: true }
+      );
+      return events as unknown as LumeEvent[];
     },
     {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
     }
   );
 

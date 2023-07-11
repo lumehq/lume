@@ -1,5 +1,6 @@
 // source: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
+import { NostrFetcher } from 'nostr-fetch';
 import { PropsWithChildren, createContext, useContext } from 'react';
 
 import { NDKInstance } from '@libs/ndk/instance';
@@ -7,17 +8,19 @@ import { NDKInstance } from '@libs/ndk/instance';
 interface NDKContext {
   ndk: NDK;
   relayUrls: string[];
+  fetcher: NostrFetcher;
   loadNdk: (_: string[]) => void;
 }
 
 const NDKContext = createContext<NDKContext>({
   ndk: new NDK({}),
   relayUrls: [],
+  fetcher: undefined,
   loadNdk: undefined,
 });
 
 const NDKProvider = ({ children }: PropsWithChildren<object>) => {
-  const { ndk, relayUrls, loadNdk } = NDKInstance();
+  const { ndk, relayUrls, fetcher, loadNdk } = NDKInstance();
 
   if (ndk)
     return (
@@ -25,6 +28,7 @@ const NDKProvider = ({ children }: PropsWithChildren<object>) => {
         value={{
           ndk,
           relayUrls,
+          fetcher,
           loadNdk,
         }}
       >

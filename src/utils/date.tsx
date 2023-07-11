@@ -20,3 +20,6 @@ export function dateToUnix(_date?: Date) {
 
   return Math.floor(date.getTime() / 1000);
 }
+
+export const nHoursAgo = (hrs: number): number =>
+  Math.floor((Date.now() - hrs * 60 * 60 * 1000) / 1000);
