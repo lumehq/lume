@@ -1,9 +1,6 @@
 import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
-import { Link } from 'react-router-dom';
-import reactStringReplace from 'react-string-replace';
-
-import { MentionUser } from '@shared/notes/mentions/user';
+import ReactPlayer from 'react-player';
 
 import { LumeEvent } from '@utils/types';
 
@@ -34,7 +31,7 @@ export function parser(event: LumeEvent) {
       content.images.push(url);
       // remove url from original content
       content.parsed = content.parsed.replace(url, '');
-    } else if (url.match(/\.(mp4|webm|mov|ogv|avi|mp3)$/)) {
+    } else if (ReactPlayer.canPlay(url)) {
       // video
       content.videos.push(url);
       // remove url from original content

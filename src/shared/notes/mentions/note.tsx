@@ -5,12 +5,10 @@ import remarkGfm from 'remark-gfm';
 
 import { createBlock } from '@libs/storage';
 
-import { NoteSkeleton } from '@shared/notes/skeleton';
+import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
-
-import { MentionUser } from './user';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const { status, data } = useEvent(id);
@@ -53,8 +51,17 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
               remarkPlugins={[remarkGfm]}
               components={{
                 del: ({ children }) => {
-                  const pubkey = children[0] as string;
-                  return <MentionUser pubkey={pubkey.slice(3)} />;
+                  const key = children[0] as string;
+                  if (key.startsWith('pub')) return <MentionUser pubkey={key.slice(3)} />;
+                  if (key.startsWith('tag'))
+                    return (
+                      <button
+                        type="button"
+                        className="font-normal text-orange-400 no-underline hover:text-orange-500"
+                      >
+                        {key.slice(3)}
+                      </button>
+                    );
                 },
               }}
             >

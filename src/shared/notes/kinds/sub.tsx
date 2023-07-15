@@ -1,15 +1,4 @@
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-
-import {
-  ImagePreview,
-  LinkPreview,
-  MentionNote,
-  MentionUser,
-  NoteActions,
-  NoteSkeleton,
-  VideoPreview,
-} from '@shared/notes';
+import { NoteActions, NoteContent, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
@@ -38,32 +27,10 @@ export function SubNote({ id }: { id: string }) {
       <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
       <div className="mb-5 flex flex-col">
         <User pubkey={data.pubkey} time={data.created_at} />
-        <div className="relative z-20 -mt-5 flex items-start gap-3">
+        <div className="relative z-20 -mt-6 flex items-start gap-3">
           <div className="w-11 shrink-0" />
           <div className="flex-1">
-            <ReactMarkdown
-              className="markdown"
-              remarkPlugins={[remarkGfm]}
-              components={{
-                del: ({ children }) => {
-                  const pubkey = children[0] as string;
-                  return <MentionUser pubkey={pubkey.slice(3)} />;
-                },
-              }}
-            >
-              {data.content.parsed}
-            </ReactMarkdown>
-            {data.content.images.length > 0 && (
-              <ImagePreview urls={data.content.images} />
-            )}
-            {data.content.videos.length > 0 && (
-              <VideoPreview urls={data.content.videos} />
-            )}
-            {data.content.links.length > 0 && <LinkPreview urls={data.content.links} />}
-            {data.content.notes.length > 0 &&
-              data.content.notes.map((note: string) => (
-                <MentionNote key={note} id={note} />
-              ))}
+            <NoteContent content={data.content} />
             <NoteActions id={data.id} eventPubkey={data.pubkey} />
           </div>
         </div>

@@ -1,17 +1,6 @@
 import { useMemo } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
-import {
-  LinkPreview,
-  MentionUser,
-  NoteActions,
-  NoteMetadata,
-  SubNote,
-  VideoPreview,
-} from '@shared/notes';
-import { MentionNote } from '@shared/notes/mentions/note';
-import { ImagePreview } from '@shared/notes/preview/image';
+import { NoteActions, NoteContent, NoteMetadata, SubNote } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { parser } from '@utils/parser';
@@ -35,26 +24,10 @@ export function NoteThread({
         <div className="relative">{reply && <SubNote id={reply} />}</div>
         <div className="relative flex flex-col">
           <User pubkey={event.pubkey} time={event.created_at} />
-          <div className="relative z-20 -mt-5 flex items-start gap-3">
+          <div className="relative z-20 -mt-6 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="flex-1">
-              <ReactMarkdown
-                className="markdown"
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  del: ({ children }) => {
-                    const pubkey = children[0] as string;
-                    return <MentionUser pubkey={pubkey.slice(3)} />;
-                  },
-                }}
-              >
-                {content.parsed}
-              </ReactMarkdown>
-              {content.images.length > 0 && <ImagePreview urls={content.images} />}
-              {content.videos.length > 0 && <VideoPreview urls={content.videos} />}
-              {content.links.length > 0 && <LinkPreview urls={content.links} />}
-              {content.notes.length > 0 &&
-                content.notes.map((note: string) => <MentionNote key={note} id={note} />)}
+              <NoteContent content={content} />
               <NoteActions
                 id={event.event_id}
                 rootID={event.parent_id}

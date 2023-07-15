@@ -20,3 +20,4 @@ export * from './kinds/repost';
 export * from './kinds/sub';
 export * from './skeleton';
 export * from './actions';
+export * from './content';
