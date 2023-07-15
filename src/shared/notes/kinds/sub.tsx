@@ -1,7 +1,11 @@
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 import {
   ImagePreview,
   LinkPreview,
   MentionNote,
+  MentionUser,
   NoteActions,
   NoteSkeleton,
   VideoPreview,
@@ -37,9 +41,18 @@ export function SubNote({ id }: { id: string }) {
         <div className="relative z-20 -mt-5 flex items-start gap-3">
           <div className="w-11 shrink-0" />
           <div className="flex-1">
-            <div className="relative z-10 select-text whitespace-pre-line break-words text-base text-zinc-100">
+            <ReactMarkdown
+              className="markdown"
+              remarkPlugins={[remarkGfm]}
+              components={{
+                del: ({ children }) => {
+                  const pubkey = children[0] as string;
+                  return <MentionUser pubkey={pubkey.slice(3)} />;
+                },
+              }}
+            >
               {data.content.parsed}
-            </div>
+            </ReactMarkdown>
             {data.content.images.length > 0 && (
               <ImagePreview urls={data.content.images} />
             )}

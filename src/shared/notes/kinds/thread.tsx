@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import {
   LinkPreview,
+  MentionUser,
   NoteActions,
   NoteMetadata,
   SubNote,
@@ -35,9 +38,18 @@ export function NoteThread({
           <div className="relative z-20 -mt-5 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="flex-1">
-              <div className="relative z-10 select-text whitespace-pre-line break-words text-base text-zinc-100">
+              <ReactMarkdown
+                className="markdown"
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  del: ({ children }) => {
+                    const pubkey = children[0] as string;
+                    return <MentionUser pubkey={pubkey.slice(3)} />;
+                  },
+                }}
+              >
                 {content.parsed}
-              </div>
+              </ReactMarkdown>
               {content.images.length > 0 && <ImagePreview urls={content.images} />}
               {content.videos.length > 0 && <VideoPreview urls={content.videos} />}
               {content.links.length > 0 && <LinkPreview urls={content.links} />}

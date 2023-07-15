@@ -1,6 +1,14 @@
 import { useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-import { LinkPreview, NoteActions, NoteMetadata, VideoPreview } from '@shared/notes';
+import {
+  LinkPreview,
+  MentionUser,
+  NoteActions,
+  NoteMetadata,
+  VideoPreview,
+} from '@shared/notes';
 import { MentionNote } from '@shared/notes/mentions/note';
 import { ImagePreview } from '@shared/notes/preview/image';
 import { User } from '@shared/user';
@@ -25,9 +33,28 @@ export function NoteKind_1({
           <div className="relative z-20 -mt-5 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="flex-1">
-              <div className="relative z-10 select-text whitespace-pre-line break-words text-base text-zinc-100">
+              <ReactMarkdown
+                className="markdown"
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  del: ({ children }) => {
+                    const key = children[0] as string;
+                    if (key.startsWith('pub'))
+                      return <MentionUser pubkey={key.slice(3)} />;
+                    if (key.startsWith('tag'))
+                      return (
+                        <button
+                          type="button"
+                          className="font-normal text-orange-400 no-underline hover:text-orange-500"
+                        >
+                          {key.slice(3)}
+                        </button>
+                      );
+                  },
+                }}
+              >
                 {content.parsed}
-              </div>
+              </ReactMarkdown>
               {content.images.length > 0 && <ImagePreview urls={content.images} />}
               {content.videos.length > 0 && <VideoPreview urls={content.videos} />}
               {content.links.length > 0 && <LinkPreview urls={content.links} />}

@@ -9,7 +9,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
   return (
     <Link
       to={`/app/user/${pubkey}`}
-      className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
+      className="break-words font-normal !text-green-400 no-underline hover:!text-green-500"
     >
       @{user?.name || user?.displayName || shortenKey(pubkey)}
     </Link>

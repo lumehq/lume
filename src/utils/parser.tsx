@@ -1,6 +1,5 @@
 import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
-import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
@@ -14,14 +13,14 @@ export function parser(event: LumeEvent) {
 
   const content: {
     original: string;
-    parsed: ReactNode[];
+    parsed: string;
     notes: string[];
     images: string[];
     videos: string[];
     links: string[];
   } = {
     original: event.content,
-    parsed: [event.content],
+    parsed: event.content,
     notes: [],
     images: [],
     videos: [],
@@ -34,31 +33,26 @@ export function parser(event: LumeEvent) {
       // image url
       content.images.push(url);
       // remove url from original content
-      content.parsed = reactStringReplace(content.parsed, url, () => '');
+      content.parsed = content.parsed.replace(url, '');
     } else if (url.match(/\.(mp4|webm|mov|ogv|avi|mp3)$/)) {
       // video
       content.videos.push(url);
       // remove url from original content
-      content.parsed = reactStringReplace(content.parsed, url, () => '');
+      content.parsed = content.parsed.replace(url, '');
     } else {
       if (content.links.length < 1) {
         // push to store
         content.links.push(url);
         // remove url from original content
-        content.parsed = reactStringReplace(content.parsed, url, () => '');
-      } else {
-        content.parsed = reactStringReplace(content.parsed, url, (match, i) => (
-          <Link
-            key={match + i}
-            to={match}
-            target="_blank"
-            className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
-          >
-            {match}
-          </Link>
-        ));
+        content.parsed = content.parsed.replace(url, '');
       }
     }
+  });
+
+  // parse hashtag
+  const hashtags = content.parsed.split(/\s/gm).filter((s) => s.startsWith('#'));
+  hashtags?.forEach((tag) => {
+    content.parsed = content.parsed.replace(tag, `~tag${tag}~`);
   });
 
   // parse nostr
@@ -67,29 +61,12 @@ export function parser(event: LumeEvent) {
     const event = item.event;
     if (event) {
       content.notes.push(event.id);
-      content.parsed = reactStringReplace(content.parsed, item.text, () => null);
+      content.parsed = content.parsed.replace(item.text, '');
     }
     if (profile) {
-      content.parsed = reactStringReplace(content.parsed, item.text, (match, i) => (
-        <MentionUser key={match + i} pubkey={profile.pubkey} />
-      ));
+      content.parsed = content.parsed.replace(item.text, `~pub${item.profile.pubkey}~`);
     }
   });
-
-  // parse hashtag
-  content.parsed = reactStringReplace(content.parsed, /#(\w+)/g, (match, i) => (
-    <span
-      key={match + i}
-      className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
-    >
-      #{match}
-    </span>
-  ));
-
-  // clean array
-  content.parsed = content.parsed.filter(
-    (el) => el !== '\n' && el !== '\n\n' && el !== '\n'
-  );
 
   return content;
 }
