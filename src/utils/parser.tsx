@@ -1,4 +1,3 @@
-import destr from 'destr';
 import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
 import { ReactNode } from 'react';
@@ -9,20 +8,7 @@ import { MentionUser } from '@shared/notes/mentions/user';
 
 import { LumeEvent } from '@utils/types';
 
-function isJsonString(str: string[][] | string) {
-  try {
-    if (typeof str === 'string') JSON.parse(str);
-  } catch (e) {
-    return false;
-  }
-  return true;
-}
-
 export function parser(event: LumeEvent) {
-  if (isJsonString(event.tags)) {
-    event['tags'] = destr(event.tags);
-  }
-
   const references = parseReferences(event as Event);
   const urls = getUrls(event.content);
 

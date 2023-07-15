@@ -24,9 +24,6 @@ export function useProfile(pubkey: string, fallback?: string) {
         if (latest) {
           await createMetadata(pubkey, pubkey, latest.content);
           return JSON.parse(latest.content);
-        } else {
-          await createMetadata(pubkey, pubkey, [...events][0].content);
-          return JSON.parse([...events][0].content);
         }
       }
     } else {

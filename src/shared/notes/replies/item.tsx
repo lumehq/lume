@@ -1,4 +1,3 @@
-import { Kind1 } from '@shared/notes/contents/kind1';
 import { NoteMetadata } from '@shared/notes/metadata';
 import { User } from '@shared/user';
 
@@ -12,7 +11,6 @@ export function Reply({ data }: { data: any }) {
       <div className="flex flex-col">
         <User pubkey={data.pubkey} time={data.created_at} />
         <div className="-mt-[20px] pl-[50px]">
-          <Kind1 content={content} />
           <NoteMetadata id={data.event_id} eventPubkey={data.pubkey} />
         </div>
       </div>

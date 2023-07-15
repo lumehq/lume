@@ -1,7 +1,9 @@
-import { NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKTag, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
 import { getParentID } from '@utils/transform';
+import { LumeEvent } from '@utils/types';
 
 let db: null | Database = null;
 
@@ -92,9 +94,17 @@ export async function getNotes(limit: number, offset: number) {
   const totalNotes = await countTotalNotes();
   const nextCursor = offset + limit;
 
-  const notes: any = { data: null, nextCursor: 0 };
-  const query: any = await db.select(
+  const notes: { data: LumeEvent[] | null; nextCursor: number } = {
+    data: null,
+    nextCursor: 0,
+  };
+
+  const query: LumeEvent[] = await db.select(
     `SELECT * FROM notes WHERE kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+  );
+
+  query.forEach(
+    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
   );
 
   notes['data'] = query;
@@ -106,11 +116,16 @@ export async function getNotes(limit: number, offset: number) {
 // get all notes by pubkey
 export async function getNotesByPubkey(pubkey: string) {
   const db = await connect();
-  const res: any = await db.select(
+
+  const query: LumeEvent[] = await db.select(
     `SELECT * FROM notes WHERE pubkey == "${pubkey}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC;`
   );
 
-  return res;
+  query.forEach(
+    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
+  );
+
+  return query;
 }
 
 // get all notes by authors
@@ -121,9 +136,17 @@ export async function getNotesByAuthors(authors: string, limit: number, offset: 
   const array = JSON.parse(authors);
   const finalArray = `'${array.join("','")}'`;
 
-  const notes: any = { data: null, nextCursor: 0 };
-  const query: any = await db.select(
+  const notes: { data: LumeEvent[] | null; nextCursor: number } = {
+    data: null,
+    nextCursor: 0,
+  };
+
+  const query: LumeEvent[] = await db.select(
     `SELECT * FROM notes WHERE pubkey IN (${finalArray}) AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+  );
+
+  query.forEach(
+    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
   );
 
   notes['data'] = query;
@@ -144,7 +167,7 @@ export async function createNote(
   event_id: string,
   pubkey: string,
   kind: number,
-  tags: any,
+  tags: string[],
   content: string,
   created_at: number
 ) {

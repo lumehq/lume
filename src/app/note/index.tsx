@@ -5,8 +5,6 @@ import { useLiveThread } from '@app/space/hooks/useLiveThread';
 
 import { getNoteByID } from '@libs/storage';
 
-import { Kind1 } from '@shared/notes/contents/kind1';
-import { Kind1063 } from '@shared/notes/contents/kind1063';
 import { NoteMetadata } from '@shared/notes/metadata';
 import { NoteReplyForm } from '@shared/notes/replies/form';
 import { RepliesList } from '@shared/notes/replies/list';
@@ -41,8 +39,6 @@ export function NoteScreen() {
             <div className="rounded-md bg-zinc-900 px-5 pt-5">
               <User pubkey={data.pubkey} time={data.created_at} />
               <div className="mt-3">
-                {data.kind === 1 && <Kind1 content={data.content} />}
-                {data.kind === 1063 && <Kind1063 metadata={data.tags} />}
                 <NoteMetadata id={data.event_id || id} eventPubkey={data.pubkey} />
               </div>
             </div>
