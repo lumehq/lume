@@ -2,6 +2,7 @@ import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ChevronDownIcon, VerticalDotsIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
@@ -79,7 +80,15 @@ export function User({
             user?.display_name ||
             shortenKey(pubkey)}
         </h5>
-        <span className="leading-none text-zinc-500">{createdAt}</span>
+        <div className="inline-flex items-center gap-2">
+          <span className="leading-none text-zinc-500">{createdAt}</span>
+          <button
+            type="button"
+            className="inline-flex h-5 w-max items-center justify-center rounded px-1 hover:bg-zinc-800"
+          >
+            <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-zinc-200" />
+          </button>
+        </div>
       </div>
       <Transition
         as={Fragment}

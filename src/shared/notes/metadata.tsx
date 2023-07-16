@@ -63,7 +63,7 @@ export function NoteMetadata({ id }: { id: string }) {
   );
 
   const block = useMutation({
-    mutationFn: (data: any) => {
+    mutationFn: (data: { kind: number; title: string; content: string }) => {
       return createBlock(data.kind, data.title, data.content);
     },
     onSuccess: () => {

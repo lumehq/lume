@@ -31,7 +31,7 @@ export function SubNote({ id }: { id: string }) {
           <div className="w-11 shrink-0" />
           <div className="flex-1">
             <NoteContent content={data.content} />
-            <NoteActions id={data.id} eventPubkey={data.pubkey} />
+            <NoteActions id={data.event_id} pubkey={data.pubkey} />
           </div>
         </div>
       </div>

@@ -87,18 +87,10 @@ export function Post() {
     let tags: string[][] = [];
 
     if (reply.id && reply.pubkey) {
-      if (reply.root && reply.root !== reply.id) {
-        tags = [
-          ['e', reply.id, FULL_RELAYS[0], 'root'],
-          ['e', reply.root, FULL_RELAYS[0], 'reply'],
-          ['p', reply.pubkey],
-        ];
-      } else {
-        tags = [
-          ['e', reply.id, FULL_RELAYS[0], 'root'],
-          ['p', reply.pubkey],
-        ];
-      }
+      tags = [
+        ['e', reply.id, FULL_RELAYS[0], 'reply'],
+        ['p', reply.pubkey],
+      ];
     } else {
       tags = [];
     }

@@ -25,11 +25,7 @@ export function NoteKindUnsupport({ event }: { event: LumeEvent }) {
                   <p>{event.content.toString()}</p>
                 </div>
               </div>
-              <NoteActions
-                id={event.event_id}
-                rootID={event.parent_id}
-                eventPubkey={event.pubkey}
-              />
+              <NoteActions id={event.event_id} pubkey={event.pubkey} />
             </div>
           </div>
           <NoteMetadata id={event.event_id} />

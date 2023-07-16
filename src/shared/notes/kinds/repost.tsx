@@ -43,11 +43,7 @@ export function Repost({ event }: { event: LumeEvent }) {
             <div className="w-11 shrink-0" />
             <div className="flex-1">
               <NoteContent content={data.content} />
-              <NoteActions
-                id={event.event_id}
-                rootID={event.parent_id}
-                eventPubkey={event.pubkey}
-              />
+              <NoteActions id={event.event_id} pubkey={event.pubkey} />
             </div>
           </div>
           <NoteMetadata id={event.event_id} />
