@@ -34,7 +34,7 @@ export function NoteContent({
               return (
                 <button
                   type="button"
-                  className="rounded bg-zinc-800 px-2 py-px text-sm font-normal text-orange-400 no-underline hover:bg-orange-100 hover:text-orange-500"
+                  className="rounded bg-zinc-800 px-2 py-px text-sm font-normal text-orange-400 no-underline hover:bg-zinc-700 hover:text-orange-500"
                 >
                   {key.slice(3)}
                 </button>
