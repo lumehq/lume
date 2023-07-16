@@ -3,7 +3,7 @@ import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
 import { getParentID } from '@utils/transform';
-import { LumeEvent } from '@utils/types';
+import { Chats, LumeEvent } from '@utils/types';
 
 let db: null | Database = null;
 
@@ -295,11 +295,30 @@ export async function getChannelUsers(channel_id: string) {
 export async function getChats() {
   const db = await connect();
   const account = await getActiveAccount();
-  const result: any = await db.select(
+  const follows =
+    typeof account.follows === 'string' ? JSON.parse(account.follows) : account.follows;
+
+  const chats: { follows: Array<Chats> | null; unknown: number } = {
+    follows: [],
+    unknown: 0,
+  };
+
+  let result: Array<Chats> = await db.select(
     `SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${account.pubkey}" ORDER BY created_at DESC;`
   );
-  const newArr: any = result.map((v) => ({ ...v, new_messages: 0 }));
-  return newArr;
+
+  result = result.map((v) => ({ ...v, new_messages: 0 }));
+  result = result.sort((a, b) => a.new_messages - b.new_messages);
+
+  chats.follows = result.filter((el) => {
+    return follows.some((i) => {
+      return i === el.sender_pubkey;
+    });
+  });
+
+  chats.unknown = result.length - chats.follows.length;
+
+  return chats;
 }
 
 // get chat messages
