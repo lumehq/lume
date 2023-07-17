@@ -9,11 +9,11 @@ import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { LumeEvent } from '@utils/types';
+import { Block, LumeEvent } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
 
-export function FeedBlock({ params }: { params: any }) {
+export function FeedBlock({ params }: { params: Block }) {
   const queryClient = useQueryClient();
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -24,7 +24,7 @@ export function FeedBlock({ params }: { params: any }) {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
+  const notes = data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : [];
   const parentRef = useRef();
 
   const rowVirtualizer = useVirtualizer({
@@ -161,9 +161,7 @@ export function FeedBlock({ params }: { params: any }) {
                 }px)`,
               }}
             >
-              {rowVirtualizer
-                .getVirtualItems()
-                .map((virtualRow) => renderItem(virtualRow.index))}
+              {itemsVirtualizer.map((virtualRow) => renderItem(virtualRow.index))}
             </div>
           </div>
         )}

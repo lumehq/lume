@@ -36,7 +36,7 @@ export function FollowingBlock() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
+  const notes = data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : [];
   const parentRef = useRef();
 
   const rowVirtualizer = useVirtualizer({
@@ -198,9 +198,7 @@ export function FollowingBlock() {
                 }px)`,
               }}
             >
-              {rowVirtualizer
-                .getVirtualItems()
-                .map((virtualRow) => renderItem(virtualRow.index))}
+              {itemsVirtualizer.map((virtualRow) => renderItem(virtualRow.index))}
             </div>
           </div>
         )}

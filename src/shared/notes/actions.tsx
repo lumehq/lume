@@ -9,6 +9,8 @@ import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
+import { BLOCK_KINDS } from '@stores/constants';
+
 export function NoteActions({ id, pubkey }: { id: string; pubkey: string }) {
   const queryClient = useQueryClient();
 
@@ -22,7 +24,7 @@ export function NoteActions({ id, pubkey }: { id: string; pubkey: string }) {
   });
 
   const openThread = (thread: string) => {
-    block.mutate({ kind: 2, title: 'Thread', content: thread });
+    block.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
   };
 
   return (

@@ -7,7 +7,9 @@ import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-export function ImageBlock({ params }: { params: any }) {
+import { Block } from '@utils/types';
+
+export function ImageBlock({ params }: { params: Block }) {
   const queryClient = useQueryClient();
 
   const block = useMutation({

@@ -5,7 +5,6 @@ import { useLiveThread } from '@app/space/hooks/useLiveThread';
 
 import { getNoteByID, removeBlock } from '@libs/storage';
 
-import { NoteMetadata } from '@shared/notes/metadata';
 import { NoteReplyForm } from '@shared/notes/replies/form';
 import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
@@ -14,8 +13,9 @@ import { User } from '@shared/user';
 
 import { useAccount } from '@utils/hooks/useAccount';
 import { parser } from '@utils/parser';
+import { Block } from '@utils/types';
 
-export function ThreadBlock({ params }: { params: any }) {
+export function ThreadBlock({ params }: { params: Block }) {
   useLiveThread(params.content);
 
   const queryClient = useQueryClient();

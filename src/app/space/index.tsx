@@ -1,14 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import { AddBlock } from '@app/space/components/add';
 import { FeedBlock } from '@app/space/components/blocks/feed';
 import { FollowingBlock } from '@app/space/components/blocks/following';
+import { HashtagBlock } from '@app/space/components/blocks/hashtag';
 import { ImageBlock } from '@app/space/components/blocks/image';
 import { ThreadBlock } from '@app/space/components/blocks/thread';
 
 import { getBlocks } from '@libs/storage';
 
 import { LoaderIcon } from '@shared/icons';
+
+import { Block } from '@utils/types';
 
 export function SpaceScreen() {
   const {
@@ -28,6 +32,24 @@ export function SpaceScreen() {
     }
   );
 
+  const renderBlock = useCallback(
+    (block: Block) => {
+      switch (block.kind) {
+        case 0:
+          return <ImageBlock key={block.id} params={block} />;
+        case 1:
+          return <FeedBlock key={block.id} params={block} />;
+        case 2:
+          return <ThreadBlock key={block.id} params={block} />;
+        case 3:
+          return <HashtagBlock key={block.id} params={block} />;
+        default:
+          break;
+      }
+    },
+    [blocks]
+  );
+
   return (
     <div className="scrollbar-hide flex h-full w-full flex-nowrap overflow-x-auto overflow-y-hidden">
       <FollowingBlock />
@@ -43,18 +65,7 @@ export function SpaceScreen() {
           </div>
         </div>
       ) : (
-        blocks.map((block: { kind: number; id: string }) => {
-          switch (block.kind) {
-            case 0:
-              return <ImageBlock key={block.id} params={block} />;
-            case 1:
-              return <FeedBlock key={block.id} params={block} />;
-            case 2:
-              return <ThreadBlock key={block.id} params={block} />;
-            default:
-              break;
-          }
-        })
+        blocks.map((block: Block) => renderBlock(block))
       )}
       {isFetching && (
         <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
