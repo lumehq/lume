@@ -1,7 +1,7 @@
 {
   "name": "lume",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -46,8 +46,8 @@
     "remark-gfm": "^3.0.1",
     "slate": "^0.94.1",
     "slate-history": "^0.93.0",
-    "slate-react": "^0.94.2",
-    "tailwind-merge": "^1.13.2",
+    "slate-react": "^0.97.2",
+    "tailwind-merge": "^1.14.0",
     "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
     "tauri-plugin-stronghold-api": "github:tauri-apps/tauri-plugin-stronghold#v1",

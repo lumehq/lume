@@ -92,17 +92,17 @@ dependencies:
     specifier: ^0.93.0
     version: 0.93.0(slate@0.94.1)
   slate-react:
-    specifier: ^0.94.2
-    version: 0.94.2(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1)
+    specifier: ^0.97.2
+    version: 0.97.2(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1)
   tailwind-merge:
-    specifier: ^1.13.2
-    version: 1.13.2
+    specifier: ^1.14.0
+    version: 1.14.0
   tauri-plugin-autostart-api:
     specifier: github:tauri-apps/tauri-plugin-autostart#v1
     version: github.com/tauri-apps/tauri-plugin-autostart/59c48c642cea6a854bb1f4181972ad0bfbeb0c75
   tauri-plugin-sql-api:
     specifier: github:tauri-apps/tauri-plugin-sql
-    version: github.com/tauri-apps/tauri-plugin-sql/f8125e517d9de2a567a2eaa14f7b1b32e456278b
+    version: github.com/tauri-apps/tauri-plugin-sql/953f2ab9f05ef131b55af065b0596c4c2136b37e
   tauri-plugin-stronghold-api:
     specifier: github:tauri-apps/tauri-plugin-stronghold#v1
     version: github.com/tauri-apps/tauri-plugin-stronghold/a2dbe1f937f2f2a1fd27d5a4a7a87ec7b7d1f5d4
@@ -5784,8 +5784,8 @@ packages:
       slate: 0.94.1
     dev: false
 
-  /slate-react@0.94.2(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1):
-    resolution: {integrity: sha512-4wDSuTuGBkdQ609CS55uc2Yhfa5but21usBgAtCVhPJQazL85kzN2vUUYTmGb7d/mpP9tdnJiVPopIyhqlRJ8Q==}
+  /slate-react@0.97.2(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1):
+    resolution: {integrity: sha512-jVUbTU+0MnbT7l09thQnWfM7gneTFGMsybmXX9utryQnbttKwIo3NynPI6chGwiz0N4/6k5Yb4fc8N/eZkYHUw==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -6061,8 +6061,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /tailwind-merge@1.13.2:
-    resolution: {integrity: sha512-R2/nULkdg1VR/EL4RXg4dEohdoxNUJGLMnWIQnPKL+O9Twu7Cn3Rxi4dlXkDzZrEGtR+G+psSXFouWlpTyLhCQ==}
+  /tailwind-merge@1.14.0:
+    resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
     dev: false
 
   /tailwindcss@3.3.3:
@@ -6722,8 +6722,8 @@ packages:
       '@tauri-apps/api': 1.4.0
     dev: false
 
-  github.com/tauri-apps/tauri-plugin-sql/f8125e517d9de2a567a2eaa14f7b1b32e456278b:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/f8125e517d9de2a567a2eaa14f7b1b32e456278b}
+  github.com/tauri-apps/tauri-plugin-sql/953f2ab9f05ef131b55af065b0596c4c2136b37e:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/953f2ab9f05ef131b55af065b0596c4c2136b37e}
     name: tauri-plugin-sql-api
     version: 0.0.0
     dependencies:
