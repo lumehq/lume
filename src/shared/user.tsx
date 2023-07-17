@@ -72,7 +72,7 @@ export function User({
       >
         <h5
           className={`truncate font-semibold leading-none text-zinc-100 ${
-            size === 'small' ? 'max-w-[10rem]' : 'max-w-[18rem]'
+            size === 'small' ? 'max-w-[10rem]' : 'max-w-[15rem]'
           }`}
         >
           {user?.nip05?.toLowerCase() ||

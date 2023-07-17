@@ -77,4 +77,5 @@ export const BLOCK_KINDS = {
   thread: 2,
   hashtag: 3,
   exchange_rate: 4,
+  user: 5,
 };

@@ -3,7 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 // import { useLiveThread } from '@app/space/hooks/useLiveThread';
 import { removeBlock } from '@libs/storage';
 
-import { NoteContent, NoteStats, ThreadUser } from '@shared/notes';
+import {
+  NoteActions,
+  NoteContent,
+  NoteReplyForm,
+  NoteStats,
+  ThreadUser,
+} from '@shared/notes';
 import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
@@ -46,12 +52,14 @@ export function ThreadBlock({ params }: { params: Block }) {
                 <NoteContent content={data.content} />
               </div>
               <div>
+                <NoteActions id={data.id} pubkey={data.pubkey} noOpenThread={true} />
                 <NoteStats id={data.id} />
               </div>
             </div>
           </div>
         )}
         <div className="px-3">
+          <NoteReplyForm id={params.content} />
           <RepliesList id={params.content} />
         </div>
       </div>

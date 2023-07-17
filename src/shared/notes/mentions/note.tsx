@@ -8,6 +8,8 @@ import { createBlock } from '@libs/storage';
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
+import { BLOCK_KINDS } from '@stores/constants';
+
 import { useEvent } from '@utils/hooks/useEvent';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
@@ -15,7 +17,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   const queryClient = useQueryClient();
   const block = useMutation({
-    mutationFn: (data: any) => {
+    mutationFn: (data: { kind: number; title: string; content: string }) => {
       return createBlock(data.kind, data.title, data.content);
     },
     onSuccess: () => {
@@ -26,7 +28,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const openThread = (event: any, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      block.mutate({ kind: 2, title: 'Thread', content: thread });
+      block.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }

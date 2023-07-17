@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { UserBlock } from '@app/space//components/blocks/user';
 import { AddBlock } from '@app/space/components/add';
 import { FeedBlock } from '@app/space/components/blocks/feed';
 import { FollowingBlock } from '@app/space/components/blocks/following';
@@ -43,6 +44,8 @@ export function SpaceScreen() {
           return <ThreadBlock key={block.id} params={block} />;
         case 3:
           return <HashtagBlock key={block.id} params={block} />;
+        case 5:
+          return <UserBlock key={block.id} params={block} />;
         default:
           break;
       }

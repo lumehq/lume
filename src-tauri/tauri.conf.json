@@ -62,7 +62,8 @@
 			},
 			"window": {
 				"startDragging": true,
-				"close": true
+				"close": true,
+				"create": true
 			},
 			"process": {
 				"all": false,

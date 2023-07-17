@@ -1,27 +1,17 @@
 import { useState } from 'react';
 
 import { Button } from '@shared/button';
-import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
-import { useProfile } from '@utils/hooks/useProfile';
 import { usePublish } from '@utils/hooks/usePublish';
-import { shortenKey } from '@utils/shortenKey';
 
-export function NoteReplyForm({
-  rootID,
-  userPubkey,
-}: {
-  rootID: string;
-  userPubkey: string;
-}) {
+export function NoteReplyForm({ id }: { id: string }) {
   const publish = usePublish();
-  const { status, user } = useProfile(userPubkey);
   const [value, setValue] = useState('');
 
   const submit = () => {
-    const tags = [['e', rootID, FULL_RELAYS[0], 'root']];
+    const tags = [['e', id, FULL_RELAYS[0], 'reply']];
 
     // publish event
     publish({ content: value, kind: 1, tags });
@@ -48,22 +38,6 @@ export function NoteReplyForm({
           </div>
         ) : (
           <div className="flex w-full items-center justify-between">
-            <div className="inline-flex items-center gap-2">
-              <div className="relative h-9 w-9 shrink-0 rounded">
-                <Image
-                  src={user.image}
-                  fallback={DEFAULT_AVATAR}
-                  alt={userPubkey}
-                  className="h-9 w-9 rounded-md bg-white object-cover"
-                />
-              </div>
-              <div>
-                <p className="mb-px text-sm leading-none text-zinc-400">Reply as</p>
-                <p className="text-sm font-medium leading-none text-zinc-100">
-                  {user.nip05 || user.name || shortenKey(userPubkey)}
-                </p>
-              </div>
-            </div>
             <div className="flex items-center gap-2">
               <Button
                 onClick={() => submit()}
