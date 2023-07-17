@@ -47,7 +47,7 @@ export function arrayObjToPureArr(arr: any) {
 }
 
 // get parent id from event tags
-export function getParentID(arr: string[], fallback: string) {
+export function getParentID(arr: string[][], fallback: string) {
   const tags = destr(arr);
   let parentID = fallback;
 

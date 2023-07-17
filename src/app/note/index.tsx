@@ -1,9 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
 import { useLiveThread } from '@app/space/hooks/useLiveThread';
-
-import { getNoteByID } from '@libs/storage';
 
 import { NoteMetadata } from '@shared/notes/metadata';
 import { NoteReplyForm } from '@shared/notes/replies/form';
@@ -12,16 +9,12 @@ import { NoteSkeleton } from '@shared/notes/skeleton';
 import { User } from '@shared/user';
 
 import { useAccount } from '@utils/hooks/useAccount';
-import { parser } from '@utils/parser';
+import { useEvent } from '@utils/hooks/useEvent';
 
 export function NoteScreen() {
   const { id } = useParams();
   const { account } = useAccount();
-  const { status, data } = useQuery(['thread', id], async () => {
-    const res = await getNoteByID(id);
-    res['content'] = parser(res);
-    return res;
-  });
+  const { status, data } = useEvent(id);
 
   useLiveThread(id);
 
@@ -39,7 +32,7 @@ export function NoteScreen() {
             <div className="rounded-md bg-zinc-900 px-5 pt-5">
               <User pubkey={data.pubkey} time={data.created_at} />
               <div className="mt-3">
-                <NoteMetadata id={data.event_id || id} eventPubkey={data.pubkey} />
+                <NoteMetadata id={data.event_id || id} />
               </div>
             </div>
             <div className="mt-3 rounded-md bg-zinc-900">
@@ -48,7 +41,7 @@ export function NoteScreen() {
           </div>
         )}
         <div className="px-3">
-          <RepliesList parent_id={id} />
+          <RepliesList id={id} />
         </div>
       </div>
     </div>

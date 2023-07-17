@@ -169,7 +169,7 @@ export async function createNote(
   event_id: string,
   pubkey: string,
   kind: number,
-  tags: string[],
+  tags: string[][],
   content: string,
   created_at: number
 ) {
@@ -186,7 +186,7 @@ export async function createNote(
 // get note replies
 export async function getReplies(parent_id: string) {
   const db = await connect();
-  const result: any = await db.select(
+  const result: Array<LumeEvent> = await db.select(
     `SELECT * FROM replies WHERE parent_id = "${parent_id}" ORDER BY created_at DESC;`
   );
   return result;
