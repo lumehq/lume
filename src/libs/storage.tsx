@@ -1,9 +1,8 @@
-import { NDKTag, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
 import { getParentID } from '@utils/transform';
-import { Chats, LumeEvent } from '@utils/types';
+import { Account, Block, Chats, LumeEvent } from '@utils/types';
 
 let db: null | Database = null;
 
@@ -20,7 +19,9 @@ export async function connect(): Promise<Database> {
 // get active account
 export async function getActiveAccount() {
   const db = await connect();
-  const result: any = await db.select('SELECT * FROM accounts WHERE is_active = 1;');
+  const result: Array<Account> = await db.select(
+    'SELECT * FROM accounts WHERE is_active = 1;'
+  );
   if (result.length > 0) {
     return result[0];
   } else {
@@ -31,9 +32,10 @@ export async function getActiveAccount() {
 // get all accounts
 export async function getAccounts() {
   const db = await connect();
-  return await db.select(
+  const result: Array<Account> = await db.select(
     'SELECT * FROM accounts WHERE is_active = 0 ORDER BY created_at DESC;'
   );
+  return result;
 }
 
 // create account
@@ -433,15 +435,19 @@ export async function updateItemInBlacklist(content: string, status: number) {
 // get all blocks
 export async function getBlocks() {
   const db = await connect();
-  const activeAccount = await getActiveAccount();
-  const result: any = await db.select(
-    `SELECT * FROM blocks WHERE account_id = "${activeAccount.id}" ORDER BY created_at DESC;`
+  const account = await getActiveAccount();
+  const result: Array<Block> = await db.select(
+    `SELECT * FROM blocks WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
   );
   return result;
 }
 
 // create block
-export async function createBlock(kind: number, title: string, content: any) {
+export async function createBlock(
+  kind: number,
+  title: string,
+  content: string | string[]
+) {
   const db = await connect();
   const activeAccount = await getActiveAccount();
   return await db.execute(

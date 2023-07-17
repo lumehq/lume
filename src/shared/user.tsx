@@ -2,7 +2,7 @@ import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ChevronDownIcon, VerticalDotsIcon } from '@shared/icons';
+import { VerticalDotsIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';

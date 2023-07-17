@@ -65,7 +65,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
                 },
               }}
             >
-              {data.content.parsed.length > 200
+              {data?.content?.parsed?.length > 200
                 ? data.content.parsed.substring(0, 200) + '...'
                 : data.content.parsed}
             </ReactMarkdown>

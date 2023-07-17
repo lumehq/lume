@@ -5,6 +5,23 @@ export interface LumeEvent extends NDKEvent {
   parent_id: string;
 }
 
+export interface Account {
+  id: number;
+  npub: string;
+  pubkey: string;
+  privkey: string;
+  follows: string[] | string;
+  is_active: number;
+}
+
+export interface Block {
+  id: string;
+  account_id: number;
+  kind: number;
+  title: string;
+  content: string;
+}
+
 export interface Chats {
   id: string;
   event_id: string;

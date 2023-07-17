@@ -72,8 +72,8 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="select-none rounded-md bg-zinc-800/80 px-1 py-1 text-sm leading-none text-zinc-100 backdrop-blur-lg will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade"
-          sideOffset={5}
+          className="select-none rounded-md border-t border-zinc-600/50 bg-zinc-700 px-1 py-1 text-sm leading-none text-zinc-100 will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade"
+          sideOffset={0}
           side="top"
         >
           <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               />
             </button>
           </div>
-          <Popover.Arrow className="fill-zinc-800" />
+          <Popover.Arrow className="fill-zinc-700" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
