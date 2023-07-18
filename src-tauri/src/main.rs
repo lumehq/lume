@@ -107,6 +107,12 @@ fn main() {
               sql: include_str!("../migrations/20230619082415_add_replies.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230718072634,
+              description: "clean up",
+              sql: include_str!("../migrations/20230718072634_clean_up_old_tables.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

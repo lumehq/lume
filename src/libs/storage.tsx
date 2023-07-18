@@ -2,7 +2,7 @@ import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
 import { getParentID } from '@utils/transform';
-import { Account, Block, Chats, LumeEvent } from '@utils/types';
+import { Account, Block, Chats, LumeEvent, Settings } from '@utils/types';
 
 let db: null | Database = null;
 
@@ -84,7 +84,7 @@ export async function countTotalChannels() {
 // count total notes
 export async function countTotalNotes() {
   const db = await connect();
-  const result = await db.select(
+  const result: Array<{ total: string }> = await db.select(
     'SELECT COUNT(*) AS "total" FROM notes WHERE kind IN (1, 6);'
   );
   return parseInt(result[0].total);
@@ -198,7 +198,7 @@ export async function createReplyNote(
   event_id: string,
   pubkey: string,
   kind: number,
-  tags: any,
+  tags: string[][],
   content: string,
   created_at: number
 ) {
@@ -328,7 +328,7 @@ export async function getChatMessages(receiver_pubkey: string, sender_pubkey: st
   const db = await connect();
   let receiver = [];
 
-  const sender: any = await db.select(
+  const sender: Array<Chats> = await db.select(
     `SELECT * FROM chats WHERE sender_pubkey = "${sender_pubkey}" AND receiver_pubkey = "${receiver_pubkey}";`
   );
 
@@ -365,7 +365,9 @@ export async function createChat(
 // get setting
 export async function getSetting(key: string) {
   const db = await connect();
-  const result = await db.select(`SELECT value FROM settings WHERE key = "${key}";`);
+  const result: Array<Settings> = await db.select(
+    `SELECT value FROM settings WHERE key = "${key}";`
+  );
   return result[0]?.value;
 }
 
@@ -378,7 +380,9 @@ export async function updateSetting(key: string, value: string | number) {
 // get last login
 export async function getLastLogin() {
   const db = await connect();
-  const result = await db.select(`SELECT value FROM settings WHERE key = "last_login";`);
+  const result: Array<Settings> = await db.select(
+    `SELECT value FROM settings WHERE key = "last_login";`
+  );
   if (result[0]) {
     return parseInt(result[0].value);
   } else {
@@ -391,44 +395,6 @@ export async function updateLastLogin(value: number) {
   const db = await connect();
   return await db.execute(
     `UPDATE settings SET value = ${value} WHERE key = "last_login";`
-  );
-}
-
-// get blacklist by kind and account id
-export async function getBlacklist(account_id: number, kind: number) {
-  const db = await connect();
-  return await db.select(
-    `SELECT * FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}";`
-  );
-}
-
-// get active blacklist by kind and account id
-export async function getActiveBlacklist(account_id: number, kind: number) {
-  const db = await connect();
-  return await db.select(
-    `SELECT content FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}" AND status = 1;`
-  );
-}
-
-// add to blacklist
-export async function addToBlacklist(
-  account_id: number,
-  content: string,
-  kind: number,
-  status?: number
-) {
-  const db = await connect();
-  return await db.execute(
-    'INSERT OR IGNORE INTO blacklist (account_id, content, kind, status) VALUES (?, ?, ?, ?);',
-    [account_id, content, kind, status || 1]
-  );
-}
-
-// update item in blacklist
-export async function updateItemInBlacklist(content: string, status: number) {
-  const db = await connect();
-  return await db.execute(
-    `UPDATE blacklist SET status = "${status}" WHERE content = "${content}";`
   );
 }
 

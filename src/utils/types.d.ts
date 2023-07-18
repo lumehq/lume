@@ -32,3 +32,9 @@ export interface Chats {
   created_at: number;
   new_messages: number;
 }
+
+export interface Settings {
+  id: string;
+  key: string;
+  value: string;
+}
