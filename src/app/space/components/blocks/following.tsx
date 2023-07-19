@@ -86,7 +86,7 @@ export function FollowingBlock() {
           if (root || reply) {
             return (
               <div
-                key={note.event_id || note.id}
+                key={(root || reply) + (note.event_id || note.id)}
                 data-index={index}
                 ref={rowVirtualizer.measureElement}
               >

@@ -53,7 +53,7 @@ export async function createAccount(
   if (res) {
     await createBlock(
       0,
-      'Preserve your freedom',
+      'Have fun together!',
       'https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv'
     );
   }

@@ -27,29 +27,36 @@ export function useEvent(id: string, fallback?: string) {
             embed.content,
             embed.created_at
           );
+          return embed;
+        } else {
+          const event = await ndk.fetchEvent(id);
+          if (event) {
+            await createNote(
+              event.id,
+              event.pubkey,
+              event.kind,
+              event.tags,
+              event.content,
+              event.created_at
+            );
+            event['event_id'] = event.id;
+            if (event.kind === 1) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              event['content'] = parser(event);
+            }
+            return event;
+          } else {
+            return null;
+          }
         }
-        const event = await ndk.fetchEvent(id);
-        await createNote(
-          event.id,
-          event.pubkey,
-          event.kind,
-          event.tags,
-          event.content,
-          event.created_at
-        );
-        event['event_id'] = event.id;
-        if (event.kind === 1) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          event['content'] = parser(event);
-        }
-        return event;
       }
     },
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      staleTime: Infinity,
     }
   );
 
