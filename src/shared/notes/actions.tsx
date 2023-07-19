@@ -23,7 +23,7 @@ export function NoteActions({
 
   return (
     <Tooltip.Provider>
-      <div className="-ml-1 mt-4 inline-flex w-full items-center">
+      <div className="-ml-1 mt-2 inline-flex w-full items-center">
         <div className="inline-flex items-center gap-2">
           <NoteReply id={id} pubkey={pubkey} />
           <NoteReaction id={id} pubkey={pubkey} />

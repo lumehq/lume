@@ -29,7 +29,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       onKeyDown={(e) => openThread(e, id)}
       role="button"
       tabIndex={0}
-      className="mt-3 rounded-lg border-t border-zinc-700/50 bg-zinc-800/50 px-3 py-3"
+      className="mb-2 mt-3 rounded-lg border-t border-zinc-700/50 bg-zinc-800/50 px-3 py-3"
     >
       {status === 'loading' ? (
         <NoteSkeleton />

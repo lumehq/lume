@@ -10,6 +10,7 @@ export * from './preview/video';
 export * from './replies/form';
 export * from './replies/item';
 export * from './replies/list';
+export * from './replies/sub';
 export * from './kinds/kind1';
 export * from './kinds/kind1063';
 export * from './metadata';

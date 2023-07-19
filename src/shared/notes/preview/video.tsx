@@ -2,7 +2,7 @@ import ReactPlayer from 'react-player/es6';
 
 export function VideoPreview({ urls }: { urls: string[] }) {
   return (
-    <div className="relative mt-3 flex w-full max-w-[420px] flex-col gap-2">
+    <div className="relative mb-2 mt-3 flex w-full max-w-[420px] flex-col gap-2">
       {urls.map((url) => (
         <ReactPlayer
           key={url}

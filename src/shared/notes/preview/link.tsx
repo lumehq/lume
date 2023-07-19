@@ -7,7 +7,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
   const domain = new URL(urls[0]);
 
   return (
-    <div className="mt-3 max-w-[420px] overflow-hidden rounded-lg bg-zinc-800">
+    <div className="mb-2 mt-3 max-w-[420px] overflow-hidden rounded-lg bg-zinc-800">
       {status === 'loading' ? (
         <div className="flex flex-col">
           <div className="h-44 w-full animate-pulse bg-zinc-700" />
