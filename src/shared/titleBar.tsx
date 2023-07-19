@@ -1,12 +1,10 @@
 import { CancelIcon } from '@shared/icons';
 
-export function TitleBar({
-  title,
-  onClick = undefined,
-}: {
-  title: string;
-  onClick?: () => void;
-}) {
+import { useBlock } from '@utils/hooks/useBlock';
+
+export function TitleBar({ id, title }: { id?: string; title: string }) {
+  const { remove } = useBlock();
+
   return (
     <div
       data-tauri-drag-region
@@ -14,10 +12,10 @@ export function TitleBar({
     >
       <div className="w-6" />
       <h3 className="text-sm font-medium text-zinc-200">{title}</h3>
-      {onClick ? (
+      {id ? (
         <button
           type="button"
-          onClick={onClick}
+          onClick={() => remove.mutate(id)}
           className="inline-flex h-6 w-6 shrink translate-y-8 transform items-center justify-center rounded transition-transform duration-150 ease-in-out hover:bg-zinc-900 group-hover:translate-y-0"
         >
           <CancelIcon width={12} height={12} className="text-zinc-300" />

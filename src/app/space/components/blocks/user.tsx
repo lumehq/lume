@@ -1,11 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { UserFeed } from '@app/user/components/feed';
 import { UserMetadata } from '@app/user/components/metadata';
-
-import { removeBlock } from '@libs/storage';
 
 import { ZapIcon } from '@shared/icons';
 import { Image } from '@shared/image';
@@ -19,21 +16,10 @@ import { shortenKey } from '@utils/shortenKey';
 import { Block } from '@utils/types';
 
 export function UserBlock({ params }: { params: Block }) {
-  const queryClient = useQueryClient();
-
   const { user } = useProfile(params.content);
   const { status, userFollows, follow, unfollow } = useSocial();
 
   const [followed, setFollowed] = useState(false);
-
-  const block = useMutation({
-    mutationFn: (id: string) => {
-      return removeBlock(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
 
   const followUser = (pubkey: string) => {
     try {
@@ -67,7 +53,7 @@ export function UserBlock({ params }: { params: Block }) {
 
   return (
     <div className="w-[400px] shrink-0 border-r border-zinc-900">
-      <TitleBar title={params.title} onClick={() => block.mutate(params.id)} />
+      <TitleBar id={params.id} title={params.title} />
       <div className="scrollbar-hide flex h-full w-full flex-col gap-1.5 overflow-y-auto pb-20 pt-1.5">
         <div className="px-3 pt-1.5">
           <Image

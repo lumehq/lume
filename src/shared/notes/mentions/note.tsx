@@ -1,34 +1,23 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
-import { createBlock } from '@libs/storage';
 
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { BLOCK_KINDS } from '@stores/constants';
 
+import { useBlock } from '@utils/hooks/useBlock';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
+  const { add } = useBlock();
   const { status, data } = useEvent(id);
 
-  const queryClient = useQueryClient();
-  const block = useMutation({
-    mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createBlock(data.kind, data.title, data.content);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
-  const openThread = (event: any, thread: string) => {
+  const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      block.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
+      add.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }

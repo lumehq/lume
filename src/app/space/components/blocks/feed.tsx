@@ -1,8 +1,8 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useEffect, useRef } from 'react';
 
-import { getNotesByAuthors, removeBlock } from '@libs/storage';
+import { getNotesByAuthors } from '@libs/storage';
 
 import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
 import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
@@ -14,7 +14,6 @@ import { Block, LumeEvent } from '@utils/types';
 const ITEM_PER_PAGE = 10;
 
 export function FeedBlock({ params }: { params: Block }) {
-  const queryClient = useQueryClient();
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed', params.content],
@@ -25,8 +24,8 @@ export function FeedBlock({ params }: { params: Block }) {
     });
 
   const notes = data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : [];
-  const parentRef = useRef();
 
+  const parentRef = useRef();
   const rowVirtualizer = useVirtualizer({
     count: hasNextPage ? notes.length + 1 : notes.length,
     getScrollElement: () => parentRef.current,
@@ -47,15 +46,6 @@ export function FeedBlock({ params }: { params: Block }) {
       fetchNextPage();
     }
   }, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
-
-  const block = useMutation({
-    mutationFn: (id: string) => {
-      return removeBlock(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
 
   const renderItem = useCallback(
     (index: string | number) => {
@@ -124,7 +114,7 @@ export function FeedBlock({ params }: { params: Block }) {
 
   return (
     <div className="w-[400px] shrink-0 border-r border-zinc-900">
-      <TitleBar title={params.title} onClick={() => block.mutate(params.id)} />
+      <TitleBar id={params.id} title={params.title} />
       <div
         ref={parentRef}
         className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"

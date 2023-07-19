@@ -1,7 +1,4 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { createBlock } from '@libs/storage';
 
 import { ThreadIcon } from '@shared/icons';
 import { NoteReaction } from '@shared/notes/actions/reaction';
@@ -10,6 +7,8 @@ import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
 import { BLOCK_KINDS } from '@stores/constants';
+
+import { useBlock } from '@utils/hooks/useBlock';
 
 export function NoteActions({
   id,
@@ -20,20 +19,7 @@ export function NoteActions({
   pubkey: string;
   noOpenThread?: boolean;
 }) {
-  const queryClient = useQueryClient();
-
-  const block = useMutation({
-    mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createBlock(data.kind, data.title, data.content);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
-  const openThread = (thread: string) => {
-    block.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
-  };
+  const { add } = useBlock();
 
   return (
     <Tooltip.Provider>
@@ -51,7 +37,13 @@ export function NoteActions({
               <Tooltip.Trigger asChild>
                 <button
                   type="button"
-                  onClick={() => openThread(id)}
+                  onClick={() =>
+                    add.mutate({
+                      kind: BLOCK_KINDS.thread,
+                      title: 'Thread',
+                      content: id,
+                    })
+                  }
                   className="group inline-flex h-7 w-7 items-center justify-center"
                 >
                   <ThreadIcon className="h-5 w-5 text-zinc-300 group-hover:text-fuchsia-400" />

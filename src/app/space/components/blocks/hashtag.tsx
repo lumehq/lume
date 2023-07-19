@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
-import { removeBlock } from '@libs/storage';
 
 import { NoteKind_1, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
@@ -12,9 +11,6 @@ import { nHoursAgo } from '@utils/date';
 import { Block, LumeEvent } from '@utils/types';
 
 export function HashtagBlock({ params }: { params: Block }) {
-  const queryClient = useQueryClient();
-  const parentRef = useRef();
-
   const { relayUrls, fetcher } = useNDK();
   const { status, data } = useQuery(['hashtag', params.content], async () => {
     const events = (await fetcher.fetchAllEvents(
@@ -25,15 +21,7 @@ export function HashtagBlock({ params }: { params: Block }) {
     return events;
   });
 
-  const block = useMutation({
-    mutationFn: (id: string) => {
-      return removeBlock(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
+  const parentRef = useRef();
   const rowVirtualizer = useVirtualizer({
     count: data ? data.length : 0,
     getScrollElement: () => parentRef.current,
@@ -44,10 +32,7 @@ export function HashtagBlock({ params }: { params: Block }) {
 
   return (
     <div className="w-[400px] shrink-0 border-r border-zinc-900">
-      <TitleBar
-        title={params.title + ' in 48 hours ago'}
-        onClick={() => block.mutate(params.id)}
-      />
+      <TitleBar id={params.id} title={params.title + ' in 48 hours ago'} />
       <div
         ref={parentRef}
         className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"

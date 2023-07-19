@@ -1,18 +1,20 @@
 import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { decode } from 'light-bolt11-decoder';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createBlock, createReplyNote } from '@libs/storage';
+import { createReplyNote } from '@libs/storage';
 
 import { LoaderIcon } from '@shared/icons';
 import { MiniUser } from '@shared/notes/users/mini';
 
+import { BLOCK_KINDS } from '@stores/constants';
+
+import { useBlock } from '@utils/hooks/useBlock';
 import { compactNumber } from '@utils/number';
 
 export function NoteMetadata({ id }: { id: string }) {
-  const queryClient = useQueryClient();
-
+  const { add } = useBlock();
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['note-metadata', id],
@@ -62,19 +64,6 @@ export function NoteMetadata({ id }: { id: string }) {
     { refetchOnWindowFocus: false, refetchOnReconnect: false }
   );
 
-  const block = useMutation({
-    mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createBlock(data.kind, data.title, data.content);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
-  const openThread = (thread: string) => {
-    block.mutate({ kind: 2, title: 'Thread', content: thread });
-  };
-
   if (status === 'loading') {
     return (
       <div className="mb-3 flex items-center gap-3">
@@ -102,7 +91,9 @@ export function NoteMetadata({ id }: { id: string }) {
             <div className="mt-2 inline-flex h-6 items-center gap-2">
               <button
                 type="button"
-                onClick={() => openThread(id)}
+                onClick={() =>
+                  add.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: id })
+                }
                 className="text-zinc-500"
               >
                 <span className="font-semibold text-zinc-300">{data.replies}</span>{' '}
