@@ -35,7 +35,7 @@ export function ThreadUser({ pubkey, time }: { pubkey: string; time: number }) {
             <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-zinc-200" />
           </button>
         </div>
-        <div className="inline-flex items-center gap-2">
+        <div className="mt-1 inline-flex items-center gap-2">
           <span className="leading-none text-zinc-500">{createdAt}</span>
           <span className="leading-none text-zinc-500">·</span>
           <span className="leading-none text-zinc-500">{displayNpub(pubkey, 16)}</span>

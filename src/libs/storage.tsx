@@ -454,11 +454,9 @@ export async function createMetadata(id: string, pubkey: string, content: string
 // get metadata
 export async function getUserMetadata(pubkey: string) {
   const db = await connect();
-  const result = await db.select(
-    `SELECT content, created_at FROM metadata WHERE id = "${pubkey}";`
-  );
+  const result = await db.select(`SELECT * FROM metadata WHERE pubkey = "${pubkey}";`);
   if (result[0]) {
-    return JSON.parse(result[0].content);
+    return result[0];
   } else {
     return null;
   }

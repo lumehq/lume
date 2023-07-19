@@ -6,6 +6,8 @@ import { useNDK } from '@libs/ndk/provider';
 
 import { LoaderIcon } from '@shared/icons';
 
+import { compactNumber } from '@utils/number';
+
 export function NoteStats({ id }: { id: string }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
@@ -59,17 +61,25 @@ export function NoteStats({ id }: { id: string }) {
 
   return (
     <div className="flex h-11 items-center gap-3">
-      <p className="inline-flex h-6 items-center justify-center gap-1 rounded bg-zinc-800 px-2 text-sm">
-        {data.reactions}
-        <span className="text-zinc-400">reactions</span>
+      <p className="text-zinc-500">
+        <span className="font-semibold text-zinc-300">
+          {compactNumber.format(data.reactions)}
+        </span>{' '}
+        reactions
       </p>
-      <p className="inline-flex h-6 items-center justify-center gap-1 rounded bg-zinc-800 px-2 text-sm">
-        {data.reposts}
-        <span className="text-zinc-400">reposts</span>
+      <span className="text-zinc-500">·</span>
+      <p className="text-zinc-500">
+        <span className="font-semibold text-zinc-300">
+          {compactNumber.format(data.reposts)}
+        </span>{' '}
+        reposts
       </p>
-      <p className="inline-flex h-6 items-center justify-center gap-1 rounded bg-zinc-800 px-2 text-sm">
-        {data.zaps}
-        <span className="text-zinc-400">zaps</span>
+      <span className="text-zinc-500">·</span>
+      <p className="text-zinc-500">
+        <span className="font-semibold text-zinc-300">
+          {compactNumber.format(data.zaps)}
+        </span>{' '}
+        zaps
       </p>
     </div>
   );
