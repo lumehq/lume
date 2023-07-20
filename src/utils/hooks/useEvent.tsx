@@ -47,7 +47,7 @@ export function useEvent(id: string, fallback?: string) {
             }
             return event;
           } else {
-            return null;
+            throw new Error('Event not found');
           }
         }
       }

@@ -40,7 +40,7 @@ export function HashtagBlock({ params }: { params: Block }) {
       >
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
+            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 pt-3">
               <NoteSkeleton />
             </div>
           </div>

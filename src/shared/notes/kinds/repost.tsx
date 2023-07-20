@@ -37,16 +37,16 @@ export function Repost({ event }: { event: LumeEvent }) {
         <div className="flex flex-col">
           <div className="isolate flex flex-col -space-y-4 overflow-hidden">
             <RepostUser pubkey={event.pubkey} />
-            <User pubkey={data.pubkey} time={event.created_at} isRepost={true} />
+            <User pubkey={data.pubkey} time={data.created_at} isRepost={true} />
           </div>
           <div className="relative z-20 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="flex-1">
               <NoteContent content={data.content} />
-              <NoteActions id={event.event_id} pubkey={event.pubkey} />
+              <NoteActions id={repostID} pubkey={data.pubkey} />
             </div>
           </div>
-          <NoteMetadata id={event.event_id} />
+          <NoteMetadata id={repostID} />
         </div>
       </div>
     </div>

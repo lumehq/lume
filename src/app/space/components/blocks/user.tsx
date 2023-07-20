@@ -1,125 +1,100 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRef } from 'react';
 
-import { UserFeed } from '@app/user/components/feed';
-import { UserMetadata } from '@app/user/components/metadata';
+import { useNDK } from '@libs/ndk/provider';
 
-import { ZapIcon } from '@shared/icons';
-import { Image } from '@shared/image';
+import { NoteKind_1, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
+import { UserProfile } from '@shared/userProfile';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
-import { useProfile } from '@utils/hooks/useProfile';
-import { useSocial } from '@utils/hooks/useSocial';
-import { shortenKey } from '@utils/shortenKey';
-import { Block } from '@utils/types';
+import { nHoursAgo } from '@utils/date';
+import { Block, LumeEvent } from '@utils/types';
 
 export function UserBlock({ params }: { params: Block }) {
-  const { user } = useProfile(params.content);
-  const { status, userFollows, follow, unfollow } = useSocial();
+  const parentRef = useRef<HTMLDivElement>(null);
 
-  const [followed, setFollowed] = useState(false);
+  const { fetcher, relayUrls } = useNDK();
+  const { status, data } = useQuery(['user-feed', params.content], async () => {
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      { kinds: [1], authors: [params.content] },
+      { since: nHoursAgo(48) },
+      { sort: true }
+    );
+    return events as unknown as LumeEvent[];
+  });
 
-  const followUser = (pubkey: string) => {
-    try {
-      follow(pubkey);
+  const rowVirtualizer = useVirtualizer({
+    count: data ? data.length : 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 400,
+  });
 
-      // update state
-      setFollowed(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const unfollowUser = (pubkey: string) => {
-    try {
-      unfollow(pubkey);
-
-      // update state
-      setFollowed(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (status === 'success' && userFollows) {
-      if (userFollows.includes(params.content)) {
-        setFollowed(true);
-      }
-    }
-  }, [status]);
+  const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
   return (
     <div className="w-[400px] shrink-0 border-r border-zinc-900">
       <TitleBar id={params.id} title={params.title} />
-      <div className="scrollbar-hide flex h-full w-full flex-col gap-1.5 overflow-y-auto pb-20 pt-1.5">
+      <div
+        ref={parentRef}
+        className="scrollbar-hide flex h-full w-full flex-col gap-1.5 overflow-y-auto pt-1.5"
+      >
         <div className="px-3 pt-1.5">
-          <Image
-            src={user?.picture || user?.image}
-            fallback={DEFAULT_AVATAR}
-            alt={params.content}
-            className="h-14 w-14 rounded-md ring-2 ring-black"
-          />
-          <div className="mt-2 flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-2">
-              <h5 className="text-lg font-semibold leading-none">
-                {user?.displayName || user?.name || 'No name'}
-              </h5>
-              <span className="max-w-[15rem] truncate text-sm leading-none text-zinc-500">
-                {user?.nip05 || shortenKey(params.content)}
-              </span>
-            </div>
-            <div className="flex flex-col gap-4">
-              <p className="mt-2 max-w-[500px] select-text break-words text-zinc-100">
-                {user?.about}
-              </p>
-              <UserMetadata pubkey={params.content} />
-            </div>
-            <div className="mt-4 inline-flex items-center gap-2">
-              {status === 'loading' ? (
-                <button
-                  type="button"
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
-                >
-                  Loading...
-                </button>
-              ) : followed ? (
-                <button
-                  type="button"
-                  onClick={() => unfollowUser(params.content)}
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
-                >
-                  Unfollow
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => followUser(params.content)}
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
-                >
-                  Follow
-                </button>
-              )}
-              <Link
-                to={`/app/chat/${params.content}`}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
-              >
-                Message
-              </Link>
-              <button
-                type="button"
-                className="group inline-flex h-10 w-10 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-orange-500"
-              >
-                <ZapIcon className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
+          <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mt-2 px-3 text-lg font-semibold text-zinc-300">Timeline</h3>
-          <UserFeed pubkey={params.content} />
+          <h3 className="mt-2 px-3 text-lg font-semibold text-zinc-300">
+            Latest activities
+          </h3>
+          <div
+            className="flex h-full w-full flex-col justify-between gap-1.5"
+            style={{ contain: 'strict' }}
+          >
+            {status === 'loading' ? (
+              <div className="px-3 py-1.5">
+                <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
+                  <NoteSkeleton />
+                </div>
+              </div>
+            ) : itemsVirtualizer.length === 0 ? (
+              <div className="px-3 py-1.5">
+                <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+                  <div className="flex flex-col items-center gap-4">
+                    <p className="text-center text-sm text-zinc-300">
+                      No new posts about this hashtag in 48 hours ago
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className="relative w-full"
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                }}
+              >
+                <div
+                  className="absolute left-0 top-0 w-full"
+                  style={{
+                    transform: `translateY(${
+                      itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin
+                    }px)`,
+                  }}
+                >
+                  {itemsVirtualizer.map((virtualRow) => (
+                    <div
+                      key={virtualRow.key}
+                      data-index={virtualRow.index}
+                      ref={rowVirtualizer.measureElement}
+                    >
+                      <NoteKind_1 event={data[virtualRow.index]} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
