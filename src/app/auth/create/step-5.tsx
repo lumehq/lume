@@ -137,7 +137,7 @@ export function CreateStep5Screen() {
   };
 
   const update = useMutation({
-    mutationFn: (follows: any) => {
+    mutationFn: (follows: string[]) => {
       return updateAccount('follows', follows, account.pubkey);
     },
     onSuccess: () => {

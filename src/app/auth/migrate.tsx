@@ -33,13 +33,10 @@ const resolver: Resolver<FormValues> = async (values) => {
 export function MigrateScreen() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const setPrivkey = useStronghold((state) => state.setPrivkey);
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
-  const [setPassword, setPrivkey] = useStronghold((state) => [
-    state.setPassword,
-    state.setPrivkey,
-  ]);
 
   const { account } = useAccount();
   const { save } = useSecureStorage();
@@ -63,9 +60,6 @@ export function MigrateScreen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      // add password to local state
-      setPassword(data.password);
-
       // load private in secure storage
       try {
         // save privkey to secure storage

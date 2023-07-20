@@ -29,13 +29,10 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 export function UnlockScreen() {
   const navigate = useNavigate();
+  const setPrivkey = useStronghold((state) => state.setPrivkey);
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
-  const [setPrivkey, setPassword] = useStronghold((state) => [
-    state.setPrivkey,
-    state.setPassword,
-  ]);
 
   const { account } = useAccount();
   const { load } = useSecureStorage();
@@ -59,9 +56,6 @@ export function UnlockScreen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      // add password to local state
-      setPassword(data.password);
-
       // load private in secure storage
       try {
         const privkey = await load(account.pubkey, data.password);

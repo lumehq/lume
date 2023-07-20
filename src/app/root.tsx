@@ -13,7 +13,7 @@ import {
   updateLastLogin,
 } from '@libs/storage';
 
-import { LoaderIcon, LumeIcon } from '@shared/icons';
+import { LoaderIcon } from '@shared/icons';
 
 import { nHoursAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
@@ -175,26 +175,23 @@ export function Root() {
   }, [status]);
 
   return (
-    <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-100">
-      <div className="relative h-full overflow-hidden">
+    <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="flex h-screen w-full flex-col">
         <div
           data-tauri-drag-region
-          className="absolute left-0 top-0 z-20 h-16 w-full bg-transparent"
+          className="relative h-11 shrink-0 border border-zinc-100 bg-white dark:border-zinc-900 dark:bg-black"
         />
-        <div className="relative flex h-full flex-col items-center justify-center">
-          <div className="flex flex-col items-center gap-2">
-            <LumeIcon className="h-16 w-16 text-black dark:text-zinc-100" />
+        <div className="relative flex min-h-0 w-full flex-1 items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <LoaderIcon className="h-6 w-6 animate-spin text-zinc-100" />
             <div className="text-center">
-              <h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
-                Here&apos;s an interesting fact:
+              <h3 className="text-lg font-semibold leading-tight text-zinc-100">
+                Prefetching data...
               </h3>
-              <p className="font-medium text-zinc-300 dark:text-zinc-600">
-                Bitcoin and Nostr can be used by anyone, and no one can stop you!
+              <p className="text-zinc-600">
+                This may take a few seconds, please don&apos;t close app.
               </p>
             </div>
-          </div>
-          <div className="absolute bottom-16 left-1/2 -translate-x-1/2 transform">
-            <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
           </div>
         </div>
       </div>

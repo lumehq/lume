@@ -21,8 +21,7 @@ export function OnboardingScreen() {
 
       // publish event
       publish({
-        content:
-          'Running Lume, fighting for better future, join us here: https://lume.nu',
+        content: 'Running Lume, join with me: https://lume.nu',
         kind: 1,
         tags: [],
       });
@@ -55,18 +54,15 @@ export function OnboardingScreen() {
               <User pubkey={account.pubkey} time={Math.floor(Date.now() / 1000)} />
             )}
             <div className="-mt-6 select-text whitespace-pre-line break-words	pl-[49px] text-base text-zinc-100">
-              <p>Running Lume, fighting for better future</p>
-              <p>
-                join us here:{' '}
-                <a
-                  href="https://lume.nu"
-                  className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  https://lume.nu
-                </a>
-              </p>
+              <p>Running Lume, join with me</p>
+              <a
+                href="https://lume.nu"
+                className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
+                target="_blank"
+                rel="noreferrer"
+              >
+                https://lume.nu
+              </a>
             </div>
           </div>
         </div>

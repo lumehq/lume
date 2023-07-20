@@ -121,8 +121,8 @@ fn main() {
       tauri_plugin_stronghold::Builder::new(|password| {
         let config = argon2::Config {
           lanes: 2,
-          mem_cost: 50_000,
-          time_cost: 30,
+          mem_cost: 10_000,
+          time_cost: 10,
           thread_mode: argon2::ThreadMode::from_threads(2),
           variant: argon2::Variant::Argon2id,
           ..Default::default()
