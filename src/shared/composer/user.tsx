@@ -4,7 +4,7 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
 
-export function User({ pubkey }: { pubkey: string }) {
+export function ComposerUser({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
 
   return (

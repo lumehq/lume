@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import { ChatsList } from '@app/chat/components/list';
 
 import { AppHeader } from '@shared/appHeader';
-import { Composer } from '@shared/composer/modal';
+import { ComposerModal } from '@shared/composer/modal';
 import { NavArrowDownIcon, SpaceIcon, TrendingIcon } from '@shared/icons';
 import { LumeBar } from '@shared/lumeBar';
 
@@ -15,7 +15,7 @@ export function Navigation() {
       <AppHeader />
       <div className="scrollbar-hide flex flex-col gap-5 overflow-y-auto pb-20">
         <div className="inlin-lflex h-8 px-3.5">
-          <Composer />
+          <ComposerModal />
         </div>
         {/* Newsfeed */}
         <div className="flex flex-col gap-0.5 px-1.5">

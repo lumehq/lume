@@ -25,6 +25,12 @@
     "@tanstack/react-query-devtools": "^4.29.25",
     "@tanstack/react-virtual": "3.0.0-beta.54",
     "@tauri-apps/api": "^1.4.0",
+    "@tiptap/extension-mention": "^2.0.4",
+    "@tiptap/extension-placeholder": "^2.0.4",
+    "@tiptap/pm": "^2.0.4",
+    "@tiptap/react": "^2.0.4",
+    "@tiptap/starter-kit": "^2.0.4",
+    "@tiptap/suggestion": "^2.0.4",
     "cheerio": "1.0.0-rc.12",
     "dayjs": "^1.11.9",
     "destr": "^1.2.2",
@@ -48,6 +54,7 @@
     "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
     "tauri-plugin-stronghold-api": "github:tauri-apps/tauri-plugin-stronghold#v1",
+    "tippy.js": "^6.3.7",
     "zustand": "^4.3.9"
   },
   "devDependencies": {
