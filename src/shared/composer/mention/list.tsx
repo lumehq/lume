@@ -1,4 +1,8 @@
+import { NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+import { MentionItem } from '@shared/composer';
 
 export const MentionList = forwardRef((props: any, ref: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -47,19 +51,22 @@ export const MentionList = forwardRef((props: any, ref: any) => {
   }));
 
   return (
-    <div className="items">
+    <div className="flex w-[250px] flex-col rounded-xl border-t border-zinc-700/50 bg-zinc-800 px-3 py-3">
       {props.items.length ? (
-        props.items.map((item, index) => (
+        props.items.map((item: NDKUserProfile, index: number) => (
           <button
-            className={`item ${index === selectedIndex ? 'is-selected' : ''}`}
+            className={twMerge(
+              'h-11 w-full rounded-lg px-2 text-start text-sm font-medium hover:bg-zinc-700',
+              `${index === selectedIndex ? 'is-selected' : ''}`
+            )}
             key={index}
             onClick={() => selectItem(index)}
           >
-            {item}
+            <MentionItem profile={item} />
           </button>
         ))
       ) : (
-        <div className="item">No result</div>
+        <div>No result</div>
       )}
     </div>
   );

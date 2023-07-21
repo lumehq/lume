@@ -1,38 +1,16 @@
 import { ReactRenderer } from '@tiptap/react';
 import tippy from 'tippy.js';
 
+import { getAllMetadata } from '@libs/storage';
+
 import { MentionList } from '@shared/composer';
+
+const users = await getAllMetadata();
 
 export const Suggestion = {
   items: ({ query }) => {
-    return [
-      'Lea Thompson',
-      'Cyndi Lauper',
-      'Tom Cruise',
-      'Madonna',
-      'Jerry Hall',
-      'Joan Collins',
-      'Winona Ryder',
-      'Christina Applegate',
-      'Alyssa Milano',
-      'Molly Ringwald',
-      'Ally Sheedy',
-      'Debbie Harry',
-      'Olivia Newton-John',
-      'Elton John',
-      'Michael J. Fox',
-      'Axl Rose',
-      'Emilio Estevez',
-      'Ralph Macchio',
-      'Rob Lowe',
-      'Jennifer Grey',
-      'Mickey Rourke',
-      'John Cusack',
-      'Matthew Broderick',
-      'Justine Bateman',
-      'Lisa Bonet',
-    ]
-      .filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+    return users
+      .filter((item) => item.ident.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, 5);
   },
 

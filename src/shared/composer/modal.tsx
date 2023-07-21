@@ -71,15 +71,13 @@ export function ComposerModal() {
                       <ChevronDownIcon width={14} height={14} />
                     </div>
                   </div>
-                  <div
+                  <button
                     onClick={closeModal}
-                    onKeyDown={closeModal}
-                    role="button"
-                    tabIndex={0}
+                    type="button"
                     className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
                   >
                     <CancelIcon width={16} height={16} className="text-zinc-500" />
-                  </div>
+                  </button>
                 </div>
                 <Composer />
               </Dialog.Panel>

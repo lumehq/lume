@@ -2,11 +2,13 @@ import Mention from '@tiptap/extension-mention';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { nip19 } from 'nostr-tools';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Button } from '@shared/button';
 import { Suggestion } from '@shared/composer';
-import { CancelIcon } from '@shared/icons';
+import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
@@ -15,6 +17,7 @@ import { FULL_RELAYS } from '@stores/constants';
 import { usePublish } from '@utils/hooks/usePublish';
 
 export function Composer() {
+  const [loading, setLoading] = useState(false);
   const [reply, clearReply, toggle] = useComposer((state) => [
     state.reply,
     state.clearReply,
@@ -27,17 +30,17 @@ export function Composer() {
       StarterKit,
       Placeholder.configure({ placeholder: "What's on your mind?" }),
       Mention.configure({
-        HTMLAttributes: {
-          class: 'mention',
-        },
         suggestion: Suggestion,
+        renderLabel({ node }) {
+          return `nostr:${nip19.npubEncode(node.attrs.id.pubkey)} `;
+        },
       }),
     ],
     content: '',
     editorProps: {
       attributes: {
         class: twMerge(
-          'markdown max-h-[500px] overflow-y-auto outline-none',
+          'markdown break-all max-h-[500px] overflow-y-auto outline-none',
           `${reply.id ? '!min-h-42' : '!min-h-[86px]'}`
         ),
       },
@@ -45,25 +48,40 @@ export function Composer() {
   });
 
   const submit = async () => {
-    let tags: string[][] = [];
+    setLoading(true);
+    try {
+      let tags: string[][] = [];
 
-    if (reply.id && reply.pubkey) {
-      tags = [
-        ['e', reply.id, FULL_RELAYS[0], 'reply'],
-        ['p', reply.pubkey],
-      ];
-    } else {
-      tags = [];
+      if (reply.id && reply.pubkey) {
+        if (reply.root) {
+          tags = [
+            ['e', reply.root, FULL_RELAYS[0], 'root'],
+            ['e', reply.id, FULL_RELAYS[0], 'reply'],
+            ['p', reply.pubkey],
+          ];
+        } else {
+          tags = [
+            ['e', reply.id, FULL_RELAYS[0], 'reply'],
+            ['p', reply.pubkey],
+          ];
+        }
+      } else {
+        tags = [];
+      }
+
+      // get plaintext content
+      const serializedContent = editor.getText();
+
+      // publish message
+      await publish({ content: serializedContent, kind: 1, tags });
+
+      // close modal
+      setLoading(false);
+      toggle(false);
+    } catch {
+      setLoading(false);
+      console.log('failed to publish');
     }
-
-    // serialize content
-    const serializedContent = editor.getText();
-
-    // publish message
-    // await publish({ content: serializedContent, kind: 1, tags });
-
-    // close modal
-    toggle(false);
   };
 
   return (
@@ -91,7 +109,11 @@ export function Composer() {
       <div className="mt-4 flex items-center justify-between">
         <div />
         <Button onClick={() => submit()} preset="publish">
-          Publish
+          {loading ? (
+            <LoaderIcon className="h-4 w-4 animate-spin text-zinc-100" />
+          ) : (
+            'Publish'
+          )}
         </Button>
       </div>
     </div>

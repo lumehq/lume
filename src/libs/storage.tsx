@@ -2,7 +2,7 @@ import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
 import { getParentID } from '@utils/transform';
-import { Account, Block, Chats, LumeEvent, Settings } from '@utils/types';
+import { Account, Block, Chats, LumeEvent, Profile, Settings } from '@utils/types';
 
 let db: null | Database = null;
 
@@ -451,7 +451,20 @@ export async function createMetadata(id: string, pubkey: string, content: string
   );
 }
 
-// get metadata
+export async function getAllMetadata() {
+  const db = await connect();
+  const result: LumeEvent[] = await db.select(`SELECT * FROM metadata;`);
+  const users: Profile[] = result.map((el) => {
+    const profile: Profile = destr(el.content);
+    return {
+      pubkey: el.pubkey,
+      ident: profile.name || profile.display_name || profile.username,
+    };
+  });
+  return users;
+}
+
+// get user metadata
 export async function getUserMetadata(pubkey: string) {
   const db = await connect();
   const result = await db.select(`SELECT * FROM metadata WHERE pubkey = "${pubkey}";`);

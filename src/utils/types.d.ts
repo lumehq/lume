@@ -1,4 +1,4 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 
 export interface LumeEvent extends NDKEvent {
   event_id?: string;
@@ -13,6 +13,11 @@ export interface Account {
   privkey: string;
   follows: string[] | string;
   is_active: number;
+}
+
+export interface Profile extends NDKUserProfile {
+  ident?: string;
+  pubkey?: string;
 }
 
 export interface Block {
