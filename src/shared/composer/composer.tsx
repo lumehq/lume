@@ -1,5 +1,3 @@
-import { TauriEvent } from '@tauri-apps/api/event';
-import { getCurrent } from '@tauri-apps/api/window';
 import Image from '@tiptap/extension-image';
 import Mention from '@tiptap/extension-mention';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -7,7 +5,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
 import { nip19 } from 'nostr-tools';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Button } from '@shared/button';
@@ -24,11 +22,7 @@ import { sendNativeNotification } from '@utils/notification';
 
 export function Composer() {
   const [status, setStatus] = useState<null | 'loading' | 'done'>(null);
-  const [reply, clearReply, toggleModal] = useComposer((state) => [
-    state.reply,
-    state.clearReply,
-    state.toggleModal,
-  ]);
+  const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
 
   const editor = useEditor({
     extensions: [
@@ -110,21 +104,16 @@ export function Composer() {
 
       // update state
       setStatus('done');
+      // reset editor
+      editor.commands.clearContent();
+      if (reply.id) {
+        clearReply();
+      }
     } catch {
       setStatus(null);
       console.log('failed to publish');
     }
   };
-
-  useEffect(() => {
-    getCurrent().listen(TauriEvent.WINDOW_FILE_DROP, (event) => {
-      const filepath: string = event.payload[0];
-      if (filepath.match(/\.(jpg|jpeg|png|gif)$/gi)) {
-        // open modal
-        toggleModal(true);
-      }
-    });
-  }, []);
 
   return (
     <div className="flex h-full flex-col px-4 pb-4">

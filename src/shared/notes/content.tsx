@@ -35,13 +35,13 @@ export function NoteContent({
           },
         }}
       >
-        {content.parsed}
+        {content?.parsed}
       </ReactMarkdown>
-      {content.images?.length > 0 && <ImagePreview urls={content.images} />}
-      {content.videos?.length > 0 && <VideoPreview urls={content.videos} />}
-      {content.links?.length > 0 && <LinkPreview urls={content.links} />}
-      {content.notes?.length > 0 &&
-        content.notes.map((note: string) => <MentionNote key={note} id={note} />)}
+      {content?.images?.length > 0 && <ImagePreview urls={content.images} />}
+      {content?.videos?.length > 0 && <VideoPreview urls={content.videos} />}
+      {content?.links?.length > 0 && <LinkPreview urls={content.links} />}
+      {content?.notes?.length > 0 &&
+        content?.notes.map((note: string) => <MentionNote key={note} id={note} />)}
     </>
   );
 }

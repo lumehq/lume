@@ -29,7 +29,7 @@ export function ComposerModal() {
   return (
     <>
       <Button onClick={() => toggle(true)} preset="small">
-        <ComposeIcon width={14} height={14} />
+        <ComposeIcon className="h-4 w-4" />
         Compose
       </Button>
       <Transition appear show={open} as={Fragment}>
@@ -68,7 +68,7 @@ export function ComposerModal() {
                     </span>
                     <div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-sm font-medium text-zinc-400">
                       New Post
-                      <ChevronDownIcon width={14} height={14} />
+                      <ChevronDownIcon className="h-4 w-4" />
                     </div>
                   </div>
                   <button

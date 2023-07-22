@@ -1,6 +1,7 @@
 import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
+import { parser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
 import { Account, Block, Chats, LumeEvent, Profile, Settings } from '@utils/types';
 
@@ -160,8 +161,16 @@ export async function getNotesByAuthors(authors: string, limit: number, offset: 
 // get note by id
 export async function getNoteByID(event_id: string) {
   const db = await connect();
-  const result = await db.select(`SELECT * FROM notes WHERE event_id = "${event_id}";`);
-  return result[0];
+  const result: LumeEvent[] = await db.select(
+    `SELECT * FROM notes WHERE event_id = "${event_id}";`
+  );
+  if (result[0]) {
+    // @ts-expect-error, todo
+    if (result[0].kind === 1) result[0]['content'] = parser(result[0]);
+    return result[0];
+  } else {
+    return null;
+  }
 }
 
 // create note
@@ -458,8 +467,11 @@ export async function getAllMetadata() {
     const profile: Profile = destr(el.content);
     return {
       pubkey: el.pubkey,
-      ident: profile.name || profile.display_name || profile.username,
-      picture: profile.picture || profile.image,
+      ident: profile.name || profile.display_name || profile.username || 'anon',
+      picture:
+        profile.picture ||
+        profile.image ||
+        'https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih.jpg',
     };
   });
   return users;
@@ -470,7 +482,7 @@ export async function getUserMetadata(pubkey: string) {
   const db = await connect();
   const result = await db.select(`SELECT * FROM metadata WHERE pubkey = "${pubkey}";`);
   if (result[0]) {
-    return result[0];
+    return JSON.parse(result[0].content) as Profile;
   } else {
     return null;
   }

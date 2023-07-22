@@ -18,6 +18,7 @@ export function useProfile(pubkey: string, fallback?: string) {
         const current = Math.floor(Date.now() / 1000);
         const cache = await getUserMetadata(pubkey);
         if (cache && parseInt(cache.created_at) + 86400 >= current) {
+          console.log('cache hit:', cache);
           return JSON.parse(cache.content);
         } else {
           const filter: NDKFilter = { kinds: [0], authors: [pubkey] };
@@ -27,7 +28,7 @@ export function useProfile(pubkey: string, fallback?: string) {
             await createMetadata(latest.id, latest.pubkey, latest.content);
             return JSON.parse(latest.content);
           } else {
-            return null;
+            throw new Error('User not found');
           }
         }
       } else {
@@ -38,7 +39,6 @@ export function useProfile(pubkey: string, fallback?: string) {
     {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      staleTime: Infinity,
     }
   );
 
