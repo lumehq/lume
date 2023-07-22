@@ -23,7 +23,7 @@ export function MentionItem({ profile }: { profile: Profile }) {
           )}
         </h5>
         <span className="text-sm leading-none text-zinc-400">
-          {profile.nip05 || profile.username || displayNpub(profile.pubkey, 16)}
+          {displayNpub(profile.pubkey, 16)}
         </span>
       </div>
     </div>

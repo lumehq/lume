@@ -459,6 +459,7 @@ export async function getAllMetadata() {
     return {
       pubkey: el.pubkey,
       ident: profile.name || profile.display_name || profile.username,
+      picture: profile.picture || profile.image,
     };
   });
   return users;

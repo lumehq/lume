@@ -150,6 +150,7 @@ fn main() {
         .emit_all("single-instance", Payload { args: argv, cwd })
         .unwrap();
     }))
+    .plugin(tauri_plugin_upload::init())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

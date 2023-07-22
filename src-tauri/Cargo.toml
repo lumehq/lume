@@ -20,6 +20,7 @@ tauri = { version = "1.2", features = [ "fs-write-file", "window-create", "path-
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 sqlx-cli = {version = "0.7.0", default-features = false, features = ["sqlite"] }
 rust-argon2 = "1.0"
 rand = "0.8.5"

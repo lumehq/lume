@@ -37,6 +37,7 @@
     "destr": "^1.2.2",
     "framer-motion": "^10.13.0",
     "get-urls": "^11.0.0",
+    "html-to-text": "^9.0.5",
     "immer": "^10.0.2",
     "light-bolt11-decoder": "^3.0.0",
     "nostr-fetch": "^0.12.1",
@@ -55,6 +56,7 @@
     "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql",
     "tauri-plugin-stronghold-api": "github:tauri-apps/tauri-plugin-stronghold#v1",
+    "tauri-plugin-upload-api": "github:tauri-apps/tauri-plugin-upload#v1",
     "tippy.js": "^6.3.7",
     "zustand": "^4.3.9"
   },

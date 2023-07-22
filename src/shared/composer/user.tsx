@@ -8,8 +8,8 @@ export function ComposerUser({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="h-8 w-8 shrink-0 overflow-hidden rounded bg-zinc-900">
+    <div className="flex items-center gap-3">
+      <div className="h-8 w-8 shrink-0 overflow-hidden rounded-md bg-zinc-900">
         <Image
           src={user?.picture || user?.image}
           fallback={DEFAULT_AVATAR}
