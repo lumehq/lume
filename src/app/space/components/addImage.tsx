@@ -1,5 +1,4 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
@@ -7,18 +6,15 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { useNDK } from '@libs/ndk/provider';
 import { createBlock } from '@libs/storage';
 
 import { CancelIcon, CommandIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
+import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
-import { dateToUnix } from '@utils/date';
-import { useAccount } from '@utils/hooks/useAccount';
 import { usePublish } from '@utils/hooks/usePublish';
 
 export function AddImageBlock() {
@@ -28,9 +24,6 @@ export function AddImageBlock() {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState('');
-
-  const { ndk } = useNDK();
-  const { account } = useAccount();
 
   const tags = useRef(null);
 
@@ -101,7 +94,7 @@ export function AddImageBlock() {
   };
 
   const block = useMutation({
-    mutationFn: (data: any) => {
+    mutationFn: (data: { kind: number; title: string; content: string }) => {
       return createBlock(data.kind, data.title, data.content);
     },
     onSuccess: () => {
@@ -109,14 +102,14 @@ export function AddImageBlock() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { kind: number; title: string; content: string }) => {
     setLoading(true);
 
     // publish file metedata
     await publish({ content: data.title, kind: 1063, tags: tags.current });
 
     // mutate
-    block.mutate({ kind: 0, title: data.title, content: data.content });
+    block.mutate({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
 
     setLoading(false);
     // reset form

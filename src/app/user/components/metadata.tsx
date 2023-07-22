@@ -19,13 +19,13 @@ export function UserMetadata({ pubkey }: { pubkey: string }) {
     <div className="flex w-full items-center gap-10">
       <div className="inline-flex flex-col gap-1">
         <span className="font-semibold leading-none text-zinc-100">
-          {data.stats[pubkey].followers_pubkey_count ?? 0}
+          {compactNumber.format(data.stats[pubkey].followers_pubkey_count) ?? 0}
         </span>
         <span className="text-sm leading-none text-zinc-400">Followers</span>
       </div>
       <div className="inline-flex flex-col gap-1">
         <span className="font-semibold leading-none text-zinc-100">
-          {data.stats[pubkey].pub_following_pubkey_count ?? 0}
+          {compactNumber.format(data.stats[pubkey].pub_following_pubkey_count) ?? 0}
         </span>
         <span className="text-sm leading-none text-zinc-400">Following</span>
       </div>

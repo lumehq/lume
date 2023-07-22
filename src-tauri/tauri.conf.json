@@ -8,7 +8,7 @@
 	},
 	"package": {
 		"productName": "Lume",
-		"version": "1.0.1"
+		"version": "1.1.0"
 	},
 	"tauri": {
 		"allowlist": {
@@ -28,6 +28,7 @@
 				"all": false,
 				"readFile": true,
 				"readDir": true,
+				"writeFile": true,
 				"scope": [
 					"$APPDATA/*",
 					"$DATA/*",
@@ -62,7 +63,8 @@
 			},
 			"window": {
 				"startDragging": true,
-				"close": true
+				"close": true,
+				"create": true
 			},
 			"process": {
 				"all": false,

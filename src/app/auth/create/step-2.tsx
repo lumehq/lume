@@ -32,12 +32,9 @@ export function CreateStep2Screen() {
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
-  const [privkey, setPassword] = useStronghold((state) => [
-    state.privkey,
-    state.setPassword,
-  ]);
 
-  const pubkey = useOnboarding((state) => state.privkey);
+  const privkey = useStronghold((state) => state.privkey);
+  const pubkey = useOnboarding((state) => state.pubkey);
 
   const { save } = useSecureStorage();
 
@@ -60,9 +57,6 @@ export function CreateStep2Screen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      // add password to local state
-      setPassword(data.password);
-
       // save privkey to secure storage
       await save(pubkey, privkey, data.password);
 

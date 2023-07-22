@@ -21,8 +21,7 @@ export function OnboardingScreen() {
 
       // publish event
       publish({
-        content:
-          'Running Lume, fighting for better future, join us here: https://lume.nu',
+        content: 'Running Lume, join with me: https://lume.nu',
         kind: 1,
         tags: [],
       });
@@ -37,15 +36,16 @@ export function OnboardingScreen() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
-        <div className="mb-8 text-center">
+        <div className="mb-4 text-center">
           <h1 className="mb-2 text-xl font-semibold text-zinc-100">
             👋 Hello, welcome you to Lume
           </h1>
           <p className="text-sm text-zinc-300">
-            You&apos;re a part of better future that we&apos;re fighting
+            You&apos;re a part of Nostr community now
           </p>
           <p className="text-sm text-zinc-300">
-            If Lume gets your attention, please help us spread via button below
+            If Lume gets your attention, please help us spread it and don&apos;t forget
+            invite your friend join with you, we can have fun togother
           </p>
         </div>
         <div className="w-full rounded-xl border-t border-zinc-800/50 bg-zinc-900">
@@ -54,18 +54,15 @@ export function OnboardingScreen() {
               <User pubkey={account.pubkey} time={Math.floor(Date.now() / 1000)} />
             )}
             <div className="-mt-6 select-text whitespace-pre-line break-words	pl-[49px] text-base text-zinc-100">
-              <p>Running Lume, fighting for better future</p>
-              <p>
-                join us here:{' '}
-                <a
-                  href="https://lume.nu"
-                  className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  https://lume.nu
-                </a>
-              </p>
+              <p>Running Lume, join with me</p>
+              <a
+                href="https://lume.nu"
+                className="font-normal text-fuchsia-500 no-underline hover:text-fuchsia-600"
+                target="_blank"
+                rel="noreferrer"
+              >
+                https://lume.nu
+              </a>
             </div>
           </div>
         </div>
@@ -84,16 +81,16 @@ export function OnboardingScreen() {
             ) : (
               <>
                 <span className="w-5" />
-                <span>Publish</span>
+                <span>Spread</span>
                 <ArrowRightCircleIcon className="h-5 w-5" />
               </>
             )}
           </button>
           <Link
             to="/"
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-6 text-sm font-medium text-zinc-200"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 px-6 font-medium text-zinc-300 hover:bg-zinc-900"
           >
-            Skip for now
+            Skip
           </Link>
         </div>
       </div>

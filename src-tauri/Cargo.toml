@@ -1,6 +1,6 @@
 [package]
 name = "lume"
-version = "1.0.1"
+version = "1.1.0"
 description = "nostr client"
 authors = ["Ren Amamiya"]
 license = ""
@@ -16,10 +16,11 @@ tauri-build = { version = "1.2", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2", features = [ "path-all", "fs-read-dir", "fs-read-file", "clipboard-read-text", "clipboard-write-text", "dialog-open", "http-all", "http-multipart", "notification-all", "os-all", "process-relaunch", "shell-open", "system-tray", "updater", "window-close", "window-start-dragging"] }
+tauri = { version = "1.2", features = [ "fs-write-file", "window-create", "path-all", "fs-read-dir", "fs-read-file", "clipboard-read-text", "clipboard-write-text", "dialog-open", "http-all", "http-multipart", "notification-all", "os-all", "process-relaunch", "shell-open", "system-tray", "updater", "window-close", "window-start-dragging"] }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 sqlx-cli = {version = "0.7.0", default-features = false, features = ["sqlite"] }
 rust-argon2 = "1.0"
 rand = "0.8.5"

@@ -1,17 +1,20 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useNewsfeed } from '@app/space/hooks/useNewsfeed';
 
 import { getNotes } from '@libs/storage';
 
-import { Note } from '@shared/notes/note';
+import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
+import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
 import { useNote } from '@stores/note';
+
+import { LumeEvent } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
 
@@ -33,7 +36,7 @@ export function FollowingBlock() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
+  const notes = data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : [];
   const parentRef = useRef();
 
   const rowVirtualizer = useVirtualizer({
@@ -66,19 +69,76 @@ export function FollowingBlock() {
     toggleHasNewNote(false);
   };
 
-  const renderItem = (index: string | number) => {
-    const note = notes[index];
-    if (!note) return;
-    return (
-      <div
-        key={note.event_id || note.id}
-        data-index={index}
-        ref={rowVirtualizer.measureElement}
-      >
-        <Note event={note} />
-      </div>
-    );
-  };
+  const renderItem = useCallback(
+    (index: string | number) => {
+      const note: LumeEvent = notes[index];
+      if (!note) return;
+      switch (note.kind) {
+        case 1: {
+          let root: string;
+          let reply: string;
+          if (note.tags?.[0]?.[0] === 'e' && !note.tags?.[0]?.[3]) {
+            root = note.tags[0][1];
+          } else {
+            root = note.tags.find((el) => el[3] === 'root')?.[1];
+            reply = note.tags.find((el) => el[3] === 'reply')?.[1];
+          }
+          if (root || reply) {
+            return (
+              <div
+                key={(root || reply) + (note.event_id || note.id)}
+                data-index={index}
+                ref={rowVirtualizer.measureElement}
+              >
+                <NoteThread event={note} root={root} reply={reply} />
+              </div>
+            );
+          } else {
+            return (
+              <div
+                key={note.event_id || note.id}
+                data-index={index}
+                ref={rowVirtualizer.measureElement}
+              >
+                <NoteKind_1 event={note} skipMetadata={false} />
+              </div>
+            );
+          }
+        }
+        case 6:
+          return (
+            <div
+              key={note.event_id || note.id}
+              data-index={index}
+              ref={rowVirtualizer.measureElement}
+            >
+              <Repost key={note.event_id} event={note} />
+            </div>
+          );
+        case 1063:
+          return (
+            <div
+              key={note.event_id || note.id}
+              data-index={index}
+              ref={rowVirtualizer.measureElement}
+            >
+              <NoteKind_1063 key={note.event_id} event={note} />
+            </div>
+          );
+        default:
+          return (
+            <div
+              key={note.event_id || note.id}
+              data-index={index}
+              ref={rowVirtualizer.measureElement}
+            >
+              <NoteKindUnsupport key={note.event_id} event={note} />
+            </div>
+          );
+      }
+    },
+    [notes]
+  );
 
   return (
     <div className="relative w-[400px] shrink-0 border-r border-zinc-900">
@@ -138,9 +198,7 @@ export function FollowingBlock() {
                 }px)`,
               }}
             >
-              {rowVirtualizer
-                .getVirtualItems()
-                .map((virtualRow) => renderItem(virtualRow.index))}
+              {itemsVirtualizer.map((virtualRow) => renderItem(virtualRow.index))}
             </div>
           </div>
         )}

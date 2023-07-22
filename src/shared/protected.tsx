@@ -6,7 +6,7 @@ import { useStronghold } from '@stores/stronghold';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function Protected({ children }: { children: ReactNode }) {
-  const password = useStronghold((state) => state.password);
+  const privkey = useStronghold((state) => state.privkey);
   const { status, account } = useAccount();
 
   if (status === 'success' && !account) {
@@ -17,7 +17,7 @@ export function Protected({ children }: { children: ReactNode }) {
     return <Navigate to="/auth/migrate" replace />;
   }
 
-  if (status === 'success' && account && !password) {
+  if (status === 'success' && account && !privkey) {
     return <Navigate to="/auth/unlock" replace />;
   }
 

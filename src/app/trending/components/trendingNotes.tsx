@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { Note } from '@shared/notes/note';
+import { NoteKind_1 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
@@ -27,7 +27,7 @@ export function TrendingNotes() {
         ) : (
           <div className="relative flex w-full flex-col pt-1.5">
             {data.notes.map((item) => (
-              <Note key={item.id} event={item.event} skipMetadata={true} />
+              <NoteKind_1 key={item.id} event={item.event} skipMetadata={true} />
             ))}
           </div>
         )}

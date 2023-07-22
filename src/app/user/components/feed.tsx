@@ -1,34 +1,84 @@
-import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { Note } from '@shared/notes/note';
+import { NoteKind_1, NoteSkeleton } from '@shared/notes';
 
-import { dateToUnix, getHourAgo } from '@utils/date';
+import { nHoursAgo } from '@utils/date';
 import { LumeEvent } from '@utils/types';
 
 export function UserFeed({ pubkey }: { pubkey: string }) {
-  const { ndk } = useNDK();
+  const parentRef = useRef();
+
+  const { fetcher, relayUrls } = useNDK();
   const { status, data } = useQuery(['user-feed', pubkey], async () => {
-    const now = new Date();
-    const filter: NDKFilter = {
-      kinds: [1],
-      authors: [pubkey],
-      since: dateToUnix(getHourAgo(48, now)),
-    };
-    const events = await ndk.fetchEvents(filter);
-    return [...events];
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      { kinds: [1], authors: [pubkey] },
+      { since: nHoursAgo(48) },
+      { sort: true }
+    );
+    return events as unknown as LumeEvent[];
   });
 
+  const rowVirtualizer = useVirtualizer({
+    count: data ? data.length : 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 400,
+  });
+
+  const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+
   return (
-    <div className="w-full max-w-[400px] px-2 pb-10">
+    <div
+      ref={parentRef}
+      className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"
+      style={{ contain: 'strict' }}
+    >
       {status === 'loading' ? (
-        <div className="px-3">
-          <p>Loading...</p>
+        <div className="px-3 py-1.5">
+          <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
+            <NoteSkeleton />
+          </div>
+        </div>
+      ) : itemsVirtualizer.length === 0 ? (
+        <div className="px-3 py-1.5">
+          <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-center text-sm text-zinc-300">
+                No new posts about this hashtag in 48 hours ago
+              </p>
+            </div>
+          </div>
         </div>
       ) : (
-        data.map((note: LumeEvent) => <Note key={note.id} event={note} />)
+        <div
+          className="relative w-full"
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+          }}
+        >
+          <div
+            className="absolute left-0 top-0 w-full"
+            style={{
+              transform: `translateY(${
+                itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin
+              }px)`,
+            }}
+          >
+            {itemsVirtualizer.map((virtualRow) => (
+              <div
+                key={virtualRow.key}
+                data-index={virtualRow.index}
+                ref={rowVirtualizer.measureElement}
+              >
+                <NoteKind_1 event={data[virtualRow.index]} />
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

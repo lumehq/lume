@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +20,7 @@ export function CreateStep1Screen() {
 
   const [privkeyInput, setPrivkeyInput] = useState('password');
   const [loading, setLoading] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
   const privkey = useMemo(() => generatePrivateKey(), []);
   const pubkey = getPublicKey(privkey);
@@ -32,6 +34,17 @@ export function CreateStep1Screen() {
     } else {
       setPrivkeyInput('password');
     }
+  };
+
+  const download = async () => {
+    await writeTextFile(
+      'lume-keys.txt',
+      `Public key: ${pubkey}\nPrivate key: ${privkey}`,
+      {
+        dir: BaseDirectory.Download,
+      }
+    );
+    setDownloaded(true);
   };
 
   const account = useMutation({
@@ -68,9 +81,7 @@ export function CreateStep1Screen() {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-zinc-100">
-          Lume is auto-generated key for you
-        </h1>
+        <h1 className="text-xl font-semibold text-zinc-100">Save your access key!</h1>
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
@@ -110,14 +121,26 @@ export function CreateStep1Screen() {
               )}
             </button>
           </div>
+          <div className="mt-2 text-sm text-zinc-500">
+            <p>
+              Your private key is your password. If you lose this key, you will lose
+              access to your account! Copy it and keep it in a safe place. There is no way
+              to reset your private key.
+            </p>
+          </div>
         </div>
-        <Button preset="large" onClick={() => submit()}>
-          {loading ? (
-            <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
-          ) : (
-            'Continue →'
-          )}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button preset="large" onClick={() => submit()}>
+            {loading ? (
+              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+            ) : (
+              'I have saved my key, continue →'
+            )}
+          </Button>
+          <Button preset="large-alt" onClick={() => download()}>
+            {downloaded ? 'Saved in Download folder' : 'Download'}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,34 +1,66 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
-import { getReplies } from '@libs/storage';
+import { useNDK } from '@libs/ndk/provider';
 
-import { Reply } from '@shared/notes/replies/item';
+import { NoteSkeleton, Reply } from '@shared/notes';
 
-export function RepliesList({ parent_id }: { parent_id: string }) {
-  const { status, data } = useQuery(['replies', parent_id], async () => {
-    return await getReplies(parent_id);
+import { LumeEvent } from '@utils/types';
+
+export function RepliesList({ id }: { id: string }) {
+  const { relayUrls, fetcher } = useNDK();
+  const { status, data } = useQuery(['thread', id], async () => {
+    const events = (await fetcher.fetchAllEvents(
+      relayUrls,
+      { kinds: [1], '#e': [id] },
+      { since: 0 }
+    )) as unknown as LumeEvent[];
+    if (events.length > 0) {
+      const replies = new Set();
+      events.forEach((event) => {
+        const tags = event.tags.filter((el) => el[0] === 'e' && el[1] !== id);
+        if (tags.length > 0) {
+          tags.forEach((tag) => {
+            const rootIndex = events.findIndex((el) => el.id === tag[1]);
+            if (rootIndex) {
+              const rootEvent = events[rootIndex];
+              if (rootEvent.replies) {
+                rootEvent.replies.push(event);
+              } else {
+                rootEvent.replies = [event];
+              }
+              replies.add(event.id);
+            }
+          });
+        }
+      });
+      const cleanEvents = events.filter((ev) => !replies.has(ev.id));
+      return cleanEvents;
+    }
+    return events;
   });
 
+  if (status === 'loading') {
+    return (
+      <div className="mt-3">
+        <div className="flex flex-col">
+          <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+            <NoteSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="mt-5">
+    <div className="mt-3">
       <div className="mb-2">
-        <h5 className="text-lg font-semibold text-zinc-300">Replies</h5>
+        <h5 className="text-lg font-semibold text-zinc-300">{data.length} replies</h5>
       </div>
       <div className="flex flex-col">
-        {status === 'loading' ? (
-          <div className="flex gap-2 px-3 py-4">
-            <div className="relative h-9 w-9 shrink animate-pulse rounded-md bg-zinc-800" />
-            <div className="flex w-full flex-1 flex-col justify-center gap-1">
-              <div className="flex items-baseline gap-2 text-base">
-                <div className="h-2.5 w-20 animate-pulse rounded-sm bg-zinc-800" />
-              </div>
-              <div className="h-4 w-44 animate-pulse rounded-sm bg-zinc-800" />
-            </div>
-          </div>
-        ) : data.length === 0 ? (
+        {data?.length === 0 ? (
           <div className="px=3">
-            <div className="flex w-full items-center justify-center rounded-md bg-zinc-900">
+            <div className="flex w-full items-center justify-center rounded-xl bg-zinc-900">
               <div className="flex flex-col items-center justify-center gap-2 py-6">
                 <h3 className="text-3xl">👋</h3>
                 <p className="leading-none text-zinc-400">Share your thought on it...</p>
@@ -36,7 +68,7 @@ export function RepliesList({ parent_id }: { parent_id: string }) {
             </div>
           </div>
         ) : (
-          data.map((event: NDKEvent) => <Reply key={event.id} data={event} />)
+          data.reverse().map((event: NDKEvent) => <Reply key={event.id} event={event} />)
         )}
       </div>
     </div>

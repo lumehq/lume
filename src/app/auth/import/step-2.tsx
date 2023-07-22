@@ -32,11 +32,8 @@ export function ImportStep2Screen() {
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
-  const [privkey, setPassword] = useStronghold((state) => [
-    state.privkey,
-    state.setPassword,
-  ]);
 
+  const privkey = useStronghold((state) => state.privkey);
   const pubkey = useOnboarding((state) => state.pubkey);
 
   const { save } = useSecureStorage();
@@ -60,9 +57,6 @@ export function ImportStep2Screen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      // add password to local state
-      setPassword(data.password);
-
       // save privkey to secure storage
       await save(pubkey, privkey, data.password);
 
@@ -115,9 +109,9 @@ export function ImportStep2Screen() {
             </div>
             <div className="text-sm text-zinc-500">
               <p>
-                Password is use to secure your key store in local machine, when you move
-                to other clients, you just need to copy your private key as nsec or
-                hexstring
+                Password is use to unlock app and secure your key store in local machine.
+                When you move to other clients, you just need to copy your private key as
+                nsec or hexstring
               </p>
             </div>
             <span className="text-sm text-red-400">

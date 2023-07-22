@@ -2,7 +2,7 @@ import { Image } from '@shared/image';
 
 export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: boolean }) {
   return (
-    <div className="mt-3 max-w-[420px] overflow-hidden">
+    <div className="mb-2 mt-3 max-w-[420px] overflow-hidden">
       <div className="flex flex-col gap-2">
         {urls.map((url) => (
           <div key={url} className="relative min-w-0 shrink-0 grow-0 basis-full">

@@ -1,18 +1,19 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect, useRef } from 'react';
 
-import { getNotesByAuthors, removeBlock } from '@libs/storage';
+import { getNotesByAuthors } from '@libs/storage';
 
-import { Note } from '@shared/notes/note';
+import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
+import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
+import { Block, LumeEvent } from '@utils/types';
+
 const ITEM_PER_PAGE = 10;
 
-export function FeedBlock({ params }: { params: any }) {
-  const queryClient = useQueryClient();
+export function FeedBlock({ params }: { params: Block }) {
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed', params.content],
@@ -22,9 +23,9 @@ export function FeedBlock({ params }: { params: any }) {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const notes = data ? data.pages.flatMap((d: { data: any }) => d.data) : [];
-  const parentRef = useRef();
+  const notes = data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : [];
 
+  const parentRef = useRef();
   const rowVirtualizer = useVirtualizer({
     count: hasNextPage ? notes.length + 1 : notes.length,
     getScrollElement: () => parentRef.current,
@@ -46,29 +47,74 @@ export function FeedBlock({ params }: { params: any }) {
     }
   }, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
 
-  const block = useMutation({
-    mutationFn: (id: string) => {
-      return removeBlock(id);
+  const renderItem = useCallback(
+    (index: string | number) => {
+      const note: LumeEvent = notes[index];
+      if (!note) return;
+      switch (note.kind) {
+        case 1: {
+          const root = note.tags.find((el) => el[3] === 'root')?.[1];
+          const reply = note.tags.find((el) => el[3] === 'reply')?.[1];
+          if (root || reply) {
+            return (
+              <div
+                key={note.event_id || note.id}
+                data-index={index}
+                ref={rowVirtualizer.measureElement}
+              >
+                <NoteThread event={note} root={root} reply={reply} />
+              </div>
+            );
+          } else {
+            return (
+              <div
+                key={note.event_id || note.id}
+                data-index={index}
+                ref={rowVirtualizer.measureElement}
+              >
+                <NoteKind_1 event={note} skipMetadata={false} />
+              </div>
+            );
+          }
+        }
+        case 6:
+          return (
+            <div
+              key={note.event_id || note.id}
+              data-index={index}
+              ref={rowVirtualizer.measureElement}
+            >
+              <Repost key={note.event_id} event={note} />
+            </div>
+          );
+        case 1063:
+          return (
+            <div
+              key={note.event_id || note.id}
+              data-index={index}
+              ref={rowVirtualizer.measureElement}
+            >
+              <NoteKind_1063 key={note.event_id} event={note} />
+            </div>
+          );
+        default:
+          return (
+            <div
+              key={note.event_id || note.id}
+              data-index={index}
+              ref={rowVirtualizer.measureElement}
+            >
+              <NoteKindUnsupport key={note.event_id} event={note} />
+            </div>
+          );
+      }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
-  const renderItem = (index: string | number) => {
-    const note = notes[index];
-
-    if (!note) return;
-    return (
-      <div key={index} data-index={index} ref={rowVirtualizer.measureElement}>
-        <Note event={note} />
-      </div>
-    );
-  };
+    [notes]
+  );
 
   return (
     <div className="w-[400px] shrink-0 border-r border-zinc-900">
-      <TitleBar title={params.title} onClick={() => block.mutate(params.id)} />
+      <TitleBar id={params.id} title={params.title} />
       <div
         ref={parentRef}
         className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"
@@ -105,9 +151,7 @@ export function FeedBlock({ params }: { params: any }) {
                 }px)`,
               }}
             >
-              {rowVirtualizer
-                .getVirtualItems()
-                .map((virtualRow) => renderItem(virtualRow.index))}
+              {itemsVirtualizer.map((virtualRow) => renderItem(virtualRow.index))}
             </div>
           </div>
         )}

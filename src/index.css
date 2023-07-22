@@ -15,7 +15,19 @@ button {
 }
 
 .markdown {
-  @apply prose prose-zinc max-w-none select-text break-words dark:prose-invert prose-p:mb-2 prose-p:mt-0 prose-p:leading-tight prose-p:last:mb-0 prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-500 hover:prose-a:text-fuchsia-600 prose-blockquote:m-0 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-li:leading-tight prose-hr:mx-0 prose-hr:my-2;
+  @apply prose prose-zinc max-w-none select-text break-words dark:prose-invert prose-p:mb-2 prose-p:mt-0 prose-p:last:mb-0 prose-a:break-all prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-400 hover:prose-a:text-fuchsia-500 prose-blockquote:m-0 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-li:leading-tight prose-img:mt-3 prose-img:mb-2 prose-hr:mx-0 prose-hr:my-2;
+}
+
+.ProseMirror p.is-empty::before {
+  @apply text-zinc-500;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  @apply outline-fuchsia-500;
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */

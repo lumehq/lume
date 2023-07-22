@@ -1,23 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { removeBlock } from '@libs/storage';
-
 import { CancelIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-export function ImageBlock({ params }: { params: any }) {
-  const queryClient = useQueryClient();
+import { useBlock } from '@utils/hooks/useBlock';
+import { Block } from '@utils/types';
 
-  const block = useMutation({
-    mutationFn: (id: string) => {
-      return removeBlock(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
+export function ImageBlock({ params }: { params: Block }) {
+  const { remove } = useBlock();
 
   return (
     <div className="flex h-full w-[350px] shrink-0 flex-col justify-between border-r border-zinc-900">
@@ -27,7 +17,7 @@ export function ImageBlock({ params }: { params: any }) {
             <h3 className="font-medium text-white drop-shadow-lg">{params.title}</h3>
             <button
               type="button"
-              onClick={() => block.mutate(params.id)}
+              onClick={() => remove.mutate(params.id)}
               className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/30 backdrop-blur-lg"
             >
               <CancelIcon width={16} height={16} className="text-white" />
