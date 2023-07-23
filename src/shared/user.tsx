@@ -115,12 +115,12 @@ export function User({
                       <div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
                     )}
                   </h5>
-                  <span className="max-w-[15rem] truncate text-sm leading-none text-zinc-500">
+                  <span className="max-w-[10rem] truncate text-sm leading-none text-zinc-500">
                     {user?.nip05 || shortenKey(pubkey)}
                   </span>
                 </div>
                 <div>
-                  <p className="line-clamp-3 break-words leading-tight text-zinc-100">
+                  <p className="line-clamp-3 break-all leading-tight text-zinc-100">
                     {user?.about}
                   </p>
                 </div>

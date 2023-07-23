@@ -482,7 +482,7 @@ export async function getUserMetadata(pubkey: string) {
   const db = await connect();
   const result = await db.select(`SELECT * FROM metadata WHERE pubkey = "${pubkey}";`);
   if (result[0]) {
-    return JSON.parse(result[0].content) as Profile;
+    return { ...result[0], ...JSON.parse(result[0].content) } as Profile;
   } else {
     return null;
   }

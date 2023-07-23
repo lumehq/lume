@@ -21,16 +21,16 @@ export function NotiUser({ pubkey }: { pubkey: string }) {
 
   return (
     <div className="flex shrink-0 items-start justify-start gap-2">
-      <div className="w-88 relative h-8 shrink rounded-md">
+      <div className="w-88 relative h-8 shrink-0 rounded-md">
         <Image
-          src={user.image}
+          src={user?.picture || user?.image}
           fallback={DEFAULT_AVATAR}
           alt={pubkey}
           className="w-88 h-8 rounded-md object-cover"
         />
       </div>
-      <span className="max-w-[10rem] truncate leading-none text-zinc-200">
-        {user.nip05 || user.name || user.displayName || displayNpub(pubkey, 16)}
+      <span className="max-w-[10rem] flex-1 truncate leading-none text-zinc-200">
+        {user?.nip05 || user?.name || user?.displayName || displayNpub(pubkey, 16)}
       </span>
     </div>
   );
