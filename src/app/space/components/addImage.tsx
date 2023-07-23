@@ -19,7 +19,7 @@ import { usePublish } from '@utils/hooks/usePublish';
 
 export function AddImageBlock() {
   const queryClient = useQueryClient();
-  const publish = usePublish();
+  const { publish } = usePublish();
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);

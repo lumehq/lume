@@ -57,7 +57,7 @@ export function Composer() {
   });
 
   const upload = useImageUploader();
-  const publish = usePublish();
+  const { publish } = usePublish();
 
   const uploadImage = async (file?: string) => {
     const image = await upload(file);

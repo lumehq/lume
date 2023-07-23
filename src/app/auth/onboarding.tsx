@@ -9,10 +9,11 @@ import { useAccount } from '@utils/hooks/useAccount';
 import { usePublish } from '@utils/hooks/usePublish';
 
 export function OnboardingScreen() {
-  const publish = usePublish();
   const navigate = useNavigate();
 
+  const { publish } = usePublish();
   const { status, account } = useAccount();
+
   const [loading, setLoading] = useState(false);
 
   const submit = async () => {

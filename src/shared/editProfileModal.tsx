@@ -17,7 +17,6 @@ import { usePublish } from '@utils/hooks/usePublish';
 
 export function EditProfileModal() {
   const queryClient = useQueryClient();
-  const publish = usePublish();
 
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,6 +24,7 @@ export function EditProfileModal() {
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: false, text: '' });
 
+  const { publish } = usePublish();
   const { account } = useAccount();
   const {
     register,

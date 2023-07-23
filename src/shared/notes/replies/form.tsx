@@ -10,9 +10,9 @@ import { usePublish } from '@utils/hooks/usePublish';
 import { displayNpub } from '@utils/shortenKey';
 
 export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
-  const publish = usePublish();
-
+  const { publish } = usePublish();
   const { status, user } = useProfile(pubkey);
+
   const [value, setValue] = useState('');
 
   const submit = () => {

@@ -114,11 +114,11 @@ const INITIAL_LIST = [
 export function CreateStep5Screen() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const publish = usePublish();
 
   const [loading, setLoading] = useState(false);
   const [follows, setFollows] = useState([]);
 
+  const { publish } = usePublish();
   const { account } = useAccount();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');

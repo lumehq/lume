@@ -14,7 +14,7 @@ export function ChatMessageForm({
   userPubkey: string;
   userPrivkey: string;
 }) {
-  const publish = usePublish();
+  const { publish } = usePublish();
   const [value, setValue] = useState('');
 
   const encryptMessage = useCallback(async () => {

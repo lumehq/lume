@@ -7,7 +7,7 @@ import { FULL_RELAYS } from '@stores/constants';
 import { usePublish } from '@utils/hooks/usePublish';
 
 export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
-  const publish = usePublish();
+  const { publish } = usePublish();
 
   const submit = async () => {
     const tags = [

@@ -4,16 +4,18 @@ import { useNDK } from '@libs/ndk/provider';
 import { createNote, getNoteByID } from '@libs/storage';
 
 import { parser } from '@utils/parser';
+import { LumeEvent } from '@utils/types';
 
 export function useEvent(id: string, fallback?: string) {
   const { ndk } = useNDK();
   const { status, data, error, isFetching } = useQuery(['note', id], async () => {
     const result = await getNoteByID(id);
     if (result) {
-      return result;
+      return result as LumeEvent;
     } else {
       if (fallback) {
-        const embed = JSON.parse(fallback);
+        const embed: LumeEvent = JSON.parse(fallback);
+        embed['event_id'] = embed.id;
         await createNote(
           embed.id,
           embed.pubkey,
@@ -40,7 +42,7 @@ export function useEvent(id: string, fallback?: string) {
             // @ts-ignore
             event['content'] = parser(event);
           }
-          return event;
+          return event as LumeEvent;
         } else {
           throw new Error('Event not found');
         }

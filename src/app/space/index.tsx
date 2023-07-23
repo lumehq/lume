@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { UserBlock } from '@app/space//components/blocks/user';
 import { AddBlock } from '@app/space/components/add';
 import { FeedBlock } from '@app/space/components/blocks/feed';
 import { FollowingBlock } from '@app/space/components/blocks/following';
 import { HashtagBlock } from '@app/space/components/blocks/hashtag';
 import { ImageBlock } from '@app/space/components/blocks/image';
 import { ThreadBlock } from '@app/space/components/blocks/thread';
+import { UserBlock } from '@app/space/components/blocks/user';
 
 import { getBlocks } from '@libs/storage';
 

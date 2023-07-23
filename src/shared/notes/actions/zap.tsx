@@ -1,13 +1,26 @@
+import { NostrEvent } from '@nostr-dev-kit/ndk';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 import { ZapIcon } from '@shared/icons';
 
-export function NoteZap() {
+import { useEvent } from '@utils/hooks/useEvent';
+import { usePublish } from '@utils/hooks/usePublish';
+
+export function NoteZap({ id }: { id: string }) {
+  const { createZap } = usePublish();
+  const { data: event } = useEvent(id);
+
+  const submit = async () => {
+    const res = await createZap(event as NostrEvent, 21000);
+    console.log(res);
+  };
+
   return (
     <Tooltip.Root delayDuration={150}>
       <Tooltip.Trigger asChild>
         <button
           type="button"
+          onClick={() => submit()}
           className="group inline-flex h-7 w-7 items-center justify-center"
         >
           <ZapIcon className="h-5 w-5 text-zinc-300 group-hover:text-orange-400" />

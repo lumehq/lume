@@ -10,8 +10,8 @@ import { nip02ToArray } from '@utils/transform';
 
 export function useSocial() {
   const queryClient = useQueryClient();
-  const publish = usePublish();
 
+  const { publish } = usePublish();
   const { fetcher, relayUrls } = useNDK();
   const { account } = useAccount();
   const { status, data: userFollows } = useQuery(

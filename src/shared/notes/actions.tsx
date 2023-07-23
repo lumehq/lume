@@ -28,7 +28,7 @@ export function NoteActions({
           <NoteReply id={id} pubkey={pubkey} />
           <NoteReaction id={id} pubkey={pubkey} />
           <NoteRepost id={id} pubkey={pubkey} />
-          <NoteZap />
+          <NoteZap id={id} />
         </div>
         {!noOpenThread && (
           <>

@@ -1,4 +1,5 @@
-import { NDKEvent, NDKKind, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind, NDKPrivateKeySigner, NostrEvent } from '@nostr-dev-kit/ndk';
+import destr from 'destr';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -38,5 +39,17 @@ export function usePublish() {
     return event;
   };
 
-  return publish;
+  const createZap = async (event: NostrEvent, amount: number) => {
+    if (!privkey) throw new Error('Private key not found');
+    if (typeof event.tags === 'string') event.tags = destr(event.tags);
+
+    const signer = new NDKPrivateKeySigner(privkey);
+    ndk.signer = signer;
+
+    const ndkEvent = new NDKEvent(ndk, event);
+    const res = await ndkEvent.zap(amount, 'test zap from lume');
+    return res;
+  };
+
+  return { publish, createZap };
 }
