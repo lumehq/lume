@@ -12,8 +12,6 @@ import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { useNote } from '@stores/note';
-
 import { LumeEvent } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
@@ -21,13 +19,8 @@ const ITEM_PER_PAGE = 10;
 export function FollowingBlock() {
   // subscribe for live update
   useNewsfeed();
-  // notify user that new note is arrive
-  const [hasNewNote, toggleHasNewNote] = useNote((state) => [
-    state.hasNewNote,
-    state.toggleHasNewNote,
-  ]);
 
-  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed-circle'],
       queryFn: async ({ pageParam = 0 }) => {
@@ -59,15 +52,6 @@ export function FollowingBlock() {
       fetchNextPage();
     }
   }, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
-
-  const refreshFirstPage = () => {
-    // refetch
-    refetch({ refetchPage: (_, index: number) => index === 0 });
-    // scroll to top
-    rowVirtualizer.scrollToIndex(1);
-    // stop notify
-    toggleHasNewNote(false);
-  };
 
   const renderItem = useCallback(
     (index: string | number) => {
@@ -143,17 +127,6 @@ export function FollowingBlock() {
   return (
     <div className="relative w-[400px] shrink-0 border-r border-zinc-900">
       <TitleBar title="Your Circle" />
-      {hasNewNote && (
-        <div className="absolute left-1/2 top-12 z-50 -translate-x-1/2 transform">
-          <button
-            type="button"
-            onClick={() => refreshFirstPage()}
-            className="inline-flex w-min items-center justify-center rounded-full border border-fuchsia-800/50 bg-fuchsia-500 px-3.5 py-1.5 text-sm hover:bg-fuchsia-600"
-          >
-            Newest
-          </button>
-        </div>
-      )}
       <div
         ref={parentRef}
         className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"

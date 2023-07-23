@@ -15,7 +15,7 @@ export function Hashtag({ tag }: { tag: string }) {
           content: tag.replace('#', ''),
         })
       }
-      className="rounded bg-zinc-800 px-2 py-px text-sm font-normal text-orange-400 no-underline hover:bg-zinc-700 hover:text-orange-500"
+      className="break-words font-normal text-orange-400 no-underline hover:text-orange-500"
     >
       {tag}
     </button>

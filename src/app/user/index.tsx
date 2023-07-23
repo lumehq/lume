@@ -1,12 +1,11 @@
-import { Tab } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { UserFeed } from '@app/user/components/feed';
 import { UserMetadata } from '@app/user/components/metadata';
 
 import { EditProfileModal } from '@shared/editProfileModal';
-import { ThreadsIcon, ZapIcon } from '@shared/icons';
+import { ZapIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
@@ -136,35 +135,11 @@ export function UserScreen() {
           </div>
         </div>
         <div className="mt-8 w-full border-t border-zinc-900">
-          <Tab.Group>
-            <Tab.List className="mb-2 px-5">
-              <Tab as={Fragment}>
-                {({ selected }) => (
-                  <button
-                    type="button"
-                    className={`${
-                      selected ? 'border-fuchsia-500' : 'border-transparent'
-                    } inline-flex h-16 items-start gap-2 border-t pt-4 font-medium`}
-                  >
-                    <ThreadsIcon className="h-3.5 w-3.5" />
-                    <div className="flex flex-col justify-start gap-0.5 text-start">
-                      <p className="text-sm font-medium leading-none text-zinc-200">
-                        Activities
-                      </p>
-                      <span className="text-sm leading-none text-zinc-500">
-                        48 hours ago
-                      </span>
-                    </div>
-                  </button>
-                )}
-              </Tab>
-            </Tab.List>
-            <Tab.Panels>
-              <Tab.Panel>
-                <UserFeed pubkey={pubkey} />
-              </Tab.Panel>
-            </Tab.Panels>
-          </Tab.Group>
+          <div className="flex flex-col justify-start gap-0.5 text-start">
+            <p className="text-sm font-medium leading-none text-zinc-200">Latest posts</p>
+            <span className="text-sm leading-none text-zinc-500">48 hours ago</span>
+          </div>
+          <UserFeed pubkey={pubkey} />
         </div>
       </div>
     </div>
