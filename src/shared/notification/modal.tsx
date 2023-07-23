@@ -6,8 +6,7 @@ import { useCallback } from 'react';
 import { useNDK } from '@libs/ndk/provider';
 
 import { BellIcon, CancelIcon, LoaderIcon } from '@shared/icons';
-import { NotificationUser } from '@shared/notification/user';
-import { User } from '@shared/user';
+import { NotiMention, NotiReaction, NotiRepost } from '@shared/notification';
 
 import { nHoursAgo } from '@utils/date';
 import { LumeEvent } from '@utils/types';
@@ -22,7 +21,9 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
         { '#p': [pubkey], kinds: [1, 6, 7, 9735] },
         { since: nHoursAgo(24) }
       );
-      return events as unknown as LumeEvent[];
+      const filterSelf = events.filter((el) => el.pubkey !== pubkey);
+      const sorted = filterSelf.sort((a, b) => a.created_at - b.created_at);
+      return sorted as unknown as LumeEvent[];
     },
     {
       refetchOnWindowFocus: false,
@@ -33,36 +34,13 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case 1:
-          return (
-            <div key={event.id} className="flex flex-col px-5 py-2">
-              <User pubkey={event.pubkey} time={event.created_at} isChat={true} />
-              <div className="-mt-[20px] pl-[49px]">
-                <p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
-                  {event.content}
-                </p>
-              </div>
-            </div>
-          );
+          return <NotiMention key={event.id} event={event} />;
         case 6:
-          return (
-            <div key={event.id} className="flex flex-col px-5 py-2">
-              <NotificationUser pubkey={event.pubkey} desc="repost your post" />
-            </div>
-          );
+          return <NotiRepost key={event.id} event={event} />;
         case 7:
-          return (
-            <div key={event.id} className="flex flex-col px-5 py-2">
-              <NotificationUser pubkey={event.pubkey} desc="liked your post" />
-            </div>
-          );
-        case 9735:
-          return (
-            <div key={event.id} className="flex flex-col px-5 py-2">
-              <NotificationUser pubkey={event.pubkey} desc="zapped your post" />
-            </div>
-          );
+          return <NotiReaction key={event.id} event={event} />;
         default:
-          return <div className="flex flex-col px-5 py-2">{event.content}</div>;
+          return null;
       }
     },
     [data]
