@@ -39,15 +39,20 @@ export function usePublish() {
     return event;
   };
 
-  const createZap = async (event: NostrEvent, amount: number) => {
-    if (!privkey) throw new Error('Private key not found');
+  const createZap = async (event: NostrEvent, amount: number, message?: string) => {
+    // @ts-expect-error, lumeevent to nostrevent
+    event.id = event.event_id;
+    // @ts-expect-error, lumeevent to nostrevent
+    if (typeof event.content !== 'string') event.content = event.content.original;
     if (typeof event.tags === 'string') event.tags = destr(event.tags);
-
-    const signer = new NDKPrivateKeySigner(privkey);
-    ndk.signer = signer;
+    if (!privkey) throw new Error('Private key not found');
+    if (!ndk.signer) {
+      const signer = new NDKPrivateKeySigner(privkey);
+      ndk.signer = signer;
+    }
 
     const ndkEvent = new NDKEvent(ndk, event);
-    const res = await ndkEvent.zap(amount, 'test zap from lume');
+    const res = await ndkEvent.zap(amount, message ?? 'test zap from lume');
     return res;
   };
 
