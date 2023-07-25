@@ -8,7 +8,7 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { useProfile } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 
-export function ChatsListSelfItem({ data }: { data: any }) {
+export function ChatsListSelfItem({ data }: { data: { pubkey: string } }) {
   const { status, user } = useProfile(data.pubkey);
 
   if (status === 'loading') {
@@ -24,7 +24,7 @@ export function ChatsListSelfItem({ data }: { data: any }) {
 
   return (
     <NavLink
-      to={`/app/chat/${data.pubkey}`}
+      to={`/app/chats/${data.pubkey}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(

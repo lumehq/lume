@@ -2,7 +2,7 @@ import { Disclosure } from '@headlessui/react';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { ChatsList } from '@app/chat/components/list';
+import { ChatsList } from '@app/chats/components/list';
 
 import { AppHeader } from '@shared/appHeader';
 import { ComposerModal } from '@shared/composer/modal';

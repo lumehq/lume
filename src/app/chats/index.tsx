@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
-import { ChatMessageForm } from '@app/chat/components/messages/form';
-import { ChatMessageItem } from '@app/chat/components/messages/item';
-import { ChatSidebar } from '@app/chat/components/sidebar';
+import { ChatMessageForm } from '@app/chats/components/messages/form';
+import { ChatMessageItem } from '@app/chats/components/messages/item';
+import { ChatSidebar } from '@app/chats/components/sidebar';
 
 import { useNDK } from '@libs/ndk/provider';
 import { createChat, getChatMessages } from '@libs/storage';

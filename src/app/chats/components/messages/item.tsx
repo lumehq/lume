@@ -1,4 +1,4 @@
-import { useDecryptMessage } from '@app/chat/hooks/useDecryptMessage';
+import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
 import { MentionNote } from '@shared/notes/mentions/note';
 import { ImagePreview } from '@shared/notes/preview/image';

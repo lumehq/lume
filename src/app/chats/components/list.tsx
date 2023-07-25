@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { ChatsListItem } from '@app/chat/components/item';
-import { NewMessageModal } from '@app/chat/components/modal';
-import { ChatsListSelfItem } from '@app/chat/components/self';
+import { ChatsListItem } from '@app/chats/components/item';
+import { NewMessageModal } from '@app/chats/components/modal';
+import { ChatsListSelfItem } from '@app/chats/components/self';
 
 import { getChats } from '@libs/storage';
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { UserMetadata } from '@app/user/components/metadata';
+import { UserMetadata } from '@app/users/components/metadata';
 
 import { ZapIcon } from '@shared/icons';
 import { Image } from '@shared/image';
@@ -97,7 +97,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             </button>
           )}
           <Link
-            to={`/app/chat/${pubkey}`}
+            to={`/app/chats/${pubkey}`}
             className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
           >
             Message

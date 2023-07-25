@@ -13,7 +13,7 @@ export function NewMessageModal() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { status, account } = useAccount();
-  const follows = account ? JSON.parse(account.follows) : [];
+  const follows = account ? JSON.parse(account.follows as string) : [];
 
   const closeModal = () => {
     setIsOpen(false);
@@ -25,7 +25,7 @@ export function NewMessageModal() {
 
   const openChat = (pubkey: string) => {
     closeModal();
-    navigate(`/app/chat/${pubkey}`);
+    navigate(`/app/chats/${pubkey}`);
   };
 
   return (
