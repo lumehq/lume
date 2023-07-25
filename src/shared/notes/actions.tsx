@@ -14,10 +14,12 @@ export function NoteActions({
   id,
   pubkey,
   noOpenThread,
+  root,
 }: {
   id: string;
   pubkey: string;
   noOpenThread?: boolean;
+  root?: string;
 }) {
   const { add } = useBlock();
 
@@ -25,7 +27,7 @@ export function NoteActions({
     <Tooltip.Provider>
       <div className="-ml-1 mt-2 inline-flex w-full items-center">
         <div className="inline-flex items-center gap-2">
-          <NoteReply id={id} pubkey={pubkey} />
+          <NoteReply id={id} pubkey={pubkey} root={root} />
           <NoteReaction id={id} pubkey={pubkey} />
           <NoteRepost id={id} pubkey={pubkey} />
           <NoteZap id={id} />

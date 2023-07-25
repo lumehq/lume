@@ -6,7 +6,7 @@ import { User } from '@shared/user';
 import { parser } from '@utils/parser';
 import { LumeEvent } from '@utils/types';
 
-export function Reply({ event }: { event: LumeEvent }) {
+export function Reply({ event, root }: { event: LumeEvent; root?: string }) {
   const content = useMemo(() => parser(event), [event]);
 
   return (
@@ -18,7 +18,11 @@ export function Reply({ event }: { event: LumeEvent }) {
             <div className="w-11 shrink-0" />
             <div className="flex-1">
               <NoteContent content={content} />
-              <NoteActions id={event.event_id || event.id} pubkey={event.pubkey} />
+              <NoteActions
+                id={event.event_id || event.id}
+                pubkey={event.pubkey}
+                root={root}
+              />
             </div>
           </div>
           <div>

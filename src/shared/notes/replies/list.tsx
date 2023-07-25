@@ -1,4 +1,3 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -68,7 +67,9 @@ export function RepliesList({ id }: { id: string }) {
             </div>
           </div>
         ) : (
-          data.reverse().map((event: NDKEvent) => <Reply key={event.id} event={event} />)
+          data
+            .reverse()
+            .map((event: LumeEvent) => <Reply key={event.id} event={event} root={id} />)
         )}
       </div>
     </div>

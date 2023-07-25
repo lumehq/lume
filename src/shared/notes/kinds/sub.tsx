@@ -3,7 +3,7 @@ import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
 
-export function SubNote({ id }: { id: string }) {
+export function SubNote({ id, root }: { id: string; root?: string }) {
   const { status, data } = useEvent(id);
 
   if (status === 'loading') {
@@ -31,7 +31,7 @@ export function SubNote({ id }: { id: string }) {
           <div className="w-11 shrink-0" />
           <div className="flex-1">
             <NoteContent content={data.content} />
-            <NoteActions id={data.event_id} pubkey={data.pubkey} />
+            <NoteActions id={data.event_id} pubkey={data.pubkey} root={root} />
           </div>
         </div>
       </div>

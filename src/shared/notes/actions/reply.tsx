@@ -4,7 +4,15 @@ import { ReplyIcon } from '@shared/icons';
 
 import { useComposer } from '@stores/composer';
 
-export function NoteReply({ id, pubkey }: { id: string; pubkey: string }) {
+export function NoteReply({
+  id,
+  pubkey,
+  root,
+}: {
+  id: string;
+  pubkey: string;
+  root?: string;
+}) {
   const setReply = useComposer((state) => state.setReply);
 
   return (
@@ -12,7 +20,7 @@ export function NoteReply({ id, pubkey }: { id: string; pubkey: string }) {
       <Tooltip.Trigger asChild>
         <button
           type="button"
-          onClick={() => setReply(id, pubkey)}
+          onClick={() => setReply(id, pubkey, root)}
           className="group inline-flex h-7 w-7 items-center justify-center"
         >
           <ReplyIcon className="h-5 w-5 text-zinc-300 group-hover:text-green-500" />

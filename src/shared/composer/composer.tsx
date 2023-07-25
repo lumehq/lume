@@ -69,11 +69,23 @@ export function Composer() {
 
   const submit = async () => {
     setStatus('loading');
+
     try {
+      // get plaintext content
+      const html = editor.getHTML();
+      const serializedContent = convert(html, {
+        selectors: [
+          { selector: 'a', options: { linkBrackets: false } },
+          { selector: 'img', options: { linkBrackets: false } },
+        ],
+      });
+
+      // define tags
       let tags: string[][] = [];
 
+      // add reply to tags if present
       if (reply.id && reply.pubkey) {
-        if (reply.root) {
+        if (reply.root && reply.root.length > 1) {
           tags = [
             ['e', reply.root, FULL_RELAYS[0], 'root'],
             ['e', reply.id, FULL_RELAYS[0], 'reply'],
@@ -87,14 +99,15 @@ export function Composer() {
         }
       }
 
-      // get plaintext content
-      const html = editor.getHTML();
-      const serializedContent = convert(html, {
-        selectors: [
-          { selector: 'a', options: { linkBrackets: false } },
-          { selector: 'img', options: { linkBrackets: false } },
-        ],
+      // add hashtag to tags if present
+      const hashtags = serializedContent
+        .split(/\s/gm)
+        .filter((s: string) => s.startsWith('#'));
+      hashtags?.forEach((tag: string) => {
+        tags.push(['t', tag.replace('#', '')]);
       });
+
+      console.log(tags);
 
       // publish message
       await publish({ content: serializedContent, kind: 1, tags });

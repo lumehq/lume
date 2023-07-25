@@ -2,22 +2,15 @@ import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
 import ReactPlayer from 'react-player';
 
-import { LumeEvent } from '@utils/types';
+import { Content, LumeEvent } from '@utils/types';
 
 export function parser(event: LumeEvent) {
-  const references = parseReferences(event as Event);
-  const urls = getUrls(event.content);
+  const references = parseReferences(event as unknown as Event);
+  const urls = getUrls(event.content as unknown as string);
 
-  const content: {
-    original: string;
-    parsed: string;
-    notes: string[];
-    images: string[];
-    videos: string[];
-    links: string[];
-  } = {
-    original: event.content,
-    parsed: event.content,
+  const content: Content = {
+    original: event.content as unknown as string,
+    parsed: event.content as unknown as string,
     notes: [],
     images: [],
     videos: [],
