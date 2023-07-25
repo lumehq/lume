@@ -1,31 +1,21 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { createBlock } from '@libs/storage';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
-import { Image } from '@shared/image';
 
-import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
-import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
+import { BLOCK_KINDS } from '@stores/constants';
+import { ADD_HASHTAGBLOCK_SHORTCUT } from '@stores/shortcuts';
 
-import { usePublish } from '@utils/hooks/usePublish';
-import { useImageUploader } from '@utils/hooks/useUploader';
-
-export function AddImageBlock() {
+export function AddHashTagBlock() {
   const queryClient = useQueryClient();
-  const upload = useImageUploader();
-
-  const { publish } = usePublish();
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [image, setImage] = useState('');
-
-  const tags = useRef(null);
 
   const openModal = () => {
     setIsOpen(true);
@@ -35,13 +25,12 @@ export function AddImageBlock() {
     setIsOpen(false);
   };
 
-  useHotkeys(ADD_IMAGEBLOCK_SHORTCUT, () => openModal());
+  useHotkeys(ADD_HASHTAGBLOCK_SHORTCUT, () => openModal());
 
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { isDirty, isValid },
   } = useForm();
 
@@ -54,21 +43,15 @@ export function AddImageBlock() {
     },
   });
 
-  const uploadImage = async () => {
-    const image = await upload(null);
-    if (image.url) {
-      setImage(image.url);
-    }
-  };
-
-  const onSubmit = async (data: { kind: number; title: string; content: string }) => {
+  const onSubmit = async (data: { hashtag: string }) => {
     setLoading(true);
 
-    // publish file metedata
-    await publish({ content: data.title, kind: 1063, tags: tags.current });
-
     // mutate
-    block.mutate({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
+    block.mutate({
+      kind: BLOCK_KINDS.hashtag,
+      title: data.hashtag,
+      content: data.hashtag.replace('#', ''),
+    });
 
     setLoading(false);
     // reset form
@@ -76,10 +59,6 @@ export function AddImageBlock() {
     // close modal
     closeModal();
   };
-
-  useEffect(() => {
-    setValue('content', image);
-  }, [setValue, image]);
 
   return (
     <>
@@ -93,11 +72,11 @@ export function AddImageBlock() {
             <CommandIcon width={12} height={12} className="text-zinc-500" />
           </div>
           <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-            <span className="text-sm leading-none text-zinc-500">I</span>
+            <span className="text-sm leading-none text-zinc-500">T</span>
           </div>
         </div>
         <div>
-          <h5 className="font-medium text-zinc-400">New image block</h5>
+          <h5 className="font-medium text-zinc-400">New hashtag block</h5>
         </div>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
@@ -131,7 +110,7 @@ export function AddImageBlock() {
                         as="h3"
                         className="text-lg font-semibold leading-none text-zinc-100"
                       >
-                        Create image block
+                        Create hashtag block
                       </Dialog.Title>
                       <button
                         type="button"
@@ -142,8 +121,7 @@ export function AddImageBlock() {
                       </button>
                     </div>
                     <Dialog.Description className="text-sm leading-tight text-zinc-400">
-                      Pin your favorite image to Space then you can view every time that
-                      you use Lume, your image will be broadcast to Nostr Relay as well
+                      Pin the hashtag you want to keep follow up
                     </Dialog.Description>
                   </div>
                 </div>
@@ -152,53 +130,23 @@ export function AddImageBlock() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="mb-0 flex h-full w-full flex-col gap-4"
                   >
-                    <input
-                      type={'hidden'}
-                      {...register('content')}
-                      value={image}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
-                    />
                     <div className="flex flex-col gap-1">
                       <label
                         htmlFor="title"
                         className="text-sm font-medium uppercase tracking-wider text-zinc-400"
                       >
-                        Title *
+                        Hashtag *
                       </label>
                       <div className="after:shadow-highlight relative w-full shrink-0 overflow-hidden before:pointer-events-none before:absolute before:-inset-1 before:rounded-[6px] before:border before:border-fuchsia-500 before:opacity-0 before:ring-2 before:ring-fuchsia-500/20 before:transition after:pointer-events-none after:absolute after:inset-px after:rounded-[6px] after:shadow-white/5 after:transition focus-within:before:opacity-100 focus-within:after:shadow-fuchsia-500/100 dark:focus-within:after:shadow-fuchsia-500/20">
                         <input
                           type={'text'}
-                          {...register('title', {
+                          {...register('hashtag', {
                             required: true,
                           })}
                           spellCheck={false}
+                          placeholder="#"
                           className="shadow-input relative h-10 w-full rounded-md border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
                         />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label
-                        htmlFor="picture"
-                        className="text-sm font-medium uppercase tracking-wider text-zinc-400"
-                      >
-                        Picture
-                      </label>
-                      <div className="relative inline-flex h-56 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
-                        <Image
-                          src={image}
-                          fallback={DEFAULT_AVATAR}
-                          alt="content"
-                          className="relative z-10 h-auto max-h-[156px] w-[150px] rounded-md object-cover"
-                        />
-                        <div className="absolute bottom-3 right-3 z-10">
-                          <button
-                            onClick={() => uploadImage()}
-                            type="button"
-                            className="inline-flex h-6 items-center justify-center rounded bg-zinc-900 px-3 text-sm font-medium text-zinc-300 ring-1 ring-zinc-800 hover:bg-zinc-800"
-                          >
-                            Upload
-                          </button>
-                        </div>
                       </div>
                     </div>
                     <div>

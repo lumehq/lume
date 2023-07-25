@@ -91,7 +91,7 @@ export function UnknownsModal({ data }: { data: Chats[] }) {
                 <div className="flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-5">
                   {data.map((user) => (
                     <div
-                      key={user.event_id}
+                      key={user.event_id || user.id}
                       className="group flex items-center justify-between px-4 py-3 hover:bg-zinc-800"
                     >
                       <User pubkey={user.sender_pubkey} />

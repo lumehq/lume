@@ -81,7 +81,7 @@ export function AddFeedBlock() {
       <button
         type="button"
         onClick={() => openModal()}
-        className="inline-flex h-9 w-56 items-center justify-start gap-2.5 rounded-md px-2.5"
+        className="inline-flex h-9 w-72 items-center justify-start gap-2.5 rounded-md px-2.5"
       >
         <div className="flex items-center gap-2">
           <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
