@@ -55,7 +55,7 @@ export async function createAccount(
     await createBlock(
       0,
       'Have fun together!',
-      'https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv'
+      'https://i.nostrimg.com/cf7bdc227592686a0fcefcecb63fa860aab74c3c36dcd1cb6b09530188db7791/file.jpg'
     );
   }
   const getAccount = await getActiveAccount();
@@ -165,7 +165,6 @@ export async function getNoteByID(event_id: string) {
     `SELECT * FROM notes WHERE event_id = "${event_id}";`
   );
   if (result[0]) {
-    // @ts-expect-error, todo
     if (result[0].kind === 1) result[0]['content'] = parser(result[0]);
     return result[0];
   } else {
