@@ -70,7 +70,7 @@ export function FollowingBlock() {
           if (root || reply) {
             return (
               <div
-                key={(root || reply) + (note.event_id || note.id)}
+                key={(root || reply) + (note.event_id || note.id) + index}
                 data-index={index}
                 ref={rowVirtualizer.measureElement}
               >
@@ -80,7 +80,7 @@ export function FollowingBlock() {
           } else {
             return (
               <div
-                key={note.event_id || note.id}
+                key={(note.event_id || note.id) + index}
                 data-index={index}
                 ref={rowVirtualizer.measureElement}
               >
@@ -92,7 +92,7 @@ export function FollowingBlock() {
         case 6:
           return (
             <div
-              key={note.event_id || note.id}
+              key={(note.event_id || note.id) + index}
               data-index={index}
               ref={rowVirtualizer.measureElement}
             >
@@ -102,7 +102,7 @@ export function FollowingBlock() {
         case 1063:
           return (
             <div
-              key={note.event_id || note.id}
+              key={(note.event_id || note.id) + index}
               data-index={index}
               ref={rowVirtualizer.measureElement}
             >
@@ -112,7 +112,7 @@ export function FollowingBlock() {
         default:
           return (
             <div
-              key={note.event_id || note.id}
+              key={(note.event_id || note.id) + index}
               data-index={index}
               ref={rowVirtualizer.measureElement}
             >

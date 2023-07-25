@@ -113,6 +113,12 @@ fn main() {
               sql: include_str!("../migrations/20230718072634_clean_up_old_tables.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230725010250,
+              description: "update default relays",
+              sql: include_str!("../migrations/20230725010250_update_default_relays.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

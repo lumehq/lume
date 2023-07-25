@@ -21,7 +21,7 @@ export function useEvent(id: string, fallback?: string) {
           embed.pubkey,
           embed.kind,
           embed.tags,
-          embed.content,
+          embed.content as unknown as string,
           embed.created_at
         );
         return embed;
@@ -42,7 +42,7 @@ export function useEvent(id: string, fallback?: string) {
             // @ts-ignore
             event['content'] = parser(event);
           }
-          return event as LumeEvent;
+          return event as unknown as LumeEvent;
         } else {
           throw new Error('Event not found');
         }

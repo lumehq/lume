@@ -25,7 +25,7 @@ export function ThreadUser({ pubkey, time }: { pubkey: string; time: number }) {
       />
       <div className="lex flex-1 items-baseline justify-between">
         <div className="inline-flex w-full items-center justify-between">
-          <h5 className="truncate font-semibold leading-none text-zinc-100">
+          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-zinc-100">
             {user?.nip05?.toLowerCase() || user?.name || user?.display_name}
           </h5>
           <button

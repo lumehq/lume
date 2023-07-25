@@ -1,9 +1,19 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 
+export interface Content {
+  original: string;
+  parsed: string;
+  notes: string[];
+  images: string[];
+  videos: string[];
+  links: string[];
+}
+
 export interface LumeEvent extends NDKEvent {
   event_id?: string;
   parent_id?: string;
   replies?: LumeEvent[];
+  content: Content;
 }
 
 export interface Account {

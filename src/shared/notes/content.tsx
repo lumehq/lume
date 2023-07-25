@@ -10,18 +10,9 @@ import {
   VideoPreview,
 } from '@shared/notes';
 
-export function NoteContent({
-  content,
-}: {
-  content: {
-    original: string;
-    parsed: string;
-    notes: string[];
-    images: string[];
-    videos: string[];
-    links: string[];
-  };
-}) {
+import { Content } from '@utils/types';
+
+export function NoteContent({ content }: { content: Content }) {
   return (
     <>
       <ReactMarkdown
