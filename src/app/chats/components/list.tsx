@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import { ChatsListItem } from '@app/chats/components/item';
 import { NewMessageModal } from '@app/chats/components/modal';
 import { ChatsListSelfItem } from '@app/chats/components/self';
+import { UnknownsModal } from '@app/chats/components/unknowns';
 
 import { getChats } from '@libs/storage';
 
-import { StrangersIcon } from '@shared/icons';
-
 import { useAccount } from '@utils/hooks/useAccount';
-import { compactNumber } from '@utils/number';
+import { Chats } from '@utils/types';
 
 export function ChatsList() {
   const { account } = useAccount();
@@ -20,6 +20,15 @@ export function ChatsList() {
   } = useQuery(['chats'], async () => {
     return await getChats();
   });
+
+  const renderItem = useCallback(
+    (item: Chats) => {
+      if (account.pubkey !== item.sender_pubkey) {
+        return <ChatsListItem key={item.sender_pubkey} data={item} />;
+      }
+    },
+    [chats]
+  );
 
   if (status === 'loading') {
     return (
@@ -46,24 +55,8 @@ export function ChatsList() {
           <div className="h-3 w-full animate-pulse rounded-sm bg-zinc-800" />
         </div>
       )}
-      {chats.follows.map((item) => {
-        if (account.pubkey !== item.sender_pubkey) {
-          return <ChatsListItem key={item.sender_pubkey} data={item} />;
-        }
-      })}
-      <button
-        type="button"
-        className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5"
-      >
-        <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-          <StrangersIcon className="h-3 w-3 text-zinc-200" />
-        </div>
-        <div>
-          <h5 className="font-medium text-zinc-400">
-            {compactNumber.format(chats.unknown)} strangers
-          </h5>
-        </div>
-      </button>
+      {chats.follows.map((item) => renderItem(item))}
+      {chats.unknowns.length > 0 && <UnknownsModal data={chats.unknowns} />}
       <NewMessageModal />
       {isFetching && (
         <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">

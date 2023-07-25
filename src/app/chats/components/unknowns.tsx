@@ -4,16 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
-import { CancelIcon, LoaderIcon, PlusIcon } from '@shared/icons';
+import { CancelIcon, StrangersIcon } from '@shared/icons';
 
-import { useAccount } from '@utils/hooks/useAccount';
+import { compactNumber } from '@utils/number';
+import { Chats } from '@utils/types';
 
-export function NewMessageModal() {
+export function UnknownsModal({ data }: { data: Chats[] }) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-
-  const { status, account } = useAccount();
-  const follows = account ? JSON.parse(account.follows as string) : [];
 
   const closeModal = () => {
     setIsOpen(false);
@@ -36,10 +34,12 @@ export function NewMessageModal() {
         className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5"
       >
         <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-          <PlusIcon className="h-3 w-3 text-zinc-200" />
+          <StrangersIcon className="h-3 w-3 text-zinc-200" />
         </div>
         <div>
-          <h5 className="font-medium text-zinc-400">New chat</h5>
+          <h5 className="font-medium text-zinc-400">
+            {compactNumber.format(data.length)} unknowns
+          </h5>
         </div>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
@@ -73,7 +73,7 @@ export function NewMessageModal() {
                         as="h3"
                         className="text-lg font-semibold leading-none text-zinc-100"
                       >
-                        New chat
+                        {data.length} unknowns
                       </Dialog.Title>
                       <button
                         type="button"
@@ -84,34 +84,28 @@ export function NewMessageModal() {
                       </button>
                     </div>
                     <Dialog.Description className="text-sm leading-tight text-zinc-400">
-                      All messages will be encrypted, but anyone can see who you chat
+                      All messages from people you not follow
                     </Dialog.Description>
                   </div>
                 </div>
                 <div className="flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-5">
-                  {status === 'loading' ? (
-                    <div className="inline-flex items-center justify-center px-4 py-3">
-                      <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
-                    </div>
-                  ) : (
-                    follows.map((follow) => (
-                      <div
-                        key={follow}
-                        className="group flex items-center justify-between px-4 py-3 hover:bg-zinc-800"
-                      >
-                        <User pubkey={follow} />
-                        <div>
-                          <button
-                            type="button"
-                            onClick={() => openChat(follow)}
-                            className="hidden w-max rounded-md bg-zinc-700 px-3 py-1 text-sm font-medium hover:bg-fuchsia-500 group-hover:inline-flex"
-                          >
-                            Chat
-                          </button>
-                        </div>
+                  {data.map((user) => (
+                    <div
+                      key={user.event_id}
+                      className="group flex items-center justify-between px-4 py-3 hover:bg-zinc-800"
+                    >
+                      <User pubkey={user.sender_pubkey} />
+                      <div>
+                        <button
+                          type="button"
+                          onClick={() => openChat(user.sender_pubkey)}
+                          className="hidden w-max rounded-md bg-zinc-700 px-3 py-1 text-sm font-medium hover:bg-fuchsia-500 group-hover:inline-flex"
+                        >
+                          Chat
+                        </button>
                       </div>
-                    ))
-                  )}
+                    </div>
+                  ))}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

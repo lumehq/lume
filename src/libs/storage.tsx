@@ -308,9 +308,9 @@ export async function getChats() {
   const follows =
     typeof account.follows === 'string' ? JSON.parse(account.follows) : account.follows;
 
-  const chats: { follows: Array<Chats> | null; unknown: number } = {
+  const chats: { follows: Array<Chats> | null; unknowns: Array<Chats> | null } = {
     follows: [],
-    unknown: 0,
+    unknowns: [],
   };
 
   let result: Array<Chats> = await db.select(
@@ -326,7 +326,9 @@ export async function getChats() {
     });
   });
 
-  chats.unknown = result.length - chats.follows.length;
+  chats.unknowns = result.filter(
+    (el) => !chats.follows.includes(el) && el.sender_pubkey !== account.pubkey
+  );
 
   return chats;
 }
