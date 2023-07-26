@@ -34,7 +34,7 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
         <span className="truncate font-medium leading-tight text-zinc-100">
           {user?.name || user?.displayName || user?.display_name}
         </span>
-        <span className="text-base leading-tight text-zinc-400">
+        <span className="max-w-[15rem] truncate text-base leading-tight text-zinc-400">
           {user?.nip05?.toLowerCase() || shortenKey(pubkey)}
         </span>
       </div>

@@ -8,6 +8,7 @@ import { NoteZap } from '@shared/notes/actions/zap';
 
 import { BLOCK_KINDS } from '@stores/constants';
 
+import { useAccount } from '@utils/hooks/useAccount';
 import { useBlock } from '@utils/hooks/useBlock';
 
 export function NoteActions({
@@ -22,6 +23,7 @@ export function NoteActions({
   root?: string;
 }) {
   const { add } = useBlock();
+  const { account } = useAccount();
 
   return (
     <Tooltip.Provider>
@@ -30,7 +32,7 @@ export function NoteActions({
           <NoteReply id={id} pubkey={pubkey} root={root} />
           <NoteReaction id={id} pubkey={pubkey} />
           <NoteRepost id={id} pubkey={pubkey} />
-          <NoteZap id={id} />
+          {(account?.lud06 || account?.lud16) && <NoteZap id={id} />}
         </div>
         {!noOpenThread && (
           <>

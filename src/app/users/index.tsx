@@ -88,6 +88,7 @@ export function UserScreen() {
                     <NoteKind_1 event={data[virtualRow.index]} />
                   </div>
                 ))}
+                <div className="h-10" />
               </div>
             </div>
           )}

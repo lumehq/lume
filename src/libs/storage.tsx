@@ -55,7 +55,7 @@ export async function createAccount(
     await createBlock(
       0,
       'Have fun together!',
-      'https://i.nostrimg.com/cf7bdc227592686a0fcefcecb63fa860aab74c3c36dcd1cb6b09530188db7791/file.jpg'
+      'https://void.cat/d/N5KUHEQCVg7SywXUPiJ7yq.jpg'
     );
   }
   const getAccount = await getActiveAccount();

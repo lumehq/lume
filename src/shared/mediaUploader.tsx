@@ -1,57 +1,20 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { open } from '@tauri-apps/api/dialog';
-import { Body, fetch } from '@tauri-apps/api/http';
 import { useState } from 'react';
 
 import { LoaderIcon, MediaIcon } from '@shared/icons';
 
-import { createBlobFromFile } from '@utils/createBlobFromFile';
+import { useImageUploader } from '@utils/hooks/useUploader';
 
 export function MediaUploader({ setState }: { setState: any }) {
+  const upload = useImageUploader();
   const [loading, setLoading] = useState(false);
 
-  const openFileDialog = async () => {
-    const selected: any = await open({
-      multiple: false,
-      filters: [
-        {
-          name: 'Image & Video',
-          extensions: ['png', 'jpeg', 'jpg', 'gif', 'mp4', 'mov'],
-        },
-      ],
-    });
-    if (Array.isArray(selected)) {
-      // user selected multiple files
-    } else if (selected === null) {
-      // user cancelled the selection
-    } else {
-      // start loading
-      setLoading(true);
-
-      const filename = selected.split('/').pop();
-      const file = await createBlobFromFile(selected);
-      const buf = await file.arrayBuffer();
-
-      const res: { data: { file: { id: string } } } = await fetch(
-        'https://void.cat/upload?cli=false',
-        {
-          method: 'POST',
-          timeout: 5,
-          headers: {
-            accept: '*/*',
-            'Content-Type': 'application/octet-stream',
-            'V-Filename': filename,
-            'V-Description': 'Upload from https://lume.nu',
-            'V-Strip-Metadata': 'true',
-          },
-          body: Body.bytes(buf),
-        }
-      );
-
-      const image = `https://void.cat/d/${res.data.file.id}.webp`;
-
+  const uploadMedia = async () => {
+    const image = await upload(null);
+    if (image.url) {
       // update state
-      setState((prev: string) => `${prev}\n${image}`);
+      setState((prev: string) => `${prev}\n${image.url}`);
       // stop loading
       setLoading(false);
     }
@@ -63,7 +26,7 @@ export function MediaUploader({ setState }: { setState: any }) {
         <Tooltip.Trigger asChild>
           <button
             type="button"
-            onClick={() => openFileDialog()}
+            onClick={() => uploadMedia()}
             className="group inline-flex h-6 w-6 items-center justify-center rounded bg-zinc-700 hover:bg-zinc-600"
           >
             {loading ? (

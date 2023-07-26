@@ -23,7 +23,7 @@ export function NoteZap({ id }: { id: string }) {
   };
 
   const createZapRequest = async () => {
-    const res = await createZap(event as NostrEvent, amount);
+    const res = await createZap(event as unknown as NostrEvent, amount);
     if (res) setInvoice(res);
   };
 

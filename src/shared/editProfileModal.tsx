@@ -312,6 +312,20 @@ export function EditProfileModal() {
                           className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
                         />
                       </div>
+                      <div className="flex flex-col gap-1">
+                        <label
+                          htmlFor="website"
+                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                        >
+                          Lightning address
+                        </label>
+                        <input
+                          type={'text'}
+                          {...register('lud16', { required: false })}
+                          spellCheck={false}
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                        />
+                      </div>
                       <div>
                         <button
                           type="submit"
