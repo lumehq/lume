@@ -1,29 +1,27 @@
-import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
 import { createNote } from '@libs/storage';
 
-import { dateToUnix, getHourAgo } from '@utils/date';
+import { nHoursAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 import { usePublish } from '@utils/hooks/usePublish';
 import { nip02ToArray } from '@utils/transform';
 
 export function useSocial() {
   const queryClient = useQueryClient();
-  const publish = usePublish();
 
-  const { ndk } = useNDK();
+  const { publish } = usePublish();
+  const { fetcher, relayUrls } = useNDK();
   const { account } = useAccount();
   const { status, data: userFollows } = useQuery(
     ['userFollows', account.pubkey],
     async () => {
-      const res = await ndk.fetchEvents({
+      const res = await fetcher.fetchLastEvent(relayUrls, {
         kinds: [3],
         authors: [account.pubkey],
       });
-      const latest = [...res].slice(-1)[0];
-      const list = nip02ToArray(latest.tags);
+      const list = nip02ToArray(res.tags);
       return list;
     },
     {
@@ -68,14 +66,14 @@ export function useSocial() {
     });
 
     // fetch events
-    const filter: NDKFilter = {
-      authors: [pubkey],
-      kinds: [1, 6],
-      since: dateToUnix(getHourAgo(48, new Date())),
-    };
-    const events = await ndk.fetchEvents(filter);
-    events.forEach((event: NDKEvent) => {
-      createNote(
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      { authors: [pubkey], kinds: [1, 6] },
+      { since: nHoursAgo(48) }
+    );
+
+    for (const event of events) {
+      await createNote(
         event.id,
         event.pubkey,
         event.kind,
@@ -83,7 +81,7 @@ export function useSocial() {
         event.content,
         event.created_at
       );
-    });
+    }
   };
 
   return { status, userFollows, follow, unfollow };

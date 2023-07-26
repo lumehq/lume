@@ -19,7 +19,7 @@ export function useNewsfeed() {
 
   useEffect(() => {
     if (status === 'success' && account) {
-      const follows = account ? JSON.parse(account.follows) : [];
+      const follows = account ? JSON.parse(account.follows as string) : [];
 
       const filter: NDKFilter = {
         kinds: [1, 6],
@@ -30,7 +30,6 @@ export function useNewsfeed() {
       sub.current = ndk.subscribe(filter, { closeOnEose: false });
 
       sub.current.addListener('event', (event: NDKEvent) => {
-        console.log('new note: ', event);
         // add to db
         createNote(
           event.id,
@@ -46,7 +45,9 @@ export function useNewsfeed() {
     }
 
     return () => {
-      sub.current.stop();
+      if (sub.current) {
+        sub.current.stop();
+      }
     };
   }, [status]);
 }

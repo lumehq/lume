@@ -24,12 +24,13 @@ export function CreateStep3Screen() {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { name: string; about: string }) => {
     setLoading(true);
     try {
       const profile = {
         ...data,
         username: data.name,
+        name: data.name,
         display_name: data.name,
         bio: data.about,
       };

@@ -43,4 +43,8 @@ export * from './settings';
 export * from './logout';
 export * from './follow';
 export * from './unfollow';
+export * from './reaction';
+export * from './thread';
+export * from './strangers';
+export * from './download';
 // @endindex

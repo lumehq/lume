@@ -12,9 +12,9 @@ import { usePublish } from '@utils/hooks/usePublish';
 
 export function CreateStep4Screen() {
   const navigate = useNavigate();
-  const publish = usePublish();
   const profile = useOnboarding((state) => state.profile);
 
+  const { publish } = usePublish();
   const { account } = useAccount();
 
   const [username, setUsername] = useState('');

@@ -15,7 +15,7 @@ import { OnboardingScreen } from '@app/auth/onboarding';
 import { UnlockScreen } from '@app/auth/unlock';
 import { WelcomeScreen } from '@app/auth/welcome';
 import { ChannelScreen } from '@app/channel';
-import { ChatScreen } from '@app/chat';
+import { ChatScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { NoteScreen } from '@app/note';
 import { Root } from '@app/root';
@@ -24,7 +24,7 @@ import { GeneralSettingsScreen } from '@app/settings/general';
 import { ShortcutsSettingsScreen } from '@app/settings/shortcuts';
 import { SpaceScreen } from '@app/space';
 import { TrendingScreen } from '@app/trending';
-import { UserScreen } from '@app/user';
+import { UserScreen } from '@app/users';
 
 import { AppLayout } from '@shared/appLayout';
 import { AuthLayout } from '@shared/authLayout';
@@ -84,8 +84,8 @@ const router = createBrowserRouter([
       { path: 'space', element: <SpaceScreen /> },
       { path: 'trending', element: <TrendingScreen /> },
       { path: 'note/:id', element: <NoteScreen /> },
-      { path: 'user/:pubkey', element: <UserScreen /> },
-      { path: 'chat/:pubkey', element: <ChatScreen /> },
+      { path: 'users/:pubkey', element: <UserScreen /> },
+      { path: 'chats/:pubkey', element: <ChatScreen /> },
       { path: 'channel/:id', element: <ChannelScreen /> },
     ],
   },

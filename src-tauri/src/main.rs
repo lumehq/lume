@@ -107,6 +107,18 @@ fn main() {
               sql: include_str!("../migrations/20230619082415_add_replies.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230718072634,
+              description: "clean up",
+              sql: include_str!("../migrations/20230718072634_clean_up_old_tables.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230725010250,
+              description: "update default relays",
+              sql: include_str!("../migrations/20230725010250_update_default_relays.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
@@ -115,8 +127,8 @@ fn main() {
       tauri_plugin_stronghold::Builder::new(|password| {
         let config = argon2::Config {
           lanes: 2,
-          mem_cost: 50_000,
-          time_cost: 30,
+          mem_cost: 10_000,
+          time_cost: 10,
           thread_mode: argon2::ThreadMode::from_threads(2),
           variant: argon2::Variant::Argon2id,
           ..Default::default()
@@ -144,6 +156,7 @@ fn main() {
         .emit_all("single-instance", Payload { args: argv, cwd })
         .unwrap();
     }))
+    .plugin(tauri_plugin_upload::init())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

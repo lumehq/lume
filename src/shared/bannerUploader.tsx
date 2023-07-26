@@ -1,52 +1,16 @@
-import { open } from '@tauri-apps/api/dialog';
-import { Body, fetch } from '@tauri-apps/api/http';
 import { useState } from 'react';
 
 import { LoaderIcon, PlusIcon } from '@shared/icons';
 
-import { createBlobFromFile } from '@utils/createBlobFromFile';
+import { useImageUploader } from '@utils/hooks/useUploader';
 
 export function BannerUploader({ setBanner }: { setBanner: any }) {
+  const upload = useImageUploader();
   const [loading, setLoading] = useState(false);
 
-  const openFileDialog = async () => {
-    const selected: any = await open({
-      multiple: false,
-      filters: [
-        {
-          name: 'Image',
-          extensions: ['png', 'jpeg', 'jpg', 'gif'],
-        },
-      ],
-    });
-    if (Array.isArray(selected)) {
-      // user selected multiple files
-    } else if (selected === null) {
-      // user cancelled the selection
-    } else {
-      setLoading(true);
-
-      const filename = selected.split('/').pop();
-      const file = await createBlobFromFile(selected);
-      const buf = await file.arrayBuffer();
-
-      const res: { data: { file: { id: string } } } = await fetch(
-        'https://void.cat/upload?cli=false',
-        {
-          method: 'POST',
-          timeout: 5,
-          headers: {
-            accept: '*/*',
-            'Content-Type': 'application/octet-stream',
-            'V-Filename': filename,
-            'V-Description': 'Upload from https://lume.nu',
-            'V-Strip-Metadata': 'true',
-          },
-          body: Body.bytes(buf),
-        }
-      );
-      const image = `https://void.cat/d/${res.data.file.id}.jpg`;
-
+  const uploadBanner = async () => {
+    const image = await upload(null);
+    if (image.url) {
       // update parent state
       setBanner(image);
 
@@ -58,7 +22,7 @@ export function BannerUploader({ setBanner }: { setBanner: any }) {
   return (
     <button
       type="button"
-      onClick={() => openFileDialog()}
+      onClick={() => uploadBanner()}
       className="inline-flex h-full w-full items-center justify-center bg-zinc-900/40"
     >
       {loading ? (

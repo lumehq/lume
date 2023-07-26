@@ -1,7 +1,9 @@
-import { NDKUserProfile } from '@nostr-dev-kit/ndk';
+import destr from 'destr';
 import Database from 'tauri-plugin-sql-api';
 
+import { parser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
+import { Account, Block, Chats, LumeEvent, Profile, Settings } from '@utils/types';
 
 let db: null | Database = null;
 
@@ -18,7 +20,9 @@ export async function connect(): Promise<Database> {
 // get active account
 export async function getActiveAccount() {
   const db = await connect();
-  const result: any = await db.select('SELECT * FROM accounts WHERE is_active = 1;');
+  const result: Array<Account> = await db.select(
+    'SELECT * FROM accounts WHERE is_active = 1;'
+  );
   if (result.length > 0) {
     return result[0];
   } else {
@@ -29,9 +33,10 @@ export async function getActiveAccount() {
 // get all accounts
 export async function getAccounts() {
   const db = await connect();
-  return await db.select(
+  const result: Array<Account> = await db.select(
     'SELECT * FROM accounts WHERE is_active = 0 ORDER BY created_at DESC;'
   );
+  return result;
 }
 
 // create account
@@ -49,8 +54,8 @@ export async function createAccount(
   if (res) {
     await createBlock(
       0,
-      'Preserve your freedom',
-      'https://void.cat/d/949GNg7ZjSLHm2eTR3jZqv'
+      'Have fun together!',
+      'https://void.cat/d/N5KUHEQCVg7SywXUPiJ7yq.jpg'
     );
   }
   const getAccount = await getActiveAccount();
@@ -80,7 +85,7 @@ export async function countTotalChannels() {
 // count total notes
 export async function countTotalNotes() {
   const db = await connect();
-  const result = await db.select(
+  const result: Array<{ total: string }> = await db.select(
     'SELECT COUNT(*) AS "total" FROM notes WHERE kind IN (1, 6);'
   );
   return parseInt(result[0].total);
@@ -92,9 +97,17 @@ export async function getNotes(limit: number, offset: number) {
   const totalNotes = await countTotalNotes();
   const nextCursor = offset + limit;
 
-  const notes: any = { data: null, nextCursor: 0 };
-  const query: any = await db.select(
+  const notes: { data: LumeEvent[] | null; nextCursor: number } = {
+    data: null,
+    nextCursor: 0,
+  };
+
+  const query: LumeEvent[] = await db.select(
     `SELECT * FROM notes WHERE kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+  );
+
+  query.forEach(
+    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
   );
 
   notes['data'] = query;
@@ -106,11 +119,16 @@ export async function getNotes(limit: number, offset: number) {
 // get all notes by pubkey
 export async function getNotesByPubkey(pubkey: string) {
   const db = await connect();
-  const res: any = await db.select(
+
+  const query: LumeEvent[] = await db.select(
     `SELECT * FROM notes WHERE pubkey == "${pubkey}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC;`
   );
 
-  return res;
+  query.forEach(
+    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
+  );
+
+  return query;
 }
 
 // get all notes by authors
@@ -121,9 +139,17 @@ export async function getNotesByAuthors(authors: string, limit: number, offset: 
   const array = JSON.parse(authors);
   const finalArray = `'${array.join("','")}'`;
 
-  const notes: any = { data: null, nextCursor: 0 };
-  const query: any = await db.select(
+  const notes: { data: LumeEvent[] | null; nextCursor: number } = {
+    data: null,
+    nextCursor: 0,
+  };
+
+  const query: LumeEvent[] = await db.select(
     `SELECT * FROM notes WHERE pubkey IN (${finalArray}) AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC LIMIT "${limit}" OFFSET "${offset}";`
+  );
+
+  query.forEach(
+    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
   );
 
   notes['data'] = query;
@@ -135,8 +161,15 @@ export async function getNotesByAuthors(authors: string, limit: number, offset: 
 // get note by id
 export async function getNoteByID(event_id: string) {
   const db = await connect();
-  const result = await db.select(`SELECT * FROM notes WHERE event_id = "${event_id}";`);
-  return result[0];
+  const result: LumeEvent[] = await db.select(
+    `SELECT * FROM notes WHERE event_id = "${event_id}";`
+  );
+  if (result[0]) {
+    if (result[0].kind === 1) result[0]['content'] = parser(result[0]);
+    return result[0];
+  } else {
+    return null;
+  }
 }
 
 // create note
@@ -144,7 +177,7 @@ export async function createNote(
   event_id: string,
   pubkey: string,
   kind: number,
-  tags: any,
+  tags: string[][],
   content: string,
   created_at: number
 ) {
@@ -161,7 +194,7 @@ export async function createNote(
 // get note replies
 export async function getReplies(parent_id: string) {
   const db = await connect();
-  const result: any = await db.select(
+  const result: Array<LumeEvent> = await db.select(
     `SELECT * FROM replies WHERE parent_id = "${parent_id}" ORDER BY created_at DESC;`
   );
   return result;
@@ -173,7 +206,7 @@ export async function createReplyNote(
   event_id: string,
   pubkey: string,
   kind: number,
-  tags: any,
+  tags: string[][],
   content: string,
   created_at: number
 ) {
@@ -272,11 +305,32 @@ export async function getChannelUsers(channel_id: string) {
 export async function getChats() {
   const db = await connect();
   const account = await getActiveAccount();
-  const result: any = await db.select(
+  const follows =
+    typeof account.follows === 'string' ? JSON.parse(account.follows) : account.follows;
+
+  const chats: { follows: Array<Chats> | null; unknowns: Array<Chats> | null } = {
+    follows: [],
+    unknowns: [],
+  };
+
+  let result: Array<Chats> = await db.select(
     `SELECT DISTINCT sender_pubkey FROM chats WHERE receiver_pubkey = "${account.pubkey}" ORDER BY created_at DESC;`
   );
-  const newArr: any = result.map((v) => ({ ...v, new_messages: 0 }));
-  return newArr;
+
+  result = result.map((v) => ({ ...v, new_messages: 0 }));
+  result = result.sort((a, b) => a.new_messages - b.new_messages);
+
+  chats.follows = result.filter((el) => {
+    return follows.some((i) => {
+      return i === el.sender_pubkey;
+    });
+  });
+
+  chats.unknowns = result.filter(
+    (el) => !chats.follows.includes(el) && el.sender_pubkey !== account.pubkey
+  );
+
+  return chats;
 }
 
 // get chat messages
@@ -284,7 +338,7 @@ export async function getChatMessages(receiver_pubkey: string, sender_pubkey: st
   const db = await connect();
   let receiver = [];
 
-  const sender: any = await db.select(
+  const sender: Array<Chats> = await db.select(
     `SELECT * FROM chats WHERE sender_pubkey = "${sender_pubkey}" AND receiver_pubkey = "${receiver_pubkey}";`
   );
 
@@ -321,7 +375,9 @@ export async function createChat(
 // get setting
 export async function getSetting(key: string) {
   const db = await connect();
-  const result = await db.select(`SELECT value FROM settings WHERE key = "${key}";`);
+  const result: Array<Settings> = await db.select(
+    `SELECT value FROM settings WHERE key = "${key}";`
+  );
   return result[0]?.value;
 }
 
@@ -334,7 +390,9 @@ export async function updateSetting(key: string, value: string | number) {
 // get last login
 export async function getLastLogin() {
   const db = await connect();
-  const result = await db.select(`SELECT value FROM settings WHERE key = "last_login";`);
+  const result: Array<Settings> = await db.select(
+    `SELECT value FROM settings WHERE key = "last_login";`
+  );
   if (result[0]) {
     return parseInt(result[0].value);
   } else {
@@ -350,56 +408,22 @@ export async function updateLastLogin(value: number) {
   );
 }
 
-// get blacklist by kind and account id
-export async function getBlacklist(account_id: number, kind: number) {
-  const db = await connect();
-  return await db.select(
-    `SELECT * FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}";`
-  );
-}
-
-// get active blacklist by kind and account id
-export async function getActiveBlacklist(account_id: number, kind: number) {
-  const db = await connect();
-  return await db.select(
-    `SELECT content FROM blacklist WHERE account_id = "${account_id}" AND kind = "${kind}" AND status = 1;`
-  );
-}
-
-// add to blacklist
-export async function addToBlacklist(
-  account_id: number,
-  content: string,
-  kind: number,
-  status?: number
-) {
-  const db = await connect();
-  return await db.execute(
-    'INSERT OR IGNORE INTO blacklist (account_id, content, kind, status) VALUES (?, ?, ?, ?);',
-    [account_id, content, kind, status || 1]
-  );
-}
-
-// update item in blacklist
-export async function updateItemInBlacklist(content: string, status: number) {
-  const db = await connect();
-  return await db.execute(
-    `UPDATE blacklist SET status = "${status}" WHERE content = "${content}";`
-  );
-}
-
 // get all blocks
 export async function getBlocks() {
   const db = await connect();
-  const activeAccount = await getActiveAccount();
-  const result: any = await db.select(
-    `SELECT * FROM blocks WHERE account_id = "${activeAccount.id}" ORDER BY created_at DESC;`
+  const account = await getActiveAccount();
+  const result: Array<Block> = await db.select(
+    `SELECT * FROM blocks WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
   );
   return result;
 }
 
 // create block
-export async function createBlock(kind: number, title: string, content: any) {
+export async function createBlock(
+  kind: number,
+  title: string,
+  content: string | string[]
+) {
   const db = await connect();
   const activeAccount = await getActiveAccount();
   return await db.execute(
@@ -437,12 +461,29 @@ export async function createMetadata(id: string, pubkey: string, content: string
   );
 }
 
-// get metadata
+export async function getAllMetadata() {
+  const db = await connect();
+  const result: LumeEvent[] = await db.select(`SELECT * FROM metadata;`);
+  const users: Profile[] = result.map((el) => {
+    const profile: Profile = destr(el.content);
+    return {
+      pubkey: el.pubkey,
+      ident: profile.name || profile.display_name || profile.username || 'anon',
+      picture:
+        profile.picture ||
+        profile.image ||
+        'https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih.jpg',
+    };
+  });
+  return users;
+}
+
+// get user metadata
 export async function getUserMetadata(pubkey: string) {
   const db = await connect();
-  const result = await db.select(`SELECT content FROM metadata WHERE id = "${pubkey}";`);
+  const result = await db.select(`SELECT * FROM metadata WHERE pubkey = "${pubkey}";`);
   if (result[0]) {
-    return JSON.parse(result[0].content);
+    return { ...result[0], ...JSON.parse(result[0].content) } as Profile;
   } else {
     return null;
   }

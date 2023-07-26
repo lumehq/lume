@@ -1,53 +1,67 @@
-import { NDKFilter } from '@nostr-dev-kit/ndk';
-import { useEffect, useRef } from 'react';
+import { NDKUser } from '@nostr-dev-kit/ndk';
+import { nip19 } from 'nostr-tools';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
-import { prefetchEvents } from '@libs/ndk/utils';
 import {
   countTotalNotes,
   createChat,
   createNote,
   getLastLogin,
+  updateAccount,
   updateLastLogin,
 } from '@libs/storage';
 
-import { LoaderIcon, LumeIcon } from '@shared/icons';
+import { LoaderIcon } from '@shared/icons';
 
-import { dateToUnix, getHourAgo } from '@utils/date';
+import { nHoursAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 const totalNotes = await countTotalNotes();
 const lastLogin = await getLastLogin();
 
 export function Root() {
-  const now = useRef(new Date());
   const navigate = useNavigate();
 
-  const { ndk } = useNDK();
+  const { ndk, relayUrls, fetcher } = useNDK();
   const { status, account } = useAccount();
+
+  async function getFollows() {
+    const authors: string[] = [];
+
+    const user = ndk.getUser({ hexpubkey: account.pubkey });
+    const follows = await user.follows();
+
+    follows.forEach((follow: NDKUser) => {
+      authors.push(nip19.decode(follow.npub).data as string);
+    });
+
+    // update follows in db
+    await updateAccount('follows', authors, account.pubkey);
+
+    return authors;
+  }
 
   async function fetchNotes() {
     try {
-      const follows = JSON.parse(account.follows);
+      const follows = await getFollows();
 
       if (follows.length > 0) {
         let since: number;
-
         if (totalNotes === 0 || lastLogin === 0) {
-          since = dateToUnix(getHourAgo(48, now.current));
+          since = nHoursAgo(48);
         } else {
           since = lastLogin;
         }
 
-        const filter: NDKFilter = {
-          kinds: [1, 6],
-          authors: follows,
-          since: since,
-        };
-
-        const events = await prefetchEvents(ndk, filter);
-        for (const event of events) {
+        const events = fetcher.allEventsIterator(
+          relayUrls,
+          { kinds: [1], authors: follows },
+          { since: since },
+          { skipVerification: true }
+        );
+        for await (const event of events) {
           await createNote(
             event.id,
             event.pubkey,
@@ -67,20 +81,23 @@ export function Root() {
 
   async function fetchChats() {
     try {
-      const sendFilter: NDKFilter = {
-        kinds: [4],
-        authors: [account.pubkey],
-        since: lastLogin,
-      };
+      const sendMessages = await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [4],
+          authors: [account.pubkey],
+        },
+        { since: lastLogin }
+      );
 
-      const receiveFilter: NDKFilter = {
-        kinds: [4],
-        '#p': [account.pubkey],
-        since: lastLogin,
-      };
-
-      const sendMessages = await prefetchEvents(ndk, sendFilter);
-      const receiveMessages = await prefetchEvents(ndk, receiveFilter);
+      const receiveMessages = await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [4],
+          '#p': [account.pubkey],
+        },
+        { since: lastLogin }
+      );
 
       const events = [...sendMessages, ...receiveMessages];
       for (const event of events) {
@@ -158,26 +175,23 @@ export function Root() {
   }, [status]);
 
   return (
-    <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-100">
-      <div className="relative h-full overflow-hidden">
+    <div className="h-screen w-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="flex h-screen w-full flex-col">
         <div
           data-tauri-drag-region
-          className="absolute left-0 top-0 z-20 h-16 w-full bg-transparent"
+          className="relative h-11 shrink-0 border border-zinc-100 bg-white dark:border-zinc-900 dark:bg-black"
         />
-        <div className="relative flex h-full flex-col items-center justify-center">
-          <div className="flex flex-col items-center gap-2">
-            <LumeIcon className="h-16 w-16 text-black dark:text-zinc-100" />
+        <div className="relative flex min-h-0 w-full flex-1 items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <LoaderIcon className="h-6 w-6 animate-spin text-zinc-100" />
             <div className="text-center">
-              <h3 className="text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
-                Here&apos;s an interesting fact:
+              <h3 className="text-lg font-semibold leading-tight text-zinc-100">
+                Prefetching data...
               </h3>
-              <p className="font-medium text-zinc-300 dark:text-zinc-600">
-                Bitcoin and Nostr can be used by anyone, and no one can stop you!
+              <p className="text-zinc-600">
+                This may take a few seconds, please don&apos;t close app.
               </p>
             </div>
-          </div>
-          <div className="absolute bottom-16 left-1/2 -translate-x-1/2 transform">
-            <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
           </div>
         </div>
       </div>

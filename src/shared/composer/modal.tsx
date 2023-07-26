@@ -3,8 +3,7 @@ import { Fragment } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { Button } from '@shared/button';
-import { Post } from '@shared/composer/types/post';
-import { User } from '@shared/composer/user';
+import { Composer, ComposerUser } from '@shared/composer';
 import {
   CancelIcon,
   ChevronDownIcon,
@@ -17,9 +16,8 @@ import { COMPOSE_SHORTCUT } from '@stores/shortcuts';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
-export function Composer() {
+export function ComposerModal() {
   const { account } = useAccount();
-
   const [toggle, open] = useComposer((state) => [state.toggleModal, state.open]);
 
   const closeModal = () => {
@@ -31,7 +29,7 @@ export function Composer() {
   return (
     <>
       <Button onClick={() => toggle(true)} preset="small">
-        <ComposeIcon width={14} height={14} />
+        <ComposeIcon className="h-4 w-4" />
         Compose
       </Button>
       <Transition appear show={open} as={Fragment}>
@@ -60,7 +58,7 @@ export function Composer() {
               <Dialog.Panel className="relative h-min w-full max-w-xl rounded-xl border-t border-zinc-800/50 bg-zinc-900">
                 <div className="flex items-center justify-between px-4 py-4">
                   <div className="flex items-center gap-2">
-                    <div>{account && <User pubkey={account.pubkey} />}</div>
+                    {account && <ComposerUser pubkey={account.pubkey} />}
                     <span>
                       <ChevronRightIcon
                         width={14}
@@ -70,20 +68,18 @@ export function Composer() {
                     </span>
                     <div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-zinc-800 pl-3 pr-1.5 text-sm font-medium text-zinc-400">
                       New Post
-                      <ChevronDownIcon width={14} height={14} />
+                      <ChevronDownIcon className="h-4 w-4" />
                     </div>
                   </div>
-                  <div
+                  <button
                     onClick={closeModal}
-                    onKeyDown={closeModal}
-                    role="button"
-                    tabIndex={0}
+                    type="button"
                     className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
                   >
                     <CancelIcon width={16} height={16} className="text-zinc-500" />
-                  </div>
+                  </button>
                 </div>
-                {account && <Post />}
+                <Composer />
               </Dialog.Panel>
             </Transition.Child>
           </div>

@@ -17,7 +17,6 @@ import { usePublish } from '@utils/hooks/usePublish';
 
 export function EditProfileModal() {
   const queryClient = useQueryClient();
-  const publish = usePublish();
 
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,6 +24,7 @@ export function EditProfileModal() {
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: false, text: '' });
 
+  const { publish } = usePublish();
   const { account } = useAccount();
   const {
     register,
@@ -308,6 +308,20 @@ export function EditProfileModal() {
                         <input
                           type={'text'}
                           {...register('website', { required: false })}
+                          spellCheck={false}
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label
+                          htmlFor="website"
+                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                        >
+                          Lightning address
+                        </label>
+                        <input
+                          type={'text'}
+                          {...register('lud16', { required: false })}
                           spellCheck={false}
                           className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
                         />

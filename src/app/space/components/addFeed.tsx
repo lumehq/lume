@@ -12,7 +12,7 @@ import { createBlock } from '@libs/storage';
 
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
+import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_FEEDBLOCK_SHORTCUT } from '@stores/shortcuts';
 
 import { useAccount } from '@utils/hooks/useAccount';
@@ -38,7 +38,7 @@ export function AddFeedBlock() {
   useHotkeys(ADD_FEEDBLOCK_SHORTCUT, () => openModal());
 
   const block = useMutation({
-    mutationFn: (data: any) => {
+    mutationFn: (data: { kind: number; title: string; content: string }) => {
       return createBlock(data.kind, data.title, data.content);
     },
     onSuccess: () => {
@@ -53,7 +53,7 @@ export function AddFeedBlock() {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { kind: number; title: string; content: string }) => {
     setLoading(true);
 
     selected.forEach((item, index) => {
@@ -64,7 +64,7 @@ export function AddFeedBlock() {
 
     // insert to database
     block.mutate({
-      kind: 1,
+      kind: BLOCK_KINDS.feed,
       title: data.title,
       content: JSON.stringify(selected),
     });
@@ -81,7 +81,7 @@ export function AddFeedBlock() {
       <button
         type="button"
         onClick={() => openModal()}
-        className="inline-flex h-9 w-56 items-center justify-start gap-2.5 rounded-md px-2.5"
+        className="inline-flex h-9 w-72 items-center justify-start gap-2.5 rounded-md px-2.5"
       >
         <div className="flex items-center gap-2">
           <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
@@ -205,7 +205,7 @@ export function AddFeedBlock() {
                               {status === 'loading' ? (
                                 <p>Loading...</p>
                               ) : (
-                                JSON.parse(account.follows).map((follow) => (
+                                JSON.parse(account.follows as string).map((follow) => (
                                   <Combobox.Option
                                     key={follow}
                                     value={follow}

@@ -1,36 +1,29 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { NDKEvent, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { open } from '@tauri-apps/api/dialog';
-import { Body, fetch } from '@tauri-apps/api/http';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { useNDK } from '@libs/ndk/provider';
 import { createBlock } from '@libs/storage';
 
-import { CancelIcon, CommandIcon } from '@shared/icons';
+import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
+import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
 
-import { createBlobFromFile } from '@utils/createBlobFromFile';
-import { dateToUnix } from '@utils/date';
-import { useAccount } from '@utils/hooks/useAccount';
 import { usePublish } from '@utils/hooks/usePublish';
+import { useImageUploader } from '@utils/hooks/useUploader';
 
 export function AddImageBlock() {
   const queryClient = useQueryClient();
-  const publish = usePublish();
+  const upload = useImageUploader();
+
+  const { publish } = usePublish();
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState('');
-
-  const { ndk } = useNDK();
-  const { account } = useAccount();
 
   const tags = useRef(null);
 
@@ -52,56 +45,8 @@ export function AddImageBlock() {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const openFileDialog = async () => {
-    const selected: any = await open({
-      multiple: false,
-      filters: [
-        {
-          name: 'Image',
-          extensions: ['png', 'jpeg', 'jpg'],
-        },
-      ],
-    });
-
-    if (Array.isArray(selected)) {
-      // user selected multiple files
-    } else if (selected === null) {
-      // user cancelled the selection
-    } else {
-      const filename = selected.split('/').pop();
-      const file = await createBlobFromFile(selected);
-      const buf = await file.arrayBuffer();
-
-      const res: any = await fetch('https://void.cat/upload?cli=false', {
-        method: 'POST',
-        timeout: 5,
-        headers: {
-          accept: '*/*',
-          'Content-Type': 'application/octet-stream',
-          'V-Filename': filename,
-          'V-Description': 'Upload from https://lume.nu',
-          'V-Strip-Metadata': 'true',
-        },
-        body: Body.bytes(buf),
-      });
-
-      if (res.ok) {
-        const imageURL = `https://void.cat/d/${res.data.file.id}.webp`;
-        tags.current = [
-          ['url', imageURL],
-          ['m', res.data.file.metadata.mimeType],
-          ['x', res.data.file.metadata.digest],
-          ['size', res.data.file.metadata.size],
-          ['magnet', res.data.file.metadata.magnetLink],
-        ];
-
-        setImage(imageURL);
-      }
-    }
-  };
-
   const block = useMutation({
-    mutationFn: (data: any) => {
+    mutationFn: (data: { kind: number; title: string; content: string }) => {
       return createBlock(data.kind, data.title, data.content);
     },
     onSuccess: () => {
@@ -109,14 +54,21 @@ export function AddImageBlock() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const uploadImage = async () => {
+    const image = await upload(null);
+    if (image.url) {
+      setImage(image.url);
+    }
+  };
+
+  const onSubmit = async (data: { kind: number; title: string; content: string }) => {
     setLoading(true);
 
     // publish file metedata
     await publish({ content: data.title, kind: 1063, tags: tags.current });
 
     // mutate
-    block.mutate({ kind: 0, title: data.title, content: data.content });
+    block.mutate({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
 
     setLoading(false);
     // reset form
@@ -134,7 +86,7 @@ export function AddImageBlock() {
       <button
         type="button"
         onClick={() => openModal()}
-        className="inline-flex h-9 w-56 items-center justify-start gap-2.5 rounded-md px-2.5"
+        className="inline-flex h-9 w-72 items-center justify-start gap-2.5 rounded-md px-2.5"
       >
         <div className="flex items-center gap-2">
           <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
@@ -240,7 +192,7 @@ export function AddImageBlock() {
                         />
                         <div className="absolute bottom-3 right-3 z-10">
                           <button
-                            onClick={() => openFileDialog()}
+                            onClick={() => uploadImage()}
                             type="button"
                             className="inline-flex h-6 items-center justify-center rounded bg-zinc-900 px-3 text-sm font-medium text-zinc-300 ring-1 ring-zinc-800 hover:bg-zinc-800"
                           >
@@ -256,27 +208,7 @@ export function AddImageBlock() {
                         className="shadow-button inline-flex h-11 w-full transform items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-zinc-100 active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         {loading ? (
-                          <svg
-                            className="h-4 w-4 animate-spin text-black dark:text-zinc-100"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <title id="loading">Loading</title>
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            />
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            />
-                          </svg>
+                          <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
                         ) : (
                           'Confirm'
                         )}
