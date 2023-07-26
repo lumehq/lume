@@ -29,16 +29,17 @@ export function UserBlock({ params }: { params: Block }) {
     count: data ? data.length : 0,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 400,
+    overscan: 2,
   });
 
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
   return (
-    <div className="w-[400px] shrink-0 border-r border-zinc-900">
+    <div className="h-full w-[400px] shrink-0 border-r border-zinc-900">
       <TitleBar id={params.id} title={params.title} />
       <div
         ref={parentRef}
-        className="scrollbar-hide flex h-full w-full flex-col gap-1.5 overflow-y-auto pt-1.5"
+        className="scrollbar-hide flex h-full flex-1 flex-col gap-1.5 overflow-y-auto pt-1.5"
       >
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
@@ -47,10 +48,7 @@ export function UserBlock({ params }: { params: Block }) {
           <h3 className="mt-2 px-3 text-lg font-semibold text-zinc-300">
             Latest activities
           </h3>
-          <div
-            className="flex h-full w-full flex-col justify-between gap-1.5"
-            style={{ contain: 'strict' }}
-          >
+          <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
                 <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
@@ -91,6 +89,7 @@ export function UserBlock({ params }: { params: Block }) {
                       <NoteKind_1 event={data[virtualRow.index]} />
                     </div>
                   ))}
+                  <div className="h-20" />
                 </div>
               </div>
             )}

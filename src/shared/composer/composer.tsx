@@ -107,8 +107,6 @@ export function Composer() {
         tags.push(['t', tag.replace('#', '')]);
       });
 
-      console.log(tags);
-
       // publish message
       await publish({ content: serializedContent, kind: 1, tags });
 
