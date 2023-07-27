@@ -1,6 +1,7 @@
+import { getPublicKey, nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
@@ -11,6 +12,7 @@ import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
 type FormValues = {
   password: string;
+  privkey: string;
 };
 
 const resolver: Resolver<FormValues> = async (values) => {
@@ -27,7 +29,7 @@ const resolver: Resolver<FormValues> = async (values) => {
   };
 };
 
-export function UnlockScreen() {
+export function ResetScreen() {
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
 
@@ -35,7 +37,7 @@ export function UnlockScreen() {
   const [loading, setLoading] = useState(false);
 
   const { account } = useAccount();
-  const { load } = useSecureStorage();
+  const { save, reset } = useSecureStorage();
 
   // toggle private key
   const showPassword = () => {
@@ -56,17 +58,36 @@ export function UnlockScreen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      // load private in secure storage
       try {
-        const privkey = await load(account.pubkey, data.password);
-        setPrivkey(privkey);
-        // redirect to home
-        navigate('/', { replace: true });
+        let privkey = data.privkey;
+        if (privkey.startsWith('nsec')) {
+          privkey = nip19.decode(privkey).data as string;
+        }
+
+        const tmpPubkey = getPublicKey(privkey);
+
+        if (tmpPubkey !== account.pubkey) {
+          setLoading(false);
+          setError('password', {
+            type: 'custom',
+            message:
+              "Private key don't match current account store in database, please check again",
+          });
+        } else {
+          // remove old stronghold
+          await reset();
+          // save privkey to secure storage
+          await save(account.pubkey, account.privkey, data.password);
+          // add privkey to state
+          setPrivkey(account.privkey);
+          // redirect to home
+          navigate('/auth/unlock', { replace: true });
+        }
       } catch {
         setLoading(false);
         setError('password', {
           type: 'custom',
-          message: 'Wrong password',
+          message: 'Invalid private key',
         });
       }
     } else {
@@ -82,18 +103,33 @@ export function UnlockScreen() {
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
         <div className="mb-8 text-center">
-          <h1 className="text-xl font-semibold text-zinc-100">
-            Enter password to unlock
-          </h1>
+          <h1 className="text-xl font-semibold text-zinc-100">Reset unlock password</h1>
         </div>
         <div className="flex flex-col gap-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
             <div className="flex flex-col gap-1">
+              <label htmlFor="privkey" className="font-medium text-zinc-200">
+                Private key
+              </label>
+              <div className="relative">
+                <input
+                  {...register('privkey', { required: true })}
+                  type="text"
+                  placeholder="nsec..."
+                  className="relative w-full rounded-lg bg-zinc-800 px-3.5 py-3 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="password" className="font-medium text-zinc-200">
+                Set a new password to protect your key
+              </label>
               <div className="relative">
                 <input
                   {...register('password', { required: true })}
                   type={passwordInput}
-                  className="relative w-full rounded-lg bg-zinc-800 py-3 text-center text-zinc-100 !outline-none placeholder:text-zinc-400"
+                  placeholder="min. 4 characters"
+                  className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
                 />
                 <button
                   type="button"
@@ -119,11 +155,11 @@ export function UnlockScreen() {
                 {errors.password && <p>{errors.password.message}</p>}
               </span>
             </div>
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center">
               <button
                 type="submit"
                 disabled={!isDirty || !isValid}
-                className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600"
+                className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
               >
                 {loading ? (
                   <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
@@ -131,12 +167,6 @@ export function UnlockScreen() {
                   'Continue →'
                 )}
               </button>
-              <Link
-                to="/auth/reset"
-                className="inline-flex h-12 items-center justify-center text-center text-sm text-zinc-400"
-              >
-                Reset password
-              </Link>
             </div>
           </form>
         </div>

@@ -5,10 +5,9 @@ import { getAllMetadata } from '@libs/storage';
 
 import { MentionList } from '@shared/composer';
 
-const users = await getAllMetadata();
-
 export const Suggestion = {
-  items: ({ query }) => {
+  items: async ({ query }) => {
+    const users = await getAllMetadata();
     return users
       .filter((item) => item.ident.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, 5);

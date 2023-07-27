@@ -29,6 +29,7 @@
 				"readFile": true,
 				"readDir": true,
 				"writeFile": true,
+				"removeFile": true,
 				"scope": [
 					"$APPDATA/*",
 					"$DATA/*",

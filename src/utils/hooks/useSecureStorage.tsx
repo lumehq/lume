@@ -1,4 +1,5 @@
-import { appConfigDir } from '@tauri-apps/api/path';
+import { removeFile } from '@tauri-apps/api/fs';
+import { BaseDirectory, appConfigDir } from '@tauri-apps/api/path';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
 
 const dir = await appConfigDir();
@@ -29,5 +30,9 @@ export function useSecureStorage() {
     return decoded;
   };
 
-  return { save, load };
+  const reset = async () => {
+    return await removeFile('lume.stronghold', { dir: BaseDirectory.AppConfig });
+  };
+
+  return { save, load, reset };
 }

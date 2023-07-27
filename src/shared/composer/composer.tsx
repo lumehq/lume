@@ -21,8 +21,12 @@ import { useImageUploader } from '@utils/hooks/useUploader';
 import { sendNativeNotification } from '@utils/notification';
 
 export function Composer() {
+  const { publish } = usePublish();
+
   const [status, setStatus] = useState<null | 'loading' | 'done'>(null);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
+
+  const upload = useImageUploader();
 
   const editor = useEditor({
     extensions: [
@@ -55,9 +59,6 @@ export function Composer() {
       },
     },
   });
-
-  const upload = useImageUploader();
-  const { publish } = usePublish();
 
   const uploadImage = async (file?: string) => {
     const image = await upload(file);
