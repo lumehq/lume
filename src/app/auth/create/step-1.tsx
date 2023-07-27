@@ -137,9 +137,13 @@ export function CreateStep1Screen() {
               'I have saved my key, continue →'
             )}
           </Button>
-          <Button preset="large-alt" onClick={() => download()}>
-            {downloaded ? 'Saved in Download folder' : 'Download'}
-          </Button>
+          {downloaded ? (
+            <span className="text-sm text-zinc-400">Saved in download folder</span>
+          ) : (
+            <Button preset="large-alt" onClick={() => download()}>
+              Download
+            </Button>
+          )}
         </div>
       </div>
     </div>
