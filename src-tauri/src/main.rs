@@ -143,6 +143,7 @@ fn main() {
     .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_os::init())
+    .plugin(tauri_plugin_window::init())
     .setup(|app| {
       #[cfg(target_os = "macos")]
       let main_window = app.get_window("main").unwrap();

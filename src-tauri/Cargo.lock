@@ -2585,6 +2585,7 @@ dependencies = [
  "tauri-plugin-stronghold",
  "tauri-plugin-updater",
  "tauri-plugin-upload",
+ "tauri-plugin-window",
 ]
 
 [[package]]
@@ -5038,6 +5039,16 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-util",
+]
+
+[[package]]
+name = "tauri-plugin-window"
+version = "2.0.0-alpha.0"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#6f01bc11ab5be762d6cbe0ca924f15cdde47ce0d"
+dependencies = [
+ "serde",
+ "tauri",
+ "thiserror",
 ]
 
 [[package]]
