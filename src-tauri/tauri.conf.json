@@ -1,7 +1,7 @@
 {
   "build": {
-    "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
+    "beforeDevCommand": "pnpm dev",
     "devPath": "http://localhost:3000",
     "distDir": "../dist",
     "withGlobalTauri": true
@@ -10,14 +10,45 @@
     "productName": "Lume",
     "version": "1.1.1"
   },
+  "plugins": {
+    "fs": {
+      "scope": [
+        "$APPDATA/*",
+        "$DATA/*",
+        "$LOCALDATA/*",
+        "$DESKTOP/*",
+        "$DOCUMENT/*",
+        "$DOWNLOAD/*",
+        "$HOME/*",
+        "$PICTURE/*",
+        "$PUBLIC/*",
+        "$VIDEO/*"
+      ]
+    },
+    "http": {
+      "scope": [
+        "http://**/",
+        "https://**/"
+      ]
+    },
+    "shell": {
+      "open": true
+    },
+    "updater": {
+      "endpoints": [
+        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
+        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
+      ]
+    }
+  },
   "tauri": {
     "bundle": {
       "active": true,
-      "category": "SocialNetworking",
-      "copyright": "",
       "appimage": {
         "bundleMediaFramework": true
       },
+      "category": "SocialNetworking",
+      "copyright": "",
       "deb": {
         "depends": []
       },
@@ -41,43 +72,39 @@
       "resources": [],
       "shortDescription": "",
       "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      },
       "updater": {
         "active": true,
-        "endpoints": [
-          "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
-          "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
-        ],
         "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
         "windows": {
           "installMode": "passive"
         }
       },
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
     },
     "security": {
       "csp": "upgrade-insecure-requests"
     },
     "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
+      "iconAsTemplate": true,
+      "iconPath": "icons/icon.png"
     },
     "windows": [
       {
-        "title": "Lume",
-        "theme": "Dark",
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "transparent": false,
         "fullscreen": false,
-        "resizable": true,
-        "width": 1080,
         "height": 800,
+        "hiddenTitle": true,
+        "minHeight": 720,
         "minWidth": 1080,
-        "minHeight": 720
+        "resizable": true,
+        "theme": "Dark",
+        "title": "Lume",
+        "titleBarStyle": "Overlay",
+        "transparent": false,
+        "width": 1080
       }
     ]
   }

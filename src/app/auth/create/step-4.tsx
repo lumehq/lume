@@ -1,4 +1,4 @@
-import { Body, fetch } from '@tauri-apps/api/http';
+import { Body, fetch } from '@tauri-apps/plugin-http';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

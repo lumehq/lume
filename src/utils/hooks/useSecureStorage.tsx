@@ -1,6 +1,6 @@
-import { removeFile } from '@tauri-apps/api/fs';
+import { removeFile } from '@tauri-apps/plugin-fs';
 import { BaseDirectory, appConfigDir } from '@tauri-apps/api/path';
-import { Stronghold } from 'tauri-plugin-stronghold-api';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 
 const dir = await appConfigDir();
 

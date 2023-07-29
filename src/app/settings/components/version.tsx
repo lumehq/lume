@@ -1,4 +1,4 @@
-import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from '@tauri-apps/plugin-app';
 
 import { RefreshIcon } from '@shared/icons';
 

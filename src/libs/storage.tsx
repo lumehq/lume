@@ -1,5 +1,5 @@
+import Database from '@tauri-apps/plugin-sql';
 import destr from 'destr';
-import Database from 'tauri-plugin-sql-api';
 
 import { parser } from '@utils/parser';
 import { getParentID } from '@utils/transform';

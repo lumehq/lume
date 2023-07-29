@@ -1,7 +1,7 @@
 import { Switch } from '@headlessui/react';
+import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { disable, enable, isEnabled } from 'tauri-plugin-autostart-api';
 
 import { getSetting, updateSetting } from '@libs/storage';
 

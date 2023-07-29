@@ -1,5 +1,5 @@
-import { open } from '@tauri-apps/api/dialog';
-import { Body, fetch } from '@tauri-apps/api/http';
+import { open } from '@tauri-apps/plugin-dialog';
+import { Body, fetch } from '@tauri-apps/plugin-http';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 

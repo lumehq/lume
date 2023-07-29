@@ -1,4 +1,4 @@
-import { FetchOptions, ResponseType, fetch } from '@tauri-apps/api/http';
+import { FetchOptions, ResponseType, fetch } from '@tauri-apps/plugin-http';
 import * as cheerio from 'cheerio';
 
 import { OPENGRAPH } from '@stores/constants';

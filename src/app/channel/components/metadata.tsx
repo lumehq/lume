@@ -12,7 +12,7 @@ export function ChannelMetadata({ id }: { id: string }) {
   const noteID = id ? nip19.noteEncode(id) : null;
 
   const copyNoteID = async () => {
-    const { writeText } = await import('@tauri-apps/api/clipboard');
+    const { writeText } = await import('@tauri-apps/plugin-clipboard-manager');
     if (noteID) {
       await writeText(noteID);
     }

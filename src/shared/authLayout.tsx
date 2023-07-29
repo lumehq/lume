@@ -1,4 +1,4 @@
-import { platform } from '@tauri-apps/api/os';
+import { platform } from '@tauri-apps/plugin-os';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { ArrowLeftIcon, ArrowRightIcon } from '@shared/icons';
@@ -29,7 +29,7 @@ export function AuthLayout() {
           >
             <div
               className={`flex h-full items-center gap-2 ${
-                platformName === 'darwin' ? 'pl-[68px]' : ''
+                platformName === 'macos' ? 'pl-[68px]' : ''
               }`}
             >
               <button

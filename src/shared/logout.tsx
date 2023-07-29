@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { useQueryClient } from '@tanstack/react-query';
-import { relaunch } from '@tauri-apps/api/process';
+import { relaunch } from '@tauri-apps/plugin-process';
 import { Fragment, useState } from 'react';
 
 import { removeAll } from '@libs/storage';

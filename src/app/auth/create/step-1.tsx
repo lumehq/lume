@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

@@ -1,5 +1,4 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { open } from '@tauri-apps/api/dialog';
 import { useState } from 'react';
 
 import { LoaderIcon, MediaIcon } from '@shared/icons';

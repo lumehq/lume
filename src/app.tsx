@@ -38,6 +38,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
+      // @ts-expect-error, todo
       <Protected>
         <Root />
       </Protected>
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
   {
     path: '/app',
     element: (
+      // @ts-expect-error, todo
       <Protected>
         <AppLayout />
       </Protected>
@@ -94,6 +96,7 @@ const router = createBrowserRouter([
   {
     path: '/settings',
     element: (
+      // @ts-expect-error, todo
       <Protected>
         <SettingsLayout />
       </Protected>

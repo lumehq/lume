@@ -1,5 +1,5 @@
 import { downloadDir } from '@tauri-apps/api/path';
-import { download } from 'tauri-plugin-upload-api';
+import { download } from '@tauri-apps/plugin-upload';
 
 import { DownloadIcon } from '@shared/icons';
 import { Image } from '@shared/image';
