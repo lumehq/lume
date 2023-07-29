@@ -11,36 +11,16 @@ rust-version = "1.57"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.2", features = [] }
+tauri-build = { version = "2.0.0-alpha.6", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2", features = [
-  "fs-remove-file",
-  "fs-write-file",
-  "window-create",
-  "path-all",
-  "fs-read-dir",
-  "fs-read-file",
-  "clipboard-read-text",
-  "clipboard-write-text",
-  "dialog-open",
-  "http-all",
-  "http-multipart",
-  "notification-all",
-  "os-all",
-  "process-relaunch",
-  "shell-open",
-  "system-tray",
-  "updater",
-  "window-close",
-  "window-start-dragging",
-] }
-tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri = { version = "2.0.0-alpha.10" }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }
@@ -49,7 +29,7 @@ rand = "0.8.5"
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"
-branch = "v1"
+branch = "v2"
 features = ["sqlite"]
 
 [target.'cfg(target_os = "macos")'.dependencies]
