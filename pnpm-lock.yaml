@@ -61,6 +61,9 @@ dependencies:
   '@tauri-apps/plugin-sql':
     specifier: github:tauri-apps/tauri-plugin-sql#v2
     version: github.com/tauri-apps/tauri-plugin-sql/0591e9f63e0f86be79c209f4bcb564ccce4bd05c
+  '@tauri-apps/plugin-store':
+    specifier: github:tauri-apps/tauri-plugin-store#v2
+    version: github.com/tauri-apps/tauri-plugin-store/2f5e470ba6d746b54da46fcb3eb10325fa224351
   '@tauri-apps/plugin-stronghold':
     specifier: github:tauri-apps/tauri-plugin-stronghold#v2
     version: github.com/tauri-apps/tauri-plugin-stronghold/a87861766f3520b5fc1ea1f34665d814bbee9b06
@@ -7750,6 +7753,14 @@ packages:
   github.com/tauri-apps/tauri-plugin-sql/0591e9f63e0f86be79c209f4bcb564ccce4bd05c:
     resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/0591e9f63e0f86be79c209f4bcb564ccce4bd05c}
     name: '@tauri-apps/plugin-sql'
+    version: 2.0.0-alpha.0
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.5
+    dev: false
+
+  github.com/tauri-apps/tauri-plugin-store/2f5e470ba6d746b54da46fcb3eb10325fa224351:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/2f5e470ba6d746b54da46fcb3eb10325fa224351}
+    name: '@tauri-apps/plugin-store'
     version: 2.0.0-alpha.0
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.5

@@ -4,6 +4,7 @@ import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
 import { useEffect, useState } from 'react';
 
+import TauriAdapter from '@libs/ndk/cache';
 import { getSetting } from '@libs/storage';
 
 const setting = await getSetting('relays');
@@ -19,7 +20,8 @@ export const NDKInstance = () => {
   }, []);
 
   async function loadNdk(explicitRelayUrls: string[]) {
-    const ndkInstance = new NDK({ explicitRelayUrls });
+    const cacheAdapter = new TauriAdapter();
+    const ndkInstance = new NDK({ explicitRelayUrls, cacheAdapter });
 
     try {
       await ndkInstance.connect();

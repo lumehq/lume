@@ -2582,6 +2582,7 @@ dependencies = [
  "tauri-plugin-process",
  "tauri-plugin-single-instance",
  "tauri-plugin-sql",
+ "tauri-plugin-store",
  "tauri-plugin-stronghold",
  "tauri-plugin-updater",
  "tauri-plugin-upload",
@@ -4979,6 +4980,18 @@ dependencies = [
  "thiserror",
  "time",
  "tokio",
+]
+
+[[package]]
+name = "tauri-plugin-store"
+version = "2.0.0-alpha.0"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#6f01bc11ab5be762d6cbe0ca924f15cdde47ce0d"
+dependencies = [
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
 ]
 
 [[package]]
