@@ -3,19 +3,10 @@
   windows_subsystem = "windows"
 )]
 
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
-
 // use rand::distributions::{Alphanumeric, DistString};
-use tauri::{Manager, WindowEvent};
+use tauri::{Manager};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-
-#[cfg(target_os = "macos")]
-use window_ext::WindowExt;
-#[cfg(target_os = "macos")]
-mod window_ext;
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -144,29 +135,6 @@ fn main() {
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_os::init())
     .plugin(tauri_plugin_window::init())
-    .setup(|app| {
-      #[cfg(target_os = "macos")]
-      let main_window = app.get_window("main").unwrap();
-
-      #[cfg(target_os = "macos")]
-      main_window.position_traffic_lights(13.0, 17.0); // set inset for traffic lights (macos)
-
-      Ok(())
-    })
-    .on_window_event(|e| {
-      #[cfg(target_os = "macos")]
-      let apply_offset = || {
-        let win = e.window();
-        // keep inset for traffic lights when window resize (macos)
-        win.position_traffic_lights(13.0, 17.0);
-      };
-      #[cfg(target_os = "macos")]
-      match e.event() {
-        WindowEvent::Resized(..) => apply_offset(),
-        WindowEvent::ThemeChanged(..) => apply_offset(),
-        _ => {}
-      }
-    })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

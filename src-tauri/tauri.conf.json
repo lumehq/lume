@@ -104,7 +104,8 @@
         "title": "Lume",
         "titleBarStyle": "Overlay",
         "transparent": false,
-        "width": 1080
+        "width": 1080,
+        "center": true
       }
     ]
   }
