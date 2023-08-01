@@ -24,7 +24,7 @@ export function SubNote({ id, root }: { id: string; root?: string }) {
 
   return (
     <>
-      <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
+      <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
       <div className="mb-5 flex flex-col">
         <User pubkey={data.pubkey} time={data.created_at} />
         <div className="relative z-20 -mt-6 flex items-start gap-3">

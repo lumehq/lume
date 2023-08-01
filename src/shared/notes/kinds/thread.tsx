@@ -19,7 +19,7 @@ export function NoteThread({
 
   return (
     <div className="h-min w-full px-3 py-1.5">
-      <div className="overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 pt-3">
+      <div className="overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
         <div className="relative">{root && <SubNote id={root} />}</div>
         <div className="relative">{reply && <SubNote id={reply} root={root} />}</div>
         <div className="relative flex flex-col">

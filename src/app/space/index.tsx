@@ -57,12 +57,11 @@ export function SpaceScreen() {
     <div className="scrollbar-hide flex h-full w-full flex-nowrap overflow-x-auto overflow-y-hidden">
       <FollowingBlock />
       {status === 'loading' ? (
-        <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
+        <div className="flex w-[350px] shrink-0 flex-col">
           <div
             data-tauri-drag-region
-            className="group flex h-11 w-full items-center justify-between overflow-hidden border-b border-zinc-900 px-3"
+            className="group flex h-11 w-full items-center justify-between overflow-hidden px-3"
           />
-
           <div className="flex w-full flex-1 items-center justify-center p-3">
             <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
           </div>
@@ -71,18 +70,17 @@ export function SpaceScreen() {
         blocks.map((block: Block) => renderBlock(block))
       )}
       {isFetching && (
-        <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
+        <div className="flex w-[350px] shrink-0 flex-col">
           <div
             data-tauri-drag-region
-            className="group flex h-11 w-full items-center justify-between overflow-hidden border-b border-zinc-900 px-3"
+            className="group flex h-11 w-full items-center justify-between overflow-hidden px-3"
           />
-
           <div className="flex w-full flex-1 items-center justify-center p-3">
             <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
           </div>
         </div>
       )}
-      <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
+      <div className="flex w-[350px] shrink-0 flex-col">
         <div className="inline-flex h-full w-full items-center justify-center">
           <AddBlock />
         </div>

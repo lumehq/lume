@@ -16,7 +16,7 @@ export interface LumeEvent extends NDKEvent {
   content: Content;
 }
 
-export interface Account {
+export interface Account extends NDKUserProfile {
   id: number;
   npub: string;
   pubkey: string;

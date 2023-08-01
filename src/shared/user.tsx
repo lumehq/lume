@@ -81,12 +81,12 @@ export function User({
             shortenKey(pubkey)}
         </h5>
         <div className="inline-flex items-center gap-2">
-          <span className="leading-none text-zinc-500">{createdAt}</span>
+          <span className="leading-none text-white/50">{createdAt}</span>
           <button
             type="button"
-            className="inline-flex h-5 w-max items-center justify-center rounded px-1 hover:bg-zinc-800"
+            className="inline-flex h-5 w-max items-center justify-center rounded px-1 hover:bg-white/20"
           >
-            <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-zinc-200" />
+            <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-white/50" />
           </button>
         </div>
       </div>

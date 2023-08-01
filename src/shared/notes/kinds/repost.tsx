@@ -33,7 +33,7 @@ export function Repost({ event }: { event: LumeEvent }) {
 
   return (
     <div className="h-min w-full px-3 py-1.5">
-      <div className="relative overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 pt-3">
+      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
         <div className="flex flex-col">
           <div className="isolate flex flex-col -space-y-4 overflow-hidden">
             <RepostUser pubkey={event.pubkey} />

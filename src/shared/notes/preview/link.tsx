@@ -7,7 +7,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
   const domain = new URL(urls[0]);
 
   return (
-    <div className="mb-2 mt-3 max-w-[420px] overflow-hidden rounded-lg bg-zinc-800">
+    <div className="mb-2 mt-3 max-w-[420px] overflow-hidden rounded-lg bg-white/10">
       {status === 'loading' ? (
         <div className="flex flex-col">
           <div className="h-44 w-full animate-pulse bg-zinc-700" />
@@ -21,7 +21,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
         </div>
       ) : (
         <a
-          className="flex flex-col rounded-lg border-t border-zinc-700/50"
+          className="flex flex-col rounded-lg"
           href={urls[0]}
           target="_blank"
           rel="noreferrer"
@@ -43,15 +43,15 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                 />
               )}
               <div className="flex flex-col gap-2 px-3 py-3">
-                <h5 className="line-clamp-1 font-medium leading-none text-zinc-200">
+                <h5 className="line-clamp-1 font-medium leading-none text-white">
                   {data.title}
                 </h5>
                 {data.description && (
-                  <p className="line-clamp-3 break-all text-sm text-zinc-400">
+                  <p className="line-clamp-3 break-all text-sm text-white/50">
                     {data.description}
                   </p>
                 )}
-                <span className="mt-2.5 text-sm leading-none text-zinc-500">
+                <span className="mt-2.5 text-sm leading-none text-white/50">
                   {domain.hostname}
                 </span>
               </div>

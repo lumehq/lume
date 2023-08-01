@@ -8,7 +8,7 @@ export function AppLayout() {
       <div className="shrink-0">
         <Navigation />
       </div>
-      <div className="h-full w-full flex-1 bg-black">
+      <div className="h-full w-full flex-1 bg-black/90">
         <Outlet />
         <ScrollRestoration />
       </div>

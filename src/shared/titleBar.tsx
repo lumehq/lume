@@ -8,7 +8,7 @@ export function TitleBar({ id, title }: { id?: string; title: string }) {
   return (
     <div
       data-tauri-drag-region
-      className="group flex h-11 w-full shrink-0 items-center justify-between overflow-hidden border-b border-zinc-900 px-3"
+      className="group flex h-11 w-full shrink-0 items-center justify-between overflow-hidden px-3"
     >
       <div className="w-6" />
       <h3 className="text-sm font-medium text-zinc-200">{title}</h3>
