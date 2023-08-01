@@ -54,7 +54,9 @@ export function RepliesList({ id }: { id: string }) {
   return (
     <div className="mt-3">
       <div className="mb-2">
-        <h5 className="text-lg font-semibold text-zinc-300">{data.length} replies</h5>
+        <h5 className="text-lg font-semibold text-zinc-300">
+          {data?.length || 0} replies
+        </h5>
       </div>
       <div className="flex flex-col">
         {data?.length === 0 ? (
@@ -68,7 +70,7 @@ export function RepliesList({ id }: { id: string }) {
           </div>
         ) : (
           data
-            .reverse()
+            ?.reverse()
             .map((event: LumeEvent) => <Reply key={event.id} event={event} root={id} />)
         )}
       </div>

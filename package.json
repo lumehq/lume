@@ -79,7 +79,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/html-to-text": "^9.0.1",
     "@types/node": "^18.17.1",
-    "@types/react": "^18.2.17",
+    "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
     "@types/youtube-player": "^5.5.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
