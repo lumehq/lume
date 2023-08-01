@@ -5,10 +5,10 @@ import { Navigation } from '@shared/navigation';
 export function AppLayout() {
   return (
     <div className="flex h-screen w-screen">
-      <div className="relative flex shrink-0 flex-row">
+      <div className="shrink-0">
         <Navigation />
       </div>
-      <div className="h-full w-full">
+      <div className="h-full w-full flex-1 bg-black">
         <Outlet />
         <ScrollRestoration />
       </div>

@@ -16,7 +16,7 @@ import { sendNativeNotification } from '@utils/notification';
 
 const lastLogin = await getLastLogin();
 
-export function ActiveAccount({ data }: { data: any }) {
+export function ActiveAccount({ data }: { data: { pubkey: string; npub: string } }) {
   const queryClient = useQueryClient();
 
   const { ndk } = useNDK();

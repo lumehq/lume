@@ -103,10 +103,11 @@
         "theme": "Dark",
         "title": "Lume",
         "titleBarStyle": "Overlay",
-        "transparent": false,
+        "transparent": true,
         "width": 1080,
         "center": true
       }
-    ]
+    ],
+    "macOSPrivateApi": true
   }
 }

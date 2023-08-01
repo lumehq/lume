@@ -33,13 +33,13 @@ export function NewMessageModal() {
       <button
         type="button"
         onClick={() => openModal()}
-        className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5"
+        className="inline-flex h-9 items-center gap-2.5 rounded-md px-2"
       >
-        <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-          <PlusIcon className="h-3 w-3 text-zinc-200" />
+        <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+          <PlusIcon className="h-3 w-3 text-white" />
         </div>
         <div>
-          <h5 className="font-medium text-zinc-400">New chat</h5>
+          <h5 className="text-white/50">New chat</h5>
         </div>
       </button>
       <Transition appear show={isOpen} as={Fragment}>

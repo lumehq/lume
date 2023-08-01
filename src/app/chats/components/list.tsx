@@ -50,20 +50,20 @@ export function ChatsList() {
       {account ? (
         <ChatsListSelfItem data={account} />
       ) : (
-        <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
+        <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2">
           <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
           <div className="h-3 w-full animate-pulse rounded-sm bg-zinc-800" />
         </div>
       )}
       {chats.follows.map((item) => renderItem(item))}
-      {chats.unknowns.length > 0 && <UnknownsModal data={chats.unknowns} />}
-      <NewMessageModal />
       {isFetching && (
-        <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
+        <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2">
           <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
           <div className="h-3 w-full animate-pulse rounded-sm bg-zinc-800" />
         </div>
       )}
+      {chats.unknowns.length > 0 && <UnknownsModal data={chats.unknowns} />}
+      <NewMessageModal />
     </div>
   );
 }

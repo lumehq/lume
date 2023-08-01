@@ -51,9 +51,9 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-9 transform items-center justify-center rounded-md border-t border-zinc-700/50 bg-zinc-800 active:translate-y-1"
+          className="inline-flex h-9 w-9 transform items-center justify-center rounded-md bg-white/20 active:translate-y-1"
         >
-          <BellIcon className="h-4 w-4 text-zinc-400" />
+          <BellIcon className="h-4 w-4 text-white" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">
