@@ -23,6 +23,7 @@ export function Navigation() {
 
   return (
     <div className="relative h-full w-[232px] bg-black/80">
+      <div className="absolute left-0 top-0 h-8 w-full" data-tauri-drag-region />
       <div className="scrollbar-hide flex flex-col gap-5 overflow-y-auto pb-20">
         <div className="inline-flex h-8 items-center justify-between px-2 pb-4 pt-14">
           <ComposerModal />
@@ -53,7 +54,7 @@ export function Navigation() {
                     open ? '' : 'rotate-180'
                   )}
                 >
-                  <NavArrowDownIcon width={12} height={12} className="text-white/50" />
+                  <NavArrowDownIcon className="h-3 w-3 text-white/50" />
                 </div>
                 <h3 className="text-[11px] font-bold uppercase tracking-widest text-white/50">
                   Feeds
@@ -106,7 +107,7 @@ export function Navigation() {
                     open ? '' : 'rotate-180'
                   )}
                 >
-                  <NavArrowDownIcon width={12} height={12} className="text-white/50" />
+                  <NavArrowDownIcon className="h-3 w-3 text-white/50" />
                 </div>
                 <h3 className="text-[11px] font-bold uppercase tracking-widest text-white/50">
                   Chats

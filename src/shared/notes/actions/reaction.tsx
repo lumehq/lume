@@ -80,7 +80,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('👏')}
-              className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
             >
               <img
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Clapping%20Hands.png"
@@ -91,7 +91,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('🤪')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Tongue.png"
@@ -102,7 +102,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('😮')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Open%20Mouth.png"
@@ -113,7 +113,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('😢')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Crying%20Face.png"
@@ -124,7 +124,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('🤡')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Clown%20Face.png"

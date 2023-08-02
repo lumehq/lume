@@ -27,10 +27,11 @@ export function LinkPreview({ urls }: { urls: string[] }) {
           rel="noreferrer"
         >
           {error ? (
-            <div className="px-3 py-3">
-              <p className="line-clamp-3 break-all text-sm text-zinc-400">
+            <div className="flex flex-col gap-2 px-3 py-3">
+              <p className="text-sm text-white/50">
                 Can&apos;t fetch open graph, click to open webpage
               </p>
+              <span className="text-sm leading-none text-white">{domain.hostname}</span>
             </div>
           ) : (
             <>

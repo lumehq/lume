@@ -15,9 +15,9 @@ export function TrendingProfiles() {
   });
 
   return (
-    <div className="flex w-[360px] shrink-0 flex-col border-r border-zinc-900">
+    <div className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
       <TitleBar title="Trending Profiles" />
-      <div className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5">
+      <div className="h-full">
         {error && <p>Failed to fetch</p>}
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
@@ -26,7 +26,7 @@ export function TrendingProfiles() {
             </div>
           </div>
         ) : (
-          <div className="relative flex w-full flex-col gap-3 px-3 pt-3">
+          <div className="relative flex w-full flex-col gap-3 px-3 pt-1.5">
             {data.profiles.map((item) => (
               <Profile key={item.pubkey} data={item} />
             ))}

@@ -57,10 +57,10 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-[1000px] bg-black bg-opacity-30 backdrop-blur-md data-[state=open]:animate-overlayShow" />
-        <div className="fixed inset-0 z-50 flex min-h-full items-center justify-center data-[state=open]:animate-contentShow">
-          <Dialog.Content className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border-t border-zinc-800/50 bg-zinc-900">
-            <div className="h-min w-full shrink-0 border-b border-zinc-800 px-5 py-5">
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
+        <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
+            <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="text-lg font-semibold leading-none text-zinc-100">
@@ -96,8 +96,8 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
                 data.map((event) => renderItem(event))
               )}
             </div>
-          </Dialog.Content>
-        </div>
+          </div>
+        </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );

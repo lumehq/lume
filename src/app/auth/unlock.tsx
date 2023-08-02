@@ -84,7 +84,7 @@ export function UnlockScreen() {
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-semibold text-white">Enter password to unlock</h1>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <div className="relative">
               <input
@@ -98,17 +98,9 @@ export function UnlockScreen() {
                 className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
               >
                 {passwordInput === 'password' ? (
-                  <EyeOffIcon
-                    width={20}
-                    height={20}
-                    className="text-white/50 group-hover:text-white"
-                  />
+                  <EyeOffIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
                 ) : (
-                  <EyeOnIcon
-                    width={20}
-                    height={20}
-                    className="text-white/50 group-hover:text-white"
-                  />
+                  <EyeOnIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
                 )}
               </button>
             </div>
