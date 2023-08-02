@@ -61,22 +61,22 @@ export function NoteStats({ id }: { id: string }) {
 
   return (
     <div className="flex h-11 items-center gap-3">
-      <p className="text-zinc-500">
-        <span className="font-semibold text-zinc-300">
+      <p className="text-white/50">
+        <span className="font-semibold text-white">
           {compactNumber.format(data.reactions)}
         </span>{' '}
         reactions
       </p>
-      <span className="text-zinc-500">·</span>
-      <p className="text-zinc-500">
-        <span className="font-semibold text-zinc-300">
+      <span className="text-white/50">·</span>
+      <p className="text-white/50">
+        <span className="font-semibold text-white">
           {compactNumber.format(data.reposts)}
         </span>{' '}
         reposts
       </p>
-      <span className="text-zinc-500">·</span>
-      <p className="text-zinc-500">
-        <span className="font-semibold text-zinc-300">
+      <span className="text-white/50">·</span>
+      <p className="text-white/50">
+        <span className="font-semibold text-white">
           {compactNumber.format(data.zaps)}
         </span>{' '}
         zaps

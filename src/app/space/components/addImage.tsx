@@ -89,15 +89,15 @@ export function AddImageBlock() {
         className="inline-flex h-9 w-72 items-center justify-start gap-2.5 rounded-md px-2.5"
       >
         <div className="flex items-center gap-2">
-          <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-            <CommandIcon width={12} height={12} className="text-zinc-500" />
+          <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+            <CommandIcon width={12} height={12} className="text-white" />
           </div>
-          <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-            <span className="text-sm leading-none text-zinc-500">I</span>
+          <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+            <span className="text-sm leading-none text-white">I</span>
           </div>
         </div>
         <div>
-          <h5 className="font-medium text-zinc-400">New image block</h5>
+          <h5 className="font-medium text-white/50">New image block</h5>
         </div>
       </button>
       <Transition appear show={isOpen} as={Fragment}>

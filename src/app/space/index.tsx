@@ -54,7 +54,7 @@ export function SpaceScreen() {
   );
 
   return (
-    <div className="scrollbar-hide flex h-full w-full flex-nowrap overflow-x-auto overflow-y-hidden">
+    <div className="scrollbar-hide flex h-full w-full flex-nowrap divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
       <FollowingBlock />
       {status === 'loading' ? (
         <div className="flex w-[350px] shrink-0 flex-col">
@@ -63,7 +63,7 @@ export function SpaceScreen() {
             className="group flex h-11 w-full items-center justify-between overflow-hidden px-3"
           />
           <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
+            <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
           </div>
         </div>
       ) : (

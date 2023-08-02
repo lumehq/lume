@@ -27,9 +27,9 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
             <button
               type="button"
               onClick={() => downloadImage(url)}
-              className="absolute right-3 top-3 hidden h-7 w-7 items-center justify-center rounded-md bg-black/70 backdrop-blur-md hover:bg-fuchsia-500 group-hover:inline-flex"
+              className="absolute right-2 top-2 hidden h-8 w-8 items-center justify-center rounded-md bg-black/50 backdrop-blur-md hover:bg-black/40 group-hover:inline-flex"
             >
-              <DownloadIcon className="h-4 w-4 text-zinc-100" />
+              <DownloadIcon className="h-5 w-5 text-white" />
             </button>
           </div>
         ))}

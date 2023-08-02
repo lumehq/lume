@@ -90,7 +90,7 @@ export function UnlockScreen() {
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                className="relative w-full rounded-lg bg-white/10 py-3 text-center text-white !outline-none placeholder:text-white/10"
+                className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/10"
               />
               <button
                 type="button"

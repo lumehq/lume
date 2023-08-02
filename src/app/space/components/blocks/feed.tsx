@@ -113,13 +113,12 @@ export function FeedBlock({ params }: { params: Block }) {
   );
 
   return (
-    <div className="w-[400px] shrink-0 border-r border-zinc-900">
+    <div
+      ref={parentRef}
+      className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20"
+    >
       <TitleBar id={params.id} title={params.title} />
-      <div
-        ref={parentRef}
-        className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"
-        style={{ contain: 'strict' }}
-      >
+      <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">

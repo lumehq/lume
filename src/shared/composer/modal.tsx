@@ -30,7 +30,7 @@ export function ComposerModal() {
     <>
       <Button onClick={() => toggle(true)} preset="small">
         <ComposeIcon className="h-4 w-4" />
-        Compose
+        Postr
       </Button>
       <Transition appear show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>

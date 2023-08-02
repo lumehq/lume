@@ -175,7 +175,7 @@ export function Root() {
   }, [status]);
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen bg-black/90">
       <div className="flex h-screen w-full flex-col">
         <div data-tauri-drag-region className="h-11 shrink-0" />
         <div className="relative flex min-h-0 w-full flex-1 items-center justify-center">

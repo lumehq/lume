@@ -36,6 +36,7 @@ export function useProfile(pubkey: string, fallback?: string) {
       }
     },
     {
+      refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     }
