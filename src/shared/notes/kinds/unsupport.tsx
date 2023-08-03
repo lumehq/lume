@@ -21,7 +21,7 @@ export function NoteKindUnsupport({ event }: { event: LumeEvent }) {
                     Lume isn&apos;t fully support this kind
                   </p>
                 </div>
-                <div className="select-text whitespace-pre-line	break-all text-zinc-100">
+                <div className="select-text whitespace-pre-line	break-all text-white">
                   <p>{event.content.toString()}</p>
                 </div>
               </div>

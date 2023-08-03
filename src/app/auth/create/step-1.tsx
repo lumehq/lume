@@ -81,25 +81,25 @@ export function CreateStep1Screen() {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-zinc-100">Save your access key!</h1>
+        <h1 className="text-xl font-semibold text-white">Save your access key!</h1>
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <span className="text-base font-semibold text-zinc-400">Public Key</span>
+          <span className="text-base font-semibold text-white/50">Public Key</span>
           <input
             readOnly
             value={npub}
-            className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+            className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
           />
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-base font-semibold text-zinc-400">Private Key</span>
+          <span className="text-base font-semibold text-white/50">Private Key</span>
           <div className="relative">
             <input
               readOnly
               type={privkeyInput}
               value={nsec}
-              className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+              className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
             />
             <button
               type="button"
@@ -110,13 +110,13 @@ export function CreateStep1Screen() {
                 <EyeOffIcon
                   width={20}
                   height={20}
-                  className="text-zinc-500 group-hover:text-zinc-100"
+                  className="text-zinc-500 group-hover:text-white"
                 />
               ) : (
                 <EyeOnIcon
                   width={20}
                   height={20}
-                  className="text-zinc-500 group-hover:text-zinc-100"
+                  className="text-zinc-500 group-hover:text-white"
                 />
               )}
             </button>
@@ -132,13 +132,13 @@ export function CreateStep1Screen() {
         <div className="flex flex-col gap-2">
           <Button preset="large" onClick={() => submit()}>
             {loading ? (
-              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
             ) : (
               'I have saved my key, continue →'
             )}
           </Button>
           {downloaded ? (
-            <span className="text-sm text-zinc-400">Saved in download folder</span>
+            <span className="text-sm text-white/50">Saved in download folder</span>
           ) : (
             <Button preset="large-alt" onClick={() => download()}>
               Download

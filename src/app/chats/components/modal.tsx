@@ -43,14 +43,14 @@ export function NewMessageModal() {
             <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <Dialog.Title className="text-lg font-semibold leading-none text-zinc-100">
+                  <Dialog.Title className="text-lg font-semibold leading-none text-white">
                     New chat
                   </Dialog.Title>
                   <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
                     <CancelIcon className="h-4 w-4 text-white/50" />
                   </Dialog.Close>
                 </div>
-                <Dialog.Description className="text-sm leading-none text-zinc-400">
+                <Dialog.Description className="text-sm leading-none text-white/50">
                   All messages will be encrypted, but anyone can see who you chat
                 </Dialog.Description>
               </div>

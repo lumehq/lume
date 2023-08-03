@@ -14,7 +14,7 @@ export function NotiReaction({ event }: { event: NDKEvent }) {
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-1">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-zinc-400">reacted {event.content}</p>
+          <p className="leading-none text-white/50">reacted {event.content}</p>
         </div>
         <div>
           <span className="leading-none text-zinc-500">{createdAt}</span>

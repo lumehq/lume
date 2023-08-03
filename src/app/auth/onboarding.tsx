@@ -38,7 +38,7 @@ export function OnboardingScreen() {
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
         <div className="mb-4 text-center">
-          <h1 className="mb-2 text-xl font-semibold text-zinc-100">
+          <h1 className="mb-2 text-xl font-semibold text-white">
             👋 Hello, welcome you to Lume
           </h1>
           <p className="text-sm text-zinc-300">
@@ -54,7 +54,7 @@ export function OnboardingScreen() {
             {status === 'success' && (
               <User pubkey={account.pubkey} time={Math.floor(Date.now() / 1000)} />
             )}
-            <div className="-mt-6 select-text whitespace-pre-line break-words	pl-[49px] text-base text-zinc-100">
+            <div className="-mt-6 select-text whitespace-pre-line break-words	pl-[49px] text-base text-white">
               <p>Running Lume, join with me #nostr #lume</p>
               <a
                 href="https://lume.nu"
@@ -71,12 +71,12 @@ export function OnboardingScreen() {
           <button
             type="button"
             onClick={() => submit()}
-            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium text-zinc-100 hover:bg-fuchsia-600"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium text-white hover:bg-fuchsia-600"
           >
             {loading ? (
               <>
                 <span className="w-5" />
-                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
                 <span className="w-5" />
               </>
             ) : (

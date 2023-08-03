@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { AddBlock } from '@app/space/components/add';
 import { FeedBlock } from '@app/space/components/blocks/feed';
 import { FollowingBlock } from '@app/space/components/blocks/following';
 import { HashtagBlock } from '@app/space/components/blocks/hashtag';
 import { ImageBlock } from '@app/space/components/blocks/image';
 import { ThreadBlock } from '@app/space/components/blocks/thread';
 import { UserBlock } from '@app/space/components/blocks/user';
+import { FeedModal } from '@app/space/components/modals/feed';
+import { HashtagModal } from '@app/space/components/modals/hashtag';
+import { ImageModal } from '@app/space/components/modals/image';
 
 import { getBlocks } from '@libs/storage';
 
@@ -76,13 +78,15 @@ export function SpaceScreen() {
             className="group flex h-11 w-full items-center justify-between overflow-hidden px-3"
           />
           <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
+            <LoaderIcon className="h-5 w-5 animate-spin text-white" />
           </div>
         </div>
       )}
       <div className="flex w-[350px] shrink-0 flex-col">
-        <div className="inline-flex h-full w-full items-center justify-center">
-          <AddBlock />
+        <div className="inline-flex h-full w-full flex-col items-center justify-center gap-1">
+          <FeedModal />
+          <ImageModal />
+          <HashtagModal />
         </div>
       </div>
       <div className="w-[250px] shrink-0" />

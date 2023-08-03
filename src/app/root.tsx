@@ -118,46 +118,6 @@ export function Root() {
     }
   }
 
-  /*
-  async function fetchChannelMessages() {
-    try {
-      const ids = [];
-      const channels: any = await getChannels();
-      channels.forEach((channel) => {
-        ids.push(channel.event_id);
-      });
-
-      const since = lastLogin === 0 ? dateToUnix(getHourAgo(48, now.current)) : lastLogin;
-
-      const filter: NDKFilter = {
-        '#e': ids,
-        kinds: [42],
-        since: since,
-      };
-
-      const events = await prefetchEvents(ndk, filter);
-      events.forEach((event) => {
-        const channel_id = event.tags[0][1];
-        if (channel_id) {
-          createChannelMessage(
-            channel_id,
-            event.id,
-            event.pubkey,
-            event.kind,
-            event.content,
-            event.tags,
-            event.created_at
-          );
-        }
-      });
-
-      return true;
-    } catch (e) {
-      console.log('error: ', e);
-    }
-  }
-  */
-
   useEffect(() => {
     async function prefetch() {
       const notes = await fetchNotes();
@@ -180,12 +140,12 @@ export function Root() {
         <div data-tauri-drag-region className="h-11 shrink-0" />
         <div className="relative flex min-h-0 w-full flex-1 items-center justify-center">
           <div className="flex flex-col items-center justify-center gap-4">
-            <LoaderIcon className="h-6 w-6 animate-spin text-zinc-100" />
+            <LoaderIcon className="h-6 w-6 animate-spin text-white" />
             <div className="text-center">
-              <h3 className="text-lg font-semibold leading-tight text-zinc-100">
+              <h3 className="text-lg font-semibold leading-tight text-white">
                 Prefetching data...
               </h3>
-              <p className="text-zinc-600">
+              <p className="text-white/50">
                 This may take a few seconds, please don&apos;t close app.
               </p>
             </div>

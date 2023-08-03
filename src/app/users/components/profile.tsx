@@ -113,7 +113,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             </div>
           </div>
           <div className="flex flex-col gap-8">
-            <p className="mt-2 max-w-[500px] select-text break-words text-zinc-100">
+            <p className="mt-2 max-w-[500px] select-text break-words text-white">
               {user?.about || user?.bio}
             </p>
             <UserMetadata pubkey={pubkey} />

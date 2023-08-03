@@ -69,7 +69,7 @@ export function NoteMetadata({ id }: { id: string }) {
       <div className="mb-3 flex items-center gap-3">
         <div className="mt-2h-6 w-11 shrink-0"></div>
         <div className="mt-2 inline-flex h-6 items-center">
-          <LoaderIcon className="h-4 w-4 animate-spin text-zinc-100" />
+          <LoaderIcon className="h-4 w-4 animate-spin text-white" />
         </div>
       </div>
     );

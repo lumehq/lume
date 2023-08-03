@@ -20,15 +20,15 @@ export function Button({
       break;
     case 'publish':
       preClass =
-        'w-min h-9 px-4 bg-fuchsia-500 rounded-md text-sm font-medium text-zinc-100 hover:bg-fuchsia-600';
+        'w-min h-9 px-4 bg-fuchsia-500 rounded-md text-sm font-medium text-white hover:bg-fuchsia-600';
       break;
     case 'large':
       preClass =
-        'h-11 w-full bg-fuchsia-500 rounded-md font-medium text-zinc-100 hover:bg-fuchsia-600';
+        'h-11 w-full bg-fuchsia-500 rounded-md font-medium text-white hover:bg-fuchsia-600';
       break;
     case 'large-alt':
       preClass =
-        'h-11 w-full bg-zinc-800 rounded-md font-medium text-zinc-300 border-t border-zinc-700/50 hover:bg-zinc-900';
+        'h-11 w-full bg-zinc-800 rounded-md font-medium text-white border-t border-zinc-700/50 hover:bg-zinc-900';
       break;
     default:
       break;

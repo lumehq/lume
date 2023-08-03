@@ -26,7 +26,7 @@ export function Repost({ event }: { event: LumeEvent }) {
   if (status === 'error') {
     return (
       <div className="flex items-center justify-center overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
-        <p className="text-zinc-400">Failed to fetch</p>
+        <p className="text-white/50">Failed to fetch</p>
       </div>
     );
   }

@@ -63,7 +63,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
             <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <Dialog.Title className="text-lg font-semibold leading-none text-zinc-100">
+                  <Dialog.Title className="text-lg font-semibold leading-none text-white">
                     Notification
                   </Dialog.Title>
                   <Dialog.Close asChild>
@@ -75,7 +75,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
                     </button>
                   </Dialog.Close>
                 </div>
-                <Dialog.Description className="text-sm leading-tight text-zinc-400">
+                <Dialog.Description className="text-sm leading-tight text-white/50">
                   All things happen when you rest in 24 hours ago
                 </Dialog.Description>
               </div>
@@ -83,7 +83,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
             <div className="scrollbar-hide flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-5">
               {status === 'loading' ? (
                 <div className="inline-flex items-center justify-center px-4 py-3">
-                  <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
+                  <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
                 </div>
               ) : data.length < 1 ? (
                 <div className="flex h-full w-full flex-col items-center justify-center">

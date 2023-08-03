@@ -178,7 +178,7 @@ export function EditProfileModal() {
                   <div className="flex items-center justify-between">
                     <Dialog.Title
                       as="h3"
-                      className="text-lg font-semibold leading-none text-zinc-100"
+                      className="text-lg font-semibold leading-none text-white"
                     >
                       Edit profile
                     </Dialog.Title>
@@ -197,13 +197,13 @@ export function EditProfileModal() {
                       type={'hidden'}
                       {...register('picture')}
                       value={picture}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
                     />
                     <input
                       type={'hidden'}
                       {...register('banner')}
                       value={banner}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
                     />
                     <div className="relative">
                       <div className="relative h-44 w-full bg-zinc-800">
@@ -235,7 +235,7 @@ export function EditProfileModal() {
                       <div className="flex flex-col gap-1">
                         <label
                           htmlFor="name"
-                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                          className="text-sm font-semibold uppercase tracking-wider text-white/50"
                         >
                           Name
                         </label>
@@ -246,13 +246,13 @@ export function EditProfileModal() {
                             minLength: 4,
                           })}
                           spellCheck={false}
-                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
                         <label
                           htmlFor="nip05"
-                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                          className="text-sm font-semibold uppercase tracking-wider text-white/50"
                         >
                           Lume ID / NIP-05
                         </label>
@@ -263,7 +263,7 @@ export function EditProfileModal() {
                               minLength: 4,
                             })}
                             spellCheck={false}
-                            className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                            className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
                           />
                           <div className="absolute right-2 top-1/2 -translate-y-1/2 transform">
                             {nip05.verified ? (
@@ -288,20 +288,20 @@ export function EditProfileModal() {
                       <div className="flex flex-col gap-1">
                         <label
                           htmlFor="about"
-                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                          className="text-sm font-semibold uppercase tracking-wider text-white/50"
                         >
                           Bio
                         </label>
                         <textarea
                           {...register('about')}
                           spellCheck={false}
-                          className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                          className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
                         <label
                           htmlFor="website"
-                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                          className="text-sm font-semibold uppercase tracking-wider text-white/50"
                         >
                           Website
                         </label>
@@ -309,13 +309,13 @@ export function EditProfileModal() {
                           type={'text'}
                           {...register('website', { required: false })}
                           spellCheck={false}
-                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
                         <label
                           htmlFor="website"
-                          className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                          className="text-sm font-semibold uppercase tracking-wider text-white/50"
                         >
                           Lightning address
                         </label>
@@ -323,17 +323,17 @@ export function EditProfileModal() {
                           type={'text'}
                           {...register('lud16', { required: false })}
                           spellCheck={false}
-                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
                         />
                       </div>
                       <div>
                         <button
                           type="submit"
                           disabled={!isValid}
-                          className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+                          className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
                         >
                           {loading ? (
-                            <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                            <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
                           ) : (
                             'Update'
                           )}

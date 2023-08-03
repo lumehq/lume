@@ -31,10 +31,10 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
         />
       </div>
       <div className="flex w-full flex-1 flex-col items-start text-start">
-        <span className="truncate font-medium leading-tight text-zinc-100">
+        <span className="truncate font-medium leading-tight text-white">
           {user?.name || user?.displayName || user?.display_name}
         </span>
-        <span className="max-w-[15rem] truncate text-base leading-tight text-zinc-400">
+        <span className="max-w-[15rem] truncate text-base leading-tight text-white/50">
           {user?.nip05?.toLowerCase() || shortenKey(pubkey)}
         </span>
       </div>

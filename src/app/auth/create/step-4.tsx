@@ -53,7 +53,7 @@ export function CreateStep4Screen() {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-zinc-100">Create your Lume ID</h1>
+        <h1 className="text-xl font-semibold text-white">Create your Lume ID</h1>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-4">
         <div className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-800">
@@ -65,7 +65,7 @@ export function CreateStep4Screen() {
             autoCorrect="none"
             spellCheck="false"
             placeholder="satoshi"
-            className="relative w-full bg-transparent py-3 pl-3.5 text-zinc-100 !outline-none placeholder:text-zinc-500"
+            className="relative w-full bg-transparent py-3 pl-3.5 text-white !outline-none placeholder:text-zinc-500"
           />
           <span className="pr-3.5 font-semibold text-fuchsia-500">@lume.nu</span>
         </div>
@@ -75,7 +75,7 @@ export function CreateStep4Screen() {
           disabled={username.length === 0}
         >
           {loading ? (
-            <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+            <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
           ) : (
             'Continue →'
           )}

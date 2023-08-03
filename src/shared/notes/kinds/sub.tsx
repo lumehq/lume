@@ -17,7 +17,7 @@ export function SubNote({ id, root }: { id: string; root?: string }) {
   if (status === 'error') {
     return (
       <div className="mb-5 flex overflow-hidden rounded-xl bg-zinc-800 px-3 py-3">
-        <p className="text-zinc-400">Failed to fetch</p>
+        <p className="text-white/50">Failed to fetch</p>
       </div>
     );
   }

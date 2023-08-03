@@ -62,7 +62,7 @@ export function RepliesList({ id }: { id: string }) {
             <div className="flex w-full items-center justify-center rounded-xl bg-white/10">
               <div className="flex flex-col items-center justify-center gap-2 py-6">
                 <h3 className="text-3xl">👋</h3>
-                <p className="leading-none text-zinc-400">Share your thought on it...</p>
+                <p className="leading-none text-white/50">Share your thought on it...</p>
               </div>
             </div>
           </div>

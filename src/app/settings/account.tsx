@@ -23,36 +23,36 @@ export function AccountSettingsScreen() {
   return (
     <div className="h-full w-full px-3 pt-12">
       <div className="flex flex-col gap-2">
-        <h1 className="text-lg font-semibold text-zinc-100">Account</h1>
+        <h1 className="text-lg font-semibold text-white">Account</h1>
         <div className="">
           {status === 'loading' ? (
             <p>Loading...</p>
           ) : (
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <label htmlFor="pubkey" className="text-base font-semibold text-zinc-400">
+                <label htmlFor="pubkey" className="text-base font-semibold text-white/50">
                   Public Key
                 </label>
                 <input
                   readOnly
                   value={account.pubkey}
-                  className="relative w-2/3 rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                  className="relative w-2/3 rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label htmlFor="npub" className="text-base font-semibold text-zinc-400">
+                <label htmlFor="npub" className="text-base font-semibold text-white/50">
                   Npub
                 </label>
                 <input
                   readOnly
                   value={account.npub}
-                  className="relative w-2/3 rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                  className="relative w-2/3 rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                 />
               </div>
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="privkey"
-                  className="text-base font-semibold text-zinc-400"
+                  className="text-base font-semibold text-white/50"
                 >
                   Private Key
                 </label>
@@ -61,7 +61,7 @@ export function AccountSettingsScreen() {
                     readOnly
                     type={type}
                     value={privkey}
-                    className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                    className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                   />
                   <button
                     type="button"
@@ -72,13 +72,13 @@ export function AccountSettingsScreen() {
                       <EyeOffIcon
                         width={20}
                         height={20}
-                        className="text-zinc-500 group-hover:text-zinc-100"
+                        className="text-zinc-500 group-hover:text-white"
                       />
                     ) : (
                       <EyeOnIcon
                         width={20}
                         height={20}
-                        className="text-zinc-500 group-hover:text-zinc-100"
+                        className="text-zinc-500 group-hover:text-white"
                       />
                     )}
                   </button>

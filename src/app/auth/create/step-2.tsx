@@ -74,7 +74,7 @@ export function CreateStep2Screen() {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-zinc-100">
+        <h1 className="text-xl font-semibold text-white">
           Set password to secure your key
         </h1>
       </div>
@@ -85,7 +85,7 @@ export function CreateStep2Screen() {
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
               />
               <button
                 type="button"
@@ -96,13 +96,13 @@ export function CreateStep2Screen() {
                   <EyeOffIcon
                     width={20}
                     height={20}
-                    className="text-zinc-500 group-hover:text-zinc-100"
+                    className="text-zinc-500 group-hover:text-white"
                   />
                 ) : (
                   <EyeOnIcon
                     width={20}
                     height={20}
-                    className="text-zinc-500 group-hover:text-zinc-100"
+                    className="text-zinc-500 group-hover:text-white"
                   />
                 )}
               </button>
@@ -122,10 +122,10 @@ export function CreateStep2Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
             >
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
               ) : (
                 'Continue →'
               )}

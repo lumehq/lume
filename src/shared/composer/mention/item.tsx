@@ -17,12 +17,12 @@ export function MentionItem({ profile }: { profile: Profile }) {
         />
       </div>
       <div className="flex flex-col gap-px">
-        <h5 className="max-w-[15rem] text-sm font-medium leading-none text-zinc-100">
+        <h5 className="max-w-[15rem] text-sm font-medium leading-none text-white">
           {profile.ident || (
             <div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
           )}
         </h5>
-        <span className="text-sm leading-none text-zinc-400">
+        <span className="text-sm leading-none text-white/50">
           {displayNpub(profile.pubkey, 16)}
         </span>
       </div>

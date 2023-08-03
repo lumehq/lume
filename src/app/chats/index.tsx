@@ -106,7 +106,7 @@ export function ChatScreen() {
           data-tauri-drag-region
           className="inline-flex h-11 w-full shrink-0 items-center justify-center border-b border-zinc-900"
         >
-          <h3 className="font-semibold text-zinc-100">Encrypted Chat</h3>
+          <h3 className="font-semibold text-white">Encrypted Chat</h3>
         </div>
         <div className="h-full w-full flex-1 p-3">
           <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900">
@@ -155,7 +155,7 @@ export function ChatScreen() {
 const Empty = (
   <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-1 text-center">
     <h3 className="mb-2 text-4xl">🙌</h3>
-    <p className="leading-none text-zinc-400">
+    <p className="leading-none text-white/50">
       You two didn&apos;t talk yet, let&apos;s send first message
     </p>
   </div>

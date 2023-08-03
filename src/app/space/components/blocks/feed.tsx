@@ -121,15 +121,15 @@ export function FeedBlock({ params }: { params: Block }) {
       <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>
         ) : itemsVirtualizer.length === 0 ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+            <div className="bbg-white/10 rounded-xl px-3 py-6">
               <div className="flex flex-col items-center gap-4">
-                <p className="text-center text-sm text-zinc-300">
+                <p className="text-center text-sm text-white">
                   Not found any posts from last 48 hours
                 </p>
               </div>

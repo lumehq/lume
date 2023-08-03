@@ -18,7 +18,7 @@ export function ChannelBlackList({ blacklist }: { blacklist: any }) {
             <MuteIcon
               width={16}
               height={16}
-              className="text-zinc-400 group-hover:text-zinc-100"
+              className="text-white/50 group-hover:text-white"
             />
           </Popover.Button>
           <Transition
@@ -37,7 +37,7 @@ export function ChannelBlackList({ blacklist }: { blacklist: any }) {
                     <h3 className="bg-gradient-to-br from-zinc-200 to-zinc-400 bg-clip-text font-semibold leading-none text-transparent">
                       Your muted list
                     </h3>
-                    <p className="text-base leading-tight text-zinc-400">
+                    <p className="text-base leading-tight text-white/50">
                       Currently, unmute only affect locally, when you move to new client,
                       muted list will loaded again
                     </p>

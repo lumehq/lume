@@ -54,7 +54,7 @@ export function NoteStats({ id }: { id: string }) {
   if (status === 'loading') {
     return (
       <div className="flex h-11 items-center">
-        <LoaderIcon className="h-4 w-4 animate-spin text-zinc-100" />
+        <LoaderIcon className="h-4 w-4 animate-spin text-white" />
       </div>
     );
   }

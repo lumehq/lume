@@ -4,7 +4,7 @@ export function ShortcutsSettingsScreen() {
   return (
     <div className="h-full w-full px-3 pt-12">
       <div className="flex flex-col gap-2">
-        <h1 className="text-lg font-semibold text-zinc-100">Shortcuts</h1>
+        <h1 className="text-lg font-semibold text-white">Shortcuts</h1>
         <div className="w-full rounded-xl border-t border-zinc-800/50 bg-zinc-900">
           <div className="flex h-full w-full flex-col divide-y divide-zinc-800">
             <div className="inline-flex items-center justify-between px-5 py-4">

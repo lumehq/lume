@@ -75,10 +75,7 @@ export function User({
           </button>
         </Popover.Trigger>
         <div
-          className={twMerge(
-            'flex flex-1 items-baseline justify-between',
-            isRepost ? 'mt-4' : ''
-          )}
+          className={twMerge('flex flex-1 items-baseline gap-2', isRepost ? 'mt-4' : '')}
         >
           <h5
             className={twMerge(
@@ -91,6 +88,7 @@ export function User({
               user?.display_name ||
               shortenKey(pubkey)}
           </h5>
+          <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>
         </div>
       </div>

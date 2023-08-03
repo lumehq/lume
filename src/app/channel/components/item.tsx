@@ -12,12 +12,12 @@ export function ChannelsListItem({ data }: { data: any }) {
       className={({ isActive }) =>
         twMerge(
           'inline-flex h-9 items-center gap-2.5 rounded-md px-2.5',
-          isActive ? 'bg-zinc-900/50 text-zinc-100' : ''
+          isActive ? 'bg-zinc-900/50 text-white' : ''
         )
       }
     >
       <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-        <span className="text-xs text-zinc-100">#</span>
+        <span className="text-xs text-white">#</span>
       </div>
       <div className="inline-flex w-full items-center justify-between">
         <h5 className="truncate font-medium text-zinc-200">{channel?.name}</h5>

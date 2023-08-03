@@ -30,7 +30,7 @@ export function ChatMessageItem({
       <div className="flex flex-col">
         <User pubkey={data.sender_pubkey} time={data.created_at} isChat={true} />
         <div className="-mt-[20px] pl-[49px]">
-          <p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
+          <p className="select-text whitespace-pre-line break-words text-base text-white">
             {content.parsed}
           </p>
           {content.images.length > 0 && <ImagePreview urls={content.images} />}

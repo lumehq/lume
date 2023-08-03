@@ -75,7 +75,7 @@ export function ImportStep3Screen() {
             <User pubkey={account.pubkey} />
             <Button preset="large" onClick={() => submit()}>
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
               ) : (
                 'Continue →'
               )}

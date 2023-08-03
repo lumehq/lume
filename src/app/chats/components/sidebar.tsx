@@ -26,7 +26,7 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
             <h3 className="text-lg font-semibold leading-none">
               {user?.displayName || user?.name}
             </h3>
-            <h5 className="leading-none text-zinc-400">
+            <h5 className="leading-none text-white/50">
               {user?.nip05 || shortenKey(pubkey)}
             </h5>
           </div>
@@ -34,7 +34,7 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
             <p className="leading-tight">{user?.bio || user?.about}</p>
             <Link
               to={`/app/users/${pubkey}`}
-              className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-zinc-900 text-sm font-medium text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+              className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-zinc-900 text-sm font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white"
             >
               View full profile
             </Link>
