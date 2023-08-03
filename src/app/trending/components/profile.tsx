@@ -11,14 +11,23 @@ import { compactNumber } from '@utils/number';
 import { shortenKey } from '@utils/shortenKey';
 
 export function Profile({ data }: { data: any }) {
-  const { status, data: userStats } = useQuery(['user-stats', data.pubkey], async () => {
-    const res = await fetch(`https://api.nostr.band/v0/stats/profile/${data.pubkey}`);
-    return res.json();
-  });
+  const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
+  const { status, data: userStats } = useQuery(
+    ['user-stats', data.pubkey],
+    async () => {
+      const res = await fetch(`https://api.nostr.band/v0/stats/profile/${data.pubkey}`);
+      return res.json();
+    },
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    }
+  );
 
   const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
   const profile = embedProfile;
-  const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
 
   const [followed, setFollowed] = useState(false);
 
@@ -50,12 +59,13 @@ export function Profile({ data }: { data: any }) {
     }
   }, [status]);
 
-  if (!profile)
+  if (!profile) {
     return (
-      <div className="rounded-md bg-zinc-900 px-5 py-5">
+      <div className="rounded-xl bg-white/10 px-5 py-5">
         <p>Can&apos;t fetch profile</p>
       </div>
     );
+  }
 
   return (
     <div className="rounded-xl bg-white/10 px-5 py-5">

@@ -1,6 +1,9 @@
+import { LogicalSize, appWindow } from '@tauri-apps/plugin-window';
 import { Outlet, ScrollRestoration } from 'react-router-dom';
 
 import { Navigation } from '@shared/navigation';
+
+await appWindow.setSize(new LogicalSize(1080, 800));
 
 export function AppLayout() {
   return (

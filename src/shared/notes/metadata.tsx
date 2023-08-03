@@ -66,10 +66,13 @@ export function NoteMetadata({ id }: { id: string }) {
 
   if (status === 'loading') {
     return (
-      <div className="mb-3 flex items-center gap-3">
-        <div className="mt-2h-6 w-11 shrink-0"></div>
-        <div className="mt-2 inline-flex h-6 items-center">
-          <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+      <div>
+        <div className="absolute left-[18px] top-14 h-[calc(100%-6.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="relative z-10 flex items-center gap-3 pb-3">
+          <div className="mt-2 h-6 w-11 shrink-0"></div>
+          <div className="mt-2 inline-flex h-6">
+            <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+          </div>
         </div>
       </div>
     );

@@ -138,6 +138,7 @@ fn main() {
     .plugin(tauri_plugin_os::init())
     .plugin(tauri_plugin_window::init())
     .plugin(tauri_plugin_store::Builder::default().build())
+    .plugin(tauri_plugin_shell::init())
     .setup(|app| {
       let window = app.get_window("main").unwrap();
       

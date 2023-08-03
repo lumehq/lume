@@ -61,6 +61,9 @@ dependencies:
   '@tauri-apps/plugin-process':
     specifier: github:tauri-apps/tauri-plugin-process#v2
     version: github.com/tauri-apps/tauri-plugin-process/ed3f8f78ddecc72c926239f5a10ec6ce1b8c353e
+  '@tauri-apps/plugin-shell':
+    specifier: github:tauri-apps/tauri-plugin-shell#v2
+    version: github.com/tauri-apps/tauri-plugin-shell/ecff26b9c9c4084374dd12ddbe24fc77fe382990
   '@tauri-apps/plugin-sql':
     specifier: github:tauri-apps/tauri-plugin-sql#v2
     version: github.com/tauri-apps/tauri-plugin-sql/0591e9f63e0f86be79c209f4bcb564ccce4bd05c
@@ -7738,6 +7741,14 @@ packages:
   github.com/tauri-apps/tauri-plugin-process/ed3f8f78ddecc72c926239f5a10ec6ce1b8c353e:
     resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-process/tar.gz/ed3f8f78ddecc72c926239f5a10ec6ce1b8c353e}
     name: '@tauri-apps/plugin-process'
+    version: 2.0.0-alpha.0
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.5
+    dev: false
+
+  github.com/tauri-apps/tauri-plugin-shell/ecff26b9c9c4084374dd12ddbe24fc77fe382990:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-shell/tar.gz/ecff26b9c9c4084374dd12ddbe24fc77fe382990}
+    name: '@tauri-apps/plugin-shell'
     version: 2.0.0-alpha.0
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.5

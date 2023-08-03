@@ -88,7 +88,7 @@ export function ActiveAccount({ data }: { data: { pubkey: string; npub: string }
   }, []);
 
   if (status === 'loading') {
-    return <div className="h-9 w-9 animate-pulse rounded-md bg-zinc-800" />;
+    return <div className="h-9 w-9 animate-pulse rounded-md bg-white/50" />;
   }
 
   return (

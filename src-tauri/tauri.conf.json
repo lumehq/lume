@@ -95,16 +95,16 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 800,
         "hiddenTitle": true,
-        "minHeight": 720,
-        "minWidth": 1080,
+        "minHeight": 400,
+        "minWidth": 500,
         "resizable": true,
         "theme": "Dark",
         "title": "Lume",
         "titleBarStyle": "Overlay",
         "transparent": true,
-        "width": 1080,
+        "width": 400,
+        "height": 500,
         "center": true
       }
     ],

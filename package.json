@@ -37,6 +37,7 @@
     "@tauri-apps/plugin-notification": "github:tauri-apps/tauri-plugin-notification#v2",
     "@tauri-apps/plugin-os": "github:tauri-apps/tauri-plugin-os#v2",
     "@tauri-apps/plugin-process": "github:tauri-apps/tauri-plugin-process#v2",
+    "@tauri-apps/plugin-shell": "github:tauri-apps/tauri-plugin-shell#v2",
     "@tauri-apps/plugin-sql": "github:tauri-apps/tauri-plugin-sql#v2",
     "@tauri-apps/plugin-store": "github:tauri-apps/tauri-plugin-store#v2",
     "@tauri-apps/plugin-stronghold": "github:tauri-apps/tauri-plugin-stronghold#v2",
