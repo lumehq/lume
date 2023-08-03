@@ -10,11 +10,11 @@ export function LinkPreview({ urls }: { urls: string[] }) {
     <div className="mb-2 mt-3 max-w-[420px] overflow-hidden rounded-lg bg-white/10">
       {status === 'loading' ? (
         <div className="flex flex-col">
-          <div className="h-44 w-full animate-pulse bg-zinc-700" />
+          <div className="h-44 w-full animate-pulse bg-white/10" />
           <div className="flex flex-col gap-2 px-3 py-3">
-            <div className="h-3 w-2/3 animate-pulse rounded bg-zinc-700" />
-            <div className="h-3 w-3/4 animate-pulse rounded bg-zinc-700" />
-            <span className="mt-2.5 text-sm leading-none text-zinc-500">
+            <div className="h-3 w-2/3 animate-pulse rounded bg-white/10" />
+            <div className="h-3 w-3/4 animate-pulse rounded bg-white/10" />
+            <span className="mt-2.5 text-sm leading-none text-white/50">
               {domain.hostname}
             </span>
           </div>

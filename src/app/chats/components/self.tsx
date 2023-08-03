@@ -14,9 +14,9 @@ export function ChatsListSelfItem({ data }: { data: { pubkey: string } }) {
   if (status === 'loading') {
     return (
       <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2">
-        <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
+        <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10" />
         <div>
-          <div className="h-2.5 w-full animate-pulse truncate rounded bg-zinc-800 text-base font-medium" />
+          <div className="h-2.5 w-full animate-pulse truncate rounded bg-white/10 text-base font-medium" />
         </div>
       </div>
     );

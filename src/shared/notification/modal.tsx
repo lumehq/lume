@@ -60,19 +60,14 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
-            <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
+            <div className="h-min w-full shrink-0 rounded-t-xl border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="text-lg font-semibold leading-none text-white">
                     Notification
                   </Dialog.Title>
-                  <Dialog.Close asChild>
-                    <button
-                      type="button"
-                      className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-900"
-                    >
-                      <CancelIcon className="h-5 w-5 text-zinc-300" />
-                    </button>
+                  <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
+                    <CancelIcon className="h-4 w-4 text-white/50" />
                   </Dialog.Close>
                 </div>
                 <Dialog.Description className="text-sm leading-tight text-white/50">
@@ -80,7 +75,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
                 </Dialog.Description>
               </div>
             </div>
-            <div className="scrollbar-hide flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-5">
+            <div className="scrollbar-hide flex h-[500px] flex-col divide-y divide-white/10 overflow-y-auto overflow-x-hidden">
               {status === 'loading' ? (
                 <div className="inline-flex items-center justify-center px-4 py-3">
                   <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />

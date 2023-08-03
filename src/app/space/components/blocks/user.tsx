@@ -51,7 +51,7 @@ export function UserBlock({ params }: { params: Block }) {
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
-                <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
+                <div className="rounded-md bg-white/10 px-3 py-3">
                   <NoteSkeleton />
                 </div>
               </div>

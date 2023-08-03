@@ -116,12 +116,7 @@ export function ImageModal() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="mb-0 flex h-full w-full flex-col gap-3"
               >
-                <input
-                  type={'hidden'}
-                  {...register('content')}
-                  value={image}
-                  className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
-                />
+                <input type={'hidden'} {...register('content')} value={image} />
                 <div className="flex flex-col gap-1">
                   <label
                     htmlFor="title"
@@ -145,7 +140,7 @@ export function ImageModal() {
                   >
                     Picture
                   </label>
-                  <div className="relative inline-flex h-56 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
+                  <div className="relative inline-flex h-56 w-full items-center justify-center overflow-hidden rounded-lg bg-white/10">
                     <Image
                       src={image}
                       fallback={DEFAULT_AVATAR}
@@ -156,7 +151,7 @@ export function ImageModal() {
                       <button
                         onClick={() => uploadImage()}
                         type="button"
-                        className="inline-flex h-6 items-center justify-center rounded bg-zinc-900 px-3 text-sm font-medium text-zinc-300 ring-1 ring-zinc-800 hover:bg-zinc-800"
+                        className="inline-flex h-6 items-center justify-center rounded bg-white/10 px-3 text-sm font-medium text-white hover:bg-fuchsia-500"
                       >
                         Upload
                       </button>

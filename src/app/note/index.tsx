@@ -23,7 +23,7 @@ export function NoteScreen() {
       <div className="scrollbar-hide flex h-full w-full flex-col gap-1.5 overflow-y-auto pb-20 pt-16">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
+            <div className="shadow-input rounded-md bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>

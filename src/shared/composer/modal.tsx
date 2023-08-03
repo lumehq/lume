@@ -1,7 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { Button } from '@shared/button';
 import { Composer, ComposerUser } from '@shared/composer';
 import {
   CancelIcon,
@@ -28,10 +27,13 @@ export function ComposerModal() {
   return (
     <Dialog.Root open={open}>
       <Dialog.Trigger asChild>
-        <Button preset="small">
+        <button
+          type="button"
+          className="inline-flex h-9 w-min items-center justify-center gap-1 rounded-md bg-white/10 px-4 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+        >
           <ComposeIcon className="h-4 w-4" />
           Postr
-        </Button>
+        </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
