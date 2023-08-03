@@ -5,6 +5,28 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      typography: ({ theme }) => ({
+        white: {
+          css: {
+            '--tw-prose-body': theme('colors.white'),
+            '--tw-prose-headings': theme('colors.white'),
+            '--tw-prose-lead': theme('colors.white/50'),
+            '--tw-prose-links': theme('colors.fuchsia[400]'),
+            '--tw-prose-bold': theme('colors.white'),
+            '--tw-prose-counters': theme('colors.white/50'),
+            '--tw-prose-bullets': theme('colors.white/50'),
+            '--tw-prose-hr': theme('colors.white/10'),
+            '--tw-prose-quotes': theme('colors.white/50'),
+            '--tw-prose-quote-borders': theme('colors.white/50'),
+            '--tw-prose-captions': theme('colors.white/50'),
+            '--tw-prose-code': theme('colors.white'),
+            '--tw-prose-pre-code': theme('colors.white/50'),
+            '--tw-prose-pre-bg': theme('colors.white/10'),
+            '--tw-prose-th-borders': theme('colors.white/10'),
+            '--tw-prose-td-borders': theme('colors.white/10'),
+          },
+        },
+      }),
       keyframes: {
         slideDownAndFade: {
           from: { opacity: 0, transform: 'translateY(-2px)' },

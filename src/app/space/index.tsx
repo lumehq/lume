@@ -18,11 +18,7 @@ import { LoaderIcon } from '@shared/icons';
 import { Block } from '@utils/types';
 
 export function SpaceScreen() {
-  const {
-    status,
-    data: blocks,
-    isFetching,
-  } = useQuery(
+  const { status, data: blocks } = useQuery(
     ['blocks'],
     async () => {
       return await getBlocks();
@@ -60,27 +56,12 @@ export function SpaceScreen() {
       <FollowingBlock />
       {status === 'loading' ? (
         <div className="flex w-[350px] shrink-0 flex-col">
-          <div
-            data-tauri-drag-region
-            className="group flex h-11 w-full items-center justify-between overflow-hidden px-3"
-          />
           <div className="flex w-full flex-1 items-center justify-center p-3">
             <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
           </div>
         </div>
       ) : (
-        blocks.map((block: Block) => renderBlock(block))
-      )}
-      {isFetching && (
-        <div className="flex w-[350px] shrink-0 flex-col">
-          <div
-            data-tauri-drag-region
-            className="group flex h-11 w-full items-center justify-between overflow-hidden px-3"
-          />
-          <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-          </div>
-        </div>
+        blocks.map((block) => renderBlock(block))
       )}
       <div className="flex w-[350px] shrink-0 flex-col">
         <div className="inline-flex h-full w-full flex-col items-center justify-center gap-1">

@@ -22,7 +22,7 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
               alt="image"
               className={`${
                 truncate ? 'h-auto max-h-[300px]' : 'h-auto'
-              } w-full rounded-lg border border-zinc-800/50 object-cover`}
+              } w-full rounded-lg border border-white/10 object-cover`}
             />
             <button
               type="button"

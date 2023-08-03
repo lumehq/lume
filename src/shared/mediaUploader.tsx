@@ -26,26 +26,22 @@ export function MediaUploader({ setState }: { setState: any }) {
           <button
             type="button"
             onClick={() => uploadMedia()}
-            className="group inline-flex h-6 w-6 items-center justify-center rounded bg-zinc-700 hover:bg-zinc-600"
+            className="group inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
           >
             {loading ? (
-              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
+              <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
             ) : (
-              <MediaIcon
-                width={14}
-                height={14}
-                className="text-white/50 group-hover:text-zinc-200"
-              />
+              <MediaIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
             )}
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content
-            className="-left-10 select-none rounded-md bg-zinc-800/80 px-3.5 py-1.5 text-sm leading-none text-white backdrop-blur-lg will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade"
+            className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade"
             sideOffset={5}
           >
             Upload media
-            <Tooltip.Arrow className="fill-zinc-800/80 backdrop-blur-lg" />
+            <Tooltip.Arrow className="fill-black" />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

@@ -17,7 +17,7 @@ export function Repost({ event }: { event: LumeEvent }) {
 
   if (status === 'loading') {
     return (
-      <div className="relative overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 pt-3">
+      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3">
         <NoteSkeleton />
       </div>
     );
@@ -25,7 +25,7 @@ export function Repost({ event }: { event: LumeEvent }) {
 
   if (status === 'error') {
     return (
-      <div className="flex items-center justify-center overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+      <div className="flex items-center justify-center overflow-hidden rounded-xl bg-white/10 px-3 py-3">
         <p className="text-white/50">Failed to fetch</p>
       </div>
     );

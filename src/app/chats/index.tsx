@@ -14,6 +14,7 @@ import { createChat, getChatMessages } from '@libs/storage';
 import { useStronghold } from '@stores/stronghold';
 
 import { useAccount } from '@utils/hooks/useAccount';
+import { Chats } from '@utils/types';
 
 export function ChatScreen() {
   const queryClient = useQueryClient();
@@ -34,7 +35,7 @@ export function ChatScreen() {
 
   const userPrivkey = useStronghold((state) => state.privkey);
 
-  const itemContent: any = useCallback(
+  const itemContent = useCallback(
     (index: string | number) => {
       return (
         <ChatMessageItem
@@ -55,7 +56,7 @@ export function ChatScreen() {
   );
 
   const chat = useMutation({
-    mutationFn: (data: any) => {
+    mutationFn: (data: Chats) => {
       return createChat(
         data.id,
         data.receiver_pubkey,
@@ -100,16 +101,10 @@ export function ChatScreen() {
   }, [pubkey]);
 
   return (
-    <div className="grid h-full w-full grid-cols-3">
-      <div className="col-span-2 flex flex-col justify-between border-r border-zinc-900">
-        <div
-          data-tauri-drag-region
-          className="inline-flex h-11 w-full shrink-0 items-center justify-center border-b border-zinc-900"
-        >
-          <h3 className="font-semibold text-white">Encrypted Chat</h3>
-        </div>
+    <div className="grid h-full w-full grid-cols-3 bg-white/10">
+      <div className="col-span-2 border-r border-white/5">
         <div className="h-full w-full flex-1 p-3">
-          <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900">
+          <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white/10">
             <div className="h-full w-full flex-1">
               {status === 'loading' ? (
                 <p>Loading...</p>
@@ -131,7 +126,7 @@ export function ChatScreen() {
                 />
               )}
             </div>
-            <div className="z-50 shrink-0 rounded-b-xl border-t border-zinc-800 bg-zinc-900 p-3 px-5">
+            <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 px-5">
               <ChatMessageForm
                 receiverPubkey={pubkey}
                 userPubkey={account.pubkey}
@@ -141,11 +136,7 @@ export function ChatScreen() {
           </div>
         </div>
       </div>
-      <div className="col-span-1">
-        <div
-          data-tauri-drag-region
-          className="inline-flex h-11 w-full shrink-0 items-center justify-center border-b border-zinc-900"
-        />
+      <div className="col-span-1 pt-3">
         <ChatSidebar pubkey={pubkey} />
       </div>
     </div>

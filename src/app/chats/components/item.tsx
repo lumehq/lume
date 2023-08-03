@@ -7,15 +7,16 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
+import { Chats } from '@utils/types';
 
-export function ChatsListItem({ data }: { data: any }) {
+export function ChatsListItem({ data }: { data: Chats }) {
   const { status, user } = useProfile(data.sender_pubkey);
 
   if (status === 'loading') {
     return (
       <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2">
-        <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-zinc-800" />
-        <div className="h-2.5 w-2/3 animate-pulse rounded bg-zinc-800" />
+        <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10" />
+        <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10" />
       </div>
     );
   }
@@ -41,7 +42,7 @@ export function ChatsListItem({ data }: { data: any }) {
         <h5 className="max-w-[10rem] truncate">
           {user?.nip05 ||
             user?.name ||
-            user?.displayName ||
+            user?.display_name ||
             displayNpub(data.sender_pubkey, 16)}
         </h5>
         <div className="flex items-center">

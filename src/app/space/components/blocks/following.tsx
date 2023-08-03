@@ -40,9 +40,10 @@ export function FollowingBlock() {
   });
 
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+  const totalSize = rowVirtualizer.getTotalSize();
 
   useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+    const [lastItem] = [...itemsVirtualizer].reverse();
 
     if (!lastItem) {
       return;
@@ -51,7 +52,7 @@ export function FollowingBlock() {
     if (lastItem.index >= notes.length - 1 && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
+  }, [notes.length, fetchNextPage, itemsVirtualizer]);
 
   const renderItem = useCallback(
     (index: string | number) => {
@@ -159,7 +160,7 @@ export function FollowingBlock() {
           <div
             className="relative w-full"
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
+              height: `${totalSize}px`,
             }}
           >
             <div

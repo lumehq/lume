@@ -40,13 +40,13 @@ export interface Block {
 
 export interface Chats {
   id: string;
-  event_id: string;
+  event_id?: string;
   receiver_pubkey: string;
   sender_pubkey: string;
   content: string;
   tags: string[][];
   created_at: number;
-  new_messages: number;
+  new_messages?: number;
 }
 
 export interface Settings {

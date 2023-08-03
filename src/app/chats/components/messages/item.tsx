@@ -26,7 +26,7 @@ export function ChatMessageItem({
   const content = parser(data);
 
   return (
-    <div className="flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-black/20">
+    <div className="flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-white/10">
       <div className="flex flex-col">
         <User pubkey={data.sender_pubkey} time={data.created_at} isChat={true} />
         <div className="-mt-[20px] pl-[49px]">

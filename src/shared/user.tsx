@@ -2,7 +2,6 @@ import * as Popover from '@radix-ui/react-popover';
 import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { VerticalDotsIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
@@ -40,10 +39,10 @@ export function User({
         <div
           className={`${avatarWidth} ${avatarHeight}  ${
             size === 'small' ? 'rounded' : 'rounded-lg'
-          } relative z-10 shrink-0 animate-pulse overflow-hidden bg-zinc-800`}
+          } relative z-10 shrink-0 animate-pulse overflow-hidden bg-white/10`}
         />
         <div className="flex flex-wrap items-baseline gap-1">
-          <div className="h-3.5 w-36 animate-pulse rounded bg-zinc-800" />
+          <div className="h-3.5 w-36 animate-pulse rounded bg-white/10" />
         </div>
       </div>
     );
@@ -107,7 +106,7 @@ export function User({
             <div className="flex flex-1 flex-col gap-2">
               <div className="inline-flex flex-col gap-1">
                 <h5 className="text-sm font-semibold leading-none">
-                  {user?.displayName || user?.name}
+                  {user?.display_name || user?.name || user?.username}
                 </h5>
                 <span className="max-w-[10rem] truncate text-sm leading-none text-white/50">
                   {user?.nip05 || displayNpub(pubkey, 16)}

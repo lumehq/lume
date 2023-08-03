@@ -51,10 +51,10 @@ export function ChatMessageForm({
         onKeyDown={handleEnterPress}
         spellCheck={false}
         placeholder="Message"
-        className="relative h-11 w-full resize-none rounded-md bg-zinc-800 px-5 !outline-none placeholder:text-zinc-500"
+        className="relative h-11 w-full resize-none rounded-md bg-white/10 px-5 text-white !outline-none placeholder:text-white/50"
       />
       <div className="absolute right-2 top-0 h-11">
-        <div className="flex h-full items-center justify-end gap-3 text-zinc-500">
+        <div className="flex h-full items-center justify-end gap-3 text-white/50">
           <MediaUploader setState={setValue} />
           <button
             type="button"
