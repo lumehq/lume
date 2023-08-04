@@ -89,6 +89,12 @@ fn main() {
               sql: include_str!("../migrations/20230725010250_update_default_relays.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230804083544,
+              description: "add network to accounts",
+              sql: include_str!("../migrations/20230804083544_add_network_to_account.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

@@ -14,8 +14,6 @@ export default class TauriAdapter implements NDKCacheAdapter {
   public async query(subscription: NDKSubscription): Promise<void> {
     const { filter } = subscription;
 
-    // if this filter uses both authors and kinds, then we need to query for each combination of author and kind
-    // and then combine the results
     if (filter.authors && filter.kinds) {
       const promises = [];
 

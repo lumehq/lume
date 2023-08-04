@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import { FeedBlock } from '@app/space/components/blocks/feed';
-import { FollowingBlock } from '@app/space/components/blocks/following';
 import { HashtagBlock } from '@app/space/components/blocks/hashtag';
 import { ImageBlock } from '@app/space/components/blocks/image';
+import { NetworkBlock } from '@app/space/components/blocks/network';
 import { ThreadBlock } from '@app/space/components/blocks/thread';
 import { UserBlock } from '@app/space/components/blocks/user';
 import { FeedModal } from '@app/space/components/modals/feed';
@@ -53,7 +53,7 @@ export function SpaceScreen() {
 
   return (
     <div className="scrollbar-hide flex h-full w-full flex-nowrap divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
-      <FollowingBlock />
+      <NetworkBlock />
       {status === 'loading' ? (
         <div className="flex w-[350px] shrink-0 flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">

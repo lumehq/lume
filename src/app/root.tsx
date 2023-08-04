@@ -27,27 +27,39 @@ export function Root() {
   const { ndk, relayUrls, fetcher } = useNDK();
   const { status, account } = useAccount();
 
-  async function getFollows() {
-    const authors: string[] = [];
+  async function fetchNetwork() {
+    const network = new Set<string>();
 
+    // fetch user's follows
     const user = ndk.getUser({ hexpubkey: account.pubkey });
     const follows = await user.follows();
-
     follows.forEach((follow: NDKUser) => {
-      authors.push(nip19.decode(follow.npub).data as string);
+      network.add(nip19.decode(follow.npub).data as string);
     });
 
-    // update follows in db
-    await updateAccount('follows', authors, account.pubkey);
+    // update user's follows in db
+    await updateAccount('follows', [...network]);
 
-    return authors;
+    // fetch network
+    for (const item of network) {
+      const user = ndk.getUser({ hexpubkey: item });
+      const follows = await user.follows();
+      follows.forEach((follow: NDKUser) => {
+        network.add(nip19.decode(follow.npub).data as string);
+      });
+    }
+
+    // update user's network in db
+    await updateAccount('network', [...network]);
+
+    return [...network];
   }
 
   async function fetchNotes() {
     try {
-      const follows = await getFollows();
+      const network = await fetchNetwork();
 
-      if (follows.length > 0) {
+      if (network.length > 0) {
         let since: number;
         if (totalNotes === 0 || lastLogin === 0) {
           since = nHoursAgo(48);
@@ -57,7 +69,7 @@ export function Root() {
 
         const events = fetcher.allEventsIterator(
           relayUrls,
-          { kinds: [1], authors: follows },
+          { kinds: [1], authors: network },
           { since: since },
           { skipVerification: true }
         );

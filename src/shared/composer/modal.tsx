@@ -18,14 +18,10 @@ export function ComposerModal() {
   const { account } = useAccount();
   const [toggle, open] = useComposer((state) => [state.toggleModal, state.open]);
 
-  const closeModal = () => {
-    toggle(false);
-  };
-
   useHotkeys(COMPOSE_SHORTCUT, () => toggle(true));
 
   return (
-    <Dialog.Root open={open}>
+    <Dialog.Root open={open} onOpenChange={toggle}>
       <Dialog.Trigger asChild>
         <button
           type="button"
@@ -51,7 +47,7 @@ export function ComposerModal() {
                 </div>
               </div>
               <Dialog.Close
-                onClick={() => closeModal()}
+                onClick={() => toggle(false)}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-800"
               >
                 <CancelIcon className="h-5 w-5 text-white/50" />

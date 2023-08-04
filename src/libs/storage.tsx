@@ -63,15 +63,12 @@ export async function createAccount(
 }
 
 // update account
-export async function updateAccount(
-  column: string,
-  value: string | string[],
-  pubkey: string
-) {
+export async function updateAccount(column: string, value: string | string[]) {
   const db = await connect();
-  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE pubkey = ?;`, [
+  const account = await getActiveAccount();
+  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE id = ?;`, [
     value,
-    pubkey,
+    account.id,
   ]);
 }
 

@@ -16,7 +16,7 @@ import { LumeEvent } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
 
-export function FollowingBlock() {
+export function NetworkBlock() {
   // subscribe for live update
   useNewsfeed();
 
@@ -130,7 +130,7 @@ export function FollowingBlock() {
       ref={parentRef}
       className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20"
     >
-      <TitleBar title="Your Circle" />
+      <TitleBar title="Network" />
       <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">

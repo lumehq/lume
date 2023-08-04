@@ -8,14 +8,15 @@ import { Link } from 'react-router-dom';
 import { HorizontalDotsIcon } from '@shared/icons';
 
 export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
-  const nevent = nip19.neventEncode(id as unknown as EventPointer);
-
   const copyID = async () => {
-    await writeText(nevent);
+    await writeText(nip19.neventEncode({ id: id, author: pubkey } as EventPointer));
   };
 
   const copyLink = async () => {
-    await writeText('https://nostr.com/' + nevent);
+    await writeText(
+      'https://nostr.com/' +
+        nip19.neventEncode({ id: id, author: pubkey } as EventPointer)
+    );
   };
 
   return (
@@ -41,12 +42,12 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
       <Popover.Portal>
         <Popover.Content className="w-[200px] overflow-hidden rounded-md bg-white/10 backdrop-blur-xl focus:outline-none">
           <div className="flex flex-col p-2">
-            <button
-              type="button"
+            <Link
+              to={`/app/events/${id}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               Open as new screen
-            </button>
+            </Link>
             <button
               type="button"
               onClick={() => copyLink()}
@@ -62,7 +63,6 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
               Copy ID
             </button>
             <Link
-              type="button"
               to={`/app/users/${pubkey}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
