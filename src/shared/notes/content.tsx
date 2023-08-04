@@ -12,7 +12,15 @@ import {
 
 import { Content } from '@utils/types';
 
-export function NoteContent({ content }: { content: Content }) {
+export function NoteContent({ content, long }: { content: Content; long?: boolean }) {
+  if (long) {
+    return (
+      <ReactMarkdown className="markdown" remarkPlugins={[remarkGfm]}>
+        {content as unknown as string}
+      </ReactMarkdown>
+    );
+  }
+
   return (
     <>
       <ReactMarkdown

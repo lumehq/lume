@@ -43,7 +43,7 @@ export function RepliesList({ id }: { id: string }) {
     return (
       <div className="mt-3">
         <div className="flex flex-col">
-          <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+          <div className="rounded-xl bg-white/10 px-3 py-3">
             <NoteSkeleton />
           </div>
         </div>

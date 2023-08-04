@@ -45,7 +45,7 @@ export function UserBlock({ params }: { params: Block }) {
           <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mt-2 px-3 text-lg font-semibold text-white">
+          <h3 className="mt-4 px-3 text-lg font-semibold text-white">
             Latest activities
           </h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">

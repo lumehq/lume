@@ -1,4 +1,3 @@
-import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -15,12 +14,12 @@ export function useProfile(pubkey: string, fallback?: string) {
     ['user', pubkey],
     async () => {
       if (!fallback) {
-        const filter: NDKFilter = { kinds: [0], authors: [pubkey] };
-        const events = await ndk.fetchEvents(filter);
-        const latest = [...events].sort((a, b) => b.created_at - a.created_at).pop();
-        if (latest) {
-          await createMetadata(latest.id, latest.pubkey, latest.content);
-          return JSON.parse(latest.content);
+        const user = await ndk.getUser({ hexpubkey: pubkey });
+        await user.fetchProfile();
+        if (user.profile) {
+          user.profile.display_name = user.profile.displayName;
+          await createMetadata(user.npub, pubkey, JSON.stringify(user.profile));
+          return user.profile;
         } else {
           throw new Error('User not found');
         }
@@ -30,6 +29,7 @@ export function useProfile(pubkey: string, fallback?: string) {
       }
     },
     {
+      staleTime: Infinity,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,

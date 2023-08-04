@@ -23,6 +23,14 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
     }
   };
 
+  if (!id) {
+    return (
+      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3">
+        <p className="break-all">Failed to fetch event: {id}</p>
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={(e) => openThread(e, id)}
@@ -56,14 +64,14 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
                 },
               }}
             >
-              {data?.content?.parsed?.length > 160
-                ? data.content.parsed.substring(0, 160) + '...'
-                : data.content.parsed}
+              {data?.content?.original?.length > 160
+                ? data.content.original.substring(0, 160) + '...'
+                : data.content.original}
             </ReactMarkdown>
           </div>
         </>
       ) : (
-        <p>Failed to fetch event</p>
+        <p className="break-all">Failed to fetch event: {id}</p>
       )}
     </div>
   );

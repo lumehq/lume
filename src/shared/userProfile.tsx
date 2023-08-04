@@ -102,12 +102,6 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           >
             Message
           </Link>
-          <button
-            type="button"
-            className="group inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-orange-500"
-          >
-            <ZapIcon className="h-5 w-5" />
-          </button>
         </div>
       </div>
     </div>

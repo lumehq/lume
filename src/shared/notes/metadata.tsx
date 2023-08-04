@@ -61,7 +61,7 @@ export function NoteMetadata({ id }: { id: string }) {
 
       return { replies, users, zap };
     },
-    { refetchOnWindowFocus: false, refetchOnReconnect: false }
+    { refetchOnWindowFocus: false, refetchOnReconnect: false, refetchOnMount: false }
   );
 
   if (status === 'loading') {

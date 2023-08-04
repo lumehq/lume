@@ -20,7 +20,11 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       }
       className="break-words font-normal text-blue-400 no-underline hover:text-blue-500"
     >
-      {'@' + user?.name || user?.displayName || displayNpub(pubkey, 16)}
+      {user?.nip05 ||
+        user?.name ||
+        user?.display_name ||
+        user?.username ||
+        displayNpub(pubkey, 16)}
     </button>
   );
 }

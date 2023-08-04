@@ -22,7 +22,7 @@ export function ThreadBlock({ params }: { params: Block }) {
   // useLiveThread(params.content);
 
   return (
-    <div className="scrollbar-hide w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
+    <div className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
       <TitleBar id={params.id} title={params.title} />
       <div className="h-full">
         {status === 'loading' ? (

@@ -17,7 +17,7 @@ export function SubNote({ id, root }: { id: string; root?: string }) {
   if (status === 'error') {
     return (
       <div className="mb-5 flex overflow-hidden rounded-xl bg-white/10 px-3 py-3">
-        <p className="text-white/50">Failed to fetch</p>
+        <p className="break-all text-white/50">Failed to fetch event: {id}</p>
       </div>
     );
   }
@@ -30,7 +30,7 @@ export function SubNote({ id, root }: { id: string; root?: string }) {
         <div className="relative z-20 -mt-6 flex items-start gap-3">
           <div className="w-11 shrink-0" />
           <div className="flex-1">
-            <NoteContent content={data.content} />
+            <NoteContent content={data.content} long={data.kind === 30023} />
             <NoteActions id={data.event_id} pubkey={data.pubkey} root={root} />
           </div>
         </div>
