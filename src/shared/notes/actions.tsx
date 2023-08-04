@@ -1,6 +1,7 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 import { ThreadIcon } from '@shared/icons';
+import { MoreActions } from '@shared/notes/actions/more';
 import { NoteReaction } from '@shared/notes/actions/reaction';
 import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
@@ -62,6 +63,7 @@ export function NoteActions({
             </Tooltip.Root>
           </>
         )}
+        <MoreActions id={id} pubkey={pubkey} />
       </div>
     </Tooltip.Provider>
   );

@@ -1,5 +1,5 @@
 import * as Popover from '@radix-ui/react-popover';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { ReactionIcon } from '@shared/icons';
 
@@ -8,23 +8,23 @@ import { usePublish } from '@utils/hooks/usePublish';
 const REACTIONS = [
   {
     content: '👏',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Clapping%20Hands.png',
+    img: '/public/clapping_hands.png',
   },
   {
     content: '🤪',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Tongue.png',
+    img: '/public/face_with_tongue.png',
   },
   {
     content: '😮',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Open%20Mouth.png',
+    img: '/public/face_with_open_mouth.png',
   },
   {
     content: '😢',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Crying%20Face.png',
+    img: '/public/crying_face.png',
   },
   {
     content: '🤡',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Clown%20Face.png',
+    img: '/public/clown_face.png',
   },
 ];
 
@@ -83,7 +83,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Clapping%20Hands.png"
+                src="/public/clapping_hands.png"
                 alt="Clapping Hands"
                 className="h-6 w-6"
               />
@@ -94,7 +94,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Tongue.png"
+                src="/public/face_with_tongue.png"
                 alt="Face with Tongue"
                 className="h-6 w-6"
               />
@@ -105,7 +105,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Open%20Mouth.png"
+                src="/public/face_with_open_mouth.png"
                 alt="Face with Open Mouth"
                 className="h-6 w-6"
               />
@@ -115,22 +115,14 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               onClick={() => react('😢')}
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Crying%20Face.png"
-                alt="Crying Face"
-                className="h-6 w-6"
-              />
+              <img src="/public/crying_face.png" alt="Crying Face" className="h-6 w-6" />
             </button>
             <button
               type="button"
               onClick={() => react('🤡')}
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Clown%20Face.png"
-                alt="Clown Face"
-                className="h-6 w-6"
-              />
+              <img src="/public/clown_face.png" alt="Clown Face" className="h-6 w-6" />
             </button>
           </div>
           <Popover.Arrow className="fill-black" />
