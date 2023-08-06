@@ -52,7 +52,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   return (
     <>
-      <div className="h-56 w-full bg-zinc-100">
+      <div className="h-56 w-full bg-white">
         <Image
           src={user?.banner}
           fallback="https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"
@@ -65,7 +65,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           src={user?.picture || user?.image}
           fallback={DEFAULT_AVATAR}
           alt={pubkey}
-          className="h-14 w-14 rounded-md ring-2 ring-black"
+          className="h-14 w-14 rounded-md ring-2 ring-white/50"
         />
         <div className="mt-2 flex flex-1 flex-col gap-4">
           <div className="flex items-center gap-16">
@@ -81,7 +81,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               {status === 'loading' ? (
                 <button
                   type="button"
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
                 >
                   Loading...
                 </button>
@@ -89,7 +89,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
                 <button
                   type="button"
                   onClick={() => unfollowUser(pubkey)}
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
                 >
                   Unfollow
                 </button>
@@ -97,18 +97,18 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
                 <button
                   type="button"
                   onClick={() => followUser(pubkey)}
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
                 >
                   Follow
                 </button>
               )}
               <Link
                 to={`/chats/${pubkey}`}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
               >
                 Message
               </Link>
-              <span className="mx-2 inline-flex h-4 w-px bg-zinc-900" />
+              <span className="mx-2 inline-flex h-4 w-px bg-white/10" />
               {account && account.pubkey === pubkey && <EditProfileModal />}
             </div>
           </div>

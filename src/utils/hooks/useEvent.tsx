@@ -17,6 +17,7 @@ export function useEvent(id: string, fallback?: string) {
       } else {
         if (fallback) {
           const embed: LumeEvent = JSON.parse(fallback);
+          if (embed.kind === 1) embed['content'] = parser(embed);
           embed['event_id'] = embed.id;
           await createNote(
             embed.id,
@@ -28,22 +29,18 @@ export function useEvent(id: string, fallback?: string) {
           );
           return embed;
         } else {
-          const event = await ndk.fetchEvent(id);
+          const event = (await ndk.fetchEvent(id)) as unknown as LumeEvent;
           if (event) {
             await createNote(
               event.id,
               event.pubkey,
               event.kind,
               event.tags,
-              event.content,
+              event.content as unknown as string,
               event.created_at
             );
             event['event_id'] = event.id;
-            if (event.kind === 1) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              event['content'] = parser(event);
-            }
+            if (event.kind === 1) event['content'] = parser(event);
             return event as unknown as LumeEvent;
           } else {
             throw new Error('Event not found');

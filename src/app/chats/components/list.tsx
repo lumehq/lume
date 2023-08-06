@@ -23,7 +23,7 @@ export function ChatsList() {
 
   const renderItem = useCallback(
     (item: Chats) => {
-      if (account.pubkey !== item.sender_pubkey) {
+      if (account?.pubkey !== item.sender_pubkey) {
         return <ChatsListItem key={item.sender_pubkey} data={item} />;
       }
     },

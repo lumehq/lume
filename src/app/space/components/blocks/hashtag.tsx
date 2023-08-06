@@ -16,7 +16,7 @@ export function HashtagBlock({ params }: { params: Block }) {
     const events = (await fetcher.fetchAllEvents(
       relayUrls,
       { kinds: [1], '#t': [params.content] },
-      { since: nHoursAgo(48) }
+      { since: nHoursAgo(24) }
     )) as unknown as LumeEvent[];
     return events;
   });
@@ -29,17 +29,15 @@ export function HashtagBlock({ params }: { params: Block }) {
   });
 
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+  const totalSize = rowVirtualizer.getTotalSize();
 
   return (
-    <div
-      ref={parentRef}
-      className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20"
-    >
-      <TitleBar id={params.id} title={params.title + ' in 48 hours ago'} />
-      <div className="h-full">
+    <div className="relative w-[400px] shrink-0 bg-white/10">
+      <TitleBar id={params.id} title={params.title + ' in 24 hours ago'} />
+      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 pt-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>
@@ -47,8 +45,8 @@ export function HashtagBlock({ params }: { params: Block }) {
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-white/10 px-3 py-6">
               <div className="flex flex-col items-center gap-4">
-                <p className="text-center text-sm text-white">
-                  No new posts about this hashtag in 48 hours ago
+                <p className="text-center text-sm font-medium text-white">
+                  No new posts about this hashtag in 24 hours ago
                 </p>
               </div>
             </div>
@@ -57,7 +55,7 @@ export function HashtagBlock({ params }: { params: Block }) {
           <div
             className="relative w-full"
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
+              height: `${totalSize}px`,
             }}
           >
             <div

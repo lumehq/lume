@@ -32,8 +32,8 @@ export interface Profile extends NDKUserProfile {
 }
 
 export interface Block {
-  id: string;
-  account_id: number;
+  id?: string;
+  account_id?: number;
   kind: number;
   title: string;
   content: string;

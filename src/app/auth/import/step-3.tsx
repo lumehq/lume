@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 
 export function ImportStep3Screen() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +30,8 @@ export function ImportStep3Screen() {
       await fetchNotes();
       await fetchChats();
       await updateLastLogin(now);
+
+      queryClient.invalidateQueries(['currentAccount']);
 
       navigate('/', { replace: true });
     } catch (e) {

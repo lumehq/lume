@@ -37,7 +37,8 @@ import './index.css';
 
 const appLoader = async () => {
   const account = await getActiveAccount();
-  const privkey = sessionStorage.getItem('stronghold');
+  const stronghold = sessionStorage.getItem('stronghold');
+  const privkey = JSON.parse(stronghold).state.privkey || null;
 
   if (!account) {
     return redirect('/auth/welcome');

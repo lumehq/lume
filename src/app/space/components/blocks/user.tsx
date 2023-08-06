@@ -35,12 +35,9 @@ export function UserBlock({ params }: { params: Block }) {
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
   return (
-    <div
-      ref={parentRef}
-      className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20"
-    >
+    <div className="relative w-[400px] shrink-0 bg-white/10">
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
         </div>

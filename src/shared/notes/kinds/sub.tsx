@@ -8,7 +8,7 @@ export function SubNote({ id, root }: { id: string; root?: string }) {
 
   if (status === 'loading') {
     return (
-      <div className="relative mb-5 overflow-hidden rounded-xl bg-white/10 py-3">
+      <div className="relative mb-5 overflow-hidden rounded-xl bg-white/10 px-3 py-3">
         <NoteSkeleton />
       </div>
     );

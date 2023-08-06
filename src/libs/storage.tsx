@@ -24,8 +24,12 @@ export async function getActiveAccount() {
     'SELECT * FROM accounts WHERE is_active = 1;'
   );
   if (result.length > 0) {
-    result[0].follows = destr(result[0].follows);
-    result[0].network = destr(result[0].network);
+    result[0]['follows'] = result[0].follows
+      ? JSON.parse(result[0].follows as unknown as string)
+      : [];
+    result[0]['network'] = result[0].network
+      ? JSON.parse(result[0].network as unknown as string)
+      : [];
     return result[0];
   } else {
     return null;
@@ -423,10 +427,19 @@ export async function createBlock(
 ) {
   const db = await connect();
   const activeAccount = await getActiveAccount();
-  return await db.execute(
+  const insert = await db.execute(
     'INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);',
     [activeAccount.id, kind, title, content]
   );
+
+  if (insert) {
+    const record: Block = await db.select(
+      'SELECT * FROM blocks ORDER BY id DESC LIMIT 1;'
+    );
+    return record[0];
+  } else {
+    return null;
+  }
 }
 
 // remove block

@@ -46,7 +46,7 @@ export function ThreadBlock({ params }: { params: Block }) {
           </div>
         )}
         <div className="px-3">
-          <NoteReplyForm id={params.content} pubkey={account.pubkey} />
+          {account && <NoteReplyForm id={params.content} pubkey={account.pubkey} />}
           <RepliesList id={params.content} />
         </div>
       </div>

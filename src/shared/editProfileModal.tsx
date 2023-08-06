@@ -146,7 +146,7 @@ export function EditProfileModal() {
       <button
         type="button"
         onClick={() => openModal()}
-        className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+        className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
       >
         Edit profile
       </button>

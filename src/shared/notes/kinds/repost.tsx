@@ -13,7 +13,7 @@ import { LumeEvent } from '@utils/types';
 
 export function Repost({ event }: { event: LumeEvent }) {
   const repostID = getRepostID(event.tags);
-  const { status, data } = useEvent(repostID, event.content);
+  const { status, data } = useEvent(repostID, event.content as unknown as string);
 
   if (status === 'loading') {
     return (
@@ -34,7 +34,7 @@ export function Repost({ event }: { event: LumeEvent }) {
   return (
     <div className="h-min w-full px-3 py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
-        <div className="flex flex-col">
+        <div className="relative flex flex-col">
           <div className="isolate flex flex-col -space-y-4 overflow-hidden">
             <RepostUser pubkey={event.pubkey} />
             <User pubkey={data.pubkey} time={data.created_at} isRepost={true} />

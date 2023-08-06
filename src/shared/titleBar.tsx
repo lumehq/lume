@@ -1,9 +1,9 @@
 import { CancelIcon } from '@shared/icons';
 
-import { useBlock } from '@utils/hooks/useBlock';
+import { useBlocks } from '@stores/blocks';
 
 export function TitleBar({ id, title }: { id?: string; title: string }) {
-  const { remove } = useBlock();
+  const removeBlock = useBlocks((state) => state.removeBlock);
 
   return (
     <div
@@ -15,7 +15,7 @@ export function TitleBar({ id, title }: { id?: string; title: string }) {
       {id ? (
         <button
           type="button"
-          onClick={() => remove.mutate(id)}
+          onClick={() => removeBlock(id)}
           className="inline-flex h-6 w-6 shrink translate-y-8 transform items-center justify-center rounded transition-transform duration-150 ease-in-out hover:bg-white/10 group-hover:translate-y-0"
         >
           <CancelIcon className="h-3 w-3 text-white" />

@@ -126,12 +126,9 @@ export function NetworkBlock() {
   );
 
   return (
-    <div
-      ref={parentRef}
-      className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20"
-    >
+    <div className="relative w-[400px] shrink-0 bg-white/10">
       <TitleBar title="Network" />
-      <div className="h-full">
+      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-white/10 px-3 py-3">

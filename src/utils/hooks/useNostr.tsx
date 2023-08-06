@@ -47,7 +47,7 @@ export function useNostr() {
         });
       });
 
-      network = [...network.values()] as string[];
+      network = [...lruNetwork.values()] as string[];
     } else {
       network = account.network;
     }
@@ -69,7 +69,7 @@ export function useNostr() {
       if (network.length > 0) {
         let since: number;
         if (totalNotes === 0 || lastLogin === 0) {
-          since = nHoursAgo(6);
+          since = nHoursAgo(24);
         } else {
           since = lastLogin;
         }

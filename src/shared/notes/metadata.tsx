@@ -8,13 +8,14 @@ import { createReplyNote } from '@libs/storage';
 import { LoaderIcon } from '@shared/icons';
 import { MiniUser } from '@shared/notes/users/mini';
 
+import { useBlocks } from '@stores/blocks';
 import { BLOCK_KINDS } from '@stores/constants';
 
-import { useBlock } from '@utils/hooks/useBlock';
 import { compactNumber } from '@utils/number';
 
 export function NoteMetadata({ id }: { id: string }) {
-  const { add } = useBlock();
+  const setBlock = useBlocks((state) => state.setBlock);
+
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['note-metadata', id],
@@ -95,7 +96,7 @@ export function NoteMetadata({ id }: { id: string }) {
               <button
                 type="button"
                 onClick={() =>
-                  add.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: id })
+                  setBlock({ kind: BLOCK_KINDS.thread, title: 'Thread', content: id })
                 }
                 className="text-white/50"
               >

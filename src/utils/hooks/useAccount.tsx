@@ -20,7 +20,7 @@ export function useAccount() {
       staleTime: Infinity,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
+      refetchOnReconnect: false,
     }
   );
 

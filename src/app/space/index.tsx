@@ -1,5 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { FeedBlock } from '@app/space/components/blocks/feed';
 import { HashtagBlock } from '@app/space/components/blocks/hashtag';
@@ -11,25 +10,14 @@ import { FeedModal } from '@app/space/components/modals/feed';
 import { HashtagModal } from '@app/space/components/modals/hashtag';
 import { ImageModal } from '@app/space/components/modals/image';
 
-import { getBlocks } from '@libs/storage';
-
 import { LoaderIcon } from '@shared/icons';
+
+import { useBlocks } from '@stores/blocks';
 
 import { Block } from '@utils/types';
 
 export function SpaceScreen() {
-  const { status, data: blocks } = useQuery(
-    ['blocks'],
-    async () => {
-      return await getBlocks();
-    },
-    {
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const [blocks, fetchBlocks] = useBlocks((state) => [state.blocks, state.fetchBlocks]);
 
   const renderBlock = useCallback(
     (block: Block) => {
@@ -51,10 +39,14 @@ export function SpaceScreen() {
     [blocks]
   );
 
+  useEffect(() => {
+    fetchBlocks();
+  }, [fetchBlocks]);
+
   return (
     <div className="scrollbar-hide flex h-full w-full flex-nowrap divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
       <NetworkBlock />
-      {status === 'loading' ? (
+      {!blocks ? (
         <div className="flex w-[350px] shrink-0 flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">
             <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />

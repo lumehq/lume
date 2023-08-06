@@ -1,18 +1,18 @@
+import { useBlocks } from '@stores/blocks';
 import { BLOCK_KINDS } from '@stores/constants';
 
-import { useBlock } from '@utils/hooks/useBlock';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export function MentionUser({ pubkey }: { pubkey: string }) {
-  const { add } = useBlock();
   const { user } = useProfile(pubkey);
+  const setBlock = useBlocks((state) => state.setBlock);
 
   return (
     <button
       type="button"
       onClick={() =>
-        add.mutate({
+        setBlock({
           kind: BLOCK_KINDS.user,
           title: user?.nip05 || user?.name || user?.displayNam,
           content: pubkey,
