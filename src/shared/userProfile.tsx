@@ -97,7 +97,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             </button>
           )}
           <Link
-            to={`/app/chats/${pubkey}`}
+            to={`/chats/${pubkey}`}
             className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
           >
             Message

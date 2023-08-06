@@ -15,10 +15,10 @@ export function ShortcutsSettingsScreen() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <CommandIcon width={12} height={12} className="text-zinc-500" />
+                  <CommandIcon width={12} height={12} className="text-white/50" />
                 </div>
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <span className="text-sm leading-none text-zinc-500">N</span>
+                  <span className="text-sm leading-none text-white/50">N</span>
                 </div>
               </div>
             </div>
@@ -30,10 +30,10 @@ export function ShortcutsSettingsScreen() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <CommandIcon width={12} height={12} className="text-zinc-500" />
+                  <CommandIcon width={12} height={12} className="text-white/50" />
                 </div>
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <span className="text-sm leading-none text-zinc-500">I</span>
+                  <span className="text-sm leading-none text-white/50">I</span>
                 </div>
               </div>
             </div>
@@ -45,10 +45,10 @@ export function ShortcutsSettingsScreen() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <CommandIcon width={12} height={12} className="text-zinc-500" />
+                  <CommandIcon width={12} height={12} className="text-white/50" />
                 </div>
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <span className="text-sm leading-none text-zinc-500">F</span>
+                  <span className="text-sm leading-none text-white/50">F</span>
                 </div>
               </div>
             </div>
@@ -60,10 +60,10 @@ export function ShortcutsSettingsScreen() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <CommandIcon width={12} height={12} className="text-zinc-500" />
+                  <CommandIcon width={12} height={12} className="text-white/50" />
                 </div>
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <span className="text-sm leading-none text-zinc-500">P</span>
+                  <span className="text-sm leading-none text-white/50">P</span>
                 </div>
               </div>
             </div>
@@ -75,10 +75,10 @@ export function ShortcutsSettingsScreen() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <CommandIcon width={12} height={12} className="text-zinc-500" />
+                  <CommandIcon width={12} height={12} className="text-white/50" />
                 </div>
                 <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-700/50 bg-zinc-800">
-                  <span className="text-sm leading-none text-zinc-500">B</span>
+                  <span className="text-sm leading-none text-white/50">B</span>
                 </div>
               </div>
             </div>

@@ -83,7 +83,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
               ) : data.length < 1 ? (
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <p className="mb-1 text-4xl">🎉</p>
-                  <p className="font-medium text-zinc-500">
+                  <p className="font-medium text-white/50">
                     Yo!, you&apos;ve no new notifications
                   </p>
                 </div>

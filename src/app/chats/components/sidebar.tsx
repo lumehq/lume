@@ -33,7 +33,7 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
           <div>
             <p className="leading-tight">{user?.bio || user?.about}</p>
             <Link
-              to={`/app/users/${pubkey}`}
+              to={`/users/${pubkey}`}
               className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-white/10 text-sm font-medium text-white hover:bg-fuchsia-500"
             >
               View full profile

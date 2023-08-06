@@ -169,7 +169,7 @@ export function FeedModal() {
                           {status === 'loading' ? (
                             <p>Loading...</p>
                           ) : (
-                            JSON.parse(account.follows as string).map((follow) => (
+                            account?.follows?.map((follow) => (
                               <Combobox.Option
                                 key={follow}
                                 value={follow}

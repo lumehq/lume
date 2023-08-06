@@ -197,13 +197,13 @@ export function EditProfileModal() {
                       type={'hidden'}
                       {...register('picture')}
                       value={picture}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-white/50"
                     />
                     <input
                       type={'hidden'}
                       {...register('banner')}
                       value={banner}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-white/50"
                     />
                     <div className="relative">
                       <div className="relative h-44 w-full bg-zinc-800">
@@ -246,7 +246,7 @@ export function EditProfileModal() {
                             minLength: 4,
                           })}
                           spellCheck={false}
-                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
@@ -263,7 +263,7 @@ export function EditProfileModal() {
                               minLength: 4,
                             })}
                             spellCheck={false}
-                            className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                            className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                           />
                           <div className="absolute right-2 top-1/2 -translate-y-1/2 transform">
                             {nip05.verified ? (
@@ -295,7 +295,7 @@ export function EditProfileModal() {
                         <textarea
                           {...register('about')}
                           spellCheck={false}
-                          className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                          className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
@@ -309,7 +309,7 @@ export function EditProfileModal() {
                           type={'text'}
                           {...register('website', { required: false })}
                           spellCheck={false}
-                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
@@ -323,7 +323,7 @@ export function EditProfileModal() {
                           type={'text'}
                           {...register('lud16', { required: false })}
                           spellCheck={false}
-                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                          className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                         />
                       </div>
                       <div>

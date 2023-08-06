@@ -8,23 +8,23 @@ import { usePublish } from '@utils/hooks/usePublish';
 const REACTIONS = [
   {
     content: '👏',
-    img: '/public/clapping_hands.png',
+    img: '/clapping_hands.png',
   },
   {
     content: '🤪',
-    img: '/public/face_with_tongue.png',
+    img: '/face_with_tongue.png',
   },
   {
     content: '😮',
-    img: '/public/face_with_open_mouth.png',
+    img: '/face_with_open_mouth.png',
   },
   {
     content: '😢',
-    img: '/public/crying_face.png',
+    img: '/crying_face.png',
   },
   {
     content: '🤡',
-    img: '/public/clown_face.png',
+    img: '/clown_face.png',
   },
 ];
 
@@ -82,11 +82,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               onClick={() => react('👏')}
               className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
             >
-              <img
-                src="/public/clapping_hands.png"
-                alt="Clapping Hands"
-                className="h-6 w-6"
-              />
+              <img src="/clapping_hands.png" alt="Clapping Hands" className="h-6 w-6" />
             </button>
             <button
               type="button"
@@ -94,7 +90,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="/public/face_with_tongue.png"
+                src="/face_with_tongue.png"
                 alt="Face with Tongue"
                 className="h-6 w-6"
               />
@@ -105,7 +101,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="/public/face_with_open_mouth.png"
+                src="/face_with_open_mouth.png"
                 alt="Face with Open Mouth"
                 className="h-6 w-6"
               />
@@ -115,14 +111,14 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               onClick={() => react('😢')}
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <img src="/public/crying_face.png" alt="Crying Face" className="h-6 w-6" />
+              <img src="/crying_face.png" alt="Crying Face" className="h-6 w-6" />
             </button>
             <button
               type="button"
               onClick={() => react('🤡')}
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <img src="/public/clown_face.png" alt="Clown Face" className="h-6 w-6" />
+              <img src="/clown_face.png" alt="Clown Face" className="h-6 w-6" />
             </button>
           </div>
           <Popover.Arrow className="fill-black" />

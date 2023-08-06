@@ -92,7 +92,7 @@ export function ActiveAccount({ data }: { data: { pubkey: string; npub: string }
   }
 
   return (
-    <Link to={`/app/users/${data.pubkey}`} className="relative inline-block h-9 w-9">
+    <Link to={`/users/${data.pubkey}`} className="relative inline-block h-9 w-9">
       <Image
         src={user?.picture || user?.image}
         fallback={DEFAULT_AVATAR}

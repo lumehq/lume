@@ -15,7 +15,7 @@ export function UnknownsModal({ data }: { data: Chats[] }) {
 
   const openChat = (pubkey: string) => {
     setOpen(false);
-    navigate(`/app/chats/${pubkey}`);
+    navigate(`/chats/${pubkey}`);
   };
 
   return (

@@ -64,7 +64,7 @@ export function Navigation() {
             <Collapsible.Content>
               <div className="flex flex-col">
                 <NavLink
-                  to="/app/space"
+                  to="/"
                   preventScrollReset={true}
                   className={({ isActive }) =>
                     twMerge(
@@ -79,7 +79,7 @@ export function Navigation() {
                   <span className="font-medium">Spaces</span>
                 </NavLink>
                 <NavLink
-                  to="/app/trending"
+                  to="/trending"
                   preventScrollReset={true}
                   className={({ isActive }) =>
                     twMerge(

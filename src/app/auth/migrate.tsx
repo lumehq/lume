@@ -135,13 +135,13 @@ export function MigrateScreen() {
                       <EyeOffIcon
                         width={20}
                         height={20}
-                        className="text-zinc-500 group-hover:text-white"
+                        className="text-white/50 group-hover:text-white"
                       />
                     ) : (
                       <EyeOnIcon
                         width={20}
                         height={20}
-                        className="text-zinc-500 group-hover:text-white"
+                        className="text-white/50 group-hover:text-white"
                       />
                     )}
                   </button>

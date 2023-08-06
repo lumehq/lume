@@ -45,7 +45,7 @@ export function UserScreen() {
       <div className="mt-8 h-full w-full border-t border-zinc-900">
         <div className="flex flex-col justify-start gap-1 px-3 pt-4 text-start">
           <p className="text-lg font-semibold leading-none text-zinc-200">Latest posts</p>
-          <span className="text-sm leading-none text-zinc-500">48 hours ago</span>
+          <span className="text-sm leading-none text-white/50">48 hours ago</span>
         </div>
         <div className="flex h-full max-w-[400px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
           {status === 'loading' ? (

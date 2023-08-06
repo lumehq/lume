@@ -14,11 +14,9 @@ export function NewMessageModal() {
   const [open, setOpen] = useState(false);
   const { status, account } = useAccount();
 
-  const follows = account ? JSON.parse(account.follows as string) : [];
-
   const openChat = (pubkey: string) => {
     setOpen(false);
-    navigate(`/app/chats/${pubkey}`);
+    navigate(`/chats/${pubkey}`);
   };
 
   return (
@@ -61,7 +59,7 @@ export function NewMessageModal() {
                   <LoaderIcon className="h-5 w-5 animate-spin text-white" />
                 </div>
               ) : (
-                follows.map((follow) => (
+                account?.follows?.map((follow) => (
                   <div
                     key={follow}
                     className="group flex items-center justify-between px-4 py-2 hover:bg-white/10"

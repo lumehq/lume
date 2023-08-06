@@ -43,7 +43,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
         <Popover.Content className="w-[200px] overflow-hidden rounded-md bg-white/10 backdrop-blur-xl focus:outline-none">
           <div className="flex flex-col p-2">
             <Link
-              to={`/app/events/${id}`}
+              to={`/events/${id}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               Open as new screen
@@ -63,7 +63,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
               Copy ID
             </button>
             <Link
-              to={`/app/users/${pubkey}`}
+              to={`/users/${pubkey}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               View profile

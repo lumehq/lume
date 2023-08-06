@@ -73,7 +73,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               <h5 className="text-lg font-semibold leading-none">
                 {user?.displayName || user?.name || 'No name'}
               </h5>
-              <span className="max-w-[15rem] truncate text-sm leading-none text-zinc-500">
+              <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
                 {user?.nip05 || shortenKey(pubkey)}
               </span>
             </div>
@@ -103,7 +103,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
                 </button>
               )}
               <Link
-                to={`/app/chats/${pubkey}`}
+                to={`/chats/${pubkey}`}
                 className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
               >
                 Message

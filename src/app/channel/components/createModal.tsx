@@ -93,7 +93,7 @@ export function ChannelCreateModal() {
         // close modal
         setIsOpen(false);
         // redirect to channel page
-        navigate(`/app/channel/${event.id}`);
+        navigate(`/channel/${event.id}`);
       }, 1000);
     } catch (e) {
       console.log('error: ', e);
@@ -112,7 +112,7 @@ export function ChannelCreateModal() {
         className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5"
       >
         <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-          <PlusIcon width={12} height={12} className="text-zinc-500" />
+          <PlusIcon width={12} height={12} className="text-white/50" />
         </div>
         <div>
           <h5 className="font-medium text-white/50">Create channel</h5>
@@ -174,7 +174,7 @@ export function ChannelCreateModal() {
                       type={'hidden'}
                       {...register('picture')}
                       value={image}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-white/50"
                     />
                     <div className="flex flex-col gap-1">
                       <span className="text-sm font-medium uppercase tracking-wider text-white/50">
@@ -206,7 +206,7 @@ export function ChannelCreateModal() {
                           minLength: 4,
                         })}
                         spellCheck={false}
-                        className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                        className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -219,7 +219,7 @@ export function ChannelCreateModal() {
                       <textarea
                         {...register('about')}
                         spellCheck={false}
-                        className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-zinc-500"
+                        className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                       />
                     </div>
                     <div className="flex h-20 items-center justify-between gap-1 rounded-lg bg-zinc-800 px-4 py-2">

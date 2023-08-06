@@ -101,14 +101,14 @@ export function ImportStep1Screen() {
         <h1 className="text-xl font-semibold text-white">Import your key</h1>
       </div>
       <div className="flex flex-col gap-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <span className="text-base font-semibold text-white/50">Private key</span>
             <input
               {...register('privkey', { required: true, minLength: 32 })}
               type={'password'}
               placeholder="nsec or hexstring"
-              className="relative w-full rounded-lg bg-zinc-800 px-3 py-3 text-white !outline-none placeholder:text-zinc-500"
+              className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none placeholder:text-white/50"
             />
             <span className="text-sm text-red-400">
               {errors.privkey && <p>{errors.privkey.message}</p>}
@@ -118,10 +118,10 @@ export function ImportStep1Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
+              className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
             >
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
+                <LoaderIcon className="h-4 w-4 animate-spin text-white" />
               ) : (
                 'Continue →'
               )}

@@ -95,10 +95,10 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
         placeholder="Message"
         className={`relative ${
           replyTo.id ? 'h-36 pt-16' : 'h-24 pt-3'
-        } w-full resize-none rounded-md bg-zinc-800 px-5 !outline-none placeholder:text-zinc-500`}
+        } w-full resize-none rounded-md bg-zinc-800 px-5 !outline-none placeholder:text-white/50`}
       />
       <div className="absolute bottom-0 right-2 h-11">
-        <div className="flex h-full items-center justify-end gap-3 text-zinc-500">
+        <div className="flex h-full items-center justify-end gap-3 text-white/50">
           <MediaUploader setState={setValue} />
           <button
             type="button"

@@ -24,11 +24,11 @@ export function Button({
       break;
     case 'large':
       preClass =
-        'h-11 w-full bg-fuchsia-500 rounded-md font-medium text-white hover:bg-fuchsia-600';
+        'h-11 w-full bg-fuchsia-500 rounded-lg font-medium text-white hover:bg-fuchsia-600';
       break;
     case 'large-alt':
       preClass =
-        'h-11 w-full bg-zinc-800 rounded-md font-medium text-white border-t border-zinc-700/50 hover:bg-zinc-900';
+        'h-11 w-full bg-white/10 rounded-lg font-medium text-white hover:bg-white/20';
       break;
     default:
       break;
@@ -40,7 +40,7 @@ export function Button({
       onClick={onClick}
       disabled={disabled}
       className={twMerge(
-        'inline-flex transform items-center justify-center gap-1 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex transform items-center justify-center gap-1 leading-none focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50',
         preClass
       )}
     >

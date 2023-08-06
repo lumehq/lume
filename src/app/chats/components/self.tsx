@@ -24,7 +24,7 @@ export function ChatsListSelfItem({ data }: { data: { pubkey: string } }) {
 
   return (
     <NavLink
-      to={`/app/chats/${data.pubkey}`}
+      to={`/chats/${data.pubkey}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(

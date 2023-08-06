@@ -24,6 +24,8 @@ export async function getActiveAccount() {
     'SELECT * FROM accounts WHERE is_active = 1;'
   );
   if (result.length > 0) {
+    result[0].follows = destr(result[0].follows);
+    result[0].network = destr(result[0].network);
     return result[0];
   } else {
     return null;
@@ -302,8 +304,6 @@ export async function getChannelUsers(channel_id: string) {
 export async function getChats() {
   const db = await connect();
   const account = await getActiveAccount();
-  const follows =
-    typeof account.follows === 'string' ? JSON.parse(account.follows) : account.follows;
 
   const chats: { follows: Array<Chats> | null; unknowns: Array<Chats> | null } = {
     follows: [],
@@ -318,7 +318,7 @@ export async function getChats() {
   result = result.sort((a, b) => a.new_messages - b.new_messages);
 
   chats.follows = result.filter((el) => {
-    return follows.some((i) => {
+    return account.follows.some((i) => {
       return i === el.sender_pubkey;
     });
   });

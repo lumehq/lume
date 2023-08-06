@@ -62,6 +62,7 @@
     "html-to-text": "^9.0.5",
     "immer": "^10.0.2",
     "light-bolt11-decoder": "^3.0.0",
+    "lru-cache": "^10.0.0",
     "million": "2.5.4-beta.2",
     "nostr-fetch": "^0.12.2",
     "nostr-tools": "^1.14.0",

@@ -23,7 +23,7 @@ export function ChatsListItem({ data }: { data: Chats }) {
 
   return (
     <NavLink
-      to={`/app/chats/${data.sender_pubkey}`}
+      to={`/chats/${data.sender_pubkey}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(

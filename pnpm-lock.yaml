@@ -136,6 +136,9 @@ dependencies:
   light-bolt11-decoder:
     specifier: ^3.0.0
     version: 3.0.0
+  lru-cache:
+    specifier: ^10.0.0
+    version: 10.0.0
   million:
     specifier: 2.5.4-beta.2
     version: 2.5.4-beta.2

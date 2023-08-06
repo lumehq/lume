@@ -17,7 +17,7 @@ export function NotiRepost({ event }: { event: NDKEvent }) {
           <p className="leading-none text-white/50">repost your post</p>
         </div>
         <div>
-          <span className="leading-none text-zinc-500">{createdAt}</span>
+          <span className="leading-none text-white/50">{createdAt}</span>
         </div>
       </div>
       <div className="-mt-5 pl-[44px]">{root && <MentionNote id={root} />}</div>

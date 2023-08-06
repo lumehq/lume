@@ -148,7 +148,7 @@ export function NetworkBlock() {
                   Follow more people to have more fun.
                 </p>
                 <Link
-                  to="/app/trending"
+                  to="/trending"
                   className="inline-flex w-max rounded bg-fuchsia-500 px-2.5 py-1.5 text-sm hover:bg-fuchsia-600"
                 >
                   Trending

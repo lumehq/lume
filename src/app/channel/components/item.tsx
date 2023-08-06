@@ -7,7 +7,7 @@ export function ChannelsListItem({ data }: { data: any }) {
   const channel = useChannelProfile(data.event_id);
   return (
     <NavLink
-      to={`/app/channel/${data.event_id}`}
+      to={`/channel/${data.event_id}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
