@@ -3,13 +3,17 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { nip19 } from 'nostr-tools';
 import { EventPointer } from 'nostr-tools/lib/nip19';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { HorizontalDotsIcon } from '@shared/icons';
 
 export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
+  const [open, setOpen] = useState(false);
+
   const copyID = async () => {
     await writeText(nip19.neventEncode({ id: id, author: pubkey } as EventPointer));
+    setOpen(false);
   };
 
   const copyLink = async () => {
@@ -17,10 +21,11 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
       'https://nostr.com/' +
         nip19.neventEncode({ id: id, author: pubkey } as EventPointer)
     );
+    setOpen(false);
   };
 
   return (
-    <Popover.Root>
+    <Popover.Root open={open} onOpenChange={setOpen}>
       <Tooltip.Root delayDuration={150}>
         <Tooltip.Trigger asChild>
           <Popover.Trigger asChild>

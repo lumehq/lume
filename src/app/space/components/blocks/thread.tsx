@@ -39,8 +39,12 @@ export function ThreadBlock({ params }: { params: Block }) {
                 <NoteContent content={data.content} />
               </div>
               <div>
-                <NoteActions id={data.id} pubkey={data.pubkey} noOpenThread={true} />
-                <NoteStats id={data.id} />
+                <NoteActions
+                  id={params.content}
+                  pubkey={data.pubkey}
+                  noOpenThread={true}
+                />
+                <NoteStats id={params.content} />
               </div>
             </div>
           </div>
