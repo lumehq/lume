@@ -8,6 +8,7 @@ import { createAccount } from '@libs/storage';
 
 import { Button } from '@shared/button';
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
+import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 import { useOnboarding } from '@stores/onboarding';
 import { useStronghold } from '@stores/stronghold';
@@ -118,13 +119,25 @@ export function CreateStep1Screen() {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <Button preset="large" onClick={() => submit()}>
+          <button
+            type="button"
+            onClick={() => submit()}
+            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+          >
             {loading ? (
-              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
+              <>
+                <span className="w-5" />
+                <span>Creating...</span>
+                <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              </>
             ) : (
-              'I have saved my key, continue →'
+              <>
+                <span className="w-5" />
+                <span>I have saved my key, continue</span>
+                <ArrowRightCircleIcon className="h-5 w-5" />
+              </>
             )}
-          </Button>
+          </button>
           {downloaded ? (
             <span className="inline-flex h-11 w-full items-center justify-center text-sm text-white/50">
               Saved in Download folder

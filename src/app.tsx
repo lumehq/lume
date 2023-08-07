@@ -4,8 +4,6 @@ import { AuthCreateScreen } from '@app/auth/create';
 import { CreateStep1Screen } from '@app/auth/create/step-1';
 import { CreateStep2Screen } from '@app/auth/create/step-2';
 import { CreateStep3Screen } from '@app/auth/create/step-3';
-import { CreateStep4Screen } from '@app/auth/create/step-4';
-import { CreateStep5Screen } from '@app/auth/create/step-5';
 import { AuthImportScreen } from '@app/auth/import';
 import { ImportStep1Screen } from '@app/auth/import/step-1';
 import { ImportStep2Screen } from '@app/auth/import/step-2';
@@ -96,8 +94,6 @@ const router = createBrowserRouter([
           { path: '', element: <CreateStep1Screen /> },
           { path: 'step-2', element: <CreateStep2Screen /> },
           { path: 'step-3', element: <CreateStep3Screen /> },
-          { path: 'step-4', element: <CreateStep4Screen /> },
-          { path: 'step-5', element: <CreateStep5Screen /> },
         ],
       },
       { path: 'unlock', element: <UnlockScreen /> },

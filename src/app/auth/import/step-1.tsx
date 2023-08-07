@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { createAccount } from '@libs/storage';
 
 import { LoaderIcon } from '@shared/icons';
+import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 import { useOnboarding } from '@stores/onboarding';
 import { useStronghold } from '@stores/stronghold';
@@ -118,12 +119,20 @@ export function ImportStep1Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             >
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+                <>
+                  <span className="w-5" />
+                  <span>Creating...</span>
+                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                </>
               ) : (
-                'Continue →'
+                <>
+                  <span className="w-5" />
+                  <span>Continue</span>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                </>
               )}
             </button>
           </div>

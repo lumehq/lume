@@ -23,7 +23,7 @@ export function BannerUploader({ setBanner }: { setBanner: any }) {
     <button
       type="button"
       onClick={() => uploadBanner()}
-      className="inline-flex h-full w-full items-center justify-center bg-zinc-900/40"
+      className="inline-flex h-full w-full items-center justify-center bg-black/40 hover:bg-black/50"
     >
       {loading ? (
         <LoaderIcon className="h-8 w-8 animate-spin text-white" />

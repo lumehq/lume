@@ -5,18 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import { AvatarUploader } from '@shared/avatarUploader';
 import { BannerUploader } from '@shared/bannerUploader';
 import { LoaderIcon } from '@shared/icons';
+import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
-import { useOnboarding } from '@stores/onboarding';
+
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function CreateStep3Screen() {
+  const { publish } = usePublish();
   const navigate = useNavigate();
-  const createProfile = useOnboarding((state) => state.createProfile);
 
+  const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState(DEFAULT_AVATAR);
   const [banner, setBanner] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -24,21 +26,29 @@ export function CreateStep3Screen() {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const onSubmit = (data: { name: string; about: string }) => {
+  const onSubmit = async (data: { name: string; about: string; website: string }) => {
     setLoading(true);
     try {
       const profile = {
         ...data,
-        username: data.name,
         name: data.name,
         display_name: data.name,
         bio: data.about,
+        website: data.website,
       };
-      createProfile(profile);
-      // redirect to next step
-      setTimeout(() => navigate('/auth/create/step-4', { replace: true }), 1200);
-    } catch {
-      console.log('error');
+
+      const event = await publish({
+        content: JSON.stringify(profile),
+        kind: 0,
+        tags: [],
+      });
+
+      if (event) {
+        setTimeout(() => navigate('/auth/create/step-4', { replace: true }), 1000);
+      }
+    } catch (e) {
+      console.log('error: ', e);
+      setLoading(false);
     }
   };
 
@@ -52,7 +62,7 @@ export function CreateStep3Screen() {
           <input type={'hidden'} {...register('picture')} value={picture} />
           <input type={'hidden'} {...register('banner')} value={banner} />
           <div className="relative">
-            <div className="relative h-44 w-full bg-zinc-800">
+            <div className="relative h-44 w-full bg-white/10">
               <Image
                 src={banner}
                 fallback="https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"
@@ -127,12 +137,20 @@ export function CreateStep3Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             >
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+                <>
+                  <span className="w-5" />
+                  <span>Creating...</span>
+                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                </>
               ) : (
-                'Continue →'
+                <>
+                  <span className="w-5" />
+                  <span>Continue</span>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                </>
               )}
             </button>
           </div>

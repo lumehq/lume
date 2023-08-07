@@ -23,7 +23,7 @@ export function AvatarUploader({ setPicture }: { setPicture: any }) {
     <button
       type="button"
       onClick={() => uploadAvatar()}
-      className="inline-flex h-full w-full items-center justify-center bg-zinc-900/40"
+      className="inline-flex h-full w-full items-center justify-center rounded-lg bg-black/50 hover:bg-black/60"
     >
       {loading ? (
         <LoaderIcon className="h-6 w-6 animate-spin text-white" />
