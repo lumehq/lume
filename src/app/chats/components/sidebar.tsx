@@ -5,7 +5,7 @@ import { Image } from '@shared/image';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
-import { shortenKey } from '@utils/shortenKey';
+import { displayNpub } from '@utils/shortenKey';
 
 export function ChatSidebar({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
@@ -24,17 +24,17 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <h3 className="text-lg font-semibold leading-none">
-              {user?.displayName || user?.name}
+              {user?.display_name || user?.name}
             </h3>
-            <h5 className="leading-none text-zinc-400">
-              {user?.nip05 || shortenKey(pubkey)}
+            <h5 className="leading-none text-white/50">
+              {user?.nip05 || displayNpub(pubkey, 16)}
             </h5>
           </div>
           <div>
             <p className="leading-tight">{user?.bio || user?.about}</p>
             <Link
-              to={`/app/users/${pubkey}`}
-              className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-zinc-900 text-sm font-medium text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+              to={`/users/${pubkey}`}
+              className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-md bg-white/10 text-sm font-medium text-white hover:bg-fuchsia-500"
             >
               View full profile
             </Link>

@@ -99,7 +99,7 @@ export function MessageMuteButton({ pubkey }: { pubkey: string }) {
                         <CancelIcon width={20} height={20} className="text-zinc-300" />
                       </button>
                     </div>
-                    <Dialog.Description className="leading-tight text-zinc-400">
+                    <Dialog.Description className="leading-tight text-white/50">
                       You will no longer see messages from this user.
                     </Dialog.Description>
                   </div>
@@ -109,14 +109,14 @@ export function MessageMuteButton({ pubkey }: { pubkey: string }) {
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="inline-flex h-9 items-center justify-center rounded-md px-2 text-base font-medium text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+                      className="inline-flex h-9 items-center justify-center rounded-md px-2 text-base font-medium text-white/50 hover:bg-zinc-800 hover:text-white"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       onClick={() => muteUser()}
-                      className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-2 text-base font-medium text-zinc-100 hover:bg-red-600"
+                      className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-2 text-base font-medium text-white hover:bg-red-600"
                     >
                       Confirm
                     </button>

@@ -1,7 +1,9 @@
 import { nip04 } from 'nostr-tools';
 import { useEffect, useState } from 'react';
 
-export function useDecryptMessage(data: any, userPubkey: string, userPriv: string) {
+import { Chats } from '@utils/types';
+
+export function useDecryptMessage(data: Chats, userPubkey: string, userPriv: string) {
   const [content, setContent] = useState(data.content);
 
   useEffect(() => {

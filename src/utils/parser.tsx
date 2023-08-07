@@ -5,6 +5,8 @@ import ReactPlayer from 'react-player';
 import { Content, LumeEvent } from '@utils/types';
 
 export function parser(event: LumeEvent) {
+  if (event.kind !== 1) return;
+
   const references = parseReferences(event as unknown as Event);
   const urls = getUrls(event.content as unknown as string);
 
@@ -49,12 +51,17 @@ export function parser(event: LumeEvent) {
   references?.forEach((item) => {
     const profile = item.profile;
     const event = item.event;
+    const addr = item.address;
     if (event) {
       content.notes.push(event.id);
       content.parsed = content.parsed.replace(item.text, '');
     }
     if (profile) {
       content.parsed = content.parsed.replace(item.text, `~pub${item.profile.pubkey}~`);
+    }
+    if (addr) {
+      content.notes.push(addr.identifier);
+      content.parsed = content.parsed.replace(item.text, '');
     }
   });
 

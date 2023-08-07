@@ -1,37 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
-import { AddBlock } from '@app/space/components/add';
 import { FeedBlock } from '@app/space/components/blocks/feed';
-import { FollowingBlock } from '@app/space/components/blocks/following';
 import { HashtagBlock } from '@app/space/components/blocks/hashtag';
 import { ImageBlock } from '@app/space/components/blocks/image';
+import { NetworkBlock } from '@app/space/components/blocks/network';
 import { ThreadBlock } from '@app/space/components/blocks/thread';
 import { UserBlock } from '@app/space/components/blocks/user';
-
-import { getBlocks } from '@libs/storage';
+import { FeedModal } from '@app/space/components/modals/feed';
+import { HashtagModal } from '@app/space/components/modals/hashtag';
+import { ImageModal } from '@app/space/components/modals/image';
 
 import { LoaderIcon } from '@shared/icons';
+
+import { useBlocks } from '@stores/blocks';
 
 import { Block } from '@utils/types';
 
 export function SpaceScreen() {
-  const {
-    status,
-    data: blocks,
-    isFetching,
-  } = useQuery(
-    ['blocks'],
-    async () => {
-      return await getBlocks();
-    },
-    {
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const [blocks, fetchBlocks] = useBlocks((state) => [state.blocks, state.fetchBlocks]);
 
   const renderBlock = useCallback(
     (block: Block) => {
@@ -53,41 +39,30 @@ export function SpaceScreen() {
     [blocks]
   );
 
-  return (
-    <div className="scrollbar-hide flex h-full w-full flex-nowrap overflow-x-auto overflow-y-hidden">
-      <FollowingBlock />
-      {status === 'loading' ? (
-        <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
-          <div
-            data-tauri-drag-region
-            className="group flex h-11 w-full items-center justify-between overflow-hidden border-b border-zinc-900 px-3"
-          />
+  useEffect(() => {
+    fetchBlocks();
+  }, [fetchBlocks]);
 
+  return (
+    <div className="scrollbar-hide flex h-full w-full flex-nowrap divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
+      <NetworkBlock />
+      {!blocks ? (
+        <div className="flex w-[350px] shrink-0 flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
+            <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
           </div>
         </div>
       ) : (
-        blocks.map((block: Block) => renderBlock(block))
+        blocks.map((block) => renderBlock(block))
       )}
-      {isFetching && (
-        <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
-          <div
-            data-tauri-drag-region
-            className="group flex h-11 w-full items-center justify-between overflow-hidden border-b border-zinc-900 px-3"
-          />
-
-          <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-zinc-100" />
-          </div>
-        </div>
-      )}
-      <div className="flex w-[350px] shrink-0 flex-col border-r border-zinc-900">
-        <div className="inline-flex h-full w-full items-center justify-center">
-          <AddBlock />
+      <div className="flex w-[350px] shrink-0 flex-col">
+        <div className="inline-flex h-full w-full flex-col items-center justify-center gap-1">
+          <FeedModal />
+          <ImageModal />
+          <HashtagModal />
         </div>
       </div>
-      <div className="w-[350px] shrink-0" />
+      <div className="w-[250px] shrink-0" />
     </div>
   );
 }

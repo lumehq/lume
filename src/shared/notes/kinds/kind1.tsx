@@ -17,7 +17,7 @@ export function NoteKind_1({
 
   return (
     <div className="h-min w-full px-3 py-1.5">
-      <div className="relative overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 pt-3">
+      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
         <div className="relative flex flex-col">
           <User pubkey={event.pubkey} time={event.created_at} />
           <div className="relative z-20 -mt-6 flex items-start gap-3">

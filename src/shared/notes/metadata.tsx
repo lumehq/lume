@@ -8,13 +8,14 @@ import { createReplyNote } from '@libs/storage';
 import { LoaderIcon } from '@shared/icons';
 import { MiniUser } from '@shared/notes/users/mini';
 
+import { useBlocks } from '@stores/blocks';
 import { BLOCK_KINDS } from '@stores/constants';
 
-import { useBlock } from '@utils/hooks/useBlock';
 import { compactNumber } from '@utils/number';
 
 export function NoteMetadata({ id }: { id: string }) {
-  const { add } = useBlock();
+  const setBlock = useBlocks((state) => state.setBlock);
+
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['note-metadata', id],
@@ -61,15 +62,18 @@ export function NoteMetadata({ id }: { id: string }) {
 
       return { replies, users, zap };
     },
-    { refetchOnWindowFocus: false, refetchOnReconnect: false }
+    { refetchOnWindowFocus: false, refetchOnReconnect: false, refetchOnMount: false }
   );
 
   if (status === 'loading') {
     return (
-      <div className="mb-3 flex items-center gap-3">
-        <div className="mt-2h-6 w-11 shrink-0"></div>
-        <div className="mt-2 inline-flex h-6 items-center">
-          <LoaderIcon className="h-4 w-4 animate-spin text-zinc-100" />
+      <div>
+        <div className="absolute left-[18px] top-14 h-[calc(100%-6.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="relative z-10 flex items-center gap-3 pb-3">
+          <div className="mt-2 h-6 w-11 shrink-0"></div>
+          <div className="mt-2 inline-flex h-6">
+            <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+          </div>
         </div>
       </div>
     );
@@ -79,8 +83,8 @@ export function NoteMetadata({ id }: { id: string }) {
     <div>
       {data.replies > 0 ? (
         <>
-          <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-zinc-800 to-zinc-600" />
-          <div className="relative z-10 flex items-center gap-3 bg-zinc-900 pb-3">
+          <div className="absolute left-[18px] top-14 h-[calc(100%-6.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+          <div className="relative z-10 flex items-center gap-3 pb-3">
             <div className="mt-2 inline-flex h-6 w-11 shrink-0 items-center justify-center">
               <div className="isolate flex -space-x-1 overflow-hidden">
                 {data.users?.map((user, index) => (
@@ -92,16 +96,15 @@ export function NoteMetadata({ id }: { id: string }) {
               <button
                 type="button"
                 onClick={() =>
-                  add.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: id })
+                  setBlock({ kind: BLOCK_KINDS.thread, title: 'Thread', content: id })
                 }
-                className="text-zinc-500"
+                className="text-white/50"
               >
-                <span className="font-semibold text-zinc-300">{data.replies}</span>{' '}
-                replies
+                <span className="font-semibold text-white">{data.replies}</span> replies
               </button>
-              <span className="text-zinc-500">·</span>
-              <p className="text-zinc-500">
-                <span className="font-semibold text-zinc-300">
+              <span className="text-white/50">·</span>
+              <p className="text-white/50">
+                <span className="font-semibold text-white">
                   {compactNumber.format(data.zap)}
                 </span>{' '}
                 zaps

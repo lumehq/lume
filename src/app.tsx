@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, redirect } from 'react-router-dom';
 
 import { AuthCreateScreen } from '@app/auth/create';
 import { CreateStep1Screen } from '@app/auth/create/step-1';
@@ -15,34 +15,63 @@ import { OnboardingScreen } from '@app/auth/onboarding';
 import { ResetScreen } from '@app/auth/reset';
 import { UnlockScreen } from '@app/auth/unlock';
 import { WelcomeScreen } from '@app/auth/welcome';
-import { ChannelScreen } from '@app/channel';
 import { ChatScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
-import { NoteScreen } from '@app/note';
-import { Root } from '@app/root';
+import { EventScreen } from '@app/events';
 import { AccountSettingsScreen } from '@app/settings/account';
 import { GeneralSettingsScreen } from '@app/settings/general';
 import { ShortcutsSettingsScreen } from '@app/settings/shortcuts';
 import { SpaceScreen } from '@app/space';
+import { SplashScreen } from '@app/splash';
 import { TrendingScreen } from '@app/trending';
 import { UserScreen } from '@app/users';
 
+import { getActiveAccount } from '@libs/storage';
+
 import { AppLayout } from '@shared/appLayout';
 import { AuthLayout } from '@shared/authLayout';
-import { Protected } from '@shared/protected';
+import { LoaderIcon } from '@shared/icons';
 import { SettingsLayout } from '@shared/settingsLayout';
 
 import './index.css';
 
+const appLoader = async () => {
+  const account = await getActiveAccount();
+  const stronghold = sessionStorage.getItem('stronghold');
+  const privkey = JSON.parse(stronghold).state.privkey || null;
+
+  if (!account) {
+    return redirect('/auth/welcome');
+  }
+
+  if (account && account.privkey.length > 35) {
+    return redirect('/auth/migrate');
+  }
+
+  if (account && !privkey) {
+    return redirect('/auth/unlock');
+  }
+
+  return null;
+};
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      // @ts-expect-error, todo
-      <Protected>
-        <Root />
-      </Protected>
-    ),
+    element: <AppLayout />,
+    errorElement: <ErrorScreen />,
+    loader: appLoader,
+    children: [
+      { path: '', element: <SpaceScreen /> },
+      { path: 'trending', element: <TrendingScreen /> },
+      { path: 'events/:id', element: <EventScreen /> },
+      { path: 'users/:pubkey', element: <UserScreen /> },
+      { path: 'chats/:pubkey', element: <ChatScreen /> },
+    ],
+  },
+  {
+    path: '/splashscreen',
+    element: <SplashScreen />,
     errorElement: <ErrorScreen />,
   },
   {
@@ -77,30 +106,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/app',
-    element: (
-      // @ts-expect-error, todo
-      <Protected>
-        <AppLayout />
-      </Protected>
-    ),
-    children: [
-      { path: 'space', element: <SpaceScreen /> },
-      { path: 'trending', element: <TrendingScreen /> },
-      { path: 'note/:id', element: <NoteScreen /> },
-      { path: 'users/:pubkey', element: <UserScreen /> },
-      { path: 'chats/:pubkey', element: <ChatScreen /> },
-      { path: 'channel/:id', element: <ChannelScreen /> },
-    ],
-  },
-  {
     path: '/settings',
-    element: (
-      // @ts-expect-error, todo
-      <Protected>
-        <SettingsLayout />
-      </Protected>
-    ),
+    element: <SettingsLayout />,
     children: [
       { path: 'general', element: <GeneralSettingsScreen /> },
       { path: 'shortcuts', element: <ShortcutsSettingsScreen /> },
@@ -113,7 +120,11 @@ export default function App() {
   return (
     <RouterProvider
       router={router}
-      fallbackElement={<p>Loading..</p>}
+      fallbackElement={
+        <div className="flex h-full w-full items-center justify-center bg-black/90">
+          <LoaderIcon className="h-6 w-6 animate-spin text-white" />
+        </div>
+      }
       future={{ v7_startTransition: true }}
     />
   );

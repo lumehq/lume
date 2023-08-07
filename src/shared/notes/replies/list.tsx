@@ -43,7 +43,7 @@ export function RepliesList({ id }: { id: string }) {
     return (
       <div className="mt-3">
         <div className="flex flex-col">
-          <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+          <div className="rounded-xl bg-white/10 px-3 py-3">
             <NoteSkeleton />
           </div>
         </div>
@@ -54,21 +54,21 @@ export function RepliesList({ id }: { id: string }) {
   return (
     <div className="mt-3">
       <div className="mb-2">
-        <h5 className="text-lg font-semibold text-zinc-300">{data.length} replies</h5>
+        <h5 className="text-lg font-semibold text-white">{data?.length || 0} replies</h5>
       </div>
       <div className="flex flex-col">
         {data?.length === 0 ? (
           <div className="px=3">
-            <div className="flex w-full items-center justify-center rounded-xl bg-zinc-900">
+            <div className="flex w-full items-center justify-center rounded-xl bg-white/10">
               <div className="flex flex-col items-center justify-center gap-2 py-6">
                 <h3 className="text-3xl">👋</h3>
-                <p className="leading-none text-zinc-400">Share your thought on it...</p>
+                <p className="leading-none text-white/50">Share your thought on it...</p>
               </div>
             </div>
           </div>
         ) : (
           data
-            .reverse()
+            ?.reverse()
             .map((event: LumeEvent) => <Reply key={event.id} event={event} root={id} />)
         )}
       </div>

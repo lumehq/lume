@@ -5,23 +5,31 @@ import remarkGfm from 'remark-gfm';
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
+import { useBlocks } from '@stores/blocks';
 import { BLOCK_KINDS } from '@stores/constants';
 
-import { useBlock } from '@utils/hooks/useBlock';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
-  const { add } = useBlock();
   const { status, data } = useEvent(id);
+  const setBlock = useBlocks((state) => state.setBlock);
 
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      add.mutate({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
+      setBlock({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }
   };
+
+  if (!id) {
+    return (
+      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3">
+        <p className="break-all">Failed to fetch event: {id}</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -29,7 +37,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       onKeyDown={(e) => openThread(e, id)}
       role="button"
       tabIndex={0}
-      className="mb-2 mt-3 cursor-default rounded-lg border-t border-zinc-700/50 bg-zinc-800/50 px-3 py-3"
+      className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3"
     >
       {status === 'loading' ? (
         <NoteSkeleton />
@@ -56,14 +64,14 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
                 },
               }}
             >
-              {data?.content?.parsed?.length > 160
-                ? data.content.parsed.substring(0, 160) + '...'
-                : data.content.parsed}
+              {data?.content?.original?.length > 160
+                ? data.content.original.substring(0, 160) + '...'
+                : data.content.original}
             </ReactMarkdown>
           </div>
         </>
       ) : (
-        <p>Failed to fetch event</p>
+        <p className="break-all">Failed to fetch event: {id}</p>
       )}
     </div>
   );

@@ -26,9 +26,9 @@ export function BannerUploader({ setBanner }: { setBanner: any }) {
       className="inline-flex h-full w-full items-center justify-center bg-zinc-900/40"
     >
       {loading ? (
-        <LoaderIcon className="h-8 w-8 animate-spin text-zinc-100" />
+        <LoaderIcon className="h-8 w-8 animate-spin text-white" />
       ) : (
-        <PlusIcon className="h-8 w-8 text-zinc-100" />
+        <PlusIcon className="h-8 w-8 text-white" />
       )}
     </button>
   );

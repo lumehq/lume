@@ -23,13 +23,13 @@ export function NoteReply({
           onClick={() => setReply(id, pubkey, root)}
           className="group inline-flex h-7 w-7 items-center justify-center"
         >
-          <ReplyIcon className="h-5 w-5 text-zinc-300 group-hover:text-green-500" />
+          <ReplyIcon className="h-5 w-5 text-white group-hover:text-green-500" />
         </button>
       </Tooltip.Trigger>
       <Tooltip.Portal>
-        <Tooltip.Content className="-left-10 select-none rounded-md border-t border-zinc-600/50 bg-zinc-700 px-3.5 py-1.5 text-sm leading-none text-zinc-100 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+        <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
           Quick reply
-          <Tooltip.Arrow className="fill-zinc-700" />
+          <Tooltip.Arrow className="fill-black" />
         </Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root>

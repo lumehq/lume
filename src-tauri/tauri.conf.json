@@ -94,18 +94,32 @@
     },
     "windows": [
       {
-        "fullscreen": false,
+        "width": 1080,
         "height": 800,
-        "hiddenTitle": true,
-        "minHeight": 720,
         "minWidth": 1080,
+        "minHeight": 800,
         "resizable": true,
         "theme": "Dark",
         "title": "Lume",
         "titleBarStyle": "Overlay",
-        "transparent": false,
-        "width": 1080
+        "transparent": true,
+        "center": true,
+        "fullscreen": false,
+        "hiddenTitle": true,
+        "visible": false
+      },
+      {
+        "width": 400,
+        "height": 500,
+        "decorations": true,
+        "hiddenTitle": true,
+        "center": true,
+        "resizable": false,
+        "titleBarStyle": "Overlay",
+        "label": "splashscreen",
+        "url": "splashscreen"
       }
-    ]
+    ],
+    "macOSPrivateApi": true
   }
 }

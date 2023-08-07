@@ -74,7 +74,7 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
             <div className="flex w-full flex-col">
               <UserReply pubkey={replyTo.pubkey} />
               <div className="-mt-5 pl-[38px]">
-                <div className="text-base text-zinc-100">{replyTo.content}</div>
+                <div className="text-base text-white">{replyTo.content}</div>
               </div>
             </div>
             <button
@@ -82,7 +82,7 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
               onClick={() => stopReply()}
               className="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
             >
-              <CancelIcon width={12} height={12} className="text-zinc-100" />
+              <CancelIcon width={12} height={12} className="text-white" />
             </button>
           </div>
         </div>
@@ -95,10 +95,10 @@ export function ChannelMessageForm({ channelID }: { channelID: string }) {
         placeholder="Message"
         className={`relative ${
           replyTo.id ? 'h-36 pt-16' : 'h-24 pt-3'
-        } w-full resize-none rounded-md bg-zinc-800 px-5 !outline-none placeholder:text-zinc-500`}
+        } w-full resize-none rounded-md bg-zinc-800 px-5 !outline-none placeholder:text-white/50`}
       />
       <div className="absolute bottom-0 right-2 h-11">
-        <div className="flex h-full items-center justify-end gap-3 text-zinc-500">
+        <div className="flex h-full items-center justify-end gap-3 text-white/50">
           <MediaUploader setState={setValue} />
           <button
             type="button"

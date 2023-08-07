@@ -11,10 +11,10 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
   if (status === 'loading') {
     return (
       <div className="flex items-center gap-2">
-        <div className="relative h-10 w-10 shrink-0 animate-pulse rounded-md bg-zinc-800" />
+        <div className="relative h-10 w-10 shrink-0 animate-pulse rounded-md bg-white/10" />
         <div className="flex w-full flex-1 flex-col items-start gap-1 text-start">
-          <span className="h-4 w-1/2 animate-pulse rounded bg-zinc-800" />
-          <span className="h-3 w-1/3 animate-pulse rounded bg-zinc-800" />
+          <span className="h-4 w-1/2 animate-pulse rounded bg-white/10" />
+          <span className="h-3 w-1/3 animate-pulse rounded bg-white/10" />
         </div>
       </div>
     );
@@ -31,10 +31,10 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
         />
       </div>
       <div className="flex w-full flex-1 flex-col items-start text-start">
-        <span className="truncate font-medium leading-tight text-zinc-100">
+        <span className="truncate font-medium leading-tight text-white">
           {user?.name || user?.displayName || user?.display_name}
         </span>
-        <span className="max-w-[15rem] truncate text-base leading-tight text-zinc-400">
+        <span className="max-w-[15rem] truncate text-base leading-tight text-white/50">
           {user?.nip05?.toLowerCase() || shortenKey(pubkey)}
         </span>
       </div>

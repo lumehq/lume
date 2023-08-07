@@ -138,7 +138,7 @@ export function CreateStep5Screen() {
 
   const update = useMutation({
     mutationFn: (follows: string[]) => {
-      return updateAccount('follows', follows, account.pubkey);
+      return updateAccount('follows', follows);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentAccount'] });
@@ -168,13 +168,11 @@ export function CreateStep5Screen() {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-zinc-100">
-          Personalized your newsfeed
-        </h1>
+        <h1 className="text-xl font-semibold text-white">Personalized your newsfeed</h1>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="w-full overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900">
-          <div className="inline-flex h-10 w-full items-center gap-1 border-b border-zinc-800 px-4 text-base font-medium text-zinc-400">
+        <div className="w-full overflow-hidden rounded-xl bg-white/10">
+          <div className="inline-flex h-10 w-full items-center gap-1 border-b border-white/10 px-4 text-base font-medium text-white/50">
             Follow at least
             <span className="font-semibold text-fuchsia-500">
               {follows.length}/10
@@ -183,7 +181,7 @@ export function CreateStep5Screen() {
           </div>
           {status === 'loading' ? (
             <div className="inline-flex h-11 w-full items-center justify-center px-4 py-2">
-              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+              <LoaderIcon className="h-4 w-4 animate-spin text-white" />
             </div>
           ) : (
             <div className="scrollbar-hide flex h-96 flex-col overflow-y-auto py-2">
@@ -192,7 +190,7 @@ export function CreateStep5Screen() {
                   key={item.pubkey}
                   type="button"
                   onClick={() => toggleFollow(item.pubkey)}
-                  className="inline-flex transform items-center justify-between bg-zinc-900 px-4 py-2 hover:bg-zinc-800 active:translate-y-1"
+                  className="inline-flex transform items-center justify-between bg-white/10 px-4 py-2 hover:bg-white/20 active:translate-y-1"
                 >
                   <User pubkey={item.pubkey} fallback={item.profile?.content} />
                   {follows.includes(item.pubkey) && (
@@ -209,10 +207,10 @@ export function CreateStep5Screen() {
           <button
             type="button"
             onClick={() => submit()}
-            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600"
+            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
           >
             {loading ? (
-              <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+              <LoaderIcon className="h-4 w-4 animate-spin text-white" />
             ) : (
               'Finish →'
             )}

@@ -1,5 +1,5 @@
 import * as Popover from '@radix-ui/react-popover';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { ReactionIcon } from '@shared/icons';
 
@@ -8,23 +8,23 @@ import { usePublish } from '@utils/hooks/usePublish';
 const REACTIONS = [
   {
     content: '👏',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Clapping%20Hands.png',
+    img: '/clapping_hands.png',
   },
   {
     content: '🤪',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Tongue.png',
+    img: '/face_with_tongue.png',
   },
   {
     content: '😮',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Open%20Mouth.png',
+    img: '/face_with_open_mouth.png',
   },
   {
     content: '😢',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Crying%20Face.png',
+    img: '/crying_face.png',
   },
   {
     content: '🤡',
-    img: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Clown%20Face.png',
+    img: '/clown_face.png',
   },
 ];
 
@@ -66,13 +66,13 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
           {reaction ? (
             <img src={getReactionImage(reaction)} alt={reaction} className="h-6 w-6" />
           ) : (
-            <ReactionIcon className="h-5 w-5 text-zinc-300 group-hover:text-red-400" />
+            <ReactionIcon className="h-5 w-5 text-white group-hover:text-red-400" />
           )}
         </button>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="select-none rounded-md border-t border-zinc-600/50 bg-zinc-700 px-1 py-1 text-sm leading-none text-zinc-100 will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade"
+          className="select-none rounded-md bg-black px-1 py-1 text-sm will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade"
           sideOffset={0}
           side="top"
         >
@@ -80,21 +80,17 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('👏')}
-              className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
             >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Clapping%20Hands.png"
-                alt="Clapping Hands"
-                className="h-6 w-6"
-              />
+              <img src="/clapping_hands.png" alt="Clapping Hands" className="h-6 w-6" />
             </button>
             <button
               type="button"
               onClick={() => react('🤪')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Tongue.png"
+                src="/face_with_tongue.png"
                 alt="Face with Tongue"
                 className="h-6 w-6"
               />
@@ -102,10 +98,10 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('😮')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Open%20Mouth.png"
+                src="/face_with_open_mouth.png"
                 alt="Face with Open Mouth"
                 className="h-6 w-6"
               />
@@ -113,27 +109,19 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('😢')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Crying%20Face.png"
-                alt="Crying Face"
-                className="h-6 w-6"
-              />
+              <img src="/crying_face.png" alt="Crying Face" className="h-6 w-6" />
             </button>
             <button
               type="button"
               onClick={() => react('🤡')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-zinc-600"
+              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Clown%20Face.png"
-                alt="Clown Face"
-                className="h-6 w-6"
-              />
+              <img src="/clown_face.png" alt="Clown Face" className="h-6 w-6" />
             </button>
           </div>
-          <Popover.Arrow className="fill-zinc-700" />
+          <Popover.Arrow className="fill-black" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

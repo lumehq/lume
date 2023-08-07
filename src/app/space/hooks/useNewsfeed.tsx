@@ -19,11 +19,9 @@ export function useNewsfeed() {
 
   useEffect(() => {
     if (status === 'success' && account) {
-      const follows = account ? JSON.parse(account.follows as string) : [];
-
       const filter: NDKFilter = {
         kinds: [1, 6],
-        authors: follows,
+        authors: account.follows,
         since: now.current,
       };
 

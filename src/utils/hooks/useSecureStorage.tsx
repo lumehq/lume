@@ -1,5 +1,5 @@
-import { removeFile } from '@tauri-apps/plugin-fs';
 import { BaseDirectory, appConfigDir } from '@tauri-apps/api/path';
+import { removeFile } from '@tauri-apps/plugin-fs';
 import { Stronghold } from '@tauri-apps/plugin-stronghold';
 
 const dir = await appConfigDir();
@@ -14,7 +14,7 @@ export function useSecureStorage() {
   }
 
   const save = async (key: string, value: string, password: string) => {
-    const stronghold = await Stronghold.load(`${dir}lume.stronghold`, password);
+    const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, password);
     const client = await getClient(stronghold);
     const store = client.getStore();
     await store.insert(key, Array.from(new TextEncoder().encode(value)));
@@ -22,7 +22,7 @@ export function useSecureStorage() {
   };
 
   const load = async (key: string, password: string) => {
-    const stronghold = await Stronghold.load(`${dir}lume.stronghold`, password);
+    const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, password);
     const client = await getClient(stronghold);
     const store = client.getStore();
     const value = await store.get(key);

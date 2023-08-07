@@ -1,7 +1,6 @@
 import { NavLink, Outlet, ScrollRestoration } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { AppHeader } from '@shared/appHeader';
 import { LumeBar } from '@shared/lumeBar';
 
 export function SettingsLayout() {
@@ -9,7 +8,6 @@ export function SettingsLayout() {
     <div className="flex h-screen w-screen">
       <div className="relative flex shrink-0 flex-row">
         <div className="relative flex w-[232px] flex-col gap-3 border-r border-zinc-900">
-          <AppHeader />
           <div className="scrollbar-hide flex flex-col gap-5 overflow-y-auto pb-20">
             <div className="flex flex-col gap-0.5 px-1.5">
               <div className="px-2.5">

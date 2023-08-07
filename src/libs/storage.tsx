@@ -24,6 +24,12 @@ export async function getActiveAccount() {
     'SELECT * FROM accounts WHERE is_active = 1;'
   );
   if (result.length > 0) {
+    result[0]['follows'] = result[0].follows
+      ? JSON.parse(result[0].follows as unknown as string)
+      : [];
+    result[0]['network'] = result[0].network
+      ? JSON.parse(result[0].network as unknown as string)
+      : [];
     return result[0];
   } else {
     return null;
@@ -63,15 +69,12 @@ export async function createAccount(
 }
 
 // update account
-export async function updateAccount(
-  column: string,
-  value: string | string[],
-  pubkey: string
-) {
+export async function updateAccount(column: string, value: string | string[]) {
   const db = await connect();
-  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE pubkey = ?;`, [
+  const account = await getActiveAccount();
+  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE id = ?;`, [
     value,
-    pubkey,
+    account.id,
   ]);
 }
 
@@ -305,8 +308,6 @@ export async function getChannelUsers(channel_id: string) {
 export async function getChats() {
   const db = await connect();
   const account = await getActiveAccount();
-  const follows =
-    typeof account.follows === 'string' ? JSON.parse(account.follows) : account.follows;
 
   const chats: { follows: Array<Chats> | null; unknowns: Array<Chats> | null } = {
     follows: [],
@@ -321,7 +322,7 @@ export async function getChats() {
   result = result.sort((a, b) => a.new_messages - b.new_messages);
 
   chats.follows = result.filter((el) => {
-    return follows.some((i) => {
+    return account.follows.some((i) => {
       return i === el.sender_pubkey;
     });
   });
@@ -426,10 +427,19 @@ export async function createBlock(
 ) {
   const db = await connect();
   const activeAccount = await getActiveAccount();
-  return await db.execute(
+  const insert = await db.execute(
     'INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);',
     [activeAccount.id, kind, title, content]
   );
+
+  if (insert) {
+    const record: Block = await db.select(
+      'SELECT * FROM blocks ORDER BY id DESC LIMIT 1;'
+    );
+    return record[0];
+  } else {
+    return null;
+  }
 }
 
 // remove block

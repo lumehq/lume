@@ -93,7 +93,7 @@ export function ChannelCreateModal() {
         // close modal
         setIsOpen(false);
         // redirect to channel page
-        navigate(`/app/channel/${event.id}`);
+        navigate(`/channel/${event.id}`);
       }, 1000);
     } catch (e) {
       console.log('error: ', e);
@@ -112,10 +112,10 @@ export function ChannelCreateModal() {
         className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5"
       >
         <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-t border-zinc-800/50 bg-zinc-900">
-          <PlusIcon width={12} height={12} className="text-zinc-500" />
+          <PlusIcon width={12} height={12} className="text-white/50" />
         </div>
         <div>
-          <h5 className="font-medium text-zinc-400">Create channel</h5>
+          <h5 className="font-medium text-white/50">Create channel</h5>
         </div>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
@@ -147,7 +147,7 @@ export function ChannelCreateModal() {
                     <div className="flex items-center justify-between">
                       <Dialog.Title
                         as="h3"
-                        className="text-lg font-semibold leading-none text-zinc-100"
+                        className="text-lg font-semibold leading-none text-white"
                       >
                         Create channel
                       </Dialog.Title>
@@ -159,7 +159,7 @@ export function ChannelCreateModal() {
                         <CancelIcon width={20} height={20} className="text-zinc-300" />
                       </button>
                     </div>
-                    <Dialog.Description className="text-sm leading-tight text-zinc-400">
+                    <Dialog.Description className="text-sm leading-tight text-white/50">
                       Channels are freedom square, everyone can speech freely, no one can
                       stop you or deceive what to speech
                     </Dialog.Description>
@@ -174,10 +174,10 @@ export function ChannelCreateModal() {
                       type={'hidden'}
                       {...register('picture')}
                       value={image}
-                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-zinc-400 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-black/10 dark:placeholder:text-zinc-500"
+                      className="shadow-input relative h-10 w-full rounded-lg border border-black/5 px-3 py-2 shadow-black/5 !outline-none placeholder:text-white/50 dark:bg-zinc-800 dark:text-white dark:shadow-black/10 dark:placeholder:text-white/50"
                     />
                     <div className="flex flex-col gap-1">
-                      <span className="text-sm font-medium uppercase tracking-wider text-zinc-400">
+                      <span className="text-sm font-medium uppercase tracking-wider text-white/50">
                         Picture
                       </span>
                       <div className="relative inline-flex h-36 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950">
@@ -195,7 +195,7 @@ export function ChannelCreateModal() {
                     <div className="flex flex-col gap-1">
                       <label
                         htmlFor="name"
-                        className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                        className="text-sm font-semibold uppercase tracking-wider text-white/50"
                       >
                         Channel name *
                       </label>
@@ -206,28 +206,28 @@ export function ChannelCreateModal() {
                           minLength: 4,
                         })}
                         spellCheck={false}
-                        className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                        className="relative h-10 w-full rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
                       <label
                         htmlFor="about"
-                        className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+                        className="text-sm font-semibold uppercase tracking-wider text-white/50"
                       >
                         Description
                       </label>
                       <textarea
                         {...register('about')}
                         spellCheck={false}
-                        className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-zinc-100 !outline-none placeholder:text-zinc-500"
+                        className="relative h-20 w-full resize-none rounded-lg bg-zinc-800 px-3 py-2 text-white !outline-none placeholder:text-white/50"
                       />
                     </div>
                     <div className="flex h-20 items-center justify-between gap-1 rounded-lg bg-zinc-800 px-4 py-2">
                       <div className="flex flex-col gap-1">
-                        <span className="font-semibold leading-none text-zinc-100">
+                        <span className="font-semibold leading-none text-white">
                           Encrypted
                         </span>
-                        <p className="w-4/5 text-sm leading-none text-zinc-400">
+                        <p className="w-4/5 text-sm leading-none text-white/50">
                           All messages are encrypted and only invited members can view and
                           send message
                         </p>
@@ -248,10 +248,10 @@ export function ChannelCreateModal() {
                       <button
                         type="submit"
                         disabled={!isDirty || !isValid}
-                        className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
                       >
                         {loading ? (
-                          <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                          <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
                         ) : (
                           'Create channel →'
                         )}

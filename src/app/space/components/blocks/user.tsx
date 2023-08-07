@@ -35,31 +35,28 @@ export function UserBlock({ params }: { params: Block }) {
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
 
   return (
-    <div className="h-full w-[400px] shrink-0 border-r border-zinc-900">
+    <div className="relative w-[400px] shrink-0 bg-white/10">
       <TitleBar id={params.id} title={params.title} />
-      <div
-        ref={parentRef}
-        className="scrollbar-hide flex h-full flex-1 flex-col gap-1.5 overflow-y-auto pt-1.5"
-      >
+      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mt-2 px-3 text-lg font-semibold text-zinc-300">
+          <h3 className="mt-4 px-3 text-lg font-semibold text-white">
             Latest activities
           </h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
-                <div className="shadow-input rounded-md bg-zinc-900 px-3 py-3 shadow-black/20">
+                <div className="rounded-md bg-white/10 px-3 py-3">
                   <NoteSkeleton />
                 </div>
               </div>
             ) : itemsVirtualizer.length === 0 ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+                <div className="rounded-xl bg-white/10 px-3 py-6">
                   <div className="flex flex-col items-center gap-4">
-                    <p className="text-center text-sm text-zinc-300">
+                    <p className="text-center text-sm text-white">
                       No new posts about this hashtag in 48 hours ago
                     </p>
                   </div>

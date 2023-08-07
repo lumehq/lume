@@ -19,7 +19,7 @@ export function ChannelMessageItem({ data }: { data: LumeEvent }) {
       <div className="flex flex-col">
         <User pubkey={data.pubkey} time={data.created_at} isChat={true} />
         <div className="-mt-[20px] pl-[49px]">
-          <p className="select-text whitespace-pre-line break-words text-base text-zinc-100">
+          <p className="select-text whitespace-pre-line break-words text-base text-white">
             {content.parsed}
           </p>
           {Array.isArray(content.images) && content.images.length ? (

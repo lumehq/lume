@@ -32,10 +32,10 @@ export function ChannelMetadata({ id }: { id: string }) {
         <div className="inline-flex items-center gap-1">
           <h5 className="text-lg font-semibold leading-none">{metadata?.name}</h5>
           <button type="button" onClick={() => copyNoteID()}>
-            <CopyIcon width={14} height={14} className="text-zinc-400" />
+            <CopyIcon width={14} height={14} className="text-white/50" />
           </button>
         </div>
-        <p className="leading-tight text-zinc-400">
+        <p className="leading-tight text-white/50">
           {metadata?.about || (noteID && `${noteID.substring(0, 24)}...`)}
         </p>
       </div>

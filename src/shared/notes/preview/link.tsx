@@ -7,30 +7,31 @@ export function LinkPreview({ urls }: { urls: string[] }) {
   const domain = new URL(urls[0]);
 
   return (
-    <div className="mb-2 mt-3 max-w-[420px] overflow-hidden rounded-lg bg-zinc-800">
+    <div className="mb-2 mt-3 max-w-[420px] overflow-hidden rounded-lg bg-white/10">
       {status === 'loading' ? (
         <div className="flex flex-col">
-          <div className="h-44 w-full animate-pulse bg-zinc-700" />
+          <div className="h-44 w-full animate-pulse bg-white/10" />
           <div className="flex flex-col gap-2 px-3 py-3">
-            <div className="h-3 w-2/3 animate-pulse rounded bg-zinc-700" />
-            <div className="h-3 w-3/4 animate-pulse rounded bg-zinc-700" />
-            <span className="mt-2.5 text-sm leading-none text-zinc-500">
+            <div className="h-3 w-2/3 animate-pulse rounded bg-white/10" />
+            <div className="h-3 w-3/4 animate-pulse rounded bg-white/10" />
+            <span className="mt-2.5 text-sm leading-none text-white/50">
               {domain.hostname}
             </span>
           </div>
         </div>
       ) : (
         <a
-          className="flex flex-col rounded-lg border-t border-zinc-700/50"
+          className="flex flex-col rounded-lg"
           href={urls[0]}
           target="_blank"
           rel="noreferrer"
         >
           {error ? (
-            <div className="px-3 py-3">
-              <p className="line-clamp-3 break-all text-sm text-zinc-400">
+            <div className="flex flex-col gap-2 px-3 py-3">
+              <p className="text-sm text-white/50">
                 Can&apos;t fetch open graph, click to open webpage
               </p>
+              <span className="text-sm leading-none text-white">{domain.hostname}</span>
             </div>
           ) : (
             <>
@@ -43,15 +44,15 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                 />
               )}
               <div className="flex flex-col gap-2 px-3 py-3">
-                <h5 className="line-clamp-1 font-medium leading-none text-zinc-200">
+                <h5 className="line-clamp-1 font-medium leading-none text-white">
                   {data.title}
                 </h5>
                 {data.description && (
-                  <p className="line-clamp-3 break-all text-sm text-zinc-400">
+                  <p className="line-clamp-3 break-all text-sm text-white/50">
                     {data.description}
                   </p>
                 )}
-                <span className="mt-2.5 text-sm leading-none text-zinc-500">
+                <span className="mt-2.5 text-sm leading-none text-white/50">
                   {domain.hostname}
                 </span>
               </div>
