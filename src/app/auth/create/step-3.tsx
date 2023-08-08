@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +15,9 @@ import { usePublish } from '@utils/hooks/usePublish';
 
 export function CreateStep3Screen() {
   const { publish } = usePublish();
+
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState(DEFAULT_AVATAR);
@@ -43,8 +46,10 @@ export function CreateStep3Screen() {
         tags: [],
       });
 
+      queryClient.invalidateQueries(['currentAccount']);
+
       if (event) {
-        setTimeout(() => navigate('/auth/create/step-4', { replace: true }), 1000);
+        setTimeout(() => navigate('/auth/onboarding', { replace: true }), 1000);
       }
     } catch (e) {
       console.log('error: ', e);

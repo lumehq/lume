@@ -9,7 +9,7 @@ interface NDKContext {
   ndk: NDK;
   relayUrls: string[];
   fetcher: NostrFetcher;
-  loadNdk: (_: string[]) => void;
+  loadNdk: () => void;
 }
 
 const NDKContext = createContext<NDKContext>({

@@ -1,30 +1,38 @@
 // source: https://github.com/nostr-dev-kit/ndk-react/
-import NDK, { NDKCacheAdapter } from '@nostr-dev-kit/ndk';
+import NDK from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
+import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
-import { getSetting } from '@libs/storage';
+import { getExplicitRelayUrls } from '@libs/storage';
 
-const setting = await getSetting('relays');
-const relays = normalizeRelayUrlSet(JSON.parse(setting));
+import { FULL_RELAYS } from '@stores/constants';
 
 export const NDKInstance = () => {
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
-  const [relayUrls, setRelayUrls] = useState<string[]>(relays);
+  const [relayUrls, setRelayUrls] = useState<string[]>([]);
   const [fetcher, setFetcher] = useState<NostrFetcher>(undefined);
+  const [cacheAdapter] = useState(new TauriAdapter());
 
   useEffect(() => {
-    const cacheAdapter = new TauriAdapter();
-    loadNdk(relays, cacheAdapter);
+    loadNdk();
 
     return () => {
       cacheAdapter.save();
     };
-  }, [relays]);
+  }, []);
 
-  async function loadNdk(explicitRelayUrls: string[], cacheAdapter: NDKCacheAdapter) {
+  async function loadNdk() {
+    let explicitRelayUrls: string[];
+    const explicitRelayUrlsFromDB = await getExplicitRelayUrls();
+
+    if (explicitRelayUrlsFromDB) {
+      explicitRelayUrls = explicitRelayUrlsFromDB;
+    } else {
+      explicitRelayUrls = FULL_RELAYS;
+    }
+
     const ndkInstance = new NDK({ explicitRelayUrls, cacheAdapter });
 
     try {

@@ -48,4 +48,5 @@ export * from './thread';
 export * from './strangers';
 export * from './download';
 export * from './horizontalDots';
+export * from './arrowRightCircle';
 // @endindex

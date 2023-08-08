@@ -55,3 +55,10 @@ export interface Settings {
   key: string;
   value: string;
 }
+
+export interface Relays {
+  id?: string;
+  account_id?: number;
+  relay: string;
+  purpose?: string;
+}

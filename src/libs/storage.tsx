@@ -3,7 +3,15 @@ import destr from 'destr';
 
 import { parser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
-import { Account, Block, Chats, LumeEvent, Profile, Settings } from '@utils/types';
+import {
+  Account,
+  Block,
+  Chats,
+  LumeEvent,
+  Profile,
+  Relays,
+  Settings,
+} from '@utils/types';
 
 let db: null | Database = null;
 
@@ -506,4 +514,40 @@ export async function removePrivkey() {
   return await db.execute(
     `UPDATE accounts SET privkey = "privkey is stored in secure storage" WHERE id = "${activeAccount.id}";`
   );
+}
+
+// get relays
+export async function getRelays() {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  return (await db.select(
+    `SELECT * FROM relays WHERE account_id = "${activeAccount.id}";`
+  )) as Relays[];
+}
+
+// get relays
+export async function getExplicitRelayUrls() {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  const result: Relays[] = await db.select(
+    `SELECT * FROM relays WHERE account_id = "${activeAccount.id}";`
+  );
+  if (result.length > 0) return result.map((el) => el.relay);
+  return null;
+}
+
+// create relay
+export async function createRelay(relay: string, purpose?: string) {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  return await db.execute(
+    'INSERT OR IGNORE INTO blocks (account_id, relay, purpose) VALUES (?, ?, ?);',
+    [activeAccount.id, relay, purpose || '']
+  );
+}
+
+// remove relay
+export async function removeRelay(relay: string) {
+  const db = await connect();
+  return await db.execute(`DELETE FROM relays WHERE relay = "${relay}";`);
 }

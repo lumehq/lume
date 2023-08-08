@@ -6,8 +6,7 @@ import { User } from '@app/auth/components/user';
 
 import { updateLastLogin } from '@libs/storage';
 
-import { LoaderIcon } from '@shared/icons';
-import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
+import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
@@ -33,7 +32,7 @@ export function ImportStep3Screen() {
 
       queryClient.invalidateQueries(['currentAccount']);
 
-      navigate('/', { replace: true });
+      navigate('/auth/onboarding/step-2', { replace: true });
     } catch (e) {
       console.log('error: ', e);
       setLoading(false);

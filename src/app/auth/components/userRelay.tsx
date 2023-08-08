@@ -5,8 +5,8 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
-export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }) {
-  const { status, user } = useProfile(pubkey, fallback);
+export function UserRelay({ pubkey }: { pubkey: string }) {
+  const { status, user } = useProfile(pubkey);
 
   if (status === 'loading') {
     return (
@@ -21,21 +21,17 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative h-10 w-10 shrink rounded-md">
+    <div className="inline-flex items-center gap-2 text-white/50">
+      <span className="text-sm">Use by</span>
+      <div className="inline-flex items-center gap-1">
         <Image
           src={user?.picture || user?.image}
           fallback={DEFAULT_AVATAR}
           alt={pubkey}
-          className="h-10 w-10 rounded-md object-cover"
+          className="h-5 w-5 shrink-0 rounded object-cover"
         />
-      </div>
-      <div className="flex w-full flex-1 flex-col items-start text-start">
-        <span className="truncate font-medium leading-tight text-white">
-          {user?.name || user?.display_name || user?.nip05}
-        </span>
-        <span className="max-w-[15rem] truncate text-base leading-tight text-white/50">
-          {user?.nip05?.toLowerCase() || displayNpub(pubkey, 16)}
+        <span className="truncate text-sm font-medium leading-none text-white">
+          {user?.name || user?.display_name || user?.nip05 || displayNpub(pubkey, 16)}
         </span>
       </div>
     </div>

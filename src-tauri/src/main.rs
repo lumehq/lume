@@ -105,6 +105,12 @@ fn main() {
               sql: include_str!("../migrations/20230804083544_add_network_to_account.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230808085847,
+              description: "add relays",
+              sql: include_str!("../migrations/20230808085847_add_relays_table.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

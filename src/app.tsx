@@ -10,6 +10,9 @@ import { ImportStep2Screen } from '@app/auth/import/step-2';
 import { ImportStep3Screen } from '@app/auth/import/step-3';
 import { MigrateScreen } from '@app/auth/migrate';
 import { OnboardingScreen } from '@app/auth/onboarding';
+import { OnboardStep1Screen } from '@app/auth/onboarding/step-1';
+import { OnboardStep2Screen } from '@app/auth/onboarding/step-2';
+import { OnboardStep3Screen } from '@app/auth/onboarding/step-3';
 import { ResetScreen } from '@app/auth/reset';
 import { UnlockScreen } from '@app/auth/unlock';
 import { WelcomeScreen } from '@app/auth/welcome';
@@ -77,7 +80,6 @@ const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: 'welcome', element: <WelcomeScreen /> },
-      { path: 'onboarding', element: <OnboardingScreen /> },
       {
         path: 'import',
         element: <AuthImportScreen />,
@@ -94,6 +96,15 @@ const router = createBrowserRouter([
           { path: '', element: <CreateStep1Screen /> },
           { path: 'step-2', element: <CreateStep2Screen /> },
           { path: 'step-3', element: <CreateStep3Screen /> },
+        ],
+      },
+      {
+        path: 'onboarding',
+        element: <OnboardingScreen />,
+        children: [
+          { path: '', element: <OnboardStep1Screen /> },
+          { path: 'step-2', element: <OnboardStep2Screen /> },
+          { path: 'step-3', element: <OnboardStep3Screen /> },
         ],
       },
       { path: 'unlock', element: <UnlockScreen /> },
