@@ -60,7 +60,7 @@ export function Composer() {
   });
 
   const uploadImage = async (file?: string) => {
-    const image = await upload(file);
+    const image = await upload(file, true);
     if (image.url) {
       editor.commands.setImage({ src: image.url });
       editor.commands.createParagraphNear();

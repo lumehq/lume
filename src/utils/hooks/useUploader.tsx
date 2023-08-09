@@ -1,28 +1,17 @@
+import { magnetDecode } from '@ctrl/magnet-link';
 import { open } from '@tauri-apps/plugin-dialog';
-import { Body, fetch } from '@tauri-apps/plugin-http';
+import { VoidApi } from '@void-cat/api';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
-
-interface UploadResponse {
-  fileID?: string;
-  fileName?: string;
-  imageUrl?: string;
-  lightningDestination?: string;
-  lightningPaymentLink?: string;
-  message?: string;
-  route?: string;
-  status: number;
-  success: boolean;
-  url?: string;
-  data?: {
-    url?: string;
-  };
-}
+import { usePublish } from '@utils/hooks/usePublish';
 
 export function useImageUploader() {
-  const upload = async (file: null | string, nip94?: boolean) => {
-    let filepath = file;
+  const { publish } = usePublish();
 
+  const upload = async (file: null | string, nip94?: boolean) => {
+    const voidcat = new VoidApi('https://void.cat');
+
+    let filepath = file;
     if (!file) {
       const selected = await open({
         multiple: false,
@@ -38,39 +27,46 @@ export function useImageUploader() {
       } else if (selected === null) {
         // user cancelled the selection
       } else {
-        filepath = selected;
+        filepath = selected.path;
       }
     }
 
     const filename = filepath.split('/').pop();
-    const filetype = 'image/' + filename.split('.').pop();
+    const filetype = filename.split('.').pop();
 
     const blob = await createBlobFromFile(filepath);
-    const res = await fetch('https://nostrimg.com/api/upload', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      body: Body.form({
-        keys: filename,
-        image: {
-          file: blob,
-          mime: filetype,
-          fileName: filename,
-        },
-      }),
-    });
+    const uploader = voidcat.getUploader(blob);
+
+    // upload file
+    const res = await uploader.upload();
 
     if (res.ok) {
-      const data = res.data as UploadResponse;
-      if (typeof data?.imageUrl === 'string' && data.success) {
-        if (nip94) {
-          console.log('todo');
+      const url =
+        res.file?.metadata?.url ?? `https://void.cat/d/${res.file?.id}.${filetype}`;
+      console.log(url);
+
+      if (nip94) {
+        const tags = [
+          ['url', url],
+          ['x', res.file?.metadata?.digest ?? ''],
+          ['m', res.file?.metadata?.mimeType ?? 'application/octet-stream'],
+          ['size', res.file?.metadata?.size.toString() ?? '0'],
+        ];
+
+        if (res.file?.metadata?.magnetLink) {
+          tags.push(['magnet', res.file.metadata.magnetLink]);
+          const parsedMagnet = magnetDecode(res.file.metadata.magnetLink);
+          if (parsedMagnet?.infoHash) {
+            tags.push(['i', parsedMagnet?.infoHash]);
+          }
         }
-        return {
-          url: new URL(data.imageUrl).toString(),
-        };
+
+        await publish({ content: '', kind: 1063, tags: tags });
       }
+
+      return {
+        url: url,
+      };
     }
 
     return {

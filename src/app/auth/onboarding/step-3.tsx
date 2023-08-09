@@ -109,6 +109,13 @@ export function OnboardStep3Screen() {
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
             </div>
+          ) : relaysAsArray.length === 0 ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <p className="text-center text-white/50">
+                Can&apos;t found any relays, you can skip this step and use default relays
+                instead
+              </p>
+            </div>
           ) : (
             relaysAsArray.map((item, index) => (
               <button
@@ -118,7 +125,7 @@ export function OnboardStep3Screen() {
                 className="inline-flex transform items-start justify-between bg-white/10 px-4 py-2 hover:bg-white/20"
               >
                 <div className="flex flex-col items-start gap-1">
-                  {item.replace(/\/+$/, '')}
+                  <p className="max-w-[15rem] truncate">{item.replace(/\/+$/, '')}</p>
                   <UserRelay pubkey={data.get(item)} />
                 </div>
                 {relays.has(item) && (

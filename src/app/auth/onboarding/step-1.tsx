@@ -9,6 +9,7 @@ import { updateAccount } from '@libs/storage';
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { useAccount } from '@utils/hooks/useAccount';
+import { useNostr } from '@utils/hooks/useNostr';
 import { usePublish } from '@utils/hooks/usePublish';
 import { arrayToNIP02 } from '@utils/transform';
 
@@ -17,6 +18,7 @@ export function OnboardStep1Screen() {
   const navigate = useNavigate();
 
   const { publish } = usePublish();
+  const { fetchNotes } = useNostr();
   const { account } = useAccount();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -45,8 +47,10 @@ export function OnboardStep1Screen() {
       const event = await publish({ content: '', kind: 3, tags: tags });
       await updateAccount('follows', follows);
 
+      const notes = await fetchNotes();
+
       // redirect to next step
-      if (event) {
+      if (event && notes) {
         setTimeout(() => {
           queryClient.invalidateQueries(['currentAccount']);
           navigate('/auth/onboarding/step-2', { replace: true });

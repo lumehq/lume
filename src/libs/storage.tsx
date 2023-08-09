@@ -529,10 +529,15 @@ export async function getRelays() {
 export async function getExplicitRelayUrls() {
   const db = await connect();
   const activeAccount = await getActiveAccount();
+
+  if (!activeAccount) return null;
+
   const result: Relays[] = await db.select(
     `SELECT * FROM relays WHERE account_id = "${activeAccount.id}";`
   );
+
   if (result.length > 0) return result.map((el) => el.relay);
+
   return null;
 }
 
@@ -541,7 +546,7 @@ export async function createRelay(relay: string, purpose?: string) {
   const db = await connect();
   const activeAccount = await getActiveAccount();
   return await db.execute(
-    'INSERT OR IGNORE INTO blocks (account_id, relay, purpose) VALUES (?, ?, ?);',
+    'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES (?, ?, ?);',
     [activeAccount.id, relay, purpose || '']
   );
 }

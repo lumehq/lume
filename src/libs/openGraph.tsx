@@ -1,4 +1,4 @@
-import { FetchOptions, ResponseType, fetch } from '@tauri-apps/plugin-http';
+import { fetch } from '@tauri-apps/plugin-http';
 import * as cheerio from 'cheerio';
 
 import { OPENGRAPH } from '@stores/constants';
@@ -332,10 +332,9 @@ function parseResponse(response: IPreFetchedResource, options?: ILinkPreviewOpti
 
 export async function getLinkPreview(text: string) {
   const fetchUrl = text;
-  const options: FetchOptions = {
+  const options = {
     method: 'GET',
     timeout: 5,
-    responseType: ResponseType.Text,
   };
 
   let response = await fetch(fetchUrl, options);
