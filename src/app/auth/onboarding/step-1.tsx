@@ -47,7 +47,8 @@ export function OnboardStep1Screen() {
       const event = await publish({ content: '', kind: 3, tags: tags });
       await updateAccount('follows', follows);
 
-      const notes = await fetchNotes();
+      // prefetch notes with current follows
+      const notes = await fetchNotes(follows);
 
       // redirect to next step
       if (event && notes) {
@@ -103,7 +104,7 @@ export function OnboardStep1Screen() {
             {loading ? (
               <>
                 <span className="w-5" />
-                <span>Creating...</span>
+                <span>It might take a bit, please patient...</span>
                 <LoaderIcon className="h-5 w-5 animate-spin text-white" />
               </>
             ) : (

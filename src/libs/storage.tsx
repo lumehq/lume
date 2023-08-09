@@ -34,10 +34,10 @@ export async function getActiveAccount() {
   if (result.length > 0) {
     result[0]['follows'] = result[0].follows
       ? JSON.parse(result[0].follows as unknown as string)
-      : [];
+      : null;
     result[0]['network'] = result[0].network
       ? JSON.parse(result[0].network as unknown as string)
-      : [];
+      : null;
     return result[0];
   } else {
     return null;

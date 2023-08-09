@@ -20,8 +20,8 @@ export interface Account extends NDKUserProfile {
   id: number;
   npub: string;
   pubkey: string;
-  follows: string[];
-  network: string[];
+  follows: null | string[];
+  network: null | string[];
   is_active: number;
   privkey?: string; // deprecated
 }

@@ -2,7 +2,7 @@
 import NDK from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { NostrFetcher } from 'nostr-fetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
 import { getExplicitRelayUrls } from '@libs/storage';
@@ -10,13 +10,14 @@ import { getExplicitRelayUrls } from '@libs/storage';
 import { FULL_RELAYS } from '@stores/constants';
 
 export const NDKInstance = () => {
+  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
+
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
   const [fetcher, setFetcher] = useState<NostrFetcher>(undefined);
-  const [cacheAdapter] = useState(new TauriAdapter());
 
   useEffect(() => {
-    loadNdk();
+    if (!ndk) loadNdk();
 
     return () => {
       cacheAdapter.save();

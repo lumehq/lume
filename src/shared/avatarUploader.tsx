@@ -9,14 +9,12 @@ export function AvatarUploader({ setPicture }: { setPicture: any }) {
   const [loading, setLoading] = useState(false);
 
   const uploadAvatar = async () => {
+    setLoading(true);
     const image = await upload(null);
     if (image.url) {
-      // update parent state
       setPicture(image.url);
-
-      // disable loader
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (

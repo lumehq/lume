@@ -18,22 +18,25 @@ import { nHoursAgo } from '@utils/date';
 export function useNostr() {
   const { ndk, relayUrls, fetcher } = useNDK();
 
-  async function fetchNetwork() {
+  async function fetchNetwork(prevFollow?: string[]) {
     const account = await getActiveAccount();
-    const follows = new Set<string>();
+    const follows = new Set<string>(prevFollow || []);
     const lruNetwork = new LRUCache<string, string, void>({ max: 300 });
 
     let network: string[];
 
     // fetch user's follows
-    const user = ndk.getUser({ hexpubkey: account.pubkey });
-    const list = await user.follows();
-    list.forEach((item: NDKUser) => {
-      follows.add(nip19.decode(item.npub).data as string);
-    });
+    if (!prevFollow) {
+      const user = ndk.getUser({ hexpubkey: account.pubkey });
+      const list = await user.follows();
+      list.forEach((item: NDKUser) => {
+        follows.add(nip19.decode(item.npub).data as string);
+      });
+    }
 
     // fetch network
     if (!account.network) {
+      console.log('fetching network...', follows.size);
       const events = await fetcher.fetchAllEvents(
         relayUrls,
         { kinds: [3], authors: [...follows] },
@@ -59,9 +62,9 @@ export function useNostr() {
     return [...new Set([...follows, ...network])];
   }
 
-  const fetchNotes = async () => {
+  const fetchNotes = async (prevFollow?: string[]) => {
     try {
-      const network = (await fetchNetwork()) as string[];
+      const network = (await fetchNetwork(prevFollow)) as string[];
 
       const totalNotes = await countTotalNotes();
       const lastLogin = await getLastLogin();

@@ -9,14 +9,12 @@ export function BannerUploader({ setBanner }: { setBanner: any }) {
   const [loading, setLoading] = useState(false);
 
   const uploadBanner = async () => {
+    setLoading(true);
     const image = await upload(null);
     if (image.url) {
-      // update parent state
       setBanner(image);
-
-      // disable loader
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
