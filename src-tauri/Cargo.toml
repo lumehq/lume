@@ -1,12 +1,12 @@
 [package]
 name = "lume"
-version = "1.1.1"
+version = "1.2.0"
 description = "nostr client"
 authors = ["Ren Amamiya"]
 license = ""
 repository = ""
 edition = "2021"
-rust-version = "1.57"
+rust-version = "1.71"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

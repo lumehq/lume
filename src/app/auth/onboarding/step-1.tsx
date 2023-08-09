@@ -65,7 +65,9 @@ export function OnboardStep1Screen() {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-white">Enrich your network</h1>
+        <h1 className="text-xl font-semibold text-white">
+          {loading ? 'Prefetching data...' : 'Enrich your network'}
+        </h1>
         <p className="text-sm text-white/50">Choose account you want to follow</p>
       </div>
       <div className="flex flex-col gap-4">
