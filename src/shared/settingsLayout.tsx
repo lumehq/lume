@@ -6,12 +6,12 @@ import { LumeBar } from '@shared/lumeBar';
 export function SettingsLayout() {
   return (
     <div className="flex h-screen w-screen">
-      <div className="relative flex shrink-0 flex-row">
-        <div className="relative flex w-[232px] flex-col gap-3 border-r border-zinc-900">
+      <div className="relative flex shrink-0 flex-row bg-black/80 pt-12">
+        <div className="relative flex w-[232px] flex-col gap-3">
           <div className="scrollbar-hide flex flex-col gap-5 overflow-y-auto pb-20">
             <div className="flex flex-col gap-0.5 px-1.5">
               <div className="px-2.5">
-                <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-600">
+                <h3 className="text-[11px] font-bold uppercase tracking-widest text-white/50">
                   Settings
                 </h3>
               </div>
@@ -20,8 +20,8 @@ export function SettingsLayout() {
                   to="/settings/general"
                   className={({ isActive }) =>
                     twMerge(
-                      'flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200',
-                      isActive ? 'bg-zinc-900/50' : ''
+                      'flex h-9 items-center gap-2.5 rounded-md px-2.5',
+                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
                     )
                   }
                 >
@@ -31,8 +31,8 @@ export function SettingsLayout() {
                   to="/settings/shortcuts"
                   className={({ isActive }) =>
                     twMerge(
-                      'flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200',
-                      isActive ? 'bg-zinc-900/50' : ''
+                      'flex h-9 items-center gap-2.5 rounded-md px-2.5',
+                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
                     )
                   }
                 >
@@ -42,8 +42,8 @@ export function SettingsLayout() {
                   to="/settings/account"
                   className={({ isActive }) =>
                     twMerge(
-                      'flex h-9 items-center gap-2.5 rounded-md px-2.5 text-zinc-200',
-                      isActive ? 'bg-zinc-900/50' : ''
+                      'flex h-9 items-center gap-2.5 rounded-md px-2.5',
+                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
                     )
                   }
                 >
@@ -57,9 +57,13 @@ export function SettingsLayout() {
           <LumeBar />
         </div>
       </div>
-      <div className="h-full w-full">
+      <div className="h-full w-full flex-1 bg-black/90">
         <Outlet />
-        <ScrollRestoration />
+        <ScrollRestoration
+          getKey={(location) => {
+            return location.pathname;
+          }}
+        />
       </div>
     </div>
   );
