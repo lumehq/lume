@@ -9,7 +9,9 @@ export function WelcomeScreen() {
     async function setWindow() {
       await appWindow.setSize(new LogicalSize(400, 500));
       await appWindow.setResizable(false);
+      await appWindow.center();
     }
+
     setWindow();
 
     return () => {

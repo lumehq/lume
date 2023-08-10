@@ -40,6 +40,12 @@ const appLoader = async () => {
   const account = await getActiveAccount();
   const stronghold = sessionStorage.getItem('stronghold');
   const privkey = JSON.parse(stronghold).state.privkey || null;
+  const onboarding = localStorage.getItem('onboarding');
+  const step = JSON.parse(onboarding).state.step || null;
+
+  if (step) {
+    return redirect(step);
+  }
 
   if (!account) {
     return redirect('/auth/welcome');

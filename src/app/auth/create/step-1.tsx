@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createAccount } from '@libs/storage';
@@ -17,7 +17,9 @@ export function CreateStep1Screen() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
+  const setTempPrivkey = useOnboarding((state) => state.setTempPrivkey);
   const setPubkey = useOnboarding((state) => state.setPubkey);
+  const setStep = useOnboarding((state) => state.setStep);
 
   const [privkeyInput, setPrivkeyInput] = useState('password');
   const [loading, setLoading] = useState(false);
@@ -61,8 +63,9 @@ export function CreateStep1Screen() {
   const submit = () => {
     setLoading(true);
 
-    setPubkey(pubkey);
     setPrivkey(privkey);
+    setTempPrivkey(privkey); // only use if user close app and reopen it
+    setPubkey(pubkey);
 
     account.mutate({
       npub,
@@ -74,6 +77,11 @@ export function CreateStep1Screen() {
     // redirect to next step
     setTimeout(() => navigate('/auth/create/step-2', { replace: true }), 1200);
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/create/step-1');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

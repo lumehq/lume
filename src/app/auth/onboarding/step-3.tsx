@@ -10,17 +10,19 @@ import { createRelay } from '@libs/storage';
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { FULL_RELAYS } from '@stores/constants';
+import { useOnboarding } from '@stores/onboarding';
 
 import { useAccount } from '@utils/hooks/useAccount';
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function OnboardStep3Screen() {
   const navigate = useNavigate();
 
+  const [setStep, clearStep] = useOnboarding((state) => [state.setStep, state.clearStep]);
   const [loading, setLoading] = useState(false);
   const [relays, setRelays] = useState(new Set<string>());
 
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const { account } = useAccount();
   const { fetcher, relayUrls } = useNDK();
   const { status, data } = useQuery(
@@ -47,6 +49,9 @@ export function OnboardStep3Screen() {
       enabled: account ? true : false,
     }
   );
+
+  // save current step, if user close app and reopen it
+  setStep('/auth/onboarding/step-3');
 
   const toggleRelay = (relay: string) => {
     if (relays.has(relay)) {
@@ -76,6 +81,7 @@ export function OnboardStep3Screen() {
       }
 
       setTimeout(() => {
+        clearStep();
         navigate('/', { replace: true });
       }, 1000);
     } catch (e) {

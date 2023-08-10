@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
@@ -8,12 +8,15 @@ import { updateLastLogin } from '@libs/storage';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 
+import { useOnboarding } from '@stores/onboarding';
+
 import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ImportStep3Screen() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const setStep = useOnboarding((state) => state.setStep);
 
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +41,11 @@ export function ImportStep3Screen() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/import/step-3');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

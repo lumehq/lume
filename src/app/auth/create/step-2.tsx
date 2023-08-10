@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,12 +30,12 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 export function CreateStep2Screen() {
   const navigate = useNavigate();
+  const setStep = useOnboarding((state) => state.setStep);
+  const pubkey = useOnboarding((state) => state.pubkey);
+  const privkey = useStronghold((state) => state.privkey);
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
-
-  const privkey = useStronghold((state) => state.privkey);
-  const pubkey = useOnboarding((state) => state.pubkey);
 
   const { save } = useSecureStorage();
 
@@ -71,6 +71,11 @@ export function CreateStep2Screen() {
       });
     }
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/create/step-2');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

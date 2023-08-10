@@ -3,10 +3,10 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { VoidApi } from '@void-cat/api';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function useImageUploader() {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
 
   const upload = async (file: null | string, nip94?: boolean) => {
     const voidcat = new VoidApi('https://void.cat');

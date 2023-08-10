@@ -111,7 +111,7 @@
       {
         "width": 400,
         "height": 500,
-        "decorations": true,
+        "decorations": false,
         "hiddenTitle": true,
         "center": true,
         "resizable": false,

@@ -15,12 +15,12 @@ import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 import { useImageUploader } from '@utils/hooks/useUploader';
 import { sendNativeNotification } from '@utils/notification';
 
 export function Composer() {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
 
   const [status, setStatus] = useState<null | 'loading' | 'done'>(null);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);

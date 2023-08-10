@@ -13,7 +13,7 @@ import { Image } from '@shared/image';
 import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useAccount } from '@utils/hooks/useAccount';
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function EditProfileModal() {
   const queryClient = useQueryClient();
@@ -24,7 +24,7 @@ export function EditProfileModal() {
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: false, text: '' });
 
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const { account } = useAccount();
   const {
     register,
@@ -65,7 +65,6 @@ export function EditProfileModal() {
 
       const res: any = await fetch(verifyURL, {
         method: 'GET',
-        timeout: 30,
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },

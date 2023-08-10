@@ -9,18 +9,16 @@ interface NDKContext {
   ndk: NDK;
   relayUrls: string[];
   fetcher: NostrFetcher;
-  loadNdk: () => void;
 }
 
 const NDKContext = createContext<NDKContext>({
   ndk: new NDK({}),
   relayUrls: [],
   fetcher: undefined,
-  loadNdk: undefined,
 });
 
 const NDKProvider = ({ children }: PropsWithChildren<object>) => {
-  const { ndk, relayUrls, fetcher, loadNdk } = NDKInstance();
+  const { ndk, relayUrls, fetcher } = NDKInstance();
 
   if (ndk)
     return (
@@ -29,7 +27,6 @@ const NDKProvider = ({ children }: PropsWithChildren<object>) => {
           ndk,
           relayUrls,
           fetcher,
-          loadNdk,
         }}
       >
         {children}

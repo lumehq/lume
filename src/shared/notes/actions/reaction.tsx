@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { ReactionIcon } from '@shared/icons';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 const REACTIONS = [
   {
@@ -32,7 +32,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
 
-  const { publish } = usePublish();
+  const { publish } = useNostr();
 
   const getReactionImage = (content: string) => {
     const reaction: { img: string } = REACTIONS.find((el) => el.content === content);

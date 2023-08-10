@@ -2,16 +2,14 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 
 import { RepostIcon } from '@shared/icons';
 
-import { FULL_RELAYS } from '@stores/constants';
-
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
 
   const submit = async () => {
     const tags = [
-      ['e', id, FULL_RELAYS[0], 'root'],
+      ['e', id, 'wss://relayable.org', 'root'],
       ['p', pubkey],
     ];
     await publish({ content: '', kind: 6, tags: tags });

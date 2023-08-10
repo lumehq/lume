@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { createBlock } from '@libs/storage';
@@ -6,6 +6,7 @@ import { createBlock } from '@libs/storage';
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { BLOCK_KINDS } from '@stores/constants';
+import { useOnboarding } from '@stores/onboarding';
 
 const data = [
   { hashtag: '#bitcoin' },
@@ -27,6 +28,7 @@ const data = [
 
 export function OnboardStep2Screen() {
   const navigate = useNavigate();
+  const setStep = useOnboarding((state) => state.setStep);
 
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(new Set<string>());
@@ -56,6 +58,11 @@ export function OnboardStep2Screen() {
       console.log('error');
     }
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/onboarding/step-2');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

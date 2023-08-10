@@ -5,12 +5,12 @@ import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
 
+import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
-import { usePublish } from '@utils/hooks/usePublish';
 import { displayNpub } from '@utils/shortenKey';
 
 export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const { status, user } = useProfile(pubkey);
 
   const [value, setValue] = useState('');

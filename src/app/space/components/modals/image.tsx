@@ -12,14 +12,14 @@ import { Image } from '@shared/image';
 import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 import { useImageUploader } from '@utils/hooks/useUploader';
 
 export function ImageModal() {
   const queryClient = useQueryClient();
   const upload = useImageUploader();
 
-  const { publish } = usePublish();
+  const { publish } = useNostr();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

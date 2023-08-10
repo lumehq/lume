@@ -8,10 +8,10 @@ import { Button } from '@shared/button';
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
 import { useEvent } from '@utils/hooks/useEvent';
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function NoteZap({ id }: { id: string }) {
-  const { createZap } = usePublish();
+  const { createZap } = useNostr();
   const { data: event } = useEvent(id);
 
   const [amount, setAmount] = useState<null | number>(null);
@@ -23,6 +23,7 @@ export function NoteZap({ id }: { id: string }) {
   };
 
   const createZapRequest = async () => {
+    // @ts-expect-error, todo: fix this
     const res = await createZap(event as unknown as NostrEvent, amount);
     if (res) setInvoice(res);
   };

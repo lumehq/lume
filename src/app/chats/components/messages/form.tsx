@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { EnterIcon } from '@shared/icons';
 import { MediaUploader } from '@shared/mediaUploader';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatMessageForm({
   receiverPubkey,
@@ -14,7 +14,7 @@ export function ChatMessageForm({
   userPubkey: string;
   userPrivkey: string;
 }) {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const [value, setValue] = useState('');
 
   const encryptMessage = useCallback(async () => {

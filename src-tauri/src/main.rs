@@ -7,7 +7,6 @@
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_shadows::set_shadow;
 use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 #[derive(Clone, serde::Serialize)]
@@ -163,9 +162,6 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .setup(|app| {
       let window = app.get_window("main").unwrap();
-
-      // native shadow
-      set_shadow(&window, true).expect("Unsupported platform!");
 
       #[cfg(target_os = "macos")]
       apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)

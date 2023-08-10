@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
@@ -8,17 +8,18 @@ import { updateAccount } from '@libs/storage';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
+import { useOnboarding } from '@stores/onboarding';
+
 import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
-import { usePublish } from '@utils/hooks/usePublish';
 import { arrayToNIP02 } from '@utils/transform';
 
 export function OnboardStep1Screen() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const setStep = useOnboarding((state) => state.setStep);
 
-  const { publish } = usePublish();
-  const { fetchNotes } = useNostr();
+  const { publish, fetchNotes } = useNostr();
   const { account } = useAccount();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -61,6 +62,11 @@ export function OnboardStep1Screen() {
       console.log('error');
     }
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/onboarding');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

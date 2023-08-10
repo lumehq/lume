@@ -36,7 +36,6 @@ tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", bra
 tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-window-shadows = { git = "https://github.com/tauri-apps/window-shadows", branch = "dev" }
 window-vibrancy = { git = "https://github.com/tauri-apps/window-vibrancy", branch = "dev" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
@@ -48,10 +47,6 @@ rand = "0.8.5"
 git = "https://github.com/tauri-apps/plugins-workspace"
 branch = "v2"
 features = ["sqlite"]
-
-[target.'cfg(target_os = "macos")'.dependencies]
-objc = "0.2.7"
-cocoa = "0.24.1"
 
 [features]
 # by default Tauri runs in production mode

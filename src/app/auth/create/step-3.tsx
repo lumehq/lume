@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,19 +10,20 @@ import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
+import { useOnboarding } from '@stores/onboarding';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function CreateStep3Screen() {
-  const { publish } = usePublish();
-
   const navigate = useNavigate();
+  const setStep = useOnboarding((state) => state.setStep);
   const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState(DEFAULT_AVATAR);
   const [banner, setBanner] = useState('');
 
+  const { publish } = useNostr();
   const {
     register,
     handleSubmit,
@@ -56,6 +57,11 @@ export function CreateStep3Screen() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/create/step-3');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

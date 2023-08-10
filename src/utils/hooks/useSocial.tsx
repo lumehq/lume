@@ -5,13 +5,14 @@ import { createNote } from '@libs/storage';
 
 import { nHoursAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
-import { usePublish } from '@utils/hooks/usePublish';
 import { nip02ToArray } from '@utils/transform';
+
+import { useNostr } from './useNostr';
 
 export function useSocial() {
   const queryClient = useQueryClient();
 
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const { fetcher, relayUrls } = useNDK();
   const { account } = useAccount();
   const { status, data: userFollows } = useQuery(

@@ -1,4 +1,4 @@
-// source: https://github.com/nostr-dev-kit/ndk-react/
+// inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { NostrFetcher } from 'nostr-fetch';
@@ -10,21 +10,16 @@ import { getExplicitRelayUrls } from '@libs/storage';
 import { FULL_RELAYS } from '@stores/constants';
 
 export const NDKInstance = () => {
-  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
-
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
-  const [fetcher, setFetcher] = useState<NostrFetcher>(undefined);
 
-  useEffect(() => {
-    if (!ndk) loadNdk();
+  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
+  const fetcher = useMemo<NostrFetcher>(
+    () => NostrFetcher.withCustomPool(ndkAdapter(ndk)),
+    [ndk]
+  );
 
-    return () => {
-      cacheAdapter.save();
-    };
-  }, []);
-
-  async function loadNdk() {
+  async function initNDK() {
     let explicitRelayUrls: string[];
     const explicitRelayUrlsFromDB = await getExplicitRelayUrls();
 
@@ -34,23 +29,29 @@ export const NDKInstance = () => {
       explicitRelayUrls = FULL_RELAYS;
     }
 
-    const ndkInstance = new NDK({ explicitRelayUrls, cacheAdapter });
+    const instance = new NDK({ explicitRelayUrls, cacheAdapter });
 
     try {
-      await ndkInstance.connect();
+      await instance.connect();
     } catch (error) {
-      console.error('ERROR loading NDK NDKInstance', error);
+      console.error('NDK instance init failed: ', error);
     }
 
-    setNDK(ndkInstance);
+    setNDK(instance);
     setRelayUrls(explicitRelayUrls);
-    setFetcher(NostrFetcher.withCustomPool(ndkAdapter(ndkInstance)));
   }
+
+  useEffect(() => {
+    if (!ndk) initNDK();
+
+    return () => {
+      cacheAdapter.save();
+    };
+  }, []);
 
   return {
     ndk,
     relayUrls,
     fetcher,
-    loadNdk,
   };
 };

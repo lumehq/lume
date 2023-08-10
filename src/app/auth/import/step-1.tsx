@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getPublicKey, nip19 } from 'nostr-tools';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,7 +34,9 @@ export function ImportStep1Screen() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
+  const setTempPubkey = useOnboarding((state) => state.setTempPrivkey);
   const setPubkey = useOnboarding((state) => state.setPubkey);
+  const setStep = useOnboarding((state) => state.setStep);
 
   const [loading, setLoading] = useState(false);
 
@@ -72,10 +74,9 @@ export function ImportStep1Screen() {
         const pubkey = getPublicKey(privkey);
         const npub = nip19.npubEncode(pubkey);
 
-        // use for onboarding process only
-        setPubkey(pubkey);
-        // add stronghold state
         setPrivkey(privkey);
+        setTempPubkey(privkey); // only use if user close app and reopen it
+        setPubkey(pubkey);
 
         // add account to local database
         account.mutate({
@@ -91,10 +92,15 @@ export function ImportStep1Screen() {
     } catch (error) {
       setError('privkey', {
         type: 'custom',
-        message: 'Private Key is invalid, please check again',
+        message: 'Private key is invalid, please check again',
       });
     }
   };
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/import/step-1');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">
