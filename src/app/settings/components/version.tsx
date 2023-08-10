@@ -1,10 +1,19 @@
 import { getVersion } from '@tauri-apps/plugin-app';
+import { useEffect, useState } from 'react';
 
 import { RefreshIcon } from '@shared/icons';
 
-const appVersion = await getVersion();
-
 export function VersionSetting() {
+  const [version, setVersion] = useState<string>('');
+
+  useEffect(() => {
+    async function checkVersion() {
+      const appVersion = await getVersion();
+      setVersion(appVersion);
+    }
+    checkVersion();
+  }, []);
+
   return (
     <div className="inline-flex items-center justify-between px-5 py-4">
       <div className="flex flex-col gap-1">
@@ -14,7 +23,7 @@ export function VersionSetting() {
         </span>
       </div>
       <div className="inline-flex items-center gap-2">
-        <span className="font-medium text-zinc-300">{appVersion}</span>
+        <span className="font-medium text-zinc-300">{version}</span>
         <button
           type="button"
           className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-800 font-medium hover:bg-fuchsia-500"

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { UserRelay } from '@app/auth/components/userRelay';
@@ -50,9 +50,6 @@ export function OnboardStep3Screen() {
     }
   );
 
-  // save current step, if user close app and reopen it
-  setStep('/auth/onboarding/step-3');
-
   const toggleRelay = (relay: string) => {
     if (relays.has(relay)) {
       setRelays((prev) => {
@@ -91,6 +88,11 @@ export function OnboardStep3Screen() {
   };
 
   const relaysAsArray = Array.from(data?.keys() || []);
+
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/onboarding/step-3');
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">
