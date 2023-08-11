@@ -70,6 +70,8 @@ export function useNostr() {
 
   async function fetchNotes(prevFollow?: string[]) {
     try {
+      if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
+
       const network = await fetchNetwork(prevFollow);
       const totalNotes = await countTotalNotes();
       const lastLogin = await getLastLogin();
@@ -112,6 +114,8 @@ export function useNostr() {
 
   async function fetchChats() {
     try {
+      if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
+
       const lastLogin = await getLastLogin();
       const incomingMessages = await fetcher.fetchAllEvents(
         relayUrls,

@@ -20,18 +20,17 @@ const NDKContext = createContext<NDKContext>({
 const NDKProvider = ({ children }: PropsWithChildren<object>) => {
   const { ndk, relayUrls, fetcher } = NDKInstance();
 
-  if (ndk)
-    return (
-      <NDKContext.Provider
-        value={{
-          ndk,
-          relayUrls,
-          fetcher,
-        }}
-      >
-        {children}
-      </NDKContext.Provider>
-    );
+  return (
+    <NDKContext.Provider
+      value={{
+        ndk,
+        relayUrls,
+        fetcher,
+      }}
+    >
+      {children}
+    </NDKContext.Provider>
+  );
 };
 
 const useNDK = () => {

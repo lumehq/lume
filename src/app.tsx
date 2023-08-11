@@ -1,31 +1,9 @@
 import { RouterProvider, createBrowserRouter, redirect } from 'react-router-dom';
 
 import { AuthCreateScreen } from '@app/auth/create';
-import { CreateStep1Screen } from '@app/auth/create/step-1';
-import { CreateStep2Screen } from '@app/auth/create/step-2';
-import { CreateStep3Screen } from '@app/auth/create/step-3';
 import { AuthImportScreen } from '@app/auth/import';
-import { ImportStep1Screen } from '@app/auth/import/step-1';
-import { ImportStep2Screen } from '@app/auth/import/step-2';
-import { ImportStep3Screen } from '@app/auth/import/step-3';
-import { MigrateScreen } from '@app/auth/migrate';
 import { OnboardingScreen } from '@app/auth/onboarding';
-import { OnboardStep1Screen } from '@app/auth/onboarding/step-1';
-import { OnboardStep2Screen } from '@app/auth/onboarding/step-2';
-import { OnboardStep3Screen } from '@app/auth/onboarding/step-3';
-import { ResetScreen } from '@app/auth/reset';
-import { UnlockScreen } from '@app/auth/unlock';
-import { WelcomeScreen } from '@app/auth/welcome';
-import { ChatScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
-import { EventScreen } from '@app/events';
-import { AccountSettingsScreen } from '@app/settings/account';
-import { GeneralSettingsScreen } from '@app/settings/general';
-import { ShortcutsSettingsScreen } from '@app/settings/shortcuts';
-import { SpaceScreen } from '@app/space';
-import { SplashScreen } from '@app/splash';
-import { TrendingScreen } from '@app/trending';
-import { UserScreen } from '@app/users';
 
 import { getActiveAccount } from '@libs/storage';
 
@@ -69,62 +47,191 @@ const router = createBrowserRouter([
     errorElement: <ErrorScreen />,
     loader: appLoader,
     children: [
-      { path: '', element: <SpaceScreen /> },
-      { path: 'trending', element: <TrendingScreen /> },
-      { path: 'events/:id', element: <EventScreen /> },
-      { path: 'users/:pubkey', element: <UserScreen /> },
-      { path: 'chats/:pubkey', element: <ChatScreen /> },
+      {
+        path: '',
+        async lazy() {
+          const { SpaceScreen } = await import('@app/space');
+          return { Component: SpaceScreen };
+        },
+      },
+      {
+        path: 'trending',
+        async lazy() {
+          const { TrendingScreen } = await import('@app/trending');
+          return { Component: TrendingScreen };
+        },
+      },
+      {
+        path: 'events/:id',
+        async lazy() {
+          const { EventScreen } = await import('@app/events');
+          return { Component: EventScreen };
+        },
+      },
+      {
+        path: 'users/:pubkey',
+        async lazy() {
+          const { UserScreen } = await import('@app/users');
+          return { Component: UserScreen };
+        },
+      },
+      {
+        path: 'chats/:pubkey',
+        async lazy() {
+          const { ChatScreen } = await import('@app/chats');
+          return { Component: ChatScreen };
+        },
+      },
     ],
   },
   {
     path: '/splashscreen',
-    element: <SplashScreen />,
     errorElement: <ErrorScreen />,
+    async lazy() {
+      const { SplashScreen } = await import('@app/splash');
+      return { Component: SplashScreen };
+    },
   },
   {
     path: '/auth',
     element: <AuthLayout />,
     children: [
-      { path: 'welcome', element: <WelcomeScreen /> },
+      {
+        path: 'welcome',
+        async lazy() {
+          const { WelcomeScreen } = await import('@app/auth/welcome');
+          return { Component: WelcomeScreen };
+        },
+      },
       {
         path: 'import',
         element: <AuthImportScreen />,
         children: [
-          { path: '', element: <ImportStep1Screen /> },
-          { path: 'step-2', element: <ImportStep2Screen /> },
-          { path: 'step-3', element: <ImportStep3Screen /> },
+          {
+            path: '',
+            async lazy() {
+              const { ImportStep1Screen } = await import('@app/auth/import/step-1');
+              return { Component: ImportStep1Screen };
+            },
+          },
+          {
+            path: 'step-2',
+            async lazy() {
+              const { ImportStep2Screen } = await import('@app/auth/import/step-2');
+              return { Component: ImportStep2Screen };
+            },
+          },
+          {
+            path: 'step-3',
+            async lazy() {
+              const { ImportStep3Screen } = await import('@app/auth/import/step-3');
+              return { Component: ImportStep3Screen };
+            },
+          },
         ],
       },
       {
         path: 'create',
         element: <AuthCreateScreen />,
         children: [
-          { path: '', element: <CreateStep1Screen /> },
-          { path: 'step-2', element: <CreateStep2Screen /> },
-          { path: 'step-3', element: <CreateStep3Screen /> },
+          {
+            path: '',
+            async lazy() {
+              const { CreateStep1Screen } = await import('@app/auth/create/step-1');
+              return { Component: CreateStep1Screen };
+            },
+          },
+          {
+            path: 'step-2',
+            async lazy() {
+              const { CreateStep2Screen } = await import('@app/auth/create/step-2');
+              return { Component: CreateStep2Screen };
+            },
+          },
+          {
+            path: 'step-3',
+            async lazy() {
+              const { CreateStep3Screen } = await import('@app/auth/create/step-3');
+              return { Component: CreateStep3Screen };
+            },
+          },
         ],
       },
       {
         path: 'onboarding',
         element: <OnboardingScreen />,
         children: [
-          { path: '', element: <OnboardStep1Screen /> },
-          { path: 'step-2', element: <OnboardStep2Screen /> },
-          { path: 'step-3', element: <OnboardStep3Screen /> },
+          {
+            path: '',
+            async lazy() {
+              const { OnboardStep1Screen } = await import('@app/auth/onboarding/step-1');
+              return { Component: OnboardStep1Screen };
+            },
+          },
+          {
+            path: 'step-2',
+            async lazy() {
+              const { OnboardStep2Screen } = await import('@app/auth/onboarding/step-2');
+              return { Component: OnboardStep2Screen };
+            },
+          },
+          {
+            path: 'step-3',
+            async lazy() {
+              const { OnboardStep3Screen } = await import('@app/auth/onboarding/step-3');
+              return { Component: OnboardStep3Screen };
+            },
+          },
         ],
       },
-      { path: 'unlock', element: <UnlockScreen /> },
-      { path: 'migrate', element: <MigrateScreen /> },
-      { path: 'reset', element: <ResetScreen /> },
+      {
+        path: 'unlock',
+        async lazy() {
+          const { UnlockScreen } = await import('@app/auth/unlock');
+          return { Component: UnlockScreen };
+        },
+      },
+      {
+        path: 'migrate',
+        async lazy() {
+          const { MigrateScreen } = await import('@app/auth/migrate');
+          return { Component: MigrateScreen };
+        },
+      },
+      {
+        path: 'reset',
+        async lazy() {
+          const { ResetScreen } = await import('@app/auth/reset');
+          return { Component: ResetScreen };
+        },
+      },
     ],
   },
   {
     path: '/settings',
     element: <SettingsLayout />,
     children: [
-      { path: 'general', element: <GeneralSettingsScreen /> },
-      { path: 'shortcuts', element: <ShortcutsSettingsScreen /> },
-      { path: 'account', element: <AccountSettingsScreen /> },
+      {
+        path: 'general',
+        async lazy() {
+          const { GeneralSettingsScreen } = await import('@app/settings/general');
+          return { Component: GeneralSettingsScreen };
+        },
+      },
+      {
+        path: 'shortcuts',
+        async lazy() {
+          const { ShortcutsSettingsScreen } = await import('@app/settings/shortcuts');
+          return { Component: ShortcutsSettingsScreen };
+        },
+      },
+      {
+        path: 'account',
+        async lazy() {
+          const { AccountSettingsScreen } = await import('@app/settings/account');
+          return { Component: AccountSettingsScreen };
+        },
+      },
     ],
   },
 ]);

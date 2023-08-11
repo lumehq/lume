@@ -1,50 +1,54 @@
 import { invoke } from '@tauri-apps/api/tauri';
 import { useEffect, useState } from 'react';
 
-import { getActiveAccount, updateLastLogin } from '@libs/storage';
+import { useNDK } from '@libs/ndk/provider';
+import { updateLastLogin } from '@libs/storage';
 
 import { LoaderIcon } from '@shared/icons';
 
+import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
-const account = await getActiveAccount();
-
 export function SplashScreen() {
-  const [loading, setLoading] = useState(true);
+  const { ndk, relayUrls } = useNDK();
+  const { status, account } = useAccount();
   const { fetchChats, fetchNotes } = useNostr();
 
-  if (!account) {
-    setTimeout(async () => await invoke('close_splashscreen'), 500);
-  }
+  const [loading, setLoading] = useState(true);
 
   const skip = async () => {
     await invoke('close_splashscreen');
   };
 
+  const prefetch = async () => {
+    const onboarding = localStorage.getItem('onboarding');
+    const step = JSON.parse(onboarding).state.step || null;
+    if (step) await invoke('close_splashscreen');
+
+    const notes = await fetchNotes();
+    const chats = await fetchChats();
+
+    if (notes.status === 'ok' && chats.status === 'ok') {
+      const now = Math.floor(Date.now() / 1000);
+      await updateLastLogin(now);
+      invoke('close_splashscreen');
+    } else {
+      setLoading(false);
+      console.log('fetch notes failed, error: ', notes.message);
+      console.log('fetch chats failed, error: ', chats.message);
+    }
+  };
+
   useEffect(() => {
-    async function prefetch() {
-      const onboarding = localStorage.getItem('onboarding');
-      const step = JSON.parse(onboarding).state.step || null;
-      if (step) await invoke('close_splashscreen');
-
-      const notes = await fetchNotes();
-      const chats = await fetchChats();
-
-      if (notes.status === 'ok' && chats.status === 'ok') {
-        const now = Math.floor(Date.now() / 1000);
-        await updateLastLogin(now);
-        invoke('close_splashscreen');
-      } else {
-        setLoading(false);
-        console.log('fetch notes failed, error: ', notes.message);
-        console.log('fetch chats failed, error: ', chats.message);
-      }
+    if (status === 'success' && !account) {
+      invoke('close_splashscreen');
     }
 
-    if (account && loading) {
+    if (ndk && account) {
+      console.log('prefetching...');
       prefetch();
     }
-  }, []);
+  }, [ndk, account]);
 
   return (
     <div className="relative flex h-screen w-screen items-center justify-center bg-black">
@@ -55,9 +59,11 @@ export function SplashScreen() {
           {loading ? (
             <div className="mt-2 flex flex-col gap-1 text-center">
               <h3 className="text-lg font-semibold leading-none text-white">
-                Prefetching data
+                {!ndk
+                  ? 'Connecting to relay...'
+                  : `Connected to ${relayUrls.length} relays`}
               </h3>
-              <p className="text-white/50">
+              <p className="text-sm text-white/50">
                 This may take a few seconds, please don&apos;t close app.
               </p>
             </div>
@@ -66,8 +72,8 @@ export function SplashScreen() {
               <h3 className="text-lg font-semibold leading-none text-white">
                 Something wrong!
               </h3>
-              <p className="text-white/50">
-                Prefetching process failed, click skip to continue.
+              <p className="text-sm text-white/50">
+                Connect process failed, click skip to continue.
               </p>
               <button
                 type="button"

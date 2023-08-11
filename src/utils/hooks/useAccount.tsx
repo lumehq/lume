@@ -9,6 +9,7 @@ export function useAccount() {
     ['currentAccount'],
     async () => {
       const account = await getActiveAccount();
+      console.log('active account: ', account);
       if (account?.pubkey) {
         const user = ndk.getUser({ hexpubkey: account?.pubkey });
         await user.fetchProfile();
@@ -17,6 +18,7 @@ export function useAccount() {
       return account;
     },
     {
+      enabled: !!ndk,
       staleTime: Infinity,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
