@@ -110,6 +110,12 @@ fn main() {
               sql: include_str!("../migrations/20230808085847_add_relays_table.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230811074423,
+              description: "rename blocks to widgets",
+              sql: include_str!("../migrations/20230811074423_rename_blocks_to_widgets.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

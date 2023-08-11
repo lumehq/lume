@@ -12,9 +12,9 @@ import { TitleBar } from '@shared/titleBar';
 
 import { useAccount } from '@utils/hooks/useAccount';
 import { useEvent } from '@utils/hooks/useEvent';
-import { Block } from '@utils/types';
+import { Widget } from '@utils/types';
 
-export function ThreadBlock({ params }: { params: Block }) {
+export function ThreadBlock({ params }: { params: Widget }) {
   const { status, data } = useEvent(params.content);
   const { account } = useAccount();
 

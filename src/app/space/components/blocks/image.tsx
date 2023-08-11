@@ -1,13 +1,13 @@
 import { CancelIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { useBlocks } from '@stores/blocks';
 import { DEFAULT_AVATAR } from '@stores/constants';
+import { useWidgets } from '@stores/widgets';
 
-import { Block } from '@utils/types';
+import { Widget } from '@utils/types';
 
-export function ImageBlock({ params }: { params: Block }) {
-  const removeBlock = useBlocks((state) => state.removeBlock);
+export function ImageBlock({ params }: { params: Widget }) {
+  const remove = useWidgets((state) => state.removeWidget);
 
   return (
     <div className="flex h-full w-[400px] shrink-0 flex-col justify-between">
@@ -17,7 +17,7 @@ export function ImageBlock({ params }: { params: Block }) {
             <h3 className="font-medium text-white drop-shadow-lg">{params.title}</h3>
             <button
               type="button"
-              onClick={() => removeBlock(params.id)}
+              onClick={() => remove(params.id)}
               className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/30 backdrop-blur-lg"
             >
               <CancelIcon width={16} height={16} className="text-white" />

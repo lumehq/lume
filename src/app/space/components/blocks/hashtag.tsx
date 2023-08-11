@@ -8,9 +8,9 @@ import { NoteKind_1, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 
 import { nHoursAgo } from '@utils/date';
-import { Block, LumeEvent } from '@utils/types';
+import { LumeEvent, Widget } from '@utils/types';
 
-export function HashtagBlock({ params }: { params: Block }) {
+export function HashtagBlock({ params }: { params: Widget }) {
   const { relayUrls, fetcher } = useNDK();
   const { status, data } = useQuery(['hashtag', params.content], async () => {
     const events = (await fetcher.fetchAllEvents(

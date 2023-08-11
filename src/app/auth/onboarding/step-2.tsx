@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { createBlock } from '@libs/storage';
+import { createWidget } from '@libs/storage';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
@@ -50,7 +50,7 @@ export function OnboardStep2Screen() {
       setLoading(true);
 
       for (const tag of tags) {
-        await createBlock(BLOCK_KINDS.hashtag, tag, tag.replace('#', ''));
+        await createWidget(BLOCK_KINDS.hashtag, tag, tag.replace('#', ''));
       }
 
       setTimeout(() => navigate('/auth/onboarding/step-3', { replace: true }), 1000);

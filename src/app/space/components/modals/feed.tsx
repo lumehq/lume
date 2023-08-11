@@ -8,7 +8,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import { User } from '@app/auth/components/user';
 
-import { createBlock } from '@libs/storage';
+import { createWidget } from '@libs/storage';
 
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
@@ -31,7 +31,7 @@ export function FeedModal() {
 
   const block = useMutation({
     mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createBlock(data.kind, data.title, data.content);
+      return createWidget(data.kind, data.title, data.content);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blocks'] });

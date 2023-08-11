@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { createBlock } from '@libs/storage';
+import { createWidget } from '@libs/storage';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
@@ -39,7 +39,7 @@ export function ImageModal() {
 
   const block = useMutation({
     mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createBlock(data.kind, data.title, data.content);
+      return createWidget(data.kind, data.title, data.content);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blocks'] });

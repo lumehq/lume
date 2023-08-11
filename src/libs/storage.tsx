@@ -5,12 +5,12 @@ import { parser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
 import {
   Account,
-  Block,
   Chats,
   LumeEvent,
   Profile,
   Relays,
   Settings,
+  Widget,
 } from '@utils/types';
 
 let db: null | Database = null;
@@ -66,7 +66,7 @@ export async function createAccount(
     [npub, pubkey, 'privkey is stored in secure storage', follows || '', is_active || 0]
   );
   if (res) {
-    await createBlock(
+    await createWidget(
       0,
       'Have fun together!',
       'https://void.cat/d/N5KUHEQCVg7SywXUPiJ7yq.jpg'
@@ -417,18 +417,18 @@ export async function updateLastLogin(value: number) {
   );
 }
 
-// get all blocks
-export async function getBlocks() {
+// get all widgets
+export async function getWidgets() {
   const db = await connect();
   const account = await getActiveAccount();
-  const result: Array<Block> = await db.select(
-    `SELECT * FROM blocks WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
+  const result: Array<Widget> = await db.select(
+    `SELECT * FROM widgets WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
   );
   return result;
 }
 
 // create block
-export async function createBlock(
+export async function createWidget(
   kind: number,
   title: string,
   content: string | string[]
@@ -436,13 +436,13 @@ export async function createBlock(
   const db = await connect();
   const activeAccount = await getActiveAccount();
   const insert = await db.execute(
-    'INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);',
+    'INSERT OR IGNORE INTO widgets (account_id, kind, title, content) VALUES (?, ?, ?, ?);',
     [activeAccount.id, kind, title, content]
   );
 
   if (insert) {
-    const record: Block = await db.select(
-      'SELECT * FROM blocks ORDER BY id DESC LIMIT 1;'
+    const record: Widget = await db.select(
+      'SELECT * FROM widgets ORDER BY id DESC LIMIT 1;'
     );
     return record[0];
   } else {
@@ -451,9 +451,9 @@ export async function createBlock(
 }
 
 // remove block
-export async function removeBlock(id: string) {
+export async function removeWidget(id: string) {
   const db = await connect();
-  return await db.execute(`DELETE FROM blocks WHERE id = "${id}";`);
+  return await db.execute(`DELETE FROM widgets WHERE id = "${id}";`);
 }
 
 // logout
@@ -462,8 +462,7 @@ export async function removeAll() {
   await db.execute(`UPDATE settings SET value = "0" WHERE key = "last_login";`);
   await db.execute('DELETE FROM replies;');
   await db.execute('DELETE FROM notes;');
-  await db.execute('DELETE FROM blacklist;');
-  await db.execute('DELETE FROM blocks;');
+  await db.execute('DELETE FROM widgets;');
   await db.execute('DELETE FROM chats;');
   await db.execute('DELETE FROM accounts;');
   return true;

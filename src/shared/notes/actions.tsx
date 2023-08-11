@@ -7,8 +7,8 @@ import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
-import { useBlocks } from '@stores/blocks';
 import { BLOCK_KINDS } from '@stores/constants';
+import { useWidgets } from '@stores/widgets';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
@@ -24,7 +24,7 @@ export function NoteActions({
   root?: string;
 }) {
   const { account } = useAccount();
-  const setBlock = useBlocks((state) => state.setBlock);
+  const setWidget = useWidgets((state) => state.setWidget);
 
   return (
     <Tooltip.Provider>
@@ -43,7 +43,7 @@ export function NoteActions({
                 <button
                   type="button"
                   onClick={() =>
-                    setBlock({
+                    setWidget({
                       kind: BLOCK_KINDS.thread,
                       title: 'Thread',
                       content: id,

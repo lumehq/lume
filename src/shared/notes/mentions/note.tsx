@@ -5,19 +5,19 @@ import remarkGfm from 'remark-gfm';
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { useBlocks } from '@stores/blocks';
 import { BLOCK_KINDS } from '@stores/constants';
+import { useWidgets } from '@stores/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const { status, data } = useEvent(id);
-  const setBlock = useBlocks((state) => state.setBlock);
+  const setWidget = useWidgets((state) => state.setWidget);
 
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      setBlock({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
+      setWidget({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }

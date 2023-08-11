@@ -31,7 +31,7 @@ export interface Profile extends NDKUserProfile {
   pubkey?: string;
 }
 
-export interface Block {
+export interface Widget {
   id?: string;
   account_id?: number;
   kind: number;

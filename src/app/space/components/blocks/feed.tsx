@@ -9,11 +9,11 @@ import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { Block, LumeEvent } from '@utils/types';
+import { LumeEvent, Widget } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
 
-export function FeedBlock({ params }: { params: Block }) {
+export function FeedBlock({ params }: { params: Widget }) {
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed', params.content],

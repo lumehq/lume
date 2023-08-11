@@ -12,48 +12,51 @@ import { ImageModal } from '@app/space/components/modals/image';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { useBlocks } from '@stores/blocks';
+import { useWidgets } from '@stores/widgets';
 
-import { Block } from '@utils/types';
+import { Widget } from '@utils/types';
 
 export function SpaceScreen() {
-  const [blocks, fetchBlocks] = useBlocks((state) => [state.blocks, state.fetchBlocks]);
+  const [widgets, fetchWidgets] = useWidgets((state) => [
+    state.widgets,
+    state.fetchWidgets,
+  ]);
 
-  const renderBlock = useCallback(
-    (block: Block) => {
-      switch (block.kind) {
+  const renderItem = useCallback(
+    (widget: Widget) => {
+      switch (widget.kind) {
         case 0:
-          return <ImageBlock key={block.id} params={block} />;
+          return <ImageBlock key={widget.id} params={widget} />;
         case 1:
-          return <FeedBlock key={block.id} params={block} />;
+          return <FeedBlock key={widget.id} params={widget} />;
         case 2:
-          return <ThreadBlock key={block.id} params={block} />;
+          return <ThreadBlock key={widget.id} params={widget} />;
         case 3:
-          return <HashtagBlock key={block.id} params={block} />;
+          return <HashtagBlock key={widget.id} params={widget} />;
         case 5:
-          return <UserBlock key={block.id} params={block} />;
+          return <UserBlock key={widget.id} params={widget} />;
         default:
           break;
       }
     },
-    [blocks]
+    [widgets]
   );
 
   useEffect(() => {
-    fetchBlocks();
-  }, [fetchBlocks]);
+    fetchWidgets();
+  }, [fetchWidgets]);
 
   return (
     <div className="scrollbar-hide flex h-full w-full flex-nowrap divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
       <NetworkBlock />
-      {!blocks ? (
+      {!widgets ? (
         <div className="flex w-[350px] shrink-0 flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">
             <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
           </div>
         </div>
       ) : (
-        blocks.map((block) => renderBlock(block))
+        widgets.map((widget) => renderItem(widget))
       )}
       <div className="flex w-[350px] shrink-0 flex-col">
         <div className="inline-flex h-full w-full flex-col items-center justify-center gap-1">

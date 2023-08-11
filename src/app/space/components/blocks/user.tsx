@@ -9,9 +9,9 @@ import { TitleBar } from '@shared/titleBar';
 import { UserProfile } from '@shared/userProfile';
 
 import { nHoursAgo } from '@utils/date';
-import { Block, LumeEvent } from '@utils/types';
+import { LumeEvent, Widget } from '@utils/types';
 
-export function UserBlock({ params }: { params: Block }) {
+export function UserBlock({ params }: { params: Widget }) {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const { fetcher, relayUrls } = useNDK();
