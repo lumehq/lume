@@ -1,21 +1,19 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
-
-import { createWidget } from '@libs/storage';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
 import { BLOCK_KINDS } from '@stores/constants';
 import { ADD_HASHTAGBLOCK_SHORTCUT } from '@stores/shortcuts';
+import { useWidgets } from '@stores/widgets';
 
 export function HashtagModal() {
-  const queryClient = useQueryClient();
-
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const setWidget = useWidgets((state) => state.setWidget);
 
   useHotkeys(ADD_HASHTAGBLOCK_SHORTCUT, () => setOpen(false));
 
@@ -26,20 +24,11 @@ export function HashtagModal() {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const block = useMutation({
-    mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createWidget(data.kind, data.title, data.content);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
   const onSubmit = async (data: { hashtag: string }) => {
     setLoading(true);
 
     // mutate
-    block.mutate({
+    setWidget({
       kind: BLOCK_KINDS.hashtag,
       title: data.hashtag,
       content: data.hashtag.replace('#', ''),
@@ -67,7 +56,7 @@ export function HashtagModal() {
               <span className="text-sm leading-none text-white">T</span>
             </div>
           </div>
-          <h5 className="font-medium text-white/50">New hashtag block</h5>
+          <h5 className="font-medium text-white/50">Add hashtag widget</h5>
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">

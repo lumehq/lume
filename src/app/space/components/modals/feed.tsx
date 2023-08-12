@@ -1,6 +1,5 @@
 import { Combobox } from '@headlessui/react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,18 +7,15 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import { User } from '@app/auth/components/user';
 
-import { createWidget } from '@libs/storage';
-
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
 import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_FEEDBLOCK_SHORTCUT } from '@stores/shortcuts';
+import { useWidgets } from '@stores/widgets';
 
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function FeedModal() {
-  const queryClient = useQueryClient();
-
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -27,16 +23,9 @@ export function FeedModal() {
 
   const { status, account } = useAccount();
 
-  useHotkeys(ADD_FEEDBLOCK_SHORTCUT, () => setOpen(true));
+  const setWidget = useWidgets((state) => state.setWidget);
 
-  const block = useMutation({
-    mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createWidget(data.kind, data.title, data.content);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
+  useHotkeys(ADD_FEEDBLOCK_SHORTCUT, () => setOpen(true));
 
   const {
     register,
@@ -55,7 +44,7 @@ export function FeedModal() {
     });
 
     // insert to database
-    block.mutate({
+    setWidget({
       kind: BLOCK_KINDS.feed,
       title: data.title,
       content: JSON.stringify(selected),
@@ -83,7 +72,7 @@ export function FeedModal() {
               <span className="text-sm leading-none text-white">F</span>
             </div>
           </div>
-          <h5 className="font-medium text-white/50">New feed block</h5>
+          <h5 className="font-medium text-white/50">Add newsfeed widget</h5>
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">

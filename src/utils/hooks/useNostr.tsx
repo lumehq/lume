@@ -149,7 +149,7 @@ export function useNostr() {
 
       return { status: 'ok' };
     } catch (e) {
-      console.error('failed fetch incoming messages, error: ', e);
+      console.error('failed fetch messages, error: ', e);
       return { status: 'failed', message: e };
     }
   }

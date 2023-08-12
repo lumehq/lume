@@ -14,7 +14,7 @@ export function NotiRepost({ event }: { event: NDKEvent }) {
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-1">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-white/50">repost your postr</p>
+          <p className="leading-none text-white/50">repostr your postr</p>
         </div>
         <div>
           <span className="leading-none text-white/50">{createdAt}</span>

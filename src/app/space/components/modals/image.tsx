@@ -1,31 +1,24 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
-
-import { createWidget } from '@libs/storage';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
 import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
+import { useWidgets } from '@stores/widgets';
 
-import { useNostr } from '@utils/hooks/useNostr';
 import { useImageUploader } from '@utils/hooks/useUploader';
 
 export function ImageModal() {
-  const queryClient = useQueryClient();
   const upload = useImageUploader();
-
-  const { publish } = useNostr();
+  const setWidget = useWidgets((state) => state.setWidget);
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState('');
-
-  const tags = useRef(null);
 
   useHotkeys(ADD_IMAGEBLOCK_SHORTCUT, () => setOpen(false));
 
@@ -37,17 +30,8 @@ export function ImageModal() {
     formState: { isDirty, isValid },
   } = useForm();
 
-  const block = useMutation({
-    mutationFn: (data: { kind: number; title: string; content: string }) => {
-      return createWidget(data.kind, data.title, data.content);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['blocks'] });
-    },
-  });
-
   const uploadImage = async () => {
-    const image = await upload(null);
+    const image = await upload(null, true);
     if (image.url) {
       setImage(image.url);
     }
@@ -56,11 +40,8 @@ export function ImageModal() {
   const onSubmit = async (data: { kind: number; title: string; content: string }) => {
     setLoading(true);
 
-    // publish file metedata
-    await publish({ content: data.title, kind: 1063, tags: tags.current });
-
     // mutate
-    block.mutate({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
+    setWidget({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
 
     setLoading(false);
     // reset form
@@ -88,7 +69,7 @@ export function ImageModal() {
               <span className="text-sm leading-none text-white">I</span>
             </div>
           </div>
-          <h5 className="font-medium text-white/50">New image block</h5>
+          <h5 className="font-medium text-white/50">Add image widget</h5>
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">

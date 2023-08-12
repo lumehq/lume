@@ -52,7 +52,7 @@ export function User({
     <Popover.Root>
       <div
         className={twMerge(
-          'relative z-30 flex',
+          'relative z-10 flex',
           size === 'small' ? 'items-center gap-2' : 'items-start gap-3'
         )}
       >

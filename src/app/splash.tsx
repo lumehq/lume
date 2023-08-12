@@ -14,7 +14,8 @@ export function SplashScreen() {
   const { status, account } = useAccount();
   const { fetchChats, fetchNotes } = useNostr();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<null | string>(null);
 
   const skip = async () => {
     await invoke('close_splashscreen');
@@ -34,6 +35,7 @@ export function SplashScreen() {
       invoke('close_splashscreen');
     } else {
       setLoading(false);
+      setError(notes.message || chats.message);
       console.log('fetch notes failed, error: ', notes.message);
       console.log('fetch chats failed, error: ', chats.message);
     }
@@ -72,9 +74,7 @@ export function SplashScreen() {
               <h3 className="text-lg font-semibold leading-none text-white">
                 Something wrong!
               </h3>
-              <p className="text-sm text-white/50">
-                Connect process failed, click skip to continue.
-              </p>
+              <p className="text-sm text-white/50">{error}</p>
               <button
                 type="button"
                 onClick={skip}
