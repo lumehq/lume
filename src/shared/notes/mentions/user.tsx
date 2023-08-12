@@ -14,7 +14,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       onClick={() =>
         setWidget({
           kind: BLOCK_KINDS.user,
-          title: user?.nip05 || user?.name || user?.displayNam,
+          title: user?.nip05 || user?.name || user?.display_name,
           content: pubkey,
         })
       }

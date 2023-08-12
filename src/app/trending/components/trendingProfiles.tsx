@@ -7,21 +7,19 @@ import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
 interface Response {
-  ok: boolean;
-  data: {
-    profiles: Array<{ pubkey: string }>;
-  };
+  profiles: Array<{ pubkey: string }>;
 }
 
 export function TrendingProfiles() {
   const { status, data, error } = useQuery(
     ['trending-profiles'],
     async () => {
-      const res: Response = await fetch('https://api.nostr.band/v0/trending/profiles');
+      const res = await fetch('https://api.nostr.band/v0/trending/profiles');
       if (!res.ok) {
         throw new Error('Error');
       }
-      return res.data?.profiles;
+      const json: Response = await res.json();
+      return json.profiles;
     },
     {
       refetchOnMount: false,
@@ -30,6 +28,8 @@ export function TrendingProfiles() {
       staleTime: Infinity,
     }
   );
+
+  console.log('profiles: ', data);
 
   return (
     <div className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
@@ -44,7 +44,7 @@ export function TrendingProfiles() {
           </div>
         ) : (
           <div className="relative flex w-full flex-col gap-3 px-3 pt-1.5">
-            {data.map((item) => (
+            {data?.map((item) => (
               <Profile key={item.pubkey} data={item} />
             ))}
           </div>

@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { fetch } from '@tauri-apps/plugin-http';
 import { useEffect, useState } from 'react';
 
 import { FollowIcon, LoaderIcon, UnfollowIcon } from '@shared/icons';

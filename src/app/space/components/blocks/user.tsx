@@ -14,15 +14,14 @@ import { LumeEvent, Widget } from '@utils/types';
 export function UserBlock({ params }: { params: Widget }) {
   const parentRef = useRef<HTMLDivElement>(null);
 
-  const { fetcher, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['user-feed', params.content], async () => {
-    const events = await fetcher.fetchAllEvents(
-      relayUrls,
-      { kinds: [1], authors: [params.content] },
-      { since: nHoursAgo(48) },
-      { sort: true }
-    );
-    return events as unknown as LumeEvent[];
+    const events = await ndk.fetchEvents({
+      kinds: [1],
+      authors: [params.content],
+      since: nHoursAgo(48),
+    });
+    return [...events] as unknown as LumeEvent[];
   });
 
   const rowVirtualizer = useVirtualizer({
@@ -42,9 +41,7 @@ export function UserBlock({ params }: { params: Widget }) {
           <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mt-4 px-3 text-lg font-semibold text-white">
-            Latest activities
-          </h3>
+          <h3 className="mt-4 px-3 text-lg font-semibold text-white">Latest postrs</h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
@@ -57,7 +54,7 @@ export function UserBlock({ params }: { params: Widget }) {
                 <div className="rounded-xl bg-white/10 px-3 py-6">
                   <div className="flex flex-col items-center gap-4">
                     <p className="text-center text-sm text-white">
-                      No new posts about this hashtag in 48 hours ago
+                      No new posts from this user in 48 hours ago
                     </p>
                   </div>
                 </div>

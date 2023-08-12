@@ -1,8 +1,10 @@
 import { NDKEvent, NDKKind, NDKPrivateKeySigner, NDKUser } from '@nostr-dev-kit/ndk';
+import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import destr from 'destr';
 import { LRUCache } from 'lru-cache';
-import { NostrEvent } from 'nostr-fetch';
+import { NostrFetcher } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
+import { useMemo } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 import {
@@ -19,10 +21,11 @@ import { nHoursAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function useNostr() {
-  const privkey = useStronghold((state) => state.privkey);
-
-  const { ndk, relayUrls, fetcher } = useNDK();
+  const { ndk, relayUrls } = useNDK();
   const { account } = useAccount();
+
+  const fetcher = useMemo(() => NostrFetcher.withCustomPool(ndkAdapter(ndk)), [ndk]);
+  const privkey = useStronghold((state) => state.privkey);
 
   async function fetchNetwork(prevFollow?: string[]) {
     const follows = new Set<string>(prevFollow || []);
@@ -43,14 +46,9 @@ export function useNostr() {
     // fetch network
     if (!account.network) {
       console.log("fetching user's network...");
-      const events = await fetcher.fetchAllEvents(
-        relayUrls,
-        { kinds: [3], authors: [...follows] },
-        { since: 0 },
-        { skipVerification: true }
-      );
+      const events = await ndk.fetchEvents({ kinds: [3], authors: [...follows] });
 
-      events.forEach((event: NostrEvent) => {
+      events.forEach((event: NDKEvent) => {
         event.tags.forEach((tag) => {
           if (tag[0] === 'p') lruNetwork.set(tag[1], tag[1]);
         });
@@ -88,9 +86,11 @@ export function useNostr() {
 
         const events = await fetcher.fetchAllEvents(
           relayUrls,
-          { kinds: [1], authors: network },
-          { since: since },
-          { skipVerification: true }
+          {
+            kinds: [1],
+            authors: network,
+          },
+          { since: since }
         );
 
         for (const event of events) {
@@ -117,17 +117,25 @@ export function useNostr() {
       if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
 
       const lastLogin = await getLastLogin();
-      const incomingMessages = await fetcher.fetchAllEvents(
+
+      const outgoingMessages = await fetcher.fetchAllEvents(
         relayUrls,
         {
           kinds: [4],
-          '#p': [account.pubkey],
+          authors: [account.pubkey],
         },
-        { since: lastLogin },
-        { skipVerification: true }
+        { since: lastLogin }
       );
 
-      for (const event of incomingMessages) {
+      const incomingMessages = await fetcher.fetchAllEvents(
+        relayUrls,
+        { kinds: [4], '#p': [account.pubkey] },
+        { since: lastLogin }
+      );
+
+      const messages = [...outgoingMessages, ...incomingMessages];
+
+      for (const event of messages) {
         const receiverPubkey = event.tags.find((t) => t[0] === 'p')[1] || account.pubkey;
         await createChat(
           event.id,
@@ -172,11 +180,11 @@ export function useNostr() {
     return event;
   };
 
-  const createZap = async (event: NostrEvent, amount: number, message?: string) => {
-    // @ts-expect-error, LumeEvent to NostrEvent
+  const createZap = async (event: NDKEvent, amount: number, message?: string) => {
+    // @ts-expect-error, LumeEvent to NDKEvent
     event.id = event.event_id;
 
-    // @ts-expect-error, LumeEvent to NostrEvent
+    // @ts-expect-error, LumeEvent to NDKEvent
     if (typeof event.content !== 'string') event.content = event.content.original;
 
     if (typeof event.tags === 'string') event.tags = destr(event.tags);
@@ -188,6 +196,7 @@ export function useNostr() {
       ndk.signer = signer;
     }
 
+    // @ts-expect-error, LumeEvent to NDKEvent
     const ndkEvent = new NDKEvent(ndk, event);
     const res = await ndkEvent.zap(amount, message ?? 'zap from lume');
 

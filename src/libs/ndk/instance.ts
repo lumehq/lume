@@ -1,8 +1,6 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
-import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { fetch } from '@tauri-apps/plugin-http';
-import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
@@ -15,10 +13,6 @@ export const NDKInstance = () => {
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
   const cacheAdapter = useMemo(() => new TauriAdapter(), []);
-  const fetcher = useMemo<NostrFetcher>(
-    () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : undefined),
-    [ndk]
-  );
 
   // TODO: fully support NIP-11
   async function verifyRelays(relays: string[]) {
@@ -37,7 +31,6 @@ export const NDKInstance = () => {
 
       try {
         const res = await fetch(url, {
-          method: 'GET',
           headers: { Accept: 'application/nostr+json' },
         });
 
@@ -67,7 +60,7 @@ export const NDKInstance = () => {
     const instance = new NDK({ explicitRelayUrls, cacheAdapter });
 
     try {
-      await instance.connect();
+      await instance.connect(10000);
     } catch (error) {
       throw new Error('NDK instance init failed: ', error);
     }
@@ -87,6 +80,5 @@ export const NDKInstance = () => {
   return {
     ndk,
     relayUrls,
-    fetcher,
   };
 };

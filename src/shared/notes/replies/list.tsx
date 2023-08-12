@@ -7,22 +7,25 @@ import { NoteSkeleton, Reply } from '@shared/notes';
 import { LumeEvent } from '@utils/types';
 
 export function RepliesList({ id }: { id: string }) {
-  const { relayUrls, fetcher } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['thread', id], async () => {
-    const events = (await fetcher.fetchAllEvents(
-      relayUrls,
-      { kinds: [1], '#e': [id] },
-      { since: 0 }
-    )) as unknown as LumeEvent[];
-    if (events.length > 0) {
+    const events = await ndk.fetchEvents({
+      kinds: [1],
+      '#e': [id],
+      since: 0,
+    });
+
+    const array = [...events] as unknown as LumeEvent[];
+
+    if (array.length > 0) {
       const replies = new Set();
-      events.forEach((event) => {
+      array.forEach((event) => {
         const tags = event.tags.filter((el) => el[0] === 'e' && el[1] !== id);
         if (tags.length > 0) {
           tags.forEach((tag) => {
-            const rootIndex = events.findIndex((el) => el.id === tag[1]);
+            const rootIndex = array.findIndex((el) => el.id === tag[1]);
             if (rootIndex) {
-              const rootEvent = events[rootIndex];
+              const rootEvent = array[rootIndex];
               if (rootEvent.replies) {
                 rootEvent.replies.push(event);
               } else {
@@ -33,10 +36,10 @@ export function RepliesList({ id }: { id: string }) {
           });
         }
       });
-      const cleanEvents = events.filter((ev) => !replies.has(ev.id));
+      const cleanEvents = array.filter((ev) => !replies.has(ev.id));
       return cleanEvents;
     }
-    return events;
+    return array;
   });
 
   if (status === 'loading') {

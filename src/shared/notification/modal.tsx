@@ -12,16 +12,16 @@ import { nHoursAgo } from '@utils/date';
 import { LumeEvent } from '@utils/types';
 
 export function NotificationModal({ pubkey }: { pubkey: string }) {
-  const { fetcher, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['notification', pubkey],
     async () => {
-      const events = await fetcher.fetchAllEvents(
-        relayUrls,
-        { '#p': [pubkey], kinds: [1, 6, 7, 9735] },
-        { since: nHoursAgo(24) }
-      );
-      const filterSelf = events.filter((el) => el.pubkey !== pubkey);
+      const events = await ndk.fetchEvents({
+        '#p': [pubkey],
+        kinds: [1, 6, 7, 9735],
+        since: nHoursAgo(24),
+      });
+      const filterSelf = [...events].filter((el) => el.pubkey !== pubkey);
       const sorted = filterSelf.sort((a, b) => a.created_at - b.created_at);
       return sorted as unknown as LumeEvent[];
     },

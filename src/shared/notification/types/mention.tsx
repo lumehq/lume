@@ -17,7 +17,7 @@ export function NotiMention({ event }: { event: NDKEvent }) {
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-1">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-white/50">reply your post</p>
+          <p className="leading-none text-white/50">reply your postr</p>
         </div>
         <span className="leading-none text-white/50">{createdAt}</span>
       </div>

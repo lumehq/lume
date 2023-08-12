@@ -42,7 +42,7 @@ export function ComposerModal() {
                   <ChevronRightIcon className="h-4 w-4 text-white/50" />
                 </span>
                 <div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-white/10 pl-3 pr-1.5 text-sm font-medium text-white">
-                  New Post
+                  New Postr
                   <ChevronDownIcon className="h-4 w-4" />
                 </div>
               </div>

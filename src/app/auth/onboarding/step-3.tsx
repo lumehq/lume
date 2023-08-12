@@ -24,16 +24,12 @@ export function OnboardStep3Screen() {
 
   const { publish } = useNostr();
   const { account } = useAccount();
-  const { fetcher, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['relays'],
     async () => {
       const tmp = new Map<string, string>();
-      const events = await fetcher.fetchAllEvents(
-        relayUrls,
-        { kinds: [10002], authors: account.follows },
-        { since: 0 }
-      );
+      const events = await ndk.fetchEvents({ kinds: [10002], authors: account.follows });
 
       if (events) {
         events.forEach((event) => {

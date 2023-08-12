@@ -111,7 +111,7 @@ export function Composer() {
       await publish({ content: serializedContent, kind: 1, tags });
 
       // send native notifiation
-      await sendNativeNotification('Publish post successfully');
+      await sendNativeNotification('Publish postr successfully');
 
       // update state
       setStatus('done');

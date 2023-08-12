@@ -8,21 +8,19 @@ import { TitleBar } from '@shared/titleBar';
 import { LumeEvent } from '@utils/types';
 
 interface Response {
-  ok: boolean;
-  data: {
-    notes: Array<{ event: LumeEvent }>;
-  };
+  notes: Array<{ event: LumeEvent }>;
 }
 
 export function TrendingNotes() {
   const { status, data, error } = useQuery(
     ['trending-notes'],
     async () => {
-      const res: Response = await fetch('https://api.nostr.band/v0/trending/notes');
+      const res = await fetch('https://api.nostr.band/v0/trending/notes');
       if (!res.ok) {
         throw new Error('Error');
       }
-      return res.data?.notes;
+      const json: Response = await res.json();
+      return json.notes;
     },
     {
       refetchOnMount: false,
@@ -31,6 +29,8 @@ export function TrendingNotes() {
       staleTime: Infinity,
     }
   );
+
+  console.log('notes: ', data);
 
   return (
     <div className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">

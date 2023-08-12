@@ -8,7 +8,7 @@ export function useOpenGraph(url: string) {
     async () => {
       const res = await getLinkPreview(url);
       if (!res) {
-        throw new Error("Can' fetch");
+        throw new Error('fetch preview failed');
       }
       return res;
     },

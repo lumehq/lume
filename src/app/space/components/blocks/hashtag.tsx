@@ -11,14 +11,14 @@ import { nHoursAgo } from '@utils/date';
 import { LumeEvent, Widget } from '@utils/types';
 
 export function HashtagBlock({ params }: { params: Widget }) {
-  const { relayUrls, fetcher } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['hashtag', params.content], async () => {
-    const events = (await fetcher.fetchAllEvents(
-      relayUrls,
-      { kinds: [1], '#t': [params.content] },
-      { since: nHoursAgo(24) }
-    )) as unknown as LumeEvent[];
-    return events;
+    const events = await ndk.fetchEvents({
+      kinds: [1],
+      '#t': [params.content],
+      since: nHoursAgo(24),
+    });
+    return [...events] as unknown as LumeEvent[];
   });
 
   const parentRef = useRef();
