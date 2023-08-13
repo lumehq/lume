@@ -2,7 +2,7 @@ name: 'publish'
 on:
   push:
     branches:
-      - release
+      - main
 
 env:
   CARGO_INCREMENTAL: 0

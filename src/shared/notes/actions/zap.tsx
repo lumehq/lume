@@ -35,14 +35,14 @@ export function NoteZap({ id }: { id: string }) {
           type="button"
           className="group inline-flex h-7 w-7 items-center justify-center"
         >
-          <ZapIcon className="h-5 w-5 text-zinc-300 group-hover:text-orange-400" />
+          <ZapIcon className="h-5 w-5 text-white group-hover:text-orange-400" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-[1000px] bg-black bg-opacity-30 backdrop-blur-md data-[state=open]:animate-overlayShow" />
-        <div className="fixed inset-0 z-50 flex min-h-full items-center justify-center data-[state=open]:animate-contentShow">
-          <Dialog.Content className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border-t border-zinc-800/50 bg-zinc-900">
-            <div className="relative h-min w-full shrink-0 border-b border-zinc-800 px-5 py-3">
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
+        <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
+            <div className="relative h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col items-center gap-1.5">
                 <Dialog.Title className="font-medium leading-none text-white">
                   Zap (Beta)
@@ -51,16 +51,11 @@ export function NoteZap({ id }: { id: string }) {
                   Send tip with Bitcoin via Lightning
                 </Dialog.Description>
               </div>
-              <Dialog.Close asChild>
-                <button
-                  type="button"
-                  className="absolute right-3 top-3 inline-flex h-5 w-5 items-center justify-center rounded hover:bg-zinc-800"
-                >
-                  <CancelIcon className="h-4 w-4 text-zinc-300" />
-                </button>
+              <Dialog.Close className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
+                <CancelIcon className="h-4 w-4 text-white/50" />
               </Dialog.Close>
             </div>
-            <div className="overflow-y-auto overflow-x-hidden px-5 pb-5">
+            <div className="overflow-y-auto overflow-x-hidden px-5 py-5">
               {!invoice ? (
                 <>
                   <div className="grid grid-cols-3 gap-3">
@@ -68,16 +63,12 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(21000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-zinc-800',
-                        `${selected(21000) && 'bg-zinc-800'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
+                        `${selected(21000) && 'bg-white/10'}`
                       )}
                     >
-                      <img
-                        className="h-12 w-12"
-                        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png"
-                        alt="High Voltage"
-                      />
-                      <span className="text-sm font-medium leading-none text-zinc-200">
+                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
+                      <span className="text-sm font-medium leading-none text-white/80">
                         21 sats
                       </span>
                     </button>
@@ -85,16 +76,12 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(69000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-zinc-800',
-                        `${selected(69000) && 'bg-zinc-800'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
+                        `${selected(69000) && 'bg-white/10'}`
                       )}
                     >
-                      <img
-                        className="h-12 w-12"
-                        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png"
-                        alt="High Voltage"
-                      />
-                      <span className="text-sm font-medium leading-none text-zinc-200">
+                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
+                      <span className="text-sm font-medium leading-none text-white/80">
                         69 sats
                       </span>
                     </button>
@@ -102,16 +89,12 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(100000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-zinc-800',
-                        `${selected(100000) && 'bg-zinc-800'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
+                        `${selected(100000) && 'bg-white/10'}`
                       )}
                     >
-                      <img
-                        className="h-12 w-12"
-                        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png"
-                        alt="High Voltage"
-                      />
-                      <span className="text-sm font-medium leading-none text-zinc-200">
+                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
+                      <span className="text-sm font-medium leading-none text-white/80">
                         100 sats
                       </span>
                     </button>
@@ -119,16 +102,12 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(200000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-zinc-800',
-                        `${selected(200000) && 'bg-zinc-800'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
+                        `${selected(200000) && 'bg-white/10'}`
                       )}
                     >
-                      <img
-                        className="h-12 w-12"
-                        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png"
-                        alt="High Voltage"
-                      />
-                      <span className="text-sm font-medium leading-none text-zinc-200">
+                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
+                      <span className="text-sm font-medium leading-none text-white/80">
                         200 sats
                       </span>
                     </button>
@@ -136,16 +115,12 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(500000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-zinc-800',
-                        `${selected(500000) && 'bg-zinc-800'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
+                        `${selected(500000) && 'bg-white/10'}`
                       )}
                     >
-                      <img
-                        className="h-12 w-12"
-                        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png"
-                        alt="High Voltage"
-                      />
-                      <span className="text-sm font-medium leading-none text-zinc-200">
+                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
+                      <span className="text-sm font-medium leading-none text-white/80">
                         500 sats
                       </span>
                     </button>
@@ -153,16 +128,12 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(1000000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-zinc-800',
-                        `${selected(1000000) && 'bg-zinc-800'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
+                        `${selected(1000000) && 'bg-white/10'}`
                       )}
                     >
-                      <img
-                        className="h-12 w-12"
-                        src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png"
-                        alt="High Voltage"
-                      />
-                      <span className="text-sm font-medium leading-none text-zinc-200">
+                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
+                      <span className="text-sm font-medium leading-none text-white/80">
                         1000 sats
                       </span>
                     </button>
@@ -191,8 +162,8 @@ export function NoteZap({ id }: { id: string }) {
                 </div>
               )}
             </div>
-          </Dialog.Content>
-        </div>
+          </div>
+        </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );
