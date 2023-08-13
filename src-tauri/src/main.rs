@@ -3,19 +3,11 @@
   windows_subsystem = "windows"
 )]
 
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
-
 // use rand::distributions::{Alphanumeric, DistString};
-use tauri::{Manager, WindowEvent};
+use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-
-#[cfg(target_os = "macos")]
-use window_ext::WindowExt;
-#[cfg(target_os = "macos")]
-mod window_ext;
+use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -23,31 +15,18 @@ struct Payload {
   cwd: String,
 }
 
+#[tauri::command]
+async fn close_splashscreen(window: tauri::Window) {
+  // Close splashscreen
+  if let Some(splashscreen) = window.get_window("splashscreen") {
+    splashscreen.close().unwrap();
+  }
+  // Show main window
+  window.get_window("main").unwrap().show().unwrap();
+}
+
 fn main() {
   tauri::Builder::default()
-    .setup(|app| {
-      #[cfg(target_os = "macos")]
-      let main_window = app.get_window("main").unwrap();
-
-      #[cfg(target_os = "macos")]
-      main_window.position_traffic_lights(13.0, 17.0); // set inset for traffic lights (macos)
-
-      Ok(())
-    })
-    .on_window_event(|e| {
-      #[cfg(target_os = "macos")]
-      let apply_offset = || {
-        let win = e.window();
-        // keep inset for traffic lights when window resize (macos)
-        win.position_traffic_lights(13.0, 17.0);
-      };
-      #[cfg(target_os = "macos")]
-      match e.event() {
-        WindowEvent::Resized(..) => apply_offset(),
-        WindowEvent::ThemeChanged(..) => apply_offset(),
-        _ => {}
-      }
-    })
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -119,6 +98,24 @@ fn main() {
               sql: include_str!("../migrations/20230725010250_update_default_relays.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230804083544,
+              description: "add network to accounts",
+              sql: include_str!("../migrations/20230804083544_add_network_to_account.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230808085847,
+              description: "add relays",
+              sql: include_str!("../migrations/20230808085847_add_relays_table.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230811074423,
+              description: "rename blocks to widgets",
+              sql: include_str!("../migrations/20230811074423_rename_blocks_to_widgets.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
@@ -156,7 +153,33 @@ fn main() {
         .emit_all("single-instance", Payload { args: argv, cwd })
         .unwrap();
     }))
+    .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_upload::init())
+    .plugin(tauri_plugin_dialog::init())
+    .plugin(tauri_plugin_http::init())
+    .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_clipboard_manager::init())
+    .plugin(tauri_plugin_notification::init())
+    .plugin(tauri_plugin_app::init())
+    .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_os::init())
+    .plugin(tauri_plugin_window::init())
+    .plugin(tauri_plugin_store::Builder::default().build())
+    .plugin(tauri_plugin_shell::init())
+    .setup(|app| {
+      let window = app.get_window("main").unwrap();
+
+      #[cfg(target_os = "macos")]
+      apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
+        .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+
+      #[cfg(target_os = "windows")]
+      apply_mica(&window, None, None)
+        .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
+      Ok(())
+    })
+    .invoke_handler(tauri::generate_handler![close_splashscreen])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

@@ -51,10 +51,10 @@ export function MutedItem({ data }: { data: any }) {
               />
             </div>
             <div className="flex w-full flex-1 flex-col items-start gap-0.5 text-start">
-              <span className="truncate text-base font-medium leading-none text-zinc-100">
+              <span className="truncate text-base font-medium leading-none text-white">
                 {user?.displayName || user?.name || 'Pleb'}
               </span>
-              <span className="text-base leading-none text-zinc-400">
+              <span className="text-base leading-none text-white/50">
                 {shortenKey(data.content)}
               </span>
             </div>
@@ -64,7 +64,7 @@ export function MutedItem({ data }: { data: any }) {
               <button
                 type="button"
                 onClick={() => unmute()}
-                className="inline-flex h-6 w-min items-center justify-center rounded px-1.5 text-base font-medium leading-none text-zinc-400 hover:bg-zinc-800 hover:text-fuchsia-500"
+                className="inline-flex h-6 w-min items-center justify-center rounded px-1.5 text-base font-medium leading-none text-white/50 hover:bg-zinc-800 hover:text-fuchsia-500"
               >
                 Unmute
               </button>
@@ -72,7 +72,7 @@ export function MutedItem({ data }: { data: any }) {
               <button
                 type="button"
                 onClick={() => mute()}
-                className="inline-flex h-6 w-min items-center justify-center rounded px-1.5 text-base font-medium leading-none text-zinc-400 hover:bg-zinc-800 hover:text-fuchsia-500"
+                className="inline-flex h-6 w-min items-center justify-center rounded px-1.5 text-base font-medium leading-none text-white/50 hover:bg-zinc-800 hover:text-fuchsia-500"
               >
                 Mute
               </button>

@@ -5,24 +5,26 @@ import { createNote } from '@libs/storage';
 
 import { nHoursAgo } from '@utils/date';
 import { useAccount } from '@utils/hooks/useAccount';
-import { usePublish } from '@utils/hooks/usePublish';
-import { nip02ToArray } from '@utils/transform';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function useSocial() {
   const queryClient = useQueryClient();
 
-  const { publish } = usePublish();
-  const { fetcher, relayUrls } = useNDK();
+  const { publish } = useNostr();
+  const { ndk } = useNDK();
   const { account } = useAccount();
   const { status, data: userFollows } = useQuery(
     ['userFollows', account.pubkey],
     async () => {
-      const res = await fetcher.fetchLastEvent(relayUrls, {
-        kinds: [3],
-        authors: [account.pubkey],
+      const keys = [];
+      const user = ndk.getUser({ hexpubkey: account.pubkey });
+      const follows = await user.follows();
+
+      follows.forEach((item) => {
+        keys.push(item.hexpubkey);
       });
-      const list = nip02ToArray(res.tags);
-      return list;
+
+      return keys;
     },
     {
       enabled: account ? true : false,
@@ -66,11 +68,11 @@ export function useSocial() {
     });
 
     // fetch events
-    const events = await fetcher.fetchAllEvents(
-      relayUrls,
-      { authors: [pubkey], kinds: [1, 6] },
-      { since: nHoursAgo(48) }
-    );
+    const events = await ndk.fetchEvents({
+      authors: [pubkey],
+      kinds: [1, 6],
+      since: nHoursAgo(24),
+    });
 
     for (const event of events) {
       await createNote(

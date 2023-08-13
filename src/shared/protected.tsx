@@ -13,8 +13,8 @@ export function Protected({ children }: { children: ReactNode }) {
 
   if (status === 'loading') {
     return (
-      <div className="flex h-full w-full items-center justify-center">
-        <LoaderIcon className="h-6 w-6 animate-spin text-zinc-100" />
+      <div className="flex h-full w-full items-center justify-center bg-black/90">
+        <LoaderIcon className="h-6 w-6 animate-spin text-white" />
       </div>
     );
   }

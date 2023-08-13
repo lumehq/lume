@@ -16,7 +16,7 @@ import { sendNativeNotification } from '@utils/notification';
 
 const lastLogin = await getLastLogin();
 
-export function ActiveAccount({ data }: { data: any }) {
+export function ActiveAccount({ data }: { data: { pubkey: string; npub: string } }) {
   const queryClient = useQueryClient();
 
   const { ndk } = useNDK();
@@ -88,11 +88,11 @@ export function ActiveAccount({ data }: { data: any }) {
   }, []);
 
   if (status === 'loading') {
-    return <div className="h-9 w-9 animate-pulse rounded-md bg-zinc-800" />;
+    return <div className="h-9 w-9 animate-pulse rounded-md bg-white/50" />;
   }
 
   return (
-    <Link to={`/app/users/${data.pubkey}`} className="relative inline-block h-9 w-9">
+    <Link to={`/users/${data.pubkey}`} className="relative inline-block h-9 w-9">
       <Image
         src={user?.picture || user?.image}
         fallback={DEFAULT_AVATAR}

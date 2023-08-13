@@ -1,8 +1,7 @@
-import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createMetadata, getUserMetadata } from '@libs/storage';
+import { createMetadata } from '@libs/storage';
 
 export function useProfile(pubkey: string, fallback?: string) {
   const { ndk } = useNDK();
@@ -15,20 +14,14 @@ export function useProfile(pubkey: string, fallback?: string) {
     ['user', pubkey],
     async () => {
       if (!fallback) {
-        const current = Math.floor(Date.now() / 1000);
-        const cache = await getUserMetadata(pubkey);
-        if (cache && parseInt(cache.created_at) + 86400 >= current) {
-          return JSON.parse(cache.content);
+        const user = await ndk.getUser({ hexpubkey: pubkey });
+        await user.fetchProfile();
+        if (user.profile) {
+          user.profile.display_name = user.profile.displayName;
+          await createMetadata(user.npub, pubkey, JSON.stringify(user.profile));
+          return user.profile;
         } else {
-          const filter: NDKFilter = { kinds: [0], authors: [pubkey] };
-          const events = await ndk.fetchEvents(filter);
-          const latest = [...events].sort((a, b) => b.created_at - a.created_at).pop();
-          if (latest) {
-            await createMetadata(latest.id, latest.pubkey, latest.content);
-            return JSON.parse(latest.content);
-          } else {
-            throw new Error('User not found');
-          }
+          throw new Error('User not found');
         }
       } else {
         const profile = JSON.parse(fallback);
@@ -36,6 +29,8 @@ export function useProfile(pubkey: string, fallback?: string) {
       }
     },
     {
+      staleTime: Infinity,
+      refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     }

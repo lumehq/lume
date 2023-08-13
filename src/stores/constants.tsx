@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.1.1';
+export const APP_VERSION = '1.2.0';
 
 export const DEFAULT_AVATAR = 'https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih';
 
@@ -66,7 +66,6 @@ export const OPENGRAPH = {
 export const FULL_RELAYS = [
   'wss://relayable.org',
   'wss://relay.damus.io',
-  'wss://relay.nostrgraph.net',
   'wss://relay.nostr.band/all',
   'wss://nostr.mutinywallet.com',
 ];

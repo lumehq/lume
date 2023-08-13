@@ -1,148 +1,125 @@
 {
-	"build": {
-		"beforeDevCommand": "pnpm dev",
-		"beforeBuildCommand": "pnpm build",
-		"devPath": "http://localhost:3000",
-		"distDir": "../dist",
-		"withGlobalTauri": true
-	},
-	"package": {
-		"productName": "Lume",
-		"version": "1.1.1"
-	},
-	"tauri": {
-		"allowlist": {
-			"all": false,
-			"app": {
-				"all": false
-			},
-			"os": {
-				"all": true
-			},
-			"http": {
-				"all": true,
-				"request": true,
-				"scope": ["http://**", "https://**"]
-			},
-			"fs": {
-				"all": false,
-				"readFile": true,
-				"readDir": true,
-				"writeFile": true,
-				"removeFile": true,
-				"scope": [
-					"$APPDATA/*",
-					"$DATA/*",
-					"$LOCALDATA/*",
-					"$DESKTOP/*",
-					"$DOCUMENT/*",
-					"$DOWNLOAD/*",
-					"$HOME/*",
-					"$PICTURE/*",
-					"$PUBLIC/*",
-					"$VIDEO/*"
-				]
-			},
-			"path": {
-				"all": true
-			},
-			"shell": {
-				"all": false,
-				"open": true
-			},
-			"clipboard": {
-				"all": false,
-				"writeText": true,
-				"readText": true
-			},
-			"dialog": {
-				"all": false,
-				"open": true
-			},
-			"notification": {
-				"all": true
-			},
-			"window": {
-				"startDragging": true,
-				"close": true,
-				"create": true
-			},
-			"process": {
-				"all": false,
-				"exit": false,
-				"relaunch": true,
-				"relaunchDangerousAllowSymlinkMacos": false
-			}
-		},
-		"bundle": {
-			"active": true,
-			"category": "SocialNetworking",
-			"copyright": "",
-			"appimage": {
-				"bundleMediaFramework": true
-			},
-			"deb": {
-				"depends": []
-			},
-			"externalBin": [],
-			"icon": [
-				"icons/32x32.png",
-				"icons/128x128.png",
-				"icons/128x128@2x.png",
-				"icons/icon.icns",
-				"icons/icon.ico"
-			],
-			"identifier": "com.lume.nu",
-			"longDescription": "",
-			"macOS": {
-				"entitlements": null,
-				"exceptionDomain": "",
-				"frameworks": [],
-				"providerShortName": null,
-				"signingIdentity": null
-			},
-			"resources": [],
-			"shortDescription": "",
-			"targets": "all",
-			"windows": {
-				"certificateThumbprint": null,
-				"digestAlgorithm": "sha256",
-				"timestampUrl": ""
-			}
-		},
-		"security": {
-			"csp": "upgrade-insecure-requests"
-		},
-		"updater": {
-			"active": true,
-			"dialog": true,
-			"endpoints": [
-				"https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
-				"https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
-			],
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
-			"windows": {
-				"installMode": "passive"
-			}
-		},
-		"systemTray": {
-			"iconPath": "icons/icon.png",
-			"iconAsTemplate": true
-		},
-		"windows": [
-			{
-				"title": "Lume",
-				"theme": "Dark",
-				"titleBarStyle": "Overlay",
-				"hiddenTitle": true,
-				"transparent": false,
-				"fullscreen": false,
-				"resizable": true,
-				"width": 1080,
-				"height": 800,
-				"minWidth": 1080,
-				"minHeight": 720
-			}
-		]
-	}
+  "build": {
+    "beforeBuildCommand": "pnpm build",
+    "beforeDevCommand": "pnpm dev",
+    "devPath": "http://localhost:3000",
+    "distDir": "../dist",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "Lume",
+    "version": "1.2.0"
+  },
+  "plugins": {
+    "fs": {
+      "scope": [
+        "$APPDATA/*",
+        "$DATA/*",
+        "$LOCALDATA/*",
+        "$DESKTOP/*",
+        "$DOCUMENT/*",
+        "$DOWNLOAD/*",
+        "$HOME/*",
+        "$PICTURE/*",
+        "$PUBLIC/*",
+        "$VIDEO/*"
+      ]
+    },
+    "http": {
+      "scope": [
+        "http://**/",
+        "https://**/"
+      ]
+    },
+    "shell": {
+      "open": true
+    },
+    "updater": {
+      "endpoints": [
+        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
+        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
+      ]
+    }
+  },
+  "tauri": {
+    "bundle": {
+      "active": true,
+      "appimage": {
+        "bundleMediaFramework": true
+      },
+      "category": "SocialNetworking",
+      "copyright": "",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "com.lume.nu",
+      "longDescription": "",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "",
+      "targets": "all",
+      "updater": {
+        "active": true,
+        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
+        "windows": {
+          "installMode": "passive"
+        }
+      },
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
+    },
+    "security": {
+      "csp": "upgrade-insecure-requests"
+    },
+    "systemTray": {
+      "iconAsTemplate": true,
+      "iconPath": "icons/icon.png"
+    },
+    "windows": [
+      {
+        "width": 1080,
+        "height": 800,
+        "minWidth": 1080,
+        "minHeight": 800,
+        "resizable": true,
+        "theme": "Dark",
+        "title": "Lume",
+        "titleBarStyle": "Overlay",
+        "transparent": true,
+        "center": true,
+        "fullscreen": false,
+        "hiddenTitle": true,
+        "visible": false
+      },
+      {
+        "width": 400,
+        "height": 500,
+        "decorations": true,
+        "hiddenTitle": true,
+        "center": true,
+        "resizable": false,
+        "titleBarStyle": "Overlay",
+        "label": "splashscreen",
+        "url": "splashscreen"
+      }
+    ],
+    "macOSPrivateApi": true
+  }
 }

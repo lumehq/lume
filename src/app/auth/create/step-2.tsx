@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
+import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 import { useOnboarding } from '@stores/onboarding';
 import { useStronghold } from '@stores/stronghold';
@@ -29,12 +30,12 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 export function CreateStep2Screen() {
   const navigate = useNavigate();
+  const setStep = useOnboarding((state) => state.setStep);
+  const pubkey = useOnboarding((state) => state.pubkey);
+  const privkey = useStronghold((state) => state.privkey);
 
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
-
-  const privkey = useStronghold((state) => state.privkey);
-  const pubkey = useOnboarding((state) => state.pubkey);
 
   const { save } = useSecureStorage();
 
@@ -71,10 +72,15 @@ export function CreateStep2Screen() {
     }
   };
 
+  useEffect(() => {
+    // save current step, if user close app and reopen it
+    setStep('/auth/create/step-2');
+  }, []);
+
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-zinc-100">
+        <h1 className="text-xl font-semibold text-white">
           Set password to secure your key
         </h1>
       </div>
@@ -85,29 +91,21 @@ export function CreateStep2Screen() {
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                className="relative h-11 w-full rounded-lg bg-white/10 px-3.5 py-1 text-center text-white !outline-none placeholder:text-white/50"
               />
               <button
                 type="button"
                 onClick={() => showPassword()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
               >
                 {passwordInput === 'password' ? (
-                  <EyeOffIcon
-                    width={20}
-                    height={20}
-                    className="text-zinc-500 group-hover:text-zinc-100"
-                  />
+                  <EyeOffIcon className="h-4 w-4 text-white/50 group-hover:text-white" />
                 ) : (
-                  <EyeOnIcon
-                    width={20}
-                    height={20}
-                    className="text-zinc-500 group-hover:text-zinc-100"
-                  />
+                  <EyeOnIcon className="h-4 w-4 text-white/50 group-hover:text-white" />
                 )}
               </button>
             </div>
-            <div className="text-sm text-zinc-500">
+            <div className="text-sm text-white/50">
               <p>
                 Password is use to secure your key store in local machine, when you move
                 to other clients, you just need to copy your private key as nsec or
@@ -122,12 +120,20 @@ export function CreateStep2Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             >
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                <>
+                  <span className="w-5" />
+                  <span>Creating...</span>
+                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                </>
               ) : (
-                'Continue →'
+                <>
+                  <span className="w-5" />
+                  <span>Continue</span>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                </>
               )}
             </button>
           </div>

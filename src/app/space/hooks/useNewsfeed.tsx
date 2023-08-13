@@ -4,8 +4,6 @@ import { useEffect, useRef } from 'react';
 import { useNDK } from '@libs/ndk/provider';
 import { createNote } from '@libs/storage';
 
-import { useNote } from '@stores/note';
-
 import { useAccount } from '@utils/hooks/useAccount';
 
 export function useNewsfeed() {
@@ -15,15 +13,11 @@ export function useNewsfeed() {
   const { ndk } = useNDK();
   const { status, account } = useAccount();
 
-  const toggleHasNewNote = useNote((state) => state.toggleHasNewNote);
-
   useEffect(() => {
     if (status === 'success' && account) {
-      const follows = account ? JSON.parse(account.follows as string) : [];
-
       const filter: NDKFilter = {
         kinds: [1, 6],
-        authors: follows,
+        authors: account.follows,
         since: now.current,
       };
 
@@ -39,8 +33,6 @@ export function useNewsfeed() {
           event.content,
           event.created_at
         );
-        // notify user about created note
-        toggleHasNewNote(true);
       });
     }
 

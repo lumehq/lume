@@ -54,19 +54,19 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
         src={user?.picture || user?.image}
         fallback={DEFAULT_AVATAR}
         alt={pubkey}
-        className="h-14 w-14 rounded-md ring-2 ring-black"
+        className="h-14 w-14 rounded-md"
       />
       <div className="mt-2 flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-2">
           <h5 className="text-lg font-semibold leading-none">
             {user?.displayName || user?.name || 'No name'}
           </h5>
-          <span className="max-w-[15rem] truncate text-sm leading-none text-zinc-500">
+          <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
             {user?.nip05 || displayNpub(pubkey, 16)}
           </span>
         </div>
         <div className="flex flex-col gap-4">
-          <p className="mt-2 max-w-[500px] select-text break-words text-zinc-100">
+          <p className="mt-2 max-w-[500px] select-text break-words text-white">
             {user?.about}
           </p>
           <UserMetadata pubkey={pubkey} />
@@ -75,7 +75,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           {status === 'loading' ? (
             <button
               type="button"
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
             >
               Loading...
             </button>
@@ -83,7 +83,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             <button
               type="button"
               onClick={() => unfollowUser(pubkey)}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
             >
               Unfollow
             </button>
@@ -91,23 +91,17 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             <button
               type="button"
               onClick={() => followUser(pubkey)}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
             >
               Follow
             </button>
           )}
           <Link
-            to={`/app/chats/${pubkey}`}
-            className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-fuchsia-500"
+            to={`/chats/${pubkey}`}
+            className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
           >
             Message
           </Link>
-          <button
-            type="button"
-            className="group inline-flex h-10 w-10 items-center justify-center rounded-md bg-zinc-900 text-sm font-medium hover:bg-orange-500"
-          >
-            <ZapIcon className="h-5 w-5" />
-          </button>
         </div>
       </div>
     </div>

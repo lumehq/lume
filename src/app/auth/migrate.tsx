@@ -92,7 +92,7 @@ export function MigrateScreen() {
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
         <div className="mb-8 text-center">
-          <h1 className="text-xl font-semibold text-zinc-100">
+          <h1 className="text-xl font-semibold text-white">
             Upgrade security for your account
           </h1>
         </div>
@@ -100,15 +100,15 @@ export function MigrateScreen() {
           <div className="flex flex-col gap-4">
             <div>
               <div className="mt-1">
-                <p className="text-sm text-zinc-400">
+                <p className="text-sm text-white/50">
                   You&apos;re using old Lume version which store your private key as
                   plaintext in database, this is huge security risk.
                 </p>
-                <p className="mt-2 text-sm text-zinc-400">
+                <p className="mt-2 text-sm text-white/50">
                   To secure your private key, please set a password and Lume will put your
                   private key in secure storage.
                 </p>
-                <p className="mt-2 text-sm text-zinc-400">
+                <p className="mt-2 text-sm text-white/50">
                   It is not possible to start the app without applying this step, it is
                   easy and fast!
                 </p>
@@ -124,7 +124,7 @@ export function MigrateScreen() {
                     {...register('password', { required: true })}
                     type={passwordInput}
                     placeholder="min. 4 characters"
-                    className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-zinc-100 !outline-none placeholder:text-zinc-400"
+                    className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                   />
                   <button
                     type="button"
@@ -135,13 +135,13 @@ export function MigrateScreen() {
                       <EyeOffIcon
                         width={20}
                         height={20}
-                        className="text-zinc-500 group-hover:text-zinc-100"
+                        className="text-white/50 group-hover:text-white"
                       />
                     ) : (
                       <EyeOnIcon
                         width={20}
                         height={20}
-                        className="text-zinc-500 group-hover:text-zinc-100"
+                        className="text-white/50 group-hover:text-white"
                       />
                     )}
                   </button>
@@ -154,10 +154,10 @@ export function MigrateScreen() {
                 <button
                   type="submit"
                   disabled={!isDirty || !isValid}
-                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
+                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 disabled:pointer-events-none disabled:opacity-50"
                 >
                   {loading ? (
-                    <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                    <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
                   ) : (
                     'Continue →'
                   )}

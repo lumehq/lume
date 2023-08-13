@@ -18,16 +18,16 @@ export function RepostUser({ pubkey }: { pubkey: string }) {
         src={user?.picture || user?.image || DEFAULT_AVATAR}
         fallback={DEFAULT_AVATAR}
         alt={pubkey}
-        className="relative z-20 inline-block h-6 w-6 rounded bg-white ring-1 ring-zinc-800"
+        className="relative z-20 inline-block h-6 w-6 rounded bg-white ring-1 ring-black"
       />
       <div className="inline-flex items-baseline gap-1">
-        <h5 className="max-w-[18rem] truncate text-zinc-400">
+        <h5 className="max-w-[18rem] truncate text-white/50">
           {user?.nip05?.toLowerCase() ||
             user?.name ||
             user?.display_name ||
             shortenKey(pubkey)}
         </h5>
-        <span className="text-zinc-400">reposted</span>
+        <span className="text-white/50">reposted</span>
       </div>
     </div>
   );

@@ -13,20 +13,16 @@ export function NotiMention({ event }: { event: NDKEvent }) {
   const content = useMemo(() => parser(event), [event]);
 
   return (
-    <div className="flex h-min flex-col px-5 py-2">
+    <div className="flex h-min flex-col px-3 py-3">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-1">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-zinc-400">reply your post</p>
+          <p className="leading-none text-white/50">reply your postr</p>
         </div>
-        <div>
-          <span className="leading-none text-zinc-500">{createdAt}</span>
-        </div>
+        <span className="leading-none text-white/50">{createdAt}</span>
       </div>
-      <div className="-mt-4 pl-[35px]">
-        <div>
-          <NoteContent content={content} />
-        </div>
+      <div className="-mt-3 pl-[44px]">
+        <NoteContent content={content} />
         {replyTo && <MentionNote id={replyTo} />}
       </div>
     </div>

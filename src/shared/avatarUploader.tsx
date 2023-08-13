@@ -9,26 +9,24 @@ export function AvatarUploader({ setPicture }: { setPicture: any }) {
   const [loading, setLoading] = useState(false);
 
   const uploadAvatar = async () => {
+    setLoading(true);
     const image = await upload(null);
     if (image.url) {
-      // update parent state
       setPicture(image.url);
-
-      // disable loader
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
     <button
       type="button"
       onClick={() => uploadAvatar()}
-      className="inline-flex h-full w-full items-center justify-center bg-zinc-900/40"
+      className="inline-flex h-full w-full items-center justify-center rounded-lg bg-black/50 hover:bg-black/60"
     >
       {loading ? (
-        <LoaderIcon className="h-6 w-6 animate-spin text-zinc-100" />
+        <LoaderIcon className="h-6 w-6 animate-spin text-white" />
       ) : (
-        <PlusIcon className="h-6 w-6 text-zinc-100" />
+        <PlusIcon className="h-6 w-6 text-white" />
       )}
     </button>
   );

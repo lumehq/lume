@@ -1,15 +1,14 @@
 import { BLOCK_KINDS } from '@stores/constants';
-
-import { useBlock } from '@utils/hooks/useBlock';
+import { useWidgets } from '@stores/widgets';
 
 export function Hashtag({ tag }: { tag: string }) {
-  const { add } = useBlock();
+  const setWidget = useWidgets((state) => state.setWidget);
 
   return (
     <button
       type="button"
       onClick={() =>
-        add.mutate({
+        setWidget({
           kind: BLOCK_KINDS.hashtag,
           title: tag,
           content: tag.replace('#', ''),

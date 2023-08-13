@@ -14,14 +14,13 @@ import { CancelIcon, LoaderIcon, PlusCircleIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
-import { FULL_RELAYS } from '@stores/constants';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 import { useImageUploader } from '@utils/hooks/useUploader';
 import { sendNativeNotification } from '@utils/notification';
 
 export function Composer() {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
 
   const [status, setStatus] = useState<null | 'loading' | 'done'>(null);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
@@ -45,7 +44,7 @@ export function Composer() {
       Image.configure({
         HTMLAttributes: {
           class:
-            'rounded-lg w-2/3 h-auto border border-zinc-800 outline outline-2 outline-offset-0 outline-zinc-700 ml-1',
+            'rounded-lg w-2/3 h-auto border border-white/10 outline outline-2 outline-offset-0 outline-white/20 ml-1',
         },
       }),
     ],
@@ -54,14 +53,14 @@ export function Composer() {
       attributes: {
         class: twMerge(
           'scrollbar-hide markdown break-all max-h-[500px] overflow-y-auto outline-none pr-2',
-          `${reply.id ? '!min-h-42' : '!min-h-[100px]'}`
+          `${reply.id ? '!min-h-42' : '!min-h-[120px]'}`
         ),
       },
     },
   });
 
   const uploadImage = async (file?: string) => {
-    const image = await upload(file);
+    const image = await upload(file, true);
     if (image.url) {
       editor.commands.setImage({ src: image.url });
       editor.commands.createParagraphNear();
@@ -88,13 +87,13 @@ export function Composer() {
       if (reply.id && reply.pubkey) {
         if (reply.root && reply.root.length > 1) {
           tags = [
-            ['e', reply.root, FULL_RELAYS[0], 'root'],
-            ['e', reply.id, FULL_RELAYS[0], 'reply'],
+            ['e', reply.root, 'wss://relayable.org', 'root'],
+            ['e', reply.id, 'wss://relayable.org', 'reply'],
             ['p', reply.pubkey],
           ];
         } else {
           tags = [
-            ['e', reply.id, FULL_RELAYS[0], 'reply'],
+            ['e', reply.id, 'wss://relayable.org', 'reply'],
             ['p', reply.pubkey],
           ];
         }
@@ -112,7 +111,7 @@ export function Composer() {
       await publish({ content: serializedContent, kind: 1, tags });
 
       // send native notifiation
-      await sendNativeNotification('Publish post successfully');
+      await sendNativeNotification('Publish postr successfully');
 
       // update state
       setStatus('done');
@@ -131,7 +130,7 @@ export function Composer() {
     <div className="flex h-full flex-col px-4 pb-4">
       <div className="flex h-full w-full gap-3">
         <div className="flex w-8 shrink-0 items-center justify-center">
-          <div className="h-full w-[2px] bg-zinc-800" />
+          <div className="h-full w-[2px] bg-white/10" />
         </div>
         <div className="w-full">
           <EditorContent
@@ -147,9 +146,9 @@ export function Composer() {
               <button
                 type="button"
                 onClick={() => clearReply()}
-                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center gap-2 rounded bg-zinc-800 px-2 hover:bg-zinc-700"
+                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-white/10 px-2"
               >
-                <CancelIcon className="h-4 w-4 text-zinc-100" />
+                <CancelIcon className="h-4 w-4 text-white" />
               </button>
             </div>
           )}
@@ -159,15 +158,15 @@ export function Composer() {
         <button
           type="button"
           onClick={() => uploadImage()}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-800"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-white/10"
         >
-          <PlusCircleIcon className="h-5 w-5 text-zinc-500" />
+          <PlusCircleIcon className="h-5 w-5 text-white/50" />
         </button>
         <Button onClick={() => submit()} preset="publish">
           {status === 'loading' ? (
-            <LoaderIcon className="h-4 w-4 animate-spin text-zinc-100" />
+            <LoaderIcon className="h-4 w-4 animate-spin text-white" />
           ) : (
-            'Publish'
+            'Postr'
           )}
         </Button>
       </div>

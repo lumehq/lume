@@ -1,5 +1,5 @@
 import { downloadDir } from '@tauri-apps/api/path';
-import { download } from 'tauri-plugin-upload-api';
+import { download } from '@tauri-apps/plugin-upload';
 
 import { DownloadIcon } from '@shared/icons';
 import { Image } from '@shared/image';
@@ -22,14 +22,14 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
               alt="image"
               className={`${
                 truncate ? 'h-auto max-h-[300px]' : 'h-auto'
-              } w-full rounded-lg border border-zinc-800/50 object-cover`}
+              } w-full rounded-lg border border-white/10 object-cover`}
             />
             <button
               type="button"
               onClick={() => downloadImage(url)}
-              className="absolute right-3 top-3 hidden h-7 w-7 items-center justify-center rounded-md bg-black/70 backdrop-blur-md hover:bg-fuchsia-500 group-hover:inline-flex"
+              className="absolute right-2 top-2 hidden h-8 w-8 items-center justify-center rounded-md bg-black/50 backdrop-blur-md hover:bg-black/40 group-hover:inline-flex"
             >
-              <DownloadIcon className="h-4 w-4 text-zinc-100" />
+              <DownloadIcon className="h-5 w-5 text-white" />
             </button>
           </div>
         ))}

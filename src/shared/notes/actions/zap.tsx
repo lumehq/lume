@@ -8,10 +8,10 @@ import { Button } from '@shared/button';
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
 import { useEvent } from '@utils/hooks/useEvent';
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function NoteZap({ id }: { id: string }) {
-  const { createZap } = usePublish();
+  const { createZap } = useNostr();
   const { data: event } = useEvent(id);
 
   const [amount, setAmount] = useState<null | number>(null);
@@ -23,6 +23,7 @@ export function NoteZap({ id }: { id: string }) {
   };
 
   const createZapRequest = async () => {
+    // @ts-expect-error, todo: fix this
     const res = await createZap(event as unknown as NostrEvent, amount);
     if (res) setInvoice(res);
   };
@@ -43,10 +44,10 @@ export function NoteZap({ id }: { id: string }) {
           <Dialog.Content className="relative flex h-min w-full max-w-lg flex-col gap-2 rounded-lg border-t border-zinc-800/50 bg-zinc-900">
             <div className="relative h-min w-full shrink-0 border-b border-zinc-800 px-5 py-3">
               <div className="flex flex-col items-center gap-1.5">
-                <Dialog.Title className="font-medium leading-none text-zinc-100">
+                <Dialog.Title className="font-medium leading-none text-white">
                   Zap (Beta)
                 </Dialog.Title>
-                <Dialog.Description className="text-sm leading-none text-zinc-400">
+                <Dialog.Description className="text-sm leading-none text-white/50">
                   Send tip with Bitcoin via Lightning
                 </Dialog.Description>
               </div>
@@ -178,10 +179,10 @@ export function NoteZap({ id }: { id: string }) {
                     <QRCodeSVG value={invoice} size={256} />
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <h3 className="text-lg font-medium leading-none text-zinc-100">
+                    <h3 className="text-lg font-medium leading-none text-white">
                       Scan to pay
                     </h3>
-                    <span className="text-center text-sm text-zinc-400">
+                    <span className="text-center text-sm text-white/50">
                       You must use Bitcoin wallet which support Lightning
                       <br />
                       such as: Blue Wallet, Bitkit, Phoenix,...

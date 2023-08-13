@@ -81,65 +81,53 @@ export function UnlockScreen() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h1 className="text-xl font-semibold text-zinc-100">
-            Enter password to unlock
-          </h1>
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-semibold text-white">Enter password to unlock</h1>
         </div>
-        <div className="flex flex-col gap-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <div className="relative">
-                <input
-                  {...register('password', { required: true })}
-                  type={passwordInput}
-                  className="relative w-full rounded-lg bg-zinc-800 py-3 text-center text-zinc-100 !outline-none placeholder:text-zinc-400"
-                />
-                <button
-                  type="button"
-                  onClick={() => showPassword()}
-                  className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
-                >
-                  {passwordInput === 'password' ? (
-                    <EyeOffIcon
-                      width={20}
-                      height={20}
-                      className="text-zinc-500 group-hover:text-zinc-100"
-                    />
-                  ) : (
-                    <EyeOnIcon
-                      width={20}
-                      height={20}
-                      className="text-zinc-500 group-hover:text-zinc-100"
-                    />
-                  )}
-                </button>
-              </div>
-              <span className="text-sm text-red-400">
-                {errors.password && <p>{errors.password.message}</p>}
-              </span>
-            </div>
-            <div className="flex flex-col items-center justify-center">
+        <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <div className="relative">
+              <input
+                {...register('password', { required: true })}
+                type={passwordInput}
+                className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/10"
+              />
               <button
-                type="submit"
-                disabled={!isDirty || !isValid}
-                className="inline-flex h-11 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-zinc-100 hover:bg-fuchsia-600"
+                type="button"
+                onClick={() => showPassword()}
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
               >
-                {loading ? (
-                  <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-zinc-100" />
+                {passwordInput === 'password' ? (
+                  <EyeOffIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
                 ) : (
-                  'Continue →'
+                  <EyeOnIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
                 )}
               </button>
-              <Link
-                to="/auth/reset"
-                className="inline-flex h-12 items-center justify-center text-center text-sm text-zinc-400"
-              >
-                Reset password
-              </Link>
             </div>
-          </form>
-        </div>
+            <span className="text-sm text-red-400">
+              {errors.password && <p>{errors.password.message}</p>}
+            </span>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <button
+              type="submit"
+              disabled={!isDirty || !isValid}
+              className="inline-flex h-12 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
+            >
+              {loading ? (
+                <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+              ) : (
+                'Continue →'
+              )}
+            </button>
+            <Link
+              to="/auth/reset"
+              className="inline-flex h-14 items-center justify-center text-center text-white/50"
+            >
+              Reset password
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );

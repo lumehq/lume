@@ -1,41 +1,84 @@
-// source: https://github.com/nostr-dev-kit/ndk-react/
+// inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
-import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
-import { useEffect, useState } from 'react';
+import { fetch } from '@tauri-apps/plugin-http';
+import { useEffect, useMemo, useState } from 'react';
 
-import { getSetting } from '@libs/storage';
+import TauriAdapter from '@libs/ndk/cache';
+import { getExplicitRelayUrls } from '@libs/storage';
 
-const setting = await getSetting('relays');
-const relays = normalizeRelayUrlSet(JSON.parse(setting));
+import { FULL_RELAYS } from '@stores/constants';
 
 export const NDKInstance = () => {
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
-  const [relayUrls, setRelayUrls] = useState<string[]>(relays);
-  const [fetcher, setFetcher] = useState<NostrFetcher>(undefined);
+  const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
-  useEffect(() => {
-    loadNdk(relays);
-  }, []);
+  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
 
-  async function loadNdk(explicitRelayUrls: string[]) {
-    const ndkInstance = new NDK({ explicitRelayUrls });
+  // TODO: fully support NIP-11
+  async function verifyRelays(relays: string[]) {
+    const verifiedRelays: string[] = [];
 
-    try {
-      await ndkInstance.connect();
-    } catch (error) {
-      console.error('ERROR loading NDK NDKInstance', error);
+    for (const relay of relays) {
+      let url: string;
+
+      if (relay.startsWith('ws')) {
+        url = relay.replace('ws', 'http');
+      }
+
+      if (relay.startsWith('wss')) {
+        url = relay.replace('wss', 'https');
+      }
+
+      try {
+        const res = await fetch(url, {
+          headers: { Accept: 'application/nostr+json' },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log('relay information: ', data);
+          verifiedRelays.push(relay);
+        }
+      } catch (e) {
+        console.log('fetch error', e);
+      }
     }
 
-    setNDK(ndkInstance);
-    setRelayUrls(explicitRelayUrls);
-    setFetcher(NostrFetcher.withCustomPool(ndkAdapter(ndkInstance)));
+    return verifiedRelays;
   }
+
+  async function initNDK() {
+    let explicitRelayUrls: string[];
+    const explicitRelayUrlsFromDB = await getExplicitRelayUrls();
+
+    if (explicitRelayUrlsFromDB) {
+      explicitRelayUrls = await verifyRelays(explicitRelayUrlsFromDB);
+    } else {
+      explicitRelayUrls = await verifyRelays(FULL_RELAYS);
+    }
+
+    const instance = new NDK({ explicitRelayUrls, cacheAdapter });
+
+    try {
+      await instance.connect(10000);
+    } catch (error) {
+      throw new Error('NDK instance init failed: ', error);
+    }
+
+    setNDK(instance);
+    setRelayUrls(explicitRelayUrls);
+  }
+
+  useEffect(() => {
+    if (!ndk) initNDK();
+
+    return () => {
+      cacheAdapter.save();
+    };
+  }, []);
 
   return {
     ndk,
     relayUrls,
-    fetcher,
-    loadNdk,
   };
 };

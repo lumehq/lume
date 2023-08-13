@@ -12,15 +12,14 @@ import { LumeEvent } from '@utils/types';
 export function UserFeed({ pubkey }: { pubkey: string }) {
   const parentRef = useRef();
 
-  const { fetcher, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['user-feed', pubkey], async () => {
-    const events = await fetcher.fetchAllEvents(
-      relayUrls,
-      { kinds: [1], authors: [pubkey] },
-      { since: nHoursAgo(48) },
-      { sort: true }
-    );
-    return events as unknown as LumeEvent[];
+    const events = await ndk.fetchEvents({
+      kinds: [1],
+      authors: [pubkey],
+      since: nHoursAgo(48),
+    });
+    return [...events] as unknown as LumeEvent[];
   });
 
   const rowVirtualizer = useVirtualizer({

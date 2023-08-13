@@ -1,9 +1,17 @@
+import Database from '@tauri-apps/plugin-sql';
 import destr from 'destr';
-import Database from 'tauri-plugin-sql-api';
 
 import { parser } from '@utils/parser';
 import { getParentID } from '@utils/transform';
-import { Account, Block, Chats, LumeEvent, Profile, Settings } from '@utils/types';
+import {
+  Account,
+  Chats,
+  LumeEvent,
+  Profile,
+  Relays,
+  Settings,
+  Widget,
+} from '@utils/types';
 
 let db: null | Database = null;
 
@@ -24,6 +32,12 @@ export async function getActiveAccount() {
     'SELECT * FROM accounts WHERE is_active = 1;'
   );
   if (result.length > 0) {
+    result[0]['follows'] = result[0].follows
+      ? JSON.parse(result[0].follows as unknown as string)
+      : null;
+    result[0]['network'] = result[0].network
+      ? JSON.parse(result[0].network as unknown as string)
+      : null;
     return result[0];
   } else {
     return null;
@@ -52,7 +66,7 @@ export async function createAccount(
     [npub, pubkey, 'privkey is stored in secure storage', follows || '', is_active || 0]
   );
   if (res) {
-    await createBlock(
+    await createWidget(
       0,
       'Have fun together!',
       'https://void.cat/d/N5KUHEQCVg7SywXUPiJ7yq.jpg'
@@ -63,15 +77,12 @@ export async function createAccount(
 }
 
 // update account
-export async function updateAccount(
-  column: string,
-  value: string | string[],
-  pubkey: string
-) {
+export async function updateAccount(column: string, value: string | string[]) {
   const db = await connect();
-  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE pubkey = ?;`, [
+  const account = await getActiveAccount();
+  return await db.execute(`UPDATE accounts SET ${column} = ? WHERE id = ?;`, [
     value,
-    pubkey,
+    account.id,
   ]);
 }
 
@@ -305,8 +316,6 @@ export async function getChannelUsers(channel_id: string) {
 export async function getChats() {
   const db = await connect();
   const account = await getActiveAccount();
-  const follows =
-    typeof account.follows === 'string' ? JSON.parse(account.follows) : account.follows;
 
   const chats: { follows: Array<Chats> | null; unknowns: Array<Chats> | null } = {
     follows: [],
@@ -321,7 +330,7 @@ export async function getChats() {
   result = result.sort((a, b) => a.new_messages - b.new_messages);
 
   chats.follows = result.filter((el) => {
-    return follows.some((i) => {
+    return account.follows.some((i) => {
       return i === el.sender_pubkey;
     });
   });
@@ -408,34 +417,43 @@ export async function updateLastLogin(value: number) {
   );
 }
 
-// get all blocks
-export async function getBlocks() {
+// get all widgets
+export async function getWidgets() {
   const db = await connect();
   const account = await getActiveAccount();
-  const result: Array<Block> = await db.select(
-    `SELECT * FROM blocks WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
+  const result: Array<Widget> = await db.select(
+    `SELECT * FROM widgets WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
   );
   return result;
 }
 
 // create block
-export async function createBlock(
+export async function createWidget(
   kind: number,
   title: string,
   content: string | string[]
 ) {
   const db = await connect();
   const activeAccount = await getActiveAccount();
-  return await db.execute(
-    'INSERT OR IGNORE INTO blocks (account_id, kind, title, content) VALUES (?, ?, ?, ?);',
+  const insert = await db.execute(
+    'INSERT OR IGNORE INTO widgets (account_id, kind, title, content) VALUES (?, ?, ?, ?);',
     [activeAccount.id, kind, title, content]
   );
+
+  if (insert) {
+    const record: Widget = await db.select(
+      'SELECT * FROM widgets ORDER BY id DESC LIMIT 1;'
+    );
+    return record[0];
+  } else {
+    return null;
+  }
 }
 
 // remove block
-export async function removeBlock(id: string) {
+export async function removeWidget(id: string) {
   const db = await connect();
-  return await db.execute(`DELETE FROM blocks WHERE id = "${id}";`);
+  return await db.execute(`DELETE FROM widgets WHERE id = "${id}";`);
 }
 
 // logout
@@ -444,8 +462,7 @@ export async function removeAll() {
   await db.execute(`UPDATE settings SET value = "0" WHERE key = "last_login";`);
   await db.execute('DELETE FROM replies;');
   await db.execute('DELETE FROM notes;');
-  await db.execute('DELETE FROM blacklist;');
-  await db.execute('DELETE FROM blocks;');
+  await db.execute('DELETE FROM widgets;');
   await db.execute('DELETE FROM chats;');
   await db.execute('DELETE FROM accounts;');
   return true;
@@ -496,4 +513,45 @@ export async function removePrivkey() {
   return await db.execute(
     `UPDATE accounts SET privkey = "privkey is stored in secure storage" WHERE id = "${activeAccount.id}";`
   );
+}
+
+// get relays
+export async function getRelays() {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  return (await db.select(
+    `SELECT * FROM relays WHERE account_id = "${activeAccount.id}";`
+  )) as Relays[];
+}
+
+// get relays
+export async function getExplicitRelayUrls() {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+
+  if (!activeAccount) return null;
+
+  const result: Relays[] = await db.select(
+    `SELECT * FROM relays WHERE account_id = "${activeAccount.id}";`
+  );
+
+  if (result.length > 0) return result.map((el) => el.relay);
+
+  return null;
+}
+
+// create relay
+export async function createRelay(relay: string, purpose?: string) {
+  const db = await connect();
+  const activeAccount = await getActiveAccount();
+  return await db.execute(
+    'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES (?, ?, ?);',
+    [activeAccount.id, relay, purpose || '']
+  );
+}
+
+// remove relay
+export async function removeRelay(relay: string) {
+  const db = await connect();
+  return await db.execute(`DELETE FROM relays WHERE relay = "${relay}";`);
 }

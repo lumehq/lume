@@ -15,11 +15,11 @@ button {
 }
 
 .markdown {
-  @apply prose prose-zinc max-w-none select-text hyphens-auto dark:prose-invert prose-p:mb-2 prose-p:mt-0 prose-p:break-words prose-p:[word-break:break-word] prose-p:last:mb-0 prose-a:break-words prose-a:break-all prose-a:font-normal prose-a:leading-tight prose-a:text-fuchsia-400 prose-a:after:content-['_↗'] hover:prose-a:text-fuchsia-500 prose-blockquote:m-0 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-li:leading-tight prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2;
+  @apply prose prose-white max-w-none select-text hyphens-auto text-white prose-p:mb-2 prose-p:mt-0 prose-p:break-words prose-p:[word-break:break-word] prose-p:last:mb-0 prose-a:break-words prose-a:break-all prose-a:font-normal prose-a:leading-tight prose-a:after:content-['_↗'] hover:prose-a:text-fuchsia-500 prose-blockquote:m-0 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-li:leading-tight prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2;
 }
 
 .ProseMirror p.is-empty::before {
-  @apply text-zinc-500;
+  @apply text-white/50;
   content: attr(data-placeholder);
   float: left;
   height: 0;

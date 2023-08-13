@@ -9,11 +9,11 @@ import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { Block, LumeEvent } from '@utils/types';
+import { LumeEvent, Widget } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
 
-export function FeedBlock({ params }: { params: Block }) {
+export function FeedBlock({ params }: { params: Widget }) {
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed', params.content],
@@ -34,6 +34,7 @@ export function FeedBlock({ params }: { params: Block }) {
   });
 
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+  const totalSize = rowVirtualizer.getTotalSize();
 
   useEffect(() => {
     const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
@@ -113,24 +114,20 @@ export function FeedBlock({ params }: { params: Block }) {
   );
 
   return (
-    <div className="w-[400px] shrink-0 border-r border-zinc-900">
+    <div className="relative w-[400px] shrink-0 bg-white/10">
       <TitleBar id={params.id} title={params.title} />
-      <div
-        ref={parentRef}
-        className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"
-        style={{ contain: 'strict' }}
-      >
+      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>
         ) : itemsVirtualizer.length === 0 ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+            <div className="bbg-white/10 rounded-xl px-3 py-6">
               <div className="flex flex-col items-center gap-4">
-                <p className="text-center text-sm text-zinc-300">
+                <p className="text-center text-sm text-white">
                   Not found any posts from last 48 hours
                 </p>
               </div>
@@ -140,7 +137,7 @@ export function FeedBlock({ params }: { params: Block }) {
           <div
             className="relative w-full"
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
+              height: `${totalSize}px`,
             }}
           >
             <div
@@ -157,7 +154,7 @@ export function FeedBlock({ params }: { params: Block }) {
         )}
         {isFetchingNextPage && (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>

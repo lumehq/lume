@@ -23,7 +23,7 @@ const Header = (
       <div className="w-full border-t border-zinc-800" />
     </div>
     <div className="relative flex justify-center">
-      <div className="inline-flex items-center gap-x-1.5 rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-medium text-zinc-400 shadow-sm ring-1 ring-inset ring-zinc-800">
+      <div className="inline-flex items-center gap-x-1.5 rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white/50 shadow-sm ring-1 ring-inset ring-zinc-800">
         {getHourAgo(24, now).toLocaleDateString('en-US', {
           weekday: 'long',
           year: 'numeric',
@@ -40,7 +40,7 @@ const Empty = (
     <h3 className="text-base font-semibold leading-none text-white">
       Nothing to see here yet
     </h3>
-    <p className="text-base leading-none text-zinc-400">
+    <p className="text-base leading-none text-white/50">
       Be the first to share a message in this channel.
     </p>
   </div>
@@ -102,7 +102,7 @@ export function ChannelScreen() {
           data-tauri-drag-region
           className="inline-flex h-11 w-full shrink-0 items-center justify-center border-b border-zinc-900"
         >
-          <h3 className="font-semibold text-zinc-100">Public Channel</h3>
+          <h3 className="font-semibold text-white">Public Channel</h3>
         </div>
         <div className="h-full w-full flex-1 p-3">
           <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl border-t border-zinc-800/50 bg-zinc-900">

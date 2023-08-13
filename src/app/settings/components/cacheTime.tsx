@@ -20,7 +20,7 @@ export function CacheTimeSetting() {
         <span className="font-medium leading-none text-zinc-200">
           Cache time (milliseconds)
         </span>
-        <span className="text-sm leading-none text-zinc-400">
+        <span className="text-sm leading-none text-white/50">
           The length of time before inactive data gets removed from the cache
         </span>
       </div>
@@ -37,7 +37,7 @@ export function CacheTimeSetting() {
           onClick={() => update()}
           className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-800 font-medium hover:bg-fuchsia-500"
         >
-          <CheckCircleIcon className="h-4 w-4 text-zinc-100" />
+          <CheckCircleIcon className="h-4 w-4 text-white" />
         </button>
       </div>
     </div>

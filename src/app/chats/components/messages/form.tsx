@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { EnterIcon } from '@shared/icons';
 import { MediaUploader } from '@shared/mediaUploader';
 
-import { usePublish } from '@utils/hooks/usePublish';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatMessageForm({
   receiverPubkey,
@@ -14,7 +14,7 @@ export function ChatMessageForm({
   userPubkey: string;
   userPrivkey: string;
 }) {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const [value, setValue] = useState('');
 
   const encryptMessage = useCallback(async () => {
@@ -51,10 +51,10 @@ export function ChatMessageForm({
         onKeyDown={handleEnterPress}
         spellCheck={false}
         placeholder="Message"
-        className="relative h-11 w-full resize-none rounded-md bg-zinc-800 px-5 !outline-none placeholder:text-zinc-500"
+        className="relative h-11 w-full resize-none rounded-md bg-white/10 px-5 text-white !outline-none placeholder:text-white/50"
       />
       <div className="absolute right-2 top-0 h-11">
-        <div className="flex h-full items-center justify-end gap-3 text-zinc-500">
+        <div className="flex h-full items-center justify-end gap-3 text-white/50">
           <MediaUploader setState={setValue} />
           <button
             type="button"

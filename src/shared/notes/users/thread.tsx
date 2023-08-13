@@ -25,20 +25,20 @@ export function ThreadUser({ pubkey, time }: { pubkey: string; time: number }) {
       />
       <div className="lex flex-1 items-baseline justify-between">
         <div className="inline-flex w-full items-center justify-between">
-          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-zinc-100">
+          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
             {user?.nip05?.toLowerCase() || user?.name || user?.display_name}
           </h5>
           <button
             type="button"
-            className="inline-flex h-5 w-max items-center justify-center rounded px-1 hover:bg-zinc-800"
+            className="inline-flex h-5 w-max items-center justify-center rounded px-1 hover:bg-white/10"
           >
-            <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-zinc-200" />
+            <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-white/50" />
           </button>
         </div>
         <div className="mt-1 inline-flex items-center gap-2">
-          <span className="leading-none text-zinc-500">{createdAt}</span>
-          <span className="leading-none text-zinc-500">·</span>
-          <span className="leading-none text-zinc-500">{displayNpub(pubkey, 16)}</span>
+          <span className="leading-none text-white/50">{createdAt}</span>
+          <span className="leading-none text-white/50">·</span>
+          <span className="leading-none text-white/50">{displayNpub(pubkey, 16)}</span>
         </div>
       </div>
     </div>

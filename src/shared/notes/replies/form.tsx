@@ -5,12 +5,12 @@ import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
 
+import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
-import { usePublish } from '@utils/hooks/usePublish';
 import { displayNpub } from '@utils/shortenKey';
 
 export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
-  const { publish } = usePublish();
+  const { publish } = useNostr();
   const { status, user } = useProfile(pubkey);
 
   const [value, setValue] = useState('');
@@ -26,17 +26,17 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   return (
-    <div className="flex flex-col rounded-xl border-t border-zinc-800/50 bg-zinc-900">
+    <div className="mt-3 flex flex-col rounded-xl bg-white/10">
       <div className="relative w-full flex-1 overflow-hidden">
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Reply to this thread..."
-          className=" relative h-24 w-full resize-none rounded-md bg-transparent px-3 py-3 text-base !outline-none placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+          className=" relative h-24 w-full resize-none rounded-md bg-transparent px-3 py-3 text-base text-white !outline-none placeholder:text-white/50"
           spellCheck={false}
         />
       </div>
-      <div className="w-full border-t border-zinc-800 px-3 py-3">
+      <div className="w-full border-t border-white/10 px-3 py-3">
         {status === 'loading' ? (
           <div>
             <p>Loading...</p>
@@ -53,8 +53,8 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
                 />
               </div>
               <div>
-                <p className="mb-1 text-sm leading-none text-zinc-400">Reply as</p>
-                <p className="text-sm font-medium leading-none text-zinc-100">
+                <p className="mb-1 text-sm leading-none text-white/50">Reply as</p>
+                <p className="text-sm font-medium leading-none text-white">
                   {user?.nip05 || user?.name || displayNpub(pubkey, 16)}
                 </p>
               </div>

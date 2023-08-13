@@ -7,22 +7,25 @@ import { NoteSkeleton, Reply } from '@shared/notes';
 import { LumeEvent } from '@utils/types';
 
 export function RepliesList({ id }: { id: string }) {
-  const { relayUrls, fetcher } = useNDK();
+  const { ndk } = useNDK();
   const { status, data } = useQuery(['thread', id], async () => {
-    const events = (await fetcher.fetchAllEvents(
-      relayUrls,
-      { kinds: [1], '#e': [id] },
-      { since: 0 }
-    )) as unknown as LumeEvent[];
-    if (events.length > 0) {
+    const events = await ndk.fetchEvents({
+      kinds: [1],
+      '#e': [id],
+      since: 0,
+    });
+
+    const array = [...events] as unknown as LumeEvent[];
+
+    if (array.length > 0) {
       const replies = new Set();
-      events.forEach((event) => {
+      array.forEach((event) => {
         const tags = event.tags.filter((el) => el[0] === 'e' && el[1] !== id);
         if (tags.length > 0) {
           tags.forEach((tag) => {
-            const rootIndex = events.findIndex((el) => el.id === tag[1]);
+            const rootIndex = array.findIndex((el) => el.id === tag[1]);
             if (rootIndex) {
-              const rootEvent = events[rootIndex];
+              const rootEvent = array[rootIndex];
               if (rootEvent.replies) {
                 rootEvent.replies.push(event);
               } else {
@@ -33,17 +36,17 @@ export function RepliesList({ id }: { id: string }) {
           });
         }
       });
-      const cleanEvents = events.filter((ev) => !replies.has(ev.id));
+      const cleanEvents = array.filter((ev) => !replies.has(ev.id));
       return cleanEvents;
     }
-    return events;
+    return array;
   });
 
   if (status === 'loading') {
     return (
       <div className="mt-3">
         <div className="flex flex-col">
-          <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+          <div className="rounded-xl bg-white/10 px-3 py-3">
             <NoteSkeleton />
           </div>
         </div>
@@ -54,21 +57,21 @@ export function RepliesList({ id }: { id: string }) {
   return (
     <div className="mt-3">
       <div className="mb-2">
-        <h5 className="text-lg font-semibold text-zinc-300">{data.length} replies</h5>
+        <h5 className="text-lg font-semibold text-white">{data?.length || 0} replies</h5>
       </div>
       <div className="flex flex-col">
         {data?.length === 0 ? (
           <div className="px=3">
-            <div className="flex w-full items-center justify-center rounded-xl bg-zinc-900">
+            <div className="flex w-full items-center justify-center rounded-xl bg-white/10">
               <div className="flex flex-col items-center justify-center gap-2 py-6">
                 <h3 className="text-3xl">👋</h3>
-                <p className="leading-none text-zinc-400">Share your thought on it...</p>
+                <p className="leading-none text-white/50">Share your thought on it...</p>
               </div>
             </div>
           </div>
         ) : (
           data
-            .reverse()
+            ?.reverse()
             .map((event: LumeEvent) => <Reply key={event.id} event={event} root={id} />)
         )}
       </div>

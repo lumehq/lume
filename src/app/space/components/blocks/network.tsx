@@ -16,7 +16,7 @@ import { LumeEvent } from '@utils/types';
 
 const ITEM_PER_PAGE = 10;
 
-export function FollowingBlock() {
+export function NetworkBlock() {
   // subscribe for live update
   useNewsfeed();
 
@@ -40,9 +40,10 @@ export function FollowingBlock() {
   });
 
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+  const totalSize = rowVirtualizer.getTotalSize();
 
   useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+    const [lastItem] = [...itemsVirtualizer].reverse();
 
     if (!lastItem) {
       return;
@@ -51,7 +52,7 @@ export function FollowingBlock() {
     if (lastItem.index >= notes.length - 1 && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [notes.length, fetchNextPage, rowVirtualizer.getVirtualItems()]);
+  }, [notes.length, fetchNextPage, itemsVirtualizer]);
 
   const renderItem = useCallback(
     (index: string | number) => {
@@ -125,30 +126,26 @@ export function FollowingBlock() {
   );
 
   return (
-    <div className="relative w-[400px] shrink-0 border-r border-zinc-900">
-      <TitleBar title="Your Circle" />
-      <div
-        ref={parentRef}
-        className="scrollbar-hide flex h-full w-full flex-col justify-between gap-1.5 overflow-y-auto pb-20 pt-1.5"
-        style={{ contain: 'strict' }}
-      >
+    <div className="relative w-[400px] shrink-0 bg-white/10">
+      <TitleBar title="Network" />
+      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>
         ) : itemsVirtualizer.length === 0 ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-6">
+            <div className="rounded-xl bg-white/10 px-3 py-6">
               <div className="flex flex-col items-center gap-4">
-                <p className="text-center text-sm text-zinc-300">
+                <p className="text-center text-sm text-white">
                   You not have any posts to see yet
                   <br />
                   Follow more people to have more fun.
                 </p>
                 <Link
-                  to="/app/trending"
+                  to="/trending"
                   className="inline-flex w-max rounded bg-fuchsia-500 px-2.5 py-1.5 text-sm hover:bg-fuchsia-600"
                 >
                   Trending
@@ -160,7 +157,7 @@ export function FollowingBlock() {
           <div
             className="relative w-full"
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
+              height: `${totalSize}px`,
             }}
           >
             <div
@@ -177,7 +174,7 @@ export function FollowingBlock() {
         )}
         {isFetchingNextPage && (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { Switch } from '@headlessui/react';
+import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { disable, enable, isEnabled } from 'tauri-plugin-autostart-api';
 
 import { getSetting, updateSetting } from '@libs/storage';
 
@@ -36,7 +36,7 @@ export function AutoStartSetting() {
     <div className="inline-flex items-center justify-between px-5 py-4">
       <div className="flex flex-col gap-1">
         <span className="font-medium leading-none text-zinc-200">Auto start</span>
-        <span className="text-sm leading-none text-zinc-400">Auto start at login</span>
+        <span className="text-sm leading-none text-white/50">Auto start at login</span>
       </div>
       <Switch
         checked={enabled}

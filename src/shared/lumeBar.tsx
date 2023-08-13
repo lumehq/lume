@@ -11,7 +11,7 @@ export function LumeBar() {
   const { status, account } = useAccount();
 
   return (
-    <div className="rounded-xl border-t border-zinc-800/50 bg-zinc-900/80 p-2 backdrop-blur-md">
+    <div className="rounded-xl bg-white/10 p-2 backdrop-blur-xl">
       <div className="flex items-center justify-between">
         {status === 'loading' ? (
           <>
@@ -26,9 +26,9 @@ export function LumeBar() {
         )}
         <Link
           to="/settings/general"
-          className="inline-flex h-9 w-9 transform items-center justify-center rounded-md border-t border-zinc-700/50 bg-zinc-800 active:translate-y-1"
+          className="inline-flex h-9 w-9 transform items-center justify-center rounded-md bg-white/20 active:translate-y-1"
         >
-          <SettingsIcon className="h-4 w-4 text-zinc-400" />
+          <SettingsIcon className="h-4 w-4 text-white" />
         </Link>
         <Logout />
       </div>
