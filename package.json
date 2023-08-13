@@ -19,7 +19,7 @@
   "dependencies": {
     "@ctrl/magnet-link": "^3.1.2",
     "@headlessui/react": "^1.7.16",
-    "@nostr-dev-kit/ndk": "^0.8.11",
+    "@nostr-dev-kit/ndk": "^0.8.13",
     "@nostr-fetch/adapter-ndk": "^0.11.0",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",

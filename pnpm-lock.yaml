@@ -8,11 +8,11 @@ dependencies:
     specifier: ^1.7.16
     version: 1.7.16(react-dom@18.2.0)(react@18.2.0)
   '@nostr-dev-kit/ndk':
-    specifier: ^0.8.11
-    version: 0.8.11(typescript@4.9.5)
+    specifier: ^0.8.13
+    version: 0.8.13(typescript@4.9.5)
   '@nostr-fetch/adapter-ndk':
     specifier: ^0.11.0
-    version: 0.11.0(@nostr-dev-kit/ndk@0.8.11)(nostr-fetch@0.12.2)
+    version: 0.11.0(@nostr-dev-kit/ndk@0.8.13)(nostr-fetch@0.12.2)
   '@radix-ui/react-alert-dialog':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -993,8 +993,8 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@nostr-dev-kit/ndk@0.8.11(typescript@4.9.5):
-    resolution: {integrity: sha512-tWUycJN25GUWzMjby7rnv5ekvFlEROaNaFlCYtnFLLS0RzIm/cyj6PlhKqXV4NvN3miG+PdYMsK+ZrG3FJCBgQ==}
+  /@nostr-dev-kit/ndk@0.8.13(typescript@4.9.5):
+    resolution: {integrity: sha512-WDDx0B3eRJWiqKbkMKTxqNPWTDShTt7IfMbZblas700Hm5DvoFb6E5jXyE4/szLM2gFf785gBXfp+rdLUfIktw==}
     dependencies:
       '@noble/hashes': 1.3.1
       '@noble/secp256k1': 2.0.0
@@ -1022,13 +1022,13 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-fetch/adapter-ndk@0.11.0(@nostr-dev-kit/ndk@0.8.11)(nostr-fetch@0.12.2):
+  /@nostr-fetch/adapter-ndk@0.11.0(@nostr-dev-kit/ndk@0.8.13)(nostr-fetch@0.12.2):
     resolution: {integrity: sha512-Otl7SEzm9ecqyHB10bpYXBu1qpqJEnipp7dZ4qcA9LeJAtM38fnYKUD34HX0JXA9EDjtc6VS5UNZe544xC9GCg==}
     peerDependencies:
       '@nostr-dev-kit/ndk': ^0.5.0
       nostr-fetch: ^0.11.0
     dependencies:
-      '@nostr-dev-kit/ndk': 0.8.11(typescript@4.9.5)
+      '@nostr-dev-kit/ndk': 0.8.13(typescript@4.9.5)
       '@nostr-fetch/kernel': 0.11.0
       nostr-fetch: 0.12.2
     dev: false
@@ -2728,7 +2728,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.10
-      caniuse-lite: 1.0.30001519
+      caniuse-lite: 1.0.30001520
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -2790,7 +2790,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001519
+      caniuse-lite: 1.0.30001520
       electron-to-chromium: 1.4.490
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
@@ -2851,8 +2851,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /caniuse-lite@1.0.30001519:
-    resolution: {integrity: sha512-0QHgqR+Jv4bxHMp8kZ1Kn8CH55OikjKJ6JmKkZYP1F3D7w+lnFXF70nG5eNfsZS89jadi5Ywy5UCSKLAglIRkg==}
+  /caniuse-lite@1.0.30001520:
+    resolution: {integrity: sha512-tahF5O9EiiTzwTUqAeFjIZbn4Dnqxzz7ktrgGlMYNLH43Ul26IgTMH/zvL3DG0lZxBYnlT04axvInszUsZULdA==}
     dev: true
 
   /case-anything@2.1.13:
