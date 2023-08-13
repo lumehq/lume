@@ -35,13 +35,13 @@ export function Repost({ event }: { event: LumeEvent }) {
     <div className="h-min w-full px-3 py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
         <div className="relative flex flex-col">
-          <div className="isolate flex flex-col -space-y-4 overflow-hidden">
+          <div className="isolate flex flex-col -space-y-4">
             <RepostUser pubkey={event.pubkey} />
             <User pubkey={data.pubkey} time={data.created_at} isRepost={true} />
           </div>
-          <div className="relative z-20 flex items-start gap-3">
+          <div className="flex items-start gap-3">
             <div className="w-11 shrink-0" />
-            <div className="flex-1">
+            <div className="relative z-20 flex-1">
               <NoteContent content={data.content} />
               <NoteActions id={repostID} pubkey={data.pubkey} />
             </div>

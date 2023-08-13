@@ -24,9 +24,9 @@ export function NoteThread({
         <div className="relative">{reply && <SubNote id={reply} root={root} />}</div>
         <div className="relative flex flex-col">
           <User pubkey={event.pubkey} time={event.created_at} />
-          <div className="relative z-20 -mt-6 flex items-start gap-3">
+          <div className="-mt-6 flex items-start gap-3">
             <div className="w-11 shrink-0" />
-            <div className="flex-1">
+            <div className="relative z-20 flex-1">
               <NoteContent content={content} />
               <NoteActions id={event.event_id} pubkey={event.pubkey} />
             </div>

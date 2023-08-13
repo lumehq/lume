@@ -9,9 +9,9 @@ export function NoteKindUnsupport({ event }: { event: LumeEvent }) {
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
         <div className="flex flex-col">
           <User pubkey={event.pubkey} time={event.created_at} />
-          <div className="relative z-20 -mt-6 flex items-start gap-3">
+          <div className="-mt-6 flex items-start gap-3">
             <div className="w-11 shrink-0" />
-            <div className="flex-1">
+            <div className="relative z-20 flex-1">
               <div className="mt-3 flex w-full flex-col gap-2">
                 <div className="inline-flex flex-col gap-1 rounded-md bg-white/10 px-2 py-2">
                   <span className="text-sm font-medium leading-none text-white/50">
