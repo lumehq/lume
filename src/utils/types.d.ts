@@ -62,3 +62,10 @@ export interface Relays {
   relay: string;
   purpose?: string;
 }
+
+export interface Opengraph {
+  url: string;
+  title?: string;
+  description?: string;
+  image?: string;
+}

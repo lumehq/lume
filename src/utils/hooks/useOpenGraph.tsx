@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
+import { invoke } from '@tauri-apps/api/tauri';
 
-import { getLinkPreview } from '@libs/openGraph';
+import { Opengraph } from '@utils/types';
 
 export function useOpenGraph(url: string) {
   const { status, data, error, isFetching } = useQuery(
     ['preview', url],
     async () => {
-      const res = await getLinkPreview(url);
+      const res: Opengraph = await invoke('opengraph', { url });
       if (!res) {
         throw new Error('fetch preview failed');
       }

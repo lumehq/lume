@@ -21,7 +21,11 @@ export async function connect(): Promise<Database> {
   if (db) {
     return db;
   }
-  db = await Database.load('sqlite:lume.db');
+  try {
+    db = await Database.load('sqlite:lume.db');
+  } catch (e) {
+    throw new Error('Failed to connect to database, error: ', e);
+  }
   return db;
 }
 
@@ -44,26 +48,12 @@ export async function getActiveAccount() {
   }
 }
 
-// get all accounts
-export async function getAccounts() {
-  const db = await connect();
-  const result: Array<Account> = await db.select(
-    'SELECT * FROM accounts WHERE is_active = 0 ORDER BY created_at DESC;'
-  );
-  return result;
-}
-
 // create account
-export async function createAccount(
-  npub: string,
-  pubkey: string,
-  follows?: string[][],
-  is_active?: number
-) {
+export async function createAccount(npub: string, pubkey: string, follows?: string[][]) {
   const db = await connect();
   const res = await db.execute(
     'INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, follows, is_active) VALUES (?, ?, ?, ?, ?);',
-    [npub, pubkey, 'privkey is stored in secure storage', follows || '', is_active || 0]
+    [npub, pubkey, 'privkey is stored in secure storage', follows || '', 1]
   );
   if (res) {
     await createWidget(
@@ -84,13 +74,6 @@ export async function updateAccount(column: string, value: string | string[]) {
     value,
     account.id,
   ]);
-}
-
-// count total notes
-export async function countTotalChannels() {
-  const db = await connect();
-  const result = await db.select('SELECT COUNT(*) AS "total" FROM channels;');
-  return result[0];
 }
 
 // count total notes
@@ -125,21 +108,6 @@ export async function getNotes(limit: number, offset: number) {
   notes['nextCursor'] = Math.round(totalNotes / nextCursor) > 1 ? nextCursor : undefined;
 
   return notes;
-}
-
-// get all notes by pubkey
-export async function getNotesByPubkey(pubkey: string) {
-  const db = await connect();
-
-  const query: LumeEvent[] = await db.select(
-    `SELECT * FROM notes WHERE pubkey == "${pubkey}" AND kind IN (1, 6, 1063) GROUP BY parent_id ORDER BY created_at DESC;`
-  );
-
-  query.forEach(
-    (el) => (el.tags = typeof el.tags === 'string' ? destr(el.tags) : el.tags)
-  );
-
-  return query;
 }
 
 // get all notes by authors
@@ -226,90 +194,6 @@ export async function createReplyNote(
     'INSERT OR IGNORE INTO replies (event_id, parent_id, pubkey, kind, tags, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?);',
     [event_id, parent_id, pubkey, kind, tags, content, created_at]
   );
-}
-
-// get all pubkeys in db
-export async function getAllPubkeys() {
-  const db = await connect();
-  const notes: any = await db.select('SELECT DISTINCT pubkey FROM notes');
-  const replies: any = await db.select('SELECT DISTINCT pubkey FROM replies');
-  const chats: any = await db.select('SELECT DISTINCT sender_pubkey FROM chats');
-  return [...notes, ...replies, ...chats];
-}
-
-// get all channels
-export async function getChannels() {
-  const db = await connect();
-  const result: any = await db.select('SELECT * FROM channels ORDER BY created_at DESC;');
-  return result;
-}
-
-// get channel by id
-export async function getChannel(id: string) {
-  const db = await connect();
-  const result = await db.select(`SELECT * FROM channels WHERE event_id = "${id}";`);
-  return result[0];
-}
-
-// create channel
-export async function createChannel(
-  event_id: string,
-  pubkey: string,
-  name: string,
-  picture: string,
-  about: string,
-  created_at: number
-) {
-  const db = await connect();
-  return await db.execute(
-    'INSERT OR IGNORE INTO channels (event_id, pubkey, name, picture, about, created_at) VALUES (?, ?, ?, ?, ?, ?);',
-    [event_id, pubkey, name, picture, about, created_at]
-  );
-}
-
-// update channel metadata
-export async function updateChannelMetadata(event_id: string, value: string) {
-  const db = await connect();
-  const data = JSON.parse(value);
-
-  return await db.execute(
-    'UPDATE channels SET name = ?, picture = ?, about = ? WHERE event_id = ?;',
-    [data.name, data.picture, data.about, event_id]
-  );
-}
-
-// create channel messages
-export async function createChannelMessage(
-  channel_id: string,
-  event_id: string,
-  pubkey: string,
-  kind: number,
-  content: string,
-  tags: string[][],
-  created_at: number
-) {
-  const db = await connect();
-  return await db.execute(
-    'INSERT OR IGNORE INTO channel_messages (channel_id, event_id, pubkey, kind, content, tags, created_at) VALUES (?, ?, ?, ?, ?, ?, ?);',
-    [channel_id, event_id, pubkey, kind, content, tags, created_at]
-  );
-}
-
-// get channel messages by channel id
-export async function getChannelMessages(channel_id: string) {
-  const db = await connect();
-  return await db.select(
-    `SELECT * FROM channel_messages WHERE channel_id = "${channel_id}" ORDER BY created_at ASC;`
-  );
-}
-
-// get channel users
-export async function getChannelUsers(channel_id: string) {
-  const db = await connect();
-  const result: any = await db.select(
-    `SELECT DISTINCT pubkey FROM channel_messages WHERE channel_id = "${channel_id}";`
-  );
-  return result;
 }
 
 // get all chats by pubkey

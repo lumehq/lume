@@ -35,10 +35,10 @@ export function LinkPreview({ urls }: { urls: string[] }) {
             </div>
           ) : (
             <>
-              {data.images?.[0] && (
+              {data.image && (
                 <Image
-                  src={data.images?.[0] || 'https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW'}
-                  fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW"
+                  src={data.image}
+                  fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW.jpg"
                   alt={urls[0]}
                   className="h-44 w-full rounded-t-lg object-cover"
                 />
