@@ -12,7 +12,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 export function SplashScreen() {
   const { ndk, relayUrls } = useNDK();
   const { status, account } = useAccount();
-  const { fetchChats, fetchNotes } = useNostr();
+  const { fetchUserData } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
@@ -27,18 +27,15 @@ export function SplashScreen() {
     if (step) await invoke('close_splashscreen');
 
     try {
-      const notes = await fetchNotes();
-      const chats = await fetchChats();
-
-      if (notes.status === 'ok' && chats.status === 'ok') {
+      const user = await fetchUserData();
+      if (user.status === 'ok') {
         const now = Math.floor(Date.now() / 1000);
         await updateLastLogin(now);
         invoke('close_splashscreen');
       } else {
         setIsLoading(false);
-        setErrorMessage(notes.message || chats.message);
-        console.log('fetch notes failed, error: ', notes.message);
-        console.log('fetch chats failed, error: ', chats.message);
+        setErrorMessage(user.message);
+        console.log('fetch failed, error: ', user.message);
       }
     } catch (e) {
       setIsLoading(false);

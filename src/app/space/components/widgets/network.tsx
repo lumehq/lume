@@ -18,11 +18,11 @@ const ITEM_PER_PAGE = 10;
 
 export function NetworkBlock() {
   // subscribe for live update
-  useNewsfeed();
+  // useNewsfeed();
 
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['newsfeed-circle'],
+      queryKey: ['network-widget'],
       queryFn: async ({ pageParam = 0 }) => {
         return await getNotes(ITEM_PER_PAGE, pageParam);
       },

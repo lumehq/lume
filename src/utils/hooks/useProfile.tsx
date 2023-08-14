@@ -14,7 +14,7 @@ export function useProfile(pubkey: string, fallback?: string) {
     ['user', pubkey],
     async () => {
       if (!fallback) {
-        const user = await ndk.getUser({ hexpubkey: pubkey });
+        const user = ndk.getUser({ hexpubkey: pubkey });
         await user.fetchProfile();
         if (user.profile) {
           user.profile.display_name = user.profile.displayName;
