@@ -1,14 +1,14 @@
 import { useCallback, useEffect } from 'react';
 
-import { FeedBlock } from '@app/space/components/blocks/feed';
-import { HashtagBlock } from '@app/space/components/blocks/hashtag';
-import { ImageBlock } from '@app/space/components/blocks/image';
-import { NetworkBlock } from '@app/space/components/blocks/network';
-import { ThreadBlock } from '@app/space/components/blocks/thread';
-import { UserBlock } from '@app/space/components/blocks/user';
 import { FeedModal } from '@app/space/components/modals/feed';
 import { HashtagModal } from '@app/space/components/modals/hashtag';
 import { ImageModal } from '@app/space/components/modals/image';
+import { FeedBlock } from '@app/space/components/widgets/feed';
+import { HashtagBlock } from '@app/space/components/widgets/hashtag';
+import { ImageBlock } from '@app/space/components/widgets/image';
+import { NetworkBlock } from '@app/space/components/widgets/network';
+import { ThreadBlock } from '@app/space/components/widgets/thread';
+import { UserBlock } from '@app/space/components/widgets/user';
 
 import { LoaderIcon } from '@shared/icons';
 

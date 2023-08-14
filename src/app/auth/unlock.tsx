@@ -31,20 +31,11 @@ export function UnlockScreen() {
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
 
-  const [passwordInput, setPasswordInput] = useState('password');
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { account } = useAccount();
   const { load } = useSecureStorage();
-
-  // toggle private key
-  const showPassword = () => {
-    if (passwordInput === 'password') {
-      setPasswordInput('text');
-    } else {
-      setPasswordInput('password');
-    }
-  };
 
   const {
     register,
@@ -62,20 +53,19 @@ export function UnlockScreen() {
         setPrivkey(privkey);
         // redirect to home
         navigate('/', { replace: true });
-      } catch {
-        setLoading(false);
+      } catch (e) {
         setError('password', {
           type: 'custom',
-          message: 'Wrong password',
+          message: e,
         });
       }
     } else {
-      setLoading(false);
       setError('password', {
         type: 'custom',
         message: 'Password is required and must be greater than 3',
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -89,15 +79,15 @@ export function UnlockScreen() {
             <div className="relative">
               <input
                 {...register('password', { required: true })}
-                type={passwordInput}
+                type={showPassword ? 'text' : 'password'}
                 className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/10"
               />
               <button
                 type="button"
-                onClick={() => showPassword()}
+                onClick={() => setShowPassword((prev) => !prev)}
                 className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
               >
-                {passwordInput === 'password' ? (
+                {showPassword ? (
                   <EyeOffIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
                 ) : (
                   <EyeOnIcon className="h-5 w-5 text-white/50 group-hover:text-white" />

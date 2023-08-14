@@ -5,27 +5,30 @@ import { Link } from 'react-router-dom';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 export function WelcomeScreen() {
-  useEffect(() => {
-    async function setWindow() {
-      await appWindow.setSize(new LogicalSize(400, 500));
-      await appWindow.setResizable(false);
-      await appWindow.center();
-    }
+  async function setWindow() {
+    await appWindow.setSize(new LogicalSize(400, 500));
+    await appWindow.setResizable(false);
+    await appWindow.center();
+  }
 
+  async function resetWindow() {
+    await appWindow.setSize(new LogicalSize(1080, 800));
+    await appWindow.setResizable(false);
+    await appWindow.center();
+  }
+
+  useEffect(() => {
     setWindow();
 
     return () => {
-      appWindow.setSize(new LogicalSize(1080, 800)).then(() => {
-        appWindow.setResizable(false);
-        appWindow.center();
-      });
+      resetWindow();
     };
   }, []);
 
   return (
     <div className="flex h-screen w-full flex-col justify-between bg-white/10">
       <div className="flex flex-col gap-10 pt-16">
-        <div className="flex flex-col gap-2 text-center">
+        <div className="sflex flex-col gap-2 text-center">
           <h1 className="text-3xl font-medium text-white">Welcome to Lume</h1>
           <h3 className="mx-auto w-2/3 text-white/50">
             Let&apos;s get you up and connecting with all peoples around the world on

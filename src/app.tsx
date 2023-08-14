@@ -15,29 +15,33 @@ import { SettingsLayout } from '@shared/settingsLayout';
 import './index.css';
 
 const appLoader = async () => {
-  const account = await getActiveAccount();
-  const stronghold = sessionStorage.getItem('stronghold');
-  const privkey = JSON.parse(stronghold).state.privkey || null;
-  const onboarding = localStorage.getItem('onboarding');
-  const step = JSON.parse(onboarding).state.step || null;
+  try {
+    const account = await getActiveAccount();
+    const stronghold = sessionStorage.getItem('stronghold');
+    const privkey = JSON.parse(stronghold).state.privkey || null;
+    const onboarding = localStorage.getItem('onboarding');
+    const step = JSON.parse(onboarding).state.step || null;
 
-  if (step) {
-    return redirect(step);
+    if (step) {
+      return redirect(step);
+    }
+
+    if (!account) {
+      return redirect('/auth/welcome');
+    } else {
+      if (account.privkey.length > 35) {
+        return redirect('/auth/migrate');
+      }
+
+      if (!privkey) {
+        return redirect('/auth/unlock');
+      }
+    }
+
+    return null;
+  } catch (e) {
+    throw new Error('App failed to load');
   }
-
-  if (!account) {
-    return redirect('/auth/welcome');
-  }
-
-  if (account && account.privkey.length > 35) {
-    return redirect('/auth/migrate');
-  }
-
-  if (account && !privkey) {
-    return redirect('/auth/unlock');
-  }
-
-  return null;
 };
 
 const router = createBrowserRouter([

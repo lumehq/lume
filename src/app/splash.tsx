@@ -14,8 +14,8 @@ export function SplashScreen() {
   const { status, account } = useAccount();
   const { fetchChats, fetchNotes } = useNostr();
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<null | string>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
   const skip = async () => {
     await invoke('close_splashscreen');
@@ -26,18 +26,24 @@ export function SplashScreen() {
     const step = JSON.parse(onboarding).state.step || null;
     if (step) await invoke('close_splashscreen');
 
-    const notes = await fetchNotes();
-    const chats = await fetchChats();
+    try {
+      const notes = await fetchNotes();
+      const chats = await fetchChats();
 
-    if (notes.status === 'ok' && chats.status === 'ok') {
-      const now = Math.floor(Date.now() / 1000);
-      await updateLastLogin(now);
-      invoke('close_splashscreen');
-    } else {
-      setLoading(false);
-      setError(notes.message || chats.message);
-      console.log('fetch notes failed, error: ', notes.message);
-      console.log('fetch chats failed, error: ', chats.message);
+      if (notes.status === 'ok' && chats.status === 'ok') {
+        const now = Math.floor(Date.now() / 1000);
+        await updateLastLogin(now);
+        invoke('close_splashscreen');
+      } else {
+        setIsLoading(false);
+        setErrorMessage(notes.message || chats.message);
+        console.log('fetch notes failed, error: ', notes.message);
+        console.log('fetch chats failed, error: ', chats.message);
+      }
+    } catch (e) {
+      setIsLoading(false);
+      setErrorMessage(e);
+      console.log('prefetch failed, error: ', e);
     }
   };
 
@@ -58,7 +64,7 @@ export function SplashScreen() {
       <div className="flex min-h-0 w-full flex-1 items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
-          {loading ? (
+          {isLoading ? (
             <div className="mt-2 flex flex-col gap-1 text-center">
               <h3 className="text-lg font-semibold leading-none text-white">
                 {!ndk
@@ -74,7 +80,7 @@ export function SplashScreen() {
               <h3 className="text-lg font-semibold leading-none text-white">
                 Something wrong!
               </h3>
-              <p className="text-sm text-white/50">{error}</p>
+              <p className="text-sm text-white/50">{errorMessage}</p>
               <button
                 type="button"
                 onClick={skip}
