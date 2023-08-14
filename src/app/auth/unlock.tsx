@@ -1,13 +1,16 @@
+import { appConfigDir } from '@tauri-apps/api/path';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
 import { useAccount } from '@utils/hooks/useAccount';
-import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
 type FormValues = {
   password: string;
@@ -35,7 +38,7 @@ export function UnlockScreen() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { account } = useAccount();
-  const { load } = useSecureStorage();
+  const { db } = useStorage();
 
   const {
     register,
@@ -47,9 +50,14 @@ export function UnlockScreen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      // load private in secure storage
       try {
-        const privkey = await load(account.pubkey, data.password);
+        const dir = await appConfigDir();
+        const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
+
+        db.secureDB = stronghold;
+
+        const privkey = await db.secureLoad(account.pubkey);
+
         setPrivkey(privkey);
         // redirect to home
         navigate('/', { replace: true });

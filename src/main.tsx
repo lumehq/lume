@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { NDKProvider } from '@libs/ndk/provider';
 import { getSetting } from '@libs/storage';
+import { StorageProvider } from '@libs/storage/provider';
 
 import App from './app';
 
@@ -21,8 +22,10 @@ const root = createRoot(container);
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <NDKProvider>
-      <App />
-    </NDKProvider>
+    <StorageProvider>
+      <NDKProvider>
+        <App />
+      </NDKProvider>
+    </StorageProvider>
   </QueryClientProvider>
 );

@@ -3,84 +3,18 @@
   windows_subsystem = "windows"
 )]
 
-use std::time::Duration;
+mod opg;
 
-// use rand::distributions::{Alphanumeric, DistString};
+use opg::opengraph;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use webpage::{Webpage, WebpageOptions};
 use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
   args: Vec<String>,
   cwd: String,
-}
-
-#[derive(serde::Serialize)]
-struct OpenGraphResponse {
-  title: String,
-  description: String,
-  url: String,
-  image: String,
-}
-
-async fn fetch_opengraph(url: String) -> OpenGraphResponse {
-  let options = WebpageOptions {
-    allow_insecure: false,
-    max_redirections: 3,
-    timeout: Duration::from_secs(15),
-    useragent: "lume - desktop app".to_string(),
-    ..Default::default()
-  };
-
-  let result = match Webpage::from_url(&url, options) {
-    Ok(webpage) => webpage,
-    Err(_) => {
-      return OpenGraphResponse {
-        title: "".to_string(),
-        description: "".to_string(),
-        url: "".to_string(),
-        image: "".to_string(),
-      }
-    }
-  };
-
-  let html = result.html;
-
-  return OpenGraphResponse {
-    title: html
-      .opengraph
-      .properties
-      .get("title")
-      .cloned()
-      .unwrap_or_default(),
-    description: html
-      .opengraph
-      .properties
-      .get("description")
-      .cloned()
-      .unwrap_or_default(),
-    url: html
-      .opengraph
-      .properties
-      .get("url")
-      .cloned()
-      .unwrap_or_default(),
-    image: html
-      .opengraph
-      .images
-      .get(0)
-      .and_then(|i| Some(i.url.clone()))
-      .unwrap_or_default(),
-  };
-}
-
-#[tauri::command]
-async fn opengraph(url: String) -> OpenGraphResponse {
-  let result = fetch_opengraph(url).await;
-  return result;
 }
 
 #[tauri::command]
@@ -182,6 +116,12 @@ fn main() {
               version: 20230811074423,
               description: "rename blocks to widgets",
               sql: include_str!("../migrations/20230811074423_rename_blocks_to_widgets.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230814083543,
+              description: "add events",
+              sql: include_str!("../migrations/20230814083543_add_events_table.sql"),
               kind: MigrationKind::Up,
             },
           ],
