@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
-import { updateLastLogin } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 
@@ -20,22 +20,27 @@ export function ImportStep3Screen() {
 
   const [loading, setLoading] = useState(false);
 
+  const { db } = useStorage();
   const { status, account } = useAccount();
-  const { fetchNotes, fetchChats } = useNostr();
+  const { fetchUserData } = useNostr();
 
   const submit = async () => {
     try {
       // show loading indicator
       setLoading(true);
 
-      const now = Math.floor(Date.now() / 1000);
-      await fetchNotes();
-      await fetchChats();
-      await updateLastLogin(now);
+      const data = await fetchUserData();
 
-      queryClient.invalidateQueries(['currentAccount']);
+      if (data.status === 'ok') {
+        // update last login
+        await db.updateLastLogin(Math.floor(Date.now() / 1000));
 
-      navigate('/auth/onboarding/step-2', { replace: true });
+        queryClient.invalidateQueries(['account']);
+        navigate('/auth/onboarding/step-2', { replace: true });
+      } else {
+        console.log('error: ', data.message);
+        setLoading(false);
+      }
     } catch (e) {
       console.log('error: ', e);
       setLoading(false);

@@ -47,10 +47,10 @@ export function CreateStep3Screen() {
         tags: [],
       });
 
-      queryClient.invalidateQueries(['currentAccount']);
+      queryClient.invalidateQueries(['account']);
 
       if (event) {
-        setTimeout(() => navigate('/auth/onboarding', { replace: true }), 1000);
+        navigate('/auth/onboarding', { replace: true });
       }
     } catch (e) {
       console.log('error: ', e);

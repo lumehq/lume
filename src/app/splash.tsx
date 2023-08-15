@@ -2,7 +2,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { useEffect, useState } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
-import { updateLastLogin } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 
@@ -10,6 +10,7 @@ import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function SplashScreen() {
+  const { db } = useStorage();
   const { ndk, relayUrls } = useNDK();
   const { status, account } = useAccount();
   const { fetchUserData } = useNostr();
@@ -30,7 +31,7 @@ export function SplashScreen() {
       const user = await fetchUserData();
       if (user.status === 'ok') {
         const now = Math.floor(Date.now() / 1000);
-        await updateLastLogin(now);
+        await db.updateLastLogin(now);
         invoke('close_splashscreen');
       } else {
         setIsLoading(false);

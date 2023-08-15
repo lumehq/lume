@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
-import { updateAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
@@ -19,7 +19,8 @@ export function OnboardStep1Screen() {
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
 
-  const { publish, fetchNotes } = useNostr();
+  const { db } = useStorage();
+  const { publish, fetchUserData } = useNostr();
   const { account } = useAccount();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -46,20 +47,22 @@ export function OnboardStep1Screen() {
 
       const tags = arrayToNIP02([...follows, account.pubkey]);
       const event = await publish({ content: '', kind: 3, tags: tags });
-      await updateAccount('follows', follows);
+      await db.updateAccount('follows', follows);
 
       // prefetch notes with current follows
-      const notes = await fetchNotes(follows);
+      const data = await fetchUserData(follows);
 
       // redirect to next step
-      if (event && notes) {
-        setTimeout(() => {
-          queryClient.invalidateQueries(['currentAccount']);
-          navigate('/auth/onboarding/step-2', { replace: true });
-        }, 1000);
+      if (event && data.status === 'ok') {
+        queryClient.invalidateQueries(['account']);
+        navigate('/auth/onboarding/step-2', { replace: true });
+      } else {
+        setLoading(false);
+        console.log('error: ', data.message);
       }
-    } catch {
-      console.log('error');
+    } catch (e) {
+      setLoading(false);
+      console.log('error: ', e);
     }
   };
 

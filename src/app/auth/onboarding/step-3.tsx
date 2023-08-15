@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserRelay } from '@app/auth/components/userRelay';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createRelay } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
@@ -22,6 +22,7 @@ export function OnboardStep3Screen() {
   const [loading, setLoading] = useState(false);
   const [relays, setRelays] = useState(new Set<string>());
 
+  const { db } = useStorage();
   const { publish } = useNostr();
   const { account } = useAccount();
   const { ndk } = useNDK();
@@ -62,21 +63,19 @@ export function OnboardStep3Screen() {
     try {
       if (!skip) {
         for (const relay of relays) {
-          await createRelay(relay);
+          await db.createRelay(relay);
         }
 
         const tags = Array.from(relays).map((relay) => ['r', relay.replace(/\/+$/, '')]);
         await publish({ content: '', kind: 10002, tags: tags });
       } else {
         for (const relay of FULL_RELAYS) {
-          await createRelay(relay);
+          await db.createRelay(relay);
         }
       }
 
-      setTimeout(() => {
-        clearStep();
-        navigate('/', { replace: true });
-      }, 1000);
+      clearStep();
+      navigate('/', { replace: true });
     } catch (e) {
       setLoading(false);
       console.log('error: ', e);

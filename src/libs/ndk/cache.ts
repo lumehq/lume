@@ -1,13 +1,14 @@
 import { NDKCacheAdapter } from '@nostr-dev-kit/ndk';
 import { NDKEvent, NDKSubscription } from '@nostr-dev-kit/ndk';
-import { Store } from '@tauri-apps/plugin-store';
+
+import { LumeStorage } from '@libs/storage/instance';
 
 export default class TauriAdapter implements NDKCacheAdapter {
-  public store: Store;
+  public store: LumeStorage;
   readonly locking: boolean;
 
-  constructor() {
-    this.store = new Store('.ndkcache.dat');
+  constructor(db: LumeStorage) {
+    this.store = db;
     this.locking = true;
   }
 
@@ -20,7 +21,7 @@ export default class TauriAdapter implements NDKCacheAdapter {
       for (const author of filter.authors) {
         for (const kind of filter.kinds) {
           const key = `${author}:${kind}`;
-          promises.push(this.store.get(key));
+          promises.push(this.store.getEventByKey(key));
         }
       }
 
@@ -28,25 +29,26 @@ export default class TauriAdapter implements NDKCacheAdapter {
 
       for (const result of results) {
         if (result) {
-          const event = await this.store.get(result as string);
-
-          if (event) {
-            console.log('cache hit: ', result);
-            const ndkEvent = new NDKEvent(subscription.ndk, JSON.parse(event as string));
-            subscription.eventReceived(ndkEvent, undefined, true);
-          }
+          console.log('cache hit: ', result);
+          const ndkEvent = new NDKEvent(
+            subscription.ndk,
+            JSON.parse(result.event as string)
+          );
+          subscription.eventReceived(ndkEvent, undefined, true);
         }
       }
     }
 
     if (filter.ids) {
       for (const id of filter.ids) {
-        const key = id;
-        const event = await this.store.get(key);
+        const cacheEvent = await this.store.getEventByID(id);
 
-        if (event) {
+        if (cacheEvent) {
           console.log('cache hit: ', id);
-          const ndkEvent = new NDKEvent(subscription.ndk, JSON.parse(event as string));
+          const ndkEvent = new NDKEvent(
+            subscription.ndk,
+            JSON.parse(cacheEvent.event as string)
+          );
           subscription.eventReceived(ndkEvent, undefined, true);
         }
       }
@@ -59,13 +61,8 @@ export default class TauriAdapter implements NDKCacheAdapter {
 
     return new Promise((resolve) => {
       Promise.all([
-        this.store.set(event.id, JSON.stringify(nostrEvent)),
-        this.store.set(key, event.id),
+        this.store.createEvent(key, event.id, event.kind, JSON.stringify(nostrEvent)),
       ]).then(() => resolve());
     });
-  }
-
-  public save() {
-    return this.store.save();
   }
 }

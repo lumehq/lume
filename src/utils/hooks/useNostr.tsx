@@ -15,7 +15,7 @@ import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
-import { updateAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -24,6 +24,7 @@ import { useAccount } from '@utils/hooks/useAccount';
 export function useNostr() {
   const { ndk, relayUrls } = useNDK();
   const { account } = useAccount();
+  const { db } = useStorage();
 
   const queryClient = useQueryClient();
   const privkey = useStronghold((state) => state.privkey);
@@ -74,10 +75,10 @@ export function useNostr() {
 
       const network = [...lruNetwork.values()] as string[];
 
-      await updateAccount('follows', [...follows]);
-      await updateAccount('network', [...new Set([...follows, ...network])]);
+      await db.updateAccount('follows', [...follows]);
+      await db.updateAccount('network', [...new Set([...follows, ...network])]);
 
-      queryClient.invalidateQueries(['currentAccount']);
+      queryClient.invalidateQueries(['account']);
 
       return { status: 'ok' };
     } catch (e) {

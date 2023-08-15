@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { createAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
@@ -31,6 +31,8 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 export function ImportStep1Screen() {
+  const { db } = useStorage();
+
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
@@ -47,10 +49,10 @@ export function ImportStep1Screen() {
       follows: null | string[];
       is_active: number | boolean;
     }) => {
-      return createAccount(data.npub, data.pubkey, null, 1);
+      return db.createAccount(data.npub, data.pubkey);
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['currentAccount'], data);
+      queryClient.setQueryData(['account'], data);
     },
   });
 
@@ -87,7 +89,7 @@ export function ImportStep1Screen() {
         });
 
         // redirect to step 2
-        setTimeout(() => navigate('/auth/import/step-2', { replace: true }), 1200);
+        navigate('/auth/import/step-2', { replace: true });
       }
     } catch (error) {
       setError('privkey', {

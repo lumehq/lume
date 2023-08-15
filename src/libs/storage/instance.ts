@@ -1,7 +1,8 @@
+import { BaseDirectory, removeFile } from '@tauri-apps/plugin-fs';
 import Database from '@tauri-apps/plugin-sql';
 import { Stronghold } from '@tauri-apps/plugin-stronghold';
 
-import { Account, Widget } from '@utils/types';
+import { Account, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
@@ -37,6 +38,10 @@ export class LumeStorage {
     const value = await store.get(key);
     const decoded = new TextDecoder().decode(new Uint8Array(value));
     return decoded;
+  }
+
+  public async secureReset() {
+    return await removeFile('lume.stronghold', { dir: BaseDirectory.AppConfig });
   }
 
   public async getActiveAccount() {
@@ -123,7 +128,10 @@ export class LumeStorage {
       'SELECT * FROM events WHERE cache_key = $1 ORDER BY id DESC LIMIT 1;',
       [cacheKey]
     )?.[0];
-    if (!event) console.error('failed to get event by cache_key: ', cacheKey);
+    if (!event) {
+      console.error('failed to get event by cache_key: ', cacheKey);
+      return null;
+    }
     return event;
   }
 
@@ -132,8 +140,40 @@ export class LumeStorage {
       'SELECT * FROM events WHERE event_id = $1 ORDER BY id DESC LIMIT 1;',
       [id]
     )?.[0];
-    if (!event) console.error('failed to get event by id: ', id);
+    if (!event) {
+      console.error('failed to get event by id: ', id);
+      return null;
+    }
     return event;
+  }
+
+  public async getExplicitRelayUrls() {
+    const account = await this.getActiveAccount();
+    const result: Relays[] = await this.db.select(
+      `SELECT * FROM relays WHERE account_id = "${account.id}";`
+    );
+
+    if (result.length > 0) return result.map((el) => el.relay);
+    return null;
+  }
+
+  public async createRelay(relay: string, purpose?: string) {
+    const account = await this.getActiveAccount();
+    return await this.db.execute(
+      'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES ($1, $2, $3);',
+      [account.id, relay, purpose || '']
+    );
+  }
+
+  public async removeRelay(relay: string) {
+    return await this.db.execute(`DELETE FROM relays WHERE relay = "${relay}";`);
+  }
+
+  public async updateLastLogin(time: number) {
+    return await this.db.execute(
+      'UPDATE settings SET value = $1 WHERE key = "last_login";',
+      [time]
+    );
   }
 
   public async close() {

@@ -54,7 +54,7 @@ export function UnlockScreen() {
         const dir = await appConfigDir();
         const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
 
-        db.secureDB = stronghold;
+        if (!db.secureDB) db.secureDB = stronghold;
 
         const privkey = await db.secureLoad(account.pubkey);
 

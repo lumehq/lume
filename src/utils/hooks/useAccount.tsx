@@ -6,7 +6,7 @@ import { getActiveAccount } from '@libs/storage';
 export function useAccount() {
   const { ndk } = useNDK();
   const { status, data: account } = useQuery(
-    ['currentAccount'],
+    ['account'],
     async () => {
       const account = await getActiveAccount();
       console.log('account: ', account);

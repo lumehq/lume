@@ -28,15 +28,9 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
     };
   }, []);
 
-  return (
-    <StorageContext.Provider
-      value={{
-        db,
-      }}
-    >
-      {children}
-    </StorageContext.Provider>
-  );
+  if (db) {
+    return <StorageContext.Provider value={{ db }}>{children}</StorageContext.Provider>;
+  }
 };
 
 const useStorage = () => {

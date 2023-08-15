@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { createWidget } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
@@ -33,6 +33,8 @@ export function OnboardStep2Screen() {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(new Set<string>());
 
+  const { db } = useStorage();
+
   const toggleTag = (tag: string) => {
     if (tags.has(tag)) {
       setTags((prev) => {
@@ -50,10 +52,10 @@ export function OnboardStep2Screen() {
       setLoading(true);
 
       for (const tag of tags) {
-        await createWidget(BLOCK_KINDS.hashtag, tag, tag.replace('#', ''));
+        await db.createWidget(BLOCK_KINDS.hashtag, tag, tag.replace('#', ''));
       }
 
-      setTimeout(() => navigate('/auth/onboarding/step-3', { replace: true }), 1000);
+      navigate('/auth/onboarding/step-3', { replace: true });
     } catch {
       console.log('error');
     }

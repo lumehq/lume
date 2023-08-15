@@ -1,16 +1,18 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { appConfigDir } from '@tauri-apps/api/path';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { removePrivkey } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
 import { useAccount } from '@utils/hooks/useAccount';
-import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
 type FormValues = {
   password: string;
@@ -39,7 +41,7 @@ export function MigrateScreen() {
   const [loading, setLoading] = useState(false);
 
   const { account } = useAccount();
-  const { save } = useSecureStorage();
+  const { db } = useStorage();
 
   // toggle private key
   const showPassword = () => {
@@ -63,13 +65,18 @@ export function MigrateScreen() {
       // load private in secure storage
       try {
         // save privkey to secure storage
-        await save(account.pubkey, account.privkey, data.password);
+        const dir = await appConfigDir();
+        const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
+
+        if (!db.secureDB) db.secureDB = stronghold;
+        await db.secureSave(account.pubkey, account.privkey);
+
         // add privkey to state
         setPrivkey(account.privkey);
         // remove privkey in db
         await removePrivkey();
         // clear cache
-        await queryClient.invalidateQueries(['currentAccount']);
+        await queryClient.invalidateQueries(['account']);
         // redirect to home
         navigate('/', { replace: true });
       } catch {

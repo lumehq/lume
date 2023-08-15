@@ -1,18 +1,19 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
 import { fetch } from '@tauri-apps/plugin-http';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
 import { getExplicitRelayUrls } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { FULL_RELAYS } from '@stores/constants';
 
 export const NDKInstance = () => {
+  const { db } = useStorage();
+
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
-
-  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
 
   // TODO: fully support NIP-11
   async function verifyRelays(relays: string[]) {
@@ -57,6 +58,8 @@ export const NDKInstance = () => {
       explicitRelayUrls = await verifyRelays(FULL_RELAYS);
     }
 
+    const cacheAdapter = new TauriAdapter(db);
+    console.log('ndk cache adapter: ', cacheAdapter);
     const instance = new NDK({ explicitRelayUrls, cacheAdapter });
 
     try {
@@ -71,10 +74,6 @@ export const NDKInstance = () => {
 
   useEffect(() => {
     if (!ndk) initNDK();
-
-    return () => {
-      cacheAdapter.save();
-    };
   }, []);
 
   return {

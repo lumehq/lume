@@ -4,7 +4,7 @@ import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { createAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { Button } from '@shared/button';
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
@@ -14,6 +14,8 @@ import { useOnboarding } from '@stores/onboarding';
 import { useStronghold } from '@stores/stronghold';
 
 export function CreateStep1Screen() {
+  const { db } = useStorage();
+
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
@@ -53,10 +55,10 @@ export function CreateStep1Screen() {
       follows: null | string[][];
       is_active: number;
     }) => {
-      return createAccount(data.npub, data.pubkey, null, 1);
+      return db.createAccount(data.npub, data.pubkey);
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['currentAccount'], data);
+      queryClient.setQueryData(['account'], data);
     },
   });
 
@@ -75,7 +77,7 @@ export function CreateStep1Screen() {
     });
 
     // redirect to next step
-    setTimeout(() => navigate('/auth/create/step-2', { replace: true }), 1200);
+    navigate('/auth/create/step-2', { replace: true });
   };
 
   useEffect(() => {
