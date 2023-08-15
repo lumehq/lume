@@ -10,8 +10,6 @@ import { NoteZap } from '@shared/notes/actions/zap';
 import { BLOCK_KINDS } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
-import { useAccount } from '@utils/hooks/useAccount';
-
 export function NoteActions({
   id,
   pubkey,
@@ -23,7 +21,6 @@ export function NoteActions({
   noOpenThread?: boolean;
   root?: string;
 }) {
-  const { account } = useAccount();
   const setWidget = useWidgets((state) => state.setWidget);
 
   return (
@@ -33,7 +30,7 @@ export function NoteActions({
           <NoteReply id={id} pubkey={pubkey} root={root} />
           <NoteReaction id={id} pubkey={pubkey} />
           <NoteRepost id={id} pubkey={pubkey} />
-          {(account?.lud06 || account?.lud16) && <NoteZap id={id} />}
+          <NoteZap id={id} />
         </div>
         {!noOpenThread && (
           <>

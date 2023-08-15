@@ -10,8 +10,6 @@ import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { useAccount } from '@utils/hooks/useAccount';
-
 type FormValues = {
   password: string;
 };
@@ -37,7 +35,6 @@ export function UnlockScreen() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { account } = useAccount();
   const { db } = useStorage();
 
   const {
@@ -56,7 +53,7 @@ export function UnlockScreen() {
 
         if (!db.secureDB) db.secureDB = stronghold;
 
-        const privkey = await db.secureLoad(account.pubkey);
+        const privkey = await db.secureLoad(db.account.pubkey);
 
         setPrivkey(privkey);
         // redirect to home

@@ -5,18 +5,18 @@ import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ErrorScreen } from '@app/error';
 
-import { getActiveAccount } from '@libs/storage';
-
 import { AppLayout } from '@shared/appLayout';
 import { AuthLayout } from '@shared/authLayout';
 import { LoaderIcon } from '@shared/icons';
 import { SettingsLayout } from '@shared/settingsLayout';
 
+import { checkActiveAccount } from '@utils/checkActiveAccount';
+
 import './index.css';
 
-const appLoader = async () => {
+async function Loader() {
   try {
-    const account = await getActiveAccount();
+    const account = await checkActiveAccount();
     const stronghold = sessionStorage.getItem('stronghold');
     const privkey = JSON.parse(stronghold).state.privkey || null;
     const onboarding = localStorage.getItem('onboarding');
@@ -29,10 +29,6 @@ const appLoader = async () => {
     if (!account) {
       return redirect('/auth/welcome');
     } else {
-      if (account.privkey.length > 35) {
-        return redirect('/auth/migrate');
-      }
-
       if (!privkey) {
         return redirect('/auth/unlock');
       }
@@ -42,14 +38,14 @@ const appLoader = async () => {
   } catch (e) {
     throw new Error('App failed to load');
   }
-};
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
     errorElement: <ErrorScreen />,
-    loader: appLoader,
+    loader: Loader,
     children: [
       {
         path: '',

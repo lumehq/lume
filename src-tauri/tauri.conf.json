@@ -89,10 +89,6 @@
     "security": {
       "csp": "upgrade-insecure-requests"
     },
-    "systemTray": {
-      "iconAsTemplate": true,
-      "iconPath": "icons/icon.png"
-    },
     "windows": [
       {
         "width": 1080,

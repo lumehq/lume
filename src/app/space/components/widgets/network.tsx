@@ -1,36 +1,34 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useCallback, useEffect, useRef } from 'react';
+import { NostrEvent } from 'nostr-fetch';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
-
-import { useNewsfeed } from '@app/space/hooks/useNewsfeed';
-
-import { getNotes } from '@libs/storage';
 
 import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
 import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
+import { useNostr } from '@utils/hooks/useNostr';
 import { LumeEvent } from '@utils/types';
 
-const ITEM_PER_PAGE = 10;
-
 export function NetworkBlock() {
-  // subscribe for live update
-  // useNewsfeed();
-
-  const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { fetchNotes } = useNostr();
+  const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['network-widget'],
-      queryFn: async ({ pageParam = 0 }) => {
-        return await getNotes(ITEM_PER_PAGE, pageParam);
+      queryFn: async ({ pageParam = 24 }) => {
+        return await fetchNotes(pageParam);
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const notes = data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : [];
   const parentRef = useRef();
+  const notes = useMemo(
+    // @ts-expect-error, todo
+    () => (data ? data.pages.flatMap((d: { data: NostrEvent[] }) => d.data) : []),
+    [data]
+  );
 
   const rowVirtualizer = useVirtualizer({
     count: hasNextPage ? notes.length + 1 : notes.length,
@@ -140,7 +138,7 @@ export function NetworkBlock() {
             <div className="rounded-xl bg-white/10 px-3 py-6">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm text-white">
-                  You not have any posts to see yet
+                  You not have any postrs to see yet
                   <br />
                   Follow more people to have more fun.
                 </p>
@@ -148,7 +146,7 @@ export function NetworkBlock() {
                   to="/trending"
                   className="inline-flex w-max rounded bg-fuchsia-500 px-2.5 py-1.5 text-sm hover:bg-fuchsia-600"
                 >
-                  Trending
+                  Trending users
                 </Link>
               </div>
             </div>

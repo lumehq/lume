@@ -1,5 +1,7 @@
 import { useParams } from 'react-router-dom';
 
+import { useStorage } from '@libs/storage/provider';
+
 import {
   NoteActions,
   NoteContent,
@@ -10,12 +12,11 @@ import {
 import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function EventScreen() {
   const { id } = useParams();
-  const { account } = useAccount();
+  const { db } = useStorage();
   const { status, data } = useEvent(id);
 
   return (
@@ -42,7 +43,7 @@ export function EventScreen() {
           </div>
         )}
         <div className="px-3">
-          <NoteReplyForm id={id} pubkey={account.pubkey} />
+          <NoteReplyForm id={id} pubkey={db.account.pubkey} />
           <RepliesList id={id} />
         </div>
       </div>

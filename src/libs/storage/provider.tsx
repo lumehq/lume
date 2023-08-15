@@ -17,6 +17,8 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
   async function initLumeStorage() {
     const sqlite = await Database.load('sqlite:lume.db');
     const lumeStorage = new LumeStorage(sqlite);
+
+    if (!lumeStorage.account) await lumeStorage.getActiveAccount();
     setDB(lumeStorage);
   }
 

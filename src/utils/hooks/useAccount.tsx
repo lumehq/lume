@@ -1,14 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
-import { getActiveAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 export function useAccount() {
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const { status, data: account } = useQuery(
     ['account'],
     async () => {
-      const account = await getActiveAccount();
+      const account = await db.getActiveAccount();
       console.log('account: ', account);
       if (account?.pubkey) {
         const user = ndk.getUser({ hexpubkey: account?.pubkey });

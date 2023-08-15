@@ -97,28 +97,6 @@ export function Navigation() {
             </Collapsible.Content>
           </div>
         </Collapsible.Root>
-        <Collapsible.Root open={chats} onOpenChange={setChats}>
-          <div className="flex flex-col gap-1 px-2">
-            <Collapsible.Trigger asChild>
-              <button className="flex items-center gap-1">
-                <div
-                  className={twMerge(
-                    'inline-flex h-5 w-5 transform items-center justify-center transition-transform duration-150 ease-in-out',
-                    open ? '' : 'rotate-180'
-                  )}
-                >
-                  <NavArrowDownIcon className="h-3 w-3 text-white/50" />
-                </div>
-                <h3 className="text-[11px] font-bold uppercase tracking-widest text-white/50">
-                  Chats
-                </h3>
-              </button>
-            </Collapsible.Trigger>
-            <Collapsible.Content>
-              <ChatsList />
-            </Collapsible.Content>
-          </div>
-        </Collapsible.Root>
         {/* Channels
 				<Disclosure defaultOpen={true}>
 					{({ open }) => (

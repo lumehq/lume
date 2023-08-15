@@ -10,7 +10,6 @@ import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons
 
 import { useOnboarding } from '@stores/onboarding';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 import { arrayToNIP02 } from '@utils/transform';
 
@@ -21,7 +20,6 @@ export function OnboardStep1Screen() {
 
   const { db } = useStorage();
   const { publish, fetchUserData } = useNostr();
-  const { account } = useAccount();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
     if (!res.ok) {
@@ -45,7 +43,7 @@ export function OnboardStep1Screen() {
     try {
       setLoading(true);
 
-      const tags = arrayToNIP02([...follows, account.pubkey]);
+      const tags = arrayToNIP02([...follows, db.account.pubkey]);
       const event = await publish({ content: '', kind: 3, tags: tags });
       await db.updateAccount('follows', follows);
 

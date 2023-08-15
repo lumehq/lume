@@ -7,7 +7,6 @@ import {
   NDKUser,
 } from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { useQueryClient } from '@tanstack/react-query';
 import destr from 'destr';
 import { LRUCache } from 'lru-cache';
 import { NostrFetcher } from 'nostr-fetch';
@@ -19,14 +18,12 @@ import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { useAccount } from '@utils/hooks/useAccount';
+import { nHoursAgo } from '@utils/date';
 
 export function useNostr() {
   const { ndk, relayUrls } = useNDK();
-  const { account } = useAccount();
   const { db } = useStorage();
 
-  const queryClient = useQueryClient();
   const privkey = useStronghold((state) => state.privkey);
   const fetcher = useMemo(() => NostrFetcher.withCustomPool(ndkAdapter(ndk)), [ndk]);
   const subManager = useMemo(
@@ -58,7 +55,7 @@ export function useNostr() {
 
       // fetch user's follows
       if (!preFollows) {
-        const user = ndk.getUser({ hexpubkey: account.pubkey });
+        const user = ndk.getUser({ hexpubkey: db.account.pubkey });
         const list = await user.follows();
         list.forEach((item: NDKUser) => {
           follows.add(nip19.decode(item.npub).data as string);
@@ -78,8 +75,6 @@ export function useNostr() {
       await db.updateAccount('follows', [...follows]);
       await db.updateAccount('network', [...new Set([...follows, ...network])]);
 
-      queryClient.invalidateQueries(['account']);
-
       return { status: 'ok' };
     } catch (e) {
       return { status: 'failed', message: e };
@@ -90,19 +85,23 @@ export function useNostr() {
     try {
       if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
 
-      const events = await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [1],
-          authors: account.network ?? account.follows,
-        },
-        { since: since }
-      );
+      const until = since === 24 ? Math.floor(Date.now() / 1000) : nHoursAgo(since / 2);
 
-      return { status: 'ok', notes: events };
+      console.log('fetch events since: ', since);
+      console.log('fetch events until: ', until);
+      /*
+      const events = await ndk.fetchEvents({
+        kinds: [1],
+        authors: db.account.network ?? db.account.follows,
+        since: since,
+        until: until,
+      });
+      */
+
+      return { status: 'ok', data: [], nextCursor: since * 2 };
     } catch (e) {
       console.error('failed get notes, error: ', e);
-      return { status: 'failed', message: e };
+      return { status: 'failed', data: [], message: e };
     }
   };
 
@@ -123,7 +122,7 @@ export function useNostr() {
     event.content = content;
     event.kind = kind;
     event.created_at = Math.floor(Date.now() / 1000);
-    event.pubkey = account.pubkey;
+    event.pubkey = db.account.pubkey;
     event.tags = tags;
 
     await event.sign(signer);

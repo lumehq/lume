@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/plugin-http';
 
 import { NoteKind_1 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';

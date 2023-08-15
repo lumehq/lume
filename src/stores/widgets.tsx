@@ -30,7 +30,7 @@ export const useWidgets = create<WidgetState>()(
       },
     }),
     {
-      name: 'blocks',
+      name: 'widgets',
       storage: createJSONStorage(() => localStorage),
     }
   )

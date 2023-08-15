@@ -6,13 +6,11 @@ import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function SplashScreen() {
   const { db } = useStorage();
   const { ndk, relayUrls } = useNDK();
-  const { status, account } = useAccount();
   const { fetchUserData } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -46,15 +44,15 @@ export function SplashScreen() {
   };
 
   useEffect(() => {
-    if (status === 'success' && !account) {
+    if (!db.account) {
       invoke('close_splashscreen');
     }
 
-    if (ndk && account) {
+    if (ndk && db.account) {
       console.log('prefetching...');
       prefetch();
     }
-  }, [ndk, account]);
+  }, [ndk, db.account]);
 
   return (
     <div className="relative flex h-screen w-screen items-center justify-center bg-black">

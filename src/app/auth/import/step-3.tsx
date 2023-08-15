@@ -10,7 +10,6 @@ import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { useOnboarding } from '@stores/onboarding';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ImportStep3Screen() {
@@ -21,7 +20,6 @@ export function ImportStep3Screen() {
   const [loading, setLoading] = useState(false);
 
   const { db } = useStorage();
-  const { status, account } = useAccount();
   const { fetchUserData } = useNostr();
 
   const submit = async () => {
@@ -72,7 +70,7 @@ export function ImportStep3Screen() {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <User pubkey={account.pubkey} />
+            <User pubkey={db.account.pubkey} />
             <button
               type="button"
               className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"

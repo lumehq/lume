@@ -12,7 +12,6 @@ import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons
 import { FULL_RELAYS } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function OnboardStep3Screen() {
@@ -22,15 +21,17 @@ export function OnboardStep3Screen() {
   const [loading, setLoading] = useState(false);
   const [relays, setRelays] = useState(new Set<string>());
 
-  const { db } = useStorage();
   const { publish } = useNostr();
-  const { account } = useAccount();
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['relays'],
     async () => {
       const tmp = new Map<string, string>();
-      const events = await ndk.fetchEvents({ kinds: [10002], authors: account.follows });
+      const events = await ndk.fetchEvents({
+        kinds: [10002],
+        authors: db.account.follows,
+      });
 
       if (events) {
         events.forEach((event) => {
@@ -43,7 +44,8 @@ export function OnboardStep3Screen() {
       return tmp;
     },
     {
-      enabled: account ? true : false,
+      enabled: db.account ? true : false,
+      refetchOnWindowFocus: false,
     }
   );
 

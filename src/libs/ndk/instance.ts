@@ -1,6 +1,5 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
-import { fetch } from '@tauri-apps/plugin-http';
 import { useEffect, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
@@ -31,14 +30,21 @@ export const NDKInstance = () => {
       }
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort('timeout'), 5000);
         const res = await fetch(url, {
           headers: { Accept: 'application/nostr+json' },
+          signal: controller.signal,
         });
 
         if (res.ok) {
           const data = await res.json();
           console.log('relay information: ', data);
+
           verifiedRelays.push(relay);
+          clearTimeout(timeoutId);
+        } else {
+          console.log('relay not working: ', res);
         }
       } catch (e) {
         console.log('fetch error', e);

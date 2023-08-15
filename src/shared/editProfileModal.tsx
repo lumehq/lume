@@ -1,7 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQueryClient } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/plugin-http';
 import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 

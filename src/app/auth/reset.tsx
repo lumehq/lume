@@ -39,7 +39,6 @@ export function ResetScreen() {
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
 
-  const { account } = useAccount();
   const { db } = useStorage();
 
   // toggle private key
@@ -69,7 +68,7 @@ export function ResetScreen() {
 
         const tmpPubkey = getPublicKey(privkey);
 
-        if (tmpPubkey !== account.pubkey) {
+        if (tmpPubkey !== db.account.pubkey) {
           setLoading(false);
           setError('password', {
             type: 'custom',
@@ -88,10 +87,10 @@ export function ResetScreen() {
           );
 
           if (!db.secureDB) db.secureDB = stronghold;
-          await db.secureSave(account.pubkey, account.privkey);
+          await db.secureSave(db.account.pubkey, db.account.privkey);
 
           // add privkey to state
-          setPrivkey(account.privkey);
+          setPrivkey(db.account.privkey);
           // redirect to home
           navigate('/auth/unlock', { replace: true });
         }

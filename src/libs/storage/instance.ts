@@ -7,10 +7,12 @@ import { Account, Relays, Widget } from '@utils/types';
 export class LumeStorage {
   public db: Database;
   public secureDB: Stronghold;
+  public account: Account | null = null;
 
   constructor(sqlite: Database, stronghold?: Stronghold) {
     this.db = sqlite;
     this.secureDB = stronghold ?? undefined;
+    this.account = null;
   }
 
   private async getSecureClient() {
@@ -45,19 +47,24 @@ export class LumeStorage {
   }
 
   public async getActiveAccount() {
-    const account: Account = await this.db.select(
-      'SELECT * FROM accounts WHERE is_active = 1;'
-    )?.[0];
-    if (account) {
+    const results: Array<Account> = await this.db.select(
+      'SELECT * FROM accounts WHERE is_active = "1" ORDER BY id DESC LIMIT 1;'
+    );
+
+    if (results.length > 0) {
+      const account = results[0];
+
       if (typeof account.follows === 'string')
         account.follows = JSON.parse(account.follows);
 
       if (typeof account.network === 'string')
         account.network = JSON.parse(account.network);
 
+      this.account = account;
       return account;
     } else {
-      throw new Error('Account not found');
+      console.log('no active account, please create new account');
+      return null;
     }
   }
 
@@ -75,27 +82,30 @@ export class LumeStorage {
   }
 
   public async updateAccount(column: string, value: string | string[]) {
-    const account = await this.getActiveAccount();
-    return await this.db.execute(`UPDATE accounts SET ${column} = $1 WHERE id = $2;`, [
-      value,
-      account.id,
-    ]);
+    const insert = await this.db.execute(
+      `UPDATE accounts SET ${column} = $1 WHERE id = $2;`,
+      [value, this.account.id]
+    );
+
+    if (insert) {
+      const account = await this.getActiveAccount();
+      return account;
+    }
   }
 
   public async getWidgets() {
-    const account = await this.getActiveAccount();
     const result: Array<Widget> = await this.db.select(
-      `SELECT * FROM widgets WHERE account_id = "${account.id}" ORDER BY created_at DESC;`
+      `SELECT * FROM widgets WHERE account_id = "${this.account.id}" ORDER BY created_at DESC;`
     );
     return result;
   }
 
   public async createWidget(kind: number, title: string, content: string | string[]) {
-    const account = await this.getActiveAccount();
     const insert = await this.db.execute(
       'INSERT OR IGNORE INTO widgets (account_id, kind, title, content) VALUES ($1, $2, $3, $4);',
-      [account.id, kind, title, content]
+      [this.account.id, kind, title, content]
     );
+
     if (insert) {
       const widget: Widget = await this.db.select(
         'SELECT * FROM widgets ORDER BY id DESC LIMIT 1;'
@@ -129,7 +139,7 @@ export class LumeStorage {
       [cacheKey]
     )?.[0];
     if (!event) {
-      console.error('failed to get event by cache_key: ', cacheKey);
+      // console.error('failed to get event by cache_key: ', cacheKey);
       return null;
     }
     return event;
@@ -141,16 +151,15 @@ export class LumeStorage {
       [id]
     )?.[0];
     if (!event) {
-      console.error('failed to get event by id: ', id);
+      // console.error('failed to get event by id: ', id);
       return null;
     }
     return event;
   }
 
   public async getExplicitRelayUrls() {
-    const account = await this.getActiveAccount();
     const result: Relays[] = await this.db.select(
-      `SELECT * FROM relays WHERE account_id = "${account.id}";`
+      `SELECT * FROM relays WHERE account_id = "${this.account.id}";`
     );
 
     if (result.length > 0) return result.map((el) => el.relay);
@@ -158,10 +167,9 @@ export class LumeStorage {
   }
 
   public async createRelay(relay: string, purpose?: string) {
-    const account = await this.getActiveAccount();
     return await this.db.execute(
       'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES ($1, $2, $3);',
-      [account.id, relay, purpose || '']
+      [this.account.id, relay, purpose || '']
     );
   }
 

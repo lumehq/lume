@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/plugin-http';
 
 import { Profile } from '@app/trending/components/profile';
 
