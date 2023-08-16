@@ -1,5 +1,5 @@
 import { NDKSubscription } from '@nostr-dev-kit/ndk';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
@@ -9,22 +9,18 @@ import { ChatMessageItem } from '@app/chats/components/messages/item';
 import { ChatSidebar } from '@app/chats/components/sidebar';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createChat, getChatMessages } from '@libs/storage';
 import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { Chats } from '@utils/types';
-
 export function ChatScreen() {
-  const queryClient = useQueryClient();
   const virtuosoRef = useRef(null);
 
   const { ndk } = useNDK();
   const { db } = useStorage();
   const { pubkey } = useParams();
   const { status, data } = useQuery(['chat', pubkey], async () => {
-    return await getChatMessages(db.account.pubkey, pubkey);
+    return [];
   });
 
   const userPrivkey = useStronghold((state) => state.privkey);
@@ -49,22 +45,6 @@ export function ChatScreen() {
     [data]
   );
 
-  const chat = useMutation({
-    mutationFn: (data: Chats) => {
-      return createChat(
-        data.id,
-        data.receiver_pubkey,
-        data.sender_pubkey,
-        data.content,
-        data.tags,
-        data.created_at
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chat', pubkey] });
-    },
-  });
-
   useEffect(() => {
     const sub: NDKSubscription = ndk.subscribe(
       {
@@ -79,14 +59,7 @@ export function ChatScreen() {
     );
 
     sub.addListener('event', (event) => {
-      chat.mutate({
-        id: event.id,
-        receiver_pubkey: pubkey,
-        sender_pubkey: event.pubkey,
-        content: event.content,
-        tags: event.tags,
-        created_at: event.created_at,
-      });
+      console.log(event);
     });
 
     return () => {

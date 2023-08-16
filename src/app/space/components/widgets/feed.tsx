@@ -2,8 +2,6 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useEffect, useRef } from 'react';
 
-import { getNotesByAuthors } from '@libs/storage';
-
 import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
 import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { NoteSkeleton } from '@shared/notes/skeleton';
@@ -11,14 +9,12 @@ import { TitleBar } from '@shared/titleBar';
 
 import { LumeEvent, Widget } from '@utils/types';
 
-const ITEM_PER_PAGE = 10;
-
 export function FeedBlock({ params }: { params: Widget }) {
   const { status, data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed', params.content],
-      queryFn: async ({ pageParam = 0 }) => {
-        return await getNotesByAuthors(params.content, ITEM_PER_PAGE, pageParam);
+      queryFn: async () => {
+        return { data: [], nextCursor: 0 };
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });

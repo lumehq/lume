@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { BLOCK_KINDS } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
@@ -17,7 +17,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      setWidget({ kind: BLOCK_KINDS.thread, title: 'Thread', content: thread });
+      setWidget({ kind: widgetKinds.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }

@@ -10,7 +10,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
-import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
+import { DEFAULT_AVATAR, widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 export function FeedModal() {
@@ -40,7 +40,7 @@ export function FeedModal() {
 
     // update state
     setWidget(db, {
-      kind: BLOCK_KINDS.feed,
+      kind: widgetKinds.feed,
       title: data.title,
       content: JSON.stringify(selected),
     });

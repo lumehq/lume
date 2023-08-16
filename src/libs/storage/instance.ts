@@ -2,7 +2,7 @@ import { BaseDirectory, removeFile } from '@tauri-apps/plugin-fs';
 import Database from '@tauri-apps/plugin-sql';
 import { Stronghold } from '@tauri-apps/plugin-stronghold';
 
-import { Account, Relays, Widget } from '@utils/types';
+import { Account, LumeEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
@@ -133,16 +133,14 @@ export class LumeStorage {
     );
   }
 
-  public async getEventByKey(cacheKey: string) {
-    const event = await this.db.select(
-      'SELECT * FROM events WHERE cache_key = $1 ORDER BY id DESC LIMIT 1;',
+  public async getALlEventByKey(cacheKey: string) {
+    const events: LumeEvent[] = await this.db.select(
+      'SELECT * FROM events WHERE cache_key = $1 ORDER BY id DESC;',
       [cacheKey]
-    )?.[0];
-    if (!event) {
-      // console.error('failed to get event by cache_key: ', cacheKey);
-      return null;
-    }
-    return event;
+    );
+
+    if (events.length < 1) return null;
+    return events;
   }
 
   public async getEventByID(id: string) {
@@ -150,20 +148,20 @@ export class LumeStorage {
       'SELECT * FROM events WHERE event_id = $1 ORDER BY id DESC LIMIT 1;',
       [id]
     )?.[0];
-    if (!event) {
-      // console.error('failed to get event by id: ', id);
-      return null;
-    }
+
+    if (!event) return null;
     return event;
   }
 
   public async getExplicitRelayUrls() {
+    if (!this.account) return null;
+
     const result: Relays[] = await this.db.select(
-      `SELECT * FROM relays WHERE account_id = "${this.account.id}";`
+      `SELECT * FROM relays WHERE account_id = "${this.account.id}" ORDER BY id DESC LIMIT 50;`
     );
 
-    if (result.length > 0) return result.map((el) => el.relay);
-    return null;
+    if (result.length < 1) return null;
+    return result.map((el) => el.relay);
   }
 
   public async createRelay(relay: string, purpose?: string) {

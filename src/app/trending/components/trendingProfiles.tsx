@@ -10,7 +10,7 @@ interface Response {
 }
 
 export function TrendingProfiles() {
-  const { status, data, error } = useQuery(
+  const { status, data } = useQuery(
     ['trending-profiles'],
     async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -18,6 +18,7 @@ export function TrendingProfiles() {
         throw new Error('Error');
       }
       const json: Response = await res.json();
+      if (!json.profiles) return null;
       return json.profiles;
     },
     {
@@ -28,22 +29,21 @@ export function TrendingProfiles() {
     }
   );
 
-  console.log('profiles: ', data);
-
   return (
     <div className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
       <TitleBar title="Trending Profiles" />
       <div className="h-full">
-        {error && <p>Failed to fetch</p>}
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-white/10 px-3 py-3">
               <NoteSkeleton />
             </div>
           </div>
+        ) : status === 'error' ? (
+          <p>Failed to fetch</p>
         ) : (
           <div className="relative flex w-full flex-col gap-3 px-3 pt-1.5">
-            {data?.map((item) => (
+            {data.map((item) => (
               <Profile key={item.pubkey} data={item} />
             ))}
           </div>

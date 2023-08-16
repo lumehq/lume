@@ -123,6 +123,12 @@ fn main() {
               sql: include_str!("../migrations/20230814083543_add_events_table.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230816090508,
+              description: "clean up tables",
+              sql: include_str!("../migrations/20230816090508_clean_up_tables.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
@@ -138,7 +144,6 @@ fn main() {
           ..Default::default()
         };
 
-        // let salt = Alphanumeric.sample_string(&mut rand::thread_rng(), 12);
         let key = argon2::hash_raw(
           password.as_ref(),
           b"LUME_NEED_RUST_DEVELOPER_HELP_MAKE_SALT_RANDOM",

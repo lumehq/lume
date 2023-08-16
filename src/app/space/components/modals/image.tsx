@@ -7,7 +7,7 @@ import { useStorage } from '@libs/storage/provider';
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
+import { DEFAULT_AVATAR, widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 import { useImageUploader } from '@utils/hooks/useUploader';
@@ -40,7 +40,7 @@ export function ImageModal() {
     setLoading(true);
 
     // mutate
-    setWidget(db, { kind: BLOCK_KINDS.image, title: data.title, content: data.content });
+    setWidget(db, { kind: widgetKinds.image, title: data.title, content: data.content });
 
     setLoading(false);
     // reset form

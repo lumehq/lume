@@ -1,4 +1,4 @@
-import { BLOCK_KINDS } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 import { useProfile } from '@utils/hooks/useProfile';
@@ -13,7 +13,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       type="button"
       onClick={() =>
         setWidget({
-          kind: BLOCK_KINDS.user,
+          kind: widgetKinds.user,
           title: user?.nip05 || user?.name || user?.display_name,
           content: pubkey,
         })

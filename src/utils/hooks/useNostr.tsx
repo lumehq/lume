@@ -6,7 +6,6 @@ import {
   NDKSubscription,
   NDKUser,
 } from '@nostr-dev-kit/ndk';
-import { destr } from 'destr';
 import { LRUCache } from 'lru-cache';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
@@ -17,6 +16,14 @@ import { useStorage } from '@libs/storage/provider';
 import { useStronghold } from '@stores/stronghold';
 
 import { nHoursAgo } from '@utils/date';
+import { LumeEvent } from '@utils/types';
+
+interface NotesResponse {
+  status: string;
+  data: LumeEvent[];
+  nextCursor?: number;
+  message?: string;
+}
 
 export function useNostr() {
   const { ndk } = useNDK();
@@ -37,6 +44,8 @@ export function useNostr() {
     callback: (event: NDKEvent) => void,
     closeOnEose?: boolean
   ) => {
+    if (!ndk) throw new Error('NDK instance not found');
+
     const subEvent = ndk.subscribe(filter, { closeOnEose: closeOnEose ?? true });
     subManager.set(JSON.stringify(filter), subEvent);
 
@@ -78,17 +87,22 @@ export function useNostr() {
     }
   };
 
-  const fetchNotes = async (since: number) => {
+  const fetchNotes = async (since: number): Promise<NotesResponse> => {
     try {
-      if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
+      if (!ndk) return { status: 'failed', data: [], message: 'NDK instance not found' };
 
+      console.log('fetch all events since: ', since);
       const events = await ndk.fetchEvents({
         kinds: [1],
         authors: db.account.network ?? db.account.follows,
         since: nHoursAgo(since),
       });
 
-      return { status: 'ok', data: [...events], nextCursor: since * 2 };
+      const sorted = [...events].sort(
+        (a, b) => b.created_at - a.created_at
+      ) as unknown as LumeEvent[];
+
+      return { status: 'ok', data: sorted, nextCursor: since * 2 };
     } catch (e) {
       console.error('failed get notes, error: ', e);
       return { status: 'failed', data: [], message: e };
@@ -122,14 +136,6 @@ export function useNostr() {
   };
 
   const createZap = async (event: NDKEvent, amount: number, message?: string) => {
-    // @ts-expect-error, LumeEvent to NDKEvent
-    event.id = event.event_id;
-
-    // @ts-expect-error, LumeEvent to NDKEvent
-    if (typeof event.content !== 'string') event.content = event.content.original;
-
-    if (typeof event.tags === 'string') event.tags = destr(event.tags);
-
     if (!privkey) throw new Error('Private key not found');
 
     if (!ndk.signer) {
@@ -137,7 +143,7 @@ export function useNostr() {
       ndk.signer = signer;
     }
 
-    // @ts-expect-error, LumeEvent to NDKEvent
+    // @ts-expect-error, NostrEvent to NDKEvent
     const ndkEvent = new NDKEvent(ndk, event);
     const res = await ndkEvent.zap(amount, message ?? 'zap from lume');
 

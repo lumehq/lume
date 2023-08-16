@@ -18,6 +18,15 @@ export const useWidgets = create<WidgetState>()(
       widgets: null,
       fetchWidgets: async (db: LumeStorage) => {
         const widgets = await db.getWidgets();
+
+        // default: add network widget
+        widgets.unshift({
+          id: String(widgets.length + 1),
+          title: 'Network',
+          content: '',
+          kind: 9999,
+        });
+
         set({ widgets: widgets });
       },
       setWidget: async (db: LumeStorage, { kind, title, content }: Widget) => {

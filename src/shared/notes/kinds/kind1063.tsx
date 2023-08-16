@@ -27,10 +27,10 @@ export function NoteKind_1063({ event }: { event: LumeEvent }) {
                   className="h-auto w-full rounded-lg object-cover"
                 />
               )}
-              <NoteActions id={event.event_id} pubkey={event.pubkey} />
+              <NoteActions id={event.id} pubkey={event.pubkey} />
             </div>
           </div>
-          <NoteMetadata id={event.event_id} />
+          <NoteMetadata id={event.id} />
         </div>
       </div>
     </div>

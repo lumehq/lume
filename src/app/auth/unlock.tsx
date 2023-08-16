@@ -60,18 +60,19 @@ export function UnlockScreen() {
         // redirect to home
         navigate('/', { replace: true });
       } catch (e) {
+        setLoading(false);
         setError('password', {
           type: 'custom',
           message: e,
         });
       }
     } else {
+      setLoading(false);
       setError('password', {
         type: 'custom',
         message: 'Password is required and must be greater than 3',
       });
     }
-    setLoading(false);
   };
 
   return (
@@ -118,7 +119,7 @@ export function UnlockScreen() {
                 <>
                   <span className="w-5" />
                   <span>Decryting...</span>
-                  <LoaderIcon className="h-5 w-5" />
+                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
                 </>
               ) : (
                 <>

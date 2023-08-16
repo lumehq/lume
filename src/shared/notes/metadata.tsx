@@ -3,12 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { decode } from 'light-bolt11-decoder';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createReplyNote } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import { MiniUser } from '@shared/notes/users/mini';
 
-import { BLOCK_KINDS } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 import { compactNumber } from '@utils/number';
@@ -16,6 +16,7 @@ import { compactNumber } from '@utils/number';
 export function NoteMetadata({ id }: { id: string }) {
   const setWidget = useWidgets((state) => state.setWidget);
 
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['note-metadata', id],
@@ -35,15 +36,6 @@ export function NoteMetadata({ id }: { id: string }) {
           case 1:
             replies += 1;
             if (users.length < 3) users.push(event.pubkey);
-            createReplyNote(
-              id,
-              event.id,
-              event.pubkey,
-              event.kind,
-              event.tags,
-              event.content,
-              event.created_at
-            );
             break;
           case 9735: {
             const bolt11 = event.tags.find((tag) => tag[0] === 'bolt11')[1];
@@ -93,7 +85,11 @@ export function NoteMetadata({ id }: { id: string }) {
               <button
                 type="button"
                 onClick={() =>
-                  setWidget({ kind: BLOCK_KINDS.thread, title: 'Thread', content: id })
+                  setWidget(db, {
+                    kind: widgetKinds.thread,
+                    title: 'Thread',
+                    content: id,
+                  })
                 }
                 className="text-white/50"
               >

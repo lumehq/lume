@@ -1,4 +1,4 @@
-import { BLOCK_KINDS } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 export function Hashtag({ tag }: { tag: string }) {
@@ -9,7 +9,7 @@ export function Hashtag({ tag }: { tag: string }) {
       type="button"
       onClick={() =>
         setWidget({
-          kind: BLOCK_KINDS.hashtag,
+          kind: widgetKinds.hashtag,
           title: tag,
           content: tag.replace('#', ''),
         })

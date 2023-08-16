@@ -4,7 +4,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { Opengraph } from '@utils/types';
 
 export function useOpenGraph(url: string) {
-  const { status, data, error, isFetching } = useQuery(
+  const { status, data, error } = useQuery(
     ['preview', url],
     async () => {
       const res: Opengraph = await invoke('opengraph', { url });
@@ -25,6 +25,5 @@ export function useOpenGraph(url: string) {
     status,
     data,
     error,
-    isFetching,
   };
 }

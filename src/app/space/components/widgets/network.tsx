@@ -1,8 +1,10 @@
+import { NDKFilter } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { NostrEvent } from 'nostr-fetch';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
 import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
@@ -13,11 +15,12 @@ import { useNostr } from '@utils/hooks/useNostr';
 import { LumeEvent } from '@utils/types';
 
 export function NetworkBlock() {
-  const { fetchNotes } = useNostr();
+  const { db } = useStorage();
+  const { sub, fetchNotes } = useNostr();
   const { status, data, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['network-widget'],
     queryFn: async ({ pageParam = 24 }) => {
-      return await fetchNotes(pageParam);
+      return { data: [], nextCursor: 0 };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     refetchOnWindowFocus: false,
@@ -26,8 +29,7 @@ export function NetworkBlock() {
 
   const parentRef = useRef();
   const notes = useMemo(
-    // @ts-expect-error, todo
-    () => (data ? data.pages.flatMap((d: { data: NostrEvent[] }) => d.data) : []),
+    () => (data ? data.pages.flatMap((d: { data: LumeEvent[] }) => d.data) : []),
     [data]
   );
 
@@ -37,9 +39,19 @@ export function NetworkBlock() {
     estimateSize: () => 500,
     overscan: 2,
   });
-
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
   const totalSize = rowVirtualizer.getTotalSize();
+
+  useEffect(() => {
+    const since = Math.floor(Date.now() / 1000);
+    const filter: NDKFilter = {
+      kinds: [1, 6],
+      authors: db.account.network,
+      since: since,
+    };
+
+    sub(filter, (event) => console.log('[network] event received: ', event));
+  }, []);
 
   const renderItem = useCallback(
     (index: string | number) => {

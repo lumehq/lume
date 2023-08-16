@@ -5,7 +5,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
-import { BLOCK_KINDS } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
 
 const data = [
@@ -52,7 +52,7 @@ export function OnboardStep2Screen() {
       setLoading(true);
 
       for (const tag of tags) {
-        await db.createWidget(BLOCK_KINDS.hashtag, tag, tag.replace('#', ''));
+        await db.createWidget(widgetKinds.hashtag, tag, tag.replace('#', ''));
       }
 
       navigate('/auth/onboarding/step-3', { replace: true });

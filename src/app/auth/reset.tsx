@@ -11,8 +11,6 @@ import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { useAccount } from '@utils/hooks/useAccount';
-
 type FormValues = {
   password: string;
   privkey: string;

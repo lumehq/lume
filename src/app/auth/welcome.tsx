@@ -1,10 +1,12 @@
-import { LogicalSize, appWindow } from '@tauri-apps/plugin-window';
+import { LogicalSize, getCurrent } from '@tauri-apps/plugin-window';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 export function WelcomeScreen() {
+  const appWindow = getCurrent();
+
   async function setWindow() {
     await appWindow.setSize(new LogicalSize(400, 500));
     await appWindow.setResizable(false);

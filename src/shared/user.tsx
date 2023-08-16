@@ -8,7 +8,7 @@ import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
-import { displayNpub, shortenKey } from '@utils/shortenKey';
+import { displayNpub } from '@utils/shortenKey';
 
 export function User({
   pubkey,
@@ -85,7 +85,7 @@ export function User({
             {user?.nip05?.toLowerCase() ||
               user?.name ||
               user?.display_name ||
-              shortenKey(pubkey)}
+              displayNpub(pubkey, 16)}
           </h5>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>

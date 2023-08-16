@@ -56,6 +56,7 @@ export const NDKInstance = () => {
   async function initNDK() {
     let explicitRelayUrls: string[];
     const explicitRelayUrlsFromDB = await db.getExplicitRelayUrls();
+    console.log('relays in db: ', explicitRelayUrlsFromDB);
 
     if (explicitRelayUrlsFromDB) {
       explicitRelayUrls = await verifyRelays(explicitRelayUrlsFromDB);

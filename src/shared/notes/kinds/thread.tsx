@@ -28,10 +28,10 @@ export function NoteThread({
             <div className="w-11 shrink-0" />
             <div className="relative z-20 flex-1">
               <NoteContent content={content} />
-              <NoteActions id={event.event_id} pubkey={event.pubkey} />
+              <NoteActions id={event.id} pubkey={event.pubkey} />
             </div>
           </div>
-          <NoteMetadata id={event.event_id} />
+          <NoteMetadata id={event.id} />
         </div>
       </div>
     </div>

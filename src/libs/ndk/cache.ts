@@ -21,15 +21,15 @@ export default class TauriAdapter implements NDKCacheAdapter {
       for (const author of filter.authors) {
         for (const kind of filter.kinds) {
           const key = `${author}:${kind}`;
-          promises.push(this.store.getEventByKey(key));
+          promises.concat(this.store.getALlEventByKey(key));
         }
       }
 
       const results = await Promise.all(promises);
 
       for (const result of results) {
-        if (result) {
-          console.log('cache hit: ', result);
+        if (result && result.event) {
+          console.log('cache hit: ', result.event);
           const ndkEvent = new NDKEvent(
             subscription.ndk,
             JSON.parse(result.event as string)

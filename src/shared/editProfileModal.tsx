@@ -4,6 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { AvatarUploader } from '@shared/avatarUploader';
 import { BannerUploader } from '@shared/bannerUploader';
 import { CancelIcon, CheckCircleIcon, LoaderIcon, UnverifiedIcon } from '@shared/icons';
@@ -11,7 +13,6 @@ import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function EditProfileModal() {
@@ -23,8 +24,8 @@ export function EditProfileModal() {
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: false, text: '' });
 
+  const { db } = useStorage();
   const { publish } = useNostr();
-  const { account } = useAccount();
   const {
     register,
     handleSubmit,
@@ -33,7 +34,7 @@ export function EditProfileModal() {
     formState: { isValid, errors },
   } = useForm({
     defaultValues: async () => {
-      const res: any = queryClient.getQueryData(['user', account.pubkey]);
+      const res: any = queryClient.getQueryData(['user', db.account.pubkey]);
       if (res.image) {
         setPicture(res.image);
       }
@@ -70,7 +71,7 @@ export function EditProfileModal() {
       });
 
       if (!res.ok) return false;
-      if (res.data.names[username] === account.pubkey) {
+      if (res.data.names[username] === db.account.pubkey) {
         setNIP05((prev) => ({ ...prev, verified: true }));
         return true;
       } else {
@@ -119,7 +120,7 @@ export function EditProfileModal() {
     if (event.id) {
       setTimeout(() => {
         // invalid cache
-        queryClient.invalidateQueries(['user', account.pubkey]);
+        queryClient.invalidateQueries(['user', db.account.pubkey]);
         // reset form
         reset();
         // reset state

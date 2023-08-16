@@ -16,7 +16,7 @@ export function useEvent(id: string, embed?: string) {
         return embed as unknown as LumeEvent;
       } else {
         const event = (await ndk.fetchEvent(id)) as LumeEvent;
-        if (!event) return null;
+        if (!event) throw new Error('event not found');
         if (event.kind === 1) event['content'] = parser(event) as unknown as string;
         return event as LumeEvent;
       }

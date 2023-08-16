@@ -1,5 +1,4 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -12,13 +11,10 @@ import {
 } from '@shared/icons';
 
 import { useComposer } from '@stores/composer';
-import { COMPOSE_SHORTCUT } from '@stores/shortcuts';
 
 export function ComposerModal() {
   const { db } = useStorage();
   const [toggle, open] = useComposer((state) => [state.toggleModal, state.open]);
-
-  useHotkeys(COMPOSE_SHORTCUT, () => toggle(true));
 
   return (
     <Dialog.Root open={open} onOpenChange={toggle}>

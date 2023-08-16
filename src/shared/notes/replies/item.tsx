@@ -18,11 +18,7 @@ export function Reply({ event, root }: { event: LumeEvent; root?: string }) {
             <div className="w-11 shrink-0" />
             <div className="flex-1">
               <NoteContent content={content} />
-              <NoteActions
-                id={event.event_id || event.id}
-                pubkey={event.pubkey}
-                root={root}
-              />
+              <NoteActions id={event.id || event.id} pubkey={event.pubkey} root={root} />
             </div>
           </div>
           <div>

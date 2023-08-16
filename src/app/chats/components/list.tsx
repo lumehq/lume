@@ -6,17 +6,14 @@ import { NewMessageModal } from '@app/chats/components/modal';
 import { ChatsListSelfItem } from '@app/chats/components/self';
 import { UnknownsModal } from '@app/chats/components/unknowns';
 
-import { useNDK } from '@libs/ndk/provider';
-import { getChats } from '@libs/storage';
 import { useStorage } from '@libs/storage/provider';
 
 import { Chats } from '@utils/types';
 
 export function ChatsList() {
   const { db } = useStorage();
-  const { ndk } = useNDK();
   const { status, data: chats } = useQuery(['chats'], async () => {
-    return await getChats();
+    return { follows: [], unknowns: [] };
   });
 
   const renderItem = useCallback(
