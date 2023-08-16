@@ -10,6 +10,8 @@ import { NetworkBlock } from '@app/space/components/widgets/network';
 import { ThreadBlock } from '@app/space/components/widgets/thread';
 import { UserBlock } from '@app/space/components/widgets/user';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { LoaderIcon } from '@shared/icons';
 
 import { useWidgets } from '@stores/widgets';
@@ -21,6 +23,8 @@ export function SpaceScreen() {
     state.widgets,
     state.fetchWidgets,
   ]);
+
+  const { db } = useStorage();
 
   const renderItem = useCallback(
     (widget: Widget) => {
@@ -43,7 +47,7 @@ export function SpaceScreen() {
   );
 
   useEffect(() => {
-    fetchWidgets();
+    fetchWidgets(db);
   }, [fetchWidgets]);
 
   return (

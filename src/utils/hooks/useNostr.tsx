@@ -6,10 +6,8 @@ import {
   NDKSubscription,
   NDKUser,
 } from '@nostr-dev-kit/ndk';
-import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import destr from 'destr';
+import { destr } from 'destr';
 import { LRUCache } from 'lru-cache';
-import { NostrFetcher } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
@@ -21,11 +19,10 @@ import { useStronghold } from '@stores/stronghold';
 import { nHoursAgo } from '@utils/date';
 
 export function useNostr() {
-  const { ndk, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { db } = useStorage();
 
   const privkey = useStronghold((state) => state.privkey);
-  const fetcher = useMemo(() => NostrFetcher.withCustomPool(ndkAdapter(ndk)), [ndk]);
   const subManager = useMemo(
     () =>
       new LRUCache<string, NDKSubscription, void>({
@@ -85,20 +82,13 @@ export function useNostr() {
     try {
       if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
 
-      const until = since === 24 ? Math.floor(Date.now() / 1000) : nHoursAgo(since / 2);
-
-      console.log('fetch events since: ', since);
-      console.log('fetch events until: ', until);
-      /*
       const events = await ndk.fetchEvents({
         kinds: [1],
         authors: db.account.network ?? db.account.follows,
-        since: since,
-        until: until,
+        since: nHoursAgo(since),
       });
-      */
 
-      return { status: 'ok', data: [], nextCursor: since * 2 };
+      return { status: 'ok', data: [...events], nextCursor: since * 2 };
     } catch (e) {
       console.error('failed get notes, error: ', e);
       return { status: 'failed', data: [], message: e };

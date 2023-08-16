@@ -1,5 +1,5 @@
 import { NDKTag } from '@nostr-dev-kit/ndk';
-import destr from 'destr';
+import { destr } from 'destr';
 import { nip19 } from 'nostr-tools';
 
 export function truncateContent(str, n) {

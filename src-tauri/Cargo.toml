@@ -33,7 +33,6 @@ tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", bra
 tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-window-vibrancy = { git = "https://github.com/tauri-apps/window-vibrancy", branch = "dev" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }

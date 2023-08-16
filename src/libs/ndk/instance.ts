@@ -3,7 +3,6 @@ import NDK from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
-import { getExplicitRelayUrls } from '@libs/storage';
 import { useStorage } from '@libs/storage/provider';
 
 import { FULL_RELAYS } from '@stores/constants';
@@ -56,7 +55,7 @@ export const NDKInstance = () => {
 
   async function initNDK() {
     let explicitRelayUrls: string[];
-    const explicitRelayUrlsFromDB = await getExplicitRelayUrls();
+    const explicitRelayUrlsFromDB = await db.getExplicitRelayUrls();
 
     if (explicitRelayUrlsFromDB) {
       explicitRelayUrls = await verifyRelays(explicitRelayUrlsFromDB);

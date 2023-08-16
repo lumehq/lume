@@ -1,4 +1,5 @@
-// import { useLiveThread } from '@app/space/hooks/useLiveThread';
+import { useStorage } from '@libs/storage/provider';
+
 import {
   NoteActions,
   NoteContent,
@@ -10,16 +11,12 @@ import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';
 
 export function ThreadBlock({ params }: { params: Widget }) {
   const { status, data } = useEvent(params.content);
-  const { account } = useAccount();
-
-  // subscribe to live reply
-  // useLiveThread(params.content);
+  const { db } = useStorage();
 
   return (
     <div className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
@@ -50,7 +47,7 @@ export function ThreadBlock({ params }: { params: Widget }) {
           </div>
         )}
         <div className="px-3">
-          {account && <NoteReplyForm id={params.content} pubkey={account.pubkey} />}
+          <NoteReplyForm id={params.content} pubkey={db.account.pubkey} />
           <RepliesList id={params.content} />
         </div>
       </div>

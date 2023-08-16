@@ -13,12 +13,12 @@ export function useEvent(id: string, embed?: string) {
       if (embed) {
         const event: LumeEvent = JSON.parse(embed);
         if (event.kind === 1) embed['content'] = parser(event);
-        return embed;
+        return embed as unknown as LumeEvent;
       } else {
-        const event = (await ndk.fetchEvent(id)) as unknown as LumeEvent;
-        if (!event) throw new Error('Event not found');
-        if (event.kind === 1) event['content'] = parser(event);
-        return event as unknown as LumeEvent;
+        const event = (await ndk.fetchEvent(id)) as LumeEvent;
+        if (!event) return null;
+        if (event.kind === 1) event['content'] = parser(event) as unknown as string;
+        return event as LumeEvent;
       }
     },
     {

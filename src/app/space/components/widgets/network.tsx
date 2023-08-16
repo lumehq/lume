@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { NostrEvent } from 'nostr-fetch';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
@@ -14,14 +14,15 @@ import { LumeEvent } from '@utils/types';
 
 export function NetworkBlock() {
   const { fetchNotes } = useNostr();
-  const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: ['network-widget'],
-      queryFn: async ({ pageParam = 24 }) => {
-        return await fetchNotes(pageParam);
-      },
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    });
+  const { status, data, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ['network-widget'],
+    queryFn: async ({ pageParam = 24 }) => {
+      return await fetchNotes(pageParam);
+    },
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   const parentRef = useRef();
   const notes = useMemo(
@@ -40,18 +41,6 @@ export function NetworkBlock() {
   const itemsVirtualizer = rowVirtualizer.getVirtualItems();
   const totalSize = rowVirtualizer.getTotalSize();
 
-  useEffect(() => {
-    const [lastItem] = [...itemsVirtualizer].reverse();
-
-    if (!lastItem) {
-      return;
-    }
-
-    if (lastItem.index >= notes.length - 1 && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [notes.length, fetchNextPage, itemsVirtualizer]);
-
   const renderItem = useCallback(
     (index: string | number) => {
       const note: LumeEvent = notes[index];
@@ -69,7 +58,7 @@ export function NetworkBlock() {
           if (root || reply) {
             return (
               <div
-                key={(root || reply) + (note.event_id || note.id) + index}
+                key={(root || reply) + note.id + index}
                 data-index={index}
                 ref={rowVirtualizer.measureElement}
               >
@@ -79,7 +68,7 @@ export function NetworkBlock() {
           } else {
             return (
               <div
-                key={(note.event_id || note.id) + index}
+                key={note.id + index}
                 data-index={index}
                 ref={rowVirtualizer.measureElement}
               >
@@ -91,31 +80,31 @@ export function NetworkBlock() {
         case 6:
           return (
             <div
-              key={(note.event_id || note.id) + index}
+              key={note.id + index}
               data-index={index}
               ref={rowVirtualizer.measureElement}
             >
-              <Repost key={note.event_id} event={note} />
+              <Repost key={note.id} event={note} />
             </div>
           );
         case 1063:
           return (
             <div
-              key={(note.event_id || note.id) + index}
+              key={note.id + index}
               data-index={index}
               ref={rowVirtualizer.measureElement}
             >
-              <NoteKind_1063 key={note.event_id} event={note} />
+              <NoteKind_1063 key={note.id} event={note} />
             </div>
           );
         default:
           return (
             <div
-              key={(note.event_id || note.id) + index}
+              key={note.id + index}
               data-index={index}
               ref={rowVirtualizer.measureElement}
             >
-              <NoteKindUnsupport key={note.event_id} event={note} />
+              <NoteKindUnsupport key={note.id} event={note} />
             </div>
           );
       }

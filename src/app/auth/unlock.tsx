@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { User } from '@app/auth/components/user';
+
 import { useStorage } from '@libs/storage/provider';
 
-import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
+import { ArrowRightCircleIcon, EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -36,7 +38,6 @@ export function UnlockScreen() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { db } = useStorage();
-
   const {
     register,
     setError,
@@ -79,13 +80,17 @@ export function UnlockScreen() {
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-semibold text-white">Enter password to unlock</h1>
         </div>
+        <div className="mb-4 w-full rounded-xl bg-white/5 p-4">
+          <User pubkey={db.account.pubkey} />
+        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
           <div className="flex flex-col gap-1">
             <div className="relative">
               <input
                 {...register('password', { required: true })}
                 type={showPassword ? 'text' : 'password'}
-                className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/10"
+                placeholder="Password"
+                className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/50"
               />
               <button
                 type="button"
@@ -107,12 +112,20 @@ export function UnlockScreen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-12 w-full items-center justify-center rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600"
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             >
               {loading ? (
-                <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+                <>
+                  <span className="w-5" />
+                  <span>Decryting...</span>
+                  <LoaderIcon className="h-5 w-5" />
+                </>
               ) : (
-                'Continue →'
+                <>
+                  <span className="w-5" />
+                  <span>Continue</span>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                </>
               )}
             </button>
             <Link

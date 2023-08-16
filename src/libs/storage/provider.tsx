@@ -24,10 +24,6 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 
   useEffect(() => {
     if (!db) initLumeStorage();
-
-    return () => {
-      db.close();
-    };
   }, []);
 
   if (db) {

@@ -1,13 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHotkeys } from 'react-hotkeys-hook';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
-import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
 import { useWidgets } from '@stores/widgets';
 
 import { useImageUploader } from '@utils/hooks/useUploader';
@@ -20,8 +20,7 @@ export function ImageModal() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState('');
 
-  useHotkeys(ADD_IMAGEBLOCK_SHORTCUT, () => setOpen(false));
-
+  const { db } = useStorage();
   const {
     register,
     handleSubmit,
@@ -41,7 +40,7 @@ export function ImageModal() {
     setLoading(true);
 
     // mutate
-    setWidget({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
+    setWidget(db, { kind: BLOCK_KINDS.image, title: data.title, content: data.content });
 
     setLoading(false);
     // reset form

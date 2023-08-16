@@ -9,7 +9,6 @@ use opg::opengraph;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -174,19 +173,6 @@ fn main() {
     .plugin(tauri_plugin_window::init())
     .plugin(tauri_plugin_store::Builder::default().build())
     .plugin(tauri_plugin_shell::init())
-    .setup(|app| {
-      let window = app.get_window("main").unwrap();
-
-      #[cfg(target_os = "macos")]
-      apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
-        .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
-
-      #[cfg(target_os = "windows")]
-      apply_mica(&window, Some(true))
-        .expect("Unsupported platform! 'apply_mica' is only supported on Windows");
-
-      Ok(())
-    })
     .invoke_handler(tauri::generate_handler![close_splashscreen, opengraph])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

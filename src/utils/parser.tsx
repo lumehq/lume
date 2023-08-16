@@ -2,7 +2,7 @@ import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
 import ReactPlayer from 'react-player';
 
-import { Content, LumeEvent } from '@utils/types';
+import { LumeEvent, RichContent } from '@utils/types';
 
 export function parser(event: LumeEvent) {
   if (event.kind !== 1) return;
@@ -10,8 +10,7 @@ export function parser(event: LumeEvent) {
   const references = parseReferences(event as unknown as Event);
   const urls = getUrls(event.content as unknown as string);
 
-  const content: Content = {
-    original: event.content as unknown as string,
+  const content: RichContent = {
     parsed: event.content as unknown as string,
     notes: [],
     images: [],

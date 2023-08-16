@@ -30,7 +30,7 @@ export function SplashScreen() {
       if (user.status === 'ok') {
         const now = Math.floor(Date.now() / 1000);
         await db.updateLastLogin(now);
-        invoke('close_splashscreen');
+        await invoke('close_splashscreen');
       } else {
         setIsLoading(false);
         setErrorMessage(user.message);
@@ -55,7 +55,7 @@ export function SplashScreen() {
   }, [ndk, db.account]);
 
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center bg-black">
+    <div className="relative flex h-screen w-screen items-center justify-center bg-black/90">
       <div data-tauri-drag-region className="absolute left-0 top-0 z-10 h-11 w-full" />
       <div className="flex min-h-0 w-full flex-1 items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4">

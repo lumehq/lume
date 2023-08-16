@@ -5,14 +5,11 @@ import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { removePrivkey } from '@libs/storage';
 import { useStorage } from '@libs/storage/provider';
 
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
-
-import { useAccount } from '@utils/hooks/useAccount';
 
 type FormValues = {
   password: string;
@@ -73,7 +70,7 @@ export function MigrateScreen() {
         // add privkey to state
         setPrivkey(db.account.privkey);
         // remove privkey in db
-        await removePrivkey();
+        await db.removePrivkey();
         // clear cache
         await queryClient.invalidateQueries(['account']);
         // redirect to home

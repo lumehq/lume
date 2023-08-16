@@ -58,21 +58,13 @@ export function FeedBlock({ params }: { params: Widget }) {
           const reply = note.tags.find((el) => el[3] === 'reply')?.[1];
           if (root || reply) {
             return (
-              <div
-                key={note.event_id || note.id}
-                data-index={index}
-                ref={rowVirtualizer.measureElement}
-              >
+              <div key={note.id} data-index={index} ref={rowVirtualizer.measureElement}>
                 <NoteThread event={note} root={root} reply={reply} />
               </div>
             );
           } else {
             return (
-              <div
-                key={note.event_id || note.id}
-                data-index={index}
-                ref={rowVirtualizer.measureElement}
-              >
+              <div key={note.id} data-index={index} ref={rowVirtualizer.measureElement}>
                 <NoteKind_1 event={note} skipMetadata={false} />
               </div>
             );
@@ -80,32 +72,20 @@ export function FeedBlock({ params }: { params: Widget }) {
         }
         case 6:
           return (
-            <div
-              key={note.event_id || note.id}
-              data-index={index}
-              ref={rowVirtualizer.measureElement}
-            >
-              <Repost key={note.event_id} event={note} />
+            <div key={note.id} data-index={index} ref={rowVirtualizer.measureElement}>
+              <Repost key={note.id} event={note} />
             </div>
           );
         case 1063:
           return (
-            <div
-              key={note.event_id || note.id}
-              data-index={index}
-              ref={rowVirtualizer.measureElement}
-            >
-              <NoteKind_1063 key={note.event_id} event={note} />
+            <div key={note.id} data-index={index} ref={rowVirtualizer.measureElement}>
+              <NoteKind_1063 key={note.id} event={note} />
             </div>
           );
         default:
           return (
-            <div
-              key={note.event_id || note.id}
-              data-index={index}
-              ref={rowVirtualizer.measureElement}
-            >
-              <NoteKindUnsupport key={note.event_id} event={note} />
+            <div key={note.id} data-index={index} ref={rowVirtualizer.measureElement}>
+              <NoteKindUnsupport key={note.id} event={note} />
             </div>
           );
       }

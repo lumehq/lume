@@ -184,6 +184,12 @@ export class LumeStorage {
     );
   }
 
+  public async removePrivkey() {
+    return await this.db.execute(
+      `UPDATE accounts SET privkey = "privkey is stored in secure storage" WHERE id = "${this.account.id}";`
+    );
+  }
+
   public async close() {
     return this.db.close();
   }

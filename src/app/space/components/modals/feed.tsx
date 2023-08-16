@@ -3,30 +3,25 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { User } from '@app/auth/components/user';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
 import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
-import { ADD_FEEDBLOCK_SHORTCUT } from '@stores/shortcuts';
 import { useWidgets } from '@stores/widgets';
 
-import { useAccount } from '@utils/hooks/useAccount';
-
 export function FeedModal() {
+  const setWidget = useWidgets((state) => state.setWidget);
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState([]);
   const [query, setQuery] = useState('');
 
-  const { status, account } = useAccount();
-
-  const setWidget = useWidgets((state) => state.setWidget);
-
-  useHotkeys(ADD_FEEDBLOCK_SHORTCUT, () => setOpen(true));
-
+  const { db } = useStorage();
   const {
     register,
     handleSubmit,
@@ -43,8 +38,8 @@ export function FeedModal() {
       }
     });
 
-    // insert to database
-    setWidget({
+    // update state
+    setWidget(db, {
       kind: BLOCK_KINDS.feed,
       title: data.title,
       content: JSON.stringify(selected),
@@ -155,26 +150,22 @@ export function FeedModal() {
                               )}
                             </Combobox.Option>
                           )}
-                          {status === 'loading' ? (
-                            <p>Loading...</p>
-                          ) : (
-                            account?.follows?.map((follow) => (
-                              <Combobox.Option
-                                key={follow}
-                                value={follow}
-                                className="group flex w-full items-center justify-between rounded-md px-2 py-2 hover:bg-white/10"
-                              >
-                                {({ selected }) => (
-                                  <>
-                                    <User pubkey={follow} />
-                                    {selected && (
-                                      <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                                    )}
-                                  </>
-                                )}
-                              </Combobox.Option>
-                            ))
-                          )}
+                          {db.account?.follows?.map((follow) => (
+                            <Combobox.Option
+                              key={follow}
+                              value={follow}
+                              className="group flex w-full items-center justify-between rounded-md px-2 py-2 hover:bg-white/10"
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <User pubkey={follow} />
+                                  {selected && (
+                                    <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                                  )}
+                                </>
+                              )}
+                            </Combobox.Option>
+                          ))}
                         </Combobox.Options>
                       </Combobox>
                     </div>

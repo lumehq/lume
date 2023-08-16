@@ -1,7 +1,6 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 
-export interface Content {
-  original: string;
+export interface RichContent {
   parsed: string;
   notes: string[];
   images: string[];
@@ -10,10 +9,7 @@ export interface Content {
 }
 
 export interface LumeEvent extends NDKEvent {
-  event_id?: string;
-  parent_id?: string;
-  replies?: LumeEvent[];
-  content: Content;
+  richContent: RichContent;
 }
 
 export interface Account extends NDKUserProfile {

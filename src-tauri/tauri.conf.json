@@ -73,13 +73,6 @@
       "resources": [],
       "shortDescription": "",
       "targets": "all",
-      "updater": {
-        "active": true,
-        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
-        "windows": {
-          "installMode": "passive"
-        }
-      },
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
@@ -103,7 +96,12 @@
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
-        "visible": false
+        "visible": false,
+        "fileDropEnabled": true,
+        "windowEffects": {
+          "effects": ["mica", "hudWindow"],
+          "state": "followsWindowActiveState"
+        }
       },
       {
         "width": 400,
@@ -114,7 +112,11 @@
         "resizable": false,
         "titleBarStyle": "Overlay",
         "label": "splashscreen",
-        "url": "splashscreen"
+        "url": "splashscreen",
+        "windowEffects": {
+          "effects": ["mica", "hudWindow"],
+          "state": "followsWindowActiveState"
+        }
       }
     ],
     "macOSPrivateApi": true

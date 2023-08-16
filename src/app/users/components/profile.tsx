@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom';
 
 import { UserMetadata } from '@app/users/components/metadata';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { EditProfileModal } from '@shared/editProfileModal';
 import { Image } from '@shared/image';
 
 import { DEFAULT_AVATAR } from '@stores/constants';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useProfile } from '@utils/hooks/useProfile';
 import { useSocial } from '@utils/hooks/useSocial';
 import { shortenKey } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
+  const { db } = useStorage();
   const { user } = useProfile(pubkey);
-  const { account } = useAccount();
   const { status, userFollows, follow, unfollow } = useSocial();
 
   const [followed, setFollowed] = useState(false);
@@ -109,7 +110,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
                 Message
               </Link>
               <span className="mx-2 inline-flex h-4 w-px bg-white/10" />
-              {account && account.pubkey === pubkey && <EditProfileModal />}
+              {db.account.pubkey === pubkey && <EditProfileModal />}
             </div>
           </div>
           <div className="flex flex-col gap-8">
