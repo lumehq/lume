@@ -1,16 +1,16 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useMemo } from 'react';
 
 import { NoteActions, NoteContent, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { parser } from '@utils/parser';
-import { LumeEvent } from '@utils/types';
 
 export function NoteKind_1({
   event,
   skipMetadata = false,
 }: {
-  event: LumeEvent;
+  event: NDKEvent;
   skipMetadata?: boolean;
 }) {
   const content = useMemo(() => parser(event), [event.id]);

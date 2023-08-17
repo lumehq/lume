@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +16,6 @@ import { useNostr } from '@utils/hooks/useNostr';
 export function CreateStep3Screen() {
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
-  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState(DEFAULT_AVATAR);
@@ -46,8 +44,6 @@ export function CreateStep3Screen() {
         kind: 0,
         tags: [],
       });
-
-      queryClient.invalidateQueries(['account']);
 
       if (event) {
         navigate('/auth/onboarding', { replace: true });

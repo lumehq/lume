@@ -129,6 +129,12 @@ fn main() {
               sql: include_str!("../migrations/20230816090508_clean_up_tables.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230817014932,
+              description: "add last login to account",
+              sql: include_str!("../migrations/20230817014932_add_last_login_time_to_account.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

@@ -1,14 +1,13 @@
 import { NDKCacheAdapter } from '@nostr-dev-kit/ndk';
 import { NDKEvent, NDKSubscription } from '@nostr-dev-kit/ndk';
-
-import { LumeStorage } from '@libs/storage/instance';
+import { Store } from '@tauri-apps/plugin-store';
 
 export default class TauriAdapter implements NDKCacheAdapter {
-  public store: LumeStorage;
+  public store: Store;
   readonly locking: boolean;
 
-  constructor(db: LumeStorage) {
-    this.store = db;
+  constructor() {
+    this.store = new Store('.ndk_cache.dat');
     this.locking = true;
   }
 
@@ -21,34 +20,15 @@ export default class TauriAdapter implements NDKCacheAdapter {
       for (const author of filter.authors) {
         for (const kind of filter.kinds) {
           const key = `${author}:${kind}`;
-          promises.concat(this.store.getALlEventByKey(key));
+          promises.push(this.store.get(key));
         }
       }
 
       const results = await Promise.all(promises);
 
       for (const result of results) {
-        if (result && result.event) {
-          console.log('cache hit: ', result.event);
-          const ndkEvent = new NDKEvent(
-            subscription.ndk,
-            JSON.parse(result.event as string)
-          );
-          subscription.eventReceived(ndkEvent, undefined, true);
-        }
-      }
-    }
-
-    if (filter.ids) {
-      for (const id of filter.ids) {
-        const cacheEvent = await this.store.getEventByID(id);
-
-        if (cacheEvent) {
-          console.log('cache hit: ', id);
-          const ndkEvent = new NDKEvent(
-            subscription.ndk,
-            JSON.parse(cacheEvent.event as string)
-          );
+        if (result) {
+          const ndkEvent = new NDKEvent(subscription.ndk, JSON.parse(result as string));
           subscription.eventReceived(ndkEvent, undefined, true);
         }
       }
@@ -60,9 +40,13 @@ export default class TauriAdapter implements NDKCacheAdapter {
     const key = `${nostrEvent.pubkey}:${nostrEvent.kind}`;
 
     return new Promise((resolve) => {
-      Promise.all([
-        this.store.createEvent(key, event.id, event.kind, JSON.stringify(nostrEvent)),
-      ]).then(() => resolve());
+      Promise.all([this.store.set(key, JSON.stringify(nostrEvent))]).then(() =>
+        resolve()
+      );
     });
+  }
+
+  public async saveCache(): Promise<void> {
+    return await this.store.save();
   }
 }

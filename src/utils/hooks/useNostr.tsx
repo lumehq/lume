@@ -6,7 +6,9 @@ import {
   NDKSubscription,
   NDKUser,
 } from '@nostr-dev-kit/ndk';
+import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { LRUCache } from 'lru-cache';
+import { NostrFetcher } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
@@ -16,17 +18,9 @@ import { useStorage } from '@libs/storage/provider';
 import { useStronghold } from '@stores/stronghold';
 
 import { nHoursAgo } from '@utils/date';
-import { LumeEvent } from '@utils/types';
-
-interface NotesResponse {
-  status: string;
-  data: LumeEvent[];
-  nextCursor?: number;
-  message?: string;
-}
 
 export function useNostr() {
-  const { ndk } = useNDK();
+  const { ndk, relayUrls } = useNDK();
   const { db } = useStorage();
 
   const privkey = useStronghold((state) => state.privkey);
@@ -81,30 +75,65 @@ export function useNostr() {
       await db.updateAccount('follows', [...follows]);
       await db.updateAccount('network', [...new Set([...follows, ...network])]);
 
-      return { status: 'ok' };
+      // clear lru caches
+      lruNetwork.clear();
+
+      return { status: 'ok', message: 'User data fetched' };
     } catch (e) {
       return { status: 'failed', message: e };
     }
   };
 
-  const fetchNotes = async (since: number): Promise<NotesResponse> => {
+  const prefetchEvents = async () => {
     try {
       if (!ndk) return { status: 'failed', data: [], message: 'NDK instance not found' };
 
-      console.log('fetch all events since: ', since);
-      const events = await ndk.fetchEvents({
-        kinds: [1],
-        authors: db.account.network ?? db.account.follows,
-        since: nHoursAgo(since),
-      });
+      // setup nostr-fetch
+      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+      const dbEventsEmpty = await db.isEventsEmpty();
 
-      const sorted = [...events].sort(
-        (a, b) => b.created_at - a.created_at
-      ) as unknown as LumeEvent[];
+      let since: number;
+      if (dbEventsEmpty) {
+        since = nHoursAgo(24);
+      } else {
+        since = db.account.last_login_at ?? nHoursAgo(24);
+      }
 
-      return { status: 'ok', data: sorted, nextCursor: since * 2 };
+      console.log("prefetching events with user's network: ", db.account.network.length);
+      console.log('prefetching events since: ', since);
+
+      const events = fetcher.allEventsIterator(
+        relayUrls,
+        {
+          kinds: [1, 6],
+          authors: db.account.network,
+        },
+        { since: since }
+      );
+
+      // save all events to database
+      for await (const event of events) {
+        let root: string;
+        let reply: string;
+        if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
+          root = event.tags[0][1];
+        } else {
+          root = event.tags.find((el) => el[3] === 'root')?.[1];
+          reply = event.tags.find((el) => el[3] === 'reply')?.[1];
+        }
+        db.createEvent(
+          event.id,
+          JSON.stringify(event),
+          event.pubkey,
+          root,
+          reply,
+          event.created_at
+        );
+      }
+
+      return { status: 'ok', data: [], message: 'prefetch completed' };
     } catch (e) {
-      console.error('failed get notes, error: ', e);
+      console.error('prefetch events failed, error: ', e);
       return { status: 'failed', data: [], message: e };
     }
   };
@@ -150,5 +179,5 @@ export function useNostr() {
     return res;
   };
 
-  return { sub, fetchUserData, fetchNotes, publish, createZap };
+  return { sub, fetchUserData, prefetchEvents, publish, createZap };
 }

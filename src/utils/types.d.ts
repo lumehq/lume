@@ -8,8 +8,15 @@ export interface RichContent {
   links: string[];
 }
 
-export interface LumeEvent extends NDKEvent {
-  richContent: RichContent;
+export interface DBEvent {
+  id: string;
+  account_id: number;
+  event: string | NDKEvent;
+  author: string;
+  root_id: string;
+  reply_id: string;
+  created_at: number;
+  richContent?: RichContent;
 }
 
 export interface Account extends NDKUserProfile {
@@ -20,6 +27,7 @@ export interface Account extends NDKUserProfile {
   network: null | string[];
   is_active: number;
   privkey?: string; // deprecated
+  last_login_at: number;
 }
 
 export interface Profile extends NDKUserProfile {

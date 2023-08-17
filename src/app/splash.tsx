@@ -11,7 +11,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 export function SplashScreen() {
   const { db } = useStorage();
   const { ndk, relayUrls } = useNDK();
-  const { fetchUserData } = useNostr();
+  const { fetchUserData, prefetchEvents } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
@@ -27,9 +27,10 @@ export function SplashScreen() {
 
     try {
       const user = await fetchUserData();
-      if (user.status === 'ok') {
-        const now = Math.floor(Date.now() / 1000);
-        await db.updateLastLogin(now);
+      const data = await prefetchEvents();
+
+      if (user.status === 'ok' && data.status === 'ok') {
+        await db.updateLastLogin();
         await invoke('close_splashscreen');
       } else {
         setIsLoading(false);

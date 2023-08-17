@@ -2912,9 +2912,9 @@ dependencies = [
 
 [[package]]
 name = "muda"
-version = "0.8.3"
+version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5381209b232fae437a2dd8054c9fe4953fb7a4b05e6e437f64aacdd01f97859"
+checksum = "a7de0cd2fdb9ef32781658513eab9080a22b3a9775955019daaf1f54bd37753a"
 dependencies = [
  "cocoa 0.25.0",
  "crossbeam-channel",
@@ -5589,9 +5589,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.31.0"
+version = "1.32.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "40de3a2ba249dcb097e01be5e67a5ff53cf250397715a071a81543e8a832a920"
+checksum = "17ed6077ed6cd6c74735e21f37eb16dc3935f96878b1fe961074089cc80893f9"
 dependencies = [
  "backtrace",
  "bytes",
@@ -5745,9 +5745,9 @@ dependencies = [
 
 [[package]]
 name = "tray-icon"
-version = "0.8.2"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "672bc5a19944bfd51e5a874e9fcb7f129b76e5dd448fe295fa25411f3f800637"
+checksum = "6b164327e17101c78ba3dfdf879b977027ef1bd7855668ac30063de21fc02447"
 dependencies = [
  "cocoa 0.25.0",
  "core-graphics 0.23.1",
@@ -6492,9 +6492,9 @@ checksum = "d419259aba16b663966e29e6d7c6ecfa0bb8425818bb96f6f1f3c3eb71a6e7b9"
 
 [[package]]
 name = "winnow"
-version = "0.5.11"
+version = "0.5.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e461589e194280efaa97236b73623445efa195aa633fd7004f39805707a9d53"
+checksum = "83817bbecf72c73bad717ee86820ebf286203d2e04c3951f3cd538869c897364"
 dependencies = [
  "memchr",
 ]
@@ -6520,9 +6520,9 @@ dependencies = [
 
 [[package]]
 name = "wry"
-version = "0.31.0"
+version = "0.31.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c6289018fa3cbc051c13f4ae1a102d80c3f35a527456c75567eb2cad6989020"
+checksum = "07bf838a5430184dfe0b1f568af7998a455c0df75a1df300a3894e0f181e7408"
 dependencies = [
  "base64 0.21.2",
  "block",

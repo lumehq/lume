@@ -80,7 +80,18 @@
       }
     },
     "security": {
-      "csp": "upgrade-insecure-requests"
+      "csp": {
+        "connect-src": "ipc: https://ipc.localhost",
+        "content-security-policy": "upgrade-insecure-requests"
+      },
+      "freezePrototype": false,
+      "assetProtocol": {
+        "enable": true,
+        "scope": {
+          "allow": ["$APPCONFIG/*.db", "$RESOURCE/**"],
+          "deny": ["$APPCONFIG/*.stronghold"]
+        }
+      }
     },
     "windows": [
       {

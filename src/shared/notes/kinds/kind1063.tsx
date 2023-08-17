@@ -1,14 +1,14 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+
 import { Image } from '@shared/image';
 import { NoteActions, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
-
-import { LumeEvent } from '@utils/types';
 
 function isImage(url: string) {
   return /\.(jpg|jpeg|gif|png|webp|avif)$/.test(url);
 }
 
-export function NoteKind_1063({ event }: { event: LumeEvent }) {
+export function NoteKind_1063({ event }: { event: NDKEvent }) {
   const url = event.tags[0][1];
 
   return (

@@ -1,9 +1,12 @@
 -- Add migration script here
 CREATE TABLE
   events (
-    id INTEGER NOT NULL PRIMARY KEY,
-    cache_key TEXT NOT NULL,
-    event_id TEXT NOT NULL UNIQUE,
-    event_kind INTEGER NOT NULL DEFAULT 1,
-    event TEXT NOT NULL
+    id TEXT NOT NULL PRIMARY KEY,
+    account_id INTEGER NOT NULL,
+    event TEXT NOT NULL,
+    author TEXT NOT NULL,
+    root_id TEXT,
+    reply_id TEXT,
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES accounts (id)
   );

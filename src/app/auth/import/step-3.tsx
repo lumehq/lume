@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +12,6 @@ import { useOnboarding } from '@stores/onboarding';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ImportStep3Screen() {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
 
@@ -30,10 +28,6 @@ export function ImportStep3Screen() {
       const data = await fetchUserData();
 
       if (data.status === 'ok') {
-        // update last login
-        await db.updateLastLogin(Math.floor(Date.now() / 1000));
-
-        queryClient.invalidateQueries(['account']);
         navigate('/auth/onboarding/step-2', { replace: true });
       } else {
         console.log('error: ', data.message);

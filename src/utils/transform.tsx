@@ -1,5 +1,4 @@
 import { NDKTag } from '@nostr-dev-kit/ndk';
-import { destr } from 'destr';
 
 // convert array to NIP-02 tag list
 export function arrayToNIP02(arr: string[]) {
@@ -12,8 +11,7 @@ export function arrayToNIP02(arr: string[]) {
 }
 
 // get repost id from event tags
-export function getRepostID(arr: NDKTag[]) {
-  const tags = destr(arr) as string[];
+export function getRepostID(tags: NDKTag[]) {
   let quoteID = null;
 
   if (tags.length > 0) {

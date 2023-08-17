@@ -1,9 +1,9 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+
 import { NoteActions, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { LumeEvent } from '@utils/types';
-
-export function NoteKindUnsupport({ event }: { event: LumeEvent }) {
+export function NoteKindUnsupport({ event }: { event: NDKEvent }) {
   return (
     <div className="h-min w-full px-3 py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">

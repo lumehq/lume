@@ -1,10 +1,11 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
 import ReactPlayer from 'react-player';
 
-import { LumeEvent, RichContent } from '@utils/types';
+import { RichContent } from '@utils/types';
 
-export function parser(event: LumeEvent) {
+export function parser(event: NDKEvent) {
   if (event.kind !== 1) return;
 
   const references = parseReferences(event as unknown as Event);

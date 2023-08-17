@@ -2,6 +2,8 @@ import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
@@ -11,13 +13,15 @@ import { useWidgets } from '@stores/widgets';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
+  const { db } = useStorage();
   const { status, data } = useEvent(id);
+
   const setWidget = useWidgets((state) => state.setWidget);
 
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      setWidget({ kind: widgetKinds.thread, title: 'Thread', content: thread });
+      setWidget(db, { kind: widgetKinds.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }
@@ -26,7 +30,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   if (!id) {
     return (
       <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3">
-        <p className="break-all">Failed to fetch event: {id}</p>
+        <p className="break-all">Failed to get event with id: {id}</p>
       </div>
     );
   }
@@ -64,14 +68,14 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
                 },
               }}
             >
-              {data?.content?.original?.length > 160
-                ? data.content.original.substring(0, 160) + '...'
-                : data.content.original}
+              {data?.content.length > 160
+                ? data.content.substring(0, 160) + '...'
+                : data.content}
             </ReactMarkdown>
           </div>
         </>
       ) : (
-        <p className="break-all">Failed to fetch event: {id}</p>
+        <p className="break-all">Failed to get event with id: {id}</p>
       )}
     </div>
   );

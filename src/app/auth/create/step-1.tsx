@@ -1,4 +1,3 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useEffect, useMemo, useState } from 'react';
@@ -16,7 +15,6 @@ import { useStronghold } from '@stores/stronghold';
 export function CreateStep1Screen() {
   const { db } = useStorage();
 
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
   const setTempPrivkey = useOnboarding((state) => state.setTempPrivkey);
@@ -52,33 +50,16 @@ export function CreateStep1Screen() {
     setDownloaded(true);
   };
 
-  const account = useMutation({
-    mutationFn: (data: {
-      npub: string;
-      pubkey: string;
-      follows: null | string[][];
-      is_active: number;
-    }) => {
-      return db.createAccount(data.npub, data.pubkey);
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(['account'], data);
-    },
-  });
-
   const submit = () => {
     setLoading(true);
 
+    // update state
     setPrivkey(privkey);
     setTempPrivkey(privkey); // only use if user close app and reopen it
     setPubkey(pubkey);
 
-    account.mutate({
-      npub,
-      pubkey,
-      follows: null,
-      is_active: 1,
-    });
+    // save to database
+    db.createAccount(npub, pubkey);
 
     // redirect to next step
     navigate('/auth/create/step-2', { replace: true });

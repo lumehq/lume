@@ -2,7 +2,7 @@ import { BaseDirectory, removeFile } from '@tauri-apps/plugin-fs';
 import Database from '@tauri-apps/plugin-sql';
 import { Stronghold } from '@tauri-apps/plugin-stronghold';
 
-import { Account, LumeEvent, Relays, Widget } from '@utils/types';
+import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
@@ -93,6 +93,13 @@ export class LumeStorage {
     }
   }
 
+  public async updateLastLogin() {
+    return await this.db.execute(
+      'UPDATE accounts SET last_login_at = $1 WHERE id = $2;',
+      [Math.floor(Date.now() / 1000), this.account.id]
+    );
+  }
+
   public async getWidgets() {
     const result: Array<Widget> = await this.db.select(
       `SELECT * FROM widgets WHERE account_id = "${this.account.id}" ORDER BY created_at DESC;`
@@ -122,35 +129,99 @@ export class LumeStorage {
   }
 
   public async createEvent(
-    cacheKey: string,
-    event_id: string,
-    event_kind: number,
-    event: string
+    id: string,
+    event: string,
+    author: string,
+    root_id: string,
+    reply_id: string,
+    created_at: number
   ) {
     return await this.db.execute(
-      'INSERT OR IGNORE INTO events (cache_key, event_id, event_kind, event) VALUES ($1, $2, $3, $4);',
-      [cacheKey, event_id, event_kind, event]
+      'INSERT OR IGNORE INTO events (id, account_id, event, author, root_id, reply_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7);',
+      [id, this.account.id, event, author, root_id, reply_id, created_at]
     );
-  }
-
-  public async getALlEventByKey(cacheKey: string) {
-    const events: LumeEvent[] = await this.db.select(
-      'SELECT * FROM events WHERE cache_key = $1 ORDER BY id DESC;',
-      [cacheKey]
-    );
-
-    if (events.length < 1) return null;
-    return events;
   }
 
   public async getEventByID(id: string) {
-    const event = await this.db.select(
-      'SELECT * FROM events WHERE event_id = $1 ORDER BY id DESC LIMIT 1;',
+    const results: DBEvent[] = await this.db.select(
+      'SELECT * FROM events WHERE id = $1 ORDER BY id DESC LIMIT 1;',
       [id]
-    )?.[0];
+    );
 
-    if (!event) return null;
-    return event;
+    if (results.length < 1) return null;
+    return results[0];
+  }
+
+  public async countTotalEvents() {
+    const result: Array<{ total: string }> = await this.db.select(
+      'SELECT COUNT(*) AS "total" FROM events;'
+    );
+    return parseInt(result[0].total);
+  }
+
+  public async getAllEvents(limit: number, offset: number) {
+    const totalEvents = await this.countTotalEvents();
+    const nextCursor = offset + limit;
+
+    const events: { data: DBEvent[] | null; nextCursor: number } = {
+      data: null,
+      nextCursor: 0,
+    };
+
+    const query: DBEvent[] = await this.db.select(
+      'SELECT * FROM events ORDER BY created_at DESC LIMIT $1 OFFSET $2;',
+      [limit, offset]
+    );
+
+    if (query && query.length > 0) {
+      events['data'] = query;
+      events['nextCursor'] =
+        Math.round(totalEvents / nextCursor) > 1 ? nextCursor : undefined;
+
+      return events;
+    }
+
+    return {
+      data: [],
+      nextCursor: 0,
+    };
+  }
+
+  public async getAllEventsByAuthors(authors: string[], limit: number, offset: number) {
+    const totalEvents = await this.countTotalEvents();
+    const nextCursor = offset + limit;
+    const authorsArr = `'${authors.join("','")}'`;
+
+    const events: { data: DBEvent[] | null; nextCursor: number } = {
+      data: null,
+      nextCursor: 0,
+    };
+
+    const query: DBEvent[] = await this.db.select(
+      'SELECT * FROM events WHERE author IN ($1) ORDER BY created_at DESC LIMIT $2 OFFSET $3;',
+      [authorsArr, limit, offset]
+    );
+
+    if (query && query.length > 0) {
+      events['data'] = query;
+      events['nextCursor'] =
+        Math.round(totalEvents / nextCursor) > 1 ? nextCursor : undefined;
+
+      return events;
+    }
+
+    return {
+      data: [],
+      nextCursor: 0,
+    };
+  }
+
+  public async isEventsEmpty() {
+    const results: DBEvent[] = await this.db.select(
+      'SELECT * FROM events ORDER BY id DESC LIMIT 1;'
+    );
+
+    return results.length < 1;
   }
 
   public async getExplicitRelayUrls() {
@@ -173,13 +244,6 @@ export class LumeStorage {
 
   public async removeRelay(relay: string) {
     return await this.db.execute(`DELETE FROM relays WHERE relay = "${relay}";`);
-  }
-
-  public async updateLastLogin(time: number) {
-    return await this.db.execute(
-      'UPDATE settings SET value = $1 WHERE key = "last_login";',
-      [time]
-    );
   }
 
   public async removePrivkey() {

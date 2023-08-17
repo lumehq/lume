@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -14,12 +14,11 @@ import { useNostr } from '@utils/hooks/useNostr';
 import { arrayToNIP02 } from '@utils/transform';
 
 export function OnboardStep1Screen() {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
 
+  const { publish, fetchUserData, prefetchEvents } = useNostr();
   const { db } = useStorage();
-  const { publish, fetchUserData } = useNostr();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
     if (!res.ok) {
@@ -45,14 +44,13 @@ export function OnboardStep1Screen() {
 
       const tags = arrayToNIP02([...follows, db.account.pubkey]);
       const event = await publish({ content: '', kind: 3, tags: tags });
-      await db.updateAccount('follows', follows);
 
-      // prefetch notes with current follows
-      const data = await fetchUserData(follows);
+      // prefetch data
+      const user = await fetchUserData(follows);
+      const data = await prefetchEvents();
 
       // redirect to next step
-      if (event && data.status === 'ok') {
-        queryClient.invalidateQueries(['account']);
+      if (event && user.status === 'ok' && data.status === 'ok') {
         navigate('/auth/onboarding/step-2', { replace: true });
       } else {
         setLoading(false);

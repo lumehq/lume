@@ -1,3 +1,5 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+
 import {
   NoteActions,
   NoteContent,
@@ -8,25 +10,32 @@ import {
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
-import { getRepostID } from '@utils/transform';
-import { LumeEvent } from '@utils/types';
 
-export function Repost({ event }: { event: LumeEvent }) {
-  const repostID = getRepostID(event.tags);
+export function Repost({ event }: { event: NDKEvent }) {
+  const repostID = event.tags.find((el) => el[0] === 'e')?.[1];
   const { status, data } = useEvent(repostID, event.content as unknown as string);
 
   if (status === 'loading') {
     return (
-      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3">
-        <NoteSkeleton />
+      <div className="h-min w-full px-3 py-1.5">
+        <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3">
+          <NoteSkeleton />
+        </div>
       </div>
     );
   }
 
   if (status === 'error') {
     return (
-      <div className="flex items-center justify-center overflow-hidden rounded-xl bg-white/10 px-3 py-3">
-        <p className="text-white/50">Failed to fetch event: {repostID}</p>
+      <div className="h-min w-full px-3 py-1.5">
+        <div className="flex flex-col gap-1 overflow-hidden rounded-xl bg-white/10 px-3 py-3">
+          <p className="select-text break-all text-white/50">
+            Failed to get repostr with ID
+          </p>
+          <div className="break-all rounded-lg bg-white/10 px-2 py-2">
+            <p className="text-white">{repostID}</p>
+          </div>
+        </div>
       </div>
     );
   }

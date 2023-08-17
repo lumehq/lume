@@ -1,25 +1,29 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
 
 import { parser } from '@utils/parser';
-import { LumeEvent } from '@utils/types';
 
 export function useEvent(id: string, embed?: string) {
   const { ndk } = useNDK();
-  const { status, data, error, isFetching } = useQuery(
-    ['note', id],
+  const { status, data, error } = useQuery(
+    ['event', id],
     async () => {
       if (embed) {
-        const event: LumeEvent = JSON.parse(embed);
-        if (event.kind === 1) embed['content'] = parser(event);
-        return embed as unknown as LumeEvent;
-      } else {
-        const event = (await ndk.fetchEvent(id)) as LumeEvent;
-        if (!event) throw new Error('event not found');
-        if (event.kind === 1) event['content'] = parser(event) as unknown as string;
-        return event as LumeEvent;
+        const event: NDKEvent = JSON.parse(embed);
+        // @ts-expect-error, #TODO: convert NDKEvent to ExNDKEvent
+        if (event.kind === 1) event.content = parser(event);
+
+        return event as unknown as NDKEvent;
       }
+
+      const event = (await ndk.fetchEvent(id)) as NDKEvent;
+      if (!event) throw new Error('event not found');
+      // @ts-expect-error, #TODO: convert NDKEvent to ExNDKEvent
+      if (event.kind === 1) event.content = parser(event);
+
+      return event as NDKEvent;
     },
     {
       staleTime: Infinity,
@@ -29,5 +33,5 @@ export function useEvent(id: string, embed?: string) {
     }
   );
 
-  return { status, data, error, isFetching };
+  return { status, data, error };
 }

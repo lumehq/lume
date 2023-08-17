@@ -1,37 +1,79 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { NoteKind_1, NoteSkeleton } from '@shared/notes';
+import { NoteKind_1, NoteSkeleton, Repost } from '@shared/notes';
+import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
 import { TitleBar } from '@shared/titleBar';
 import { UserProfile } from '@shared/userProfile';
 
 import { nHoursAgo } from '@utils/date';
-import { LumeEvent, Widget } from '@utils/types';
+import { DBEvent, Widget } from '@utils/types';
 
-export function UserBlock({ params }: { params: Widget }) {
-  const parentRef = useRef<HTMLDivElement>(null);
-
+export function UserWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(['user-feed', params.content], async () => {
-    const events = await ndk.fetchEvents({
-      kinds: [1],
-      authors: [params.content],
-      since: nHoursAgo(48),
-    });
-    return [...events] as unknown as LumeEvent[];
-  });
+  const { status, data } = useQuery(
+    ['user-widget', params.content],
+    async () => {
+      const events = await ndk.fetchEvents({
+        kinds: [1],
+        authors: [params.content],
+        since: nHoursAgo(24),
+      });
+      return [...events] as unknown as DBEvent[];
+    },
+    { refetchOnMount: false, refetchOnReconnect: false, refetchOnWindowFocus: false }
+  );
 
-  const rowVirtualizer = useVirtualizer({
+  const parentRef = useRef<HTMLDivElement>(null);
+  const virtualizer = useVirtualizer({
     count: data ? data.length : 0,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 400,
-    overscan: 2,
+    estimateSize: () => 650,
+    overscan: 4,
   });
+  const items = virtualizer.getVirtualItems();
 
-  const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+  // render event match event kind
+  const renderItem = useCallback(
+    (index: string | number) => {
+      const event: NDKEvent = data[index];
+      if (!event) return;
+
+      switch (event.kind) {
+        case 1:
+          return (
+            <div key={event.id} data-index={index} ref={virtualizer.measureElement}>
+              <NoteKind_1 event={event} skipMetadata={false} />
+            </div>
+          );
+        case 6:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <Repost key={event.id} event={event} />
+            </div>
+          );
+        default:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteKindUnsupport key={event.id} event={event} />
+            </div>
+          );
+      }
+    },
+    [data]
+  );
 
   return (
     <div className="relative w-[400px] shrink-0 bg-white/10">
@@ -49,41 +91,31 @@ export function UserBlock({ params }: { params: Widget }) {
                   <NoteSkeleton />
                 </div>
               </div>
-            ) : itemsVirtualizer.length === 0 ? (
+            ) : items.length === 0 ? (
               <div className="px-3 py-1.5">
                 <div className="rounded-xl bg-white/10 px-3 py-6">
                   <div className="flex flex-col items-center gap-4">
                     <p className="text-center text-sm text-white">
-                      No new posts from this user in 48 hours ago
+                      No new postr from user in 24 hours ago
                     </p>
                   </div>
                 </div>
               </div>
             ) : (
               <div
-                className="relative w-full"
                 style={{
-                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  position: 'relative',
+                  width: '100%',
+                  height: `${virtualizer.getTotalSize()}px`,
                 }}
               >
                 <div
                   className="absolute left-0 top-0 w-full"
                   style={{
-                    transform: `translateY(${
-                      itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin
-                    }px)`,
+                    transform: `translateY(${items[0].start}px)`,
                   }}
                 >
-                  {itemsVirtualizer.map((virtualRow) => (
-                    <div
-                      key={virtualRow.key}
-                      data-index={virtualRow.index}
-                      ref={rowVirtualizer.measureElement}
-                    >
-                      <NoteKind_1 event={data[virtualRow.index]} />
-                    </div>
-                  ))}
-                  <div className="h-20" />
+                  {items.map((item) => renderItem(item.index))}
                 </div>
               </div>
             )}

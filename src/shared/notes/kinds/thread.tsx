@@ -1,17 +1,17 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useMemo } from 'react';
 
 import { NoteActions, NoteContent, NoteMetadata, SubNote } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { parser } from '@utils/parser';
-import { LumeEvent } from '@utils/types';
 
 export function NoteThread({
   event,
   root,
   reply,
 }: {
-  event: LumeEvent;
+  event: NDKEvent;
   root: string;
   reply: string;
 }) {
