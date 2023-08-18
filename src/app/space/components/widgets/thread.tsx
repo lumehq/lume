@@ -31,14 +31,14 @@ export function ThreadBlock({ params }: { params: Widget }) {
         ) : (
           <div className="h-min w-full px-3 pt-1.5">
             <div className="rounded-xl bg-white/10 px-3 pt-3">
-              <ThreadUser pubkey={data.pubkey} time={data.created_at} />
+              <ThreadUser pubkey={data.event.pubkey} time={data.event.created_at} />
               <div className="mt-2">
-                <NoteContent content={data.content} />
+                <NoteContent content={data.richContent} />
               </div>
               <div>
                 <NoteActions
                   id={params.content}
-                  pubkey={data.pubkey}
+                  pubkey={data.event.pubkey}
                   noOpenThread={true}
                 />
                 <NoteStats id={params.content} />

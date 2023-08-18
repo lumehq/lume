@@ -31,12 +31,12 @@ export function EventScreen() {
         ) : (
           <div className="h-min w-full px-3 pt-1.5">
             <div className="rounded-xl bg-white/10 px-3 pt-3">
-              <ThreadUser pubkey={data.pubkey} time={data.created_at} />
+              <ThreadUser pubkey={data.event.pubkey} time={data.event.created_at} />
               <div className="mt-2">
-                <NoteContent content={data.content} />
+                <NoteContent content={data.richContent} />
               </div>
               <div>
-                <NoteActions id={id} pubkey={data.pubkey} noOpenThread={true} />
+                <NoteActions id={id} pubkey={data.event.pubkey} noOpenThread={true} />
                 <NoteStats id={id} />
               </div>
             </div>

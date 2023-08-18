@@ -245,7 +245,6 @@ export default function App() {
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
         </div>
       }
-      future={{ v7_startTransition: true }}
     />
   );
 }

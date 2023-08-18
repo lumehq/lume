@@ -40,8 +40,6 @@ sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }
 rust-argon2 = "1.0"
-rand = "0.8.5"
-webpage = { version = "1.1", features = ["serde"] }
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"

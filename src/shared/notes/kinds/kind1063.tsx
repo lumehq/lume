@@ -4,12 +4,10 @@ import { Image } from '@shared/image';
 import { NoteActions, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
 
-function isImage(url: string) {
-  return /\.(jpg|jpeg|gif|png|webp|avif)$/.test(url);
-}
+import { isImage } from '@utils/isImage';
 
 export function NoteKind_1063({ event }: { event: NDKEvent }) {
-  const url = event.tags[0][1];
+  const url = event.tags.find((el) => el[0] === 'url')[1];
 
   return (
     <div className="h-min w-full px-3 py-1.5">

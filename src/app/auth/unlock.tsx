@@ -46,31 +46,32 @@ export function UnlockScreen() {
   } = useForm<FormValues>({ resolver });
 
   const onSubmit = async (data: { [x: string]: string }) => {
-    setLoading(true);
-    if (data.password.length > 3) {
-      try {
-        const dir = await appConfigDir();
-        const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
-
-        if (!db.secureDB) db.secureDB = stronghold;
-
-        const privkey = await db.secureLoad(db.account.pubkey);
-
-        setPrivkey(privkey);
-        // redirect to home
-        navigate('/', { replace: true });
-      } catch (e) {
-        setLoading(false);
-        setError('password', {
-          type: 'custom',
-          message: e,
-        });
-      }
-    } else {
-      setLoading(false);
+    if (data.password.length < 3) {
       setError('password', {
         type: 'custom',
         message: 'Password is required and must be greater than 3',
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const dir = await appConfigDir();
+      const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
+
+      if (!db.secureDB) db.secureDB = stronghold;
+
+      const privkey = await db.secureLoad(db.account.pubkey);
+
+      setPrivkey(privkey);
+      // redirect to home
+      navigate('/', { replace: true });
+    } catch (e) {
+      setLoading(false);
+      setError('password', {
+        type: 'custom',
+        message: e,
       });
     }
   };
@@ -89,7 +90,7 @@ export function UnlockScreen() {
             <div className="relative">
               <input
                 {...register('password', { required: true })}
-                type={showPassword ? 'text' : 'password'}
+                type={'password'}
                 placeholder="Password"
                 className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/50"
               />

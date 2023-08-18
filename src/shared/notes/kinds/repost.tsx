@@ -46,13 +46,17 @@ export function Repost({ event }: { event: NDKEvent }) {
         <div className="relative flex flex-col">
           <div className="isolate flex flex-col -space-y-4">
             <RepostUser pubkey={event.pubkey} />
-            <User pubkey={data.pubkey} time={data.created_at} isRepost={true} />
+            <User
+              pubkey={data.event.pubkey}
+              time={data.event.created_at}
+              isRepost={true}
+            />
           </div>
           <div className="flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="relative z-20 flex-1">
-              <NoteContent content={data.content} />
-              <NoteActions id={repostID} pubkey={data.pubkey} />
+              <NoteContent content={data.richContent} />
+              <NoteActions id={repostID} pubkey={data.event.pubkey} />
             </div>
           </div>
           <NoteMetadata id={repostID} />

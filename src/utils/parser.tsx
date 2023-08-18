@@ -1,7 +1,6 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import getUrls from 'get-urls';
 import { Event, parseReferences } from 'nostr-tools';
-import ReactPlayer from 'react-player';
 
 import { RichContent } from '@utils/types';
 
@@ -26,19 +25,23 @@ export function parser(event: NDKEvent) {
       content.images.push(url);
       // remove url from original content
       content.parsed = content.parsed.replace(url, '');
-    } else if (ReactPlayer.canPlay(url)) {
+    }
+
+    if (url.match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv|mp3|m3u8)$/)) {
       // video
       content.videos.push(url);
       // remove url from original content
       content.parsed = content.parsed.replace(url, '');
-    } else {
-      if (content.links.length < 1) {
-        // push to store
-        content.links.push(url);
-        // remove url from original content
-        content.parsed = content.parsed.replace(url, '');
-      }
     }
+
+    /*
+    if (content.links.length < 1) {
+      // push to store
+      content.links.push(url);
+      // remove url from original content
+      content.parsed = content.parsed.replace(url, '');
+    }
+    */
   });
 
   // parse hashtag

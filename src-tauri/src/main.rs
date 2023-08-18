@@ -3,9 +3,6 @@
   windows_subsystem = "windows"
 )]
 
-mod opg;
-
-use opg::opengraph;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -184,7 +181,7 @@ fn main() {
     .plugin(tauri_plugin_window::init())
     .plugin(tauri_plugin_store::Builder::default().build())
     .plugin(tauri_plugin_shell::init())
-    .invoke_handler(tauri::generate_handler![close_splashscreen, opengraph])
+    .invoke_handler(tauri::generate_handler![close_splashscreen])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNDK } from '@libs/ndk/provider';
 
 import { parser } from '@utils/parser';
+import { RichContent } from '@utils/types';
 
 export function useEvent(id: string, embed?: string) {
   const { ndk } = useNDK();
@@ -12,18 +13,18 @@ export function useEvent(id: string, embed?: string) {
     async () => {
       if (embed) {
         const event: NDKEvent = JSON.parse(embed);
-        // @ts-expect-error, #TODO: convert NDKEvent to ExNDKEvent
-        if (event.kind === 1) event.content = parser(event);
+        let richContent: RichContent;
+        if (event.kind === 1) richContent = parser(event);
 
-        return event as unknown as NDKEvent;
+        return { event: event as NDKEvent, richContent: richContent };
       }
 
       const event = (await ndk.fetchEvent(id)) as NDKEvent;
       if (!event) throw new Error('event not found');
-      // @ts-expect-error, #TODO: convert NDKEvent to ExNDKEvent
-      if (event.kind === 1) event.content = parser(event);
+      let richContent: RichContent;
+      if (event.kind === 1) richContent = parser(event);
 
-      return event as NDKEvent;
+      return { event: event as NDKEvent, richContent: richContent };
     },
     {
       staleTime: Infinity,

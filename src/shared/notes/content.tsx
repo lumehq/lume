@@ -10,9 +10,9 @@ import {
   VideoPreview,
 } from '@shared/notes';
 
-import { Content } from '@utils/types';
+import { RichContent } from '@utils/types';
 
-export function NoteContent({ content, long }: { content: Content; long?: boolean }) {
+export function NoteContent({ content, long }: { content: RichContent; long?: boolean }) {
   if (long) {
     return (
       <ReactMarkdown className="markdown" remarkPlugins={[remarkGfm]}>
