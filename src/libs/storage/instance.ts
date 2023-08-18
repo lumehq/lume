@@ -101,10 +101,11 @@ export class LumeStorage {
   }
 
   public async getWidgets() {
-    const result: Array<Widget> = await this.db.select(
-      `SELECT * FROM widgets WHERE account_id = "${this.account.id}" ORDER BY created_at DESC;`
+    const widgets: Array<Widget> = await this.db.select(
+      'SELECT * FROM widgets WHERE account_id = $1 ORDER BY created_at DESC;',
+      [this.account.id]
     );
-    return result;
+    return widgets;
   }
 
   public async createWidget(kind: number, title: string, content: string | string[]) {

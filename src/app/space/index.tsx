@@ -27,6 +27,7 @@ export function SpaceScreen() {
 
   const renderItem = useCallback(
     (widget: Widget) => {
+      if (!widget) return;
       switch (widget.kind) {
         case 1:
           return <FeedWidget key={widget.id} params={widget} />;
@@ -60,7 +61,7 @@ export function SpaceScreen() {
       ) : (
         widgets.map((widget) => renderItem(widget))
       )}
-      <div className="flex w-[250px] shrink-0 flex-col">
+      <div className="flex w-[350px] shrink-0 flex-col">
         <div className="inline-flex h-full w-full flex-col items-center justify-center gap-1">
           <FeedModal />
           <ImageModal />
