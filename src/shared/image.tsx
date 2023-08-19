@@ -1,16 +1,12 @@
 import { minidenticon } from 'minidenticons';
 import { ImgHTMLAttributes, useState } from 'react';
-import { useMemo } from 'react';
 
 export function Image({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
   const [isError, setIsError] = useState(false);
 
   if (isError || !src) {
-    const svgURI = useMemo(
-      () =>
-        'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(props.alt, 90, 50)),
-      [props.alt]
-    );
+    const svgURI =
+      'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(props.alt, 90, 50));
     return (
       <img src={svgURI} alt={props.alt} {...props} style={{ backgroundColor: '#000' }} />
     );
@@ -20,7 +16,8 @@ export function Image({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
     <img
       {...props}
       src={src}
-      onError={() => {
+      onError={({ currentTarget }) => {
+        currentTarget.onerror = null;
         setIsError(true);
       }}
       decoding="async"

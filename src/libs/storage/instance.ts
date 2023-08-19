@@ -1,3 +1,4 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { BaseDirectory, removeFile } from '@tauri-apps/plugin-fs';
 import Database from '@tauri-apps/plugin-sql';
 import { Stronghold } from '@tauri-apps/plugin-stronghold';
@@ -114,16 +115,16 @@ export class LumeStorage {
 
   public async createWidget(kind: number, title: string, content: string | string[]) {
     const insert = await this.db.execute(
-      'INSERT OR IGNORE INTO widgets (account_id, kind, title, content) VALUES ($1, $2, $3, $4);',
+      'INSERT INTO widgets (account_id, kind, title, content) VALUES ($1, $2, $3, $4);',
       [this.account.id, kind, title, content]
     );
 
     if (insert) {
-      const widget: Widget = await this.db.select(
+      const widgets: Array<Widget> = await this.db.select(
         'SELECT * FROM widgets ORDER BY id DESC LIMIT 1;'
-      )?.[0];
-      if (!widget) console.error('get created widget failed');
-      return widget;
+      );
+      if (widgets.length < 1) console.error('get created widget failed');
+      return widgets[0];
     } else {
       console.error('create widget failed');
     }
@@ -150,12 +151,12 @@ export class LumeStorage {
 
   public async getEventByID(id: string) {
     const results: DBEvent[] = await this.db.select(
-      'SELECT * FROM events WHERE id = $1 ORDER BY id DESC LIMIT 1;',
+      'SELECT * FROM events WHERE id = $1 LIMIT 1;',
       [id]
     );
 
     if (results.length < 1) return null;
-    return results[0];
+    return JSON.parse(results[0].event as string) as NDKEvent;
   }
 
   public async countTotalEvents() {
@@ -175,7 +176,7 @@ export class LumeStorage {
     };
 
     const query: DBEvent[] = await this.db.select(
-      'SELECT * FROM events ORDER BY created_at DESC LIMIT $1 OFFSET $2;',
+      'SELECT * FROM events GROUP BY root_id ORDER BY created_at DESC LIMIT $1 OFFSET $2;',
       [limit, offset]
     );
 

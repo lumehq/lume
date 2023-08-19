@@ -33,8 +33,8 @@ export function ErrorScreen() {
   }, []);
 
   return (
-    <div className="flex h-full w-full items-center justify-center bg-black/90">
-      <div className="flex flex-col gap-4">
+    <div className="flex h-full items-center justify-center bg-black/90">
+      <div className="flex max-w-lg flex-col gap-4">
         <div className="flex flex-col">
           <h1 className="mb-1 text-2xl font-semibold text-white">
             Sorry, an unexpected error has occurred.

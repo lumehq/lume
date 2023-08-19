@@ -11,7 +11,7 @@ import { TitleBar } from '@shared/titleBar';
 import { UserProfile } from '@shared/userProfile';
 
 import { nHoursAgo } from '@utils/date';
-import { DBEvent, Widget } from '@utils/types';
+import { Widget } from '@utils/types';
 
 export function UserWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
@@ -19,13 +19,18 @@ export function UserWidget({ params }: { params: Widget }) {
     ['user-widget', params.content],
     async () => {
       const events = await ndk.fetchEvents({
-        kinds: [1],
+        kinds: [1, 6],
         authors: [params.content],
         since: nHoursAgo(24),
       });
-      return [...events] as unknown as DBEvent[];
+      return [...events] as unknown as NDKEvent[];
     },
-    { refetchOnMount: false, refetchOnReconnect: false, refetchOnWindowFocus: false }
+    {
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
   );
 
   const parentRef = useRef<HTMLDivElement>(null);
@@ -87,7 +92,7 @@ export function UserWidget({ params }: { params: Widget }) {
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-md bg-white/10 px-3 py-3">
+                <div className="rounded-xl bg-white/10 px-3 py-3">
                   <NoteSkeleton />
                 </div>
               </div>

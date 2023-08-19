@@ -22,7 +22,7 @@ export const useWidgets = create<WidgetState>()(
 
         // default: add network widget
         dbWidgets.unshift({
-          id: String(dbWidgets.length + 1),
+          id: '9999',
           title: 'Network',
           content: '',
           kind: 9999,

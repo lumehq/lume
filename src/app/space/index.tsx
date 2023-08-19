@@ -68,7 +68,7 @@ export function SpaceScreen() {
           <HashtagModal />
         </div>
       </div>
-      <div className="w-[150px] shrink-0" />
+      <div className="w-[250px] shrink-0" />
     </div>
   );
 }

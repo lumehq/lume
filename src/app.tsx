@@ -55,13 +55,6 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: 'trending',
-        async lazy() {
-          const { TrendingScreen } = await import('@app/trending');
-          return { Component: TrendingScreen };
-        },
-      },
-      {
         path: 'events/:id',
         async lazy() {
           const { EventScreen } = await import('@app/events');

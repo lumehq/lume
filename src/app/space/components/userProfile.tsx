@@ -8,7 +8,12 @@ import { useSocial } from '@utils/hooks/useSocial';
 import { compactNumber } from '@utils/number';
 import { shortenKey } from '@utils/shortenKey';
 
-export function Profile({ data }: { data: any }) {
+export interface Profile {
+  pubkey: string;
+  profile: { content: string };
+}
+
+export function UserProfile({ data }: { data: Profile }) {
   const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
   const { status, data: userStats } = useQuery(
     ['user-stats', data.pubkey],

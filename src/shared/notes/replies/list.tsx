@@ -1,10 +1,13 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
 
 import { NoteSkeleton, Reply } from '@shared/notes';
 
-import { LumeEvent } from '@utils/types';
+interface ReplyEvent extends NDKEvent {
+  replies: Array<NDKEvent>;
+}
 
 export function RepliesList({ id }: { id: string }) {
   const { ndk } = useNDK();
@@ -12,10 +15,9 @@ export function RepliesList({ id }: { id: string }) {
     const events = await ndk.fetchEvents({
       kinds: [1],
       '#e': [id],
-      since: 0,
     });
 
-    const array = [...events] as unknown as LumeEvent[];
+    const array = [...events] as unknown as ReplyEvent[];
 
     if (array.length > 0) {
       const replies = new Set();
@@ -55,7 +57,7 @@ export function RepliesList({ id }: { id: string }) {
   }
 
   return (
-    <div className="mt-3">
+    <div className="mt-3 pb-10">
       <div className="mb-2">
         <h5 className="text-lg font-semibold text-white">{data?.length || 0} replies</h5>
       </div>
@@ -71,8 +73,8 @@ export function RepliesList({ id }: { id: string }) {
           </div>
         ) : (
           data
-            ?.reverse()
-            .map((event: LumeEvent) => <Reply key={event.id} event={event} root={id} />)
+            .reverse()
+            .map((event: NDKEvent) => <Reply key={event.id} event={event} root={id} />)
         )}
       </div>
     </div>

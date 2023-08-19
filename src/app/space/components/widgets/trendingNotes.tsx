@@ -1,20 +1,21 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { NoteKind_1 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { LumeEvent } from '@utils/types';
+import { Widget } from '@utils/types';
 
 interface Response {
-  notes: Array<{ event: LumeEvent }>;
+  notes: Array<{ event: NDKEvent }>;
 }
 
-export function TrendingNotes() {
+export function TrendingNotesWidget({ params }: { params: Widget }) {
   const { status, data } = useQuery(
     ['trending-notes'],
     async () => {
-      const res = await fetch('https://api.nostr.band/v0/trending/notes');
+      const res = await fetch(params.content);
       if (!res.ok) {
         throw new Error('failed to fecht trending notes');
       }
@@ -32,7 +33,7 @@ export function TrendingNotes() {
 
   return (
     <div className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
-      <TitleBar title="Trending Posts" />
+      <TitleBar title={params.title} />
       <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
@@ -41,7 +42,13 @@ export function TrendingNotes() {
             </div>
           </div>
         ) : status === 'error' ? (
-          <p>Failed to fetch</p>
+          <div className="px-3 py-1.5">
+            <div className="rounded-xl bg-white/10 px-3 py-3">
+              <p className="text-center text-sm font-medium text-white">
+                Sorry, an unexpected error has occurred.
+              </p>
+            </div>
+          </div>
         ) : (
           <div className="relative flex w-full flex-col">
             {data.map((item) => (

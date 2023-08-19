@@ -15,11 +15,11 @@ import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';
 
 export function ThreadBlock({ params }: { params: Widget }) {
-  const { status, data } = useEvent(params.content);
   const { db } = useStorage();
+  const { status, data } = useEvent(params.content);
 
   return (
-    <div className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
+    <div className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10">
       <TitleBar id={params.id} title={params.title} />
       <div className="h-full">
         {status === 'loading' ? (
