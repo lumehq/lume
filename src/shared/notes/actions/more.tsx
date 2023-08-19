@@ -45,7 +45,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
         </Tooltip.Portal>
       </Tooltip.Root>
       <Popover.Portal>
-        <Popover.Content className="w-[200px] overflow-hidden rounded-md bg-white/10 backdrop-blur-xl focus:outline-none">
+        <Popover.Content className="w-[200px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl focus:outline-none">
           <div className="flex flex-col p-2">
             <Link
               to={`/events/${id}`}

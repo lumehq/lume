@@ -1,7 +1,5 @@
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function MiniUser({ pubkey }: { pubkey: string }) {
@@ -13,8 +11,7 @@ export function MiniUser({ pubkey }: { pubkey: string }) {
 
   return (
     <Image
-      src={user?.picture || user?.image || DEFAULT_AVATAR}
-      fallback={DEFAULT_AVATAR}
+      src={user?.picture || user?.image}
       alt={pubkey}
       className="relative z-20 inline-block h-4 w-4 rounded bg-white ring-1 ring-zinc-800"
     />

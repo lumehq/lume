@@ -1,7 +1,5 @@
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { shortenKey } from '@utils/shortenKey';
 
@@ -15,8 +13,7 @@ export function RepostUser({ pubkey }: { pubkey: string }) {
   return (
     <div className="flex gap-2 pl-6">
       <Image
-        src={user?.picture || user?.image || DEFAULT_AVATAR}
-        fallback={DEFAULT_AVATAR}
+        src={user?.picture || user?.image}
         alt={pubkey}
         className="relative z-20 inline-block h-6 w-6 rounded bg-white ring-1 ring-black"
       />

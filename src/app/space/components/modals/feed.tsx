@@ -10,7 +10,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
-import { DEFAULT_AVATAR, widgetKinds } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 export function FeedModal() {
@@ -134,7 +134,6 @@ export function FeedModal() {
                                   <div className="flex items-center gap-2">
                                     <img
                                       alt={query}
-                                      src={DEFAULT_AVATAR}
                                       className="h-11 w-11 shrink-0 rounded object-cover"
                                     />
                                     <div className="inline-flex flex-col gap-1">

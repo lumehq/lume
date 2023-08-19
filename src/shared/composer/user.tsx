@@ -1,7 +1,5 @@
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function ComposerUser({ pubkey }: { pubkey: string }) {
@@ -11,7 +9,6 @@ export function ComposerUser({ pubkey }: { pubkey: string }) {
     <div className="flex items-center gap-3">
       <Image
         src={user?.picture || user?.image}
-        fallback={DEFAULT_AVATAR}
         alt={pubkey}
         className="h-8 w-8 shrink-0 rounded-md object-cover"
       />

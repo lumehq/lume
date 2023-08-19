@@ -59,6 +59,7 @@
     "html-to-text": "^9.0.5",
     "light-bolt11-decoder": "^3.0.0",
     "lru-cache": "^10.0.1",
+    "minidenticons": "^4.2.0",
     "nostr-fetch": "^0.12.2",
     "nostr-tools": "^1.14.0",
     "qrcode.react": "^3.1.0",

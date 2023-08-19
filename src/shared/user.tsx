@@ -4,8 +4,6 @@ import { twMerge } from 'tailwind-merge';
 
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -63,7 +61,6 @@ export function User({
           >
             <Image
               src={user?.picture || user?.image}
-              fallback={DEFAULT_AVATAR}
               alt={pubkey}
               className={twMerge(
                 `object-cover ${avatarWidth} ${avatarHeight}`,
@@ -99,7 +96,6 @@ export function User({
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
             <Image
               src={user?.picture || user?.image}
-              fallback={DEFAULT_AVATAR}
               alt={pubkey}
               className="h-11 w-11 shrink-0 rounded-lg object-cover"
             />

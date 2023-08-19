@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
@@ -16,7 +14,6 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
         <div className="relative h-11 w-11 shrink rounded-md">
           <Image
             src={user?.picture || user?.image}
-            fallback={DEFAULT_AVATAR}
             alt={pubkey}
             className="h-11 w-11 rounded-md object-cover"
           />

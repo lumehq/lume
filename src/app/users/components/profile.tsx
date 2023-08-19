@@ -8,8 +8,6 @@ import { useStorage } from '@libs/storage/provider';
 import { EditProfileModal } from '@shared/editProfileModal';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { useSocial } from '@utils/hooks/useSocial';
 import { shortenKey } from '@utils/shortenKey';
@@ -54,17 +52,11 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   return (
     <>
       <div className="h-56 w-full bg-white">
-        <Image
-          src={user?.banner}
-          fallback="https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"
-          alt={'banner'}
-          className="h-full w-full object-cover"
-        />
+        <img src={user?.banner} alt={'banner'} className="h-full w-full object-cover" />
       </div>
       <div className="-mt-7 w-full px-5">
         <Image
           src={user?.picture || user?.image}
-          fallback={DEFAULT_AVATAR}
           alt={pubkey}
           className="h-14 w-14 rounded-md ring-2 ring-white/50"
         />

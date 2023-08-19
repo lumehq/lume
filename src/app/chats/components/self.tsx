@@ -3,8 +3,6 @@ import { twMerge } from 'tailwind-merge';
 
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
@@ -33,7 +31,6 @@ export function ChatsListSelfItem({ pubkey }: { pubkey: string }) {
     >
       <Image
         src={user?.picture || user?.image}
-        fallback={DEFAULT_AVATAR}
         alt={pubkey}
         className="h-6 w-6 shrink-0 rounded bg-white object-cover"
       />

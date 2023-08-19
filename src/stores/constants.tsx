@@ -1,5 +1,3 @@
-export const DEFAULT_AVATAR = 'https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih';
-
 export const FULL_RELAYS = [
   'wss://relay.damus.io',
   'wss://relay.nostr.band/all',

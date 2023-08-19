@@ -7,7 +7,7 @@ import { useStorage } from '@libs/storage/provider';
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR, widgetKinds } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 import { useImageUploader } from '@utils/hooks/useUploader';
@@ -123,7 +123,6 @@ export function ImageModal() {
                   <div className="relative inline-flex h-56 w-full items-center justify-center overflow-hidden rounded-lg bg-white/10">
                     <Image
                       src={image}
-                      fallback={DEFAULT_AVATAR}
                       alt="content"
                       className="relative z-10 h-auto max-h-[156px] w-[150px] rounded-md object-cover"
                     />

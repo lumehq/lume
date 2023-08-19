@@ -11,8 +11,6 @@ import { BannerUploader } from '@shared/bannerUploader';
 import { CancelIcon, CheckCircleIcon, LoaderIcon, UnverifiedIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function EditProfileModal() {
@@ -20,7 +18,7 @@ export function EditProfileModal() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [picture, setPicture] = useState(DEFAULT_AVATAR);
+  const [picture, setPicture] = useState('https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih');
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: false, text: '' });
 
@@ -126,7 +124,7 @@ export function EditProfileModal() {
         // reset state
         setLoading(false);
         setIsOpen(false);
-        setPicture(DEFAULT_AVATAR);
+        setPicture('https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih');
         setBanner(null);
       }, 1200);
     } else {
@@ -206,9 +204,8 @@ export function EditProfileModal() {
                     />
                     <div className="relative">
                       <div className="relative h-44 w-full bg-zinc-800">
-                        <Image
+                        <img
                           src={banner}
-                          fallback="https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"
                           alt="user's banner"
                           className="h-full w-full object-cover"
                         />
@@ -220,7 +217,6 @@ export function EditProfileModal() {
                         <div className="relative z-10 -mt-7 h-14 w-14">
                           <Image
                             src={picture}
-                            fallback={DEFAULT_AVATAR}
                             alt="user's avatar"
                             className="h-14 w-14 rounded-lg object-cover ring-2 ring-zinc-900"
                           />

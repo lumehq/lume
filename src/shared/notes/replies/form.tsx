@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '@shared/button';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR, FULL_RELAYS } from '@stores/constants';
+import { FULL_RELAYS } from '@stores/constants';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -47,7 +47,6 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
               <div className="relative h-11 w-11 shrink-0 rounded">
                 <Image
                   src={user?.picture || user?.image}
-                  fallback={DEFAULT_AVATAR}
                   alt={pubkey}
                   className="h-11 w-11 rounded-lg bg-white object-cover"
                 />

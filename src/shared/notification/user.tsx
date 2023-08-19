@@ -1,7 +1,5 @@
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
@@ -23,7 +21,6 @@ export function NotiUser({ pubkey }: { pubkey: string }) {
     <div className="flex shrink-0 items-start justify-start gap-3">
       <Image
         src={user?.picture || user?.image}
-        fallback={DEFAULT_AVATAR}
         alt={pubkey}
         className="h-10 w-10 shrink-0 rounded-md object-cover"
       />

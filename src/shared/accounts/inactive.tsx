@@ -1,7 +1,5 @@
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function InactiveAccount({ data }: { data: any }) {
@@ -9,12 +7,7 @@ export function InactiveAccount({ data }: { data: any }) {
 
   return (
     <div className="relative h-9 w-9 shrink-0">
-      <Image
-        src={user?.image}
-        fallback={DEFAULT_AVATAR}
-        alt={data.npub}
-        className="h-9 w-9 rounded object-cover"
-      />
+      <Image src={user?.image} alt={data.npub} className="h-9 w-9 rounded object-cover" />
     </div>
   );
 }

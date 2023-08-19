@@ -127,6 +127,9 @@ dependencies:
   lru-cache:
     specifier: ^10.0.1
     version: 10.0.1
+  minidenticons:
+    specifier: ^4.2.0
+    version: 4.2.0
   nostr-fetch:
     specifier: ^0.12.2
     version: 0.12.2
@@ -5013,6 +5016,11 @@ packages:
   /min-indent@1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
+    dev: false
+
+  /minidenticons@4.2.0:
+    resolution: {integrity: sha512-2T3VU1N30yI3kXMRbdLsJ5DgsBoGLi2+2hbm1xTOU2RQXWW5wwpmz9XQohVSsVlhymf4W69sMGj6s39t796PBA==}
+    engines: {node: '>=15.14.0'}
     dev: false
 
   /minimatch@3.1.2:
