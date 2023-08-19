@@ -18,6 +18,24 @@ export function parser(event: NDKEvent) {
     links: [],
   };
 
+  // parse nostr references
+  references?.forEach((item) => {
+    const profile = item.profile;
+    const event = item.event;
+    const addr = item.address;
+    if (event) {
+      content.notes.push(event.id);
+      content.parsed = content.parsed.replace(item.text, '');
+    }
+    if (profile) {
+      content.parsed = content.parsed.replace(item.text, `~pub-${item.profile.pubkey}~`);
+    }
+    if (addr) {
+      content.notes.push(addr.identifier);
+      content.parsed = content.parsed.replace(item.text, '');
+    }
+  });
+
   // parse urls
   urls?.forEach((url: string) => {
     if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
@@ -47,25 +65,7 @@ export function parser(event: NDKEvent) {
   // parse hashtag
   const hashtags = content.parsed.split(/\s/gm).filter((s) => s.startsWith('#'));
   hashtags?.forEach((tag) => {
-    content.parsed = content.parsed.replace(tag, `~tag${tag}~`);
-  });
-
-  // parse nostr
-  references?.forEach((item) => {
-    const profile = item.profile;
-    const event = item.event;
-    const addr = item.address;
-    if (event) {
-      content.notes.push(event.id);
-      content.parsed = content.parsed.replace(item.text, '');
-    }
-    if (profile) {
-      content.parsed = content.parsed.replace(item.text, `~pub${item.profile.pubkey}~`);
-    }
-    if (addr) {
-      content.notes.push(addr.identifier);
-      content.parsed = content.parsed.replace(item.text, '');
-    }
+    content.parsed = content.parsed.replace(tag, ` ~tag-${tag}~ `);
   });
 
   return content;

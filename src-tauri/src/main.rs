@@ -25,6 +25,11 @@ async fn close_splashscreen(window: tauri::Window) {
 
 fn main() {
   tauri::Builder::default()
+    .setup(|app| {
+      #[cfg(debug_assertions)]
+      app.get_window("main").unwrap().open_devtools();
+      Ok(())
+    })
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(

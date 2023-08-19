@@ -76,6 +76,9 @@ export function OnboardStep3Screen() {
         }
       }
 
+      // update last login
+      await db.updateLastLogin();
+
       clearStep();
       navigate('/', { replace: true });
     } catch (e) {

@@ -13,6 +13,7 @@ export interface DBEvent {
   account_id: number;
   event: string | NDKEvent;
   author: string;
+  kind: number;
   root_id: string;
   reply_id: string;
   created_at: number;

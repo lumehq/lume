@@ -63,7 +63,12 @@ export function useNostr() {
       }
 
       // build user's network
-      const events = await ndk.fetchEvents({ kinds: [3], authors: [...follows] });
+      const events = await ndk.fetchEvents({
+        kinds: [3],
+        authors: [...follows],
+        limit: 300,
+      });
+
       events.forEach((event: NDKEvent) => {
         event.tags.forEach((tag) => {
           if (tag[0] === 'p') lruNetwork.set(tag[1], tag[1]);
@@ -88,12 +93,11 @@ export function useNostr() {
     try {
       if (!ndk) return { status: 'failed', data: [], message: 'NDK instance not found' };
 
-      // setup nostr-fetch
       const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
       const dbEventsEmpty = await db.isEventsEmpty();
 
       let since: number;
-      if (dbEventsEmpty) {
+      if (dbEventsEmpty || db.account.last_login_at === 0) {
         since = nHoursAgo(24);
       } else {
         since = db.account.last_login_at ?? nHoursAgo(24);
@@ -125,6 +129,7 @@ export function useNostr() {
           event.id,
           JSON.stringify(event),
           event.pubkey,
+          event.kind,
           root,
           reply,
           event.created_at

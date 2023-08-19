@@ -1,19 +1,20 @@
+import { NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
 
-export function useProfile(pubkey: string, fallback?: string) {
+export function useProfile(pubkey: string, embed?: string) {
   const { ndk } = useNDK();
   const {
     status,
     data: user,
     error,
-    isFetching,
   } = useQuery(
     ['user', pubkey],
     async () => {
-      if (!fallback) {
-        const user = ndk.getUser({ hexpubkey: pubkey });
+      if (!embed) {
+        const cleanPubkey = pubkey.replace('-', '');
+        const user = ndk.getUser({ hexpubkey: cleanPubkey });
         await user.fetchProfile();
         if (user.profile) {
           user.profile.display_name = user.profile.displayName;
@@ -22,7 +23,7 @@ export function useProfile(pubkey: string, fallback?: string) {
           throw new Error('User not found');
         }
       } else {
-        const profile = JSON.parse(fallback);
+        const profile: NDKUserProfile = JSON.parse(embed);
         return profile;
       }
     },
@@ -35,5 +36,5 @@ export function useProfile(pubkey: string, fallback?: string) {
     }
   );
 
-  return { status, user, error, isFetching };
+  return { status, user, error };
 }

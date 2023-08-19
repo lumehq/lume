@@ -60,6 +60,9 @@ export class LumeStorage {
       if (typeof account.network === 'string')
         account.network = JSON.parse(account.network);
 
+      if (typeof account.last_login_at === 'string')
+        account.last_login_at = parseInt(account.last_login_at);
+
       this.account = account;
       return account;
     } else {
@@ -94,9 +97,10 @@ export class LumeStorage {
   }
 
   public async updateLastLogin() {
+    const now = Math.floor(Date.now() / 1000);
     return await this.db.execute(
       'UPDATE accounts SET last_login_at = $1 WHERE id = $2;',
-      [Math.floor(Date.now() / 1000), this.account.id]
+      [now, this.account.id]
     );
   }
 
@@ -133,13 +137,14 @@ export class LumeStorage {
     id: string,
     event: string,
     author: string,
+    kind: number,
     root_id: string,
     reply_id: string,
     created_at: number
   ) {
     return await this.db.execute(
-      'INSERT OR IGNORE INTO events (id, account_id, event, author, root_id, reply_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7);',
-      [id, this.account.id, event, author, root_id, reply_id, created_at]
+      'INSERT OR IGNORE INTO events (id, account_id, event, author, kind, root_id, reply_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);',
+      [id, this.account.id, event, author, kind, root_id, reply_id, created_at]
     );
   }
 

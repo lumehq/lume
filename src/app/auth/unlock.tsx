@@ -46,14 +46,6 @@ export function UnlockScreen() {
   } = useForm<FormValues>({ resolver });
 
   const onSubmit = async (data: { [x: string]: string }) => {
-    if (data.password.length < 3) {
-      setError('password', {
-        type: 'custom',
-        message: 'Password is required and must be greater than 3',
-      });
-      return;
-    }
-
     try {
       setLoading(true);
 
@@ -89,7 +81,7 @@ export function UnlockScreen() {
           <div className="flex flex-col gap-1">
             <div className="relative">
               <input
-                {...register('password', { required: true })}
+                {...register('password', { required: true, minLength: 4 })}
                 type={'password'}
                 placeholder="Password"
                 className="relative h-12 w-full rounded-lg bg-white/10 py-1 text-center text-white !outline-none placeholder:text-white/50"
