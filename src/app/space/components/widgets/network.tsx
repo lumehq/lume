@@ -121,15 +121,35 @@ export function NetworkWidget() {
       const filter: NDKFilter = {
         kinds: [1, 6],
         authors: db.account.network,
-        since: Math.floor(Date.now() / 1000),
+        since: db.account.last_login_at ?? Math.floor(Date.now() / 1000),
       };
 
-      sub(filter, (event) => console.log('[network] event received: ', event.content));
+      sub(filter, async (event) => {
+        console.log('[network] new event', event.id);
+
+        let root: string;
+        let reply: string;
+        if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
+          root = event.tags[0][1];
+        } else {
+          root = event.tags.find((el) => el[3] === 'root')?.[1];
+          reply = event.tags.find((el) => el[3] === 'reply')?.[1];
+        }
+        await db.createEvent(
+          event.id,
+          JSON.stringify(event),
+          event.pubkey,
+          event.kind,
+          root,
+          reply,
+          event.created_at
+        );
+      });
     }
   }, []);
 
   return (
-    <div className="relative w-[400px] shrink-0 bg-white/10">
+    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10">
       <TitleBar title="Network" />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (

@@ -1,8 +1,5 @@
 import { useCallback, useEffect } from 'react';
 
-import { FeedModal } from '@app/space/components/modals/feed';
-import { HashtagModal } from '@app/space/components/modals/hashtag';
-import { ImageModal } from '@app/space/components/modals/image';
 import { FeedWidget } from '@app/space/components/widgets/feed';
 import { HashtagWidget } from '@app/space/components/widgets/hashtag';
 import { NetworkWidget } from '@app/space/components/widgets/network';
@@ -11,7 +8,7 @@ import { UserWidget } from '@app/space/components/widgets/user';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { LoaderIcon } from '@shared/icons';
+import { LoaderIcon, PlusIcon } from '@shared/icons';
 
 import { useWidgets } from '@stores/widgets';
 
@@ -51,9 +48,9 @@ export function SpaceScreen() {
   }, [fetchWidgets]);
 
   return (
-    <div className="scrollbar-hide flex h-full w-full flex-nowrap divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
+    <div className="scrollbar-hide inline-flex h-full w-full min-w-full flex-nowrap items-start divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
       {!widgets ? (
-        <div className="flex w-[400px] shrink-0 flex-col">
+        <div className="flex shrink-0 grow-0 basis-[400px] flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">
             <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
           </div>
@@ -61,14 +58,16 @@ export function SpaceScreen() {
       ) : (
         widgets.map((widget) => renderItem(widget))
       )}
-      <div className="flex w-[350px] shrink-0 flex-col">
-        <div className="inline-flex h-full w-full flex-col items-center justify-center gap-1">
-          <FeedModal />
-          <ImageModal />
-          <HashtagModal />
+      <div className="flex h-full shrink-0 grow-0 basis-[400px] flex-col">
+        <div className="inline-flex h-full w-full flex-col items-center justify-center">
+          <button type="button" className="flex flex-col items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 hover:bg-white/10">
+              <PlusIcon className="h-5 w-5 text-white" />
+            </div>
+            <p className="font-medium text-white/50">Add widget</p>
+          </button>
         </div>
       </div>
-      <div className="w-[250px] shrink-0" />
     </div>
   );
 }

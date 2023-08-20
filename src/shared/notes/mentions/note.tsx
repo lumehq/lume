@@ -65,7 +65,6 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
             {isImage(url) && (
               <Image
                 src={url}
-                fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW"
                 alt="image"
                 className="h-auto w-full rounded-lg object-cover"
               />
@@ -94,7 +93,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       tabIndex={0}
       className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3"
     >
-      <User pubkey={data.event.pubkey} time={data.event.created_at} size="small" />
+      <User pubkey={data?.event?.pubkey} time={data?.event?.created_at} size="small" />
       <div className="mt-2">{renderItem()}</div>
     </div>
   );
