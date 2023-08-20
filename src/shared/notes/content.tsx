@@ -10,9 +10,9 @@ import {
   VideoPreview,
 } from '@shared/notes';
 
-import { Content } from '@utils/types';
+import { RichContent } from '@utils/types';
 
-export function NoteContent({ content, long }: { content: Content; long?: boolean }) {
+export function NoteContent({ content, long }: { content: RichContent; long?: boolean }) {
   if (long) {
     return (
       <ReactMarkdown className="markdown" remarkPlugins={[remarkGfm]}>
@@ -29,8 +29,9 @@ export function NoteContent({ content, long }: { content: Content; long?: boolea
         components={{
           del: ({ children }) => {
             const key = children[0] as string;
-            if (key.startsWith('pub')) return <MentionUser pubkey={key.slice(3)} />;
-            if (key.startsWith('tag')) return <Hashtag tag={key.slice(3)} />;
+            if (key.startsWith('pub') && key.length > 50 && key.length < 100)
+              return <MentionUser pubkey={key.replace('pub-', '')} />;
+            if (key.startsWith('tag')) return <Hashtag tag={key.replace('tag-', '')} />;
           },
         }}
       >

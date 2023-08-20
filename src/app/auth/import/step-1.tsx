@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getPublicKey, nip19 } from 'nostr-tools';
 import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { createAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
@@ -31,7 +30,6 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 export function ImportStep1Screen() {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
   const setTempPubkey = useOnboarding((state) => state.setTempPrivkey);
@@ -40,20 +38,7 @@ export function ImportStep1Screen() {
 
   const [loading, setLoading] = useState(false);
 
-  const account = useMutation({
-    mutationFn: (data: {
-      npub: string;
-      pubkey: string;
-      follows: null | string[];
-      is_active: number | boolean;
-    }) => {
-      return createAccount(data.npub, data.pubkey, null, 1);
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(['currentAccount'], data);
-    },
-  });
-
+  const { db } = useStorage();
   const {
     register,
     setError,
@@ -79,15 +64,10 @@ export function ImportStep1Screen() {
         setPubkey(pubkey);
 
         // add account to local database
-        account.mutate({
-          npub,
-          pubkey,
-          follows: null,
-          is_active: 1,
-        });
+        db.createAccount(npub, pubkey);
 
         // redirect to step 2
-        setTimeout(() => navigate('/auth/import/step-2', { replace: true }), 1200);
+        navigate('/auth/import/step-2', { replace: true });
       }
     } catch (error) {
       setError('privkey', {

@@ -1,16 +1,15 @@
 import { useState } from 'react';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { EyeOffIcon, EyeOnIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { useAccount } from '@utils/hooks/useAccount';
-
 export function AccountSettingsScreen() {
-  const { status, account } = useAccount();
   const [type, setType] = useState('password');
-
   const privkey = useStronghold((state) => state.privkey);
+  const { db } = useStorage();
 
   const showPrivateKey = () => {
     if (type === 'password') {
@@ -35,7 +34,7 @@ export function AccountSettingsScreen() {
                 </label>
                 <input
                   readOnly
-                  value={account.pubkey}
+                  value={db.account.pubkey}
                   className="relative w-2/3 rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                 />
               </div>
@@ -45,7 +44,7 @@ export function AccountSettingsScreen() {
                 </label>
                 <input
                   readOnly
-                  value={account.npub}
+                  value={db.account.npub}
                   className="relative w-2/3 rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                 />
               </div>

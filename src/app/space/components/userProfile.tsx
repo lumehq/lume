@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/plugin-http';
 import { useEffect, useState } from 'react';
 
 import { FollowIcon, LoaderIcon, UnfollowIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useSocial } from '@utils/hooks/useSocial';
 import { compactNumber } from '@utils/number';
 import { shortenKey } from '@utils/shortenKey';
 
-export function Profile({ data }: { data: any }) {
+export interface Profile {
+  pubkey: string;
+  profile: { content: string };
+}
+
+export function UserProfile({ data }: { data: Profile }) {
   const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
   const { status, data: userStats } = useQuery(
     ['user-stats', data.pubkey],
@@ -74,7 +76,6 @@ export function Profile({ data }: { data: any }) {
         <div className="inline-flex items-center gap-2">
           <Image
             src={profile.picture}
-            fallback={DEFAULT_AVATAR}
             className="h-11 w-11 shrink-0 rounded-lg object-cover"
           />
           <div className="inline-flex flex-col gap-1">

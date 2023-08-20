@@ -1,17 +1,24 @@
-import { ImgHTMLAttributes } from 'react';
+import { minidenticon } from 'minidenticons';
+import { ImgHTMLAttributes, useState } from 'react';
 
-interface Props extends ImgHTMLAttributes<any> {
-  fallback: string;
-}
+export function Image({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
+  const [isError, setIsError] = useState(false);
 
-export function Image({ src, fallback, ...props }: Props) {
+  if (isError || !src) {
+    const svgURI =
+      'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(props.alt, 90, 50));
+    return (
+      <img src={svgURI} alt={props.alt} {...props} style={{ backgroundColor: '#000' }} />
+    );
+  }
+
   return (
     <img
       {...props}
-      src={src || fallback}
+      src={src}
       onError={({ currentTarget }) => {
         currentTarget.onerror = null;
-        currentTarget.src = fallback;
+        setIsError(true);
       }}
       decoding="async"
       alt="lume default img"

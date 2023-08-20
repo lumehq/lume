@@ -1,26 +1,24 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
-import { updateAccount } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { useOnboarding } from '@stores/onboarding';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 import { arrayToNIP02 } from '@utils/transform';
 
 export function OnboardStep1Screen() {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
 
-  const { publish, fetchNotes } = useNostr();
-  const { account } = useAccount();
+  const { publish, fetchUserData, prefetchEvents } = useNostr();
+  const { db } = useStorage();
   const { status, data } = useQuery(['trending-profiles'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
     if (!res.ok) {
@@ -44,22 +42,23 @@ export function OnboardStep1Screen() {
     try {
       setLoading(true);
 
-      const tags = arrayToNIP02([...follows, account.pubkey]);
+      const tags = arrayToNIP02([...follows, db.account.pubkey]);
       const event = await publish({ content: '', kind: 3, tags: tags });
-      await updateAccount('follows', follows);
 
-      // prefetch notes with current follows
-      const notes = await fetchNotes(follows);
+      // prefetch data
+      const user = await fetchUserData(follows);
+      const data = await prefetchEvents();
 
       // redirect to next step
-      if (event && notes) {
-        setTimeout(() => {
-          queryClient.invalidateQueries(['currentAccount']);
-          navigate('/auth/onboarding/step-2', { replace: true });
-        }, 1000);
+      if (event && user.status === 'ok' && data.status === 'ok') {
+        navigate('/auth/onboarding/step-2', { replace: true });
+      } else {
+        setLoading(false);
+        console.log('error: ', data.message);
       }
-    } catch {
-      console.log('error');
+    } catch (e) {
+      setLoading(false);
+      console.log('error: ', e);
     }
   };
 

@@ -5,14 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { UserRelay } from '@app/auth/components/userRelay';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createRelay } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { FULL_RELAYS } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function OnboardStep3Screen() {
@@ -23,13 +22,16 @@ export function OnboardStep3Screen() {
   const [relays, setRelays] = useState(new Set<string>());
 
   const { publish } = useNostr();
-  const { account } = useAccount();
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['relays'],
     async () => {
       const tmp = new Map<string, string>();
-      const events = await ndk.fetchEvents({ kinds: [10002], authors: account.follows });
+      const events = await ndk.fetchEvents({
+        kinds: [10002],
+        authors: db.account.follows,
+      });
 
       if (events) {
         events.forEach((event) => {
@@ -42,7 +44,8 @@ export function OnboardStep3Screen() {
       return tmp;
     },
     {
-      enabled: account ? true : false,
+      enabled: db.account ? true : false,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -62,21 +65,22 @@ export function OnboardStep3Screen() {
     try {
       if (!skip) {
         for (const relay of relays) {
-          await createRelay(relay);
+          await db.createRelay(relay);
         }
 
         const tags = Array.from(relays).map((relay) => ['r', relay.replace(/\/+$/, '')]);
         await publish({ content: '', kind: 10002, tags: tags });
       } else {
         for (const relay of FULL_RELAYS) {
-          await createRelay(relay);
+          await db.createRelay(relay);
         }
       }
 
-      setTimeout(() => {
-        clearStep();
-        navigate('/', { replace: true });
-      }, 1000);
+      // update last login
+      await db.updateLastLogin();
+
+      clearStep();
+      navigate('/', { replace: true });
     } catch (e) {
       setLoading(false);
       console.log('error: ', e);

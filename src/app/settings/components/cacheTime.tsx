@@ -1,17 +1,12 @@
 import { useState } from 'react';
 
-import { getSetting, updateSetting } from '@libs/storage';
-
 import { CheckCircleIcon } from '@shared/icons';
 
-const setting = await getSetting('cache_time');
-const cacheTime = setting;
-
 export function CacheTimeSetting() {
-  const [time, setTime] = useState(cacheTime);
+  const [time, setTime] = useState('0');
 
   const update = async () => {
-    await updateSetting('cache_time', time);
+    // await updateSetting('cache_time', time);
   };
 
   return (

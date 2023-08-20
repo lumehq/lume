@@ -1,8 +1,6 @@
 import { VerticalDotsIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -18,8 +16,7 @@ export function ThreadUser({ pubkey, time }: { pubkey: string; time: number }) {
   return (
     <div className="flex items-center gap-3">
       <Image
-        src={user?.picture || user?.image || DEFAULT_AVATAR}
-        fallback={DEFAULT_AVATAR}
+        src={user?.picture || user?.image}
         alt={pubkey}
         className="relative z-20 inline-block h-11 w-11 rounded-lg"
       />

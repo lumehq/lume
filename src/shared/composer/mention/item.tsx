@@ -1,7 +1,5 @@
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { displayNpub } from '@utils/shortenKey';
 import { Profile } from '@utils/types';
 
@@ -11,7 +9,6 @@ export function MentionItem({ profile }: { profile: Profile }) {
       <div className="h-8 w-8 shrink-0 overflow-hidden rounded-md bg-zinc-900">
         <Image
           src={profile.picture || profile.image}
-          fallback={DEFAULT_AVATAR}
           alt={profile.pubkey}
           className="h-8 w-8 object-cover"
         />

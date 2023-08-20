@@ -11,14 +11,14 @@ rust-version = "1.71"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-alpha.6", features = [] }
+tauri-build = { version = "2.0.0-alpha.8", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-alpha.10", features = [
+tauri = { version = "2.0.0-alpha.11", features = [
+  "protocol-asset",
   "macos-private-api",
-  "system-tray",
 ] }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
@@ -36,12 +36,10 @@ tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", bra
 tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-window-vibrancy = { git = "https://github.com/tauri-apps/window-vibrancy", branch = "dev" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }
 rust-argon2 = "1.0"
-rand = "0.8.5"
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"
@@ -54,7 +52,7 @@ features = ["sqlite"]
 default = ["custom-protocol"]
 # this feature is used used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
-custom-protocol = ["tauri/custom-protocol"]
+custom-protocol = []
 
 # Optimized for bundle size. If you want faster builds comment out/delete this section.
 [profile.release]

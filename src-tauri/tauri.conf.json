@@ -67,18 +67,12 @@
         "exceptionDomain": "",
         "frameworks": [],
         "providerShortName": null,
-        "signingIdentity": null
+        "signingIdentity": null,
+        "minimumSystemVersion": "10.15.0"
       },
       "resources": [],
       "shortDescription": "",
       "targets": "all",
-      "updater": {
-        "active": true,
-        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
-        "windows": {
-          "installMode": "passive"
-        }
-      },
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
@@ -86,11 +80,18 @@
       }
     },
     "security": {
-      "csp": "upgrade-insecure-requests"
-    },
-    "systemTray": {
-      "iconAsTemplate": true,
-      "iconPath": "icons/icon.png"
+      "csp": {
+        "connect-src": "ipc: https://ipc.localhost",
+        "content-security-policy": "upgrade-insecure-requests"
+      },
+      "freezePrototype": false,
+      "assetProtocol": {
+        "enable": true,
+        "scope": {
+          "allow": ["$APPCONFIG/*.db", "$RESOURCE/**"],
+          "deny": ["$APPCONFIG/*.stronghold"]
+        }
+      }
     },
     "windows": [
       {
@@ -106,7 +107,12 @@
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
-        "visible": false
+        "visible": false,
+        "fileDropEnabled": true,
+        "windowEffects": {
+          "effects": ["mica", "hudWindow"],
+          "state": "followsWindowActiveState"
+        }
       },
       {
         "width": 400,
@@ -117,7 +123,11 @@
         "resizable": false,
         "titleBarStyle": "Overlay",
         "label": "splashscreen",
-        "url": "splashscreen"
+        "url": "splashscreen",
+        "windowEffects": {
+          "effects": ["mica", "hudWindow"],
+          "state": "followsWindowActiveState"
+        }
       }
     ],
     "macOSPrivateApi": true

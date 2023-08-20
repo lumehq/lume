@@ -1,51 +1,38 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createNote, getNoteByID } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { parser } from '@utils/parser';
-import { LumeEvent } from '@utils/types';
+import { RichContent } from '@utils/types';
 
-export function useEvent(id: string, fallback?: string) {
+export function useEvent(id: string, embed?: string) {
+  const { db } = useStorage();
   const { ndk } = useNDK();
-  const { status, data, error, isFetching } = useQuery(
-    ['note', id],
+  const { status, data, error } = useQuery(
+    ['event', id],
     async () => {
-      const result = await getNoteByID(id);
-      if (result) {
-        return result as LumeEvent;
+      let richContent: RichContent;
+      // return embed event (nostr.band api)
+      if (embed) {
+        const event: NDKEvent = JSON.parse(embed);
+        if (event.kind === 1) richContent = parser(event);
+
+        return { event: event, richContent: richContent };
+      }
+
+      // get event from db
+      const dbEvent = await db.getEventByID(id);
+      if (dbEvent) {
+        if (dbEvent.kind === 1) richContent = parser(dbEvent);
+        return { event: dbEvent, richContent: richContent };
       } else {
-        if (fallback) {
-          const embed: LumeEvent = JSON.parse(fallback);
-          if (embed.kind === 1) embed['content'] = parser(embed);
-          embed['event_id'] = embed.id;
-          await createNote(
-            embed.id,
-            embed.pubkey,
-            embed.kind,
-            embed.tags,
-            embed.content as unknown as string,
-            embed.created_at
-          );
-          return embed;
-        } else {
-          const event = (await ndk.fetchEvent(id)) as unknown as LumeEvent;
-          if (event) {
-            await createNote(
-              event.id,
-              event.pubkey,
-              event.kind,
-              event.tags,
-              event.content as unknown as string,
-              event.created_at
-            );
-            event['event_id'] = event.id;
-            if (event.kind === 1) event['content'] = parser(event);
-            return event as unknown as LumeEvent;
-          } else {
-            throw new Error('Event not found');
-          }
-        }
+        // get event from relay if event in db not present
+        const event = await ndk.fetchEvent(id);
+        if (event.kind === 1) richContent = parser(event);
+
+        return { event: event, richContent: richContent };
       }
     },
     {
@@ -56,5 +43,5 @@ export function useEvent(id: string, fallback?: string) {
     }
   );
 
-  return { status, data, error, isFetching };
+  return { status, data, error };
 }

@@ -1,13 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHotkeys } from 'react-hotkeys-hook';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { BLOCK_KINDS, DEFAULT_AVATAR } from '@stores/constants';
-import { ADD_IMAGEBLOCK_SHORTCUT } from '@stores/shortcuts';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 import { useImageUploader } from '@utils/hooks/useUploader';
@@ -20,8 +20,7 @@ export function ImageModal() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState('');
 
-  useHotkeys(ADD_IMAGEBLOCK_SHORTCUT, () => setOpen(false));
-
+  const { db } = useStorage();
   const {
     register,
     handleSubmit,
@@ -41,7 +40,7 @@ export function ImageModal() {
     setLoading(true);
 
     // mutate
-    setWidget({ kind: BLOCK_KINDS.image, title: data.title, content: data.content });
+    setWidget(db, { kind: widgetKinds.image, title: data.title, content: data.content });
 
     setLoading(false);
     // reset form
@@ -124,7 +123,6 @@ export function ImageModal() {
                   <div className="relative inline-flex h-56 w-full items-center justify-center overflow-hidden rounded-lg bg-white/10">
                     <Image
                       src={image}
-                      fallback={DEFAULT_AVATAR}
                       alt="content"
                       className="relative z-10 h-auto max-h-[156px] w-[150px] rounded-md object-cover"
                     />

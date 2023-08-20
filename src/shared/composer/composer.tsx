@@ -87,13 +87,13 @@ export function Composer() {
       if (reply.id && reply.pubkey) {
         if (reply.root && reply.root.length > 1) {
           tags = [
-            ['e', reply.root, 'wss://relayable.org', 'root'],
-            ['e', reply.id, 'wss://relayable.org', 'reply'],
+            ['e', reply.root, '', 'root'],
+            ['e', reply.id, '', 'reply'],
             ['p', reply.pubkey],
           ];
         } else {
           tags = [
-            ['e', reply.id, 'wss://relayable.org', 'reply'],
+            ['e', reply.id, '', 'reply'],
             ['p', reply.pubkey],
           ];
         }

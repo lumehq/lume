@@ -1,52 +1,73 @@
-import { NDKEvent, NDKKind, NDKPrivateKeySigner, NDKUser } from '@nostr-dev-kit/ndk';
+import {
+  NDKEvent,
+  NDKFilter,
+  NDKKind,
+  NDKPrivateKeySigner,
+  NDKSubscription,
+  NDKUser,
+} from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import destr from 'destr';
 import { LRUCache } from 'lru-cache';
 import { NostrFetcher } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
-import {
-  countTotalNotes,
-  createChat,
-  createNote,
-  getLastLogin,
-  updateAccount,
-} from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
 import { nHoursAgo } from '@utils/date';
-import { useAccount } from '@utils/hooks/useAccount';
 
 export function useNostr() {
   const { ndk, relayUrls } = useNDK();
-  const { account } = useAccount();
+  const { db } = useStorage();
 
-  const fetcher = useMemo(() => NostrFetcher.withCustomPool(ndkAdapter(ndk)), [ndk]);
   const privkey = useStronghold((state) => state.privkey);
+  const subManager = useMemo(
+    () =>
+      new LRUCache<string, NDKSubscription, void>({
+        max: 4,
+        dispose: (sub) => sub.stop(),
+      }),
+    []
+  );
 
-  async function fetchNetwork(prevFollow?: string[]) {
-    const follows = new Set<string>(prevFollow || []);
-    const lruNetwork = new LRUCache<string, string, void>({ max: 300 });
+  const sub = async (
+    filter: NDKFilter,
+    callback: (event: NDKEvent) => void,
+    closeOnEose?: boolean
+  ) => {
+    if (!ndk) throw new Error('NDK instance not found');
 
-    let network: string[];
+    const subEvent = ndk.subscribe(filter, { closeOnEose: closeOnEose ?? true });
+    subManager.set(JSON.stringify(filter), subEvent);
 
-    // fetch user's follows
-    if (!prevFollow) {
-      console.log("fetching user's follow...");
-      const user = ndk.getUser({ hexpubkey: account.pubkey });
-      const list = await user.follows();
-      list.forEach((item: NDKUser) => {
-        follows.add(nip19.decode(item.npub).data as string);
+    subEvent.addListener('event', (event: NDKEvent) => {
+      callback(event);
+    });
+  };
+
+  const fetchUserData = async (preFollows?: string[]) => {
+    try {
+      const follows = new Set<string>(preFollows || []);
+      const lruNetwork = new LRUCache<string, string, void>({ max: 300 });
+
+      // fetch user's follows
+      if (!preFollows) {
+        const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+        const list = await user.follows();
+        list.forEach((item: NDKUser) => {
+          follows.add(nip19.decode(item.npub).data as string);
+        });
+      }
+
+      // build user's network
+      const events = await ndk.fetchEvents({
+        kinds: [3],
+        authors: [...follows],
+        limit: 300,
       });
-    }
-
-    // fetch network
-    if (!account.network) {
-      console.log("fetching user's network...");
-      const events = await ndk.fetchEvents({ kinds: [3], authors: [...follows] });
 
       events.forEach((event: NDKEvent) => {
         event.tags.forEach((tag) => {
@@ -54,105 +75,73 @@ export function useNostr() {
         });
       });
 
-      network = [...lruNetwork.values()] as string[];
-    } else {
-      network = account.network;
-    }
+      const network = [...lruNetwork.values()] as string[];
 
-    // update user in db
-    await updateAccount('follows', [...follows]);
-    await updateAccount('network', network);
+      await db.updateAccount('follows', [...follows]);
+      await db.updateAccount('network', [...new Set([...follows, ...network])]);
 
-    return [...new Set([...follows, ...network])];
-  }
+      // clear lru caches
+      lruNetwork.clear();
 
-  async function fetchNotes(prevFollow?: string[]) {
-    try {
-      if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
-
-      const network = await fetchNetwork(prevFollow);
-      const totalNotes = await countTotalNotes();
-      const lastLogin = await getLastLogin();
-
-      if (network.length > 0) {
-        console.log('fetching notes...');
-
-        let since: number;
-        if (totalNotes === 0 || lastLogin === 0) {
-          since = nHoursAgo(24);
-        } else {
-          since = lastLogin;
-        }
-
-        const events = await fetcher.fetchAllEvents(
-          relayUrls,
-          {
-            kinds: [1],
-            authors: network,
-          },
-          { since: since }
-        );
-
-        for (const event of events) {
-          await createNote(
-            event.id,
-            event.pubkey,
-            event.kind,
-            event.tags,
-            event.content,
-            event.created_at
-          );
-        }
-      }
-
-      return { status: 'ok' };
+      return { status: 'ok', message: 'User data fetched' };
     } catch (e) {
-      console.error('failed fetch notes, error: ', e);
       return { status: 'failed', message: e };
     }
-  }
+  };
 
-  async function fetchChats() {
+  const prefetchEvents = async () => {
     try {
-      if (!ndk) return { status: 'failed', message: 'NDK instance not found' };
+      if (!ndk) return { status: 'failed', data: [], message: 'NDK instance not found' };
 
-      const lastLogin = await getLastLogin();
+      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+      const dbEventsEmpty = await db.isEventsEmpty();
 
-      const outgoingMessages = await fetcher.fetchAllEvents(
+      let since: number;
+      if (dbEventsEmpty || db.account.last_login_at === 0) {
+        since = nHoursAgo(24);
+      } else {
+        since = db.account.last_login_at ?? nHoursAgo(24);
+      }
+
+      console.log("prefetching events with user's network: ", db.account.network.length);
+      console.log('prefetching events since: ', since);
+
+      const events = fetcher.allEventsIterator(
         relayUrls,
         {
-          kinds: [4],
-          authors: [account.pubkey],
+          kinds: [1, 6],
+          authors: db.account.network,
         },
-        { since: lastLogin }
+        { since: since }
       );
 
-      const incomingMessages = await fetcher.fetchAllEvents(
-        relayUrls,
-        { kinds: [4], '#p': [account.pubkey] },
-        { since: lastLogin }
-      );
-
-      const messages = [...outgoingMessages, ...incomingMessages];
-
-      for (const event of messages) {
-        const receiverPubkey = event.tags.find((t) => t[0] === 'p')[1] || account.pubkey;
-        await createChat(
+      // save all events to database
+      for await (const event of events) {
+        let root: string;
+        let reply: string;
+        if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
+          root = event.tags[0][1];
+        } else {
+          root = event.tags.find((el) => el[3] === 'root')?.[1];
+          reply = event.tags.find((el) => el[3] === 'reply')?.[1];
+        }
+        db.createEvent(
           event.id,
-          receiverPubkey,
+          JSON.stringify(event),
           event.pubkey,
-          event.content,
-          event.tags,
+          event.kind,
+          root,
+          reply,
           event.created_at
         );
       }
 
-      return { status: 'ok' };
+      return { status: 'ok', data: [], message: 'prefetch completed' };
     } catch (e) {
-      console.error('failed fetch messages, error: ', e);
-      return { status: 'failed', message: e };
+      console.error('prefetch events failed, error: ', e);
+      return { status: 'failed', data: [], message: e };
     }
-  }
+  };
 
   const publish = async ({
     content,
@@ -171,7 +160,7 @@ export function useNostr() {
     event.content = content;
     event.kind = kind;
     event.created_at = Math.floor(Date.now() / 1000);
-    event.pubkey = account.pubkey;
+    event.pubkey = db.account.pubkey;
     event.tags = tags;
 
     await event.sign(signer);
@@ -181,14 +170,6 @@ export function useNostr() {
   };
 
   const createZap = async (event: NDKEvent, amount: number, message?: string) => {
-    // @ts-expect-error, LumeEvent to NDKEvent
-    event.id = event.event_id;
-
-    // @ts-expect-error, LumeEvent to NDKEvent
-    if (typeof event.content !== 'string') event.content = event.content.original;
-
-    if (typeof event.tags === 'string') event.tags = destr(event.tags);
-
     if (!privkey) throw new Error('Private key not found');
 
     if (!ndk.signer) {
@@ -196,12 +177,12 @@ export function useNostr() {
       ndk.signer = signer;
     }
 
-    // @ts-expect-error, LumeEvent to NDKEvent
+    // @ts-expect-error, NostrEvent to NDKEvent
     const ndkEvent = new NDKEvent(ndk, event);
     const res = await ndkEvent.zap(amount, message ?? 'zap from lume');
 
     return res;
   };
 
-  return { fetchNotes, fetchChats, publish, createZap };
+  return { sub, fetchUserData, prefetchEvents, publish, createZap };
 }

@@ -26,12 +26,12 @@ export function SubNote({ id, root }: { id: string; root?: string }) {
     <>
       <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
       <div className="mb-5 flex flex-col">
-        <User pubkey={data.pubkey} time={data.created_at} />
+        <User pubkey={data.event.pubkey} time={data.event.created_at} />
         <div className="-mt-6 flex items-start gap-3">
           <div className="w-11 shrink-0" />
           <div className="relative z-20 flex-1">
-            <NoteContent content={data.content} long={data.kind === 30023} />
-            <NoteActions id={data.event_id} pubkey={data.pubkey} root={root} />
+            <NoteContent content={data.richContent} long={data.event.kind === 30023} />
+            <NoteActions id={data.event.id} pubkey={data.event.pubkey} root={root} />
           </div>
         </div>
       </div>

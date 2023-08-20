@@ -1,22 +1,21 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHotkeys } from 'react-hotkeys-hook';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
-import { BLOCK_KINDS } from '@stores/constants';
-import { ADD_HASHTAGBLOCK_SHORTCUT } from '@stores/shortcuts';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
 
 export function HashtagModal() {
+  const setWidget = useWidgets((state) => state.setWidget);
+
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const setWidget = useWidgets((state) => state.setWidget);
-
-  useHotkeys(ADD_HASHTAGBLOCK_SHORTCUT, () => setOpen(false));
-
+  const { db } = useStorage();
   const {
     register,
     handleSubmit,
@@ -27,9 +26,9 @@ export function HashtagModal() {
   const onSubmit = async (data: { hashtag: string }) => {
     setLoading(true);
 
-    // mutate
-    setWidget({
-      kind: BLOCK_KINDS.hashtag,
+    // update state
+    setWidget(db, {
+      kind: widgetKinds.hashtag,
       title: data.hashtag,
       content: data.hashtag.replace('#', ''),
     });

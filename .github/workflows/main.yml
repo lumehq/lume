@@ -1,8 +1,5 @@
 name: 'publish'
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 env:
   CARGO_INCREMENTAL: 0
@@ -27,7 +24,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin

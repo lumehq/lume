@@ -6,24 +6,19 @@ import { NewMessageModal } from '@app/chats/components/modal';
 import { ChatsListSelfItem } from '@app/chats/components/self';
 import { UnknownsModal } from '@app/chats/components/unknowns';
 
-import { getChats } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
-import { useAccount } from '@utils/hooks/useAccount';
 import { Chats } from '@utils/types';
 
 export function ChatsList() {
-  const { account } = useAccount();
-  const {
-    status,
-    data: chats,
-    isFetching,
-  } = useQuery(['chats'], async () => {
-    return await getChats();
+  const { db } = useStorage();
+  const { status, data: chats } = useQuery(['chats'], async () => {
+    return { follows: [], unknowns: [] };
   });
 
   const renderItem = useCallback(
     (item: Chats) => {
-      if (account?.pubkey !== item.sender_pubkey) {
+      if (db.account.pubkey !== item.sender_pubkey) {
         return <ChatsListItem key={item.sender_pubkey} data={item} />;
       }
     },
@@ -47,21 +42,8 @@ export function ChatsList() {
 
   return (
     <div className="flex flex-col">
-      {account ? (
-        <ChatsListSelfItem data={account} />
-      ) : (
-        <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2">
-          <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10" />
-          <div className="h-3 w-full animate-pulse rounded-sm bg-white/10" />
-        </div>
-      )}
+      <ChatsListSelfItem pubkey={db.account.pubkey} />
       {chats.follows.map((item) => renderItem(item))}
-      {isFetching && (
-        <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2">
-          <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10" />
-          <div className="h-3 w-full animate-pulse rounded-sm bg-white/10" />
-        </div>
-      )}
       {chats.unknowns.length > 0 && <UnknownsModal data={chats.unknowns} />}
       <NewMessageModal />
     </div>

@@ -9,7 +9,6 @@ import { BellIcon, CancelIcon, LoaderIcon } from '@shared/icons';
 import { NotiMention, NotiReaction, NotiRepost } from '@shared/notification';
 
 import { nHoursAgo } from '@utils/date';
-import { LumeEvent } from '@utils/types';
 
 export function NotificationModal({ pubkey }: { pubkey: string }) {
   const { ndk } = useNDK();
@@ -23,10 +22,12 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
       });
       const filterSelf = [...events].filter((el) => el.pubkey !== pubkey);
       const sorted = filterSelf.sort((a, b) => a.created_at - b.created_at);
-      return sorted as unknown as LumeEvent[];
+      return sorted as unknown as NDKEvent[];
     },
     {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     }
   );
 
@@ -80,7 +81,7 @@ export function NotificationModal({ pubkey }: { pubkey: string }) {
                 <div className="inline-flex items-center justify-center px-4 py-3">
                   <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
                 </div>
-              ) : data.length < 1 ? (
+              ) : data?.length < 1 ? (
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <p className="mb-1 text-4xl">🎉</p>
                   <p className="font-medium text-white/50">

@@ -5,60 +5,53 @@ import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ErrorScreen } from '@app/error';
 
-import { getActiveAccount } from '@libs/storage';
-
 import { AppLayout } from '@shared/appLayout';
 import { AuthLayout } from '@shared/authLayout';
 import { LoaderIcon } from '@shared/icons';
 import { SettingsLayout } from '@shared/settingsLayout';
 
+import { checkActiveAccount } from '@utils/checkActiveAccount';
+
 import './index.css';
 
-const appLoader = async () => {
-  const account = await getActiveAccount();
-  const stronghold = sessionStorage.getItem('stronghold');
-  const privkey = JSON.parse(stronghold).state.privkey || null;
-  const onboarding = localStorage.getItem('onboarding');
-  const step = JSON.parse(onboarding).state.step || null;
+async function Loader() {
+  try {
+    const account = await checkActiveAccount();
+    const stronghold = sessionStorage.getItem('stronghold');
+    const privkey = JSON.parse(stronghold).state.privkey || null;
+    const onboarding = localStorage.getItem('onboarding');
+    const step = JSON.parse(onboarding).state.step || null;
 
-  if (step) {
-    return redirect(step);
+    if (step) {
+      return redirect(step);
+    }
+
+    if (!account) {
+      return redirect('/auth/welcome');
+    } else {
+      if (!privkey) {
+        return redirect('/auth/unlock');
+      }
+    }
+
+    return null;
+  } catch (e) {
+    throw new Error('App failed to load');
   }
-
-  if (!account) {
-    return redirect('/auth/welcome');
-  }
-
-  if (account && account.privkey.length > 35) {
-    return redirect('/auth/migrate');
-  }
-
-  if (account && !privkey) {
-    return redirect('/auth/unlock');
-  }
-
-  return null;
-};
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
     errorElement: <ErrorScreen />,
-    loader: appLoader,
+    loader: Loader,
     children: [
       {
         path: '',
         async lazy() {
           const { SpaceScreen } = await import('@app/space');
           return { Component: SpaceScreen };
-        },
-      },
-      {
-        path: 'trending',
-        async lazy() {
-          const { TrendingScreen } = await import('@app/trending');
-          return { Component: TrendingScreen };
         },
       },
       {
@@ -245,7 +238,6 @@ export default function App() {
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
         </div>
       }
-      future={{ v7_startTransition: true }}
     />
   );
 }

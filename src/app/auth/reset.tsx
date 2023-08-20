@@ -1,14 +1,15 @@
+import { appConfigDir } from '@tauri-apps/api/path';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { getPublicKey, nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
-
-import { useAccount } from '@utils/hooks/useAccount';
-import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
 type FormValues = {
   password: string;
@@ -36,8 +37,7 @@ export function ResetScreen() {
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
 
-  const { account } = useAccount();
-  const { save, reset } = useSecureStorage();
+  const { db } = useStorage();
 
   // toggle private key
   const showPassword = () => {
@@ -66,7 +66,7 @@ export function ResetScreen() {
 
         const tmpPubkey = getPublicKey(privkey);
 
-        if (tmpPubkey !== account.pubkey) {
+        if (tmpPubkey !== db.account.pubkey) {
           setLoading(false);
           setError('password', {
             type: 'custom',
@@ -75,11 +75,20 @@ export function ResetScreen() {
           });
         } else {
           // remove old stronghold
-          await reset();
+          await db.secureReset();
+
           // save privkey to secure storage
-          await save(account.pubkey, account.privkey, data.password);
+          const dir = await appConfigDir();
+          const stronghold = await Stronghold.load(
+            `${dir}/lume.stronghold`,
+            data.password
+          );
+
+          if (!db.secureDB) db.secureDB = stronghold;
+          await db.secureSave(db.account.pubkey, db.account.privkey);
+
           // add privkey to state
-          setPrivkey(account.privkey);
+          setPrivkey(db.account.privkey);
           // redirect to home
           navigate('/auth/unlock', { replace: true });
         }

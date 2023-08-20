@@ -1,27 +1,15 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { relaunch } from '@tauri-apps/plugin-process';
-import { Fragment, useState } from 'react';
-
-import { removeAll } from '@libs/storage';
 
 import { CancelIcon, LogoutIcon } from '@shared/icons';
 
 export function Logout() {
   const queryClient = useQueryClient();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
 
   const logout = async () => {
     // reset database
-    await removeAll();
+    // await removeAll();
     // reset react query
     queryClient.clear();
     // navigate
@@ -69,7 +57,6 @@ export function Logout() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={closeModal}
                   className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium text-white/50 hover:bg-white/10"
                 >
                   Cancel

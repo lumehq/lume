@@ -4,11 +4,9 @@ import { twMerge } from 'tailwind-merge';
 
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
-import { displayNpub, shortenKey } from '@utils/shortenKey';
+import { displayNpub } from '@utils/shortenKey';
 
 export function User({
   pubkey,
@@ -63,7 +61,6 @@ export function User({
           >
             <Image
               src={user?.picture || user?.image}
-              fallback={DEFAULT_AVATAR}
               alt={pubkey}
               className={twMerge(
                 `object-cover ${avatarWidth} ${avatarHeight}`,
@@ -85,7 +82,7 @@ export function User({
             {user?.nip05?.toLowerCase() ||
               user?.name ||
               user?.display_name ||
-              shortenKey(pubkey)}
+              displayNpub(pubkey, 16)}
           </h5>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>
@@ -93,13 +90,12 @@ export function User({
       </div>
       <Popover.Portal>
         <Popover.Content
-          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-xl focus:outline-none"
+          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
             <Image
               src={user?.picture || user?.image}
-              fallback={DEFAULT_AVATAR}
               alt={pubkey}
               className="h-11 w-11 shrink-0 rounded-lg object-cover"
             />

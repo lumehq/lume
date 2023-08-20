@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { UserMetadata } from '@app/users/components/metadata';
 
-import { ZapIcon } from '@shared/icons';
 import { Image } from '@shared/image';
-
-import { DEFAULT_AVATAR } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { useSocial } from '@utils/hooks/useSocial';
@@ -52,7 +49,6 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
     <div>
       <Image
         src={user?.picture || user?.image}
-        fallback={DEFAULT_AVATAR}
         alt={pubkey}
         className="h-14 w-14 rounded-md"
       />

@@ -1,15 +1,13 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+
 import { Image } from '@shared/image';
 import { NoteActions, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { LumeEvent } from '@utils/types';
+import { isImage } from '@utils/isImage';
 
-function isImage(url: string) {
-  return /\.(jpg|jpeg|gif|png|webp|avif)$/.test(url);
-}
-
-export function NoteKind_1063({ event }: { event: LumeEvent }) {
-  const url = event.tags[0][1];
+export function NoteKind_1063({ event }: { event: NDKEvent }) {
+  const url = event.tags.find((el) => el[0] === 'url')[1];
 
   return (
     <div className="h-min w-full px-3 py-1.5">
@@ -27,10 +25,10 @@ export function NoteKind_1063({ event }: { event: LumeEvent }) {
                   className="h-auto w-full rounded-lg object-cover"
                 />
               )}
-              <NoteActions id={event.event_id} pubkey={event.pubkey} />
+              <NoteActions id={event.id} pubkey={event.pubkey} />
             </div>
           </div>
-          <NoteMetadata id={event.event_id} />
+          <NoteMetadata id={event.id} />
         </div>
       </div>
     </div>

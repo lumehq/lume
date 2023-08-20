@@ -3,11 +3,9 @@
   windows_subsystem = "windows"
 )]
 
-// use rand::distributions::{Alphanumeric, DistString};
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -27,6 +25,11 @@ async fn close_splashscreen(window: tauri::Window) {
 
 fn main() {
   tauri::Builder::default()
+    .setup(|app| {
+      #[cfg(debug_assertions)]
+      app.get_window("main").unwrap().open_devtools();
+      Ok(())
+    })
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -116,6 +119,24 @@ fn main() {
               sql: include_str!("../migrations/20230811074423_rename_blocks_to_widgets.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230814083543,
+              description: "add events",
+              sql: include_str!("../migrations/20230814083543_add_events_table.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230816090508,
+              description: "clean up tables",
+              sql: include_str!("../migrations/20230816090508_clean_up_tables.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20230817014932,
+              description: "add last login to account",
+              sql: include_str!("../migrations/20230817014932_add_last_login_time_to_account.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
@@ -131,7 +152,6 @@ fn main() {
           ..Default::default()
         };
 
-        // let salt = Alphanumeric.sample_string(&mut rand::thread_rng(), 12);
         let key = argon2::hash_raw(
           password.as_ref(),
           b"LUME_NEED_RUST_DEVELOPER_HELP_MAKE_SALT_RANDOM",
@@ -166,19 +186,6 @@ fn main() {
     .plugin(tauri_plugin_window::init())
     .plugin(tauri_plugin_store::Builder::default().build())
     .plugin(tauri_plugin_shell::init())
-    .setup(|app| {
-      let window = app.get_window("main").unwrap();
-
-      #[cfg(target_os = "macos")]
-      apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
-        .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
-
-      #[cfg(target_os = "windows")]
-      apply_mica(&window, Some(true))
-        .expect("Unsupported platform! 'apply_mica' is only supported on Windows");
-
-      Ok(())
-    })
     .invoke_handler(tauri::generate_handler![close_splashscreen])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

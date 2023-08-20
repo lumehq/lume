@@ -3,26 +3,24 @@ import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { getSetting, updateSetting } from '@libs/storage';
-
 export function AutoStartSetting() {
   const [enabled, setEnabled] = useState(false);
 
   const toggle = async () => {
     if (!enabled) {
       await enable();
-      await updateSetting('auto_start', 1);
+      // await updateSetting('auto_start', 1);
       console.log(`registered for autostart? ${await isEnabled()}`);
     } else {
       await disable();
-      await updateSetting('auto_start', 0);
+      // await updateSetting('auto_start', 0);
     }
     setEnabled(!enabled);
   };
 
   useEffect(() => {
     async function getAppSetting() {
-      const setting = await getSetting('auto_start');
+      const setting = '0';
       if (parseInt(setting) === 0) {
         setEnabled(false);
       } else {

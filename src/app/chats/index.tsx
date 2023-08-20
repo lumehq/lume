@@ -1,5 +1,5 @@
 import { NDKSubscription } from '@nostr-dev-kit/ndk';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
@@ -9,29 +9,19 @@ import { ChatMessageItem } from '@app/chats/components/messages/item';
 import { ChatSidebar } from '@app/chats/components/sidebar';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createChat, getChatMessages } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { useAccount } from '@utils/hooks/useAccount';
-import { Chats } from '@utils/types';
-
 export function ChatScreen() {
-  const queryClient = useQueryClient();
   const virtuosoRef = useRef(null);
 
   const { ndk } = useNDK();
+  const { db } = useStorage();
   const { pubkey } = useParams();
-  const { account } = useAccount();
-  const { status, data } = useQuery(
-    ['chat', pubkey],
-    async () => {
-      return await getChatMessages(account.pubkey, pubkey);
-    },
-    {
-      enabled: account ? true : false,
-    }
-  );
+  const { status, data } = useQuery(['chat', pubkey], async () => {
+    return [];
+  });
 
   const userPrivkey = useStronghold((state) => state.privkey);
 
@@ -40,7 +30,7 @@ export function ChatScreen() {
       return (
         <ChatMessageItem
           data={data[index]}
-          userPubkey={account.pubkey}
+          userPubkey={db.account.pubkey}
           userPrivkey={userPrivkey}
         />
       );
@@ -55,27 +45,11 @@ export function ChatScreen() {
     [data]
   );
 
-  const chat = useMutation({
-    mutationFn: (data: Chats) => {
-      return createChat(
-        data.id,
-        data.receiver_pubkey,
-        data.sender_pubkey,
-        data.content,
-        data.tags,
-        data.created_at
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chat', pubkey] });
-    },
-  });
-
   useEffect(() => {
     const sub: NDKSubscription = ndk.subscribe(
       {
         kinds: [4],
-        authors: [account.pubkey],
+        authors: [db.account.pubkey],
         '#p': [pubkey],
         since: Math.floor(Date.now() / 1000),
       },
@@ -85,14 +59,7 @@ export function ChatScreen() {
     );
 
     sub.addListener('event', (event) => {
-      chat.mutate({
-        id: event.id,
-        receiver_pubkey: pubkey,
-        sender_pubkey: event.pubkey,
-        content: event.content,
-        tags: event.tags,
-        created_at: event.created_at,
-      });
+      console.log(event);
     });
 
     return () => {
@@ -129,7 +96,7 @@ export function ChatScreen() {
             <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 px-5">
               <ChatMessageForm
                 receiverPubkey={pubkey}
-                userPubkey={account.pubkey}
+                userPubkey={db.account.pubkey}
                 userPrivkey={userPrivkey}
               />
             </div>

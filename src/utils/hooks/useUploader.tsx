@@ -43,7 +43,6 @@ export function useImageUploader() {
     if (res.ok) {
       const url =
         res.file?.metadata?.url ?? `https://void.cat/d/${res.file?.id}.${filetype}`;
-      console.log(url);
 
       if (nip94) {
         const tags = [

@@ -1,14 +1,16 @@
+import { appConfigDir } from '@tauri-apps/api/path';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 import { useOnboarding } from '@stores/onboarding';
 import { useStronghold } from '@stores/stronghold';
-
-import { useSecureStorage } from '@utils/hooks/useSecureStorage';
 
 type FormValues = {
   password: string;
@@ -37,7 +39,7 @@ export function CreateStep2Screen() {
   const [passwordInput, setPasswordInput] = useState('password');
   const [loading, setLoading] = useState(false);
 
-  const { save } = useSecureStorage();
+  const { db } = useStorage();
 
   // toggle private key
   const showPassword = () => {
@@ -58,8 +60,13 @@ export function CreateStep2Screen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
+      const dir = await appConfigDir();
+      const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
+
+      db.secureDB = stronghold;
+
       // save privkey to secure storage
-      await save(pubkey, privkey, data.password);
+      await db.secureSave(pubkey, privkey);
 
       // redirect to next step
       navigate('/auth/create/step-3', { replace: true });

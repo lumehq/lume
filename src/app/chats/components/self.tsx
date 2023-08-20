@@ -3,13 +3,11 @@ import { twMerge } from 'tailwind-merge';
 
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
-export function ChatsListSelfItem({ data }: { data: { pubkey: string } }) {
-  const { status, user } = useProfile(data.pubkey);
+export function ChatsListSelfItem({ pubkey }: { pubkey: string }) {
+  const { status, user } = useProfile(pubkey);
 
   if (status === 'loading') {
     return (
@@ -22,7 +20,7 @@ export function ChatsListSelfItem({ data }: { data: { pubkey: string } }) {
 
   return (
     <NavLink
-      to={`/chats/${data.pubkey}`}
+      to={`/chats/${pubkey}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
@@ -33,13 +31,12 @@ export function ChatsListSelfItem({ data }: { data: { pubkey: string } }) {
     >
       <Image
         src={user?.picture || user?.image}
-        fallback={DEFAULT_AVATAR}
-        alt={data.pubkey}
+        alt={pubkey}
         className="h-6 w-6 shrink-0 rounded bg-white object-cover"
       />
       <div className="inline-flex items-baseline gap-1">
         <h5 className="max-w-[10rem] truncate">
-          {user?.nip05 || user?.name || displayNpub(data.pubkey, 16)}
+          {user?.nip05 || user?.name || displayNpub(pubkey, 16)}
         </h5>
         <span className="text-white/50">(you)</span>
       </div>

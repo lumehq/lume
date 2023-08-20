@@ -1,5 +1,7 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { ThreadIcon } from '@shared/icons';
 import { MoreActions } from '@shared/notes/actions/more';
 import { NoteReaction } from '@shared/notes/actions/reaction';
@@ -7,10 +9,8 @@ import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
-import { BLOCK_KINDS } from '@stores/constants';
+import { widgetKinds } from '@stores/constants';
 import { useWidgets } from '@stores/widgets';
-
-import { useAccount } from '@utils/hooks/useAccount';
 
 export function NoteActions({
   id,
@@ -23,7 +23,7 @@ export function NoteActions({
   noOpenThread?: boolean;
   root?: string;
 }) {
-  const { account } = useAccount();
+  const { db } = useStorage();
   const setWidget = useWidgets((state) => state.setWidget);
 
   return (
@@ -33,7 +33,7 @@ export function NoteActions({
           <NoteReply id={id} pubkey={pubkey} root={root} />
           <NoteReaction id={id} pubkey={pubkey} />
           <NoteRepost id={id} pubkey={pubkey} />
-          {(account?.lud06 || account?.lud16) && <NoteZap id={id} />}
+          <NoteZap id={id} />
         </div>
         {!noOpenThread && (
           <>
@@ -43,8 +43,8 @@ export function NoteActions({
                 <button
                   type="button"
                   onClick={() =>
-                    setWidget({
-                      kind: BLOCK_KINDS.thread,
+                    setWidget(db, {
+                      kind: widgetKinds.thread,
                       title: 'Thread',
                       content: id,
                     })

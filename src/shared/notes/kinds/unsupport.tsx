@@ -1,9 +1,9 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+
 import { NoteActions, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { LumeEvent } from '@utils/types';
-
-export function NoteKindUnsupport({ event }: { event: LumeEvent }) {
+export function NoteKindUnsupport({ event }: { event: NDKEvent }) {
   return (
     <div className="h-min w-full px-3 py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
@@ -25,10 +25,10 @@ export function NoteKindUnsupport({ event }: { event: LumeEvent }) {
                   <p>{event.content.toString()}</p>
                 </div>
               </div>
-              <NoteActions id={event.event_id} pubkey={event.pubkey} />
+              <NoteActions id={event.id} pubkey={event.pubkey} />
             </div>
           </div>
-          <NoteMetadata id={event.event_id} />
+          <NoteMetadata id={event.id} />
         </div>
       </div>
     </div>

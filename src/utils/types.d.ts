@@ -1,7 +1,6 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 
-export interface Content {
-  original: string;
+export interface RichContent {
   parsed: string;
   notes: string[];
   images: string[];
@@ -9,11 +8,16 @@ export interface Content {
   links: string[];
 }
 
-export interface LumeEvent extends NDKEvent {
-  event_id?: string;
-  parent_id?: string;
-  replies?: LumeEvent[];
-  content: Content;
+export interface DBEvent {
+  id: string;
+  account_id: number;
+  event: string | NDKEvent;
+  author: string;
+  kind: number;
+  root_id: string;
+  reply_id: string;
+  created_at: number;
+  richContent?: RichContent;
 }
 
 export interface Account extends NDKUserProfile {
@@ -24,6 +28,7 @@ export interface Account extends NDKUserProfile {
   network: null | string[];
   is_active: number;
   privkey?: string; // deprecated
+  last_login_at: number;
 }
 
 export interface Profile extends NDKUserProfile {
@@ -61,4 +66,11 @@ export interface Relays {
   account_id?: number;
   relay: string;
   purpose?: string;
+}
+
+export interface Opengraph {
+  url: string;
+  title?: string;
+  description?: string;
+  image?: string;
 }

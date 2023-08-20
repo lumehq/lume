@@ -7,7 +7,7 @@ export default class TauriAdapter implements NDKCacheAdapter {
   readonly locking: boolean;
 
   constructor() {
-    this.store = new Store('.ndkcache.dat');
+    this.store = new Store('.ndk_cache.dat');
     this.locking = true;
   }
 
@@ -28,12 +28,8 @@ export default class TauriAdapter implements NDKCacheAdapter {
 
       for (const result of results) {
         if (result) {
-          const event = await this.store.get(result as string);
-
-          if (event) {
-            const ndkEvent = new NDKEvent(subscription.ndk, JSON.parse(event as string));
-            subscription.eventReceived(ndkEvent, undefined, true);
-          }
+          const ndkEvent = new NDKEvent(subscription.ndk, JSON.parse(result as string));
+          subscription.eventReceived(ndkEvent, undefined, true);
         }
       }
     }
@@ -44,14 +40,13 @@ export default class TauriAdapter implements NDKCacheAdapter {
     const key = `${nostrEvent.pubkey}:${nostrEvent.kind}`;
 
     return new Promise((resolve) => {
-      Promise.all([
-        this.store.set(event.id, JSON.stringify(nostrEvent)),
-        this.store.set(key, event.id),
-      ]).then(() => resolve());
+      Promise.all([this.store.set(key, JSON.stringify(nostrEvent))]).then(() =>
+        resolve()
+      );
     });
   }
 
-  public save() {
-    return this.store.save();
+  public async saveCache(): Promise<void> {
+    return await this.store.save();
   }
 }

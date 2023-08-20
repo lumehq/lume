@@ -1,5 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { useHotkeys } from 'react-hotkeys-hook';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { Composer, ComposerUser } from '@shared/composer';
 import {
@@ -10,22 +11,17 @@ import {
 } from '@shared/icons';
 
 import { useComposer } from '@stores/composer';
-import { COMPOSE_SHORTCUT } from '@stores/shortcuts';
-
-import { useAccount } from '@utils/hooks/useAccount';
 
 export function ComposerModal() {
-  const { account } = useAccount();
+  const { db } = useStorage();
   const [toggle, open] = useComposer((state) => [state.toggleModal, state.open]);
-
-  useHotkeys(COMPOSE_SHORTCUT, () => toggle(true));
 
   return (
     <Dialog.Root open={open} onOpenChange={toggle}>
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-min items-center justify-center gap-1 rounded-md bg-white/10 px-4 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex h-9 w-min items-center justify-center gap-1 rounded-md bg-white/10 px-8 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
         >
           <ComposeIcon className="h-4 w-4" />
           Postr
@@ -37,7 +33,7 @@ export function ComposerModal() {
           <div className="relative h-min w-full max-w-2xl rounded-xl bg-white/10">
             <div className="flex items-center justify-between px-4 py-4">
               <div className="flex items-center gap-2">
-                {account && <ComposerUser pubkey={account.pubkey} />}
+                <ComposerUser pubkey={db.account.pubkey} />
                 <span>
                   <ChevronRightIcon className="h-4 w-4 text-white/50" />
                 </span>

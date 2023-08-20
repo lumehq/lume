@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 import { Image } from '@shared/image';
 
-import { DEFAULT_AVATAR } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
 
 import { useNostr } from '@utils/hooks/useNostr';
@@ -17,10 +15,9 @@ import { useNostr } from '@utils/hooks/useNostr';
 export function CreateStep3Screen() {
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
-  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
-  const [picture, setPicture] = useState(DEFAULT_AVATAR);
+  const [picture, setPicture] = useState('https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih');
   const [banner, setBanner] = useState('');
 
   const { publish } = useNostr();
@@ -47,10 +44,8 @@ export function CreateStep3Screen() {
         tags: [],
       });
 
-      queryClient.invalidateQueries(['currentAccount']);
-
       if (event) {
-        setTimeout(() => navigate('/auth/onboarding', { replace: true }), 1000);
+        navigate('/auth/onboarding', { replace: true });
       }
     } catch (e) {
       console.log('error: ', e);
@@ -76,7 +71,6 @@ export function CreateStep3Screen() {
             <div className="relative h-44 w-full bg-white/10">
               <Image
                 src={banner}
-                fallback="https://void.cat/d/QY1myro5tkHVs2nY7dy74b.jpg"
                 alt="user's banner"
                 className="h-full w-full object-cover"
               />
@@ -88,7 +82,6 @@ export function CreateStep3Screen() {
               <div className="relative z-10 -mt-7 h-14 w-14">
                 <Image
                   src={picture}
-                  fallback={DEFAULT_AVATAR}
                   alt="user's avatar"
                   className="h-14 w-14 rounded-lg object-cover ring-2 ring-white/10"
                 />

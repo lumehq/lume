@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 
 import { User } from '@app/auth/components/user';
 
-import { CancelIcon, LoaderIcon, PlusIcon } from '@shared/icons';
+import { useStorage } from '@libs/storage/provider';
 
-import { useAccount } from '@utils/hooks/useAccount';
+import { CancelIcon, LoaderIcon, PlusIcon } from '@shared/icons';
 
 export function NewMessageModal() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const { status, account } = useAccount();
+  const { db } = useStorage();
 
   const openChat = (pubkey: string) => {
     setOpen(false);
@@ -59,7 +59,7 @@ export function NewMessageModal() {
                   <LoaderIcon className="h-5 w-5 animate-spin text-white" />
                 </div>
               ) : (
-                account?.follows?.map((follow) => (
+                db.account?.follows?.map((follow) => (
                   <div
                     key={follow}
                     className="group flex items-center justify-between px-4 py-2 hover:bg-white/10"

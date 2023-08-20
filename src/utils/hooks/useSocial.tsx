@@ -1,10 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
-import { createNote } from '@libs/storage';
+import { useStorage } from '@libs/storage/provider';
 
-import { nHoursAgo } from '@utils/date';
-import { useAccount } from '@utils/hooks/useAccount';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function useSocial() {
@@ -12,12 +10,12 @@ export function useSocial() {
 
   const { publish } = useNostr();
   const { ndk } = useNDK();
-  const { account } = useAccount();
+  const { db } = useStorage();
   const { status, data: userFollows } = useQuery(
-    ['userFollows', account.pubkey],
+    ['userFollows', db.account.pubkey],
     async () => {
       const keys = [];
-      const user = ndk.getUser({ hexpubkey: account.pubkey });
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
       const follows = await user.follows();
 
       follows.forEach((item) => {
@@ -27,7 +25,6 @@ export function useSocial() {
       return keys;
     },
     {
-      enabled: account ? true : false,
       refetchOnReconnect: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -47,7 +44,7 @@ export function useSocial() {
     publish({ content: '', kind: 3, tags: tags });
     // invalid cache
     queryClient.invalidateQueries({
-      queryKey: ['userFollows', account.pubkey],
+      queryKey: ['userFollows', db.account.pubkey],
     });
   };
 
@@ -64,26 +61,8 @@ export function useSocial() {
     publish({ content: '', kind: 3, tags: tags });
     // invalid cache
     queryClient.invalidateQueries({
-      queryKey: ['userFollows', account.pubkey],
+      queryKey: ['userFollows', db.account.pubkey],
     });
-
-    // fetch events
-    const events = await ndk.fetchEvents({
-      authors: [pubkey],
-      kinds: [1, 6],
-      since: nHoursAgo(24),
-    });
-
-    for (const event of events) {
-      await createNote(
-        event.id,
-        event.pubkey,
-        event.kind,
-        event.tags,
-        event.content,
-        event.created_at
-      );
-    }
   };
 
   return { status, userFollows, follow, unfollow };

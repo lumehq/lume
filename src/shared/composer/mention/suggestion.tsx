@@ -1,13 +1,11 @@
 import { ReactRenderer } from '@tiptap/react';
 import tippy from 'tippy.js';
 
-import { getAllMetadata } from '@libs/storage';
-
 import { MentionList } from '@shared/composer';
 
 export const Suggestion = {
   items: async ({ query }) => {
-    const users = await getAllMetadata();
+    const users = [];
     return users
       .filter((item) => item.ident.toLowerCase().startsWith(query.toLowerCase()))
       .slice(0, 5);
