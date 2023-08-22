@@ -17,42 +17,49 @@ export const NDKInstance = () => {
 
   // TODO: fully support NIP-11
   async function verifyRelays(relays: string[]) {
-    const verifiedRelays: string[] = [];
+    try {
+      const urls: string[] = relays.map((relay) => {
+        if (relay.startsWith('ws')) {
+          return relay.replace('ws', 'http');
+        }
+        if (relay.startsWith('wss')) {
+          return relay.replace('wss', 'https');
+        }
+      });
 
-    for (const relay of relays) {
-      let url: string;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort('timeout'), 5000);
 
-      if (relay.startsWith('ws')) {
-        url = relay.replace('ws', 'http');
-      }
-
-      if (relay.startsWith('wss')) {
-        url = relay.replace('wss', 'https');
-      }
-
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort('timeout'), 5000);
-        const res = await fetch(url, {
+      const requests = urls.map((url) =>
+        fetch(url, {
           headers: { Accept: 'application/nostr+json' },
           signal: controller.signal,
-        });
+        })
+      );
+      const responses = await Promise.all(requests);
+      const errors = responses.filter((response) => !response.ok);
 
-        if (res.ok) {
-          const data = await res.json();
-          console.log('relay information: ', data);
-
-          verifiedRelays.push(relay);
-          clearTimeout(timeoutId);
-        } else {
-          console.log('relay not working: ', res);
-        }
-      } catch (e) {
-        console.log('fetch error', e);
+      if (errors.length > 0) {
+        throw errors.map((response) => Error(response.statusText));
       }
-    }
 
-    return verifiedRelays;
+      const verifiedRelays: string[] = responses.map((res) => {
+        if (res.url.startsWith('http')) {
+          return res.url.replace('htto', 'ws');
+        }
+        if (res.url.startsWith('https')) {
+          return res.url.replace('https', 'wss');
+        }
+      });
+
+      // clear timeout
+      clearTimeout(timeoutId);
+
+      // return all validate relays
+      return verifiedRelays;
+    } catch (e) {
+      e.forEach((error) => console.error(error));
+    }
   }
 
   async function initNDK() {

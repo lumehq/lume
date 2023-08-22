@@ -91,8 +91,6 @@ export function useNostr() {
 
   const prefetchEvents = async () => {
     try {
-      if (!ndk) return { status: 'failed', data: [], message: 'NDK instance not found' };
-
       const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
       const dbEventsEmpty = await db.isEventsEmpty();
 
@@ -100,13 +98,13 @@ export function useNostr() {
       if (dbEventsEmpty || db.account.last_login_at === 0) {
         since = nHoursAgo(24);
       } else {
-        since = db.account.last_login_at ?? nHoursAgo(24);
+        since = db.account.last_login_at;
       }
 
       console.log("prefetching events with user's network: ", db.account.network.length);
       console.log('prefetching events since: ', since);
 
-      const events = fetcher.allEventsIterator(
+      const events = await fetcher.fetchAllEvents(
         relayUrls,
         {
           kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
@@ -116,7 +114,7 @@ export function useNostr() {
       );
 
       // save all events to database
-      for await (const event of events) {
+      for (const event of events) {
         let root: string;
         let reply: string;
         if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
@@ -125,7 +123,7 @@ export function useNostr() {
           root = event.tags.find((el) => el[3] === 'root')?.[1];
           reply = event.tags.find((el) => el[3] === 'reply')?.[1];
         }
-        db.createEvent(
+        await db.createEvent(
           event.id,
           JSON.stringify(event),
           event.pubkey,
@@ -140,6 +138,31 @@ export function useNostr() {
     } catch (e) {
       console.error('prefetch events failed, error: ', e);
       return { status: 'failed', data: [], message: e };
+    }
+  };
+
+  const fetchActivities = async () => {
+    try {
+      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+      const events = await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [
+            NDKKind.Text,
+            NDKKind.Contacts,
+            NDKKind.Repost,
+            NDKKind.Reaction,
+            NDKKind.Zap,
+          ],
+          '#p': [db.account.pubkey],
+        },
+        { since: nHoursAgo(24) },
+        { sort: true }
+      );
+
+      return events as unknown as NDKEvent[];
+    } catch (e) {
+      console.error('Error fetching activities', e);
     }
   };
 
@@ -184,5 +207,5 @@ export function useNostr() {
     return res;
   };
 
-  return { sub, fetchUserData, prefetchEvents, publish, createZap };
+  return { sub, fetchUserData, prefetchEvents, fetchActivities, publish, createZap };
 }

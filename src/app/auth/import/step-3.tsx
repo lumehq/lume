@@ -18,16 +18,19 @@ export function ImportStep3Screen() {
   const [loading, setLoading] = useState(false);
 
   const { db } = useStorage();
-  const { fetchUserData } = useNostr();
+  const { fetchUserData, prefetchEvents } = useNostr();
 
   const submit = async () => {
     try {
       // show loading indicator
       setLoading(true);
 
-      const data = await fetchUserData();
+      // prefetch data
+      const user = await fetchUserData();
+      const data = await prefetchEvents();
 
-      if (data.status === 'ok') {
+      // redirect to next step
+      if (user.status === 'ok' && data.status === 'ok') {
         navigate('/auth/onboarding/step-2', { replace: true });
       } else {
         console.log('error: ', data.message);

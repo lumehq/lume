@@ -75,6 +75,13 @@ const router = createBrowserRouter([
           return { Component: ChatScreen };
         },
       },
+      {
+        path: 'notifications',
+        async lazy() {
+          const { NotificationScreen } = await import('@app/notification');
+          return { Component: NotificationScreen };
+        },
+      },
     ],
   },
   {

@@ -8,6 +8,7 @@ import { ComposerModal } from '@shared/composer/modal';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  BellIcon,
   NavArrowDownIcon,
   SpaceIcon,
 } from '@shared/icons';
@@ -79,16 +80,29 @@ export function Navigation() {
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-white/10">
                     <SpaceIcon className="h-3 w-3 text-white" />
                   </span>
-                  <span className="font-medium">Space</span>
+                  <span className="text-sm font-medium">Space</span>
+                </NavLink>
+                <NavLink
+                  to="/notifications"
+                  preventScrollReset={true}
+                  className={({ isActive }) =>
+                    twMerge(
+                      'flex h-9 items-center gap-2.5 rounded-md px-2',
+                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                    )
+                  }
+                >
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-white/10">
+                    <BellIcon className="h-3 w-3 text-white" />
+                  </span>
+                  <span className="text-sm font-medium">Notifications</span>
                 </NavLink>
               </div>
             </Collapsible.Content>
           </div>
         </Collapsible.Root>
       </div>
-      <div className="absolute bottom-3 left-0 w-full px-10">
-        <LumeBar />
-      </div>
+      <LumeBar />
     </div>
   );
 }

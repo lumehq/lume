@@ -1,7 +1,8 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 
+import { NotiUser } from '@app/notification/components/user';
+
 import { MentionNote } from '@shared/notes';
-import { NotiUser } from '@shared/notification';
 
 import { formatCreatedAt } from '@utils/createdAt';
 
@@ -14,13 +15,15 @@ export function NotiReaction({ event }: { event: NDKEvent }) {
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-1">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-white/50">reacted {event.content}</p>
-        </div>
-        <div>
-          <span className="leading-none text-white/50">{createdAt}</span>
+          <p className="leading-none text-white/50">
+            reacted {event.content} · {createdAt}
+          </p>
         </div>
       </div>
-      <div className="-mt-5 pl-[44px]">{root && <MentionNote id={root} />}</div>
+      <div className="relative z-10 -mt-6 flex gap-3">
+        <div className="h-10 w-10 shrink-0" />
+        <div className="flex-1">{root && <MentionNote id={root} />}</div>
+      </div>
     </div>
   );
 }

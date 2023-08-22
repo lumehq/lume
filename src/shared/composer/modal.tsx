@@ -21,7 +21,7 @@ export function ComposerModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-min items-center justify-center gap-1 rounded-md bg-white/10 px-8 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex h-9 w-min items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-8 text-sm font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
         >
           <ComposeIcon className="h-4 w-4" />
           Postr

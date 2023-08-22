@@ -1,14 +1,13 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useMemo } from 'react';
 
-import { MentionNote, NoteContent } from '@shared/notes';
-import { NotiUser } from '@shared/notification';
+import { NotiContent } from '@app/notification/components/content';
+import { NotiUser } from '@app/notification/components/user';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { parser } from '@utils/parser';
 
 export function NotiMention({ event }: { event: NDKEvent }) {
-  const replyTo = event.tags.find((e) => e[0] === 'e')?.[1];
   const createdAt = formatCreatedAt(event.created_at);
   const content = useMemo(() => parser(event), [event]);
 
@@ -17,13 +16,12 @@ export function NotiMention({ event }: { event: NDKEvent }) {
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-1">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-white/50">reply your postr</p>
+          <p className="leading-none text-white/50">mention you · {createdAt}</p>
         </div>
-        <span className="leading-none text-white/50">{createdAt}</span>
       </div>
-      <div className="-mt-3 pl-[44px]">
-        <NoteContent content={content} />
-        {replyTo && <MentionNote id={replyTo} />}
+      <div className="relative z-10 -mt-6 flex gap-3">
+        <div className="h-10 w-10 shrink-0" />
+        <NotiContent content={content} />
       </div>
     </div>
   );
