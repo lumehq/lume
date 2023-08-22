@@ -8,28 +8,28 @@ import { Image } from '@shared/image';
 import { MentionUser, NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { isImage } from '@utils/isImage';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const { db } = useStorage();
-  const { status, data } = useEvent(id);
+  const { status, data, error } = useEvent(id);
 
   const setWidget = useWidgets((state) => state.setWidget);
 
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      setWidget(db, { kind: widgetKinds.thread, title: 'Thread', content: thread });
+      setWidget(db, { kind: WidgetKinds.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }
   };
 
   const renderItem = useCallback(() => {
+    if (!data) return;
     switch (data.event.kind) {
       case 1: {
         return (
@@ -85,6 +85,14 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
     );
   }
 
+  if (error) {
+    return (
+      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3">
+        <p>Can&apos;t get event from relay</p>
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={(e) => openThread(e, id)}
@@ -93,7 +101,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       tabIndex={0}
       className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3"
     >
-      <User pubkey={data?.event?.pubkey} time={data?.event?.created_at} size="small" />
+      <User pubkey={data.event.pubkey} time={data.event.created_at} size="small" />
       <div className="mt-2">{renderItem()}</div>
     </div>
   );

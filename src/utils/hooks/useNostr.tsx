@@ -109,7 +109,7 @@ export function useNostr() {
       const events = fetcher.allEventsIterator(
         relayUrls,
         {
-          kinds: [1, 6],
+          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
           authors: db.account.network,
         },
         { since: since }

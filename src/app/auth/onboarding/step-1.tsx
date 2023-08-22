@@ -76,7 +76,7 @@ export function OnboardStep1Screen() {
         <p className="text-sm text-white/50">Choose account you want to follow</p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10">
+        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10 py-2">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
@@ -88,7 +88,7 @@ export function OnboardStep1Screen() {
                   key={item.pubkey}
                   type="button"
                   onClick={() => toggleFollow(item.pubkey)}
-                  className="inline-flex transform items-center justify-between bg-white/10 px-4 py-2 hover:bg-white/20"
+                  className="inline-flex transform items-center justify-between px-4 py-2 hover:bg-white/20"
                 >
                   <User pubkey={item.pubkey} fallback={item.profile?.content} />
                   {follows.includes(item.pubkey) && (

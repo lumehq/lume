@@ -17,7 +17,7 @@ export function FeedWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['newsfeed', params.content],
+      queryKey: ['groupfeed-widget', params.content],
       queryFn: async ({ pageParam = 0 }) => {
         const authors = JSON.parse(params.content);
         return await db.getAllEventsByAuthors(authors, 20, pageParam);

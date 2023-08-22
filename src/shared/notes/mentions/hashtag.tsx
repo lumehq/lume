@@ -1,7 +1,6 @@
 import { useStorage } from '@libs/storage/provider';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 export function Hashtag({ tag }: { tag: string }) {
   const { db } = useStorage();
@@ -12,7 +11,7 @@ export function Hashtag({ tag }: { tag: string }) {
       type="button"
       onClick={() =>
         setWidget(db, {
-          kind: widgetKinds.hashtag,
+          kind: WidgetKinds.hashtag,
           title: tag,
           content: tag.replace('#', ''),
         })

@@ -205,8 +205,8 @@ export class LumeStorage {
     };
 
     const query: DBEvent[] = await this.db.select(
-      'SELECT * FROM events WHERE author IN ($1) ORDER BY created_at DESC LIMIT $2 OFFSET $3;',
-      [authorsArr, limit, offset]
+      `SELECT * FROM events WHERE author IN (${authorsArr}) ORDER BY created_at DESC LIMIT $1 OFFSET $2;`,
+      [limit, offset]
     );
 
     if (query && query.length > 0) {

@@ -1,16 +1,21 @@
 import { useCallback, useEffect } from 'react';
 
+import { AddWidgetButton } from '@app/space/components/button';
+import { FeedWidgetForm } from '@app/space/components/forms/feed';
+import { HashTagWidgetForm } from '@app/space/components/forms/hashtag';
 import { FeedWidget } from '@app/space/components/widgets/feed';
 import { HashtagWidget } from '@app/space/components/widgets/hashtag';
 import { NetworkWidget } from '@app/space/components/widgets/network';
 import { ThreadBlock } from '@app/space/components/widgets/thread';
+import { TrendingNotesWidget } from '@app/space/components/widgets/trendingNotes';
+import { TrendingProfilesWidget } from '@app/space/components/widgets/trendingProfile';
 import { UserWidget } from '@app/space/components/widgets/user';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { LoaderIcon, PlusIcon } from '@shared/icons';
+import { LoaderIcon } from '@shared/icons';
 
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { Widget } from '@utils/types';
 
@@ -26,16 +31,24 @@ export function SpaceScreen() {
     (widget: Widget) => {
       if (!widget) return;
       switch (widget.kind) {
-        case 1:
+        case WidgetKinds.feed:
           return <FeedWidget key={widget.id} params={widget} />;
-        case 2:
+        case WidgetKinds.thread:
           return <ThreadBlock key={widget.id} params={widget} />;
-        case 3:
+        case WidgetKinds.hashtag:
           return <HashtagWidget key={widget.id} params={widget} />;
-        case 5:
+        case WidgetKinds.user:
           return <UserWidget key={widget.id} params={widget} />;
-        case 9999:
+        case WidgetKinds.trendingProfiles:
+          return <TrendingProfilesWidget key={widget.id} params={widget} />;
+        case WidgetKinds.trendingNotes:
+          return <TrendingNotesWidget key={widget.id} params={widget} />;
+        case WidgetKinds.network:
           return <NetworkWidget key={widget.id} />;
+        case WidgetKinds.xhashtag:
+          return <HashTagWidgetForm key={widget.id} params={widget} />;
+        case WidgetKinds.xfeed:
+          return <FeedWidgetForm key={widget.id} params={widget} />;
         default:
           break;
       }
@@ -58,16 +71,7 @@ export function SpaceScreen() {
       ) : (
         widgets.map((widget) => renderItem(widget))
       )}
-      <div className="flex h-full shrink-0 grow-0 basis-[400px] flex-col">
-        <div className="inline-flex h-full w-full flex-col items-center justify-center">
-          <button type="button" className="flex flex-col items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 hover:bg-white/10">
-              <PlusIcon className="h-5 w-5 text-white" />
-            </div>
-            <p className="font-medium text-white/50">Add widget</p>
-          </button>
-        </div>
-      </div>
+      <AddWidgetButton />
     </div>
   );
 }

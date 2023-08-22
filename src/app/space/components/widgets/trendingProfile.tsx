@@ -13,7 +13,7 @@ interface Response {
 
 export function TrendingProfilesWidget({ params }: { params: Widget }) {
   const { status, data } = useQuery(
-    ['trending-profiles'],
+    ['trending-profiles-widget'],
     async () => {
       const res = await fetch(params.content);
       if (!res.ok) {
@@ -33,7 +33,7 @@ export function TrendingProfilesWidget({ params }: { params: Widget }) {
 
   return (
     <div className="scrollbar-hide relative h-full w-[400px] shrink-0 overflow-y-auto bg-white/10 pb-20">
-      <TitleBar title={params.title} />
+      <TitleBar id={params.id} title={params.title} />
       <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">

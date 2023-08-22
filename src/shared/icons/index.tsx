@@ -1,4 +1,3 @@
-// @index('./*.tsx', f => `export * from '${f.path}'`)
 export * from './arrowLeft';
 export * from './arrowRight';
 export * from './bell';
@@ -49,4 +48,5 @@ export * from './strangers';
 export * from './download';
 export * from './horizontalDots';
 export * from './arrowRightCircle';
-// @endindex
+export * from './hashtag';
+export * from './file';

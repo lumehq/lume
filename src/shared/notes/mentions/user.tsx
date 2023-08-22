@@ -1,7 +1,6 @@
 import { useStorage } from '@libs/storage/provider';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -17,7 +16,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       type="button"
       onClick={() =>
         setWidget(db, {
-          kind: widgetKinds.user,
+          kind: WidgetKinds.user,
           title: user?.nip05 || user?.name || user?.display_name,
           content: pubkey,
         })

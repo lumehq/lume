@@ -1,6 +1,7 @@
 import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { destr } from 'destr';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -137,7 +138,7 @@ export function NetworkWidget() {
         }
         await db.createEvent(
           event.id,
-          JSON.stringify(event),
+          destr(event),
           event.pubkey,
           event.kind,
           root,

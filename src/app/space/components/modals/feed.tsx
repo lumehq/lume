@@ -10,8 +10,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CheckCircleIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 export function FeedModal() {
   const setWidget = useWidgets((state) => state.setWidget);
@@ -40,7 +39,7 @@ export function FeedModal() {
 
     // update state
     setWidget(db, {
-      kind: widgetKinds.feed,
+      kind: WidgetKinds.feed,
       title: data.title,
       content: JSON.stringify(selected),
     });

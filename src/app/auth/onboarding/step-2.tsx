@@ -5,8 +5,8 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
-import { widgetKinds } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
+import { WidgetKinds } from '@stores/widgets';
 
 const data = [
   { hashtag: '#bitcoin' },
@@ -52,7 +52,7 @@ export function OnboardStep2Screen() {
       setLoading(true);
 
       for (const tag of tags) {
-        await db.createWidget(widgetKinds.hashtag, tag, tag.replace('#', ''));
+        await db.createWidget(WidgetKinds.hashtag, tag, tag.replace('#', ''));
       }
 
       navigate('/auth/onboarding/step-3', { replace: true });

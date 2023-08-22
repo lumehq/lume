@@ -6,8 +6,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, CommandIcon, LoaderIcon } from '@shared/icons';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 export function HashtagModal() {
   const setWidget = useWidgets((state) => state.setWidget);
@@ -28,7 +27,7 @@ export function HashtagModal() {
 
     // update state
     setWidget(db, {
-      kind: widgetKinds.hashtag,
+      kind: WidgetKinds.hashtag,
       title: data.hashtag,
       content: data.hashtag.replace('#', ''),
     });

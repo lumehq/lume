@@ -9,8 +9,7 @@ import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 export function NoteActions({
   id,
@@ -44,7 +43,7 @@ export function NoteActions({
                   type="button"
                   onClick={() =>
                     setWidget(db, {
-                      kind: widgetKinds.thread,
+                      kind: WidgetKinds.thread,
                       title: 'Thread',
                       content: id,
                     })

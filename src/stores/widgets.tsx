@@ -12,6 +12,20 @@ interface WidgetState {
   removeWidget: (db: LumeStorage, id: string) => void;
 }
 
+export const WidgetKinds = {
+  feed: 1, // NIP-01
+  thread: 2, // NIP-01
+  hashtag: 3, // NIP-01
+  article: 4, // NIP-23
+  user: 5, // NIP-01
+  trendingProfiles: 6,
+  trendingNotes: 7,
+  file: 8, // NIP-94
+  network: 9999,
+  xfeed: 10000, // x is temporary state for new feed widget form
+  xhashtag: 10001, // x is temporary state for new hashtag widget form
+};
+
 export const useWidgets = create<WidgetState>()(
   persist(
     (set) => ({
@@ -25,7 +39,7 @@ export const useWidgets = create<WidgetState>()(
           id: '9999',
           title: 'Network',
           content: '',
-          kind: 9999,
+          kind: WidgetKinds.network,
         });
 
         set({ widgets: dbWidgets });

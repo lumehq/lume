@@ -1,4 +1,4 @@
-import * as Popover from '@radix-ui/react-popover';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { nip19 } from 'nostr-tools';
@@ -25,17 +25,17 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
+    <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <Tooltip.Root delayDuration={150}>
         <Tooltip.Trigger asChild>
-          <Popover.Trigger asChild>
+          <DropdownMenu.Trigger asChild>
             <button
               type="button"
               className="group ml-auto inline-flex h-7 w-7 items-center justify-center"
             >
               <HorizontalDotsIcon className="h-5 w-5 text-white group-hover:text-fuchsia-400" />
             </button>
-          </Popover.Trigger>
+          </DropdownMenu.Trigger>
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
@@ -44,15 +44,17 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>
-      <Popover.Portal>
-        <Popover.Content className="w-[200px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl focus:outline-none">
-          <div className="flex flex-col p-2">
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl focus:outline-none">
+          <DropdownMenu.Item asChild>
             <Link
               to={`/events/${id}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               Open as new screen
             </Link>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => copyLink()}
@@ -60,6 +62,8 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             >
               Copy shareable link
             </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => copyID()}
@@ -67,15 +71,17 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             >
               Copy ID
             </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               View profile
             </Link>
-          </div>
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }

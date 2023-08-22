@@ -8,8 +8,7 @@ import { useStorage } from '@libs/storage/provider';
 import { LoaderIcon } from '@shared/icons';
 import { MiniUser } from '@shared/notes/users/mini';
 
-import { widgetKinds } from '@stores/constants';
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { compactNumber } from '@utils/number';
 
@@ -54,7 +53,11 @@ export function NoteMetadata({ id }: { id: string }) {
 
       return { replies, users, zap };
     },
-    { refetchOnWindowFocus: false, refetchOnReconnect: false, refetchOnMount: false }
+    {
+      enabled: !!ndk,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
   );
 
   if (status === 'loading') {
@@ -66,6 +69,12 @@ export function NoteMetadata({ id }: { id: string }) {
         </div>
       </div>
     );
+  }
+
+  if (status === 'error') {
+    <div>
+      <div className="pb-3" />
+    </div>;
   }
 
   return (
@@ -86,7 +95,7 @@ export function NoteMetadata({ id }: { id: string }) {
                 type="button"
                 onClick={() =>
                   setWidget(db, {
-                    kind: widgetKinds.thread,
+                    kind: WidgetKinds.thread,
                     title: 'Thread',
                     content: id,
                   })

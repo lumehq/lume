@@ -30,12 +30,17 @@ export function useEvent(id: string, embed?: string) {
       } else {
         // get event from relay if event in db not present
         const event = await ndk.fetchEvent(id);
-        if (event.kind === 1) richContent = parser(event);
+
+        if (!event) throw new Error(`Event not found: ${id}`);
+        if (event.kind === 1) {
+          richContent = parser(event);
+        }
 
         return { event: event, richContent: richContent };
       }
     },
     {
+      enabled: !!ndk,
       staleTime: Infinity,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

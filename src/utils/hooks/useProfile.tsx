@@ -20,7 +20,7 @@ export function useProfile(pubkey: string, embed?: string) {
           user.profile.display_name = user.profile.displayName;
           return user.profile;
         } else {
-          throw new Error('User not found');
+          throw new Error(`User not found: ${pubkey}`);
         }
       } else {
         const profile: NDKUserProfile = JSON.parse(embed);
