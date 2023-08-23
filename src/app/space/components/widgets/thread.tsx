@@ -41,7 +41,7 @@ export function ThreadBlock({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10">
+    <div className="scrollbar-hide relative shrink-0 grow-0 basis-[400px] overflow-y-auto bg-white/10">
       <TitleBar id={params.id} title={params.title} />
       <div className="h-full">
         {status === 'loading' ? (

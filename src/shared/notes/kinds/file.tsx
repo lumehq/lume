@@ -1,35 +1,45 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
+import ReactPlayer from 'react-player';
 
 import { Image } from '@shared/image';
-import { NoteActions, NoteMetadata } from '@shared/notes';
-import { User } from '@shared/user';
 
-import { isImage } from '@utils/isImage';
+import { fileType } from '@utils/nip94';
 
 export function FileNote({ event }: { event: NDKEvent }) {
   const url = event.tags.find((el) => el[0] === 'url')[1];
+  const type = fileType(url);
+
+  if (type === 'image') {
+    return (
+      <div className="mb-2 mt-3">
+        <Image
+          src={url}
+          alt={event.content}
+          className="h-auto w-full rounded-lg object-cover"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'video') {
+    return (
+      <div className="mb-2 mt-3">
+        <ReactPlayer
+          key={url}
+          url={url}
+          width="100%"
+          height="auto"
+          className="!h-auto overflow-hidden rounded-lg object-fill"
+          controls={true}
+          pip={true}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="h-min w-full px-3 py-1.5">
-      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
-        <div className="flex flex-col">
-          <User pubkey={event.pubkey} time={event.created_at} />
-          <div className="-mt-6 flex items-start gap-3">
-            <div className="w-11 shrink-0" />
-            <div className="relative z-20 flex-1">
-              {isImage(url) && (
-                <Image
-                  src={url}
-                  alt="image"
-                  className="h-auto w-full rounded-lg object-cover"
-                />
-              )}
-              <NoteActions id={event.id} pubkey={event.pubkey} />
-            </div>
-          </div>
-          <NoteMetadata id={event.id} />
-        </div>
-      </div>
+    <div className="mb-2 mt-3">
+      <p>{url}</p>
     </div>
   );
 }

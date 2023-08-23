@@ -38,7 +38,6 @@ export function LinkPreview({ urls }: { urls: string[] }) {
               {data.image && (
                 <Image
                   src={data.image}
-                  fallback="https://void.cat/d/XTmrMkpid8DGLjv1AzdvcW.jpg"
                   alt={urls[0]}
                   className="h-44 w-full rounded-t-lg object-cover"
                 />

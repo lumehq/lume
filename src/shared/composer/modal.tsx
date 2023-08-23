@@ -21,7 +21,7 @@ export function ComposerModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-min items-center justify-center gap-1 rounded-md bg-fuchsia-500 px-8 text-sm font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex h-9 w-min items-center justify-center gap-2 rounded-md bg-white/10 px-6 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1"
         >
           <ComposeIcon className="h-4 w-4" />
           Postr
@@ -44,7 +44,7 @@ export function ComposerModal() {
               </div>
               <Dialog.Close
                 onClick={() => toggle(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-zinc-800"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-white/10"
               >
                 <CancelIcon className="h-5 w-5 text-white/50" />
               </Dialog.Close>

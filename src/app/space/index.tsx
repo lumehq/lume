@@ -5,6 +5,7 @@ import { FeedWidgetForm } from '@app/space/components/forms/feed';
 import { HashTagWidgetForm } from '@app/space/components/forms/hashtag';
 import { ArticleWidget } from '@app/space/components/widgets/article';
 import { FeedWidget } from '@app/space/components/widgets/feed';
+import { FileWidget } from '@app/space/components/widgets/file';
 import { HashtagWidget } from '@app/space/components/widgets/hashtag';
 import { NetworkWidget } from '@app/space/components/widgets/network';
 import { ThreadBlock } from '@app/space/components/widgets/thread';
@@ -48,6 +49,8 @@ export function SpaceScreen() {
           return <NetworkWidget key={widget.id} />;
         case WidgetKinds.article:
           return <ArticleWidget key={widget.id} params={widget} />;
+        case WidgetKinds.file:
+          return <FileWidget key={widget.id} params={widget} />;
         case WidgetKinds.xhashtag:
           return <HashTagWidgetForm key={widget.id} params={widget} />;
         case WidgetKinds.xfeed:
