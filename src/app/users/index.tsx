@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { NoteKind_1, NoteSkeleton } from '@shared/notes';
+import { NoteSkeleton, TextNote } from '@shared/notes';
 
 import { nHoursAgo } from '@utils/date';
 import { LumeEvent } from '@utils/types';
@@ -84,7 +84,7 @@ export function UserScreen() {
                     data-index={virtualRow.index}
                     ref={rowVirtualizer.measureElement}
                   >
-                    <NoteKind_1 event={data[virtualRow.index]} />
+                    <TextNote event={data[virtualRow.index]} />
                   </div>
                 ))}
                 <div className="h-10" />

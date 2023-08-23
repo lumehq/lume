@@ -1,11 +1,14 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 
 import {
+  ArticleNote,
+  FileNote,
   NoteActions,
-  NoteContent,
   NoteMetadata,
   NoteSkeleton,
   RepostUser,
+  TextNote,
+  UnknownNote,
 } from '@shared/notes';
 import { User } from '@shared/user';
 
@@ -40,23 +43,32 @@ export function Repost({ event }: { event: NDKEvent }) {
     );
   }
 
+  const renderKind = (event: NDKEvent) => {
+    switch (event.kind) {
+      case NDKKind.Text:
+        return <TextNote event={event} />;
+      case NDKKind.Article:
+        return <ArticleNote event={event} />;
+      case 1063:
+        return <FileNote event={event} />;
+      default:
+        return <UnknownNote event={event} />;
+    }
+  };
+
   return (
     <div className="h-min w-full px-3 py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
         <div className="relative flex flex-col">
           <div className="isolate flex flex-col -space-y-4">
             <RepostUser pubkey={event.pubkey} />
-            <User
-              pubkey={data.event.pubkey}
-              time={data.event.created_at}
-              isRepost={true}
-            />
+            <User pubkey={data.pubkey} time={data.created_at} isRepost={true} />
           </div>
           <div className="flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="relative z-20 flex-1">
-              <NoteContent content={data.richContent} />
-              <NoteActions id={repostID} pubkey={data.event.pubkey} />
+              {renderKind(data)}
+              <NoteActions id={repostID} pubkey={data.pubkey} />
             </div>
           </div>
           <NoteMetadata id={repostID} />

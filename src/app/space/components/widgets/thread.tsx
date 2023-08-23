@@ -1,11 +1,17 @@
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { useCallback } from 'react';
+
 import { useStorage } from '@libs/storage/provider';
 
 import {
+  ArticleNote,
+  FileNote,
   NoteActions,
-  NoteContent,
   NoteReplyForm,
   NoteStats,
+  TextNote,
   ThreadUser,
+  UnknownNote,
 } from '@shared/notes';
 import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
@@ -17,6 +23,22 @@ import { Widget } from '@utils/types';
 export function ThreadBlock({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data } = useEvent(params.content);
+
+  const renderKind = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return <TextNote event={event} />;
+        case NDKKind.Article:
+          return <ArticleNote event={event} />;
+        case 1063:
+          return <FileNote event={event} />;
+        default:
+          return <UnknownNote event={event} />;
+      }
+    },
+    [data]
+  );
 
   return (
     <div className="scrollbar-hide h-full w-[400px] shrink-0 overflow-y-auto bg-white/10">
@@ -31,18 +53,10 @@ export function ThreadBlock({ params }: { params: Widget }) {
         ) : (
           <div className="h-min w-full px-3 pt-1.5">
             <div className="rounded-xl bg-white/10 px-3 pt-3">
-              <ThreadUser pubkey={data.event.pubkey} time={data.event.created_at} />
-              <div className="mt-2">
-                <NoteContent content={data.richContent} />
-              </div>
-              <div>
-                <NoteActions
-                  id={params.content}
-                  pubkey={data.event.pubkey}
-                  noOpenThread={true}
-                />
-                <NoteStats id={params.content} />
-              </div>
+              <ThreadUser pubkey={data.pubkey} time={data.created_at} />
+              <div className="mt-2">{renderKind(data)}</div>
+              <NoteActions id={params.content} pubkey={data.pubkey} noOpenThread={true} />
+              <NoteStats id={params.content} />
             </div>
           </div>
         )}

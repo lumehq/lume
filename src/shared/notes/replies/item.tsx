@@ -4,9 +4,9 @@ import { NoteActions, NoteContent, SubReply } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { parser } from '@utils/parser';
-import { LumeEvent } from '@utils/types';
+import { NDKEventWithReplies } from '@utils/types';
 
-export function Reply({ event, root }: { event: LumeEvent; root?: string }) {
+export function Reply({ event, root }: { event: NDKEventWithReplies; root?: string }) {
   const content = useMemo(() => parser(event), [event]);
 
   return (

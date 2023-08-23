@@ -3,6 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { AddWidgetButton } from '@app/space/components/button';
 import { FeedWidgetForm } from '@app/space/components/forms/feed';
 import { HashTagWidgetForm } from '@app/space/components/forms/hashtag';
+import { ArticleWidget } from '@app/space/components/widgets/article';
 import { FeedWidget } from '@app/space/components/widgets/feed';
 import { HashtagWidget } from '@app/space/components/widgets/hashtag';
 import { NetworkWidget } from '@app/space/components/widgets/network';
@@ -45,6 +46,8 @@ export function SpaceScreen() {
           return <TrendingNotesWidget key={widget.id} params={widget} />;
         case WidgetKinds.network:
           return <NetworkWidget key={widget.id} />;
+        case WidgetKinds.article:
+          return <ArticleWidget key={widget.id} params={widget} />;
         case WidgetKinds.xhashtag:
           return <HashTagWidgetForm key={widget.id} params={widget} />;
         case WidgetKinds.xfeed:

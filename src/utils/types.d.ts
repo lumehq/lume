@@ -74,3 +74,7 @@ export interface Opengraph {
   description?: string;
   image?: string;
 }
+
+export interface NDKEventWithReplies extends NDKEvent {
+  replies: Array<NDKEvent>;
+}

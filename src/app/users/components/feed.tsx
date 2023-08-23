@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { NoteKind_1, NoteSkeleton } from '@shared/notes';
+import { NoteSkeleton, TextNote } from '@shared/notes';
 
 import { nHoursAgo } from '@utils/date';
 import { LumeEvent } from '@utils/types';
@@ -73,7 +73,7 @@ export function UserFeed({ pubkey }: { pubkey: string }) {
                 data-index={virtualRow.index}
                 ref={rowVirtualizer.measureElement}
               >
-                <NoteKind_1 event={data[virtualRow.index]} />
+                <TextNote event={data[virtualRow.index]} />
               </div>
             ))}
           </div>

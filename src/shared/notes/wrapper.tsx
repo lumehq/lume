@@ -1,37 +1,38 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { useMemo } from 'react';
+import { ReactNode } from 'react';
 
-import { NoteActions, NoteContent, NoteMetadata } from '@shared/notes';
+import { ChildNote, NoteActions, NoteMetadata } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { parser } from '@utils/parser';
-
-export function NoteKind_1({
+export function NoteWrapper({
   event,
-  skipMetadata = false,
+  children,
+  meta = true,
+  root,
+  reply,
 }: {
   event: NDKEvent;
-  skipMetadata?: boolean;
+  children: ReactNode;
+  repost?: boolean;
+  meta?: boolean;
+  root?: string;
+  reply?: string;
 }) {
-  const content = useMemo(() => parser(event), [event.id]);
-
   return (
     <div className="h-min w-full px-3 py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
+        <div className="relative">{root && <ChildNote id={root} />}</div>
+        <div className="relative">{reply && <ChildNote id={reply} root={root} />}</div>
         <div className="relative flex flex-col">
           <User pubkey={event.pubkey} time={event.created_at} />
           <div className="-mt-6 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="relative z-20 flex-1">
-              <NoteContent content={content} />
-              <NoteActions id={event.id || event.id} pubkey={event.pubkey} />
+              {children}
+              <NoteActions id={event.id} pubkey={event.pubkey} />
             </div>
           </div>
-          {!skipMetadata ? (
-            <NoteMetadata id={event.id || event.id} />
-          ) : (
-            <div className="pb-3" />
-          )}
+          {meta ? <NoteMetadata id={event.id} /> : <div className="pb-3" />}
         </div>
       </div>
     </div>

@@ -1,23 +1,20 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
 
 import { NoteSkeleton, Reply } from '@shared/notes';
 
-interface ReplyEvent extends NDKEvent {
-  replies: Array<NDKEvent>;
-}
+import { NDKEventWithReplies } from '@utils/types';
 
 export function RepliesList({ id }: { id: string }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(['thread', id], async () => {
+  const { status, data } = useQuery(['note-replies', id], async () => {
     const events = await ndk.fetchEvents({
       kinds: [1],
       '#e': [id],
     });
 
-    const array = [...events] as unknown as ReplyEvent[];
+    const array = [...events] as unknown as NDKEventWithReplies[];
 
     if (array.length > 0) {
       const replies = new Set();
@@ -74,7 +71,9 @@ export function RepliesList({ id }: { id: string }) {
         ) : (
           data
             .reverse()
-            .map((event: NDKEvent) => <Reply key={event.id} event={event} root={id} />)
+            .map((event: NDKEventWithReplies) => (
+              <Reply key={event.id} event={event} root={id} />
+            ))
         )}
       </div>
     </div>

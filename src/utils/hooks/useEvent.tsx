@@ -4,39 +4,26 @@ import { useQuery } from '@tanstack/react-query';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { parser } from '@utils/parser';
-import { RichContent } from '@utils/types';
-
 export function useEvent(id: string, embed?: string) {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { status, data, error } = useQuery(
+  const { status, data } = useQuery(
     ['event', id],
     async () => {
-      let richContent: RichContent;
       // return embed event (nostr.band api)
       if (embed) {
         const event: NDKEvent = JSON.parse(embed);
-        if (event.kind === 1) richContent = parser(event);
-
-        return { event: event, richContent: richContent };
+        return event;
       }
-
       // get event from db
       const dbEvent = await db.getEventByID(id);
       if (dbEvent) {
-        if (dbEvent.kind === 1) richContent = parser(dbEvent);
-        return { event: dbEvent, richContent: richContent };
+        return dbEvent;
       } else {
         // get event from relay if event in db not present
         const event = await ndk.fetchEvent(id);
-
         if (!event) throw new Error(`Event not found: ${id}`);
-        if (event.kind === 1) {
-          richContent = parser(event);
-        }
-
-        return { event: event, richContent: richContent };
+        return event;
       }
     },
     {
@@ -48,5 +35,5 @@ export function useEvent(id: string, embed?: string) {
     }
   );
 
-  return { status, data, error };
+  return { status, data };
 }

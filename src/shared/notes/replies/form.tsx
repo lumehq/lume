@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { Button } from '@shared/button';
 import { Image } from '@shared/image';
 
-import { FULL_RELAYS } from '@stores/constants';
-
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -16,7 +14,7 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
   const [value, setValue] = useState('');
 
   const submit = () => {
-    const tags = [['e', id, FULL_RELAYS[0], 'reply']];
+    const tags = [['e', id, '', 'reply']];
 
     // publish event
     publish({ content: value, kind: 1, tags });

@@ -1,15 +1,20 @@
-import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { destr } from 'destr';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
-import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
+import {
+  ArticleNote,
+  FileNote,
+  NoteWrapper,
+  Repost,
+  TextNote,
+  UnknownNote,
+} from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
@@ -23,7 +28,7 @@ export function NetworkWidget() {
     useInfiniteQuery({
       queryKey: ['network-widget'],
       queryFn: async ({ pageParam = 0 }) => {
-        return await db.getAllEvents(20, pageParam);
+        return await db.getAllEvents(30, pageParam);
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       refetchOnWindowFocus: false,
@@ -51,36 +56,20 @@ export function NetworkWidget() {
       if (!dbEvent) return;
 
       const event: NDKEvent = JSON.parse(dbEvent.event as string);
-
       switch (event.kind) {
-        case 1: {
-          if (dbEvent.root_id || dbEvent.reply_id) {
-            return (
-              <div
-                key={(dbEvent.root_id || dbEvent.reply_id) + dbEvent.id + index}
-                data-index={index}
-                ref={virtualizer.measureElement}
-              >
-                <NoteThread
-                  event={event}
-                  root={dbEvent.root_id}
-                  reply={dbEvent.reply_id}
-                />
-              </div>
-            );
-          } else {
-            return (
-              <div
-                key={dbEvent.id + index}
-                data-index={index}
-                ref={virtualizer.measureElement}
-              >
-                <NoteKind_1 event={event} skipMetadata={false} />
-              </div>
-            );
-          }
-        }
-        case 6:
+        case NDKKind.Text:
+          return (
+            <div
+              key={dbEvent.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event} root={dbEvent.root_id} reply={dbEvent.reply_id}>
+                <TextNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Repost:
           return (
             <div
               key={dbEvent.id + index}
@@ -97,7 +86,21 @@ export function NetworkWidget() {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <NoteKind_1063 key={dbEvent.id} event={event} />
+              <NoteWrapper event={event}>
+                <FileNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Article:
+          return (
+            <div
+              key={dbEvent.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <ArticleNote event={event} />
+              </NoteWrapper>
             </div>
           );
         default:
@@ -107,7 +110,9 @@ export function NetworkWidget() {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <NoteKindUnsupport key={dbEvent.id} event={event} />
+              <NoteWrapper event={event}>
+                <UnknownNote event={event} />
+              </NoteWrapper>
             </div>
           );
       }
@@ -168,12 +173,6 @@ export function NetworkWidget() {
                   <br />
                   Follow more people to have more fun.
                 </p>
-                <Link
-                  to="/trending"
-                  className="inline-flex w-max rounded bg-fuchsia-500 px-2.5 py-1.5 text-sm hover:bg-fuchsia-600"
-                >
-                  Trending users
-                </Link>
               </div>
             </div>
           </div>

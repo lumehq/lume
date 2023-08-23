@@ -1,12 +1,19 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { NoteKind_1, NoteSkeleton, Repost } from '@shared/notes';
-import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
+import {
+  ArticleNote,
+  FileNote,
+  NoteSkeleton,
+  NoteWrapper,
+  Repost,
+  TextNote,
+  UnknownNote,
+} from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { UserProfile } from '@shared/userProfile';
 
@@ -49,13 +56,19 @@ export function UserWidget({ params }: { params: Widget }) {
       if (!event) return;
 
       switch (event.kind) {
-        case 1:
+        case NDKKind.Text:
           return (
-            <div key={event.id} data-index={index} ref={virtualizer.measureElement}>
-              <NoteKind_1 event={event} skipMetadata={false} />
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <TextNote event={event} />
+              </NoteWrapper>
             </div>
           );
-        case 6:
+        case NDKKind.Repost:
           return (
             <div
               key={event.id + index}
@@ -65,6 +78,30 @@ export function UserWidget({ params }: { params: Widget }) {
               <Repost key={event.id} event={event} />
             </div>
           );
+        case 1063:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <FileNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Article:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <ArticleNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
         default:
           return (
             <div
@@ -72,7 +109,9 @@ export function UserWidget({ params }: { params: Widget }) {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <NoteKindUnsupport key={event.id} event={event} />
+              <NoteWrapper event={event}>
+                <UnknownNote event={event} />
+              </NoteWrapper>
             </div>
           );
       }

@@ -1,8 +1,7 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
-import { NoteKind_1 } from '@shared/notes';
-import { NoteSkeleton } from '@shared/notes/skeleton';
+import { NoteSkeleton, NoteWrapper, TextNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 
 import { Widget } from '@utils/types';
@@ -52,7 +51,9 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
         ) : (
           <div className="relative flex w-full flex-col">
             {data.map((item) => (
-              <NoteKind_1 key={item.event.id} event={item.event} skipMetadata={true} />
+              <NoteWrapper key={item.event.id} event={item.event}>
+                <TextNote event={item.event} />
+              </NoteWrapper>
             ))}
           </div>
         )}

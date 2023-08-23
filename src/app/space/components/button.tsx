@@ -36,7 +36,7 @@ export function AddWidgetButton() {
   const setArticleWidget = () => {
     setWidget(db, {
       kind: WidgetKinds.article,
-      title: 'Blogs',
+      title: 'Articles',
       content: '',
     });
   };

@@ -1,4 +1,4 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useMemo, useRef } from 'react';
@@ -6,8 +6,14 @@ import { useCallback, useMemo, useRef } from 'react';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { NoteKind_1, NoteKind_1063, NoteThread, Repost } from '@shared/notes';
-import { NoteKindUnsupport } from '@shared/notes/kinds/unsupport';
+import {
+  ArticleNote,
+  FileNote,
+  NoteWrapper,
+  Repost,
+  TextNote,
+  UnknownNote,
+} from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
@@ -45,36 +51,20 @@ export function FeedWidget({ params }: { params: Widget }) {
       if (!dbEvent) return;
 
       const event: NDKEvent = JSON.parse(dbEvent.event as string);
-
       switch (event.kind) {
-        case 1: {
-          if (dbEvent.root_id || dbEvent.reply_id) {
-            return (
-              <div
-                key={(dbEvent.root_id || dbEvent.reply_id) + dbEvent.id + index}
-                data-index={index}
-                ref={virtualizer.measureElement}
-              >
-                <NoteThread
-                  event={event}
-                  root={dbEvent.root_id}
-                  reply={dbEvent.reply_id}
-                />
-              </div>
-            );
-          } else {
-            return (
-              <div
-                key={dbEvent.id + index}
-                data-index={index}
-                ref={virtualizer.measureElement}
-              >
-                <NoteKind_1 event={event} skipMetadata={false} />
-              </div>
-            );
-          }
-        }
-        case 6:
+        case NDKKind.Text:
+          return (
+            <div
+              key={dbEvent.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event} root={dbEvent.root_id} reply={dbEvent.reply_id}>
+                <TextNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Repost:
           return (
             <div
               key={dbEvent.id + index}
@@ -91,7 +81,21 @@ export function FeedWidget({ params }: { params: Widget }) {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <NoteKind_1063 key={dbEvent.id} event={event} />
+              <NoteWrapper event={event}>
+                <FileNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Article:
+          return (
+            <div
+              key={dbEvent.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <ArticleNote event={event} />
+              </NoteWrapper>
             </div>
           );
         default:
@@ -101,7 +105,9 @@ export function FeedWidget({ params }: { params: Widget }) {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <NoteKindUnsupport key={dbEvent.id} event={event} />
+              <NoteWrapper event={event}>
+                <UnknownNote event={event} />
+              </NoteWrapper>
             </div>
           );
       }
@@ -124,7 +130,7 @@ export function FeedWidget({ params }: { params: Widget }) {
             <div className="bbg-white/10 rounded-xl px-3 py-6">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm text-white">
-                  Not found any postrs from last 48 hours
+                  There have been no new postrs.
                 </p>
               </div>
             </div>
