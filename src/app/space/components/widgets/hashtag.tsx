@@ -21,13 +21,18 @@ import { Widget } from '@utils/types';
 
 export function HashtagWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(['hashtag-widget', params.content], async () => {
-    const events = await ndk.fetchEvents({
-      '#t': [params.content],
-      since: nHoursAgo(24),
-    });
-    return [...events] as unknown as NDKEvent[];
-  });
+  const { status, data } = useQuery(
+    ['hashtag-widget', params.content],
+    async () => {
+      const events = await ndk.fetchEvents({
+        kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
+        '#t': [params.content],
+        since: nHoursAgo(24),
+      });
+      return [...events] as unknown as NDKEvent[];
+    },
+    { refetchOnWindowFocus: false }
+  );
 
   const parentRef = useRef<HTMLDivElement>(null);
   const virtualizer = useVirtualizer({

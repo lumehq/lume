@@ -12,13 +12,17 @@ import { Widget } from '@utils/types';
 
 export function FileWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(['file-widget', params.content], async () => {
-    const events = await ndk.fetchEvents({
-      kinds: [1063],
-      limit: 100,
-    });
-    return [...events] as unknown as NDKEvent[];
-  });
+  const { status, data } = useQuery(
+    ['file-widget', params.content],
+    async () => {
+      const events = await ndk.fetchEvents({
+        kinds: [1063],
+        limit: 100,
+      });
+      return [...events] as unknown as NDKEvent[];
+    },
+    { refetchOnWindowFocus: false }
+  );
 
   const parentRef = useRef<HTMLDivElement>(null);
   const virtualizer = useVirtualizer({
