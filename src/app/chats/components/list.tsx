@@ -8,18 +8,23 @@ import { UnknownsModal } from '@app/chats/components/unknowns';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { Chats } from '@utils/types';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatsList() {
   const { db } = useStorage();
-  const { status, data: chats } = useQuery(['chats'], async () => {
-    return { follows: [], unknowns: [] };
-  });
+  const { fetchNIP04Chats } = useNostr();
+  const { status, data: chats } = useQuery(
+    ['nip04-chats'],
+    async () => {
+      return await fetchNIP04Chats();
+    },
+    { refetchOnWindowFocus: false }
+  );
 
   const renderItem = useCallback(
-    (item: Chats) => {
-      if (db.account.pubkey !== item.sender_pubkey) {
-        return <ChatsListItem key={item.sender_pubkey} data={item} />;
+    (item: string) => {
+      if (db.account.pubkey !== item) {
+        return <ChatsListItem key={item} pubkey={item} />;
       }
     },
     [chats]

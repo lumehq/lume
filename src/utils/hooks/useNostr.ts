@@ -166,6 +166,54 @@ export function useNostr() {
     }
   };
 
+  const fetchNIP04Chats = async () => {
+    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      {
+        kinds: [NDKKind.EncryptedDirectMessage],
+        '#p': [db.account.pubkey],
+      },
+      { since: 0 }
+    );
+
+    const senders = events.map((e) => e.pubkey);
+    const follows = new Set(senders.filter((el) => db.account.follows.includes(el)));
+    const unknowns = new Set(senders.filter((el) => !db.account.follows.includes(el)));
+
+    return { follows: [...follows], unknowns: [...unknowns] };
+  };
+
+  const fetchNIP04Messages = async (sender: string) => {
+    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+
+    const senderMessages = await fetcher.fetchAllEvents(
+      relayUrls,
+      {
+        kinds: [NDKKind.EncryptedDirectMessage],
+        authors: [sender],
+        '#p': [db.account.pubkey],
+      },
+      { since: 0 }
+    );
+
+    const userMessages = await fetcher.fetchAllEvents(
+      relayUrls,
+      {
+        kinds: [NDKKind.EncryptedDirectMessage],
+        authors: [db.account.pubkey],
+        '#p': [sender],
+      },
+      { since: 0 }
+    );
+
+    const all = [...senderMessages, ...userMessages].sort(
+      (a, b) => a.created_at - b.created_at
+    );
+
+    return all as unknown as NDKEvent[];
+  };
+
   const publish = async ({
     content,
     kind,
@@ -207,5 +255,14 @@ export function useNostr() {
     return res;
   };
 
-  return { sub, fetchUserData, prefetchEvents, fetchActivities, publish, createZap };
+  return {
+    sub,
+    fetchUserData,
+    prefetchEvents,
+    fetchActivities,
+    fetchNIP04Chats,
+    fetchNIP04Messages,
+    publish,
+    createZap,
+  };
 }

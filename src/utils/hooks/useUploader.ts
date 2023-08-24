@@ -65,10 +65,12 @@ export function useImageUploader() {
 
       return {
         url: url,
+        error: null,
       };
     }
 
     return {
+      url: null,
       error: 'Upload failed',
     };
   };

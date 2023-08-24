@@ -1,22 +1,25 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, MediaIcon } from '@shared/icons';
 
 import { useImageUploader } from '@utils/hooks/useUploader';
 
-export function MediaUploader({ setState }: { setState: any }) {
+export function MediaUploader({
+  setState,
+}: {
+  setState: Dispatch<SetStateAction<string>>;
+}) {
   const upload = useImageUploader();
   const [loading, setLoading] = useState(false);
 
   const uploadMedia = async () => {
+    setLoading(true);
     const image = await upload(null);
     if (image.url) {
-      // update state
       setState((prev: string) => `${prev}\n${image.url}`);
-      // stop loading
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (

@@ -13,23 +13,27 @@ import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
+import { useNostr } from '@utils/hooks/useNostr';
+
 export function ChatScreen() {
   const virtuosoRef = useRef(null);
-
-  const { ndk } = useNDK();
-  const { db } = useStorage();
-  const { pubkey } = useParams();
-  const { status, data } = useQuery(['chat', pubkey], async () => {
-    return [];
-  });
-
   const userPrivkey = useStronghold((state) => state.privkey);
+
+  const { db } = useStorage();
+  const { ndk } = useNDK();
+  const { pubkey } = useParams();
+  const { fetchNIP04Messages } = useNostr();
+  const { status, data } = useQuery(['nip04-dm', pubkey], async () => {
+    return await fetchNIP04Messages(pubkey);
+  });
 
   const itemContent = useCallback(
     (index: string | number) => {
+      const message = data[index];
+      if (!message) return;
       return (
         <ChatMessageItem
-          data={data[index]}
+          message={message}
           userPubkey={db.account.pubkey}
           userPrivkey={userPrivkey}
         />

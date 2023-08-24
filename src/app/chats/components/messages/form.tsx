@@ -1,8 +1,9 @@
 import { nip04 } from 'nostr-tools';
 import { useCallback, useState } from 'react';
 
+import { MediaUploader } from '@app/chats/components/messages/mediaUploader';
+
 import { EnterIcon } from '@shared/icons';
-import { MediaUploader } from '@shared/mediaUploader';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
@@ -34,7 +35,7 @@ export function ChatMessageForm({
 
   const handleEnterPress = (e: {
     key: string;
-    shiftKey: any;
+    shiftKey: KeyboardEvent['shiftKey'];
     preventDefault: () => void;
   }) => {
     if (e.key === 'Enter' && !e.shiftKey) {

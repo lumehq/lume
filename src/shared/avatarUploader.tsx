@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, PlusIcon } from '@shared/icons';
 
 import { useImageUploader } from '@utils/hooks/useUploader';
 
-export function AvatarUploader({ setPicture }: { setPicture: any }) {
+export function AvatarUploader({
+  setPicture,
+}: {
+  setPicture: Dispatch<
+    SetStateAction<{ url: undefined | string; error?: undefined | string }>
+  >;
+}) {
   const upload = useImageUploader();
   const [loading, setLoading] = useState(false);
 

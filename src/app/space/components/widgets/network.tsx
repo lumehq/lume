@@ -131,8 +131,6 @@ export function NetworkWidget() {
       };
 
       sub(filter, async (event) => {
-        console.log('[network] new event', event.id);
-
         let root: string;
         let reply: string;
         if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {

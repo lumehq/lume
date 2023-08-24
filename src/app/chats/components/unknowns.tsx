@@ -7,9 +7,8 @@ import { User } from '@app/auth/components/user';
 import { CancelIcon, PlusIcon } from '@shared/icons';
 
 import { compactNumber } from '@utils/number';
-import { Chats } from '@utils/types';
 
-export function UnknownsModal({ data }: { data: Chats[] }) {
+export function UnknownsModal({ data }: { data: string[] }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -55,16 +54,16 @@ export function UnknownsModal({ data }: { data: Chats[] }) {
               </div>
             </div>
             <div className="flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-2 pt-2">
-              {data.map((user) => (
+              {data.map((pubkey) => (
                 <div
-                  key={user.sender_pubkey}
+                  key={pubkey}
                   className="group flex items-center justify-between px-4 py-2 hover:bg-white/10"
                 >
-                  <User pubkey={user.sender_pubkey} />
+                  <User pubkey={pubkey} />
                   <div>
                     <button
                       type="button"
-                      onClick={() => openChat(user.sender_pubkey)}
+                      onClick={() => openChat(pubkey)}
                       className="hidden w-max rounded bg-white/10 px-3 py-1 text-sm font-medium hover:bg-fuchsia-500 group-hover:inline-flex"
                     >
                       Chat

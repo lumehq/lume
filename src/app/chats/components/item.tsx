@@ -5,10 +5,9 @@ import { Image } from '@shared/image';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
-import { Chats } from '@utils/types';
 
-export function ChatsListItem({ data }: { data: Chats }) {
-  const { status, user } = useProfile(data.sender_pubkey);
+export function ChatsListItem({ pubkey }: { pubkey: string }) {
+  const { status, user } = useProfile(pubkey);
 
   if (status === 'loading') {
     return (
@@ -21,7 +20,7 @@ export function ChatsListItem({ data }: { data: Chats }) {
 
   return (
     <NavLink
-      to={`/chats/${data.sender_pubkey}`}
+      to={`/chats/${pubkey}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
@@ -32,23 +31,13 @@ export function ChatsListItem({ data }: { data: Chats }) {
     >
       <Image
         src={user?.picture || user?.image}
-        alt={data.sender_pubkey}
+        alt={pubkey}
         className="h-6 w-6 shrink-0 rounded object-cover"
       />
       <div className="inline-flex w-full flex-1 items-center justify-between">
         <h5 className="max-w-[10rem] truncate">
-          {user?.nip05 ||
-            user?.name ||
-            user?.display_name ||
-            displayNpub(data.sender_pubkey, 16)}
+          {user?.nip05 || user?.name || user?.display_name || displayNpub(pubkey, 16)}
         </h5>
-        <div className="flex items-center">
-          {data.new_messages > 0 && (
-            <span className="inline-flex w-8 items-center justify-center rounded bg-fuchsia-400/10 px-1 py-1 text-xs font-medium text-fuchsia-500 ring-1 ring-inset ring-fuchsia-400/20">
-              {data.new_messages}
-            </span>
-          )}
-        </div>
       </div>
     </NavLink>
   );
