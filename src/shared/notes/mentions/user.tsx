@@ -21,7 +21,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
           content: pubkey,
         })
       }
-      className="break-words font-normal text-blue-400 no-underline hover:text-blue-500"
+      className="break-words text-fuchsia-400 hover:text-fuchsia-500"
     >
       {user?.nip05 ||
         user?.name ||

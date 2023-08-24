@@ -1,14 +1,9 @@
-import { useMemo } from 'react';
-
-import { NoteActions, NoteContent, SubReply } from '@shared/notes';
+import { NoteActions, SubReply, TextNote } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { parser } from '@utils/parser';
 import { NDKEventWithReplies } from '@utils/types';
 
 export function Reply({ event, root }: { event: NDKEventWithReplies; root?: string }) {
-  const content = useMemo(() => parser(event), [event]);
-
   return (
     <div className="h-min w-full py-1.5">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
@@ -17,8 +12,8 @@ export function Reply({ event, root }: { event: NDKEventWithReplies; root?: stri
           <div className="relative z-20 -mt-6 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="flex-1">
-              <NoteContent content={content} />
-              <NoteActions id={event.id || event.id} pubkey={event.pubkey} root={root} />
+              <TextNote event={event} />
+              <NoteActions id={event.id} pubkey={event.pubkey} root={root} />
             </div>
           </div>
           <div>

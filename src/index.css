@@ -15,7 +15,7 @@ button {
 }
 
 .markdown {
-  @apply prose prose-white max-w-none select-text hyphens-auto text-white prose-p:mb-2 prose-p:mt-0 prose-p:break-words prose-p:[word-break:break-word] prose-p:last:mb-0 prose-a:break-words prose-a:break-all prose-a:font-normal prose-a:leading-tight prose-a:after:content-['_↗'] hover:prose-a:text-fuchsia-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-fuchsia-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-li:leading-tight prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2;
+  @apply prose prose-white max-w-none select-text hyphens-auto text-white prose-p:mb-2 prose-p:mt-0 prose-p:break-words prose-p:[word-break:break-word] prose-p:last:mb-0 prose-a:break-words prose-a:break-all prose-a:font-normal prose-a:leading-tight prose-a:after:content-['_↗'] hover:prose-a:text-fuchsia-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-fuchsia-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2;
 }
 
 .ProseMirror p.is-empty::before {
@@ -51,13 +51,4 @@ iframe {
 
 span[data-slate-placeholder] {
   @apply top-0;
-}
-
-@keyframes loop {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
 }

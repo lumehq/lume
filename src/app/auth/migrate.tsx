@@ -99,7 +99,7 @@ export function MigrateScreen() {
             Upgrade security for your account
           </h1>
         </div>
-        <div className="w-full rounded-xl border-t border-zinc-800/50 bg-zinc-900 px-3 py-3">
+        <div className="w-full rounded-xl bg-white/10 px-3 py-3">
           <div className="flex flex-col gap-4">
             <div>
               <div className="mt-1">
