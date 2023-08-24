@@ -32,9 +32,9 @@ export function MediaUploader({
             className="group inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
           >
             {loading ? (
-              <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
             ) : (
-              <MediaIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
+              <MediaIcon className="h-5 w-5 text-white" />
             )}
           </button>
         </Tooltip.Trigger>

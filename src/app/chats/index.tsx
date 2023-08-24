@@ -11,6 +11,8 @@ import { ChatSidebar } from '@app/chats/components/sidebar';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
+import { LoaderIcon } from '@shared/icons';
+
 import { useStronghold } from '@stores/stronghold';
 
 import { useNostr } from '@utils/hooks/useNostr';
@@ -78,7 +80,12 @@ export function ChatScreen() {
           <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white/10">
             <div className="h-full w-full flex-1">
               {status === 'loading' ? (
-                <p>Loading...</p>
+                <div className="flex h-full w-full items-center justify-center">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                    <p className="text-sm font-medium text-white/50">Loading messages</p>
+                  </div>
+                </div>
               ) : (
                 <Virtuoso
                   ref={virtuosoRef}

@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 
 import { ChatsListItem } from '@app/chats/components/item';
 import { NewMessageModal } from '@app/chats/components/modal';
-import { ChatsListSelfItem } from '@app/chats/components/self';
 import { UnknownsModal } from '@app/chats/components/unknowns';
 
 import { useStorage } from '@libs/storage/provider';
@@ -47,7 +46,6 @@ export function ChatsList() {
 
   return (
     <div className="flex flex-col">
-      <ChatsListSelfItem pubkey={db.account.pubkey} />
       {chats.follows.map((item) => renderItem(item))}
       {chats.unknowns.length > 0 && <UnknownsModal data={chats.unknowns} />}
       <NewMessageModal />

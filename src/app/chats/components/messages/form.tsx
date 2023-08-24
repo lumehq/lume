@@ -1,5 +1,6 @@
 import { nip04 } from 'nostr-tools';
 import { useCallback, useState } from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import { MediaUploader } from '@app/chats/components/messages/mediaUploader';
 
@@ -45,27 +46,28 @@ export function ChatMessageForm({
   };
 
   return (
-    <div className="relative h-11 w-full">
-      <input
+    <div className="flex w-full items-center justify-between rounded-md bg-white/20 px-3">
+      <TextareaAutosize
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleEnterPress}
         spellCheck={false}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
         placeholder="Message"
-        className="relative h-11 w-full resize-none rounded-md bg-white/10 px-5 text-white !outline-none placeholder:text-white/50"
+        className="min-h-[44px] flex-1 resize-none bg-transparent py-3 text-white !outline-none placeholder:text-white"
       />
-      <div className="absolute right-2 top-0 h-11">
-        <div className="flex h-full items-center justify-end gap-3 text-white/50">
-          <MediaUploader setState={setValue} />
-          <button
-            type="button"
-            onClick={submit}
-            className="inline-flex items-center gap-1 text-sm leading-none"
-          >
-            <EnterIcon width={14} height={14} className="" />
-            Send
-          </button>
-        </div>
+      <div className="inline-flex items-center gap-2">
+        <MediaUploader setState={setValue} />
+        <button
+          type="button"
+          onClick={submit}
+          className="inline-flex items-center gap-1.5 text-sm font-medium leading-none text-white/50"
+        >
+          <EnterIcon className="h-5 w-5" />
+          Send
+        </button>
       </div>
     </div>
   );
