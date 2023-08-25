@@ -1,38 +1,115 @@
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { UserProfile } from '@app/users/components/profile';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { NoteSkeleton, TextNote } from '@shared/notes';
+import {
+  ArticleNote,
+  FileNote,
+  NoteSkeleton,
+  NoteWrapper,
+  Repost,
+  TextNote,
+  UnknownNote,
+} from '@shared/notes';
 
 import { nHoursAgo } from '@utils/date';
-import { LumeEvent } from '@utils/types';
-
-import { UserProfile } from './components/profile';
 
 export function UserScreen() {
-  const parentRef = useRef();
-
   const { pubkey } = useParams();
   const { ndk } = useNDK();
   const { status, data } = useQuery(['user-feed', pubkey], async () => {
     const events = await ndk.fetchEvents({
-      kinds: [1],
+      kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
       authors: [pubkey],
       since: nHoursAgo(48),
     });
-    return [...events] as unknown as LumeEvent[];
+    return [...events] as unknown as NDKEvent[];
   });
 
-  const rowVirtualizer = useVirtualizer({
+  const parentRef = useRef();
+  const virtualizer = useVirtualizer({
     count: data ? data.length : 0,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 400,
+    estimateSize: () => 650,
+    overscan: 2,
   });
+  const items = virtualizer.getVirtualItems();
 
-  const itemsVirtualizer = rowVirtualizer.getVirtualItems();
+  // render event match event kind
+  const renderItem = useCallback(
+    (index: string | number) => {
+      const event: NDKEvent = data[index];
+      if (!event) return;
+
+      switch (event.kind) {
+        case NDKKind.Text:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <TextNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Repost:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <Repost key={event.id} event={event} />
+            </div>
+          );
+        case 1063:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <FileNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Article:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <ArticleNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        default:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <UnknownNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+      }
+    },
+    [data]
+  );
 
   return (
     <div
@@ -41,53 +118,42 @@ export function UserScreen() {
     >
       <div data-tauri-drag-region className="absolute left-0 top-0 h-11 w-full" />
       <UserProfile pubkey={pubkey} />
-      <div className="mt-8 h-full w-full border-t border-white/5 px-1.5">
-        <div className="flex flex-col justify-start gap-1 px-3 pt-4 text-start">
-          <p className="text-lg font-semibold leading-none text-white">Latest posts</p>
-          <span className="text-sm leading-none text-white/50">48 hours ago</span>
-        </div>
-        <div className="flex h-full max-w-[400px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
+      <div className="mt-6 h-full w-full border-t border-white/5 px-1.5">
+        <h3 className="mb-2 pt-4 text-center text-lg font-semibold leading-none text-white">
+          Latest postrs
+        </h3>
+        <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
           {status === 'loading' ? (
             <div className="px-3 py-1.5">
-              <div className="shadow-input rounded-xl bg-white/10">
+              <div className="rounded-xl bg-white/10 px-3 py-3">
                 <NoteSkeleton />
               </div>
             </div>
-          ) : itemsVirtualizer.length === 0 ? (
+          ) : items.length === 0 ? (
             <div className="px-3 py-1.5">
               <div className="rounded-xl bg-white/10 px-3 py-6">
                 <div className="flex flex-col items-center gap-4">
-                  <p className="text-center text-sm font-medium text-zinc-300">
-                    No new posts in 48 hours ago
+                  <p className="text-center text-sm font-medium text-white">
+                    User doesn&apos;t have any postrs in the last 48 hours.
                   </p>
                 </div>
               </div>
             </div>
           ) : (
             <div
-              className="relative w-full"
               style={{
-                height: `${rowVirtualizer.getTotalSize()}px`,
+                position: 'relative',
+                width: '100%',
+                height: `${virtualizer.getTotalSize()}px`,
               }}
             >
               <div
                 className="absolute left-0 top-0 w-full"
                 style={{
-                  transform: `translateY(${
-                    itemsVirtualizer[0].start - rowVirtualizer.options.scrollMargin
-                  }px)`,
+                  transform: `translateY(${items[0].start}px)`,
                 }}
               >
-                {itemsVirtualizer.map((virtualRow) => (
-                  <div
-                    key={virtualRow.key}
-                    data-index={virtualRow.index}
-                    ref={rowVirtualizer.measureElement}
-                  >
-                    <TextNote event={data[virtualRow.index]} />
-                  </div>
-                ))}
-                <div className="h-10" />
+                {items.map((item) => renderItem(item.index))}
               </div>
             </div>
           )}

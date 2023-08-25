@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { UserMetadata } from '@app/users/components/metadata';
+import { UserStats } from '@app/users/components/stats';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -49,67 +49,85 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
     }
   }, [status]);
 
+  if (!user) return <p>Loading...</p>;
+
   return (
     <>
-      <div className="h-56 w-full bg-white">
-        <img src={user?.banner} alt={'banner'} className="h-full w-full object-cover" />
+      <div className="h-56 w-full">
+        {user.banner ? (
+          <img
+            src={user.banner}
+            alt="user banner"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="h-full w-full bg-black/50" />
+        )}
       </div>
-      <div className="-mt-7 w-full px-5">
+      <div className="-mt-7 flex w-full flex-col items-center px-5">
         <Image
-          src={user?.picture || user?.image}
+          src={user.picture || user.image}
           alt={pubkey}
-          className="h-14 w-14 rounded-md ring-2 ring-white/50"
+          className="h-14 w-14 rounded-lg ring-2 ring-black"
         />
-        <div className="mt-2 flex flex-1 flex-col gap-4">
-          <div className="flex items-center gap-16">
+        <div className="mt-2 flex flex-1 flex-col gap-6">
+          <div className="flex flex-col items-center gap-1">
             <div className="inline-flex flex-col gap-1.5">
-              <h5 className="text-lg font-semibold leading-none">
-                {user?.displayName || user?.name || 'No name'}
+              <h5 className="text-center text-xl font-semibold leading-none">
+                {user.display_name || user.displayName || user.name || 'No name'}
               </h5>
-              <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
-                {user?.nip05 || shortenKey(pubkey)}
+              <span className="max-w-[15rem] truncate text-center leading-none text-white/50">
+                {user.nip05 || user.username || shortenKey(pubkey)}
               </span>
             </div>
-            <div className="inline-flex items-center gap-2">
-              {status === 'loading' ? (
-                <button
-                  type="button"
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
-                >
-                  Loading...
-                </button>
-              ) : followed ? (
-                <button
-                  type="button"
-                  onClick={() => unfollowUser(pubkey)}
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
-                >
-                  Unfollow
-                </button>
+            <div className="flex flex-col gap-6">
+              {user.about || user.bio ? (
+                <p className="mt-2 max-w-[500px] select-text break-words text-center text-white">
+                  {user.about || user.bio}
+                </p>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => followUser(pubkey)}
-                  className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
-                >
-                  Follow
-                </button>
+                <></>
               )}
-              <Link
-                to={`/chats/${pubkey}`}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
-              >
-                Message
-              </Link>
-              <span className="mx-2 inline-flex h-4 w-px bg-white/10" />
-              {db.account.pubkey === pubkey && <EditProfileModal />}
+              <UserStats pubkey={pubkey} />
             </div>
           </div>
-          <div className="flex flex-col gap-8">
-            <p className="mt-2 max-w-[500px] select-text break-words text-white">
-              {user?.about || user?.bio}
-            </p>
-            <UserMetadata pubkey={pubkey} />
+          <div className="inline-flex items-center justify-center gap-2">
+            {status === 'loading' ? (
+              <button
+                type="button"
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+              >
+                Loading...
+              </button>
+            ) : followed ? (
+              <button
+                type="button"
+                onClick={() => unfollowUser(pubkey)}
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => followUser(pubkey)}
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+              >
+                Follow
+              </button>
+            )}
+            <Link
+              to={`/chats/${pubkey}`}
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+            >
+              Message
+            </Link>
+            {db.account.pubkey === pubkey && (
+              <>
+                <span className="mx-2 inline-flex h-4 w-px bg-white/10" />
+                <EditProfileModal />
+              </>
+            )}
           </div>
         </div>
       </div>

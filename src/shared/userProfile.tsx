@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { UserMetadata } from '@app/users/components/metadata';
+import { UserMetadata } from '@app/users/components/stats';
 
 import { Image } from '@shared/image';
 

@@ -1,7 +1,6 @@
 import { NDKEvent, NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { destr } from 'destr';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useStorage } from '@libs/storage/provider';
@@ -31,9 +30,6 @@ export function NetworkWidget() {
         return await db.getAllEvents(30, pageParam);
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchOnMount: false,
     });
 
   const dbEvents = useMemo(
@@ -130,25 +126,29 @@ export function NetworkWidget() {
         since: db.account.last_login_at ?? Math.floor(Date.now() / 1000),
       };
 
-      sub(filter, async (event) => {
-        let root: string;
-        let reply: string;
-        if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
-          root = event.tags[0][1];
-        } else {
-          root = event.tags.find((el) => el[3] === 'root')?.[1];
-          reply = event.tags.find((el) => el[3] === 'reply')?.[1];
-        }
-        await db.createEvent(
-          event.id,
-          destr(event),
-          event.pubkey,
-          event.kind,
-          root,
-          reply,
-          event.created_at
-        );
-      });
+      sub(
+        filter,
+        async (event) => {
+          let root: string;
+          let reply: string;
+          if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
+            root = event.tags[0][1];
+          } else {
+            root = event.tags.find((el) => el[3] === 'root')?.[1];
+            reply = event.tags.find((el) => el[3] === 'reply')?.[1];
+          }
+          await db.createEvent(
+            event.id,
+            JSON.stringify(event),
+            event.pubkey,
+            event.kind,
+            root,
+            reply,
+            event.created_at
+          );
+        },
+        false // don't close sub on eose
+      );
     }
   }, []);
 

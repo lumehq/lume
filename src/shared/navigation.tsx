@@ -110,7 +110,7 @@ export function Navigation() {
                 <div
                   className={twMerge(
                     'inline-flex h-5 w-5 transform items-center justify-center transition-transform duration-150 ease-in-out',
-                    open ? '' : 'rotate-180'
+                    chats ? '' : 'rotate-180'
                   )}
                 >
                   <NavArrowDownIcon className="h-3 w-3 text-white/50" />
