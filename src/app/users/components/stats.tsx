@@ -26,7 +26,7 @@ export function UserStats({ pubkey }: { pubkey: string }) {
   }
 
   return (
-    <div className="flex w-full items-center gap-10">
+    <div className="flex w-full items-center justify-center gap-10">
       <div className="inline-flex flex-col items-center gap-1">
         <span className="font-semibold leading-none text-white">
           {compactNumber.format(data.stats[pubkey].followers_pubkey_count) ?? 0}

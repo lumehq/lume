@@ -37,7 +37,7 @@ export function UserScreen() {
     count: data ? data.length : 0,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 650,
-    overscan: 2,
+    overscan: 4,
   });
   const items = virtualizer.getVirtualItems();
 

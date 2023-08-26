@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
-import { FollowIcon, LoaderIcon, UnfollowIcon } from '@shared/icons';
+import { useStorage } from '@libs/storage/provider';
+
+import { FollowIcon, UnfollowIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { useSocial } from '@utils/hooks/useSocial';
+import { useNostr } from '@utils/hooks/useNostr';
 import { compactNumber } from '@utils/number';
 import { shortenKey } from '@utils/shortenKey';
 
@@ -14,7 +16,8 @@ export interface Profile {
 }
 
 export function UserProfile({ data }: { data: Profile }) {
-  const { status: socialStatus, userFollows, follow, unfollow } = useSocial();
+  const { db } = useStorage();
+  const { addContact, removeContact } = useNostr();
   const { status, data: userStats } = useQuery(
     ['user-stats', data.pubkey],
     async () => {
@@ -36,7 +39,7 @@ export function UserProfile({ data }: { data: Profile }) {
 
   const followUser = (pubkey: string) => {
     try {
-      follow(pubkey);
+      addContact(pubkey);
       // update state
       setFollowed(true);
     } catch (error) {
@@ -46,7 +49,7 @@ export function UserProfile({ data }: { data: Profile }) {
 
   const unfollowUser = (pubkey: string) => {
     try {
-      unfollow(pubkey);
+      removeContact(pubkey);
       // update state
       setFollowed(false);
     } catch (error) {
@@ -55,12 +58,10 @@ export function UserProfile({ data }: { data: Profile }) {
   };
 
   useEffect(() => {
-    if (status === 'success' && userFollows) {
-      if (userFollows.includes(data.pubkey)) {
-        setFollowed(true);
-      }
+    if (db.account.follows.includes(data.pubkey)) {
+      setFollowed(true);
     }
-  }, [status]);
+  }, []);
 
   if (!profile) {
     return (
@@ -88,14 +89,7 @@ export function UserProfile({ data }: { data: Profile }) {
           </div>
         </div>
         <div className="inline-flex items-center gap-2">
-          {socialStatus === 'loading' ? (
-            <button
-              type="button"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 hover:bg-fuchsia-500"
-            >
-              <LoaderIcon className="h-4 w-4 animate-spin text-white" />
-            </button>
-          ) : followed ? (
+          {followed ? (
             <button
               type="button"
               onClick={() => unfollowUser(data.pubkey)}

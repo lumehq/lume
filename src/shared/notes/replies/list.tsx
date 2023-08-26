@@ -11,10 +11,13 @@ export function RepliesList({ id }: { id: string }) {
   const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
 
   useEffect(() => {
+    let isCancelled = false;
+
     async function fetchRepliesAndSub() {
       const events = await fetchAllReplies(id);
-      setData(events);
-
+      if (!isCancelled) {
+        setData(events);
+      }
       // subscribe for new replies
       sub(
         {
@@ -26,9 +29,12 @@ export function RepliesList({ id }: { id: string }) {
         false
       );
     }
-
     fetchRepliesAndSub();
-  }, []);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [id]);
 
   if (!data) {
     return (

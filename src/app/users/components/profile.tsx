@@ -8,21 +8,20 @@ import { useStorage } from '@libs/storage/provider';
 import { EditProfileModal } from '@shared/editProfileModal';
 import { Image } from '@shared/image';
 
+import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
-import { useSocial } from '@utils/hooks/useSocial';
 import { shortenKey } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
   const { db } = useStorage();
   const { user } = useProfile(pubkey);
-  const { status, userFollows, follow, unfollow } = useSocial();
+  const { addContact, removeContact } = useNostr();
 
   const [followed, setFollowed] = useState(false);
 
   const followUser = (pubkey: string) => {
     try {
-      follow(pubkey);
-
+      addContact(pubkey);
       // update state
       setFollowed(true);
     } catch (error) {
@@ -32,8 +31,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const unfollowUser = (pubkey: string) => {
     try {
-      unfollow(pubkey);
-
+      removeContact(pubkey);
       // update state
       setFollowed(false);
     } catch (error) {
@@ -42,12 +40,10 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   };
 
   useEffect(() => {
-    if (status === 'success' && userFollows) {
-      if (userFollows.includes(pubkey)) {
-        setFollowed(true);
-      }
+    if (db.account.follows.includes(pubkey)) {
+      setFollowed(true);
     }
-  }, [status]);
+  }, []);
 
   if (!user) return <p>Loading...</p>;
 
@@ -92,14 +88,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             </div>
           </div>
           <div className="inline-flex items-center justify-center gap-2">
-            {status === 'loading' ? (
-              <button
-                type="button"
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
-              >
-                Loading...
-              </button>
-            ) : followed ? (
+            {followed ? (
               <button
                 type="button"
                 onClick={() => unfollowUser(pubkey)}

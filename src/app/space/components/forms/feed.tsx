@@ -28,6 +28,10 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
     setGroups(arr);
   };
 
+  const cancel = () => {
+    removeWidget(db, params.id);
+  };
+
   const submit = async () => {
     setWidget(db, {
       kind: WidgetKinds.feed,
@@ -39,7 +43,7 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
   };
 
   return (
-    <div className="flex h-full shrink-0 grow-0 basis-[400px] flex-col items-center justify-center">
+    <div className="flex h-full shrink-0 grow-0 basis-[400px] flex-col items-center justify-center bg-white/10">
       <div className="w-full px-5">
         <h3 className="mb-4 text-center text-lg font-semibold">
           Choose account you want to add to group feeds
@@ -70,7 +74,7 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
               </button>
             ))}
           </div>
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-2">
             <button
               type="submit"
               disabled={groups.length < 1}
@@ -80,6 +84,13 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
               <span className="w-5" />
               <span>Add {groups.length} account to group feed</span>
               <ArrowRightCircleIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={cancel}
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/10 px-6 font-medium leading-none text-white hover:bg-white/20 focus:outline-none disabled:opacity-50"
+            >
+              Cancel
             </button>
           </div>
         </div>

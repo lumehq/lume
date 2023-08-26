@@ -98,6 +98,32 @@ export function useNostr() {
     }
   };
 
+  const addContact = async (pubkey: string) => {
+    const list = new Set(db.account.follows);
+    list.add(pubkey);
+
+    const tags = [];
+    list.forEach((item) => {
+      tags.push(['p', item]);
+    });
+
+    // publish event
+    publish({ content: '', kind: NDKKind.Contacts, tags: tags });
+  };
+
+  const removeContact = async (pubkey: string) => {
+    const list = new Set(db.account.follows);
+    list.delete(pubkey);
+
+    const tags = [];
+    list.forEach((item) => {
+      tags.push(['p', item]);
+    });
+
+    // publish event
+    publish({ content: '', kind: NDKKind.Contacts, tags: tags });
+  };
+
   const prefetchEvents = async () => {
     try {
       const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
@@ -309,6 +335,8 @@ export function useNostr() {
   return {
     sub,
     fetchUserData,
+    addContact,
+    removeContact,
     prefetchEvents,
     fetchActivities,
     fetchNIP04Chats,

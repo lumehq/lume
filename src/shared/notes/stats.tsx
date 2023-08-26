@@ -72,7 +72,7 @@ export function NoteStats({ id }: { id: string }) {
         <span className="font-semibold text-white">
           {compactNumber.format(data.reposts)}
         </span>{' '}
-        reposts
+        repostrs
       </p>
       <span className="text-white/50">·</span>
       <p className="text-white/50">
