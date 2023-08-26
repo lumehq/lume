@@ -1,73 +1,41 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { useNDK } from '@libs/ndk/provider';
+import { NDKKind } from '@nostr-dev-kit/ndk';
+import { useEffect, useState } from 'react';
 
 import { NoteSkeleton, Reply } from '@shared/notes';
 
+import { useNostr } from '@utils/hooks/useNostr';
 import { NDKEventWithReplies } from '@utils/types';
 
 export function RepliesList({ id }: { id: string }) {
-  const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['note-replies', id],
-    async () => {
-      try {
-        const events = await ndk.fetchEvents({
-          kinds: [1],
+  const { fetchAllReplies, sub } = useNostr();
+  const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
+
+  useEffect(() => {
+    async function fetchRepliesAndSub() {
+      const events = await fetchAllReplies(id);
+      setData(events);
+
+      // subscribe for new replies
+      sub(
+        {
+          kinds: [NDKKind.Text],
           '#e': [id],
-        });
+          since: Math.floor(Date.now() / 1000),
+        },
+        (event: NDKEventWithReplies) => setData((prev) => [event, ...prev]),
+        false
+      );
+    }
 
-        const array = [...events] as unknown as NDKEventWithReplies[];
+    fetchRepliesAndSub();
+  }, []);
 
-        if (array.length > 0) {
-          const replies = new Set();
-          array.forEach((event) => {
-            const tags = event.tags.filter((el) => el[0] === 'e' && el[1] !== id);
-            if (tags.length > 0) {
-              tags.forEach((tag) => {
-                const rootIndex = array.findIndex((el) => el.id === tag[1]);
-                if (rootIndex !== -1) {
-                  const rootEvent = array[rootIndex];
-                  if (rootEvent && rootEvent.replies) {
-                    rootEvent.replies.push(event);
-                  } else {
-                    rootEvent.replies = [event];
-                  }
-                  replies.add(event.id);
-                }
-              });
-            }
-          });
-          const cleanEvents = array.filter((ev) => !replies.has(ev.id));
-          return cleanEvents;
-        }
-
-        return array;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    { enabled: !!ndk }
-  );
-
-  if (status === 'loading') {
+  if (!data) {
     return (
       <div className="mt-5 pb-10">
         <div className="flex flex-col">
           <div className="rounded-xl bg-white/10 px-3 py-3">
             <NoteSkeleton />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="mt-5 pb-10">
-        <div className="flex flex-col">
-          <div className="rounded-xl bg-white/10 px-3 py-3">
-            <p>Error: failed to get replies</p>
           </div>
         </div>
       </div>
@@ -88,11 +56,7 @@ export function RepliesList({ id }: { id: string }) {
             </div>
           </div>
         ) : (
-          data
-            .reverse()
-            .map((event: NDKEventWithReplies) => (
-              <Reply key={event.id} event={event} root={id} />
-            ))
+          data.map((event) => <Reply key={event.id} event={event} root={id} />)
         )}
       </div>
     </div>

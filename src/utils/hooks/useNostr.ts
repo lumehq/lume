@@ -18,6 +18,7 @@ import { useStorage } from '@libs/storage/provider';
 import { useStronghold } from '@stores/stronghold';
 
 import { nHoursAgo } from '@utils/date';
+import { NDKEventWithReplies } from '@utils/types';
 
 export function useNostr() {
   const { ndk, relayUrls } = useNDK();
@@ -222,6 +223,48 @@ export function useNostr() {
     return all as unknown as NDKEvent[];
   };
 
+  const fetchAllReplies = async (id: string, data?: NDKEventWithReplies[]) => {
+    let events = data || null;
+    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+
+    if (!data) {
+      events = (await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [NDKKind.Text],
+          '#e': [id],
+        },
+        { since: 0 },
+        { sort: true }
+      )) as unknown as NDKEventWithReplies[];
+    }
+
+    if (events.length > 0) {
+      const replies = new Set();
+      events.forEach((event) => {
+        const tags = event.tags.filter((el) => el[0] === 'e' && el[1] !== id);
+        if (tags.length > 0) {
+          tags.forEach((tag) => {
+            const rootIndex = events.findIndex((el) => el.id === tag[1]);
+            if (rootIndex !== -1) {
+              const rootEvent = events[rootIndex];
+              if (rootEvent && rootEvent.replies) {
+                rootEvent.replies.push(event);
+              } else {
+                rootEvent.replies = [event];
+              }
+              replies.add(event.id);
+            }
+          });
+        }
+      });
+      const cleanEvents = events.filter((ev) => !replies.has(ev.id));
+      return cleanEvents;
+    }
+
+    return events;
+  };
+
   const publish = async ({
     content,
     kind,
@@ -270,6 +313,7 @@ export function useNostr() {
     fetchActivities,
     fetchNIP04Chats,
     fetchNIP04Messages,
+    fetchAllReplies,
     publish,
     createZap,
   };
