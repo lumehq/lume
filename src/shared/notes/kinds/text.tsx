@@ -26,11 +26,16 @@ export function TextNote({ event }: { event: NDKEvent }) {
           del: ({ children }) => {
             const key = children[0] as string;
             if (typeof key !== 'string') return;
-            if (key.startsWith('pub') && key.length > 50 && key.length < 100)
+            if (key.startsWith('pub') && key.length > 50 && key.length < 100) {
               return <MentionUser pubkey={key.replace('pub-', '')} />;
-            if (key.startsWith('tag')) return <Hashtag tag={key.replace('tag-', '')} />;
+            }
+            if (key.startsWith('tag')) {
+              return <Hashtag tag={key.replace('tag-', '')} />;
+            }
           },
         }}
+        disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
+        unwrapDisallowed={true}
       >
         {content?.parsed}
       </ReactMarkdown>

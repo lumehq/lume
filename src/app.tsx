@@ -5,10 +5,11 @@ import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ErrorScreen } from '@app/error';
 
-import { AppLayout } from '@shared/appLayout';
-import { AuthLayout } from '@shared/authLayout';
 import { LoaderIcon } from '@shared/icons';
-import { SettingsLayout } from '@shared/settingsLayout';
+import { AppLayout } from '@shared/layouts/app';
+import { AuthLayout } from '@shared/layouts/auth';
+import { NoteLayout } from '@shared/layouts/note';
+import { SettingsLayout } from '@shared/layouts/settings';
 
 import { checkActiveAccount } from '@utils/checkActiveAccount';
 
@@ -55,13 +56,6 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: 'events/:id',
-        async lazy() {
-          const { EventScreen } = await import('@app/events');
-          return { Component: EventScreen };
-        },
-      },
-      {
         path: 'users/:pubkey',
         async lazy() {
           const { UserScreen } = await import('@app/users');
@@ -80,6 +74,27 @@ const router = createBrowserRouter([
         async lazy() {
           const { NotificationScreen } = await import('@app/notification');
           return { Component: NotificationScreen };
+        },
+      },
+    ],
+  },
+  {
+    path: '/notes',
+    element: <NoteLayout />,
+    errorElement: <ErrorScreen />,
+    children: [
+      {
+        path: 'text/:id',
+        async lazy() {
+          const { TextNoteScreen } = await import('@app/notes/text');
+          return { Component: TextNoteScreen };
+        },
+      },
+      {
+        path: 'article/:id',
+        async lazy() {
+          const { ArticleNoteScreen } = await import('@app/notes/article');
+          return { Component: ArticleNoteScreen };
         },
       },
     ],

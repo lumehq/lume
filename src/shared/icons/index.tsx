@@ -50,3 +50,4 @@ export * from './horizontalDots';
 export * from './arrowRightCircle';
 export * from './hashtag';
 export * from './file';
+export * from './share';

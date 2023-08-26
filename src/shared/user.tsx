@@ -79,10 +79,7 @@ export function User({
               size === 'small' ? 'max-w-[10rem]' : 'max-w-[15rem]'
             )}
           >
-            {user?.nip05?.toLowerCase() ||
-              user?.name ||
-              user?.display_name ||
-              displayNpub(pubkey, 16)}
+            {user?.nip05 || user?.name || user?.display_name || displayNpub(pubkey, 16)}
           </h5>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>

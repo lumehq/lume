@@ -40,7 +40,7 @@ export function ErrorScreen() {
             Sorry, an unexpected error has occurred.
           </h1>
           <div className="mt-4 inline-flex h-16 items-center justify-center rounded-xl border border-dashed border-red-400 bg-red-200/10 px-5">
-            <p className="text-sm font-medium text-red-400">
+            <p className="select-text text-sm font-medium text-red-400">
               {error.statusText || error.message}
             </p>
           </div>

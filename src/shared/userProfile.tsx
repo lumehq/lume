@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { UserMetadata } from '@app/users/components/stats';
+import { UserStats } from '@app/users/components/stats';
 
 import { Image } from '@shared/image';
 
@@ -65,7 +65,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           <p className="mt-2 max-w-[500px] select-text break-words text-white">
             {user?.about}
           </p>
-          <UserMetadata pubkey={pubkey} />
+          <UserStats pubkey={pubkey} />
         </div>
         <div className="mt-4 inline-flex items-center gap-2">
           {status === 'loading' ? (

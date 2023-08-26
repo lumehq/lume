@@ -14,6 +14,7 @@ export * from './replies/sub';
 export * from './kinds/text';
 export * from './kinds/file';
 export * from './kinds/article';
+export * from './kinds/articleDetail';
 export * from './kinds/unknown';
 export * from './metadata';
 export * from './users/mini';

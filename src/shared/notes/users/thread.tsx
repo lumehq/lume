@@ -1,4 +1,3 @@
-import { VerticalDotsIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
 import { formatCreatedAt } from '@utils/createdAt';
@@ -16,23 +15,15 @@ export function ThreadUser({ pubkey, time }: { pubkey: string; time: number }) {
   return (
     <div className="flex items-center gap-3">
       <Image
-        src={user?.picture || user?.image}
+        src={user.picture || user.image}
         alt={pubkey}
         className="relative z-20 inline-block h-11 w-11 rounded-lg"
       />
-      <div className="lex flex-1 items-baseline justify-between">
-        <div className="inline-flex w-full items-center justify-between">
-          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
-            {user?.nip05?.toLowerCase() || user?.name || user?.display_name}
-          </h5>
-          <button
-            type="button"
-            className="inline-flex h-5 w-max items-center justify-center rounded px-1 hover:bg-white/10"
-          >
-            <VerticalDotsIcon className="h-4 w-4 rotate-90 transform text-white/50" />
-          </button>
-        </div>
-        <div className="mt-1 inline-flex items-center gap-2">
+      <div className="flex flex-1 flex-col gap-2">
+        <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
+          {user.display_name || user.name}
+        </h5>
+        <div className="inline-flex items-center gap-2">
           <span className="leading-none text-white/50">{createdAt}</span>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{displayNpub(pubkey, 16)}</span>
