@@ -70,10 +70,10 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: 'lodge',
+        path: 'notifications',
         async lazy() {
-          const { LodgeScreen } = await import('@app/lodge');
-          return { Component: LodgeScreen };
+          const { NotificationScreen } = await import('@app/notifications');
+          return { Component: NotificationScreen };
         },
       },
     ],

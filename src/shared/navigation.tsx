@@ -85,7 +85,7 @@ export function Navigation() {
                   Space
                 </NavLink>
                 <NavLink
-                  to="/lodge"
+                  to="/notifications"
                   preventScrollReset={true}
                   className={({ isActive }) =>
                     twMerge(
@@ -97,7 +97,7 @@ export function Navigation() {
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-white/10">
                     <BellIcon className="h-3 w-3 text-white" />
                   </span>
-                  Lodge
+                  Notifications
                 </NavLink>
               </div>
             </Collapsible.Content>

@@ -4,13 +4,13 @@ import {
   sendNotification,
 } from '@tauri-apps/plugin-notification';
 
-export async function sendNativeNotification(content: string) {
+export async function sendNativeNotification(content: string, title?: string) {
   let permissionGranted = await isPermissionGranted();
   if (!permissionGranted) {
     const permission = await requestPermission();
     permissionGranted = permission === 'granted';
   }
   if (permissionGranted) {
-    sendNotification({ title: 'Lume', body: content });
+    sendNotification({ title: title || 'Lume', body: content });
   }
 }

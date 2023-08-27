@@ -1,7 +1,7 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 
-import { SimpleNote } from '@app/lodge/components/simpleNote';
-import { NotiUser } from '@app/lodge/components/user';
+import { SimpleNote } from '@app/notifications/components/simpleNote';
+import { NotiUser } from '@app/notifications/components/user';
 
 import { useStorage } from '@libs/storage/provider';
 

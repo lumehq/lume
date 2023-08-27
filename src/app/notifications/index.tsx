@@ -1,10 +1,10 @@
-import { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
-import { NotiMention } from '@app/lodge/components/mention';
-import { NotiReaction } from '@app/lodge/components/reaction';
-import { NotiRepost } from '@app/lodge/components/repost';
+import { NotiMention } from '@app/notifications/components/mention';
+import { NotiReaction } from '@app/notifications/components/reaction';
+import { NotiRepost } from '@app/notifications/components/repost';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -13,11 +13,11 @@ import { TitleBar } from '@shared/titleBar';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
-export function LodgeScreen() {
+export function NotificationScreen() {
   const { db } = useStorage();
-  const { sub, fetchActivities } = useNostr();
+  const { fetchActivities } = useNostr();
   const { status, data } = useQuery(
-    ['lodge', db.account.pubkey],
+    ['notifications', db.account.pubkey],
     async () => {
       return await fetchActivities();
     },
@@ -40,22 +40,10 @@ export function LodgeScreen() {
     [data]
   );
 
-  useEffect(() => {
-    const filter: NDKFilter = {
-      '#p': [db.account.pubkey],
-      kinds: [1, 3, 6, 7, 9735],
-      since: db.account.last_login_at ?? Math.floor(Date.now() / 1000),
-    };
-
-    sub(filter, async (event) => {
-      console.log('[notify] new noti', event.id);
-    });
-  }, []);
-
   return (
     <div className="scrollbar-hide h-full w-full overflow-y-auto bg-white/10">
       <div className="grid grid-cols-3">
-        <div className="col-span-2 h-full border-r border-white/5">
+        <div className="col-span-2 flex flex-col border-r border-white/5">
           <TitleBar title="Activities in the last 24 hours" />
           <div className="flex h-full flex-col gap-1.5">
             <div className="flex flex-col">

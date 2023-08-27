@@ -1,8 +1,8 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useMemo } from 'react';
 
-import { NotiContent } from '@app/lodge/components/content';
-import { NotiUser } from '@app/lodge/components/user';
+import { NotiContent } from '@app/notifications/components/content';
+import { NotiUser } from '@app/notifications/components/user';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { parser } from '@utils/parser';
