@@ -7,9 +7,7 @@ import { useImageUploader } from '@utils/hooks/useUploader';
 export function AvatarUploader({
   setPicture,
 }: {
-  setPicture: Dispatch<
-    SetStateAction<{ url: undefined | string; error?: undefined | string }>
-  >;
+  setPicture: Dispatch<SetStateAction<string>>;
 }) {
   const upload = useImageUploader();
   const [loading, setLoading] = useState(false);

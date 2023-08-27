@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { EditProfileModal } from '@app/users/components/modal';
 import { UserStats } from '@app/users/components/stats';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { EditProfileModal } from '@shared/editProfileModal';
 import { Image } from '@shared/image';
 
 import { useNostr } from '@utils/hooks/useNostr';

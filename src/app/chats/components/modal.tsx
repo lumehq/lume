@@ -6,7 +6,7 @@ import { User } from '@app/auth/components/user';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { CancelIcon, LoaderIcon, PlusIcon } from '@shared/icons';
+import { CancelIcon, PlusIcon } from '@shared/icons';
 
 export function NewMessageModal() {
   const navigate = useNavigate();
@@ -54,29 +54,23 @@ export function NewMessageModal() {
               </div>
             </div>
             <div className="flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-2 pt-2">
-              {status === 'loading' ? (
-                <div className="inline-flex items-center justify-center px-4 py-3">
-                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-                </div>
-              ) : (
-                db.account?.follows?.map((follow) => (
-                  <div
-                    key={follow}
-                    className="group flex items-center justify-between px-4 py-2 hover:bg-white/10"
-                  >
-                    <User pubkey={follow} />
-                    <div>
-                      <button
-                        type="button"
-                        onClick={() => openChat(follow)}
-                        className="hidden w-max rounded bg-white/10 px-3 py-1 text-sm font-medium hover:bg-fuchsia-500 group-hover:inline-flex"
-                      >
-                        Chat
-                      </button>
-                    </div>
+              {db.account?.follows?.map((follow) => (
+                <div
+                  key={follow}
+                  className="group flex items-center justify-between px-4 py-2 hover:bg-white/10"
+                >
+                  <User pubkey={follow} />
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => openChat(follow)}
+                      className="hidden w-max rounded bg-white/10 px-3 py-1 text-sm font-medium hover:bg-fuchsia-500 group-hover:inline-flex"
+                    >
+                      Chat
+                    </button>
                   </div>
-                ))
-              )}
+                </div>
+              ))}
             </div>
           </div>
         </Dialog.Content>
