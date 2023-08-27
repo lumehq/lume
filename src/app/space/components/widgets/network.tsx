@@ -167,7 +167,7 @@ export function NetworkWidget() {
             <div className="rounded-xl bg-white/10 px-3 py-6">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm text-white">
-                  You not have any postrs to see yet
+                  You not have any posts to see yet
                   <br />
                   Follow more people to have more fun.
                 </p>

@@ -130,7 +130,7 @@ export function FeedWidget({ params }: { params: Widget }) {
             <div className="bbg-white/10 rounded-xl px-3 py-6">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm text-white">
-                  There have been no new postrs.
+                  There have been no new posts.
                 </p>
               </div>
             </div>

@@ -127,7 +127,7 @@ export function UserWidget({ params }: { params: Widget }) {
           <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mt-4 px-3 text-lg font-semibold text-white">Latest postrs</h3>
+          <h3 className="mt-4 px-3 text-lg font-semibold text-white">Latest posts</h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
@@ -140,7 +140,7 @@ export function UserWidget({ params }: { params: Widget }) {
                 <div className="rounded-xl bg-white/10 px-3 py-6">
                   <div className="flex flex-col items-center gap-4">
                     <p className="text-center text-sm text-white">
-                      No new postr from user in 24 hours ago
+                      No new post from user in 24 hours ago
                     </p>
                   </div>
                 </div>

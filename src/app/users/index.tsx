@@ -120,7 +120,7 @@ export function UserScreen() {
       <UserProfile pubkey={pubkey} />
       <div className="mt-6 h-full w-full border-t border-white/5 px-1.5">
         <h3 className="mb-2 pt-4 text-center text-lg font-semibold leading-none text-white">
-          Latest postrs
+          Latest posts
         </h3>
         <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
           {status === 'loading' ? (
@@ -134,7 +134,7 @@ export function UserScreen() {
               <div className="rounded-xl bg-white/10 px-3 py-6">
                 <div className="flex flex-col items-center gap-4">
                   <p className="text-center text-sm font-medium text-white">
-                    User doesn&apos;t have any postrs in the last 48 hours.
+                    User doesn&apos;t have any posts in the last 48 hours.
                   </p>
                 </div>
               </div>

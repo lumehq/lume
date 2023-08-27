@@ -51,7 +51,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
               to={`/notes/text/${id}`}
               className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
-              Open as new screen
+              Focus mode
             </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>

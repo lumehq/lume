@@ -111,7 +111,7 @@ export function Composer() {
       await publish({ content: serializedContent, kind: 1, tags });
 
       // send native notifiation
-      await sendNativeNotification('Publish postr successfully');
+      await sendNativeNotification('Publish post successfully');
 
       // update state
       setStatus('done');
@@ -166,7 +166,7 @@ export function Composer() {
           {status === 'loading' ? (
             <LoaderIcon className="h-4 w-4 animate-spin text-white" />
           ) : (
-            'Postr'
+            'Post'
           )}
         </Button>
       </div>

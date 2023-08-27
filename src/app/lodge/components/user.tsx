@@ -22,7 +22,7 @@ export function NotiUser({ pubkey }: { pubkey: string }) {
       <Image
         src={user?.picture || user?.image}
         alt={pubkey}
-        className="h-10 w-10 shrink-0 rounded-md object-cover"
+        className="h-11 w-11 shrink-0 rounded-lg object-cover"
       />
       <span className="max-w-[10rem] flex-1 truncate font-medium leading-none text-white">
         {user?.nip05 || user?.name || user?.display_name || displayNpub(pubkey, 16)}

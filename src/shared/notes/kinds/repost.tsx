@@ -33,7 +33,7 @@ export function Repost({ event }: { event: NDKEvent }) {
       <div className="h-min w-full px-3 py-1.5">
         <div className="flex flex-col gap-1 overflow-hidden rounded-xl bg-white/10 px-3 py-3">
           <p className="select-text break-all text-white/50">
-            Failed to get repostr with ID
+            Failed to get repost with ID
           </p>
           <div className="break-all rounded-lg bg-white/10 px-2 py-2">
             <p className="text-white">{repostID}</p>

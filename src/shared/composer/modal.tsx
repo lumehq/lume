@@ -21,7 +21,7 @@ export function ComposerModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-min items-center justify-center gap-2 rounded-md bg-white/10 px-6 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1"
+          className="inline-flex h-9 w-max items-center justify-center gap-2 rounded-md bg-white/10 px-4 text-sm font-medium text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1"
         >
           <ComposeIcon className="h-4 w-4" />
           Postr
@@ -38,7 +38,7 @@ export function ComposerModal() {
                   <ChevronRightIcon className="h-4 w-4 text-white/50" />
                 </span>
                 <div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-white/10 pl-3 pr-1.5 text-sm font-medium text-white">
-                  New Postr
+                  New Post
                   <ChevronDownIcon className="h-4 w-4" />
                 </div>
               </div>

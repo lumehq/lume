@@ -128,7 +128,7 @@ export function HashtagWidget({ params }: { params: Widget }) {
             <div className="rounded-xl bg-white/10 px-3 py-6">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm font-medium text-white">
-                  There have been no new postrs with this hashtag in the last 24 hours.
+                  There have been no new posts with this hashtag in the last 24 hours.
                 </p>
               </div>
             </div>

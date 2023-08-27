@@ -38,7 +38,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-            Repostr
+            Repost
             <Tooltip.Arrow className="fill-black" />
           </Tooltip.Content>
         </Tooltip.Portal>
@@ -49,11 +49,11 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
             <div className="flex flex-col gap-2 border-b border-white/5 px-5 py-4">
               <AlertDialog.Title className="text-lg font-semibold leading-none text-white">
-                Confirm repostr this postr?
+                Confirm repost this post?
               </AlertDialog.Title>
               <AlertDialog.Description className="text-sm leading-none text-white/50">
-                Repostred postr will be visible to your followers, and you cannot undo
-                this action.
+                Reposted post will be visible to your followers, and you cannot undo this
+                action.
               </AlertDialog.Description>
             </div>
             <div className="flex justify-end gap-6 px-5 py-3">
@@ -67,7 +67,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
                 onClick={() => submit()}
                 className="inline-flex h-11 items-center justify-center rounded-lg bg-fuchsia-500 px-4 font-medium leading-none text-white outline-none"
               >
-                Yes, repostr
+                Yes, repost
               </button>
             </div>
           </div>
