@@ -35,7 +35,7 @@ export function AccountSettingsScreen() {
                 <input
                   readOnly
                   value={db.account.pubkey}
-                  className="relative w-2/3 rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
+                  className="relative w-2/3 rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -45,7 +45,7 @@ export function AccountSettingsScreen() {
                 <input
                   readOnly
                   value={db.account.npub}
-                  className="relative w-2/3 rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
+                  className="relative w-2/3 rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -60,7 +60,7 @@ export function AccountSettingsScreen() {
                     readOnly
                     type={type}
                     value={privkey}
-                    className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
+                    className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
                   />
                   <button
                     type="button"

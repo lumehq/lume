@@ -29,7 +29,7 @@ export function MediaUploader({
           <button
             type="button"
             onClick={() => uploadMedia()}
-            className="group inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
+            className="group inline-flex h-8 w-8 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
           >
             {loading ? (
               <LoaderIcon className="h-5 w-5 animate-spin text-white" />

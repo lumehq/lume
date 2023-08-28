@@ -28,7 +28,7 @@ export function WelcomeScreen() {
   }, []);
 
   return (
-    <div className="flex h-screen w-full flex-col justify-between bg-white/10">
+    <div className="flex h-screen w-full flex-col justify-between bg-white/10 backdrop-blur-xl">
       <div className="flex flex-col gap-10 pt-16">
         <div className="sflex flex-col gap-2 text-center">
           <h1 className="text-3xl font-medium text-white">Welcome to Lume</h1>
@@ -48,7 +48,7 @@ export function WelcomeScreen() {
           </Link>
           <Link
             to="/auth/create"
-            className="inline-flex h-11 w-2/3 items-center justify-center gap-2 rounded-lg bg-white/10 px-6 font-medium leading-none text-zinc-200 hover:bg-white/20 focus:outline-none"
+            className="inline-flex h-11 w-2/3 items-center justify-center gap-2 rounded-lg bg-white/10 px-6 font-medium leading-none text-zinc-200 backdrop-blur-xl hover:bg-white/20 focus:outline-none"
           >
             Create new key
           </Link>

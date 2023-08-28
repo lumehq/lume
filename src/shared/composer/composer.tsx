@@ -130,7 +130,7 @@ export function Composer() {
     <div className="flex h-full flex-col px-4 pb-4">
       <div className="flex h-full w-full gap-3">
         <div className="flex w-8 shrink-0 items-center justify-center">
-          <div className="h-full w-[2px] bg-white/10" />
+          <div className="h-full w-[2px] bg-white/10 backdrop-blur-xl" />
         </div>
         <div className="w-full">
           <EditorContent
@@ -146,7 +146,7 @@ export function Composer() {
               <button
                 type="button"
                 onClick={() => clearReply()}
-                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-white/10 px-2"
+                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-white/10 px-2 backdrop-blur-xl"
               >
                 <CancelIcon className="h-4 w-4 text-white" />
               </button>
@@ -158,7 +158,7 @@ export function Composer() {
         <button
           type="button"
           onClick={() => uploadImage()}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-white/10"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10"
         >
           <PlusCircleIcon className="h-5 w-5 text-white/50" />
         </button>

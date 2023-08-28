@@ -75,13 +75,13 @@ export function OnboardStep2Screen() {
         <p className="text-sm text-white/50">Customize your space which hashtag widget</p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10">
+        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl">
           {data.map((item: { hashtag: string }) => (
             <button
               key={item.hashtag}
               type="button"
               onClick={() => toggleTag(item.hashtag)}
-              className="inline-flex transform items-center justify-between bg-white/10 px-4 py-2 hover:bg-white/20"
+              className="inline-flex transform items-center justify-between bg-white/10 px-4 py-2 backdrop-blur-xl hover:bg-white/20"
             >
               <p className="text-white">{item.hashtag}</p>
               {tags.has(item.hashtag) && (
@@ -115,7 +115,7 @@ export function OnboardStep2Screen() {
           </button>
           <Link
             to="/auth/onboarding/step-3"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white hover:bg-white/10 focus:outline-none"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/10 focus:outline-none"
           >
             Skip, you can add later
           </Link>

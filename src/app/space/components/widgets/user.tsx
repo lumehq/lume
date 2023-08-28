@@ -120,7 +120,7 @@ export function UserWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10">
+    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
       <TitleBar id={params.id} title={params.title} />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="px-3 pt-1.5">
@@ -131,13 +131,13 @@ export function UserWidget({ params }: { params: Widget }) {
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-white/10 px-3 py-3">
+                <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
                   <NoteSkeleton />
                 </div>
               </div>
             ) : items.length === 0 ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-white/10 px-3 py-6">
+                <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
                   <div className="flex flex-col items-center gap-4">
                     <p className="text-center text-sm text-white">
                       No new post from user in 24 hours ago

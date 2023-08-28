@@ -21,7 +21,9 @@ export function SettingsLayout() {
                   className={({ isActive }) =>
                     twMerge(
                       'flex h-9 items-center gap-2.5 rounded-md px-2.5',
-                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                      isActive
+                        ? 'bg-white/10 text-white backdrop-blur-xl'
+                        : 'text-white/80'
                     )
                   }
                 >
@@ -32,7 +34,9 @@ export function SettingsLayout() {
                   className={({ isActive }) =>
                     twMerge(
                       'flex h-9 items-center gap-2.5 rounded-md px-2.5',
-                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                      isActive
+                        ? 'bg-white/10 text-white backdrop-blur-xl'
+                        : 'text-white/80'
                     )
                   }
                 >
@@ -43,7 +47,9 @@ export function SettingsLayout() {
                   className={({ isActive }) =>
                     twMerge(
                       'flex h-9 items-center gap-2.5 rounded-md px-2.5',
-                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                      isActive
+                        ? 'bg-white/10 text-white backdrop-blur-xl'
+                        : 'text-white/80'
                     )
                   }
                 >
@@ -57,7 +63,7 @@ export function SettingsLayout() {
           <LumeBar />
         </div>
       </div>
-      <div className="h-full w-full flex-1 bg-black/90">
+      <div className="h-full w-full flex-1 bg-black/90 backdrop-blur-xl">
         <Outlet />
         <ScrollRestoration
           getKey={(location) => {

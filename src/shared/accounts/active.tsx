@@ -11,10 +11,10 @@ import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
 
-export function ActiveAccount({ data }: { data: { pubkey: string; npub: string } }) {
-  const { sub } = useNostr();
+export function ActiveAccount() {
   const { db } = useStorage();
-  const { status, user } = useProfile(data.pubkey);
+  const { status, user } = useProfile(db.account.pubkey);
+  const { sub } = useNostr();
 
   useEffect(() => {
     const filter: NDKFilter = {
@@ -53,11 +53,11 @@ export function ActiveAccount({ data }: { data: { pubkey: string; npub: string }
   }
 
   return (
-    <Link to={`/users/${data.pubkey}`} className="relative inline-block h-9 w-9">
+    <Link to={`/users/${db.account.pubkey}`} className="relative inline-block shrink-0">
       <Image
         src={user?.picture || user?.image}
-        alt={data.npub}
-        className="h-9 w-9 rounded-md object-cover"
+        alt={db.account.npub}
+        className="h-10 w-10 rounded-lg object-cover"
       />
       <NetworkStatusIndicator />
     </Link>

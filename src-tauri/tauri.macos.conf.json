@@ -25,12 +25,12 @@
         "width": 400,
         "height": 500,
         "decorations": true,
-        "label": "Lume",
         "title": "Lume",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
         "center": true,
         "resizable": false,
+        "label": "splashscreen",
         "url": "splashscreen"
       }
     ]

@@ -17,7 +17,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
 
   if (status === 'loading') {
     return (
-      <div className="relative mb-5 overflow-hidden rounded-xl bg-white/10 px-3 py-3">
+      <div className="relative mb-5 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
         <NoteSkeleton />
       </div>
     );
@@ -25,7 +25,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
 
   if (status === 'error') {
     return (
-      <div className="mb-5 flex overflow-hidden rounded-xl bg-white/10 px-3 py-3">
+      <div className="mb-5 flex overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
         <p className="break-all text-white/50">Failed to fetch event: {id}</p>
       </div>
     );

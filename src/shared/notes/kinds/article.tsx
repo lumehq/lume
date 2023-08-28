@@ -41,7 +41,7 @@ export function ArticleNote({ event }: { event: NDKEvent }) {
             className="h-44 w-full rounded-t-lg object-cover"
           />
         )}
-        <div className="flex flex-col gap-2 rounded-b-lg bg-white/10 px-3 py-3">
+        <div className="flex flex-col gap-2 rounded-b-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
           <h5 className="line-clamp-1 font-medium leading-none text-white">
             {metadata.title}
           </h5>

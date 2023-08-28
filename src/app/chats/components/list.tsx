@@ -33,12 +33,12 @@ export function ChatsList() {
     return (
       <div className="flex flex-col">
         <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
-          <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10" />
-          <div className="h-3 w-full animate-pulse rounded-sm bg-white/10" />
+          <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+          <div className="h-3 w-full animate-pulse rounded-sm bg-white/10 backdrop-blur-xl" />
         </div>
         <div className="inline-flex h-9 items-center gap-2.5 rounded-md px-2.5">
-          <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10" />
-          <div className="h-3 w-full animate-pulse rounded-sm bg-white/10" />
+          <div className="relative h-6 w-6 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+          <div className="h-3 w-full animate-pulse rounded-sm bg-white/10 backdrop-blur-xl" />
         </div>
       </div>
     );

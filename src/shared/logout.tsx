@@ -30,14 +30,14 @@ export function Logout() {
       <Dialog.Portal className="relative z-10">
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-6">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="text-lg font-semibold leading-none text-white">
                     Are you sure!
                   </Dialog.Title>
-                  <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
+                  <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
                     <CancelIcon className="h-4 w-4 text-white/50" />
                   </Dialog.Close>
                 </div>
@@ -57,7 +57,7 @@ export function Logout() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium text-white/50 hover:bg-white/10"
+                  className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium text-white/50 backdrop-blur-xl hover:bg-white/10"
                 >
                   Cancel
                 </button>

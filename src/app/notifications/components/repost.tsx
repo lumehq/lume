@@ -15,7 +15,7 @@ export function NotiRepost({ event }: { event: NDKEvent }) {
 
   return (
     <div className="h-min w-full px-3 py-1.5">
-      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3">
+      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-1">
             <NotiUser pubkey={event.pubkey} />

@@ -41,18 +41,18 @@ export function ThreadBlock({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="scrollbar-hide relative shrink-0 grow-0 basis-[400px] overflow-y-auto bg-white/10">
+    <div className="scrollbar-hide relative shrink-0 grow-0 basis-[400px] overflow-y-auto bg-white/10 backdrop-blur-xl">
       <TitleBar id={params.id} title={params.title} />
       <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
               <NoteSkeleton />
             </div>
           </div>
         ) : (
           <div className="h-min w-full px-3 pt-1.5">
-            <div className="rounded-xl bg-white/10 px-3 pt-3">
+            <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
               <ThreadUser pubkey={data.pubkey} time={data.created_at} />
               <div className="mt-2">{renderKind(data)}</div>
               <NoteActions id={params.content} pubkey={data.pubkey} noOpenThread={true} />

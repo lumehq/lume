@@ -33,7 +33,7 @@ export function ErrorScreen() {
   }, []);
 
   return (
-    <div className="flex h-full items-center justify-center bg-black/90">
+    <div className="flex h-full items-center justify-center bg-black/90 backdrop-blur-xl">
       <div className="flex max-w-lg flex-col gap-4">
         <div className="flex flex-col">
           <h1 className="mb-1 text-2xl font-semibold text-white">
@@ -57,19 +57,19 @@ export function ErrorScreen() {
             href="https://github.com/luminous-devs/lume/issues/new"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/20"
           >
             Click here to report the issue on GitHub
           </a>
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/20"
           >
             Reload app
           </button>
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white hover:bg-white/20"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/20"
           >
             Reset app
           </button>

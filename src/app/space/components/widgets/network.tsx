@@ -153,23 +153,25 @@ export function NetworkWidget() {
   }, []);
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10">
+    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
       <TitleBar title="Network" />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
               <NoteSkeleton />
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-6">
-              <div className="flex flex-col items-center gap-4">
-                <p className="text-center text-sm text-white">
-                  You not have any posts to see yet
-                  <br />
-                  Follow more people to have more fun.
+          <div className="flex h-full w-full flex-col items-center justify-center px-3">
+            <div className="flex flex-col items-center gap-4">
+              <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
+              <div className="text-center">
+                <h3 className="text-xl font-semibold leading-tight">
+                  Your newsfeed is empty
+                </h3>
+                <p className="text-center text-white/50">
+                  Connect more people to explore more content
                 </p>
               </div>
             </div>
@@ -193,38 +195,40 @@ export function NetworkWidget() {
           </div>
         )}
         {isFetchingNextPage && (
-          <div className="mb-20 px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3">
+          <div className="mb-20 px-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
               <NoteSkeleton />
             </div>
           </div>
         )}
         <div className="px-3 py-1.5">
-          <button
-            onClick={() => fetchNextPage()}
-            disabled={!hasNextPage || isFetchingNextPage}
-            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
-          >
-            {isFetchingNextPage ? (
-              <>
-                <span className="w-5" />
-                <span>Loading...</span>
-                <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-              </>
-            ) : hasNextPage ? (
-              <>
-                <span className="w-5" />
-                <span>Load more</span>
-                <ArrowRightCircleIcon className="h-5 w-5" />
-              </>
-            ) : (
-              <>
-                <span className="w-5" />
-                <span>Nothing more to load</span>
-                <ArrowRightCircleIcon className="h-5 w-5" />
-              </>
-            )}
-          </button>
+          {dbEvents.length > 0 ? (
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+            >
+              {isFetchingNextPage ? (
+                <>
+                  <span className="w-5" />
+                  <span>Loading...</span>
+                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                </>
+              ) : hasNextPage ? (
+                <>
+                  <span className="w-5" />
+                  <span>Load more</span>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                </>
+              ) : (
+                <>
+                  <span className="w-5" />
+                  <span>Nothing more to load</span>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                </>
+              )}
+            </button>
+          ) : null}
         </div>
       </div>
     </div>

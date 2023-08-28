@@ -124,7 +124,7 @@ export function ResetScreen() {
                 {...register('privkey', { required: true })}
                 type="text"
                 placeholder="nsec..."
-                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none placeholder:text-white/10"
+                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/10"
               />
             </div>
           </div>
@@ -137,12 +137,12 @@ export function ResetScreen() {
                 {...register('password', { required: true })}
                 type={passwordInput}
                 placeholder="min. 4 characters"
-                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none placeholder:text-white/10"
+                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/10"
               />
               <button
                 type="button"
                 onClick={() => showPassword()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 backdrop-blur-xl hover:bg-white/10"
               >
                 {passwordInput === 'password' ? (
                   <EyeOffIcon className="h-5 w-5 text-white/50 group-hover:text-white" />

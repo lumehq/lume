@@ -43,7 +43,7 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
   };
 
   return (
-    <div className="flex h-full shrink-0 grow-0 basis-[400px] flex-col items-center justify-center bg-white/10">
+    <div className="flex h-full shrink-0 grow-0 basis-[400px] flex-col items-center justify-center bg-white/10 backdrop-blur-xl">
       <div className="w-full px-5">
         <h3 className="mb-4 text-center text-lg font-semibold">
           Choose account you want to add to group feeds
@@ -54,10 +54,10 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Title"
-              className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none placeholder:text-white/50"
+              className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
             />
           </div>
-          <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-lg bg-white/10 py-2">
+          <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-lg bg-white/10 py-2 backdrop-blur-xl">
             {db.account.network.map((item: string) => (
               <button
                 key={item}
@@ -88,7 +88,7 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
             <button
               type="button"
               onClick={cancel}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/10 px-6 font-medium leading-none text-white hover:bg-white/20 focus:outline-none disabled:opacity-50"
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/10 px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/20 focus:outline-none disabled:opacity-50"
             >
               Cancel
             </button>

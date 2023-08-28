@@ -36,7 +36,7 @@ export function NoteActions({
         </div>
         {!noOpenThread && (
           <>
-            <div className="mx-2 block h-4 w-px bg-white/10" />
+            <div className="mx-2 block h-4 w-px bg-white/10 backdrop-blur-xl" />
             <Tooltip.Root delayDuration={150}>
               <Tooltip.Trigger asChild>
                 <button

@@ -125,7 +125,7 @@ export function EditProfileModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+          className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
         >
           Edit profile
         </button>
@@ -133,13 +133,13 @@ export function EditProfileModal() {
       <Dialog.Portal className="relative z-10">
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex items-center justify-between">
                 <Dialog.Title className="text-lg font-semibold leading-none text-white">
                   Edit profile
                 </Dialog.Title>
-                <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
+                <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
                   <CancelIcon className="h-4 w-4 text-white/50" />
                 </Dialog.Close>
               </div>
@@ -191,7 +191,7 @@ export function EditProfileModal() {
                         minLength: 4,
                       })}
                       spellCheck={false}
-                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none placeholder:text-white/50"
+                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -208,7 +208,7 @@ export function EditProfileModal() {
                           minLength: 4,
                         })}
                         spellCheck={false}
-                        className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none placeholder:text-white/50"
+                        className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
                       />
                       <div className="absolute right-2 top-1/2 -translate-y-1/2 transform">
                         {nip05.verified ? (
@@ -240,7 +240,7 @@ export function EditProfileModal() {
                     <textarea
                       {...register('about')}
                       spellCheck={false}
-                      className="relative h-20 w-full resize-none rounded-lg bg-white/10 px-3 py-1 !outline-none placeholder:text-white/50"
+                      className="relative h-20 w-full resize-none rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -254,7 +254,7 @@ export function EditProfileModal() {
                       type={'text'}
                       {...register('website', { required: false })}
                       spellCheck={false}
-                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none placeholder:text-white/50"
+                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -268,7 +268,7 @@ export function EditProfileModal() {
                       type={'text'}
                       {...register('lud16', { required: false })}
                       spellCheck={false}
-                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none placeholder:text-white/50"
+                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
                     />
                   </div>
                   <div>

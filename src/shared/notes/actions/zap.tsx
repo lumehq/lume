@@ -41,7 +41,7 @@ export function NoteZap({ id }: { id: string }) {
       <Dialog.Portal className="relative z-10">
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="relative h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col items-center gap-1.5">
                 <Dialog.Title className="font-medium leading-none text-white">
@@ -51,7 +51,7 @@ export function NoteZap({ id }: { id: string }) {
                   Send tip with Bitcoin via Lightning
                 </Dialog.Description>
               </div>
-              <Dialog.Close className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
+              <Dialog.Close className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
                 <CancelIcon className="h-4 w-4 text-white/50" />
               </Dialog.Close>
             </div>
@@ -63,8 +63,8 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(21000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
-                        `${selected(21000) && 'bg-white/10'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        `${selected(21000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
                       <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
@@ -76,8 +76,8 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(69000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
-                        `${selected(69000) && 'bg-white/10'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        `${selected(69000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
                       <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
@@ -89,8 +89,8 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(100000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
-                        `${selected(100000) && 'bg-white/10'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        `${selected(100000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
                       <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
@@ -102,8 +102,8 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(200000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
-                        `${selected(200000) && 'bg-white/10'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        `${selected(200000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
                       <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
@@ -115,8 +115,8 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(500000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
-                        `${selected(500000) && 'bg-white/10'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        `${selected(500000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
                       <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
@@ -128,8 +128,8 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(1000000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 hover:bg-white/10',
-                        `${selected(1000000) && 'bg-white/10'}`
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        `${selected(1000000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
                       <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />

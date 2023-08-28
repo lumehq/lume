@@ -24,7 +24,7 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   return (
-    <div className="mt-3 flex flex-col rounded-xl bg-white/10">
+    <div className="mt-3 flex flex-col rounded-xl bg-white/10 backdrop-blur-xl">
       <div className="relative w-full flex-1 overflow-hidden">
         <textarea
           value={value}

@@ -95,7 +95,7 @@ export function ImportStep1Screen() {
               {...register('privkey', { required: true, minLength: 32 })}
               type={'password'}
               placeholder="nsec or hexstring"
-              className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none placeholder:text-white/50"
+              className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
             />
             <span className="text-sm text-red-400">
               {errors.privkey && <p>{errors.privkey.message}</p>}

@@ -46,7 +46,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
       <AlertDialog.Portal className="relative z-10">
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="flex flex-col gap-2 border-b border-white/5 px-5 py-4">
               <AlertDialog.Title className="text-lg font-semibold leading-none text-white">
                 Confirm repost this post?
@@ -58,7 +58,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
             </div>
             <div className="flex justify-end gap-6 px-5 py-3">
               <AlertDialog.Cancel asChild>
-                <button className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 px-4 font-medium leading-none text-white outline-none">
+                <button className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 px-4 font-medium leading-none text-white outline-none backdrop-blur-xl">
                   Cancel
                 </button>
               </AlertDialog.Cancel>

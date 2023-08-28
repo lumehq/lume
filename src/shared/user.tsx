@@ -37,10 +37,10 @@ export function User({
         <div
           className={`${avatarWidth} ${avatarHeight}  ${
             size === 'small' ? 'rounded' : 'rounded-lg'
-          } relative z-10 shrink-0 animate-pulse overflow-hidden bg-white/10`}
+          } relative z-10 shrink-0 animate-pulse overflow-hidden bg-white/10 backdrop-blur-xl`}
         />
         <div className="flex flex-wrap items-baseline gap-1">
-          <div className="h-3.5 w-36 animate-pulse rounded bg-white/10" />
+          <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
         </div>
       </div>
     );
@@ -87,7 +87,7 @@ export function User({
       </div>
       <Popover.Portal>
         <Popover.Content
-          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl focus:outline-none"
+          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl backdrop-blur-xl focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
@@ -115,13 +115,13 @@ export function User({
           <div className="flex items-center gap-2 px-3 py-3">
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
             >
               View profile
             </Link>
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
             >
               Message
             </Link>

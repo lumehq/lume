@@ -71,7 +71,7 @@ export function AddWidgetButton() {
         <div className="inline-flex h-full w-full flex-col items-center justify-center">
           <DropdownMenu.Trigger asChild>
             <button type="button" className="flex flex-col items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 hover:bg-white/10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 backdrop-blur-xl hover:bg-white/10">
                 <PlusIcon className="h-5 w-5 text-white" />
               </div>
               <p className="font-medium text-white/50">Add widget</p>
@@ -82,15 +82,15 @@ export function AddWidgetButton() {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           sideOffset={-20}
-          className="flex w-[256px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl focus:outline-none"
+          className="flex w-[256px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl backdrop-blur-xl focus:outline-none"
         >
           <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={setHashtagWidget}
-              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
             >
-              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
                 <HashtagIcon className="h-4 w-4 text-white" />
               </div>
               Add hashtag feeds
@@ -100,9 +100,9 @@ export function AddWidgetButton() {
             <button
               type="button"
               onClick={setGroupFeedWidget}
-              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
             >
-              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
                 <FeedIcon className="h-4 w-4 text-white" />
               </div>
               Add user group feeds
@@ -112,9 +112,9 @@ export function AddWidgetButton() {
             <button
               type="button"
               onClick={setArticleWidget}
-              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
             >
-              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
                 <ThreadsIcon className="h-4 w-4 text-white" />
               </div>
               Add article feeds
@@ -124,9 +124,9 @@ export function AddWidgetButton() {
             <button
               type="button"
               onClick={setFileWidget}
-              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
             >
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
                 <FileIcon className="h-4 w-4 text-white" />
               </div>
               Add file feeds
@@ -136,9 +136,9 @@ export function AddWidgetButton() {
             <button
               type="button"
               onClick={setTrendingProfilesWidget}
-              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
             >
-              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
                 <TrendingIcon className="h-4 w-4 text-white" />
               </div>
               Add trending accounts
@@ -148,9 +148,9 @@ export function AddWidgetButton() {
             <button
               type="button"
               onClick={setTrendingNotesWidget}
-              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-11 items-center gap-2 rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
             >
-              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10">
+              <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
                 <TrendingIcon className="h-4 w-4 text-white" />
               </div>
               Add trending notes

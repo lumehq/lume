@@ -76,7 +76,7 @@ export function OnboardStep1Screen() {
         <p className="text-sm text-white/50">Choose account you want to follow</p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10 py-2">
+        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10 py-2 backdrop-blur-xl">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
@@ -124,7 +124,7 @@ export function OnboardStep1Screen() {
           </button>
           <Link
             to="/auth/onboarding/step-2"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white hover:bg-white/10 focus:outline-none"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/10 focus:outline-none"
           >
             Skip, you can add later
           </Link>

@@ -112,7 +112,7 @@ export function OnboardStep3Screen() {
         </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide relative flex h-[500px] w-full flex-col divide-y divide-white/10 overflow-y-auto rounded-xl bg-white/10">
+        <div className="scrollbar-hide relative flex h-[500px] w-full flex-col divide-y divide-white/10 overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
@@ -130,7 +130,7 @@ export function OnboardStep3Screen() {
                 key={item + index}
                 type="button"
                 onClick={() => toggleRelay(item)}
-                className="inline-flex transform items-start justify-between bg-white/10 px-4 py-2 hover:bg-white/20"
+                className="inline-flex transform items-start justify-between bg-white/10 px-4 py-2 backdrop-blur-xl hover:bg-white/20"
               >
                 <div className="flex flex-col items-start gap-1">
                   <p className="max-w-[15rem] truncate">{item.replace(/\/+$/, '')}</p>
@@ -145,7 +145,7 @@ export function OnboardStep3Screen() {
             ))
           )}
           {relays.size > 5 && (
-            <div className="sticky bottom-0 left-0 inline-flex w-full items-center justify-center bg-white/10 px-4 py-2 backdrop-blur-2xl">
+            <div className="sticky bottom-0 left-0 inline-flex w-full items-center justify-center bg-white/10 px-4 py-2 backdrop-blur-2xl backdrop-blur-xl">
               <p className="text-sm text-orange-400">
                 Using too much relay can cause high resource usage
               </p>
@@ -176,7 +176,7 @@ export function OnboardStep3Screen() {
           <button
             type="button"
             onClick={() => submit(true)}
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white hover:bg-white/10 focus:outline-none"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/10 focus:outline-none"
           >
             Skip, use default relays
           </button>
