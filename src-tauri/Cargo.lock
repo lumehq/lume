@@ -432,9 +432,9 @@ checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
 
 [[package]]
 name = "base64"
-version = "0.21.2"
+version = "0.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "604178f6c5c21f02dc555784810edfb88d34ac2c73b2eae109655649ee73ce3d"
+checksum = "414dcefbc63d77c526a76b3afcf6fbb9b5e2791c19c3aa2297733208750c6e53"
 
 [[package]]
 name = "base64ct"
@@ -1340,15 +1340,15 @@ dependencies = [
 
 [[package]]
 name = "embed-resource"
-version = "2.2.0"
+version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7f1e82a60222fc67bfd50d752a9c89da5cce4c39ed39decc84a443b07bbd69a"
+checksum = "fd0a2c9b742a980060d22545a7a83b573acd6b73045b9de6370c9530ce652f27"
 dependencies = [
  "cc",
  "rustc_version",
  "toml",
  "vswhom",
- "winreg 0.11.0",
+ "winreg 0.51.0",
 ]
 
 [[package]]
@@ -2684,7 +2684,7 @@ dependencies = [
  "serde_json",
  "sqlx-cli",
  "tauri",
- "tauri-build",
+ "tauri-build 2.0.0-alpha.8",
  "tauri-plugin-app",
  "tauri-plugin-autostart",
  "tauri-plugin-clipboard-manager",
@@ -2932,15 +2932,14 @@ dependencies = [
 
 [[package]]
 name = "nix"
-version = "0.26.2"
+version = "0.26.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfdda3d196821d6af13126e40375cdf7da646a96114af134d5f417a9a1dc8e1a"
+checksum = "abbbc55ad7b13aac85f9401c796dcda1b864e07fcad40ad47792eaa8932ea502"
 dependencies = [
- "bitflags 1.3.2",
+ "bitflags 2.4.0",
  "cfg-if",
  "libc",
  "memoffset 0.7.1",
- "static_assertions",
 ]
 
 [[package]]
@@ -3458,7 +3457,7 @@ version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bdc0001cfea3db57a2e24bc0d818e9e20e554b5f97fabb9bc231dc240269ae06"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "indexmap 1.9.3",
  "line-wrap",
  "quick-xml 0.29.0",
@@ -3776,14 +3775,14 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.9.3"
+version = "1.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81bc1d4caf89fac26a70747fe603c130093b53c773888797a6329091246d651a"
+checksum = "12de2eff854e5fa4b1295edd650e227e9d8fb0c9e90b12e7f36d6a6811791a29"
 dependencies = [
  "aho-corasick",
  "memchr",
- "regex-automata 0.3.6",
- "regex-syntax 0.7.4",
+ "regex-automata 0.3.7",
+ "regex-syntax 0.7.5",
 ]
 
 [[package]]
@@ -3797,13 +3796,13 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.3.6"
+version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fed1ceff11a1dddaee50c9dc8e4938bd106e9d89ae372f192311e7da498e3b69"
+checksum = "49530408a136e16e5b486e883fbb6ba058e8e4e8ae6621a77b048b314336e629"
 dependencies = [
  "aho-corasick",
  "memchr",
- "regex-syntax 0.7.4",
+ "regex-syntax 0.7.5",
 ]
 
 [[package]]
@@ -3814,9 +3813,9 @@ checksum = "f162c6dd7b008981e4d40210aca20b4bd0f9b60ca9271061b07f78537722f2e1"
 
 [[package]]
 name = "regex-syntax"
-version = "0.7.4"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5ea92a5b6195c6ef2a0295ea818b312502c6fc94dde986c5553242e18fd4ce2"
+checksum = "dbb5fb1acd8a1a18b3dd5be62d25485eb770e05afb408a9627d14d451bae12da"
 
 [[package]]
 name = "remove_dir_all"
@@ -3837,7 +3836,7 @@ version = "0.11.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e9ad3fe7488d7e34558a2033d45a0c90b72d97b4f80705666fea71472e2e6a1"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "bytes",
  "encoding_rs",
  "futures-core",
@@ -4000,7 +3999,7 @@ version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d3987094b1d07b653b7dfdc3f70ce9a1da9c51ac18c1b06b662e4f9a0e9f4b2"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
 ]
 
 [[package]]
@@ -4184,7 +4183,7 @@ version = "3.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1ca3b16a3d82c4088f343b7480a93550b3eabe1a358569c2dfe38bbcead07237"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "chrono",
  "hex",
  "indexmap 1.9.3",
@@ -4562,7 +4561,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ca69bf415b93b60b80dc8fda3cb4ef52b2336614d8da2de5456cc942a110482"
 dependencies = [
  "atoi",
- "base64 0.21.2",
+ "base64 0.21.3",
  "bitflags 2.4.0",
  "byteorder",
  "bytes",
@@ -4605,7 +4604,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a0db2df1b8731c3651e204629dd55e52adbae0462fa1bdcbed56a2302c18181e"
 dependencies = [
  "atoi",
- "base64 0.21.2",
+ "base64 0.21.3",
  "bitflags 2.4.0",
  "byteorder",
  "crc",
@@ -4800,7 +4799,7 @@ version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1bbdb58577b6301f8d17ae2561f32002a5bae056d444e0f69e611e504a276204"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "serde",
  "serde_json",
 ]
@@ -4829,12 +4828,11 @@ dependencies = [
 
 [[package]]
 name = "sys-locale"
-version = "0.3.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea0b9eefabb91675082b41eb94c3ecd91af7656caee3fb4961a07c0ec8c7ca6f"
+checksum = "e801cf239ecd6ccd71f03d270d67dd53d13e90aab208bf4b8fe4ad957ea949b0"
 dependencies = [
  "libc",
- "windows-sys 0.45.0",
 ]
 
 [[package]]
@@ -4930,8 +4928,7 @@ checksum = "9d0e916b1148c8e263850e1ebcbd046f333e0683c724876bb0da63ea4373dc8a"
 [[package]]
 name = "tauri"
 version = "2.0.0-alpha.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fad0a5c32ce9e3e9862fb8cd433abf63e65ffea9b80dcc44d3d991e6794ea9a6"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
 dependencies = [
  "anyhow",
  "bytes",
@@ -4961,11 +4958,11 @@ dependencies = [
  "serialize-to-javascript",
  "state",
  "swift-rs",
- "tauri-build",
+ "tauri-build 2.0.0-alpha.7",
  "tauri-macros",
  "tauri-runtime",
  "tauri-runtime-wry",
- "tauri-utils",
+ "tauri-utils 2.0.0-alpha.7 (git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph)",
  "thiserror",
  "tokio",
  "tray-icon",
@@ -4974,6 +4971,25 @@ dependencies = [
  "webkit2gtk",
  "webview2-com",
  "windows 0.48.0",
+]
+
+[[package]]
+name = "tauri-build"
+version = "2.0.0-alpha.7"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
+dependencies = [
+ "anyhow",
+ "cargo_toml",
+ "heck",
+ "json-patch",
+ "plist",
+ "semver",
+ "serde",
+ "serde_json",
+ "swift-rs",
+ "tauri-utils 2.0.0-alpha.7 (git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph)",
+ "tauri-winres",
+ "walkdir",
 ]
 
 [[package]]
@@ -4991,7 +5007,7 @@ dependencies = [
  "serde",
  "serde_json",
  "swift-rs",
- "tauri-utils",
+ "tauri-utils 2.0.0-alpha.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "tauri-winres",
  "walkdir",
 ]
@@ -4999,10 +5015,9 @@ dependencies = [
 [[package]]
 name = "tauri-codegen"
 version = "2.0.0-alpha.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f98a67c7ef3cb3c25de91fe1fa16cc3681997f6ec99da0a7496d6feae2ea91e"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "brotli",
  "ico",
  "json-patch",
@@ -5014,7 +5029,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2 0.10.7",
- "tauri-utils",
+ "tauri-utils 2.0.0-alpha.7 (git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph)",
  "thiserror",
  "time",
  "url",
@@ -5025,21 +5040,20 @@ dependencies = [
 [[package]]
 name = "tauri-macros"
 version = "2.0.0-alpha.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b01cb5f945c71e040c5d191c32598565ae26cc266a9d5d4f7dd2dc324c5cfdd0"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
 dependencies = [
  "heck",
  "proc-macro2",
  "quote",
  "syn 1.0.109",
  "tauri-codegen",
- "tauri-utils",
+ "tauri-utils 2.0.0-alpha.7 (git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph)",
 ]
 
 [[package]]
 name = "tauri-plugin-app"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "tauri",
 ]
@@ -5047,7 +5061,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "auto-launch",
  "log",
@@ -5060,21 +5074,21 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "arboard",
  "log",
  "serde",
  "serde_json",
  "tauri",
- "tauri-build",
+ "tauri-build 2.0.0-alpha.8",
  "thiserror",
 ]
 
 [[package]]
 name = "tauri-plugin-dialog"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "glib",
  "log",
@@ -5083,7 +5097,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tauri",
- "tauri-build",
+ "tauri-build 2.0.0-alpha.8",
  "tauri-plugin-fs",
  "thiserror",
 ]
@@ -5091,7 +5105,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-fs"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "anyhow",
  "glob",
@@ -5104,7 +5118,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.2"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "data-url",
  "glob",
@@ -5121,7 +5135,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-notification"
 version = "2.0.0-alpha.2"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "log",
  "notify-rust",
@@ -5130,7 +5144,7 @@ dependencies = [
  "serde_json",
  "serde_repr",
  "tauri",
- "tauri-build",
+ "tauri-build 2.0.0-alpha.8",
  "thiserror",
  "time",
  "url",
@@ -5139,7 +5153,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-os"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "gethostname 0.4.3",
  "log",
@@ -5155,7 +5169,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "tauri",
 ]
@@ -5163,7 +5177,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-shell"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "encoding_rs",
  "log",
@@ -5180,7 +5194,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-single-instance"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "log",
  "serde",
@@ -5194,7 +5208,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-sql"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "futures-core",
  "log",
@@ -5210,7 +5224,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-store"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "log",
  "serde",
@@ -5222,7 +5236,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-stronghold"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "hex",
  "iota-crypto 0.23.0",
@@ -5238,9 +5252,9 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "dirs-next",
  "futures-util",
  "http",
@@ -5263,7 +5277,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-upload"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "futures-util",
  "log",
@@ -5280,7 +5294,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window"
 version = "2.0.0-alpha.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#319de692bf5f50775fd3bb1d6722cb03304fd6ab"
+source = "git+https://github.com/luminous-devs/plugins-workspace?branch=v2#ef1ce3f62a2811d30f15c4333afcddd57b3aca84"
 dependencies = [
  "serde",
  "tauri",
@@ -5290,8 +5304,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime"
 version = "1.0.0-alpha.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5ba2ea1c0b7a2c3e53259edc3c78527e9f40fa7b45f73c52ab5165e42f9d18a"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
 dependencies = [
  "gtk",
  "http",
@@ -5301,7 +5314,7 @@ dependencies = [
  "raw-window-handle",
  "serde",
  "serde_json",
- "tauri-utils",
+ "tauri-utils 2.0.0-alpha.7 (git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph)",
  "thiserror",
  "url",
  "uuid",
@@ -5311,8 +5324,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime-wry"
 version = "1.0.0-alpha.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "095d8a6cb312211bd0ed6b51f078be2e5bba4e3244b5fdbe39fce2ebfc0d7a15"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
 dependencies = [
  "cocoa 0.24.1",
  "gtk",
@@ -5321,7 +5333,7 @@ dependencies = [
  "rand 0.8.5",
  "raw-window-handle",
  "tauri-runtime",
- "tauri-utils",
+ "tauri-utils 2.0.0-alpha.7 (git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph)",
  "uuid",
  "webkit2gtk",
  "webview2-com",
@@ -5334,6 +5346,33 @@ name = "tauri-utils"
 version = "2.0.0-alpha.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06bcd7c6f67fd6371dcc22da7d7f26ec12c4eae26ad7bc54943bb9f35b5db302"
+dependencies = [
+ "ctor",
+ "dunce",
+ "glob",
+ "heck",
+ "html5ever",
+ "infer",
+ "json-patch",
+ "kuchikiki",
+ "memchr",
+ "phf 0.10.1",
+ "proc-macro2",
+ "quote",
+ "semver",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "thiserror",
+ "url",
+ "walkdir",
+ "windows 0.48.0",
+]
+
+[[package]]
+name = "tauri-utils"
+version = "2.0.0-alpha.7"
+source = "git+https://git.nextgraph.org/NextGraph/tauri.git?branch=alpha.11-nextgraph#61a93f463666b7d42e74acc6083cb2460b8c3e84"
 dependencies = [
  "brotli",
  "ctor",
@@ -5451,9 +5490,9 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.27"
+version = "0.3.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0bb39ee79a6d8de55f48f2293a830e040392f1c5f16e336bdd1788cd0aadce07"
+checksum = "17f6bb557fd245c28e6411aa56b6403c689ad95061f50e4be16c274e70a17e48"
 dependencies = [
  "deranged",
  "itoa 1.0.9",
@@ -5470,9 +5509,9 @@ checksum = "7300fbefb4dadc1af235a9cef3737cea692a9d97e1b9cbcd4ebdae6f8868e6fb"
 
 [[package]]
 name = "time-macros"
-version = "0.2.13"
+version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "733d258752e9303d392b94b75230d07b0b9c489350c69b851fc6c065fde3e8f9"
+checksum = "1a942f44339478ef67935ab2bbaec2fb0322496cf3cbe84b261e06ac3814c572"
 dependencies = [
  "time-core",
 ]
@@ -6402,19 +6441,19 @@ dependencies = [
 
 [[package]]
 name = "winreg"
-version = "0.11.0"
+version = "0.50.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76a1a57ff50e9b408431e8f97d5456f2807f8eb2a2cd79b06068fc87f8ecf189"
+checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
 dependencies = [
  "cfg-if",
- "winapi",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
 name = "winreg"
-version = "0.50.0"
+version = "0.51.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
+checksum = "937f3df7948156640f46aacef17a70db0de5917bda9c92b0f751f3a955b588fc"
 dependencies = [
  "cfg-if",
  "windows-sys 0.48.0",
@@ -6426,7 +6465,7 @@ version = "0.31.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07bf838a5430184dfe0b1f568af7998a455c0df75a1df300a3894e0f181e7408"
 dependencies = [
- "base64 0.21.2",
+ "base64 0.21.3",
  "block",
  "cocoa 0.24.1",
  "core-graphics 0.22.3",
@@ -6528,7 +6567,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2769203cd13a0c6015d515be729c526d041e9cf2c0cc478d57faee85f40c6dcd"
 dependencies = [
- "nix 0.26.2",
+ "nix 0.26.3",
  "winapi",
 ]
 
@@ -6556,7 +6595,7 @@ dependencies = [
  "futures-sink",
  "futures-util",
  "hex",
- "nix 0.26.2",
+ "nix 0.26.3",
  "once_cell",
  "ordered-stream",
  "rand 0.8.5",
