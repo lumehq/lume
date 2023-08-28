@@ -1,0 +1,35 @@
+{
+  "tauri": {
+    "windows": [
+      {
+        "width": 1080,
+        "height": 800,
+        "minWidth": 1080,
+        "minHeight": 800,
+        "resizable": true,
+        "theme": "Dark",
+        "title": "Lume",
+        "transparent": false,
+        "center": true,
+        "fullscreen": false,
+        "hiddenTitle": true,
+        "visible": false,
+        "fileDropEnabled": true,
+        "windowEffects": {
+          "effects": ["micaDark", "micaLight", "acrylic"],
+          "state": "followsWindowActiveState"
+        }
+      },
+      {
+        "width": 400,
+        "height": 500,
+        "decorations": false,
+        "label": "Lume",
+        "title": "Lume",
+        "center": true,
+        "resizable": false,
+        "url": "splashscreen"
+      }
+    ]
+  }
+}

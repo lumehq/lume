@@ -93,43 +93,6 @@
         }
       }
     },
-    "windows": [
-      {
-        "width": 1080,
-        "height": 800,
-        "minWidth": 1080,
-        "minHeight": 800,
-        "resizable": true,
-        "theme": "Dark",
-        "title": "Lume",
-        "titleBarStyle": "Overlay",
-        "transparent": true,
-        "center": true,
-        "fullscreen": false,
-        "hiddenTitle": true,
-        "visible": false,
-        "fileDropEnabled": true,
-        "windowEffects": {
-          "effects": ["mica", "hudWindow"],
-          "state": "followsWindowActiveState"
-        }
-      },
-      {
-        "width": 400,
-        "height": 500,
-        "decorations": true,
-        "hiddenTitle": true,
-        "center": true,
-        "resizable": false,
-        "titleBarStyle": "Overlay",
-        "label": "splashscreen",
-        "url": "splashscreen",
-        "windowEffects": {
-          "effects": ["mica", "hudWindow"],
-          "state": "followsWindowActiveState"
-        }
-      }
-    ],
     "macOSPrivateApi": true
   }
 }

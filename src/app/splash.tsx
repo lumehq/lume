@@ -50,13 +50,15 @@ export function SplashScreen() {
     }
 
     if (ndk && db.account) {
+      if (db.account.network.length < 1) invoke('close_splashscreen');
+
       console.log('prefetching...');
       prefetch();
     }
   }, [ndk, db.account]);
 
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center bg-black/90">
+    <div className="relative flex h-screen w-screen items-center justify-center bg-black">
       <div data-tauri-drag-region className="absolute left-0 top-0 z-10 h-11 w-full" />
       <div className="flex min-h-0 w-full flex-1 items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4">
