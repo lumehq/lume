@@ -25,8 +25,13 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
 
   if (status === 'error') {
     return (
-      <div className="mb-5 flex overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-        <p className="break-all text-white/50">Failed to fetch event: {id}</p>
+      <div className="mb-5 flex flex-col gap-1.5 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+        <p className="text-sm font-bold text-white">
+          Lume cannot found the event with ID
+        </p>
+        <div className="inline-flex items-center justify-center rounded-xl border border-dashed border-red-400 bg-red-200/10 p-2">
+          <p className="select-text break-all text-sm font-medium text-red-400">{id}</p>
+        </div>
       </div>
     );
   }

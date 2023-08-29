@@ -3,10 +3,10 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useStorage } from '@libs/storage/provider';
 
 import {
+  AddWidgetIcon,
   FeedIcon,
   FileIcon,
   HashtagIcon,
-  PlusIcon,
   ThreadsIcon,
   TrendingIcon,
 } from '@shared/icons';
@@ -72,7 +72,7 @@ export function AddWidgetButton() {
           <DropdownMenu.Trigger asChild>
             <button type="button" className="flex flex-col items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 backdrop-blur-xl hover:bg-white/10">
-                <PlusIcon className="h-5 w-5 text-white" />
+                <AddWidgetIcon className="h-5 w-5 text-white" />
               </div>
               <p className="font-medium text-white/50">Add widget</p>
             </button>
@@ -82,7 +82,7 @@ export function AddWidgetButton() {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           sideOffset={-20}
-          className="flex w-[256px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl backdrop-blur-xl focus:outline-none"
+          className="flex w-[256px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl focus:outline-none"
         >
           <DropdownMenu.Item asChild>
             <button

@@ -37,13 +37,15 @@ export default class TauriAdapter implements NDKCacheAdapter {
 
   public async setEvent(event: NDKEvent): Promise<void> {
     const nostrEvent = await event.toNostrEvent();
-    const key = `${nostrEvent.pubkey}:${nostrEvent.kind}`;
+    if (event.kind !== 3) {
+      const key = `${nostrEvent.pubkey}:${nostrEvent.kind}`;
 
-    return new Promise((resolve) => {
-      Promise.all([this.store.set(key, JSON.stringify(nostrEvent))]).then(() =>
-        resolve()
-      );
-    });
+      return new Promise((resolve) => {
+        Promise.all([this.store.set(key, JSON.stringify(nostrEvent))]).then(() =>
+          resolve()
+        );
+      });
+    }
   }
 
   public async saveCache(): Promise<void> {

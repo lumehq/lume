@@ -50,7 +50,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyLink()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
+              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               Copy shareable link
             </button>
@@ -59,7 +59,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyID()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
+              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               Copy ID
             </button>
@@ -67,7 +67,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
+              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
             >
               View profile
             </Link>

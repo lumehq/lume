@@ -74,7 +74,7 @@ export function UnlockScreen() {
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-semibold text-white">Enter password to unlock</h1>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-1">
+        <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col">
           <div className="flex flex-col rounded-lg bg-white/5">
             <div className="w-full rounded-t-lg border-b border-white/10 bg-white/5 p-4">
               <User pubkey={db.account.pubkey} />
@@ -82,7 +82,7 @@ export function UnlockScreen() {
             <div className="relative">
               <input
                 {...register('password', { required: true, minLength: 4 })}
-                type={'password'}
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 className="relative h-12 w-full rounded-b-lg bg-white/10 py-1 text-center text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
@@ -124,7 +124,7 @@ export function UnlockScreen() {
             </button>
             <Link
               to="/auth/reset"
-              className="inline-flex h-14 items-center justify-center text-center text-white/50"
+              className="mt-1 inline-flex h-11 w-full items-center justify-center rounded-lg text-center text-white/50 hover:bg-white/10"
             >
               Reset password
             </Link>

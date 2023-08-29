@@ -19,7 +19,7 @@ export function NoteWrapper({
   reply?: string;
 }) {
   return (
-    <div className="h-min w-full px-3 py-1.5">
+    <div className="h-min w-full px-3 pb-3">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
         <div className="relative">{root && <ChildNote id={root} />}</div>
         <div className="relative">{reply && <ChildNote id={reply} root={root} />}</div>

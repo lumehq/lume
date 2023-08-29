@@ -19,19 +19,17 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative h-10 w-10 shrink rounded-md">
-        <Image
-          src={user?.picture || user?.image}
-          alt={pubkey}
-          className="h-10 w-10 rounded-md object-cover"
-        />
-      </div>
+    <div className="flex items-center gap-2.5">
+      <Image
+        src={user?.picture || user?.image}
+        alt={pubkey}
+        className="h-10 w-10 shrink-0 rounded-lg object-cover"
+      />
       <div className="flex w-full flex-1 flex-col items-start text-start">
         <p className="max-w-[15rem] truncate font-medium leading-tight text-white">
           {user?.name || user?.display_name || user?.nip05}
         </p>
-        <span className="max-w-[15rem] truncate text-base leading-tight text-white/50">
+        <span className="max-w-[15rem] truncate leading-tight text-white/50">
           {displayNpub(pubkey, 16)}
         </span>
       </div>

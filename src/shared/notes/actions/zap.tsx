@@ -4,7 +4,6 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Button } from '@shared/button';
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
 import { useEvent } from '@utils/hooks/useEvent';
@@ -42,7 +41,7 @@ export function NoteZap({ id }: { id: string }) {
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
-            <div className="relative h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
+            <div className="relative h-min w-full shrink-0 border-b border-white/5 bg-white/5 px-5 py-5">
               <div className="flex flex-col items-center gap-1.5">
                 <Dialog.Title className="font-medium leading-none text-white">
                   Zap (Beta)
@@ -63,7 +62,7 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(21000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
                         `${selected(21000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
@@ -76,7 +75,7 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(69000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
                         `${selected(69000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
@@ -89,7 +88,7 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(100000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
                         `${selected(100000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
@@ -102,7 +101,7 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(200000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
                         `${selected(200000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
@@ -115,7 +114,7 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(500000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
                         `${selected(500000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
@@ -128,7 +127,7 @@ export function NoteZap({ id }: { id: string }) {
                       type="button"
                       onClick={() => setAmount(1000000)}
                       className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-md px-2 py-2 backdrop-blur-xl hover:bg-white/10',
+                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
                         `${selected(1000000) && 'bg-white/10 backdrop-blur-xl'}`
                       )}
                     >
@@ -139,9 +138,13 @@ export function NoteZap({ id }: { id: string }) {
                     </button>
                   </div>
                   <div className="mt-4 flex w-full">
-                    <Button onClick={() => createZapRequest()} preset="large">
+                    <button
+                      type="button"
+                      onClick={() => createZapRequest()}
+                      className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 px-4 hover:bg-fuchsia-600"
+                    >
                       Create invoice
-                    </Button>
+                    </button>
                   </div>
                 </>
               ) : (

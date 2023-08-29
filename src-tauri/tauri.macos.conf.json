@@ -2,6 +2,18 @@
   "tauri": {
     "windows": [
       {
+        "width": 400,
+        "height": 500,
+        "decorations": true,
+        "title": "Lume",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "center": true,
+        "resizable": false,
+        "label": "splashscreen",
+        "url": "splashscreen"
+      },
+      {
         "width": 1080,
         "height": 800,
         "minWidth": 1080,
@@ -22,16 +34,24 @@
         }
       },
       {
-        "width": 400,
-        "height": 500,
-        "decorations": true,
-        "title": "Lume",
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "center": true,
+        "width": 1080,
+        "height": 800,
         "resizable": false,
-        "label": "splashscreen",
-        "url": "splashscreen"
+        "theme": "Dark",
+        "label": "settings",
+        "url": "settings",
+        "title": "Settings",
+        "titleBarStyle": "Overlay",
+        "transparent": true,
+        "center": true,
+        "fullscreen": false,
+        "hiddenTitle": true,
+        "visible": false,
+        "fileDropEnabled": false,
+        "windowEffects": {
+          "effects": ["hudWindow"],
+          "state": "followsWindowActiveState"
+        }
       }
     ]
   }

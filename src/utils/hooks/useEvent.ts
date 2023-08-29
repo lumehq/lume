@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
+import { toRawEvent } from '@utils/rawEvent';
+
 export function useEvent(id: string, embed?: string) {
   const { db } = useStorage();
   const { ndk } = useNDK();
@@ -34,9 +36,10 @@ export function useEvent(id: string, embed?: string) {
           reply = event.tags.find((el) => el[3] === 'reply')?.[1];
         }
 
+        const rawEvent = toRawEvent(event);
         await db.createEvent(
           event.id,
-          JSON.stringify(event),
+          JSON.stringify(rawEvent),
           event.pubkey,
           event.kind,
           root,

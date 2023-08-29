@@ -4,13 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { useStorage } from '@libs/storage/provider';
 
 import { Composer, ComposerUser } from '@shared/composer';
-import {
-  CancelIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ComposeIcon,
-  ExpandIcon,
-} from '@shared/icons';
+import { CancelIcon, ChevronDownIcon, ChevronRightIcon, ExpandIcon } from '@shared/icons';
 
 import { useComposer } from '@stores/composer';
 
@@ -30,7 +24,6 @@ export function ComposerModal() {
           type="button"
           className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-lg bg-white/20 px-4 font-bold text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1"
         >
-          <ComposeIcon className="h-5 w-5" />
           Postr
         </button>
       </Dialog.Trigger>

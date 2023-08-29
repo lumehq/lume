@@ -45,14 +45,6 @@ export function useNostr() {
     subManager.set(JSON.stringify(filter), subEvent);
 
     subEvent.addListener('event', (event: NDKEvent) => {
-      delete event.ndk;
-      delete event.decrypt;
-      delete event.encrypt;
-      delete event.encode;
-      delete event.isParamReplaceable;
-      delete event.isReplaceable;
-      delete event.repost;
-      delete event.relay;
       callback(event);
     });
   };

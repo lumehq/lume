@@ -18,6 +18,7 @@ import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
 import { useNostr } from '@utils/hooks/useNostr';
+import { toRawEvent } from '@utils/rawEvent';
 import { DBEvent } from '@utils/types';
 
 export function NetworkWidget() {
@@ -131,15 +132,19 @@ export function NetworkWidget() {
         async (event) => {
           let root: string;
           let reply: string;
+
           if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
             root = event.tags[0][1];
           } else {
             root = event.tags.find((el) => el[3] === 'root')?.[1];
             reply = event.tags.find((el) => el[3] === 'reply')?.[1];
           }
+
+          const rawEvent = toRawEvent(event);
+
           await db.createEvent(
             event.id,
-            JSON.stringify(event),
+            JSON.stringify(rawEvent),
             event.pubkey,
             event.kind,
             root,
@@ -154,7 +159,7 @@ export function NetworkWidget() {
 
   return (
     <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
-      <TitleBar title="Network" />
+      <TitleBar title="👋 Network" />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">

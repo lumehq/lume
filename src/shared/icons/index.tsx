@@ -1,3 +1,4 @@
+export * from './addWidget';
 export * from './arrowLeft';
 export * from './arrowRight';
 export * from './bell';
