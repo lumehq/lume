@@ -109,7 +109,7 @@ export function TextNoteScreen() {
                   <ThreadUser pubkey={data.pubkey} time={data.created_at} />
                   <div className="mt-2">{renderKind(data)}</div>
                   <div>
-                    <NoteActions id={id} pubkey={data.pubkey} noOpenThread={true} />
+                    <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
                     <NoteStats id={id} />
                   </div>
                 </div>

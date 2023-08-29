@@ -55,7 +55,11 @@ export function ThreadBlock({ params }: { params: Widget }) {
             <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
               <ThreadUser pubkey={data.pubkey} time={data.created_at} />
               <div className="mt-2">{renderKind(data)}</div>
-              <NoteActions id={params.content} pubkey={data.pubkey} noOpenThread={true} />
+              <NoteActions
+                id={params.content}
+                pubkey={data.pubkey}
+                extraButtons={false}
+              />
               <NoteStats id={params.content} />
             </div>
           </div>

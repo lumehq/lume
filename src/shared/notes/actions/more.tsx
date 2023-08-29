@@ -45,15 +45,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
         </Tooltip.Portal>
       </Tooltip.Root>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl backdrop-blur-xl focus:outline-none">
-          <DropdownMenu.Item asChild>
-            <Link
-              to={`/notes/text/${id}`}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
-            >
-              Focus mode
-            </Link>
-          </DropdownMenu.Item>
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-md bg-white/10 p-2 backdrop-blur-3xl focus:outline-none">
           <DropdownMenu.Item asChild>
             <button
               type="button"
