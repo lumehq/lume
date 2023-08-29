@@ -8,7 +8,6 @@ import { nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Button } from '@shared/button';
 import { Suggestion } from '@shared/composer';
 import { CancelIcon, LoaderIcon, PlusCircleIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
@@ -25,6 +24,7 @@ export function Composer() {
   const [status, setStatus] = useState<null | 'loading' | 'done'>(null);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
 
+  const expand = useComposer((state) => state.expand)
   const upload = useImageUploader();
 
   const editor = useEditor({
@@ -51,10 +51,7 @@ export function Composer() {
     content: '',
     editorProps: {
       attributes: {
-        class: twMerge(
-          'scrollbar-hide markdown break-all max-h-[500px] overflow-y-auto outline-none pr-2',
-          `${reply.id ? '!min-h-42' : '!min-h-[120px]'}`
-        ),
+        class: 'h-full markdown break-all overflow-y-auto outline-none pr-2',
       },
     },
   });
@@ -127,9 +124,9 @@ export function Composer() {
   };
 
   return (
-    <div className="flex h-full flex-col px-4 pb-4">
-      <div className="flex h-full w-full gap-3">
-        <div className="flex w-8 shrink-0 items-center justify-center">
+    <div className="flex h-full flex-col">
+      <div className="flex h-full w-full gap-3 px-4 pb-4">
+        <div className="flex w-10 shrink-0 items-center justify-center">
           <div className="h-full w-[2px] bg-white/10 backdrop-blur-xl" />
         </div>
         <div className="w-full">
@@ -139,6 +136,7 @@ export function Composer() {
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
+            className={twMerge('scrollbar-hide markdown break-all max-h-[500px] overflow-y-auto outline-none pr-2', expand ? 'min-h-[500px]' : 'min-h-[120px]')}
           />
           {reply.id && (
             <div className="relative">
@@ -154,21 +152,21 @@ export function Composer() {
           )}
         </div>
       </div>
-      <div className="mt-4 flex items-center justify-between">
+      <div className="flex items-center justify-between bg-white/5 rounded-b-xl p-2 border-t border-white/10">
         <button
           type="button"
           onClick={() => uploadImage()}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10"
+          className="ml-2 inline-flex h-10 w-10 items-center justify-center rounded-lg backdrop-blur-xl hover:bg-white/10"
         >
-          <PlusCircleIcon className="h-5 w-5 text-white/50" />
+          <PlusCircleIcon className="h-5 w-5 text-white" />
         </button>
-        <Button onClick={() => submit()} preset="publish">
+        <button onClick={() => submit()} className="inline-flex items-center justify-center w-max px-8 rounded-lg font-bold h-10 bg-fuchsia-500 hover:bg-fuchsia-600">
           {status === 'loading' ? (
             <LoaderIcon className="h-4 w-4 animate-spin text-white" />
           ) : (
             'Post'
           )}
-        </Button>
+        </button>
       </div>
     </div>
   );

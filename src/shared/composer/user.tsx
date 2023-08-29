@@ -10,7 +10,7 @@ export function ComposerUser({ pubkey }: { pubkey: string }) {
       <Image
         src={user?.picture || user?.image}
         alt={pubkey}
-        className="h-8 w-8 shrink-0 rounded-md object-cover"
+        className="h-10 w-10 shrink-0 rounded-lg"
       />
       <h5 className="text-base font-semibold leading-none text-white">
         {user?.nip05 || user?.name || (
