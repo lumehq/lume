@@ -98,12 +98,12 @@ export function ImportStep2Screen() {
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                className="relative h-11 w-full rounded-lg bg-white/10 px-3.5 py-1 text-center text-white !outline-none placeholder:text-white/50"
+                className="relative h-11 w-full rounded-lg bg-white/10 px-3.5 py-1 text-center text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
               <button
                 type="button"
                 onClick={() => showPassword()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 backdrop-blur-xl hover:bg-white/10"
               >
                 {passwordInput === 'password' ? (
                   <EyeOffIcon className="h-4 w-4 text-white/50 group-hover:text-white" />

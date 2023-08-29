@@ -80,14 +80,14 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('👏')}
-              className="inline-flex h-8 w-8 items-center justify-center rounded hover:bg-white/10"
+              className="inline-flex h-8 w-8 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
             >
               <img src="/clapping_hands.png" alt="Clapping Hands" className="h-6 w-6" />
             </button>
             <button
               type="button"
               onClick={() => react('🤪')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
+              className="inline-flex h-7 w-7 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
             >
               <img
                 src="/face_with_tongue.png"
@@ -98,7 +98,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('😮')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
+              className="inline-flex h-7 w-7 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
             >
               <img
                 src="/face_with_open_mouth.png"
@@ -109,14 +109,14 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => react('😢')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
+              className="inline-flex h-7 w-7 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
             >
               <img src="/crying_face.png" alt="Crying Face" className="h-6 w-6" />
             </button>
             <button
               type="button"
               onClick={() => react('🤡')}
-              className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
+              className="inline-flex h-7 w-7 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
             >
               <img src="/clown_face.png" alt="Clown Face" className="h-6 w-6" />
             </button>

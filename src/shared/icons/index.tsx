@@ -51,3 +51,5 @@ export * from './arrowRightCircle';
 export * from './hashtag';
 export * from './file';
 export * from './share';
+export * from './expand';
+export * from './focus';

@@ -54,7 +54,7 @@ export function ImportStep3Screen() {
           {loading ? 'Prefetching data...' : 'Continue with'}
         </h1>
       </div>
-      <div className="w-full rounded-xl bg-white/10 p-4">
+      <div className="w-full rounded-xl bg-white/10 p-4 backdrop-blur-xl">
         <div className="flex flex-col gap-3">
           <User pubkey={db.account.pubkey} />
           <button

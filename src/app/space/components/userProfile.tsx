@@ -65,14 +65,14 @@ export function UserProfile({ data }: { data: Profile }) {
 
   if (!profile) {
     return (
-      <div className="rounded-xl bg-white/10 px-5 py-5">
+      <div className="rounded-xl bg-white/10 px-5 py-5 backdrop-blur-xl">
         <p>Can&apos;t fetch profile</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-white/10 px-5 py-5">
+    <div className="rounded-xl bg-white/10 px-5 py-5 backdrop-blur-xl">
       <div className="flex items-center justify-between">
         <div className="inline-flex items-center gap-2">
           <Image
@@ -93,7 +93,7 @@ export function UserProfile({ data }: { data: Profile }) {
             <button
               type="button"
               onClick={() => unfollowUser(data.pubkey)}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white hover:bg-fuchsia-500 hover:text-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white backdrop-blur-xl hover:bg-fuchsia-500 hover:text-white"
             >
               <UnfollowIcon className="h-4 w-4" />
             </button>
@@ -101,7 +101,7 @@ export function UserProfile({ data }: { data: Profile }) {
             <button
               type="button"
               onClick={() => followUser(data.pubkey)}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white hover:bg-fuchsia-500 hover:text-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white backdrop-blur-xl hover:bg-fuchsia-500 hover:text-white"
             >
               <FollowIcon className="h-4 w-4" />
             </button>

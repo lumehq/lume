@@ -51,18 +51,18 @@ export function ArticleWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10">
+    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
       <TitleBar id={params.id} title={params.title} />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3">
+            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
               <NoteSkeleton />
             </div>
           </div>
         ) : items.length === 0 ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-6">
+            <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm font-medium text-white">
                   There have been no new articles in the last 24 hours.

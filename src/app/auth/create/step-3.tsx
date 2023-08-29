@@ -63,12 +63,12 @@ export function CreateStep3Screen() {
       <div className="mb-8 text-center">
         <h1 className="text-xl font-semibold text-white">Create your profile</h1>
       </div>
-      <div className="w-full overflow-hidden rounded-xl bg-white/10">
+      <div className="w-full overflow-hidden rounded-xl bg-white/10 backdrop-blur-xl">
         <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col">
           <input type={'hidden'} {...register('picture')} value={picture} />
           <input type={'hidden'} {...register('banner')} value={banner} />
           <div className="relative">
-            <div className="relative h-44 w-full bg-white/10">
+            <div className="relative h-44 w-full bg-white/10 backdrop-blur-xl">
               <Image
                 src={banner}
                 alt="user's banner"
@@ -106,7 +106,7 @@ export function CreateStep3Screen() {
                   minLength: 4,
                 })}
                 spellCheck={false}
-                className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none placeholder:text-white/50"
+                className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -119,7 +119,7 @@ export function CreateStep3Screen() {
               <textarea
                 {...register('about')}
                 spellCheck={false}
-                className="relative h-20 w-full resize-none rounded-lg bg-white/10 px-3 py-1 text-white !outline-none placeholder:text-white/50"
+                className="relative h-20 w-full resize-none rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -135,7 +135,7 @@ export function CreateStep3Screen() {
                   required: false,
                 })}
                 spellCheck={false}
-                className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none placeholder:text-white/50"
+                className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
             </div>
             <button

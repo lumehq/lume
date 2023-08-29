@@ -24,10 +24,10 @@
         "width": 400,
         "height": 500,
         "decorations": false,
-        "label": "Lume",
         "title": "Lume",
         "center": true,
         "resizable": false,
+        "label": "splashscreen",
         "url": "splashscreen"
       }
     ]

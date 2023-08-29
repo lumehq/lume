@@ -220,6 +220,13 @@ const router = createBrowserRouter([
           return { Component: ResetScreen };
         },
       },
+      {
+        path: 'hard-reset',
+        async lazy() {
+          const { HardResetScreen } = await import('@app/auth/hardReset');
+          return { Component: HardResetScreen };
+        },
+      },
     ],
   },
   {
@@ -256,7 +263,7 @@ export default function App() {
     <RouterProvider
       router={router}
       fallbackElement={
-        <div className="flex h-full w-full items-center justify-center bg-black/90">
+        <div className="flex h-full w-full items-center justify-center bg-black/90 backdrop-blur-xl">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
         </div>
       }

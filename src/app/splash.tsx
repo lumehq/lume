@@ -50,8 +50,6 @@ export function SplashScreen() {
     }
 
     if (ndk && db.account) {
-      if (db.account.network.length < 1) invoke('close_splashscreen');
-
       console.log('prefetching...');
       prefetch();
     }

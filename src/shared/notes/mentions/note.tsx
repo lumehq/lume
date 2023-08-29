@@ -33,7 +33,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   if (status === 'loading') {
     return (
-      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3">
+      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
         <NoteSkeleton />
       </div>
     );
@@ -41,7 +41,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   if (status === 'error') {
     return (
-      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3">
+      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
         <p>Can&apos;t get event from relay</p>
       </div>
     );
@@ -66,7 +66,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       onKeyDown={(e) => openThread(e, id)}
       role="button"
       tabIndex={0}
-      className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3"
+      className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl"
     >
       <User pubkey={data.pubkey} time={data.created_at} size="small" />
       <div>{renderKind(data)}</div>

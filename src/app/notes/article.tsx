@@ -93,17 +93,17 @@ export function ArticleNoteScreen() {
           <div className="col-span-3 flex flex-col gap-1.5">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-white/10 px-3 py-3">
+                <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
                   <NoteSkeleton />
                 </div>
               </div>
             ) : (
               <div className="h-min w-full px-3">
-                <div className="rounded-xl bg-white/10 px-3 pt-3">
+                <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
                   <ThreadUser pubkey={data.pubkey} time={data.created_at} />
                   <div className="mt-2">{renderKind(data)}</div>
                   <div>
-                    <NoteActions id={id} pubkey={data.pubkey} noOpenThread={true} />
+                    <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
                     <NoteStats id={id} />
                   </div>
                 </div>

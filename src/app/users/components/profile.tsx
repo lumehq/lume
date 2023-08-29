@@ -92,7 +92,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               <button
                 type="button"
                 onClick={() => unfollowUser(pubkey)}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
               >
                 Unfollow
               </button>
@@ -100,20 +100,20 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               <button
                 type="button"
                 onClick={() => followUser(pubkey)}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
               >
                 Follow
               </button>
             )}
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium hover:bg-fuchsia-500"
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
             >
               Message
             </Link>
             {db.account.pubkey === pubkey && (
               <>
-                <span className="mx-2 inline-flex h-4 w-px bg-white/10" />
+                <span className="mx-2 inline-flex h-4 w-px bg-white/10 backdrop-blur-xl" />
                 <EditProfileModal />
               </>
             )}

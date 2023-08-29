@@ -74,10 +74,10 @@ export function ChatScreen() {
   }, [pubkey]);
 
   return (
-    <div className="grid h-full w-full grid-cols-3 bg-white/10">
+    <div className="grid h-full w-full grid-cols-3 bg-white/10 backdrop-blur-xl">
       <div className="col-span-2 border-r border-white/5">
         <div className="h-full w-full flex-1 p-3">
-          <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white/10">
+          <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="h-full w-full flex-1">
               {status === 'loading' ? (
                 <div className="flex h-full w-full items-center justify-center">
@@ -104,7 +104,7 @@ export function ChatScreen() {
                 />
               )}
             </div>
-            <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 px-5">
+            <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 px-5 backdrop-blur-xl">
               <ChatMessageForm
                 receiverPubkey={pubkey}
                 userPubkey={db.account.pubkey}

@@ -1,8 +1,6 @@
 import { NavLink, Outlet, ScrollRestoration } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { LumeBar } from '@shared/lumeBar';
-
 export function SettingsLayout() {
   return (
     <div className="flex h-screen w-screen">
@@ -21,7 +19,9 @@ export function SettingsLayout() {
                   className={({ isActive }) =>
                     twMerge(
                       'flex h-9 items-center gap-2.5 rounded-md px-2.5',
-                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                      isActive
+                        ? 'bg-white/10 text-white backdrop-blur-xl'
+                        : 'text-white/80'
                     )
                   }
                 >
@@ -32,7 +32,9 @@ export function SettingsLayout() {
                   className={({ isActive }) =>
                     twMerge(
                       'flex h-9 items-center gap-2.5 rounded-md px-2.5',
-                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                      isActive
+                        ? 'bg-white/10 text-white backdrop-blur-xl'
+                        : 'text-white/80'
                     )
                   }
                 >
@@ -43,7 +45,9 @@ export function SettingsLayout() {
                   className={({ isActive }) =>
                     twMerge(
                       'flex h-9 items-center gap-2.5 rounded-md px-2.5',
-                      isActive ? 'bg-white/10 text-white' : 'text-white/80'
+                      isActive
+                        ? 'bg-white/10 text-white backdrop-blur-xl'
+                        : 'text-white/80'
                     )
                   }
                 >
@@ -53,11 +57,8 @@ export function SettingsLayout() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-3 left-0 w-full px-10">
-          <LumeBar />
-        </div>
       </div>
-      <div className="h-full w-full flex-1 bg-black/90">
+      <div className="h-full w-full flex-1 bg-black/90 backdrop-blur-xl">
         <Outlet />
         <ScrollRestoration
           getKey={(location) => {
