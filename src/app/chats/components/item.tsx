@@ -24,15 +24,17 @@ export function ChatsListItem({ pubkey }: { pubkey: string }) {
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
-          'inline-flex h-10 items-center gap-2.5 rounded-md px-2',
-          isActive ? 'bg-white/10 text-white backdrop-blur-xl' : 'text-white/80'
+          'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+          isActive
+            ? 'border-fuchsia-500 bg-white/5 text-white'
+            : 'border-transparent text-white/80'
         )
       }
     >
       <Image
         src={user?.picture || user?.image}
         alt={pubkey}
-        className="h-7 w-7 shrink-0 rounded object-cover"
+        className="h-7 w-7 shrink-0 rounded"
       />
       <div className="inline-flex w-full flex-1 items-center justify-between">
         <h5 className="max-w-[10rem] truncate">

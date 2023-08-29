@@ -22,7 +22,7 @@ export function UnknownsModal({ data }: { data: string[] }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 items-center gap-2.5 rounded-md px-2"
+          className="inline-flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 border-transparent pl-4 pr-2"
         >
           <div className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
             <StrangersIcon className="h-4 w-4 text-white" />

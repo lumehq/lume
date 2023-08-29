@@ -17,18 +17,20 @@ export function Navigation() {
     <div className="relative h-full w-[232px] bg-black/80">
       <div data-tauri-drag-region className="h-11 w-full" />
       <div className="scrollbar-hide flex h-full flex-col gap-6 overflow-y-auto pb-32">
-        <div className="flex flex-col px-2">
+        <div className="flex flex-col pr-2">
           <NavLink
             to="/"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-md px-2',
-                isActive ? 'bg-white/5 text-white' : 'text-white/80'
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/80'
               )
             }
           >
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
               <SpaceIcon className="h-4 w-4 text-white" />
             </span>
             Space
@@ -38,12 +40,14 @@ export function Navigation() {
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-md px-2',
-                isActive ? 'bg-white/5 text-white' : 'text-white/80'
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/80'
               )
             }
           >
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
               <BellIcon className="h-4 w-4 text-white" />
             </span>
             Notifications
@@ -53,21 +57,23 @@ export function Navigation() {
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-md px-2',
-                isActive ? 'bg-white/5 text-white' : 'text-white/80'
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/80'
               )
             }
           >
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
               <SettingsIcon className="h-4 w-4 text-white" />
             </span>
             Settings
           </NavLink>
         </div>
         <Collapsible.Root open={chats} onOpenChange={toggleChats}>
-          <div className="flex flex-col gap-1 px-2">
+          <div className="flex flex-col gap-1 pr-2">
             <Collapsible.Trigger asChild>
-              <button className="flex items-center gap-1 px-3">
+              <button className="flex items-center gap-1 pl-[20px] pr-4">
                 <div
                   className={twMerge(
                     'inline-flex h-5 w-5 transform items-center justify-center transition-transform duration-150 ease-in-out',
