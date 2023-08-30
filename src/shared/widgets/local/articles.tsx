@@ -6,27 +6,18 @@ import { useCallback, useMemo, useRef } from 'react';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import {
-  ArticleNote,
-  FileNote,
-  NoteWrapper,
-  Repost,
-  TextNote,
-  UnknownNote,
-} from '@shared/notes';
-import { NoteSkeleton } from '@shared/notes/skeleton';
+import { FileNote, NoteSkeleton, NoteWrapper } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 
 import { DBEvent, Widget } from '@utils/types';
 
-export function FeedWidget({ params }: { params: Widget }) {
+export function LocalArticlesWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['groupfeed-widget', params.content],
+      queryKey: ['local-articles-widget'],
       queryFn: async ({ pageParam = 0 }) => {
-        const authors = JSON.parse(params.content);
-        return await db.getAllEventsByAuthors(authors, 20, pageParam);
+        return await db.getAllEventsByKinds([NDKKind.Article], 20, pageParam);
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
@@ -47,72 +38,18 @@ export function FeedWidget({ params }: { params: Widget }) {
   // render event match event kind
   const renderItem = useCallback(
     (index: string | number) => {
-      const dbEvent: DBEvent = dbEvents[index];
-      if (!dbEvent) return;
+      const event: NDKEvent = data[index];
+      if (!event) return;
 
-      const event: NDKEvent = JSON.parse(dbEvent.event as string);
-      switch (event.kind) {
-        case NDKKind.Text:
-          return (
-            <div
-              key={dbEvent.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event} root={dbEvent.root_id} reply={dbEvent.reply_id}>
-                <TextNote event={event} />
-              </NoteWrapper>
-            </div>
-          );
-        case NDKKind.Repost:
-          return (
-            <div
-              key={dbEvent.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <Repost key={dbEvent.id} event={event} />
-            </div>
-          );
-        case 1063:
-          return (
-            <div
-              key={dbEvent.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <FileNote event={event} />
-              </NoteWrapper>
-            </div>
-          );
-        case NDKKind.Article:
-          return (
-            <div
-              key={dbEvent.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <ArticleNote event={event} />
-              </NoteWrapper>
-            </div>
-          );
-        default:
-          return (
-            <div
-              key={dbEvent.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <UnknownNote event={event} />
-              </NoteWrapper>
-            </div>
-          );
-      }
+      return (
+        <div key={event.id} data-index={index} ref={virtualizer.measureElement}>
+          <NoteWrapper event={event}>
+            <FileNote event={event} />
+          </NoteWrapper>
+        </div>
+      );
     },
-    [dbEvents]
+    [data]
   );
 
   return (

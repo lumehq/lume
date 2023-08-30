@@ -1,21 +1,26 @@
 import { useCallback, useEffect } from 'react';
 
-import { AddWidgetButton } from '@app/space/components/button';
-import { FeedWidgetForm } from '@app/space/components/forms/feed';
-import { HashTagWidgetForm } from '@app/space/components/forms/hashtag';
-import { ArticleWidget } from '@app/space/components/widgets/article';
-import { FeedWidget } from '@app/space/components/widgets/feed';
-import { FileWidget } from '@app/space/components/widgets/file';
-import { HashtagWidget } from '@app/space/components/widgets/hashtag';
-import { NetworkWidget } from '@app/space/components/widgets/network';
-import { ThreadBlock } from '@app/space/components/widgets/thread';
-import { TrendingNotesWidget } from '@app/space/components/widgets/trendingNotes';
-import { TrendingProfilesWidget } from '@app/space/components/widgets/trendingProfile';
-import { UserWidget } from '@app/space/components/widgets/user';
+import { ToggleWidgetList } from '@app/space/components/toggle';
+import { WidgetList } from '@app/space/components/widgetList';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
+import {
+  GlobalArticlesWidget,
+  GlobalFilesWidget,
+  GlobalHashtagWidget,
+  LocalArticlesWidget,
+  LocalFeedsWidget,
+  LocalFilesWidget,
+  LocalNetworkWidget,
+  LocalThreadWidget,
+  LocalUserWidget,
+  TrendingAccountsWidget,
+  TrendingNotesWidget,
+  XfeedsWidget,
+  XhashtagWidget,
+} from '@shared/widgets';
 
 import { WidgetKinds, useWidgets } from '@stores/widgets';
 
@@ -33,28 +38,34 @@ export function SpaceScreen() {
     (widget: Widget) => {
       if (!widget) return;
       switch (widget.kind) {
-        case WidgetKinds.feed:
-          return <FeedWidget key={widget.id} params={widget} />;
-        case WidgetKinds.thread:
-          return <ThreadBlock key={widget.id} params={widget} />;
-        case WidgetKinds.hashtag:
-          return <HashtagWidget key={widget.id} params={widget} />;
-        case WidgetKinds.user:
-          return <UserWidget key={widget.id} params={widget} />;
-        case WidgetKinds.trendingProfiles:
-          return <TrendingProfilesWidget key={widget.id} params={widget} />;
-        case WidgetKinds.trendingNotes:
+        case WidgetKinds.local.network:
+          return <LocalNetworkWidget key={widget.id} />;
+        case WidgetKinds.local.feeds:
+          return <LocalFeedsWidget key={widget.id} params={widget} />;
+        case WidgetKinds.local.files:
+          return <LocalFilesWidget key={widget.id} params={widget} />;
+        case WidgetKinds.local.articles:
+          return <LocalArticlesWidget key={widget.id} params={widget} />;
+        case WidgetKinds.local.user:
+          return <LocalUserWidget key={widget.id} params={widget} />;
+        case WidgetKinds.local.thread:
+          return <LocalThreadWidget key={widget.id} params={widget} />;
+        case WidgetKinds.global.hashtag:
+          return <GlobalHashtagWidget key={widget.id} params={widget} />;
+        case WidgetKinds.global.articles:
+          return <GlobalArticlesWidget key={widget.id} params={widget} />;
+        case WidgetKinds.global.files:
+          return <GlobalFilesWidget key={widget.id} params={widget} />;
+        case WidgetKinds.nostrBand.trendingAccounts:
+          return <TrendingAccountsWidget key={widget.id} params={widget} />;
+        case WidgetKinds.nostrBand.trendingNotes:
           return <TrendingNotesWidget key={widget.id} params={widget} />;
-        case WidgetKinds.network:
-          return <NetworkWidget key={widget.id} />;
-        case WidgetKinds.article:
-          return <ArticleWidget key={widget.id} params={widget} />;
-        case WidgetKinds.file:
-          return <FileWidget key={widget.id} params={widget} />;
-        case WidgetKinds.xhashtag:
-          return <HashTagWidgetForm key={widget.id} params={widget} />;
-        case WidgetKinds.xfeed:
-          return <FeedWidgetForm key={widget.id} params={widget} />;
+        case WidgetKinds.tmp.xfeed:
+          return <XhashtagWidget key={widget.id} params={widget} />;
+        case WidgetKinds.tmp.xhashtag:
+          return <XfeedsWidget key={widget.id} params={widget} />;
+        case WidgetKinds.tmp.list:
+          return <WidgetList key={widget.id} params={widget} />;
         default:
           break;
       }
@@ -77,7 +88,7 @@ export function SpaceScreen() {
       ) : (
         widgets.map((widget) => renderItem(widget))
       )}
-      <AddWidgetButton />
+      <ToggleWidgetList />
     </div>
   );
 }

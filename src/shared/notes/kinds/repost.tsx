@@ -20,7 +20,7 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   if (status === 'loading') {
     return (
-      <div className="h-min w-full px-3 py-1.5">
+      <div className="h-min w-full px-3 pb-3">
         <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
           <NoteSkeleton />
         </div>
@@ -30,7 +30,7 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   if (status === 'error') {
     return (
-      <div className="h-min w-full px-3 py-1.5">
+      <div className="h-min w-full px-3 pb-3">
         <div className="flex flex-col gap-1 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
           <p className="select-text break-all text-white/50">
             Failed to get repost with ID
@@ -57,7 +57,7 @@ export function Repost({ event }: { event: NDKEvent }) {
   };
 
   return (
-    <div className="h-min w-full px-3 py-1.5">
+    <div className="h-min w-full px-3 pb-3">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
         <div className="relative flex flex-col">
           <div className="isolate flex flex-col -space-y-4">

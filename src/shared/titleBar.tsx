@@ -19,7 +19,7 @@ export function TitleBar({ id, title }: { id?: string; title: string }) {
         <button
           type="button"
           onClick={() => remove(db, id)}
-          className="inline-flex h-6 w-6 shrink-0 transform items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
         >
           <CancelIcon className="h-3 w-3 text-white" />
         </button>

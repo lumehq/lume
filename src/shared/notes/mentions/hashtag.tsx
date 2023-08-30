@@ -11,7 +11,7 @@ export function Hashtag({ tag }: { tag: string }) {
       type="button"
       onClick={() =>
         setWidget(db, {
-          kind: WidgetKinds.hashtag,
+          kind: WidgetKinds.global.hashtag,
           title: tag,
           content: tag.replace('#', ''),
         })

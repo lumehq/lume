@@ -20,7 +20,7 @@ import { TitleBar } from '@shared/titleBar';
 import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';
 
-export function ThreadBlock({ params }: { params: Widget }) {
+export function LocalThreadWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data } = useEvent(params.content);
 

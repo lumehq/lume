@@ -16,7 +16,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       type="button"
       onClick={() =>
         setWidget(db, {
-          kind: WidgetKinds.user,
+          kind: WidgetKinds.local.user,
           title: user?.nip05 || user?.name || user?.display_name,
           content: pubkey,
         })

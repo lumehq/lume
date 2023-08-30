@@ -5,19 +5,29 @@ import { useCallback, useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { ArticleNote, NoteSkeleton, NoteWrapper } from '@shared/notes';
+import {
+  ArticleNote,
+  FileNote,
+  NoteSkeleton,
+  NoteWrapper,
+  Repost,
+  TextNote,
+  UnknownNote,
+} from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 
+import { nHoursAgo } from '@utils/date';
 import { Widget } from '@utils/types';
 
-export function ArticleWidget({ params }: { params: Widget }) {
+export function GlobalHashtagWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['article-widget', params.content],
+    ['global-hashtag-widget', params.content],
     async () => {
       const events = await ndk.fetchEvents({
-        kinds: [NDKKind.Article],
-        limit: 100,
+        kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
+        '#t': [params.content],
+        since: nHoursAgo(24),
       });
       return [...events] as unknown as NDKEvent[];
     },
@@ -39,20 +49,73 @@ export function ArticleWidget({ params }: { params: Widget }) {
       const event: NDKEvent = data[index];
       if (!event) return;
 
-      return (
-        <div key={event.id} data-index={index} ref={virtualizer.measureElement}>
-          <NoteWrapper event={event}>
-            <ArticleNote event={event} />
-          </NoteWrapper>
-        </div>
-      );
+      switch (event.kind) {
+        case NDKKind.Text:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <TextNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Repost:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <Repost key={event.id} event={event} />
+            </div>
+          );
+        case 1063:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <FileNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        case NDKKind.Article:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <ArticleNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+        default:
+          return (
+            <div
+              key={event.id + index}
+              data-index={index}
+              ref={virtualizer.measureElement}
+            >
+              <NoteWrapper event={event}>
+                <UnknownNote event={event} />
+              </NoteWrapper>
+            </div>
+          );
+      }
     },
     [data]
   );
 
   return (
     <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
-      <TitleBar id={params.id} title={params.title} />
+      <TitleBar id={params.id} title={params.title + ' in 24 hours ago'} />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
@@ -65,7 +128,7 @@ export function ArticleWidget({ params }: { params: Widget }) {
             <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm font-medium text-white">
-                  There have been no new articles in the last 24 hours.
+                  There have been no new posts with this hashtag in the last 24 hours.
                 </p>
               </div>
             </div>

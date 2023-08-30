@@ -1,22 +1,22 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useRef } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { FileNote, NoteSkeleton, NoteWrapper } from '@shared/notes';
+import { ArticleNote, NoteSkeleton, NoteWrapper } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 
 import { Widget } from '@utils/types';
 
-export function FileWidget({ params }: { params: Widget }) {
+export function GlobalArticlesWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['file-widget', params.content],
+    ['global-articles-widget'],
     async () => {
       const events = await ndk.fetchEvents({
-        kinds: [1063],
+        kinds: [NDKKind.Article],
         limit: 100,
       });
       return [...events] as unknown as NDKEvent[];
@@ -42,7 +42,7 @@ export function FileWidget({ params }: { params: Widget }) {
       return (
         <div key={event.id} data-index={index} ref={virtualizer.measureElement}>
           <NoteWrapper event={event}>
-            <FileNote event={event} />
+            <ArticleNote event={event} />
           </NoteWrapper>
         </div>
       );
@@ -65,7 +65,7 @@ export function FileWidget({ params }: { params: Widget }) {
             <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-center text-sm font-medium text-white">
-                  There have been no new files in the last 24 hours.
+                  There have been no new articles in the last 24 hours.
                 </p>
               </div>
             </div>

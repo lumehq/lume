@@ -10,7 +10,7 @@ import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { Widget } from '@utils/types';
 
-export function FeedWidgetForm({ params }: { params: Widget }) {
+export function XfeedsWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
 
   const [setWidget, removeWidget] = useWidgets((state) => [
@@ -34,7 +34,7 @@ export function FeedWidgetForm({ params }: { params: Widget }) {
 
   const submit = async () => {
     setWidget(db, {
-      kind: WidgetKinds.feed,
+      kind: WidgetKinds.local.feeds,
       title: title || 'Group',
       content: JSON.stringify(groups),
     });

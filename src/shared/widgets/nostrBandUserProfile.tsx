@@ -15,7 +15,7 @@ export interface Profile {
   profile: { content: string };
 }
 
-export function UserProfile({ data }: { data: Profile }) {
+export function NostrBandUserProfile({ data }: { data: Profile }) {
   const { db } = useStorage();
   const { addContact, removeContact } = useNostr();
   const { status, data: userStats } = useQuery(

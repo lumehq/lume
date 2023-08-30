@@ -223,6 +223,35 @@ export class LumeStorage {
     };
   }
 
+  public async getAllEventsByKinds(kinds: number[], limit: number, offset: number) {
+    const totalEvents = await this.countTotalEvents();
+    const nextCursor = offset + limit;
+    const authorsArr = `'${kinds.join("','")}'`;
+
+    const events: { data: DBEvent[] | null; nextCursor: number } = {
+      data: null,
+      nextCursor: 0,
+    };
+
+    const query: DBEvent[] = await this.db.select(
+      `SELECT * FROM events WHERE kinds IN (${authorsArr}) ORDER BY created_at DESC LIMIT $1 OFFSET $2;`,
+      [limit, offset]
+    );
+
+    if (query && query.length > 0) {
+      events['data'] = query;
+      events['nextCursor'] =
+        Math.round(totalEvents / nextCursor) > 1 ? nextCursor : undefined;
+
+      return events;
+    }
+
+    return {
+      data: [],
+      nextCursor: 0,
+    };
+  }
+
   public async isEventsEmpty() {
     const results: DBEvent[] = await this.db.select(
       'SELECT * FROM events ORDER BY id DESC LIMIT 1;'

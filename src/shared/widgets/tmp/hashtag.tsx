@@ -26,7 +26,7 @@ const resolver: Resolver<FormValues> = async (values) => {
   };
 };
 
-export function HashTagWidgetForm({ params }: { params: Widget }) {
+export function XhashtagWidget({ params }: { params: Widget }) {
   const [setWidget, removeWidget] = useWidgets((state) => [
     state.setWidget,
     state.removeWidget,
@@ -47,7 +47,7 @@ export function HashTagWidgetForm({ params }: { params: Widget }) {
   const onSubmit = async (data: FormValues) => {
     try {
       setWidget(db, {
-        kind: WidgetKinds.hashtag,
+        kind: WidgetKinds.global.hashtag,
         title: data.hashtag + ' in 24 hours ago',
         content: data.hashtag.replace('#', ''),
       });

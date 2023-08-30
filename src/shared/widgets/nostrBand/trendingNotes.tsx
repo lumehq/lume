@@ -1,27 +1,26 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
-import { type Profile, UserProfile } from '@app/space/components/userProfile';
-
-import { NoteSkeleton } from '@shared/notes/skeleton';
+import { NoteSkeleton, NoteWrapper, TextNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 
 import { Widget } from '@utils/types';
 
 interface Response {
-  profiles: Array<{ pubkey: string }>;
+  notes: Array<{ event: NDKEvent }>;
 }
 
-export function TrendingProfilesWidget({ params }: { params: Widget }) {
+export function TrendingNotesWidget({ params }: { params: Widget }) {
   const { status, data } = useQuery(
-    ['trending-profiles-widget'],
+    ['trending-notes-widget'],
     async () => {
-      const res = await fetch(params.content);
+      const res = await fetch('https://api.nostr.band/v0/trending/notes');
       if (!res.ok) {
-        throw new Error('Error');
+        throw new Error('failed to fecht trending notes');
       }
       const json: Response = await res.json();
-      if (!json.profiles) return [];
-      return json.profiles;
+      if (!json.notes) return null;
+      return json.notes;
     },
     {
       refetchOnMount: false,
@@ -32,9 +31,9 @@ export function TrendingProfilesWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="scrollbar-hide relative shrink-0 grow-0 basis-[400px] overflow-y-auto bg-white/10 backdrop-blur-xl">
-      <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+      <TitleBar id={params.id} title="Trending Notes" />
+      <div className="scrollbar-hide h-full max-w-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
@@ -50,9 +49,11 @@ export function TrendingProfilesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <div className="relative flex w-full flex-col gap-3 px-3 pt-1.5">
-            {data.map((item: Profile) => (
-              <UserProfile key={item.pubkey} data={item} />
+          <div className="relative flex w-full flex-col">
+            {data.map((item) => (
+              <NoteWrapper key={item.event.id} event={item.event}>
+                <TextNote event={item.event} />
+              </NoteWrapper>
             ))}
           </div>
         )}

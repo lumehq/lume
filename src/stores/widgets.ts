@@ -13,18 +13,80 @@ interface WidgetState {
 }
 
 export const WidgetKinds = {
-  feed: 1, // NIP-01
-  thread: 2, // NIP-01
-  hashtag: 3, // NIP-01
-  article: 4, // NIP-23
-  user: 5, // NIP-01
-  trendingProfiles: 6,
-  trendingNotes: 7,
-  file: 8, // NIP-94
-  network: 9999,
-  xfeed: 10000, // x is temporary state for new feed widget form
-  xhashtag: 10001, // x is temporary state for new hashtag widget form
+  local: {
+    network: 100,
+    feeds: 101,
+    files: 102,
+    articles: 103,
+    user: 104,
+    thread: 105,
+  },
+  global: {
+    feeds: 1000,
+    files: 1001,
+    articles: 1002,
+    hashtag: 1003,
+  },
+  nostrBand: {
+    trendingAccounts: 1,
+    trendingNotes: 2,
+  },
+  tmp: {
+    list: 10000,
+    xfeed: 10001,
+    xhashtag: 10002,
+  },
 };
+
+export const DefaultWidgets = [
+  {
+    title: 'Network / Follows',
+    data: [
+      {
+        kind: WidgetKinds.tmp.xfeed,
+        title: 'Group feeds',
+      },
+      {
+        kind: WidgetKinds.local.files,
+        title: 'Files',
+      },
+      {
+        kind: WidgetKinds.local.articles,
+        title: 'Articles',
+      },
+    ],
+  },
+  {
+    title: 'Global',
+    data: [
+      {
+        kind: WidgetKinds.tmp.xhashtag,
+        title: 'Hashtag',
+      },
+      {
+        kind: WidgetKinds.global.files,
+        title: 'Files',
+      },
+      {
+        kind: WidgetKinds.global.articles,
+        title: 'Articles',
+      },
+    ],
+  },
+  {
+    title: 'Trending (nostr.band)',
+    data: [
+      {
+        kind: WidgetKinds.nostrBand.trendingAccounts,
+        title: 'Accounts',
+      },
+      {
+        kind: WidgetKinds.nostrBand.trendingNotes,
+        title: 'Notes',
+      },
+    ],
+  },
+];
 
 export const useWidgets = create<WidgetState>()(
   persist(
@@ -39,7 +101,7 @@ export const useWidgets = create<WidgetState>()(
           id: '9999',
           title: 'Network',
           content: '',
-          kind: WidgetKinds.network,
+          kind: WidgetKinds.local.network,
         });
 
         set({ widgets: dbWidgets });

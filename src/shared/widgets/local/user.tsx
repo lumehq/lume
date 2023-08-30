@@ -20,10 +20,10 @@ import { UserProfile } from '@shared/userProfile';
 import { nHoursAgo } from '@utils/date';
 import { Widget } from '@utils/types';
 
-export function UserWidget({ params }: { params: Widget }) {
+export function LocalUserWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['user-widget', params.content],
+    ['local-user-widget', params.content],
     async () => {
       const events = await ndk.fetchEvents({
         kinds: [1, 6],

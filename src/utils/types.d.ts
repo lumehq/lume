@@ -36,6 +36,16 @@ export interface Profile extends NDKUserProfile {
   pubkey?: string;
 }
 
+export interface WidgetGroup {
+  title: string;
+  data: WidgetGroupItem[];
+}
+
+export interface WidgetGroupItem {
+  title: string;
+  kind: number;
+}
+
 export interface Widget {
   id?: string;
   account_id?: number;
