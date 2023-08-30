@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useStorage } from '@libs/storage/provider';
 
 import { Image } from '@shared/image';
-import { NetworkStatusIndicator } from '@shared/networkStatusIndicator';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -49,17 +48,25 @@ export function ActiveAccount() {
   }, []);
 
   if (status === 'loading') {
-    return <div className="h-9 w-9 animate-pulse rounded-md bg-white/50" />;
+    return (
+      <div className="inline-flex h-10 items-center gap-2.5 rounded-md px-2">
+        <div className="relative h-7 w-7 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+        <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+      </div>
+    );
   }
 
   return (
-    <Link to={`/users/${db.account.pubkey}`} className="relative inline-block shrink-0">
+    <Link
+      to={`/users/${db.account.pubkey}`}
+      className="flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 border-transparent pl-4 pr-2"
+    >
       <Image
         src={user?.picture || user?.image}
         alt={db.account.npub}
-        className="h-10 w-10 rounded-lg object-cover"
+        className="h-7 w-7 shrink-0 rounded object-cover"
       />
-      <NetworkStatusIndicator />
+      <p className="text-white/80">Your profile</p>
     </Link>
   );
 }

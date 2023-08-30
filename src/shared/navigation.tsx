@@ -18,6 +18,7 @@ export function Navigation() {
       <div data-tauri-drag-region className="h-11 w-full" />
       <div className="scrollbar-hide flex h-full flex-col gap-6 overflow-y-auto pb-32">
         <div className="flex flex-col pr-2">
+          <ComposerModal />
           <NavLink
             to="/"
             preventScrollReset={true}
@@ -69,6 +70,7 @@ export function Navigation() {
             </span>
             Settings
           </NavLink>
+          <ActiveAccount />
         </div>
         <Collapsible.Root open={chats} onOpenChange={toggleChats}>
           <div className="flex flex-col gap-1 pr-2">
@@ -92,12 +94,6 @@ export function Navigation() {
             </Collapsible.Content>
           </div>
         </Collapsible.Root>
-      </div>
-      <div className="absolute bottom-4 left-0 right-0 px-2">
-        <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-2 py-2 backdrop-blur-xl">
-          <ActiveAccount />
-          <ComposerModal />
-        </div>
       </div>
     </div>
   );

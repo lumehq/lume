@@ -84,7 +84,7 @@ export function NoteMetadata({ id }: { id: string }) {
           <div className="absolute left-[18px] top-14 h-[calc(100%-6.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
           <div className="relative z-10 flex items-center gap-3 pb-3">
             <div className="mt-2 inline-flex h-6 w-11 shrink-0 items-center justify-center">
-              <div className="isolate flex -space-x-1 overflow-hidden">
+              <div className="isolate flex -space-x-1">
                 {data.users?.map((user, index) => (
                   <MiniUser key={user + index} pubkey={user} />
                 ))}

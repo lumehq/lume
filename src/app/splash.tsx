@@ -62,7 +62,7 @@ export function SplashScreen() {
         <div className="flex flex-col items-center justify-center gap-4">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
           {isLoading ? (
-            <div className="mt-2 flex flex-col gap-1 text-center">
+            <div className="flex flex-col gap-1 text-center">
               <h3 className="text-lg font-semibold leading-none text-white">
                 {!ndk
                   ? 'Connecting to relay...'

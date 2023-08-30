@@ -7,7 +7,7 @@ export function RepostUser({ pubkey }: { pubkey: string }) {
   const { status, user } = useProfile(pubkey);
 
   if (status === 'loading') {
-    return <div className="h-4 w-4 animate-pulse rounded bg-zinc-700"></div>;
+    return <div className="h-4 w-4 animate-pulse rounded bg-white/10"></div>;
   }
 
   return (

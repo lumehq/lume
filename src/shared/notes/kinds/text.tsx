@@ -36,6 +36,7 @@ export function TextNote({ event }: { event: NDKEvent }) {
         }}
         disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
         unwrapDisallowed={true}
+        linkTarget={'_blank'}
       >
         {content?.parsed}
       </ReactMarkdown>

@@ -149,7 +149,7 @@ export function EditProfileModal() {
                 <input type={'hidden'} {...register('picture')} value={picture} />
                 <input type={'hidden'} {...register('banner')} value={banner} />
                 <div className="relative">
-                  <div className="relative h-44 w-full bg-zinc-800">
+                  <div className="relative h-44 w-full">
                     {banner ? (
                       <img
                         src={banner}

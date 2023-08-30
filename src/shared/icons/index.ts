@@ -54,3 +54,4 @@ export * from './file';
 export * from './share';
 export * from './expand';
 export * from './focus';
+export * from './chevronUp';

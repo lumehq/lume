@@ -65,7 +65,7 @@ export function User({
               className={twMerge(
                 `object-cover ${avatarWidth} ${avatarHeight}`,
                 size === 'small' ? 'rounded' : 'rounded-lg',
-                isRepost ? 'ring-1 ring-zinc-800' : ''
+                isRepost ? 'ring-1 ring-black' : ''
               )}
             />
           </button>

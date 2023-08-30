@@ -9,9 +9,9 @@ export function NotiUser({ pubkey }: { pubkey: string }) {
   if (status === 'loading') {
     return (
       <div className="flex items-start gap-2">
-        <div className="relative h-8 w-8 shrink-0 animate-pulse rounded-md bg-zinc-800" />
+        <div className="relative h-8 w-8 shrink-0 animate-pulse rounded-md bg-white/10" />
         <div className="flex w-full flex-1 flex-col items-start gap-1 text-start">
-          <span className="h-4 w-1/2 animate-pulse rounded bg-zinc-800" />
+          <span className="h-4 w-1/2 animate-pulse rounded bg-white/10" />
         </div>
       </div>
     );

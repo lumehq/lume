@@ -4,7 +4,13 @@ import { twMerge } from 'tailwind-merge';
 import { useStorage } from '@libs/storage/provider';
 
 import { Composer, ComposerUser } from '@shared/composer';
-import { CancelIcon, ChevronDownIcon, ChevronRightIcon, ExpandIcon } from '@shared/icons';
+import {
+  CancelIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ComposeIcon,
+  ExpandIcon,
+} from '@shared/icons';
 
 import { useComposer } from '@stores/composer';
 
@@ -22,9 +28,12 @@ export function ComposerModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-lg bg-white/20 px-4 font-bold text-white hover:bg-fuchsia-500 focus:outline-none active:translate-y-1"
+          className="flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 border-transparent pl-4 pr-2 text-white/80"
         >
-          Postr
+          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+            <ComposeIcon className="h-4 w-4 text-white" />
+          </span>
+          New postr
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">

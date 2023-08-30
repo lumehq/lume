@@ -119,7 +119,7 @@ export function MigrateScreen() {
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="mb-0">
               <div className="flex flex-col gap-1">
-                <span className="font-medium text-zinc-200">
+                <span className="font-medium text-white">
                   Set a password to protect your key
                 </span>
                 <div className="relative">
@@ -127,12 +127,12 @@ export function MigrateScreen() {
                     {...register('password', { required: true })}
                     type={passwordInput}
                     placeholder="min. 4 characters"
-                    className="relative w-full rounded-lg bg-zinc-800 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
+                    className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none placeholder:text-white/50"
                   />
                   <button
                     type="button"
                     onClick={() => showPassword()}
-                    className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+                    className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-white/10"
                   >
                     {passwordInput === 'password' ? (
                       <EyeOffIcon
