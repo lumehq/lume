@@ -32,26 +32,6 @@
           "effects": ["hudWindow"],
           "state": "followsWindowActiveState"
         }
-      },
-      {
-        "width": 1080,
-        "height": 800,
-        "resizable": false,
-        "theme": "Dark",
-        "label": "settings",
-        "url": "settings",
-        "title": "Settings",
-        "titleBarStyle": "Overlay",
-        "transparent": true,
-        "center": true,
-        "fullscreen": false,
-        "hiddenTitle": true,
-        "visible": false,
-        "fileDropEnabled": false,
-        "windowEffects": {
-          "effects": ["hudWindow"],
-          "state": "followsWindowActiveState"
-        }
       }
     ]
   }

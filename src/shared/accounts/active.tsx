@@ -1,14 +1,15 @@
 import { NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
+import { AccountMoreActions } from '@shared/accounts/more';
 import { Image } from '@shared/image';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
+import { displayNpub } from '@utils/shortenKey';
 
 export function ActiveAccount() {
   const { db } = useStorage();
@@ -57,16 +58,23 @@ export function ActiveAccount() {
   }
 
   return (
-    <Link
-      to={`/users/${db.account.pubkey}`}
-      className="flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 border-transparent pl-4 pr-2"
-    >
-      <Image
-        src={user?.picture || user?.image}
-        alt={db.account.npub}
-        className="h-7 w-7 shrink-0 rounded object-cover"
-      />
-      <p className="text-white/80">Your profile</p>
-    </Link>
+    <div className="flex h-16 items-center justify-between border-l-2 border-transparent pb-2 pl-4 pr-2">
+      <div className="flex items-center gap-2.5">
+        <Image
+          src={user?.picture || user?.image}
+          alt={db.account.npub}
+          className="h-10 w-10 shrink-0 rounded-lg object-cover"
+        />
+        <div className="flex w-full flex-1 flex-col items-start gap-1.5">
+          <p className="max-w-[10rem] truncate font-bold leading-none text-white">
+            {user?.name || user?.display_name || user?.nip05}
+          </p>
+          <span className="max-w-[8rem] truncate text-sm leading-none text-white/50">
+            {displayNpub(db.account.pubkey, 16)}
+          </span>
+        </div>
+      </div>
+      <AccountMoreActions pubkey={db.account.pubkey} />
+    </div>
   );
 }

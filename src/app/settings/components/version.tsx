@@ -1,8 +1,6 @@
 import { getVersion } from '@tauri-apps/plugin-app';
 import { useEffect, useState } from 'react';
 
-import { RefreshIcon } from '@shared/icons';
-
 export function VersionSetting() {
   const [version, setVersion] = useState<string>('');
 
@@ -24,12 +22,6 @@ export function VersionSetting() {
       </div>
       <div className="inline-flex items-center gap-2">
         <span className="font-medium text-zinc-300">{version}</span>
-        <button
-          type="button"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-800 font-medium hover:bg-fuchsia-500"
-        >
-          <RefreshIcon className="h-4 w-4 text-white" />
-        </button>
       </div>
     </div>
   );

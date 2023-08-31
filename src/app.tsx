@@ -110,6 +110,7 @@ const router = createBrowserRouter([
   {
     path: '/auth',
     element: <AuthLayout />,
+    errorElement: <ErrorScreen />,
     children: [
       {
         path: 'welcome',
@@ -121,6 +122,7 @@ const router = createBrowserRouter([
       {
         path: 'import',
         element: <AuthImportScreen />,
+        errorElement: <ErrorScreen />,
         children: [
           {
             path: '',
@@ -148,6 +150,7 @@ const router = createBrowserRouter([
       {
         path: 'create',
         element: <AuthCreateScreen />,
+        errorElement: <ErrorScreen />,
         children: [
           {
             path: '',
@@ -175,6 +178,7 @@ const router = createBrowserRouter([
       {
         path: 'onboarding',
         element: <OnboardingScreen />,
+        errorElement: <ErrorScreen />,
         children: [
           {
             path: '',
@@ -232,23 +236,17 @@ const router = createBrowserRouter([
   {
     path: '/settings',
     element: <SettingsLayout />,
+    errorElement: <ErrorScreen />,
     children: [
       {
-        path: 'general',
+        path: '',
         async lazy() {
           const { GeneralSettingsScreen } = await import('@app/settings/general');
           return { Component: GeneralSettingsScreen };
         },
       },
       {
-        path: 'shortcuts',
-        async lazy() {
-          const { ShortcutsSettingsScreen } = await import('@app/settings/shortcuts');
-          return { Component: ShortcutsSettingsScreen };
-        },
-      },
-      {
-        path: 'account',
+        path: 'backup',
         async lazy() {
           const { AccountSettingsScreen } = await import('@app/settings/account');
           return { Component: AccountSettingsScreen };

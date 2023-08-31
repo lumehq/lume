@@ -42,7 +42,7 @@ export function WidgetList({ params }: { params: Widget }) {
 
   return (
     <div className="relative h-full shrink-0 grow-0 basis-[400px] overflow-hidden">
-      <TitleBar title="Add widget" />
+      <TitleBar id={params.id} title="Add widget" />
       <div className="flex flex-col gap-8 px-3">
         {DefaultWidgets.map((row: WidgetGroup) => renderItem(row))}
       </div>

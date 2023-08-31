@@ -6,7 +6,7 @@ import { ChatsList } from '@app/chats/components/list';
 
 import { ActiveAccount } from '@shared/accounts/active';
 import { ComposerModal } from '@shared/composer';
-import { BellIcon, NavArrowDownIcon, SettingsIcon, SpaceIcon } from '@shared/icons';
+import { BellIcon, NavArrowDownIcon, SpaceIcon } from '@shared/icons';
 
 import { useSidebar } from '@stores/sidebar';
 
@@ -14,9 +14,9 @@ export function Navigation() {
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
 
   return (
-    <div className="relative h-full w-[232px] bg-black/80">
-      <div data-tauri-drag-region className="h-11 w-full" />
-      <div className="scrollbar-hide flex h-full flex-col gap-6 overflow-y-auto pb-32">
+    <div className="relative flex h-full w-[232px] flex-col bg-black/80">
+      <div data-tauri-drag-region className="h-11 w-full shrink-0" />
+      <div className="scrollbar-hide flex h-full flex-1 flex-col gap-6 overflow-y-auto pb-32">
         <div className="flex flex-col pr-2">
           <ComposerModal />
           <NavLink
@@ -53,24 +53,6 @@ export function Navigation() {
             </span>
             Notifications
           </NavLink>
-          <NavLink
-            to="/settings"
-            preventScrollReset={true}
-            className={({ isActive }) =>
-              twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
-                isActive
-                  ? 'border-fuchsia-500 bg-white/5 text-white'
-                  : 'border-transparent text-white/80'
-              )
-            }
-          >
-            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
-              <SettingsIcon className="h-4 w-4 text-white" />
-            </span>
-            Settings
-          </NavLink>
-          <ActiveAccount />
         </div>
         <Collapsible.Root open={chats} onOpenChange={toggleChats}>
           <div className="flex flex-col gap-1 pr-2">
@@ -94,6 +76,9 @@ export function Navigation() {
             </Collapsible.Content>
           </div>
         </Collapsible.Root>
+      </div>
+      <div className="shrink-0">
+        <ActiveAccount />
       </div>
     </div>
   );

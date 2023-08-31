@@ -58,7 +58,7 @@ export const NDKInstance = () => {
       // return all validate relays
       return verifiedRelays;
     } catch (e) {
-      e.forEach((error) => console.error(error));
+      console.error('ndk instance error: ', e);
     }
   }
 
