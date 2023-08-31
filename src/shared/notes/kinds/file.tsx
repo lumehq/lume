@@ -1,5 +1,6 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import ReactPlayer from 'react-player';
+import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
 
@@ -38,8 +39,14 @@ export function FileNote({ event }: { event: NDKEvent }) {
   }
 
   return (
-    <div className="mb-2 mt-3">
-      <p>{url}</p>
+    <div className="mb-2">
+      <Link
+        to={url}
+        target="_blank"
+        className="break-all font-normal text-fuchsia-500 hover:text-fuchsia-600"
+      >
+        {url}
+      </Link>
     </div>
   );
 }
