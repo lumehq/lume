@@ -55,9 +55,6 @@ dependencies:
   '@tauri-apps/plugin-fs':
     specifier: github:tauri-apps/tauri-plugin-fs#v2
     version: github.com/tauri-apps/tauri-plugin-fs/c90fd8bcad3be92f34a0642d67ab1a6ad9f73dee
-  '@tauri-apps/plugin-http':
-    specifier: github:tauri-apps/tauri-plugin-http#v2
-    version: github.com/tauri-apps/tauri-plugin-http/50bc7956907eef54a20255b62ea57ff4c2e8585a
   '@tauri-apps/plugin-notification':
     specifier: github:tauri-apps/tauri-plugin-notification#v2
     version: github.com/tauri-apps/tauri-plugin-notification/66c0779854575ec7860eadcd98673c39627e81a6
@@ -7154,14 +7151,6 @@ packages:
   github.com/tauri-apps/tauri-plugin-fs/c90fd8bcad3be92f34a0642d67ab1a6ad9f73dee:
     resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-fs/tar.gz/c90fd8bcad3be92f34a0642d67ab1a6ad9f73dee}
     name: '@tauri-apps/plugin-fs'
-    version: 2.0.0-alpha.1
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.6
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-http/50bc7956907eef54a20255b62ea57ff4c2e8585a:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-http/tar.gz/50bc7956907eef54a20255b62ea57ff4c2e8585a}
-    name: '@tauri-apps/plugin-http'
     version: 2.0.0-alpha.1
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.6

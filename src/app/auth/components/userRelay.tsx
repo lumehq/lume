@@ -28,7 +28,7 @@ export function UserRelay({ pubkey }: { pubkey: string }) {
           className="h-5 w-5 shrink-0 rounded object-cover"
         />
         <span className="truncate text-sm font-medium leading-none text-white">
-          {user?.name || user?.display_name || user?.nip05 || displayNpub(pubkey, 16)}
+          {user?.name || user?.display_name || displayNpub(pubkey, 16)}
         </span>
       </div>
     </div>

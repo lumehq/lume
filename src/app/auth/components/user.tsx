@@ -27,7 +27,7 @@ export function User({ pubkey, fallback }: { pubkey: string; fallback?: string }
       />
       <div className="flex w-full flex-1 flex-col items-start text-start">
         <p className="max-w-[15rem] truncate font-medium leading-tight text-white">
-          {user?.name || user?.display_name || user?.nip05}
+          {user?.name || user?.display_name}
         </p>
         <span className="max-w-[15rem] truncate leading-tight text-white/50">
           {displayNpub(pubkey, 16)}

@@ -6,6 +6,7 @@ import { UserStats } from '@app/users/components/stats';
 import { useStorage } from '@libs/storage/provider';
 
 import { Image } from '@shared/image';
+import { NIP05 } from '@shared/nip05';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -58,9 +59,17 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           <h5 className="text-lg font-semibold leading-none">
             {user?.displayName || user?.name || 'No name'}
           </h5>
-          <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
-            {user?.nip05 || displayNpub(pubkey, 16)}
-          </span>
+          {user?.nip05 ? (
+            <NIP05
+              pubkey={pubkey}
+              nip05={user?.nip05}
+              className="max-w-[15rem] truncate text-sm leading-none text-white/50"
+            />
+          ) : (
+            <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
+              {displayNpub(pubkey, 16)}
+            </span>
+          )}
         </div>
         <div className="flex flex-col gap-4">
           <p className="mt-2 max-w-[500px] select-text break-words text-white">

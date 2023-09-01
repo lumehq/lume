@@ -19,7 +19,7 @@ export function RepostUser({ pubkey }: { pubkey: string }) {
       />
       <div className="inline-flex items-baseline gap-1">
         <h5 className="max-w-[18rem] truncate text-white/50">
-          {user?.nip05 || user?.name || user?.display_name || shortenKey(pubkey)}
+          {user?.name || user?.display_name || shortenKey(pubkey)}
         </h5>
         <span className="text-white/50">reposted</span>
       </div>

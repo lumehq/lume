@@ -56,3 +56,4 @@ export * from './expand';
 export * from './focus';
 export * from './chevronUp';
 export * from './secure';
+export * from './verified';

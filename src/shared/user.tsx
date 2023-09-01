@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { Image } from '@shared/image';
+import { NIP05 } from '@shared/nip05';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -79,7 +80,7 @@ export function User({
               size === 'small' ? 'max-w-[10rem]' : 'max-w-[15rem]'
             )}
           >
-            {user?.nip05 || user?.name || user?.display_name || displayNpub(pubkey, 16)}
+            {user?.display_name || user?.name || displayNpub(pubkey, 16)}
           </h5>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>
@@ -87,7 +88,7 @@ export function User({
       </div>
       <Popover.Portal>
         <Popover.Content
-          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl backdrop-blur-xl focus:outline-none"
+          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
@@ -101,9 +102,17 @@ export function User({
                 <h5 className="text-sm font-semibold leading-none">
                   {user?.display_name || user?.name || user?.username}
                 </h5>
-                <span className="max-w-[10rem] truncate text-sm leading-none text-white/50">
-                  {user?.nip05 || displayNpub(pubkey, 16)}
-                </span>
+                {user?.nip05 ? (
+                  <NIP05
+                    pubkey={pubkey}
+                    nip05={user?.nip05}
+                    className="max-w-[15rem] truncate text-sm leading-none text-white/50"
+                  />
+                ) : (
+                  <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
+                    {displayNpub(pubkey, 16)}
+                  </span>
+                )}
               </div>
               <div>
                 <p className="line-clamp-3 break-all leading-tight text-white">

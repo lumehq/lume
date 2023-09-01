@@ -17,17 +17,13 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       onClick={() =>
         setWidget(db, {
           kind: WidgetKinds.local.user,
-          title: user?.nip05 || user?.name || user?.display_name,
+          title: user?.name || user?.display_name,
           content: pubkey,
         })
       }
       className="break-words text-fuchsia-400 hover:text-fuchsia-500"
     >
-      {user?.nip05 ||
-        user?.name ||
-        user?.display_name ||
-        user?.username ||
-        displayNpub(pubkey, 16)}
+      {user?.name || user?.display_name || user?.username || displayNpub(pubkey, 16)}
     </button>
   );
 }

@@ -52,7 +52,7 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
               <div>
                 <p className="mb-1 text-sm leading-none text-white/50">Reply as</p>
                 <p className="text-sm font-medium leading-none text-white">
-                  {user?.nip05 || user?.name || displayNpub(pubkey, 16)}
+                  {user?.name || displayNpub(pubkey, 16)}
                 </p>
               </div>
             </div>

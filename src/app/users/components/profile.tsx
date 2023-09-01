@@ -7,10 +7,11 @@ import { UserStats } from '@app/users/components/stats';
 import { useStorage } from '@libs/storage/provider';
 
 import { Image } from '@shared/image';
+import { NIP05 } from '@shared/nip05';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
-import { shortenKey } from '@utils/shortenKey';
+import { displayNpub } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
   const { db } = useStorage();
@@ -68,13 +69,21 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
         />
         <div className="mt-2 flex flex-1 flex-col gap-6">
           <div className="flex flex-col items-center gap-1">
-            <div className="inline-flex flex-col gap-1.5">
+            <div className="inline-flex flex-col items-center gap-1.5">
               <h5 className="text-center text-xl font-semibold leading-none">
                 {user.display_name || user.displayName || user.name || 'No name'}
               </h5>
-              <span className="max-w-[15rem] truncate text-center leading-none text-white/50">
-                {user.nip05 || user.username || shortenKey(pubkey)}
-              </span>
+              {user.nip05 ? (
+                <NIP05
+                  pubkey={pubkey}
+                  nip05={user?.nip05}
+                  className="max-w-[15rem] truncate text-sm leading-none text-white/50"
+                />
+              ) : (
+                <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
+                  {displayNpub(pubkey, 16)}
+                </span>
+              )}
             </div>
             <div className="flex flex-col gap-6">
               {user.about || user.bio ? (

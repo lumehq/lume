@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
+import { NIP05 } from '@shared/nip05';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -23,9 +24,17 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
             <h3 className="text-lg font-semibold leading-none">
               {user?.display_name || user?.name}
             </h3>
-            <h5 className="leading-none text-white/50">
-              {user?.nip05 || displayNpub(pubkey, 16)}
-            </h5>
+            {user?.nip05 ? (
+              <NIP05
+                pubkey={pubkey}
+                nip05={user?.nip05}
+                className="leading-none text-white/50"
+              />
+            ) : (
+              <span className="leading-none text-white/50">
+                {displayNpub(pubkey, 16)}
+              </span>
+            )}
           </div>
           <div>
             <p className="leading-tight">{user?.bio || user?.about}</p>

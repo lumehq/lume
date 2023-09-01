@@ -1,6 +1,7 @@
 import { Image } from '@shared/image';
 
 import { useProfile } from '@utils/hooks/useProfile';
+import { displayNpub } from '@utils/shortenKey';
 
 export function ComposerUser({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
@@ -13,9 +14,7 @@ export function ComposerUser({ pubkey }: { pubkey: string }) {
         className="h-10 w-10 shrink-0 rounded-lg"
       />
       <h5 className="text-base font-semibold leading-none text-white">
-        {user?.nip05 || user?.name || (
-          <div className="h-3 w-20 animate-pulse rounded-sm bg-zinc-700" />
-        )}
+        {user?.name || user?.display_name || displayNpub(pubkey, 16)}
       </h5>
     </div>
   );

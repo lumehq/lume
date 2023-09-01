@@ -36,7 +36,6 @@
     "@tauri-apps/plugin-clipboard-manager": "github:tauri-apps/tauri-plugin-clipboard-manager#v2",
     "@tauri-apps/plugin-dialog": "github:tauri-apps/tauri-plugin-dialog#v2",
     "@tauri-apps/plugin-fs": "github:tauri-apps/tauri-plugin-fs#v2",
-    "@tauri-apps/plugin-http": "github:tauri-apps/tauri-plugin-http#v2",
     "@tauri-apps/plugin-notification": "github:tauri-apps/tauri-plugin-notification#v2",
     "@tauri-apps/plugin-os": "github:tauri-apps/tauri-plugin-os#v2",
     "@tauri-apps/plugin-process": "github:tauri-apps/tauri-plugin-process#v2",

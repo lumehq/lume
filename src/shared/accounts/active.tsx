@@ -67,7 +67,7 @@ export function ActiveAccount() {
         />
         <div className="flex w-full flex-1 flex-col items-start gap-1.5">
           <p className="max-w-[10rem] truncate font-bold leading-none text-white">
-            {user?.name || user?.display_name || user?.nip05}
+            {user?.name || user?.display_name}
           </p>
           <span className="max-w-[8rem] truncate text-sm leading-none text-white/50">
             {displayNpub(db.account.pubkey, 16)}
