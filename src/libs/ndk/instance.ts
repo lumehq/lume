@@ -1,5 +1,6 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
+import { message } from '@tauri-apps/plugin-dialog';
 import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
@@ -28,7 +29,7 @@ export const NDKInstance = () => {
       });
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort('timeout'), 5000);
+      const timeoutId = setTimeout(() => controller.abort('timeout'), 10000);
 
       const requests = urls.map((url) =>
         fetch(url, {
@@ -58,14 +59,16 @@ export const NDKInstance = () => {
       // return all validate relays
       return verifiedRelays;
     } catch (e) {
-      console.error('ndk instance error: ', e);
+      console.error('verify relay failed with error: ', e);
     }
   }
 
   async function initNDK() {
     let explicitRelayUrls: string[];
     const explicitRelayUrlsFromDB = await db.getExplicitRelayUrls();
+
     console.log('relays in db: ', explicitRelayUrlsFromDB);
+    console.log('ndk cache adapter: ', cacheAdapter);
 
     if (explicitRelayUrlsFromDB) {
       explicitRelayUrls = await verifyRelays(explicitRelayUrlsFromDB);
@@ -73,13 +76,21 @@ export const NDKInstance = () => {
       explicitRelayUrls = await verifyRelays(FULL_RELAYS);
     }
 
-    console.log('ndk cache adapter: ', cacheAdapter);
-    const instance = new NDK({ explicitRelayUrls, cacheAdapter });
+    if (explicitRelayUrls.length < 1) {
+      await message('Something is wrong. No relays have been found.', {
+        title: 'Lume',
+        type: 'error',
+      });
+    }
 
+    const instance = new NDK({ explicitRelayUrls, cacheAdapter });
     try {
       await instance.connect(10000);
     } catch (error) {
-      throw new Error('NDK instance init failed: ', error);
+      await message(`NDK instance init failed: ${error}`, {
+        title: 'Lume',
+        type: 'error',
+      });
     }
 
     setNDK(instance);

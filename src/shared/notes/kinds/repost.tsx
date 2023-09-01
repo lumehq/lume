@@ -1,4 +1,5 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { useCallback } from 'react';
 
 import {
   ArticleNote,
@@ -15,8 +16,24 @@ import { User } from '@shared/user';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function Repost({ event }: { event: NDKEvent }) {
-  const repostID = event.tags.find((el) => el[0] === 'e')?.[1];
+  const repostID = event.tags.find((el) => el[0] === 'e')[1] ?? '';
   const { status, data } = useEvent(repostID, event.content as unknown as string);
+
+  const renderKind = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return <TextNote event={event} />;
+        case NDKKind.Article:
+          return <ArticleNote event={event} />;
+        case 1063:
+          return <FileNote event={event} />;
+        default:
+          return <UnknownNote event={event} />;
+      }
+    },
+    [event]
+  );
 
   if (status === 'loading') {
     return (
@@ -43,19 +60,6 @@ export function Repost({ event }: { event: NDKEvent }) {
     );
   }
 
-  const renderKind = (event: NDKEvent) => {
-    switch (event.kind) {
-      case NDKKind.Text:
-        return <TextNote event={event} />;
-      case NDKKind.Article:
-        return <ArticleNote event={event} />;
-      case 1063:
-        return <FileNote event={event} />;
-      default:
-        return <UnknownNote event={event} />;
-    }
-  };
-
   return (
     <div className="h-min w-full px-3 pb-3">
       <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
@@ -64,7 +68,7 @@ export function Repost({ event }: { event: NDKEvent }) {
             <RepostUser pubkey={event.pubkey} />
             <User pubkey={data.pubkey} time={data.created_at} isRepost={true} />
           </div>
-          <div className="flex items-start gap-3">
+          <div className="-mt-2 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="relative z-20 flex-1">
               {renderKind(data)}

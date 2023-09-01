@@ -5,8 +5,6 @@ import { Event, parseReferences } from 'nostr-tools';
 import { RichContent } from '@utils/types';
 
 export function parser(event: NDKEvent) {
-  if (event.kind !== 1) return;
-
   const references = parseReferences(event as unknown as Event);
   const urls = getUrls(event.content as unknown as string);
 

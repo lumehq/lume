@@ -19,13 +19,13 @@ export function NIP05({
   className?: string;
 }) {
   const { status, data } = useQuery(
-    [nip05],
+    ['nip05', nip05],
     async () => {
       try {
-        const username = nip05.split('@')[0];
+        const localPath = nip05.split('@')[0];
         const service = nip05.split('@')[1];
         // #TODO: use tauri native fetch to avoid CORS
-        const verifyURL = `https://${service}/.well-known/nostr.json?name=${username}`;
+        const verifyURL = `https://${service}/.well-known/nostr.json?name=${localPath}`;
 
         const res = await fetch(verifyURL, {
           method: 'GET',
@@ -37,11 +37,11 @@ export function NIP05({
         if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
         const data: NIP05 = await res.json();
-
         if (data.names) {
           if (data.names.username !== pubkey) return false;
           return true;
         }
+        return false;
       } catch (e) {
         throw new Error(`Failed to verify NIP-05, error: ${e}`);
       }

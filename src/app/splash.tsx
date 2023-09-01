@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/tauri';
+import { message } from '@tauri-apps/plugin-dialog';
 import { useEffect, useState } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -40,7 +41,10 @@ export function SplashScreen() {
     } catch (e) {
       setIsLoading(false);
       setErrorMessage(e);
-      console.log('prefetch failed, error: ', e);
+      await message(`Something wrong: ${e}`, {
+        title: 'Lume',
+        type: 'error',
+      });
     }
   };
 

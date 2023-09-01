@@ -23,8 +23,8 @@ export function User({
   isChat?: boolean;
 }) {
   const { status, user } = useProfile(pubkey);
-  const createdAt = formatCreatedAt(time, isChat);
 
+  const createdAt = formatCreatedAt(time, isChat);
   const avatarWidth = size === 'small' ? 'w-6' : 'w-11';
   const avatarHeight = size === 'small' ? 'h-6' : 'h-11';
 
@@ -102,10 +102,10 @@ export function User({
                 <h5 className="text-sm font-semibold leading-none">
                   {user?.display_name || user?.name || user?.username}
                 </h5>
-                {user?.nip05 ? (
+                {user.nip05 ? (
                   <NIP05
                     pubkey={pubkey}
-                    nip05={user?.nip05}
+                    nip05={user.nip05}
                     className="max-w-[15rem] truncate text-sm leading-none text-white/50"
                   />
                 ) : (
