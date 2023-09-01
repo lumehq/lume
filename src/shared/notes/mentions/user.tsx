@@ -12,9 +12,17 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
   const setWidget = useWidgets((state) => state.setWidget);
 
   return (
-    <button
-      type="button"
+    <span
+      role="button"
+      tabIndex={0}
       onClick={() =>
+        setWidget(db, {
+          kind: WidgetKinds.local.user,
+          title: user?.name || user?.display_name,
+          content: pubkey,
+        })
+      }
+      onKeyDown={() =>
         setWidget(db, {
           kind: WidgetKinds.local.user,
           title: user?.name || user?.display_name,
@@ -24,6 +32,6 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       className="break-words text-fuchsia-400 hover:text-fuchsia-500"
     >
       {user?.name || user?.display_name || user?.username || displayNpub(pubkey, 16)}
-    </button>
+    </span>
   );
 }

@@ -7,9 +7,17 @@ export function Hashtag({ tag }: { tag: string }) {
   const setWidget = useWidgets((state) => state.setWidget);
 
   return (
-    <button
-      type="button"
+    <span
+      role="button"
+      tabIndex={0}
       onClick={() =>
+        setWidget(db, {
+          kind: WidgetKinds.global.hashtag,
+          title: tag,
+          content: tag.replace('#', ''),
+        })
+      }
+      onKeyDown={() =>
         setWidget(db, {
           kind: WidgetKinds.global.hashtag,
           title: tag,
@@ -19,6 +27,6 @@ export function Hashtag({ tag }: { tag: string }) {
       className="break-words text-fuchsia-400 hover:text-fuchsia-500"
     >
       {tag}
-    </button>
+    </span>
   );
 }

@@ -62,9 +62,12 @@ export function parser(event: NDKEvent) {
 
   // parse hashtag
   const hashtags = content.parsed.split(/\s/gm).filter((s) => s.startsWith('#'));
-  hashtags?.forEach((tag) => {
-    content.parsed = content.parsed.replace(tag, ` ~tag-${tag}~ `);
-  });
+  if (hashtags) {
+    const uniqTags = new Set(hashtags);
+    uniqTags.forEach((tag) => {
+      content.parsed = content.parsed.replaceAll(tag, `~tag-${tag}~`);
+    });
+  }
 
   return content;
 }
