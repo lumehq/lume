@@ -28,7 +28,7 @@ export function LocalNetworkWidget() {
     useInfiniteQuery({
       queryKey: ['local-network-widget'],
       queryFn: async ({ pageParam = 0 }) => {
-        return await db.getAllEvents(30, pageParam);
+        return await db.getAllEvents(20, pageParam);
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });

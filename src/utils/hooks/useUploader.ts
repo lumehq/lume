@@ -18,7 +18,18 @@ export function useImageUploader() {
         filters: [
           {
             name: 'Image',
-            extensions: ['png', 'jpeg', 'jpg', 'gif'],
+            extensions: [
+              'png',
+              'jpeg',
+              'jpg',
+              'gif',
+              'mp4',
+              'mp3',
+              'webm',
+              'mkv',
+              'avi',
+              'mov',
+            ],
           },
         ],
       });

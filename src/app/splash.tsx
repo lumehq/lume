@@ -11,7 +11,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 
 export function SplashScreen() {
   const { db } = useStorage();
-  const { ndk, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { fetchUserData, prefetchEvents } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -68,9 +68,7 @@ export function SplashScreen() {
           {isLoading ? (
             <div className="flex flex-col gap-1 text-center">
               <h3 className="text-lg font-semibold leading-none text-white">
-                {!ndk
-                  ? 'Connecting to relay...'
-                  : `Connected to ${relayUrls.length} relays`}
+                {!ndk ? 'Connecting to relay...' : 'Fetching events from the last login.'}
               </h3>
               <p className="text-sm text-white/50">
                 This may take a few seconds, please don&apos;t close app.
