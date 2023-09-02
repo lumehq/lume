@@ -18,7 +18,7 @@ export const SimpleNote = memo(function SimpleNote({ id }: { id: string }) {
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      setWidget(db, { kind: WidgetKinds.thread, title: 'Thread', content: thread });
+      setWidget(db, { kind: WidgetKinds.local.thread, title: 'Thread', content: thread });
     } else {
       event.stopPropagation();
     }

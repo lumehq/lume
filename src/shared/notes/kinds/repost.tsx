@@ -5,7 +5,6 @@ import {
   ArticleNote,
   FileNote,
   NoteActions,
-  NoteMetadata,
   NoteSkeleton,
   RepostUser,
   TextNote,
@@ -62,7 +61,7 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   return (
     <div className="h-min w-full px-3 pb-3">
-      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
         <div className="relative flex flex-col">
           <div className="isolate flex flex-col -space-y-4">
             <RepostUser pubkey={event.pubkey} />
@@ -75,7 +74,6 @@ export function Repost({ event }: { event: NDKEvent }) {
               <NoteActions id={repostID} pubkey={data.pubkey} />
             </div>
           </div>
-          <NoteMetadata id={repostID} />
         </div>
       </div>
     </div>

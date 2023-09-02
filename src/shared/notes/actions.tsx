@@ -61,7 +61,7 @@ export function NoteActions({
                     type="button"
                     onClick={() =>
                       setWidget(db, {
-                        kind: WidgetKinds.thread,
+                        kind: WidgetKinds.local.thread,
                         title: 'Thread',
                         content: id,
                       })
