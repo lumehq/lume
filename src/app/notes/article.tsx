@@ -1,5 +1,5 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
-import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { writeText } from '@tauri-apps/api/clipboard';
 import { nip19 } from 'nostr-tools';
 import { EventPointer } from 'nostr-tools/lib/nip19';
 import { useRef, useState } from 'react';

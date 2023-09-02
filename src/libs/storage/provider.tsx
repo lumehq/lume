@@ -1,6 +1,6 @@
-import { message } from '@tauri-apps/plugin-dialog';
-import Database from '@tauri-apps/plugin-sql';
+import { message } from '@tauri-apps/api/dialog';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
+import Database from 'tauri-plugin-sql-api';
 
 import { LumeStorage } from '@libs/storage/instance';
 

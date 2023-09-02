@@ -27,11 +27,7 @@
         "fullscreen": false,
         "hiddenTitle": true,
         "visible": false,
-        "fileDropEnabled": true,
-        "windowEffects": {
-          "effects": ["hudWindow"],
-          "state": "followsWindowActiveState"
-        }
+        "fileDropEnabled": true
       }
     ]
   }

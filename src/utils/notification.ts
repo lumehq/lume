@@ -2,7 +2,7 @@ import {
   isPermissionGranted,
   requestPermission,
   sendNotification,
-} from '@tauri-apps/plugin-notification';
+} from '@tauri-apps/api/notification';
 
 export async function sendNativeNotification(content: string, title?: string) {
   let permissionGranted = await isPermissionGranted();

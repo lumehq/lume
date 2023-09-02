@@ -8,7 +8,7 @@ import {
   NDKUser,
 } from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { message, open } from '@tauri-apps/plugin-dialog';
+import { message, open } from '@tauri-apps/api/dialog';
 import { VoidApi } from '@void-cat/api';
 import { LRUCache } from 'lru-cache';
 import { NostrFetcher } from 'nostr-fetch';
@@ -362,7 +362,7 @@ export function useNostr() {
             error: 'Cancelled',
           };
         } else {
-          filepath = selected.path;
+          filepath = selected;
         }
       }
 

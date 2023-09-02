@@ -11,40 +11,39 @@ rust-version = "1.71"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-alpha.8", features = [] }
+tauri-build = { version = "1.4.0", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { git = "https://git.nextgraph.org/NextGraph/tauri.git", branch = "alpha.11-nextgraph", features = [
-  "protocol-asset",
+tauri = { version = "1.4.0", features = [ "window-start-dragging", "path-all", "http-all",
+  "clipboard-write-text",
+  "os-all",
+  "notification-all",
+  "clipboard-read-text",
+  "window-set-resizable",
+  "window-set-size",
+  "shell-open",
+  "fs-write-file",
+  "app-all",
+  "fs-remove-file",
+  "window-center",
+  "dialog-all",
   "macos-private-api",
-  "no-ipc-custom-protocol",
 ] }
-tauri-plugin-single-instance = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-autostart = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-stronghold = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-upload = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-updater = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-dialog = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-http = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-fs = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-clipboard-manager = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-notification = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-app = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-process = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-os = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-window = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-store = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
-tauri-plugin-shell = { git = "https://github.com/luminous-devs/plugins-workspace", branch = "v2" }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }
 rust-argon2 = "1.0"
 
 [dependencies.tauri-plugin-sql]
-git = "https://github.com/luminous-devs/plugins-workspace"
-branch = "v2"
+git = "hhttps://github.com/tauri-apps/plugins-workspace"
+branch = "v1"
 features = ["sqlite"]
 
 [features]

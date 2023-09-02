@@ -1,6 +1,6 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
-import { message } from '@tauri-apps/plugin-dialog';
+import { message } from '@tauri-apps/api/dialog';
 import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';

@@ -1,6 +1,6 @@
 import { NDKCacheAdapter } from '@nostr-dev-kit/ndk';
 import { NDKEvent, NDKSubscription } from '@nostr-dev-kit/ndk';
-import { Store } from '@tauri-apps/plugin-store';
+import { Store } from 'tauri-plugin-store-api';
 
 export default class TauriAdapter implements NDKCacheAdapter {
   public store: Store;

@@ -1,4 +1,4 @@
-import { message } from '@tauri-apps/plugin-dialog';
+import { message } from '@tauri-apps/api/dialog';
 import Image from '@tiptap/extension-image';
 import Mention from '@tiptap/extension-mention';
 import Placeholder from '@tiptap/extension-placeholder';
