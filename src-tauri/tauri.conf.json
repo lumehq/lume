@@ -48,7 +48,8 @@
       "http": {
         "all": true,
         "scope": [
-          "https://void.cat/*"
+          "http://**",
+          "https://**"
         ]
       },
       "shell": {
