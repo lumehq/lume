@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { fetch } from '@tauri-apps/api/http';
 import { twMerge } from 'tailwind-merge';
 
 import { UnverifiedIcon, VerifiedIcon } from '@shared/icons';
@@ -29,6 +30,7 @@ export function NIP05({
 
         const res = await fetch(verifyURL, {
           method: 'GET',
+          timeout: 10,
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
@@ -36,9 +38,9 @@ export function NIP05({
 
         if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
-        const data: NIP05 = await res.json();
+        const data = res.data as NIP05;
         if (data.names) {
-          if (data.names.username !== pubkey) return false;
+          if (data.names[localPath] !== pubkey) return false;
           return true;
         }
         return false;

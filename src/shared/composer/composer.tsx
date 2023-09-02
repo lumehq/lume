@@ -1,3 +1,4 @@
+import { message } from '@tauri-apps/api/dialog';
 import Image from '@tiptap/extension-image';
 import Mention from '@tiptap/extension-mention';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -9,24 +10,21 @@ import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Suggestion } from '@shared/composer';
-import { CancelIcon, LoaderIcon, PlusCircleIcon } from '@shared/icons';
+import { CancelIcon, LoaderIcon, MediaIcon, MentionIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
 
 import { useNostr } from '@utils/hooks/useNostr';
-import { useImageUploader } from '@utils/hooks/useUploader';
 import { sendNativeNotification } from '@utils/notification';
 
 export function Composer() {
-  const { publish } = useNostr();
-
-  const [status, setStatus] = useState<null | 'loading' | 'done'>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
 
-  const expand = useComposer((state) => state.expand)
-  const upload = useImageUploader();
+  const { publish, upload } = useNostr();
 
+  const expand = useComposer((state) => state.expand);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -65,9 +63,9 @@ export function Composer() {
   };
 
   const submit = async () => {
-    setStatus('loading');
-
     try {
+      setLoading(true);
+
       // get plaintext content
       const html = editor.getHTML();
       const serializedContent = convert(html, {
@@ -108,18 +106,19 @@ export function Composer() {
       await publish({ content: serializedContent, kind: 1, tags });
 
       // send native notifiation
-      await sendNativeNotification('Publish post successfully');
+      await sendNativeNotification('Post has been published successfully.');
 
       // update state
-      setStatus('done');
+      setLoading(false);
       // reset editor
       editor.commands.clearContent();
+      // reset reply
       if (reply.id) {
         clearReply();
       }
     } catch {
-      setStatus(null);
-      console.log('failed to publish');
+      setLoading(false);
+      await message('Publishing post failed.', { title: 'Lume', type: 'error' });
     }
   };
 
@@ -136,7 +135,10 @@ export function Composer() {
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
-            className={twMerge('scrollbar-hide markdown break-all max-h-[500px] overflow-y-auto outline-none pr-2', expand ? 'min-h-[500px]' : 'min-h-[120px]')}
+            className={twMerge(
+              'scrollbar-hide markdown max-h-[500px] overflow-y-auto break-all pr-2 outline-none',
+              expand ? 'min-h-[500px]' : 'min-h-[120px]'
+            )}
           />
           {reply.id && (
             <div className="relative">
@@ -152,17 +154,31 @@ export function Composer() {
           )}
         </div>
       </div>
-      <div className="flex items-center justify-between bg-white/5 rounded-b-xl p-2 border-t border-white/10">
+      <div className="flex items-center justify-between rounded-b-xl border-t border-white/10 bg-white/5 p-2">
+        <div className="inline-flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => uploadImage()}
+            className="ml-2 inline-flex h-10 w-max items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-medium text-white/80 hover:bg-white/10 hover:backdrop-blur-xl"
+          >
+            <MediaIcon className="h-5 w-5 text-white/80" />
+            Add media
+          </button>
+          <button
+            type="button"
+            onClick={() => uploadImage()}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-white/10 hover:backdrop-blur-xl"
+          >
+            <MentionIcon className="h-5 w-5 text-white/80" />
+          </button>
+        </div>
         <button
-          type="button"
-          onClick={() => uploadImage()}
-          className="ml-2 inline-flex h-10 w-10 items-center justify-center rounded-lg backdrop-blur-xl hover:bg-white/10"
+          onClick={() => submit()}
+          disabled={editor && editor.isEmpty}
+          className="inline-flex h-10 w-20 items-center justify-center rounded-lg bg-fuchsia-500 px-2 font-semibold hover:bg-fuchsia-600 disabled:opacity-50"
         >
-          <PlusCircleIcon className="h-5 w-5 text-white" />
-        </button>
-        <button onClick={() => submit()} className="inline-flex items-center justify-center w-max px-8 rounded-lg font-bold h-10 bg-fuchsia-500 hover:bg-fuchsia-600">
-          {status === 'loading' ? (
-            <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+          {loading === true ? (
+            <LoaderIcon className="h-5 w-5 animate-spin text-white" />
           ) : (
             'Post'
           )}

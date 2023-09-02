@@ -1,4 +1,4 @@
-import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

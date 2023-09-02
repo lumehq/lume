@@ -1,4 +1,4 @@
-import { LogicalSize, getCurrent } from '@tauri-apps/plugin-window';
+import { LogicalSize, getCurrent } from '@tauri-apps/api/window';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 

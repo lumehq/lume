@@ -10,38 +10,71 @@
     "productName": "Lume",
     "version": "1.2.1"
   },
-  "plugins": {
-    "fs": {
-      "scope": [
-        "$APPDATA/*",
-        "$DATA/*",
-        "$LOCALDATA/*",
-        "$DESKTOP/*",
-        "$DOCUMENT/*",
-        "$DOWNLOAD/*",
-        "$HOME/*",
-        "$PICTURE/*",
-        "$PUBLIC/*",
-        "$VIDEO/*"
-      ]
-    },
-    "http": {
-      "scope": [
-        "http://**/",
-        "https://**/"
-      ]
-    },
-    "shell": {
-      "open": true
-    },
-    "updater": {
-      "endpoints": [
-        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
-        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
-      ]
-    }
-  },
   "tauri": {
+    "allowlist": {
+      "app": {
+        "all": true,
+        "show": true,
+        "hide": true
+      },
+      "path": {
+        "all": true
+      },
+      "dialog": {
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
+        "open": true,
+        "save": true
+      },
+      "fs": {
+        "all": false,
+        "removeFile": true,
+        "writeFile": true,
+        "scope": [
+          "$APPDATA/*",
+          "$DATA/*",
+          "$LOCALDATA/*",
+          "$DESKTOP/*",
+          "$DOCUMENT/*",
+          "$DOWNLOAD/*",
+          "$HOME/*",
+          "$PICTURE/*",
+          "$PUBLIC/*",
+          "$VIDEO/*"
+        ]
+      },
+      "http": {
+        "all": true,
+        "scope": [
+          "http://**",
+          "https://**"
+        ]
+      },
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "os": {
+        "all": true
+      },
+      "window": {
+        "all": false,
+        "center": true,
+        "setResizable": true,
+        "setSize": true,
+        "startDragging": true
+      },
+      "clipboard": {
+        "all": false,
+        "writeText": true,
+        "readText": true
+      },
+      "notification": {
+        "all": true
+      }
+    },
     "bundle": {
       "active": true,
       "appimage": {
@@ -79,18 +112,15 @@
         "timestampUrl": ""
       }
     },
+    "updater": {
+      "endpoints": [
+        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
+        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
+      ]
+    },
     "security": {
       "csp": {
-        "connect-src": "ipc: https://ipc.localhost",
         "content-security-policy": "upgrade-insecure-requests"
-      },
-      "freezePrototype": false,
-      "assetProtocol": {
-        "enable": true,
-        "scope": {
-          "allow": ["$APPCONFIG/*.db", "$RESOURCE/**"],
-          "deny": ["$APPCONFIG/*.stronghold"]
-        }
       }
     },
     "macOSPrivateApi": true

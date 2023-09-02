@@ -1,6 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
-import { relaunch } from '@tauri-apps/plugin-process';
 
 import { CancelIcon, LogoutIcon } from '@shared/icons';
 
@@ -12,8 +11,6 @@ export function Logout() {
     // await removeAll();
     // reset react query
     queryClient.clear();
-    // navigate
-    await relaunch();
   };
 
   return (

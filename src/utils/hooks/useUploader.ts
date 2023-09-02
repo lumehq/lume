@@ -1,5 +1,5 @@
 import { magnetDecode } from '@ctrl/magnet-link';
-import { open } from '@tauri-apps/plugin-dialog';
+import { open } from '@tauri-apps/api/dialog';
 import { VoidApi } from '@void-cat/api';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
@@ -18,7 +18,18 @@ export function useImageUploader() {
         filters: [
           {
             name: 'Image',
-            extensions: ['png', 'jpeg', 'jpg', 'gif'],
+            extensions: [
+              'png',
+              'jpeg',
+              'jpg',
+              'gif',
+              'mp4',
+              'mp3',
+              'webm',
+              'mkv',
+              'avi',
+              'mov',
+            ],
           },
         ],
       });
@@ -27,7 +38,7 @@ export function useImageUploader() {
       } else if (selected === null) {
         // user cancelled the selection
       } else {
-        filepath = selected.path;
+        filepath = selected;
       }
     }
 
