@@ -58,7 +58,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="h-full w-full bg-black/50" />
+          <div className="h-full w-full bg-black" />
         )}
       </div>
       <div className="-mt-7 flex w-full flex-col items-center px-5">

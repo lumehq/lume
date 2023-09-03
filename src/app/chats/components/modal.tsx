@@ -35,7 +35,7 @@ export function NewMessageModal() {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">

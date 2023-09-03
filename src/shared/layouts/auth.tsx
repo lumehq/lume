@@ -1,10 +1,12 @@
 import { Outlet } from 'react-router-dom';
 
+import { Frame } from '@shared/frame';
+
 export function AuthLayout() {
   return (
-    <div className="relative h-screen w-screen bg-black/90 backdrop-blur-xl">
+    <Frame className="relative h-screen w-screen">
       <div className="absolute left-0 top-0 z-50 h-16 w-full" data-tauri-drag-region />
       <Outlet />
-    </div>
+    </Frame>
   );
 }

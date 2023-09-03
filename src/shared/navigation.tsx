@@ -6,6 +6,7 @@ import { ChatsList } from '@app/chats/components/list';
 
 import { ActiveAccount } from '@shared/accounts/active';
 import { ComposerModal } from '@shared/composer';
+import { Frame } from '@shared/frame';
 import { BellIcon, NavArrowDownIcon, SpaceIcon } from '@shared/icons';
 
 import { useSidebar } from '@stores/sidebar';
@@ -14,7 +15,7 @@ export function Navigation() {
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
 
   return (
-    <div className="relative flex h-full w-[232px] flex-col bg-black/80">
+    <Frame className="relative flex h-full w-[232px] flex-col" lighter>
       <div data-tauri-drag-region className="h-11 w-full shrink-0" />
       <div className="scrollbar-hide flex h-full flex-1 flex-col gap-6 overflow-y-auto pb-32">
         <div className="flex flex-col pr-2">
@@ -80,6 +81,6 @@ export function Navigation() {
       <div className="shrink-0">
         <ActiveAccount />
       </div>
-    </div>
+    </Frame>
   );
 }

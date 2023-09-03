@@ -5,6 +5,7 @@ import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ErrorScreen } from '@app/error';
 
+import { Frame } from '@shared/frame';
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
@@ -261,9 +262,9 @@ export default function App() {
     <RouterProvider
       router={router}
       fallbackElement={
-        <div className="flex h-full w-full items-center justify-center bg-black/90 backdrop-blur-xl">
+        <Frame className="flex h-full w-full items-center justify-center">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
-        </div>
+        </Frame>
       }
     />
   );

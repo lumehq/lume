@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useRouteError } from 'react-router-dom';
 
+import { Frame } from '@shared/frame';
+
 interface IRouteError {
   statusText: string;
   message: string;
@@ -33,7 +35,7 @@ export function ErrorScreen() {
   }, []);
 
   return (
-    <div className="flex h-full items-center justify-center bg-black/90 backdrop-blur-xl">
+    <Frame className="flex h-full items-center justify-center">
       <div className="flex max-w-lg flex-col gap-4">
         <div className="flex flex-col">
           <h1 className="mb-1 text-2xl font-semibold text-white">
@@ -75,6 +77,6 @@ export function ErrorScreen() {
           </button>
         </div>
       </div>
-    </div>
+    </Frame>
   );
 }

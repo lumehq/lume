@@ -1,5 +1,6 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom';
 
+import { Frame } from '@shared/frame';
 import { Navigation } from '@shared/navigation';
 
 export function AppLayout() {
@@ -8,14 +9,14 @@ export function AppLayout() {
       <div className="shrink-0">
         <Navigation />
       </div>
-      <div className="h-full w-full flex-1 bg-black/90 backdrop-blur-xl">
+      <Frame className="h-full w-full flex-1">
         <Outlet />
         <ScrollRestoration
           getKey={(location) => {
             return location.pathname;
           }}
         />
-      </div>
+      </Frame>
     </div>
   );
 }
