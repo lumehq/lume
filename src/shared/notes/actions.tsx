@@ -50,7 +50,7 @@ export function NoteActions({
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-                    Open thread
+                    Focus
                     <Tooltip.Arrow className="fill-black" />
                   </Tooltip.Content>
                 </Tooltip.Portal>

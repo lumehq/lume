@@ -1,16 +1,14 @@
 import { message } from '@tauri-apps/api/dialog';
 import Image from '@tiptap/extension-image';
-import Mention from '@tiptap/extension-mention';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
-import { nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Suggestion } from '@shared/composer';
-import { CancelIcon, LoaderIcon, MediaIcon, MentionIcon } from '@shared/icons';
+import { MentionPopup } from '@shared/composer';
+import { CancelIcon, LoaderIcon, MediaIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
@@ -33,12 +31,6 @@ export function Composer() {
         },
       }),
       Placeholder.configure({ placeholder: 'Type something...' }),
-      Mention.configure({
-        suggestion: Suggestion,
-        renderLabel({ node }) {
-          return `nostr:${nip19.npubEncode(node.attrs.id.pubkey)} `;
-        },
-      }),
       Image.configure({
         HTMLAttributes: {
           class:
@@ -164,13 +156,7 @@ export function Composer() {
             <MediaIcon className="h-5 w-5 text-white/80" />
             Add media
           </button>
-          <button
-            type="button"
-            onClick={() => uploadImage()}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-white/10 hover:backdrop-blur-xl"
-          >
-            <MentionIcon className="h-5 w-5 text-white/80" />
-          </button>
+          <MentionPopup editor={editor} />
         </div>
         <button
           onClick={() => submit()}

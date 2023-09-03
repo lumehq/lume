@@ -88,7 +88,7 @@ export function User({
       </div>
       <Popover.Portal>
         <Popover.Content
-          className="w-[300px] overflow-hidden rounded-md bg-white/10 backdrop-blur-3xl focus:outline-none"
+          className="w-[300px] overflow-hidden rounded-lg bg-white/10 backdrop-blur-3xl focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
