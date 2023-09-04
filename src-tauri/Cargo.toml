@@ -50,6 +50,7 @@ sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }
 rust-argon2 = "1.0"
+webpage = { version = "1.6.0", features = ["serde"] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

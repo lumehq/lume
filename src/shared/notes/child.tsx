@@ -15,27 +15,6 @@ import { useEvent } from '@utils/hooks/useEvent';
 export function ChildNote({ id, root }: { id: string; root?: string }) {
   const { status, data } = useEvent(id);
 
-  if (status === 'loading') {
-    return (
-      <div className="relative mb-5 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-        <NoteSkeleton />
-      </div>
-    );
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="mb-5 flex flex-col gap-1.5 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-        <p className="text-sm font-bold text-white">
-          Lume cannot found the event with ID
-        </p>
-        <div className="inline-flex items-center justify-center rounded-xl border border-dashed border-red-400 bg-red-200/10 p-2">
-          <p className="select-text break-all text-sm font-medium text-red-400">{id}</p>
-        </div>
-      </div>
-    );
-  }
-
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
       case NDKKind.Text:
@@ -48,6 +27,40 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
         return <UnknownNote event={event} />;
     }
   };
+
+  if (status === 'loading') {
+    return (
+      <>
+        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="relative mb-5 overflow-hidden">
+          <NoteSkeleton />
+        </div>
+      </>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <>
+        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="relative mb-5 flex flex-col">
+          <div className="relative z-10 flex items-start gap-3">
+            <div className="h-11 w-11 rounded-lg bg-black" />
+            <h5 className="truncate font-semibold leading-none text-white">
+              Lume (System)
+            </h5>
+          </div>
+          <div className="-mt-6 flex items-start gap-3">
+            <div className="w-11 shrink-0" />
+            <div className="markdown relative z-20 flex-1 select-text">
+              <p>Event not found, click to open this note via nostr.com</p>
+              <p>{id}</p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

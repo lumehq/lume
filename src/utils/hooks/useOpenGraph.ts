@@ -5,7 +5,7 @@ import { Opengraph } from '@utils/types';
 
 export function useOpenGraph(url: string) {
   const { status, data, error } = useQuery(
-    ['preview', url],
+    ['opg', url],
     async () => {
       const res: Opengraph = await invoke('opengraph', { url });
       if (!res) {
@@ -14,10 +14,10 @@ export function useOpenGraph(url: string) {
       return res;
     },
     {
+      staleTime: Infinity,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      staleTime: Infinity,
     }
   );
 

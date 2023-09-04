@@ -45,6 +45,8 @@ export function parser(eventContent: string) {
           // remove url from original content
           word = word.replace(word, '');
         }
+
+        content.links.push(url.toString());
       }
 
       // hashtag

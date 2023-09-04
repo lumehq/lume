@@ -46,7 +46,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   if (status === 'loading') {
     return (
-      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
+      <div className="mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
         <NoteSkeleton />
       </div>
     );
@@ -54,8 +54,11 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   if (status === 'error') {
     return (
-      <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
-        <p>Can&apos;t get event from relay, ID: {id}</p>
+      <div className="mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
+        <h5 className="mb-1 text-sm font-medium text-red-500">Event not found</h5>
+        <div className="select-text break-all rounded border border-dashed border-red-500 p-2 text-red-500">
+          {id}
+        </div>
       </div>
     );
   }

@@ -7,6 +7,8 @@ use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use window_shadows::set_shadow;
+use webpage::{Webpage, WebpageOptions};
+use std::time::Duration;
 
 #[cfg(target_os = "macos")]
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
@@ -15,6 +17,71 @@ use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 struct Payload {
   args: Vec<String>,
   cwd: String,
+}
+
+#[derive(serde::Serialize)]
+struct OpenGraphResponse {
+  title: String,
+  description: String,
+  url: String,
+  image: String,
+}
+
+async fn fetch_opengraph(url: String) -> OpenGraphResponse {
+  let options = WebpageOptions {
+    allow_insecure: false,
+    max_redirections: 3,
+    timeout: Duration::from_secs(15),
+    useragent: "lume - desktop app".to_string(),
+    ..Default::default()
+  };
+
+  let result = match Webpage::from_url(&url, options) {
+    Ok(webpage) => webpage,
+    Err(_) => {
+      return OpenGraphResponse {
+        title: "".to_string(),
+        description: "".to_string(),
+        url: "".to_string(),
+        image: "".to_string(),
+      }
+    }
+  };
+
+  let html = result.html;
+
+  return OpenGraphResponse {
+    title: html
+      .opengraph
+      .properties
+      .get("title")
+      .cloned()
+      .unwrap_or_default(),
+    description: html
+      .opengraph
+      .properties
+      .get("description")
+      .cloned()
+      .unwrap_or_default(),
+    url: html
+      .opengraph
+      .properties
+      .get("url")
+      .cloned()
+      .unwrap_or_default(),
+    image: html
+      .opengraph
+      .images
+      .get(0)
+      .and_then(|i| Some(i.url.clone()))
+      .unwrap_or_default(),
+  };
+}
+
+#[tauri::command]
+async fn opengraph(url: String) -> OpenGraphResponse {
+  let result = fetch_opengraph(url).await;
+  return result;
 }
 
 #[tauri::command]
@@ -186,7 +253,7 @@ fn main() {
     }))
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_store::Builder::default().build())
-    .invoke_handler(tauri::generate_handler![close_splashscreen])
+    .invoke_handler(tauri::generate_handler![close_splashscreen, opengraph])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
