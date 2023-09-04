@@ -20,6 +20,7 @@ export const WidgetKinds = {
     articles: 103,
     user: 104,
     thread: 105,
+    follows: 106,
   },
   global: {
     feeds: 1000,
@@ -53,6 +54,10 @@ export const DefaultWidgets = [
       {
         kind: WidgetKinds.local.articles,
         title: 'Articles',
+      },
+      {
+        kind: WidgetKinds.local.follows,
+        title: 'Follows',
       },
     ],
   },
