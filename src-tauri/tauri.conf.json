@@ -124,7 +124,6 @@
       "csp": {
         "content-security-policy": "upgrade-insecure-requests"
       }
-    },
-    "macOSPrivateApi": true
+    }
   }
 }

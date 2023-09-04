@@ -19,7 +19,7 @@
         "resizable": true,
         "theme": "Dark",
         "title": "Lume",
-        "transparent": true,
+        "transparent": false,
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,

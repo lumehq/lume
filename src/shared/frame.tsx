@@ -17,7 +17,6 @@ export function Frame({
   const platformStyles = useCallback(() => {
     switch (db.platform) {
       case 'darwin':
-      case 'win32':
         if (lighter) return 'bg-black/80';
         return 'bg-black/90';
       default:

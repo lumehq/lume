@@ -49,11 +49,9 @@ export function SplashScreen() {
   };
 
   useEffect(() => {
-    if (!db.account) {
-      invoke('close_splashscreen');
-    }
+    if (ndk) {
+      if (!db.account) invoke('close_splashscreen');
 
-    if (ndk && db.account) {
       console.log('prefetching...');
       prefetch();
     }
