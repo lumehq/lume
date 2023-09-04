@@ -56,7 +56,7 @@ export function UserScreen() {
               ref={virtualizer.measureElement}
             >
               <NoteWrapper event={event}>
-                <TextNote event={event} />
+                <TextNote content={event.content} />
               </NoteWrapper>
             </div>
           );

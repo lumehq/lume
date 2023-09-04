@@ -12,7 +12,7 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
   };
 
   return (
-    <div className="mb-2 mt-3 overflow-hidden">
+    <div className="mt-3 overflow-hidden">
       <div className="flex flex-col gap-2">
         {urls.map((url) => (
           <div key={url} className="group relative min-w-0 shrink-0 grow-0 basis-full">

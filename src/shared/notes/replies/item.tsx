@@ -15,7 +15,7 @@ export function Reply({ event, root }: { event: NDKEventWithReplies; root?: stri
           <div className="-mt-6 flex items-start gap-3">
             <div className="w-11 shrink-0" />
             <div className="flex-1">
-              <TextNote event={event} />
+              <TextNote content={event.content} />
               <NoteActions id={event.id} pubkey={event.pubkey} root={root} />
             </div>
           </div>

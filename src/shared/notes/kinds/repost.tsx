@@ -16,22 +16,22 @@ import { useEvent } from '@utils/hooks/useEvent';
 
 export function Repost({ event }: { event: NDKEvent }) {
   const repostID = event.tags.find((el) => el[0] === 'e')[1] ?? '';
-  const { status, data } = useEvent(repostID, event.content as unknown as string);
+  const { status, data } = useEvent(repostID, event.content);
 
   const renderKind = useCallback(
-    (event: NDKEvent) => {
-      switch (event.kind) {
+    (repostEvent: NDKEvent) => {
+      switch (repostEvent.kind) {
         case NDKKind.Text:
-          return <TextNote event={event} />;
+          return <TextNote content={repostEvent.content} />;
         case NDKKind.Article:
-          return <ArticleNote event={event} />;
+          return <ArticleNote event={repostEvent} />;
         case 1063:
-          return <FileNote event={event} />;
+          return <FileNote event={repostEvent} />;
         default:
-          return <UnknownNote event={event} />;
+          return <UnknownNote event={repostEvent} />;
       }
     },
-    [event]
+    [data]
   );
 
   if (status === 'loading') {

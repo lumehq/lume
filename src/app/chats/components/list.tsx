@@ -36,10 +36,6 @@ export function ChatsList() {
           <div className="relative h-7 w-7 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
           <div className="h-4 w-full animate-pulse rounded bg-white/10 backdrop-blur-xl" />
         </div>
-        <div className="inline-flex h-10 items-center gap-2.5 border-l-2 border-transparent pl-4">
-          <div className="relative h-7 w-7 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-          <div className="h-4 w-full animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-        </div>
       </div>
     );
   }

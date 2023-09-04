@@ -31,6 +31,19 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
     }
   };
 
+  const renderKind = (event: NDKEvent) => {
+    switch (event.kind) {
+      case NDKKind.Text:
+        return <TextNote content={event.content} />;
+      case NDKKind.Article:
+        return <ArticleNote event={event} />;
+      case 1063:
+        return <FileNote event={event} />;
+      default:
+        return <UnknownNote event={event} />;
+    }
+  };
+
   if (status === 'loading') {
     return (
       <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
@@ -42,23 +55,10 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   if (status === 'error') {
     return (
       <div className="mb-2 mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
-        <p>Can&apos;t get event from relay</p>
+        <p>Can&apos;t get event from relay, ID: {id}</p>
       </div>
     );
   }
-
-  const renderKind = (event: NDKEvent) => {
-    switch (event.kind) {
-      case NDKKind.Text:
-        return <TextNote event={event} />;
-      case NDKKind.Article:
-        return <ArticleNote event={event} />;
-      case 1063:
-        return <FileNote event={event} />;
-      default:
-        return <UnknownNote event={event} />;
-    }
-  };
 
   return (
     <div
@@ -66,7 +66,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       onKeyDown={(e) => openThread(e, id)}
       role="button"
       tabIndex={0}
-      className="cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl"
+      className="mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl"
     >
       <User pubkey={data.pubkey} time={data.created_at} size="small" />
       <div className="mt-1">{renderKind(data)}</div>

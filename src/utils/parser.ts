@@ -1,73 +1,87 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
-import getUrls from 'get-urls';
-import { Event, parseReferences } from 'nostr-tools';
+import { nip19 } from 'nostr-tools';
+import { EventPointer } from 'nostr-tools/lib/nip19';
 
 import { RichContent } from '@utils/types';
 
-export function parser(event: NDKEvent) {
-  const references = parseReferences(event as unknown as Event);
-  const urls = getUrls(event.content as unknown as string);
+function isURL(str: string) {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$', // fragment locator
+    'i'
+  );
+  return !!pattern.test(str);
+}
 
-  const content: RichContent = {
-    parsed: event.content as unknown as string,
-    notes: [],
-    images: [],
-    videos: [],
-    links: [],
-  };
+export function parser(eventContent: string) {
+  try {
+    const content: RichContent = {
+      parsed: null,
+      images: [],
+      videos: [],
+      links: [],
+      notes: [],
+    };
 
-  // parse nostr references
-  references?.forEach((item) => {
-    const profile = item.profile;
-    const event = item.event;
-    const addr = item.address;
-    if (event) {
-      content.notes.push(event.id);
-      content.parsed = content.parsed.replace(item.text, '');
-    }
-    if (profile) {
-      content.parsed = content.parsed.replace(item.text, `~pub-${item.profile.pubkey}~`);
-    }
-    if (addr) {
-      content.notes.push(addr.identifier);
-      content.parsed = content.parsed.replace(item.text, '');
-    }
-  });
+    const parse = eventContent.split(/\s/gm).map((word) => {
+      // url
+      if (isURL(word)) {
+        const url = new URL(word);
+        url.search = '';
 
-  // parse urls
-  urls?.forEach((url: string) => {
-    if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
-      // image url
-      content.images.push(url);
-      // remove url from original content
-      content.parsed = content.parsed.replace(url, '');
-    }
+        if (url.toString().match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
+          // image url
+          content.images.push(word);
+          // remove url from original content
+          return word.replace(word, '');
+        }
 
-    if (url.match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv|mp3|m3u8)$/)) {
-      // video
-      content.videos.push(url);
-      // remove url from original content
-      content.parsed = content.parsed.replace(url, '');
-    }
+        if (url.toString().match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv|mp3|m3u8)$/)) {
+          // video
+          content.videos.push(word);
+          // remove url from original content
+          word = word.replace(word, '');
+        }
+      }
 
-    /*
-    if (content.links.length < 1) {
-      // push to store
-      content.links.push(url);
-      // remove url from original content
-      content.parsed = content.parsed.replace(url, '');
-    }
-    */
-  });
+      // hashtag
+      if (word.startsWith('#') && word.length > 1) {
+        return word.replace(word, `~tag-${word}~`);
+      }
 
-  // parse hashtag
-  const hashtags = content.parsed.split(/\s/gm).filter((s) => s.startsWith('#'));
-  if (hashtags) {
-    const uniqTags = new Set(hashtags);
-    uniqTags.forEach((tag) => {
-      content.parsed = content.parsed.replaceAll(tag, `~tag-${tag}~`);
+      // nostr account references
+      if (word.startsWith('nostr:npub1')) {
+        const npub = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        return word.replace(word, `~pub-${nip19.decode(npub).data}~`);
+      }
+
+      // nostr account references
+      if (word.startsWith('nostr:note1')) {
+        const note = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        content.notes.push(nip19.decode(note).data as string);
+        return word.replace(word, '');
+      }
+
+      // nostr event references
+      if (word.startsWith('nostr:nevent1')) {
+        const nevent = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        const decoded = nip19.decode(nevent).data as EventPointer;
+        content.notes.push(decoded.id);
+        return word.replace(word, '');
+      }
+
+      // normal word
+      return word;
     });
-  }
 
-  return content;
+    // update content with parsed version
+    content.parsed = parse.join(' ');
+
+    return content;
+  } catch (e) {
+    console.error('cannot parse content, error: ', e);
+  }
 }

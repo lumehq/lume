@@ -52,7 +52,7 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
           <div className="relative flex w-full flex-col">
             {data.map((item) => (
               <NoteWrapper key={item.event.id} event={item.event}>
-                <TextNote event={item.event} />
+                <TextNote content={item.event.content} />
               </NoteWrapper>
             ))}
           </div>

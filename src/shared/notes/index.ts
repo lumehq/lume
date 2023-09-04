@@ -24,7 +24,6 @@ export * from './kinds/repost';
 export * from './child';
 export * from './skeleton';
 export * from './actions';
-export * from './content';
 export * from './mentions/hashtag';
 export * from './stats';
 export * from './wrapper';

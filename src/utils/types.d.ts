@@ -2,10 +2,10 @@ import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 
 export interface RichContent {
   parsed: string;
-  notes: string[];
   images: string[];
   videos: string[];
   links: string[];
+  notes: string[];
 }
 
 export interface DBEvent {

@@ -60,7 +60,7 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
               ref={virtualizer.measureElement}
             >
               <NoteWrapper event={event} root={dbEvent.root_id} reply={dbEvent.reply_id}>
-                <TextNote event={event} />
+                <TextNote content={event.content} />
               </NoteWrapper>
             </div>
           );

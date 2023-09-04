@@ -23,7 +23,7 @@ export function useEvent(id: string, embed?: string) {
 
       // get event from relay if event in db not present
       const event = await ndk.fetchEvent(id);
-      if (!event) throw new Error(`Event not found: ${id}`);
+      if (!event) throw new Error(`Event not found: ${id.toString()}`);
 
       let root: string;
       let reply: string;
@@ -50,10 +50,8 @@ export function useEvent(id: string, embed?: string) {
     },
     {
       enabled: !!ndk,
-      staleTime: Infinity,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
     }
   );
 

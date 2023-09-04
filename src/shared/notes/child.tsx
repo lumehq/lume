@@ -39,7 +39,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
       case NDKKind.Text:
-        return <TextNote event={event} />;
+        return <TextNote content={event.content} />;
       case NDKKind.Article:
         return <ArticleNote event={event} />;
       case 1063:

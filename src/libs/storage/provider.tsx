@@ -1,5 +1,6 @@
 import { message } from '@tauri-apps/api/dialog';
 import { platform } from '@tauri-apps/api/os';
+import { appConfigDir } from '@tauri-apps/api/path';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 
@@ -18,9 +19,12 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 
   async function initLumeStorage() {
     try {
+      const dir = await appConfigDir();
       const sqlite = await Database.load('sqlite:lume.db');
       const platformName = await platform();
       const lumeStorage = new LumeStorage(sqlite, platformName);
+
+      console.log('App config dir: ', dir);
 
       if (!lumeStorage.account) await lumeStorage.getActiveAccount();
       setDB(lumeStorage);

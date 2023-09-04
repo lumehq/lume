@@ -62,7 +62,7 @@ export function LocalNetworkWidget() {
               ref={virtualizer.measureElement}
             >
               <NoteWrapper event={event} root={dbEvent.root_id} reply={dbEvent.reply_id}>
-                <TextNote event={event} />
+                <TextNote content={event.content} />
               </NoteWrapper>
             </div>
           );
@@ -122,7 +122,7 @@ export function LocalNetworkWidget() {
   useEffect(() => {
     if (db.account && db.account.network) {
       const filter: NDKFilter = {
-        kinds: [1, 6],
+        kinds: [NDKKind.Text, NDKKind.Repost],
         authors: db.account.network,
         since: db.account.last_login_at ?? Math.floor(Date.now() / 1000),
       };

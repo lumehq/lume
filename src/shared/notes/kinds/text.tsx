@@ -1,5 +1,3 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -14,8 +12,24 @@ import {
 
 import { parser } from '@utils/parser';
 
-export function TextNote({ event }: { event: NDKEvent }) {
-  const content = useMemo(() => parser(event), [event.id]);
+export function TextNote({ content }: { content: string }) {
+  const richContent = parser(content) ?? null;
+
+  if (!richContent) {
+    return (
+      <div>
+        <ReactMarkdown
+          className="markdown"
+          remarkPlugins={[remarkGfm]}
+          disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
+          unwrapDisallowed={true}
+          linkTarget={'_blank'}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -38,13 +52,15 @@ export function TextNote({ event }: { event: NDKEvent }) {
         unwrapDisallowed={true}
         linkTarget={'_blank'}
       >
-        {content?.parsed}
+        {richContent.parsed}
       </ReactMarkdown>
-      {content?.images?.length > 0 && <ImagePreview urls={content.images} />}
-      {content?.videos?.length > 0 && <VideoPreview urls={content.videos} />}
-      {content?.links?.length > 0 && <LinkPreview urls={content.links} />}
-      {content?.notes?.length > 0 &&
-        content?.notes.map((note: string) => <MentionNote key={note} id={note} />)}
+      <div>
+        {richContent.images.length > 0 && <ImagePreview urls={richContent.images} />}
+        {richContent.videos.length > 0 && <VideoPreview urls={richContent.videos} />}
+        {richContent.links.length > 0 && <LinkPreview urls={richContent.links} />}
+        {richContent.notes.length > 0 &&
+          richContent.notes.map((note: string) => <MentionNote key={note} id={note} />)}
+      </div>
     </div>
   );
 }
