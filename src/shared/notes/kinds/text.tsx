@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 
 import {
@@ -37,6 +38,15 @@ export function TextNote({ content }: { content: string }) {
         className="markdown"
         remarkPlugins={[remarkGfm]}
         components={{
+          a: ({ href }) => {
+            const cleanURL = new URL(href);
+            cleanURL.search = '';
+            return (
+              <Link to={href} target="_blank">
+                {cleanURL.hostname + cleanURL.pathname}
+              </Link>
+            );
+          },
           del: ({ children }) => {
             const key = children[0] as string;
             if (typeof key !== 'string') return;

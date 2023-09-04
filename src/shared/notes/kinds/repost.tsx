@@ -14,9 +14,8 @@ import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
 
-export function Repost({ event }: { event: NDKEvent }) {
-  const repostID = event.tags.find((el) => el[0] === 'e')[1] ?? '';
-  const { status, data } = useEvent(repostID, event.content);
+export function Repost({ event }: { event: NDKEvent & { root_id: string } }) {
+  const { status, data } = useEvent(event.root_id, event.content);
 
   const renderKind = useCallback(
     (repostEvent: NDKEvent) => {
@@ -49,10 +48,10 @@ export function Repost({ event }: { event: NDKEvent }) {
       <div className="h-min w-full px-3 pb-3">
         <div className="flex flex-col gap-1 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
           <p className="select-text break-all text-white/50">
-            Failed to get repost with ID
+            Failed to get post with ID
           </p>
           <div className="break-all rounded-lg bg-white/10 px-2 py-2 backdrop-blur-xl">
-            <p className="text-white">{repostID}</p>
+            <p className="text-white">{event.id}</p>
           </div>
         </div>
       </div>
@@ -71,7 +70,7 @@ export function Repost({ event }: { event: NDKEvent }) {
             <div className="w-11 shrink-0" />
             <div className="relative z-20 flex-1">
               {renderKind(data)}
-              <NoteActions id={repostID} pubkey={data.pubkey} />
+              <NoteActions id={data.id} pubkey={data.pubkey} />
             </div>
           </div>
         </div>
