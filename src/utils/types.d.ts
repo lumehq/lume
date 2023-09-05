@@ -1,4 +1,5 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { Response } from '@tauri-apps/api/http';
 
 export interface RichContent {
   parsed: string;
@@ -87,4 +88,24 @@ export interface Opengraph {
 
 export interface NDKEventWithReplies extends NDKEvent {
   replies: Array<NDKEvent>;
+}
+
+export interface NostrBuildResponse extends Response {
+  ok: boolean;
+  data: {
+    message: string;
+    status: string;
+    data: Array<{
+      blurhash: string;
+      dimensions: {
+        width: number;
+        height: number;
+      };
+      mime: string;
+      name: string;
+      sha256: string;
+      size: number;
+      url: string;
+    }>;
+  };
 }

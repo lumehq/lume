@@ -7,8 +7,8 @@ import { convert } from 'html-to-text';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { MentionPopup } from '@shared/composer';
-import { CancelIcon, LoaderIcon, MediaIcon } from '@shared/icons';
+import { MediaUploader, MentionPopup } from '@shared/composer';
+import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
@@ -20,7 +20,7 @@ export function Composer() {
   const [loading, setLoading] = useState<boolean>(false);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
 
-  const { publish, upload } = useNostr();
+  const { publish } = useNostr();
 
   const expand = useComposer((state) => state.expand);
   const editor = useEditor({
@@ -45,14 +45,6 @@ export function Composer() {
       },
     },
   });
-
-  const uploadImage = async (file?: string) => {
-    const image = await upload(file, true);
-    if (image.url) {
-      editor.commands.setImage({ src: image.url });
-      editor.commands.createParagraphNear();
-    }
-  };
 
   const submit = async () => {
     try {
@@ -148,14 +140,7 @@ export function Composer() {
       </div>
       <div className="flex items-center justify-between rounded-b-xl border-t border-white/10 bg-white/5 p-2">
         <div className="inline-flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => uploadImage()}
-            className="ml-2 inline-flex h-10 w-max items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-medium text-white/80 hover:bg-white/10 hover:backdrop-blur-xl"
-          >
-            <MediaIcon className="h-5 w-5 text-white/80" />
-            Add media
-          </button>
+          <MediaUploader editor={editor} />
           <MentionPopup editor={editor} />
         </div>
         <button

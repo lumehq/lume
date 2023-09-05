@@ -1,4 +1,3 @@
-import { magnetDecode } from '@ctrl/magnet-link';
 import {
   NDKEvent,
   NDKFilter,
@@ -9,7 +8,7 @@ import {
 } from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message, open } from '@tauri-apps/api/dialog';
-import { VoidApi } from '@void-cat/api';
+import { Body, fetch } from '@tauri-apps/api/http';
 import { LRUCache } from 'lru-cache';
 import { NostrFetcher } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
@@ -22,7 +21,7 @@ import { useStronghold } from '@stores/stronghold';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 import { nHoursAgo } from '@utils/date';
-import { NDKEventWithReplies } from '@utils/types';
+import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
 
 export function useNostr() {
   const { ndk, relayUrls } = useNDK();
@@ -330,9 +329,8 @@ export function useNostr() {
 
   const upload = async (file: null | string, nip94?: boolean) => {
     try {
-      const voidcat = new VoidApi('https://void.cat');
-
       let filepath = file;
+
       if (!file) {
         const selected = await open({
           multiple: false,
@@ -369,31 +367,36 @@ export function useNostr() {
       const filename = filepath.split('/').pop();
       const filetype = filename.split('.').pop();
 
-      const blob = await createBlobFromFile(filepath);
-      const uploader = voidcat.getUploader(blob);
-
-      // upload file
-      const res = await uploader.upload();
+      const fileData = await createBlobFromFile(filepath);
+      const res: NostrBuildResponse = await fetch(
+        'https://nostr.build/api/v2/upload/files',
+        {
+          method: 'POST',
+          timeout: 30,
+          headers: { 'Content-Type': 'multipart/form-data' },
+          body: Body.form({
+            fileData: {
+              file: fileData,
+              mime: `image/${filetype}`,
+              fileName: filename,
+            },
+          }),
+        }
+      );
 
       if (res.ok) {
-        const url =
-          res.file?.metadata?.url ?? `https://void.cat/d/${res.file?.id}.${filetype}`;
+        const data = res.data.data[0];
+        const url = data.url;
 
         if (nip94) {
           const tags = [
             ['url', url],
-            ['x', res.file?.metadata?.digest ?? ''],
-            ['m', res.file?.metadata?.mimeType ?? 'application/octet-stream'],
-            ['size', res.file?.metadata?.size.toString() ?? '0'],
+            ['x', data.sha256 ?? ''],
+            ['m', data.mime ?? 'application/octet-stream'],
+            ['size', data.size.toString() ?? '0'],
+            ['dim', `${data.dimensions.width}x${data.dimensions.height}` ?? '0'],
+            ['blurhash', data.blurhash ?? ''],
           ];
-
-          if (res.file?.metadata?.magnetLink) {
-            tags.push(['magnet', res.file.metadata.magnetLink]);
-            const parsedMagnet = magnetDecode(res.file.metadata.magnetLink);
-            if (parsedMagnet?.infoHash) {
-              tags.push(['i', parsedMagnet?.infoHash]);
-            }
-          }
 
           await publish({ content: '', kind: 1063, tags: tags });
         }

@@ -35,6 +35,7 @@ tauri = { version = "1.4.0", features = [
   "window-center",
   "dialog-all",
   "macos-private-api",
+  "http-multipart",
 ] }
 tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v1", features = [
   "sqlite",
