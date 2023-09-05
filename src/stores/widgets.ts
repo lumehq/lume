@@ -122,7 +122,7 @@ export const useWidgets = create<WidgetState>()(
     }),
     {
       name: 'widgets',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

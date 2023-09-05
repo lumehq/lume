@@ -38,11 +38,15 @@ export function Composer() {
         },
       }),
     ],
-    content: '',
+    content: JSON.parse(localStorage.getItem('editor-content') || '{}'),
     editorProps: {
       attributes: {
         class: 'h-full markdown break-all overflow-y-auto outline-none pr-2',
       },
+    },
+    onUpdate: ({ editor }) => {
+      const jsonContent = JSON.stringify(editor.getJSON());
+      localStorage.setItem('editor-content', jsonContent);
     },
   });
 

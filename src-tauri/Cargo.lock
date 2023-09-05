@@ -2627,7 +2627,7 @@ dependencies = [
 
 [[package]]
 name = "lume"
-version = "1.2.1"
+version = "1.2.2"
 dependencies = [
  "rust-argon2 1.0.0",
  "serde",

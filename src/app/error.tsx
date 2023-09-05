@@ -3,32 +3,43 @@ import { useLocation, useRouteError } from 'react-router-dom';
 
 import { Frame } from '@shared/frame';
 
-interface IRouteError {
+interface RouteError {
   statusText: string;
   message: string;
 }
 
-interface IDebugInfo {
+interface DebugInfo {
   os: null | string;
   version: null | string;
+  appDir: null | string;
 }
 
 export function ErrorScreen() {
-  const error = useRouteError() as IRouteError;
+  const error = useRouteError() as RouteError;
   const location = useLocation();
 
-  const [debugInfo, setDebugInfo] = useState<IDebugInfo>({ os: null, version: null });
+  const [debugInfo, setDebugInfo] = useState<DebugInfo>({
+    os: null,
+    version: null,
+    appDir: null,
+  });
 
   useEffect(() => {
     async function getInformation() {
       const { platform, version } = await import('@tauri-apps/api/os');
       const { getVersion } = await import('@tauri-apps/api/app');
+      const { appConfigDir } = await import('@tauri-apps/api/path');
 
       const platformName = await platform();
       const osVersion = await version();
       const appVersion = await getVersion();
+      const appDir = await appConfigDir();
 
-      setDebugInfo({ os: platformName + ' ' + osVersion, version: appVersion });
+      setDebugInfo({
+        os: platformName + ' ' + osVersion,
+        version: appVersion,
+        appDir: appDir,
+      });
     }
 
     getInformation();
@@ -36,7 +47,7 @@ export function ErrorScreen() {
 
   return (
     <Frame className="flex h-full items-center justify-center">
-      <div className="flex max-w-lg flex-col gap-4">
+      <div className="flex w-full flex-col gap-4 px-4 md:max-w-lg md:px-0">
         <div className="flex flex-col">
           <h1 className="mb-1 text-2xl font-semibold text-white">
             Sorry, an unexpected error has occurred.
@@ -59,19 +70,19 @@ export function ErrorScreen() {
             href="https://github.com/luminous-devs/lume/issues/new"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/20"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
           >
             Click here to report the issue on GitHub
           </a>
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/20"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
           >
             Reload app
           </button>
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white backdrop-blur-xl hover:bg-white/20"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
           >
             Reset app
           </button>

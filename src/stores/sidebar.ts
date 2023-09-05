@@ -18,7 +18,7 @@ export const useSidebar = create<SidebarState>()(
     }),
     {
       name: 'sidebar',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
