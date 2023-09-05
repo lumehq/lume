@@ -1,6 +1,7 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { fetch } from '@tauri-apps/api/http';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -12,6 +13,12 @@ import { CancelIcon, CheckCircleIcon, LoaderIcon, UnverifiedIcon } from '@shared
 import { Image } from '@shared/image';
 
 import { useNostr } from '@utils/hooks/useNostr';
+
+interface NIP05 {
+  names: {
+    [key: string]: string;
+  };
+}
 
 export function EditProfileModal() {
   const queryClient = useQueryClient();
@@ -47,19 +54,26 @@ export function EditProfileModal() {
   });
 
   const verifyNIP05 = async (nip05: string) => {
-    const url = nip05.split('@');
-    const username = url[0];
-    const service = url[1];
-    const verifyURL = `https://${service}/.well-known/nostr.json?name=${username}`;
+    const localPath = nip05.split('@')[0];
+    const service = nip05.split('@')[1];
+    const verifyURL = `https://${service}/.well-known/nostr.json?name=${localPath}`;
 
     const res = await fetch(verifyURL, {
+      method: 'GET',
+      timeout: 10,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
     });
 
-    console.log(res);
-    return true;
+    if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
+
+    const data = res.data as NIP05;
+    if (data.names) {
+      if (data.names[localPath] !== db.account.pubkey) return false;
+      return true;
+    }
+    return false;
   };
 
   const onSubmit = async (data: NDKUserProfile) => {

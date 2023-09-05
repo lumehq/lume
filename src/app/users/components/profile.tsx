@@ -91,7 +91,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
                   {user.about || user.bio}
                 </p>
               ) : (
-                <></>
+                <div />
               )}
               <UserStats pubkey={pubkey} />
             </div>

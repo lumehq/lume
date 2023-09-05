@@ -7,9 +7,7 @@ import { useImageUploader } from '@utils/hooks/useUploader';
 export function BannerUploader({
   setBanner,
 }: {
-  setBanner: Dispatch<
-    SetStateAction<{ url: undefined | string; error?: undefined | string }>
-  >;
+  setBanner: Dispatch<SetStateAction<string>>;
 }) {
   const upload = useImageUploader();
   const [loading, setLoading] = useState(false);
@@ -18,7 +16,7 @@ export function BannerUploader({
     setLoading(true);
     const image = await upload(null);
     if (image.url) {
-      setBanner(image);
+      setBanner(image.url);
     }
     setLoading(false);
   };

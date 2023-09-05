@@ -49,7 +49,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                   {data.title}
                 </h5>
                 {data.description && (
-                  <p className="line-clamp-3 break-words text-sm text-white/50">
+                  <p className="line-clamp-3 break-all text-sm text-white/50">
                     {data.description}
                   </p>
                 )}

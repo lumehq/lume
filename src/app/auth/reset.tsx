@@ -2,7 +2,7 @@ import { appConfigDir } from '@tauri-apps/api/path';
 import { getPublicKey, nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
 
 import { useStorage } from '@libs/storage/provider';
@@ -124,7 +124,7 @@ export function ResetScreen() {
                 {...register('privkey', { required: true })}
                 type="text"
                 placeholder="nsec..."
-                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/10"
+                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
             </div>
           </div>
@@ -137,7 +137,7 @@ export function ResetScreen() {
                 {...register('password', { required: true })}
                 type={passwordInput}
                 placeholder="min. 4 characters"
-                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/10"
+                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
               />
               <button
                 type="button"
@@ -155,7 +155,7 @@ export function ResetScreen() {
               {errors.password && <p>{errors.password.message}</p>}
             </span>
           </div>
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center">
             <button
               type="submit"
               disabled={!isDirty || !isValid}
@@ -167,6 +167,12 @@ export function ResetScreen() {
                 'Continue →'
               )}
             </button>
+            <Link
+              to="/auth/unlock"
+              className="mt-1 inline-flex h-11 w-full items-center justify-center rounded-lg text-center text-white/50 hover:bg-white/10"
+            >
+              Back
+            </Link>
           </div>
         </form>
       </div>

@@ -1,3 +1,4 @@
+import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +41,7 @@ export function CreateStep3Screen() {
 
       const event = await publish({
         content: JSON.stringify(profile),
-        kind: 0,
+        kind: NDKKind.Metadata,
         tags: [],
       });
 
@@ -69,11 +70,15 @@ export function CreateStep3Screen() {
           <input type={'hidden'} {...register('banner')} value={banner} />
           <div className="relative">
             <div className="relative h-44 w-full bg-white/10 backdrop-blur-xl">
-              <Image
-                src={banner}
-                alt="user's banner"
-                className="h-full w-full object-cover"
-              />
+              {banner ? (
+                <Image
+                  src={banner}
+                  alt="user's banner"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="h-full w-full bg-black/50" />
+              )}
               <div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform">
                 <BannerUploader setBanner={setBanner} />
               </div>

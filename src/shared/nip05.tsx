@@ -25,7 +25,6 @@ export function NIP05({
       try {
         const localPath = nip05.split('@')[0];
         const service = nip05.split('@')[1];
-        // #TODO: use tauri native fetch to avoid CORS
         const verifyURL = `https://${service}/.well-known/nostr.json?name=${localPath}`;
 
         const res = await fetch(verifyURL, {
