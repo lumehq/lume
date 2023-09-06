@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { LumeStorage } from '@libs/storage/instance';
 
-import { Widget } from '@utils/types';
+import { Widget, WidgetGroup } from '@utils/types';
 
 interface WidgetState {
   widgets: null | Array<Widget>;
@@ -39,7 +39,7 @@ export const WidgetKinds = {
   },
 };
 
-export const DefaultWidgets = [
+export const DefaultWidgets: Array<WidgetGroup> = [
   {
     title: 'Network / Follows',
     data: [

@@ -17,40 +17,32 @@ export const NDKInstance = () => {
   const cacheAdapter = useMemo(() => new TauriAdapter(), [ndk]);
 
   // TODO: fully support NIP-11
-  async function verifyRelays(relays: string[]) {
+  async function getExplicitRelays() {
     try {
-      const urls: string[] = relays.map((relay) => {
-        if (relay.startsWith('ws')) {
-          return relay.replace('ws', 'http');
-        }
-        if (relay.startsWith('wss')) {
-          return relay.replace('wss', 'https');
-        }
-      });
-
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort('timeout'), 10000);
 
-      const requests = urls.map((url) =>
-        fetch(url, {
+      // get relays
+      const relays = (await db.getExplicitRelayUrls()) ?? FULL_RELAYS;
+
+      const requests = relays.map((relay) => {
+        const url = new URL(relay);
+
+        return fetch(`https://${url.hostname + url.pathname}`, {
           headers: { Accept: 'application/nostr+json' },
           signal: controller.signal,
-        })
-      );
+        });
+      });
+
       const responses = await Promise.all(requests);
       const errors = responses.filter((response) => !response.ok);
 
-      if (errors.length > 0) {
-        throw errors.map((response) => Error(response.statusText));
-      }
+      if (errors.length > 0) throw errors.map((response) => Error(response.statusText));
 
       const verifiedRelays: string[] = responses.map((res) => {
-        if (res.url.startsWith('http')) {
-          return res.url.replace('htto', 'ws');
-        }
-        if (res.url.startsWith('https')) {
-          return res.url.replace('https', 'wss');
-        }
+        const url = new URL(res.url);
+        if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
+        if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
       });
 
       // clear timeout
@@ -59,31 +51,14 @@ export const NDKInstance = () => {
       // return all validate relays
       return verifiedRelays;
     } catch (e) {
-      console.error('verify relay failed with error: ', e);
+      await message(e, { title: 'Cannot connect to relays', type: 'error' });
     }
   }
 
   async function initNDK() {
-    let explicitRelayUrls: string[];
-    const explicitRelayUrlsFromDB = await db.getExplicitRelayUrls();
-
-    console.log('relays in db: ', explicitRelayUrlsFromDB);
-    console.log('ndk cache adapter: ', cacheAdapter);
-
-    if (explicitRelayUrlsFromDB) {
-      explicitRelayUrls = await verifyRelays(explicitRelayUrlsFromDB);
-    } else {
-      explicitRelayUrls = await verifyRelays(FULL_RELAYS);
-    }
-
-    if (explicitRelayUrls.length < 1) {
-      await message('Something is wrong. No relays have been found.', {
-        title: 'Lume',
-        type: 'error',
-      });
-    }
-
+    const explicitRelayUrls = await getExplicitRelays();
     const instance = new NDK({ explicitRelayUrls, cacheAdapter });
+
     try {
       await instance.connect(10000);
     } catch (error) {

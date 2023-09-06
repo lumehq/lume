@@ -58,3 +58,6 @@ export * from './chevronUp';
 export * from './secure';
 export * from './verified';
 export * from './mention';
+export * from './groupFeeds';
+export * from './article';
+export * from './follows';

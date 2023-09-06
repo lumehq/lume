@@ -1,6 +1,6 @@
 import { SVGProps } from 'react';
 
-export function HashtagIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+export function ArticleIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +15,7 @@ export function HashtagIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElem
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
-        d="M8.75 3.75l-2 16.5m10.5-16.5l-2 16.5M3.75 7.75h16.5m0 8.5H3.75"
+        d="M16.25 12V4.75a1 1 0 00-1-1H3.75a1 1 0 00-1 1v13a2.5 2.5 0 002.5 2.5H18.5M16.25 12v5.75a2.5 2.5 0 005 0V13a1 1 0 00-1-1h-4zm-9.5 3.75h5.5m-5.5-8h5.5v4.5h-5.5v-4.5z"
       ></path>
     </svg>
   );

@@ -46,6 +46,7 @@ export interface WidgetGroupItem {
   title: string;
   description: string;
   kind: number;
+  icon?: string;
 }
 
 export interface Widget {
