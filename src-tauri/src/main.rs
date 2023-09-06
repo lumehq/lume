@@ -6,7 +6,6 @@
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
-use window_shadows::set_shadow;
 use webpage::{Webpage, WebpageOptions};
 use std::time::Duration;
 
@@ -102,9 +101,6 @@ fn main() {
       #[cfg(target_os = "macos")]
       apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
-
-      // set native shadow
-      set_shadow(&window, true).expect("Unsupported platform!");
 
       Ok(())
     })
