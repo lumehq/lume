@@ -125,7 +125,7 @@ export function Composer() {
             autoCapitalize="off"
             className={twMerge(
               'scrollbar-hide markdown max-h-[500px] overflow-y-auto break-all pr-2 outline-none',
-              expand ? 'min-h-[500px]' : 'min-h-[120px]'
+              expand ? 'min-h-[500px]' : reply.id ? 'min-h-min' : 'min-h-[120px]'
             )}
           />
           {reply.id && (

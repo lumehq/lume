@@ -44,6 +44,7 @@ export interface WidgetGroup {
 
 export interface WidgetGroupItem {
   title: string;
+  description: string;
   kind: number;
 }
 

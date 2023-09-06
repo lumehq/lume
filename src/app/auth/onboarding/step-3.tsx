@@ -118,10 +118,11 @@ export function OnboardStep3Screen() {
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
             </div>
           ) : relaysAsArray.length === 0 ? (
-            <div className="flex h-full w-full items-center justify-center">
+            <div className="flex h-full w-full items-center justify-center px-6">
               <p className="text-center text-white/50">
-                Can&apos;t found any relays, you can skip this step and use default relays
-                instead
+                Lume couldn&apos;t find any relays from your follows.
+                <br />
+                You can skip this step and use default relays instead.
               </p>
             </div>
           ) : (
@@ -145,7 +146,7 @@ export function OnboardStep3Screen() {
             ))
           )}
           {relays.size > 5 && (
-            <div className="sticky bottom-0 left-0 inline-flex w-full items-center justify-center bg-white/10 px-4 py-2 backdrop-blur-2xl backdrop-blur-xl">
+            <div className="sticky bottom-0 left-0 inline-flex w-full items-center justify-center bg-white/10 px-4 py-2 backdrop-blur-2xl">
               <p className="text-sm text-orange-400">
                 Using too much relay can cause high resource usage
               </p>

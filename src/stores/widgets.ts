@@ -46,18 +46,22 @@ export const DefaultWidgets = [
       {
         kind: WidgetKinds.tmp.xfeed,
         title: 'Group feeds',
+        description: 'All posts from specific people you want to keep up with',
       },
       {
         kind: WidgetKinds.local.files,
         title: 'Files',
+        description: 'All files shared by people in your network',
       },
       {
         kind: WidgetKinds.local.articles,
         title: 'Articles',
+        description: 'All articles shared by people in your network',
       },
       {
         kind: WidgetKinds.local.follows,
         title: 'Follows',
+        description: 'All posts from people you are following',
       },
     ],
   },
@@ -67,27 +71,32 @@ export const DefaultWidgets = [
       {
         kind: WidgetKinds.tmp.xhashtag,
         title: 'Hashtag',
+        description: 'All posts have a specific hashtag',
       },
       {
         kind: WidgetKinds.global.files,
         title: 'Files',
+        description: 'All files shared by people in your current relay set',
       },
       {
         kind: WidgetKinds.global.articles,
         title: 'Articles',
+        description: 'All articles shared by people in your current relay set',
       },
     ],
   },
   {
-    title: 'Trending (nostr.band)',
+    title: 'nostr.band',
     data: [
       {
         kind: WidgetKinds.nostrBand.trendingAccounts,
         title: 'Accounts',
+        description: 'Trending accounts from the last 24 hours',
       },
       {
         kind: WidgetKinds.nostrBand.trendingNotes,
         title: 'Notes',
+        description: 'Trending notes from the last 24 hours',
       },
     ],
   },
