@@ -32,18 +32,18 @@ export function parser(eventContent: string) {
         const url = new URL(word);
         url.search = '';
 
-        if (url.toString().match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
+        if (url.pathname.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
           // image url
           content.images.push(word);
           // remove url from original content
           return word.replace(word, '');
         }
 
-        if (url.toString().match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv|mp3|m3u8)$/)) {
+        if (url.pathname.match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv|mp3|m3u8)$/)) {
           // video
           content.videos.push(word);
           // remove url from original content
-          word = word.replace(word, '');
+          return word.replace(word, '');
         }
 
         content.links.push(url.toString());
