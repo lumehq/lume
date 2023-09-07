@@ -7,15 +7,17 @@ import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 
+import { useActivities } from '@stores/activities';
+
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function SplashScreen() {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { fetchUserData, prefetchEvents } = useNostr();
+  const { fetchUserData, fetchActivities, prefetchEvents } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<null | string>(null);
+  const setActivities = useActivities((state) => state.setActivities);
 
   const skip = async () => {
     await invoke('close_splashscreen');
@@ -29,20 +31,20 @@ export function SplashScreen() {
     try {
       const user = await fetchUserData();
       const data = await prefetchEvents();
+      const activities = await fetchActivities();
 
       if (user.status === 'ok' && data.status === 'ok') {
+        // set activities
+        setActivities(activities);
+        // update last login = current time
         await db.updateLastLogin();
+        // close splash screen and open main app screen
         await invoke('close_splashscreen');
-      } else {
-        setIsLoading(false);
-        setErrorMessage(user.message);
-        console.log('fetch failed, error: ', user.message);
       }
     } catch (e) {
       setIsLoading(false);
-      setErrorMessage(e);
-      await message(`Something wrong: ${e}`, {
-        title: 'Lume',
+      await message(e, {
+        title: 'An unexpected error has occurred',
         type: 'error',
       });
     }
@@ -75,15 +77,14 @@ export function SplashScreen() {
           ) : (
             <div className="mt-2 flex flex-col gap-1 text-center">
               <h3 className="text-lg font-semibold leading-none text-white">
-                Something wrong!
+                An unexpected error has occurred
               </h3>
-              <p className="text-sm text-white/50">{errorMessage}</p>
               <button
                 type="button"
                 onClick={skip}
                 className="mx-auto mt-4 inline-flex h-10 w-max items-center justify-center rounded-md bg-white/10 px-8 text-sm font-medium leading-none text-white backdrop-blur-xl hover:bg-white/20"
               >
-                Skip
+                Skip this step
               </button>
             </div>
           )}

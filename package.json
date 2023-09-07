@@ -57,7 +57,7 @@
     "react-player": "^2.13.0",
     "react-router-dom": "^6.15.0",
     "react-textarea-autosize": "^8.5.3",
-    "react-virtuoso": "^4.5.0",
+    "react-virtuoso": "^4.5.1",
     "remark-gfm": "^3.0.1",
     "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#v1",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#v1",

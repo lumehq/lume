@@ -6,6 +6,8 @@ import { useStorage } from '@libs/storage/provider';
 import { AccountMoreActions } from '@shared/accounts/more';
 import { Image } from '@shared/image';
 
+import { useActivities } from '@stores/activities';
+
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
@@ -15,6 +17,8 @@ export function ActiveAccount() {
   const { db } = useStorage();
   const { status, user } = useProfile(db.account.pubkey);
   const { sub } = useNostr();
+
+  const addActivity = useActivities((state) => state.addActivity);
 
   useEffect(() => {
     const filter: NDKFilter = {
@@ -30,6 +34,8 @@ export function ActiveAccount() {
     };
 
     sub(filter, async (event) => {
+      addActivity(event);
+
       switch (event.kind) {
         case NDKKind.Text:
           return await sendNativeNotification('Mention');
