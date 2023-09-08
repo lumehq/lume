@@ -291,6 +291,15 @@ export class LumeStorage {
     );
   }
 
+  public async accountLogout() {
+    await this.db.execute("UPDATE accounts SET is_active = '0' WHERE id = $1;", [
+      this.account.id,
+    ]);
+
+    this.account = null;
+    return true;
+  }
+
   public async close() {
     return this.db.close();
   }

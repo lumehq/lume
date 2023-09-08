@@ -1,75 +1,65 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import { useQueryClient } from '@tanstack/react-query';
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { useNavigate } from 'react-router-dom';
 
-import { CancelIcon, LogoutIcon } from '@shared/icons';
+import { useStorage } from '@libs/storage/provider';
+
+import { useStronghold } from '@stores/stronghold';
 
 export function Logout() {
-  const queryClient = useQueryClient();
+  const { db } = useStorage();
+
+  const navigate = useNavigate();
+  const clearPrivkey = useStronghold((state) => state.clearPrivkey);
 
   const logout = async () => {
-    // reset database
-    // await removeAll();
-    // reset react query
-    queryClient.clear();
+    // remove account
+    db.accountLogout();
+    // clear privkey in session storage
+    clearPrivkey();
+    // redirect to welcome screen
+    navigate('/auth/welcome');
   };
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
+    <AlertDialog.Root>
+      <AlertDialog.Trigger asChild>
         <button
           type="button"
-          aria-label="Logout"
-          className="inline-flex h-9 w-9 transform items-center justify-center rounded-md bg-white/20 active:translate-y-1"
+          className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-white/10"
         >
-          <LogoutIcon className="h-4 w-4 text-white" />
+          Logout
         </button>
-      </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl" />
-        <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
-            <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-6">
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <Dialog.Title className="text-lg font-semibold leading-none text-white">
-                    Are you sure!
-                  </Dialog.Title>
-                  <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
-                    <CancelIcon className="h-4 w-4 text-white/50" />
-                  </Dialog.Close>
-                </div>
-                <Dialog.Description className="text-sm leading-tight text-white/50">
-                  <p className="mb-2">
-                    When logout, all local data will be wiped, and restart app then you
-                    need to start onboarding process again when you log in.
-                  </p>
-                  <p>
-                    In the next version, Lume will support multi account, then you can
-                    switch between all account s instead of logout
-                  </p>
-                </Dialog.Description>
-              </div>
+      </AlertDialog.Trigger>
+      <AlertDialog.Portal className="relative z-10">
+        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+        <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
+          <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">
+            <div className="flex flex-col gap-2 border-b border-white/5 px-5 py-4">
+              <AlertDialog.Title className="text-lg font-semibold leading-none text-white">
+                Are you sure!
+              </AlertDialog.Title>
+              <AlertDialog.Description className="text-sm leading-tight text-white/50">
+                You can always log back in at any time. If you just want to switch
+                accounts, you can do that by adding an existing account.
+              </AlertDialog.Description>
             </div>
-            <div className="flex h-full w-full flex-col items-end justify-center overflow-y-auto px-5 py-2.5">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium text-white/50 backdrop-blur-xl hover:bg-white/10"
-                >
+            <div className="flex justify-end gap-2 px-5 py-3">
+              <AlertDialog.Cancel asChild>
+                <button className="inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium leading-none text-white outline-none hover:bg-white/10 hover:backdrop-blur-xl">
                   Cancel
                 </button>
-                <button
-                  type="button"
-                  onClick={() => logout()}
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-red-500 px-3 text-sm font-medium text-white hover:bg-red-600"
-                >
-                  Confirm
-                </button>
-              </div>
+              </AlertDialog.Cancel>
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="inline-flex h-9 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium leading-none text-white outline-none hover:bg-fuchsia-500"
+              >
+                Logout
+              </button>
             </div>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
   );
 }

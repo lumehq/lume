@@ -79,7 +79,7 @@ export function ImportStep1Screen() {
 
   useEffect(() => {
     // save current step, if user close app and reopen it
-    setStep('/auth/import/step-1');
+    setStep('/auth/import');
   }, []);
 
   return (

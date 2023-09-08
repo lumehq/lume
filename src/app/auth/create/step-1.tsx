@@ -67,7 +67,7 @@ export function CreateStep1Screen() {
 
   useEffect(() => {
     // save current step, if user close app and reopen it
-    setStep('/auth/create/step-1');
+    setStep('/auth/create');
   }, []);
 
   return (

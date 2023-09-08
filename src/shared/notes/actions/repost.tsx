@@ -46,26 +46,26 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
       <AlertDialog.Portal className="relative z-10">
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
+          <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="flex flex-col gap-2 border-b border-white/5 px-5 py-4">
               <AlertDialog.Title className="text-lg font-semibold leading-none text-white">
                 Confirm repost this post?
               </AlertDialog.Title>
-              <AlertDialog.Description className="text-sm leading-none text-white/50">
+              <AlertDialog.Description className="text-sm leading-tight text-white/50">
                 Reposted post will be visible to your followers, and you cannot undo this
                 action.
               </AlertDialog.Description>
             </div>
-            <div className="flex justify-end gap-6 px-5 py-3">
+            <div className="flex justify-end gap-2 px-5 py-3">
               <AlertDialog.Cancel asChild>
-                <button className="inline-flex h-11 items-center justify-center rounded-lg bg-white/10 px-4 font-medium leading-none text-white outline-none backdrop-blur-xl">
+                <button className="inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium leading-none text-white outline-none hover:bg-white/10 hover:backdrop-blur-xl">
                   Cancel
                 </button>
               </AlertDialog.Cancel>
               <button
                 type="button"
                 onClick={() => submit()}
-                className="inline-flex h-11 items-center justify-center rounded-lg bg-fuchsia-500 px-4 font-medium leading-none text-white outline-none"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium leading-none text-white outline-none hover:bg-fuchsia-500"
               >
                 Yes, repost
               </button>

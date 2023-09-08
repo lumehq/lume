@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { HorizontalDotsIcon } from '@shared/icons';
+import { Logout } from '@shared/logout';
 
 export function AccountMoreActions({ pubkey }: { pubkey: string }) {
   const [open, setOpen] = useState(false);
@@ -44,9 +45,7 @@ export function AccountMoreActions({ pubkey }: { pubkey: string }) {
             </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
-            <button className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-white/10">
-              Logout
-            </button>
+            <Logout />
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

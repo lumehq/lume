@@ -63,7 +63,7 @@ export function CreateStep2Screen() {
       const dir = await appConfigDir();
       const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
 
-      db.secureDB = stronghold;
+      if (!db.secureDB) db.secureDB = stronghold;
 
       // save privkey to secure storage
       await db.secureSave(pubkey, privkey);
