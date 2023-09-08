@@ -1,3 +1,4 @@
+import { message } from '@tauri-apps/api/dialog';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -52,12 +53,12 @@ export function OnboardStep2Screen() {
       setLoading(true);
 
       for (const tag of tags) {
-        await db.createWidget(WidgetKinds.hashtag, tag, tag.replace('#', ''));
+        await db.createWidget(WidgetKinds.global.hashtag, tag, tag.replace('#', ''));
       }
 
       navigate('/auth/onboarding/step-3', { replace: true });
-    } catch {
-      console.log('error');
+    } catch (e) {
+      await message(e, { title: 'Error', type: 'error' });
     }
   };
 
