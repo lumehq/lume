@@ -21,6 +21,7 @@ import {
   XfeedsWidget,
   XhashtagWidget,
 } from '@shared/widgets';
+import { LocalFollowsWidget } from '@shared/widgets/local/follows';
 
 import { WidgetKinds, useWidgets } from '@stores/widgets';
 
@@ -40,6 +41,8 @@ export function SpaceScreen() {
       switch (widget.kind) {
         case WidgetKinds.local.network:
           return <LocalNetworkWidget key={widget.id} />;
+        case WidgetKinds.local.follows:
+          return <LocalFollowsWidget key={widget.id} params={widget} />;
         case WidgetKinds.local.feeds:
           return <LocalFeedsWidget key={widget.id} params={widget} />;
         case WidgetKinds.local.files:

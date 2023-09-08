@@ -17,9 +17,9 @@ import {
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 
-import { DBEvent } from '@utils/types';
+import { DBEvent, Widget } from '@utils/types';
 
-export function LocalFollowsWidget() {
+export function LocalFollowsWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
@@ -116,7 +116,7 @@ export function LocalFollowsWidget() {
 
   return (
     <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
-      <TitleBar title="👋 Network" />
+      <TitleBar id={params.id} title="Follows" />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">

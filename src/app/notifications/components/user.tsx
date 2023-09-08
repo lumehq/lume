@@ -18,13 +18,13 @@ export function NotiUser({ pubkey }: { pubkey: string }) {
   }
 
   return (
-    <div className="flex shrink-0 items-start justify-start gap-3">
+    <div className="flex shrink-0 items-center justify-start gap-2">
       <Image
         src={user?.picture || user?.image}
         alt={pubkey}
-        className="h-11 w-11 shrink-0 rounded-lg object-cover"
+        className="h-8 w-8 shrink-0 rounded-md object-cover"
       />
-      <span className="max-w-[10rem] flex-1 truncate font-medium leading-none text-white">
+      <span className="max-w-[10rem] truncate font-medium leading-none text-white">
         {user?.name || user?.display_name || displayNpub(pubkey, 16)}
       </span>
     </div>

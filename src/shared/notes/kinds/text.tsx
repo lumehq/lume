@@ -42,7 +42,7 @@ export function TextNote({ content }: { content: string }) {
             const cleanURL = new URL(href);
             cleanURL.search = '';
             return (
-              <Link to={href} target="_blank">
+              <Link to={href} target="_blank" className="line-clamp-1">
                 {cleanURL.hostname + cleanURL.pathname}
               </Link>
             );

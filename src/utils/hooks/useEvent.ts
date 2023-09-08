@@ -12,7 +12,7 @@ export function useEvent(id: string, embed?: string) {
   const { status, data } = useQuery(
     ['event', id],
     async () => {
-      // return embed event (nostr.band api)
+      // return embed event (nostr.band api) or repost
       if (embed) {
         const event: NDKEvent = JSON.parse(embed);
         return event;

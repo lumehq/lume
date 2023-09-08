@@ -3,17 +3,20 @@ import { EventPointer } from 'nostr-tools/lib/nip19';
 
 import { RichContent } from '@utils/types';
 
-function isURL(str: string) {
-  const pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$', // fragment locator
-    'i'
-  );
-  return !!pattern.test(str);
+function isURL(string: string) {
+  try {
+    const url = new URL(string);
+    if (url.protocol.length > 0) {
+      if (url.protocol === 'https:' || url.protocol === 'http:') {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export function parser(eventContent: string) {

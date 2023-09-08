@@ -7,17 +7,14 @@ import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { useActivities } from '@stores/activities';
-
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function SplashScreen() {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { fetchUserData, fetchActivities, prefetchEvents } = useNostr();
+  const { fetchUserData, prefetchEvents } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const setActivities = useActivities((state) => state.setActivities);
 
   const skip = async () => {
     await invoke('close_splashscreen');
@@ -27,11 +24,8 @@ export function SplashScreen() {
     try {
       const user = await fetchUserData();
       const data = await prefetchEvents();
-      const activities = await fetchActivities();
 
       if (user.status === 'ok' && data.status === 'ok') {
-        // set activities
-        setActivities(activities);
         // update last login = current time
         await db.updateLastLogin();
         // close splash screen and open main app screen

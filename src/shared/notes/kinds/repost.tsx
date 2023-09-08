@@ -19,7 +19,7 @@ import { useEvent } from '@utils/hooks/useEvent';
 
 export function Repost({ event }: { event: NDKEvent }) {
   // @ts-expect-error, root_id isn't exist on NDKEvent
-  const { status, data } = useEvent(event.root_id, event.content);
+  const { status, data } = useEvent(event.root_id ?? event.id, event.content);
 
   const renderKind = useCallback(
     (repostEvent: NDKEvent) => {

@@ -11,10 +11,15 @@ import { ComposerModal } from '@shared/composer';
 import { Frame } from '@shared/frame';
 import { BellIcon, NavArrowDownIcon, SpaceIcon } from '@shared/icons';
 
+import { useActivities } from '@stores/activities';
 import { useSidebar } from '@stores/sidebar';
+
+import { compactNumber } from '@utils/number';
 
 export function Navigation() {
   const { db } = useStorage();
+
+  const [totalNewActivities] = useActivities((state) => [state.totalNewActivities]);
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
 
   return (
@@ -47,17 +52,26 @@ export function Navigation() {
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+                'flex h-10 items-center justify-between rounded-r-lg border-l-2 pl-4 pr-2',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
                   : 'border-transparent text-white/80'
               )
             }
           >
-            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
-              <BellIcon className="h-4 w-4 text-white" />
-            </span>
-            Notifications
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+                <BellIcon className="h-4 w-4 text-white" />
+              </span>
+              Notifications
+            </div>
+            {totalNewActivities > 0 ? (
+              <div className="inline-flex h-5 w-8 items-center justify-center rounded bg-fuchsia-500">
+                <span className="text-xs font-medium text-white">
+                  {compactNumber.format(totalNewActivities)}
+                </span>
+              </div>
+            ) : null}
           </NavLink>
         </div>
         <Collapsible.Root open={chats} onOpenChange={toggleChats}>
