@@ -1,3 +1,4 @@
+import { message } from '@tauri-apps/api/dialog';
 import { RouterProvider, createBrowserRouter, redirect } from 'react-router-dom';
 
 import { AuthCreateScreen } from '@app/auth/create';
@@ -19,18 +20,20 @@ import './index.css';
 async function Loader() {
   try {
     const account = await checkActiveAccount();
+
     const stronghold = sessionStorage.getItem('stronghold');
     const privkey = JSON.parse(stronghold).state.privkey || null;
+
     const onboarding = localStorage.getItem('onboarding');
     const step = JSON.parse(onboarding).state.step || null;
-
-    if (step) {
-      return redirect(step);
-    }
 
     if (!account) {
       return redirect('/auth/welcome');
     } else {
+      if (step) {
+        return redirect(step);
+      }
+
       if (!privkey) {
         return redirect('/auth/unlock');
       }
@@ -38,7 +41,7 @@ async function Loader() {
 
     return null;
   } catch (e) {
-    throw new Error('App failed to load');
+    await message(e, { title: 'An unexpected error has occurred', type: 'error' });
   }
 }
 

@@ -49,6 +49,8 @@ export function OnboardStep3Screen() {
     }
   );
 
+  const relaysAsArray = Array.from(data?.keys() || []);
+
   const toggleRelay = (relay: string) => {
     if (relays.has(relay)) {
       setRelays((prev) => {
@@ -61,8 +63,9 @@ export function OnboardStep3Screen() {
   };
 
   const submit = async (skip?: boolean) => {
-    setLoading(true);
     try {
+      setLoading(true);
+
       if (!skip) {
         for (const relay of relays) {
           await db.createRelay(relay);
@@ -86,8 +89,6 @@ export function OnboardStep3Screen() {
       console.log('error: ', e);
     }
   };
-
-  const relaysAsArray = Array.from(data?.keys() || []);
 
   useEffect(() => {
     // save current step, if user close app and reopen it
@@ -179,7 +180,7 @@ export function OnboardStep3Screen() {
             onClick={() => submit(true)}
             className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/10 focus:outline-none"
           >
-            Skip, use default relays
+            Skip, use Lume default relays
           </button>
         </div>
       </div>

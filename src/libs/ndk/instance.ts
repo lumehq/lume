@@ -57,7 +57,12 @@ export const NDKInstance = () => {
 
   async function initNDK() {
     const explicitRelayUrls = await getExplicitRelays();
-    const instance = new NDK({ explicitRelayUrls, cacheAdapter });
+    const instance = new NDK({
+      explicitRelayUrls,
+      cacheAdapter,
+      // outboxRelayUrls: ['wss://purplepag.es'],
+      // enableOutboxModel: true,
+    });
 
     try {
       await instance.connect(10000);

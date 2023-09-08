@@ -24,10 +24,6 @@ export function SplashScreen() {
   };
 
   const prefetch = async () => {
-    const onboarding = localStorage.getItem('onboarding');
-    const step = JSON.parse(onboarding).state.step || null;
-    if (step) await invoke('close_splashscreen');
-
     try {
       const user = await fetchUserData();
       const data = await prefetchEvents();
@@ -51,11 +47,24 @@ export function SplashScreen() {
   };
 
   useEffect(() => {
-    if (ndk) {
-      if (!db.account) invoke('close_splashscreen');
+    async function initial() {
+      if (!db.account) {
+        await invoke('close_splashscreen');
+      } else {
+        const onboarding = localStorage.getItem('onboarding');
+        const step = JSON.parse(onboarding).state.step || null;
 
-      console.log('prefetching...');
-      prefetch();
+        if (step) {
+          await invoke('close_splashscreen');
+        } else {
+          console.log('prefetching...');
+          prefetch();
+        }
+      }
+    }
+
+    if (ndk) {
+      initial();
     }
   }, [ndk, db.account]);
 
