@@ -1,6 +1,6 @@
 [package]
 name = "lume"
-version = "1.2.3"
+version = "1.2.4"
 description = "the communication app"
 authors = ["Ren Amamiya"]
 license = "GPL-3.0"
@@ -34,7 +34,6 @@ tauri = { version = "1.4", features = [
   "fs-remove-file",
   "window-center",
   "dialog-all",
-  "macos-private-api",
   "http-multipart",
 ] }
 tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v1", features = [
