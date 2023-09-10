@@ -2,21 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  font-size: 14px;
-}
-
-input::-ms-reveal,
-input::-ms-clear {
+.scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-a {
-  @apply cursor-default no-underline !important;
-}
-
-button {
-  @apply cursor-default focus:outline-none;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .markdown {
@@ -35,25 +27,31 @@ button {
   @apply outline-fuchsia-500;
 }
 
+html {
+  font-size: 14px;
+}
+
+a {
+  @apply cursor-default no-underline !important;
+}
+
+button {
+  @apply cursor-default focus:outline-none;
+}
+
 iframe {
   height: auto !important;
 }
 
-/* For Webkit-based browsers (Chrome, Safari and Opera) */
-.scrollbar-hide::-webkit-scrollbar {
+span[data-slate-placeholder] {
+  margin-top: 0;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
   display: none;
 }
 
-/* For IE, Edge and Firefox */
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.border {
-  background-clip: padding-box;
-}
-
-span[data-slate-placeholder] {
-  @apply top-0;
+::-webkit-input-placeholder {
+  line-height: normal;
 }

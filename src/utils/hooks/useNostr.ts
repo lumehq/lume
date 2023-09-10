@@ -134,37 +134,21 @@ export function useNostr() {
       console.log("prefetching events with user's network: ", db.account.network.length);
       console.log('prefetching events since: ', since);
 
-      const events = await fetcher.fetchAllEvents(
+      const events = (await fetcher.fetchAllEvents(
         relayUrls,
         {
           kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
           authors: db.account.network,
         },
         { since: since }
-      );
+      )) as unknown as NDKEvent[];
 
       // save all events to database
-      for (const event of events) {
-        let root: string;
-        let reply: string;
-        if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
-          root = event.tags[0][1];
-        } else {
-          root = event.tags.find((el) => el[3] === 'root')?.[1];
-          reply = event.tags.find((el) => el[3] === 'reply')?.[1];
-        }
-        await db.createEvent(
-          event.id,
-          JSON.stringify(event),
-          event.pubkey,
-          event.kind,
-          root,
-          reply,
-          event.created_at
-        );
-      }
+      const promises = await Promise.all(
+        events.map(async (event) => await db.createEvent(event))
+      );
 
-      return { status: 'ok', message: 'prefetch completed' };
+      if (promises) return { status: 'ok', message: 'prefetch completed' };
     } catch (e) {
       console.error('prefetch events failed, error: ', e);
       return { status: 'failed', message: e };

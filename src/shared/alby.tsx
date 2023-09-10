@@ -10,15 +10,20 @@ import {
   AlbyIcon,
   ArrowRightCircleIcon,
   CancelIcon,
+  CheckCircleIcon,
   LoaderIcon,
   StarsIcon,
 } from '@shared/icons';
 
+import { useStronghold } from '@stores/stronghold';
+
 export function AlbyConnectButton() {
   const { db } = useStorage();
+  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
   const initAlby = async () => {
     try {
@@ -35,16 +40,16 @@ export function AlbyConnectButton() {
         title: 'Connect Alby',
         url: authURL.href,
         center: true,
-        theme: 'light',
         width: 400,
         height: 650,
       });
 
-      webview.listen('tauri://close-requested', async (e) => {
-        console.log(e);
-        await db.secureSave('wallet-connect-url', walletConnectURL);
+      webview.listen('tauri://close-requested', async () => {
+        await db.secureSave('walletConnectURL', walletConnectURL, 'alby');
+        setWalletConnectURL(walletConnectURL);
         setIsloading(false);
-        webview.close();
+        setIsOpen(false);
+        setIsConnected(true);
       });
     } catch (e) {
       setIsloading(false);
@@ -84,7 +89,7 @@ export function AlbyConnectButton() {
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
-            <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
+            <div className="h-min w-full shrink-0 rounded-t-xl border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="text-lg font-semibold leading-none text-white">
@@ -97,11 +102,25 @@ export function AlbyConnectButton() {
               </div>
             </div>
             <div className="flex flex-col gap-3 px-5 py-5">
+              <div className="relative flex h-40 items-center justify-center gap-4">
+                <div className="inline-flex h-16 w-16 items-end justify-center rounded-lg bg-black pb-2">
+                  <img src="/lume.png" className="w-1/3" alt="Lume Logo" />
+                </div>
+                <div className="w-20 border border-dashed border-white/5" />
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-lg bg-white">
+                  <AlbyIcon className="h-8 w-8" />
+                </div>
+                {isConnected ? (
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform">
+                    <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                  </div>
+                ) : null}
+              </div>
               <div className="flex flex-col gap-2">
                 <p className="text-sm text-white/50">
-                  When you click &quot;Connect&quot;, a new window will open in your
-                  default browser. You will need to click the &quot;Connect Wallet&quot;
-                  button to grant Lume permission to integrate with your Alby account.
+                  When you click &quot;Connect&quot;, a new window will open and you need
+                  to click the &quot;Connect Wallet&quot; button to grant Lume permission
+                  to integrate with your Alby account.
                 </p>
                 <p className="text-sm text-white/50">
                   All information will be encrypted and stored on the local machine.
@@ -117,6 +136,12 @@ export function AlbyConnectButton() {
                     <span className="w-5" />
                     <span>Connecting...</span>
                     <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                  </>
+                ) : isConnected ? (
+                  <>
+                    <span className="w-5" />
+                    <span>Connected</span>
+                    <CheckCircleIcon className="h-5 w-5" />
                   </>
                 ) : (
                   <>

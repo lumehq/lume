@@ -25,26 +25,8 @@ export function useEvent(id: string, embed?: string) {
       const event = await ndk.fetchEvent(id);
       if (!event) throw new Error(`Event not found: ${id.toString()}`);
 
-      let root: string;
-      let reply: string;
-
-      if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
-        root = event.tags[0][1];
-      } else {
-        root = event.tags.find((el) => el[3] === 'root')?.[1];
-        reply = event.tags.find((el) => el[3] === 'reply')?.[1];
-      }
-
       const rawEvent = toRawEvent(event);
-      await db.createEvent(
-        event.id,
-        JSON.stringify(rawEvent),
-        event.pubkey,
-        event.kind,
-        root,
-        reply,
-        event.created_at
-      );
+      await db.createEvent(rawEvent);
 
       return event;
     },

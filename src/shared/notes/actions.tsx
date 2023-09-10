@@ -33,7 +33,7 @@ export function NoteActions({
           <NoteReply id={id} pubkey={pubkey} root={root} />
           <NoteReaction id={id} pubkey={pubkey} />
           <NoteRepost id={id} pubkey={pubkey} />
-          <NoteZap id={id} />
+          <NoteZap id={id} pubkey={pubkey} />
         </div>
         {extraButtons && (
           <>

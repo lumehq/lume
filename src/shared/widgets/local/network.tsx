@@ -130,27 +130,8 @@ export function LocalNetworkWidget() {
       sub(
         filter,
         async (event) => {
-          let root: string;
-          let reply: string;
-
-          if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
-            root = event.tags[0][1];
-          } else {
-            root = event.tags.find((el) => el[3] === 'root')?.[1];
-            reply = event.tags.find((el) => el[3] === 'reply')?.[1];
-          }
-
           const rawEvent = toRawEvent(event);
-
-          await db.createEvent(
-            event.id,
-            JSON.stringify(rawEvent),
-            event.pubkey,
-            event.kind,
-            root,
-            reply,
-            event.created_at
-          );
+          await db.createEvent(rawEvent);
         },
         false // don't close sub on eose
       );

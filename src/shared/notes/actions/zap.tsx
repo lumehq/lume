@@ -1,34 +1,75 @@
-import { NostrEvent } from '@nostr-dev-kit/ndk';
+import { webln } from '@getalby/sdk';
+import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
+import { message } from '@tauri-apps/api/dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
-import { twMerge } from 'tailwind-merge';
+import CurrencyInput from 'react-currency-input-field';
+import TextareaAutosize from 'react-textarea-autosize';
 
-import { CancelIcon, ZapIcon } from '@shared/icons';
+import { AlbyIcon, CancelIcon, ZapIcon } from '@shared/icons';
+
+import { useStronghold } from '@stores/stronghold';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { useNostr } from '@utils/hooks/useNostr';
+import { useProfile } from '@utils/hooks/useProfile';
+import { sendNativeNotification } from '@utils/notification';
+import { compactNumber } from '@utils/number';
 
-export function NoteZap({ id }: { id: string }) {
+export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const { createZap } = useNostr();
   const { data: event } = useEvent(id);
+  const { user } = useProfile(pubkey);
 
-  const [amount, setAmount] = useState<null | number>(null);
+  const [amount, setAmount] = useState<string>('21');
+  const [zapMessage, setZapMessage] = useState<string>('');
   const [invoice, setInvoice] = useState<null | string>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const selected = (num: number) => {
-    if (amount === num) return true;
-    return false;
-  };
+  const walletConnectURL = useStronghold((state) => state.walletConnectURL);
 
   const createZapRequest = async () => {
-    // @ts-expect-error, todo: fix this
-    const res = await createZap(event as unknown as NostrEvent, amount);
-    if (res) setInvoice(res);
+    try {
+      const zapAmount = parseInt(amount) * 1000;
+      const res = await createZap(event, zapAmount, zapMessage);
+
+      if (!res)
+        return await message('Cannot create zap request', {
+          title: 'Zap',
+          type: 'error',
+        });
+
+      // user don't connect Alby, create QR Code for invoice
+      if (!walletConnectURL) return setInvoice(res);
+
+      // user connect Alby
+      const nwc = new webln.NostrWebLNProvider({
+        nostrWalletConnectUrl: walletConnectURL,
+      });
+      await nwc.enable();
+
+      const send: SendPaymentResponse = await nwc.sendPayment(res);
+      if (send) {
+        await sendNativeNotification(
+          `You've tipped ${compactNumber.format(send.amount)} sats to ${
+            user?.display_name || user?.name
+          }`
+        );
+
+        // eose
+        nwc.close();
+        setIsOpen(false);
+        setAmount('');
+        setZapMessage('');
+      }
+    } catch (e) {
+      await message(JSON.stringify(e), { title: 'Zap', type: 'error' });
+    }
   };
 
   return (
-    <Dialog.Root>
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger asChild>
         <button
           type="button"
@@ -41,110 +82,109 @@ export function NoteZap({ id }: { id: string }) {
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
-            <div className="relative h-min w-full shrink-0 border-b border-white/5 bg-white/5 px-5 py-5">
-              <div className="flex flex-col items-center gap-1.5">
-                <Dialog.Title className="font-medium leading-none text-white">
-                  Zap (Beta)
-                </Dialog.Title>
-                <Dialog.Description className="text-sm leading-none text-white/50">
-                  Send tip with Bitcoin via Lightning
-                </Dialog.Description>
-              </div>
-              <Dialog.Close className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
+            <div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
+              <div className="w-6" />
+              <Dialog.Title className="text-center text-sm font-semibold leading-none text-white">
+                Send tip to {user?.display_name || user?.name}
+              </Dialog.Title>
+              <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
                 <CancelIcon className="h-4 w-4 text-white/50" />
               </Dialog.Close>
             </div>
-            <div className="overflow-y-auto overflow-x-hidden px-5 py-5">
+            <div className="overflow-y-auto overflow-x-hidden px-5 pb-5">
               {!invoice ? (
                 <>
-                  <div className="grid grid-cols-3 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setAmount(21000)}
-                      className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
-                        `${selected(21000) && 'bg-white/10 backdrop-blur-xl'}`
-                      )}
-                    >
-                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
-                      <span className="text-sm font-medium leading-none text-white/80">
-                        21 sats
+                  <div className="relative flex h-40 flex-col">
+                    <div className="inline-flex h-full flex-1 items-center justify-center gap-1">
+                      <CurrencyInput
+                        placeholder="0"
+                        defaultValue={'21'}
+                        value={amount}
+                        decimalsLimit={2}
+                        min={0} // 0 sats
+                        max={10000} // 1M sats
+                        maxLength={10000} // 1M sats
+                        onValueChange={(value) => setAmount(value)}
+                        className="w-full flex-1 bg-transparent text-right text-4xl font-semibold text-white placeholder:text-white/50 focus:outline-none"
+                      />
+                      <span className="w-full flex-1 text-left text-4xl font-semibold text-white/50">
+                        sats
                       </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAmount(69000)}
-                      className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
-                        `${selected(69000) && 'bg-white/10 backdrop-blur-xl'}`
-                      )}
-                    >
-                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
-                      <span className="text-sm font-medium leading-none text-white/80">
+                    </div>
+                    <div className="inline-flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setAmount('69')}
+                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                      >
                         69 sats
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAmount(100000)}
-                      className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
-                        `${selected(100000) && 'bg-white/10 backdrop-blur-xl'}`
-                      )}
-                    >
-                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
-                      <span className="text-sm font-medium leading-none text-white/80">
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAmount('100')}
+                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                      >
                         100 sats
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAmount(200000)}
-                      className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
-                        `${selected(200000) && 'bg-white/10 backdrop-blur-xl'}`
-                      )}
-                    >
-                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
-                      <span className="text-sm font-medium leading-none text-white/80">
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAmount('200')}
+                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                      >
                         200 sats
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAmount(500000)}
-                      className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
-                        `${selected(500000) && 'bg-white/10 backdrop-blur-xl'}`
-                      )}
-                    >
-                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
-                      <span className="text-sm font-medium leading-none text-white/80">
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAmount('500')}
+                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                      >
                         500 sats
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAmount(1000000)}
-                      className={twMerge(
-                        'inline-flex flex-col items-center justify-center gap-2 rounded-lg px-2 py-2 backdrop-blur-xl hover:bg-white/10',
-                        `${selected(1000000) && 'bg-white/10 backdrop-blur-xl'}`
-                      )}
-                    >
-                      <img className="h-12 w-12" src="/zap.png" alt="High Voltage" />
-                      <span className="text-sm font-medium leading-none text-white/80">
-                        1000 sats
-                      </span>
-                    </button>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAmount('1000')}
+                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                      >
+                        1K sats
+                      </button>
+                    </div>
                   </div>
-                  <div className="mt-4 flex w-full">
-                    <button
-                      type="button"
-                      onClick={() => createZapRequest()}
-                      className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 px-4 hover:bg-fuchsia-600"
-                    >
-                      Create invoice
-                    </button>
+                  <div className="mt-4 flex w-full flex-col gap-2">
+                    <TextareaAutosize
+                      name="zapMessage"
+                      value={zapMessage}
+                      onChange={(e) => setZapMessage(e.target.value)}
+                      spellCheck={false}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      placeholder="Enter message (optional)"
+                      className="relative min-h-[56px] w-full resize-none rounded-lg bg-white/10 px-3 py-2 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                    />
+                    <div className="flex flex-col gap-2">
+                      {walletConnectURL ? (
+                        <button
+                          type="button"
+                          onClick={() => createZapRequest()}
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-orange-100 px-4 font-medium text-black hover:bg-orange-200"
+                        >
+                          <p>Tip with Alby</p>
+                          <AlbyIcon className="h-6 w-6" />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => createZapRequest()}
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 px-4 font-medium hover:bg-fuchsia-600"
+                        >
+                          <p>Create Lightning invoice</p>
+                        </button>
+                      )}
+                      <span className="text-center text-sm leading-tight text-white/50">
+                        The recipient receives 100% of the amount that you send. Lume does
+                        not take any commission, and you cannot get refund
+                      </span>
+                    </div>
                   </div>
                 </>
               ) : (

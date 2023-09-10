@@ -1,5 +1,5 @@
 import { nip19 } from 'nostr-tools';
-import { EventPointer } from 'nostr-tools/lib/nip19';
+import { EventPointer, ProfilePointer } from 'nostr-tools/lib/nip19';
 
 import { RichContent } from '@utils/types';
 
@@ -58,20 +58,27 @@ export function parser(eventContent: string) {
       }
 
       // nostr account references
-      if (word.startsWith('nostr:npub1')) {
+      if (word.startsWith('nostr:npub1') || word.startsWith('npub1')) {
         const npub = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
         return word.replace(word, `~pub-${nip19.decode(npub).data}~`);
       }
 
+      // nostr profile references
+      if (word.startsWith('nostr:nprofile1') || word.startsWith('nprofile1')) {
+        const nprofile = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        const decoded = nip19.decode(nprofile).data as ProfilePointer;
+        return word.replace(word, `~pub-${decoded.pubkey}~`);
+      }
+
       // nostr account references
-      if (word.startsWith('nostr:note1')) {
+      if (word.startsWith('nostr:note1') || word.startsWith('noté')) {
         const note = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
         content.notes.push(nip19.decode(note).data as string);
         return word.replace(word, '');
       }
 
       // nostr event references
-      if (word.startsWith('nostr:nevent1')) {
+      if (word.startsWith('nostr:nevent1') || word.startsWith('nevent1')) {
         const nevent = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
         const decoded = nip19.decode(nevent).data as EventPointer;
         content.notes.push(decoded.id);

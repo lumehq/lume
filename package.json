@@ -50,6 +50,7 @@
     "nostr-tools": "^1.14.2",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
+    "react-currency-input-field": "^3.6.11",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
     "react-hotkeys-hook": "^4.4.1",
@@ -71,7 +72,7 @@
     "@tauri-apps/cli": "^1.4.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/html-to-text": "^9.0.1",
-    "@types/node": "^20.5.9",
+    "@types/node": "^20.6.0",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/youtube-player": "^5.5.7",
@@ -83,7 +84,7 @@
     "cross-env": "^7.0.3",
     "csstype": "^3.1.2",
     "encoding": "^0.1.13",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
@@ -98,6 +99,6 @@
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vite-tsconfig-paths": "^4.2.0"
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }

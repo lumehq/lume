@@ -22,10 +22,9 @@ export function SplashScreen() {
 
   const prefetch = async () => {
     try {
-      const user = await fetchUserData();
-      const data = await prefetchEvents();
+      const [user, events] = await Promise.all([fetchUserData(), prefetchEvents()]);
 
-      if (user.status === 'ok' && data.status === 'ok') {
+      if (user.status === 'ok' && events.status === 'ok') {
         // update last login = current time
         await db.updateLastLogin();
         // close splash screen and open main app screen

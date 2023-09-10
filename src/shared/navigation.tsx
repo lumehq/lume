@@ -14,11 +14,13 @@ import { BellIcon, NavArrowDownIcon, SpaceIcon } from '@shared/icons';
 
 import { useActivities } from '@stores/activities';
 import { useSidebar } from '@stores/sidebar';
+import { useStronghold } from '@stores/stronghold';
 
 import { compactNumber } from '@utils/number';
 
 export function Navigation() {
   const { db } = useStorage();
+  const walletConnectURL = useStronghold((state) => state.walletConnectURL);
 
   const [totalNewActivities] = useActivities((state) => [state.totalNewActivities]);
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
@@ -99,9 +101,11 @@ export function Navigation() {
         </Collapsible.Root>
       </div>
       <div className="relative shrink-0">
-        <div className="border-l-2 border-transparent pb-2 pl-4 pr-2">
-          <AlbyConnectButton />
-        </div>
+        {!walletConnectURL ? (
+          <div className="border-l-2 border-transparent pb-2 pl-4 pr-2">
+            <AlbyConnectButton />
+          </div>
+        ) : null}
         <ActiveAccount />
       </div>
     </Frame>

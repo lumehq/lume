@@ -33,6 +33,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 export function UnlockScreen() {
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
+  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,8 +56,13 @@ export function UnlockScreen() {
       if (!db.secureDB) db.secureDB = stronghold;
 
       const privkey = await db.secureLoad(db.account.pubkey);
+      const uri = await db.secureLoad('walletConnectURL', 'alby');
 
-      setPrivkey(privkey);
+      console.log('found privkey: ', privkey);
+      console.log('found wallet conenct url: ', uri);
+
+      if (privkey) setPrivkey(privkey);
+      if (uri) setWalletConnectURL(uri);
       // redirect to home
       navigate('/', { replace: true });
     } catch (e) {

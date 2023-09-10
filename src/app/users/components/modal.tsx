@@ -289,7 +289,7 @@ export function EditProfileModal() {
                     <button
                       type="submit"
                       disabled={!isValid}
-                      className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-md bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+                      className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-lg bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
                     >
                       {loading ? (
                         <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />

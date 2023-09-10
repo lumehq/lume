@@ -61,7 +61,7 @@ export function CreateStep2Screen() {
     setLoading(true);
     if (data.password.length > 3) {
       const dir = await appConfigDir();
-      const stronghold = await Stronghold.load(`${dir}/lume.stronghold`, data.password);
+      const stronghold = await Stronghold.load(`${dir}lume.stronghold`, data.password);
 
       if (!db.secureDB) db.secureDB = stronghold;
 

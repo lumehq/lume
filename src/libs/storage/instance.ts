@@ -19,29 +19,35 @@ export class LumeStorage {
     this.account = null;
   }
 
-  private async getSecureClient() {
+  private async getSecureClient(key?: string) {
     try {
-      return await this.secureDB.loadClient('lume');
+      return await this.secureDB.loadClient(key ?? 'lume');
     } catch {
-      return await this.secureDB.createClient('lume');
+      return await this.secureDB.createClient(key ?? 'lume');
     }
   }
 
-  public async secureSave(key: string, value: string) {
+  public async secureSave(key: string, value: string, clientKey?: string) {
     if (!this.secureDB) throw new Error("Stronghold isn't initialize");
 
-    const client = await this.getSecureClient();
+    const client = await this.getSecureClient(clientKey);
     const store = client.getStore();
+    console.log('insert key: ', key);
+
     await store.insert(key, Array.from(new TextEncoder().encode(value)));
-    return await this.secureDB.save();
+    await this.secureDB.save();
   }
 
-  public async secureLoad(key: string) {
+  public async secureLoad(key: string, clientKey?: string) {
     if (!this.secureDB) throw new Error("Stronghold isn't initialize");
 
-    const client = await this.getSecureClient();
+    const client = await this.getSecureClient(clientKey);
     const store = client.getStore();
+    console.log('get key: ', key);
+
     const value = await store.get(key);
+    if (!value) return null;
+
     const decoded = new TextDecoder().decode(new Uint8Array(value));
     return decoded;
   }
@@ -137,18 +143,29 @@ export class LumeStorage {
     return await this.db.execute('DELETE FROM widgets WHERE id = $1;', [id]);
   }
 
-  public async createEvent(
-    id: string,
-    event: string,
-    author: string,
-    kind: number,
-    root_id: string,
-    reply_id: string,
-    created_at: number
-  ) {
+  public async createEvent(event: NDKEvent) {
+    let root: string;
+    let reply: string;
+
+    if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
+      root = event.tags[0][1];
+    } else {
+      root = event.tags.find((el) => el[3] === 'root')?.[1];
+      reply = event.tags.find((el) => el[3] === 'reply')?.[1];
+    }
+
     return await this.db.execute(
       'INSERT OR IGNORE INTO events (id, account_id, event, author, kind, root_id, reply_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);',
-      [id, this.account.id, event, author, kind, root_id, reply_id, created_at]
+      [
+        event.id,
+        this.account.id,
+        JSON.stringify(event),
+        event.pubkey,
+        event.kind,
+        root,
+        reply,
+        event.created_at,
+      ]
     );
   }
 
