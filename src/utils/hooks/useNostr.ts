@@ -126,7 +126,7 @@ export function useNostr() {
 
       let since: number;
       if (dbEventsEmpty || db.account.last_login_at === 0) {
-        since = nHoursAgo(24);
+        since = db.account.network.length > 400 ? nHoursAgo(12) : nHoursAgo(24);
       } else {
         since = db.account.last_login_at;
       }
@@ -164,10 +164,10 @@ export function useNostr() {
         );
       }
 
-      return { status: 'ok', data: [], message: 'prefetch completed' };
+      return { status: 'ok', message: 'prefetch completed' };
     } catch (e) {
       console.error('prefetch events failed, error: ', e);
-      return { status: 'failed', data: [], message: e };
+      return { status: 'failed', message: e };
     }
   };
 

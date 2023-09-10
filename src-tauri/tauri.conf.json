@@ -67,7 +67,10 @@
         "center": true,
         "setResizable": true,
         "setSize": true,
-        "startDragging": true
+        "startDragging": true,
+        "create": true,
+        "close": true,
+        "print": true
       },
       "clipboard": {
         "all": false,
@@ -124,7 +127,15 @@
     "security": {
       "csp": {
         "content-security-policy": "upgrade-insecure-requests"
-      }
+      },
+      "dangerousRemoteDomainIpcAccess": [
+        {
+          "scheme": "https",
+          "domain": "nwc.getalby.com",
+          "windows": ["alby"],
+          "enableTauriAPI": true
+        }
+      ]
     },
     "macOSPrivateApi": true
   }

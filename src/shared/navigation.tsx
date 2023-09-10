@@ -7,6 +7,7 @@ import { ChatsList } from '@app/chats/components/list';
 import { useStorage } from '@libs/storage/provider';
 
 import { ActiveAccount } from '@shared/accounts/active';
+import { AlbyConnectButton } from '@shared/alby';
 import { ComposerModal } from '@shared/composer';
 import { Frame } from '@shared/frame';
 import { BellIcon, NavArrowDownIcon, SpaceIcon } from '@shared/icons';
@@ -97,7 +98,10 @@ export function Navigation() {
           </div>
         </Collapsible.Root>
       </div>
-      <div className="shrink-0">
+      <div className="relative shrink-0">
+        <div className="border-l-2 border-transparent pb-2 pl-4 pr-2">
+          <AlbyConnectButton />
+        </div>
         <ActiveAccount />
       </div>
     </Frame>
