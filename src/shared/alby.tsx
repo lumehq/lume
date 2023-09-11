@@ -47,9 +47,8 @@ export function AlbyConnectButton() {
       webview.listen('tauri://close-requested', async () => {
         await db.secureSave('walletConnectURL', walletConnectURL, 'alby');
         setWalletConnectURL(walletConnectURL);
-        setIsloading(false);
-        setIsOpen(false);
         setIsConnected(true);
+        setIsloading(false);
       });
     } catch (e) {
       setIsloading(false);

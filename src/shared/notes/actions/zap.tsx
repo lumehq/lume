@@ -3,7 +3,7 @@ import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
 import { message } from '@tauri-apps/api/dialog';
 import { QRCodeSVG } from 'qrcode.react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -26,6 +26,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [zapMessage, setZapMessage] = useState<string>('');
   const [invoice, setInvoice] = useState<null | string>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const walletConnectURL = useStronghold((state) => state.walletConnectURL);
 
@@ -59,14 +60,24 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
 
         // eose
         nwc.close();
-        setIsOpen(false);
-        setAmount('');
-        setZapMessage('');
+        setIsCompleted(true);
+
+        // reset after 3 secs
+        const timeout = setTimeout(() => setIsCompleted(false), 3000);
+        clearTimeout(timeout);
       }
     } catch (e) {
       await message(JSON.stringify(e), { title: 'Zap', type: 'error' });
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setAmount('');
+      setZapMessage('');
+      setIsCompleted(false);
+    };
+  }, []);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -168,7 +179,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                           onClick={() => createZapRequest()}
                           className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-orange-100 px-4 font-medium text-black hover:bg-orange-200"
                         >
-                          <p>Tip with Alby</p>
+                          <p>{isCompleted ? 'Successfully tipped' : 'Tip with Alby'}</p>
                           <AlbyIcon className="h-6 w-6" />
                         </button>
                       ) : (

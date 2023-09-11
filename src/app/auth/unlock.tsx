@@ -58,9 +58,6 @@ export function UnlockScreen() {
       const privkey = await db.secureLoad(db.account.pubkey);
       const uri = await db.secureLoad('walletConnectURL', 'alby');
 
-      console.log('found privkey: ', privkey);
-      console.log('found wallet conenct url: ', uri);
-
       if (privkey) setPrivkey(privkey);
       if (uri) setWalletConnectURL(uri);
       // redirect to home
