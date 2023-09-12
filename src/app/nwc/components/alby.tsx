@@ -45,7 +45,7 @@ export function NWCAlby() {
       });
 
       webview.listen('tauri://close-requested', async () => {
-        await db.secureSave('walletConnectURL', walletConnectURL, 'alby');
+        await db.secureSave('walletConnectURL', walletConnectURL, 'nwc');
         setWalletConnectURL(walletConnectURL);
         setIsConnected(true);
         setIsloading(false);
@@ -59,7 +59,7 @@ export function NWCAlby() {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <div className="flex items-center justify-between">
-        <div className="inline-flex items-center gap-2">
+        <div className="inline-flex items-center gap-2.5">
           <div className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-orange-200">
             <AlbyIcon className="h-8 w-8" />
           </div>
@@ -71,7 +71,7 @@ export function NWCAlby() {
         <Dialog.Trigger asChild>
           <button
             type="button"
-            className="inline-flex h-8 w-min items-center justify-center rounded-md bg-white/10 px-2.5 text-sm font-medium text-white hover:bg-white/20"
+            className="inline-flex h-8 w-min items-center justify-center rounded-md bg-white/10 px-2.5 text-sm font-medium text-white hover:bg-green-500"
           >
             Connect
           </button>

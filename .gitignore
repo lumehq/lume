@@ -17,6 +17,7 @@ out
 pnpm-lock.yaml
 *.db
 *.db-journal
+bun.lockb
 
 # Editor directories and files
 .vscode/*

@@ -56,7 +56,7 @@ export function UnlockScreen() {
       if (!db.secureDB) db.secureDB = stronghold;
 
       const privkey = await db.secureLoad(db.account.pubkey);
-      const uri = await db.secureLoad('walletConnectURL', 'alby');
+      const uri = await db.secureLoad('walletConnectURL', 'nwc');
 
       if (privkey) setPrivkey(privkey);
       if (uri) setWalletConnectURL(uri);

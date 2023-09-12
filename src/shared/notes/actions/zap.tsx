@@ -3,11 +3,11 @@ import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
 import { message } from '@tauri-apps/api/dialog';
 import { QRCodeSVG } from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import TextareaAutosize from 'react-textarea-autosize';
 
-import { AlbyIcon, CancelIcon, ZapIcon } from '@shared/icons';
+import { CancelIcon, ZapIcon } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -29,6 +29,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const walletConnectURL = useStronghold((state) => state.walletConnectURL);
+  const nwc = useRef(null);
 
   const createZapRequest = async () => {
     try {
@@ -41,16 +42,16 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
           type: 'error',
         });
 
-      // user don't connect Alby, create QR Code for invoice
+      // user don't connect nwc, create QR Code for invoice
       if (!walletConnectURL) return setInvoice(res);
 
-      // user connect Alby
-      const nwc = new webln.NostrWebLNProvider({
+      // user connect nwc
+      nwc.current = new webln.NostrWebLNProvider({
         nostrWalletConnectUrl: walletConnectURL,
       });
-      await nwc.enable();
+      await nwc.current.enable();
 
-      const send: SendPaymentResponse = await nwc.sendPayment(res);
+      const send: SendPaymentResponse = await nwc.current.sendPayment(res);
       if (send) {
         await sendNativeNotification(
           `You've tipped ${compactNumber.format(send.amount)} sats to ${
@@ -59,7 +60,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
         );
 
         // eose
-        nwc.close();
+        nwc.current.close();
         setIsCompleted(true);
 
         // reset after 3 secs
@@ -67,6 +68,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
         clearTimeout(timeout);
       }
     } catch (e) {
+      nwc.current.close();
       await message(JSON.stringify(e), { title: 'Zap', type: 'error' });
     }
   };
@@ -177,10 +179,18 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-orange-100 px-4 font-medium text-black hover:bg-orange-200"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 px-4 font-medium text-white hover:bg-fuchsia-600"
                         >
-                          <p>{isCompleted ? 'Successfully tipped' : 'Tip with Alby'}</p>
-                          <AlbyIcon className="h-6 w-6" />
+                          {isCompleted ? (
+                            <p>Successfully tipped</p>
+                          ) : (
+                            <span className="flex flex-col">
+                              <p className="mb-px leading-none">Send tip</p>
+                              <p className="text-xs leading-none text-white/70">
+                                You&apos;re using nostr wallet connect
+                              </p>
+                            </span>
+                          )}
                         </button>
                       ) : (
                         <button
@@ -191,10 +201,6 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                           <p>Create Lightning invoice</p>
                         </button>
                       )}
-                      <span className="text-center text-sm leading-tight text-white/50">
-                        The recipient receives 100% of the amount that you send. Lume does
-                        not take any commission, and you cannot get refund
-                      </span>
                     </div>
                   </div>
                 </>

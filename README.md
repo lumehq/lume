@@ -8,6 +8,12 @@ Download Lume for your platform here: [https://github.com/luminous-devs/lume/rel
 
 Supported platform: macOS, Windows and Linux
 
+### Prerequisites
+
+- Bun: https://bun.sh/docs/installation
+
+- Tauri: https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-macos
+
 ### Develop
 
 Clone project
@@ -19,23 +25,17 @@ git clone https://github.com/luminous-devs/lume.git && cd lume
 Install packages
 
 ```
-pnpm install
+bun install
 ```
 
-Run dev
+Run dev build
 
 ```
-pnpm tauri dev
+bun tauri dev
 ```
 
-Build
+Generate production build
 
 ```
-pnpm tauri build
-```
-
-(Advance) - Generate SQLite migration
-
-```
-pnpm add-migrate <migrate_name>
+bun tauri build
 ```

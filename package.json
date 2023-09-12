@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "lint": "eslint ./src --fix",
     "format": "prettier ./src --write",
-    "dep-update": "pnpm update && cd src-tauri/ && cargo update"
+    "dep-update": "bun update && cd src-tauri/ && cargo update"
   },
   "lint-staged": {
     "**/*.{ts, tsx}": "eslint --fix",

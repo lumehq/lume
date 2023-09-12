@@ -57,9 +57,10 @@ export function NWCOther() {
       const params = new URLSearchParams(uriObj.search);
 
       if (params.has('relay') && params.has('secret')) {
-        await db.secureSave('walletConnectURL', data.uri, 'alby');
+        await db.secureSave('walletConnectURL', data.uri, 'nwc');
         setWalletConnectURL(data.uri);
         setIsloading(false);
+        setIsOpen(false);
       }
     } catch (e) {
       setIsloading(false);
@@ -73,22 +74,22 @@ export function NWCOther() {
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex items-center justify-between pt-3">
-        <div className="inline-flex items-center gap-2">
+      <div className="flex items-center justify-between pt-4">
+        <div className="inline-flex items-center gap-2.5">
           <div className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-white/10">
             <WorldIcon className="h-5 w-5" />
           </div>
           <div>
             <h5 className="font-semibold leading-tight text-white">URI String</h5>
             <p className="text-sm leading-tight text-white/50">
-              Using format nostr+walletconnect://
+              Using format nostr+walletconnect:
             </p>
           </div>
         </div>
         <Dialog.Trigger asChild>
           <button
             type="button"
-            className="inline-flex h-8 w-min items-center justify-center rounded-md bg-white/10 px-2.5 text-sm font-medium text-white hover:bg-white/20"
+            className="inline-flex h-8 w-min items-center justify-center rounded-md bg-white/10 px-2.5 text-sm font-medium text-white hover:bg-green-500"
           >
             Connect
           </button>
@@ -123,6 +124,7 @@ export function NWCOther() {
                 </label>
                 <input
                   {...register('uri', { required: true })}
+                  placeholder="nostr+walletconnect:"
                   spellCheck={false}
                   autoComplete="off"
                   autoCorrect="off"
