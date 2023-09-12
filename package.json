@@ -4,8 +4,8 @@
   "private": true,
   "version": "1.2.4",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "bunx --bun vite",
+    "build": "bunx --bun vite build",
     "tauri": "tauri",
     "add-migrate": "cd src-tauri/ && sqlx migrate add",
     "prepare": "husky install",
