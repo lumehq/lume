@@ -12,18 +12,18 @@ import {
   CancelIcon,
   CheckCircleIcon,
   LoaderIcon,
-  StarsIcon,
 } from '@shared/icons';
 
 import { useStronghold } from '@stores/stronghold';
 
-export function AlbyConnectButton() {
+export function NWCAlby() {
   const { db } = useStorage();
-  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
 
   const initAlby = async () => {
     try {
@@ -58,31 +58,24 @@ export function AlbyConnectButton() {
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <div className="relative w-full rounded-xl bg-gradient-to-r from-orange-400 via-red-200 to-yellow-200 p-px">
-        <StarsIcon className="absolute -left-4 -top-3 z-50 h-10 w-10 text-white" />
-        <div className="flex w-full flex-col rounded-xl bg-white/10 backdrop-blur-xl">
-          <div className="absolute right-2 top-2">
-            <button type="button">
-              <CancelIcon className="h-4 w-4 text-black/50" />
-            </button>
+      <div className="flex items-center justify-between">
+        <div className="inline-flex items-center gap-2">
+          <div className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-orange-200">
+            <AlbyIcon className="h-8 w-8" />
           </div>
-          <div className="flex h-14 w-full flex-col items-center justify-center">
-            <h5 className="text-center text-sm font-semibold leading-tight text-black/50">
-              New feature
-            </h5>
-            <h3 className="transform font-medium leading-tight text-black">
-              Send bitcoin tip with Alby
-            </h3>
+          <div>
+            <h5 className="font-semibold leading-tight text-white">Alby</h5>
+            <p className="text-sm leading-tight text-white/50">Require alby account</p>
           </div>
-          <Dialog.Trigger asChild>
-            <button
-              type="button"
-              className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-1 rounded-b-xl border-t border-orange-200 bg-white text-sm font-semibold text-orange-400 hover:bg-orange-50"
-            >
-              Connect your Alby account <AlbyIcon className="h-7 w-7" />
-            </button>
-          </Dialog.Trigger>
         </div>
+        <Dialog.Trigger asChild>
+          <button
+            type="button"
+            className="inline-flex h-8 w-min items-center justify-center rounded-md bg-white/10 px-2.5 text-sm font-medium text-white hover:bg-white/20"
+          >
+            Connect
+          </button>
+        </Dialog.Trigger>
       </div>
       <Dialog.Portal className="relative z-10">
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />

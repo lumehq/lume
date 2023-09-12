@@ -80,6 +80,13 @@ const router = createBrowserRouter([
           return { Component: NotificationScreen };
         },
       },
+      {
+        path: 'nwc',
+        async lazy() {
+          const { NWCScreen } = await import('@app/nwc');
+          return { Component: NWCScreen };
+        },
+      },
     ],
   },
   {
