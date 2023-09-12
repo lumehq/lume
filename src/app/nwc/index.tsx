@@ -46,7 +46,7 @@ export function NWCScreen() {
               <div className="flex flex-col gap-2">
                 <textarea
                   readOnly
-                  value={walletConnectURL}
+                  value={walletConnectURL.substring(0, 120) + '****'}
                   className="relative h-40 w-full resize-none rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
                 />
                 <button
