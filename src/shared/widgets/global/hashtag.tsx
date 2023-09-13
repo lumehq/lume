@@ -22,7 +22,7 @@ import { Widget } from '@utils/types';
 export function GlobalHashtagWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['global-hashtag-widget', params.content],
+    [params.id + '-' + params.title],
     async () => {
       const events = await ndk.fetchEvents({
         kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],

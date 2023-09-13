@@ -88,7 +88,7 @@ export function User({
       </div>
       <Popover.Portal>
         <Popover.Content
-          className="w-[300px] overflow-hidden rounded-lg bg-white/10 backdrop-blur-3xl focus:outline-none"
+          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
@@ -115,7 +115,7 @@ export function User({
                 )}
               </div>
               <div>
-                <p className="line-clamp-3 break-all leading-tight text-white">
+                <p className="line-clamp-3 break-all text-sm leading-tight text-white">
                   {user?.about}
                 </p>
               </div>
@@ -124,13 +124,13 @@ export function User({
           <div className="flex items-center gap-2 px-3 py-3">
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-fuchsia-500"
             >
               View profile
             </Link>
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-fuchsia-500"
             >
               Message
             </Link>

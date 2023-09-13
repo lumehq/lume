@@ -13,7 +13,7 @@ import { Widget } from '@utils/types';
 export function GlobalArticlesWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['global-articles-widget'],
+    [params.id + '-' + params.title],
     async () => {
       const events = await ndk.fetchEvents({
         kinds: [NDKKind.Article],

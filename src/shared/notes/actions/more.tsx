@@ -45,7 +45,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
         </Tooltip.Portal>
       </Tooltip.Root>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl bg-white/10 p-2 backdrop-blur-3xl focus:outline-none">
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-white/10 bg-white/10 p-2 backdrop-blur-3xl focus:outline-none">
           <DropdownMenu.Item asChild>
             <button
               type="button"

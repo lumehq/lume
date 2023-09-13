@@ -23,7 +23,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['local-follows-widget'],
+      queryKey: [params.id + '-' + params.title],
       queryFn: async ({ pageParam = 0 }) => {
         return await db.getAllEventsByAuthors(db.account.follows, 20, pageParam);
       },
@@ -70,7 +70,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <Repost key={dbEvent.id} event={event} />
+              <Repost key={dbEvent.id} event={event} root={dbEvent.root_id} />
             </div>
           );
         case 1063:

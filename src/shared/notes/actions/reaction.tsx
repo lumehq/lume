@@ -1,3 +1,4 @@
+import { NDKKind } from '@nostr-dev-kit/ndk';
 import * as Popover from '@radix-ui/react-popover';
 import { useState } from 'react';
 
@@ -44,7 +45,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
 
     const event = await publish({
       content: content,
-      kind: 7,
+      kind: NDKKind.Reaction,
       tags: [
         ['e', id],
         ['p', pubkey],

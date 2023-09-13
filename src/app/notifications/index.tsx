@@ -60,7 +60,7 @@ export function NotificationScreen() {
                   <p className="text-sm font-medium text-white/50">Loading</p>
                 </div>
               </div>
-            ) : activities.length < 1 ? (
+            ) : activities.length <= 1 ? (
               <div className="flex h-full w-full flex-col items-center justify-center">
                 <p className="mb-1 text-4xl">🎉</p>
                 <p className="font-medium text-white/50">

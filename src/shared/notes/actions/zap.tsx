@@ -19,8 +19,8 @@ import { compactNumber } from '@utils/number';
 
 export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const { createZap } = useNostr();
-  const { data: event } = useEvent(id);
   const { user } = useProfile(pubkey);
+  const { data: event } = useEvent(id);
 
   const [amount, setAmount] = useState<string>('21');
   const [zapMessage, setZapMessage] = useState<string>('');

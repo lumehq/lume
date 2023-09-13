@@ -13,7 +13,7 @@ import { Widget } from '@utils/types';
 export function GlobalFilesWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['global-files-widget'],
+    [params.id + '-' + params.title],
     async () => {
       const events = await ndk.fetchEvents({
         // @ts-expect-error, NDK not support file metadata yet

@@ -19,7 +19,7 @@ export function AccountMoreActions({ pubkey }: { pubkey: string }) {
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl bg-white/10 p-2 backdrop-blur-3xl focus:outline-none">
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-white/10 bg-white/10 p-2 backdrop-blur-3xl focus:outline-none">
           <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}

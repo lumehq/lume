@@ -17,9 +17,9 @@ import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
 
-export function Repost({ event }: { event: NDKEvent }) {
-  // @ts-expect-error, root_id isn't exist on NDKEvent
-  const { status, data } = useEvent(event.root_id ?? event.id, event.content);
+export function Repost({ event, root }: { event: NDKEvent; root?: string }) {
+  const rootPost = root ?? event.tags.find((el) => el[0] === 'e')?.[1];
+  const { status, data } = useEvent(rootPost, event.content);
 
   const renderKind = useCallback(
     (repostEvent: NDKEvent) => {

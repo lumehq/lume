@@ -15,7 +15,7 @@ export function LocalFilesWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['local-files-widget'],
+      queryKey: [params.id + '-' + params.title],
       queryFn: async ({ pageParam = 0 }) => {
         return await db.getAllEventsByKinds([1063], 20, pageParam);
       },

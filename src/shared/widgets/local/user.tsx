@@ -23,7 +23,7 @@ import { Widget } from '@utils/types';
 export function LocalUserWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    ['local-user-widget', params.content],
+    [params.id + '-' + params.title],
     async () => {
       const events = await ndk.fetchEvents({
         kinds: [1, 6],

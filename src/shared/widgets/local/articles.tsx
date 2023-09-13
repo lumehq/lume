@@ -15,7 +15,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['local-articles-widget'],
+      queryKey: [params.id + '-' + params.title],
       queryFn: async ({ pageParam = 0 }) => {
         return await db.getAllEventsByKinds([NDKKind.Article], 20, pageParam);
       },
