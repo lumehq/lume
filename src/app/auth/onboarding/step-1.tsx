@@ -19,7 +19,7 @@ export function OnboardStep1Screen() {
 
   const { publish, fetchUserData, prefetchEvents } = useNostr();
   const { db } = useStorage();
-  const { status, data } = useQuery(['trending-profiles'], async () => {
+  const { status, data } = useQuery(['trending-profiles-widget'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
     if (!res.ok) {
       throw new Error('Error');
@@ -69,14 +69,18 @@ export function OnboardStep1Screen() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-white">
+      <div className="mb-4 border-b border-white/10 pb-4">
+        <h1 className="mb-2 text-center text-2xl font-semibold text-white">
           {loading ? 'Prefetching data...' : 'Enrich your network'}
         </h1>
-        <p className="text-sm text-white/50">Choose account you want to follow</p>
+        <p className="text-white/70">
+          Choose the account you want to follow. These accounts are trending in the last
+          24 hours. If none of the accounts interest you, you can explore more options and
+          add them later.
+        </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10 py-2 backdrop-blur-xl">
+        <div className="scrollbar-hide flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
@@ -88,11 +92,11 @@ export function OnboardStep1Screen() {
                   key={item.pubkey}
                   type="button"
                   onClick={() => toggleFollow(item.pubkey)}
-                  className="inline-flex transform items-center justify-between px-4 py-2 hover:bg-white/20"
+                  className="relative px-4 py-2 hover:bg-white/10"
                 >
                   <User pubkey={item.pubkey} fallback={item.profile?.content} />
                   {follows.includes(item.pubkey) && (
-                    <div>
+                    <div className="absolute right-2 top-2">
                       <CheckCircleIcon className="h-4 w-4 text-green-400" />
                     </div>
                   )}
@@ -106,7 +110,7 @@ export function OnboardStep1Screen() {
             type="button"
             onClick={submit}
             disabled={loading || follows.length === 0}
-            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
           >
             {loading ? (
               <>
@@ -122,12 +126,14 @@ export function OnboardStep1Screen() {
               </>
             )}
           </button>
-          <Link
-            to="/auth/onboarding/step-2"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/10 focus:outline-none"
-          >
-            Skip, you can add later
-          </Link>
+          {!loading ? (
+            <Link
+              to="/auth/onboarding/step-2"
+              className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/30 focus:outline-none"
+            >
+              Skip, you can add later
+            </Link>
+          ) : null}
         </div>
       </div>
     </div>

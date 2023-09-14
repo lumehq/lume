@@ -2,14 +2,14 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, PlusIcon } from '@shared/icons';
 
-import { useImageUploader } from '@utils/hooks/useUploader';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function AvatarUploader({
   setPicture,
 }: {
   setPicture: Dispatch<SetStateAction<string>>;
 }) {
-  const upload = useImageUploader();
+  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const uploadAvatar = async () => {

@@ -12,6 +12,7 @@ import { WidgetKinds } from '@stores/widgets';
 const data = [
   { hashtag: '#bitcoin' },
   { hashtag: '#nostr' },
+  { hashtag: '#nostrdesign' },
   { hashtag: '#zap' },
   { hashtag: '#LFG' },
   { hashtag: '#zapchain' },
@@ -20,6 +21,10 @@ const data = [
   { hashtag: '#hodl' },
   { hashtag: '#stacksats' },
   { hashtag: '#nokyc' },
+  { hashtag: '#meme' },
+  { hashtag: '#memes' },
+  { hashtag: '#memestr' },
+  { hashtag: '#penisbutter' },
   { hashtag: '#anime' },
   { hashtag: '#waifu' },
   { hashtag: '#manga' },
@@ -58,7 +63,7 @@ export function OnboardStep2Screen() {
 
       navigate('/auth/onboarding/step-3', { replace: true });
     } catch (e) {
-      await message(e, { title: 'Error', type: 'error' });
+      await message(e, { title: 'Lume', type: 'error' });
     }
   };
 
@@ -69,20 +74,23 @@ export function OnboardStep2Screen() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-white">
-          Choose {tags.size}/3 your favorite tags
+      <div className="mb-4 border-b border-white/10 pb-4">
+        <h1 className="mb-2 text-center text-2xl font-semibold text-white">
+          Choose {tags.size}/3 your favorite hashtags
         </h1>
-        <p className="text-sm text-white/50">Customize your space which hashtag widget</p>
+        <p className="text-white/70">
+          Hashtags are an easy way to discover more content. By adding a hashtag, Lume
+          will show all related posts. You can always add more later.
+        </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl">
+        <div className="scrollbar-hide flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl">
           {data.map((item: { hashtag: string }) => (
             <button
               key={item.hashtag}
               type="button"
               onClick={() => toggleTag(item.hashtag)}
-              className="inline-flex transform items-center justify-between bg-white/10 px-4 py-2 backdrop-blur-xl hover:bg-white/20"
+              className="inline-flex transform items-center justify-between px-4 py-2 hover:bg-white/10"
             >
               <p className="text-white">{item.hashtag}</p>
               {tags.has(item.hashtag) && (
@@ -98,7 +106,7 @@ export function OnboardStep2Screen() {
             type="button"
             onClick={submit}
             disabled={loading || tags.size === 0 || tags.size > 3}
-            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
           >
             {loading ? (
               <>
@@ -114,12 +122,14 @@ export function OnboardStep2Screen() {
               </>
             )}
           </button>
-          <Link
-            to="/auth/onboarding/step-3"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/10 focus:outline-none"
-          >
-            Skip, you can add later
-          </Link>
+          {!loading ? (
+            <Link
+              to="/auth/onboarding/step-3"
+              className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/30 focus:outline-none"
+            >
+              Skip, you can add later
+            </Link>
+          ) : null}
         </div>
       </div>
     </div>
