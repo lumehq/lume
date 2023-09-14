@@ -66,10 +66,11 @@ export function ImportStep1Screen() {
         // add account to local database
         db.createAccount(npub, pubkey);
 
-        // redirect to step 2
-        navigate('/auth/import/step-2', { replace: true });
+        // redirect to step 2 with delay 1.2s
+        setTimeout(() => navigate('/auth/import/step-2', { replace: true }), 1200);
       }
     } catch (error) {
+      setLoading(false);
       setError('privkey', {
         type: 'custom',
         message: 'Private key is invalid, please check again',
@@ -84,20 +85,24 @@ export function ImportStep1Screen() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-white">Import your key</h1>
+      <div className="mb-4 pb-4">
+        <h1 className="text-center text-2xl font-semibold text-white">
+          Import your Nostr key
+        </h1>
       </div>
       <div className="flex flex-col gap-4">
         <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <span className="text-base font-semibold text-white/50">Private key</span>
+            <label htmlFor="privkey" className="font-medium text-white">
+              Insert your nostr private key, in nsec or hex format
+            </label>
             <input
               {...register('privkey', { required: true, minLength: 32 })}
               type={'password'}
-              placeholder="nsec or hexstring"
-              className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+              placeholder="nsec1..."
+              className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3 py-1 text-white backdrop-blur-xl placeholder:text-white/70 focus:outline-none"
             />
-            <span className="text-sm text-red-400">
+            <span className="text-sm text-red-500">
               {errors.privkey && <p>{errors.privkey.message}</p>}
             </span>
           </div>
@@ -105,12 +110,12 @@ export function ImportStep1Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             >
               {loading ? (
                 <>
                   <span className="w-5" />
-                  <span>Creating...</span>
+                  <span>Importing...</span>
                   <LoaderIcon className="h-5 w-5 animate-spin text-white" />
                 </>
               ) : (

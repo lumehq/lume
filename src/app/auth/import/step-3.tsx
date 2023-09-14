@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '@app/auth/components/user';
+import { UserImport } from '@app/auth/components/userImport';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -15,10 +15,10 @@ export function ImportStep3Screen() {
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
 
-  const [loading, setLoading] = useState(false);
-
   const { db } = useStorage();
   const { fetchUserData, prefetchEvents } = useNostr();
+
+  const [loading, setLoading] = useState(false);
 
   const submit = async () => {
     try {
@@ -49,17 +49,19 @@ export function ImportStep3Screen() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold">
-          {loading ? 'Prefetching data...' : 'Continue with'}
+      <div className="mb-4 pb-4">
+        <h1 className="text-center text-2xl font-semibold text-white">
+          {loading ? 'Prefetching data...' : 'Your Nostr profile'}
         </h1>
       </div>
-      <div className="w-full rounded-xl bg-white/10 p-4 backdrop-blur-xl">
-        <div className="flex flex-col gap-3">
-          <User pubkey={db.account.pubkey} />
+      <div className="flex flex-col gap-3">
+        <div className="rounded-lg border-t border-white/10 bg-white/20 px-3 py-3">
+          <UserImport pubkey={db.account.pubkey} />
+        </div>
+        <div className="flex flex-col gap-2">
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             onClick={() => submit()}
           >
             {loading ? (
@@ -76,6 +78,10 @@ export function ImportStep3Screen() {
               </>
             )}
           </button>
+          <span className="text-center text-sm text-white/50">
+            By clicking &apos;Continue&apos;, Lume will download your relay list and all
+            events from the last 24 hours. It may take a bit
+          </span>
         </div>
       </div>
     </div>
