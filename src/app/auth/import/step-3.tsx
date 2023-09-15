@@ -51,7 +51,7 @@ export function ImportStep3Screen() {
     <div className="mx-auto w-full max-w-md">
       <div className="mb-4 pb-4">
         <h1 className="text-center text-2xl font-semibold text-white">
-          {loading ? 'Prefetching data...' : 'Your Nostr profile'}
+          {loading ? 'Downloading...' : 'Your Nostr profile'}
         </h1>
       </div>
       <div className="flex flex-col gap-3">

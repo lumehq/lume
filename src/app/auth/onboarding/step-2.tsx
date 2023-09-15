@@ -1,6 +1,6 @@
 import { message } from '@tauri-apps/api/dialog';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -34,8 +34,8 @@ const data = [
 
 export function OnboardStep2Screen() {
   const navigate = useNavigate();
-  const setStep = useOnboarding((state) => state.setStep);
 
+  const [setStep, clearStep] = useOnboarding((state) => [state.setStep, state.clearStep]);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(new Set<string>());
 
@@ -53,6 +53,16 @@ export function OnboardStep2Screen() {
     }
   };
 
+  const skip = async () => {
+    // update last login
+    await db.updateLastLogin();
+
+    // clear local storage
+    clearStep();
+
+    navigate('/', { replace: true });
+  };
+
   const submit = async () => {
     try {
       setLoading(true);
@@ -61,8 +71,15 @@ export function OnboardStep2Screen() {
         await db.createWidget(WidgetKinds.global.hashtag, tag, tag.replace('#', ''));
       }
 
-      navigate('/auth/onboarding/step-3', { replace: true });
+      // update last login
+      await db.updateLastLogin();
+
+      // clear local storage
+      clearStep();
+
+      navigate('/', { replace: true });
     } catch (e) {
+      setLoading(false);
       await message(e, { title: 'Lume', type: 'error' });
     }
   };
@@ -123,12 +140,13 @@ export function OnboardStep2Screen() {
             )}
           </button>
           {!loading ? (
-            <Link
-              to="/auth/onboarding/step-3"
+            <button
+              type="button"
+              onClick={() => skip()}
               className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/30 focus:outline-none"
             >
               Skip, you can add later
-            </Link>
+            </button>
           ) : null}
         </div>
       </div>

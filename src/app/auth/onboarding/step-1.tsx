@@ -68,8 +68,8 @@ export function OnboardStep1Screen() {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <div className="mb-4 border-b border-white/10 pb-4">
+    <div className="flex h-full w-full flex-col justify-center">
+      <div className="mx-auto mb-4 w-full max-w-md border-b border-white/10 pb-4">
         <h1 className="mb-2 text-center text-2xl font-semibold text-white">
           {loading ? 'Prefetching data...' : 'Enrich your network'}
         </h1>
@@ -79,32 +79,30 @@ export function OnboardStep1Screen() {
           add them later.
         </p>
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl">
-          {status === 'loading' ? (
-            <div className="flex h-full w-full items-center justify-center">
-              <LoaderIcon className="h-4 w-4 animate-spin text-white" />
-            </div>
-          ) : (
-            data?.profiles.map(
-              (item: { pubkey: string; profile: { content: string } }) => (
-                <button
-                  key={item.pubkey}
-                  type="button"
-                  onClick={() => toggleFollow(item.pubkey)}
-                  className="relative px-4 py-2 hover:bg-white/10"
-                >
-                  <User pubkey={item.pubkey} fallback={item.profile?.content} />
-                  {follows.includes(item.pubkey) && (
-                    <div className="absolute right-2 top-2">
-                      <CheckCircleIcon className="h-4 w-4 text-green-400" />
-                    </div>
-                  )}
-                </button>
-              )
-            )
-          )}
-        </div>
+      <div className="scrollbar-hide flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4">
+        {status === 'loading' ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+          </div>
+        ) : (
+          data?.profiles.map((item: { pubkey: string; profile: { content: string } }) => (
+            <button
+              key={item.pubkey}
+              type="button"
+              onClick={() => toggleFollow(item.pubkey)}
+              className="relative h-[300px] shrink-0 grow-0 basis-[250px] rounded-lg border-t border-white/10 bg-white/20 px-4 py-4 hover:bg-white/30"
+            >
+              <User pubkey={item.pubkey} fallback={item.profile?.content} />
+              {follows.includes(item.pubkey) && (
+                <div className="absolute right-2 top-2">
+                  <CheckCircleIcon className="h-4 w-4 text-green-400" />
+                </div>
+              )}
+            </button>
+          ))
+        )}
+      </div>
+      <div className="mx-auto mt-4 w-full max-w-md">
         <div className="flex flex-col gap-2">
           <button
             type="button"
@@ -133,7 +131,12 @@ export function OnboardStep1Screen() {
             >
               Skip, you can add later
             </Link>
-          ) : null}
+          ) : (
+            <span className="text-center text-sm text-white/50">
+              By clicking &apos;Continue&apos;, Lume will download all events related to
+              your follows from the last 24 hours. It may take a bit
+            </span>
+          )}
         </div>
       </div>
     </div>
