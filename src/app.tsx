@@ -208,6 +208,13 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: 'complete',
+        async lazy() {
+          const { CompleteScreen } = await import('@app/auth/complete');
+          return { Component: CompleteScreen };
+        },
+      },
+      {
         path: 'unlock',
         async lazy() {
           const { UnlockScreen } = await import('@app/auth/unlock');

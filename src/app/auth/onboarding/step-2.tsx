@@ -60,7 +60,7 @@ export function OnboardStep2Screen() {
     // clear local storage
     clearStep();
 
-    navigate('/', { replace: true });
+    navigate('/auth/complete', { replace: true });
   };
 
   const submit = async () => {
@@ -77,7 +77,7 @@ export function OnboardStep2Screen() {
       // clear local storage
       clearStep();
 
-      navigate('/', { replace: true });
+      navigate('/auth/complete', { replace: true });
     } catch (e) {
       setLoading(false);
       await message(e, { title: 'Lume', type: 'error' });

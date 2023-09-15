@@ -2,7 +2,6 @@ import { LogicalSize, getCurrent } from '@tauri-apps/api/window';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Frame } from '@shared/frame';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 export function WelcomeScreen() {
@@ -29,7 +28,7 @@ export function WelcomeScreen() {
   }, []);
 
   return (
-    <Frame className="flex h-screen w-full flex-col justify-between">
+    <div className="flex h-screen w-full flex-col justify-between">
       <div className="flex flex-col gap-10 pt-16">
         <div className="flex flex-col gap-1.5 text-center">
           <h1 className="text-3xl font-semibold text-white">Welcome to Lume</h1>
@@ -58,6 +57,6 @@ export function WelcomeScreen() {
       <div className="flex flex-1 items-end justify-center pb-6">
         <img src="/lume.png" alt="lume" className="h-auto w-1/4" />
       </div>
-    </Frame>
+    </div>
   );
 }

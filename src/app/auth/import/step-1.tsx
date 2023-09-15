@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { LoaderIcon } from '@shared/icons';
+import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 import { useOnboarding } from '@stores/onboarding';
@@ -37,6 +37,7 @@ export function ImportStep1Screen() {
   const setStep = useOnboarding((state) => state.setStep);
 
   const [loading, setLoading] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('password');
 
   const { db } = useStorage();
   const {
@@ -78,6 +79,15 @@ export function ImportStep1Screen() {
     }
   };
 
+  // toggle private key
+  const showPassword = () => {
+    if (passwordInput === 'password') {
+      setPasswordInput('text');
+    } else {
+      setPasswordInput('password');
+    }
+  };
+
   useEffect(() => {
     // save current step, if user close app and reopen it
     setStep('/auth/import');
@@ -96,12 +106,25 @@ export function ImportStep1Screen() {
             <label htmlFor="privkey" className="font-medium text-white">
               Insert your nostr private key, in nsec or hex format
             </label>
-            <input
-              {...register('privkey', { required: true, minLength: 32 })}
-              type={'password'}
-              placeholder="nsec1..."
-              className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3 py-1 text-white backdrop-blur-xl placeholder:text-white/70 focus:outline-none"
-            />
+            <div className="relative">
+              <input
+                {...register('privkey', { required: true, minLength: 32 })}
+                type={passwordInput}
+                placeholder="nsec1..."
+                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3 py-1 text-white backdrop-blur-xl placeholder:text-white/70 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => showPassword()}
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 backdrop-blur-xl hover:bg-white/20"
+              >
+                {passwordInput === 'password' ? (
+                  <EyeOffIcon className="h-4 w-4 text-white/50 group-hover:text-white" />
+                ) : (
+                  <EyeOnIcon className="h-4 w-4 text-white/50 group-hover:text-white" />
+                )}
+              </button>
+            </div>
             <span className="text-sm text-red-500">
               {errors.privkey && <p>{errors.privkey.message}</p>}
             </span>

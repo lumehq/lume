@@ -112,7 +112,7 @@ export function CreateStep3Screen() {
                 type={'text'}
                 {...register('name', {
                   required: true,
-                  minLength: 4,
+                  minLength: 1,
                 })}
                 spellCheck={false}
                 className="relative h-12 w-full rounded-lg bg-white/20 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/70"
