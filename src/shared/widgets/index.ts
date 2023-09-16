@@ -11,3 +11,4 @@ export * from './nostrBand/trendingNotes';
 export * from './nostrBand/trendingAccounts';
 export * from './tmp/feeds';
 export * from './tmp/hashtag';
+export * from './other/learnNostr';

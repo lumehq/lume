@@ -10,6 +10,7 @@ import {
   GlobalArticlesWidget,
   GlobalFilesWidget,
   GlobalHashtagWidget,
+  LearnNostrWidget,
   LocalArticlesWidget,
   LocalFeedsWidget,
   LocalFilesWidget,
@@ -69,8 +70,10 @@ export function SpaceScreen() {
           return <XfeedsWidget key={widget.id} params={widget} />;
         case WidgetKinds.tmp.list:
           return <WidgetList key={widget.id} params={widget} />;
+        case WidgetKinds.other.learnNostr:
+          return <LearnNostrWidget key={widget.id} params={widget} />;
         default:
-          break;
+          return null;
       }
     },
     [widgets]
