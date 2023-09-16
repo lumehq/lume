@@ -111,3 +111,14 @@ export interface NostrBuildResponse extends Response {
     }>;
   };
 }
+
+export interface Resource {
+  id: string;
+  title: string;
+  image: string;
+}
+
+export interface Resources {
+  title: string;
+  data: Array<Resource>;
+}
