@@ -18,7 +18,6 @@
     "**/*.{ts, tsx, css, md, html, json}": "prettier --cache --write"
   },
   "dependencies": {
-    "@ctrl/magnet-link": "^3.1.2",
     "@getalby/sdk": "^2.4.0",
     "@nostr-dev-kit/ndk": "^1.0.0",
     "@nostr-fetch/adapter-ndk": "^0.12.2",
@@ -38,7 +37,6 @@
     "@tiptap/react": "^2.1.8",
     "@tiptap/starter-kit": "^2.1.8",
     "@tiptap/suggestion": "^2.1.8",
-    "@void-cat/api": "^1.0.7",
     "dayjs": "^1.11.9",
     "destr": "^2.0.1",
     "get-urls": "^12.1.0",
@@ -53,7 +51,6 @@
     "react-currency-input-field": "^3.6.11",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
-    "react-hotkeys-hook": "^4.4.1",
     "react-markdown": "^8.0.7",
     "react-player": "^2.13.0",
     "react-router-dom": "^6.15.0",
@@ -64,7 +61,6 @@
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#v1",
     "tauri-plugin-stronghold-api": "github:tauri-apps/tauri-plugin-stronghold#v1",
     "tauri-plugin-upload-api": "github:tauri-apps/tauri-plugin-upload#v1",
-    "tippy.js": "^6.3.7",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

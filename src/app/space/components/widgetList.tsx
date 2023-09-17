@@ -8,6 +8,7 @@ import {
   FollowsIcon,
   GroupFeedsIcon,
   HashtagIcon,
+  ThreadsIcon,
   TrendingIcon,
 } from '@shared/icons';
 import { TitleBar } from '@shared/titleBar';
@@ -46,8 +47,10 @@ export function WidgetList({ params }: { params: Widget }) {
         case WidgetKinds.nostrBand.trendingAccounts:
         case WidgetKinds.nostrBand.trendingNotes:
           return <TrendingIcon className="h-5 w-4 text-white" />;
+        case WidgetKinds.other.learnNostr:
+          return <ThreadsIcon className="h-5 w-4 text-white" />;
         default:
-          return '';
+          return null;
       }
     },
     [DefaultWidgets]
@@ -94,25 +97,25 @@ export function WidgetList({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative h-full shrink-0 grow-0 basis-[400px] overflow-hidden bg-white/10">
+    <div className="relative h-full shrink-0 grow-0 basis-[400px] bg-white/10">
       <TitleBar id={params.id} title="Add widget" />
-      <div className="flex flex-col gap-6 px-3">
-        {DefaultWidgets.map((row: WidgetGroup) => renderItem(row))}
-      </div>
-      <div className="mt-6 px-3">
-        <div className="border-t border-white/5 pt-6">
-          <button
-            type="button"
-            disabled
-            className="inline-flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-white/5 text-sm font-medium text-white/50"
-          >
-            Build your own widget{' '}
-            <div className="-rotate-3 transform rounded-md border border-white/20 bg-white/10 px-1.5 py-1">
-              <span className="bg-gradient-to-t from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text text-xs text-transparent">
-                Coming soon
-              </span>
-            </div>
-          </button>
+      <div className="scrollbar-hide h-full overflow-y-auto pb-20">
+        <div className="flex flex-col gap-6 px-3">
+          {DefaultWidgets.map((row: WidgetGroup) => renderItem(row))}
+          <div className="border-t border-white/5 pt-6">
+            <button
+              type="button"
+              disabled
+              className="inline-flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-white/5 text-sm font-medium text-white/50"
+            >
+              Build your own widget{' '}
+              <div className="-rotate-3 transform rounded-md border border-white/20 bg-white/10 px-1.5 py-1">
+                <span className="bg-gradient-to-t from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text text-xs text-transparent">
+                  Coming soon
+                </span>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>

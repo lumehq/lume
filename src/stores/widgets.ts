@@ -32,6 +32,9 @@ export const WidgetKinds = {
     trendingAccounts: 1,
     trendingNotes: 2,
   },
+  other: {
+    learnNostr: 90000,
+  },
   tmp: {
     list: 10000,
     xfeed: 10001,
@@ -97,6 +100,16 @@ export const DefaultWidgets: Array<WidgetGroup> = [
         kind: WidgetKinds.nostrBand.trendingNotes,
         title: 'Notes',
         description: 'Trending notes from the last 24 hours',
+      },
+    ],
+  },
+  {
+    title: 'Other',
+    data: [
+      {
+        kind: WidgetKinds.other.learnNostr,
+        title: 'Learn Nostr',
+        description: 'All things you need to know about Nostr',
       },
     ],
   },

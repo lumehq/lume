@@ -57,6 +57,24 @@ export function useNostr() {
       const follows = new Set<string>(preFollows || []);
       const lruNetwork = new LRUCache<string, string, void>({ max: 300 });
 
+      // fetch user's relays
+      const relayEvents = await ndk.fetchEvents({
+        kinds: [NDKKind.RelayList],
+        authors: [db.account.pubkey],
+      });
+
+      if (relayEvents) {
+        const latestRelayEvent = [...relayEvents].sort(
+          (a, b) => b.created_at - a.created_at
+        )[0];
+
+        if (latestRelayEvent) {
+          for (const item of latestRelayEvent.tags) {
+            await db.createRelay(item[1], item[2]);
+          }
+        }
+      }
+
       // fetch user's follows
       if (!preFollows) {
         const user = ndk.getUser({ hexpubkey: db.account.pubkey });
@@ -67,20 +85,22 @@ export function useNostr() {
       }
 
       // build user's network
-      const events = await ndk.fetchEvents({
-        kinds: [3],
+      const followEvents = await ndk.fetchEvents({
+        kinds: [NDKKind.Contacts],
         authors: [...follows],
         limit: 300,
       });
 
-      events.forEach((event: NDKEvent) => {
+      followEvents.forEach((event: NDKEvent) => {
         event.tags.forEach((tag) => {
           if (tag[0] === 'p') lruNetwork.set(tag[1], tag[1]);
         });
       });
 
+      // get lru values
       const network = [...lruNetwork.values()] as string[];
 
+      // update db
       await db.updateAccount('follows', [...follows]);
       await db.updateAccount('network', [...new Set([...follows, ...network])]);
 

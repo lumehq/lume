@@ -205,14 +205,14 @@ const router = createBrowserRouter([
               return { Component: OnboardStep2Screen };
             },
           },
-          {
-            path: 'step-3',
-            async lazy() {
-              const { OnboardStep3Screen } = await import('@app/auth/onboarding/step-3');
-              return { Component: OnboardStep3Screen };
-            },
-          },
         ],
+      },
+      {
+        path: 'complete',
+        async lazy() {
+          const { CompleteScreen } = await import('@app/auth/complete');
+          return { Component: CompleteScreen };
+        },
       },
       {
         path: 'unlock',
@@ -233,13 +233,6 @@ const router = createBrowserRouter([
         async lazy() {
           const { ResetScreen } = await import('@app/auth/reset');
           return { Component: ResetScreen };
-        },
-      },
-      {
-        path: 'hard-reset',
-        async lazy() {
-          const { HardResetScreen } = await import('@app/auth/hardReset');
-          return { Component: HardResetScreen };
         },
       },
     ],

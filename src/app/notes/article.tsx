@@ -1,7 +1,7 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { nip19 } from 'nostr-tools';
-import { EventPointer } from 'nostr-tools/lib/nip19';
+import { AddressPointer, EventPointer } from 'nostr-tools/lib/nip19';
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -27,13 +27,15 @@ export function ArticleNoteScreen() {
 
   const { id } = useParams();
   const { db } = useStorage();
-  const { status, data } = useEvent(id);
+
+  const naddr = id.startsWith('naddr') ? (nip19.decode(id).data as AddressPointer) : null;
+  const { status, data } = useEvent(id, naddr);
 
   const [isCopy, setIsCopy] = useState(false);
 
   const share = async () => {
     await writeText(
-      'https://nostr.com/' +
+      'https://njump.me/' +
         nip19.neventEncode({ id: data.id, author: data.pubkey } as EventPointer)
     );
     // update state
@@ -103,15 +105,15 @@ export function ArticleNoteScreen() {
                   <ThreadUser pubkey={data.pubkey} time={data.created_at} />
                   <div className="mt-2">{renderKind(data)}</div>
                   <div>
-                    <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
-                    <NoteStats id={id} />
+                    <NoteActions id={data.id} pubkey={data.pubkey} extraButtons={false} />
+                    <NoteStats id={data.id} />
                   </div>
                 </div>
               </div>
             )}
             <div ref={replyRef} className="px-3">
-              <NoteReplyForm id={id} pubkey={db.account.pubkey} />
-              <RepliesList id={id} />
+              <NoteReplyForm id={data?.id} pubkey={db.account.pubkey} />
+              <RepliesList id={data?.id} />
             </div>
           </div>
           <div className="col-span-1" />

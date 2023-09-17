@@ -27,7 +27,7 @@ export function ChatsListItem({ pubkey }: { pubkey: string }) {
           'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
           isActive
             ? 'border-fuchsia-500 bg-white/5 text-white'
-            : 'border-transparent text-white/80'
+            : 'border-transparent text-white/70'
         )
       }
     >

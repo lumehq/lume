@@ -86,10 +86,16 @@ export function ImportStep2Screen() {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-8 text-center">
-        <h1 className="text-xl font-semibold text-white">
+      <div className="mb-4 border-b border-white/10 pb-4">
+        <h1 className="mb-2 text-center text-2xl font-semibold text-white">
           Set password to secure your key
         </h1>
+        <p className="text-white/70">
+          Password is not related to your Nostr account. It is only used to secure your
+          keys stored on your local machine and to unlock the app (like unlocking your
+          phone with a passcode). When you move to other Nostr clients, you just need to
+          copy your private key.
+        </p>
       </div>
       <div className="flex flex-col gap-4">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
@@ -98,12 +104,13 @@ export function ImportStep2Screen() {
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                className="relative h-11 w-full rounded-lg bg-white/10 px-3.5 py-1 text-center text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                placeholder="Enter password"
+                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3.5 py-1 text-center tracking-widest text-white !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-white/70"
               />
               <button
                 type="button"
                 onClick={() => showPassword()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 backdrop-blur-xl hover:bg-white/10"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 backdrop-blur-xl hover:bg-white/20"
               >
                 {passwordInput === 'password' ? (
                   <EyeOffIcon className="h-4 w-4 text-white/50 group-hover:text-white" />
@@ -112,11 +119,6 @@ export function ImportStep2Screen() {
                 )}
               </button>
             </div>
-            <p className="text-sm text-white/50">
-              Password is use to unlock app and secure your key store in local machine.
-              When you move to other clients, you just need to copy your private key as
-              nsec or hexstring
-            </p>
             <span className="text-sm text-red-400">
               {errors.password && <p>{errors.password.message}</p>}
             </span>
@@ -125,12 +127,12 @@ export function ImportStep2Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
             >
               {loading ? (
                 <>
                   <span className="w-5" />
-                  <span>Creating...</span>
+                  <span>Securing your account...</span>
                   <LoaderIcon className="h-5 w-5 animate-spin text-white" />
                 </>
               ) : (

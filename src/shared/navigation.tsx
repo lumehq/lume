@@ -42,7 +42,7 @@ export function Navigation() {
                 'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
-                  : 'border-transparent text-white/80'
+                  : 'border-transparent text-white/70'
               )
             }
           >
@@ -59,7 +59,7 @@ export function Navigation() {
                 'flex h-10 items-center justify-between rounded-r-lg border-l-2 pl-4 pr-2',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
-                  : 'border-transparent text-white/80'
+                  : 'border-transparent text-white/70'
               )
             }
           >
@@ -104,7 +104,7 @@ export function Navigation() {
                     'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
                     isActive
                       ? 'border-fuchsia-500 bg-white/5 text-white'
-                      : 'border-transparent text-white/80'
+                      : 'border-transparent text-white/70'
                   )
                 }
               >

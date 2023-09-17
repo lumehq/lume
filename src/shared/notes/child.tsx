@@ -43,7 +43,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
   }
 
   if (status === 'error') {
-    const noteLink = `https://nostr.com/${nip19.noteEncode(id)}`;
+    const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
     return (
       <>
         <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
@@ -62,7 +62,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
               <div className="relative z-20 mt-1 flex-1 select-text">
                 <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
                   Lume cannot find this post with your current relays, but you can view it
-                  via nostr.com.{' '}
+                  via njump.me.{' '}
                   <Link to={noteLink} className="text-fuchsia-500">
                     Learn more
                   </Link>
