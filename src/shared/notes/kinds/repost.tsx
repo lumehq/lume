@@ -1,7 +1,10 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import {
   ArticleNote,
@@ -15,27 +18,66 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { useEvent } from '@utils/hooks/useEvent';
+export function Repost({ event }: { event: NDKEvent }) {
+  const embedEvent: null | NDKEvent =
+    event.content.length > 0 ? JSON.parse(event.content) : null;
 
-export function Repost({ event, root }: { event: NDKEvent; root?: string }) {
-  const rootPost = root ?? event.tags.find((el) => el[0] === 'e')?.[1];
-  const { status, data } = useEvent(rootPost, null, event.content);
+  const { ndk } = useNDK();
+  const { status, data } = useQuery(
+    ['repost', event.id],
+    async () => {
+      const id = event.tags.find((el) => el[0] === 'e')[1];
+      if (id === undefined) throw new Error('wrong id');
 
-  const renderKind = useCallback(
-    (repostEvent: NDKEvent) => {
-      switch (repostEvent.kind) {
-        case NDKKind.Text:
-          return <TextNote content={repostEvent.content} />;
-        case NDKKind.Article:
-          return <ArticleNote event={repostEvent} />;
-        case 1063:
-          return <FileNote event={repostEvent} />;
-        default:
-          return <UnknownNote event={repostEvent} />;
-      }
+      const ndkEvent = await ndk.fetchEvent(id);
+      if (!ndkEvent) throw new Error('Event not found');
+
+      return ndkEvent;
     },
-    [data]
+    {
+      enabled: embedEvent === null,
+      refetchOnWindowFocus: false,
+    }
   );
+
+  const renderKind = useCallback((repostEvent: NDKEvent) => {
+    switch (repostEvent.kind) {
+      case NDKKind.Text:
+        return <TextNote content={repostEvent.content} />;
+      case NDKKind.Article:
+        return <ArticleNote event={repostEvent} />;
+      case 1063:
+        return <FileNote event={repostEvent} />;
+      default:
+        return <UnknownNote event={repostEvent} />;
+    }
+  }, []);
+
+  if (embedEvent) {
+    return (
+      <div className="h-min w-full px-3 pb-3">
+        <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+          <div className="relative flex flex-col">
+            <div className="isolate flex flex-col -space-y-4">
+              <RepostUser pubkey={event.pubkey} />
+              <User
+                pubkey={embedEvent.pubkey}
+                time={embedEvent.created_at}
+                isRepost={true}
+              />
+            </div>
+            <div className="-mt-2 flex items-start gap-3">
+              <div className="w-11 shrink-0" />
+              <div className="relative z-20 flex-1">
+                {renderKind(embedEvent)}
+                <NoteActions id={embedEvent.id} pubkey={embedEvent.pubkey} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'loading') {
     return (

@@ -47,9 +47,7 @@ export function LearnNostrWidget({ params }: { params: Widget }) {
                         )}
                       </div>
                     </div>
-                    <button type="button">
-                      <ArrowRightIcon className="h-5 w-5 text-white" />
-                    </button>
+                    <ArrowRightIcon className="h-5 w-5 text-white" />
                   </button>
                 ))
               ) : (

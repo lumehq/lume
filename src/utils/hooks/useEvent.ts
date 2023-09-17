@@ -7,12 +7,17 @@ import { useStorage } from '@libs/storage/provider';
 
 import { toRawEvent } from '@utils/rawEvent';
 
-export function useEvent(id: string, naddr?: AddressPointer, embed?: string) {
+export function useEvent(
+  id: undefined | string,
+  naddr?: undefined | AddressPointer,
+  embed?: undefined | string
+) {
   const { db } = useStorage();
   const { ndk } = useNDK();
   const { status, data } = useQuery(
     ['event', id],
     async () => {
+      // return event refer from naddr
       if (naddr) {
         const rEvents = await ndk.fetchEvents({
           kinds: [naddr.kind],
@@ -20,11 +25,10 @@ export function useEvent(id: string, naddr?: AddressPointer, embed?: string) {
           authors: [naddr.pubkey],
         });
         const rEvent = [...rEvents].slice(-1)[0];
-
         return rEvent;
       }
 
-      // return embed event (nostr.band api) or repost
+      // return embed event (nostr.band api)
       if (embed) {
         const event: NDKEvent = JSON.parse(embed);
         return event;
@@ -36,7 +40,7 @@ export function useEvent(id: string, naddr?: AddressPointer, embed?: string) {
 
       // get event from relay if event in db not present
       const event = await ndk.fetchEvent(id);
-      if (!event) throw new Error(`Event not found: ${id.toString()}`);
+      if (!event) throw new Error(`Event not found: ${id}`);
 
       const rawEvent = toRawEvent(event);
       await db.createEvent(rawEvent);
@@ -45,7 +49,6 @@ export function useEvent(id: string, naddr?: AddressPointer, embed?: string) {
     },
     {
       enabled: !!ndk,
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
     }
   );
