@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { AvatarUploader } from '@shared/avatarUploader';
 import { BannerUploader } from '@shared/bannerUploader';
 import { LoaderIcon } from '@shared/icons';
@@ -10,6 +12,7 @@ import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 import { Image } from '@shared/image';
 
 import { useOnboarding } from '@stores/onboarding';
+import { WidgetKinds } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
@@ -21,6 +24,7 @@ export function CreateStep3Screen() {
   const [picture, setPicture] = useState('https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih');
   const [banner, setBanner] = useState('');
 
+  const { db } = useStorage();
   const { publish } = useNostr();
   const {
     register,
@@ -44,6 +48,9 @@ export function CreateStep3Screen() {
         kind: NDKKind.Metadata,
         tags: [],
       });
+
+      // create default widget
+      await db.createWidget(WidgetKinds.other.learnNostr, 'Learn Nostr', '');
 
       if (event) {
         navigate('/auth/onboarding', { replace: true });

@@ -65,7 +65,7 @@ export function ImportStep1Screen() {
         setPubkey(pubkey);
 
         // add account to local database
-        db.createAccount(npub, pubkey);
+        await db.createAccount(npub, pubkey);
 
         // redirect to step 2 with delay 1.2s
         setTimeout(() => navigate('/auth/import/step-2', { replace: true }), 1200);

@@ -104,7 +104,8 @@ export function CreateStep2Screen() {
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3.5 py-1 text-center tracking-widest text-white !outline-none backdrop-blur-xl placeholder:text-white/70"
+                placeholder="Enter password"
+                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3.5 py-1 text-center tracking-widest text-white !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-white/70"
               />
               <button
                 type="button"

@@ -8,6 +8,7 @@ import { useStorage } from '@libs/storage/provider';
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 
 import { useOnboarding } from '@stores/onboarding';
+import { WidgetKinds } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
@@ -28,6 +29,9 @@ export function ImportStep3Screen() {
       // prefetch data
       const user = await fetchUserData();
       const data = await prefetchEvents();
+
+      // create default widget
+      await db.createWidget(WidgetKinds.other.learnNostr, 'Learn Nostr', '');
 
       // redirect to next step
       if (user.status === 'ok' && data.status === 'ok') {

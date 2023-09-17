@@ -63,7 +63,7 @@ export function CreateStep1Screen() {
     }
   };
 
-  const submit = () => {
+  const submit = async () => {
     setLoading(true);
 
     // update state
@@ -72,7 +72,7 @@ export function CreateStep1Screen() {
     setPubkey(pubkey);
 
     // save to database
-    db.createAccount(npub, pubkey);
+    await db.createAccount(npub, pubkey);
 
     // redirect to next step
     navigate('/auth/create/step-2', { replace: true });
