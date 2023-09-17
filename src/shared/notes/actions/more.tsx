@@ -18,8 +18,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
 
   const copyLink = async () => {
     await writeText(
-      'https://nostr.com/' +
-        nip19.neventEncode({ id: id, author: pubkey } as EventPointer)
+      'https://njump.me/' + nip19.neventEncode({ id: id, author: pubkey } as EventPointer)
     );
     setOpen(false);
   };

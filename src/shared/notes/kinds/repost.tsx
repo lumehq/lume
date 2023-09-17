@@ -19,7 +19,7 @@ import { useEvent } from '@utils/hooks/useEvent';
 
 export function Repost({ event, root }: { event: NDKEvent; root?: string }) {
   const rootPost = root ?? event.tags.find((el) => el[0] === 'e')?.[1];
-  const { status, data } = useEvent(rootPost, event.content);
+  const { status, data } = useEvent(rootPost, null, event.content);
 
   const renderKind = useCallback(
     (repostEvent: NDKEvent) => {
@@ -49,7 +49,7 @@ export function Repost({ event, root }: { event: NDKEvent; root?: string }) {
 
   if (status === 'error') {
     // @ts-expect-error, root_id isn't exist on NDKEvent
-    const noteLink = `https://nostr.com/${nip19.noteEncode(event.root_id)}`;
+    const noteLink = `https://njump.me/${nip19.noteEncode(event.root_id)}`;
     return (
       <div className="relative mb-5 flex flex-col">
         <div className="relative z-10 flex items-start gap-3">
@@ -66,7 +66,7 @@ export function Repost({ event, root }: { event: NDKEvent; root?: string }) {
             <div className="relative z-20 mt-1 flex-1 select-text">
               <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
                 Lume cannot find this post with your current relays, but you can view it
-                via nostr.com.{' '}
+                via njump.me.{' '}
                 <Link to={noteLink} className="text-fuchsia-500">
                   Learn more
                 </Link>

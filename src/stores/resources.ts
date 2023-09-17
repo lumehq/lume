@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
 import { Resources } from '@utils/types';
 
@@ -47,22 +47,42 @@ const DEFAULT_RESOURCES: Array<Resources> = [
 
 interface ResourceState {
   resources: Array<Resources>;
-  readed: Set<string>;
-  readResource: (id: string) => void;
+  seens: Set<string>;
+  openResource: (id: string) => void;
 }
 
 export const useResources = create<ResourceState>()(
   persist(
     (set) => ({
       resources: DEFAULT_RESOURCES,
-      readed: new Set(),
-      readResource: (id: string) => {
-        set((state) => ({ readed: new Set(state.readed).add(id) }));
+      seens: new Set(),
+      openResource: (id: string) => {
+        set((state) => ({ seens: new Set(state.seens).add(id) }));
       },
     }),
     {
       name: 'resources',
-      storage: createJSONStorage(() => localStorage),
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          return {
+            state: {
+              ...JSON.parse(str).state,
+              seens: new Set(JSON.parse(str).state.seens),
+            },
+          };
+        },
+        setItem: (name, newValue) => {
+          const str = JSON.stringify({
+            state: {
+              ...newValue.state,
+              seens: Array.from(newValue.state.seens),
+            },
+          });
+          localStorage.setItem(name, str);
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
     }
   )
 );

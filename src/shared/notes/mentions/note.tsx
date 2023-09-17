@@ -56,7 +56,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   }
 
   if (status === 'error') {
-    const noteLink = `https://nostr.com/${nip19.noteEncode(id)}`;
+    const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
     return (
       <div className="relative mt-3 flex flex-col">
         <div className="relative z-10 flex items-center gap-3">
@@ -70,7 +70,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
         <div className="mt-1">
           <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
             Lume cannot find this post with your current relays, but you can view it via
-            nostr.com.{' '}
+            njump.me.{' '}
             <Link to={noteLink} className="text-fuchsia-500">
               Learn more
             </Link>

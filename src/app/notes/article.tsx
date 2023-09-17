@@ -35,7 +35,7 @@ export function ArticleNoteScreen() {
 
   const share = async () => {
     await writeText(
-      'https://nostr.com/' +
+      'https://njump.me/' +
         nip19.neventEncode({ id: data.id, author: data.pubkey } as EventPointer)
     );
     // update state

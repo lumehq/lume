@@ -9,13 +9,14 @@ import { Widget } from '@utils/types';
 
 export function LearnNostrWidget({ params }: { params: Widget }) {
   const navigate = useNavigate();
-  const readResource = useResources((state) => state.readResource);
-
+  const openResource = useResources((state) => state.openResource);
   const resources = useResources((state) => state.resources);
-  const readed = useResources((state) => state.readed);
+  const seens = useResources((state) => state.seens);
 
   const open = (naddr: string) => {
-    readResource(naddr);
+    // add resource to seen list
+    openResource(naddr);
+    // redirect
     navigate(`/notes/article/${naddr}`);
   };
 
@@ -39,7 +40,7 @@ export function LearnNostrWidget({ params }: { params: Widget }) {
                       <div className="h-10 w-10 shrink-0 rounded-md bg-white/10" />
                       <div className="flex flex-col items-start gap-1">
                         <h5 className="font-semibold leading-none">{item.title}</h5>
-                        {readed.has(item.id) ? (
+                        {seens.has(item.id) ? (
                           <p className="text-sm leading-none text-green-500">Readed</p>
                         ) : (
                           <p className="text-sm leading-none text-white/70">Unread</p>

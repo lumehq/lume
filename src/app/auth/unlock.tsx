@@ -89,7 +89,7 @@ export function UnlockScreen() {
                 {...register('password', { required: true, minLength: 4 })}
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
-                className="relative h-12 w-full rounded-b-lg bg-white/10 py-1 text-center tracking-widest text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                className="relative h-12 w-full rounded-b-lg bg-white/10 py-1 text-center tracking-widest text-white !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-white/50"
               />
               <button
                 type="button"
