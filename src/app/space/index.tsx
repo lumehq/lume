@@ -14,6 +14,7 @@ import {
   LocalArticlesWidget,
   LocalFeedsWidget,
   LocalFilesWidget,
+  LocalFollowsWidget,
   LocalNetworkWidget,
   LocalThreadWidget,
   LocalUserWidget,
@@ -22,7 +23,6 @@ import {
   XfeedsWidget,
   XhashtagWidget,
 } from '@shared/widgets';
-import { LocalFollowsWidget } from '@shared/widgets/local/follows';
 
 import { WidgetKinds, useWidgets } from '@stores/widgets';
 

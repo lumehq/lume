@@ -70,7 +70,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
               data-index={index}
               ref={virtualizer.measureElement}
             >
-              <Repost key={dbEvent.id} event={event} root={dbEvent.root_id} />
+              <Repost key={dbEvent.id} event={event} />
             </div>
           );
         case 1063:

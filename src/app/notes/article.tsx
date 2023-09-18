@@ -102,7 +102,7 @@ export function ArticleNoteScreen() {
             ) : (
               <>
                 <div className="h-min w-full px-3">
-                  <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
+                  <div className="rounded-xl border-t border-white/10 bg-white/20 px-3 pt-3">
                     <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
                     <div className="mt-2">{renderKind(data)}</div>
                     <div>

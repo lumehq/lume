@@ -43,7 +43,7 @@ export function NewMessageModal() {
                   <Dialog.Title className="text-lg font-semibold leading-none text-white">
                     New chat
                   </Dialog.Title>
-                  <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
+                  <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-white/10">
                     <CancelIcon className="h-4 w-4 text-white/50" />
                   </Dialog.Close>
                 </div>
@@ -56,14 +56,14 @@ export function NewMessageModal() {
               {db.account?.follows?.map((pubkey) => (
                 <div
                   key={pubkey}
-                  className="group flex items-center justify-between px-4 py-2 backdrop-blur-xl hover:bg-white/10"
+                  className="group flex items-center justify-between px-4 py-2 hover:bg-white/10"
                 >
                   <User pubkey={pubkey} variant="simple" />
                   <div>
                     <button
                       type="button"
                       onClick={() => openChat(pubkey)}
-                      className="hidden w-max rounded bg-white/10 px-3 py-1 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500 group-hover:inline-flex"
+                      className="hidden w-max rounded bg-white/10 px-3 py-1 text-sm font-medium hover:bg-fuchsia-500 group-hover:inline-flex"
                     >
                       Chat
                     </button>

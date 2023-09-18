@@ -4,7 +4,7 @@ import { create } from 'zustand';
 interface ActivitiesState {
   activities: Array<NDKEvent>;
   totalNewActivities: number;
-  setActivities: (events: NDKEvent[]) => void;
+  setActivities: (events: NDKEvent[], lastLogin: number) => void;
   addActivity: (event: NDKEvent) => void;
   clearTotalNewActivities: () => void;
 }
@@ -12,8 +12,12 @@ interface ActivitiesState {
 export const useActivities = create<ActivitiesState>((set) => ({
   activities: null,
   totalNewActivities: 0,
-  setActivities: (events: NDKEvent[]) => {
-    set(() => ({ activities: events }));
+  setActivities: (events: NDKEvent[], lastLogin: number) => {
+    const latest = events.filter((ev) => ev.created_at > lastLogin);
+    set(() => ({
+      activities: events,
+      totalNewActivities: latest.length > 0 ? latest.length : 0,
+    }));
   },
   addActivity: (event: NDKEvent) => {
     set((state) => ({

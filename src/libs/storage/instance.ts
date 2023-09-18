@@ -4,6 +4,8 @@ import { Platform } from '@tauri-apps/api/os';
 import Database from 'tauri-plugin-sql-api';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
 
+import { FULL_RELAYS } from '@stores/constants';
+
 import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
@@ -287,8 +289,9 @@ export class LumeStorage {
       `SELECT * FROM relays WHERE account_id = "${this.account.id}" ORDER BY id DESC LIMIT 50;`
     );
 
-    if (result.length < 1) return null;
-    return result.map((el) => el.relay);
+    if (result.length < 1) return FULL_RELAYS;
+    // return [...new Set(result.map((el) => el.relay))];
+    return FULL_RELAYS;
   }
 
   public async createRelay(relay: string, purpose?: string) {

@@ -26,7 +26,7 @@ export function ArticleDetailNote({ event }: { event: NDKEvent }) {
   }, [event.id]);*/
 
   return (
-    <ReactMarkdown className="markdown" remarkPlugins={[remarkGfm]}>
+    <ReactMarkdown className="markdown-article" remarkPlugins={[remarkGfm]}>
       {event.content}
     </ReactMarkdown>
   );

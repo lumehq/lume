@@ -4,6 +4,7 @@ export * from './local/user';
 export * from './local/thread';
 export * from './local/files';
 export * from './local/articles';
+export * from './local/follows';
 export * from './global/articles';
 export * from './global/files';
 export * from './global/hashtag';

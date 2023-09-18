@@ -57,7 +57,7 @@ export function useNostr() {
       const follows = new Set<string>(preFollows || []);
       const lruNetwork = new LRUCache<string, string, void>({ max: 300 });
 
-      // fetch user's relays
+      /* fetch user's relays
       const relayEvents = await ndk.fetchEvents({
         kinds: [NDKKind.RelayList],
         authors: [db.account.pubkey],
@@ -74,6 +74,7 @@ export function useNostr() {
           }
         }
       }
+      */
 
       // fetch user's follows
       if (!preFollows) {

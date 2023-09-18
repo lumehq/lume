@@ -6,14 +6,11 @@ import { useEffect, useMemo, useState } from 'react';
 import TauriAdapter from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
-import { FULL_RELAYS } from '@stores/constants';
-
 export const NDKInstance = () => {
-  const { db } = useStorage();
-
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
+  const { db } = useStorage();
   const cacheAdapter = useMemo(() => new TauriAdapter(), [ndk]);
 
   // TODO: fully support NIP-11
@@ -23,11 +20,10 @@ export const NDKInstance = () => {
       const timeoutId = setTimeout(() => controller.abort('timeout'), 10000);
 
       // get relays
-      const relays = (await db.getExplicitRelayUrls()) ?? FULL_RELAYS;
+      const relays = await db.getExplicitRelayUrls();
 
       const requests = relays.map((relay) => {
         const url = new URL(relay);
-
         return fetch(`https://${url.hostname + url.pathname}`, {
           headers: { Accept: 'application/nostr+json' },
           signal: controller.signal,
@@ -35,11 +31,12 @@ export const NDKInstance = () => {
       });
 
       const responses = await Promise.all(requests);
-      const errors = responses.filter((response) => !response.ok);
+      const successes = responses.filter((res) => res.ok);
+      const errors = responses.filter((res) => !res.ok);
 
       if (errors.length > 0) throw errors.map((response) => Error(response.statusText));
 
-      const verifiedRelays: string[] = responses.map((res) => {
+      const verifiedRelays: string[] = successes.map((res) => {
         const url = new URL(res.url);
         if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
         if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
@@ -60,8 +57,6 @@ export const NDKInstance = () => {
     const instance = new NDK({
       explicitRelayUrls,
       cacheAdapter,
-      // outboxRelayUrls: ['wss://purplepag.es'],
-      // enableOutboxModel: true,
     });
 
     try {

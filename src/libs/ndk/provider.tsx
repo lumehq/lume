@@ -5,12 +5,12 @@ import { PropsWithChildren, createContext, useContext } from 'react';
 import { NDKInstance } from '@libs/ndk/instance';
 
 interface NDKContext {
-  ndk: NDK;
+  ndk: undefined | NDK;
   relayUrls: string[];
 }
 
 const NDKContext = createContext<NDKContext>({
-  ndk: new NDK({}),
+  ndk: undefined,
   relayUrls: [],
 });
 
