@@ -2,9 +2,8 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '@app/auth/components/user';
-
 import { CancelIcon, StrangersIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { compactNumber } from '@utils/number';
 
@@ -59,7 +58,7 @@ export function UnknownsModal({ data }: { data: string[] }) {
                   key={pubkey}
                   className="group flex items-center justify-between px-4 py-2 backdrop-blur-xl hover:bg-white/10"
                 >
-                  <User pubkey={pubkey} />
+                  <User pubkey={pubkey} variant="simple" />
                   <div>
                     <button
                       type="button"

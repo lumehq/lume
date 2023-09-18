@@ -2,11 +2,10 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '@app/auth/components/user';
-
 import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, PlusIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 export function NewMessageModal() {
   const navigate = useNavigate();
@@ -54,16 +53,16 @@ export function NewMessageModal() {
               </div>
             </div>
             <div className="flex h-[500px] flex-col overflow-y-auto overflow-x-hidden pb-2 pt-2">
-              {db.account?.follows?.map((follow) => (
+              {db.account?.follows?.map((pubkey) => (
                 <div
-                  key={follow}
+                  key={pubkey}
                   className="group flex items-center justify-between px-4 py-2 backdrop-blur-xl hover:bg-white/10"
                 >
-                  <User pubkey={follow} />
+                  <User pubkey={pubkey} variant="simple" />
                   <div>
                     <button
                       type="button"
-                      onClick={() => openChat(follow)}
+                      onClick={() => openChat(pubkey)}
                       className="hidden w-max rounded bg-white/10 px-3 py-1 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500 group-hover:inline-flex"
                     >
                       Chat

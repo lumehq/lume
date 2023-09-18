@@ -116,28 +116,28 @@ export function ResetScreen() {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label htmlFor="privkey" className="font-medium text-white/50">
+            <label htmlFor="privkey" className="font-medium text-white">
               Private key
             </label>
             <div className="relative">
               <input
                 {...register('privkey', { required: true })}
                 type="text"
-                placeholder="nsec..."
-                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                placeholder="nsec1..."
+                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/70"
               />
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="font-medium text-white/50">
+            <label htmlFor="password" className="font-medium text-white">
               Set a new password to protect your key
             </label>
             <div className="relative">
               <input
                 {...register('password', { required: true })}
                 type={passwordInput}
-                placeholder="min. 4 characters"
-                className="relative h-12 w-full rounded-lg bg-white/10 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                placeholder="Min. 4 characters"
+                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/70"
               />
               <button
                 type="button"
@@ -169,7 +169,7 @@ export function ResetScreen() {
             </button>
             <Link
               to="/auth/unlock"
-              className="mt-1 inline-flex h-11 w-full items-center justify-center rounded-lg text-center text-white/50 hover:bg-white/10"
+              className="mt-1 inline-flex h-12 w-full items-center justify-center rounded-lg text-center text-white/70 hover:bg-white/20"
             >
               Back
             </Link>

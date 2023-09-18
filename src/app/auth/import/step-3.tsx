@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserImport } from '@app/auth/components/userImport';
-
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { useOnboarding } from '@stores/onboarding';
 import { WidgetKinds } from '@stores/widgets';
@@ -60,7 +59,7 @@ export function ImportStep3Screen() {
       </div>
       <div className="flex flex-col gap-3">
         <div className="rounded-lg border-t border-white/10 bg-white/20 px-3 py-3">
-          <UserImport pubkey={db.account.pubkey} />
+          <User pubkey={db.account.pubkey} variant="simple" />
         </div>
         <div className="flex flex-col gap-2">
           <button

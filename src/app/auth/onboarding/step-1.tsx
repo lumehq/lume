@@ -2,11 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { User } from '@app/auth/components/user';
-
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { useOnboarding } from '@stores/onboarding';
 
@@ -92,7 +91,11 @@ export function OnboardStep1Screen() {
               onClick={() => toggleFollow(item.pubkey)}
               className="relative h-[300px] shrink-0 grow-0 basis-[250px] rounded-lg border-t border-white/10 bg-white/20 px-4 py-4 hover:bg-white/30"
             >
-              <User pubkey={item.pubkey} fallback={item.profile?.content} />
+              <User
+                pubkey={item.pubkey}
+                variant="large"
+                embedProfile={item.profile?.content}
+              />
               {follows.includes(item.pubkey) && (
                 <div className="absolute right-2 top-2">
                   <CheckCircleIcon className="h-4 w-4 text-green-400" />

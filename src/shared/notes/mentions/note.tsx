@@ -89,7 +89,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       tabIndex={0}
       className="mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl"
     >
-      <User pubkey={data.pubkey} time={data.created_at} size="small" />
+      <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
       <div className="mt-1">{renderKind(data)}</div>
     </div>
   );

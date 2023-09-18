@@ -4,11 +4,10 @@ import { Resolver, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
 
-import { UserImport } from '@app/auth/components/userImport';
-
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -82,7 +81,7 @@ export function UnlockScreen() {
         <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col">
           <div className="flex flex-col rounded-lg bg-white/5">
             <div className="w-full rounded-t-lg border-b border-white/10 bg-white/5 p-4">
-              <UserImport pubkey={db.account.pubkey} />
+              <User pubkey={db.account.pubkey} variant="simple" />
             </div>
             <div className="relative">
               <input

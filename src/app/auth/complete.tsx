@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function CompleteScreen() {
   const navigate = useNavigate();
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState(5);
 
   useEffect(() => {
     let counter: NodeJS.Timeout;
@@ -26,7 +26,6 @@ export function CompleteScreen() {
       <div className="mx-auto flex max-w-xl flex-col gap-1.5 text-center">
         <h1 className="text-2xl font-light leading-none text-white">
           <span className="font-semibold">You&apos;re ready</span>, redirecting in {count}
-          ...
         </h1>
         <p className="text-white/70">
           Thank you for using Lume. Lume doesn&apos;t use telemetry. If you encounter any

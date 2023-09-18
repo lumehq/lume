@@ -25,6 +25,7 @@ export function useEvent(
           authors: [naddr.pubkey],
         });
         const rEvent = [...rEvents].slice(-1)[0];
+        if (!rEvent) return Promise.reject(new Error('event not found'));
         return rEvent;
       }
 
@@ -40,7 +41,7 @@ export function useEvent(
 
       // get event from relay if event in db not present
       const event = await ndk.fetchEvent(id);
-      if (!event) throw new Error(`Event not found: ${id}`);
+      if (!event) return Promise.reject(new Error('event not found'));
 
       const rawEvent = toRawEvent(event);
       await db.createEvent(rawEvent);

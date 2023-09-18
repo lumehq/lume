@@ -27,13 +27,13 @@ export function NWCScreen() {
           <h3 className="text-2xl font-bold leading-tight">
             Nostr Wallet Connect (Beta)
           </h3>
-          <p className="leading-tight text-white/50">
+          <p className="leading-tight text-white/70">
             Sending tips easily via Bitcoin Lightning.
           </p>
         </div>
         <div className="mx-auto max-w-lg">
           {!walletConnectURL ? (
-            <div className="flex w-full flex-col gap-4 divide-y divide-white/5 rounded-xl bg-white/10 p-3">
+            <div className="flex w-full flex-col gap-4 divide-y divide-white/5 rounded-xl border-t border-white/10 bg-white/20 p-3">
               <NWCAlby />
               <NWCOther />
             </div>
@@ -61,12 +61,12 @@ export function NWCScreen() {
           )}
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <h5 className="text-sm font-bold text-white/80">Introduction</h5>
-              <p className="text-sm text-white/50">
+              <h5 className="text-sm font-bold text-white">Introduction</h5>
+              <p className="text-sm text-white/70">
                 Nostr Wallet Connect (NWC) is a way for applications like Nostr clients to
                 access a remote Lightning wallet through a standardized protocol.
               </p>
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-white/70">
                 To learn more about the details have a look at{' '}
                 <a
                   href="https://github.com/getAlby/nips/blob/7-wallet-connect-patch/47.md"
@@ -79,15 +79,15 @@ export function NWCScreen() {
               </p>
             </div>
             <div className="flex flex-col gap-1.5">
-              <h5 className="text-sm font-bold text-white/80">About tipping</h5>
-              <p className="text-sm text-white/50">
+              <h5 className="text-sm font-bold text-white">About tipping</h5>
+              <p className="text-sm text-white/70">
                 Also known as Zap in other Nostr client.
               </p>
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-white/70">
                 Lume doesn&apos;t take any commission or platform fees when you tip
                 someone.
               </p>
-              <p className="text-sm text-white/50">Lume doesn&apos;t hold your Bitcoin</p>
+              <p className="text-sm text-white/70">Lume doesn&apos;t hold your Bitcoin</p>
             </div>
           </div>
         </div>

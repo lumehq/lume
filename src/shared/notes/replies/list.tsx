@@ -1,4 +1,3 @@
-import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 
 import { NoteSkeleton, Reply } from '@shared/notes';
@@ -21,7 +20,6 @@ export function RepliesList({ id }: { id: string }) {
       // subscribe for new replies
       sub(
         {
-          kinds: [NDKKind.Text],
           '#e': [id],
           since: Math.floor(Date.now() / 1000),
         },
@@ -50,7 +48,7 @@ export function RepliesList({ id }: { id: string }) {
 
   return (
     <div className="mt-5 pb-10">
-      <h5 className="mb-5 text-lg font-semibold text-white">
+      <h5 className="mb-2 text-lg font-semibold text-white">
         {data?.length || 0} replies
       </h5>
       <div className="flex flex-col gap-3">

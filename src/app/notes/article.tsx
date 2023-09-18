@@ -13,11 +13,11 @@ import {
   NoteActions,
   NoteReplyForm,
   NoteStats,
-  ThreadUser,
   UnknownNote,
 } from '@shared/notes';
 import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
+import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
 
@@ -100,21 +100,27 @@ export function ArticleNoteScreen() {
                 </div>
               </div>
             ) : (
-              <div className="h-min w-full px-3">
-                <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
-                  <ThreadUser pubkey={data.pubkey} time={data.created_at} />
-                  <div className="mt-2">{renderKind(data)}</div>
-                  <div>
-                    <NoteActions id={data.id} pubkey={data.pubkey} extraButtons={false} />
-                    <NoteStats id={data.id} />
+              <>
+                <div className="h-min w-full px-3">
+                  <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
+                    <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
+                    <div className="mt-2">{renderKind(data)}</div>
+                    <div>
+                      <NoteActions
+                        id={data.id}
+                        pubkey={data.pubkey}
+                        extraButtons={false}
+                      />
+                      <NoteStats id={data.id} />
+                    </div>
                   </div>
                 </div>
-              </div>
+                <div ref={replyRef} className="px-3">
+                  <NoteReplyForm id={data.id} pubkey={db.account.pubkey} />
+                  <RepliesList id={data.id} />
+                </div>
+              </>
             )}
-            <div ref={replyRef} className="px-3">
-              <NoteReplyForm id={data?.id} pubkey={db.account.pubkey} />
-              <RepliesList id={data?.id} />
-            </div>
           </div>
           <div className="col-span-1" />
         </div>

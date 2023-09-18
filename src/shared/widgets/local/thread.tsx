@@ -10,12 +10,12 @@ import {
   NoteReplyForm,
   NoteStats,
   TextNote,
-  ThreadUser,
   UnknownNote,
 } from '@shared/notes';
 import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
+import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';
@@ -53,7 +53,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
         ) : (
           <div className="h-min w-full px-3 pt-1.5">
             <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
-              <ThreadUser pubkey={data.pubkey} time={data.created_at} />
+              <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
               <div className="mt-2">{renderKind(data)}</div>
               <NoteActions
                 id={params.content}

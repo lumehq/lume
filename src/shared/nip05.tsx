@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetch } from '@tauri-apps/api/http';
+import { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { UnverifiedIcon, VerifiedIcon } from '@shared/icons';
@@ -10,7 +11,7 @@ interface NIP05 {
   };
 }
 
-export function NIP05({
+export const NIP05 = memo(function NIP05({
   pubkey,
   nip05,
   className,
@@ -71,4 +72,4 @@ export function NIP05({
       </div>
     </div>
   );
-}
+});

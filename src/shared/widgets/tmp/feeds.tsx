@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
-import { User } from '@app/auth/components/user';
-
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { WidgetKinds, useWidgets } from '@stores/widgets';
 
@@ -65,7 +64,7 @@ export function XfeedsWidget({ params }: { params: Widget }) {
                 onClick={() => toggleGroup(item)}
                 className="inline-flex transform items-center justify-between px-4 py-2 hover:bg-white/20"
               >
-                <User pubkey={item} />
+                <User pubkey={item} variant="simple" />
                 {groups.includes(item) && (
                   <div>
                     <CheckCircleIcon className="h-4 w-4 text-green-400" />

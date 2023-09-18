@@ -6,7 +6,7 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
-import { MiniUser } from '@shared/notes/users/mini';
+import { User } from '@shared/user';
 
 import { WidgetKinds, useWidgets } from '@stores/widgets';
 
@@ -86,7 +86,7 @@ export function NoteMetadata({ id }: { id: string }) {
             <div className="mt-2 inline-flex h-6 w-11 shrink-0 items-center justify-center">
               <div className="isolate flex -space-x-1">
                 {data.users?.map((user, index) => (
-                  <MiniUser key={user + index} pubkey={user} />
+                  <User key={user + index} pubkey={user} />
                 ))}
               </div>
             </div>

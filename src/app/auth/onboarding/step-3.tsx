@@ -2,12 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserRelay } from '@app/auth/components/userRelay';
-
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { FULL_RELAYS } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
@@ -136,7 +135,7 @@ export function OnboardStep3Screen() {
               >
                 <div className="flex flex-col items-start gap-1">
                   <p className="max-w-[15rem] truncate">{item.replace(/\/+$/, '')}</p>
-                  <UserRelay pubkey={data.get(item)} />
+                  <User pubkey={data.get(item)} variant="mention" />
                 </div>
                 {relays.has(item) && (
                   <div className="pt-1.5">
