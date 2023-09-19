@@ -27,6 +27,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [invoice, setInvoice] = useState<null | string>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const walletConnectURL = useStronghold((state) => state.walletConnectURL);
   const nwc = useRef(null);
@@ -51,7 +52,11 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       });
       await nwc.current.enable();
 
+      // start loading
+      setIsLoading(true);
+      // send payment via nwc
       const send: SendPaymentResponse = await nwc.current.sendPayment(res);
+
       if (send) {
         await sendNativeNotification(
           `You've tipped ${compactNumber.format(send.amount)} sats to ${
@@ -62,6 +67,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
         // eose
         nwc.current.close();
         setIsCompleted(true);
+        setIsLoading(false);
 
         // reset after 3 secs
         const timeout = setTimeout(() => setIsCompleted(false), 3000);
@@ -69,15 +75,17 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       }
     } catch (e) {
       nwc.current.close();
+      setIsLoading(false);
       await message(JSON.stringify(e), { title: 'Zap', type: 'error' });
     }
   };
 
   useEffect(() => {
     return () => {
-      setAmount('');
+      setAmount('21');
       setZapMessage('');
       setIsCompleted(false);
+      setIsLoading(false);
     };
   }, []);
 
@@ -183,6 +191,13 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         >
                           {isCompleted ? (
                             <p>Successfully tipped</p>
+                          ) : isLoading ? (
+                            <span className="flex flex-col">
+                              <p className="mb-px leading-none">Waiting for approval</p>
+                              <p className="text-xs leading-none text-white/70">
+                                Go to your wallet and approve payment request
+                              </p>
+                            </span>
                           ) : (
                             <span className="flex flex-col">
                               <p className="mb-px leading-none">Send tip</p>

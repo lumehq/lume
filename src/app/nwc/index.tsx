@@ -38,7 +38,7 @@ export function NWCScreen() {
               <NWCOther />
             </div>
           ) : (
-            <div className="flex w-full flex-col rounded-xl bg-white/10 p-3">
+            <div className="flex w-full flex-col rounded-xl border-t border-white/10 bg-white/20 p-3">
               <div className="mb-1 inline-flex items-center gap-1.5 text-sm text-green-500">
                 <CheckCircleIcon className="h-4 w-4" />
                 <p>You&apos;re using nostr wallet connect</p>
@@ -47,12 +47,12 @@ export function NWCScreen() {
                 <textarea
                   readOnly
                   value={walletConnectURL.substring(0, 120) + '****'}
-                  className="relative h-40 w-full resize-none rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                  className="relative h-40 w-full resize-none rounded-lg bg-white/20 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
                 />
                 <button
                   type="button"
                   onClick={() => remove()}
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/5 px-6 font-medium leading-none text-red-500 hover:bg-white/10 focus:outline-none disabled:opacity-50"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/10 px-6 font-medium leading-none text-red-500 hover:bg-white/20 focus:outline-none disabled:opacity-50"
                 >
                   Remove connection
                 </button>

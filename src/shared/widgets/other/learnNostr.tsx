@@ -34,18 +34,15 @@ export function LearnNostrWidget({ params }: { params: Widget }) {
                     key={index}
                     type="button"
                     onClick={() => open(item.id)}
-                    className="flex items-center justify-between rounded-xl bg-white/10 px-3 py-3 hover:bg-white/20"
+                    className="flex items-center justify-between rounded-xl bg-white/10 px-4 py-3 hover:bg-white/20"
                   >
-                    <div className="inline-flex items-center gap-2.5">
-                      <div className="h-10 w-10 shrink-0 rounded-md bg-white/10" />
-                      <div className="flex flex-col items-start gap-1">
-                        <h5 className="font-semibold leading-none">{item.title}</h5>
-                        {seens.has(item.id) ? (
-                          <p className="text-sm leading-none text-green-500">Readed</p>
-                        ) : (
-                          <p className="text-sm leading-none text-white/70">Unread</p>
-                        )}
-                      </div>
+                    <div className="flex flex-col items-start gap-1">
+                      <h5 className="font-semibold leading-none">{item.title}</h5>
+                      {seens.has(item.id) ? (
+                        <p className="text-sm leading-none text-green-500">Readed</p>
+                      ) : (
+                        <p className="text-sm leading-none text-white/70">Unread</p>
+                      )}
                     </div>
                     <ArrowRightIcon className="h-5 w-5 text-white" />
                   </button>

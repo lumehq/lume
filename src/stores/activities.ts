@@ -13,10 +13,10 @@ export const useActivities = create<ActivitiesState>((set) => ({
   activities: null,
   totalNewActivities: 0,
   setActivities: (events: NDKEvent[], lastLogin: number) => {
-    const latest = events.filter((ev) => ev.created_at > lastLogin);
+    const totalLatest = events.filter((ev) => ev.created_at > lastLogin)?.length ?? 0;
     set(() => ({
       activities: events,
-      totalNewActivities: latest.length > 0 ? latest.length : 0,
+      totalNewActivities: totalLatest,
     }));
   },
   addActivity: (event: NDKEvent) => {
