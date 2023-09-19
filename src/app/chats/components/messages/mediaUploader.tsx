@@ -3,14 +3,14 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, MediaIcon } from '@shared/icons';
 
-import { useImageUploader } from '@utils/hooks/useUploader';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function MediaUploader({
   setState,
 }: {
   setState: Dispatch<SetStateAction<string>>;
 }) {
-  const upload = useImageUploader();
+  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const uploadMedia = async () => {
