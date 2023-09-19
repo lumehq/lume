@@ -2,7 +2,7 @@
   "name": "lume",
   "description": "the communication app",
   "private": true,
-  "version": "1.2.4",
+  "version": "1.2.5",
   "scripts": {
     "dev": "bunx --bun vite",
     "build": "bunx --bun vite build",
