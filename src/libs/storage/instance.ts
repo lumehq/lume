@@ -283,15 +283,14 @@ export class LumeStorage {
   }
 
   public async getExplicitRelayUrls() {
-    if (!this.account) return null;
+    if (!this.account) return FULL_RELAYS;
 
     const result: Relays[] = await this.db.select(
       `SELECT * FROM relays WHERE account_id = "${this.account.id}" ORDER BY id DESC LIMIT 50;`
     );
 
-    if (result.length < 1) return FULL_RELAYS;
-    // return [...new Set(result.map((el) => el.relay))];
-    return FULL_RELAYS;
+    if (!result || result.length < 1) return FULL_RELAYS;
+    return result.map((el) => el.relay);
   }
 
   public async createRelay(relay: string, purpose?: string) {

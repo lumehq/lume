@@ -82,8 +82,8 @@ export function ImportStep3Screen() {
             )}
           </button>
           <span className="text-center text-sm text-white/50">
-            By clicking &apos;Continue&apos;, Lume will download your relay list and all
-            events from the last 24 hours. It may take a bit
+            By clicking &apos;Continue&apos;, Lume will download your old relay list and
+            all events from the last 24 hours. It may take a bit
           </span>
         </div>
       </div>

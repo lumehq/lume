@@ -93,7 +93,7 @@ export function ImportStep2Screen() {
         <p className="text-white/70">
           Password is not related to your Nostr account. It is only used to secure your
           keys stored on your local machine and to unlock the app (like unlocking your
-          phone with a passcode). When you move to other Nostr clients, you just need to
+          phone with a passcode). When you move to other Nostr clients, you only need to
           copy your private key.
         </p>
       </div>

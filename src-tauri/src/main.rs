@@ -211,6 +211,12 @@ fn main() {
               sql: include_str!("../migrations/20230817014932_add_last_login_time_to_account.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230918235335,
+              description: "add unique to relay",
+              sql: include_str!("../migrations/20230918235335_add_uniq_to_relay.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),

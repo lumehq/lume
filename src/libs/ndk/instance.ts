@@ -1,6 +1,7 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
 import { message } from '@tauri-apps/api/dialog';
+import { fetch } from '@tauri-apps/api/http';
 import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
@@ -16,39 +17,36 @@ export const NDKInstance = () => {
   // TODO: fully support NIP-11
   async function getExplicitRelays() {
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort('timeout'), 10000);
-
       // get relays
       const relays = await db.getExplicitRelayUrls();
-
       const requests = relays.map((relay) => {
         const url = new URL(relay);
         return fetch(`https://${url.hostname + url.pathname}`, {
-          headers: { Accept: 'application/nostr+json' },
-          signal: controller.signal,
+          method: 'GET',
+          timeout: 10,
+          headers: {
+            Accept: 'application/nostr+json',
+          },
         });
       });
 
       const responses = await Promise.all(requests);
       const successes = responses.filter((res) => res.ok);
-      const errors = responses.filter((res) => !res.ok);
-
-      if (errors.length > 0) throw errors.map((response) => Error(response.statusText));
 
       const verifiedRelays: string[] = successes.map((res) => {
-        const url = new URL(res.url);
-        if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
-        if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
+        // TODO: support payment
+        // @ts-expect-error, not have type yet
+        if (!res.data.limitation?.payment_required) {
+          const url = new URL(res.url);
+          if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
+          if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
+        }
       });
 
-      // clear timeout
-      clearTimeout(timeoutId);
-
-      // return all validate relays
+      // return all validated relays
       return verifiedRelays;
     } catch (e) {
-      await message(e, { title: 'Cannot connect to relays', type: 'error' });
+      console.error(e);
     }
   }
 
