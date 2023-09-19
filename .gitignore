@@ -14,7 +14,6 @@ out
 *.local
 .next
 .vscode
-pnpm-lock.yaml
 *.db
 *.db-journal
 bun.lockb
