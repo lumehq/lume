@@ -4,14 +4,14 @@
   "private": true,
   "version": "1.2.5",
   "scripts": {
-    "dev": "bunx --bun vite",
-    "build": "bunx --bun vite build",
+    "dev": "vite",
+    "build": "vite build",
     "tauri": "tauri",
     "add-migrate": "cd src-tauri/ && sqlx migrate add",
     "prepare": "husky install",
     "lint": "eslint ./src --fix",
     "format": "prettier ./src --write",
-    "dep-update": "bun update && cd src-tauri/ && cargo update"
+    "dep-update": "pnpm update && cd src-tauri/ && cargo update"
   },
   "lint-staged": {
     "**/*.{ts, tsx}": "eslint --fix",
