@@ -55,8 +55,8 @@ export function Repost({ event }: { event: NDKEvent }) {
   if (embedEvent) {
     return (
       <div className="h-min w-full px-3 pb-3">
-        <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-          <User pubkey={event.pubkey} variant="repost" />
+        <div className="relative flex flex-col gap-10 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+          <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
             <User pubkey={embedEvent.pubkey} time={embedEvent.created_at} />
             <div className="-mt-6 flex items-start gap-3">
@@ -122,8 +122,8 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   return (
     <div className="h-min w-full px-3 pb-3">
-      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-        <User pubkey={event.pubkey} variant="repost" />
+      <div className="relative flex flex-col gap-10 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+        <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
           <User pubkey={data.pubkey} time={data.created_at} />
           <div className="-mt-2 flex items-start gap-3">

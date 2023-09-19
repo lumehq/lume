@@ -12,6 +12,13 @@ export function VideoPreview({ urls }: { urls: string[] }) {
           className="!h-auto overflow-hidden rounded-lg object-fill"
           controls={true}
           pip={true}
+          light={
+            <img
+              src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+              alt={url}
+              className="h-auto w-full bg-white object-cover"
+            />
+          }
         />
       ))}
     </div>

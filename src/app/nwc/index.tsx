@@ -71,7 +71,7 @@ export function NWCScreen() {
                 <a
                   href="https://github.com/getAlby/nips/blob/7-wallet-connect-patch/47.md"
                   target="_blank"
-                  className="text-fuchsia-200"
+                  className="text-fuchsia-300"
                   rel="noreferrer"
                 >
                   the specs (NIP47)
@@ -88,6 +88,33 @@ export function NWCScreen() {
                 someone.
               </p>
               <p className="text-sm text-white/70">Lume doesn&apos;t hold your Bitcoin</p>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <h5 className="text-sm font-bold text-white">
+                Recommend wallet that support NWC
+              </h5>
+              <p className="text-sm text-white/70">
+                Mutiny Wallet:{' '}
+                <a
+                  href="https://www.mutinywallet.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-fuchsia-300"
+                >
+                  website
+                </a>
+              </p>
+              <p className="text-sm text-white/70">
+                Self hosted NWC on Umbrel :{' '}
+                <a
+                  href="https://apps.umbrel.com/app/alby-nostr-wallet-connect"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-fuchsia-300"
+                >
+                  website
+                </a>
+              </p>
             </div>
           </div>
         </div>

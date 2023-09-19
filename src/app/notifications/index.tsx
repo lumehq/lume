@@ -5,6 +5,8 @@ import { NotiMention } from '@app/notifications/components/mention';
 import { NotiReaction } from '@app/notifications/components/reaction';
 import { NotiRepost } from '@app/notifications/components/repost';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { LoaderIcon } from '@shared/icons';
 import { TitleBar } from '@shared/titleBar';
 
@@ -13,7 +15,9 @@ import { useActivities } from '@stores/activities';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function NotificationScreen() {
+  const { db } = useStorage();
   const { fetchActivities } = useNostr();
+
   const [activities, setActivities, clearTotalNewActivities] = useActivities((state) => [
     state.activities,
     state.setActivities,
@@ -39,12 +43,13 @@ export function NotificationScreen() {
   useEffect(() => {
     async function getActivities() {
       const events = await fetchActivities();
-      setActivities(events);
-      // clear total new activities
-      clearTotalNewActivities();
+      setActivities(events, db.account.last_login_at);
     }
 
     getActivities();
+
+    // clear total new activities
+    clearTotalNewActivities();
   }, []);
 
   return (

@@ -64,18 +64,20 @@ export function Navigation() {
             }
           >
             <div className="flex items-center gap-2.5">
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
-                <BellIcon className="h-4 w-4 text-white" />
-              </span>
+              {totalNewActivities > 0 ? (
+                <div className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-fuchsia-500/20 backdrop-blur-xl">
+                  <p className="text-sm font-bold text-fuchsia-500">
+                    {compactNumber.format(totalNewActivities)}
+                  </p>
+                  <span className="absolute right-0 top-0 block h-1 w-1 -translate-y-1/2 translate-x-1/2 transform rounded-full bg-fuchsia-500 ring-2 ring-black/80" />
+                </div>
+              ) : (
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+                  <BellIcon className="h-4 w-4 text-white" />
+                </span>
+              )}
               Notifications
             </div>
-            {totalNewActivities > 0 ? (
-              <div className="inline-flex h-5 w-8 items-center justify-center rounded bg-fuchsia-500">
-                <span className="text-xs font-medium text-white">
-                  {compactNumber.format(totalNewActivities)}
-                </span>
-              </div>
-            ) : null}
           </NavLink>
         </div>
         <Collapsible.Root open={integrations} onOpenChange={toggleIntegrations}>

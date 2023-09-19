@@ -119,21 +119,24 @@ export const User = memo(function User({
 
   if (variant === 'repost') {
     return (
-      <div className="flex gap-3">
-        <Image
-          src={user?.picture || user?.image}
-          alt={pubkey}
-          className="relative z-20 inline-block h-11 w-11 rounded-lg"
-        />
-        <div className="inline-flex items-baseline gap-1">
-          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
-            {user?.display_name || user?.name || displayNpub(pubkey, 16)}
-          </h5>
-          <span className="font-semibold text-fuchsia-500">reposted</span>
-          <span className="leading-none text-white/50">·</span>
-          <span className="leading-none text-white/50">{createdAt}</span>
+      <>
+        <div className="flex gap-3">
+          <Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            className="relative z-20 inline-block h-11 w-11 rounded-lg"
+          />
+          <div className="inline-flex items-baseline gap-1">
+            <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
+              {user?.display_name || user?.name || displayNpub(pubkey, 16)}
+            </h5>
+            <span className="font-semibold text-fuchsia-500">reposted</span>
+            <span className="leading-none text-white/50">·</span>
+            <span className="leading-none text-white/50">{createdAt}</span>
+          </div>
         </div>
-      </div>
+        <div className="absolute left-[28px] top-16 h-6 w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+      </>
     );
   }
 

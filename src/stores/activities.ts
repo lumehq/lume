@@ -22,7 +22,7 @@ export const useActivities = create<ActivitiesState>((set) => ({
   addActivity: (event: NDKEvent) => {
     set((state) => ({
       activities: state.activities ? [event, ...state.activities] : [event],
-      totalNewActivities: state.totalNewActivities++,
+      totalNewActivities: (state.totalNewActivities += 1),
     }));
   },
   clearTotalNewActivities: () => {

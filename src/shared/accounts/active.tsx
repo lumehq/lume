@@ -40,7 +40,7 @@ export function ActiveAccount() {
         case NDKKind.Text:
           return await sendNativeNotification('Mention');
         case NDKKind.Contacts:
-          return await sendNativeNotification("You've new follower");
+          return await sendNativeNotification("You've a new follower");
         case NDKKind.Repost:
           return await sendNativeNotification('Repost');
         case NDKKind.Reaction:
@@ -48,7 +48,6 @@ export function ActiveAccount() {
         case NDKKind.Zap:
           return await sendNativeNotification('Zap');
         default:
-          console.log('[notify] new event: ', event);
           break;
       }
     });
@@ -56,8 +55,8 @@ export function ActiveAccount() {
 
   if (status === 'loading') {
     return (
-      <div className="inline-flex h-10 items-center gap-2.5 rounded-md px-2">
-        <div className="relative h-7 w-7 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+      <div className="inline-flex h-16 items-center gap-2.5 border-l-2 border-transparent pb-2 pl-4 pr-2">
+        <div className="relative h-10 w-10 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
         <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
       </div>
     );
