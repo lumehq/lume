@@ -16,6 +16,7 @@ import {
 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { DBEvent, Widget } from '@utils/types';
 
@@ -115,7 +116,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar id={params.id} title="Follows" />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
@@ -193,6 +194,6 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
           ) : null}
         </div>
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }

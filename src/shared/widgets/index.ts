@@ -1,3 +1,4 @@
+export * from './wrapper';
 export * from './local/feeds';
 export * from './local/network';
 export * from './local/user';

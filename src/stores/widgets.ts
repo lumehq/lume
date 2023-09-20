@@ -10,6 +10,7 @@ interface WidgetState {
   fetchWidgets: (db: LumeStorage) => void;
   setWidget: (db: LumeStorage, { kind, title, content }: Widget) => void;
   removeWidget: (db: LumeStorage, id: string) => void;
+  reorderWidget: (id: string, position: number) => void;
 }
 
 export const WidgetKinds = {
@@ -141,6 +142,18 @@ export const useWidgets = create<WidgetState>()(
         await db.removeWidget(id);
         set((state) => ({ widgets: state.widgets.filter((widget) => widget.id !== id) }));
       },
+      reorderWidget: (id: string, position: number) =>
+        set((state) => {
+          const widgets = [...state.widgets];
+          const widget = widgets.find((widget) => widget.id === id);
+          if (!widget) return { widgets };
+
+          const idx = widgets.indexOf(widget);
+          widgets.splice(idx, 1);
+          widgets.splice(position, 0, widget);
+
+          return { widgets };
+        }),
     }),
     {
       name: 'widgets',

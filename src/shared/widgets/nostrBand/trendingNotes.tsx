@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { NoteSkeleton, NoteWrapper, TextNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { Widget } from '@utils/types';
 
@@ -31,7 +32,7 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar id={params.id} title="Trending Notes" />
       <div className="scrollbar-hide h-full max-w-full overflow-y-auto pb-20">
         {status === 'loading' ? (
@@ -58,6 +59,6 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
           </div>
         )}
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }

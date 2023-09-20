@@ -16,6 +16,7 @@ import {
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { UserProfile } from '@shared/userProfile';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { nHoursAgo } from '@utils/date';
 import { Widget } from '@utils/types';
@@ -120,7 +121,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="px-3 pt-1.5">
@@ -166,6 +167,6 @@ export function LocalUserWidget({ params }: { params: Widget }) {
           </div>
         </div>
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }

@@ -15,6 +15,7 @@ import {
   UnknownNote,
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { nHoursAgo } from '@utils/date';
 import { Widget } from '@utils/types';
@@ -114,7 +115,7 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar id={params.id} title={params.title + ' in 24 hours ago'} />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
@@ -152,6 +153,6 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
           </div>
         )}
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }

@@ -16,6 +16,7 @@ import {
 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { toRawEvent } from '@utils/rawEvent';
@@ -127,19 +128,15 @@ export function LocalNetworkWidget() {
         since: db.account.last_login_at ?? Math.floor(Date.now() / 1000),
       };
 
-      sub(
-        filter,
-        async (event) => {
-          const rawEvent = toRawEvent(event);
-          await db.createEvent(rawEvent);
-        },
-        false // don't close sub on eose
-      );
+      sub(filter, async (event) => {
+        const rawEvent = toRawEvent(event);
+        await db.createEvent(rawEvent);
+      });
     }
   }, []);
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar title="👋 Network" />
       <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
         {status === 'loading' ? (
@@ -217,6 +214,6 @@ export function LocalNetworkWidget() {
           ) : null}
         </div>
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }
