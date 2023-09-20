@@ -1,6 +1,8 @@
 import * as Popover from '@radix-ui/react-popover';
 import { memo } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import remarkGfm from 'remark-gfm';
 
 import { WorldIcon } from '@shared/icons';
 import { Image } from '@shared/image';
@@ -76,9 +78,15 @@ export const User = memo(function User({
             <p className="max-w-[15rem] truncate text-lg font-semibold leading-none text-white">
               {user?.name || user?.display_name}
             </p>
-            <p className="line-clamp-6 break-all text-white/70">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              className="markdown-simple line-clamp-6"
+              disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
+              unwrapDisallowed={true}
+              linkTarget={'_blank'}
+            >
               {user?.about || user?.bio || 'No bio'}
-            </p>
+            </ReactMarkdown>
           </div>
           <div className="flex flex-col gap-2">
             {user?.website ? (

@@ -9,7 +9,7 @@ dependencies:
     specifier: ^2.4.0
     version: 2.4.0
   '@nostr-dev-kit/ndk':
-    specifier: ^1.0.0
+    specifier: ^1.2.1
     version: 1.2.1(typescript@5.2.2)
   '@nostr-fetch/adapter-ndk':
     specifier: ^0.12.2
@@ -33,7 +33,7 @@ dependencies:
     specifier: ^1.0.6
     version: 1.0.6(@types/react-dom@18.2.7)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-query':
-    specifier: ^4.35.0
+    specifier: ^4.35.3
     version: 4.35.3(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-virtual':
     specifier: 3.0.0-beta.54
@@ -42,29 +42,29 @@ dependencies:
     specifier: ^1.4.0
     version: 1.4.0
   '@tiptap/extension-image':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10(@tiptap/core@2.1.10)
   '@tiptap/extension-mention':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10(@tiptap/core@2.1.10)(@tiptap/pm@2.1.10)(@tiptap/suggestion@2.1.10)
   '@tiptap/extension-placeholder':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10(@tiptap/core@2.1.10)(@tiptap/pm@2.1.10)
   '@tiptap/pm':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10
   '@tiptap/react':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10(@tiptap/core@2.1.10)(@tiptap/pm@2.1.10)(react-dom@18.2.0)(react@18.2.0)
   '@tiptap/starter-kit':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10(@tiptap/pm@2.1.10)
   '@tiptap/suggestion':
-    specifier: ^2.1.8
+    specifier: ^2.1.10
     version: 2.1.10(@tiptap/core@2.1.10)(@tiptap/pm@2.1.10)
   dayjs:
-    specifier: ^1.11.9
-    version: 1.11.9
+    specifier: ^1.11.10
+    version: 1.11.10
   destr:
     specifier: ^2.0.1
     version: 2.0.1
@@ -87,7 +87,7 @@ dependencies:
     specifier: ^0.13.0
     version: 0.13.0
   nostr-tools:
-    specifier: ^1.14.2
+    specifier: ^1.15.0
     version: 1.15.0(typescript@5.2.2)
   qrcode.react:
     specifier: ^3.1.0
@@ -111,14 +111,14 @@ dependencies:
     specifier: ^2.13.0
     version: 2.13.0(react@18.2.0)
   react-router-dom:
-    specifier: ^6.15.0
+    specifier: ^6.16.0
     version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
   react-textarea-autosize:
     specifier: ^8.5.3
     version: 8.5.3(@types/react@18.2.22)(react@18.2.0)
   react-virtuoso:
-    specifier: ^4.5.1
-    version: 4.5.1(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^4.6.0
+    version: 4.6.0(react-dom@18.2.0)(react@18.2.0)
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
@@ -130,7 +130,7 @@ dependencies:
     version: github.com/tauri-apps/tauri-plugin-store/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa
   tauri-plugin-stronghold-api:
     specifier: github:tauri-apps/tauri-plugin-stronghold#v1
-    version: github.com/tauri-apps/tauri-plugin-stronghold/877f308097f98b59a6cad87adda0f75a65398e00
+    version: github.com/tauri-apps/tauri-plugin-stronghold/96dd2cc891915e6fdfb78868b0bef6c5648335a2
   tauri-plugin-upload-api:
     specifier: github:tauri-apps/tauri-plugin-upload#v1
     version: github.com/tauri-apps/tauri-plugin-upload/b53ebc6c2e716d95fd94b64d3b4b87cd57ae4feb
@@ -149,13 +149,13 @@ devDependencies:
     specifier: ^4.2.0
     version: 4.2.0(prettier@3.0.3)
   '@types/html-to-text':
-    specifier: ^9.0.1
+    specifier: ^9.0.2
     version: 9.0.2
   '@types/node':
-    specifier: ^20.6.0
+    specifier: ^20.6.2
     version: 20.6.2
   '@types/react':
-    specifier: ^18.2.21
+    specifier: ^18.2.22
     version: 18.2.22
   '@types/react-dom':
     specifier: ^18.2.7
@@ -164,10 +164,10 @@ devDependencies:
     specifier: ^5.5.7
     version: 5.5.7
   '@typescript-eslint/eslint-plugin':
-    specifier: ^6.6.0
+    specifier: ^6.7.2
     version: 6.7.2(@typescript-eslint/parser@6.7.2)(eslint@8.49.0)(typescript@5.2.2)
   '@typescript-eslint/parser':
-    specifier: ^6.6.0
+    specifier: ^6.7.2
     version: 6.7.2(eslint@8.49.0)(typescript@5.2.2)
   '@vitejs/plugin-react-swc':
     specifier: ^3.3.2
@@ -209,7 +209,7 @@ devDependencies:
     specifier: ^14.0.1
     version: 14.0.1
   postcss:
-    specifier: ^8.4.29
+    specifier: ^8.4.30
     version: 8.4.30
   prettier:
     specifier: ^3.0.3
@@ -2532,7 +2532,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001538
-      electron-to-chromium: 1.4.523
+      electron-to-chromium: 1.4.525
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: true
@@ -2745,8 +2745,8 @@ packages:
     engines: {node: '>= 12'}
     dev: false
 
-  /dayjs@1.11.9:
-    resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
     dev: false
 
   /debug@2.6.9:
@@ -2881,8 +2881,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.523:
-    resolution: {integrity: sha512-9AreocSUWnzNtvLcbpng6N+GkXnCcBR80IQkxRC9Dfdyg4gaWNUPBujAHUpKkiUkoSoR9UlhA4zD/IgBklmhzg==}
+  /electron-to-chromium@1.4.525:
+    resolution: {integrity: sha512-GIZ620hDK4YmIqAWkscG4W6RwY6gOx1y5J6f4JUQwctiJrqH2oxZYU4mXHi35oV32tr630UcepBzSBGJ/WYcZA==}
     dev: true
 
   /emoji-regex@9.2.2:
@@ -5301,8 +5301,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /react-virtuoso@4.5.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Jdo9M/T5PcDAczvmXAKwvb/BW0MCMr/cb+3j2m9192zlQgQ+syMdJR42i+Sk80ln5aSNaL1fnxleJzdKsCc4lw==}
+  /react-virtuoso@4.6.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-paQbkLA8U6dRe9srltWgPeoFCtNKqUYIcOpUR01JyznzaXWVzgZQE0M9KGi9vMoq8vHvHkGzuxJ6jDCS6uzePg==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16 || >=17 || >= 18'
@@ -6330,8 +6330,8 @@ packages:
       '@tauri-apps/api': 1.4.0
     dev: false
 
-  github.com/tauri-apps/tauri-plugin-stronghold/877f308097f98b59a6cad87adda0f75a65398e00:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-stronghold/tar.gz/877f308097f98b59a6cad87adda0f75a65398e00}
+  github.com/tauri-apps/tauri-plugin-stronghold/96dd2cc891915e6fdfb78868b0bef6c5648335a2:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-stronghold/tar.gz/96dd2cc891915e6fdfb78868b0bef6c5648335a2}
     name: tauri-plugin-stronghold-api
     version: 0.0.0
     dependencies:
