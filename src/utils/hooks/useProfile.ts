@@ -1,9 +1,11 @@
-import { NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKKind, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
+import { useStorage } from '@libs/storage/provider';
 
 export function useProfile(pubkey: string, embed?: string) {
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const {
     status,
@@ -14,14 +16,24 @@ export function useProfile(pubkey: string, embed?: string) {
     async () => {
       if (!embed) {
         const cleanPubkey = pubkey.replace('-', '');
-        const user = ndk.getUser({ hexpubkey: cleanPubkey });
-        await user.fetchProfile();
-        if (user.profile) {
-          user.profile.display_name = user.profile.displayName;
-          return user.profile;
-        } else {
-          throw new Error(`User not found: ${pubkey}`);
+        const dbEvent = await db.getMetadataByPubkey(cleanPubkey);
+        if (dbEvent) {
+          return JSON.parse(dbEvent.content) as NDKUserProfile;
         }
+
+        const events = await ndk.fetchEvents(
+          {
+            kinds: [NDKKind.Metadata],
+            authors: [cleanPubkey],
+            limit: 1,
+          },
+          { closeOnEose: true }
+        );
+        if (!events) throw new Error(`User not found: ${pubkey}`);
+        const latestEvent = [...events].sort((a, b) => b.created_at - a.created_at)[0];
+        await db.createMetadata(latestEvent);
+
+        return JSON.parse(latestEvent.content) as NDKUserProfile;
       } else {
         const profile: NDKUserProfile = JSON.parse(embed);
         return profile;

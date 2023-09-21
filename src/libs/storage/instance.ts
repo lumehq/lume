@@ -6,6 +6,7 @@ import { Stronghold } from 'tauri-plugin-stronghold-api';
 
 import { FULL_RELAYS } from '@stores/constants';
 
+import { toRawEvent } from '@utils/rawEvent';
 import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
@@ -280,6 +281,31 @@ export class LumeStorage {
     );
 
     return results.length < 1;
+  }
+
+  public async createMetadata(event: NDKEvent) {
+    const rawEvent = toRawEvent(event);
+
+    return await this.db.execute(
+      'INSERT OR IGNORE INTO metadata (id, event, author, kind, created_at) VALUES ($1, $2, $3, $4, $5);',
+      [
+        rawEvent.id,
+        JSON.stringify(rawEvent),
+        rawEvent.pubkey,
+        rawEvent.kind,
+        rawEvent.created_at,
+      ]
+    );
+  }
+
+  public async getMetadataByPubkey(pubkey: string) {
+    const results: DBEvent[] = await this.db.select(
+      'SELECT * FROM metadata WHERE author = $1 AND kind = "0" LIMIT 1;',
+      [pubkey]
+    );
+
+    if (results.length < 1) return null;
+    return JSON.parse(results[0].event as string) as NDKEvent;
   }
 
   public async getExplicitRelayUrls() {

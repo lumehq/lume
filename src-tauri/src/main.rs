@@ -217,6 +217,12 @@ fn main() {
               sql: include_str!("../migrations/20230918235335_add_uniq_to_relay.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20230921085234,
+              description: "add metadata",
+              sql: include_str!("../migrations/20230921085234_add_metadata_table.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
