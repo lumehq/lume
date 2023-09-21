@@ -60,10 +60,10 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: 'timeline',
+        path: 'browse',
         async lazy() {
-          const { TimelineScreen } = await import('@app/timeline');
-          return { Component: TimelineScreen };
+          const { BrowseScreen } = await import('@app/browse');
+          return { Component: BrowseScreen };
         },
       },
       {

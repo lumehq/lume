@@ -7,13 +7,7 @@ import { ChatsList } from '@app/chats/components/list';
 import { ActiveAccount } from '@shared/accounts/active';
 import { ComposerModal } from '@shared/composer';
 import { Frame } from '@shared/frame';
-import {
-  BellIcon,
-  NavArrowDownIcon,
-  NwcIcon,
-  SpaceIcon,
-  TimeLineIcon,
-} from '@shared/icons';
+import { BellIcon, NavArrowDownIcon, NwcIcon, SpaceIcon, WorldIcon } from '@shared/icons';
 
 import { useActivities } from '@stores/activities';
 import { useSidebar } from '@stores/sidebar';
@@ -39,23 +33,6 @@ export function Navigation() {
       >
         <div className="flex flex-col pr-3">
           <NavLink
-            to="/timeline"
-            preventScrollReset={true}
-            className={({ isActive }) =>
-              twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
-                isActive
-                  ? 'border-fuchsia-500 bg-white/5 text-white'
-                  : 'border-transparent text-white/70'
-              )
-            }
-          >
-            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
-              <TimeLineIcon className="h-4 w-4 text-white" />
-            </span>
-            Timeline
-          </NavLink>
-          <NavLink
             to="/"
             preventScrollReset={true}
             className={({ isActive }) =>
@@ -70,7 +47,24 @@ export function Navigation() {
             <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
               <SpaceIcon className="h-4 w-4 text-white" />
             </span>
-            Space
+            Home
+          </NavLink>
+          <NavLink
+            to="/browse"
+            preventScrollReset={true}
+            className={({ isActive }) =>
+              twMerge(
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/70'
+              )
+            }
+          >
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+              <WorldIcon className="h-4 w-4 text-white" />
+            </span>
+            Browse
           </NavLink>
           <NavLink
             to="/notifications"

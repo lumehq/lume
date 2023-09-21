@@ -1,18 +1,25 @@
 // inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
+import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message } from '@tauri-apps/api/dialog';
 import { fetch } from '@tauri-apps/api/http';
+import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
 export const NDKInstance = () => {
+  const { db } = useStorage();
+
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
-  const { db } = useStorage();
   const cacheAdapter = useMemo(() => new TauriAdapter(), [ndk]);
+  const fetcher = useMemo(
+    () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : null),
+    [ndk]
+  );
 
   // TODO: fully support NIP-11
   async function getExplicitRelays() {
@@ -81,5 +88,6 @@ export const NDKInstance = () => {
   return {
     ndk,
     relayUrls,
+    fetcher,
   };
 };

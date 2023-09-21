@@ -58,7 +58,7 @@ export function LocalNetworkWidget() {
         case NDKKind.Text:
           return (
             <div
-              key={dbEvent.id + index}
+              key={dbEvent.id + dbEvent.root_id + dbEvent.reply_id + index}
               data-index={index}
               ref={virtualizer.measureElement}
             >

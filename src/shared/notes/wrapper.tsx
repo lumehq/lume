@@ -1,5 +1,6 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { ChildNote, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
@@ -9,16 +10,23 @@ export function NoteWrapper({
   children,
   root,
   reply,
+  lighter = false,
 }: {
   event: NDKEvent;
   children: ReactNode;
   repost?: boolean;
   root?: string;
   reply?: string;
+  lighter?: boolean;
 }) {
   return (
     <div className="h-min w-full px-3 pb-3">
-      <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+      <div
+        className={twMerge(
+          'relative overflow-hidden rounded-xl px-3 py-3',
+          !lighter ? 'bg-white/10 backdrop-blur-xl' : 'bg-transparent'
+        )}
+      >
         <div className="relative">{root && <ChildNote id={root} />}</div>
         <div className="relative">{reply && <ChildNote id={reply} root={root} />}</div>
         <div className="relative flex flex-col">

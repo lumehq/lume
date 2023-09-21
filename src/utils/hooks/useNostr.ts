@@ -6,11 +6,9 @@ import {
   NDKSubscription,
   NDKUser,
 } from '@nostr-dev-kit/ndk';
-import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message, open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
 import { LRUCache } from 'lru-cache';
-import { NostrFetcher } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
@@ -24,8 +22,8 @@ import { nHoursAgo } from '@utils/date';
 import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
 
 export function useNostr() {
-  const { ndk, relayUrls } = useNDK();
   const { db } = useStorage();
+  const { ndk, relayUrls, fetcher } = useNDK();
 
   const privkey = useStronghold((state) => state.privkey);
   const subManager = useMemo(
@@ -137,7 +135,6 @@ export function useNostr() {
 
   const prefetchEvents = async () => {
     try {
-      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
       const dbEventsEmpty = await db.isEventsEmpty();
 
       let since: number;
@@ -173,7 +170,6 @@ export function useNostr() {
 
   const fetchActivities = async () => {
     try {
-      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
       const events = await fetcher.fetchAllEvents(
         relayUrls,
         {
@@ -197,7 +193,6 @@ export function useNostr() {
   };
 
   const fetchNIP04Chats = async () => {
-    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
     const events = await fetcher.fetchAllEvents(
       relayUrls,
       {
@@ -215,8 +210,6 @@ export function useNostr() {
   };
 
   const fetchNIP04Messages = async (sender: string) => {
-    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
-
     const senderMessages = await fetcher.fetchAllEvents(
       relayUrls,
       {
@@ -246,7 +239,6 @@ export function useNostr() {
 
   const fetchAllReplies = async (id: string, data?: NDKEventWithReplies[]) => {
     let events = data || null;
-    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
 
     if (!data) {
       events = (await fetcher.fetchAllEvents(

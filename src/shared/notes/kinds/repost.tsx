@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -17,7 +18,13 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-export function Repost({ event }: { event: NDKEvent }) {
+export function Repost({
+  event,
+  lighter = false,
+}: {
+  event: NDKEvent;
+  lighter?: boolean;
+}) {
   const embedEvent: null | NDKEvent =
     event.content.length > 0 ? JSON.parse(event.content) : null;
 
@@ -55,7 +62,12 @@ export function Repost({ event }: { event: NDKEvent }) {
   if (embedEvent) {
     return (
       <div className="h-min w-full px-3 pb-3">
-        <div className="relative flex flex-col gap-10 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+        <div
+          className={twMerge(
+            'relative flex flex-col gap-10 overflow-hidden rounded-xl px-3 py-3',
+            !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
+          )}
+        >
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
             <User pubkey={embedEvent.pubkey} time={embedEvent.created_at} />
@@ -89,7 +101,12 @@ export function Repost({ event }: { event: NDKEvent }) {
 
     return (
       <div className="h-min w-full px-3 pb-3">
-        <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+        <div
+          className={twMerge(
+            'relative overflow-hidden rounded-xl px-3 py-3',
+            !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
+          )}
+        >
           <div className="relative flex flex-col">
             <div className="relative z-10 flex items-start gap-3">
               <div className="inline-flex h-11 w-11 items-end justify-center rounded-lg bg-black pb-1">
@@ -122,7 +139,12 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   return (
     <div className="h-min w-full px-3 pb-3">
-      <div className="relative flex flex-col gap-10 overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+      <div
+        className={twMerge(
+          'relative flex flex-col gap-10 overflow-hidden rounded-xl px-3 py-3',
+          !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
+        )}
+      >
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
           <User pubkey={data.pubkey} time={data.created_at} />
