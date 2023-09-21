@@ -18,7 +18,6 @@
     "**/*.{ts, tsx, css, md, html, json}": "prettier --cache --write"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.0.8",
     "@getalby/sdk": "^2.4.0",
     "@nostr-dev-kit/ndk": "^1.2.1",
     "@nostr-fetch/adapter-ndk": "^0.12.2",
@@ -40,7 +39,6 @@
     "@tiptap/suggestion": "^2.1.10",
     "dayjs": "^1.11.10",
     "destr": "^2.0.1",
-    "get-urls": "^12.1.0",
     "html-to-text": "^9.0.5",
     "light-bolt11-decoder": "^3.0.0",
     "lru-cache": "^10.0.1",
