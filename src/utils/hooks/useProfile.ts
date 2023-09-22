@@ -25,7 +25,7 @@ export function useProfile(pubkey: string, embed?: string) {
           {
             kinds: [NDKKind.Metadata],
             authors: [cleanPubkey],
-            limit: 1,
+            limit: 100,
           },
           { closeOnEose: true }
         );

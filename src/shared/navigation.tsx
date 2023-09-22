@@ -50,7 +50,7 @@ export function Navigation() {
             Home
           </NavLink>
           <NavLink
-            to="/browse"
+            to="/browse/"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(

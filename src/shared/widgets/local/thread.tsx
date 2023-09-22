@@ -44,7 +44,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+      <div className="scrollbar-hide h-full overflow-y-auto">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">

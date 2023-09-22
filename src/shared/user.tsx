@@ -20,7 +20,15 @@ export const User = memo(function User({
 }: {
   pubkey: string;
   time?: number;
-  variant?: 'default' | 'simple' | 'mention' | 'repost' | 'chat' | 'large' | 'thread';
+  variant?:
+    | 'default'
+    | 'simple'
+    | 'mention'
+    | 'repost'
+    | 'chat'
+    | 'large'
+    | 'thread'
+    | 'avatar';
   embedProfile?: string;
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
@@ -122,6 +130,16 @@ export const User = memo(function User({
           </p>
         </div>
       </div>
+    );
+  }
+
+  if (variant === 'avatar') {
+    return (
+      <Image
+        src={user?.picture || user?.image}
+        alt={pubkey}
+        className="h-12 w-12 shrink-0 rounded-lg object-cover"
+      />
     );
   }
 

@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter, redirect } from 'react-router-dom'
 import { AuthCreateScreen } from '@app/auth/create';
 import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
+import { BrowseScreen } from '@app/browse';
 import { ErrorScreen } from '@app/error';
 
 import { Frame } from '@shared/frame';
@@ -61,10 +62,24 @@ const router = createBrowserRouter([
       },
       {
         path: 'browse',
-        async lazy() {
-          const { BrowseScreen } = await import('@app/browse');
-          return { Component: BrowseScreen };
-        },
+        element: <BrowseScreen />,
+        errorElement: <ErrorScreen />,
+        children: [
+          {
+            path: '',
+            async lazy() {
+              const { BrowseUsersScreen } = await import('@app/browse/users');
+              return { Component: BrowseUsersScreen };
+            },
+          },
+          {
+            path: 'relays',
+            async lazy() {
+              const { BrowseRelaysScreen } = await import('@app/browse/relays');
+              return { Component: BrowseRelaysScreen };
+            },
+          },
+        ],
       },
       {
         path: 'users/:pubkey',
