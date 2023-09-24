@@ -94,9 +94,9 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="group inline-flex h-7 w-7 items-center justify-center"
+          className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
         >
-          <ZapIcon className="h-5 w-5 text-white group-hover:text-orange-400" />
+          <ZapIcon className="h-5 w-5 text-white/80 group-hover:text-orange-400" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">

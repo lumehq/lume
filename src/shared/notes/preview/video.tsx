@@ -16,7 +16,7 @@ export function VideoPreview({ urls }: { urls: string[] }) {
             <img
               src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
               alt={url}
-              className="h-auto w-full bg-white object-cover"
+              className="aspect-video h-full w-full bg-white object-cover"
             />
           }
         />

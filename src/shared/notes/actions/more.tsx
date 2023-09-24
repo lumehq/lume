@@ -30,9 +30,9 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="group ml-auto inline-flex h-7 w-7 items-center justify-center"
+              className="group ml-auto inline-flex h-7 w-7 items-center justify-center text-white/80"
             >
-              <HorizontalDotsIcon className="h-5 w-5 text-white group-hover:text-fuchsia-400" />
+              <HorizontalDotsIcon className="h-5 w-5 text-white/80 group-hover:text-fuchsia-400" />
             </button>
           </DropdownMenu.Trigger>
         </Tooltip.Trigger>

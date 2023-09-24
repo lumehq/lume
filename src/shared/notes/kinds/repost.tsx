@@ -64,15 +64,15 @@ export function Repost({
       <div className="h-min w-full px-3 pb-3">
         <div
           className={twMerge(
-            'relative flex flex-col gap-10 overflow-hidden rounded-xl px-3 py-3',
+            'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
             !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
           )}
         >
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
             <User pubkey={embedEvent.pubkey} time={embedEvent.created_at} />
-            <div className="-mt-6 flex items-start gap-3">
-              <div className="w-11 shrink-0" />
+            <div className="-mt-5 flex items-start gap-3">
+              <div className="w-10 shrink-0" />
               <div className="relative z-20 flex-1">
                 {renderKind(embedEvent)}
                 <NoteActions id={embedEvent.id} pubkey={embedEvent.pubkey} />
@@ -141,7 +141,7 @@ export function Repost({
     <div className="h-min w-full px-3 pb-3">
       <div
         className={twMerge(
-          'relative flex flex-col gap-10 overflow-hidden rounded-xl px-3 py-3',
+          'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
           !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
         )}
       >
@@ -149,7 +149,7 @@ export function Repost({
         <div className="relative flex flex-col">
           <User pubkey={data.pubkey} time={data.created_at} />
           <div className="-mt-2 flex items-start gap-3">
-            <div className="w-11 shrink-0" />
+            <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">
               {renderKind(data)}
               <NoteActions id={data.id} pubkey={data.pubkey} />

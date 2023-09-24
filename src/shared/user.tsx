@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 
-import { WorldIcon } from '@shared/icons';
+import { RepostIcon, WorldIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 import { NIP05 } from '@shared/nip05';
 
@@ -46,7 +46,7 @@ export const User = memo(function User({
 
     return (
       <div className="relative flex items-start gap-3">
-        <div className="relative z-10 h-11 w-11 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+        <div className="relative z-10 h-10 w-10 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
         <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
       </div>
     );
@@ -145,24 +145,24 @@ export const User = memo(function User({
 
   if (variant === 'repost') {
     return (
-      <>
-        <div className="flex gap-3">
+      <div className="flex gap-3">
+        <div className="inline-flex h-10 w-10 items-center justify-center">
+          <RepostIcon className="h-6 w-6 text-blue-500" />
+        </div>
+        <div className="inline-flex items-center gap-2">
           <Image
             src={user?.picture || user?.image}
             alt={pubkey}
-            className="relative z-20 inline-block h-11 w-11 rounded-lg"
+            className="relative z-20 inline-block h-6 w-6 rounded"
           />
           <div className="inline-flex items-baseline gap-1">
-            <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
+            <h5 className="max-w-[10rem] truncate font-medium leading-none text-white/80">
               {user?.display_name || user?.name || displayNpub(pubkey, 16)}
             </h5>
-            <span className="font-semibold text-fuchsia-500">reposted</span>
-            <span className="leading-none text-white/50">·</span>
-            <span className="leading-none text-white/50">{createdAt}</span>
+            <span className="text-blue-500">reposted</span>
           </div>
         </div>
-        <div className="absolute left-[28px] top-16 h-6 w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
-      </>
+      </div>
     );
   }
 
@@ -172,7 +172,7 @@ export const User = memo(function User({
         <Image
           src={user?.picture || user?.image}
           alt={pubkey}
-          className="relative z-20 inline-block h-11 w-11 rounded-lg"
+          className="relative z-20 inline-block h-10 w-10 rounded-lg"
         />
         <div className="flex flex-1 flex-col gap-2">
           <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
@@ -194,12 +194,12 @@ export const User = memo(function User({
         <Popover.Trigger asChild>
           <button
             type="button"
-            className="relative z-40 h-11 w-11 shrink-0 overflow-hidden"
+            className="relative z-40 h-10 w-10 shrink-0 overflow-hidden"
           >
             <Image
               src={user?.picture || user?.image}
               alt={pubkey}
-              className="h-11 w-11 rounded-lg object-cover"
+              className="h-10 w-10 rounded-lg object-cover"
             />
           </button>
         </Popover.Trigger>
@@ -220,7 +220,7 @@ export const User = memo(function User({
             <Image
               src={user?.picture || user?.image}
               alt={pubkey}
-              className="h-11 w-11 shrink-0 rounded-lg object-cover"
+              className="h-10 w-10 shrink-0 rounded-lg object-cover"
             />
             <div className="flex flex-1 flex-col gap-2">
               <div className="inline-flex flex-col gap-1">

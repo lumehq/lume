@@ -9,19 +9,19 @@ export function WidgetWrapper({
   children: ReactNode;
   className?: string;
 }) {
-  const [width, setWidth] = useState(400);
+  const [width, setWidth] = useState(420);
 
   return (
     <Resizable
       size={{ width: width, height: '100vh' }}
       onResizeStart={(e) => e.preventDefault()}
-      onResizeStop={(e, direction, ref, d) => {
+      onResizeStop={(_e, _direction, _ref, d) => {
         setWidth((prevWidth) => prevWidth + d.width);
       }}
-      minWidth={400}
+      minWidth={420}
       minHeight={'100vh'}
       className={twMerge(
-        'relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl',
+        'relative shrink-0 grow-0 bg-white/10 backdrop-blur-xl',
         className
       )}
       enable={{ right: true }}
