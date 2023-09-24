@@ -37,7 +37,7 @@ export function BrowseScreen() {
       <div className="absolute z-10 h-full w-full">
         <DotsPattern className="h-full w-full text-white/10" />
       </div>
-      <div className="relative z-20">
+      <div className="relative z-20 h-full w-full">
         <Outlet />
       </div>
     </div>

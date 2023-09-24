@@ -35,6 +35,10 @@ export const User = memo(function User({
   const createdAt = time ? formatCreatedAt(time, variant === 'chat') : 0;
 
   if (status === 'loading') {
+    if (variant === 'avatar') {
+      <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />;
+    }
+
     if (variant === 'mention') {
       return (
         <div className="relative flex items-center gap-3">

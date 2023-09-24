@@ -1,10 +1,10 @@
+import { useDraggable } from '@dnd-kit/core';
 import * as Dialog from '@radix-ui/react-dialog';
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { PlusIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 import { NIP05 } from '@shared/nip05';
 import { TextNote } from '@shared/notes';
@@ -18,8 +18,18 @@ export const UserDrawer = memo(function UserDrawer({ pubkey }: { pubkey: string 
   const { db } = useStorage();
   const { status, user } = useProfile(pubkey);
   const { addContact, removeContact } = useNostr();
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: pubkey,
+  });
 
   const [followed, setFollowed] = useState(false);
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        zIndex: 20,
+      }
+    : undefined;
 
   const followUser = (pubkey: string) => {
     try {
@@ -51,26 +61,20 @@ export const UserDrawer = memo(function UserDrawer({ pubkey }: { pubkey: string 
 
   return (
     <Dialog.Root>
-      <div className="group relative">
-        <Dialog.Trigger asChild>
-          <button type="button" className="relative z-10">
-            <User pubkey={pubkey} variant="avatar" />
-          </button>
-        </Dialog.Trigger>
-        <div className="absolute -bottom-14 left-0 flex flex-col opacity-0 transition-all duration-300 ease-smooth group-hover:-bottom-16 group-hover:opacity-100">
-          <div className="mt-4">
-            <button
-              type="button"
-              className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/10 backdrop-blur-xl hover:bg-white/20"
-            >
-              <PlusIcon className="h-4 w-4 text-white" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <Dialog.Trigger asChild>
+        <button
+          type="button"
+          ref={setNodeRef}
+          style={style}
+          {...listeners}
+          {...attributes}
+        >
+          <User pubkey={pubkey} variant="avatar" />
+        </button>
+      </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Content className="fixed right-0 top-0 z-50 flex h-full w-[400px] items-center justify-center px-4 pb-4 pt-16">
-          <div className="h-full w-full overflow-y-auto rounded-lg border-t border-white/10 bg-white/20 px-3 py-3 backdrop-blur-xl">
+          <div className="h-full w-full overflow-y-auto rounded-lg border-t border-white/10 bg-white/20 px-3 py-3 backdrop-blur-3xl">
             {status === 'loading' ? (
               <div>
                 <p>Loading...</p>
