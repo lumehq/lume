@@ -1,5 +1,6 @@
 import { message } from '@tauri-apps/api/dialog';
 import { RouterProvider, createBrowserRouter, redirect } from 'react-router-dom';
+import 'reactflow/dist/style.css';
 
 import { AuthCreateScreen } from '@app/auth/create';
 import { AuthImportScreen } from '@app/auth/import';

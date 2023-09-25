@@ -42,8 +42,8 @@ export function ChatsList() {
 
   return (
     <div className="flex flex-col">
-      {chats.follows.map((item) => renderItem(item))}
-      {chats.unknowns.length > 0 && <UnknownsModal data={chats.unknowns} />}
+      {chats?.follows?.map((item) => renderItem(item))}
+      {chats?.unknowns?.length > 0 && <UnknownsModal data={chats.unknowns} />}
       <NewMessageModal />
     </div>
   );

@@ -36,7 +36,9 @@ export const User = memo(function User({
 
   if (status === 'loading') {
     if (variant === 'avatar') {
-      <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />;
+      return (
+        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+      );
     }
 
     if (variant === 'mention') {

@@ -19,6 +19,7 @@ import { useStronghold } from '@stores/stronghold';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 import { nHoursAgo } from '@utils/date';
+import { getMultipleRandom } from '@utils/transform';
 import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
 
 export function useNostr() {
@@ -278,6 +279,22 @@ export function useNostr() {
     return events;
   };
 
+  const getContactsByPubkey = async (pubkey: string) => {
+    const user = ndk.getUser({ hexpubkey: pubkey });
+    const follows = [...(await user.follows())].map((user) => user.hexpubkey);
+    return getMultipleRandom([...follows], 10);
+  };
+
+  const getEventsByPubkey = async (pubkey: string) => {
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      { authors: [pubkey], kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article] },
+      { since: nHoursAgo(24) },
+      { sort: true }
+    );
+    return events as unknown as NDKEvent[];
+  };
+
   const publish = async ({
     content,
     kind,
@@ -421,5 +438,7 @@ export function useNostr() {
     publish,
     createZap,
     upload,
+    getContactsByPubkey,
+    getEventsByPubkey,
   };
 }

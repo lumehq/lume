@@ -1,42 +1,116 @@
-import { DndContext } from '@dnd-kit/core';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import ReactFlow, {
+  Background,
+  ConnectionMode,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
+} from 'reactflow';
 
-import { UserDrawer } from '@app/browse/components/userDrawer';
-import { UserDropable } from '@app/browse/components/userDropable';
+import { Edge } from '@app/browse//components/edge';
+import { UserGroupNode } from '@app/browse//components/userGroupNode';
+import { Line } from '@app/browse/components/line';
+import { UserNode } from '@app/browse/components/userNode';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { User } from '@shared/user';
-
+import { useNostr } from '@utils/hooks/useNostr';
 import { getMultipleRandom } from '@utils/transform';
+
+let id = 2;
+const getId = () => `${id++}`;
+const nodeTypes = { user: UserNode, userGroup: UserGroupNode };
+const edgeTypes = { buttonedge: Edge };
 
 export function BrowseUsersScreen() {
   const { db } = useStorage();
+  const { getContactsByPubkey } = useNostr();
+  const { project } = useReactFlow();
 
-  const data = useMemo(() => getMultipleRandom(db.account.follows, 10), []);
+  const defaultContacts = useMemo(() => getMultipleRandom(db.account.follows, 10), []);
+  const reactFlowWrapper = useRef(null);
+  const connectingNodeId = useRef(null);
 
-  const handleDragEnd = (event) => {
-    console.log(event.id);
-  };
+  const initialNodes = [
+    {
+      id: '0',
+      type: 'user',
+      position: { x: 141, y: 0 },
+      data: { list: [], title: '', pubkey: db.account.pubkey },
+    },
+    {
+      id: '1',
+      type: 'userGroup',
+      position: { x: 0, y: 200 },
+      data: { list: defaultContacts, title: 'Starting Point', pubkey: '' },
+    },
+  ];
+  const initialEdges = [{ id: 'e0-1', type: 'buttonedge', source: '0', target: '1' }];
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+
+  const onConnectStart = useCallback((_, { nodeId }) => {
+    connectingNodeId.current = nodeId;
+  }, []);
+
+  const onConnectEnd = useCallback(
+    async (event) => {
+      const targetIsPane = event.target.classList.contains('react-flow__pane');
+
+      if (targetIsPane) {
+        const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
+
+        const id = getId();
+        const prevData = nodes.slice(-1)[0];
+        const randomPubkey = getMultipleRandom(prevData.data.list, 1)[0];
+
+        const newContactList = await getContactsByPubkey(randomPubkey);
+        const newNode = {
+          id,
+          type: 'userGroup',
+          position: project({ x: event.clientX - left, y: event.clientY - top }),
+          data: { list: newContactList, title: null, pubkey: randomPubkey },
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) =>
+          eds.concat({
+            id,
+            type: 'buttonedge',
+            source: connectingNodeId.current,
+            target: id,
+          })
+        );
+      }
+    },
+    [project]
+  );
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <div className="scrollbar-hide flex h-full w-full flex-col items-center justify-center overflow-x-auto overflow-y-auto">
-        <div className="flex items-center gap-16">
-          <div className="flex flex-col gap-1">
-            <h3 className="text-sm font-semibold text-fuchsia-500">Follows</h3>
-            <div className="grid grid-cols-5 gap-6 rounded-lg border border-fuchsia-500/50 bg-fuchsia-500/10 p-4">
-              {data.map((user) => (
-                <UserDrawer key={user} pubkey={user} />
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-16">
-            <User pubkey={db.account.pubkey} variant="avatar" />
-            <UserDropable />
-          </div>
-        </div>
-      </div>
-    </DndContext>
+    <div className="h-full w-full" ref={reactFlowWrapper}>
+      <ReactFlow
+        proOptions={{ hideAttribution: true }}
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        connectionLineComponent={Line}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        connectionMode={ConnectionMode.Loose}
+        minZoom={0.8}
+        maxZoom={1.2}
+        fitView
+      >
+        <Background color="#3f3f46" />
+      </ReactFlow>
+    </div>
   );
 }
