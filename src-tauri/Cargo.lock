@@ -2623,6 +2623,8 @@ dependencies = [
 name = "lume"
 version = "1.2.5"
 dependencies = [
+ "cocoa 0.25.0",
+ "objc",
  "rust-argon2",
  "serde",
  "serde_json",

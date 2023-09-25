@@ -3,14 +3,24 @@
   windows_subsystem = "windows"
 )]
 
-use tauri::Manager;
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate objc;
+
+use std::time::Duration;
+use tauri::{Manager, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};
-use std::time::Duration;
 
 #[cfg(target_os = "macos")]
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+
+#[cfg(target_os = "macos")]
+use traffic_light::TrafficLight;
+
+#[cfg(target_os = "macos")]
+mod traffic_light;
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -102,7 +112,17 @@ fn main() {
       apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
+      #[cfg(target_os = "macos")]
+      window.set_transparent_titlebar(true);
+      window.position_traffic_lights(16.0, 25.0);
+
       Ok(())
+    })
+    .on_window_event(|e| {
+      if let WindowEvent::Resized(..) = e.event() {
+        let window = e.window();
+        window.position_traffic_lights(16., 25.);
+      }
     })
     .plugin(
       tauri_plugin_sql::Builder::default()
