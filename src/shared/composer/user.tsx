@@ -14,7 +14,7 @@ export function ComposerUser({ pubkey }: { pubkey: string }) {
         className="h-10 w-10 shrink-0 rounded-lg"
       />
       <h5 className="text-base font-semibold leading-none text-white">
-        {user?.name || user?.display_name || displayNpub(pubkey, 16)}
+        {user?.name || user?.display_name || user?.displayName || displayNpub(pubkey, 16)}
       </h5>
     </div>
   );

@@ -1,4 +1,4 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { BaseDirectory, removeFile } from '@tauri-apps/api/fs';
 import Database from 'tauri-plugin-sql-api';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
@@ -299,6 +299,13 @@ export class LumeStorage {
         rawEvent.kind,
         rawEvent.created_at,
       ]
+    );
+  }
+
+  public async createProfile(pubkey: string, profile: NDKUserProfile) {
+    return await this.db.execute(
+      'INSERT OR REPLACE INTO metadata (id, event, author, kind, created_at) VALUES ($1, $2, $3, $4, $5);',
+      [pubkey, JSON.stringify(profile), pubkey, 0, Math.round(Date.now() / 1000)]
     );
   }
 

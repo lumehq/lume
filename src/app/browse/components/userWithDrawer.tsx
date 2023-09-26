@@ -90,7 +90,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
                           {displayNpub(pubkey, 16)}
                         </span>
                       )}
-                      {user.about ? <TextNote content={user.about} /> : null}
+                      {user?.about ? <TextNote content={user?.about} /> : null}
                     </div>
                     <div className="mt-3 inline-flex items-center gap-2">
                       {followed ? (

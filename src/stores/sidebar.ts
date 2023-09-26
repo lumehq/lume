@@ -14,7 +14,7 @@ export const useSidebar = create<SidebarState>()(
   persist(
     (set) => ({
       feeds: true,
-      chats: true,
+      chats: false,
       integrations: true,
       toggleFeeds: () => set((state) => ({ feeds: !state.feeds })),
       toggleChats: () => set((state) => ({ chats: !state.chats })),

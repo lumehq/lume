@@ -5,6 +5,7 @@ import { fetch } from '@tauri-apps/api/http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
+import TauriAdapter from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
 export const NDKInstance = () => {
@@ -13,6 +14,7 @@ export const NDKInstance = () => {
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
+  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
   const fetcher = useMemo(
     () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : null),
     [ndk]
@@ -58,6 +60,7 @@ export const NDKInstance = () => {
     const explicitRelayUrls = await getExplicitRelays();
     const instance = new NDK({
       explicitRelayUrls,
+      cacheAdapter,
     });
 
     try {
@@ -75,6 +78,10 @@ export const NDKInstance = () => {
 
   useEffect(() => {
     if (!ndk) initNDK();
+
+    return () => {
+      cacheAdapter.saveCache();
+    };
   }, []);
 
   return {

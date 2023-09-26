@@ -18,20 +18,24 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
       onClick={() =>
         setWidget(db, {
           kind: WidgetKinds.local.user,
-          title: user?.name || user?.display_name,
+          title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
         })
       }
       onKeyDown={() =>
         setWidget(db, {
           kind: WidgetKinds.local.user,
-          title: user?.name || user?.display_name,
+          title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
         })
       }
       className="break-words text-fuchsia-400 hover:text-fuchsia-500"
     >
-      {user?.name || user?.display_name || user?.username || displayNpub(pubkey, 16)}
+      {user?.name ||
+        user?.display_name ||
+        user?.displayName ||
+        user?.username ||
+        displayNpub(pubkey, 16)}
     </span>
   );
 }

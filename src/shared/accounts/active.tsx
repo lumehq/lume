@@ -35,24 +35,28 @@ export function ActiveAccount() {
       since: Math.floor(Date.now() / 1000),
     };
 
-    sub(filter, async (event) => {
-      addActivity(event);
+    sub(
+      filter,
+      async (event) => {
+        addActivity(event);
 
-      switch (event.kind) {
-        case NDKKind.Text:
-          return await sendNativeNotification('Mention');
-        case NDKKind.Contacts:
-          return await sendNativeNotification("You've a new follower");
-        case NDKKind.Repost:
-          return await sendNativeNotification('Repost');
-        case NDKKind.Reaction:
-          return await sendNativeNotification('Reaction');
-        case NDKKind.Zap:
-          return await sendNativeNotification('Zap');
-        default:
-          break;
-      }
-    });
+        switch (event.kind) {
+          case NDKKind.Text:
+            return await sendNativeNotification('Mention');
+          case NDKKind.Contacts:
+            return await sendNativeNotification("You've a new follower");
+          case NDKKind.Repost:
+            return await sendNativeNotification('Repost');
+          case NDKKind.Reaction:
+            return await sendNativeNotification('Reaction');
+          case NDKKind.Zap:
+            return await sendNativeNotification('Zap');
+          default:
+            break;
+        }
+      },
+      false
+    );
   }, []);
 
   if (status === 'loading') {
@@ -74,7 +78,7 @@ export function ActiveAccount() {
         />
         <div className="flex w-full flex-1 flex-col items-start gap-0.5">
           <p className="max-w-[10rem] truncate font-semibold leading-none text-white">
-            {user?.name || user?.display_name}
+            {user?.name || user?.display_name || user?.displayName}
           </p>
           <span className="max-w-[7rem] truncate text-sm leading-none text-white/50">
             {user?.nip05 || displayNpub(db.account.pubkey, 12)}

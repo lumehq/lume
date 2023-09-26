@@ -36,10 +36,17 @@ export function useNostr() {
     []
   );
 
-  const sub = async (filter: NDKFilter, callback: (event: NDKEvent) => void) => {
+  const sub = async (
+    filter: NDKFilter,
+    callback: (event: NDKEvent) => void,
+    groupable?: boolean
+  ) => {
     if (!ndk) throw new Error('NDK instance not found');
 
-    const subEvent = ndk.subscribe(filter, { closeOnEose: false });
+    const subEvent = ndk.subscribe(filter, {
+      closeOnEose: false,
+      groupable: groupable ?? true,
+    });
     subManager.set(JSON.stringify(filter), subEvent);
 
     subEvent.addListener('event', (event: NDKEvent) => {

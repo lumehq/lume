@@ -38,7 +38,10 @@ export function ChatsListItem({ pubkey }: { pubkey: string }) {
       />
       <div className="inline-flex w-full flex-1 items-center justify-between">
         <h5 className="max-w-[10rem] truncate">
-          {user?.name || user?.display_name || displayNpub(pubkey, 16)}
+          {user?.name ||
+            user?.display_name ||
+            user?.displayName ||
+            displayNpub(pubkey, 16)}
         </h5>
       </div>
     </NavLink>
