@@ -148,7 +148,7 @@ export function Repost({
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
           <User pubkey={data.pubkey} time={data.created_at} />
-          <div className="-mt-2 flex items-start gap-3">
+          <div className="-mt-5 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">
               {renderKind(data)}

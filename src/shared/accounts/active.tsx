@@ -25,26 +25,19 @@ export function ActiveAccount() {
   useEffect(() => {
     const filter: NDKFilter = {
       '#p': [db.account.pubkey],
-      kinds: [
-        NDKKind.Text,
-        NDKKind.Contacts,
-        NDKKind.Repost,
-        NDKKind.Reaction,
-        NDKKind.Zap,
-      ],
+      kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
       since: Math.floor(Date.now() / 1000),
     };
 
     sub(
       filter,
       async (event) => {
+        console.log('new notify: ', event);
         addActivity(event);
 
         switch (event.kind) {
           case NDKKind.Text:
             return await sendNativeNotification('Mention');
-          case NDKKind.Contacts:
-            return await sendNativeNotification("You've a new follower");
           case NDKKind.Repost:
             return await sendNativeNotification('Repost');
           case NDKKind.Reaction:

@@ -21,7 +21,7 @@ export function NWCScreen() {
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="flex h-full w-full items-center justify-center bg-white/5">
       <div className="flex w-full flex-col gap-5">
         <div className="text-center">
           <h3 className="text-2xl font-bold leading-tight">

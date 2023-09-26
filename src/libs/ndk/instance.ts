@@ -40,13 +40,18 @@ export const NDKInstance = () => {
       const successes = responses.filter((res) => res.ok);
 
       const verifiedRelays: string[] = successes.map((res) => {
-        // TODO: support payment
+        const url = new URL(res.url);
+
         // @ts-expect-error, not have type yet
-        if (!res.data.limitation?.payment_required) {
-          const url = new URL(res.url);
-          if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
-          if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
+        if (res.data?.limitation?.payment_required) {
+          if (url.protocol === 'http:')
+            return `ws://${url.hostname + url.pathname + db.account.npub}`;
+          if (url.protocol === 'https:')
+            return `wss://${url.hostname + url.pathname + db.account.npub}`;
         }
+
+        if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
+        if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
       });
 
       // return all validated relays

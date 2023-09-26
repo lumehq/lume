@@ -47,11 +47,13 @@ export function useNostr() {
       closeOnEose: false,
       groupable: groupable ?? true,
     });
-    subManager.set(JSON.stringify(filter), subEvent);
 
     subEvent.addListener('event', (event: NDKEvent) => {
       callback(event);
     });
+
+    subManager.set(JSON.stringify(filter), subEvent);
+    console.log(subManager.keys());
   };
 
   const fetchUserData = async (preFollows?: string[]) => {
