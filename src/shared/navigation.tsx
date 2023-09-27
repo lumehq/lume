@@ -15,7 +15,8 @@ import { useSidebar } from '@stores/sidebar';
 import { compactNumber } from '@utils/number';
 
 export function Navigation() {
-  const [totalNewActivities] = useActivities((state) => [state.totalNewActivities]);
+  const totalNewActivities = useActivities((state) => state.totalNewActivities);
+
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
   const [integrations, toggleIntegrations] = useSidebar((state) => [
     state.integrations,

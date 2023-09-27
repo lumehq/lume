@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react';
 import { useStorage } from '@libs/storage/provider';
 
 import { useNostr } from '@utils/hooks/useNostr';
+import { useStronghold } from '@stores/stronghold';
 
 export function EmptyList() {
   const { db } = useStorage();
   const { getAllEventsSinceLastLogin } = useNostr();
 
+  const setIsFetched = useStronghold((state) => state.setIsFetched);
   const queryClient = useQueryClient();
+  
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -21,6 +24,7 @@ export function EmptyList() {
 
       if (promises) {
         setProgress(100);
+        setIsFetched();
         // invalidate queries
         queryClient.invalidateQueries(['local-network-widget']);
       }

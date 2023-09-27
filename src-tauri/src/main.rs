@@ -114,14 +114,16 @@ fn main() {
 
       #[cfg(target_os = "macos")]
       window.set_transparent_titlebar(true);
+      #[cfg(target_os = "macos")]
       window.position_traffic_lights(16.0, 25.0);
 
       Ok(())
     })
     .on_window_event(|e| {
+      #[cfg(target_os = "macos")]
       if let WindowEvent::Resized(..) = e.event() {
         let window = e.window();
-        window.position_traffic_lights(16., 25.);
+        window.position_traffic_lights(16.0, 25.0);
       }
     })
     .plugin(
