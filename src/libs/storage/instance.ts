@@ -1,5 +1,6 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { BaseDirectory, removeFile } from '@tauri-apps/api/fs';
+import { Platform } from '@tauri-apps/api/os';
 import Database from 'tauri-plugin-sql-api';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
 
@@ -11,12 +12,14 @@ import { Account, DBEvent, Relays, Widget } from '@utils/types';
 export class LumeStorage {
   public db: Database;
   public secureDB: Stronghold;
-  public account: Account | null = null;
+  public account: Account | null;
+  public platform: Platform | null;
 
-  constructor(sqlite: Database, stronghold?: Stronghold) {
+  constructor(sqlite: Database, platform?: Platform, stronghold?: Stronghold) {
     this.db = sqlite;
     this.secureDB = stronghold ?? undefined;
     this.account = null;
+    this.platform = platform ?? undefined;
   }
 
   private async getSecureClient(key?: string) {

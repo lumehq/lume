@@ -54,7 +54,7 @@ export function useNostr() {
     });
 
     subManager.set(JSON.stringify(filter), subEvent);
-    console.log(subManager.keys());
+    console.log('current active sub: ', subManager.size);
   };
 
   const fetchUserData = async (preFollows?: string[]) => {
@@ -142,41 +142,6 @@ export function useNostr() {
 
     // publish event
     publish({ content: '', kind: NDKKind.Contacts, tags: tags });
-  };
-
-  const prefetchEvents = async () => {
-    try {
-      const dbEventsEmpty = await db.isEventsEmpty();
-
-      let since: number;
-      if (dbEventsEmpty || db.account.last_login_at === 0) {
-        since = db.account.network.length > 400 ? nHoursAgo(12) : nHoursAgo(24);
-      } else {
-        since = db.account.last_login_at;
-      }
-
-      console.log("prefetching events with user's network: ", db.account.network.length);
-      console.log('prefetching events since: ', since);
-
-      const events = (await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.network,
-        },
-        { since: since }
-      )) as unknown as NDKEvent[];
-
-      // save all events to database
-      const promises = await Promise.all(
-        events.map(async (event) => await db.createEvent(event))
-      );
-
-      if (promises) return { status: 'ok', message: 'prefetch completed' };
-    } catch (e) {
-      console.error('prefetch events failed, error: ', e);
-      return { status: 'failed', message: e };
-    }
   };
 
   const fetchActivities = async () => {
@@ -291,6 +256,37 @@ export function useNostr() {
     }
 
     return events;
+  };
+
+  const getAllEventsSinceLastLogin = async (customSince?: number) => {
+    try {
+      let since: number;
+      const dbEventsEmpty = await db.isEventsEmpty();
+
+      if (!customSince) {
+        if (dbEventsEmpty || db.account.last_login_at === 0) {
+          since = db.account.network.length > 400 ? nHoursAgo(12) : nHoursAgo(24);
+        } else {
+          since = db.account.last_login_at;
+        }
+      } else {
+        since = customSince;
+      }
+
+      const events = (await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+          authors: db.account.network,
+        },
+        { since: since }
+      )) as unknown as NDKEvent[];
+
+      return { status: 'ok', message: 'fetch completed', data: events };
+    } catch (e) {
+      console.error('prefetch events failed, error: ', e);
+      return { status: 'failed', message: e };
+    }
   };
 
   const getContactsByPubkey = async (pubkey: string) => {
@@ -444,7 +440,7 @@ export function useNostr() {
     fetchUserData,
     addContact,
     removeContact,
-    prefetchEvents,
+    getAllEventsSinceLastLogin,
     fetchActivities,
     fetchNIP04Chats,
     fetchNIP04Messages,

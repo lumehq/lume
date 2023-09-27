@@ -65,9 +65,9 @@ export function SpaceScreen() {
         case WidgetKinds.nostrBand.trendingNotes:
           return <TrendingNotesWidget key={widget.id} params={widget} />;
         case WidgetKinds.tmp.xfeed:
-          return <XhashtagWidget key={widget.id} params={widget} />;
-        case WidgetKinds.tmp.xhashtag:
           return <XfeedsWidget key={widget.id} params={widget} />;
+        case WidgetKinds.tmp.xhashtag:
+          return <XhashtagWidget key={widget.id} params={widget} />;
         case WidgetKinds.tmp.list:
           return <WidgetList key={widget.id} params={widget} />;
         case WidgetKinds.other.learnNostr:

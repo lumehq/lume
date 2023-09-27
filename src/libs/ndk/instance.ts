@@ -21,49 +21,42 @@ export const NDKInstance = () => {
   );
 
   // TODO: fully support NIP-11
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function getExplicitRelays() {
     try {
       // get relays
       const relays = await db.getExplicitRelayUrls();
-      const requests = relays.map((relay) => {
+      const onlineRelays = new Set(relays);
+
+      for (const relay of relays) {
         const url = new URL(relay);
-        return fetch(`https://${url.hostname + url.pathname}`, {
-          method: 'GET',
-          timeout: 10,
-          headers: {
-            Accept: 'application/nostr+json',
-          },
-        });
-      });
+        try {
+          const res = await fetch(`https://${url.hostname}`, {
+            method: 'GET',
+            timeout: { secs: 5, nanos: 0 },
+            headers: {
+              Accept: 'application/nostr+json',
+            },
+          });
 
-      const responses = await Promise.all(requests);
-      const successes = responses.filter((res) => res.ok);
-
-      const verifiedRelays: string[] = successes.map((res) => {
-        const url = new URL(res.url);
-
-        // @ts-expect-error, not have type yet
-        if (res.data?.limitation?.payment_required) {
-          if (url.protocol === 'http:')
-            return `ws://${url.hostname + url.pathname + db.account.npub}`;
-          if (url.protocol === 'https:')
-            return `wss://${url.hostname + url.pathname + db.account.npub}`;
+          if (!res.ok) {
+            console.info(`${relay} is not working, skipping...`);
+            onlineRelays.delete(relay);
+          }
+        } catch {
+          console.warn(`${relay} is not working, skipping...`);
+          onlineRelays.delete(relay);
         }
+      }
 
-        if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
-        if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
-      });
-
-      // return all validated relays
-      return verifiedRelays;
+      // return all online relays
+      return [...onlineRelays];
     } catch (e) {
       console.error(e);
     }
   }
 
   async function initNDK() {
-    const explicitRelayUrls = await db.getExplicitRelayUrls();
+    const explicitRelayUrls = await getExplicitRelays();
     const instance = new NDK({
       explicitRelayUrls,
       cacheAdapter,

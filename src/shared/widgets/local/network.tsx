@@ -16,7 +16,9 @@ import {
 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
-import { WidgetWrapper } from '@shared/widgets';
+import { EmptyList, LoadLatestEvents, WidgetWrapper } from '@shared/widgets';
+
+import { useStronghold } from '@stores/stronghold';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { toRawEvent } from '@utils/rawEvent';
@@ -34,6 +36,7 @@ export function LocalNetworkWidget() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
+  const isFetched = useStronghold((state) => state.isFetched);
   const dbEvents = useMemo(
     () => (data ? data.pages.flatMap((d: { data: DBEvent[] }) => d.data) : []),
     [data]
@@ -83,7 +86,7 @@ export function LocalNetworkWidget() {
   // subscribe for new event
   // sub will be managed by lru-cache
   useEffect(() => {
-    if (db.account && db.account.network) {
+    if (db.account && db.account.network && dbEvents.length > 0) {
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
         authors: db.account.network,
@@ -95,11 +98,11 @@ export function LocalNetworkWidget() {
         await db.createEvent(rawEvent);
       });
     }
-  }, []);
+  }, [data]);
 
   return (
     <WidgetWrapper>
-      <TitleBar title="👋 Network" />
+      <TitleBar title="Network" />
       <div className="h-full">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
@@ -108,21 +111,10 @@ export function LocalNetworkWidget() {
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
-          <div className="flex h-full w-full flex-col items-center justify-center px-3">
-            <div className="flex flex-col items-center gap-4">
-              <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
-              <div className="text-center">
-                <h3 className="text-xl font-semibold leading-tight">
-                  Your newsfeed is empty
-                </h3>
-                <p className="text-center text-white/50">
-                  Connect more people to explore more content
-                </p>
-              </div>
-            </div>
-          </div>
+          <EmptyList />
         ) : (
           <VList className="scrollbar-hide h-full">
+            {!isFetched ? <LoadLatestEvents /> : null}
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">
               {dbEvents.length > 0 ? (
