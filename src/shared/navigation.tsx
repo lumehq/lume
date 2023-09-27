@@ -23,7 +23,10 @@ export function Navigation() {
   ]);
 
   return (
-    <Frame className="relative flex h-full w-[232px] flex-col" lighter>
+    <Frame
+      className="relative flex h-full w-[232px] flex-col border-r border-white/5"
+      lighter
+    >
       <div
         data-tauri-drag-region
         className="inline-flex h-16 w-full items-center justify-end px-3"

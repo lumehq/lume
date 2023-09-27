@@ -1,5 +1,5 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { ReactNode } from 'react';
+import { ReactElement, cloneElement } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ChildNote, NoteActions } from '@shared/notes';
@@ -13,7 +13,7 @@ export function NoteWrapper({
   lighter = false,
 }: {
   event: NDKEvent;
-  children: ReactNode;
+  children: ReactElement;
   repost?: boolean;
   root?: string;
   reply?: string;
@@ -34,7 +34,10 @@ export function NoteWrapper({
           <div className="-mt-5 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">
-              {children}
+              {cloneElement(
+                children,
+                event.kind === 1 ? { content: event.content } : { event: event }
+              )}
               <NoteActions id={event.id} pubkey={event.pubkey} />
             </div>
           </div>

@@ -7,6 +7,8 @@ import { UnknownsModal } from '@app/chats/components/unknowns';
 
 import { useStorage } from '@libs/storage/provider';
 
+import { LoaderIcon } from '@shared/icons';
+
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatsList() {
@@ -33,8 +35,10 @@ export function ChatsList() {
     return (
       <div className="flex flex-col">
         <div className="inline-flex h-10 items-center gap-2.5 border-l-2 border-transparent pl-4">
-          <div className="relative h-7 w-7 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-          <div className="h-4 w-full animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+          <div className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center">
+            <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+          </div>
+          <h5 className="text-white/50">Loading messages...</h5>
         </div>
       </div>
     );

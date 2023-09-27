@@ -1,7 +1,7 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
+import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -41,79 +41,35 @@ export function LocalUserWidget({ params }: { params: Widget }) {
     }
   );
 
-  const parentRef = useRef<HTMLDivElement>(null);
-  const virtualizer = useVirtualizer({
-    count: data ? data.length : 0,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 650,
-    overscan: 4,
-  });
-  const items = virtualizer.getVirtualItems();
-
   // render event match event kind
   const renderItem = useCallback(
-    (index: string | number) => {
-      const event: NDKEvent = data[index];
-      if (!event) return;
-
+    (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
           return (
-            <div
-              key={event.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <TextNote content={event.content} />
-              </NoteWrapper>
-            </div>
+            <NoteWrapper key={event.id} event={event}>
+              <TextNote />
+            </NoteWrapper>
           );
         case NDKKind.Repost:
-          return (
-            <div
-              key={event.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <Repost key={event.id} event={event} />
-            </div>
-          );
+          return <Repost key={event.id} event={event} />;
         case 1063:
           return (
-            <div
-              key={event.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <FileNote event={event} />
-              </NoteWrapper>
-            </div>
+            <NoteWrapper key={event.id} event={event}>
+              <FileNote />
+            </NoteWrapper>
           );
         case NDKKind.Article:
           return (
-            <div
-              key={event.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <ArticleNote event={event} />
-              </NoteWrapper>
-            </div>
+            <NoteWrapper key={event.id} event={event}>
+              <ArticleNote />
+            </NoteWrapper>
           );
         default:
           return (
-            <div
-              key={event.id + index}
-              data-index={index}
-              ref={virtualizer.measureElement}
-            >
-              <NoteWrapper event={event}>
-                <UnknownNote event={event} />
-              </NoteWrapper>
-            </div>
+            <NoteWrapper key={event.id} event={event}>
+              <UnknownNote />
+            </NoteWrapper>
           );
       }
     },
@@ -123,7 +79,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div ref={parentRef} className="scrollbar-hide h-full overflow-y-auto pb-20">
+      <div className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
         </div>
@@ -136,7 +92,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
                   <NoteSkeleton />
                 </div>
               </div>
-            ) : items.length === 0 ? (
+            ) : data.length === 0 ? (
               <div className="px-3 py-1.5">
                 <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
                   <div className="flex flex-col items-center gap-4">
@@ -147,22 +103,10 @@ export function LocalUserWidget({ params }: { params: Widget }) {
                 </div>
               </div>
             ) : (
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  height: `${virtualizer.getTotalSize()}px`,
-                }}
-              >
-                <div
-                  className="absolute left-0 top-0 w-full"
-                  style={{
-                    transform: `translateY(${items[0].start}px)`,
-                  }}
-                >
-                  {items.map((item) => renderItem(item.index))}
-                </div>
-              </div>
+              <VList className="scrollbar-hide h-full">
+                {data.map((item) => renderItem(item))}
+                <div className="h-16" />
+              </VList>
             )}
           </div>
         </div>

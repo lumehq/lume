@@ -60,7 +60,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Content className="fixed right-0 top-0 z-50 flex h-full w-[400px] items-center justify-center px-4 pb-4 pt-16">
+        <Dialog.Content className="fixed right-0 top-0 z-50 flex h-full w-[400px] animate-slideRightAndFade items-center justify-center px-4 pb-4 pt-16 transition-all">
           <div className="h-full w-full overflow-y-auto rounded-lg border-t border-white/10 bg-white/20 py-3 backdrop-blur-3xl">
             {status === 'loading' ? (
               <div>

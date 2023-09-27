@@ -13,8 +13,8 @@ import {
 
 import { parser } from '@utils/parser';
 
-export function TextNote({ content }: { content: string }) {
-  const richContent = parser(content) ?? null;
+export function TextNote(props: { content?: string }) {
+  const richContent = parser(props.content) ?? null;
 
   if (!richContent) {
     return (
@@ -26,7 +26,7 @@ export function TextNote({ content }: { content: string }) {
           unwrapDisallowed={true}
           linkTarget={'_blank'}
         >
-          {content}
+          {props.content}
         </ReactMarkdown>
       </div>
     );

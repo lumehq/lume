@@ -21,6 +21,7 @@ export const NDKInstance = () => {
   );
 
   // TODO: fully support NIP-11
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function getExplicitRelays() {
     try {
       // get relays
@@ -62,7 +63,7 @@ export const NDKInstance = () => {
   }
 
   async function initNDK() {
-    const explicitRelayUrls = await getExplicitRelays();
+    const explicitRelayUrls = await db.getExplicitRelayUrls();
     const instance = new NDK({
       explicitRelayUrls,
       cacheAdapter,

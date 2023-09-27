@@ -26,7 +26,7 @@ export function UserLatestPosts({ pubkey }: { pubkey: string }) {
         case NDKKind.Text:
           return (
             <NoteWrapper key={event.id} event={event}>
-              <TextNote content={event.content} />
+              <TextNote />
             </NoteWrapper>
           );
         case NDKKind.Repost:
@@ -34,19 +34,19 @@ export function UserLatestPosts({ pubkey }: { pubkey: string }) {
         case 1063:
           return (
             <NoteWrapper key={event.id} event={event}>
-              <FileNote event={event} />
+              <FileNote />
             </NoteWrapper>
           );
         case NDKKind.Article:
           return (
             <NoteWrapper key={event.id} event={event}>
-              <ArticleNote event={event} />
+              <ArticleNote />
             </NoteWrapper>
           );
         default:
           return (
             <NoteWrapper key={event.id} event={event}>
-              <UnknownNote event={event} />
+              <UnknownNote />
             </NoteWrapper>
           );
       }

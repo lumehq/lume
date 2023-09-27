@@ -9,6 +9,7 @@ import {
 import { message, open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
 import { LRUCache } from 'lru-cache';
+import { NostrEventExt } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
@@ -220,15 +221,19 @@ export function useNostr() {
   };
 
   const fetchNIP04Messages = async (sender: string) => {
-    const senderMessages = await fetcher.fetchAllEvents(
-      relayUrls,
-      {
-        kinds: [NDKKind.EncryptedDirectMessage],
-        authors: [sender],
-        '#p': [db.account.pubkey],
-      },
-      { since: 0 }
-    );
+    let senderMessages: NostrEventExt<false>[] = [];
+
+    if (sender !== db.account.pubkey) {
+      senderMessages = await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [NDKKind.EncryptedDirectMessage],
+          authors: [sender],
+          '#p': [db.account.pubkey],
+        },
+        { since: 0 }
+      );
+    }
 
     const userMessages = await fetcher.fetchAllEvents(
       relayUrls,

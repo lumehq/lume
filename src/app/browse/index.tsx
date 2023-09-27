@@ -13,7 +13,7 @@ export function BrowseScreen() {
               to="/browse/"
               className={({ isActive }) =>
                 twMerge(
-                  'inline-flex h-8 w-20 items-center justify-center rounded-full text-sm font-semibold',
+                  'inline-flex h-7 w-20 items-center justify-center rounded-full text-sm font-semibold',
                   isActive ? 'bg-white/10 hover:bg-white/20' : ' hover:bg-white/5'
                 )
               }
@@ -24,7 +24,7 @@ export function BrowseScreen() {
               to="/browse/relays"
               className={({ isActive }) =>
                 twMerge(
-                  'inline-flex h-8 w-20 items-center justify-center rounded-full text-sm font-semibold',
+                  'inline-flex h-7 w-20 items-center justify-center rounded-full text-sm font-semibold',
                   isActive ? 'bg-white/10 hover:bg-white/20' : ' hover:bg-white/5'
                 )
               }
