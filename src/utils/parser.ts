@@ -57,6 +57,11 @@ export function parser(eventContent: string) {
         return word.replace(word, `~tag-${word}~`);
       }
 
+      // boost
+      if (word.startsWith('$') && word.length > 1) {
+        return word.replace(word, `~boost-${word}~`);
+      }
+
       // nostr account references
       if (word.startsWith('nostr:npub1') || word.startsWith('npub1')) {
         const npub = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');

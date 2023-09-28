@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 
 import {
+  Boost,
   Hashtag,
   ImagePreview,
   LinkPreview,
@@ -55,6 +56,9 @@ export function TextNote(props: { content?: string }) {
             }
             if (key.startsWith('tag')) {
               return <Hashtag tag={key.replace('tag-', '')} />;
+            }
+            if (key.startsWith('boost')) {
+              return <Boost boost={key.replace('boost-', '')} />;
             }
           },
         }}

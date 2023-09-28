@@ -80,8 +80,8 @@ export function ImportStep3Screen() {
             )}
           </button>
           <span className="text-center text-sm text-white/50">
-            By clicking &apos;Continue&apos;, Lume will sync your old relay list and
-            metadata.<br/>It may take a bit, please be patient.
+            By clicking &apos;Continue&apos;, Lume will download your old relay list and
+            metadata. It may take a bit
           </span>
         </div>
       </div>

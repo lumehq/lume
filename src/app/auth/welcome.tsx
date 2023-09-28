@@ -1,34 +1,10 @@
-import { LogicalSize, getCurrent } from '@tauri-apps/api/window';
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 export function WelcomeScreen() {
-  const appWindow = getCurrent();
-
-  async function setWindow() {
-    await appWindow.setSize(new LogicalSize(400, 500));
-    await appWindow.setResizable(false);
-    await appWindow.center();
-  }
-
-  async function resetWindow() {
-    await appWindow.setSize(new LogicalSize(1080, 800));
-    await appWindow.setResizable(true);
-    await appWindow.center();
-  }
-
-  useEffect(() => {
-    setWindow();
-
-    return () => {
-      resetWindow();
-    };
-  }, []);
-
   return (
-    <div className="flex h-screen w-full flex-col justify-between">
+    <div className="mx-auto flex h-screen w-full max-w-md flex-col justify-center">
       <div className="flex flex-col gap-10 pt-16">
         <div className="flex flex-col gap-1.5 text-center">
           <h1 className="text-3xl font-semibold text-white">Welcome to Lume</h1>
@@ -54,8 +30,8 @@ export function WelcomeScreen() {
           </Link>
         </div>
       </div>
-      <div className="flex flex-1 items-end justify-center pb-6">
-        <img src="/lume.png" alt="lume" className="h-auto w-1/4" />
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 transform">
+        <img src="/lume.png" alt="lume" className="mx-auto h-auto w-1/4" />
       </div>
     </div>
   );
