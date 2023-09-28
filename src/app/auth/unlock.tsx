@@ -70,6 +70,13 @@ export function UnlockScreen() {
     }
   };
 
+  const logout = async () => {
+    // remove account
+    db.accountLogout();
+    // redirect to welcome screen
+    navigate('/auth/welcome');
+  };
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
@@ -126,12 +133,30 @@ export function UnlockScreen() {
                 </>
               )}
             </button>
-            <Link
-              to="/auth/reset"
-              className="mt-1 inline-flex h-12 w-full items-center justify-center rounded-lg text-center text-white/70 hover:bg-white/20"
-            >
-              Reset password
-            </Link>
+            <div className="mt-8 w-full">
+              <div className="flex items-center gap-2.5">
+                <div className="h-px flex-1 bg-white/10" />
+                <p className="shrink-0 text-sm font-medium text-white/50">
+                  Forgot password?
+                </p>
+                <div className="h-px flex-1 bg-white/10" />
+              </div>
+              <div className="mt-2 flex flex-col">
+                <Link
+                  to="/auth/reset"
+                  className="inline-flex h-10 w-full items-center justify-center rounded-lg text-center text-sm font-medium text-white/70 hover:bg-white/20"
+                >
+                  Reset password if you still have private key
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="inline-flex h-10 w-full items-center justify-center rounded-lg text-center text-sm font-medium text-white/70 hover:bg-white/20"
+                >
+                  Login with another account
+                </button>
+              </div>
+            </div>
           </div>
         </form>
       </div>

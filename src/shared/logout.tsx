@@ -32,7 +32,7 @@ export function Logout() {
           <LogoutIcon className="h-4 w-4 text-white" />
         </button>
       </AlertDialog.Trigger>
-      <AlertDialog.Portal className="relative z-10">
+      <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">

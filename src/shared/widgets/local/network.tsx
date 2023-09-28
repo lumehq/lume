@@ -16,7 +16,7 @@ import {
 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
-import { EmptyList, LoadLatestEvents, WidgetWrapper } from '@shared/widgets';
+import { EventLoader, WidgetWrapper } from '@shared/widgets';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -111,10 +111,10 @@ export function LocalNetworkWidget() {
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
-          <EmptyList />
+          <EventLoader firstTime={true} />
         ) : (
           <VList className="scrollbar-hide h-full">
-            {!isFetched ? <LoadLatestEvents /> : null}
+            {!isFetched ? <EventLoader firstTime={false} /> : null}
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">
               {dbEvents.length > 0 ? (

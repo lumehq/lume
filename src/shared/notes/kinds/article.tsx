@@ -28,12 +28,8 @@ export function ArticleNote(props: { event?: NDKEvent }) {
   }, [props.event.id]);
 
   return (
-    <Link
-      to={`/notes/article/${props.event.id}`}
-      preventScrollReset={true}
-      className="mb-2 mt-3 rounded-lg"
-    >
-      <div className="flex flex-col rounded-lg">
+    <Link to={`/notes/article/${props.event.id}`} preventScrollReset={true}>
+      <div className="mb-2 mt-3 flex flex-col rounded-lg">
         {metadata.image && (
           <Image
             src={metadata.image}

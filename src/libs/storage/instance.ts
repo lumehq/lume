@@ -351,6 +351,10 @@ export class LumeStorage {
   }
 
   public async accountLogout() {
+    // delete all events
+    await this.db.execute('DELETE FROM events WHERE account_id = $1;', [this.account.id]);
+
+    // update current account status
     await this.db.execute("UPDATE accounts SET is_active = '0' WHERE id = $1;", [
       this.account.id,
     ]);

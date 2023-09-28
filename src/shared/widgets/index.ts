@@ -14,5 +14,4 @@ export * from './nostrBand/trendingAccounts';
 export * from './tmp/feeds';
 export * from './tmp/hashtag';
 export * from './other/learnNostr';
-export * from './emptyList';
-export * from './loadLatestEvents';
+export * from './eventLoader';

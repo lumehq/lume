@@ -130,11 +130,11 @@ export const User = memo(function User({
           alt={pubkey}
           className="h-12 w-12 shrink-0 rounded-lg object-cover"
         />
-        <div className="flex w-full flex-col gap-1">
+        <div className="flex w-full flex-col items-start gap-1">
           <h3 className="max-w-[15rem] truncate font-medium leading-none text-white">
             {user?.name || user?.display_name || user?.displayName}
           </h3>
-          <p className="text-sm leading-none text-white/70">
+          <p className="max-w-[10rem] truncate text-sm leading-none text-white/70">
             {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
