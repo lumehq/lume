@@ -1,13 +1,23 @@
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { ChatsList } from '@app/chats/components/list';
 
+import { useStorage } from '@libs/storage/provider';
+
 import { ActiveAccount } from '@shared/accounts/active';
 import { ComposerModal } from '@shared/composer';
 import { Frame } from '@shared/frame';
-import { BellIcon, NavArrowDownIcon, NwcIcon, SpaceIcon, WorldIcon } from '@shared/icons';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  BellIcon,
+  NavArrowDownIcon,
+  NwcIcon,
+  SpaceIcon,
+  WorldIcon,
+} from '@shared/icons';
 
 import { useActivities } from '@stores/activities';
 import { useSidebar } from '@stores/sidebar';
@@ -15,6 +25,9 @@ import { useSidebar } from '@stores/sidebar';
 import { compactNumber } from '@utils/number';
 
 export function Navigation() {
+  const { db } = useStorage();
+
+  const navigate = useNavigate();
   const totalNewActivities = useActivities((state) => state.totalNewActivities);
 
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
@@ -30,8 +43,28 @@ export function Navigation() {
     >
       <div
         data-tauri-drag-region
-        className="inline-flex h-16 w-full items-center justify-end px-3"
+        className="inline-flex h-16 w-full items-center justify-between px-3"
       >
+        {db.platform !== 'darwin' ? (
+          <div className="inline-flex items-center gap-4 pl-2">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="inline-flex h-9 items-center justify-center"
+            >
+              <ArrowLeftIcon className="h-5 w-5 text-white/50" />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(1)}
+              className="inline-flex h-9 items-center justify-center"
+            >
+              <ArrowRightIcon className="h-5 w-5 text-white/50" />
+            </button>
+          </div>
+        ) : (
+          <div />
+        )}
         <ComposerModal />
       </div>
       <div

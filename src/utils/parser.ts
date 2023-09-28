@@ -20,6 +20,8 @@ function isURL(string: string) {
 }
 
 export function parser(eventContent: string) {
+  if (!eventContent) return '';
+
   try {
     const content: RichContent = {
       parsed: null,

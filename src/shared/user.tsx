@@ -1,11 +1,12 @@
+import * as Avatar from '@radix-ui/react-avatar';
 import * as HoverCard from '@radix-ui/react-hover-card';
+import { minidenticon } from 'minidenticons';
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 
 import { RepostIcon, WorldIcon } from '@shared/icons';
-import { Image } from '@shared/image';
 import { NIP05 } from '@shared/nip05';
 
 import { formatCreatedAt } from '@utils/createdAt';
@@ -32,7 +33,10 @@ export const User = memo(function User({
   embedProfile?: string;
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
-  const createdAt = time ? formatCreatedAt(time, variant === 'chat') : 0;
+
+  const createdAt = formatCreatedAt(time, variant === 'chat');
+  const svgURI =
+    'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
 
   if (status === 'loading') {
     if (variant === 'avatar') {
@@ -51,8 +55,8 @@ export const User = memo(function User({
     }
 
     return (
-      <div className="relative flex items-start gap-3">
-        <div className="relative z-10 h-10 w-10 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-10 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
         <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
       </div>
     );
@@ -60,14 +64,20 @@ export const User = memo(function User({
 
   if (variant === 'mention') {
     return (
-      <div className="relative z-10 flex items-center gap-2">
-        <button type="button" className="relative z-40 h-6 w-6 shrink-0 overflow-hidden">
-          <Image
+      <div className="flex items-center gap-2">
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
             src={user?.picture || user?.image}
             alt={pubkey}
-            className="h-6 w-6 rounded object-cover"
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="h-6 w-6 rounded"
           />
-        </button>
+          <Avatar.Fallback delayMs={300}>
+            <img src={svgURI} alt={pubkey} className="h-6 w-6 rounded bg-black" />
+          </Avatar.Fallback>
+        </Avatar.Root>
         <div className="flex flex-1 items-baseline gap-2">
           <h5 className="max-w-[10rem] truncate font-semibold leading-none text-white">
             {user?.name ||
@@ -85,11 +95,19 @@ export const User = memo(function User({
   if (variant === 'large') {
     return (
       <div className="flex h-full w-full flex-col gap-2.5">
-        <Image
-          src={user?.picture || user?.image}
-          alt={pubkey}
-          className="h-14 w-14 shrink-0 rounded-lg object-cover"
-        />
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="h-14 w-14 rounded-lg"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img src={svgURI} alt={pubkey} className="h-14 w-14 rounded-lg bg-black" />
+          </Avatar.Fallback>
+        </Avatar.Root>
         <div className="flex h-full flex-col items-start justify-between">
           <div className="flex flex-col items-start gap-1 text-start">
             <p className="max-w-[15rem] truncate text-lg font-semibold leading-none text-white">
@@ -125,11 +143,19 @@ export const User = memo(function User({
   if (variant === 'simple') {
     return (
       <div className="flex items-center gap-2.5">
-        <Image
-          src={user?.picture || user?.image}
-          alt={pubkey}
-          className="h-12 w-12 shrink-0 rounded-lg object-cover"
-        />
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="h-12 w-12 rounded-lg"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img src={svgURI} alt={pubkey} className="h-12 w-12 rounded-lg bg-black" />
+          </Avatar.Fallback>
+        </Avatar.Root>
         <div className="flex w-full flex-col items-start gap-1">
           <h3 className="max-w-[15rem] truncate font-medium leading-none text-white">
             {user?.name || user?.display_name || user?.displayName}
@@ -144,11 +170,19 @@ export const User = memo(function User({
 
   if (variant === 'avatar') {
     return (
-      <Image
-        src={user?.picture || user?.image}
-        alt={pubkey}
-        className="h-12 w-12 shrink-0 rounded-lg object-cover"
-      />
+      <Avatar.Root>
+        <Avatar.Image
+          src={user?.picture || user?.image}
+          alt={pubkey}
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="h-12 w-12 rounded-lg"
+        />
+        <Avatar.Fallback delayMs={300}>
+          <img src={svgURI} alt={pubkey} className="h-12 w-12 rounded-lg bg-black" />
+        </Avatar.Fallback>
+      </Avatar.Root>
     );
   }
 
@@ -159,11 +193,19 @@ export const User = memo(function User({
           <RepostIcon className="h-6 w-6 text-blue-500" />
         </div>
         <div className="inline-flex items-center gap-2">
-          <Image
-            src={user?.picture || user?.image}
-            alt={pubkey}
-            className="relative z-20 inline-block h-6 w-6 rounded"
-          />
+          <Avatar.Root className="shrink-0">
+            <Avatar.Image
+              src={user?.picture || user?.image}
+              alt={pubkey}
+              loading="lazy"
+              decoding="async"
+              style={{ contentVisibility: 'auto' }}
+              className="h-6 w-6 rounded"
+            />
+            <Avatar.Fallback delayMs={300}>
+              <img src={svgURI} alt={pubkey} className="h-6 w-6 rounded bg-black" />
+            </Avatar.Fallback>
+          </Avatar.Root>
           <div className="inline-flex items-baseline gap-1">
             <h5 className="max-w-[10rem] truncate font-medium leading-none text-white/80">
               {user?.name ||
@@ -181,14 +223,22 @@ export const User = memo(function User({
   if (variant === 'thread') {
     return (
       <div className="flex items-center gap-3">
-        <Image
-          src={user?.picture || user?.image}
-          alt={pubkey}
-          className="relative z-20 inline-block h-10 w-10 rounded-lg"
-        />
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="h-10 w-10 rounded-lg"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img src={svgURI} alt={pubkey} className="h-10 w-10 rounded-lg bg-black" />
+          </Avatar.Fallback>
+        </Avatar.Root>
         <div className="flex flex-1 flex-col gap-2">
           <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
-            {user?.name || user?.display_name || user?.displayName}
+            {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
           <div className="inline-flex items-center gap-2">
             <span className="leading-none text-white/50">{createdAt}</span>
@@ -204,16 +254,23 @@ export const User = memo(function User({
     <HoverCard.Root>
       <div className="relative z-10 flex items-start gap-3">
         <HoverCard.Trigger asChild>
-          <button
-            type="button"
-            className="relative z-40 h-10 w-10 shrink-0 overflow-hidden"
-          >
-            <Image
+          <Avatar.Root className="shrink-0">
+            <Avatar.Image
               src={user?.picture || user?.image}
               alt={pubkey}
-              className="h-10 w-10 rounded-lg object-cover"
+              loading="lazy"
+              decoding="async"
+              style={{ contentVisibility: 'auto' }}
+              className="h-10 w-10 rounded-lg border border-white/5"
             />
-          </button>
+            <Avatar.Fallback delayMs={300}>
+              <img
+                src={svgURI}
+                alt={pubkey}
+                className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+              />
+            </Avatar.Fallback>
+          </Avatar.Root>
         </HoverCard.Trigger>
         <div className="flex flex-1 items-baseline gap-2">
           <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
@@ -232,11 +289,23 @@ export const User = memo(function User({
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
-            <Image
-              src={user?.picture || user?.image}
-              alt={pubkey}
-              className="h-10 w-10 shrink-0 rounded-lg object-cover"
-            />
+            <Avatar.Root className="shrink-0">
+              <Avatar.Image
+                src={user?.picture || user?.image}
+                alt={pubkey}
+                loading="lazy"
+                decoding="async"
+                style={{ contentVisibility: 'auto' }}
+                className="h-10 w-10 rounded-lg border border-white/5"
+              />
+              <Avatar.Fallback delayMs={300}>
+                <img
+                  src={svgURI}
+                  alt={pubkey}
+                  className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+                />
+              </Avatar.Fallback>
+            </Avatar.Root>
             <div className="flex flex-1 flex-col gap-2">
               <div className="inline-flex flex-col gap-1">
                 <h5 className="text-sm font-semibold leading-none">

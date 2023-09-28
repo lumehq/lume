@@ -265,7 +265,7 @@ export function useNostr() {
 
       if (!customSince) {
         if (dbEventsEmpty || db.account.last_login_at === 0) {
-          since = db.account.network.length > 400 ? nHoursAgo(12) : nHoursAgo(24);
+          since = db.account.network.length > 500 ? nHoursAgo(12) : nHoursAgo(24);
         } else {
           since = db.account.last_login_at;
         }

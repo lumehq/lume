@@ -1,20 +1,18 @@
 import NDK from '@nostr-dev-kit/ndk';
+import NDKCacheAdapterDexie from '@nostr-dev-kit/ndk-cache-dexie';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message } from '@tauri-apps/api/dialog';
 import { fetch } from '@tauri-apps/api/http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
-import TauriAdapter from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
 export const NDKInstance = () => {
-  const { db } = useStorage();
-
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
-  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
+  const { db } = useStorage();
   const fetcher = useMemo(
     () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : null),
     [ndk]
@@ -57,9 +55,10 @@ export const NDKInstance = () => {
 
   async function initNDK() {
     const explicitRelayUrls = await getExplicitRelays();
+    const dexieAdapter = new NDKCacheAdapterDexie({ dbName: 'lume_ndkcache' });
     const instance = new NDK({
       explicitRelayUrls,
-      cacheAdapter,
+      cacheAdapter: dexieAdapter,
     });
 
     try {
@@ -77,10 +76,6 @@ export const NDKInstance = () => {
 
   useEffect(() => {
     if (!ndk) initNDK();
-
-    return () => {
-      cacheAdapter.saveCache();
-    };
   }, []);
 
   return {

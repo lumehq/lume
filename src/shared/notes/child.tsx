@@ -49,7 +49,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
         <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
         <div className="relative mb-5 flex flex-col">
           <div className="relative z-10 flex items-start gap-3">
-            <div className="inline-flex h-11 w-11 items-end justify-center rounded-lg bg-black pb-1">
+            <div className="inline-flex h-10 w-10 items-end justify-center rounded-lg bg-black pb-1">
               <img src="/lume.png" alt="lume" className="h-auto w-1/3" />
             </div>
             <h5 className="truncate font-semibold leading-none text-white">

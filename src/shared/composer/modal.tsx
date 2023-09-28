@@ -34,7 +34,7 @@ export function ComposerModal() {
           <ComposeIcon className="h-4 w-4 text-white" />
         </button>
       </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
+      <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div

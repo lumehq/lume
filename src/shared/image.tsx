@@ -1,7 +1,10 @@
 import { minidenticon } from 'minidenticons';
-import { ImgHTMLAttributes, useState } from 'react';
+import { ImgHTMLAttributes, memo, useState } from 'react';
 
-export function Image({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
+export const Image = memo(function Image({
+  src,
+  ...props
+}: ImgHTMLAttributes<HTMLImageElement>) {
   const [isError, setIsError] = useState(false);
 
   if (isError || !src) {
@@ -20,9 +23,10 @@ export function Image({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
         currentTarget.onerror = null;
         setIsError(true);
       }}
+      loading="lazy"
       decoding="async"
       alt="lume default img"
       style={{ contentVisibility: 'auto' }}
     />
   );
-}
+});

@@ -19,6 +19,8 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
   useEffect(() => {
     async function getEvents() {
       const events = await getAllEventsSinceLastLogin();
+      console.log('total event found: ', events.data.length);
+
       const promises = await Promise.all(
         events.data.map(async (event) => await db.createEvent(event))
       );

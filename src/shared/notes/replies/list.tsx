@@ -51,7 +51,7 @@ export function RepliesList({ id }: { id: string }) {
       <h5 className="mb-2 text-lg font-semibold text-white">
         {data?.length || 0} replies
       </h5>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-5">
         {data?.length === 0 ? (
           <div className="mt-2 flex w-full items-center justify-center rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="flex flex-col items-center justify-center gap-2 py-6">
