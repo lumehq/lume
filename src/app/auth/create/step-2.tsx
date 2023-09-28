@@ -66,7 +66,7 @@ export function CreateStep2Screen() {
       if (!db.secureDB) db.secureDB = stronghold;
 
       // save privkey to secure storage
-      await db.secureSave(pubkey, privkey);
+      await db.secureSave(pubkey, privkey, pubkey);
 
       // redirect to next step
       navigate('/auth/create/step-3', { replace: true });

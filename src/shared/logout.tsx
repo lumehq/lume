@@ -11,13 +11,13 @@ export function Logout() {
   const { db } = useStorage();
 
   const navigate = useNavigate();
-  const clearPrivkey = useStronghold((state) => state.clearPrivkey);
+  const resetStronghold = useStronghold((state) => state.reset);
 
   const logout = async () => {
     // remove account
     db.accountLogout();
     // clear privkey in session storage
-    clearPrivkey();
+    resetStronghold();
     // redirect to welcome screen
     navigate('/auth/welcome');
   };

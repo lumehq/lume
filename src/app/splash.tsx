@@ -68,7 +68,7 @@ export function SplashScreen() {
               </h3>
               {ndk ? (
                 <p className="text-sm text-white/50">
-                  Ensure all your data is sync across all Nostr clients, it may take a few
+                  Ensure all your data is sync across all Nostr clients. It may take a few
                   seconds, please don&apos;t close app.
                 </p>
               ) : null}

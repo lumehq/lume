@@ -9,6 +9,7 @@ interface StrongholdState {
   setWalletConnectURL: (uri: string) => void;
   clearPrivkey: () => void;
   setIsFetched: () => void;
+  reset: () => void;
 }
 
 export const useStronghold = create<StrongholdState>()(
@@ -28,6 +29,9 @@ export const useStronghold = create<StrongholdState>()(
       },
       setIsFetched: () => {
         set({ isFetched: true });
+      },
+      reset: () => {
+        set({ privkey: null, walletConnectURL: null, isFetched: false });
       },
     }),
     {

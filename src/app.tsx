@@ -24,7 +24,7 @@ export default function App() {
 
   const accountLoader = async () => {
     try {
-      const account = await db.checkAccount();
+      const totalAccount = await db.checkAccount();
 
       const stronghold = sessionStorage.getItem('stronghold');
       const privkey = JSON.parse(stronghold).state.privkey || null;
@@ -32,7 +32,7 @@ export default function App() {
       const onboarding = localStorage.getItem('onboarding');
       const step = JSON.parse(onboarding).state.step || null;
 
-      if (!account) {
+      if (totalAccount === 0) {
         return redirect('/auth/welcome');
       } else {
         if (step) {
@@ -249,6 +249,13 @@ export default function App() {
           async lazy() {
             const { UnlockScreen } = await import('@app/auth/unlock');
             return { Component: UnlockScreen };
+          },
+        },
+        {
+          path: 'lock',
+          async lazy() {
+            const { LockScreen } = await import('@app/auth/lock');
+            return { Component: LockScreen };
           },
         },
         {

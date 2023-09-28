@@ -56,7 +56,7 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
           ) : (
             <div className="text-center">
               <h3 className="font-semibold leading-tight">
-                Downloading all events from your last login...
+                Downloading all events while you&apos;re away...
               </h3>
             </div>
           )}

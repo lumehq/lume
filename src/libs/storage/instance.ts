@@ -35,7 +35,6 @@ export class LumeStorage {
 
     const client = await this.getSecureClient(clientKey);
     const store = client.getStore();
-    console.log('insert key: ', key);
 
     await store.insert(key, Array.from(new TextEncoder().encode(value)));
     await this.secureDB.save();
@@ -46,7 +45,6 @@ export class LumeStorage {
 
     const client = await this.getSecureClient(clientKey);
     const store = client.getStore();
-    console.log('get key: ', key);
 
     const value = await store.get(key);
     if (!value) return null;
@@ -60,10 +58,10 @@ export class LumeStorage {
   }
 
   public async checkAccount() {
-    const result: Array<Account> = await this.db.select(
-      'SELECT * FROM accounts WHERE is_active = 1;'
+    const result: Array<{ total: string }> = await this.db.select(
+      'SELECT COUNT(*) AS "total" FROM accounts;'
     );
-    return result.length > 0;
+    return parseInt(result[0].total);
   }
 
   public async getActiveAccount() {
@@ -92,16 +90,24 @@ export class LumeStorage {
   }
 
   public async createAccount(npub: string, pubkey: string) {
-    const res = await this.db.execute(
-      'INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, is_active) VALUES ($1, $2, $3, $4);',
-      [npub, pubkey, 'privkey is stored in secure storage', 1]
+    const existAccounts: Array<Account> = await this.db.select(
+      'SELECT * FROM accounts WHERE pubkey = $1 ORDER BY id DESC LIMIT 1;',
+      [pubkey]
     );
-    if (res) {
-      const account = await this.getActiveAccount();
-      return account;
+
+    if (existAccounts.length > 0) {
+      await this.db.execute("UPDATE accounts SET is_active = '1' WHERE pubkey = $1;", [
+        pubkey,
+      ]);
     } else {
-      console.error('create account failed');
+      await this.db.execute(
+        'INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, is_active) VALUES ($1, $2, $3, $4);',
+        [npub, pubkey, 'privkey is stored in secure storage', 1]
+      );
     }
+
+    const account = await this.getActiveAccount();
+    return account;
   }
 
   public async updateAccount(column: string, value: string | string[]) {
@@ -191,7 +197,8 @@ export class LumeStorage {
 
   public async countTotalEvents() {
     const result: Array<{ total: string }> = await this.db.select(
-      'SELECT COUNT(*) AS "total" FROM events;'
+      'SELECT COUNT(*) AS "total" FROM events WHERE account_id = $1;',
+      [this.account.id]
     );
     return parseInt(result[0].total);
   }
@@ -206,8 +213,8 @@ export class LumeStorage {
     };
 
     const query: DBEvent[] = await this.db.select(
-      'SELECT * FROM events GROUP BY root_id ORDER BY created_at DESC LIMIT $1 OFFSET $2;',
-      [limit, offset]
+      'SELECT * FROM events WHERE account_id = $1 GROUP BY root_id ORDER BY created_at DESC LIMIT $2 OFFSET $3;',
+      [this.account.id, limit, offset]
     );
 
     if (query && query.length > 0) {
@@ -264,8 +271,8 @@ export class LumeStorage {
     };
 
     const query: DBEvent[] = await this.db.select(
-      `SELECT * FROM events WHERE kinds IN (${authorsArr}) ORDER BY created_at DESC LIMIT $1 OFFSET $2;`,
-      [limit, offset]
+      `SELECT * FROM events WHERE kinds IN (${authorsArr}) AND account_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3;`,
+      [this.account.id, limit, offset]
     );
 
     if (query && query.length > 0) {
@@ -284,7 +291,8 @@ export class LumeStorage {
 
   public async isEventsEmpty() {
     const results: DBEvent[] = await this.db.select(
-      'SELECT * FROM events ORDER BY id DESC LIMIT 1;'
+      'SELECT * FROM events WHERE account_id = $1 ORDER BY id DESC LIMIT 1;',
+      [this.account.id]
     );
 
     return results.length < 1;
@@ -351,9 +359,6 @@ export class LumeStorage {
   }
 
   public async accountLogout() {
-    // delete all events
-    await this.db.execute('DELETE FROM events WHERE account_id = $1;', [this.account.id]);
-
     // update current account status
     await this.db.execute("UPDATE accounts SET is_active = '0' WHERE id = $1;", [
       this.account.id,

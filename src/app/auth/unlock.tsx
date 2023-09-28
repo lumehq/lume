@@ -33,6 +33,7 @@ export function UnlockScreen() {
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
   const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
+  const resetStronghold = useStronghold((state) => state.reset);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,6 +74,8 @@ export function UnlockScreen() {
   const logout = async () => {
     // remove account
     db.accountLogout();
+    // reset stronghold
+    resetStronghold();
     // redirect to welcome screen
     navigate('/auth/welcome');
   };
@@ -146,7 +149,7 @@ export function UnlockScreen() {
                   to="/auth/reset"
                   className="inline-flex h-10 w-full items-center justify-center rounded-lg text-center text-sm font-medium text-white/70 hover:bg-white/20"
                 >
-                  Reset password if you still have private key
+                  Reset password if you still have a private key
                 </Link>
                 <button
                   type="button"
