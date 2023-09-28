@@ -1,8 +1,8 @@
-import { NDKSubscription } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Virtuoso } from 'react-virtuoso';
+import { VList, VListHandle } from 'virtua';
 
 import { ChatMessageForm } from '@app/chats/components/messages/form';
 import { ChatMessageItem } from '@app/chats/components/messages/item';
@@ -18,7 +18,7 @@ import { useStronghold } from '@stores/stronghold';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatScreen() {
-  const virtuosoRef = useRef(null);
+  const listRef = useRef<VListHandle>(null);
   const userPrivkey = useStronghold((state) => state.privkey);
 
   const { db } = useStorage();
@@ -29,10 +29,8 @@ export function ChatScreen() {
     return await fetchNIP04Messages(pubkey);
   });
 
-  const itemContent = useCallback(
-    (index: string | number) => {
-      const message = data[index];
-      if (!message) return;
+  const renderItem = useCallback(
+    (message: NDKEvent) => {
       return (
         <ChatMessageItem
           message={message}
@@ -44,12 +42,9 @@ export function ChatScreen() {
     [data]
   );
 
-  const computeItemKey = useCallback(
-    (index: string | number) => {
-      return data[index].id;
-    },
-    [data]
-  );
+  useEffect(() => {
+    if (data.length > 0) listRef.current?.scrollToIndex(data.length);
+  }, [data]);
 
   useEffect(() => {
     const sub: NDKSubscription = ndk.subscribe(
@@ -86,22 +81,17 @@ export function ChatScreen() {
                     <p className="text-sm font-medium text-white/50">Loading messages</p>
                   </div>
                 </div>
+              ) : data.length === 0 ? (
+                <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-1 text-center">
+                  <h3 className="mb-2 text-4xl">🙌</h3>
+                  <p className="leading-none text-white/50">
+                    You two didn&apos;t talk yet, let&apos;s send first message
+                  </p>
+                </div>
               ) : (
-                <Virtuoso
-                  ref={virtuosoRef}
-                  data={data}
-                  itemContent={itemContent}
-                  computeItemKey={computeItemKey}
-                  initialTopMostItemIndex={data.length - 1}
-                  alignToBottom={true}
-                  followOutput={true}
-                  overscan={50}
-                  increaseViewportBy={{ top: 200, bottom: 200 }}
-                  className="scrollbar-hide relative overflow-y-auto"
-                  components={{
-                    EmptyPlaceholder: () => Empty,
-                  }}
-                />
+                <VList ref={listRef} className="scrollbar-hide h-full" mode="reverse">
+                  {data.map((message) => renderItem(message))}
+                </VList>
               )}
             </div>
             <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 px-5 backdrop-blur-xl">
@@ -120,12 +110,3 @@ export function ChatScreen() {
     </div>
   );
 }
-
-const Empty = (
-  <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-1 text-center">
-    <h3 className="mb-2 text-4xl">🙌</h3>
-    <p className="leading-none text-white/50">
-      You two didn&apos;t talk yet, let&apos;s send first message
-    </p>
-  </div>
-);

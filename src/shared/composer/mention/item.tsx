@@ -3,12 +3,12 @@ import { Image } from '@shared/image';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
-export function MentionItem({ pubkey }: { pubkey: string }) {
-  const { status, user } = useProfile(pubkey);
+export function MentionItem({ pubkey, embed }: { pubkey: string; embed?: string }) {
+  const { status, user } = useProfile(pubkey, embed);
 
   if (status === 'loading') {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2.5 px-2">
         <div className="relative h-8 w-8 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
         <div className="flex w-full flex-1 flex-col items-start gap-1 text-start">
           <span className="h-4 w-1/2 animate-pulse rounded bg-white/10 backdrop-blur-xl" />

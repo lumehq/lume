@@ -12,7 +12,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 export function SplashScreen() {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { fetchUserData, prefetchEvents } = useNostr();
+  const { fetchUserData } = useNostr();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -20,27 +20,8 @@ export function SplashScreen() {
     await invoke('close_splashscreen');
   };
 
-  const prefetch = async () => {
-    try {
-      const [user, events] = await Promise.all([fetchUserData(), prefetchEvents()]);
-
-      if (user.status === 'ok' && events.status === 'ok') {
-        // update last login = current time
-        await db.updateLastLogin();
-        // close splash screen and open main app screen
-        await invoke('close_splashscreen');
-      }
-    } catch (e) {
-      setIsLoading(false);
-      await message(e, {
-        title: 'An unexpected error has occurred',
-        type: 'error',
-      });
-    }
-  };
-
   useEffect(() => {
-    async function initial() {
+    async function syncUserData() {
       if (!db.account) {
         await invoke('close_splashscreen');
       } else {
@@ -50,31 +31,47 @@ export function SplashScreen() {
         if (step) {
           await invoke('close_splashscreen');
         } else {
-          console.log('prefetching...');
-          prefetch();
+          try {
+            const userData = await fetchUserData();
+            if (userData.status === 'ok') {
+              // update last login = current time
+              await db.updateLastLogin();
+              // close splash screen and open main app screen
+              await invoke('close_splashscreen');
+            }
+          } catch (e) {
+            setIsLoading(false);
+            await message(e, {
+              title: 'An unexpected error has occurred',
+              type: 'error',
+            });
+          }
         }
       }
     }
 
     if (ndk) {
-      initial();
+      syncUserData();
     }
   }, [ndk, db.account]);
 
   return (
     <div className="relative flex h-screen w-screen items-center justify-center bg-black">
       <div data-tauri-drag-region className="absolute left-0 top-0 z-10 h-11 w-full" />
-      <div className="flex min-h-0 w-full flex-1 items-center justify-center">
+      <div className="flex min-h-0 w-full flex-1 items-center justify-center px-8">
         <div className="flex flex-col items-center justify-center gap-4">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
           {isLoading ? (
-            <div className="flex flex-col gap-1 text-center">
+            <div className="flex flex-col gap-2 text-center">
               <h3 className="text-lg font-semibold leading-none text-white">
-                {!ndk ? 'Connecting to relay...' : 'Fetching events from the last login.'}
+                {!ndk ? 'Connecting to relay...' : 'Syncing user data...'}
               </h3>
-              <p className="text-sm text-white/50">
-                This may take a few seconds, please don&apos;t close app.
-              </p>
+              {ndk ? (
+                <p className="text-sm text-white/50">
+                  Ensure all your data is sync across all Nostr clients, it may take a few
+                  seconds, please don&apos;t close app.
+                </p>
+              ) : null}
             </div>
           ) : (
             <div className="mt-2 flex flex-col gap-1 text-center">

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 
 import {
+  Boost,
   Hashtag,
   ImagePreview,
   LinkPreview,
@@ -13,8 +14,8 @@ import {
 
 import { parser } from '@utils/parser';
 
-export function TextNote({ content }: { content: string }) {
-  const richContent = parser(content) ?? null;
+export function TextNote(props: { content?: string }) {
+  const richContent = parser(props.content) ?? null;
 
   if (!richContent) {
     return (
@@ -26,7 +27,7 @@ export function TextNote({ content }: { content: string }) {
           unwrapDisallowed={true}
           linkTarget={'_blank'}
         >
-          {content}
+          {props.content}
         </ReactMarkdown>
       </div>
     );
@@ -55,6 +56,9 @@ export function TextNote({ content }: { content: string }) {
             }
             if (key.startsWith('tag')) {
               return <Hashtag tag={key.replace('tag-', '')} />;
+            }
+            if (key.startsWith('boost')) {
+              return <Boost boost={key.replace('boost-', '')} />;
             }
           },
         }}

@@ -16,7 +16,7 @@ export function OnboardStep1Screen() {
   const navigate = useNavigate();
   const setStep = useOnboarding((state) => state.setStep);
 
-  const { publish, fetchUserData, prefetchEvents } = useNostr();
+  const { publish, fetchUserData } = useNostr();
   const { db } = useStorage();
   const { status, data } = useQuery(['trending-profiles-widget'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -46,14 +46,12 @@ export function OnboardStep1Screen() {
 
       // prefetch data
       const user = await fetchUserData(follows);
-      const data = await prefetchEvents();
 
       // redirect to next step
-      if (event && user.status === 'ok' && data.status === 'ok') {
+      if (event && user.status === 'ok') {
         navigate('/auth/onboarding/step-2', { replace: true });
       } else {
         setLoading(false);
-        console.log('error: ', data.message);
       }
     } catch (e) {
       setLoading(false);
@@ -70,7 +68,7 @@ export function OnboardStep1Screen() {
     <div className="flex h-full w-full flex-col justify-center">
       <div className="mx-auto mb-4 w-full max-w-md border-b border-white/10 pb-4">
         <h1 className="mb-2 text-center text-2xl font-semibold text-white">
-          {loading ? 'Prefetching data...' : 'Enrich your network'}
+          {loading ? 'Loading...' : 'Enrich your network'}
         </h1>
         <p className="text-white/70">
           Choose the account you want to follow. These accounts are trending in the last
@@ -127,19 +125,12 @@ export function OnboardStep1Screen() {
               </>
             )}
           </button>
-          {!loading ? (
-            <Link
-              to="/auth/onboarding/step-2"
-              className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/30 focus:outline-none"
-            >
-              Skip, you can add later
-            </Link>
-          ) : (
-            <span className="text-center text-sm text-white/50">
-              By clicking &apos;Continue&apos;, Lume will download all events related to
-              your follows from the last 24 hours. It may take a bit
-            </span>
-          )}
+          <Link
+            to="/auth/onboarding/step-2"
+            className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 px-6 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/30 focus:outline-none"
+          >
+            Skip, you can add later
+          </Link>
         </div>
       </div>
     </div>

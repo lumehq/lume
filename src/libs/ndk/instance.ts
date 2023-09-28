@@ -1,50 +1,55 @@
-// inspire by: https://github.com/nostr-dev-kit/ndk-react/
 import NDK from '@nostr-dev-kit/ndk';
+import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message } from '@tauri-apps/api/dialog';
 import { fetch } from '@tauri-apps/api/http';
+import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
 import TauriAdapter from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
 export const NDKInstance = () => {
+  const { db } = useStorage();
+
   const [ndk, setNDK] = useState<NDK | undefined>(undefined);
   const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
-  const { db } = useStorage();
-  const cacheAdapter = useMemo(() => new TauriAdapter(), [ndk]);
+  const cacheAdapter = useMemo(() => new TauriAdapter(), []);
+  const fetcher = useMemo(
+    () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : null),
+    [ndk]
+  );
 
   // TODO: fully support NIP-11
   async function getExplicitRelays() {
     try {
       // get relays
       const relays = await db.getExplicitRelayUrls();
-      const requests = relays.map((relay) => {
+      const onlineRelays = new Set(relays);
+
+      for (const relay of relays) {
         const url = new URL(relay);
-        return fetch(`https://${url.hostname + url.pathname}`, {
-          method: 'GET',
-          timeout: 10,
-          headers: {
-            Accept: 'application/nostr+json',
-          },
-        });
-      });
+        try {
+          const res = await fetch(`https://${url.hostname}`, {
+            method: 'GET',
+            timeout: { secs: 5, nanos: 0 },
+            headers: {
+              Accept: 'application/nostr+json',
+            },
+          });
 
-      const responses = await Promise.all(requests);
-      const successes = responses.filter((res) => res.ok);
-
-      const verifiedRelays: string[] = successes.map((res) => {
-        // TODO: support payment
-        // @ts-expect-error, not have type yet
-        if (!res.data.limitation?.payment_required) {
-          const url = new URL(res.url);
-          if (url.protocol === 'http:') return `ws://${url.hostname + url.pathname}`;
-          if (url.protocol === 'https:') return `wss://${url.hostname + url.pathname}`;
+          if (!res.ok) {
+            console.info(`${relay} is not working, skipping...`);
+            onlineRelays.delete(relay);
+          }
+        } catch {
+          console.warn(`${relay} is not working, skipping...`);
+          onlineRelays.delete(relay);
         }
-      });
+      }
 
-      // return all validated relays
-      return verifiedRelays;
+      // return all online relays
+      return [...onlineRelays];
     } catch (e) {
       console.error(e);
     }
@@ -81,5 +86,6 @@ export const NDKInstance = () => {
   return {
     ndk,
     relayUrls,
+    fetcher,
   };
 };

@@ -1,3 +1,4 @@
+export * from './wrapper';
 export * from './local/feeds';
 export * from './local/network';
 export * from './local/user';
@@ -13,3 +14,4 @@ export * from './nostrBand/trendingAccounts';
 export * from './tmp/feeds';
 export * from './tmp/hashtag';
 export * from './other/learnNostr';
+export * from './eventLoader';

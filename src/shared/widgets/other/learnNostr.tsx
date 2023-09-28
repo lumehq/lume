@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ArrowRightIcon } from '@shared/icons';
 import { TitleBar } from '@shared/titleBar';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { useResources } from '@stores/resources';
 
@@ -21,7 +22,7 @@ export function LearnNostrWidget({ params }: { params: Widget }) {
   };
 
   return (
-    <div className="relative shrink-0 grow-0 basis-[400px] bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar id={params.id} title="The Joy of Nostr" />
       <div className="scrollbar-hide h-full overflow-y-auto px-3 pb-20">
         {resources.map((resource, index) => (
@@ -58,6 +59,6 @@ export function LearnNostrWidget({ params }: { params: Widget }) {
           </div>
         ))}
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }

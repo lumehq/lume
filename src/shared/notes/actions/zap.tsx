@@ -60,7 +60,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       if (send) {
         await sendNativeNotification(
           `You've tipped ${compactNumber.format(send.amount)} sats to ${
-            user?.display_name || user?.name
+            user?.name || user?.display_name || user?.displayName
           }`
         );
 
@@ -94,9 +94,9 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="group inline-flex h-7 w-7 items-center justify-center"
+          className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
         >
-          <ZapIcon className="h-5 w-5 text-white group-hover:text-orange-400" />
+          <ZapIcon className="h-5 w-5 text-white/80 group-hover:text-orange-400" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal className="relative z-10">
@@ -106,7 +106,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
             <div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
               <div className="w-6" />
               <Dialog.Title className="text-center text-sm font-semibold leading-none text-white">
-                Send tip to {user?.display_name || user?.name}
+                Send tip to {user?.name || user?.display_name || user?.displayName}
               </Dialog.Title>
               <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
                 <CancelIcon className="h-4 w-4 text-white/50" />

@@ -22,5 +22,6 @@ export * from './child';
 export * from './skeleton';
 export * from './actions';
 export * from './mentions/hashtag';
+export * from './mentions/boost';
 export * from './stats';
 export * from './wrapper';

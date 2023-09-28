@@ -64,3 +64,5 @@ export * from './follows';
 export * from './alby';
 export * from './stars';
 export * from './nwc';
+export * from './timeline';
+export * from './dots';

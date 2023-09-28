@@ -4,9 +4,11 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 interface StrongholdState {
   privkey: null | string;
   walletConnectURL: null | string;
+  isFetched: null | boolean;
   setPrivkey: (privkey: string) => void;
   setWalletConnectURL: (uri: string) => void;
   clearPrivkey: () => void;
+  setIsFetched: () => void;
 }
 
 export const useStronghold = create<StrongholdState>()(
@@ -14,6 +16,7 @@ export const useStronghold = create<StrongholdState>()(
     (set) => ({
       privkey: null,
       walletConnectURL: null,
+      isFetched: false,
       setPrivkey: (privkey: string) => {
         set({ privkey: privkey });
       },
@@ -22,6 +25,9 @@ export const useStronghold = create<StrongholdState>()(
       },
       clearPrivkey: () => {
         set({ privkey: null });
+      },
+      setIsFetched: () => {
+        set({ isFetched: true });
       },
     }),
     {

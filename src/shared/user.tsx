@@ -1,10 +1,10 @@
-import * as Popover from '@radix-ui/react-popover';
+import * as HoverCard from '@radix-ui/react-hover-card';
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 
-import { WorldIcon } from '@shared/icons';
+import { RepostIcon, WorldIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 import { NIP05 } from '@shared/nip05';
 
@@ -20,13 +20,27 @@ export const User = memo(function User({
 }: {
   pubkey: string;
   time?: number;
-  variant?: 'default' | 'simple' | 'mention' | 'repost' | 'chat' | 'large' | 'thread';
+  variant?:
+    | 'default'
+    | 'simple'
+    | 'mention'
+    | 'repost'
+    | 'chat'
+    | 'large'
+    | 'thread'
+    | 'avatar';
   embedProfile?: string;
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
   const createdAt = time ? formatCreatedAt(time, variant === 'chat') : 0;
 
   if (status === 'loading') {
+    if (variant === 'avatar') {
+      return (
+        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+      );
+    }
+
     if (variant === 'mention') {
       return (
         <div className="relative flex items-center gap-3">
@@ -38,7 +52,7 @@ export const User = memo(function User({
 
     return (
       <div className="relative flex items-start gap-3">
-        <div className="relative z-10 h-11 w-11 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+        <div className="relative z-10 h-10 w-10 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
         <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
       </div>
     );
@@ -56,7 +70,10 @@ export const User = memo(function User({
         </button>
         <div className="flex flex-1 items-baseline gap-2">
           <h5 className="max-w-[10rem] truncate font-semibold leading-none text-white">
-            {user?.display_name || user?.name || displayNpub(pubkey, 16)}
+            {user?.name ||
+              user?.display_name ||
+              user?.displayName ||
+              displayNpub(pubkey, 16)}
           </h5>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>
@@ -76,7 +93,7 @@ export const User = memo(function User({
         <div className="flex h-full flex-col items-start justify-between">
           <div className="flex flex-col items-start gap-1 text-start">
             <p className="max-w-[15rem] truncate text-lg font-semibold leading-none text-white">
-              {user?.name || user?.display_name}
+              {user?.name || user?.display_name || user?.displayName}
             </p>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -96,7 +113,7 @@ export const User = memo(function User({
                 className="inline-flex items-center gap-2 text-sm text-white/70"
               >
                 <WorldIcon className="h-4 w-4" />
-                <p className="max-w-[10rem] truncate">{user.website}</p>
+                <p className="max-w-[10rem] truncate">{user?.website}</p>
               </Link>
             ) : null}
           </div>
@@ -113,11 +130,11 @@ export const User = memo(function User({
           alt={pubkey}
           className="h-12 w-12 shrink-0 rounded-lg object-cover"
         />
-        <div className="flex w-full flex-col gap-1">
+        <div className="flex w-full flex-col items-start gap-1">
           <h3 className="max-w-[15rem] truncate font-medium leading-none text-white">
-            {user?.name || user?.display_name}
+            {user?.name || user?.display_name || user?.displayName}
           </h3>
-          <p className="text-sm leading-none text-white/70">
+          <p className="max-w-[10rem] truncate text-sm leading-none text-white/70">
             {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
@@ -125,26 +142,39 @@ export const User = memo(function User({
     );
   }
 
+  if (variant === 'avatar') {
+    return (
+      <Image
+        src={user?.picture || user?.image}
+        alt={pubkey}
+        className="h-12 w-12 shrink-0 rounded-lg object-cover"
+      />
+    );
+  }
+
   if (variant === 'repost') {
     return (
-      <>
-        <div className="flex gap-3">
+      <div className="flex gap-3">
+        <div className="inline-flex h-10 w-10 items-center justify-center">
+          <RepostIcon className="h-6 w-6 text-blue-500" />
+        </div>
+        <div className="inline-flex items-center gap-2">
           <Image
             src={user?.picture || user?.image}
             alt={pubkey}
-            className="relative z-20 inline-block h-11 w-11 rounded-lg"
+            className="relative z-20 inline-block h-6 w-6 rounded"
           />
           <div className="inline-flex items-baseline gap-1">
-            <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
-              {user?.display_name || user?.name || displayNpub(pubkey, 16)}
+            <h5 className="max-w-[10rem] truncate font-medium leading-none text-white/80">
+              {user?.name ||
+                user?.display_name ||
+                user?.displayName ||
+                displayNpub(pubkey, 16)}
             </h5>
-            <span className="font-semibold text-fuchsia-500">reposted</span>
-            <span className="leading-none text-white/50">·</span>
-            <span className="leading-none text-white/50">{createdAt}</span>
+            <span className="text-blue-500">reposted</span>
           </div>
         </div>
-        <div className="absolute left-[28px] top-16 h-6 w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
-      </>
+      </div>
     );
   }
 
@@ -154,11 +184,11 @@ export const User = memo(function User({
         <Image
           src={user?.picture || user?.image}
           alt={pubkey}
-          className="relative z-20 inline-block h-11 w-11 rounded-lg"
+          className="relative z-20 inline-block h-10 w-10 rounded-lg"
         />
         <div className="flex flex-1 flex-col gap-2">
           <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
-            {user?.display_name || user?.name}
+            {user?.name || user?.display_name || user?.displayName}
           </h5>
           <div className="inline-flex items-center gap-2">
             <span className="leading-none text-white/50">{createdAt}</span>
@@ -171,48 +201,54 @@ export const User = memo(function User({
   }
 
   return (
-    <Popover.Root>
+    <HoverCard.Root>
       <div className="relative z-10 flex items-start gap-3">
-        <Popover.Trigger asChild>
+        <HoverCard.Trigger asChild>
           <button
             type="button"
-            className="relative z-40 h-11 w-11 shrink-0 overflow-hidden"
+            className="relative z-40 h-10 w-10 shrink-0 overflow-hidden"
           >
             <Image
               src={user?.picture || user?.image}
               alt={pubkey}
-              className="h-11 w-11 rounded-lg object-cover"
+              className="h-10 w-10 rounded-lg object-cover"
             />
           </button>
-        </Popover.Trigger>
+        </HoverCard.Trigger>
         <div className="flex flex-1 items-baseline gap-2">
           <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
-            {user?.display_name || user?.name || displayNpub(pubkey, 16)}
+            {user?.name ||
+              user?.display_name ||
+              user?.displayName ||
+              displayNpub(pubkey, 16)}
           </h5>
           <span className="leading-none text-white/50">·</span>
           <span className="leading-none text-white/50">{createdAt}</span>
         </div>
       </div>
-      <Popover.Portal>
-        <Popover.Content
-          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl focus:outline-none"
+      <HoverCard.Portal>
+        <HoverCard.Content
+          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl focus:outline-none data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
             <Image
               src={user?.picture || user?.image}
               alt={pubkey}
-              className="h-11 w-11 shrink-0 rounded-lg object-cover"
+              className="h-10 w-10 shrink-0 rounded-lg object-cover"
             />
             <div className="flex flex-1 flex-col gap-2">
               <div className="inline-flex flex-col gap-1">
                 <h5 className="text-sm font-semibold leading-none">
-                  {user?.display_name || user?.name || user?.username}
+                  {user?.name ||
+                    user?.display_name ||
+                    user?.displayName ||
+                    user?.username}
                 </h5>
-                {user.nip05 ? (
+                {user?.nip05 ? (
                   <NIP05
                     pubkey={pubkey}
-                    nip05={user.nip05}
+                    nip05={user?.nip05}
                     className="max-w-[15rem] truncate text-sm leading-none text-white/50"
                   />
                 ) : (
@@ -242,8 +278,8 @@ export const User = memo(function User({
               Message
             </Link>
           </div>
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
+        </HoverCard.Content>
+      </HoverCard.Portal>
+    </HoverCard.Root>
   );
 });

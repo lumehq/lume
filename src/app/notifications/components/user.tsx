@@ -25,7 +25,7 @@ export function NotiUser({ pubkey }: { pubkey: string }) {
         className="h-8 w-8 shrink-0 rounded-md object-cover"
       />
       <span className="max-w-[10rem] truncate font-medium leading-none text-white">
-        {user?.name || user?.display_name || displayNpub(pubkey, 16)}
+        {user?.name || user?.display_name || user?.displayName || displayNpub(pubkey, 16)}
       </span>
     </div>
   );

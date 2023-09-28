@@ -2,6 +2,7 @@ import { NDKEvent } from '@nostr-dev-kit/ndk';
 
 import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
+import { TextNote } from '@shared/notes';
 import { User } from '@shared/user';
 
 export function ChatMessageItem({
@@ -20,13 +21,12 @@ export function ChatMessageItem({
   }
 
   return (
-    <div className="flex h-min min-h-min w-full select-text flex-col px-5 py-3 backdrop-blur-xl hover:bg-white/10">
+    <div className="flex h-min min-h-min w-full select-text flex-col px-5 py-3 hover:bg-white/10">
       <div className="flex flex-col">
         <User pubkey={message.pubkey} time={message.created_at} variant="chat" />
-        <div className="-mt-[20px] pl-[49px]">
-          <p className="select-text whitespace-pre-line break-words text-base text-white">
-            {message.content}
-          </p>
+        <div className="-mt-5 flex items-start gap-3">
+          <div className="w-10 shrink-0" />
+          <TextNote content={message.content} />
         </div>
       </div>
     </div>

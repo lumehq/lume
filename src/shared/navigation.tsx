@@ -4,12 +4,10 @@ import { twMerge } from 'tailwind-merge';
 
 import { ChatsList } from '@app/chats/components/list';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { ActiveAccount } from '@shared/accounts/active';
 import { ComposerModal } from '@shared/composer';
 import { Frame } from '@shared/frame';
-import { BellIcon, NavArrowDownIcon, NwcIcon, SpaceIcon } from '@shared/icons';
+import { BellIcon, NavArrowDownIcon, NwcIcon, SpaceIcon, WorldIcon } from '@shared/icons';
 
 import { useActivities } from '@stores/activities';
 import { useSidebar } from '@stores/sidebar';
@@ -17,9 +15,8 @@ import { useSidebar } from '@stores/sidebar';
 import { compactNumber } from '@utils/number';
 
 export function Navigation() {
-  const { db } = useStorage();
+  const totalNewActivities = useActivities((state) => state.totalNewActivities);
 
-  const [totalNewActivities] = useActivities((state) => [state.totalNewActivities]);
   const [chats, toggleChats] = useSidebar((state) => [state.chats, state.toggleChats]);
   const [integrations, toggleIntegrations] = useSidebar((state) => [
     state.integrations,
@@ -27,19 +24,27 @@ export function Navigation() {
   ]);
 
   return (
-    <Frame className="relative flex h-full w-[232px] flex-col" lighter>
-      {db.platform === 'darwin' ? (
-        <div data-tauri-drag-region className="h-11 w-full shrink-0" />
-      ) : null}
-      <div className="scrollbar-hide flex h-full flex-1 flex-col gap-6 overflow-y-auto pb-32">
-        <div className="flex flex-col pr-2">
-          <ComposerModal />
+    <Frame
+      className="relative flex h-full w-[232px] flex-col border-r border-white/5"
+      lighter
+    >
+      <div
+        data-tauri-drag-region
+        className="inline-flex h-16 w-full items-center justify-end px-3"
+      >
+        <ComposerModal />
+      </div>
+      <div
+        data-tauri-drag-region
+        className="scrollbar-hide flex h-full flex-1 flex-col gap-6 overflow-y-auto pb-32"
+      >
+        <div className="flex flex-col pr-3">
           <NavLink
             to="/"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
                   : 'border-transparent text-white/70'
@@ -49,14 +54,31 @@ export function Navigation() {
             <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
               <SpaceIcon className="h-4 w-4 text-white" />
             </span>
-            Space
+            Home
+          </NavLink>
+          <NavLink
+            to="/browse/"
+            preventScrollReset={true}
+            className={({ isActive }) =>
+              twMerge(
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/70'
+              )
+            }
+          >
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+              <WorldIcon className="h-4 w-4 text-white" />
+            </span>
+            Browse
           </NavLink>
           <NavLink
             to="/notifications"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center justify-between rounded-r-lg border-l-2 pl-4 pr-2',
+                'flex h-10 items-center justify-between rounded-r-lg border-l-2 pl-4 pr-3',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
                   : 'border-transparent text-white/70'
@@ -81,7 +103,7 @@ export function Navigation() {
           </NavLink>
         </div>
         <Collapsible.Root open={integrations} onOpenChange={toggleIntegrations}>
-          <div className="flex flex-col gap-1 pr-2">
+          <div className="flex flex-col gap-1 pr-3">
             <Collapsible.Trigger asChild>
               <button className="flex items-center gap-1 pl-[20px] pr-4">
                 <div
@@ -103,7 +125,7 @@ export function Navigation() {
                 preventScrollReset={true}
                 className={({ isActive }) =>
                   twMerge(
-                    'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
+                    'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
                     isActive
                       ? 'border-fuchsia-500 bg-white/5 text-white'
                       : 'border-transparent text-white/70'
@@ -119,7 +141,7 @@ export function Navigation() {
           </div>
         </Collapsible.Root>
         <Collapsible.Root open={chats} onOpenChange={toggleChats}>
-          <div className="flex flex-col gap-1 pr-2">
+          <div className="flex flex-col gap-1 pr-3">
             <Collapsible.Trigger asChild>
               <button className="flex items-center gap-1 pl-[20px] pr-4">
                 <div

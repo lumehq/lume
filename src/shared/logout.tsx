@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
+import { LogoutIcon } from '@shared/icons';
+
 import { useStronghold } from '@stores/stronghold';
 
 export function Logout() {
@@ -25,12 +27,12 @@ export function Logout() {
       <AlertDialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-white/10"
+          className="inline-flex h-9 w-9 items-center justify-center hover:bg-white/10"
         >
-          Logout
+          <LogoutIcon className="h-4 w-4 text-white" />
         </button>
       </AlertDialog.Trigger>
-      <AlertDialog.Portal className="relative z-10">
+      <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">

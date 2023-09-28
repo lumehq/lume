@@ -2,8 +2,10 @@ import { NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useNDK } from '@libs/ndk/provider';
+import { useStorage } from '@libs/storage/provider';
 
 export function useProfile(pubkey: string, embed?: string) {
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const {
     status,
@@ -12,20 +14,20 @@ export function useProfile(pubkey: string, embed?: string) {
   } = useQuery(
     ['user', pubkey],
     async () => {
-      if (!embed) {
-        const cleanPubkey = pubkey.replace('-', '');
-        const user = ndk.getUser({ hexpubkey: cleanPubkey });
-        await user.fetchProfile();
-        if (user.profile) {
-          user.profile.display_name = user.profile.displayName;
-          return user.profile;
-        } else {
-          throw new Error(`User not found: ${pubkey}`);
-        }
-      } else {
+      if (embed) {
         const profile: NDKUserProfile = JSON.parse(embed);
         return profile;
       }
+
+      const cleanPubkey = pubkey.replace('-', '');
+      const user = ndk.getUser({ hexpubkey: cleanPubkey });
+
+      const profile = await user.fetchProfile({ closeOnEose: true });
+      if (!user.profile) return Promise.reject(new Error('profile not found'));
+
+      await db.createProfile(cleanPubkey, profile);
+
+      return user.profile;
     },
     {
       enabled: !!ndk,

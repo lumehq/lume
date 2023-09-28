@@ -44,12 +44,12 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           <AlertDialog.Trigger asChild>
             <button
               type="button"
-              className="group inline-flex h-7 w-7 items-center justify-center"
+              className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
             >
               <RepostIcon
                 className={twMerge(
-                  'h-5 w-5 group-hover:text-blue-400',
-                  isRepost ? 'text-blue-400' : 'text-white'
+                  'h-5 w-5 group-hover:text-blue-500',
+                  isRepost ? 'text-blue-500' : 'text-white/80'
                 )}
               />
             </button>

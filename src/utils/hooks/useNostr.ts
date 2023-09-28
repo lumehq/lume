@@ -6,11 +6,10 @@ import {
   NDKSubscription,
   NDKUser,
 } from '@nostr-dev-kit/ndk';
-import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message, open } from '@tauri-apps/api/dialog';
 import { Body, fetch } from '@tauri-apps/api/http';
 import { LRUCache } from 'lru-cache';
-import { NostrFetcher } from 'nostr-fetch';
+import { NostrEventExt } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
@@ -21,11 +20,12 @@ import { useStronghold } from '@stores/stronghold';
 
 import { createBlobFromFile } from '@utils/createBlobFromFile';
 import { nHoursAgo } from '@utils/date';
+import { getMultipleRandom } from '@utils/transform';
 import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
 
 export function useNostr() {
-  const { ndk, relayUrls } = useNDK();
   const { db } = useStorage();
+  const { ndk, relayUrls, fetcher } = useNDK();
 
   const privkey = useStronghold((state) => state.privkey);
   const subManager = useMemo(
@@ -37,15 +37,24 @@ export function useNostr() {
     []
   );
 
-  const sub = async (filter: NDKFilter, callback: (event: NDKEvent) => void) => {
+  const sub = async (
+    filter: NDKFilter,
+    callback: (event: NDKEvent) => void,
+    groupable?: boolean
+  ) => {
     if (!ndk) throw new Error('NDK instance not found');
 
-    const subEvent = ndk.subscribe(filter, { closeOnEose: false });
-    subManager.set(JSON.stringify(filter), subEvent);
+    const subEvent = ndk.subscribe(filter, {
+      closeOnEose: false,
+      groupable: groupable ?? true,
+    });
 
     subEvent.addListener('event', (event: NDKEvent) => {
       callback(event);
     });
+
+    subManager.set(JSON.stringify(filter), subEvent);
+    console.log('current active sub: ', subManager.size);
   };
 
   const fetchUserData = async (preFollows?: string[]) => {
@@ -135,45 +144,8 @@ export function useNostr() {
     publish({ content: '', kind: NDKKind.Contacts, tags: tags });
   };
 
-  const prefetchEvents = async () => {
-    try {
-      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
-      const dbEventsEmpty = await db.isEventsEmpty();
-
-      let since: number;
-      if (dbEventsEmpty || db.account.last_login_at === 0) {
-        since = db.account.network.length > 400 ? nHoursAgo(12) : nHoursAgo(24);
-      } else {
-        since = db.account.last_login_at;
-      }
-
-      console.log("prefetching events with user's network: ", db.account.network.length);
-      console.log('prefetching events since: ', since);
-
-      const events = (await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.network,
-        },
-        { since: since }
-      )) as unknown as NDKEvent[];
-
-      // save all events to database
-      const promises = await Promise.all(
-        events.map(async (event) => await db.createEvent(event))
-      );
-
-      if (promises) return { status: 'ok', message: 'prefetch completed' };
-    } catch (e) {
-      console.error('prefetch events failed, error: ', e);
-      return { status: 'failed', message: e };
-    }
-  };
-
   const fetchActivities = async () => {
     try {
-      const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
       const events = await fetcher.fetchAllEvents(
         relayUrls,
         {
@@ -197,7 +169,6 @@ export function useNostr() {
   };
 
   const fetchNIP04Chats = async () => {
-    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
     const events = await fetcher.fetchAllEvents(
       relayUrls,
       {
@@ -215,17 +186,19 @@ export function useNostr() {
   };
 
   const fetchNIP04Messages = async (sender: string) => {
-    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
+    let senderMessages: NostrEventExt<false>[] = [];
 
-    const senderMessages = await fetcher.fetchAllEvents(
-      relayUrls,
-      {
-        kinds: [NDKKind.EncryptedDirectMessage],
-        authors: [sender],
-        '#p': [db.account.pubkey],
-      },
-      { since: 0 }
-    );
+    if (sender !== db.account.pubkey) {
+      senderMessages = await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [NDKKind.EncryptedDirectMessage],
+          authors: [sender],
+          '#p': [db.account.pubkey],
+        },
+        { since: 0 }
+      );
+    }
 
     const userMessages = await fetcher.fetchAllEvents(
       relayUrls,
@@ -246,7 +219,6 @@ export function useNostr() {
 
   const fetchAllReplies = async (id: string, data?: NDKEventWithReplies[]) => {
     let events = data || null;
-    const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
 
     if (!data) {
       events = (await fetcher.fetchAllEvents(
@@ -284,6 +256,53 @@ export function useNostr() {
     }
 
     return events;
+  };
+
+  const getAllEventsSinceLastLogin = async (customSince?: number) => {
+    try {
+      let since: number;
+      const dbEventsEmpty = await db.isEventsEmpty();
+
+      if (!customSince) {
+        if (dbEventsEmpty || db.account.last_login_at === 0) {
+          since = db.account.network.length > 400 ? nHoursAgo(12) : nHoursAgo(24);
+        } else {
+          since = db.account.last_login_at;
+        }
+      } else {
+        since = customSince;
+      }
+
+      const events = (await fetcher.fetchAllEvents(
+        relayUrls,
+        {
+          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+          authors: db.account.network,
+        },
+        { since: since }
+      )) as unknown as NDKEvent[];
+
+      return { status: 'ok', message: 'fetch completed', data: events };
+    } catch (e) {
+      console.error('prefetch events failed, error: ', e);
+      return { status: 'failed', message: e };
+    }
+  };
+
+  const getContactsByPubkey = async (pubkey: string) => {
+    const user = ndk.getUser({ hexpubkey: pubkey });
+    const follows = [...(await user.follows())].map((user) => user.hexpubkey);
+    return getMultipleRandom([...follows], 10);
+  };
+
+  const getEventsByPubkey = async (pubkey: string) => {
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      { authors: [pubkey], kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article] },
+      { since: nHoursAgo(24) },
+      { sort: true }
+    );
+    return events as unknown as NDKEvent[];
   };
 
   const publish = async ({
@@ -421,7 +440,7 @@ export function useNostr() {
     fetchUserData,
     addContact,
     removeContact,
-    prefetchEvents,
+    getAllEventsSinceLastLogin,
     fetchActivities,
     fetchNIP04Chats,
     fetchNIP04Messages,
@@ -429,5 +448,7 @@ export function useNostr() {
     publish,
     createZap,
     upload,
+    getContactsByPubkey,
+    getEventsByPubkey,
   };
 }

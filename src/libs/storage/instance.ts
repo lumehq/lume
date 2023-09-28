@@ -1,4 +1,4 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { BaseDirectory, removeFile } from '@tauri-apps/api/fs';
 import { Platform } from '@tauri-apps/api/os';
 import Database from 'tauri-plugin-sql-api';
@@ -6,19 +6,20 @@ import { Stronghold } from 'tauri-plugin-stronghold-api';
 
 import { FULL_RELAYS } from '@stores/constants';
 
+import { toRawEvent } from '@utils/rawEvent';
 import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
-  public platform: Platform;
   public secureDB: Stronghold;
-  public account: Account | null = null;
+  public account: Account | null;
+  public platform: Platform | null;
 
-  constructor(sqlite: Database, platform: Platform, stronghold?: Stronghold) {
+  constructor(sqlite: Database, platform?: Platform, stronghold?: Stronghold) {
     this.db = sqlite;
-    this.platform = platform ?? undefined;
     this.secureDB = stronghold ?? undefined;
     this.account = null;
+    this.platform = platform ?? undefined;
   }
 
   private async getSecureClient(key?: string) {
@@ -56,6 +57,13 @@ export class LumeStorage {
 
   public async secureReset() {
     return await removeFile('lume.stronghold', { dir: BaseDirectory.AppConfig });
+  }
+
+  public async checkAccount() {
+    const result: Array<Account> = await this.db.select(
+      'SELECT * FROM accounts WHERE is_active = 1;'
+    );
+    return result.length > 0;
   }
 
   public async getActiveAccount() {
@@ -282,6 +290,38 @@ export class LumeStorage {
     return results.length < 1;
   }
 
+  public async createMetadata(event: NDKEvent) {
+    const rawEvent = toRawEvent(event);
+
+    return await this.db.execute(
+      'INSERT OR IGNORE INTO metadata (id, event, author, kind, created_at) VALUES ($1, $2, $3, $4, $5);',
+      [
+        rawEvent.id,
+        JSON.stringify(rawEvent),
+        rawEvent.pubkey,
+        rawEvent.kind,
+        rawEvent.created_at,
+      ]
+    );
+  }
+
+  public async createProfile(pubkey: string, profile: NDKUserProfile) {
+    return await this.db.execute(
+      'INSERT OR REPLACE INTO metadata (id, event, author, kind, created_at) VALUES ($1, $2, $3, $4, $5);',
+      [pubkey, JSON.stringify(profile), pubkey, 0, Math.round(Date.now() / 1000)]
+    );
+  }
+
+  public async getMetadataByPubkey(pubkey: string) {
+    const results: DBEvent[] = await this.db.select(
+      'SELECT * FROM metadata WHERE author = $1 AND kind = "0" LIMIT 1;',
+      [pubkey]
+    );
+
+    if (results.length < 1) return null;
+    return JSON.parse(results[0].event as string) as NDKEvent;
+  }
+
   public async getExplicitRelayUrls() {
     if (!this.account) return FULL_RELAYS;
 
@@ -311,6 +351,10 @@ export class LumeStorage {
   }
 
   public async accountLogout() {
+    // delete all events
+    await this.db.execute('DELETE FROM events WHERE account_id = $1;', [this.account.id]);
+
+    // update current account status
     await this.db.execute("UPDATE accounts SET is_active = '0' WHERE id = $1;", [
       this.account.id,
     ]);

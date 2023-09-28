@@ -6,8 +6,8 @@ import { Image } from '@shared/image';
 
 import { fileType } from '@utils/nip94';
 
-export function FileNote({ event }: { event: NDKEvent }) {
-  const url = event.tags.find((el) => el[0] === 'url')[1];
+export function FileNote(props: { event?: NDKEvent }) {
+  const url = props.event.tags.find((el) => el[0] === 'url')[1];
   const type = fileType(url);
 
   if (type === 'image') {
@@ -15,7 +15,7 @@ export function FileNote({ event }: { event: NDKEvent }) {
       <div className="mb-2 mt-3">
         <Image
           src={url}
-          alt={event.content}
+          alt={props.event.content}
           className="h-auto w-full rounded-lg object-cover"
         />
       </div>

@@ -16,7 +16,7 @@ export function ImportStep3Screen() {
   const setStep = useOnboarding((state) => state.setStep);
 
   const { db } = useStorage();
-  const { fetchUserData, prefetchEvents } = useNostr();
+  const { fetchUserData } = useNostr();
 
   const [loading, setLoading] = useState(false);
 
@@ -27,16 +27,14 @@ export function ImportStep3Screen() {
 
       // prefetch data
       const user = await fetchUserData();
-      const data = await prefetchEvents();
 
       // create default widget
       await db.createWidget(WidgetKinds.other.learnNostr, 'Learn Nostr', '');
 
       // redirect to next step
-      if (user.status === 'ok' && data.status === 'ok') {
+      if (user.status === 'ok') {
         navigate('/auth/onboarding/step-2', { replace: true });
       } else {
-        console.log('error: ', data.message);
         setLoading(false);
       }
     } catch (e) {
@@ -83,7 +81,7 @@ export function ImportStep3Screen() {
           </button>
           <span className="text-center text-sm text-white/50">
             By clicking &apos;Continue&apos;, Lume will download your old relay list and
-            all events from the last 24 hours. It may take a bit
+            metadata. It may take a bit
           </span>
         </div>
       </div>

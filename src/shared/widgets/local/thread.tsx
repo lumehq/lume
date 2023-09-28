@@ -16,6 +16,7 @@ import { RepliesList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 import { User } from '@shared/user';
+import { WidgetWrapper } from '@shared/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';
@@ -41,9 +42,9 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="scrollbar-hide relative shrink-0 grow-0 basis-[400px] overflow-y-auto bg-white/10 backdrop-blur-xl">
+    <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+      <div className="scrollbar-hide h-full overflow-y-auto">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
@@ -69,6 +70,6 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
           <RepliesList id={params.content} />
         </div>
       </div>
-    </div>
+    </WidgetWrapper>
   );
 }

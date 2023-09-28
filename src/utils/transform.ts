@@ -24,3 +24,9 @@ export function getRepostID(tags: NDKTag[]) {
 
   return quoteID;
 }
+
+// get random n elements from array
+export function getMultipleRandom(arr: string[], num: number) {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, num);
+}

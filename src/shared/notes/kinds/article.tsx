@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
 
-export function ArticleNote({ event }: { event: NDKEvent }) {
+export function ArticleNote(props: { event?: NDKEvent }) {
   const metadata = useMemo(() => {
-    const title = event.tags.find((tag) => tag[0] === 'title')?.[1];
-    const image = event.tags.find((tag) => tag[0] === 'image')?.[1];
-    const summary = event.tags.find((tag) => tag[0] === 'summary')?.[1];
+    const title = props.event.tags.find((tag) => tag[0] === 'title')?.[1];
+    const image = props.event.tags.find((tag) => tag[0] === 'image')?.[1];
+    const summary = props.event.tags.find((tag) => tag[0] === 'summary')?.[1];
 
-    let publishedAt: Date | string | number = event.tags.find(
+    let publishedAt: Date | string | number = props.event.tags.find(
       (tag) => tag[0] === 'published_at'
     )?.[1];
     if (publishedAt) {
       publishedAt = new Date(parseInt(publishedAt)).toLocaleDateString('en-US');
     } else {
-      publishedAt = new Date(event.created_at * 1000).toLocaleDateString('en-US');
+      publishedAt = new Date(props.event.created_at * 1000).toLocaleDateString('en-US');
     }
 
     return {
@@ -25,15 +25,11 @@ export function ArticleNote({ event }: { event: NDKEvent }) {
       publishedAt,
       summary,
     };
-  }, [event.id]);
+  }, [props.event.id]);
 
   return (
-    <Link
-      to={`/notes/article/${event.id}`}
-      preventScrollReset={true}
-      className="mb-2 mt-3 rounded-lg"
-    >
-      <div className="flex flex-col rounded-lg">
+    <Link to={`/notes/article/${props.event.id}`} preventScrollReset={true}>
+      <div className="mb-2 mt-3 flex flex-col rounded-lg">
         {metadata.image && (
           <Image
             src={metadata.image}

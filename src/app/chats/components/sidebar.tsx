@@ -22,7 +22,7 @@ export function ChatSidebar({ pubkey }: { pubkey: string }) {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <h3 className="text-lg font-semibold leading-none">
-              {user?.display_name || user?.name}
+              {user?.name || user?.display_name || user?.displayName}
             </h3>
             {user?.nip05 ? (
               <NIP05

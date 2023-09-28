@@ -21,9 +21,9 @@ export function NoteReply({
         <button
           type="button"
           onClick={() => setReply(id, pubkey, root)}
-          className="group inline-flex h-7 w-7 items-center justify-center"
+          className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
         >
-          <ReplyIcon className="h-5 w-5 text-white group-hover:text-green-500" />
+          <ReplyIcon className="h-5 w-5 text-white/80 group-hover:text-green-500" />
         </button>
       </Tooltip.Trigger>
       <Tooltip.Portal>

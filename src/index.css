@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.border {
+  background-clip: padding-box;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
