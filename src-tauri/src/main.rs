@@ -113,8 +113,6 @@ fn main() {
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
       #[cfg(target_os = "macos")]
-      window.set_transparent_titlebar(true);
-      #[cfg(target_os = "macos")]
       window.position_traffic_lights(16.0, 25.0);
 
       Ok(())

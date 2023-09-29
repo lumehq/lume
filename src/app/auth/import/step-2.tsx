@@ -66,7 +66,7 @@ export function ImportStep2Screen() {
       if (!db.secureDB) db.secureDB = stronghold;
 
       // save privkey to secure storage
-      await db.secureSave(pubkey, privkey, pubkey);
+      await db.secureSave(pubkey, privkey);
 
       // redirect to next step
       navigate('/auth/import/step-3', { replace: true });

@@ -4,9 +4,9 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "width": 400,
-        "height": 500,
-        "decorations": true,
+        "width": 300,
+        "height": 300,
+        "decorations": false,
         "title": "Lume",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,

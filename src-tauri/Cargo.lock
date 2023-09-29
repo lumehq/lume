@@ -2638,7 +2638,7 @@ dependencies = [
 
 [[package]]
 name = "lume"
-version = "1.2.5"
+version = "1.2.6"
 dependencies = [
  "cocoa 0.25.0",
  "objc",
