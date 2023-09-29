@@ -6,7 +6,7 @@ import { VList } from 'virtua';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { FileNote, NoteSkeleton, NoteWrapper } from '@shared/notes';
+import { ArticleNote, NoteWrapper } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -16,7 +16,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: [params.id + '-' + params.title],
+      queryKey: ['local-articles'],
       queryFn: async ({ pageParam = 0 }) => {
         return await db.getAllEventsByKinds([NDKKind.Article], 20, pageParam);
       },
@@ -34,7 +34,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
       const event: NDKEvent = JSON.parse(dbEvent.event as string);
       return (
         <NoteWrapper key={event.id} event={event}>
-          <FileNote />
+          <ArticleNote />
         </NoteWrapper>
       );
     },
@@ -44,11 +44,12 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+      <div className="flex-1">
         {status === 'loading' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-              <NoteSkeleton />
+          <div className="flex h-full w-full items-center justify-center ">
+            <div className="inline-flex flex-col items-center justify-center gap-2">
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <p className="text-sm font-medium text-white/80">Loading article...</p>
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
@@ -56,12 +57,10 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold leading-tight">
-                  Your newsfeed is empty
+                <h3 className="font-semibold leading-tight">
+                  Oops, it looks like there are no articles.
                 </h3>
-                <p className="text-center text-white/50">
-                  Connect more people to explore more content
-                </p>
+                <p className="text-white/50">You can close this widget</p>
               </div>
             </div>
           </div>

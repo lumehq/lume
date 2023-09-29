@@ -2,7 +2,7 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { VList } from 'virtua';
+import { WVList } from 'virtua';
 
 import { UserProfile } from '@app/users/components/profile';
 
@@ -93,10 +93,10 @@ export function UserScreen() {
               </div>
             </div>
           ) : (
-            <VList className="scrollbar-hide h-full">
+            <WVList>
               {data.map((item) => renderItem(item))}
               <div className="h-16" />
-            </VList>
+            </WVList>
           )}
         </div>
       </div>

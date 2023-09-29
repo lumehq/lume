@@ -5,10 +5,10 @@ import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
 
+import { LoaderIcon } from '@shared/icons';
 import {
   ArticleNote,
   FileNote,
-  NoteSkeleton,
   NoteWrapper,
   Repost,
   TextNote,
@@ -23,14 +23,15 @@ import { Widget } from '@utils/types';
 export function GlobalHashtagWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    [params.id + '-' + params.title],
+    ['hashtag-' + params.title],
     async () => {
       const events = await ndk.fetchEvents({
         kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
         '#t': [params.content],
         since: nHoursAgo(24),
       });
-      return [...events] as unknown as NDKEvent[];
+      const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
+      return sortedEvents;
     },
     { refetchOnWindowFocus: false }
   );
@@ -72,12 +73,15 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title={params.title + ' in 24 hours ago'} />
-      <div className="h-full">
+      <TitleBar id={params.id} title={params.title} />
+      <div className="flex-1">
         {status === 'loading' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-              <NoteSkeleton />
+          <div className="flex h-full w-full items-center justify-center ">
+            <div className="inline-flex flex-col items-center justify-center gap-2">
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <p className="text-sm font-medium text-white/80">
+                Loading event related to the hashtag {params.title}...
+              </p>
             </div>
           </div>
         ) : data.length === 0 ? (
@@ -85,11 +89,11 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold leading-tight">
-                  Your newsfeed is empty
+                <h3 className="font-semibold leading-tight">
+                  Oops, it looks like there are no events related to {params.title}.
                 </h3>
-                <p className="text-center text-white/50">
-                  Connect more people to explore more content
+                <p className="text-white/50">
+                  You can close this widget or try with other hashtag
                 </p>
               </div>
             </div>
@@ -97,7 +101,6 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
         ) : (
           <VList className="scrollbar-hide h-full">
             {data.map((item) => renderItem(item))}
-
             <div className="h-16" />
           </VList>
         )}

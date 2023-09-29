@@ -69,6 +69,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
           <NoteReplyForm id={params.content} pubkey={db.account.pubkey} />
           <RepliesList id={params.content} />
         </div>
+        <div className="h-16" />
       </div>
     </WidgetWrapper>
   );

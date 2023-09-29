@@ -56,7 +56,7 @@ export const User = memo(function User({
 
     return (
       <div className="flex items-start gap-3">
-        <div className="h-10 w-10 shrink-0 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-white/10 backdrop-blur-xl" />
         <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
       </div>
     );
@@ -150,10 +150,10 @@ export const User = memo(function User({
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="h-12 w-12 rounded-lg"
+            className="h-10 w-10 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-12 w-12 rounded-lg bg-black" />
+            <img src={svgURI} alt={pubkey} className="h-10 w-10 rounded-lg bg-black" />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex w-full flex-col items-start gap-1">

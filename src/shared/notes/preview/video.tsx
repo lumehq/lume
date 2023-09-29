@@ -17,6 +17,9 @@ export function VideoPreview({ urls }: { urls: string[] }) {
               src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
               alt={url}
               className="aspect-video h-full w-full bg-white object-cover"
+              loading="lazy"
+              decoding="async"
+              style={{ contentVisibility: 'auto' }}
             />
           }
         />

@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 14px;
+}
+
+a {
+  @apply cursor-default no-underline !important;
+}
+
+button {
+  @apply cursor-default focus:outline-none;
+}
+
+iframe {
+  height: auto !important;
+}
+
+span[data-slate-placeholder] {
+  margin-top: 0;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+::-webkit-input-placeholder {
+  line-height: normal;
+}
+
 .border {
   background-clip: padding-box;
 }
@@ -37,33 +66,4 @@
 
 .ProseMirror img.ProseMirror-selectednode {
   @apply outline-fuchsia-500;
-}
-
-html {
-  font-size: 14px;
-}
-
-a {
-  @apply cursor-default no-underline !important;
-}
-
-button {
-  @apply cursor-default focus:outline-none;
-}
-
-iframe {
-  height: auto !important;
-}
-
-span[data-slate-placeholder] {
-  margin-top: 0;
-}
-
-input::-ms-reveal,
-input::-ms-clear {
-  display: none;
-}
-
-::-webkit-input-placeholder {
-  line-height: normal;
 }

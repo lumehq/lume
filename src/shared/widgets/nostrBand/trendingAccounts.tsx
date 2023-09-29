@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+import { VList } from 'virtua';
 
-import { NoteSkeleton } from '@shared/notes/skeleton';
+import { LoaderIcon } from '@shared/icons';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 import { NostrBandUserProfile, type Profile } from '@shared/widgets/nostrBandUserProfile';
@@ -34,27 +35,34 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title="Trending Accounts" />
-      <div className="scrollbar-hide h-full max-w-full overflow-y-auto pb-20">
+      <div className="flex-1">
         {status === 'loading' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-              <NoteSkeleton />
-            </div>
-          </div>
-        ) : status === 'error' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-              <p className="text-center text-sm font-medium text-white">
-                Sorry, an unexpected error has occurred.
+          <div className="flex h-full w-full items-center justify-center ">
+            <div className="inline-flex flex-col items-center justify-center gap-2">
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <p className="text-sm font-medium text-white/80">
+                Loading trending accounts...
               </p>
             </div>
           </div>
+        ) : status === 'error' ? (
+          <div className="flex h-full w-full flex-col items-center justify-center px-3">
+            <div className="flex flex-col items-center gap-4">
+              <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
+              <div className="text-center">
+                <h3 className="font-semibold leading-tight">
+                  Sorry, an unexpected error has occurred.
+                </h3>
+              </div>
+            </div>
+          </div>
         ) : (
-          <div className="relative flex w-full flex-col gap-3 px-3 pt-1.5">
+          <VList className="scrollbar-hide h-full">
             {data.map((item: Profile) => (
               <NostrBandUserProfile key={item.pubkey} data={item} />
             ))}
-          </div>
+            <div className="h-16" />
+          </VList>
         )}
       </div>
     </WidgetWrapper>

@@ -32,9 +32,7 @@ export function ActiveAccount() {
     sub(
       filter,
       async (event) => {
-        console.log('new notify: ', event);
         addActivity(event);
-
         switch (event.kind) {
           case NDKKind.Text:
             return await sendNativeNotification('Mention');

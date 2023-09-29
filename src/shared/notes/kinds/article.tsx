@@ -14,7 +14,7 @@ export function ArticleNote(props: { event?: NDKEvent }) {
       (tag) => tag[0] === 'published_at'
     )?.[1];
     if (publishedAt) {
-      publishedAt = new Date(parseInt(publishedAt)).toLocaleDateString('en-US');
+      publishedAt = new Date(parseInt(publishedAt) * 1000).toLocaleDateString('en-US');
     } else {
       publishedAt = new Date(props.event.created_at * 1000).toLocaleDateString('en-US');
     }
@@ -29,7 +29,7 @@ export function ArticleNote(props: { event?: NDKEvent }) {
 
   return (
     <Link to={`/notes/article/${props.event.id}`} preventScrollReset={true}>
-      <div className="mb-2 mt-3 flex flex-col rounded-lg">
+      <div className="mb-2 mt-2 flex flex-col rounded-lg">
         {metadata.image && (
           <Image
             src={metadata.image}

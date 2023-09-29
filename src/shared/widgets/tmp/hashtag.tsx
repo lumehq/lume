@@ -48,7 +48,7 @@ export function XhashtagWidget({ params }: { params: Widget }) {
     try {
       setWidget(db, {
         kind: WidgetKinds.global.hashtag,
-        title: data.hashtag + ' in 24 hours ago',
+        title: data.hashtag,
         content: data.hashtag.replace('#', ''),
       });
       // remove temp widget

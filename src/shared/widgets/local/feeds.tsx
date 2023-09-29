@@ -14,7 +14,6 @@ import {
   TextNote,
   UnknownNote,
 } from '@shared/notes';
-import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -24,7 +23,7 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: [params.id + '-' + params.title],
+      queryKey: ['group-feeds-' + params.id],
       queryFn: async ({ pageParam = 0 }) => {
         const authors = JSON.parse(params.content);
         return await db.getAllEventsByAuthors(authors, 20, pageParam);
@@ -81,11 +80,12 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+      <div className="flex-1">
         {status === 'loading' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-              <NoteSkeleton />
+          <div className="flex h-full w-full items-center justify-center ">
+            <div className="inline-flex flex-col items-center justify-center gap-2">
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <p className="text-sm font-medium text-white/80">Loading newsfeed...</p>
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
@@ -93,12 +93,10 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold leading-tight">
-                  Your newsfeed is empty
+                <h3 className="font-semibold leading-tight">
+                  Oops, it looks like there are no posts.
                 </h3>
-                <p className="text-center text-white/50">
-                  Connect more people to explore more content
-                </p>
+                <p className="text-white/50">You can close this widget</p>
               </div>
             </div>
           </div>

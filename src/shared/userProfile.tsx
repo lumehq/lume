@@ -5,7 +5,6 @@ import { UserStats } from '@app/users/components/stats';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { Image } from '@shared/image';
 import { NIP05 } from '@shared/nip05';
 
 import { useNostr } from '@utils/hooks/useNostr';
@@ -49,15 +48,45 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   return (
     <div>
-      <Image
-        src={user?.picture || user?.image}
-        alt={pubkey}
-        className="h-14 w-14 rounded-md"
-      />
+      <div className="flex items-center justify-between">
+        <img
+          src={user?.picture || user?.image}
+          alt={pubkey}
+          className="h-12 w-12 shrink-0 rounded-lg"
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+        />
+        <div className="inline-flex items-center gap-2">
+          {followed ? (
+            <button
+              type="button"
+              onClick={() => unfollowUser(pubkey)}
+              className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
+            >
+              Unfollow
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => followUser(pubkey)}
+              className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
+            >
+              Follow
+            </button>
+          )}
+          <Link
+            to={`/chats/${pubkey}`}
+            className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
+          >
+            Message
+          </Link>
+        </div>
+      </div>
       <div className="mt-2 flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-2">
           <h5 className="text-lg font-semibold leading-none">
-            {user?.displayName || user?.name || 'No name'}
+            {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
           {user?.nip05 ? (
             <NIP05
@@ -72,35 +101,10 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           )}
         </div>
         <div className="flex flex-col gap-4">
-          <p className="mt-2 max-w-[500px] select-text break-words text-white">
+          <p className="mb-3 mt-2 max-w-[500px] select-text break-words text-sm text-white">
             {user?.about}
           </p>
           <UserStats pubkey={pubkey} />
-        </div>
-        <div className="mt-4 inline-flex items-center gap-2">
-          {followed ? (
-            <button
-              type="button"
-              onClick={() => unfollowUser(pubkey)}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
-            >
-              Unfollow
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => followUser(pubkey)}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
-            >
-              Follow
-            </button>
-          )}
-          <Link
-            to={`/chats/${pubkey}`}
-            className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
-          >
-            Message
-          </Link>
         </div>
       </div>
     </div>

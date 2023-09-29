@@ -1,7 +1,7 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { VList } from 'virtua';
+import { WVList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -24,14 +24,16 @@ import { Widget } from '@utils/types';
 export function LocalUserWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    [params.id + '-' + params.title],
+    ['user-posts', params.content],
     async () => {
       const events = await ndk.fetchEvents({
-        kinds: [1, 6],
+        // @ts-expect-error, NDK not support file metadata yet
+        kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
         authors: [params.content],
         since: nHoursAgo(24),
       });
-      return [...events] as unknown as NDKEvent[];
+      const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
+      return sortedEvents;
     },
     {
       staleTime: Infinity,
@@ -84,7 +86,9 @@ export function LocalUserWidget({ params }: { params: Widget }) {
           <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mt-4 px-3 text-lg font-semibold text-white">Latest posts</h3>
+          <h3 className="mb-3 mt-4 px-3 text-lg font-semibold text-white">
+            Latest posts
+          </h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
@@ -97,16 +101,16 @@ export function LocalUserWidget({ params }: { params: Widget }) {
                 <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
                   <div className="flex flex-col items-center gap-4">
                     <p className="text-center text-sm text-white">
-                      No new post from user in 24 hours ago
+                      No new post from 24 hours ago
                     </p>
                   </div>
                 </div>
               </div>
             ) : (
-              <VList className="scrollbar-hide h-full">
+              <WVList>
                 {data.map((item) => renderItem(item))}
                 <div className="h-16" />
-              </VList>
+              </WVList>
             )}
           </div>
         </div>

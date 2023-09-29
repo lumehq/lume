@@ -5,23 +5,26 @@ import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { FileNote, NoteSkeleton, NoteWrapper } from '@shared/notes';
+import { LoaderIcon } from '@shared/icons';
+import { FileNote, NoteWrapper } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
+import { nHoursAgo } from '@utils/date';
 import { Widget } from '@utils/types';
 
 export function GlobalFilesWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery(
-    [params.id + '-' + params.title],
+    ['global-file-sharing'],
     async () => {
       const events = await ndk.fetchEvents({
         // @ts-expect-error, NDK not support file metadata yet
         kinds: [1063],
-        limit: 100,
+        since: nHoursAgo(24),
       });
-      return [...events] as unknown as NDKEvent[];
+      const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
+      return sortedEvents;
     },
     { refetchOnWindowFocus: false }
   );
@@ -41,11 +44,14 @@ export function GlobalFilesWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full">
+      <div className="flex-1">
         {status === 'loading' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-              <NoteSkeleton />
+          <div className="flex h-full w-full items-center justify-center ">
+            <div className="inline-flex flex-col items-center justify-center gap-2">
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <p className="text-sm font-medium text-white/80">
+                Loading file sharing event...
+              </p>
             </div>
           </div>
         ) : data.length === 0 ? (
@@ -53,12 +59,10 @@ export function GlobalFilesWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold leading-tight">
-                  Your newsfeed is empty
+                <h3 className="font-semibold leading-tight">
+                  Oops, it looks like there are no file sharing events.
                 </h3>
-                <p className="text-center text-white/50">
-                  Connect more people to explore more content
-                </p>
+                <p className="text-white/50">You can close this widget</p>
               </div>
             </div>
           </div>
