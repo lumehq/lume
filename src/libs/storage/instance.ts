@@ -310,6 +310,13 @@ export class LumeStorage {
   }
 
   public async createRelay(relay: string, purpose?: string) {
+    const existRelays: Relays[] = await this.db.select(
+      'SELECT * FROM relays WHERE relay = $1 AND account_id = $2 ORDER BY id DESC LIMIT 1;',
+      [relay, this.account.id]
+    );
+
+    if (existRelays.length > 0) return false;
+
     return await this.db.execute(
       'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES ($1, $2, $3);',
       [this.account.id, relay, purpose || '']

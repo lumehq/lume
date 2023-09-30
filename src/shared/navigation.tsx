@@ -15,6 +15,7 @@ import {
   BellIcon,
   NavArrowDownIcon,
   NwcIcon,
+  RelayIcon,
   SpaceIcon,
   WorldIcon,
 } from '@shared/icons';
@@ -102,7 +103,7 @@ export function Navigation() {
             }
           >
             <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
-              <WorldIcon className="h-4 w-4 text-white" />
+              <RelayIcon className="h-4 w-4 text-white" />
             </span>
             Relays
           </NavLink>

@@ -117,16 +117,14 @@ export default function App() {
             const { RelaysScreen } = await import('@app/relays');
             return { Component: RelaysScreen };
           },
-          children: [
-            {
-              path: ':url',
-              loader: relayLoader,
-              async lazy() {
-                const { RelayScreen } = await import('@app/relays/relay');
-                return { Component: RelayScreen };
-              },
-            },
-          ],
+        },
+        {
+          path: 'relays/:url',
+          loader: relayLoader,
+          async lazy() {
+            const { RelayScreen } = await import('@app/relays/relay');
+            return { Component: RelayScreen };
+          },
         },
       ],
     },

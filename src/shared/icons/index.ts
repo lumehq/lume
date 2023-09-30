@@ -67,3 +67,4 @@ export * from './nwc';
 export * from './timeline';
 export * from './dots';
 export * from './handArrowDown';
+export * from './relay';

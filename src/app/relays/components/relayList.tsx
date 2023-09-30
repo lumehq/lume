@@ -1,6 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { message } from '@tauri-apps/api/dialog';
+import { normalizeRelayUrl } from 'nostr-fetch';
 import { useNavigate } from 'react-router-dom';
 import { VList } from 'virtua';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon, PlusIcon, ShareIcon } from '@shared/icons';
 import { User } from '@shared/user';
@@ -9,19 +13,29 @@ import { useNostr } from '@utils/hooks/useNostr';
 
 export function RelayList() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { getAllRelaysByUsers } = useNostr();
+  const { db } = useStorage();
   const { status, data } = useQuery(
     ['relays'],
     async () => {
       return await getAllRelaysByUsers();
     },
-    { refetchOnMount: false }
+    { refetchOnWindowFocus: false }
   );
 
-  const openRelay = (relayUrl: string) => {
+  const inspectRelay = (relayUrl: string) => {
     const url = new URL(relayUrl);
     navigate(`/relays/${url.hostname}`);
+  };
+
+  const connectRelay = async (relayUrl: string) => {
+    const url = normalizeRelayUrl(relayUrl);
+    const res = await db.createRelay(url);
+
+    if (!res) await message("You're aldready connected to this relay");
+    queryClient.invalidateQueries(['user-relay']);
   };
 
   return (
@@ -49,7 +63,7 @@ export function RelayList() {
                 <div className="inline-flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => openRelay(key)}
+                    onClick={() => inspectRelay(key)}
                     className="inline-flex h-6 items-center justify-center gap-1 rounded bg-white/10 px-1.5 text-sm font-medium hover:bg-white/20"
                   >
                     <ShareIcon className="h-3 w-3" />
@@ -57,6 +71,7 @@ export function RelayList() {
                   </button>
                   <button
                     type="button"
+                    onClick={() => connectRelay(key)}
                     className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-white/10"
                   >
                     <PlusIcon className="h-3 w-3" />
