@@ -1,6 +1,6 @@
 import { Handle, Position } from 'reactflow';
 
-import { UserWithDrawer } from '@app/browse/components/userWithDrawer';
+import { UserWithDrawer } from '@app/explore/components/userWithDrawer';
 
 import { GroupTitle } from './groupTitle';
 

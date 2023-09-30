@@ -2,16 +2,17 @@ import { useCallback, useMemo, useRef } from 'react';
 import ReactFlow, {
   Background,
   ConnectionMode,
+  ReactFlowProvider,
   addEdge,
   useEdgesState,
   useNodesState,
   useReactFlow,
 } from 'reactflow';
 
-import { Edge } from '@app/browse//components/edge';
-import { UserGroupNode } from '@app/browse//components/userGroupNode';
-import { Line } from '@app/browse/components/line';
-import { UserNode } from '@app/browse/components/userNode';
+import { Edge } from '@app/explore/components/edge';
+import { Line } from '@app/explore/components/line';
+import { UserGroupNode } from '@app/explore/components/userGroupNode';
+import { UserNode } from '@app/explore/components/userNode';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -23,7 +24,7 @@ const getId = () => `${id++}`;
 const nodeTypes = { user: UserNode, userGroup: UserGroupNode };
 const edgeTypes = { buttonedge: Edge };
 
-export function BrowseUsersScreen() {
+export function ExploreScreen() {
   const { db } = useStorage();
   const { getContactsByPubkey } = useNostr();
   const { project } = useReactFlow();
@@ -91,26 +92,28 @@ export function BrowseUsersScreen() {
   );
 
   return (
-    <div className="h-full w-full" ref={reactFlowWrapper}>
-      <ReactFlow
-        proOptions={{ hideAttribution: true }}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        connectionLineComponent={Line}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onConnectStart={onConnectStart}
-        onConnectEnd={onConnectEnd}
-        connectionMode={ConnectionMode.Loose}
-        minZoom={0.8}
-        maxZoom={1.2}
-        fitView
-      >
-        <Background color="#3f3f46" />
-      </ReactFlow>
-    </div>
+    <ReactFlowProvider>
+      <div className="h-full w-full" ref={reactFlowWrapper}>
+        <ReactFlow
+          proOptions={{ hideAttribution: true }}
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          connectionLineComponent={Line}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onConnectStart={onConnectStart}
+          onConnectEnd={onConnectEnd}
+          connectionMode={ConnectionMode.Loose}
+          minZoom={0.8}
+          maxZoom={1.2}
+          fitView
+        >
+          <Background color="#3f3f46" />
+        </ReactFlow>
+      </div>
+    </ReactFlowProvider>
   );
 }

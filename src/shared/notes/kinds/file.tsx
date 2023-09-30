@@ -1,5 +1,5 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import ReactPlayer from 'react-player';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
@@ -25,15 +25,16 @@ export function FileNote(props: { event?: NDKEvent }) {
   if (type === 'video') {
     return (
       <div className="mb-2 mt-3">
-        <ReactPlayer
+        <MediaPlayer
           key={url}
-          url={url}
-          width="100%"
-          height="auto"
-          className="!h-auto overflow-hidden rounded-lg object-fill"
-          controls={true}
-          pip={true}
-        />
+          src={url}
+          poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+          load="visible"
+          aspectRatio="16/9"
+          crossorigin=""
+        >
+          <MediaProvider />
+        </MediaPlayer>
       </div>
     );
   }

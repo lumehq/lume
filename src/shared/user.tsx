@@ -29,7 +29,8 @@ export const User = memo(function User({
     | 'chat'
     | 'large'
     | 'thread'
-    | 'avatar';
+    | 'avatar'
+    | 'stacked';
   embedProfile?: string;
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
@@ -181,6 +182,28 @@ export const User = memo(function User({
         />
         <Avatar.Fallback delayMs={300}>
           <img src={svgURI} alt={pubkey} className="h-12 w-12 rounded-lg bg-black" />
+        </Avatar.Fallback>
+      </Avatar.Root>
+    );
+  }
+
+  if (variant === 'stacked') {
+    return (
+      <Avatar.Root>
+        <Avatar.Image
+          src={user?.picture || user?.image}
+          alt={pubkey}
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="inline-block h-8 w-8 rounded-full ring-1 ring-black"
+        />
+        <Avatar.Fallback delayMs={300}>
+          <img
+            src={svgURI}
+            alt={pubkey}
+            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-black"
+          />
         </Avatar.Fallback>
       </Avatar.Root>
     );

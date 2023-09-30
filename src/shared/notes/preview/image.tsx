@@ -2,7 +2,6 @@ import { downloadDir } from '@tauri-apps/api/path';
 import { download } from 'tauri-plugin-upload-api';
 
 import { DownloadIcon } from '@shared/icons';
-import { Image } from '@shared/image';
 
 export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: boolean }) {
   const downloadImage = async (url: string) => {
@@ -16,12 +15,15 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
       <div className="flex flex-col gap-2">
         {urls.map((url) => (
           <div key={url} className="group relative min-w-0 shrink-0 grow-0 basis-full">
-            <Image
+            <img
               src={url}
               alt={url}
               className={`${
                 truncate ? 'h-auto max-h-[300px]' : 'h-auto'
               } w-full rounded-lg border border-white/10 object-cover`}
+              loading="lazy"
+              decoding="async"
+              style={{ contentVisibility: 'auto' }}
             />
             <button
               type="button"

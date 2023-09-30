@@ -305,6 +305,31 @@ export function useNostr() {
     return events as unknown as NDKEvent[];
   };
 
+  const getAllRelaysByUsers = async () => {
+    const relayMap = new Map<string, string[]>();
+    const relayEvents = fetcher.fetchLatestEventsPerAuthor(
+      {
+        authors: db.account.follows,
+        relayUrls: relayUrls,
+      },
+      { kinds: [NDKKind.RelayList] },
+      5
+    );
+
+    for await (const { author, events } of relayEvents) {
+      if (events[0]) {
+        events[0].tags.forEach((tag) => {
+          const users = relayMap.get(tag[1]);
+
+          if (!users) return relayMap.set(tag[1], [author]);
+          return users.push(author);
+        });
+      }
+    }
+
+    return relayMap;
+  };
+
   const publish = async ({
     content,
     kind,
@@ -450,5 +475,6 @@ export function useNostr() {
     upload,
     getContactsByPubkey,
     getEventsByPubkey,
+    getAllRelaysByUsers,
   };
 }

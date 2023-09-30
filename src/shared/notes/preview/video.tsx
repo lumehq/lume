@@ -1,28 +1,19 @@
-import ReactPlayer from 'react-player/es6';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 
 export function VideoPreview({ urls }: { urls: string[] }) {
   return (
     <div className="relative mt-3 flex w-full flex-col gap-2">
       {urls.map((url) => (
-        <ReactPlayer
+        <MediaPlayer
           key={url}
-          url={url}
-          width="100%"
-          height="auto"
-          className="!h-auto overflow-hidden rounded-lg object-fill"
-          controls={true}
-          pip={true}
-          light={
-            <img
-              src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-              alt={url}
-              className="aspect-video h-full w-full bg-white object-cover"
-              loading="lazy"
-              decoding="async"
-              style={{ contentVisibility: 'auto' }}
-            />
-          }
-        />
+          src={url}
+          poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+          load="visible"
+          aspectRatio="16/9"
+          crossorigin=""
+        >
+          <MediaProvider />
+        </MediaPlayer>
       ))}
     </div>
   );

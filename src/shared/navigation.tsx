@@ -90,7 +90,7 @@ export function Navigation() {
             Home
           </NavLink>
           <NavLink
-            to="/browse/"
+            to="/relays"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
@@ -104,7 +104,24 @@ export function Navigation() {
             <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
               <WorldIcon className="h-4 w-4 text-white" />
             </span>
-            Browse
+            Relays
+          </NavLink>
+          <NavLink
+            to="/explore"
+            preventScrollReset={true}
+            className={({ isActive }) =>
+              twMerge(
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/70'
+              )
+            }
+          >
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+              <WorldIcon className="h-4 w-4 text-white" />
+            </span>
+            Explore
           </NavLink>
           <NavLink
             to="/notifications"

@@ -1,11 +1,12 @@
 import { message } from '@tauri-apps/api/dialog';
-import { RouterProvider, createBrowserRouter, redirect } from 'react-router-dom';
+import { fetch } from '@tauri-apps/api/http';
+import '@vidstack/react/player/styles/default/theme.css';
+import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 
 import { AuthCreateScreen } from '@app/auth/create';
 import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
-import { BrowseScreen } from '@app/browse';
 import { ErrorScreen } from '@app/error';
 
 import { useStorage } from '@libs/storage/provider';
@@ -50,6 +51,17 @@ export default function App() {
     }
   };
 
+  const relayLoader = async ({ params }) => {
+    return defer({
+      relay: fetch(`https://${params.url}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/nostr+json',
+        },
+      }).then((res) => res.data),
+    });
+  };
+
   const router = createBrowserRouter([
     {
       path: '/',
@@ -63,27 +75,6 @@ export default function App() {
             const { SpaceScreen } = await import('@app/space');
             return { Component: SpaceScreen };
           },
-        },
-        {
-          path: 'browse',
-          element: <BrowseScreen />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { BrowseUsersScreen } = await import('@app/browse/users');
-                return { Component: BrowseUsersScreen };
-              },
-            },
-            {
-              path: 'relays',
-              async lazy() {
-                const { BrowseRelaysScreen } = await import('@app/browse/relays');
-                return { Component: BrowseRelaysScreen };
-              },
-            },
-          ],
         },
         {
           path: 'users/:pubkey',
@@ -112,6 +103,30 @@ export default function App() {
             const { NWCScreen } = await import('@app/nwc');
             return { Component: NWCScreen };
           },
+        },
+        {
+          path: 'explore',
+          async lazy() {
+            const { ExploreScreen } = await import('@app/explore');
+            return { Component: ExploreScreen };
+          },
+        },
+        {
+          path: 'relays',
+          async lazy() {
+            const { RelaysScreen } = await import('@app/relays');
+            return { Component: RelaysScreen };
+          },
+          children: [
+            {
+              path: ':url',
+              loader: relayLoader,
+              async lazy() {
+                const { RelayScreen } = await import('@app/relays/relay');
+                return { Component: RelayScreen };
+              },
+            },
+          ],
         },
       ],
     },
