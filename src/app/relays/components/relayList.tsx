@@ -22,7 +22,12 @@ export function RelayList() {
     async () => {
       return await getAllRelaysByUsers();
     },
-    { refetchOnWindowFocus: false }
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: Infinity,
+    }
   );
 
   const inspectRelay = (relayUrl: string) => {

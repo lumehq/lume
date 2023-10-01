@@ -277,7 +277,7 @@ export const User = memo(function User({
     <HoverCard.Root>
       <div className="relative z-10 flex items-start gap-3">
         <HoverCard.Trigger asChild>
-          <Avatar.Root className="shrink-0">
+          <Avatar.Root className="h-10 w-10 shrink-0">
             <Avatar.Image
               src={user?.picture || user?.image}
               alt={pubkey}
