@@ -58,6 +58,7 @@ export const NDKInstance = () => {
     const dexieAdapter = new NDKCacheAdapterDexie({ dbName: 'lume_ndkcache' });
     const instance = new NDK({
       explicitRelayUrls,
+      // @ts-expect-error, wtf?
       cacheAdapter: dexieAdapter,
     });
 

@@ -62,7 +62,7 @@ export function TextNote(props: { content?: string }) {
             }
           },
         }}
-        disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
+        disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code']}
         unwrapDisallowed={true}
         linkTarget={'_blank'}
       >

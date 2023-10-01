@@ -2,7 +2,6 @@ import { useCallback, useMemo, useRef } from 'react';
 import ReactFlow, {
   Background,
   ConnectionMode,
-  ReactFlowProvider,
   addEdge,
   useEdgesState,
   useNodesState,
@@ -92,28 +91,26 @@ export function ExploreScreen() {
   );
 
   return (
-    <ReactFlowProvider>
-      <div className="h-full w-full" ref={reactFlowWrapper}>
-        <ReactFlow
-          proOptions={{ hideAttribution: true }}
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          connectionLineComponent={Line}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onConnectStart={onConnectStart}
-          onConnectEnd={onConnectEnd}
-          connectionMode={ConnectionMode.Loose}
-          minZoom={0.8}
-          maxZoom={1.2}
-          fitView
-        >
-          <Background color="#3f3f46" />
-        </ReactFlow>
-      </div>
-    </ReactFlowProvider>
+    <div className="h-full w-full" ref={reactFlowWrapper}>
+      <ReactFlow
+        proOptions={{ hideAttribution: true }}
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        connectionLineComponent={Line}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        connectionMode={ConnectionMode.Loose}
+        minZoom={0.8}
+        maxZoom={1.2}
+        fitView
+      >
+        <Background color="#3f3f46" />
+      </ReactFlow>
+    </div>
   );
 }

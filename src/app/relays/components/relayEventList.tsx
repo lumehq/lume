@@ -5,6 +5,7 @@ import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
 
+import { LoaderIcon } from '@shared/icons';
 import {
   ArticleNote,
   FileNote,
@@ -70,7 +71,12 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
     <div className="h-full">
       <div className="mx-auto w-full max-w-[500px]">
         {status === 'loading' ? (
-          <div>Loading...</div>
+          <div className="flex h-full w-full items-center justify-center">
+            <div className="inline-flex flex-col items-center justify-center gap-2">
+              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <p className="text-sm font-medium text-white/80">Loading newsfeed...</p>
+            </div>
+          </div>
         ) : (
           <VList className="scrollbar-hide h-full">
             <div className="h-10" />

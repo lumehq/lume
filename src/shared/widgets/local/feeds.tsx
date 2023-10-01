@@ -82,7 +82,7 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
       <TitleBar id={params.id} title={params.title} />
       <div className="flex-1">
         {status === 'loading' ? (
-          <div className="flex h-full w-full items-center justify-center ">
+          <div className="flex h-full w-full items-center justify-center">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-white" />
               <p className="text-sm font-medium text-white/80">Loading newsfeed...</p>

@@ -1,13 +1,13 @@
 import { message } from '@tauri-apps/api/dialog';
 import { fetch } from '@tauri-apps/api/http';
-import '@vidstack/react/player/styles/default/theme.css';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
-import 'reactflow/dist/style.css';
+import { ReactFlowProvider } from 'reactflow';
 
 import { AuthCreateScreen } from '@app/auth/create';
 import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ErrorScreen } from '@app/error';
+import { ExploreScreen } from '@app/explore';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -106,10 +106,12 @@ export default function App() {
         },
         {
           path: 'explore',
-          async lazy() {
-            const { ExploreScreen } = await import('@app/explore');
-            return { Component: ExploreScreen };
-          },
+          element: (
+            <ReactFlowProvider>
+              <ExploreScreen />
+            </ReactFlowProvider>
+          ),
+          errorElement: <ErrorScreen />,
         },
         {
           path: 'relays',

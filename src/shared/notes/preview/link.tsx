@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 
-import { Image } from '@shared/image';
-
 import { useOpenGraph } from '@utils/hooks/useOpenGraph';
 
 export function LinkPreview({ urls }: { urls: string[] }) {
@@ -38,10 +36,13 @@ export function LinkPreview({ urls }: { urls: string[] }) {
           ) : (
             <>
               {data.image && (
-                <Image
+                <img
                   src={data.image}
                   alt={urls[0]}
                   className="h-44 w-full rounded-t-lg object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ contentVisibility: 'auto' }}
                 />
               )}
               <div className="flex flex-col gap-1 border-t border-white/5 px-3 py-3">
