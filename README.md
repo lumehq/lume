@@ -10,7 +10,7 @@ Supported platform: macOS, Windows and Linux
 
 ### Prerequisites
 
-- Bun: https://bun.sh/docs/installation
+- PNPM or Bun (experiment)
 
 - Tauri: https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-macos
 
@@ -25,17 +25,17 @@ git clone https://github.com/luminous-devs/lume.git && cd lume
 Install packages
 
 ```
-bun install
+pnpm install
 ```
 
 Run dev build
 
 ```
-bun tauri dev
+pnpm tauri dev
 ```
 
 Generate production build
 
 ```
-bun tauri build
+pnpm tauri build
 ```
