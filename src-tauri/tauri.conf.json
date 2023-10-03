@@ -125,10 +125,6 @@
       ]
     },
     "security": {
-      "csp": {
-        "content-security-policy": "upgrade-insecure-requests"
-      },
-      "dangerousUseHttpScheme": true,
       "dangerousRemoteDomainIpcAccess": [
         {
           "scheme": "https",
