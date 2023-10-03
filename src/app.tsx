@@ -128,6 +128,13 @@ export default function App() {
             return { Component: RelayScreen };
           },
         },
+        {
+          path: 'communities',
+          async lazy() {
+            const { CommunitiesScreen } = await import('@app/communities');
+            return { Component: CommunitiesScreen };
+          },
+        },
       ],
     },
     {

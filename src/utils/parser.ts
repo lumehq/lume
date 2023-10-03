@@ -60,8 +60,14 @@ export function parser(eventContent: string) {
       }
 
       // boost
-      if (word.startsWith('$') && word.length > 1) {
+      if (word.startsWith('$prism') && word.length > 1) {
         return word.replace(word, `~boost-${word}~`);
+      }
+
+      // nostr account references (depreciated)
+      if (word.startsWith('@npub1')) {
+        const npub = word.replace('@', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        return word.replace(word, `~pub-${nip19.decode(npub).data}~`);
       }
 
       // nostr account references

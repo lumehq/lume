@@ -1,6 +1,6 @@
 import { SVGProps } from 'react';
 
-export function SpaceIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+export function HomeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,9 +13,9 @@ export function SpaceIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElemen
       <path
         fill="currentColor"
         fillRule="evenodd"
-        d="M14.522 2.261a4 4 0 00-5.044 0l-5 4.062A4 4 0 003 9.428V17a4 4 0 004 4h10a4 4 0 004-4V9.428a4 4 0 00-1.478-3.105l-5-4.062zM8 15a1 1 0 100 2h8a1 1 0 100-2H8z"
+        d="M10.108 1.999a3 3 0 013.784 0l6 4.875A3 3 0 0121 9.202V18a3 3 0 01-3 3H6a3 3 0 01-3-3V9.202a3 3 0 011.108-2.328l6-4.875zM8 15a1 1 0 100 2h8a1 1 0 100-2H8z"
         clipRule="evenodd"
-      />
+      ></path>
     </svg>
   );
 }
