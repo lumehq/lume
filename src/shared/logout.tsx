@@ -27,9 +27,9 @@ export function Logout() {
       <AlertDialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-9 items-center justify-center hover:bg-white/10"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-r-lg hover:bg-white/10"
         >
-          <LogoutIcon className="h-4 w-4 text-white" />
+          <LogoutIcon className="h-5 w-5 text-white" />
         </button>
       </AlertDialog.Trigger>
       <AlertDialog.Portal>

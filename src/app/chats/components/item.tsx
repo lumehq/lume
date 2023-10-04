@@ -1,13 +1,30 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+import * as Avatar from '@radix-ui/react-avatar';
+import { minidenticon } from 'minidenticons';
+import { memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { Image } from '@shared/image';
+import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
+import { useStorage } from '@libs/storage/provider';
+
+import { useStronghold } from '@stores/stronghold';
+
+import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
-export function ChatsListItem({ pubkey }: { pubkey: string }) {
-  const { status, user } = useProfile(pubkey);
+export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEvent }) {
+  const { db } = useStorage();
+  const { status, user } = useProfile(event.pubkey);
+
+  const privkey = useStronghold((state) => state.privkey);
+  const decryptedContent = useDecryptMessage(event, db.account.pubkey, privkey);
+
+  const createdAt = formatCreatedAt(event.created_at, true);
+  const svgURI =
+    'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(event.pubkey, 90, 50));
 
   if (status === 'loading') {
     return (
@@ -20,30 +37,48 @@ export function ChatsListItem({ pubkey }: { pubkey: string }) {
 
   return (
     <NavLink
-      to={`/chats/${pubkey}`}
+      to={`/chats/chat/${event.pubkey}`}
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
-          'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3',
+          'flex items-center gap-2.5 px-3 py-2 hover:bg-white/10',
           isActive
             ? 'border-fuchsia-500 bg-white/5 text-white'
             : 'border-transparent text-white/70'
         )
       }
     >
-      <Image
-        src={user?.picture || user?.image}
-        alt={pubkey}
-        className="h-7 w-7 shrink-0 rounded"
-      />
-      <div className="inline-flex w-full flex-1 items-center justify-between">
-        <h5 className="max-w-[10rem] truncate">
+      <Avatar.Root className="shrink-0">
+        <Avatar.Image
+          src={user?.picture || user?.image}
+          alt={event.pubkey}
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="h-10 w-10 rounded-lg"
+        />
+        <Avatar.Fallback delayMs={300}>
+          <img
+            src={svgURI}
+            alt={event.pubkey}
+            className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+          />
+        </Avatar.Fallback>
+      </Avatar.Root>
+      <div className="flex w-full flex-col">
+        <h5 className="max-w-[10rem] truncate font-semibold text-white">
           {user?.name ||
             user?.display_name ||
             user?.displayName ||
-            displayNpub(pubkey, 16)}
+            displayNpub(event.pubkey, 16)}
         </h5>
+        <div className="flex w-full items-center justify-between">
+          <p className="max-w-[8rem] truncate text-sm text-white/70">
+            {decryptedContent}
+          </p>
+          <p className="text-sm text-white/70">{createdAt}</p>
+        </div>
       </div>
     </NavLink>
   );
-}
+});

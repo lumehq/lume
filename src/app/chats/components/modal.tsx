@@ -23,17 +23,15 @@ export function NewMessageModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 border-transparent pl-4 pr-3"
+          className="inline-flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 border-transparent px-3"
         >
-          <div className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
-            <PlusIcon className="h-4 w-4 text-white" />
+          <div className="inline-flex h-7 w-7 shrink-0 items-center justify-center">
+            <PlusIcon className="h-5 w-5" />
           </div>
-          <div>
-            <h5 className="text-white/50">New chat</h5>
-          </div>
+          <h5 className="font-medium text-white/50">New message</h5>
         </button>
       </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
+      <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">

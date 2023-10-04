@@ -6,6 +6,7 @@ import { ReactFlowProvider } from 'reactflow';
 import { AuthCreateScreen } from '@app/auth/create';
 import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
+import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
 
@@ -84,13 +85,6 @@ export default function App() {
           },
         },
         {
-          path: 'chats/:pubkey',
-          async lazy() {
-            const { ChatScreen } = await import('@app/chats');
-            return { Component: ChatScreen };
-          },
-        },
-        {
           path: 'notifications',
           async lazy() {
             const { NotificationScreen } = await import('@app/notifications');
@@ -103,15 +97,6 @@ export default function App() {
             const { NWCScreen } = await import('@app/nwc');
             return { Component: NWCScreen };
           },
-        },
-        {
-          path: 'explore',
-          element: (
-            <ReactFlowProvider>
-              <ExploreScreen />
-            </ReactFlowProvider>
-          ),
-          errorElement: <ErrorScreen />,
         },
         {
           path: 'relays',
@@ -134,6 +119,29 @@ export default function App() {
             const { CommunitiesScreen } = await import('@app/communities');
             return { Component: CommunitiesScreen };
           },
+        },
+        {
+          path: 'explore',
+          element: (
+            <ReactFlowProvider>
+              <ExploreScreen />
+            </ReactFlowProvider>
+          ),
+          errorElement: <ErrorScreen />,
+        },
+        {
+          path: 'chats',
+          element: <ChatsScreen />,
+          errorElement: <ErrorScreen />,
+          children: [
+            {
+              path: 'chat/:pubkey',
+              async lazy() {
+                const { ChatScreen } = await import('@app/chats/chat');
+                return { Component: ChatScreen };
+              },
+            },
+          ],
         },
       ],
     },

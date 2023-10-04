@@ -52,7 +52,7 @@ export function ActiveAccount() {
 
   if (status === 'loading') {
     return (
-      <div className="inline-flex h-16 items-center gap-2.5 border-l-2 border-transparent pb-2 pl-4 pr-2">
+      <div className="inline-flex h-16 items-center gap-2.5 border-l-2 border-transparent px-3 pb-2">
         <div className="relative h-10 w-10 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
         <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
       </div>
@@ -60,7 +60,7 @@ export function ActiveAccount() {
   }
 
   return (
-    <div className="flex h-16 items-center justify-between border-l-2 border-transparent pb-2 pl-4 pr-3">
+    <div className="flex h-16 items-center justify-between border-l-2 border-transparent px-3 pb-1">
       <Link to={`/users/${db.account.pubkey}`} className="flex items-center gap-1.5">
         <Image
           src={user?.picture || user?.image}
@@ -76,12 +76,12 @@ export function ActiveAccount() {
           </span>
         </div>
       </Link>
-      <div className="inline-flex divide-x divide-white/5 rounded-lg border-t border-white/10 bg-white/20">
+      <div className="inline-flex divide-x divide-white/5 rounded-lg border-t border-white/5 bg-white/10">
         <Link
           to="/settings/"
-          className="inline-flex h-9 w-9 items-center justify-center hover:bg-white/10"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-l-lg hover:bg-white/10"
         >
-          <SettingsIcon className="h-4 w-4 text-white" />
+          <SettingsIcon className="h-5 w-5 text-white" />
         </Link>
         <Logout />
       </div>

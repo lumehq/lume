@@ -9,6 +9,7 @@ import { Frame } from '@shared/frame';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ChatsIcon,
   ExploreIcon,
   HomeIcon,
   RelayIcon,
@@ -52,15 +53,15 @@ export function Navigation() {
       </div>
       <div
         data-tauri-drag-region
-        className="scrollbar-hide flex h-full flex-1 flex-col gap-6 overflow-y-auto pb-32"
+        className="scrollbar-hide flex h-full flex-1 flex-col gap-6 overflow-y-auto pr-3"
       >
-        <div className="flex flex-col pr-3">
+        <div className="flex flex-col">
           <NavLink
             to="/"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3 font-medium',
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 px-3 font-medium',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
                   : 'border-transparent text-white/70'
@@ -73,11 +74,28 @@ export function Navigation() {
             Home
           </NavLink>
           <NavLink
+            to="/chats"
+            preventScrollReset={true}
+            className={({ isActive }) =>
+              twMerge(
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 px-3 font-medium',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/70'
+              )
+            }
+          >
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center">
+              <ChatsIcon className="h-5 w-5" />
+            </span>
+            Chats
+          </NavLink>
+          <NavLink
             to="/relays"
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3 font-medium',
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 px-3 font-medium',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
                   : 'border-transparent text-white/70'
@@ -94,7 +112,7 @@ export function Navigation() {
             preventScrollReset={true}
             className={({ isActive }) =>
               twMerge(
-                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-3 font-medium',
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 px-3 font-medium',
                 isActive
                   ? 'border-fuchsia-500 bg-white/5 text-white'
                   : 'border-transparent text-white/70'

@@ -168,23 +168,6 @@ export function useNostr() {
     }
   };
 
-  const fetchNIP04Chats = async () => {
-    const events = await fetcher.fetchAllEvents(
-      relayUrls,
-      {
-        kinds: [NDKKind.EncryptedDirectMessage],
-        '#p': [db.account.pubkey],
-      },
-      { since: 0 }
-    );
-
-    const senders = events.map((e) => e.pubkey);
-    const follows = new Set(senders.filter((el) => db.account.follows.includes(el)));
-    const unknowns = new Set(senders.filter((el) => !db.account.follows.includes(el)));
-
-    return { follows: [...follows], unknowns: [...unknowns] };
-  };
-
   const fetchNIP04Messages = async (sender: string) => {
     let senderMessages: NostrEventExt<false>[] = [];
 
@@ -256,6 +239,32 @@ export function useNostr() {
     }
 
     return events;
+  };
+
+  const getAllNIP04Chats = async () => {
+    const events = await fetcher.fetchAllEvents(
+      relayUrls,
+      {
+        kinds: [NDKKind.EncryptedDirectMessage],
+        '#p': [db.account.pubkey],
+      },
+      { since: 0 }
+    );
+
+    const dedup: NDKEvent[] = Object.values(
+      events.reduce((ev, { id, content, pubkey, created_at, tags }) => {
+        if (ev[pubkey]) {
+          if (ev[pubkey].created_at < created_at) {
+            ev[pubkey] = { id, content, pubkey, created_at, tags };
+          }
+        } else {
+          ev[pubkey] = { id, content, pubkey, created_at, tags };
+        }
+        return ev;
+      }, {})
+    );
+
+    return dedup;
   };
 
   const getAllEventsSinceLastLogin = async (customSince?: number) => {
@@ -465,9 +474,9 @@ export function useNostr() {
     fetchUserData,
     addContact,
     removeContact,
+    getAllNIP04Chats,
     getAllEventsSinceLastLogin,
     fetchActivities,
-    fetchNIP04Chats,
     fetchNIP04Messages,
     fetchAllReplies,
     publish,
