@@ -72,8 +72,8 @@ dependencies:
     specifier: ^2.1.11
     version: 2.1.11(@tiptap/core@2.1.11)(@tiptap/pm@2.1.11)
   '@vidstack/react':
-    specifier: ^1.1.5
-    version: 1.1.5(@types/react@18.2.24)(react@18.2.0)
+    specifier: ^1.1.7
+    version: 1.1.7(@types/react@18.2.24)(react@18.2.0)
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -2703,8 +2703,8 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@vidstack/react@1.1.5(@types/react@18.2.24)(react@18.2.0):
-    resolution: {integrity: sha512-EutVuOU2b6XTryEmPU23T2Ftu3j4BuJGdGbyHoDtc15m6iL/DtpkBJCLqRVI7PaiuQtqneKcvKUNcBNogVz5KQ==}
+  /@vidstack/react@1.1.7(@types/react@18.2.24)(react@18.2.0):
+    resolution: {integrity: sha512-qNd3+hLBdtWqFuPe1OZetVi/F/qOKXb1ByTPc4JdCmiGaheNhpMMLf8HM/r26YnP5v86WXvKgCFDuiiMyWXGbg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': ^18.0.0
