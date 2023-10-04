@@ -107,7 +107,8 @@
         "frameworks": [],
         "providerShortName": null,
         "signingIdentity": null,
-        "minimumSystemVersion": "10.15.0"
+        "minimumSystemVersion": "10.15.0",
+        "license": "../LICENSE"
       },
       "resources": [],
       "shortDescription": "",
