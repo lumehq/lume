@@ -29,12 +29,12 @@ export function MediaUploader({
           <button
             type="button"
             onClick={() => uploadMedia()}
-            className="group inline-flex h-8 w-8 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
+            className="group inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl hover:bg-white/20"
           >
             {loading ? (
-              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+              <LoaderIcon className="h-4 w-4 animate-spin" />
             ) : (
-              <MediaIcon className="h-5 w-5 text-white" />
+              <MediaIcon className="h-4 w-4" />
             )}
           </button>
         </Tooltip.Trigger>

@@ -1,5 +1,10 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { MediaPlayer, MediaProvider } from '@vidstack/react';
+import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
+import {
+  DefaultAudioLayout,
+  DefaultVideoLayout,
+  defaultLayoutIcons,
+} from '@vidstack/react/player/layouts/default';
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
@@ -31,9 +36,27 @@ export function FileNote(props: { event?: NDKEvent }) {
           poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
           load="visible"
           aspectRatio="16/9"
+          muted={true}
           crossorigin=""
+          className="player"
         >
-          <MediaProvider />
+          <MediaProvider>
+            <Poster
+              className="vds-poster"
+              src="https://thumbnail.video/api/get?url=${url}&seconds=1"
+              alt={url}
+            />
+          </MediaProvider>
+          <DefaultAudioLayout
+            icons={defaultLayoutIcons}
+            smallLayoutWhen="(width < 500) or (height < 380)"
+            noModal={true}
+          />
+          <DefaultVideoLayout
+            icons={defaultLayoutIcons}
+            smallLayoutWhen="(width < 500) or (height < 380)"
+            noModal={true}
+          />
         </MediaPlayer>
       </div>
     );

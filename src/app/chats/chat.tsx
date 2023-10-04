@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { VList, VListHandle } from 'virtua';
 
-import { ChatMessageForm } from '@app/chats/components/messages/form';
-import { ChatMessageItem } from '@app/chats/components/messages/item';
+import { ChatForm } from '@app/chats/components/chatForm';
+import { ChatMessage } from '@app/chats/components/message';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
@@ -31,7 +31,7 @@ export function ChatScreen() {
   const renderItem = useCallback(
     (message: NDKEvent) => {
       return (
-        <ChatMessageItem
+        <ChatMessage
           message={message}
           userPubkey={db.account.pubkey}
           userPrivkey={userPrivkey}
@@ -42,7 +42,7 @@ export function ChatScreen() {
   );
 
   useEffect(() => {
-    if (data.length > 0) listRef.current?.scrollToIndex(data.length);
+    if (data && data.length > 0) listRef.current?.scrollToIndex(data.length);
   }, [data]);
 
   useEffect(() => {
@@ -68,38 +68,36 @@ export function ChatScreen() {
   }, [pubkey]);
 
   return (
-    <div className="grid h-full w-full grid-cols-3 bg-white/10 backdrop-blur-xl">
-      <div className="col-span-2 border-r border-white/5">
-        <div className="h-full w-full flex-1 p-3">
-          <div className="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white/10 backdrop-blur-xl">
-            <div className="h-full w-full flex-1">
-              {status === 'loading' ? (
-                <div className="flex h-full w-full items-center justify-center">
-                  <div className="flex flex-col items-center gap-1.5">
-                    <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-                    <p className="text-sm font-medium text-white/50">Loading messages</p>
-                  </div>
+    <div className="h-full w-full p-3">
+      <div className="rounded-lg border-t border-white/5 bg-white/10 backdrop-blur-xl">
+        <div className="flex h-full flex-col justify-between overflow-hidden">
+          <div className="h-full w-full flex-1">
+            {status === 'loading' ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <div className="flex flex-col items-center gap-1.5">
+                  <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                  <p className="text-sm font-medium text-white/50">Loading messages</p>
                 </div>
-              ) : data.length === 0 ? (
-                <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-1 text-center">
-                  <h3 className="mb-2 text-4xl">🙌</h3>
-                  <p className="leading-none text-white/50">
-                    You two didn&apos;t talk yet, let&apos;s send first message
-                  </p>
-                </div>
-              ) : (
-                <VList ref={listRef} className="scrollbar-hide h-full" mode="reverse">
-                  {data.map((message) => renderItem(message))}
-                </VList>
-              )}
-            </div>
-            <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 px-5 backdrop-blur-xl">
-              <ChatMessageForm
-                receiverPubkey={pubkey}
-                userPubkey={db.account.pubkey}
-                userPrivkey={userPrivkey}
-              />
-            </div>
+              </div>
+            ) : data.length === 0 ? (
+              <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-1 text-center">
+                <h3 className="mb-2 text-4xl">🙌</h3>
+                <p className="leading-none text-white/50">
+                  You two didn&apos;t talk yet, let&apos;s send first message
+                </p>
+              </div>
+            ) : (
+              <VList ref={listRef} className="scrollbar-hide h-full" mode="reverse">
+                {data.map((message) => renderItem(message))}
+              </VList>
+            )}
+          </div>
+          <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 backdrop-blur-xl">
+            <ChatForm
+              receiverPubkey={pubkey}
+              userPubkey={db.account.pubkey}
+              userPrivkey={userPrivkey}
+            />
           </div>
         </div>
       </div>

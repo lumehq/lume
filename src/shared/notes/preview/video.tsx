@@ -15,6 +15,7 @@ export function VideoPreview({ urls }: { urls: string[] }) {
           load="visible"
           aspectRatio="16/9"
           crossorigin=""
+          muted={true}
           className="player"
         >
           <MediaProvider>
@@ -24,8 +25,16 @@ export function VideoPreview({ urls }: { urls: string[] }) {
               alt={url}
             />
           </MediaProvider>
-          <DefaultAudioLayout icons={defaultLayoutIcons} />
-          <DefaultVideoLayout icons={defaultLayoutIcons} />
+          <DefaultAudioLayout
+            icons={defaultLayoutIcons}
+            smallLayoutWhen="(width < 500) or (height < 380)"
+            noModal={true}
+          />
+          <DefaultVideoLayout
+            icons={defaultLayoutIcons}
+            smallLayoutWhen="(width < 500) or (height < 380)"
+            noModal={true}
+          />
         </MediaPlayer>
       ))}
     </div>

@@ -1,14 +1,13 @@
 import { nip04 } from 'nostr-tools';
 import { useCallback, useState } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
 
-import { MediaUploader } from '@app/chats/components/messages/mediaUploader';
+import { MediaUploader } from '@app/chats/components/mediaUploader';
 
 import { EnterIcon } from '@shared/icons';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
-export function ChatMessageForm({
+export function ChatForm({
   receiverPubkey,
   userPrivkey,
 }: {
@@ -46,24 +45,24 @@ export function ChatMessageForm({
   };
 
   return (
-    <div className="flex w-full items-center justify-between rounded-md bg-white/20 px-3">
-      <TextareaAutosize
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={handleEnterPress}
-        spellCheck={false}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        placeholder="Message"
-        className="min-h-[44px] flex-1 resize-none bg-transparent py-3 text-white !outline-none placeholder:text-white"
-      />
-      <div className="inline-flex items-center gap-2">
-        <MediaUploader setState={setValue} />
+    <div className="flex items-center gap-2">
+      <MediaUploader setState={setValue} />
+      <div className="flex w-full items-center justify-between rounded-full bg-white/20 px-3">
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleEnterPress}
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          placeholder="Message"
+          className="h-10 flex-1 resize-none bg-transparent px-3 text-white placeholder:text-white/80 focus:outline-none"
+        />
         <button
           type="button"
           onClick={submit}
-          className="inline-flex items-center gap-1.5 text-sm font-medium leading-none text-white/50"
+          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-white/80"
         >
           <EnterIcon className="h-5 w-5" />
           Send

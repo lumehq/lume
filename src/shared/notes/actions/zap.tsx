@@ -5,7 +5,6 @@ import { message } from '@tauri-apps/api/dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
-import TextareaAutosize from 'react-textarea-autosize';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
@@ -99,7 +98,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
           <ZapIcon className="h-5 w-5 text-white/80 group-hover:text-orange-400" />
         </button>
       </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
+      <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
@@ -171,7 +170,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                     </div>
                   </div>
                   <div className="mt-4 flex w-full flex-col gap-2">
-                    <TextareaAutosize
+                    <input
                       name="zapMessage"
                       value={zapMessage}
                       onChange={(e) => setZapMessage(e.target.value)}

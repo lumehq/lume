@@ -41,7 +41,7 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
-          'flex items-center gap-2.5 px-3 py-2 hover:bg-white/10',
+          'flex items-center gap-2.5 px-3 py-1.5 hover:bg-white/10',
           isActive
             ? 'border-fuchsia-500 bg-white/5 text-white'
             : 'border-transparent text-white/70'
@@ -55,14 +55,10 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
           loading="lazy"
           decoding="async"
           style={{ contentVisibility: 'auto' }}
-          className="h-10 w-10 rounded-lg"
+          className="h-9 w-9 rounded-lg"
         />
         <Avatar.Fallback delayMs={300}>
-          <img
-            src={svgURI}
-            alt={event.pubkey}
-            className="h-10 w-10 rounded-lg border border-white/5 bg-black"
-          />
+          <img src={svgURI} alt={event.pubkey} className="h-9 w-9 rounded-lg bg-white" />
         </Avatar.Fallback>
       </Avatar.Root>
       <div className="flex w-full flex-col">
