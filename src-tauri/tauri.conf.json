@@ -107,7 +107,8 @@
         "frameworks": [],
         "providerShortName": null,
         "signingIdentity": null,
-        "minimumSystemVersion": "10.15.0"
+        "minimumSystemVersion": "10.15.0",
+        "license": "../LICENSE"
       },
       "resources": [],
       "shortDescription": "",
@@ -125,10 +126,6 @@
       ]
     },
     "security": {
-      "csp": {
-        "content-security-policy": "upgrade-insecure-requests"
-      },
-      "dangerousUseHttpScheme": true,
       "dangerousRemoteDomainIpcAccess": [
         {
           "scheme": "https",
