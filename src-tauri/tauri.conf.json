@@ -134,6 +134,7 @@
           "enableTauriAPI": true
         }
       ]
-    }
+    },
+    "macOSPrivateApi": true
   }
 }

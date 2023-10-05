@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { ChatListItem } from '@app/chats/components/chaListItem';
+import { ChatListItem } from '@app/chats/components/chatListItem';
 
 import { LoaderIcon } from '@shared/icons';
 
