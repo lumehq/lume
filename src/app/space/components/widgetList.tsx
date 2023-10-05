@@ -57,9 +57,9 @@ export function WidgetList({ params }: { params: Widget }) {
   );
 
   const renderItem = useCallback(
-    (row: WidgetGroup) => {
+    (row: WidgetGroup, index: number) => {
       return (
-        <div className="flex flex-col gap-3">
+        <div key={index} className="flex flex-col gap-3">
           <h3 className="font-medium text-white/50">{row.title}</h3>
           <div className="flex flex-col divide-y divide-white/5 overflow-hidden rounded-xl bg-white/10">
             {row.data.map((item, index) => (
@@ -101,7 +101,9 @@ export function WidgetList({ params }: { params: Widget }) {
       <TitleBar id={params.id} title="Add widget" />
       <div className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="flex flex-col gap-6 px-3">
-          {DefaultWidgets.map((row: WidgetGroup) => renderItem(row))}
+          {DefaultWidgets.map((row: WidgetGroup, index: number) =>
+            renderItem(row, index)
+          )}
           <div className="border-t border-white/5 pt-6">
             <button
               type="button"

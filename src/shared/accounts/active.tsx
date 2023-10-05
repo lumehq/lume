@@ -67,8 +67,8 @@ export function ActiveAccount() {
           alt={db.account.npub}
           className="h-9 w-9 shrink-0 rounded-lg object-cover"
         />
-        <div className="flex w-full flex-1 flex-col items-start gap-0.5">
-          <p className="max-w-[10rem] truncate font-semibold leading-none text-white">
+        <div className="flex flex-col items-start">
+          <p className="max-w-[10rem] truncate text-base font-semibold leading-none text-white">
             {user?.name || user?.display_name || user?.displayName}
           </p>
           <span className="max-w-[7rem] truncate text-sm leading-none text-white/50">

@@ -16,7 +16,12 @@ export function ChatsScreen() {
     async () => {
       return await getAllNIP04Chats();
     },
-    { refetchOnWindowFocus: false }
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: Infinity,
+    }
   );
 
   const renderItem = useCallback(
@@ -31,9 +36,13 @@ export function ChatsScreen() {
       <div className="scrollbar-hide col-span-1 h-full overflow-y-auto border-r border-white/5">
         <div
           data-tauri-drag-region
-          className="h-16 w-full shrink-0 border-b border-white/5"
-        />
-        <div className="flex h-full flex-col gap-1 py-2">
+          className="flex h-11 w-full shrink-0 items-center border-b border-white/5 px-3"
+        >
+          <h3 className="bg-gradient-to-r from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
+            All chats
+          </h3>
+        </div>
+        <div className="flex h-full flex-col gap-1">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center pb-16">
               <div className="inline-flex flex-col items-center justify-center gap-2">

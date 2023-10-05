@@ -10,6 +10,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ChatsIcon,
+  CommunityIcon,
   ExploreIcon,
   HomeIcon,
   RelayIcon,
@@ -89,6 +90,23 @@ export function Navigation() {
               <ChatsIcon className="h-5 w-5" />
             </span>
             Chats
+          </NavLink>
+          <NavLink
+            to="/communities"
+            preventScrollReset={true}
+            className={({ isActive }) =>
+              twMerge(
+                'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 px-3 font-medium',
+                isActive
+                  ? 'border-fuchsia-500 bg-white/5 text-white'
+                  : 'border-transparent text-white/70'
+              )
+            }
+          >
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center">
+              <CommunityIcon className="h-5 w-5" />
+            </span>
+            Communities
           </NavLink>
           <NavLink
             to="/relays"

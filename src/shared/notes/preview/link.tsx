@@ -46,17 +46,15 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                 />
               )}
               <div className="flex flex-col gap-1 border-t border-white/5 px-3 py-3">
-                <h5 className="line-clamp-1 font-semibold leading-none text-white">
+                <h5 className="line-clamp-1 text-base font-semibold text-white">
                   {data.title}
                 </h5>
                 {data.description && (
-                  <p className="line-clamp-3 break-all text-sm text-white/50">
+                  <p className="line-clamp-3 break-all text-sm text-white/80">
                     {data.description}
                   </p>
                 )}
-                <span className="mt-2.5 text-sm leading-none text-white/80">
-                  {domain.hostname}
-                </span>
+                <span className="mt-2.5 text-sm text-white/80">{domain.hostname}</span>
               </div>
             </>
           )}

@@ -7,7 +7,7 @@ export function Hashtag({ tag }: { tag: string }) {
   const setWidget = useWidgets((state) => state.setWidget);
 
   return (
-    <div
+    <span
       role="button"
       tabIndex={0}
       onClick={() =>
@@ -27,6 +27,6 @@ export function Hashtag({ tag }: { tag: string }) {
       className="break-all text-fuchsia-400 hover:text-fuchsia-500"
     >
       {tag}
-    </div>
+    </span>
   );
 }

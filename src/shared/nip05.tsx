@@ -61,8 +61,10 @@ export const NIP05 = memo(function NIP05({
   }
 
   return (
-    <div className={twMerge('leadning-none inline-flex items-center gap-1', className)}>
-      <p>{nip05}</p>
+    <div className={twMerge('inline-flex items-center gap-1', className)}>
+      <div>
+        <p className="text-sm">{nip05}</p>
+      </div>
       <div className="shrink-0">
         {data === true ? (
           <VerifiedIcon className="h-3 w-3 text-green-500" />

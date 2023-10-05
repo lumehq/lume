@@ -11,6 +11,7 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
+import { User } from '@shared/user';
 
 import { useStronghold } from '@stores/stronghold';
 
@@ -35,6 +36,7 @@ export function ChatScreen() {
           message={message}
           userPubkey={db.account.pubkey}
           userPrivkey={userPrivkey}
+          self={message.pubkey === db.account.pubkey}
         />
       );
     },
@@ -71,7 +73,10 @@ export function ChatScreen() {
     <div className="h-full w-full p-3">
       <div className="rounded-lg border-t border-white/5 bg-white/10 backdrop-blur-xl">
         <div className="flex h-full flex-col justify-between overflow-hidden">
-          <div className="h-full w-full flex-1">
+          <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-3">
+            <User pubkey={pubkey} variant="simple" />
+          </div>
+          <div className="h-full w-full flex-1 px-3 py-3">
             {status === 'loading' ? (
               <div className="flex h-full w-full items-center justify-center">
                 <div className="flex flex-col items-center gap-1.5">
@@ -92,7 +97,7 @@ export function ChatScreen() {
               </VList>
             )}
           </div>
-          <div className="z-50 shrink-0 rounded-b-xl border-t border-white/5 bg-white/10 p-3 backdrop-blur-xl">
+          <div className="z-50 shrink-0 rounded-b-lg border-t border-white/5 bg-white/10 p-3 backdrop-blur-xl">
             <ChatForm
               receiverPubkey={pubkey}
               userPubkey={db.account.pubkey}

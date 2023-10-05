@@ -72,3 +72,4 @@ export * from './explore';
 export * from './explore2';
 export * from './home';
 export * from './chats';
+export * from './community';

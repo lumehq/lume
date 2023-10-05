@@ -38,13 +38,15 @@ export function ArticleNote(props: { event?: NDKEvent }) {
           />
         )}
         <div className="flex flex-col gap-2 rounded-b-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
-          <h5 className="line-clamp-1 font-medium leading-none text-white">
+          <h5 className="line-clamp-1 text-base font-medium text-white">
             {metadata.title}
           </h5>
-          <p className="line-clamp-3 break-all text-sm text-white/50">
-            {metadata.summary}
-          </p>
-          <span className="mt-2.5 text-sm leading-none text-white/50">
+          {metadata.summary ? (
+            <p className="line-clamp-3 break-all text-sm text-white/70">
+              {metadata.summary}
+            </p>
+          ) : null}
+          <span className="mt-2.5 text-sm text-white/70">
             {metadata.publishedAt.toString()}
           </span>
         </div>

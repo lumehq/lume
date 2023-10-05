@@ -28,9 +28,12 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
 
   if (status === 'loading') {
     return (
-      <div className="inline-flex h-10 items-center gap-2.5 rounded-md px-3">
-        <div className="relative h-7 w-7 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-        <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+      <div className="flex items-center gap-2.5 rounded-md px-3">
+        <div className="h-9 w-9 shrink-0 animate-pulse rounded-lg bg-white/10 backdrop-blur-xl" />
+        <div className="flex w-full flex-col">
+          <div className="h-2.5 w-1/2 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+          <div className="h-2.5 w-full animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+        </div>
       </div>
     );
   }
@@ -55,24 +58,28 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
           loading="lazy"
           decoding="async"
           style={{ contentVisibility: 'auto' }}
-          className="h-9 w-9 rounded-lg"
+          className="h-10 w-10 rounded-lg"
         />
         <Avatar.Fallback delayMs={300}>
-          <img src={svgURI} alt={event.pubkey} className="h-9 w-9 rounded-lg bg-white" />
+          <img
+            src={svgURI}
+            alt={event.pubkey}
+            className="h-10 w-10 rounded-lg bg-white"
+          />
         </Avatar.Fallback>
       </Avatar.Root>
       <div className="flex w-full flex-col">
-        <h5 className="max-w-[10rem] truncate font-semibold text-white">
+        <div className="max-w-[10rem] truncate font-semibold text-white">
           {user?.name ||
             user?.display_name ||
             user?.displayName ||
             displayNpub(event.pubkey, 16)}
-        </h5>
+        </div>
         <div className="flex w-full items-center justify-between">
-          <p className="max-w-[8rem] truncate text-sm text-white/70">
+          <div className="max-w-[10rem] truncate text-sm text-white/70">
             {decryptedContent}
-          </p>
-          <p className="text-sm text-white/70">{createdAt}</p>
+          </div>
+          <div className="text-sm text-white/70">{createdAt}</div>
         </div>
       </div>
     </NavLink>
