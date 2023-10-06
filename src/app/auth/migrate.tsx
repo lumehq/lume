@@ -1,9 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { appConfigDir } from '@tauri-apps/api/path';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { Stronghold } from 'tauri-plugin-stronghold-api';
 
 import { useStorage } from '@libs/storage/provider';
 

@@ -1,9 +1,9 @@
 import { appConfigDir } from '@tauri-apps/api/path';
+import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { getPublicKey, nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { Stronghold } from 'tauri-plugin-stronghold-api';
 
 import { useStorage } from '@libs/storage/provider';
 

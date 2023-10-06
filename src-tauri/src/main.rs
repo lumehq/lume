@@ -12,8 +12,6 @@ use tauri::{Manager, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};
-use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
-use window_shadows::set_shadow;
 
 #[cfg(target_os = "macos")]
 use traffic_light::TrafficLight;
@@ -120,7 +118,6 @@ fn main() {
       }
     })
     .plugin(tauri_plugin_app::init())
-    .plugin(tauri_plugin_cli::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
@@ -129,6 +126,7 @@ fn main() {
     .plugin(tauri_plugin_os::init())
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_shell::init())
+    .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_window::init())
     .plugin(

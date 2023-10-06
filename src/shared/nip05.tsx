@@ -30,7 +30,6 @@ export const NIP05 = memo(function NIP05({
 
         const res = await fetch(verifyURL, {
           method: 'GET',
-          timeout: 10,
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
@@ -38,7 +37,7 @@ export const NIP05 = memo(function NIP05({
 
         if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
-        const data = res.data as NIP05;
+        const data: NIP05 = await res.json();
         if (data.names) {
           if (data.names[localPath] !== pubkey) return false;
           return true;

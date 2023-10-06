@@ -59,7 +59,7 @@ export default function App() {
         headers: {
           Accept: 'application/nostr+json',
         },
-      }).then((res) => res.data),
+      }).then((res) => res.json()),
     });
   };
 

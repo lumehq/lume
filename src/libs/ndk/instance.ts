@@ -30,7 +30,6 @@ export const NDKInstance = () => {
         try {
           const res = await fetch(`https://${url.hostname}`, {
             method: 'GET',
-            timeout: { secs: 5, nanos: 0 },
             headers: {
               Accept: 'application/nostr+json',
             },

@@ -7,7 +7,7 @@ import {
   NDKUser,
 } from '@nostr-dev-kit/ndk';
 import { message, open } from '@tauri-apps/plugin-dialog';
-import { Body, fetch } from '@tauri-apps/plugin-http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { LRUCache } from 'lru-cache';
 import { NostrEventExt } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
@@ -18,7 +18,6 @@ import { useStorage } from '@libs/storage/provider';
 
 import { useStronghold } from '@stores/stronghold';
 
-import { createBlobFromFile } from '@utils/createBlobFromFile';
 import { nHoursAgo } from '@utils/date';
 import { getMultipleRandom } from '@utils/transform';
 import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
@@ -413,27 +412,19 @@ export function useNostr() {
             error: 'Cancelled',
           };
         } else {
-          filepath = selected;
+          filepath = selected.path;
         }
       }
 
-      const filename = filepath.split('/').pop();
-      const filetype = filename.split('.').pop();
+      const formData = new FormData();
+      formData.append('file', filepath);
 
-      const fileData = await createBlobFromFile(filepath);
       const res: NostrBuildResponse = await fetch(
         'https://nostr.build/api/v2/upload/files',
         {
           method: 'POST',
-          timeout: 30,
           headers: { 'Content-Type': 'multipart/form-data' },
-          body: Body.form({
-            fileData: {
-              file: fileData,
-              mime: `image/${filetype}`,
-              fileName: filename,
-            },
-          }),
+          body: formData,
         }
       );
 

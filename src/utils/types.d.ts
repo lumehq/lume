@@ -94,7 +94,7 @@ export interface NDKEventWithReplies extends NDKEvent {
 
 export interface NostrBuildResponse extends Response {
   ok: boolean;
-  data: {
+  data?: {
     message: string;
     status: string;
     data: Array<{

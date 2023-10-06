@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@dnd-kit/core':
-    specifier: ^6.0.8
-    version: 6.0.8(react-dom@18.2.0)(react@18.2.0)
   '@fontsource-variable/inter':
     specifier: ^5.0.12
     version: 5.0.12
@@ -51,12 +48,9 @@ dependencies:
     specifier: ^4.35.7
     version: 4.35.7(react-dom@18.2.0)(react@18.2.0)
   '@tauri-apps/api':
-    specifier: ^1.5.0
-    version: 1.5.0
+    specifier: 2.0.0-alpha.8
+    version: 2.0.0-alpha.8
   '@tauri-apps/plugin-app':
-    specifier: 2.0.0-alpha.1
-    version: 2.0.0-alpha.1
-  '@tauri-apps/plugin-cli':
     specifier: 2.0.0-alpha.1
     version: 2.0.0-alpha.1
   '@tauri-apps/plugin-clipboard-manager':
@@ -83,7 +77,16 @@ dependencies:
   '@tauri-apps/plugin-shell':
     specifier: 2.0.0-alpha.1
     version: 2.0.0-alpha.1
+  '@tauri-apps/plugin-sql':
+    specifier: 2.0.0-alpha.1
+    version: 2.0.0-alpha.1
+  '@tauri-apps/plugin-stronghold':
+    specifier: 2.0.0-alpha.2
+    version: 2.0.0-alpha.2
   '@tauri-apps/plugin-updater':
+    specifier: 2.0.0-alpha.1
+    version: 2.0.0-alpha.1
+  '@tauri-apps/plugin-upload':
     specifier: 2.0.0-alpha.1
     version: 2.0.0-alpha.1
   '@tauri-apps/plugin-window':
@@ -167,18 +170,6 @@ dependencies:
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
-  tauri-plugin-sql-api:
-    specifier: github:tauri-apps/tauri-plugin-sql#v1
-    version: github.com/tauri-apps/tauri-plugin-sql/1c79471feb06366fe1c11cb1cb6c67bcdb80c215
-  tauri-plugin-store-api:
-    specifier: github:tauri-apps/tauri-plugin-store#v1
-    version: github.com/tauri-apps/tauri-plugin-store/1a741b721ed1eae0de0d811ecfe86fc6ad54fb73
-  tauri-plugin-stronghold-api:
-    specifier: github:tauri-apps/tauri-plugin-stronghold#v1
-    version: github.com/tauri-apps/tauri-plugin-stronghold/d87b778f48ee12435efcf3f82d2e5efbb9541759
-  tauri-plugin-upload-api:
-    specifier: github:tauri-apps/tauri-plugin-upload#v1
-    version: github.com/tauri-apps/tauri-plugin-upload/5348082f7436b01f0b5c08d6ddfc4f760abbac7e
   tippy.js:
     specifier: ^6.3.7
     version: 6.3.7
@@ -419,37 +410,6 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
     dev: true
-
-  /@dnd-kit/accessibility@3.0.1(react@18.2.0):
-    resolution: {integrity: sha512-HXRrwS9YUYQO9lFRc/49uO/VICbM+O+ZRpFDe9Pd1rwVv2PCNkRiTZRdxrDgng/UkvdC3Re9r2vwPpXXrWeFzg==}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
-      tslib: 2.6.2
-    dev: false
-
-  /@dnd-kit/core@6.0.8(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-lYaoP8yHTQSLlZe6Rr9qogouGUz9oRUj4AHhDQGQzq/hqaJRpFo65X+JKsdHf8oUFBzx5A+SJPUvxAwTF2OabA==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@dnd-kit/accessibility': 3.0.1(react@18.2.0)
-      '@dnd-kit/utilities': 3.2.1(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.6.2
-    dev: false
-
-  /@dnd-kit/utilities@3.2.1(react@18.2.0):
-    resolution: {integrity: sha512-OOXqISfvBw/1REtkSK2N3Fi2EQiLMlWUlqnOK/UpOISqBZPWpE6TqL+jcPtMOkE8TqYGiURvRdPSI9hltNUjEA==}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
-      tslib: 2.6.2
-    dev: false
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
@@ -1932,13 +1892,13 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@tauri-apps/api@1.5.0:
-    resolution: {integrity: sha512-yQY9wpVNuiYhLLuyDlu1nBpqJELT1fGp7OctN4rW9I2W1T2p7A3tqPxsEzQprEwneQRBAlPM9vC8NsnMbct+pg==}
+  /@tauri-apps/api@2.0.0-alpha.6:
+    resolution: {integrity: sha512-ZMOc3eu9amwvkC6M69h3hWt4/EsFaAXmtkiw4xd2LN59/lTb4ZQiVfq2QKlRcu1rj3n/Tcr7U30ZopvHwXBGIg==}
     engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
-  /@tauri-apps/api@2.0.0-alpha.6:
-    resolution: {integrity: sha512-ZMOc3eu9amwvkC6M69h3hWt4/EsFaAXmtkiw4xd2LN59/lTb4ZQiVfq2QKlRcu1rj3n/Tcr7U30ZopvHwXBGIg==}
+  /@tauri-apps/api@2.0.0-alpha.8:
+    resolution: {integrity: sha512-3hZ+7EzUA11KN+O/Y4KgmjR+ldhXLdNllkw//hv/AaNsktEopCRBuKfVRLzVK3yov+Z+GzgxqFlwgJ1v6g1iKw==}
     engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
@@ -2055,12 +2015,6 @@ packages:
       '@tauri-apps/api': 2.0.0-alpha.6
     dev: false
 
-  /@tauri-apps/plugin-cli@2.0.0-alpha.1:
-    resolution: {integrity: sha512-CsEGByU9btlLWgo2WGsWnvMFHY7za+K5tAcCo5c6xgyOGplx+PrN63ZDxVvF686ZpjxtItoRra8lesqXHToGMg==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.6
-    dev: false
-
   /@tauri-apps/plugin-clipboard-manager@2.0.0-alpha.1:
     resolution: {integrity: sha512-zXybHu31RCx58ZGU7/kUHcvoXW2AX6kBXBZsKHv4rYe7Z869WmDLDC7iU23/dAJLu7xAPTJzJ/HbeMfbrfJ4hg==}
     dependencies:
@@ -2109,8 +2063,26 @@ packages:
       '@tauri-apps/api': 2.0.0-alpha.6
     dev: false
 
+  /@tauri-apps/plugin-sql@2.0.0-alpha.1:
+    resolution: {integrity: sha512-HzFjcISMnkYR4lSOEAvtOUUT/YIMU2mz+oVGdVzVYAM5gzt8Xmooapp66UCJ/ugTlpd0angSkqfRgU3eQVS7Mg==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.6
+    dev: false
+
+  /@tauri-apps/plugin-stronghold@2.0.0-alpha.2:
+    resolution: {integrity: sha512-G01gRHjD1QCNn2EK/hgHJYy0tFEfjuKpU104JOgeYVEbkJX7G92hjxfyLqe++LoihPF/sUa6VHEUVVXBsRa71Q==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.6
+    dev: false
+
   /@tauri-apps/plugin-updater@2.0.0-alpha.1:
     resolution: {integrity: sha512-rJoVc/N8gg1MkUOFZdx5h39V47elddwnOjs0sAPhaGfwct7okmFMRnXpN/MwHoprTkK2+6EDLOvhf0jFMiy4JA==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.6
+    dev: false
+
+  /@tauri-apps/plugin-upload@2.0.0-alpha.1:
+    resolution: {integrity: sha512-MSQesuCrQqPJtn1kbO428sz2M2q+G/jrOV2J3nxVrxUkISQvn2vK/vmMZ8e3p/dT5hdzs10Xz6KC9GZ67BCMVg==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.6
     dev: false
@@ -6809,36 +6781,4 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-sql/1c79471feb06366fe1c11cb1cb6c67bcdb80c215:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/1c79471feb06366fe1c11cb1cb6c67bcdb80c215}
-    name: tauri-plugin-sql-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.5.0
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-store/1a741b721ed1eae0de0d811ecfe86fc6ad54fb73:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/1a741b721ed1eae0de0d811ecfe86fc6ad54fb73}
-    name: tauri-plugin-store-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.5.0
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-stronghold/d87b778f48ee12435efcf3f82d2e5efbb9541759:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-stronghold/tar.gz/d87b778f48ee12435efcf3f82d2e5efbb9541759}
-    name: tauri-plugin-stronghold-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.5.0
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-upload/5348082f7436b01f0b5c08d6ddfc4f760abbac7e:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-upload/tar.gz/5348082f7436b01f0b5c08d6ddfc4f760abbac7e}
-    name: tauri-plugin-upload-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.5.0
     dev: false

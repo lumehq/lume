@@ -60,7 +60,6 @@ export function EditProfileModal() {
 
     const res = await fetch(verifyURL, {
       method: 'GET',
-      timeout: 10,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
@@ -68,7 +67,7 @@ export function EditProfileModal() {
 
     if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
-    const data = res.data as NIP05;
+    const data: NIP05 = await res.json();
     if (data.names) {
       if (data.names[localPath] !== db.account.pubkey) return false;
       return true;
@@ -144,7 +143,7 @@ export function EditProfileModal() {
           Edit profile
         </button>
       </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
+      <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
