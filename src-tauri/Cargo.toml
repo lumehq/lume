@@ -49,6 +49,7 @@ tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspa
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 window-vibrancy = { git = "https://github.com/tauri-apps/window-vibrancy", branch = "dev" }
+window-shadows = { git = "https://github.com/tauri-apps/window-shadows", branch = "dev" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }

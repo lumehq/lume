@@ -5,7 +5,6 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ActiveAccount } from '@shared/accounts/active';
 import { ComposerModal } from '@shared/composer';
-import { Frame } from '@shared/frame';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -21,10 +20,7 @@ export function Navigation() {
   const navigate = useNavigate();
 
   return (
-    <Frame
-      className="relative flex h-full w-[232px] flex-col border-r border-white/5"
-      lighter
-    >
+    <div className="relative flex h-full w-[232px] flex-col border-r border-white/5">
       <div
         data-tauri-drag-region
         className="inline-flex h-16 w-full items-center justify-between px-3"
@@ -147,6 +143,6 @@ export function Navigation() {
       <div className="relative shrink-0">
         <ActiveAccount />
       </div>
-    </Frame>
+    </div>
   );
 }

@@ -24,6 +24,6 @@
     "jsx": "preserve",
     "strictNullChecks": false
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/main.jsx"],
   "exclude": ["node_modules", "dist", "src-tauri"]
 }

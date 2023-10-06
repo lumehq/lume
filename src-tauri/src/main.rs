@@ -12,9 +12,8 @@ use tauri::{Manager, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};
-
-#[cfg(target_os = "macos")]
-use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+use window_vibrancy::{apply_mica, apply_vibrancy, NSVisualEffectMaterial};
+use window_shadows::set_shadow;
 
 #[cfg(target_os = "macos")]
 use traffic_light::TrafficLight;
@@ -107,6 +106,12 @@ fn main() {
   tauri::Builder::default()
     .setup(|app| {
       let window = app.get_window("main").unwrap();
+      let splashscreen = app.get_window("splashscreen").unwrap();
+      
+      #[cfg(target_os = "windows")]
+      set_shadow(&window, true).expect("Unsupported platform!");
+      #[cfg(target_os = "windows")]
+      set_shadow(&splashscreen, true).expect("Unsupported platform!");
 
       #[cfg(target_os = "macos")]
       apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)

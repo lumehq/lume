@@ -1,3 +1,4 @@
+import '@fontsource-variable/inter/slnt.css';
 import { message } from '@tauri-apps/api/dialog';
 import { fetch } from '@tauri-apps/api/http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
@@ -12,14 +13,13 @@ import { ExploreScreen } from '@app/explore';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { Frame } from '@shared/frame';
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
 import { NoteLayout } from '@shared/layouts/note';
 import { SettingsLayout } from '@shared/layouts/settings';
 
-import './index.css';
+import './app.css';
 
 export default function App() {
   const { db } = useStorage();
@@ -331,9 +331,9 @@ export default function App() {
     <RouterProvider
       router={router}
       fallbackElement={
-        <Frame className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
-        </Frame>
+        </div>
       }
       future={{ v7_startTransition: true }}
     />
