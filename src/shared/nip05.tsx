@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 

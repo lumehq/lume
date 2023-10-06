@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { normalizeRelayUrl } from 'nostr-fetch';
 import { useNavigate } from 'react-router-dom';
 import { VList } from 'virtua';

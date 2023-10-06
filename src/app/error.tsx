@@ -24,8 +24,8 @@ export function ErrorScreen() {
 
   useEffect(() => {
     async function getInformation() {
-      const { platform, version } = await import('@tauri-apps/api/os');
-      const { getVersion } = await import('@tauri-apps/api/app');
+      const { platform, version } = await import('@tauri-apps/plugin-os');
+      const { getVersion } = await import('@tauri-apps/plugin-app');
       const { appConfigDir } = await import('@tauri-apps/api/path');
 
       const platformName = await platform();

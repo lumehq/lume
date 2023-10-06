@@ -1,8 +1,8 @@
 import NDK from '@nostr-dev-kit/ndk';
 import NDKCacheAdapterDexie from '@nostr-dev-kit/ndk-cache-dexie';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { message } from '@tauri-apps/api/dialog';
-import { fetch } from '@tauri-apps/api/http';
+import { message } from '@tauri-apps/plugin-dialog';
+import { fetch } from '@tauri-apps/plugin-http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 

@@ -11,76 +11,38 @@
     "productName": "Lume",
     "version": "1.2.6"
   },
-  "tauri": {
-    "allowlist": {
-      "app": {
-        "all": true,
-        "show": true,
-        "hide": true
-      },
-      "path": {
-        "all": true
-      },
-      "dialog": {
-        "all": true,
-        "ask": true,
-        "confirm": true,
-        "message": true,
-        "open": true,
-        "save": true
-      },
-      "fs": {
-        "all": false,
-        "removeFile": true,
-        "writeFile": true,
-        "readDir": true,
-        "readFile": true,
-        "scope": [
-          "$APPDATA/*",
-          "$DATA/*",
-          "$LOCALDATA/*",
-          "$DESKTOP/*",
-          "$DOCUMENT/*",
-          "$DOWNLOAD/*",
-          "$HOME/*",
-          "$PICTURE/*",
-          "$PUBLIC/*",
-          "$VIDEO/*"
-        ]
-      },
-      "http": {
-        "all": true,
-        "scope": [
-          "http://**",
-          "https://**"
-        ]
-      },
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "os": {
-        "all": true
-      },
-      "window": {
-        "all": false,
-        "center": true,
-        "setResizable": true,
-        "setSize": true,
-        "startDragging": true,
-        "create": true,
-        "close": true,
-        "print": true
-      },
-      "clipboard": {
-        "all": false,
-        "writeText": true,
-        "readText": true
-      },
-      "notification": {
-        "all": true
-      }
+  "plugins": {
+    "fs": {
+      "scope": [
+        "$APPDATA/*",
+        "$DATA/*",
+        "$LOCALDATA/*",
+        "$DESKTOP/*",
+        "$DOCUMENT/*",
+        "$DOWNLOAD/*",
+        "$HOME/*",
+        "$PICTURE/*",
+        "$PUBLIC/*",
+        "$VIDEO/*"
+      ]
     },
+    "http": {
+      "scope": [
+        "http://**/",
+        "https://**/"
+      ]
+    },
+    "shell": {
+      "open": true
+    },
+    "updater": {
+      "endpoints": [
+        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
+        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
+      ]
+    }
+  },
+  "tauri": {
     "bundle": {
       "active": true,
       "appimage": {
@@ -105,36 +67,32 @@
         "entitlements": null,
         "exceptionDomain": "",
         "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null,
+        "license": "../LICENSE",
         "minimumSystemVersion": "10.15.0",
-        "license": "../LICENSE"
+        "providerShortName": null,
+        "signingIdentity": null
       },
       "resources": [],
       "shortDescription": "",
       "targets": "all",
+      "updater": {},
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
         "timestampUrl": ""
       }
     },
-    "updater": {
-      "endpoints": [
-        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
-        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
-      ]
-    },
+    "macOSPrivateApi": true,
     "security": {
       "dangerousRemoteDomainIpcAccess": [
         {
-          "scheme": "https",
           "domain": "nwc.getalby.com",
-          "windows": ["alby"],
-          "enableTauriAPI": true
+          "scheme": "https",
+          "windows": [
+            "alby"
+          ]
         }
       ]
-    },
-    "macOSPrivateApi": true
+    }
   }
 }

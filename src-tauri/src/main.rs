@@ -106,16 +106,6 @@ fn main() {
   tauri::Builder::default()
     .setup(|app| {
       let window = app.get_window("main").unwrap();
-      let splashscreen = app.get_window("splashscreen").unwrap();
-      
-      #[cfg(target_os = "windows")]
-      set_shadow(&window, true).expect("Unsupported platform!");
-      #[cfg(target_os = "windows")]
-      set_shadow(&splashscreen, true).expect("Unsupported platform!");
-
-      #[cfg(target_os = "macos")]
-      apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
-        .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
       #[cfg(target_os = "macos")]
       window.position_traffic_lights(16.0, 25.0);
@@ -129,6 +119,18 @@ fn main() {
         window.position_traffic_lights(16.0, 25.0);
       }
     })
+    .plugin(tauri_plugin_app::init())
+    .plugin(tauri_plugin_cli::init())
+    .plugin(tauri_plugin_clipboard_manager::init())
+    .plugin(tauri_plugin_dialog::init())
+    .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_http::init())
+    .plugin(tauri_plugin_notification::init())
+    .plugin(tauri_plugin_os::init())
+    .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_shell::init())
+    .plugin(tauri_plugin_updater::Builder::new().build())
+    .plugin(tauri_plugin_window::init())
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(

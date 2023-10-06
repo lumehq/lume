@@ -1,6 +1,6 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { BaseDirectory, removeFile } from '@tauri-apps/api/fs';
-import { Platform } from '@tauri-apps/api/os';
+import { BaseDirectory, removeFile } from '@tauri-apps/plugin-fs';
+import { Platform } from '@tauri-apps/plugin-os';
 import Database from 'tauri-plugin-sql-api';
 import { Stronghold } from 'tauri-plugin-stronghold-api';
 

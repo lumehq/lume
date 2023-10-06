@@ -1,6 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { nip19 } from 'nostr-tools';
 import { EventPointer } from 'nostr-tools/lib/nip19';
 import { useState } from 'react';

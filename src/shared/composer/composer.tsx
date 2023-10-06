@@ -1,4 +1,4 @@
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';

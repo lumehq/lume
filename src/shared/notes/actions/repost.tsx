@@ -1,7 +1,7 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 

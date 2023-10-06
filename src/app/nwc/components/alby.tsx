@@ -1,7 +1,7 @@
 import { webln } from '@getalby/sdk';
 import * as Dialog from '@radix-ui/react-dialog';
-import { message } from '@tauri-apps/api/dialog';
-import { WebviewWindow } from '@tauri-apps/api/window';
+import { message } from '@tauri-apps/plugin-dialog';
+import { WebviewWindow } from '@tauri-apps/plugin-window';
 import { useState } from 'react';
 
 import { useStorage } from '@libs/storage/provider';

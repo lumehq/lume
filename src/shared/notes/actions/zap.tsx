@@ -1,7 +1,7 @@
 import { webln } from '@getalby/sdk';
 import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';

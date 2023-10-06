@@ -1,7 +1,7 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 

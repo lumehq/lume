@@ -11,45 +11,35 @@ rust-version = "1.66"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.5", features = [] }
+tauri-build = { version = "2.0.0-alpha.8", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.5", features = [
+tauri = { version = "2.0.0-alpha", features = [
   "macos-private-api",
-  "window-close",
-  "window-print",
-  "window-create",
-  "fs-read-dir",
-  "fs-read-file",
-  "window-start-dragging",
-  "path-all",
-  "http-all",
-  "clipboard-write-text",
-  "os-all",
-  "notification-all",
-  "clipboard-read-text",
-  "window-set-resizable",
-  "window-set-size",
-  "shell-open",
-  "fs-write-file",
-  "app-all",
-  "fs-remove-file",
-  "window-center",
-  "dialog-all",
-  "http-multipart",
+  "native-tls-vendored",
 ] }
-tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v1", features = [
+tauri-plugin-app = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-cli = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-dialog = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-fs = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-http = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-notification = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v2", features = [
   "sqlite",
 ] }
-tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-window-vibrancy = { git = "https://github.com/tauri-apps/window-vibrancy", branch = "dev" }
-window-shadows = { git = "https://github.com/tauri-apps/window-shadows", branch = "dev" }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }

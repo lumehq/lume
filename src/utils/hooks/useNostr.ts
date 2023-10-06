@@ -6,8 +6,8 @@ import {
   NDKSubscription,
   NDKUser,
 } from '@nostr-dev-kit/ndk';
-import { message, open } from '@tauri-apps/api/dialog';
-import { Body, fetch } from '@tauri-apps/api/http';
+import { message, open } from '@tauri-apps/plugin-dialog';
+import { Body, fetch } from '@tauri-apps/plugin-http';
 import { LRUCache } from 'lru-cache';
 import { NostrEventExt } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';

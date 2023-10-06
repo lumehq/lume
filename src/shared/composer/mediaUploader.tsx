@@ -1,4 +1,4 @@
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { UnlistenFn, listen } from '@tauri-apps/api/event';
 import { Editor } from '@tiptap/react';
 import { useEffect, useState } from 'react';

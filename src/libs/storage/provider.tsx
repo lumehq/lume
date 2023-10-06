@@ -1,5 +1,5 @@
-import { message } from '@tauri-apps/api/dialog';
-import { platform } from '@tauri-apps/api/os';
+import { message } from '@tauri-apps/plugin-dialog';
+import { platform } from '@tauri-apps/plugin-os';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import Database from 'tauri-plugin-sql-api';
 

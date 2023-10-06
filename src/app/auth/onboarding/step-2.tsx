@@ -1,4 +1,4 @@
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

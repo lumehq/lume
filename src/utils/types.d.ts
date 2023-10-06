@@ -1,5 +1,5 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
-import { Response } from '@tauri-apps/api/http';
+import { Response } from '@tauri-apps/plugin-http';
 
 export interface RichContent {
   parsed: string;

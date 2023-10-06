@@ -1,6 +1,6 @@
-import { writeText } from '@tauri-apps/api/clipboard';
-import { message, save } from '@tauri-apps/api/dialog';
-import { writeTextFile } from '@tauri-apps/api/fs';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { message, save } from '@tauri-apps/plugin-dialog';
+import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { downloadDir } from '@tauri-apps/api/path';
 import { generatePrivateKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useEffect, useMemo, useState } from 'react';
