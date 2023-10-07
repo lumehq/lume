@@ -71,8 +71,10 @@
     "react-hook-form": "^7.47.0",
     "react-markdown": "^8.0.7",
     "react-router-dom": "^6.16.0",
+    "react-string-replace": "^1.1.1",
     "reactflow": "^11.9.2",
     "remark-gfm": "^3.0.1",
+    "tauri-controls": "^0.2.0",
     "tippy.js": "^6.3.7",
     "virtua": "^0.9.1",
     "zustand": "^4.4.2"

@@ -83,44 +83,37 @@ export function UnlockScreen() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md">
-        <div className="mb-4 pb-4">
-          <h1 className="text-center text-2xl font-semibold text-white">
-            Enter password to unlock
-          </h1>
+        <div className="mb-8 inline-flex w-full items-center justify-center">
+          <User pubkey={db.account.pubkey} variant="avatar" />
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col">
-          <div className="flex flex-col rounded-lg bg-white/5">
-            <div className="w-full rounded-t-lg border-b border-white/10 bg-white/5 p-4">
-              <User pubkey={db.account.pubkey} variant="simple" />
-            </div>
-            <div className="relative">
-              <input
-                {...register('password', { required: true, minLength: 4 })}
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                className="relative h-12 w-full rounded-b-lg bg-white/10 py-1 text-center tracking-widest text-white !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-white/50"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 backdrop-blur-xl hover:bg-white/10"
-              >
-                {showPassword ? (
-                  <EyeOffIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
-                ) : (
-                  <EyeOnIcon className="h-5 w-5 text-white/50 group-hover:text-white" />
-                )}
-              </button>
-            </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mx-auto mb-0 flex w-2/3 flex-col"
+        >
+          <div className="relative">
+            <input
+              {...register('password', { required: true, minLength: 4 })}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter password"
+              className="relative h-12 w-full rounded-lg bg-zinc-300 py-1 text-center tracking-widest text-zinc-900 !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full p-1 backdrop-blur-xl hover:bg-black/10 dark:hover:bg-white/10"
+            >
+              {showPassword ? (
+                <EyeOffIcon className="group-hover:text-dark h-5 w-5 text-black/50 dark:text-white/50 dark:group-hover:text-white" />
+              ) : (
+                <EyeOnIcon className="group-hover:text-dark h-5 w-5 text-black/50 dark:text-white/50 dark:group-hover:text-white" />
+              )}
+            </button>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <span className="mb-3 text-sm text-red-400">
-              {errors.password && <p>{errors.password.message}</p>}
-            </span>
+          <div className="mt-2 flex flex-col">
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
+              className="inline-flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-interor-600 px-6 text-white hover:bg-interor-700 focus:outline-none disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -136,30 +129,6 @@ export function UnlockScreen() {
                 </>
               )}
             </button>
-            <div className="mt-8 w-full">
-              <div className="flex items-center gap-2.5">
-                <div className="h-px flex-1 bg-white/10" />
-                <p className="shrink-0 text-sm font-medium text-white/50">
-                  Forgot password?
-                </p>
-                <div className="h-px flex-1 bg-white/10" />
-              </div>
-              <div className="mt-2 flex flex-col">
-                <Link
-                  to="/auth/reset"
-                  className="inline-flex h-10 w-full items-center justify-center rounded-lg text-center text-sm font-medium text-white/70 hover:bg-white/20"
-                >
-                  Reset password if you still have a private key
-                </Link>
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="inline-flex h-10 w-full items-center justify-center rounded-lg text-center text-sm font-medium text-white/70 hover:bg-white/20"
-                >
-                  Login with another account
-                </button>
-              </div>
-            </div>
           </div>
         </form>
       </div>

@@ -1,12 +1,28 @@
 /** @type {import('tailwindcss').Config} */
 
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}', 'index.html'],
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        // 'international orange'
+        interor: {
+          50: 'hsl(32, 100%, 96%)',
+          100: 'hsl(34, 100%, 91%)',
+          200: 'hsl(31, 100%, 82%)',
+          300: 'hsl(30, 100%, 71%)',
+          400: 'hsl(26, 100%, 60%)',
+          500: 'hsl(23, 100%, 52%)',
+          600: 'hsl(19, 100%, 50%)',
+          700: 'hsl(15, 98%, 40%)',
+          800: 'hsl(13, 87%, 34%)',
+          900: 'hsl(13, 83%, 28%)',
+          950: 'hsl(11, 89%, 15%)',
+        },
+      },
       fontFamily: {
         sans: ['Inter Variable', ...defaultTheme.fontFamily.sans],
       },

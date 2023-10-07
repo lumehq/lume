@@ -14,14 +14,14 @@ export function TitleBar({ id, title }: { id?: string; title: string }) {
       className="flex h-11 w-full shrink-0 items-center justify-between overflow-hidden px-3"
     >
       <div className="w-6" />
-      <h3 className="text-sm font-bold text-white">{title}</h3>
+      <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</h3>
       {id ? (
         <button
           type="button"
           onClick={() => remove(db, id)}
-          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded backdrop-blur-xl hover:bg-white/10"
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-zinc-900 backdrop-blur-xl hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-900"
         >
-          <CancelIcon className="h-3 w-3 text-white" />
+          <CancelIcon className="h-3 w-3" />
         </button>
       ) : (
         <div className="w-6" />

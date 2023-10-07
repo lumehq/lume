@@ -17,7 +17,7 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
           <div key={url} className="group relative min-w-0 shrink-0 grow-0 basis-full">
             <img
               src={url}
-              alt={url}
+              alt="image"
               className={`${
                 truncate ? 'h-auto max-h-[300px]' : 'h-auto'
               } w-full rounded-lg border border-white/10 object-cover`}

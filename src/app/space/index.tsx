@@ -84,7 +84,7 @@ export function SpaceScreen() {
   }, [fetchWidgets]);
 
   return (
-    <div className="scrollbar-hide inline-flex h-full w-full min-w-full flex-nowrap items-start divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
+    <div className="scrollbar-hide inline-flex h-full w-full min-w-full flex-nowrap items-start divide-x divide-zinc-200 overflow-x-auto overflow-y-hidden dark:divide-zinc-800">
       {!widgets ? (
         <div className="flex shrink-0 grow-0 basis-[400px] flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">

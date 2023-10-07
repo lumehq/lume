@@ -21,7 +21,7 @@ export function VideoPreview({ urls }: { urls: string[] }) {
           <MediaProvider>
             <Poster
               className="vds-poster"
-              src="https://thumbnail.video/api/get?url=${url}&seconds=1"
+              src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
               alt={url}
             />
           </MediaProvider>

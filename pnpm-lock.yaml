@@ -164,12 +164,18 @@ dependencies:
   react-router-dom:
     specifier: ^6.16.0
     version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+  react-string-replace:
+    specifier: ^1.1.1
+    version: 1.1.1
   reactflow:
     specifier: ^11.9.2
     version: 11.9.2(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0)
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
+  tauri-controls:
+    specifier: ^0.2.0
+    version: 0.2.0(@tauri-apps/plugin-os@2.0.0-alpha.2)(@tauri-apps/plugin-window@2.0.0-alpha.1)(clsx@2.0.0)(react-dom@18.2.0)(react@18.2.0)(tailwind-merge@1.14.0)
   tippy.js:
     specifier: ^6.3.7
     version: 6.3.7
@@ -3153,7 +3159,6 @@ packages:
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
-    dev: true
 
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -5804,6 +5809,11 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-string-replace@1.1.1:
+    resolution: {integrity: sha512-26TUbLzLfHQ5jO5N7y3Mx88eeKo0Ml0UjCQuX4BMfOd/JX+enQqlKpL1CZnmjeBRvQE8TR+ds9j1rqx9CxhKHQ==}
+    engines: {node: '>=0.12.0'}
+    dev: false
+
   /react-style-singleton@2.2.1(@types/react@18.2.24)(react@18.2.0):
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
     engines: {node: '>=10'}
@@ -6211,7 +6221,6 @@ packages:
 
   /tailwind-merge@1.14.0:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
-    dev: true
 
   /tailwindcss@3.3.3:
     resolution: {integrity: sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w==}
@@ -6243,6 +6252,25 @@ packages:
     transitivePeerDependencies:
       - ts-node
     dev: true
+
+  /tauri-controls@0.2.0(@tauri-apps/plugin-os@2.0.0-alpha.2)(@tauri-apps/plugin-window@2.0.0-alpha.1)(clsx@2.0.0)(react-dom@18.2.0)(react@18.2.0)(tailwind-merge@1.14.0):
+    resolution: {integrity: sha512-/IDXLhcqGRjNN7QKfzgyr2y4QfnWT9MSIdqxrjH2oElXyngSo/cQltTb8LT6h/sH/7gRiSQMvQBEmavfn9Hk0w==}
+    peerDependencies:
+      '@tauri-apps/plugin-os': 2.0.0-alpha.2
+      '@tauri-apps/plugin-window': 2.0.0-alpha.1
+      clsx: ^2.0.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      tailwind-merge: ^1.14.0
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.8
+      '@tauri-apps/plugin-os': 2.0.0-alpha.2
+      '@tauri-apps/plugin-window': 2.0.0-alpha.1
+      clsx: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tailwind-merge: 1.14.0
+    dev: false
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}

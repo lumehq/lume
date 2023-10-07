@@ -17,6 +17,7 @@
         "height": 800,
         "minWidth": 1080,
         "minHeight": 800,
+        "decorations": false,
         "resizable": true,
         "theme": "Dark",
         "title": "Lume",
