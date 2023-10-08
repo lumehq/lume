@@ -42,29 +42,29 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
 
   return (
     <div className="mb-3 px-3">
-      <div className="h-max w-full rounded-lg border-t border-white/10 bg-white/20 p-3">
+      <div className="h-max w-full rounded-lg bg-zinc-100 p-3 dark:bg-zinc-900">
         <div className="flex flex-col items-center gap-3">
           {firstTime ? (
             <div>
               <span className="text-4xl">👋</span>
-              <h3 className="mt-2 font-semibold leading-tight">
+              <h3 className="mt-2 font-semibold leading-tight text-zinc-100 dark:text-zinc-900">
                 Hello, this is the first time you&apos;re using Lume
               </h3>
-              <p className="text-sm text-white/70">
+              <p className="text-sm text-zinc-500">
                 Lume is downloading all events since the last 24 hours. It will auto
                 refresh when it done, please be patient
               </p>
             </div>
           ) : (
             <div className="text-center">
-              <h3 className="font-semibold leading-tight">
+              <h3 className="font-semibold leading-tight text-zinc-500">
                 Downloading all events while you&apos;re away...
               </h3>
             </div>
           )}
           <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-white/20">
             <div
-              className="flex flex-col justify-center overflow-hidden bg-fuchsia-500 transition-all duration-1000 ease-smooth"
+              className="flex flex-col justify-center overflow-hidden bg-interor-600 transition-all duration-1000 ease-smooth"
               role="progressbar"
               style={{ width: `${progress}%` }}
             />

@@ -30,9 +30,9 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="group ml-auto inline-flex h-7 w-7 items-center justify-center text-white/80"
+              className="group ml-auto inline-flex h-7 w-7 items-center justify-center text-zinc-500 dark:text-zinc-300"
             >
-              <HorizontalDotsIcon className="h-5 w-5 text-white/80 group-hover:text-fuchsia-400" />
+              <HorizontalDotsIcon className="h-5 w-5 group-hover:text-interor-600" />
             </button>
           </DropdownMenu.Trigger>
         </Tooltip.Trigger>
@@ -49,7 +49,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyLink()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none"
             >
               Copy shareable link
             </button>
@@ -58,7 +58,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyID()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none"
             >
               Copy ID
             </button>
@@ -66,7 +66,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none"
             >
               View profile
             </Link>

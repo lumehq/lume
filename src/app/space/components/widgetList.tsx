@@ -33,22 +33,22 @@ export function WidgetList({ params }: { params: Widget }) {
     (kind: number) => {
       switch (kind) {
         case WidgetKinds.tmp.xfeed:
-          return <GroupFeedsIcon className="h-5 w-5 text-white" />;
+          return <GroupFeedsIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />;
         case WidgetKinds.local.follows:
-          return <FollowsIcon className="h-5 w-5 text-white" />;
+          return <FollowsIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />;
         case WidgetKinds.local.files:
         case WidgetKinds.global.files:
-          return <FileIcon className="h-5 w-5 text-white" />;
+          return <FileIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />;
         case WidgetKinds.local.articles:
         case WidgetKinds.global.articles:
-          return <ArticleIcon className="h-5 w-5 text-white" />;
+          return <ArticleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />;
         case WidgetKinds.tmp.xhashtag:
-          return <HashtagIcon className="h-5 w-4 text-white" />;
+          return <HashtagIcon className="h-5 w-4 text-zinc-900 dark:text-zinc-100" />;
         case WidgetKinds.nostrBand.trendingAccounts:
         case WidgetKinds.nostrBand.trendingNotes:
-          return <TrendingIcon className="h-5 w-4 text-white" />;
+          return <TrendingIcon className="h-5 w-4 text-zinc-900 dark:text-zinc-100" />;
         case WidgetKinds.other.learnNostr:
-          return <ThreadsIcon className="h-5 w-4 text-white" />;
+          return <ThreadsIcon className="h-5 w-4 text-zinc-900 dark:text-zinc-100" />;
         default:
           return null;
       }
@@ -59,14 +59,16 @@ export function WidgetList({ params }: { params: Widget }) {
   const renderItem = useCallback(
     (row: WidgetGroup, index: number) => {
       return (
-        <div key={index} className="flex flex-col gap-3">
-          <h3 className="font-medium text-white/50">{row.title}</h3>
-          <div className="flex flex-col divide-y divide-white/5 overflow-hidden rounded-xl bg-white/10">
+        <div key={index} className="flex flex-col gap-2">
+          <h3 className="text-sm font-semibold text-zinc-500 dark:text-zinc-300">
+            {row.title}
+          </h3>
+          <div className="flex flex-col divide-y divide-zinc-200 overflow-hidden rounded-xl bg-zinc-100 dark:divide-zinc-800 dark:bg-zinc-900">
             {row.data.map((item, index) => (
               <button
                 onClick={() => openWidget(item)}
                 key={index}
-                className="flex items-center gap-2.5 px-4 hover:bg-white/10"
+                className="group flex items-center gap-2.5 px-4 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
                 {item.icon ? (
                   <div className="h-10 w-10 shrink-0 rounded-md">
@@ -77,13 +79,15 @@ export function WidgetList({ params }: { params: Widget }) {
                     />
                   </div>
                 ) : (
-                  <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white/10">
+                  <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-zinc-200 group-hover:bg-zinc-300 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
                     {renderIcon(item.kind)}
                   </div>
                 )}
-                <div className="inline-flex h-16 w-full flex-col items-start justify-center gap-1">
-                  <h5 className="line-clamp-1 font-medium leading-none">{item.title}</h5>
-                  <p className="line-clamp-1 text-xs leading-none text-white/50">
+                <div className="inline-flex h-16 w-full flex-col items-start justify-center">
+                  <h5 className="line-clamp-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    {item.title}
+                  </h5>
+                  <p className="line-clamp-1 text-xs text-zinc-500 dark:text-zinc-300">
                     {item.description}
                   </p>
                 </div>
@@ -97,21 +101,21 @@ export function WidgetList({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative h-full shrink-0 grow-0 basis-[400px] bg-white/10">
+    <div className="relative h-full shrink-0 grow-0 basis-[400px]">
       <TitleBar id={params.id} title="Add widget" />
       <div className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="flex flex-col gap-6 px-3">
           {DefaultWidgets.map((row: WidgetGroup, index: number) =>
             renderItem(row, index)
           )}
-          <div className="border-t border-white/5 pt-6">
+          <div className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
             <button
               type="button"
               disabled
-              className="inline-flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-white/5 text-sm font-medium text-white/50"
+              className="inline-flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-zinc-100 text-sm font-medium text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
             >
               Build your own widget{' '}
-              <div className="-rotate-3 transform rounded-md border border-white/20 bg-white/10 px-1.5 py-1">
+              <div className="-rotate-3 transform-gpu rounded-md border border-zinc-300 bg-zinc-200 px-1.5 py-1 dark:border-zinc-700 dark:bg-zinc-800">
                 <span className="bg-gradient-to-t from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text text-xs text-transparent">
                   Coming soon
                 </span>

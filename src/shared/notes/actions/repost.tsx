@@ -44,12 +44,12 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           <AlertDialog.Trigger asChild>
             <button
               type="button"
-              className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
+              className="group inline-flex h-7 w-7 items-center justify-center text-zinc-500 dark:text-zinc-300"
             >
               <RepostIcon
                 className={twMerge(
                   'h-5 w-5 group-hover:text-blue-500',
-                  isRepost ? 'text-blue-500' : 'text-white/80'
+                  isRepost ? 'text-blue-500' : ''
                 )}
               />
             </button>
@@ -62,7 +62,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>
-      <AlertDialog.Portal className="relative z-10">
+      <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">
@@ -84,7 +84,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
               <button
                 type="button"
                 onClick={() => submit()}
-                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-fuchsia-500"
+                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-interor-500"
               >
                 {isLoading ? (
                   <LoaderIcon className="h-4 w-4 animate-spin text-white" />

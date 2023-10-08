@@ -107,7 +107,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
-                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
                 >
                   {isFetchingNextPage ? (
                     <>

@@ -18,7 +18,7 @@ export function UserGroupNode({ data }) {
         ) : (
           <GroupTitle pubkey={data.pubkey} />
         )}
-        <div className="grid grid-cols-5 gap-6 rounded-lg border border-fuchsia-500/50 bg-fuchsia-500/10 p-4">
+        <div className="grid grid-cols-5 gap-6 rounded-lg border border-fuchsia-500/50 bg-interor-500/10 p-4">
           {data.list.map((user: string) => (
             <UserWithDrawer key={user} pubkey={user} />
           ))}

@@ -62,12 +62,12 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
+          className="group inline-flex h-7 w-7 items-center justify-center text-zinc-500 dark:text-zinc-300"
         >
           {reaction ? (
             <img src={getReactionImage(reaction)} alt={reaction} className="h-6 w-6" />
           ) : (
-            <ReactionIcon className="h-5 w-5 text-white/80 group-hover:text-red-400" />
+            <ReactionIcon className="h-5 w-5 group-hover:text-red-400" />
           )}
         </button>
       </Popover.Trigger>

@@ -88,7 +88,7 @@ export function SpaceScreen() {
       {!widgets ? (
         <div className="flex shrink-0 grow-0 basis-[400px] flex-col">
           <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
+            <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />
           </div>
         </div>
       ) : (

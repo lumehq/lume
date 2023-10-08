@@ -102,9 +102,7 @@ export function parser(eventContent: string) {
       if (word.startsWith('nostr:naddr1') || word.startsWith('naddr1')) {
         const naddr = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
         const decoded = nip19.decode(naddr).data as AddressPointer;
-        // TODO
-        console.log('todo: ', decoded);
-        return word.replace(word, '');
+        return word.replace(word, `~pub-${decoded.pubkey}~`);
       }
 
       // normal word

@@ -30,7 +30,7 @@ export function CacheTimeSetting() {
         <button
           type="button"
           onClick={() => update()}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-800 font-medium hover:bg-fuchsia-500"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-800 font-medium hover:bg-interor-500"
         >
           <CheckCircleIcon className="h-4 w-4 text-white" />
         </button>

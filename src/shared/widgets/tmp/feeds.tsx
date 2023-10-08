@@ -78,7 +78,7 @@ export function XfeedsWidget({ params }: { params: Widget }) {
               type="submit"
               disabled={groups.length < 1}
               onClick={submit}
-              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none disabled:opacity-50"
             >
               <span className="w-5" />
               <span>Add {groups.length} account to group feed</span>

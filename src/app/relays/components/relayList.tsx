@@ -44,17 +44,17 @@ export function RelayList() {
   };
 
   return (
-    <div className="col-span-2 border-r border-white/5">
+    <div className="col-span-2 border-r border-zinc-100 dark:border-zinc-900">
       {status === 'loading' ? (
         <div className="flex h-full w-full items-center justify-center pb-10">
           <div className="inline-flex flex-col items-center justify-center gap-2">
-            <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+            <LoaderIcon className="h-5 w-5 animate-spin text-zinc-100 dark:text-zinc-900" />
             <p>Loading relay...</p>
           </div>
         </div>
       ) : (
         <VList className="scrollbar-hide mt-20 h-full">
-          <div className="inline-flex h-16 w-full items-center border-b border-white/5 px-3">
+          <div className="inline-flex h-16 w-full items-center border-b border-zinc-100 px-3 dark:border-zinc-900">
             <h3 className="bg-gradient-to-r from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
               All relays used by your follows
             </h3>
@@ -62,14 +62,14 @@ export function RelayList() {
           {[...data].map(([key, value]) => (
             <div
               key={key}
-              className="flex h-14 w-full items-center justify-between border-b border-white/5 px-3"
+              className="flex h-14 w-full items-center justify-between border-b border-zinc-100 px-3 dark:border-zinc-900"
             >
-              <div className="inline-flex items-center gap-2 divide-x divide-white/10">
+              <div className="inline-flex items-center gap-2 divide-x divide-zinc-100 dark:divide-zinc-900">
                 <div className="inline-flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => inspectRelay(key)}
-                    className="inline-flex h-6 items-center justify-center gap-1 rounded bg-white/10 px-1.5 text-sm font-medium hover:bg-white/20"
+                    className="inline-flex h-6 items-center justify-center gap-1 rounded bg-zinc-200 px-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
                   >
                     <ShareIcon className="h-3 w-3" />
                     Inspect
@@ -77,14 +77,16 @@ export function RelayList() {
                   <button
                     type="button"
                     onClick={() => connectRelay(key)}
-                    className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-white/10"
+                    className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-100 hover:bg-zinc-200 dark:text-zinc-100 dark:hover:bg-zinc-800"
                   >
                     <PlusIcon className="h-3 w-3" />
                   </button>
                 </div>
                 <div className="inline-flex items-center gap-2 pl-3">
-                  <span className="text-sm font-semibold text-white/70">Relay: </span>
-                  <span className="max-w-[200px] truncate text-sm font-medium text-white">
+                  <span className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                    Relay:{' '}
+                  </span>
+                  <span className="max-w-[200px] truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     {key}
                   </span>
                 </div>
@@ -94,8 +96,8 @@ export function RelayList() {
                   <User key={item} pubkey={item} variant="stacked" />
                 ))}
                 {value.length > 4 ? (
-                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/80 ring-1 ring-white/10 backdrop-blur-xl">
-                    <span className="text-xs font-semibold">+{value.length}</span>
+                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-zinc-200 text-zinc-900 ring-1 ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-zinc-700">
+                    <span className="text-xs font-medium">+{value.length}</span>
                   </div>
                 ) : null}
               </div>

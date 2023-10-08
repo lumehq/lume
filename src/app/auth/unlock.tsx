@@ -100,7 +100,7 @@ export function UnlockScreen() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full p-1 backdrop-blur-xl hover:bg-black/10 dark:hover:bg-white/10"
+              className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded-lg p-1 backdrop-blur-xl hover:bg-black/10 dark:hover:bg-white/10"
             >
               {showPassword ? (
                 <EyeOffIcon className="group-hover:text-dark h-5 w-5 text-black/50 dark:text-white/50 dark:group-hover:text-white" />

@@ -127,7 +127,7 @@ export function CreateStep2Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
             >
               {loading ? (
                 <>

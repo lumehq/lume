@@ -40,9 +40,9 @@ export function RelayForm() {
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex h-10 items-center justify-between rounded-lg bg-white/10 pr-1.5">
+      <div className="flex h-10 items-center justify-between rounded-lg bg-zinc-200 pr-1.5 dark:bg-zinc-800">
         <input
-          className="h-full w-full bg-transparent pl-3 pr-1.5 placeholder:text-white/70 focus:outline-none"
+          className="h-full w-full bg-transparent pl-3 pr-1.5 text-zinc-900 placeholder:text-zinc-600 focus:outline-none dark:text-zinc-100 dark:placeholder:text-zinc-400"
           type="url"
           placeholder="wss://"
           spellCheck={false}
@@ -55,7 +55,7 @@ export function RelayForm() {
         <button
           type="button"
           onClick={() => createRelay()}
-          className="inline-flex h-6 w-6 items-center justify-center rounded bg-fuchsia-500 text-white hover:bg-fuchsia-600"
+          className="inline-flex h-6 w-6 items-center justify-center rounded bg-interor-500 text-white hover:bg-interor-600"
         >
           <PlusIcon className="h-4 w-4" />
         </button>

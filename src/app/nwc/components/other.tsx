@@ -139,7 +139,7 @@ export function NWCOther() {
                 <button
                   type="submit"
                   disabled={!isDirty || !isValid}
-                  className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
+                  className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none disabled:opacity-50"
                 >
                   {isLoading ? (
                     <>

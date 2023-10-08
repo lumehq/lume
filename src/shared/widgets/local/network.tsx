@@ -106,7 +106,7 @@ export function LocalNetworkWidget() {
       <div className="flex-1">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+            <div className="rounded-xl bg-zinc-100 px-3 py-3 backdrop-blur-xl dark:bg-zinc-900">
               <NoteSkeleton />
             </div>
           </div>
@@ -121,21 +121,21 @@ export function LocalNetworkWidget() {
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
-                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-interor-500 px-6 font-medium hover:bg-interor-600 focus:outline-none"
                 >
                   {isFetchingNextPage ? (
                     <>
                       <span>Loading...</span>
-                      <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                      <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />
                     </>
                   ) : hasNextPage ? (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-white" />
+                      <ArrowRightCircleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />
                       <span>Load more</span>
                     </>
                   ) : (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-white" />
+                      <ArrowRightCircleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />
                       <span>Nothing more to load</span>
                     </>
                   )}

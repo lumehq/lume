@@ -44,10 +44,10 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
-          'flex items-center gap-2.5 px-3 py-1.5 hover:bg-white/10',
+          'flex items-center gap-2.5 px-3 py-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800',
           isActive
-            ? 'border-fuchsia-500 bg-white/5 text-white'
-            : 'border-transparent text-white/70'
+            ? 'bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'
+            : 'text-zinc-500 dark:text-zinc-300'
         )
       }
     >
@@ -64,22 +64,20 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
           <img
             src={svgURI}
             alt={event.pubkey}
-            className="h-10 w-10 rounded-lg bg-white"
+            className="h-10 w-10 rounded-lg bg-black dark:bg-white"
           />
         </Avatar.Fallback>
       </Avatar.Root>
       <div className="flex w-full flex-col">
-        <div className="max-w-[10rem] truncate font-semibold text-white">
+        <div className="max-w-[10rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
           {user?.name ||
             user?.display_name ||
             user?.displayName ||
             displayNpub(event.pubkey, 16)}
         </div>
         <div className="flex w-full items-center justify-between">
-          <div className="max-w-[10rem] truncate text-sm text-white/70">
-            {decryptedContent}
-          </div>
-          <div className="text-sm text-white/70">{createdAt}</div>
+          <div className="max-w-[10rem] truncate text-sm">{decryptedContent}</div>
+          <div className="text-sm">{createdAt}</div>
         </div>
       </div>
     </NavLink>

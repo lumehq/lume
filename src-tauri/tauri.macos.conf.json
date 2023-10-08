@@ -23,7 +23,7 @@
         "theme": "Dark",
         "title": "Lume",
         "titleBarStyle": "Overlay",
-        "transparent": true,
+        "transparent": false,
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,

@@ -150,7 +150,7 @@ export function Composer() {
         <button
           onClick={() => submit()}
           disabled={editor && editor.isEmpty}
-          className="inline-flex h-10 w-20 items-center justify-center rounded-lg bg-fuchsia-500 px-2 font-semibold hover:bg-fuchsia-600 disabled:opacity-50"
+          className="inline-flex h-10 w-20 items-center justify-center rounded-lg bg-interor-500 px-2 font-semibold hover:bg-interor-600 disabled:opacity-50"
         >
           {loading === true ? (
             <LoaderIcon className="h-5 w-5 animate-spin text-white" />

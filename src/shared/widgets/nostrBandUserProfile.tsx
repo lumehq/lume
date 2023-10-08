@@ -94,7 +94,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
               <button
                 type="button"
                 onClick={() => unfollowUser(data.pubkey)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white backdrop-blur-xl hover:bg-fuchsia-500 hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white backdrop-blur-xl hover:bg-interor-500 hover:text-white"
               >
                 <UnfollowIcon className="h-4 w-4" />
               </button>
@@ -102,7 +102,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
               <button
                 type="button"
                 onClick={() => followUser(data.pubkey)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white backdrop-blur-xl hover:bg-fuchsia-500 hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-white backdrop-blur-xl hover:bg-interor-500 hover:text-white"
               >
                 <FollowIcon className="h-4 w-4" />
               </button>

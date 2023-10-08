@@ -21,12 +21,15 @@
         "resizable": true,
         "theme": "Dark",
         "title": "Lume",
-        "transparent": false,
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
         "visible": false,
-        "fileDropEnabled": true
+        "fileDropEnabled": true,
+        "transparent": true,
+        "windowEffects": {
+          "effects": ["mica"]
+        }
       }
     ]
   }
