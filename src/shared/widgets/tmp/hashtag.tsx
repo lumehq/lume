@@ -72,7 +72,7 @@ export function XhashtagWidget({ params }: { params: Widget }) {
             <input
               {...register('hashtag', { required: true, minLength: 1 })}
               placeholder="#bitcoin"
-              className="relative h-11 w-full rounded-lg bg-zinc-100 px-3 py-1 text-zinc-900 !outline-none backdrop-blur-xl placeholder:text-white/50 dark:bg-zinc-900 dark:text-zinc-100"
+              className="relative h-12 w-full rounded-lg bg-zinc-200 px-3 py-1 text-zinc-900 !outline-none placeholder:text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-300"
             />
             <span className="text-sm text-red-400">
               {errors.hashtag && <p>{errors.hashtag.message}</p>}
@@ -82,7 +82,7 @@ export function XhashtagWidget({ params }: { params: Widget }) {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium text-zinc-900 hover:bg-interor-600 focus:outline-none disabled:opacity-50 dark:text-zinc-100"
+              className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium text-white hover:bg-interor-600 focus:outline-none disabled:opacity-50"
             >
               <span className="w-5" />
               <span>Create</span>
@@ -91,7 +91,7 @@ export function XhashtagWidget({ params }: { params: Widget }) {
             <button
               type="button"
               onClick={cancel}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-6 font-medium leading-none text-zinc-900 backdrop-blur-xl hover:bg-white/20 focus:outline-none disabled:opacity-50 dark:bg-zinc-900 dark:text-zinc-100"
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg px-6 font-medium leading-none text-zinc-900 hover:bg-zinc-200 focus:outline-none disabled:opacity-50 dark:text-zinc-100 dark:hover:bg-zinc-800"
             >
               Cancel
             </button>

@@ -47,13 +47,13 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
       <div className="scrollbar-hide h-full overflow-y-auto">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+            <div className="rounded-xl bg-zinc-100 px-3 py-3 dark:bg-zinc-900">
               <NoteSkeleton />
             </div>
           </div>
         ) : (
           <div className="h-min w-full px-3 pt-1.5">
-            <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
+            <div className="rounded-xl bg-zinc-100 px-3 pt-3 dark:bg-zinc-900">
               <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
               <div className="mt-2">{renderKind(data)}</div>
               <NoteActions

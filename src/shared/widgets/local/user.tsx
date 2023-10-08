@@ -86,21 +86,21 @@ export function LocalUserWidget({ params }: { params: Widget }) {
           <UserProfile pubkey={params.content} />
         </div>
         <div>
-          <h3 className="mb-3 mt-4 px-3 text-lg font-semibold text-white">
+          <h3 className="mb-3 mt-4 px-3 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
             Latest posts
           </h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
             {status === 'loading' ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+                <div className="rounded-xl bg-zinc-100 px-3 py-3 dark:bg-zinc-900">
                   <NoteSkeleton />
                 </div>
               </div>
             ) : data.length === 0 ? (
               <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-white/10 px-3 py-6 backdrop-blur-xl">
+                <div className="rounded-xl bg-zinc-100 px-3 py-6 dark:bg-zinc-900">
                   <div className="flex flex-col items-center gap-4">
-                    <p className="text-center text-sm text-white">
+                    <p className="text-center text-sm text-zinc-900 dark:text-zinc-100">
                       No new post from 24 hours ago
                     </p>
                   </div>

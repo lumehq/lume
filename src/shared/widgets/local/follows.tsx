@@ -83,8 +83,10 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
         {status === 'loading' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
-              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-              <p className="text-sm font-medium text-white/80">Loading post...</p>
+              <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                Loading post...
+              </p>
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
@@ -92,10 +94,12 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="font-semibold leading-tight">
+                <h3 className="font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
                   Oops, it looks like there are no posts.
                 </h3>
-                <p className="text-white/50">You can close this widget</p>
+                <p className="text-zinc-500 dark:text-zinc-400">
+                  You can close this widget
+                </p>
               </div>
             </div>
           </div>
@@ -107,21 +111,21 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
-                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
+                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-interor-500 px-6 font-medium text-white hover:bg-interor-600 focus:outline-none"
                 >
                   {isFetchingNextPage ? (
                     <>
                       <span>Loading...</span>
-                      <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                      <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />
                     </>
                   ) : hasNextPage ? (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-white" />
+                      <ArrowRightCircleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />
                       <span>Load more</span>
                     </>
                   ) : (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-white" />
+                      <ArrowRightCircleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />
                       <span>Nothing more to load</span>
                     </>
                   )}

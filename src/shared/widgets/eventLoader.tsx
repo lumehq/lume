@@ -62,7 +62,7 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
               </h3>
             </div>
           )}
-          <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+          <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
             <div
               className="flex flex-col justify-center overflow-hidden bg-interor-600 transition-all duration-1000 ease-smooth"
               role="progressbar"

@@ -46,8 +46,10 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
         {status === 'loading' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
-              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-              <p className="text-sm font-medium text-white/80">Loading article...</p>
+              <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                Loading article...
+              </p>
             </div>
           </div>
         ) : data.length === 0 ? (
@@ -55,10 +57,12 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="font-semibold leading-tight">
+                <h3 className="font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
                   Oops, it looks like there are no articles.
                 </h3>
-                <p className="text-white/50">You can close this widget</p>
+                <p className="text-zinc-500 dark:text-zinc-400">
+                  You can close this widget
+                </p>
               </div>
             </div>
           </div>
