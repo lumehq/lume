@@ -57,7 +57,7 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
             </div>
           ) : (
             <div className="text-center">
-              <h3 className="font-semibold leading-tight text-zinc-500">
+              <h3 className="font-semibold leading-tight text-zinc-500 dark:text-zinc-300">
                 Downloading all events while you&apos;re away...
               </h3>
             </div>

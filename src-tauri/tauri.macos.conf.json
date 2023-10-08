@@ -20,7 +20,6 @@
         "minWidth": 1080,
         "minHeight": 800,
         "resizable": true,
-        "theme": "Dark",
         "title": "Lume",
         "titleBarStyle": "Overlay",
         "transparent": false,

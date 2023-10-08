@@ -19,7 +19,6 @@
         "minHeight": 800,
         "decorations": false,
         "resizable": true,
-        "theme": "Dark",
         "title": "Lume",
         "center": true,
         "fullscreen": false,

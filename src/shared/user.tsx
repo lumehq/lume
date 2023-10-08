@@ -76,18 +76,22 @@ export const User = memo(function User({
             className="h-6 w-6 rounded"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-6 w-6 rounded bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-6 w-6 rounded bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex flex-1 items-baseline gap-2">
-          <h5 className="max-w-[10rem] truncate font-semibold  text-white">
+          <h5 className="max-w-[10rem] truncate font-semibold  text-zinc-900 dark:text-zinc-100">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </h5>
-          <span className="text-white/50">·</span>
-          <span className="text-white/50">{createdAt}</span>
+          <span className="text-zinc-500 dark:text-zinc-300">·</span>
+          <span className="text-zinc-500 dark:text-zinc-300">{createdAt}</span>
         </div>
       </div>
     );
@@ -106,12 +110,16 @@ export const User = memo(function User({
             className="h-14 w-14 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-14 w-14 rounded-lg bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-14 w-14 rounded-lg bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex h-full flex-col items-start justify-between">
           <div className="flex flex-col items-start gap-1 text-start">
-            <p className="max-w-[15rem] truncate text-lg font-semibold text-white">
+            <p className="max-w-[15rem] truncate text-lg font-semibold text-zinc-900 dark:text-zinc-100">
               {user?.name || user?.display_name || user?.displayName}
             </p>
             <ReactMarkdown
@@ -129,7 +137,7 @@ export const User = memo(function User({
               <Link
                 to={user?.website}
                 target="_blank"
-                className="inline-flex items-center gap-2 text-sm text-white/70"
+                className="inline-flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-100/70"
               >
                 <WorldIcon className="h-4 w-4" />
                 <p className="max-w-[10rem] truncate">{user?.website}</p>
@@ -154,14 +162,18 @@ export const User = memo(function User({
             className="h-10 w-10 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-10 w-10 rounded-lg bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex w-full flex-col items-start">
-          <h3 className="max-w-[15rem] truncate font-medium text-white">
+          <h3 className="max-w-[15rem] truncate font-medium text-zinc-900 dark:text-zinc-100">
             {user?.name || user?.display_name || user?.displayName}
           </h3>
-          <p className="max-w-[10rem] truncate text-sm text-white/70">
+          <p className="max-w-[10rem] truncate text-sm text-zinc-900 dark:text-zinc-100/70">
             {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
@@ -181,7 +193,11 @@ export const User = memo(function User({
           className="h-12 w-12 rounded-lg"
         />
         <Avatar.Fallback delayMs={300}>
-          <img src={svgURI} alt={pubkey} className="h-12 w-12 rounded-lg bg-black" />
+          <img
+            src={svgURI}
+            alt={pubkey}
+            className="h-12 w-12 rounded-lg bg-black dark:bg-white"
+          />
         </Avatar.Fallback>
       </Avatar.Root>
     );
@@ -202,7 +218,7 @@ export const User = memo(function User({
           <img
             src={svgURI}
             alt={pubkey}
-            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-black"
+            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-black dark:bg-white"
           />
         </Avatar.Fallback>
       </Avatar.Root>
@@ -226,11 +242,15 @@ export const User = memo(function User({
               className="h-6 w-6 rounded"
             />
             <Avatar.Fallback delayMs={300}>
-              <img src={svgURI} alt={pubkey} className="h-6 w-6 rounded bg-black" />
+              <img
+                src={svgURI}
+                alt={pubkey}
+                className="h-6 w-6 rounded bg-black dark:bg-white"
+              />
             </Avatar.Fallback>
           </Avatar.Root>
           <div className="inline-flex items-baseline gap-1">
-            <h5 className="max-w-[10rem] truncate font-medium text-white/80">
+            <h5 className="max-w-[10rem] truncate font-medium text-zinc-900 dark:text-zinc-100/80">
               {user?.name ||
                 user?.display_name ||
                 user?.displayName ||
@@ -256,17 +276,23 @@ export const User = memo(function User({
             className="h-10 w-10 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-10 w-10 rounded-lg bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex flex-1 flex-col gap-2">
-          <h5 className="max-w-[15rem] truncate font-semibold text-white">
+          <h5 className="max-w-[15rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
             {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
           <div className="inline-flex items-center gap-2">
-            <span className="text-white/50">{createdAt}</span>
-            <span className="text-white/50">·</span>
-            <span className="text-white/50">{displayNpub(pubkey, 16)}</span>
+            <span className="text-zinc-500 dark:text-zinc-300">{createdAt}</span>
+            <span className="text-zinc-500 dark:text-zinc-300">·</span>
+            <span className="text-zinc-500 dark:text-zinc-300">
+              {displayNpub(pubkey, 16)}
+            </span>
           </div>
         </div>
       </div>
@@ -290,20 +316,20 @@ export const User = memo(function User({
               <img
                 src={svgURI}
                 alt={pubkey}
-                className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+                className="h-10 w-10 rounded-lg border border-white/5 bg-black dark:bg-white"
               />
             </Avatar.Fallback>
           </Avatar.Root>
         </HoverCard.Trigger>
         <div className="flex flex-1 items-center gap-2">
-          <h5 className="max-w-[15rem] truncate font-semibold text-white">
+          <h5 className="max-w-[15rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </h5>
-          <span className="text-white/50">·</span>
-          <span className="text-white/50">{createdAt}</span>
+          <span className="text-zinc-500 dark:text-zinc-300">·</span>
+          <span className="text-zinc-500 dark:text-zinc-300">{createdAt}</span>
         </div>
       </div>
       <HoverCard.Portal>
@@ -325,7 +351,7 @@ export const User = memo(function User({
                 <img
                   src={svgURI}
                   alt={pubkey}
-                  className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+                  className="h-10 w-10 rounded-lg border border-white/5 bg-black dark:bg-white"
                 />
               </Avatar.Fallback>
             </Avatar.Root>
@@ -341,16 +367,16 @@ export const User = memo(function User({
                   <NIP05
                     pubkey={pubkey}
                     nip05={user?.nip05}
-                    className="max-w-[15rem] truncate text-sm text-white/50"
+                    className="max-w-[15rem] truncate text-sm text-zinc-500 dark:text-zinc-300"
                   />
                 ) : (
-                  <span className="max-w-[15rem] truncate text-sm text-white/50">
+                  <span className="max-w-[15rem] truncate text-sm text-zinc-500 dark:text-zinc-300">
                     {displayNpub(pubkey, 16)}
                   </span>
                 )}
               </div>
               <div>
-                <p className="line-clamp-3 break-all text-sm leading-tight text-white">
+                <p className="line-clamp-3 break-all text-sm leading-tight text-zinc-900 dark:text-zinc-100">
                   {user?.about}
                 </p>
               </div>
