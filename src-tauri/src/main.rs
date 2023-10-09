@@ -3,21 +3,11 @@
   windows_subsystem = "windows"
 )]
 
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
-
 use std::time::Duration;
 use tauri::{Manager, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};
-
-#[cfg(target_os = "macos")]
-use traffic_light::TrafficLight;
-
-#[cfg(target_os = "macos")]
-mod traffic_light;
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -102,21 +92,6 @@ async fn close_splashscreen(window: tauri::Window) {
 
 fn main() {
   tauri::Builder::default()
-    .setup(|app| {
-      let window = app.get_window("main").unwrap();
-
-      #[cfg(target_os = "macos")]
-      window.position_traffic_lights(16.0, 25.0);
-
-      Ok(())
-    })
-    .on_window_event(|e| {
-      #[cfg(target_os = "macos")]
-      if let WindowEvent::Resized(..) = e.event() {
-        let window = e.window();
-        window.position_traffic_lights(16.0, 25.0);
-      }
-    })
     .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())

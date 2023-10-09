@@ -8,7 +8,7 @@ export function SettingsLayout() {
     <div className="flex h-screen w-screen">
       <div className="relative flex h-full w-[232px] flex-col">
         <div data-tauri-drag-region className="h-11 w-full shrink-0" />
-        <div className="scrollbar-hide flex h-full flex-1 flex-col gap-2 overflow-y-auto pb-32">
+        <div className="scrollbar-none flex h-full flex-1 flex-col gap-2 overflow-y-auto pb-32">
           <div className="inline-flex items-center gap-2 border-l-2 border-transparent pl-4">
             <Link
               to="/"

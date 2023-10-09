@@ -86,7 +86,7 @@ export function SpaceScreen() {
 
   return (
     <div className="h-full w-full">
-      <VList className="scrollbar-hide h-full w-full" horizontal>
+      <VList className="scrollbar-none h-full w-full" horizontal>
         {!widgets ? (
           <div className="flex h-full w-full flex-col items-center justify-center">
             <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />

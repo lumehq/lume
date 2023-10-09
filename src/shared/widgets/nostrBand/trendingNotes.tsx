@@ -58,7 +58,7 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="scrollbar-none h-full">
             {data.map((item) => (
               <NoteWrapper key={item.event.id} event={item.event}>
                 <TextNote content={item.event.content} />

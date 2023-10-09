@@ -22,12 +22,16 @@
         "resizable": true,
         "title": "Lume",
         "titleBarStyle": "Overlay",
-        "transparent": false,
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
         "visible": false,
-        "fileDropEnabled": true
+        "fileDropEnabled": true,
+        "decorations": false,
+        "transparent": true,
+        "windowEffects": {
+          "effects": ["hudWindow"]
+        }
       }
     ]
   }

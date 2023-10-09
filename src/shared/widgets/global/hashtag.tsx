@@ -99,7 +99,7 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="scrollbar-none h-full">
             {data.map((item) => renderItem(item))}
             <div className="h-16" />
           </VList>

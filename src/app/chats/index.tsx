@@ -33,7 +33,7 @@ export function ChatsScreen() {
 
   return (
     <div className="grid h-full w-full grid-cols-3">
-      <div className="scrollbar-hide col-span-1 h-full overflow-y-auto border-r border-white/5">
+      <div className="scrollbar-none col-span-1 h-full overflow-y-auto border-r border-white/5">
         <div
           data-tauri-drag-region
           className="flex h-11 w-full shrink-0 items-center border-b border-white/5 px-3"

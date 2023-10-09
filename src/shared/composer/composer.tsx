@@ -124,7 +124,7 @@ export function Composer() {
             autoCorrect="off"
             autoCapitalize="off"
             className={twMerge(
-              'scrollbar-hide markdown max-h-[500px] overflow-y-auto break-all pr-2 outline-none',
+              'scrollbar-none markdown max-h-[500px] overflow-y-auto break-all pr-2 outline-none',
               expand ? 'min-h-[500px]' : reply.id ? 'min-h-min' : 'min-h-[120px]'
             )}
           />

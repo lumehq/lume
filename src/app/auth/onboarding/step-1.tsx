@@ -76,7 +76,7 @@ export function OnboardStep1Screen() {
           add them later.
         </p>
       </div>
-      <div className="scrollbar-hide flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4">
+      <div className="scrollbar-none flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4">
         {status === 'loading' ? (
           <div className="flex h-full w-full items-center justify-center">
             <LoaderIcon className="h-4 w-4 animate-spin text-white" />

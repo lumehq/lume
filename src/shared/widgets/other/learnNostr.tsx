@@ -24,7 +24,7 @@ export function LearnNostrWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title="The Joy of Nostr" />
-      <div className="scrollbar-hide h-full overflow-y-auto px-3 pb-20">
+      <div className="scrollbar-none h-full overflow-y-auto px-3 pb-20">
         {resources.map((resource, index) => (
           <div key={index} className="mb-6">
             <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">

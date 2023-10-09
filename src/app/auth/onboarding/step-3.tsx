@@ -112,7 +112,7 @@ export function OnboardStep3Screen() {
         </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide relative flex h-[500px] w-full flex-col divide-y divide-white/10 overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl">
+        <div className="scrollbar-none relative flex h-[500px] w-full flex-col divide-y divide-white/10 overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />

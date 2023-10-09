@@ -48,12 +48,12 @@ export function RelayList() {
       {status === 'loading' ? (
         <div className="flex h-full w-full items-center justify-center pb-10">
           <div className="inline-flex flex-col items-center justify-center gap-2">
-            <LoaderIcon className="h-5 w-5 animate-spin text-zinc-100 dark:text-zinc-900" />
+            <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />
             <p>Loading relay...</p>
           </div>
         </div>
       ) : (
-        <VList className="scrollbar-hide mt-20 h-full">
+        <VList className="scrollbar-none mt-20 h-full">
           <div className="inline-flex h-16 w-full items-center border-b border-zinc-100 px-3 dark:border-zinc-900">
             <h3 className="bg-gradient-to-r from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
               All relays used by your follows
@@ -77,7 +77,7 @@ export function RelayList() {
                   <button
                     type="button"
                     onClick={() => connectRelay(key)}
-                    className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-100 hover:bg-zinc-200 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                    className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-900 hover:bg-zinc-200 dark:text-zinc-100 dark:hover:bg-zinc-800"
                   >
                     <PlusIcon className="h-3 w-3" />
                   </button>

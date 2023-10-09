@@ -62,7 +62,7 @@ export function TextNoteScreen() {
   };
 
   return (
-    <div className="scrollbar-hide h-full w-full overflow-y-auto scroll-smooth">
+    <div className="scrollbar-none h-full w-full overflow-y-auto scroll-smooth">
       <div className="container mx-auto px-4 pt-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-5">
           <div className="col-span-1 pr-8">

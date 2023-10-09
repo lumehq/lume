@@ -104,7 +104,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="scrollbar-none h-full">
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">
               {dbEvents.length > 0 ? (

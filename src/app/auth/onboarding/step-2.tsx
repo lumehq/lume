@@ -101,7 +101,7 @@ export function OnboardStep2Screen() {
         </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-hide flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl">
+        <div className="scrollbar-none flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl">
           {data.map((item: { hashtag: string }) => (
             <button
               key={item.hashtag}

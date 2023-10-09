@@ -34,21 +34,19 @@ export function ComposerModal() {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div
             className={twMerge(
-              'relative h-min w-full rounded-xl bg-white/10 backdrop-blur-xl',
+              'relative h-min w-full rounded-xl bg-zinc-100 dark:bg-zinc-900',
               expand ? 'max-w-4xl' : 'max-w-2xl'
             )}
           >
             <div className="flex items-center justify-between px-4 py-4">
               <div className="flex items-center gap-2">
                 <ComposerUser pubkey={db.account.pubkey} />
-                <span>
-                  <ChevronRightIcon className="h-4 w-4 text-white/50" />
-                </span>
-                <div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-white/10 pl-3 pr-1.5 text-sm font-medium text-white backdrop-blur-xl">
+                <ChevronRightIcon className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
+                <div className="inline-flex h-7 w-max items-center justify-center gap-0.5 rounded bg-zinc-200 pl-3 pr-1.5 text-sm font-medium text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
                   New Post
                   <ChevronDownIcon className="h-4 w-4" />
                 </div>
@@ -57,12 +55,12 @@ export function ComposerModal() {
                 <button
                   type="button"
                   onClick={() => toggleExpand()}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg backdrop-blur-xl hover:bg-white/10"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-200 hover:text-zinc-500 dark:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-400"
                 >
-                  <ExpandIcon className="h-5 w-5 text-white/50" />
+                  <ExpandIcon className="h-5 w-5" />
                 </button>
-                <Dialog.Close className="inline-flex h-10 w-10 items-center justify-center rounded-lg backdrop-blur-xl hover:bg-white/10">
-                  <CancelIcon className="h-5 w-5 text-white/50" />
+                <Dialog.Close className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-200 hover:text-zinc-500 dark:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-400">
+                  <CancelIcon className="h-5 w-5" />
                 </Dialog.Close>
               </div>
             </div>

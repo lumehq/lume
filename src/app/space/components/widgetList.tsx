@@ -103,7 +103,7 @@ export function WidgetList({ params }: { params: Widget }) {
   return (
     <div className="h-full w-[420px] border-r border-zinc-100 dark:border-zinc-900">
       <TitleBar id={params.id} title="Add widget" />
-      <div className="scrollbar-hide h-full overflow-y-auto pb-20">
+      <div className="scrollbar-none h-full overflow-y-auto pb-20">
         <div className="flex flex-col gap-6 px-3">
           {DefaultWidgets.map((row: WidgetGroup, index: number) =>
             renderItem(row, index)

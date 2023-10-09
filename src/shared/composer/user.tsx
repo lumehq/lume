@@ -13,8 +13,8 @@ export function ComposerUser({ pubkey }: { pubkey: string }) {
         alt={pubkey}
         className="h-10 w-10 shrink-0 rounded-lg"
       />
-      <h5 className="text-base font-semibold leading-none text-white">
-        {user?.name || user?.display_name || user?.displayName || displayNpub(pubkey, 16)}
+      <h5 className="font-medium text-white">
+        {user?.display_name || user?.name || user?.displayName || displayNpub(pubkey, 16)}
       </h5>
     </div>
   );

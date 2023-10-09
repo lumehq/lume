@@ -56,7 +56,7 @@ export function XfeedsWidget({ params }: { params: Widget }) {
               className="relative h-11 w-full rounded-lg bg-zinc-200 px-3 py-1 text-zinc-900 !outline-none placeholder:text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-300"
             />
           </div>
-          <div className="scrollbar-hide flex h-[500px] w-full flex-col overflow-y-auto rounded-lg bg-zinc-200 py-2 dark:bg-zinc-800">
+          <div className="scrollbar-none flex h-[500px] w-full flex-col overflow-y-auto rounded-lg bg-zinc-200 py-2 dark:bg-zinc-800">
             {db.account.network.map((item: string) => (
               <button
                 key={item}

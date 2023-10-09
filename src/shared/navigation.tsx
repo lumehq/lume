@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { ActiveAccount } from '@shared/accounts/active';
@@ -8,6 +8,7 @@ import {
   CommunityIcon,
   ExploreIcon,
   HomeIcon,
+  NwcIcon,
   RelayIcon,
 } from '@shared/icons';
 
@@ -123,6 +124,12 @@ export function Navigation() {
       </div>
       <div className="flex shrink-0 flex-col gap-3 p-1">
         <ComposerModal />
+        <Link
+          to="/nwc"
+          className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-zinc-100 hover:bg-interor-600 dark:bg-zinc-900 dark:hover:bg-interor-600"
+        >
+          <NwcIcon className="h-5 w-5" />
+        </Link>
         <ActiveAccount />
       </div>
     </div>

@@ -81,7 +81,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="scrollbar-hide h-full overflow-y-auto">
+      <div className="scrollbar-none h-full overflow-y-auto">
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
         </div>

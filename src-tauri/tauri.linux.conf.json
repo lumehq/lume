@@ -17,15 +17,15 @@
         "height": 800,
         "minWidth": 1080,
         "minHeight": 800,
-        "decorations": false,
         "resizable": true,
         "title": "Lume",
-        "transparent": false,
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
         "visible": false,
-        "fileDropEnabled": true
+        "fileDropEnabled": true,
+        "decorations": false,
+        "transparent": false
       }
     ]
   }
