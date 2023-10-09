@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@evilmartians/harmony':
+    specifier: ^1.1.0
+    version: 1.1.0
   '@fontsource-variable/inter':
     specifier: ^5.0.13
     version: 5.0.13
@@ -114,8 +117,8 @@ dependencies:
     specifier: ^2.1.11
     version: 2.1.11(@tiptap/core@2.1.11)(@tiptap/pm@2.1.11)
   '@vidstack/react':
-    specifier: ^1.1.8
-    version: 1.1.8(@types/react@18.2.25)(react@18.2.0)
+    specifier: ^1.1.9
+    version: 1.1.9(@types/react@18.2.25)(react@18.2.0)
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -653,6 +656,10 @@ packages:
     resolution: {integrity: sha512-HxjQ8Qn+4SI3/AFv6sOrDB+g6PpUTDwSJiQqOrnneEk8L71161srI9gjzzZvYVbzHiVg/BvcH95+cK/zfIt4pg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
+
+  /@evilmartians/harmony@1.1.0:
+    resolution: {integrity: sha512-yci5pFdR26Boi5hElDkWME8Egp4xrhlKrlA1R1xknuvZV8QOjpIWIlZk/dvRZsY3QZulRVBthBMpBiDyq5kBCQ==}
+    dev: false
 
   /@floating-ui/core@1.5.0:
     resolution: {integrity: sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==}
@@ -2773,8 +2780,8 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@vidstack/react@1.1.8(@types/react@18.2.25)(react@18.2.0):
-    resolution: {integrity: sha512-bwigitlnecYI2DtdMOr70RJ/T9fwxaUy+QZzlk7jYmLfKuTWCIr9IDLAjcIybzHALIYSxzRc6OoZTJicqew6TQ==}
+  /@vidstack/react@1.1.9(@types/react@18.2.25)(react@18.2.0):
+    resolution: {integrity: sha512-CYXhr0Hk/xTcYDVKy39J6VUIcJMCLzbfNe9upBQ096lnCpk3yEncsAUl73jTE3GzJ8yOPEQcdloFoJXbA4ekeg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': ^18.0.0

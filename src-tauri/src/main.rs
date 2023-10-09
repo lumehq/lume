@@ -4,7 +4,7 @@
 )]
 
 use std::time::Duration;
-use tauri::{Manager, WindowEvent};
+use tauri::{Manager};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};

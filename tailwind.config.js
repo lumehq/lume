@@ -1,10 +1,12 @@
 /** @type {import('tailwindcss').Config} */
+import harmonyPalette from '@evilmartians/harmony/tailwind';
 
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}', 'index.html'],
   theme: {
+    colors: harmonyPalette,
     extend: {
       colors: {
         // 'international orange'
