@@ -20,7 +20,10 @@ export function WidgetWrapper({
       }}
       minWidth={420}
       minHeight={'100vh'}
-      className={twMerge('relative shrink-0 grow-0', className)}
+      className={twMerge(
+        'h-full border-r border-zinc-100 pb-10 dark:border-zinc-900',
+        className
+      )}
       enable={{ right: true }}
     >
       {children}

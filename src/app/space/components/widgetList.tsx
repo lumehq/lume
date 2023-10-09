@@ -101,7 +101,7 @@ export function WidgetList({ params }: { params: Widget }) {
   );
 
   return (
-    <div className="relative h-full shrink-0 grow-0 basis-[400px]">
+    <div className="h-full w-[420px] border-r border-zinc-100 dark:border-zinc-900">
       <TitleBar id={params.id} title="Add widget" />
       <div className="scrollbar-hide h-full overflow-y-auto pb-20">
         <div className="flex flex-col gap-6 px-3">

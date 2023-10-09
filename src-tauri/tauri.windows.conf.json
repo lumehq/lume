@@ -27,7 +27,7 @@
         "fileDropEnabled": true,
         "transparent": true,
         "windowEffects": {
-          "effects": ["mica"]
+          "effects": ["micaLight", "micaDark"]
         }
       }
     ]

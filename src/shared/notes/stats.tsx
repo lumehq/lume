@@ -60,27 +60,25 @@ export function NoteStats({ id }: { id: string }) {
   }
 
   return (
-    <div className="flex h-11 items-center gap-3">
-      <p className="text-white/50">
-        <span className="font-semibold text-white">
+    <div className="mt-3 flex w-full flex-wrap gap-2">
+      <div className="flex flex-1 flex-col rounded-lg bg-zinc-100 px-3 py-2 dark:bg-zinc-900">
+        <div className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           {compactNumber.format(data.reactions)}
-        </span>{' '}
-        reactions
-      </p>
-      <span className="text-white/50">·</span>
-      <p className="text-white/50">
-        <span className="font-semibold text-white">
+        </div>
+        <div className="text-sm text-zinc-500 dark:text-zinc-300">Reactions</div>
+      </div>
+      <div className="flex flex-1 flex-col rounded-lg bg-zinc-100 px-3 py-2 dark:bg-zinc-900">
+        <div className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           {compactNumber.format(data.reposts)}
-        </span>{' '}
-        reposts
-      </p>
-      <span className="text-white/50">·</span>
-      <p className="text-white/50">
-        <span className="font-semibold text-white">
+        </div>
+        <div className="text-sm text-zinc-500 dark:text-zinc-300">Reposts</div>
+      </div>
+      <div className="flex flex-1 flex-col rounded-lg bg-zinc-100 px-3 py-2 dark:bg-zinc-900">
+        <div className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           {compactNumber.format(data.zaps)}
-        </span>{' '}
-        zaps
-      </p>
+        </div>
+        <div className="text-sm text-zinc-500 dark:text-zinc-300">Zaps</div>
+      </div>
     </div>
   );
 }

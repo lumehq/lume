@@ -28,10 +28,9 @@ export function ComposerModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="flex h-9 items-center gap-2 rounded-full bg-zinc-200 px-4 text-sm font-semibold text-zinc-900  hover:bg-interor-600 hover:text-white dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-interor-600"
+          className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-zinc-300 hover:bg-interor-600 dark:bg-zinc-700 dark:hover:bg-interor-600"
         >
-          New
-          <ComposeIcon className="h-4 w-4" />
+          <ComposeIcon className="h-5 w-5 text-black dark:text-white" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>

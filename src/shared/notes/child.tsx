@@ -34,7 +34,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
   if (status === 'loading') {
     return (
       <>
-        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
         <div className="relative mb-5 overflow-hidden">
           <NoteSkeleton />
         </div>
@@ -46,7 +46,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
     const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
     return (
       <>
-        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
         <div className="relative mb-5 flex flex-col">
           <div className="relative z-10 flex items-start gap-3">
             <div className="inline-flex h-10 w-10 items-end justify-center rounded-lg bg-black pb-1">
@@ -78,7 +78,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
 
   return (
     <>
-      <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.6rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+      <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.6rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
       <div className="mb-6 flex flex-col">
         <User pubkey={data.pubkey} time={data.created_at} />
         <div className="-mt-4 flex items-start gap-3">

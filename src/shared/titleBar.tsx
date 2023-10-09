@@ -9,12 +9,11 @@ export function TitleBar({ id, title }: { id?: string; title: string }) {
   const remove = useWidgets((state) => state.removeWidget);
 
   return (
-    <div
-      data-tauri-drag-region
-      className="flex h-11 w-full shrink-0 items-center justify-between overflow-hidden px-3"
-    >
+    <div className="flex h-11 w-full shrink-0 items-center justify-between overflow-hidden px-3">
       <div className="w-6" />
-      <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</h3>
+      <h3 className="text-sm font-medium tracking-wide text-zinc-900 dark:text-zinc-100">
+        {title}
+      </h3>
       {id ? (
         <button
           type="button"

@@ -52,8 +52,8 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <div className="h-min w-full px-3 pt-1.5">
-            <div className="rounded-xl bg-zinc-100 px-3 pt-3 dark:bg-zinc-900">
+          <div className="h-min w-full px-3">
+            <div className="rounded-xl bg-zinc-100 px-3 py-3 dark:bg-zinc-900">
               <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
               <div className="mt-2">{renderKind(data)}</div>
               <NoteActions
@@ -61,11 +61,11 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
                 pubkey={data.pubkey}
                 extraButtons={false}
               />
-              <NoteStats id={params.content} />
             </div>
           </div>
         )}
         <div className="px-3">
+          <NoteStats id={params.content} />
           <NoteReplyForm id={params.content} pubkey={db.account.pubkey} />
           <RepliesList id={params.content} />
         </div>

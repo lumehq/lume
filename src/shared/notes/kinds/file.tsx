@@ -40,13 +40,7 @@ export function FileNote(props: { event?: NDKEvent }) {
           crossorigin=""
           className="player"
         >
-          <MediaProvider>
-            <Poster
-              className="vds-poster"
-              src="https://thumbnail.video/api/get?url=${url}&seconds=1"
-              alt={url}
-            />
-          </MediaProvider>
+          <MediaProvider />
           <DefaultAudioLayout
             icons={defaultLayoutIcons}
             smallLayoutWhen="(width < 500) or (height < 380)"

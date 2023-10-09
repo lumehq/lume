@@ -9,7 +9,7 @@ export function ToggleWidgetList() {
   const setWidget = useWidgets((state) => state.setWidget);
 
   return (
-    <div className="flex h-full shrink-0 grow-0 basis-[400px] items-center justify-center">
+    <div className="flex h-full w-[420px] items-center justify-center border-r border-zinc-100 dark:border-zinc-900">
       <div className="relative">
         <div className="absolute -top-44 left-1/2 -translate-x-1/2 transform">
           <HandArrowDownIcon className="text-zinc-100 dark:text-zinc-900" />

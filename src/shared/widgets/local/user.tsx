@@ -81,7 +81,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="scrollbar-hide h-full overflow-y-auto pb-20">
+      <div className="scrollbar-hide h-full overflow-y-auto">
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
         </div>
@@ -107,10 +107,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
                 </div>
               </div>
             ) : (
-              <WVList>
-                {data.map((item) => renderItem(item))}
-                <div className="h-16" />
-              </WVList>
+              <WVList>{data.map((item) => renderItem(item))}</WVList>
             )}
           </div>
         </div>

@@ -4,16 +4,14 @@ import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { SettingsIcon } from '@shared/icons';
+import { HorizontalDotsIcon } from '@shared/icons';
 import { Image } from '@shared/image';
-import { Logout } from '@shared/logout';
 
 import { useActivities } from '@stores/activities';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
-import { displayNpub } from '@utils/shortenKey';
 
 export function ActiveAccount() {
   const { db } = useStorage();
@@ -52,38 +50,22 @@ export function ActiveAccount() {
 
   if (status === 'loading') {
     return (
-      <div className="inline-flex h-16 items-center gap-2.5 border-l-2 border-transparent px-3 pb-2">
-        <div className="relative h-10 w-10 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-        <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-      </div>
+      <div className="aspect-square h-full w-full animate-pulse rounded-lg bg-white/10" />
     );
   }
 
   return (
-    <div className="flex h-16 items-center justify-between border-l-2 border-transparent px-3 pb-1">
-      <Link to={`/users/${db.account.pubkey}`} className="flex items-center gap-1.5">
+    <div className="flex flex-col gap-1">
+      <Link to={`/users/${db.account.pubkey}`} className="relative inline-block">
         <Image
           src={user?.picture || user?.image}
           alt={db.account.npub}
-          className="h-9 w-9 shrink-0 rounded-lg object-cover"
+          className="aspect-square h-full w-full rounded-lg"
         />
-        <div className="flex flex-col items-start">
-          <div className="max-w-[10rem] truncate text-sm font-semibold text-white">
-            {user?.name || user?.display_name || user?.displayName}
-          </div>
-          <div className="max-w-[7rem] truncate text-sm text-white/50">
-            {user?.nip05 || displayNpub(db.account.pubkey, 12)}
-          </div>
-        </div>
+        <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-400 ring-2 ring-zinc-50 dark:ring-zinc-950" />
       </Link>
-      <div className="inline-flex divide-x divide-white/5 rounded-lg border-t border-white/5 bg-white/10">
-        <Link
-          to="/settings/"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-l-lg hover:bg-white/10"
-        >
-          <SettingsIcon className="h-5 w-5 text-white" />
-        </Link>
-        <Logout />
+      <div className="inline-flex items-center justify-center rounded-md bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800">
+        <HorizontalDotsIcon className="h-5 w-5" />
       </div>
     </div>
   );

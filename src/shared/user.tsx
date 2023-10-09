@@ -283,16 +283,14 @@ export const User = memo(function User({
             />
           </Avatar.Fallback>
         </Avatar.Root>
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-1 flex-col">
           <h5 className="max-w-[15rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
             {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
-          <div className="inline-flex items-center gap-2">
-            <span className="text-zinc-500 dark:text-zinc-300">{createdAt}</span>
-            <span className="text-zinc-500 dark:text-zinc-300">·</span>
-            <span className="text-zinc-500 dark:text-zinc-300">
-              {displayNpub(pubkey, 16)}
-            </span>
+          <div className="inline-flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-300">
+            <span>{createdAt}</span>
+            <span>·</span>
+            <span>{displayNpub(pubkey, 16)}</span>
           </div>
         </div>
       </div>
@@ -310,7 +308,7 @@ export const User = memo(function User({
               loading="lazy"
               decoding="async"
               style={{ contentVisibility: 'auto' }}
-              className="h-10 w-10 rounded-lg border border-white/5"
+              className="h-10 w-10 rounded-lg border border-white/5 object-cover"
             />
             <Avatar.Fallback delayMs={300}>
               <img
