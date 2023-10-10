@@ -95,7 +95,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
           type="button"
           className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
         >
-          <ZapIcon className="h-5 w-5 group-hover:text-orange-400" />
+          <ZapIcon className="h-5 w-5 group-hover:text-blue-500" />
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>

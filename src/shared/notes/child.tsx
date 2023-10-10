@@ -56,7 +56,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
               Lume <span className="text-green-500">(System)</span>
             </h5>
           </div>
-          <div className="-mt-5 flex items-start gap-3">
+          <div className="-mt-3 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div>
               <div className="relative z-20 mt-1 flex-1 select-text">
@@ -81,7 +81,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
       <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.6rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
       <div className="mb-6 flex flex-col">
         <User pubkey={data.pubkey} time={data.created_at} />
-        <div className="-mt-4 flex items-start gap-3">
+        <div className="-mt-3 flex items-start gap-3">
           <div className="w-10 shrink-0" />
           <div className="relative z-20 flex-1">
             {renderKind(data)}

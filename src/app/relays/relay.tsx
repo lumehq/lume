@@ -79,7 +79,7 @@ export function RelayScreen() {
                       <a
                         href={`mailto:${resolvedRelay.contact}`}
                         target="_blank"
-                        className="underline after:content-['_↗'] hover:text-blue-500"
+                        className="underline after:content-['_↗'] hover:text-blue-600"
                         rel="noreferrer"
                       >
                         mailto:{resolvedRelay.contact}
@@ -92,7 +92,7 @@ export function RelayScreen() {
                       href={resolvedRelay.software}
                       target="_blank"
                       rel="noreferrer"
-                      className="underline after:content-['_↗'] hover:text-blue-500"
+                      className="underline after:content-['_↗'] hover:text-blue-600"
                     >
                       {getSoftwareName(resolvedRelay.software) +
                         ' - ' +

@@ -30,26 +30,35 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="group ml-auto inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
+              className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
             >
               <HorizontalDotsIcon className="h-5 w-5 group-hover:text-blue-500" />
             </button>
           </DropdownMenu.Trigger>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+          <Tooltip.Content className="-left-10 inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-200 px-3.5 text-sm text-neutral-900 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-100">
             More
-            <Tooltip.Arrow className="fill-black" />
+            <Tooltip.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-white/10 bg-white/20 p-2 backdrop-blur-3xl focus:outline-none">
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800">
           <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => copyLink()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
+            >
+              Focus
+            </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <button
+              type="button"
+              onClick={() => copyLink()}
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
               Copy shareable link
             </button>
@@ -58,7 +67,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyID()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
               Copy ID
             </button>
@@ -66,7 +75,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10 focus:outline-none"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
               View profile
             </Link>

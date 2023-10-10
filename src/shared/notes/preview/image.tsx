@@ -11,30 +11,25 @@ export function ImagePreview({ urls, truncate }: { urls: string[]; truncate?: bo
   };
 
   return (
-    <div className="mt-3 overflow-hidden">
-      <div className="flex flex-col gap-2">
-        {urls.map((url) => (
-          <div key={url} className="group relative min-w-0 shrink-0 grow-0 basis-full">
-            <img
-              src={url}
-              alt="image"
-              className={`${
-                truncate ? 'h-auto max-h-[300px]' : 'h-auto'
-              } w-full rounded-lg border border-white/10 object-cover`}
-              loading="lazy"
-              decoding="async"
-              style={{ contentVisibility: 'auto' }}
-            />
-            <button
-              type="button"
-              onClick={() => downloadImage(url)}
-              className="absolute right-2 top-2 hidden h-8 w-8 items-center justify-center rounded-md bg-black/50 backdrop-blur-md hover:bg-black/40 group-hover:inline-flex"
-            >
-              <DownloadIcon className="h-5 w-5 text-white" />
-            </button>
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col gap-2">
+      {urls.map((url) => (
+        <div key={url} className="group relative min-w-0 shrink-0 grow-0 basis-full">
+          <img
+            src={url}
+            alt="image"
+            className={`${
+              truncate ? 'h-auto max-h-[300px]' : 'h-auto'
+            } w-full rounded-lg border border-white/10 object-cover`}
+          />
+          <button
+            type="button"
+            onClick={() => downloadImage(url)}
+            className="absolute right-2 top-2 hidden h-8 w-8 items-center justify-center rounded-md bg-black/50 backdrop-blur-md group-hover:inline-flex hover:bg-black/40"
+          >
+            <DownloadIcon className="h-5 w-5 text-white" />
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

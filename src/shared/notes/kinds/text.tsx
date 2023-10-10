@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
@@ -82,3 +83,5 @@ export function TextNote(props: { content?: string }) {
     </div>
   );
 }
+
+export const MemoizedTextNote = memo(TextNote);

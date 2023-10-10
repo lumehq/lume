@@ -62,7 +62,7 @@ export function ActiveAccount() {
           alt={db.account.npub}
           className="aspect-square h-full w-full rounded-md"
         />
-        <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-400 ring-2 ring-neutral-50 dark:ring-neutral-950" />
+        <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-neutral-100 dark:ring-neutral-900" />
       </Link>
       <div className="inline-flex items-center justify-center rounded-md">
         <HorizontalDotsIcon className="h-4 w-4" />

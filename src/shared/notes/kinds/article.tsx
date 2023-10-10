@@ -1,5 +1,5 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
@@ -54,3 +54,5 @@ export function ArticleNote(props: { event?: NDKEvent }) {
     </Link>
   );
 }
+
+export const MemoizedArticleNote = memo(ArticleNote);

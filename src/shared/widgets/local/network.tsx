@@ -7,11 +7,11 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
-  ArticleNote,
-  FileNote,
+  MemoizedArticleNote,
+  MemoizedFileNote,
+  MemoizedRepost,
+  MemoizedTextNote,
   NoteWrapper,
-  Repost,
-  TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
@@ -55,21 +55,21 @@ export function LocalNetworkWidget() {
               root={dbEvent.root_id}
               reply={dbEvent.reply_id}
             >
-              <TextNote />
+              <MemoizedTextNote />
             </NoteWrapper>
           );
         case NDKKind.Repost:
-          return <Repost key={dbEvent.id} event={event} />;
+          return <MemoizedRepost key={dbEvent.id} event={event} />;
         case 1063:
           return (
             <NoteWrapper key={dbEvent.id} event={event}>
-              <FileNote />
+              <MemoizedFileNote />
             </NoteWrapper>
           );
         case NDKKind.Article:
           return (
             <NoteWrapper key={dbEvent.id} event={event}>
-              <ArticleNote />
+              <MemoizedArticleNote />
             </NoteWrapper>
           );
         default:

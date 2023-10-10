@@ -5,6 +5,7 @@ import {
   DefaultVideoLayout,
   defaultLayoutIcons,
 } from '@vidstack/react/player/layouts/default';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
@@ -34,13 +35,19 @@ export function FileNote(props: { event?: NDKEvent }) {
           key={url}
           src={url}
           poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-          load="visible"
+          load="idle"
           aspectRatio="16/9"
           muted={true}
           crossorigin=""
           className="player"
         >
-          <MediaProvider />
+          <MediaProvider>
+            <Poster
+              className="vds-poster"
+              src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+              alt="poster"
+            />
+          </MediaProvider>
           <DefaultAudioLayout
             icons={defaultLayoutIcons}
             smallLayoutWhen="(width < 500) or (height < 380)"
@@ -61,10 +68,12 @@ export function FileNote(props: { event?: NDKEvent }) {
       <Link
         to={url}
         target="_blank"
-        className="break-all font-normal text-blue-500 hover:text-blue-500"
+        className="break-all font-normal text-blue-500 hover:text-blue-600"
       >
         {url}
       </Link>
     </div>
   );
 }
+
+export const MemoizedFileNote = memo(FileNote);

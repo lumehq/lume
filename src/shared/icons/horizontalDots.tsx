@@ -13,16 +13,12 @@ export function HorizontalDotsIcon(
       {...props}
     >
       <path
-        fill="currentColor"
-        d="M12 13a1 1 0 100-2 1 1 0 000 2zM20.25 13a1 1 0 100-2 1 1 0 000 2zM3.75 13a1 1 0 100-2 1 1 0 000 2z"
-      />
-      <path
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="M12 13a1 1 0 100-2 1 1 0 000 2zM20.25 13a1 1 0 100-2 1 1 0 000 2zM3.75 13a1 1 0 100-2 1 1 0 000 2z"
-      />
+        strokeWidth="2"
+        d="M12 13a1 1 0 100-2 1 1 0 000 2zM20 13a1 1 0 100-2 1 1 0 000 2zM4 13a1 1 0 100-2 1 1 0 000 2z"
+      ></path>
     </svg>
   );
 }

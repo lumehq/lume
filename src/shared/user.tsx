@@ -229,7 +229,7 @@ export const User = memo(function User({
     return (
       <div className="flex gap-3">
         <div className="inline-flex h-10 w-10 items-center justify-center">
-          <RepostIcon className="h-6 w-6 text-blue-500" />
+          <RepostIcon className="h-5 w-5 text-blue-500" />
         </div>
         <div className="inline-flex items-center gap-2">
           <Avatar.Root className="shrink-0">
@@ -308,7 +308,7 @@ export const User = memo(function User({
               loading="lazy"
               decoding="async"
               style={{ contentVisibility: 'auto' }}
-              className="h-10 w-10 rounded-lg border border-white/5 object-cover"
+              className="h-10 w-10 rounded-lg object-cover"
             />
             <Avatar.Fallback delayMs={300}>
               <img
@@ -320,14 +320,15 @@ export const User = memo(function User({
           </Avatar.Root>
         </HoverCard.Trigger>
         <div className="flex flex-1 items-center gap-2">
-          <h5 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+          <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
-          </h5>
-          <span className="text-neutral-500 dark:text-neutral-300">·</span>
-          <span className="text-neutral-500 dark:text-neutral-300">{createdAt}</span>
+          </div>
+          <div className="ml-auto text-neutral-500 dark:text-neutral-400">
+            {createdAt}
+          </div>
         </div>
       </div>
       <HoverCard.Portal>

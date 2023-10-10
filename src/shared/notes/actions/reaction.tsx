@@ -65,15 +65,15 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
           className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
         >
           {reaction ? (
-            <img src={getReactionImage(reaction)} alt={reaction} className="h-6 w-6" />
+            <img src={getReactionImage(reaction)} alt={reaction} className="h-5 w-5" />
           ) : (
-            <ReactionIcon className="h-5 w-5 group-hover:text-red-400" />
+            <ReactionIcon className="h-5 w-5 group-hover:text-blue-500" />
           )}
         </button>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="select-none rounded-md bg-black px-1 py-1 text-sm will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade"
+          className="select-none rounded-md bg-neutral-200 px-1 py-1 text-sm will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800"
           sideOffset={0}
           side="top"
         >
@@ -122,7 +122,7 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
               <img src="/clown_face.png" alt="Clown Face" className="h-6 w-6" />
             </button>
           </div>
-          <Popover.Arrow className="fill-black" />
+          <Popover.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

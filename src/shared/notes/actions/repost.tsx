@@ -48,7 +48,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
             >
               <RepostIcon
                 className={twMerge(
-                  'h-5 w-5 group-hover:text-blue-500',
+                  'h-5 w-5 group-hover:text-blue-600',
                   isRepost ? 'text-blue-500' : ''
                 )}
               />
@@ -56,9 +56,9 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           </AlertDialog.Trigger>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+          <Tooltip.Content className="-left-10 inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-200 px-3.5 text-sm text-neutral-900 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-100">
             Repost
-            <Tooltip.Arrow className="fill-black" />
+            <Tooltip.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

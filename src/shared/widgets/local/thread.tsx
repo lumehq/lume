@@ -4,12 +4,12 @@ import { useCallback } from 'react';
 import { useStorage } from '@libs/storage/provider';
 
 import {
-  ArticleNote,
-  FileNote,
+  MemoizedArticleNote,
+  MemoizedFileNote,
+  MemoizedTextNote,
   NoteActions,
   NoteReplyForm,
   NoteStats,
-  TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { RepliesList } from '@shared/notes/replies/list';
@@ -29,11 +29,11 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return <TextNote content={event.content} />;
+          return <MemoizedTextNote content={event.content} />;
         case NDKKind.Article:
-          return <ArticleNote event={event} />;
+          return <MemoizedArticleNote event={event} />;
         case 1063:
-          return <FileNote event={event} />;
+          return <MemoizedFileNote event={event} />;
         default:
           return <UnknownNote event={event} />;
       }
