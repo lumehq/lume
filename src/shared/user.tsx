@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 
 import { RepostIcon, WorldIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
+import { MoreActions } from '@shared/notes';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -15,11 +16,13 @@ import { displayNpub } from '@utils/shortenKey';
 
 export const User = memo(function User({
   pubkey,
+  eventId,
   time,
   variant = 'default',
   embedProfile,
 }: {
   pubkey: string;
+  eventId?: string;
   time?: number;
   variant?:
     | 'default'
@@ -301,33 +304,34 @@ export const User = memo(function User({
     <HoverCard.Root>
       <div className="relative z-10 flex items-start gap-3">
         <HoverCard.Trigger asChild>
-          <Avatar.Root className="h-10 w-10 shrink-0">
+          <Avatar.Root className="relative top-1 shrink-0">
             <Avatar.Image
               src={user?.picture || user?.image}
               alt={pubkey}
               loading="lazy"
               decoding="async"
               style={{ contentVisibility: 'auto' }}
-              className="h-10 w-10 rounded-lg object-cover"
+              className="h-10 w-10 rounded-lg bg-white object-cover"
             />
             <Avatar.Fallback delayMs={300}>
               <img
                 src={svgURI}
                 alt={pubkey}
-                className="h-10 w-10 rounded-lg border border-white/5 bg-black dark:bg-white"
+                className="h-10 w-10 rounded-lg bg-black dark:bg-white"
               />
             </Avatar.Fallback>
           </Avatar.Root>
         </HoverCard.Trigger>
-        <div className="flex flex-1 items-center gap-2">
+        <div className="flex flex-1 items-start gap-2">
           <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </div>
-          <div className="ml-auto text-neutral-500 dark:text-neutral-400">
-            {createdAt}
+          <div className="ml-auto inline-flex items-center gap-3">
+            <div className="text-neutral-500 dark:text-neutral-400">{createdAt}</div>
+            <MoreActions id={eventId} pubkey={pubkey} />
           </div>
         </div>
       </div>

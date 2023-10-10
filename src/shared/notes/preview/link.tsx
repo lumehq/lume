@@ -7,9 +7,9 @@ export function LinkPreview({ urls }: { urls: string[] }) {
   const domain = new URL(urls[0]);
 
   return (
-    <div className="rounded-lg bg-neutral-200 dark:bg-neutral-800">
+    <div className="my-2">
       {status === 'loading' ? (
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-neutral-200 dark:bg-neutral-800">
           <div className="h-44 w-full animate-pulse bg-white/10 backdrop-blur-xl" />
           <div className="flex flex-col gap-2 px-3 py-3">
             <div className="h-3 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
@@ -24,7 +24,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
           to={urls[0]}
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col rounded-lg"
+          className="flex flex-col rounded-lg bg-neutral-200 dark:bg-neutral-800"
         >
           {error ? (
             <div className="flex flex-col gap-2 px-3 py-3">
@@ -42,9 +42,6 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                   src={data.image}
                   alt={urls[0]}
                   className="h-44 w-full rounded-t-lg object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  style={{ contentVisibility: 'auto' }}
                 />
               )}
               <div className="flex flex-col gap-1 border-t border-white/5 px-3 py-3">

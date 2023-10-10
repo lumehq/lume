@@ -25,24 +25,9 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-      <Tooltip.Root delayDuration={150}>
-        <Tooltip.Trigger asChild>
-          <DropdownMenu.Trigger asChild>
-            <button
-              type="button"
-              className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
-            >
-              <HorizontalDotsIcon className="h-5 w-5 group-hover:text-blue-500" />
-            </button>
-          </DropdownMenu.Trigger>
-        </Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Content className="-left-10 inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-200 px-3.5 text-sm text-neutral-900 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-100">
-            More
-            <Tooltip.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
-          </Tooltip.Content>
-        </Tooltip.Portal>
-      </Tooltip.Root>
+      <DropdownMenu.Trigger>
+        <HorizontalDotsIcon className="h-5 w-5 text-neutral-800 hover:text-blue-500 dark:text-neutral-200" />
+      </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800">
           <DropdownMenu.Item asChild>

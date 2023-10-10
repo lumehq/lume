@@ -50,15 +50,15 @@ export function SplashScreen() {
   }, [ndk, db.account]);
 
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950">
-      <div data-tauri-drag-region className="absolute left-0 top-0 z-10 h-16 w-full" />
-      <div className="flex min-h-0 w-full flex-1 items-center justify-center px-8">
-        <div className="flex flex-col items-center justify-center gap-6">
-          <LoaderIcon className="h-6 w-6 animate-spin text-neutral-950 dark:text-neutral-50" />
-          <h3 className="text-lg font-medium leading-none text-neutral-950 dark:text-neutral-50">
-            {!ndk ? 'Connecting...' : 'Syncing...'}
-          </h3>
-        </div>
+    <div
+      data-tauri-drag-region
+      className="flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
+    >
+      <div className="flex flex-col items-center justify-center gap-6">
+        <LoaderIcon className="h-6 w-6 animate-spin text-neutral-950 dark:text-neutral-50" />
+        <h3 className="text-lg font-medium leading-none text-neutral-950 dark:text-neutral-50">
+          {!ndk ? 'Connecting...' : 'Syncing...'}
+        </h3>
       </div>
     </div>
   );

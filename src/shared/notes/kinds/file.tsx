@@ -1,10 +1,15 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
 import {
-  DefaultAudioLayout,
-  DefaultVideoLayout,
-  defaultLayoutIcons,
-} from '@vidstack/react/player/layouts/default';
+  MediaControlBar,
+  MediaController,
+  MediaMuteButton,
+  MediaPlayButton,
+  MediaSeekBackwardButton,
+  MediaSeekForwardButton,
+  MediaTimeDisplay,
+  MediaTimeRange,
+  MediaVolumeRange,
+} from 'media-chrome/dist/react';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -31,34 +36,25 @@ export function FileNote(props: { event?: NDKEvent }) {
   if (type === 'video') {
     return (
       <div className="mb-2 mt-3">
-        <MediaPlayer
-          key={url}
-          src={url}
-          poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-          load="idle"
-          aspectRatio="16/9"
-          muted={true}
-          crossorigin=""
-          className="player"
-        >
-          <MediaProvider>
-            <Poster
-              className="vds-poster"
-              src={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-              alt="poster"
-            />
-          </MediaProvider>
-          <DefaultAudioLayout
-            icons={defaultLayoutIcons}
-            smallLayoutWhen="(width < 500) or (height < 380)"
-            noModal={true}
+        <MediaController key={url} className="aspect-video">
+          <video
+            slot="media"
+            src={url}
+            poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+            preload="auto"
+            muted
+            crossOrigin=""
           />
-          <DefaultVideoLayout
-            icons={defaultLayoutIcons}
-            smallLayoutWhen="(width < 500) or (height < 380)"
-            noModal={true}
-          />
-        </MediaPlayer>
+          <MediaControlBar>
+            <MediaPlayButton></MediaPlayButton>
+            <MediaSeekBackwardButton></MediaSeekBackwardButton>
+            <MediaSeekForwardButton></MediaSeekForwardButton>
+            <MediaTimeRange></MediaTimeRange>
+            <MediaTimeDisplay showDuration></MediaTimeDisplay>
+            <MediaMuteButton></MediaMuteButton>
+            <MediaVolumeRange></MediaVolumeRange>
+          </MediaControlBar>
+        </MediaController>
       </div>
     );
   }

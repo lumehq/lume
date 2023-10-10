@@ -8,9 +8,6 @@ dependencies:
   '@evilmartians/harmony':
     specifier: ^1.1.0
     version: 1.1.0
-  '@fontsource-variable/inter':
-    specifier: ^5.0.13
-    version: 5.0.13
   '@getalby/sdk':
     specifier: ^2.4.0
     version: 2.4.0
@@ -116,9 +113,6 @@ dependencies:
   '@tiptap/suggestion':
     specifier: ^2.1.11
     version: 2.1.11(@tiptap/core@2.1.11)(@tiptap/pm@2.1.11)
-  '@vidstack/react':
-    specifier: ^1.1.9
-    version: 1.1.9(@types/react@18.2.27)(react@18.2.0)
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -134,6 +128,9 @@ dependencies:
   lru-cache:
     specifier: ^10.0.1
     version: 10.0.1
+  media-chrome:
+    specifier: ^1.4.3
+    version: 1.4.3
   million:
     specifier: ^2.6.4
     version: 2.6.4
@@ -822,10 +819,6 @@ packages:
 
   /@floating-ui/utils@0.1.6:
     resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
-    dev: false
-
-  /@fontsource-variable/inter@5.0.13:
-    resolution: {integrity: sha512-mb2WyZ2rHeqIG8aqGJIvLBOmo4sg2x7SHlsE6PUhwxbOicVzO59EZwSGtzNO3FmchuDPFVAxzcXYcR5B6jE6Qw==}
     dev: false
 
   /@getalby/sdk@2.4.0:
@@ -2917,18 +2910,6 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@vidstack/react@1.1.9(@types/react@18.2.27)(react@18.2.0):
-    resolution: {integrity: sha512-CYXhr0Hk/xTcYDVKy39J6VUIcJMCLzbfNe9upBQ096lnCpk3yEncsAUl73jTE3GzJ8yOPEQcdloFoJXbA4ekeg==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/react': ^18.0.0
-      react: ^18.0.0
-    dependencies:
-      '@types/react': 18.2.27
-      media-captions: 1.0.0
-      react: 18.2.0
-    dev: false
-
   /@vitejs/plugin-react-swc@3.4.0(vite@4.4.11):
     resolution: {integrity: sha512-m7UaA4Uvz82N/0EOVpZL4XsFIakRqrFKeSNxa1FBLSXGvWrWRBwmZb4qxk+ZIVAZcW3c3dn5YosomDgx62XWcQ==}
     peerDependencies:
@@ -3110,7 +3091,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001546
+      caniuse-lite: 1.0.30001547
       fraction.js: 4.3.6
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3162,8 +3143,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001546
-      electron-to-chromium: 1.4.546
+      caniuse-lite: 1.0.30001547
+      electron-to-chromium: 1.4.548
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
 
@@ -3191,8 +3172,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite@1.0.30001546:
-    resolution: {integrity: sha512-zvtSJwuQFpewSyRrI3AsftF6rM0X80mZkChIt1spBGEvRglCrjTniXvinc8JKRoqTwXAgvqTImaN9igfSMtUBw==}
+  /caniuse-lite@1.0.30001547:
+    resolution: {integrity: sha512-W7CrtIModMAxobGhz8iXmDfuJiiKg1WADMO/9x7/CLNin5cpSbuBjooyoIUVB5eyCc36QuTVlkVa1iB2S5+/eA==}
 
   /case-anything@2.1.13:
     resolution: {integrity: sha512-zlOQ80VrQ2Ue+ymH5OuM/DlDq64mEm+B9UTdHULv5osUMD6HalNTblf2b1u/m6QecjsnOkBpqVZ+XPwIVsy7Ng==}
@@ -3565,8 +3546,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.546:
-    resolution: {integrity: sha512-cz9bBM26ZqoEmGHkdHXU3LP7OofVyEzRoMqfALQ9Au9WlB4rogAHzqj/NkNvw2JJjy4xuxS1me+pP2lbCD5Mfw==}
+  /electron-to-chromium@1.4.548:
+    resolution: {integrity: sha512-R77KD6mXv37DOyKLN/eW1rGS61N6yHOfapNSX9w+y9DdPG83l9Gkuv7qkCFZ4Ta4JPhrjgQfYbv4Y3TnM1Hi2Q==}
 
   /emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
@@ -4863,9 +4844,8 @@ packages:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
     dev: false
 
-  /media-captions@1.0.0:
-    resolution: {integrity: sha512-605d9sXW+DtJBNzzfL4N6NpOIjigN+kpzS+V1QaCiNNPB7G015/peyw6wfv9iCp8GAP6R5NPyAICZKeuqWPAQQ==}
-    engines: {node: '>=16'}
+  /media-chrome@1.4.3:
+    resolution: {integrity: sha512-VpFqCOu2FLULW6TX4sluo44AolJXryHxr85UBdO+IuOltgYPuf7Lgp1F3OqJeRIeO8874d5mri/6xmI22CO9yA==}
     dev: false
 
   /merge-stream@2.0.0:
