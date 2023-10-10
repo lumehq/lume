@@ -44,7 +44,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           <AlertDialog.Trigger asChild>
             <button
               type="button"
-              className="group inline-flex h-7 w-7 items-center justify-center text-zinc-500 dark:text-zinc-300"
+              className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
             >
               <RepostIcon
                 className={twMerge(
@@ -84,7 +84,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
               <button
                 type="button"
                 onClick={() => submit()}
-                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-interor-500"
+                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-blue-600"
               >
                 {isLoading ? (
                   <LoaderIcon className="h-4 w-4 animate-spin text-white" />

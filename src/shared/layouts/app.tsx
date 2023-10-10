@@ -5,7 +5,7 @@ import { Navigation } from '@shared/navigation';
 
 export function AppLayout() {
   return (
-    <div className="flex h-screen w-screen flex-col bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
       <WindowTitlebar />
       <div className="flex h-full min-h-0 w-full">
         <div data-tauri-drag-region className="h-full w-[64px] shrink-0 pt-2">

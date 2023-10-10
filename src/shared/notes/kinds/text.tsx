@@ -6,6 +6,7 @@ import {
   Boost,
   Hashtag,
   ImagePreview,
+  Invoice,
   LinkPreview,
   MentionNote,
   MentionUser,
@@ -21,7 +22,7 @@ export function TextNote(props: { content?: string }) {
     return (
       <div>
         <ReactMarkdown
-          className="prose prose-zinc max-w-none select-text dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-0 prose-a:font-normal prose-a:text-interor-500 hover:prose-a:text-interor-600 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-interor-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2"
+          className="prose prose-neutral max-w-none select-text leading-normal dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-0 prose-a:font-normal prose-a:text-blue-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-blue-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2 hover:prose-a:text-blue-500"
           remarkPlugins={[remarkGfm]}
           disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code']}
           unwrapDisallowed={true}
@@ -36,7 +37,7 @@ export function TextNote(props: { content?: string }) {
   return (
     <div>
       <ReactMarkdown
-        className="prose prose-zinc max-w-none select-text dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-0 prose-a:font-normal prose-a:text-interor-500 hover:prose-a:text-interor-600 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-interor-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2"
+        className="prose prose-neutral max-w-none select-text leading-normal dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-0 prose-a:font-normal prose-a:text-blue-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-blue-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2 hover:prose-a:text-blue-500"
         remarkPlugins={[remarkGfm]}
         components={{
           a: ({ href }) => {
@@ -59,6 +60,9 @@ export function TextNote(props: { content?: string }) {
             }
             if (key.startsWith('boost')) {
               return <Boost boost={key.replace('boost-', '')} />;
+            }
+            if (key.startsWith('lnbc')) {
+              return <Invoice invoice={key.replace('lnbc-', '')} />;
             }
           },
         }}

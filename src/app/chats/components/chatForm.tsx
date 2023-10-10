@@ -47,7 +47,7 @@ export function ChatForm({
   return (
     <div className="flex items-center gap-2">
       <MediaUploader setState={setValue} />
-      <div className="flex w-full items-center justify-between rounded-full bg-zinc-300 px-3 dark:bg-zinc-700">
+      <div className="flex w-full items-center justify-between rounded-full bg-neutral-300 px-3 dark:bg-neutral-700">
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -57,12 +57,12 @@ export function ChatForm({
           autoCorrect="off"
           autoCapitalize="off"
           placeholder="Message"
-          className="h-10 flex-1 resize-none bg-transparent px-3 text-zinc-900 placeholder:text-zinc-500 focus:outline-none dark:text-zinc-100 dark:placeholder:text-zinc-300"
+          className="h-10 flex-1 resize-none bg-transparent px-3 text-neutral-900 placeholder:text-neutral-500 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-300"
         />
         <button
           type="button"
           onClick={submit}
-          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-zinc-500 dark:text-zinc-300"
+          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-neutral-500 dark:text-neutral-300"
         >
           <EnterIcon className="h-5 w-5" />
           Send

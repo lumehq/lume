@@ -7,7 +7,7 @@ export function Reply({ event, root }: { event: NDKEventWithReplies; root?: stri
   return (
     <div className="relative h-min w-full">
       {event?.replies?.length > 0 && (
-        <div className="absolute -left-3 top-0 h-[calc(100%-1.2rem)] w-px bg-gradient-to-t from-fuchsia-200 via-red-200 to-orange-300" />
+        <div className="absolute -left-3 top-0 h-[calc(100%-1.2rem)] w-px bg-gradient-to-t from-blue-200 via-red-200 to-orange-300" />
       )}
       <div className="relative z-10">
         <div className="relative flex flex-col">

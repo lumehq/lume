@@ -44,10 +44,10 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
       preventScrollReset={true}
       className={({ isActive }) =>
         twMerge(
-          'flex items-center gap-2.5 px-3 py-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800',
+          'flex items-center gap-2.5 px-3 py-1.5 hover:bg-neutral-200 dark:hover:bg-neutral-800',
           isActive
-            ? 'bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'
-            : 'text-zinc-500 dark:text-zinc-300'
+            ? 'bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
+            : 'text-neutral-500 dark:text-neutral-300'
         )
       }
     >
@@ -69,7 +69,7 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
         </Avatar.Fallback>
       </Avatar.Root>
       <div className="flex w-full flex-col">
-        <div className="max-w-[10rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
+        <div className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
           {user?.name ||
             user?.display_name ||
             user?.displayName ||

@@ -57,5 +57,5 @@ input::-ms-clear {
 }
 
 .ProseMirror img.ProseMirror-selectednode {
-  @apply outline-fuchsia-500;
+  @apply outline-blue-500;
 }

@@ -157,7 +157,7 @@ export function MigrateScreen() {
                 <button
                   type="submit"
                   disabled={!isDirty || !isValid}
-                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-interor-500 font-medium text-white hover:bg-interor-600 disabled:pointer-events-none disabled:opacity-50"
+                  className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-md bg-blue-500 font-medium text-white hover:bg-blue-600 disabled:pointer-events-none disabled:opacity-50"
                 >
                   {loading ? (
                     <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />

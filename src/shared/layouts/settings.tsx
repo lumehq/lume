@@ -8,7 +8,7 @@ export function SettingsLayout() {
     <div className="flex h-screen w-screen">
       <div className="relative flex h-full w-[232px] flex-col">
         <div data-tauri-drag-region className="h-11 w-full shrink-0" />
-        <div className="scrollbar-none flex h-full flex-1 flex-col gap-2 overflow-y-auto pb-32">
+        <div className="flex h-full flex-1 flex-col gap-2 overflow-y-auto pb-32 scrollbar-none">
           <div className="inline-flex items-center gap-2 border-l-2 border-transparent pl-4">
             <Link
               to="/"
@@ -27,7 +27,7 @@ export function SettingsLayout() {
                 twMerge(
                   'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
                   isActive
-                    ? 'border-fuchsia-500 bg-white/5 text-white'
+                    ? 'border-blue-500 bg-white/5 text-white'
                     : 'border-transparent text-white/80'
                 )
               }
@@ -43,7 +43,7 @@ export function SettingsLayout() {
                 twMerge(
                   'flex h-10 items-center gap-2.5 rounded-r-lg border-l-2 pl-4 pr-2',
                   isActive
-                    ? 'border-fuchsia-500 bg-white/5 text-white'
+                    ? 'border-blue-500 bg-white/5 text-white'
                     : 'border-transparent text-white/80'
                 )
               }

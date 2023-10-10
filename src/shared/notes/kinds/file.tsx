@@ -61,7 +61,7 @@ export function FileNote(props: { event?: NDKEvent }) {
       <Link
         to={url}
         target="_blank"
-        className="break-all font-normal text-fuchsia-500 hover:text-fuchsia-600"
+        className="break-all font-normal text-blue-500 hover:text-blue-500"
       >
         {url}
       </Link>

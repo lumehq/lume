@@ -79,7 +79,7 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
           <div className="flex h-full w-full items-center justify-center">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
-              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
                 Loading event related to the hashtag {params.title}...
               </p>
             </div>
@@ -89,17 +89,17 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="font-semibold leading-tight text-zinc-900 dark:text-zinc-100">
+                <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
                   Oops, it looks like there are no events related to {params.title}.
                 </h3>
-                <p className="text-zinc-500 dark:text-zinc-400">
+                <p className="text-neutral-500 dark:text-neutral-400">
                   You can close this widget or try with other hashtag
                 </p>
               </div>
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-none h-full">
+          <VList className="h-full scrollbar-none">
             {data.map((item) => renderItem(item))}
             <div className="h-16" />
           </VList>

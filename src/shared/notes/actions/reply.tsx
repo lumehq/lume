@@ -21,7 +21,7 @@ export function NoteReply({
         <button
           type="button"
           onClick={() => setReply(id, pubkey, root)}
-          className="group inline-flex h-7 w-7 items-center justify-center text-zinc-500 dark:text-zinc-300"
+          className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
         >
           <ReplyIcon className="h-5 w-5 group-hover:text-green-500" />
         </button>

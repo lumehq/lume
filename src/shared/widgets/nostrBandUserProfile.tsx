@@ -65,7 +65,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
 
   if (!profile) {
     return (
-      <div className="rounded-xl bg-zinc-100 px-5 py-5 dark:bg-zinc-900">
+      <div className="rounded-xl bg-neutral-100 px-5 py-5 dark:bg-neutral-900">
         <p>Can&apos;t fetch profile</p>
       </div>
     );
@@ -73,7 +73,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
 
   return (
     <div className="h-min w-full px-3 pb-3">
-      <div className="rounded-xl bg-zinc-100 px-5 py-5 dark:bg-zinc-900">
+      <div className="rounded-xl bg-neutral-100 px-5 py-5 dark:bg-neutral-900">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-2">
             <Image
@@ -81,10 +81,10 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
               className="h-11 w-11 shrink-0 rounded-lg object-cover"
             />
             <div className="inline-flex flex-col">
-              <h3 className="max-w-[15rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
+              <h3 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
                 {profile.display_name || profile.name}
               </h3>
-              <p className="max-w-[10rem] truncate text-sm text-zinc-900 dark:text-zinc-100/50">
+              <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/50">
                 {profile.nip05 || shortenKey(data.pubkey)}
               </p>
             </div>
@@ -94,7 +94,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
               <button
                 type="button"
                 onClick={() => unfollowUser(data.pubkey)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-200 text-zinc-900 backdrop-blur-xl hover:bg-interor-500 hover:text-white dark:bg-zinc-800 dark:text-zinc-100 dark:hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-200 text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-white dark:bg-neutral-800 dark:text-neutral-100 dark:hover:text-white"
               >
                 <UnfollowIcon className="h-4 w-4" />
               </button>
@@ -102,7 +102,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
               <button
                 type="button"
                 onClick={() => followUser(data.pubkey)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-zinc-200 text-zinc-900 backdrop-blur-xl hover:bg-interor-500 hover:text-white dark:bg-zinc-800 dark:text-zinc-100 dark:hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-200 text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-white dark:bg-neutral-800 dark:text-neutral-100 dark:hover:text-white"
               >
                 <FollowIcon className="h-4 w-4" />
               </button>
@@ -110,7 +110,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
           </div>
         </div>
         <div className="mt-2">
-          <p className="whitespace-pre-line break-words text-zinc-900 dark:text-zinc-100">
+          <p className="whitespace-pre-line break-words text-neutral-900 dark:text-neutral-100">
             {profile.about || profile.bio}
           </p>
         </div>
@@ -120,30 +120,30 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
           ) : (
             <div className="flex w-full items-center gap-8">
               <div className="inline-flex flex-col gap-1">
-                <span className="font-semibold leading-none text-zinc-900 dark:text-zinc-100">
+                <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
                   {userStats.stats[data.pubkey].followers_pubkey_count ?? 0}
                 </span>
-                <span className="text-sm leading-none text-zinc-900 dark:text-zinc-100/50">
+                <span className="text-sm leading-none text-neutral-900 dark:text-neutral-100/50">
                   Followers
                 </span>
               </div>
               <div className="inline-flex flex-col gap-1">
-                <span className="font-semibold leading-none text-zinc-900 dark:text-zinc-100">
+                <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
                   {userStats.stats[data.pubkey].pub_following_pubkey_count ?? 0}
                 </span>
-                <span className="text-sm leading-none text-zinc-900 dark:text-zinc-100/50">
+                <span className="text-sm leading-none text-neutral-900 dark:text-neutral-100/50">
                   Following
                 </span>
               </div>
               <div className="inline-flex flex-col gap-1">
-                <span className="font-semibold leading-none text-zinc-900 dark:text-zinc-100">
+                <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
                   {userStats.stats[data.pubkey].zaps_received
                     ? compactNumber.format(
                         userStats.stats[data.pubkey].zaps_received.msats / 1000
                       )
                     : 0}
                 </span>
-                <span className="text-sm leading-none text-zinc-900 dark:text-zinc-100/50">
+                <span className="text-sm leading-none text-neutral-900 dark:text-neutral-100/50">
                   Zaps received
                 </span>
               </div>

@@ -71,7 +71,7 @@ export function AccountSettingsScreen() {
               <button
                 type="button"
                 onClick={() => showPrivkey()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-neutral-700"
               >
                 {privType === 'password' ? (
                   <EyeOffIcon
@@ -103,7 +103,7 @@ export function AccountSettingsScreen() {
               <button
                 type="button"
                 onClick={() => showNsec()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-neutral-700"
               >
                 {privType === 'password' ? (
                   <EyeOffIcon

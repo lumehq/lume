@@ -71,7 +71,7 @@ export function NWCScreen() {
                 <a
                   href="https://github.com/getAlby/nips/blob/7-wallet-connect-patch/47.md"
                   target="_blank"
-                  className="text-fuchsia-300"
+                  className="text-blue-300"
                   rel="noreferrer"
                 >
                   the specs (NIP47)
@@ -99,7 +99,7 @@ export function NWCScreen() {
                   href="https://www.mutinywallet.com/"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-fuchsia-300"
+                  className="text-blue-300"
                 >
                   website
                 </a>
@@ -110,7 +110,7 @@ export function NWCScreen() {
                   href="https://apps.umbrel.com/app/alby-nostr-wallet-connect"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-fuchsia-300"
+                  className="text-blue-300"
                 >
                   website
                 </a>

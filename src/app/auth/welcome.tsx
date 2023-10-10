@@ -16,7 +16,7 @@ export function WelcomeScreen() {
         <div className="inline-flex w-full flex-col items-center gap-3 px-4 pb-10">
           <Link
             to="/auth/import"
-            className="inline-flex h-12 w-3/4 items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-interor-500 px-4 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
+            className="inline-flex h-12 w-3/4 items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-blue-500 px-4 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none"
           >
             <span className="w-5" />
             <span>Login with private key</span>

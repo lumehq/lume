@@ -124,7 +124,7 @@ export function Composer() {
             autoCorrect="off"
             autoCapitalize="off"
             className={twMerge(
-              'scrollbar-none markdown max-h-[500px] overflow-y-auto break-all pr-2 outline-none',
+              'markdown max-h-[500px] overflow-y-auto break-all pr-2 outline-none scrollbar-none',
               expand ? 'min-h-[500px]' : reply.id ? 'min-h-min' : 'min-h-[120px]'
             )}
           />
@@ -150,7 +150,7 @@ export function Composer() {
         <button
           onClick={() => submit()}
           disabled={editor && editor.isEmpty}
-          className="inline-flex h-10 w-20 items-center justify-center rounded-lg bg-interor-500 px-2 font-semibold hover:bg-interor-600 disabled:opacity-50"
+          className="inline-flex h-10 w-20 items-center justify-center rounded-lg bg-blue-500 px-2 font-semibold hover:bg-blue-600 disabled:opacity-50"
         >
           {loading === true ? (
             <LoaderIcon className="h-5 w-5 animate-spin text-white" />

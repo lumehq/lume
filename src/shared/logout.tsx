@@ -54,7 +54,7 @@ export function Logout() {
               <button
                 type="button"
                 onClick={() => logout()}
-                className="inline-flex h-9 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium leading-none text-white outline-none hover:bg-interor-500"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium leading-none text-white outline-none hover:bg-blue-600"
               >
                 Logout
               </button>

@@ -45,7 +45,7 @@ export function NoteActions({
                     to={`/notes/text/${id}`}
                     className="group inline-flex h-7 w-7 items-center justify-center"
                   >
-                    <FocusIcon className="h-5 w-5 text-white/80 group-hover:text-fuchsia-400" />
+                    <FocusIcon className="h-5 w-5 text-white/80 group-hover:text-blue-400" />
                   </Link>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
@@ -68,7 +68,7 @@ export function NoteActions({
                     }
                     className="group inline-flex h-7 w-7 items-center justify-center"
                   >
-                    <ThreadIcon className="h-5 w-5 text-white/80 group-hover:text-fuchsia-400" />
+                    <ThreadIcon className="h-5 w-5 text-white/80 group-hover:text-blue-400" />
                   </button>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>

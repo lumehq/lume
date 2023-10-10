@@ -106,14 +106,14 @@ export function LocalNetworkWidget() {
       <div className="flex-1">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-zinc-100 px-3 py-3 dark:bg-zinc-900">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <NoteSkeleton />
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
           <EventLoader firstTime={true} />
         ) : (
-          <VList className="scrollbar-none h-full">
+          <VList className="h-full scrollbar-none">
             {!isFetched ? <EventLoader firstTime={false} /> : null}
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">
@@ -121,21 +121,21 @@ export function LocalNetworkWidget() {
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
-                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-interor-500 px-6 font-medium text-white hover:bg-interor-600 focus:outline-none"
+                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
                 >
                   {isFetchingNextPage ? (
                     <>
                       <span>Loading...</span>
-                      <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />
+                      <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />
                     </>
                   ) : hasNextPage ? (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />
+                      <ArrowRightCircleIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
                       <span>Load more</span>
                     </>
                   ) : (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-100" />
+                      <ArrowRightCircleIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
                       <span>Nothing more to load</span>
                     </>
                   )}

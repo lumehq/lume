@@ -101,7 +101,7 @@ export function OnboardStep2Screen() {
         </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-none flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl">
+        <div className="flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl scrollbar-none">
           {data.map((item: { hashtag: string }) => (
             <button
               key={item.hashtag}
@@ -123,7 +123,7 @@ export function OnboardStep2Screen() {
             type="button"
             onClick={submit}
             disabled={loading || tags.size === 0 || tags.size > 3}
-            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
           >
             {loading ? (
               <>

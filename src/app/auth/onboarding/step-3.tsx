@@ -105,14 +105,14 @@ export function OnboardStep3Screen() {
             href="https://nostr.com/relays"
             target="_blank"
             rel="noreferrer"
-            className="text-fuchsia-500 underline"
+            className="text-blue-500 underline"
           >
             here (nostr.com)
           </a>
         </p>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="scrollbar-none relative flex h-[500px] w-full flex-col divide-y divide-white/10 overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl">
+        <div className="relative flex h-[500px] w-full flex-col divide-y divide-white/10 overflow-y-auto rounded-xl bg-white/10 backdrop-blur-xl scrollbar-none">
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center">
               <LoaderIcon className="h-4 w-4 animate-spin text-white" />
@@ -158,7 +158,7 @@ export function OnboardStep3Screen() {
             type="button"
             disabled={loading}
             onClick={() => submit()}
-            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none disabled:opacity-50"
+            className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
           >
             {loading ? (
               <>

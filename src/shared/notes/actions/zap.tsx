@@ -93,7 +93,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="group inline-flex h-7 w-7 items-center justify-center text-zinc-500 dark:text-zinc-300"
+          className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
         >
           <ZapIcon className="h-5 w-5 group-hover:text-orange-400" />
         </button>
@@ -186,7 +186,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-interor-500 px-4 font-medium text-white hover:bg-interor-600"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
                         >
                           {isCompleted ? (
                             <p>Successfully tipped</p>
@@ -210,7 +210,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-interor-500 px-4 font-medium hover:bg-interor-600"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium hover:bg-blue-600"
                         >
                           <p>Create Lightning invoice</p>
                         </button>

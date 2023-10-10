@@ -33,12 +33,12 @@ export function ChatsScreen() {
 
   return (
     <div className="grid h-full w-full grid-cols-3">
-      <div className="scrollbar-none col-span-1 h-full overflow-y-auto border-r border-white/5">
+      <div className="col-span-1 h-full overflow-y-auto border-r border-white/5 scrollbar-none">
         <div
           data-tauri-drag-region
           className="flex h-11 w-full shrink-0 items-center border-b border-white/5 px-3"
         >
-          <h3 className="bg-gradient-to-r from-fuchsia-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
+          <h3 className="bg-gradient-to-r from-blue-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
             All chats
           </h3>
         </div>

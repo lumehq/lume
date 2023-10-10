@@ -44,16 +44,16 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="scrollbar-none h-full overflow-y-auto">
+      <div className="h-full overflow-y-auto scrollbar-none">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-zinc-100 px-3 py-3 dark:bg-zinc-900">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <NoteSkeleton />
             </div>
           </div>
         ) : (
           <div className="h-min w-full px-3">
-            <div className="rounded-xl bg-zinc-100 px-3 py-3 dark:bg-zinc-900">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
               <div className="mt-2">{renderKind(data)}</div>
               <NoteActions

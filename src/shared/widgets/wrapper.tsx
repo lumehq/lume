@@ -21,7 +21,7 @@ export function WidgetWrapper({
       minWidth={420}
       minHeight={'100vh'}
       className={twMerge(
-        'h-full border-r border-zinc-100 pb-10 dark:border-zinc-900',
+        'h-full border-r border-neutral-100 pb-10 dark:border-neutral-900',
         className
       )}
       enable={{ right: true }}

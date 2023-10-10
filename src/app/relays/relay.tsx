@@ -79,7 +79,7 @@ export function RelayScreen() {
                       <a
                         href={`mailto:${resolvedRelay.contact}`}
                         target="_blank"
-                        className="underline after:content-['_↗'] hover:text-fuchsia-500"
+                        className="underline after:content-['_↗'] hover:text-blue-500"
                         rel="noreferrer"
                       >
                         mailto:{resolvedRelay.contact}
@@ -92,7 +92,7 @@ export function RelayScreen() {
                       href={resolvedRelay.software}
                       target="_blank"
                       rel="noreferrer"
-                      className="underline after:content-['_↗'] hover:text-fuchsia-500"
+                      className="underline after:content-['_↗'] hover:text-blue-500"
                     >
                       {getSoftwareName(resolvedRelay.software) +
                         ' - ' +
@@ -110,7 +110,7 @@ export function RelayScreen() {
                           href={`https://nips.be/${item}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex aspect-square h-full w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium hover:bg-interor-500"
+                          className="inline-flex aspect-square h-full w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium hover:bg-blue-600"
                         >
                           {item}
                         </a>
@@ -145,7 +145,7 @@ export function RelayScreen() {
                         href={resolvedRelay.payments_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-interor-500 text-sm font-medium hover:bg-interor-600"
+                        className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-blue-500 text-sm font-medium hover:bg-blue-600"
                       >
                         Open payment website
                       </a>

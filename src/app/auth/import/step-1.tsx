@@ -133,7 +133,7 @@ export function ImportStep1Screen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
+              className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none"
             >
               {loading ? (
                 <>

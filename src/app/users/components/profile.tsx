@@ -58,36 +58,36 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="h-full w-full bg-zinc-100 dark:bg-zinc-900" />
+          <div className="h-full w-full bg-neutral-100 dark:bg-neutral-900" />
         )}
       </div>
       <div className="-mt-7 flex w-full flex-col items-center px-5">
         <Image
           src={user.picture || user.image}
           alt={pubkey}
-          className="h-14 w-14 rounded-lg ring-2 ring-zinc-100 dark:ring-zinc-900"
+          className="h-14 w-14 rounded-lg ring-2 ring-neutral-100 dark:ring-neutral-900"
         />
         <div className="mt-2 flex flex-1 flex-col gap-6">
           <div className="flex flex-col items-center gap-1">
             <div className="inline-flex flex-col items-center">
-              <h5 className="text-center text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+              <h5 className="text-center text-xl font-semibold text-neutral-900 dark:text-neutral-100">
                 {user.name || user.display_name || user.displayName || 'No name'}
               </h5>
               {user.nip05 ? (
                 <NIP05
                   pubkey={pubkey}
                   nip05={user?.nip05}
-                  className="max-w-[15rem] truncate text-sm text-zinc-500 dark:text-zinc-400"
+                  className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-400"
                 />
               ) : (
-                <span className="max-w-[15rem] truncate text-sm text-zinc-500 dark:text-zinc-400">
+                <span className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-400">
                   {displayNpub(pubkey, 16)}
                 </span>
               )}
             </div>
             <div className="flex flex-col gap-6">
               {user.about || user.bio ? (
-                <p className="mt-2 max-w-[500px] select-text break-words text-center text-zinc-900 dark:text-zinc-100">
+                <p className="mt-2 max-w-[500px] select-text break-words text-center text-neutral-900 dark:text-neutral-100">
                   {user.about || user.bio}
                 </p>
               ) : (
@@ -101,7 +101,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               <button
                 type="button"
                 onClick={() => unfollowUser(pubkey)}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-200 text-sm font-medium text-zinc-900 backdrop-blur-xl hover:bg-interor-500 hover:text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-interor-500 dark:hover:text-zinc-100"
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
               >
                 Unfollow
               </button>
@@ -109,20 +109,20 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               <button
                 type="button"
                 onClick={() => followUser(pubkey)}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-200 text-sm font-medium text-zinc-900 backdrop-blur-xl hover:bg-interor-500 hover:text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-interor-500 dark:hover:text-zinc-100"
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
               >
                 Follow
               </button>
             )}
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-zinc-200 text-sm font-medium text-zinc-900 backdrop-blur-xl hover:bg-interor-500 hover:text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-interor-500 dark:hover:text-zinc-100"
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
             >
               Message
             </Link>
             {db.account.pubkey === pubkey && (
               <>
-                <span className="mx-2 inline-flex h-4 w-px bg-zinc-200 dark:bg-zinc-800" />
+                <span className="mx-2 inline-flex h-4 w-px bg-neutral-200 dark:bg-neutral-800" />
                 <EditProfileModal />
               </>
             )}

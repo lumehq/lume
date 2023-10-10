@@ -16,7 +16,7 @@ export function NotiMention({ event }: { event: NDKEvent }) {
           <NotiUser pubkey={event.pubkey} />
           <p className="leading-none text-white/50">has mention you · {createdAt}</p>
         </div>
-        <span className="hidden text-sm font-semibold text-fuchsia-500 group-hover:block">
+        <span className="hidden text-sm font-semibold text-blue-500 group-hover:block">
           View
         </span>
       </div>

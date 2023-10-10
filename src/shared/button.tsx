@@ -16,15 +16,15 @@ export function Button({
   switch (preset) {
     case 'small':
       preClass =
-        'w-min h-9 px-4 bg-white/10 backdrop-blur-xl rounded-md text-sm font-medium text-white hover:bg-interor-500';
+        'w-min h-9 px-4 bg-white/10 backdrop-blur-xl rounded-md text-sm font-medium text-white hover:bg-blue-600';
       break;
     case 'publish':
       preClass =
-        'w-min h-9 px-4 bg-interor-500 rounded-md text-sm font-medium text-white hover:bg-interor-600';
+        'w-min h-9 px-4 bg-blue-500 rounded-md text-sm font-medium text-white hover:bg-blue-600';
       break;
     case 'large':
       preClass =
-        'h-11 w-full bg-interor-500 rounded-lg font-medium text-white hover:bg-interor-600';
+        'h-11 w-full bg-blue-500 rounded-lg font-medium text-white hover:bg-blue-600';
       break;
     case 'large-alt':
       preClass =

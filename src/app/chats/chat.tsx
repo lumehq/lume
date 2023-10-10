@@ -71,17 +71,17 @@ export function ChatScreen() {
 
   return (
     <div className="h-full w-full p-3">
-      <div className="rounded-lg bg-zinc-100 backdrop-blur-xl dark:bg-zinc-900">
+      <div className="rounded-lg bg-neutral-100 backdrop-blur-xl dark:bg-neutral-900">
         <div className="flex h-full flex-col justify-between overflow-hidden">
-          <div className="flex h-16 shrink-0 items-center border-b border-zinc-200 px-3 dark:border-zinc-800">
+          <div className="flex h-16 shrink-0 items-center border-b border-neutral-200 px-3 dark:border-neutral-800">
             <User pubkey={pubkey} variant="simple" />
           </div>
           <div className="h-full w-full flex-1 px-3 py-3">
             {status === 'loading' ? (
               <div className="flex h-full w-full items-center justify-center">
                 <div className="flex flex-col items-center gap-1.5">
-                  <LoaderIcon className="h-5 w-5 animate-spin text-zinc-900 dark:text-zinc-100" />
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-300">
+                  <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />
+                  <p className="text-sm font-medium text-neutral-500 dark:text-neutral-300">
                     Loading messages
                   </p>
                 </div>
@@ -89,17 +89,17 @@ export function ChatScreen() {
             ) : data.length === 0 ? (
               <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 transform flex-col gap-1 text-center">
                 <h3 className="mb-2 text-4xl">🙌</h3>
-                <p className="leading-none text-zinc-500 dark:text-zinc-300">
+                <p className="leading-none text-neutral-500 dark:text-neutral-300">
                   You two didn&apos;t talk yet, let&apos;s send first message
                 </p>
               </div>
             ) : (
-              <VList ref={listRef} className="scrollbar-none h-full" mode="reverse">
+              <VList ref={listRef} className="h-full scrollbar-none" reverse>
                 {data.map((message) => renderItem(message))}
               </VList>
             )}
           </div>
-          <div className="shrink-0 rounded-b-lg border-t border-zinc-300 bg-zinc-200 p-3 backdrop-blur-xl dark:border-zinc-700 dark:bg-zinc-800">
+          <div className="shrink-0 rounded-b-lg border-t border-neutral-300 bg-neutral-200 p-3 backdrop-blur-xl dark:border-neutral-700 dark:bg-neutral-800">
             <ChatForm
               receiverPubkey={pubkey}
               userPubkey={db.account.pubkey}

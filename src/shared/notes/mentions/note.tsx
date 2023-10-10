@@ -71,7 +71,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
           <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
             Lume cannot find this post with your current relays, but you can view it via
             njump.me.{' '}
-            <Link to={noteLink} className="text-fuchsia-500">
+            <Link to={noteLink} className="text-blue-500">
               Learn more
             </Link>
           </div>

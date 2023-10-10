@@ -68,7 +68,7 @@ export function UserScreen() {
   );
 
   return (
-    <div className="scrollbar-none relative h-full w-full overflow-y-auto">
+    <div className="relative h-full w-full overflow-y-auto scrollbar-none">
       <div data-tauri-drag-region className="absolute left-0 top-0 h-11 w-full" />
       <UserProfile pubkey={pubkey} />
       <div className="mt-6 h-full w-full border-t border-white/5 px-1.5">
@@ -84,9 +84,9 @@ export function UserScreen() {
             </div>
           ) : data.length === 0 ? (
             <div className="px-3 py-1.5">
-              <div className="rounded-xl bg-zinc-100 px-3 py-6 dark:bg-zinc-900">
+              <div className="rounded-xl bg-neutral-100 px-3 py-6 dark:bg-neutral-900">
                 <div className="flex flex-col items-center gap-4">
-                  <p className="text-center text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  <p className="text-center text-sm font-medium text-neutral-900 dark:text-neutral-100">
                     User doesn&apos;t have any posts in the last 48 hours.
                   </p>
                 </div>

@@ -62,7 +62,7 @@ export function ImportStep3Screen() {
         <div className="flex flex-col gap-2">
           <button
             type="button"
-            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none"
             onClick={() => submit()}
           >
             {loading ? (

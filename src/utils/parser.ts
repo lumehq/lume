@@ -105,6 +105,11 @@ export function parser(eventContent: string) {
         return word.replace(word, `~pub-${decoded.pubkey}~`);
       }
 
+      // lightning invoice
+      if (word.startsWith('lnbc') && word.length > 60) {
+        return word.replace(word, `~lnbc-${word}~`);
+      }
+
       // normal word
       return word;
     });

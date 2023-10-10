@@ -132,7 +132,7 @@ export function CreateStep1Screen() {
           <button
             type="button"
             onClick={() => download()}
-            className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none"
+            className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none"
           >
             {downloaded ? 'Downloaded' : 'Download account keys'}
           </button>

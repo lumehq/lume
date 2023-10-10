@@ -84,14 +84,14 @@ export const User = memo(function User({
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex flex-1 items-baseline gap-2">
-          <h5 className="max-w-[10rem] truncate font-semibold  text-zinc-900 dark:text-zinc-100">
+          <h5 className="max-w-[10rem] truncate font-semibold  text-neutral-900 dark:text-neutral-100">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </h5>
-          <span className="text-zinc-500 dark:text-zinc-300">·</span>
-          <span className="text-zinc-500 dark:text-zinc-300">{createdAt}</span>
+          <span className="text-neutral-500 dark:text-neutral-300">·</span>
+          <span className="text-neutral-500 dark:text-neutral-300">{createdAt}</span>
         </div>
       </div>
     );
@@ -119,7 +119,7 @@ export const User = memo(function User({
         </Avatar.Root>
         <div className="flex h-full flex-col items-start justify-between">
           <div className="flex flex-col items-start gap-1 text-start">
-            <p className="max-w-[15rem] truncate text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            <p className="max-w-[15rem] truncate text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {user?.name || user?.display_name || user?.displayName}
             </p>
             <ReactMarkdown
@@ -137,7 +137,7 @@ export const User = memo(function User({
               <Link
                 to={user?.website}
                 target="_blank"
-                className="inline-flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-100/70"
+                className="inline-flex items-center gap-2 text-sm text-neutral-900 dark:text-neutral-100/70"
               >
                 <WorldIcon className="h-4 w-4" />
                 <p className="max-w-[10rem] truncate">{user?.website}</p>
@@ -170,10 +170,10 @@ export const User = memo(function User({
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex w-full flex-col items-start">
-          <h3 className="max-w-[15rem] truncate font-medium text-zinc-900 dark:text-zinc-100">
+          <h3 className="max-w-[15rem] truncate font-medium text-neutral-900 dark:text-neutral-100">
             {user?.name || user?.display_name || user?.displayName}
           </h3>
-          <p className="max-w-[10rem] truncate text-sm text-zinc-900 dark:text-zinc-100/70">
+          <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/70">
             {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
@@ -250,7 +250,7 @@ export const User = memo(function User({
             </Avatar.Fallback>
           </Avatar.Root>
           <div className="inline-flex items-baseline gap-1">
-            <h5 className="max-w-[10rem] truncate font-medium text-zinc-900 dark:text-zinc-100/80">
+            <h5 className="max-w-[10rem] truncate font-medium text-neutral-900 dark:text-neutral-100/80">
               {user?.name ||
                 user?.display_name ||
                 user?.displayName ||
@@ -284,10 +284,10 @@ export const User = memo(function User({
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex flex-1 flex-col">
-          <h5 className="max-w-[15rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
+          <h5 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
-          <div className="inline-flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-300">
+          <div className="inline-flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-300">
             <span>{createdAt}</span>
             <span>·</span>
             <span>{displayNpub(pubkey, 16)}</span>
@@ -320,19 +320,19 @@ export const User = memo(function User({
           </Avatar.Root>
         </HoverCard.Trigger>
         <div className="flex flex-1 items-center gap-2">
-          <h5 className="max-w-[15rem] truncate font-semibold text-zinc-900 dark:text-zinc-100">
+          <h5 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </h5>
-          <span className="text-zinc-500 dark:text-zinc-300">·</span>
-          <span className="text-zinc-500 dark:text-zinc-300">{createdAt}</span>
+          <span className="text-neutral-500 dark:text-neutral-300">·</span>
+          <span className="text-neutral-500 dark:text-neutral-300">{createdAt}</span>
         </div>
       </div>
       <HoverCard.Portal>
         <HoverCard.Content
-          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl focus:outline-none data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all"
+          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
@@ -365,16 +365,16 @@ export const User = memo(function User({
                   <NIP05
                     pubkey={pubkey}
                     nip05={user?.nip05}
-                    className="max-w-[15rem] truncate text-sm text-zinc-500 dark:text-zinc-300"
+                    className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300"
                   />
                 ) : (
-                  <span className="max-w-[15rem] truncate text-sm text-zinc-500 dark:text-zinc-300">
+                  <span className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300">
                     {displayNpub(pubkey, 16)}
                   </span>
                 )}
               </div>
               <div>
-                <p className="line-clamp-3 break-all text-sm leading-tight text-zinc-900 dark:text-zinc-100">
+                <p className="line-clamp-3 break-all text-sm leading-tight text-neutral-900 dark:text-neutral-100">
                   {user?.about}
                 </p>
               </div>
@@ -383,13 +383,13 @@ export const User = memo(function User({
           <div className="flex items-center gap-2 px-3 py-3">
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-interor-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-blue-600"
             >
               View profile
             </Link>
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-interor-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-blue-600"
             >
               Message
             </Link>

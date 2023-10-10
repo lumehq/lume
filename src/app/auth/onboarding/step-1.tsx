@@ -76,7 +76,7 @@ export function OnboardStep1Screen() {
           add them later.
         </p>
       </div>
-      <div className="scrollbar-none flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4">
+      <div className="flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4 scrollbar-none">
         {status === 'loading' ? (
           <div className="flex h-full w-full items-center justify-center">
             <LoaderIcon className="h-4 w-4 animate-spin text-white" />
@@ -109,7 +109,7 @@ export function OnboardStep1Screen() {
             type="button"
             onClick={submit}
             disabled={loading || follows.length === 0}
-            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-interor-500 px-6 font-medium leading-none text-white hover:bg-interor-600 focus:outline-none disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
           >
             {loading ? (
               <>

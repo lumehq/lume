@@ -24,7 +24,7 @@ export function NoteWrapper({
       <div
         className={twMerge(
           'relative overflow-hidden rounded-xl px-3 py-4',
-          !lighter ? 'bg-zinc-100 dark:bg-zinc-900' : 'bg-transparent'
+          !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
         )}
       >
         <div className="relative">{root && <ChildNote id={root} />}</div>

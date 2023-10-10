@@ -3,9 +3,9 @@ import { WindowTitlebar } from 'tauri-controls';
 
 export function AuthLayout() {
   return (
-    <div className="relative h-screen w-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="relative h-screen w-screen bg-neutral-50 dark:bg-neutral-950">
       <WindowTitlebar />
-      <div className="bg-zinc-50 dark:bg-zinc-950">
+      <div className="bg-neutral-50 dark:bg-neutral-950">
         <Outlet />
       </div>
     </div>

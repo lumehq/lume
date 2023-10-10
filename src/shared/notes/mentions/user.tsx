@@ -30,7 +30,7 @@ export const MentionUser = memo(function MentionUser({ pubkey }: { pubkey: strin
           content: pubkey,
         })
       }
-      className="break-words text-interor-500 hover:text-interor-600"
+      className="break-words text-blue-500 hover:text-blue-500"
     >
       {'@' +
         (user?.name ||

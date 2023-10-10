@@ -65,7 +65,7 @@ export function Repost({
         <div
           className={twMerge(
             'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
-            !lighter ? 'bg-zinc-100 dark:bg-zinc-900' : 'bg-transparent'
+            !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
           )}
         >
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
@@ -104,7 +104,7 @@ export function Repost({
         <div
           className={twMerge(
             'relative overflow-hidden rounded-xl px-3 py-3',
-            !lighter ? 'bg-zinc-100 dark:bg-zinc-900' : 'bg-transparent'
+            !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
           )}
         >
           <div className="relative flex flex-col">
@@ -123,7 +123,7 @@ export function Repost({
                   <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
                     Lume cannot find this post with your current relays, but you can view
                     it via njump.me.{' '}
-                    <Link to={noteLink} className="text-fuchsia-500">
+                    <Link to={noteLink} className="text-blue-500">
                       Learn more
                     </Link>
                   </div>
@@ -142,7 +142,7 @@ export function Repost({
       <div
         className={twMerge(
           'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
-          !lighter ? 'bg-zinc-100 dark:bg-zinc-900' : 'bg-transparent'
+          !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
         )}
       >
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />

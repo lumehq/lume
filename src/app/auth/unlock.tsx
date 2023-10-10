@@ -95,7 +95,7 @@ export function UnlockScreen() {
               {...register('password', { required: true, minLength: 4 })}
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter password"
-              className="relative h-12 w-full rounded-lg bg-zinc-300 py-1 text-center tracking-widest text-zinc-900 !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+              className="relative h-12 w-full rounded-lg bg-neutral-300 py-1 text-center tracking-widest text-neutral-900 !outline-none backdrop-blur-xl placeholder:tracking-normal placeholder:text-neutral-500 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500"
             />
             <button
               type="button"
@@ -113,7 +113,7 @@ export function UnlockScreen() {
             <button
               type="submit"
               disabled={!isDirty || !isValid}
-              className="inline-flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-interor-600 px-6 text-white hover:bg-interor-700 focus:outline-none disabled:opacity-50"
+              className="inline-flex h-10 w-full items-center justify-between gap-2 rounded-lg bg-blue-500 px-6 text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
             >
               {loading ? (
                 <>

@@ -31,7 +31,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
               <p className="text-sm text-white/50">
                 Can&apos;t fetch open graph, click to open webpage
               </p>
-              <span className="text-sm leading-none text-zinc-900 dark:text-zinc-100">
+              <span className="text-sm leading-none text-neutral-900 dark:text-neutral-100">
                 {domain.hostname}
               </span>
             </div>
@@ -48,15 +48,15 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                 />
               )}
               <div className="flex flex-col gap-1 border-t border-white/5 px-3 py-3">
-                <h5 className="line-clamp-1 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                <h5 className="line-clamp-1 text-base font-semibold text-neutral-900 dark:text-neutral-100">
                   {data.title}
                 </h5>
                 {data.description && (
-                  <p className="line-clamp-3 break-all text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="line-clamp-3 break-all text-sm text-neutral-500 dark:text-neutral-400">
                     {data.description}
                   </p>
                 )}
-                <span className="mt-2.5 text-sm text-zinc-500 dark:text-zinc-400">
+                <span className="mt-2.5 text-sm text-neutral-500 dark:text-neutral-400">
                   {domain.hostname}
                 </span>
               </div>

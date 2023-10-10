@@ -26,15 +26,15 @@ export function ChatMessage({
       className={twMerge(
         'my-2 w-max max-w-[400px] rounded-t-xl px-3 py-3',
         self
-          ? 'ml-auto rounded-l-xl bg-interor-500'
-          : 'rounded-r-xl bg-zinc-200 dark:bg-zinc-800'
+          ? 'ml-auto rounded-l-xl bg-blue-500'
+          : 'rounded-r-xl bg-neutral-200 dark:bg-neutral-800'
       )}
     >
       {!richContent ? (
-        <p className="text-zinc-900 dark:text-zinc-100">Decrypting...</p>
+        <p className="text-neutral-900 dark:text-neutral-100">Decrypting...</p>
       ) : (
         <div>
-          <p className="select-text whitespace-pre-line text-zinc-900 dark:text-zinc-100">
+          <p className="select-text whitespace-pre-line text-neutral-900 dark:text-neutral-100">
             {richContent.parsed}
           </p>
           <div>
