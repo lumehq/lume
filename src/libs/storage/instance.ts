@@ -1,8 +1,7 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { BaseDirectory, removeFile } from '@tauri-apps/plugin-fs';
+import { invoke } from '@tauri-apps/api';
 import { Platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
-import { Stronghold } from '@tauri-apps/plugin-stronghold';
 
 import { FULL_RELAYS } from '@stores/constants';
 
@@ -10,52 +9,22 @@ import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
-  public secureDB: Stronghold;
   public account: Account | null;
   public platform: Platform | null;
 
-  constructor(sqlite: Database, platform: Platform, stronghold?: Stronghold) {
+  constructor(sqlite: Database, platform: Platform) {
     this.db = sqlite;
-    this.secureDB = stronghold ?? undefined;
     this.account = null;
     this.platform = platform;
   }
 
-  private async getSecureClient() {
-    try {
-      return await this.secureDB.loadClient('lume');
-    } catch {
-      return await this.secureDB.createClient('lume');
-    }
+  public async secureSave(value: string, key?: string) {
+    await invoke('secure_save', { key: this.account.pubkey ?? key, value });
   }
 
-  public async secureSave(key: string, value: string) {
-    if (!this.secureDB) throw new Error("Stronghold isn't initialize");
-
-    const client = await this.getSecureClient();
-    if (!client) throw new Error('Cannot get stronghold client');
-
-    const store = client.getStore();
-    await store.insert(key, Array.from(new TextEncoder().encode(value)));
-    await this.secureDB.save();
-  }
-
-  public async secureLoad(key: string) {
-    if (!this.secureDB) throw new Error("Stronghold isn't initialize");
-
-    const client = await this.getSecureClient();
-    if (!client) throw new Error('Cannot get stronghold client');
-
-    const store = client.getStore();
-    const value = await store.get(key);
-    if (!value) return null;
-
-    const decoded = new TextDecoder().decode(new Uint8Array(value));
-    return decoded;
-  }
-
-  public async secureReset() {
-    return await removeFile('lume.stronghold', { dir: BaseDirectory.AppConfig });
+  public async secureLoad(key?: string) {
+    const value = invoke('secure_load', { key: this.account.pubkey ?? key });
+    return value;
   }
 
   public async checkAccount() {

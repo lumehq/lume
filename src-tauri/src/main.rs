@@ -3,6 +3,7 @@
   windows_subsystem = "windows"
 )]
 
+use keyring::Entry;
 use std::time::Duration;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
@@ -81,7 +82,7 @@ async fn opengraph(url: String) -> OpenGraphResponse {
 }
 
 #[tauri::command]
-async fn close_splashscreen(window: tauri::Window) {
+fn close_splashscreen(window: tauri::Window) {
   // Close splashscreen
   if let Some(splashscreen) = window.get_window("splashscreen") {
     splashscreen.close().unwrap();
@@ -90,21 +91,22 @@ async fn close_splashscreen(window: tauri::Window) {
   window.get_window("main").unwrap().show().unwrap();
 }
 
+#[tauri::command]
+fn secure_save(key: String, value: String) -> Result<(), ()> {
+  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let _ = entry.set_password(&value);
+  Ok(())
+}
+
+#[tauri::command]
+fn secure_load(key: String) -> Result<String, ()> {
+  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let password = entry.get_password().unwrap();
+  Ok(password)
+}
+
 fn main() {
   tauri::Builder::default()
-    /*
-    .setup(|app| {
-      let salt_path = app
-        .path()
-        .app_local_data_dir()
-        .expect("could not resolve app local data path")
-        .join(".salt.txt");
-      app
-        .handle()
-        .plugin(tauri_plugin_stronghold::Builder::with_argon2(&salt_path).build())?;
-      Ok(())
-    })
-    */
     .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
@@ -234,28 +236,6 @@ fn main() {
         )
         .build(),
     )
-    .plugin(
-      tauri_plugin_stronghold::Builder::new(|password| {
-        let config = argon2::Config {
-          lanes: 2,
-          mem_cost: 50_000,
-          time_cost: 30,
-          thread_mode: argon2::ThreadMode::from_threads(2),
-          variant: argon2::Variant::Argon2id,
-          ..Default::default()
-        };
-
-        let key = argon2::hash_raw(
-          password.as_ref(),
-          b"LUME_NEED_RUST_DEVELOPER_HELP_MAKE_SALT_RANDOM",
-          &config,
-        )
-        .expect("failed to hash password");
-
-        key.to_vec()
-      })
-      .build(),
-    )
     .plugin(tauri_plugin_autostart::init(
       MacosLauncher::LaunchAgent,
       Some(vec!["--flag1", "--flag2"]),
@@ -268,7 +248,12 @@ fn main() {
     }))
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_store::Builder::default().build())
-    .invoke_handler(tauri::generate_handler![close_splashscreen, opengraph])
+    .invoke_handler(tauri::generate_handler![
+      close_splashscreen,
+      opengraph,
+      secure_save,
+      secure_load
+    ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

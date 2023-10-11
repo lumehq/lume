@@ -32,7 +32,6 @@ tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace"
 tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v2", features = [
@@ -43,6 +42,7 @@ sqlx-cli = { version = "0.7.0", default-features = false, features = [
 ] }
 rust-argon2 = "1.0"
 webpage = { version = "1.6.0", features = ["serde"] }
+keyring = "2"
 
 [features]
 # by default Tauri runs in production mode

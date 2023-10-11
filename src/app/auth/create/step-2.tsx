@@ -1,5 +1,3 @@
-import { appConfigDir } from '@tauri-apps/api/path';
-import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { useEffect, useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -60,11 +58,6 @@ export function CreateStep2Screen() {
   const onSubmit = async (data: { [x: string]: string }) => {
     setLoading(true);
     if (data.password.length > 3) {
-      const dir = await appConfigDir();
-      const stronghold = await Stronghold.load(`${dir}lume.stronghold`, data.password);
-
-      if (!db.secureDB) db.secureDB = stronghold;
-
       // save privkey to secure storage
       await db.secureSave(pubkey, privkey);
 

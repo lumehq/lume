@@ -28,7 +28,6 @@ export interface Account extends NDKUserProfile {
   follows: null | string[];
   network: null | string[];
   is_active: number;
-  privkey?: string; // deprecated
   last_login_at: number;
 }
 
