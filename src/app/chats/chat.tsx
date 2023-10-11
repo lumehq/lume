@@ -94,7 +94,12 @@ export function ChatScreen() {
                 </p>
               </div>
             ) : (
-              <VList ref={listRef} className="h-full scrollbar-none" reverse>
+              <VList
+                ref={listRef}
+                className="h-full scrollbar-none"
+                mode="reverse"
+                shift={true}
+              >
                 {data.map((message) => renderItem(message))}
               </VList>
             )}
