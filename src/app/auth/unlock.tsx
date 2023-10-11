@@ -2,7 +2,7 @@ import { appConfigDir } from '@tauri-apps/api/path';
 import { Stronghold } from '@tauri-apps/plugin-stronghold';
 import { useState } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -33,7 +33,6 @@ export function UnlockScreen() {
   const navigate = useNavigate();
   const setPrivkey = useStronghold((state) => state.setPrivkey);
   const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
-  const resetStronghold = useStronghold((state) => state.reset);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,7 +42,7 @@ export function UnlockScreen() {
     register,
     setError,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { isDirty, isValid },
   } = useForm<FormValues>({ resolver });
 
   const onSubmit = async (data: { [x: string]: string }) => {
@@ -69,15 +68,6 @@ export function UnlockScreen() {
         message: e,
       });
     }
-  };
-
-  const logout = async () => {
-    // remove account
-    db.accountLogout();
-    // reset stronghold
-    resetStronghold();
-    // redirect to welcome screen
-    navigate('/auth/welcome');
   };
 
   return (

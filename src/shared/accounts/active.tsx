@@ -50,7 +50,7 @@ export function ActiveAccount() {
 
   if (status === 'loading') {
     return (
-      <div className="aspect-square h-full w-full animate-pulse rounded-lg bg-white/10" />
+      <div className="aspect-square h-auto w-full animate-pulse rounded-lg bg-white/10" />
     );
   }
 
@@ -60,7 +60,7 @@ export function ActiveAccount() {
         <Image
           src={user?.picture || user?.image}
           alt={db.account.npub}
-          className="aspect-square h-full w-full rounded-md"
+          className="aspect-square h-auto w-full rounded-md"
         />
         <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-neutral-100 dark:ring-neutral-900" />
       </Link>

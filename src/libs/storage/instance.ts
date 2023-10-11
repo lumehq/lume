@@ -14,37 +14,39 @@ export class LumeStorage {
   public account: Account | null;
   public platform: Platform | null;
 
-  constructor(sqlite: Database, platform?: Platform, stronghold?: Stronghold) {
+  constructor(sqlite: Database, platform: Platform, stronghold?: Stronghold) {
     this.db = sqlite;
     this.secureDB = stronghold ?? undefined;
     this.account = null;
-    this.platform = platform ?? undefined;
+    this.platform = platform;
   }
 
-  private async getSecureClient(key?: string) {
+  private async getSecureClient() {
     try {
-      return await this.secureDB.loadClient(key ?? 'lume');
+      return await this.secureDB.loadClient('lume');
     } catch {
-      return await this.secureDB.createClient(key ?? 'lume');
+      return await this.secureDB.createClient('lume');
     }
   }
 
-  public async secureSave(key: string, value: string, clientKey?: string) {
+  public async secureSave(key: string, value: string) {
     if (!this.secureDB) throw new Error("Stronghold isn't initialize");
 
-    const client = await this.getSecureClient(clientKey);
-    const store = client.getStore();
+    const client = await this.getSecureClient();
+    if (!client) throw new Error('Cannot get stronghold client');
 
+    const store = client.getStore();
     await store.insert(key, Array.from(new TextEncoder().encode(value)));
     await this.secureDB.save();
   }
 
-  public async secureLoad(key: string, clientKey?: string) {
+  public async secureLoad(key: string) {
     if (!this.secureDB) throw new Error("Stronghold isn't initialize");
 
-    const client = await this.getSecureClient(clientKey);
-    const store = client.getStore();
+    const client = await this.getSecureClient();
+    if (!client) throw new Error('Cannot get stronghold client');
 
+    const store = client.getStore();
     const value = await store.get(key);
     if (!value) return null;
 

@@ -5,7 +5,7 @@
       {
         "width": 300,
         "height": 300,
-        "decorations": false,
+        "decorations": true,
         "title": "Lume",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
@@ -27,7 +27,7 @@
         "hiddenTitle": true,
         "visible": false,
         "fileDropEnabled": true,
-        "decorations": false,
+        "decorations": true,
         "transparent": true,
         "windowEffects": {
           "effects": ["hudWindow"]

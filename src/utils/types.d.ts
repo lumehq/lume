@@ -1,5 +1,5 @@
-import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
-import { Response } from '@tauri-apps/plugin-http';
+import { type NDKEvent, type NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { type Response } from '@tauri-apps/plugin-http';
 
 export interface RichContent {
   parsed: string;
@@ -66,12 +66,6 @@ export interface Chats {
   tags: string[][];
   created_at: number;
   new_messages?: number;
-}
-
-export interface Settings {
-  id: string;
-  key: string;
-  value: string;
 }
 
 export interface Relays {

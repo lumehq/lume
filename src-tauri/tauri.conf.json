@@ -83,6 +83,7 @@
       }
     },
     "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost",
       "dangerousRemoteDomainIpcAccess": [
         {
           "domain": "nwc.getalby.com",
@@ -92,6 +93,7 @@
           ]
         }
       ]
-    }
+    },
+    "macOSPrivateApi": true
   }
 }

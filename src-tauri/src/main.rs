@@ -4,7 +4,7 @@
 )]
 
 use std::time::Duration;
-use tauri::{Manager};
+use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};
@@ -92,6 +92,19 @@ async fn close_splashscreen(window: tauri::Window) {
 
 fn main() {
   tauri::Builder::default()
+    /*
+    .setup(|app| {
+      let salt_path = app
+        .path()
+        .app_local_data_dir()
+        .expect("could not resolve app local data path")
+        .join(".salt.txt");
+      app
+        .handle()
+        .plugin(tauri_plugin_stronghold::Builder::with_argon2(&salt_path).build())?;
+      Ok(())
+    })
+    */
     .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())

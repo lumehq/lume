@@ -110,7 +110,7 @@ export function RelayScreen() {
                           href={`https://nips.be/${item}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex aspect-square h-full w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium hover:bg-blue-600"
+                          className="inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium hover:bg-blue-600"
                         >
                           {item}
                         </a>
