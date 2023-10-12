@@ -27,23 +27,14 @@ export default function App() {
     try {
       const totalAccount = await db.checkAccount();
 
-      const stronghold = sessionStorage.getItem('stronghold');
-      const privkey = JSON.parse(stronghold).state.privkey || null;
-
       const onboarding = localStorage.getItem('onboarding');
       const step = JSON.parse(onboarding).state.step || null;
 
-      if (totalAccount === 0) {
-        return redirect('/auth/welcome');
-      } else {
-        if (step) {
-          return redirect(step);
-        }
+      // redirect to welcome screen if none user exist
+      if (totalAccount === 0) return redirect('/auth/welcome');
 
-        if (!privkey) {
-          return redirect('/auth/unlock');
-        }
-      }
+      // restart onboarding process
+      if (step) return redirect(step);
 
       return null;
     } catch (e) {
@@ -204,13 +195,6 @@ export default function App() {
                 return { Component: ImportStep2Screen };
               },
             },
-            {
-              path: 'step-3',
-              async lazy() {
-                const { ImportStep3Screen } = await import('@app/auth/import/step-3');
-                return { Component: ImportStep3Screen };
-              },
-            },
           ],
         },
         {
@@ -230,13 +214,6 @@ export default function App() {
               async lazy() {
                 const { CreateStep2Screen } = await import('@app/auth/create/step-2');
                 return { Component: CreateStep2Screen };
-              },
-            },
-            {
-              path: 'step-3',
-              async lazy() {
-                const { CreateStep3Screen } = await import('@app/auth/create/step-3');
-                return { Component: CreateStep3Screen };
               },
             },
           ],
@@ -271,34 +248,6 @@ export default function App() {
           async lazy() {
             const { CompleteScreen } = await import('@app/auth/complete');
             return { Component: CompleteScreen };
-          },
-        },
-        {
-          path: 'unlock',
-          async lazy() {
-            const { UnlockScreen } = await import('@app/auth/unlock');
-            return { Component: UnlockScreen };
-          },
-        },
-        {
-          path: 'lock',
-          async lazy() {
-            const { LockScreen } = await import('@app/auth/lock');
-            return { Component: LockScreen };
-          },
-        },
-        {
-          path: 'migrate',
-          async lazy() {
-            const { MigrateScreen } = await import('@app/auth/migrate');
-            return { Component: MigrateScreen };
-          },
-        },
-        {
-          path: 'reset',
-          async lazy() {
-            const { ResetScreen } = await import('@app/auth/reset');
-            return { Component: ResetScreen };
           },
         },
       ],

@@ -13,13 +13,10 @@ import { useStorage } from '@libs/storage/provider';
 import { LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
-import { useStronghold } from '@stores/stronghold';
-
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatScreen() {
   const listRef = useRef<VListHandle>(null);
-  const userPrivkey = useStronghold((state) => state.privkey);
 
   const { db } = useStorage();
   const { ndk } = useNDK();
@@ -35,7 +32,7 @@ export function ChatScreen() {
         <ChatMessage
           message={message}
           userPubkey={db.account.pubkey}
-          userPrivkey={userPrivkey}
+          userPrivkey={''}
           self={message.pubkey === db.account.pubkey}
         />
       );
@@ -108,7 +105,7 @@ export function ChatScreen() {
             <ChatForm
               receiverPubkey={pubkey}
               userPubkey={db.account.pubkey}
-              userPrivkey={userPrivkey}
+              userPrivkey={''}
             />
           </div>
         </div>

@@ -18,7 +18,7 @@ import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 import { EventLoader, WidgetWrapper } from '@shared/widgets';
 
-import { useStronghold } from '@stores/stronghold';
+import { useWidgets } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { toRawEvent } from '@utils/rawEvent';
@@ -36,7 +36,7 @@ export function LocalNetworkWidget() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const isFetched = useStronghold((state) => state.isFetched);
+  const isFetched = useWidgets((state) => state.isFetched);
   const dbEvents = useMemo(
     () => (data ? data.pages.flatMap((d: { data: DBEvent[] }) => d.data) : []),
     [data]

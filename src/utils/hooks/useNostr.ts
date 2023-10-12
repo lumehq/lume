@@ -16,8 +16,6 @@ import { useMemo } from 'react';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { useStronghold } from '@stores/stronghold';
-
 import { nHoursAgo } from '@utils/date';
 import { getMultipleRandom } from '@utils/transform';
 import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
@@ -26,7 +24,6 @@ export function useNostr() {
   const { db } = useStorage();
   const { ndk, relayUrls, fetcher } = useNDK();
 
-  const privkey = useStronghold((state) => state.privkey);
   const subManager = useMemo(
     () =>
       new LRUCache<string, NDKSubscription, void>({
@@ -41,6 +38,7 @@ export function useNostr() {
     callback: (event: NDKEvent) => void,
     groupable?: boolean
   ) => {
+    console.info(ndk);
     if (!ndk) throw new Error('NDK instance not found');
 
     const subEvent = ndk.subscribe(filter, {
@@ -347,7 +345,7 @@ export function useNostr() {
     kind: NDKKind | number;
     tags: string[][];
   }): Promise<NDKEvent> => {
-    if (!privkey) throw new Error('Private key not found');
+    const privkey: string = await db.secureLoad();
 
     const event = new NDKEvent(ndk);
     const signer = new NDKPrivateKeySigner(privkey);
@@ -365,7 +363,7 @@ export function useNostr() {
   };
 
   const createZap = async (event: NDKEvent, amount: number, message?: string) => {
-    if (!privkey) throw new Error('Private key not found');
+    const privkey: string = await db.secureLoad();
 
     if (!ndk.signer) {
       const signer = new NDKPrivateKeySigner(privkey);

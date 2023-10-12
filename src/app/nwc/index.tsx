@@ -1,23 +1,14 @@
 import { NWCAlby } from '@app/nwc/components/alby';
 import { NWCOther } from '@app/nwc/components/other';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { CheckCircleIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 export function NWCScreen() {
-  const { db } = useStorage();
-
-  const [walletConnectURL, setWalletConnectURL] = useStronghold((state) => [
-    state.walletConnectURL,
-    state.setWalletConnectURL,
-  ]);
+  const walletConnectURL = 'test';
 
   const remove = async () => {
-    setWalletConnectURL('');
-    await db.secureSave('walletConnectURL', '', 'nwc');
+    // setWalletConnectURL('');
+    // await db.secureSave('walletConnectURL', '', 'nwc');
   };
 
   return (

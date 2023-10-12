@@ -5,15 +5,13 @@ import { useStorage } from '@libs/storage/provider';
 
 import { EyeOffIcon, EyeOnIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 export function AccountSettingsScreen() {
   const { db } = useStorage();
 
   const [privType, setPrivType] = useState('password');
   const [nsecType, setNsecType] = useState('password');
 
-  const privkey = useStronghold((state) => state.privkey);
+  const privkey = 'todo';
   const nsec = useMemo(() => nip19.nsecEncode(privkey), [privkey]);
 
   const showPrivkey = () => {

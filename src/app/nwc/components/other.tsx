@@ -6,8 +6,6 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CancelIcon, LoaderIcon, WorldIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 type FormValues = {
   uri: string;
 };
@@ -38,8 +36,6 @@ export function NWCOther() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
 
-  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
-
   const onSubmit = async (data: { [x: string]: string }) => {
     try {
       if (!data.uri.startsWith('nostr+walletconnect:')) {
@@ -57,8 +53,7 @@ export function NWCOther() {
       const params = new URLSearchParams(uriObj.search);
 
       if (params.has('relay') && params.has('secret')) {
-        await db.secureSave('walletConnectURL', data.uri, 'nwc');
-        setWalletConnectURL(data.uri);
+        await db.secureSave('nwc', data.uri);
         setIsloading(false);
         setIsOpen(false);
       }
@@ -95,7 +90,7 @@ export function NWCOther() {
           </button>
         </Dialog.Trigger>
       </div>
-      <Dialog.Portal className="relative z-10">
+      <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">

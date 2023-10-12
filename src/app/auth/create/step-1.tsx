@@ -11,13 +11,11 @@ import { useStorage } from '@libs/storage/provider';
 import { CopyIcon } from '@shared/icons';
 
 import { useOnboarding } from '@stores/onboarding';
-import { useStronghold } from '@stores/stronghold';
 
 export function CreateStep1Screen() {
   const { db } = useStorage();
 
   const navigate = useNavigate();
-  const setPrivkey = useStronghold((state) => state.setPrivkey);
   const setTempPrivkey = useOnboarding((state) => state.setTempPrivkey);
   const setPubkey = useOnboarding((state) => state.setPubkey);
   const setStep = useOnboarding((state) => state.setStep);
@@ -67,7 +65,6 @@ export function CreateStep1Screen() {
     setLoading(true);
 
     // update state
-    setPrivkey(privkey);
     setTempPrivkey(privkey); // only use if user close app and reopen it
     setPubkey(pubkey);
 

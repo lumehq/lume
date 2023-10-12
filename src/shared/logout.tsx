@@ -5,19 +5,14 @@ import { useStorage } from '@libs/storage/provider';
 
 import { LogoutIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 export function Logout() {
   const { db } = useStorage();
 
   const navigate = useNavigate();
-  const resetStronghold = useStronghold((state) => state.reset);
 
   const logout = async () => {
     // remove account
     db.accountLogout();
-    // clear privkey in session storage
-    resetStronghold();
     // redirect to welcome screen
     navigate('/auth/welcome');
   };

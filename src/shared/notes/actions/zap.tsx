@@ -8,8 +8,6 @@ import CurrencyInput from 'react-currency-input-field';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 import { useEvent } from '@utils/hooks/useEvent';
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -21,6 +19,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const { user } = useProfile(pubkey);
   const { data: event } = useEvent(id);
 
+  const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
   const [amount, setAmount] = useState<string>('21');
   const [zapMessage, setZapMessage] = useState<string>('');
   const [invoice, setInvoice] = useState<null | string>(null);
@@ -28,7 +27,6 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const walletConnectURL = useStronghold((state) => state.walletConnectURL);
   const nwc = useRef(null);
 
   const createZapRequest = async () => {
@@ -80,6 +78,12 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   useEffect(() => {
+    async function getWalletConnectURL() {
+      // const uri: string = await invoke('secure_load', { key: 'nwc' });
+      setWalletConnectURL('todo');
+    }
+    getWalletConnectURL();
+
     return () => {
       setAmount('21');
       setZapMessage('');

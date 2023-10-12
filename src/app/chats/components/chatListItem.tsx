@@ -9,8 +9,6 @@ import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { useStronghold } from '@stores/stronghold';
-
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -19,8 +17,7 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
   const { db } = useStorage();
   const { status, user } = useProfile(event.pubkey);
 
-  const privkey = useStronghold((state) => state.privkey);
-  const decryptedContent = useDecryptMessage(event, db.account.pubkey, privkey);
+  const decryptedContent = useDecryptMessage(event, db.account.pubkey);
 
   const createdAt = formatCreatedAt(event.created_at, true);
   const svgURI =

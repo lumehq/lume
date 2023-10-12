@@ -7,10 +7,12 @@ import { Widget, WidgetGroup } from '@utils/types';
 
 interface WidgetState {
   widgets: null | Array<Widget>;
+  isFetched: boolean;
   fetchWidgets: (db: LumeStorage) => void;
   setWidget: (db: LumeStorage, { kind, title, content }: Widget) => void;
   removeWidget: (db: LumeStorage, id: string) => void;
   reorderWidget: (id: string, position: number) => void;
+  setIsFetched: () => void;
 }
 
 export const WidgetKinds = {
@@ -120,6 +122,7 @@ export const useWidgets = create<WidgetState>()(
   persist(
     (set) => ({
       widgets: null,
+      isFetched: false,
       fetchWidgets: async (db: LumeStorage) => {
         const dbWidgets = await db.getWidgets();
         console.log('db widgets: ', dbWidgets);
@@ -142,7 +145,7 @@ export const useWidgets = create<WidgetState>()(
         await db.removeWidget(id);
         set((state) => ({ widgets: state.widgets.filter((widget) => widget.id !== id) }));
       },
-      reorderWidget: (id: string, position: number) =>
+      reorderWidget: (id: string, position: number) => {
         set((state) => {
           const widgets = [...state.widgets];
           const widget = widgets.find((widget) => widget.id === id);
@@ -153,7 +156,11 @@ export const useWidgets = create<WidgetState>()(
           widgets.splice(position, 0, widget);
 
           return { widgets };
-        }),
+        });
+      },
+      setIsFetched: () => {
+        set({ isFetched: true });
+      },
     }),
     {
       name: 'widgets',

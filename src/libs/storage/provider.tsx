@@ -1,3 +1,4 @@
+import { appConfigDir } from '@tauri-apps/api/path';
 import { message } from '@tauri-apps/plugin-dialog';
 import { platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
@@ -20,10 +21,13 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
     try {
       const sqlite = await Database.load('sqlite:lume.db');
       const platformName = await platform();
-      const lumeStorage = new LumeStorage(sqlite, platformName);
+      const dir = await appConfigDir();
 
+      const lumeStorage = new LumeStorage(sqlite, platformName);
       if (!lumeStorage.account) await lumeStorage.getActiveAccount();
+
       setDB(lumeStorage);
+      console.info(dir);
     } catch (e) {
       await message(`Cannot initialize database: ${e}`, {
         title: 'Lume',

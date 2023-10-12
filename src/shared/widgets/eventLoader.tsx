@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { useStronghold } from '@stores/stronghold';
+import { useWidgets } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
@@ -11,10 +11,10 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
   const { db } = useStorage();
   const { getAllEventsSinceLastLogin } = useNostr();
 
-  const setIsFetched = useStronghold((state) => state.setIsFetched);
-  const queryClient = useQueryClient();
-
   const [progress, setProgress] = useState(0);
+
+  const queryClient = useQueryClient();
+  const setIsFetched = useWidgets((state) => state.setIsFetched);
 
   useEffect(() => {
     async function getEvents() {

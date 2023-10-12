@@ -1,7 +1,6 @@
 import { webln } from '@getalby/sdk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { message } from '@tauri-apps/plugin-dialog';
-import { WebviewWindow } from '@tauri-apps/plugin-window';
 import { useState } from 'react';
 
 import { useStorage } from '@libs/storage/provider';
@@ -14,16 +13,12 @@ import {
   LoaderIcon,
 } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 export function NWCAlby() {
   const { db } = useStorage();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-
-  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
 
   const initAlby = async () => {
     try {
@@ -36,6 +31,7 @@ export function NWCAlby() {
       const authURL = provider.getAuthorizationUrl({ name: 'Lume' });
 
       // open auth window
+      /*
       const webview = new WebviewWindow('alby', {
         title: 'Connect Alby',
         url: authURL.href,
@@ -45,11 +41,11 @@ export function NWCAlby() {
       });
 
       webview.listen('tauri://close-requested', async () => {
-        await db.secureSave('walletConnectURL', walletConnectURL, 'nwc');
-        setWalletConnectURL(walletConnectURL);
+        await db.secureSave('nwc', walletConnectURL);
         setIsConnected(true);
         setIsloading(false);
       });
+      */
     } catch (e) {
       setIsloading(false);
       await message(e.toString(), { title: 'Connect Alby', type: 'error' });

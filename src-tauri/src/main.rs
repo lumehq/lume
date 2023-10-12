@@ -99,10 +99,13 @@ fn secure_save(key: String, value: String) -> Result<(), ()> {
 }
 
 #[tauri::command]
-fn secure_load(key: String) -> Result<String, ()> {
+fn secure_load(key: String) -> Result<String, String> {
   let entry = Entry::new("lume", &key).expect("Failed to create entry");
-  let password = entry.get_password().unwrap();
-  Ok(password)
+  if let Ok(password) = entry.get_password() {
+    Ok(password)
+  } else {
+    Err("not found".to_string())
+  }
 }
 
 fn main() {

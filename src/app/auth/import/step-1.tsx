@@ -9,7 +9,6 @@ import { EyeOffIcon, EyeOnIcon, LoaderIcon } from '@shared/icons';
 import { ArrowRightCircleIcon } from '@shared/icons/arrowRightCircle';
 
 import { useOnboarding } from '@stores/onboarding';
-import { useStronghold } from '@stores/stronghold';
 
 type FormValues = {
   privkey: string;
@@ -31,13 +30,14 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 export function ImportStep1Screen() {
   const navigate = useNavigate();
-  const setPrivkey = useStronghold((state) => state.setPrivkey);
-  const setTempPubkey = useOnboarding((state) => state.setTempPrivkey);
-  const setPubkey = useOnboarding((state) => state.setPubkey);
-  const setStep = useOnboarding((state) => state.setStep);
 
   const [loading, setLoading] = useState(false);
   const [passwordInput, setPasswordInput] = useState('password');
+  const [setStep, setPubkey, setTempPrivkey] = useOnboarding((state) => [
+    state.setStep,
+    state.setPubkey,
+    state.setTempPrivkey,
+  ]);
 
   const { db } = useStorage();
   const {
@@ -60,8 +60,7 @@ export function ImportStep1Screen() {
         const pubkey = getPublicKey(privkey);
         const npub = nip19.npubEncode(pubkey);
 
-        setPrivkey(privkey);
-        setTempPubkey(privkey); // only use if user close app and reopen it
+        setTempPrivkey(privkey);
         setPubkey(pubkey);
 
         // add account to local database
