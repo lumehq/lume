@@ -10,7 +10,12 @@ export function AppLayout() {
   const { db } = useStorage();
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
+    <div
+      className={twMerge(
+        'flex h-screen w-screen flex-col',
+        db.platform !== 'macos' ? 'bg-neutral-50 dark:bg-neutral-950' : ''
+      )}
+    >
       {db.platform !== 'macos' ? (
         <WindowTitlebar />
       ) : (

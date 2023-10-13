@@ -7,17 +7,13 @@ import { twMerge } from 'tailwind-merge';
 
 import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEvent }) {
-  const { db } = useStorage();
   const { status, user } = useProfile(event.pubkey);
-
-  const decryptedContent = useDecryptMessage(event, db.account.pubkey);
+  const decryptedContent = useDecryptMessage(event);
 
   const createdAt = formatCreatedAt(event.created_at, true);
   const svgURI =

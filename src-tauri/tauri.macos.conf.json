@@ -17,7 +17,7 @@
         "decorations": true,
         "transparent": true,
         "windowEffects": {
-          "effects": ["hudWindow"]
+          "effects": ["sidebar"]
         }
       }
     ]
