@@ -38,7 +38,7 @@ export function ChatsScreen() {
           data-tauri-drag-region
           className="flex h-11 w-full shrink-0 items-center border-b border-white/5 px-3"
         >
-          <h3 className="bg-gradient-to-r from-blue-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
+          <h3 className="bg-gradient-to-r from-blue-400 via-red-400 to-orange-500 bg-clip-text font-semibold text-transparent dark:from-blue-200 dark:via-red-200 dark:to-orange-300">
             All chats
           </h3>
         </div>
@@ -46,8 +46,10 @@ export function ChatsScreen() {
           {status === 'loading' ? (
             <div className="flex h-full w-full items-center justify-center pb-16">
               <div className="inline-flex flex-col items-center justify-center gap-2">
-                <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-                <h5 className="text-white/50">Loading messages...</h5>
+                <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />
+                <h5 className="text-neutral-900 dark:text-neutral-100">
+                  Loading messages...
+                </h5>
               </div>
             </div>
           ) : (

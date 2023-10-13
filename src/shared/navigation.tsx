@@ -126,7 +126,7 @@ export function Navigation() {
         <ComposerModal />
         <Link
           to="/nwc"
-          className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 hover:bg-blue-600 dark:bg-neutral-900 dark:hover:bg-blue-600"
+          className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 hover:bg-blue-600 hover:text-white dark:bg-neutral-900 dark:hover:bg-blue-600"
         >
           <NwcIcon className="h-5 w-5" />
         </Link>

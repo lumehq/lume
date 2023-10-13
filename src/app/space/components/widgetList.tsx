@@ -96,10 +96,10 @@ export function WidgetList({ params }: { params: Widget }) {
                   </div>
                 )}
                 <div className="inline-flex h-16 w-full flex-col items-start justify-center">
-                  <h5 className="line-clamp-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                  <h5 className="line-clamp-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {item.title}
                   </h5>
-                  <p className="line-clamp-1 text-xs text-neutral-500 dark:text-neutral-300">
+                  <p className="line-clamp-1 text-sm text-neutral-500 dark:text-neutral-300">
                     {item.description}
                   </p>
                 </div>
@@ -128,7 +128,7 @@ export function WidgetList({ params }: { params: Widget }) {
             >
               Build your own widget{' '}
               <div className="-rotate-3 transform-gpu rounded-md border border-neutral-300 bg-neutral-200 px-1.5 py-1 dark:border-neutral-700 dark:bg-neutral-800">
-                <span className="bg-gradient-to-t from-blue-200 via-red-200 to-orange-300 bg-clip-text text-xs text-transparent">
+                <span className="bg-gradient-to-r from-blue-400 via-red-400 to-orange-500 bg-clip-text text-xs text-transparent dark:from-blue-200 dark:via-red-200 dark:to-orange-300">
                   Coming soon
                 </span>
               </div>

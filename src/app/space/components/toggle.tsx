@@ -21,7 +21,7 @@ export function ToggleWidgetList() {
           }
           className="inline-flex h-9 items-center gap-2 rounded-full bg-neutral-200 px-3 text-neutral-900 hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
         >
-          <PlusIcon className="h-4 w-4 text-white" />
+          <PlusIcon className="h-4 w-4 text-neutral-900 dark:text-zinc-100" />
           <p className="text-sm font-semibold leading-none">Add widget</p>
         </button>
       </div>

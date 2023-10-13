@@ -71,7 +71,7 @@ export function Repost({
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
             <User pubkey={embedEvent.pubkey} time={embedEvent.created_at} />
-            <div className="-mt-3 flex items-start gap-3">
+            <div className="-mt-4 flex items-start gap-3">
               <div className="w-10 shrink-0" />
               <div className="relative z-20 flex-1">
                 {renderKind(embedEvent)}
@@ -116,7 +116,7 @@ export function Repost({
                 Lume <span className="text-green-500">(System)</span>
               </h5>
             </div>
-            <div className="-mt-3 flex items-start gap-3">
+            <div className="-mt-4 flex items-start gap-3">
               <div className="w-11 shrink-0" />
               <div>
                 <div className="relative z-20 mt-1 flex-1 select-text">
@@ -148,7 +148,7 @@ export function Repost({
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
           <User pubkey={data.pubkey} time={data.created_at} />
-          <div className="-mt-3 flex items-start gap-3">
+          <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">
               {renderKind(data)}

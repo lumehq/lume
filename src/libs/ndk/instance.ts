@@ -61,7 +61,7 @@ export const NDKInstance = () => {
     });
 
     try {
-      await instance.connect(10000);
+      await instance.connect();
     } catch (error) {
       await message(`NDK instance init failed: ${error}`, {
         title: 'Lume',

@@ -82,16 +82,6 @@ async fn opengraph(url: String) -> OpenGraphResponse {
 }
 
 #[tauri::command]
-fn close_splashscreen(window: tauri::Window) {
-  // Close splashscreen
-  if let Some(splashscreen) = window.get_window("splashscreen") {
-    splashscreen.close().unwrap();
-  }
-  // Show main window
-  window.get_window("main").unwrap().show().unwrap();
-}
-
-#[tauri::command]
 fn secure_save(key: String, value: String) -> Result<(), ()> {
   let entry = Entry::new("lume", &key).expect("Failed to create entry");
   let _ = entry.set_password(&value);
@@ -252,7 +242,6 @@ fn main() {
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_store::Builder::default().build())
     .invoke_handler(tauri::generate_handler![
-      close_splashscreen,
       opengraph,
       secure_save,
       secure_load

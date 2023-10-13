@@ -38,7 +38,6 @@ export function useNostr() {
     callback: (event: NDKEvent) => void,
     groupable?: boolean
   ) => {
-    console.info(ndk);
     if (!ndk) throw new Error('NDK instance not found');
 
     const subEvent = ndk.subscribe(filter, {

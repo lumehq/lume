@@ -3,18 +3,6 @@
   "tauri": {
     "windows": [
       {
-        "width": 300,
-        "height": 300,
-        "decorations": true,
-        "title": "Lume",
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "center": true,
-        "resizable": false,
-        "label": "splashscreen",
-        "url": "splashscreen"
-      },
-      {
         "width": 1080,
         "height": 800,
         "minWidth": 1080,
@@ -25,7 +13,6 @@
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
-        "visible": false,
         "fileDropEnabled": true,
         "decorations": true,
         "transparent": true,

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { VList, WVList } from 'virtua';
+import { VList } from 'virtua';
 
 import { ToggleWidgetList } from '@app/space/components/toggle';
 import { WidgetList } from '@app/space/components/widgetList';
@@ -85,7 +85,10 @@ export function SpaceScreen() {
   }, [fetchWidgets]);
 
   return (
-    <VList className="h-screen w-full scrollbar-none" horizontal>
+    <VList
+      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none"
+      horizontal
+    >
       {!widgets ? (
         <div className="flex h-full w-[420px] flex-col items-center justify-center">
           <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />

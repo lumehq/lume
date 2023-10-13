@@ -49,11 +49,11 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                   {data.title}
                 </h5>
                 {data.description && (
-                  <p className="line-clamp-3 break-all text-sm text-neutral-500 dark:text-neutral-400">
+                  <p className="line-clamp-3 break-words text-sm text-neutral-700 dark:text-neutral-400">
                     {data.description}
                   </p>
                 )}
-                <span className="mt-2.5 text-sm text-neutral-500 dark:text-neutral-400">
+                <span className="mt-2.5 text-sm text-neutral-600 dark:text-neutral-400">
                   {domain.hostname}
                 </span>
               </div>

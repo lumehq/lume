@@ -31,7 +31,7 @@ export function NoteWrapper({
         <div className="relative">{reply && <ChildNote id={reply} root={root} />}</div>
         <div className="relative flex flex-col">
           <User pubkey={event.pubkey} time={event.created_at} />
-          <div className="-mt-3 flex items-start gap-3">
+          <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">
               {cloneElement(

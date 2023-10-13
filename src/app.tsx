@@ -157,14 +157,6 @@ export default function App() {
       ],
     },
     {
-      path: '/splashscreen',
-      errorElement: <ErrorScreen />,
-      async lazy() {
-        const { SplashScreen } = await import('@app/splash');
-        return { Component: SplashScreen };
-      },
-    },
-    {
       path: '/auth',
       element: <AuthLayout />,
       errorElement: <ErrorScreen />,

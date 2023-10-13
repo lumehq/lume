@@ -78,7 +78,7 @@
     "tailwind-scrollbar": "^3.0.5",
     "tauri-controls": "^0.2.0",
     "tippy.js": "^6.3.7",
-    "virtua": "0.9.1",
+    "virtua": "^0.13.0",
     "zustand": "^4.4.3"
   },
   "devDependencies": {
