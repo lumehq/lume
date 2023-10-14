@@ -126,23 +126,23 @@ export function LocalNetworkWidget() {
                   {isFetchingNextPage ? (
                     <>
                       <span>Loading...</span>
-                      <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />
+                      <LoaderIcon className="h-5 w-5 animate-spin" />
                     </>
                   ) : hasNextPage ? (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
+                      <ArrowRightCircleIcon className="h-5 w-5" />
                       <span>Load more</span>
                     </>
                   ) : (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
+                      <ArrowRightCircleIcon className="h-5 w-5" />
                       <span>Nothing more to load</span>
                     </>
                   )}
                 </button>
               ) : null}
             </div>
-            <div className="h-16" />
+            <div className="h-14" />
           </VList>
         )}
       </div>
