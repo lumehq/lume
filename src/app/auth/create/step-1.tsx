@@ -16,7 +16,6 @@ export function CreateStep1Screen() {
   const { db } = useStorage();
 
   const navigate = useNavigate();
-  const setTempPrivkey = useOnboarding((state) => state.setTempPrivkey);
   const setPubkey = useOnboarding((state) => state.setPubkey);
   const setStep = useOnboarding((state) => state.setStep);
 
@@ -28,6 +27,17 @@ export function CreateStep1Screen() {
   const pubkey = getPublicKey(privkey);
   const npub = nip19.npubEncode(pubkey);
   const nsec = nip19.nsecEncode(privkey);
+
+  const copyPrivkey = async () => {
+    try {
+      await writeText(nsec);
+      setCopied(true);
+
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      await message(e, { title: 'Cannot copy private key', type: 'error' });
+    }
+  };
 
   const download = async () => {
     try {
@@ -50,29 +60,22 @@ export function CreateStep1Screen() {
     }
   };
 
-  const copyPrivkey = async () => {
-    try {
-      await writeText(nsec);
-      setCopied(true);
-
-      setTimeout(() => setCopied(false), 3000);
-    } catch (e) {
-      await message(e, { title: 'Cannot copy private key', type: 'error' });
-    }
-  };
-
   const submit = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
+      setPubkey(pubkey);
 
-    // update state
-    setTempPrivkey(privkey); // only use if user close app and reopen it
-    setPubkey(pubkey);
+      // save privkey
+      await db.secureSave(privkey, pubkey);
 
-    // save to database
-    await db.createAccount(npub, pubkey);
+      // save to database
+      await db.createAccount(npub, pubkey);
 
-    // redirect to next step
-    navigate('/auth/create/step-2', { replace: true });
+      // redirect to next step
+      navigate('/auth/create/step-2', { replace: true });
+    } catch (e) {
+      await message(e, { title: 'Something went wrong!', type: 'error' });
+    }
   };
 
   useEffect(() => {
@@ -81,69 +84,85 @@ export function CreateStep1Screen() {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <div className="mb-4 border-b border-white/10 pb-4">
-        <h1 className="mb-2 text-center text-2xl font-semibold text-white">
-          This is your new Nostr account
-        </h1>
-        <p className="mb-2 text-white/70">
-          Your private key is your password. If you lose this key, you will lose access to
-          your account! Copy it and keep it in a safe place. There is no way to reset your
-          private key.
-        </p>
-        <p className="text-white/70">
-          Public key is used for sharing with other people so that they can find you using
-          the public key.
-        </p>
-      </div>
-      <div className="flex flex-col gap-8">
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="mx-auto flex w-full max-w-md flex-col gap-10">
+        <div>
+          <h1 className="mb-2 text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+            This is your new Nostr account
+          </h1>
+          <p className="mb-2 select-text text-neutral-600 dark:text-neutral-300">
+            Your private key is your password. If you lose this key, you will lose access
+            to your account! Copy it and keep it in a safe place.{' '}
+            <span className="text-red-500">
+              There is no way to reset your private key.
+            </span>
+          </p>
+          <p className="select-text text-neutral-600 dark:text-neutral-300">
+            Public key is used for sharing with other people so that they can find you
+            using the public key.
+          </p>
+        </div>
         <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <span className="font-medium text-white">Private Key</span>
-            <div className="relative">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="nsec"
+                className="font-medium text-neutral-900 dark:text-neutral-100"
+              >
+                Private Key
+              </label>
+              <div className="relative">
+                <input
+                  readOnly
+                  name="nsec"
+                  value={nsec.substring(0, 5) + '**************************************'}
+                  className="relative h-12 w-full rounded-lg bg-neutral-200 py-1 pl-3.5 pr-11 text-neutral-900 !outline-none dark:bg-neutral-800 dark:text-neutral-100"
+                />
+                <button
+                  type="button"
+                  onClick={() => copyPrivkey()}
+                  className="group absolute right-2 top-1/2 inline-flex h-7 -translate-y-1/2 transform items-center gap-1.5 rounded-md bg-neutral-300 px-2.5 text-sm text-neutral-800 hover:bg-neutral-400 hover:text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600 dark:hover:text-neutral-100"
+                >
+                  <CopyIcon className="h-4 w-4" />
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="npub"
+                className="font-medium text-neutral-900 dark:text-neutral-100"
+              >
+                Public Key
+              </label>
               <input
                 readOnly
-                value={nsec.substring(0, 5) + '**************************************'}
-                className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 py-1 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/70"
+                name="npub"
+                value={npub}
+                className="relative h-12 w-full rounded-lg bg-neutral-200 px-3.5 py-1 text-neutral-900 !outline-none dark:bg-neutral-800 dark:text-neutral-100"
               />
-              <button
-                type="button"
-                onClick={() => copyPrivkey()}
-                className="group absolute right-2 top-1/2 inline-flex h-7 -translate-y-1/2 transform items-center gap-1.5 rounded-md bg-white/20 px-2.5 text-sm hover:bg-white/30"
-              >
-                <CopyIcon className="h-4 w-4 text-white/70 group-hover:text-white" />
-                {copied ? 'Copied' : 'Copy'}
-              </button>
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-medium text-white">Public Key</span>
-            <input
-              readOnly
-              value={npub}
-              className="relative h-12 w-full rounded-lg border-t border-white/10 bg-white/20 px-3.5 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/70"
-            />
+            <button
+              type="button"
+              onClick={() => download()}
+              className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none"
+            >
+              {downloaded ? 'Downloaded' : 'Download account keys'}
+            </button>
+            <button
+              type="button"
+              onClick={() => submit()}
+              className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-neutral-200 px-6 font-medium leading-none text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
+            >
+              {loading ? 'Creating...' : 'Continue'}
+            </button>
+            <span className="select-text text-center text-sm text-neutral-400 dark:text-neutral-600">
+              By clicking &apos;Continue&apos;, you are ensuring that your keys are saved
+              in a safe place. You cannot recover these keys if they are lost.
+            </span>
           </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={() => download()}
-            className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none"
-          >
-            {downloaded ? 'Downloaded' : 'Download account keys'}
-          </button>
-          <button
-            type="button"
-            onClick={() => submit()}
-            className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 px-6 font-medium leading-none text-white hover:bg-white/30 focus:outline-none"
-          >
-            {loading ? 'Creating...' : 'Continue'}
-          </button>
-          <span className="text-center text-sm text-white/50">
-            By clicking &apos;Continue&apos;, you are ensuring that your keys are saved in
-            a safe place. You cannot recover these keys if they are lost.
-          </span>
         </div>
       </div>
     </div>

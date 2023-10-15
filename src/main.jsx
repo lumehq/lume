@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
+import { Toaster } from 'sonner';
 
 import { NDKProvider } from '@libs/ndk/provider';
 import { StorageProvider } from '@libs/storage/provider';
@@ -15,6 +16,7 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <StorageProvider>
       <NDKProvider>
+        <Toaster />
         <App />
       </NDKProvider>
     </StorageProvider>

@@ -3,8 +3,7 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 
-import { AuthCreateScreen } from '@app/auth/create';
-import { AuthImportScreen } from '@app/auth/import';
+import { CreateAccountScreen } from '@app/auth/create';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
@@ -28,7 +27,7 @@ export default function App() {
       const totalAccount = await db.checkAccount();
 
       const onboarding = localStorage.getItem('onboarding');
-      const step = JSON.parse(onboarding).state.step || null;
+      const step = onboarding ? JSON.parse(onboarding).state.step : null;
 
       // redirect to welcome screen if none user exist
       if (totalAccount === 0) return redirect('/auth/welcome');
@@ -169,46 +168,16 @@ export default function App() {
           },
         },
         {
-          path: 'import',
-          element: <AuthImportScreen />,
+          path: 'create',
+          element: <CreateAccountScreen />,
           errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { ImportStep1Screen } = await import('@app/auth/import/step-1');
-                return { Component: ImportStep1Screen };
-              },
-            },
-            {
-              path: 'step-2',
-              async lazy() {
-                const { ImportStep2Screen } = await import('@app/auth/import/step-2');
-                return { Component: ImportStep2Screen };
-              },
-            },
-          ],
         },
         {
-          path: 'create',
-          element: <AuthCreateScreen />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { CreateStep1Screen } = await import('@app/auth/create/step-1');
-                return { Component: CreateStep1Screen };
-              },
-            },
-            {
-              path: 'step-2',
-              async lazy() {
-                const { CreateStep2Screen } = await import('@app/auth/create/step-2');
-                return { Component: CreateStep2Screen };
-              },
-            },
-          ],
+          path: 'import',
+          async lazy() {
+            const { ImportAccountScreen } = await import('@app/auth/import');
+            return { Component: ImportAccountScreen };
+          },
         },
         {
           path: 'onboarding',

@@ -162,18 +162,18 @@ export const User = memo(function User({
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="h-10 w-10 rounded-lg"
+            className="h-11 w-11 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
             <img
               src={svgURI}
               alt={pubkey}
-              className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+              className="h-11 w-11 rounded-lg bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex w-full flex-col items-start">
-          <h3 className="max-w-[15rem] truncate font-medium text-neutral-900 dark:text-neutral-100">
+          <h3 className="max-w-[15rem] truncate text-base font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name || user?.display_name || user?.displayName}
           </h3>
           <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/70">

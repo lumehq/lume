@@ -19,13 +19,11 @@ export class LumeStorage {
   }
 
   public async secureSave(value: string, key?: string) {
-    return await invoke('secure_save', { key: this.account.pubkey ?? key, value });
+    return await invoke('secure_save', { key, value });
   }
 
   public async secureLoad(key?: string) {
-    const value: string = await invoke('secure_load', {
-      key: this.account.pubkey ?? key,
-    });
+    const value: string = await invoke('secure_load', { key });
     return value;
   }
 

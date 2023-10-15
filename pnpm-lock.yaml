@@ -12,14 +12,14 @@ dependencies:
     specifier: ^2.4.0
     version: 2.4.0
   '@nostr-dev-kit/ndk':
-    specifier: ^2.0.1
-    version: 2.0.1(typescript@5.2.2)
+    specifier: ^2.0.2
+    version: 2.0.2(typescript@5.2.2)
   '@nostr-dev-kit/ndk-cache-dexie':
-    specifier: ^2.0.1
-    version: 2.0.1(typescript@5.2.2)
+    specifier: ^2.0.2
+    version: 2.0.2(typescript@5.2.2)
   '@nostr-fetch/adapter-ndk':
     specifier: ^0.12.2
-    version: 0.12.2(@nostr-dev-kit/ndk@2.0.1)(nostr-fetch@0.13.0)
+    version: 0.12.2(@nostr-dev-kit/ndk@2.0.2)(nostr-fetch@0.13.0)
   '@radix-ui/react-alert-dialog':
     specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
@@ -119,6 +119,9 @@ dependencies:
   destr:
     specifier: ^2.0.1
     version: 2.0.1
+  framer-motion:
+    specifier: ^10.16.4
+    version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
   html-to-text:
     specifier: ^9.0.5
     version: 9.0.5
@@ -176,6 +179,9 @@ dependencies:
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
+  sonner:
+    specifier: ^1.0.3
+    version: 1.0.3(react-dom@18.2.0)(react@18.2.0)
   tailwind-scrollbar:
     specifier: ^3.0.5
     version: 3.0.5(tailwindcss@3.3.3)
@@ -551,6 +557,20 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
+  /@emotion/is-prop-valid@0.8.8:
+    resolution: {integrity: sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==}
+    requiresBuild: true
+    dependencies:
+      '@emotion/memoize': 0.7.4
+    dev: false
+    optional: true
+
+  /@emotion/memoize@0.7.4:
+    resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
     engines: {node: '>=12'}
@@ -920,10 +940,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@nostr-dev-kit/ndk-cache-dexie@2.0.1(typescript@5.2.2):
-    resolution: {integrity: sha512-O1ngV95yuZPhV0PB6JQAMHQkZvGtcW6qEY1jawvrZCfYLf2vdHWuzMN2rXYiSdrx6mMsnqB17bq5Lg3r8Coslw==}
+  /@nostr-dev-kit/ndk-cache-dexie@2.0.2(typescript@5.2.2):
+    resolution: {integrity: sha512-v6dq82Gzw/AoDMtkjCeTg+gx9n6sX3xReaMpIUbKL5W+E7z1lqnR0RmYkeNxUhd7Tlg0FQ+Ywqq7nZs+UmGDEA==}
     dependencies:
-      '@nostr-dev-kit/ndk': 2.0.1(typescript@5.2.2)
+      '@nostr-dev-kit/ndk': 2.0.2(typescript@5.2.2)
       debug: 4.3.4
       dexie: 3.2.4
       nostr-tools: 1.16.0(typescript@5.2.2)
@@ -933,8 +953,8 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk@2.0.1(typescript@5.2.2):
-    resolution: {integrity: sha512-LZ7h4HL2B0Yek3Pr276OMaiVzr6WYXSWExZKn8bdpZ5lIzt5t1j4bi8kxwfUZti1Z/nIY7Hq7tIguty39YBs/g==}
+  /@nostr-dev-kit/ndk@2.0.2(typescript@5.2.2):
+    resolution: {integrity: sha512-EwaOJVS0FOCXlIffiVceKrK+QtbaRTG6QYdoQchMAe+ag2C3jl7nAoDTWlixv/WgJOFl4KPQkS8r0sEkGmXsjQ==}
     dependencies:
       '@noble/hashes': 1.3.2
       '@noble/secp256k1': 2.0.0
@@ -952,13 +972,13 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-fetch/adapter-ndk@0.12.2(@nostr-dev-kit/ndk@2.0.1)(nostr-fetch@0.13.0):
+  /@nostr-fetch/adapter-ndk@0.12.2(@nostr-dev-kit/ndk@2.0.2)(nostr-fetch@0.13.0):
     resolution: {integrity: sha512-+7EVuxS5DDZvNo6qbfFp7xRHwIyjyi36hYkiQFDjbQ4gX5LKo9RIPB1P+1XGkOSDFshypTbovZCaFunscJ/zhQ==}
     peerDependencies:
       '@nostr-dev-kit/ndk': ^0.7.5
       nostr-fetch: ^0.12.2
     dependencies:
-      '@nostr-dev-kit/ndk': 2.0.1(typescript@5.2.2)
+      '@nostr-dev-kit/ndk': 2.0.2(typescript@5.2.2)
       '@nostr-fetch/kernel': 0.12.2
       nostr-fetch: 0.13.0
     dev: false
@@ -3082,7 +3102,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001547
+      caniuse-lite: 1.0.30001549
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3134,7 +3154,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001547
+      caniuse-lite: 1.0.30001549
       electron-to-chromium: 1.4.554
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
@@ -3163,8 +3183,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite@1.0.30001547:
-    resolution: {integrity: sha512-W7CrtIModMAxobGhz8iXmDfuJiiKg1WADMO/9x7/CLNin5cpSbuBjooyoIUVB5eyCc36QuTVlkVa1iB2S5+/eA==}
+  /caniuse-lite@1.0.30001549:
+    resolution: {integrity: sha512-qRp48dPYSCYaP+KurZLhDYdVE+yEyht/3NlmcJgVQ2VMGt6JL36ndQ/7rgspdZsJuxDPFIo/OzBT2+GmIJ53BA==}
 
   /case-anything@2.1.13:
     resolution: {integrity: sha512-zlOQ80VrQ2Ue+ymH5OuM/DlDq64mEm+B9UTdHULv5osUMD6HalNTblf2b1u/m6QecjsnOkBpqVZ+XPwIVsy7Ng==}
@@ -3996,6 +4016,24 @@ packages:
   /fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
     dev: true
+
+  /framer-motion@10.16.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-p9V9nGomS3m6/CALXqv6nFGMuFOxbWsmaOrdmhyQimMIlLl3LC7h7l86wge/Js/8cRu5ktutS/zlzgR7eBOtFA==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tslib: 2.6.2
+    optionalDependencies:
+      '@emotion/is-prop-valid': 0.8.8
+    dev: false
 
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
@@ -5464,7 +5502,7 @@ packages:
     dependencies:
       lilconfig: 2.1.0
       postcss: 8.4.31
-      yaml: 2.3.2
+      yaml: 2.3.3
 
   /postcss-nested@6.0.1(postcss@8.4.31):
     resolution: {integrity: sha512-mEp4xPMi5bSWiMbsgoPfcP74lsWLHkQbZc3sY+jWYd65CUwXrUaTp0fmNpa01ZcETKlIgUdFN/MpS2xZtqL9dQ==}
@@ -5801,7 +5839,7 @@ packages:
       remark-parse: 10.0.2
       remark-rehype: 10.1.0
       space-separated-tokens: 2.0.2
-      style-to-object: 0.4.2
+      style-to-object: 0.4.3
       unified: 10.1.2
       unist-util-visit: 4.1.2
       vfile: 5.3.7
@@ -6140,6 +6178,16 @@ packages:
       is-fullwidth-code-point: 4.0.0
     dev: true
 
+  /sonner@1.0.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-hBoA2zKuYW3lUnpx4K0vAn8j77YuYiwvP9sLQfieNS2pd5FkT20sMyPTDJnl9S+5T27ZJbwQRPiujwvDBwhZQg==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -6230,8 +6278,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /style-to-object@0.4.2:
-    resolution: {integrity: sha512-1JGpfPB3lo42ZX8cuPrheZbfQ6kqPPnPHlKMyeRYtfKD+0jG+QsXgXN57O/dvJlzlB2elI6dGmrPnl5VPQFPaA==}
+  /style-to-object@0.4.3:
+    resolution: {integrity: sha512-RP9icVx0g3Pt0CyNiC2qvBkqMTHD5uBVC2XYcSr/ag8QWKApx/oXEh2ehMGSyzkjK0+ySkukMuO+mz+DNQq57Q==}
     dependencies:
       inline-style-parser: 0.1.1
     dev: false
@@ -6850,8 +6898,8 @@ packages:
     engines: {node: '>= 14'}
     dev: true
 
-  /yaml@2.3.2:
-    resolution: {integrity: sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==}
+  /yaml@2.3.3:
+    resolution: {integrity: sha512-zw0VAJxgeZ6+++/su5AFoqBbZbrEakwu+X0M5HmcwUiBL7AzcuPKjj5we4xfQLp78LkEMpD0cOnUhmgOVy3KdQ==}
     engines: {node: '>= 14'}
 
   /yocto-queue@0.1.0:
