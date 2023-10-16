@@ -25,14 +25,16 @@ export function BannerUploader({
     <button
       type="button"
       onClick={() => uploadBanner()}
-      className="inline-flex h-full w-full flex-col items-center justify-center gap-1 bg-black/40 hover:bg-black/50"
+      className="inline-flex h-full w-full flex-col items-center justify-center"
     >
       {loading ? (
-        <LoaderIcon className="h-6 w-6 animate-spin text-white" />
+        <LoaderIcon className="h-6 w-6 animate-spin text-neutral-900 dark:text-neutral-100" />
       ) : (
-        <PlusIcon className="h-6 w-6 text-white" />
+        <PlusIcon className="h-6 w-6 text-neutral-900 dark:text-neutral-100" />
       )}
-      <p className="text-sm font-medium text-white/70">Add a banner image</p>
+      <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+        Add cover
+      </p>
     </button>
   );
 }

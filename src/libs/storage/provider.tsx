@@ -19,7 +19,7 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 
   const initLumeStorage = async () => {
     try {
-      const sqlite = await Database.load('sqlite:lume.db');
+      const sqlite = await Database.load('sqlite:lume_v2.db');
       const platformName = await platform();
       const dir = await appConfigDir();
 

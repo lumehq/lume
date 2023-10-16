@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@evilmartians/harmony": "^1.1.0",
+    "@formkit/auto-animate": "^0.8.0",
     "@getalby/sdk": "^2.4.0",
     "@nostr-dev-kit/ndk": "^2.0.2",
     "@nostr-dev-kit/ndk-cache-dexie": "^2.0.2",

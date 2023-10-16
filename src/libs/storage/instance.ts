@@ -18,7 +18,7 @@ export class LumeStorage {
     this.platform = platform;
   }
 
-  public async secureSave(value: string, key?: string) {
+  public async secureSave(key: string, value: string) {
     return await invoke('secure_save', { key, value });
   }
 

@@ -8,6 +8,9 @@ dependencies:
   '@evilmartians/harmony':
     specifier: ^1.1.0
     version: 1.1.0
+  '@formkit/auto-animate':
+    specifier: ^0.8.0
+    version: 0.8.0
   '@getalby/sdk':
     specifier: ^2.4.0
     version: 2.4.0
@@ -836,6 +839,10 @@ packages:
 
   /@floating-ui/utils@0.1.6:
     resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
+    dev: false
+
+  /@formkit/auto-animate@0.8.0:
+    resolution: {integrity: sha512-G8f7489ka0mWyi+1IEZT+xgIwcpWtRMmE2x+IrVoQ+KM1cP6VDj/TbujZjwxdb0P8w8b16/qBfViRmydbYHwMw==}
     dev: false
 
   /@getalby/sdk@2.4.0:

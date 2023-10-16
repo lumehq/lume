@@ -1,12 +1,11 @@
 import { message } from '@tauri-apps/plugin-dialog';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
-import { useOnboarding } from '@stores/onboarding';
 import { WidgetKinds } from '@stores/widgets';
 
 const data = [
@@ -32,14 +31,12 @@ const data = [
   { hashtag: '#dev' },
 ];
 
-export function OnboardStep2Screen() {
+export function OnboardHashtagScreen() {
+  const { db } = useStorage();
   const navigate = useNavigate();
 
-  const [setStep, clearStep] = useOnboarding((state) => [state.setStep, state.clearStep]);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(new Set<string>());
-
-  const { db } = useStorage();
 
   const toggleTag = (tag: string) => {
     if (tags.has(tag)) {
@@ -57,9 +54,6 @@ export function OnboardStep2Screen() {
     // update last login
     await db.updateLastLogin();
 
-    // clear local storage
-    clearStep();
-
     navigate('/auth/complete', { replace: true });
   };
 
@@ -74,20 +68,12 @@ export function OnboardStep2Screen() {
       // update last login
       await db.updateLastLogin();
 
-      // clear local storage
-      clearStep();
-
       navigate('/auth/complete', { replace: true });
     } catch (e) {
       setLoading(false);
       await message(e, { title: 'Lume', type: 'error' });
     }
   };
-
-  useEffect(() => {
-    // save current step, if user close app and reopen it
-    setStep('/auth/onboarding/step-2');
-  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

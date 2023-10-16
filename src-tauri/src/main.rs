@@ -115,7 +115,7 @@ fn main() {
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
-          "sqlite:lume.db",
+          "sqlite:lume_v2.db",
           vec![
             Migration {
               version: 20230418013219,

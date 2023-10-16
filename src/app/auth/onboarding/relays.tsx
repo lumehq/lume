@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -9,14 +9,12 @@ import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons
 import { User } from '@shared/user';
 
 import { FULL_RELAYS } from '@stores/constants';
-import { useOnboarding } from '@stores/onboarding';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
-export function OnboardStep3Screen() {
+export function OnboardRelaysScreen() {
   const navigate = useNavigate();
 
-  const [setStep, clearStep] = useOnboarding((state) => [state.setStep, state.clearStep]);
   const [loading, setLoading] = useState(false);
   const [relays, setRelays] = useState(new Set<string>());
 
@@ -81,18 +79,12 @@ export function OnboardStep3Screen() {
       // update last login
       await db.updateLastLogin();
 
-      clearStep();
       navigate('/', { replace: true });
     } catch (e) {
       setLoading(false);
       console.log('error: ', e);
     }
   };
-
-  useEffect(() => {
-    // save current step, if user close app and reopen it
-    setStep('/auth/onboarding/step-3');
-  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md">

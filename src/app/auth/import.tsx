@@ -7,6 +7,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { useStorage } from '@libs/storage/provider';
 
+import { ArrowLeftIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function ImportAccountScreen() {
@@ -58,24 +59,34 @@ export function ImportAccountScreen() {
     }
   };
 
-  const finish = async () => {
-    navigate('/auth/onboarding');
-  };
-
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="relative flex h-full w-full items-center justify-center">
+      <div className="absolute left-[8px] top-4">
+        {!created ? (
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-sm font-medium"
+          >
+            <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+              <ArrowLeftIcon className="h-5 w-5" />
+            </div>
+            Back
+          </button>
+        ) : null}
+      </div>
       <div className="mx-auto flex w-full max-w-md flex-col gap-10">
         <h1 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Import your Nostr account
+          Import your Nostr account.
         </h1>
         <div className="flex flex-col gap-3">
           <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="npub" className="font-semibold">
-                Enter your nostr npub:
+                Enter your npub:
               </label>
               <div className="inline-flex w-full items-center gap-2">
                 <input
+                  name="npub"
                   type="text"
                   value={npub}
                   onChange={(e) => setNpub(e.target.value)}
@@ -105,7 +116,6 @@ export function ImportAccountScreen() {
                 opacity: 1,
                 y: 0,
               }}
-              transition={{ y: { velocity: -100 } }}
               className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
             >
               <h5 className="mb-1.5 font-semibold">Account found</h5>
@@ -142,15 +152,15 @@ export function ImportAccountScreen() {
                   opacity: 1,
                   y: 0,
                 }}
-                transition={{ y: { velocity: -100 } }}
                 className="rounded-lg bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
               >
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="npub" className="font-semibold">
-                    Enter your nostr nsec (optional):
+                  <label htmlFor="nsec" className="font-semibold">
+                    Enter your nsec (optional):
                   </label>
                   <div className="inline-flex w-full items-center gap-2">
                     <input
+                      name="nsec"
                       type="text"
                       value={nsec}
                       onChange={(e) => setNsec(e.target.value)}
@@ -204,15 +214,16 @@ export function ImportAccountScreen() {
                 </div>
               </motion.div>
               <motion.button
-                type="button"
-                onClick={finish}
                 initial={{ opacity: 0, y: 80 }}
                 animate={{
                   opacity: 1,
                   y: 0,
                 }}
-                transition={{ y: { velocity: -130 } }}
-                className="h-9 w-full shrink-0 rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+                className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+                type="button"
+                onClick={() =>
+                  navigate('/auth/onboarding', { state: { newuser: false } })
+                }
               >
                 Finish
               </motion.button>

@@ -3,7 +3,6 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 
-import { CreateAccountScreen } from '@app/auth/create';
 import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
@@ -24,16 +23,9 @@ export default function App() {
 
   const accountLoader = async () => {
     try {
-      const totalAccount = await db.checkAccount();
-
-      const onboarding = localStorage.getItem('onboarding');
-      const step = onboarding ? JSON.parse(onboarding).state.step : null;
-
       // redirect to welcome screen if none user exist
+      const totalAccount = await db.checkAccount();
       if (totalAccount === 0) return redirect('/auth/welcome');
-
-      // restart onboarding process
-      if (step) return redirect(step);
 
       return null;
     } catch (e) {
@@ -169,14 +161,23 @@ export default function App() {
         },
         {
           path: 'create',
-          element: <CreateAccountScreen />,
-          errorElement: <ErrorScreen />,
+          async lazy() {
+            const { CreateAccountScreen } = await import('@app/auth/create');
+            return { Component: CreateAccountScreen };
+          },
         },
         {
           path: 'import',
           async lazy() {
             const { ImportAccountScreen } = await import('@app/auth/import');
             return { Component: ImportAccountScreen };
+          },
+        },
+        {
+          path: 'complete',
+          async lazy() {
+            const { CompleteScreen } = await import('@app/auth/complete');
+            return { Component: CompleteScreen };
           },
         },
         {
@@ -187,29 +188,22 @@ export default function App() {
             {
               path: '',
               async lazy() {
-                const { OnboardStep1Screen } = await import(
-                  '@app/auth/onboarding/step-1'
+                const { OnboardingListScreen } = await import(
+                  '@app/auth/onboarding/list'
                 );
-                return { Component: OnboardStep1Screen };
+                return { Component: OnboardingListScreen };
               },
             },
             {
-              path: 'step-2',
+              path: 'enrich',
               async lazy() {
-                const { OnboardStep2Screen } = await import(
-                  '@app/auth/onboarding/step-2'
+                const { OnboardEnrichScreen } = await import(
+                  '@app/auth/onboarding/enrich'
                 );
-                return { Component: OnboardStep2Screen };
+                return { Component: OnboardEnrichScreen };
               },
             },
           ],
-        },
-        {
-          path: 'complete',
-          async lazy() {
-            const { CompleteScreen } = await import('@app/auth/complete');
-            return { Component: CompleteScreen };
-          },
         },
       ],
     },

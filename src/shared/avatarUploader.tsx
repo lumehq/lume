@@ -25,13 +25,14 @@ export function AvatarUploader({
     <button
       type="button"
       onClick={() => uploadAvatar()}
-      className="inline-flex h-full w-full items-center justify-center rounded-lg bg-black/50 hover:bg-black/60"
+      className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-100 px-1.5 py-1 text-sm font-medium text-blue-500 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-500 dark:hover:bg-blue-800"
     >
       {loading ? (
-        <LoaderIcon className="h-6 w-6 animate-spin text-white" />
+        <LoaderIcon className="h-4 w-4 animate-spin" />
       ) : (
-        <PlusIcon className="h-6 w-6 text-white" />
+        <PlusIcon className="h-4 w-4" />
       )}
+      Change avatar
     </button>
   );
 }
