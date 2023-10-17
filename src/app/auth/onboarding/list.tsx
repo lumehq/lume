@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import { CustomRelay } from '@app/auth/components/features/customRelay';
+import { AllowNotification } from '@app/auth/components/features/allowNotification';
+import { Circle } from '@app/auth/components/features/enableCircle';
+import { OutboxModel } from '@app/auth/components/features/enableOutbox';
 import { FavoriteHashtag } from '@app/auth/components/features/favoriteHashtag';
 import { FollowList } from '@app/auth/components/features/followList';
-import { LinkList } from '@app/auth/components/features/linkList';
-import { NIP04 } from '@app/auth/components/features/nip04';
 import { SuggestFollow } from '@app/auth/components/features/suggestFollow';
 
 export function OnboardingListScreen() {
@@ -25,9 +25,9 @@ export function OnboardingListScreen() {
         <div className="flex flex-col gap-3">
           {newuser ? <SuggestFollow /> : <FollowList />}
           <FavoriteHashtag />
-          <LinkList />
-          <NIP04 />
-          <CustomRelay />
+          <Circle />
+          <OutboxModel />
+          <AllowNotification />
           <Link
             to="/"
             className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"

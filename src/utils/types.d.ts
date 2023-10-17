@@ -26,7 +26,7 @@ export interface Account extends NDKUserProfile {
   npub: string;
   pubkey: string;
   follows: null | string[];
-  network: null | string[];
+  circles: null | string[];
   is_active: number;
   last_login_at: number;
 }

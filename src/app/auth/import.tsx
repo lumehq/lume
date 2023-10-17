@@ -82,7 +82,7 @@ export function ImportAccountScreen() {
           <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="npub" className="font-semibold">
-                Enter your npub:
+                Enter your public key:
               </label>
               <div className="inline-flex w-full items-center gap-2">
                 <input
@@ -156,7 +156,7 @@ export function ImportAccountScreen() {
               >
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="nsec" className="font-semibold">
-                    Enter your nsec (optional):
+                    Enter your private key (optional):
                   </label>
                   <div className="inline-flex w-full items-center gap-2">
                     <input
@@ -187,12 +187,12 @@ export function ImportAccountScreen() {
                 </div>
                 <div className="mt-3 select-text">
                   <p className="text-sm">
-                    <b>nsec</b> is used to sign your event. For example, if you want to
-                    make a new post or send a message to your contact, you need to use
-                    nsec to sign this event.
+                    <b>Private Key</b> is used to sign your event. For example, if you
+                    want to make a new post or send a message to your contact, you need to
+                    use your private key to sign this event.
                   </p>
                   <h5 className="mt-2 font-semibold">
-                    1. In case you store nsec in Lume
+                    1. In case you store private key in Lume
                   </h5>
                   <p className="text-sm">
                     Lume will put your nsec to{' '}
@@ -204,12 +204,12 @@ export function ImportAccountScreen() {
                     , it will be secured by your OS
                   </p>
                   <h5 className="mt-2 font-semibold">
-                    2. In case you do not store nsec in Lume
+                    2. In case you do not store private key in Lume
                   </h5>
                   <p className="text-sm">
-                    When you make an event that requires a sign by your nsec, Lume will
-                    show a prompt popup for you to enter nsec. It will be cleared after
-                    signing and not stored anywhere.
+                    When you make an event that requires a sign by your private key, Lume
+                    will show a prompt for you to enter private key. It will be cleared
+                    after signing and not stored anywhere.
                   </p>
                 </div>
               </motion.div>

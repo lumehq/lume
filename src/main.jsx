@@ -16,7 +16,7 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <StorageProvider>
       <NDKProvider>
-        <Toaster />
+        <Toaster position="top-center" />
         <App />
       </NDKProvider>
     </StorageProvider>

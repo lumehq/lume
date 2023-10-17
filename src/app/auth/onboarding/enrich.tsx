@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
+import { useOnboarding } from '@stores/onboarding';
+
 import { useNostr } from '@utils/hooks/useNostr';
 import { arrayToNIP02 } from '@utils/transform';
 
 export function OnboardEnrichScreen() {
-  const { publish, fetchUserData } = useNostr();
   const { db } = useStorage();
   const { status, data } = useQuery(['trending-profiles-widget'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -20,11 +22,13 @@ export function OnboardEnrichScreen() {
     }
     return res.json();
   });
+  const { publish } = useNostr();
 
   const [loading, setLoading] = useState(false);
   const [follows, setFollows] = useState([]);
 
   const navigate = useNavigate();
+  const setEnrich = useOnboarding((state) => state.toggleEnrich);
 
   // toggle follow state
   const toggleFollow = (pubkey: string) => {
@@ -38,21 +42,24 @@ export function OnboardEnrichScreen() {
     try {
       setLoading(true);
 
-      const tags = arrayToNIP02([...follows, db.account.pubkey]);
+      const tags = arrayToNIP02(follows);
       const event = await publish({ content: '', kind: 3, tags: tags });
 
-      // prefetch data
-      const user = await fetchUserData(follows);
-
       // redirect to next step
-      if (event && user.status === 'ok') {
-        navigate('/auth/onboarding/step-2', { replace: true });
+      if (event) {
+        db.account.follows = follows;
+
+        await db.updateAccount('follows', JSON.stringify(follows));
+        await db.updateAccount('circles', JSON.stringify(follows));
+
+        setEnrich();
+        navigate(-1);
       } else {
         setLoading(false);
       }
     } catch (e) {
       setLoading(false);
-      console.log('error: ', e);
+      toast(e);
     }
   };
 
@@ -71,7 +78,7 @@ export function OnboardEnrichScreen() {
       </div>
       <div className="mx-auto mb-8 w-full max-w-md px-3">
         <h1 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          {loading ? 'Loading...' : 'Enrich your network'}
+          Enrich your network
         </h1>
       </div>
       <div className="flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4 scrollbar-none">

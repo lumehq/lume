@@ -95,13 +95,6 @@ export default function App() {
           },
         },
         {
-          path: 'communities',
-          async lazy() {
-            const { CommunitiesScreen } = await import('@app/communities');
-            return { Component: CommunitiesScreen };
-          },
-        },
-        {
           path: 'explore',
           element: (
             <ReactFlowProvider>
@@ -174,13 +167,6 @@ export default function App() {
           },
         },
         {
-          path: 'complete',
-          async lazy() {
-            const { CompleteScreen } = await import('@app/auth/complete');
-            return { Component: CompleteScreen };
-          },
-        },
-        {
           path: 'onboarding',
           element: <OnboardingScreen />,
           errorElement: <ErrorScreen />,
@@ -201,6 +187,15 @@ export default function App() {
                   '@app/auth/onboarding/enrich'
                 );
                 return { Component: OnboardEnrichScreen };
+              },
+            },
+            {
+              path: 'hashtag',
+              async lazy() {
+                const { OnboardHashtagScreen } = await import(
+                  '@app/auth/onboarding/hashtag'
+                );
+                return { Component: OnboardHashtagScreen };
               },
             },
           ],

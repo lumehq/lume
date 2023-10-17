@@ -54,10 +54,13 @@ export const NDKInstance = () => {
 
   async function initNDK() {
     const explicitRelayUrls = await getExplicitRelays();
+    const outboxSetting = await db.getSettingValue('outbox');
     const dexieAdapter = new NDKCacheAdapterDexie({ dbName: 'lume_ndkcache' });
     const instance = new NDK({
       explicitRelayUrls,
       cacheAdapter: dexieAdapter,
+      outboxRelayUrls: ['wss://purplepag.es'],
+      enableOutboxModel: outboxSetting === '1',
     });
 
     try {

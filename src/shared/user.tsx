@@ -127,7 +127,7 @@ export const User = memo(function User({
             </p>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              className="markdown-simple line-clamp-6"
+              className="markdown-simple line-clamp-6 whitespace-pre-line break-all"
               disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
               unwrapDisallowed={true}
               linkTarget={'_blank'}

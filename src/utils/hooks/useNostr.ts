@@ -4,13 +4,11 @@ import {
   NDKKind,
   NDKPrivateKeySigner,
   NDKSubscription,
-  NDKUser,
 } from '@nostr-dev-kit/ndk';
 import { message, open } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { LRUCache } from 'lru-cache';
 import { NostrEventExt } from 'nostr-fetch';
-import { nip19 } from 'nostr-tools';
 import { useMemo } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -51,67 +49,6 @@ export function useNostr() {
 
     subManager.set(JSON.stringify(filter), subEvent);
     console.log('current active sub: ', subManager.size);
-  };
-
-  const fetchUserData = async (preFollows?: string[]) => {
-    try {
-      const follows = new Set<string>(preFollows || []);
-      const lruNetwork = new LRUCache<string, string, void>({ max: 300 });
-
-      // fetch user's relays
-      const relayEvents = await ndk.fetchEvents({
-        kinds: [NDKKind.RelayList],
-        authors: [db.account.pubkey],
-      });
-
-      if (relayEvents) {
-        const latestRelayEvent = [...relayEvents].sort(
-          (a, b) => b.created_at - a.created_at
-        )[0];
-
-        if (latestRelayEvent) {
-          for (const item of latestRelayEvent.tags) {
-            await db.createRelay(item[1], item[2]);
-          }
-        }
-      }
-
-      // fetch user's follows
-      if (!preFollows) {
-        const user = ndk.getUser({ hexpubkey: db.account.pubkey });
-        const list = await user.follows();
-        list.forEach((item: NDKUser) => {
-          follows.add(nip19.decode(item.npub).data as string);
-        });
-      }
-
-      // build user's network
-      const followEvents = await ndk.fetchEvents({
-        kinds: [NDKKind.Contacts],
-        authors: [...follows],
-        limit: 300,
-      });
-
-      followEvents.forEach((event: NDKEvent) => {
-        event.tags.forEach((tag) => {
-          if (tag[0] === 'p') lruNetwork.set(tag[1], tag[1]);
-        });
-      });
-
-      // get lru values
-      const network = [...lruNetwork.values()] as string[];
-
-      // update db
-      await db.updateAccount('follows', [...follows]);
-      await db.updateAccount('network', [...new Set([...follows, ...network])]);
-
-      // clear lru caches
-      lruNetwork.clear();
-
-      return { status: 'ok', message: 'User data fetched' };
-    } catch (e) {
-      return { status: 'failed', message: e };
-    }
   };
 
   const addContact = async (pubkey: string) => {
@@ -270,7 +207,7 @@ export function useNostr() {
 
       if (!customSince) {
         if (dbEventsEmpty || db.account.last_login_at === 0) {
-          since = db.account.network.length > 500 ? nHoursAgo(12) : nHoursAgo(24);
+          since = db.account.circles.length > 500 ? nHoursAgo(12) : nHoursAgo(24);
         } else {
           since = db.account.last_login_at;
         }
@@ -282,7 +219,7 @@ export function useNostr() {
         relayUrls,
         {
           kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.network,
+          authors: db.account.circles,
         },
         { since: since }
       )) as unknown as NDKEvent[];
@@ -344,7 +281,9 @@ export function useNostr() {
     kind: NDKKind | number;
     tags: string[][];
   }): Promise<NDKEvent> => {
-    const privkey: string = await db.secureLoad();
+    const privkey: string = await db.secureLoad(db.account.pubkey);
+    // #TODO: show prompt
+    if (!privkey) return;
 
     const event = new NDKEvent(ndk);
     const signer = new NDKPrivateKeySigner(privkey);
@@ -362,7 +301,9 @@ export function useNostr() {
   };
 
   const createZap = async (event: NDKEvent, amount: number, message?: string) => {
-    const privkey: string = await db.secureLoad();
+    const privkey: string = await db.secureLoad(db.account.pubkey);
+    // #TODO: show prompt
+    if (!privkey) return;
 
     if (!ndk.signer) {
       const signer = new NDKPrivateKeySigner(privkey);
@@ -459,7 +400,6 @@ export function useNostr() {
 
   return {
     sub,
-    fetchUserData,
     addContact,
     removeContact,
     getAllNIP04Chats,

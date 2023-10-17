@@ -30,6 +30,7 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
         setIsFetched();
         // invalidate queries
         queryClient.invalidateQueries(['local-network-widget']);
+        await db.updateLastLogin();
       }
     }
 
@@ -47,10 +48,10 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
           {firstTime ? (
             <div>
               <span className="text-4xl">👋</span>
-              <h3 className="mt-2 font-semibold leading-tight text-neutral-100 dark:text-neutral-900">
+              <h3 className="mt-2 font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
                 Hello, this is the first time you&apos;re using Lume
               </h3>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-neutral-600 dark:text-neutral-500">
                 Lume is downloading all events since the last 24 hours. It will auto
                 refresh when it done, please be patient
               </p>

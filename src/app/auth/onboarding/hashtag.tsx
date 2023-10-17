@@ -4,17 +4,20 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { ArrowRightCircleIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
+import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
+import { useOnboarding } from '@stores/onboarding';
 import { WidgetKinds } from '@stores/widgets';
 
 const data = [
   { hashtag: '#bitcoin' },
   { hashtag: '#nostr' },
   { hashtag: '#nostrdesign' },
+  { hashtag: '#security' },
   { hashtag: '#zap' },
   { hashtag: '#LFG' },
   { hashtag: '#zapchain' },
+  { hashtag: '#shitcoin' },
   { hashtag: '#plebchain' },
   { hashtag: '#nodes' },
   { hashtag: '#hodl' },
@@ -23,20 +26,25 @@ const data = [
   { hashtag: '#meme' },
   { hashtag: '#memes' },
   { hashtag: '#memestr' },
-  { hashtag: '#penisbutter' },
+  { hashtag: '#nostriches' },
+  { hashtag: '#dev' },
   { hashtag: '#anime' },
   { hashtag: '#waifu' },
   { hashtag: '#manga' },
-  { hashtag: '#nostriches' },
-  { hashtag: '#dev' },
+  { hashtag: '#lume' },
+  { hashtag: '#snort' },
+  { hashtag: '#damus' },
+  { hashtag: '#primal' },
 ];
 
 export function OnboardHashtagScreen() {
   const { db } = useStorage();
-  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(new Set<string>());
+
+  const navigate = useNavigate();
+  const setHashtag = useOnboarding((state) => state.toggleHashtag);
 
   const toggleTag = (tag: string) => {
     if (tags.has(tag)) {
@@ -50,13 +58,6 @@ export function OnboardHashtagScreen() {
     }
   };
 
-  const skip = async () => {
-    // update last login
-    await db.updateLastLogin();
-
-    navigate('/auth/complete', { replace: true });
-  };
-
   const submit = async () => {
     try {
       setLoading(true);
@@ -65,10 +66,8 @@ export function OnboardHashtagScreen() {
         await db.createWidget(WidgetKinds.global.hashtag, tag, tag.replace('#', ''));
       }
 
-      // update last login
-      await db.updateLastLogin();
-
-      navigate('/auth/complete', { replace: true });
+      setHashtag();
+      navigate(-1);
     } catch (e) {
       setLoading(false);
       await message(e, { title: 'Lume', type: 'error' });
@@ -76,64 +75,55 @@ export function OnboardHashtagScreen() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <div className="mb-4 border-b border-white/10 pb-4">
-        <h1 className="mb-2 text-center text-2xl font-semibold text-white">
-          Choose {tags.size}/3 your favorite hashtags
-        </h1>
-        <p className="text-white/70">
-          Hashtags are an easy way to discover more content. By adding a hashtag, Lume
-          will show all related posts. You can always add more later.
-        </p>
+    <div className="relative flex h-full w-full flex-col justify-center">
+      <div className="absolute left-[8px] top-4">
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 text-sm font-medium"
+        >
+          <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+            <ArrowLeftIcon className="h-5 w-5" />
+          </div>
+          Back
+        </button>
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="flex h-[450px] w-full flex-col divide-y divide-white/5 overflow-y-auto rounded-xl bg-white/20 backdrop-blur-xl scrollbar-none">
-          {data.map((item: { hashtag: string }) => (
-            <button
-              key={item.hashtag}
-              type="button"
-              onClick={() => toggleTag(item.hashtag)}
-              className="inline-flex transform items-center justify-between px-4 py-2 hover:bg-white/10"
-            >
-              <p className="text-white">{item.hashtag}</p>
-              {tags.has(item.hashtag) && (
-                <div>
-                  <CheckCircleIcon className="h-4 w-4 text-green-400" />
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-col gap-2">
+      <div className="mx-auto flex w-full max-w-md flex-col gap-10 px-3">
+        <h1 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+          Choose {tags.size}/3 your favorite hashtag
+        </h1>
+        <div className="flex flex-col gap-4">
+          <div className="flex h-[420px] w-full flex-col overflow-y-auto rounded-xl bg-neutral-100 dark:bg-neutral-900">
+            {data.map((item: { hashtag: string }) => (
+              <button
+                key={item.hashtag}
+                type="button"
+                onClick={() => toggleTag(item.hashtag)}
+                className="inline-flex items-center justify-between px-4 py-2 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+              >
+                <p className="text-neutral-900 dark:text-neutral-100">{item.hashtag}</p>
+                {tags.has(item.hashtag) && (
+                  <div>
+                    <CheckCircleIcon className="h-5 w-5 text-teal-500" />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
           <button
             type="button"
             onClick={submit}
-            disabled={loading || tags.size === 0 || tags.size > 3}
-            className="inline-flex h-12 w-full items-center justify-between gap-2 rounded-lg border-t border-white/10 bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
+            disabled={loading || tags.size === 0}
+            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
           >
             {loading ? (
               <>
-                <span className="w-5" />
-                <span>Creating...</span>
-                <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                <LoaderIcon className="h-4 w-4 animate-spin" />
+                <span>Adding...</span>
               </>
             ) : (
-              <>
-                <span className="w-5" />
-                <span>Add {tags.size} tags & Continue</span>
-                <ArrowRightCircleIcon className="h-5 w-5" />
-              </>
+              <span>Add {tags.size} tags & Continue</span>
             )}
           </button>
-          {!loading ? (
-            <button
-              type="button"
-              onClick={() => skip()}
-              className="inline-flex h-12 w-full items-center justify-center rounded-lg border-t border-white/10 bg-white/20 font-medium leading-none text-white backdrop-blur-xl hover:bg-white/30 focus:outline-none"
-            >
-              Skip, you can add later
-            </button>
-          ) : null}
         </div>
       </div>
     </div>
