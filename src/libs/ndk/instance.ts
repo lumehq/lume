@@ -26,8 +26,8 @@ export const NDKInstance = () => {
       const onlineRelays = new Set(relays);
 
       for (const relay of relays) {
-        const url = new URL(relay);
         try {
+          const url = new URL(relay);
           const res = await fetch(`https://${url.hostname}`, {
             method: 'GET',
             headers: {
