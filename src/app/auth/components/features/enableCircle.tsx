@@ -67,6 +67,7 @@ export function Circle() {
     lru.clear();
 
     // done
+    await db.createSetting('circles', '1');
     setCircle();
   };
 

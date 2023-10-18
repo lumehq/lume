@@ -404,14 +404,14 @@ export function useNostr() {
     removeContact,
     getAllNIP04Chats,
     getAllEventsSinceLastLogin,
+    getContactsByPubkey,
+    getEventsByPubkey,
+    getAllRelaysByUsers,
     fetchActivities,
     fetchNIP04Messages,
     fetchAllReplies,
     publish,
     createZap,
     upload,
-    getContactsByPubkey,
-    getEventsByPubkey,
-    getAllRelaysByUsers,
   };
 }

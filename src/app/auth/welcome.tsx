@@ -21,7 +21,7 @@ export function WelcomeScreen() {
             to="/auth/import"
             className="inline-flex h-10 w-full items-center justify-center rounded-lg font-medium text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
           >
-            Log in
+            Log in with key
           </Link>
         </div>
       </div>

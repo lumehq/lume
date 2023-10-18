@@ -33,7 +33,8 @@ export const User = memo(function User({
     | 'large'
     | 'thread'
     | 'avatar'
-    | 'stacked';
+    | 'stacked'
+    | 'ministacked';
   embedProfile?: string;
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
@@ -222,6 +223,28 @@ export const User = memo(function User({
             src={svgURI}
             alt={pubkey}
             className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-black dark:bg-white"
+          />
+        </Avatar.Fallback>
+      </Avatar.Root>
+    );
+  }
+
+  if (variant === 'ministacked') {
+    return (
+      <Avatar.Root>
+        <Avatar.Image
+          src={user?.picture || user?.image}
+          alt={pubkey}
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="inline-block h-6 w-6 rounded-full ring-1 ring-white dark:ring-black"
+        />
+        <Avatar.Fallback delayMs={300}>
+          <img
+            src={svgURI}
+            alt={pubkey}
+            className="inline-block h-6 w-6 rounded-full bg-black ring-1 ring-white dark:bg-white dark:ring-black"
           />
         </Avatar.Fallback>
       </Avatar.Root>

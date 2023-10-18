@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from 'react';
-import { VList } from 'virtua';
+import { useCallback, useEffect, useRef } from 'react';
+import { VList, VListHandle } from 'virtua';
 
 import { ToggleWidgetList } from '@app/space/components/toggle';
 import { WidgetList } from '@app/space/components/widgetList';
@@ -31,6 +31,7 @@ import { Widget } from '@utils/types';
 
 export function SpaceScreen() {
   const { db } = useStorage();
+  const vlistRef = useRef<VListHandle>(null);
 
   const [widgets, fetchWidgets] = useWidgets((state) => [
     state.widgets,
@@ -88,6 +89,7 @@ export function SpaceScreen() {
     <VList
       className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none"
       horizontal
+      ref={vlistRef}
     >
       {!widgets ? (
         <div className="flex h-full w-[420px] flex-col items-center justify-center">

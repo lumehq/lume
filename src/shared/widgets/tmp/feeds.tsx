@@ -57,7 +57,7 @@ export function XfeedsWidget({ params }: { params: Widget }) {
             />
           </div>
           <div className="flex h-[500px] w-full flex-col overflow-y-auto rounded-lg bg-neutral-200 py-2 scrollbar-none dark:bg-neutral-800">
-            {db.account.network.map((item: string) => (
+            {db.account.circles.map((item: string) => (
               <button
                 key={item}
                 type="button"

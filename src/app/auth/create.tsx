@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { downloadDir } from '@tauri-apps/api/path';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { message, save } from '@tauri-apps/plugin-dialog';
 import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { motion } from 'framer-motion';
@@ -42,18 +43,14 @@ export function CreateAccountScreen() {
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(minidenticon('lume new account', 90, 50));
 
-  const onSubmit = async (data: {
-    name: string;
-    display_name: string;
-    about: string;
-  }) => {
+  const onSubmit = async (data: { name: string; about: string }) => {
     try {
       setLoading(true);
 
       const profile = {
         ...data,
         name: data.name,
-        display_name: data.display_name,
+        display_name: data.name,
         bio: data.about,
       };
 
@@ -93,6 +90,10 @@ export function CreateAccountScreen() {
     }
   };
 
+  const copyNsec = async () => {
+    await writeText(keys.nsec);
+  };
+
   const download = async () => {
     try {
       const downloadPath = await downloadDir();
@@ -116,7 +117,7 @@ export function CreateAccountScreen() {
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
-      <div className="absolute left-[8px] top-4">
+      <div className="absolute left-[8px] top-2">
         {!keys ? (
           <button
             onClick={() => navigate(-1)}
@@ -230,11 +231,24 @@ export function CreateAccountScreen() {
                       <label htmlFor="nsec" className="text-sm font-semibold">
                         Private key
                       </label>
-                      <input
-                        readOnly
-                        value={keys.nsec}
-                        className="h-11 rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
-                      />
+                      <div className="relative w-full">
+                        <input
+                          readOnly
+                          value={
+                            keys.nsec.substring(0, 10) + '**************************'
+                          }
+                          className="h-11 w-full rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                        />
+                        <div className="absolute right-0 top-0 inline-flex h-11 items-center justify-center px-2">
+                          <button
+                            type="button"
+                            onClick={copyNsec}
+                            className="rounded-md bg-neutral-300 px-2 py-1 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label htmlFor="nsec" className="text-sm font-semibold">

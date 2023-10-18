@@ -26,7 +26,7 @@ export function Navigation() {
               >
                 <HomeIcon className="h-6 w-6" />
               </div>
-              <div className="text-sm text-black dark:text-white">Home</div>
+              <div className="text-sm font-medium text-black dark:text-white">Home</div>
             </>
           )}
         </NavLink>
@@ -47,7 +47,7 @@ export function Navigation() {
               >
                 <ChatsIcon className="h-6 w-6" />
               </div>
-              <div className="text-sm text-black dark:text-white">Chats</div>
+              <div className="text-sm font-medium text-black dark:text-white">Chats</div>
             </>
           )}
         </NavLink>
@@ -68,7 +68,7 @@ export function Navigation() {
               >
                 <RelayIcon className="h-6 w-6" />
               </div>
-              <div className="text-sm text-black dark:text-white">Relays</div>
+              <div className="text-sm font-medium text-black dark:text-white">Relays</div>
             </>
           )}
         </NavLink>
@@ -89,7 +89,9 @@ export function Navigation() {
               >
                 <ExploreIcon className="h-6 w-6" />
               </div>
-              <div className="text-sm text-black dark:text-white">Explore</div>
+              <div className="text-sm font-medium text-black dark:text-white">
+                Explore
+              </div>
             </>
           )}
         </NavLink>
@@ -98,7 +100,7 @@ export function Navigation() {
         <ComposerModal />
         <Link
           to="/nwc"
-          className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 hover:bg-blue-600 hover:text-white dark:bg-neutral-900 dark:hover:bg-blue-600"
+          className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 hover:bg-blue-500 hover:text-white dark:bg-neutral-900 dark:hover:bg-blue-500"
         >
           <NwcIcon className="h-5 w-5" />
         </Link>

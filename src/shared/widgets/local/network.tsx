@@ -86,10 +86,10 @@ export function LocalNetworkWidget() {
   // subscribe for new event
   // sub will be managed by lru-cache
   useEffect(() => {
-    if (db.account && db.account.network && dbEvents.length > 0) {
+    if (db.account && db.account.circles && dbEvents.length > 0) {
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: db.account.network,
+        authors: db.account.circles,
         since: Math.floor(Date.now() / 1000),
       };
 
@@ -102,7 +102,7 @@ export function LocalNetworkWidget() {
 
   return (
     <WidgetWrapper>
-      <TitleBar title="Network" />
+      <TitleBar id="9999" />
       <div className="flex-1">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">

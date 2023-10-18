@@ -25,7 +25,7 @@ export function AvatarUploader({
     <button
       type="button"
       onClick={() => uploadAvatar()}
-      className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-100 px-1.5 py-1 text-sm font-medium text-blue-500 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-500 dark:hover:bg-blue-800"
+      className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-100 px-1.5 py-1 text-sm font-medium text-blue-500 hover:border-blue-300 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-500 dark:hover:border-blue-800 dark:hover:bg-blue-800"
     >
       {loading ? (
         <LoaderIcon className="h-4 w-4 animate-spin" />
