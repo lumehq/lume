@@ -1,19 +1,18 @@
 import { NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
+import * as Avatar from '@radix-ui/react-avatar';
+import { minidenticon } from 'minidenticons';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { SettingsIcon } from '@shared/icons';
-import { Image } from '@shared/image';
-import { Logout } from '@shared/logout';
+import { AccountMoreActions } from '@shared/accounts/more';
 
 import { useActivities } from '@stores/activities';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
-import { displayNpub } from '@utils/shortenKey';
 
 export function ActiveAccount() {
   const { db } = useStorage();
@@ -21,6 +20,9 @@ export function ActiveAccount() {
   const { sub } = useNostr();
 
   const addActivity = useActivities((state) => state.addActivity);
+  const svgURI =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(minidenticon(db.account.pubkey, 90, 50));
 
   useEffect(() => {
     const filter: NDKFilter = {
@@ -52,39 +54,33 @@ export function ActiveAccount() {
 
   if (status === 'loading') {
     return (
-      <div className="inline-flex h-16 items-center gap-2.5 border-l-2 border-transparent pb-2 pl-4 pr-2">
-        <div className="relative h-10 w-10 shrink-0 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-        <div className="h-2.5 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-      </div>
+      <div className="aspect-square h-auto w-full animate-pulse rounded-lg bg-white/10" />
     );
   }
 
   return (
-    <div className="flex h-16 items-center justify-between border-l-2 border-transparent pb-2 pl-4 pr-3">
-      <Link to={`/users/${db.account.pubkey}`} className="flex items-center gap-1.5">
-        <Image
-          src={user?.picture || user?.image}
-          alt={db.account.npub}
-          className="h-9 w-9 shrink-0 rounded-lg object-cover"
-        />
-        <div className="flex w-full flex-1 flex-col items-start gap-0.5">
-          <p className="max-w-[10rem] truncate font-semibold leading-none text-white">
-            {user?.name || user?.display_name || user?.displayName}
-          </p>
-          <span className="max-w-[7rem] truncate text-sm leading-none text-white/50">
-            {user?.nip05 || displayNpub(db.account.pubkey, 12)}
-          </span>
-        </div>
+    <div className="flex flex-col gap-1 rounded-lg bg-neutral-100 p-1 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+      <Link to={`/users/${db.account.pubkey}`} className="relative inline-block">
+        <Avatar.Root>
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={db.account.pubkey}
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="aspect-square h-auto w-full rounded-md"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img
+              src={svgURI}
+              alt={db.account.pubkeypubkey}
+              className="aspect-square h-auto w-full rounded-md bg-black dark:bg-white"
+            />
+          </Avatar.Fallback>
+        </Avatar.Root>
+        <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-teal-500 ring-2 ring-neutral-100 dark:ring-neutral-900" />
       </Link>
-      <div className="inline-flex divide-x divide-white/5 rounded-lg border-t border-white/10 bg-white/20">
-        <Link
-          to="/settings/"
-          className="inline-flex h-9 w-9 items-center justify-center hover:bg-white/10"
-        >
-          <SettingsIcon className="h-4 w-4 text-white" />
-        </Link>
-        <Logout />
-      </div>
+      <AccountMoreActions pubkey={db.account.pubkey} />
     </div>
   );
 }

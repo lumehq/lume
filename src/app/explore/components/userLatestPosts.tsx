@@ -55,19 +55,21 @@ export function UserLatestPosts({ pubkey }: { pubkey: string }) {
   );
 
   return (
-    <div className="mt-4 border-t border-white/5 pt-3">
-      <h3 className="mb-4 px-3 font-semibold text-white">Latest post</h3>
+    <div className="mt-4 border-t border-neutral-300 pt-3 dark:border-neutral-700">
+      <h3 className="mb-4 px-3 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Latest post
+      </h3>
       <div>
         {status === 'loading' ? (
           <div className="px-3">
-            <div className="inline-flex h-16 w-full items-center justify-center gap-1.5 rounded-lg bg-white/10 text-sm font-medium text-white/70">
-              <LoaderIcon className="h-4 w-4 animate-spin text-white" />
+            <div className="inline-flex h-16 w-full items-center justify-center gap-1.5 rounded-lg bg-neutral-300 text-sm font-medium dark:bg-neutral-700">
+              <LoaderIcon className="h-4 w-4 animate-spin" />
               Loading latest posts...
             </div>
           </div>
         ) : data.length < 1 ? (
           <div className="px-3">
-            <div className="inline-flex h-16 w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium text-white/70">
+            <div className="inline-flex h-16 w-full items-center justify-center rounded-lg bg-neutral-300 text-sm font-medium dark:bg-neutral-700">
               No posts from 24 hours ago
             </div>
           </div>

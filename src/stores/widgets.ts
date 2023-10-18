@@ -7,10 +7,12 @@ import { Widget, WidgetGroup } from '@utils/types';
 
 interface WidgetState {
   widgets: null | Array<Widget>;
+  isFetched: boolean;
   fetchWidgets: (db: LumeStorage) => void;
   setWidget: (db: LumeStorage, { kind, title, content }: Widget) => void;
   removeWidget: (db: LumeStorage, id: string) => void;
   reorderWidget: (id: string, position: number) => void;
+  setIsFetched: () => void;
 }
 
 export const WidgetKinds = {
@@ -45,7 +47,7 @@ export const WidgetKinds = {
 
 export const DefaultWidgets: Array<WidgetGroup> = [
   {
-    title: 'Network / Follows',
+    title: 'Circles / Follows',
     data: [
       {
         kind: WidgetKinds.tmp.xfeed,
@@ -55,12 +57,12 @@ export const DefaultWidgets: Array<WidgetGroup> = [
       {
         kind: WidgetKinds.local.files,
         title: 'Files',
-        description: 'All files shared by people in your network',
+        description: 'All files shared by people in your circle',
       },
       {
         kind: WidgetKinds.local.articles,
         title: 'Articles',
-        description: 'All articles shared by people in your network',
+        description: 'All articles shared by people in your circle',
       },
       {
         kind: WidgetKinds.local.follows,
@@ -120,6 +122,7 @@ export const useWidgets = create<WidgetState>()(
   persist(
     (set) => ({
       widgets: null,
+      isFetched: false,
       fetchWidgets: async (db: LumeStorage) => {
         const dbWidgets = await db.getWidgets();
         console.log('db widgets: ', dbWidgets);
@@ -127,7 +130,7 @@ export const useWidgets = create<WidgetState>()(
         // default: add network widget
         dbWidgets.unshift({
           id: '9999',
-          title: 'Network',
+          title: '',
           content: '',
           kind: WidgetKinds.local.network,
         });
@@ -142,7 +145,7 @@ export const useWidgets = create<WidgetState>()(
         await db.removeWidget(id);
         set((state) => ({ widgets: state.widgets.filter((widget) => widget.id !== id) }));
       },
-      reorderWidget: (id: string, position: number) =>
+      reorderWidget: (id: string, position: number) => {
         set((state) => {
           const widgets = [...state.widgets];
           const widget = widgets.find((widget) => widget.id === id);
@@ -153,7 +156,11 @@ export const useWidgets = create<WidgetState>()(
           widgets.splice(position, 0, widget);
 
           return { widgets };
-        }),
+        });
+      },
+      setIsFetched: () => {
+        set({ isFetched: true });
+      },
     }),
     {
       name: 'widgets',

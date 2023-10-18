@@ -11,18 +11,11 @@ export function RelayIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElemen
       {...props}
     >
       <path
-        stroke="currentColor"
-        strokeLinecap="square"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="M21.25 12V5.75a1 1 0 00-1-1H3.75a1 1 0 00-1 1V12m18.5 0H2.75m18.5 0v6.25a1 1 0 01-1 1H3.75a1 1 0 01-1-1V12"
-      />
-      <path
         fill="currentColor"
-        stroke="currentColor"
-        strokeWidth="0.5"
-        d="M6.5 9.125a.75.75 0 100-1.5.75.75 0 000 1.5zm0 7.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
-      />
+        fillRule="evenodd"
+        d="M4 5a3 3 0 013-3h10a3 3 0 013 3v11c0 .889-.386 1.687-1 2.236V20a2 2 0 01-2 2H7a2 2 0 01-2-2v-1.75-.014c-.614-.55-1-1.348-1-2.236V5zm3-1a1 1 0 00-1 1v11a1 1 0 001 1h10a1 1 0 001-1V5a1 1 0 00-1-1H7zm0 2a1 1 0 011-1h8a1 1 0 011 1v6a1 1 0 01-1 1H8a1 1 0 01-1-1V6zm6 9a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"
+        clipRule="evenodd"
+      ></path>
     </svg>
   );
 }

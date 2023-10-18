@@ -34,7 +34,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
   if (status === 'loading') {
     return (
       <>
-        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
         <div className="relative mb-5 overflow-hidden">
           <NoteSkeleton />
         </div>
@@ -46,7 +46,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
     const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
     return (
       <>
-        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
+        <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
         <div className="relative mb-5 flex flex-col">
           <div className="relative z-10 flex items-start gap-3">
             <div className="inline-flex h-10 w-10 items-end justify-center rounded-lg bg-black pb-1">
@@ -56,14 +56,14 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
               Lume <span className="text-green-500">(System)</span>
             </h5>
           </div>
-          <div className="-mt-5 flex items-start gap-3">
+          <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div>
               <div className="relative z-20 mt-1 flex-1 select-text">
                 <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
                   Lume cannot find this post with your current relays, but you can view it
                   via njump.me.{' '}
-                  <Link to={noteLink} className="text-fuchsia-500">
+                  <Link to={noteLink} className="text-blue-500">
                     Learn more
                   </Link>
                 </div>
@@ -78,10 +78,10 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
 
   return (
     <>
-      <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.6rem)] w-0.5 bg-gradient-to-t from-white/20 to-white/10" />
-      <div className="mb-6 flex flex-col">
-        <User pubkey={data.pubkey} time={data.created_at} />
-        <div className="-mt-5 flex items-start gap-3">
+      <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.6rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />
+      <div className="mb-5 flex flex-col">
+        <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />
+        <div className="-mt-4 flex items-start gap-3">
           <div className="w-10 shrink-0" />
           <div className="relative z-20 flex-1">
             {renderKind(data)}

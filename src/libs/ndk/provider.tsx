@@ -5,6 +5,8 @@ import { PropsWithChildren, createContext, useContext } from 'react';
 
 import { NDKInstance } from '@libs/ndk/instance';
 
+import { LoaderIcon } from '@shared/icons';
+
 interface NDKContext {
   ndk: undefined | NDK;
   relayUrls: string[];
@@ -19,6 +21,17 @@ const NDKContext = createContext<NDKContext>({
 
 const NDKProvider = ({ children }: PropsWithChildren<object>) => {
   const { ndk, relayUrls, fetcher } = NDKInstance();
+
+  if (!ndk) {
+    return (
+      <div
+        data-tauri-drag-region
+        className="flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
+      >
+        <LoaderIcon className="h-8 w-8 animate-spin text-neutral-950 dark:text-neutral-50" />
+      </div>
+    );
+  }
 
   return (
     <NDKContext.Provider

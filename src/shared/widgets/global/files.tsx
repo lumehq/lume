@@ -48,8 +48,8 @@ export function GlobalFilesWidget({ params }: { params: Widget }) {
         {status === 'loading' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
-              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-              <p className="text-sm font-medium text-white/80">
+              <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
+              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
                 Loading file sharing event...
               </p>
             </div>
@@ -59,15 +59,17 @@ export function GlobalFilesWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="font-semibold leading-tight">
+                <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
                   Oops, it looks like there are no file sharing events.
                 </h3>
-                <p className="text-white/50">You can close this widget</p>
+                <p className="text-neutral-500 dark:text-neutral-400">
+                  You can close this widget
+                </p>
               </div>
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="h-full scrollbar-none">
             {data.map((item) => renderItem(item))}
             <div className="h-16" />
           </VList>

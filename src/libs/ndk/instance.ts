@@ -1,8 +1,8 @@
 import NDK from '@nostr-dev-kit/ndk';
 import NDKCacheAdapterDexie from '@nostr-dev-kit/ndk-cache-dexie';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { message } from '@tauri-apps/api/dialog';
-import { fetch } from '@tauri-apps/api/http';
+import { message } from '@tauri-apps/plugin-dialog';
+import { fetch } from '@tauri-apps/plugin-http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -30,7 +30,6 @@ export const NDKInstance = () => {
           const url = new URL(relay);
           const res = await fetch(`https://${url.hostname}`, {
             method: 'GET',
-            timeout: { secs: 5, nanos: 0 },
             headers: {
               Accept: 'application/nostr+json',
             },
@@ -55,15 +54,17 @@ export const NDKInstance = () => {
 
   async function initNDK() {
     const explicitRelayUrls = await getExplicitRelays();
+    const outboxSetting = await db.getSettingValue('outbox');
     const dexieAdapter = new NDKCacheAdapterDexie({ dbName: 'lume_ndkcache' });
     const instance = new NDK({
       explicitRelayUrls,
-      // @ts-expect-error, wtf?
       cacheAdapter: dexieAdapter,
+      outboxRelayUrls: ['wss://purplepag.es'],
+      enableOutboxModel: outboxSetting === '1',
     });
 
     try {
-      await instance.connect(10000);
+      await instance.connect();
     } catch (error) {
       await message(`NDK instance init failed: ${error}`, {
         title: 'Lume',

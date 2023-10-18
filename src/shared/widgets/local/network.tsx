@@ -7,18 +7,18 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
-  ArticleNote,
-  FileNote,
+  MemoizedArticleNote,
+  MemoizedFileNote,
+  MemoizedRepost,
+  MemoizedTextNote,
   NoteWrapper,
-  Repost,
-  TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 import { EventLoader, WidgetWrapper } from '@shared/widgets';
 
-import { useStronghold } from '@stores/stronghold';
+import { useWidgets } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { toRawEvent } from '@utils/rawEvent';
@@ -36,7 +36,7 @@ export function LocalNetworkWidget() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
-  const isFetched = useStronghold((state) => state.isFetched);
+  const isFetched = useWidgets((state) => state.isFetched);
   const dbEvents = useMemo(
     () => (data ? data.pages.flatMap((d: { data: DBEvent[] }) => d.data) : []),
     [data]
@@ -55,21 +55,21 @@ export function LocalNetworkWidget() {
               root={dbEvent.root_id}
               reply={dbEvent.reply_id}
             >
-              <TextNote />
+              <MemoizedTextNote />
             </NoteWrapper>
           );
         case NDKKind.Repost:
-          return <Repost key={dbEvent.id} event={event} />;
+          return <MemoizedRepost key={dbEvent.id} event={event} />;
         case 1063:
           return (
             <NoteWrapper key={dbEvent.id} event={event}>
-              <FileNote />
+              <MemoizedFileNote />
             </NoteWrapper>
           );
         case NDKKind.Article:
           return (
             <NoteWrapper key={dbEvent.id} event={event}>
-              <ArticleNote />
+              <MemoizedArticleNote />
             </NoteWrapper>
           );
         default:
@@ -86,10 +86,10 @@ export function LocalNetworkWidget() {
   // subscribe for new event
   // sub will be managed by lru-cache
   useEffect(() => {
-    if (db.account && db.account.network && dbEvents.length > 0) {
+    if (db.account && db.account.circles && dbEvents.length > 0) {
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: db.account.network,
+        authors: db.account.circles,
         since: Math.floor(Date.now() / 1000),
       };
 
@@ -102,18 +102,18 @@ export function LocalNetworkWidget() {
 
   return (
     <WidgetWrapper>
-      <TitleBar title="Network" />
+      <TitleBar id="9999" />
       <div className="flex-1">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <NoteSkeleton />
             </div>
           </div>
         ) : dbEvents.length === 0 ? (
           <EventLoader firstTime={true} />
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="h-full scrollbar-none">
             {!isFetched ? <EventLoader firstTime={false} /> : null}
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">
@@ -121,28 +121,28 @@ export function LocalNetworkWidget() {
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
-                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none"
+                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
                 >
                   {isFetchingNextPage ? (
                     <>
                       <span>Loading...</span>
-                      <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+                      <LoaderIcon className="h-5 w-5 animate-spin" />
                     </>
                   ) : hasNextPage ? (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-white" />
+                      <ArrowRightCircleIcon className="h-5 w-5" />
                       <span>Load more</span>
                     </>
                   ) : (
                     <>
-                      <ArrowRightCircleIcon className="h-5 w-5 text-white" />
+                      <ArrowRightCircleIcon className="h-5 w-5" />
                       <span>Nothing more to load</span>
                     </>
                   )}
                 </button>
               ) : null}
             </div>
-            <div className="h-16" />
+            <div className="h-14" />
           </VList>
         )}
       </div>

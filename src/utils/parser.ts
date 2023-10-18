@@ -1,5 +1,5 @@
 import { nip19 } from 'nostr-tools';
-import { EventPointer, ProfilePointer } from 'nostr-tools/lib/nip19';
+import { AddressPointer, EventPointer, ProfilePointer } from 'nostr-tools/lib/nip19';
 
 import { RichContent } from '@utils/types';
 
@@ -60,8 +60,14 @@ export function parser(eventContent: string) {
       }
 
       // boost
-      if (word.startsWith('$') && word.length > 1) {
+      if (word.startsWith('$prism') && word.length > 1) {
         return word.replace(word, `~boost-${word}~`);
+      }
+
+      // nostr account references (depreciated)
+      if (word.startsWith('@npub1')) {
+        const npub = word.replace('@', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        return word.replace(word, `~pub-${nip19.decode(npub).data}~`);
       }
 
       // nostr account references
@@ -78,7 +84,7 @@ export function parser(eventContent: string) {
       }
 
       // nostr account references
-      if (word.startsWith('nostr:note1') || word.startsWith('noté')) {
+      if (word.startsWith('nostr:note1') || word.startsWith('note1')) {
         const note = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
         content.notes.push(nip19.decode(note).data as string);
         return word.replace(word, '');
@@ -90,6 +96,18 @@ export function parser(eventContent: string) {
         const decoded = nip19.decode(nevent).data as EventPointer;
         content.notes.push(decoded.id);
         return word.replace(word, '');
+      }
+
+      // nostr address references
+      if (word.startsWith('nostr:naddr1') || word.startsWith('naddr1')) {
+        const naddr = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
+        const decoded = nip19.decode(naddr).data as AddressPointer;
+        return word.replace(word, `~pub-${decoded.pubkey}~`);
+      }
+
+      // lightning invoice
+      if (word.startsWith('lnbc') && word.length > 60) {
+        return word.replace(word, `~lnbc-${word}~`);
       }
 
       // normal word

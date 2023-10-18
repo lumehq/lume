@@ -13,15 +13,15 @@ export function WidgetWrapper({
 
   return (
     <Resizable
-      size={{ width: width, height: '100vh' }}
+      size={{ width: width, height: '100%' }}
       onResizeStart={(e) => e.preventDefault()}
       onResizeStop={(_e, _direction, _ref, d) => {
         setWidth((prevWidth) => prevWidth + d.width);
       }}
       minWidth={420}
-      minHeight={'100vh'}
+      maxWidth={600}
       className={twMerge(
-        'relative shrink-0 grow-0 bg-white/10 backdrop-blur-xl',
+        'flex flex-col border-r border-neutral-100 dark:border-neutral-900',
         className
       )}
       enable={{ right: true }}

@@ -1,8 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import * as Tooltip from '@radix-ui/react-tooltip';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { nip19 } from 'nostr-tools';
-import { EventPointer } from 'nostr-tools/lib/nip19';
+import { EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -25,31 +24,26 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-      <Tooltip.Root delayDuration={150}>
-        <Tooltip.Trigger asChild>
-          <DropdownMenu.Trigger asChild>
-            <button
-              type="button"
-              className="group ml-auto inline-flex h-7 w-7 items-center justify-center text-white/80"
-            >
-              <HorizontalDotsIcon className="h-5 w-5 text-white/80 group-hover:text-fuchsia-400" />
-            </button>
-          </DropdownMenu.Trigger>
-        </Tooltip.Trigger>
-        <Tooltip.Portal>
-          <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-            More
-            <Tooltip.Arrow className="fill-black" />
-          </Tooltip.Content>
-        </Tooltip.Portal>
-      </Tooltip.Root>
+      <DropdownMenu.Trigger asChild>
+        <button type="button" className="inline-flex h-7 w-7 items-center justify-center">
+          <HorizontalDotsIcon className="h-5 w-5 text-neutral-800 hover:text-blue-500 dark:text-neutral-200" />
+        </button>
+      </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-white/10 bg-white/20 p-2 backdrop-blur-3xl focus:outline-none">
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800">
+          <DropdownMenu.Item asChild>
+            <Link
+              to={`/notes/text/${id}`}
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
+            >
+              Focus
+            </Link>
+          </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => copyLink()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
               Copy shareable link
             </button>
@@ -58,7 +52,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyID()}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
               Copy ID
             </button>
@@ -66,7 +60,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 items-center rounded-md px-2 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
               View profile
             </Link>

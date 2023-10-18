@@ -3,21 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { LogoutIcon } from '@shared/icons';
-
-import { useStronghold } from '@stores/stronghold';
-
 export function Logout() {
   const { db } = useStorage();
 
   const navigate = useNavigate();
-  const resetStronghold = useStronghold((state) => state.reset);
 
   const logout = async () => {
     // remove account
     db.accountLogout();
-    // clear privkey in session storage
-    resetStronghold();
     // redirect to welcome screen
     navigate('/auth/welcome');
   };
@@ -27,9 +20,9 @@ export function Logout() {
       <AlertDialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-9 items-center justify-center hover:bg-white/10"
+          className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
         >
-          <LogoutIcon className="h-4 w-4 text-white" />
+          Logout
         </button>
       </AlertDialog.Trigger>
       <AlertDialog.Portal>
@@ -54,7 +47,7 @@ export function Logout() {
               <button
                 type="button"
                 onClick={() => logout()}
-                className="inline-flex h-9 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium leading-none text-white outline-none hover:bg-fuchsia-500"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium leading-none text-white outline-none hover:bg-blue-600"
               >
                 Logout
               </button>

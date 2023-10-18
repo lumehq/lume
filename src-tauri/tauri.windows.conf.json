@@ -3,29 +3,21 @@
   "tauri": {
     "windows": [
       {
-        "width": 300,
-        "height": 300,
-        "decorations": false,
-        "title": "Lume",
-        "center": true,
-        "resizable": false,
-        "label": "splashscreen",
-        "url": "splashscreen"
-      },
-      {
         "width": 1080,
         "height": 800,
         "minWidth": 1080,
         "minHeight": 800,
         "resizable": true,
-        "theme": "Dark",
         "title": "Lume",
-        "transparent": false,
         "center": true,
         "fullscreen": false,
         "hiddenTitle": true,
-        "visible": false,
-        "fileDropEnabled": true
+        "fileDropEnabled": true,
+        "decorations": false,
+        "transparent": true,
+        "windowEffects": {
+          "effects": ["micaLight", "micaDark"]
+        }
       }
     ]
   }

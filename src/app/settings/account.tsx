@@ -5,15 +5,13 @@ import { useStorage } from '@libs/storage/provider';
 
 import { EyeOffIcon, EyeOnIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 export function AccountSettingsScreen() {
   const { db } = useStorage();
 
   const [privType, setPrivType] = useState('password');
   const [nsecType, setNsecType] = useState('password');
 
-  const privkey = useStronghold((state) => state.privkey);
+  const privkey = 'todo';
   const nsec = useMemo(() => nip19.nsecEncode(privkey), [privkey]);
 
   const showPrivkey = () => {
@@ -71,7 +69,7 @@ export function AccountSettingsScreen() {
               <button
                 type="button"
                 onClick={() => showPrivkey()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-neutral-700"
               >
                 {privType === 'password' ? (
                   <EyeOffIcon
@@ -103,7 +101,7 @@ export function AccountSettingsScreen() {
               <button
                 type="button"
                 onClick={() => showNsec()}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-zinc-700"
+                className="group absolute right-2 top-1/2 -translate-y-1/2 transform rounded p-1 hover:bg-neutral-700"
               >
                 {privType === 'password' ? (
                   <EyeOffIcon

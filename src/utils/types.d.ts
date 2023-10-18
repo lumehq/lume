@@ -1,5 +1,5 @@
-import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
-import { Response } from '@tauri-apps/api/http';
+import { type NDKEvent, type NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { type Response } from '@tauri-apps/plugin-http';
 
 export interface RichContent {
   parsed: string;
@@ -26,9 +26,8 @@ export interface Account extends NDKUserProfile {
   npub: string;
   pubkey: string;
   follows: null | string[];
-  network: null | string[];
+  circles: null | string[];
   is_active: number;
-  privkey?: string; // deprecated
   last_login_at: number;
 }
 
@@ -68,12 +67,6 @@ export interface Chats {
   new_messages?: number;
 }
 
-export interface Settings {
-  id: string;
-  key: string;
-  value: string;
-}
-
 export interface Relays {
   id?: string;
   account_id?: number;
@@ -94,7 +87,7 @@ export interface NDKEventWithReplies extends NDKEvent {
 
 export interface NostrBuildResponse extends Response {
   ok: boolean;
-  data: {
+  data?: {
     message: string;
     status: string;
     data: Array<{

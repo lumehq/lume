@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import { VList, VListHandle } from 'virtua';
 
 import { ToggleWidgetList } from '@app/space/components/toggle';
 import { WidgetList } from '@app/space/components/widgetList';
@@ -30,6 +31,7 @@ import { Widget } from '@utils/types';
 
 export function SpaceScreen() {
   const { db } = useStorage();
+  const vlistRef = useRef<VListHandle>(null);
 
   const [widgets, fetchWidgets] = useWidgets((state) => [
     state.widgets,
@@ -84,17 +86,19 @@ export function SpaceScreen() {
   }, [fetchWidgets]);
 
   return (
-    <div className="scrollbar-hide inline-flex h-full w-full min-w-full flex-nowrap items-start divide-x divide-white/5 overflow-x-auto overflow-y-hidden">
+    <VList
+      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none"
+      horizontal
+      ref={vlistRef}
+    >
       {!widgets ? (
-        <div className="flex shrink-0 grow-0 basis-[400px] flex-col">
-          <div className="flex w-full flex-1 items-center justify-center p-3">
-            <LoaderIcon className="h-5 w-5 animate-spin text-white/10" />
-          </div>
+        <div className="flex h-full w-[420px] flex-col items-center justify-center">
+          <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />
         </div>
       ) : (
         widgets.map((widget) => renderItem(widget))
       )}
       <ToggleWidgetList />
-    </div>
+    </VList>
   );
 }

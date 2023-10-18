@@ -1,15 +1,13 @@
 import { webln } from '@getalby/sdk';
 import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
-import { message } from '@tauri-apps/api/dialog';
+import { invoke } from '@tauri-apps/api';
+import { message } from '@tauri-apps/plugin-dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
-import TextareaAutosize from 'react-textarea-autosize';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
-
-import { useStronghold } from '@stores/stronghold';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { useNostr } from '@utils/hooks/useNostr';
@@ -22,6 +20,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const { user } = useProfile(pubkey);
   const { data: event } = useEvent(id);
 
+  const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
   const [amount, setAmount] = useState<string>('21');
   const [zapMessage, setZapMessage] = useState<string>('');
   const [invoice, setInvoice] = useState<null | string>(null);
@@ -29,7 +28,6 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const walletConnectURL = useStronghold((state) => state.walletConnectURL);
   const nwc = useRef(null);
 
   const createZapRequest = async () => {
@@ -81,6 +79,13 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   useEffect(() => {
+    async function getWalletConnectURL() {
+      const uri: string = await invoke('secure_load', { key: 'nwc' });
+      if (uri) setWalletConnectURL(uri);
+    }
+
+    getWalletConnectURL();
+
     return () => {
       setAmount('21');
       setZapMessage('');
@@ -94,13 +99,13 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
+          className="group inline-flex h-7 w-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
         >
-          <ZapIcon className="h-5 w-5 text-white/80 group-hover:text-orange-400" />
+          <ZapIcon className="h-5 w-5 group-hover:text-blue-500" />
         </button>
       </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
@@ -171,7 +176,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                     </div>
                   </div>
                   <div className="mt-4 flex w-full flex-col gap-2">
-                    <TextareaAutosize
+                    <input
                       name="zapMessage"
                       value={zapMessage}
                       onChange={(e) => setZapMessage(e.target.value)}
@@ -187,7 +192,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 px-4 font-medium text-white hover:bg-fuchsia-600"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
                         >
                           {isCompleted ? (
                             <p>Successfully tipped</p>
@@ -211,7 +216,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-fuchsia-500 px-4 font-medium hover:bg-fuchsia-600"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium hover:bg-blue-600"
                         >
                           <p>Create Lightning invoice</p>
                         </button>

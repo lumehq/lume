@@ -1,7 +1,7 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -44,25 +44,25 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
           <AlertDialog.Trigger asChild>
             <button
               type="button"
-              className="group inline-flex h-7 w-7 items-center justify-center text-white/80"
+              className="group inline-flex h-7 w-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
             >
               <RepostIcon
                 className={twMerge(
-                  'h-5 w-5 group-hover:text-blue-500',
-                  isRepost ? 'text-blue-500' : 'text-white/80'
+                  'h-5 w-5 group-hover:text-blue-600',
+                  isRepost ? 'text-blue-500' : ''
                 )}
               />
             </button>
           </AlertDialog.Trigger>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content className="-left-10 select-none rounded-md bg-black px-3.5 py-1.5 text-sm leading-none text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+          <Tooltip.Content className="-left-10 inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-200 px-3.5 text-sm text-neutral-900 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-100">
             Repost
-            <Tooltip.Arrow className="fill-black" />
+            <Tooltip.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>
-      <AlertDialog.Portal className="relative z-10">
+      <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">
@@ -84,7 +84,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
               <button
                 type="button"
                 onClick={() => submit()}
-                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-fuchsia-500"
+                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-blue-600"
               >
                 {isLoading ? (
                   <LoaderIcon className="h-4 w-4 animate-spin text-white" />

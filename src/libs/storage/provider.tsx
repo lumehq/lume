@@ -1,7 +1,8 @@
-import { message } from '@tauri-apps/api/dialog';
-import { platform } from '@tauri-apps/api/os';
+import { appConfigDir } from '@tauri-apps/api/path';
+import { message } from '@tauri-apps/plugin-dialog';
+import { platform } from '@tauri-apps/plugin-os';
+import Database from '@tauri-apps/plugin-sql';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
-import Database from 'tauri-plugin-sql-api';
 
 import { LumeStorage } from '@libs/storage/instance';
 
@@ -18,12 +19,15 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 
   const initLumeStorage = async () => {
     try {
-      const sqlite = await Database.load('sqlite:lume.db');
+      const sqlite = await Database.load('sqlite:lume_v2.db');
       const platformName = await platform();
-      const lumeStorage = new LumeStorage(sqlite, platformName);
+      const dir = await appConfigDir();
 
+      const lumeStorage = new LumeStorage(sqlite, platformName);
       if (!lumeStorage.account) await lumeStorage.getActiveAccount();
+
       setDB(lumeStorage);
+      console.info(dir);
     } catch (e) {
       await message(`Cannot initialize database: ${e}`, {
         title: 'Lume',

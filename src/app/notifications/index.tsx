@@ -53,7 +53,7 @@ export function NotificationScreen() {
   }, []);
 
   return (
-    <div className="scrollbar-hide h-full w-full overflow-y-auto bg-white/10 backdrop-blur-xl">
+    <div className="scrollbar-none h-full w-full overflow-y-auto bg-white/10 backdrop-blur-xl">
       <div className="grid h-full grid-cols-3">
         <div className="col-span-2 flex flex-col border-r border-white/5">
           <TitleBar title="Activities in the last 24 hours" />

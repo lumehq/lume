@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 
 import { RepostIcon, WorldIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
+import { MoreActions } from '@shared/notes';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -15,11 +16,13 @@ import { displayNpub } from '@utils/shortenKey';
 
 export const User = memo(function User({
   pubkey,
+  eventId,
   time,
   variant = 'default',
   embedProfile,
 }: {
   pubkey: string;
+  eventId?: string;
   time?: number;
   variant?:
     | 'default'
@@ -30,7 +33,8 @@ export const User = memo(function User({
     | 'large'
     | 'thread'
     | 'avatar'
-    | 'stacked';
+    | 'stacked'
+    | 'ministacked';
   embedProfile?: string;
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
@@ -76,18 +80,22 @@ export const User = memo(function User({
             className="h-6 w-6 rounded"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-6 w-6 rounded bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-6 w-6 rounded bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex flex-1 items-baseline gap-2">
-          <h5 className="max-w-[10rem] truncate font-semibold leading-none text-white">
+          <h5 className="max-w-[10rem] truncate font-semibold  text-neutral-900 dark:text-neutral-100">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </h5>
-          <span className="leading-none text-white/50">·</span>
-          <span className="leading-none text-white/50">{createdAt}</span>
+          <span className="text-neutral-500 dark:text-neutral-300">·</span>
+          <span className="text-neutral-500 dark:text-neutral-300">{createdAt}</span>
         </div>
       </div>
     );
@@ -106,17 +114,21 @@ export const User = memo(function User({
             className="h-14 w-14 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-14 w-14 rounded-lg bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-14 w-14 rounded-lg bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex h-full flex-col items-start justify-between">
           <div className="flex flex-col items-start gap-1 text-start">
-            <p className="max-w-[15rem] truncate text-lg font-semibold leading-none text-white">
+            <p className="max-w-[15rem] truncate text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {user?.name || user?.display_name || user?.displayName}
             </p>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              className="markdown-simple line-clamp-6"
+              className="markdown-simple line-clamp-6 whitespace-pre-line break-all"
               disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
               unwrapDisallowed={true}
               linkTarget={'_blank'}
@@ -129,7 +141,7 @@ export const User = memo(function User({
               <Link
                 to={user?.website}
                 target="_blank"
-                className="inline-flex items-center gap-2 text-sm text-white/70"
+                className="inline-flex items-center gap-2 text-sm text-neutral-900 dark:text-neutral-100/70"
               >
                 <WorldIcon className="h-4 w-4" />
                 <p className="max-w-[10rem] truncate">{user?.website}</p>
@@ -151,17 +163,21 @@ export const User = memo(function User({
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="h-10 w-10 rounded-lg"
+            className="h-11 w-11 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-10 w-10 rounded-lg bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-11 w-11 rounded-lg bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
-        <div className="flex w-full flex-col items-start gap-1">
-          <h3 className="max-w-[15rem] truncate font-medium leading-none text-white">
+        <div className="flex w-full flex-col items-start">
+          <h3 className="max-w-[15rem] truncate text-base font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name || user?.display_name || user?.displayName}
           </h3>
-          <p className="max-w-[10rem] truncate text-sm leading-none text-white/70">
+          <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/70">
             {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
@@ -181,7 +197,11 @@ export const User = memo(function User({
           className="h-12 w-12 rounded-lg"
         />
         <Avatar.Fallback delayMs={300}>
-          <img src={svgURI} alt={pubkey} className="h-12 w-12 rounded-lg bg-black" />
+          <img
+            src={svgURI}
+            alt={pubkey}
+            className="h-12 w-12 rounded-lg bg-black dark:bg-white"
+          />
         </Avatar.Fallback>
       </Avatar.Root>
     );
@@ -196,13 +216,35 @@ export const User = memo(function User({
           loading="lazy"
           decoding="async"
           style={{ contentVisibility: 'auto' }}
-          className="inline-block h-8 w-8 rounded-full ring-1 ring-black"
+          className="inline-block h-8 w-8 rounded-full ring-1 ring-neutral-200 dark:ring-neutral-800"
         />
         <Avatar.Fallback delayMs={300}>
           <img
             src={svgURI}
             alt={pubkey}
-            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-black"
+            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-neutral-200 dark:bg-white dark:ring-neutral-800"
+          />
+        </Avatar.Fallback>
+      </Avatar.Root>
+    );
+  }
+
+  if (variant === 'ministacked') {
+    return (
+      <Avatar.Root>
+        <Avatar.Image
+          src={user?.picture || user?.image}
+          alt={pubkey}
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="inline-block h-6 w-6 rounded-full ring-1 ring-white dark:ring-black"
+        />
+        <Avatar.Fallback delayMs={300}>
+          <img
+            src={svgURI}
+            alt={pubkey}
+            className="inline-block h-6 w-6 rounded-full bg-black ring-1 ring-white dark:bg-white dark:ring-black"
           />
         </Avatar.Fallback>
       </Avatar.Root>
@@ -213,7 +255,7 @@ export const User = memo(function User({
     return (
       <div className="flex gap-3">
         <div className="inline-flex h-10 w-10 items-center justify-center">
-          <RepostIcon className="h-6 w-6 text-blue-500" />
+          <RepostIcon className="h-5 w-5 text-blue-500" />
         </div>
         <div className="inline-flex items-center gap-2">
           <Avatar.Root className="shrink-0">
@@ -226,11 +268,15 @@ export const User = memo(function User({
               className="h-6 w-6 rounded"
             />
             <Avatar.Fallback delayMs={300}>
-              <img src={svgURI} alt={pubkey} className="h-6 w-6 rounded bg-black" />
+              <img
+                src={svgURI}
+                alt={pubkey}
+                className="h-6 w-6 rounded bg-black dark:bg-white"
+              />
             </Avatar.Fallback>
           </Avatar.Root>
           <div className="inline-flex items-baseline gap-1">
-            <h5 className="max-w-[10rem] truncate font-medium leading-none text-white/80">
+            <h5 className="max-w-[10rem] truncate font-medium text-neutral-900 dark:text-neutral-100/80">
               {user?.name ||
                 user?.display_name ||
                 user?.displayName ||
@@ -256,17 +302,21 @@ export const User = memo(function User({
             className="h-10 w-10 rounded-lg"
           />
           <Avatar.Fallback delayMs={300}>
-            <img src={svgURI} alt={pubkey} className="h-10 w-10 rounded-lg bg-black" />
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+            />
           </Avatar.Fallback>
         </Avatar.Root>
-        <div className="flex flex-1 flex-col gap-2">
-          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
+        <div className="flex flex-1 flex-col">
+          <h5 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
-          <div className="inline-flex items-center gap-2">
-            <span className="leading-none text-white/50">{createdAt}</span>
-            <span className="leading-none text-white/50">·</span>
-            <span className="leading-none text-white/50">{displayNpub(pubkey, 16)}</span>
+          <div className="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+            <span>{createdAt}</span>
+            <span>·</span>
+            <span>{displayNpub(pubkey, 16)}</span>
           </div>
         </div>
       </div>
@@ -277,38 +327,40 @@ export const User = memo(function User({
     <HoverCard.Root>
       <div className="relative z-10 flex items-start gap-3">
         <HoverCard.Trigger asChild>
-          <Avatar.Root className="h-10 w-10 shrink-0">
+          <Avatar.Root className="relative top-1 shrink-0">
             <Avatar.Image
               src={user?.picture || user?.image}
               alt={pubkey}
               loading="lazy"
               decoding="async"
               style={{ contentVisibility: 'auto' }}
-              className="h-10 w-10 rounded-lg border border-white/5"
+              className="h-10 w-10 rounded-lg bg-white object-cover"
             />
             <Avatar.Fallback delayMs={300}>
               <img
                 src={svgURI}
                 alt={pubkey}
-                className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+                className="h-10 w-10 rounded-lg bg-black dark:bg-white"
               />
             </Avatar.Fallback>
           </Avatar.Root>
         </HoverCard.Trigger>
-        <div className="flex flex-1 items-baseline gap-2">
-          <h5 className="max-w-[15rem] truncate font-semibold leading-none text-white">
+        <div className="flex flex-1 items-start gap-2">
+          <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
-          </h5>
-          <span className="leading-none text-white/50">·</span>
-          <span className="leading-none text-white/50">{createdAt}</span>
+          </div>
+          <div className="ml-auto inline-flex items-center gap-3">
+            <div className="text-neutral-500 dark:text-neutral-400">{createdAt}</div>
+            <MoreActions id={eventId} pubkey={pubkey} />
+          </div>
         </div>
       </div>
       <HoverCard.Portal>
         <HoverCard.Content
-          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl focus:outline-none data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all"
+          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all focus:outline-none"
           sideOffset={5}
         >
           <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
@@ -325,13 +377,13 @@ export const User = memo(function User({
                 <img
                   src={svgURI}
                   alt={pubkey}
-                  className="h-10 w-10 rounded-lg border border-white/5 bg-black"
+                  className="h-10 w-10 rounded-lg border border-white/5 bg-black dark:bg-white"
                 />
               </Avatar.Fallback>
             </Avatar.Root>
             <div className="flex flex-1 flex-col gap-2">
               <div className="inline-flex flex-col gap-1">
-                <h5 className="text-sm font-semibold leading-none">
+                <h5 className="text-sm font-semibold">
                   {user?.name ||
                     user?.display_name ||
                     user?.displayName ||
@@ -341,16 +393,16 @@ export const User = memo(function User({
                   <NIP05
                     pubkey={pubkey}
                     nip05={user?.nip05}
-                    className="max-w-[15rem] truncate text-sm leading-none text-white/50"
+                    className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300"
                   />
                 ) : (
-                  <span className="max-w-[15rem] truncate text-sm leading-none text-white/50">
+                  <span className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300">
                     {displayNpub(pubkey, 16)}
                   </span>
                 )}
               </div>
               <div>
-                <p className="line-clamp-3 break-all text-sm leading-tight text-white">
+                <p className="line-clamp-3 break-all text-sm leading-tight text-neutral-900 dark:text-neutral-100">
                   {user?.about}
                 </p>
               </div>
@@ -359,13 +411,13 @@ export const User = memo(function User({
           <div className="flex items-center gap-2 px-3 py-3">
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-fuchsia-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-blue-600"
             >
               View profile
             </Link>
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-fuchsia-500"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-blue-600"
             >
               Message
             </Link>

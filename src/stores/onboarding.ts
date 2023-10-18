@@ -2,37 +2,39 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface OnboardingState {
-  step: null | string;
-  pubkey: null | string;
-  tempPrivkey: null | string;
-  setPubkey: (pubkey: string) => void;
-  setTempPrivkey: (privkey: string) => void;
-  setStep: (url: string) => void;
-  clearStep: () => void;
+  enrich: boolean;
+  hashtag: boolean;
+  circle: boolean;
+  relays: boolean;
+  outbox: boolean;
+  notification: boolean;
+  toggleEnrich: () => void;
+  toggleHashtag: () => void;
+  toggleCircle: () => void;
+  toggleRelays: () => void;
+  toggleOutbox: () => void;
+  toggleNotification: () => void;
 }
 
 export const useOnboarding = create<OnboardingState>()(
   persist(
     (set) => ({
-      step: null,
-      pubkey: null,
-      tempPrivkey: null,
-      setPubkey: (pubkey: string) => {
-        set({ pubkey });
-      },
-      setTempPrivkey: (privkey: string) => {
-        set({ tempPrivkey: privkey });
-      },
-      setStep: (url: string) => {
-        set({ step: url });
-      },
-      clearStep: () => {
-        set({ step: null, pubkey: null, tempPrivkey: null });
-      },
+      enrich: false,
+      hashtag: false,
+      circle: false,
+      relays: false,
+      outbox: false,
+      notification: false,
+      toggleEnrich: () => set((state) => ({ enrich: !state.enrich })),
+      toggleHashtag: () => set((state) => ({ hashtag: !state.hashtag })),
+      toggleCircle: () => set((state) => ({ circle: !state.circle })),
+      toggleRelays: () => set((state) => ({ relays: !state.relays })),
+      toggleOutbox: () => set((state) => ({ outbox: !state.outbox })),
+      toggleNotification: () => set((state) => ({ notification: !state.notification })),
     }),
     {
       name: 'onboarding',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

@@ -58,8 +58,8 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   if (status === 'error') {
     const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
     return (
-      <div className="relative mt-3 flex flex-col">
-        <div className="relative z-10 flex items-center gap-3">
+      <div className="mt-3 rounded-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800">
+        <div className="flex items-center gap-2">
           <div className="inline-flex h-6 w-6 items-end justify-center rounded bg-black pb-1">
             <img src="/lume.png" alt="lume" className="h-auto w-1/3" />
           </div>
@@ -67,11 +67,11 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
             Lume <span className="text-green-500">(System)</span>
           </h5>
         </div>
-        <div className="mt-1">
+        <div className="mt-1.5">
           <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
             Lume cannot find this post with your current relays, but you can view it via
             njump.me.{' '}
-            <Link to={noteLink} className="text-fuchsia-500">
+            <Link to={noteLink} className="text-blue-500">
               Learn more
             </Link>
           </div>
@@ -87,10 +87,10 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       onKeyDown={(e) => openThread(e, id)}
       role="button"
       tabIndex={0}
-      className="mt-3 cursor-default rounded-lg bg-white/10 px-3 py-3 backdrop-blur-xl"
+      className="mt-3 cursor-default rounded-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800"
     >
       <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
-      <div className="mt-1">{renderKind(data)}</div>
+      <div className="mt-1.5">{renderKind(data)}</div>
     </div>
   );
 });

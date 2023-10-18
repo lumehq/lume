@@ -1,5 +1,16 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { MediaPlayer, MediaProvider } from '@vidstack/react';
+import {
+  MediaControlBar,
+  MediaController,
+  MediaMuteButton,
+  MediaPlayButton,
+  MediaSeekBackwardButton,
+  MediaSeekForwardButton,
+  MediaTimeDisplay,
+  MediaTimeRange,
+  MediaVolumeRange,
+} from 'media-chrome/dist/react';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
@@ -25,16 +36,25 @@ export function FileNote(props: { event?: NDKEvent }) {
   if (type === 'video') {
     return (
       <div className="mb-2 mt-3">
-        <MediaPlayer
-          key={url}
-          src={url}
-          poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-          load="visible"
-          aspectRatio="16/9"
-          crossorigin=""
-        >
-          <MediaProvider />
-        </MediaPlayer>
+        <MediaController key={url} className="aspect-video">
+          <video
+            slot="media"
+            src={url}
+            poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+            preload="auto"
+            muted
+            crossOrigin=""
+          />
+          <MediaControlBar>
+            <MediaPlayButton></MediaPlayButton>
+            <MediaSeekBackwardButton></MediaSeekBackwardButton>
+            <MediaSeekForwardButton></MediaSeekForwardButton>
+            <MediaTimeRange></MediaTimeRange>
+            <MediaTimeDisplay showDuration></MediaTimeDisplay>
+            <MediaMuteButton></MediaMuteButton>
+            <MediaVolumeRange></MediaVolumeRange>
+          </MediaControlBar>
+        </MediaController>
       </div>
     );
   }
@@ -44,10 +64,12 @@ export function FileNote(props: { event?: NDKEvent }) {
       <Link
         to={url}
         target="_blank"
-        className="break-all font-normal text-fuchsia-500 hover:text-fuchsia-600"
+        className="break-all font-normal text-blue-500 hover:text-blue-600"
       >
         {url}
       </Link>
     </div>
   );
 }
+
+export const MemoizedFileNote = memo(FileNote);

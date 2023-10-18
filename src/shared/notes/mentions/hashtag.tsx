@@ -24,7 +24,7 @@ export function Hashtag({ tag }: { tag: string }) {
           content: tag.replace('#', ''),
         })
       }
-      className="break-words text-fuchsia-400 hover:text-fuchsia-500"
+      className="cursor-default break-all text-blue-500 hover:text-blue-600"
     >
       {tag}
     </span>

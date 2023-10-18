@@ -1,12 +1,22 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, ScrollRestoration } from 'react-router-dom';
+import { WindowTitlebar } from 'tauri-controls';
 
-import { Frame } from '@shared/frame';
+import { useStorage } from '@libs/storage/provider';
 
 export function AuthLayout() {
+  const { db } = useStorage();
+
   return (
-    <Frame className="relative h-screen w-screen">
-      <div className="absolute left-0 top-0 z-50 h-16 w-full" data-tauri-drag-region />
-      <Outlet />
-    </Frame>
+    <div className="h-screen w-screen bg-neutral-50 dark:bg-neutral-950">
+      {db.platform !== 'macos' ? (
+        <WindowTitlebar />
+      ) : (
+        <div data-tauri-drag-region className="h-9" />
+      )}
+      <div className="h-full w-full">
+        <Outlet />
+        <ScrollRestoration />
+      </div>
+    </div>
   );
 }

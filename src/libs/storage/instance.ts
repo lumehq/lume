@@ -1,8 +1,7 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { BaseDirectory, removeFile } from '@tauri-apps/api/fs';
-import { Platform } from '@tauri-apps/api/os';
-import Database from 'tauri-plugin-sql-api';
-import { Stronghold } from 'tauri-plugin-stronghold-api';
+import { invoke } from '@tauri-apps/api';
+import { Platform } from '@tauri-apps/plugin-os';
+import Database from '@tauri-apps/plugin-sql';
 
 import { FULL_RELAYS } from '@stores/constants';
 
@@ -10,50 +9,27 @@ import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
-  public secureDB: Stronghold;
   public account: Account | null;
   public platform: Platform | null;
 
-  constructor(sqlite: Database, platform?: Platform, stronghold?: Stronghold) {
+  constructor(sqlite: Database, platform: Platform) {
     this.db = sqlite;
-    this.secureDB = stronghold ?? undefined;
     this.account = null;
-    this.platform = platform ?? undefined;
+    this.platform = platform;
   }
 
-  private async getSecureClient(key?: string) {
-    try {
-      return await this.secureDB.loadClient(key ?? 'lume');
-    } catch {
-      return await this.secureDB.createClient(key ?? 'lume');
-    }
+  public async secureSave(key: string, value: string) {
+    return await invoke('secure_save', { key, value });
   }
 
-  public async secureSave(key: string, value: string, clientKey?: string) {
-    if (!this.secureDB) throw new Error("Stronghold isn't initialize");
-
-    const client = await this.getSecureClient(clientKey);
-    const store = client.getStore();
-
-    await store.insert(key, Array.from(new TextEncoder().encode(value)));
-    await this.secureDB.save();
-  }
-
-  public async secureLoad(key: string, clientKey?: string) {
-    if (!this.secureDB) throw new Error("Stronghold isn't initialize");
-
-    const client = await this.getSecureClient(clientKey);
-    const store = client.getStore();
-
-    const value = await store.get(key);
+  public async secureLoad(key: string) {
+    const value: string = await invoke('secure_load', { key });
     if (!value) return null;
-
-    const decoded = new TextDecoder().decode(new Uint8Array(value));
-    return decoded;
+    return value;
   }
 
-  public async secureReset() {
-    return await removeFile('lume.stronghold', { dir: BaseDirectory.AppConfig });
+  public async secureRemove(key: string) {
+    return await invoke('secure_remove', { key });
   }
 
   public async checkAccount() {
@@ -74,8 +50,8 @@ export class LumeStorage {
       if (typeof account.follows === 'string')
         account.follows = JSON.parse(account.follows);
 
-      if (typeof account.network === 'string')
-        account.network = JSON.parse(account.network);
+      if (typeof account.circles === 'string')
+        account.circles = JSON.parse(account.circles);
 
       if (typeof account.last_login_at === 'string')
         account.last_login_at = parseInt(account.last_login_at);
@@ -100,8 +76,8 @@ export class LumeStorage {
       ]);
     } else {
       await this.db.execute(
-        'INSERT OR IGNORE INTO accounts (npub, pubkey, privkey, is_active) VALUES ($1, $2, $3, $4);',
-        [npub, pubkey, 'privkey is stored in secure storage', 1]
+        'INSERT OR IGNORE INTO accounts (id, pubkey, is_active) VALUES ($1, $2, $3);',
+        [npub, pubkey, 1]
       );
     }
 
@@ -109,7 +85,7 @@ export class LumeStorage {
     return account;
   }
 
-  public async updateAccount(column: string, value: string | string[]) {
+  public async updateAccount(column: string, value: string) {
     const insert = await this.db.execute(
       `UPDATE accounts SET ${column} = $1 WHERE id = $2;`,
       [value, this.account.id]
@@ -327,10 +303,20 @@ export class LumeStorage {
     return await this.db.execute(`DELETE FROM relays WHERE relay = "${relay}";`);
   }
 
-  public async removePrivkey() {
+  public async createSetting(key: string, value: string) {
     return await this.db.execute(
-      `UPDATE accounts SET privkey = "privkey is stored in secure storage" WHERE id = "${this.account.id}";`
+      'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
+      [key, value]
     );
+  }
+
+  public async getSettingValue(key: string) {
+    const results: { key: string; value: string }[] = await this.db.select(
+      'SELECT * FROM settings WHERE key = $1 ORDER BY id DESC LIMIT 1;',
+      [key]
+    );
+    if (results.length < 1) return null;
+    return results[0].value;
   }
 
   public async accountLogout() {

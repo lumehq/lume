@@ -78,7 +78,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="scrollbar-none h-full">
             <div className="h-10" />
             {data.map((item) => renderItem(item))}
             <div className="h-16" />

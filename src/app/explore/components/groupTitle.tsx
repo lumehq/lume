@@ -10,7 +10,7 @@ export const GroupTitle = memo(function GroupTitle({ pubkey }: { pubkey: string 
   }
 
   return (
-    <h3 className="text-sm font-semibold text-fuchsia-500">{`${
+    <h3 className="text-sm font-semibold text-blue-500">{`${
       user.name || user.display_name
     }'s network`}</h3>
   );

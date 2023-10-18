@@ -6,8 +6,6 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, CancelIcon, LoaderIcon, WorldIcon } from '@shared/icons';
 
-import { useStronghold } from '@stores/stronghold';
-
 type FormValues = {
   uri: string;
 };
@@ -38,8 +36,6 @@ export function NWCOther() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(false);
 
-  const setWalletConnectURL = useStronghold((state) => state.setWalletConnectURL);
-
   const onSubmit = async (data: { [x: string]: string }) => {
     try {
       if (!data.uri.startsWith('nostr+walletconnect:')) {
@@ -57,8 +53,7 @@ export function NWCOther() {
       const params = new URLSearchParams(uriObj.search);
 
       if (params.has('relay') && params.has('secret')) {
-        await db.secureSave('walletConnectURL', data.uri, 'nwc');
-        setWalletConnectURL(data.uri);
+        await db.secureSave('nwc', data.uri);
         setIsloading(false);
         setIsOpen(false);
       }
@@ -76,12 +71,14 @@ export function NWCOther() {
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <div className="flex items-center justify-between pt-4">
         <div className="inline-flex items-center gap-2.5">
-          <div className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-white/10">
+          <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-700">
             <WorldIcon className="h-5 w-5" />
           </div>
           <div>
-            <h5 className="font-semibold leading-tight text-white">URI String</h5>
-            <p className="text-sm leading-tight text-white/50">
+            <h5 className="font-semibold text-neutral-900 dark:text-neutral-100">
+              URI String
+            </h5>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
               Using format nostr+walletconnect:
             </p>
           </div>
@@ -89,14 +86,14 @@ export function NWCOther() {
         <Dialog.Trigger asChild>
           <button
             type="button"
-            className="inline-flex h-9 w-min items-center justify-center rounded-md border-t border-white/10 bg-white/20 px-3 text-sm font-medium text-white hover:bg-green-500"
+            className="inline-flex h-9 w-min items-center justify-center rounded-md bg-neutral-300 px-3 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-700"
           >
             Connect
           </button>
         </Dialog.Trigger>
       </div>
-      <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="h-min w-full shrink-0 rounded-t-xl border-b border-white/10 bg-white/5 px-5 py-5">
@@ -139,7 +136,7 @@ export function NWCOther() {
                 <button
                   type="submit"
                   disabled={!isDirty || !isValid}
-                  className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-fuchsia-500 px-6 font-medium leading-none text-white hover:bg-fuchsia-600 focus:outline-none disabled:opacity-50"
+                  className="inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-blue-500 px-6 font-medium leading-none text-white hover:bg-blue-600 focus:outline-none disabled:opacity-50"
                 >
                   {isLoading ? (
                     <>

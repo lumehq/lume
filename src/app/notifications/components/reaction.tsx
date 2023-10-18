@@ -18,7 +18,7 @@ export function NotiReaction({ event }: { event: NDKEvent }) {
             reacted {event.content} · {createdAt}
           </p>
         </div>
-        <span className="hidden text-sm font-semibold text-fuchsia-500 group-hover:block">
+        <span className="hidden text-sm font-semibold text-blue-500 group-hover:block">
           View
         </span>
       </div>

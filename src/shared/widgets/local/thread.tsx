@@ -4,12 +4,12 @@ import { useCallback } from 'react';
 import { useStorage } from '@libs/storage/provider';
 
 import {
-  ArticleNote,
-  FileNote,
+  MemoizedArticleNote,
+  MemoizedFileNote,
+  MemoizedTextNote,
   NoteActions,
   NoteReplyForm,
   NoteStats,
-  TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { RepliesList } from '@shared/notes/replies/list';
@@ -29,11 +29,11 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return <TextNote content={event.content} />;
+          return <MemoizedTextNote content={event.content} />;
         case NDKKind.Article:
-          return <ArticleNote event={event} />;
+          return <MemoizedArticleNote event={event} />;
         case 1063:
-          return <FileNote event={event} />;
+          return <MemoizedFileNote event={event} />;
         default:
           return <UnknownNote event={event} />;
       }
@@ -44,16 +44,16 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="scrollbar-hide h-full overflow-y-auto">
+      <div className="h-full overflow-y-auto scrollbar-none">
         {status === 'loading' ? (
           <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <NoteSkeleton />
             </div>
           </div>
         ) : (
-          <div className="h-min w-full px-3 pt-1.5">
-            <div className="rounded-xl bg-white/10 px-3 pt-3 backdrop-blur-xl">
+          <div className="h-min w-full px-3">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
               <div className="mt-2">{renderKind(data)}</div>
               <NoteActions
@@ -61,11 +61,11 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
                 pubkey={data.pubkey}
                 extraButtons={false}
               />
-              <NoteStats id={params.content} />
             </div>
           </div>
         )}
         <div className="px-3">
+          <NoteStats id={params.content} />
           <NoteReplyForm id={params.content} pubkey={db.account.pubkey} />
           <RepliesList id={params.content} />
         </div>

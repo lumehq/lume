@@ -1,7 +1,7 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
@@ -65,13 +65,17 @@ export function Repost({
         <div
           className={twMerge(
             'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
-            !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
+            !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
           )}
         >
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
-            <User pubkey={embedEvent.pubkey} time={embedEvent.created_at} />
-            <div className="-mt-5 flex items-start gap-3">
+            <User
+              pubkey={embedEvent.pubkey}
+              time={embedEvent.created_at}
+              eventId={embedEvent.id}
+            />
+            <div className="-mt-4 flex items-start gap-3">
               <div className="w-10 shrink-0" />
               <div className="relative z-20 flex-1">
                 {renderKind(embedEvent)}
@@ -104,7 +108,7 @@ export function Repost({
         <div
           className={twMerge(
             'relative overflow-hidden rounded-xl px-3 py-3',
-            !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
+            !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
           )}
         >
           <div className="relative flex flex-col">
@@ -116,14 +120,14 @@ export function Repost({
                 Lume <span className="text-green-500">(System)</span>
               </h5>
             </div>
-            <div className="-mt-6 flex items-start gap-3">
+            <div className="-mt-4 flex items-start gap-3">
               <div className="w-11 shrink-0" />
               <div>
                 <div className="relative z-20 mt-1 flex-1 select-text">
                   <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
                     Lume cannot find this post with your current relays, but you can view
                     it via njump.me.{' '}
-                    <Link to={noteLink} className="text-fuchsia-500">
+                    <Link to={noteLink} className="text-blue-500">
                       Learn more
                     </Link>
                   </div>
@@ -142,13 +146,13 @@ export function Repost({
       <div
         className={twMerge(
           'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
-          !lighter ? 'bg-white/10 backdrop-blur-xl' : ''
+          !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
         )}
       >
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
-          <User pubkey={data.pubkey} time={data.created_at} />
-          <div className="-mt-5 flex items-start gap-3">
+          <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />
+          <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">
               {renderKind(data)}
@@ -160,3 +164,5 @@ export function Repost({
     </div>
   );
 }
+
+export const MemoizedRepost = memo(Repost);

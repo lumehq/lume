@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api';
 
 import { Opengraph } from '@utils/types';
 

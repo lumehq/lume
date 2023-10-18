@@ -1,49 +1,30 @@
-import { message } from '@tauri-apps/api/dialog';
-import { fetch } from '@tauri-apps/api/http';
+import { message } from '@tauri-apps/plugin-dialog';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 
-import { AuthCreateScreen } from '@app/auth/create';
-import { AuthImportScreen } from '@app/auth/import';
 import { OnboardingScreen } from '@app/auth/onboarding';
+import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { Frame } from '@shared/frame';
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
 import { NoteLayout } from '@shared/layouts/note';
 import { SettingsLayout } from '@shared/layouts/settings';
 
-import './index.css';
+import './app.css';
 
 export default function App() {
   const { db } = useStorage();
 
   const accountLoader = async () => {
     try {
+      // redirect to welcome screen if none user exist
       const totalAccount = await db.checkAccount();
-
-      const stronghold = sessionStorage.getItem('stronghold');
-      const privkey = JSON.parse(stronghold).state.privkey || null;
-
-      const onboarding = localStorage.getItem('onboarding');
-      const step = JSON.parse(onboarding).state.step || null;
-
-      if (totalAccount === 0) {
-        return redirect('/auth/welcome');
-      } else {
-        if (step) {
-          return redirect(step);
-        }
-
-        if (!privkey) {
-          return redirect('/auth/unlock');
-        }
-      }
+      if (totalAccount === 0) return redirect('/auth/welcome');
 
       return null;
     } catch (e) {
@@ -58,7 +39,7 @@ export default function App() {
         headers: {
           Accept: 'application/nostr+json',
         },
-      }).then((res) => res.data),
+      }).then((res) => res.json()),
     });
   };
 
@@ -84,13 +65,6 @@ export default function App() {
           },
         },
         {
-          path: 'chats/:pubkey',
-          async lazy() {
-            const { ChatScreen } = await import('@app/chats');
-            return { Component: ChatScreen };
-          },
-        },
-        {
           path: 'notifications',
           async lazy() {
             const { NotificationScreen } = await import('@app/notifications');
@@ -103,15 +77,6 @@ export default function App() {
             const { NWCScreen } = await import('@app/nwc');
             return { Component: NWCScreen };
           },
-        },
-        {
-          path: 'explore',
-          element: (
-            <ReactFlowProvider>
-              <ExploreScreen />
-            </ReactFlowProvider>
-          ),
-          errorElement: <ErrorScreen />,
         },
         {
           path: 'relays',
@@ -127,6 +92,29 @@ export default function App() {
             const { RelayScreen } = await import('@app/relays/relay');
             return { Component: RelayScreen };
           },
+        },
+        {
+          path: 'explore',
+          element: (
+            <ReactFlowProvider>
+              <ExploreScreen />
+            </ReactFlowProvider>
+          ),
+          errorElement: <ErrorScreen />,
+        },
+        {
+          path: 'chats',
+          element: <ChatsScreen />,
+          errorElement: <ErrorScreen />,
+          children: [
+            {
+              path: 'chat/:pubkey',
+              async lazy() {
+                const { ChatScreen } = await import('@app/chats/chat');
+                return { Component: ChatScreen };
+              },
+            },
+          ],
         },
       ],
     },
@@ -152,14 +140,6 @@ export default function App() {
       ],
     },
     {
-      path: '/splashscreen',
-      errorElement: <ErrorScreen />,
-      async lazy() {
-        const { SplashScreen } = await import('@app/splash');
-        return { Component: SplashScreen };
-      },
-    },
-    {
       path: '/auth',
       element: <AuthLayout />,
       errorElement: <ErrorScreen />,
@@ -172,60 +152,18 @@ export default function App() {
           },
         },
         {
-          path: 'import',
-          element: <AuthImportScreen />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { ImportStep1Screen } = await import('@app/auth/import/step-1');
-                return { Component: ImportStep1Screen };
-              },
-            },
-            {
-              path: 'step-2',
-              async lazy() {
-                const { ImportStep2Screen } = await import('@app/auth/import/step-2');
-                return { Component: ImportStep2Screen };
-              },
-            },
-            {
-              path: 'step-3',
-              async lazy() {
-                const { ImportStep3Screen } = await import('@app/auth/import/step-3');
-                return { Component: ImportStep3Screen };
-              },
-            },
-          ],
+          path: 'create',
+          async lazy() {
+            const { CreateAccountScreen } = await import('@app/auth/create');
+            return { Component: CreateAccountScreen };
+          },
         },
         {
-          path: 'create',
-          element: <AuthCreateScreen />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { CreateStep1Screen } = await import('@app/auth/create/step-1');
-                return { Component: CreateStep1Screen };
-              },
-            },
-            {
-              path: 'step-2',
-              async lazy() {
-                const { CreateStep2Screen } = await import('@app/auth/create/step-2');
-                return { Component: CreateStep2Screen };
-              },
-            },
-            {
-              path: 'step-3',
-              async lazy() {
-                const { CreateStep3Screen } = await import('@app/auth/create/step-3');
-                return { Component: CreateStep3Screen };
-              },
-            },
-          ],
+          path: 'import',
+          async lazy() {
+            const { ImportAccountScreen } = await import('@app/auth/import');
+            return { Component: ImportAccountScreen };
+          },
         },
         {
           path: 'onboarding',
@@ -235,57 +173,31 @@ export default function App() {
             {
               path: '',
               async lazy() {
-                const { OnboardStep1Screen } = await import(
-                  '@app/auth/onboarding/step-1'
+                const { OnboardingListScreen } = await import(
+                  '@app/auth/onboarding/list'
                 );
-                return { Component: OnboardStep1Screen };
+                return { Component: OnboardingListScreen };
               },
             },
             {
-              path: 'step-2',
+              path: 'enrich',
               async lazy() {
-                const { OnboardStep2Screen } = await import(
-                  '@app/auth/onboarding/step-2'
+                const { OnboardEnrichScreen } = await import(
+                  '@app/auth/onboarding/enrich'
                 );
-                return { Component: OnboardStep2Screen };
+                return { Component: OnboardEnrichScreen };
+              },
+            },
+            {
+              path: 'hashtag',
+              async lazy() {
+                const { OnboardHashtagScreen } = await import(
+                  '@app/auth/onboarding/hashtag'
+                );
+                return { Component: OnboardHashtagScreen };
               },
             },
           ],
-        },
-        {
-          path: 'complete',
-          async lazy() {
-            const { CompleteScreen } = await import('@app/auth/complete');
-            return { Component: CompleteScreen };
-          },
-        },
-        {
-          path: 'unlock',
-          async lazy() {
-            const { UnlockScreen } = await import('@app/auth/unlock');
-            return { Component: UnlockScreen };
-          },
-        },
-        {
-          path: 'lock',
-          async lazy() {
-            const { LockScreen } = await import('@app/auth/lock');
-            return { Component: LockScreen };
-          },
-        },
-        {
-          path: 'migrate',
-          async lazy() {
-            const { MigrateScreen } = await import('@app/auth/migrate');
-            return { Component: MigrateScreen };
-          },
-        },
-        {
-          path: 'reset',
-          async lazy() {
-            const { ResetScreen } = await import('@app/auth/reset');
-            return { Component: ResetScreen };
-          },
         },
       ],
     },
@@ -316,9 +228,9 @@ export default function App() {
     <RouterProvider
       router={router}
       fallbackElement={
-        <Frame className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center">
           <LoaderIcon className="h-6 w-6 animate-spin text-white" />
-        </Frame>
+        </div>
       }
       future={{ v7_startTransition: true }}
     />

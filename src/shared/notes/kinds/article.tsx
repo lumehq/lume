@@ -1,5 +1,5 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Image } from '@shared/image';
@@ -29,7 +29,7 @@ export function ArticleNote(props: { event?: NDKEvent }) {
 
   return (
     <Link to={`/notes/article/${props.event.id}`} preventScrollReset={true}>
-      <div className="mb-2 mt-2 flex flex-col rounded-lg">
+      <div className="my-2 overflow-hidden rounded-lg">
         {metadata.image && (
           <Image
             src={metadata.image}
@@ -37,14 +37,16 @@ export function ArticleNote(props: { event?: NDKEvent }) {
             className="h-44 w-full rounded-t-lg object-cover"
           />
         )}
-        <div className="flex flex-col gap-2 rounded-b-lg bg-white/10 px-3 py-3 backdrop-blur-xl">
-          <h5 className="line-clamp-1 font-medium leading-none text-white">
+        <div className="flex flex-col gap-1 rounded-b-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800">
+          <h5 className="line-clamp-1 font-semibold text-neutral-900 dark:text-neutral-100">
             {metadata.title}
           </h5>
-          <p className="line-clamp-3 break-all text-sm text-white/50">
-            {metadata.summary}
-          </p>
-          <span className="mt-2.5 text-sm leading-none text-white/50">
+          {metadata.summary ? (
+            <p className="line-clamp-3 break-all text-sm text-neutral-600 dark:text-neutral-400">
+              {metadata.summary}
+            </p>
+          ) : null}
+          <span className="mt-2.5 text-sm text-neutral-500 dark:text-neutral-400">
             {metadata.publishedAt.toString()}
           </span>
         </div>
@@ -52,3 +54,5 @@ export function ArticleNote(props: { event?: NDKEvent }) {
     </Link>
   );
 }
+
+export const MemoizedArticleNote = memo(ArticleNote);

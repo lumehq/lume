@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -30,7 +30,6 @@ export const NIP05 = memo(function NIP05({
 
         const res = await fetch(verifyURL, {
           method: 'GET',
-          timeout: 10,
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
@@ -38,7 +37,7 @@ export const NIP05 = memo(function NIP05({
 
         if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
-        const data = res.data as NIP05;
+        const data: NIP05 = await res.json();
         if (data.names) {
           if (data.names[localPath] !== pubkey) return false;
           return true;
@@ -61,8 +60,8 @@ export const NIP05 = memo(function NIP05({
   }
 
   return (
-    <div className={twMerge('leadning-none inline-flex items-center gap-1', className)}>
-      <p>{nip05}</p>
+    <div className={twMerge('inline-flex items-center gap-1', className)}>
+      <p className="text-sm">{nip05}</p>
       <div className="shrink-0">
         {data === true ? (
           <VerifiedIcon className="h-3 w-3 text-green-500" />

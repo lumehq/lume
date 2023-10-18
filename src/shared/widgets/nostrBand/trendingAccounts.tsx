@@ -39,8 +39,8 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
         {status === 'loading' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
-              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-              <p className="text-sm font-medium text-white/80">
+              <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />
+              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-300">
                 Loading trending accounts...
               </p>
             </div>
@@ -50,14 +50,14 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
             <div className="flex flex-col items-center gap-4">
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
-                <h3 className="font-semibold leading-tight">
+                <h3 className="font-semibold leading-tight text-neutral-500 dark:text-neutral-300">
                   Sorry, an unexpected error has occurred.
                 </h3>
               </div>
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-hide h-full">
+          <VList className="h-full scrollbar-none">
             {data.map((item: Profile) => (
               <NostrBandUserProfile key={item.pubkey} data={item} />
             ))}

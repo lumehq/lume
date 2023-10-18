@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { Button } from '@shared/button';
-import { Image } from '@shared/image';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
@@ -24,34 +23,32 @@ export function NoteReplyForm({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   return (
-    <div className="mt-3 flex flex-col rounded-xl bg-white/10 backdrop-blur-xl">
+    <div className="mt-3 flex flex-col rounded-xl bg-neutral-200 dark:bg-neutral-800">
       <div className="relative w-full flex-1 overflow-hidden">
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Reply to this thread..."
-          className=" relative h-24 w-full resize-none rounded-md bg-transparent px-3 py-3 text-base text-white !outline-none placeholder:text-white/50"
+          className=" relative h-24 w-full resize-none rounded-md bg-transparent px-3 py-3 text-base text-neutral-900 !outline-none placeholder:text-neutral-600 dark:text-neutral-100 dark:placeholder:text-neutral-400"
           spellCheck={false}
         />
       </div>
-      <div className="w-full border-t border-white/10 px-3 py-3">
+      <div className="w-full border-t border-neutral-300 px-3 py-3 dark:border-neutral-700">
         {status === 'loading' ? (
-          <div>
-            <p>Loading...</p>
-          </div>
+          <div>Loading</div>
         ) : (
           <div className="flex w-full items-center justify-between">
-            <div className="inline-flex items-center gap-3">
+            <div className="inline-flex items-center gap-2">
               <div className="relative h-11 w-11 shrink-0 rounded">
-                <Image
+                <img
                   src={user?.picture || user?.image}
                   alt={pubkey}
                   className="h-11 w-11 rounded-lg bg-white object-cover"
                 />
               </div>
               <div>
-                <p className="mb-1 text-sm leading-none text-white/50">Reply as</p>
-                <p className="text-sm font-medium leading-none text-white">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">Reply as</p>
+                <p className="font-semibold text-neutral-900 dark:text-neutral-100">
                   {user?.name || displayNpub(pubkey, 16)}
                 </p>
               </div>

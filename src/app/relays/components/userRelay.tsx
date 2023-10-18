@@ -34,13 +34,13 @@ export function UserRelay() {
           {data.map((item) => (
             <div
               key={item}
-              className="group flex h-10 items-center justify-between rounded-lg bg-white/10 pl-3 pr-1.5"
+              className="group flex h-10 items-center justify-between rounded-lg bg-neutral-200 pl-3 pr-1.5 dark:bg-neutral-800"
             >
               <div className="inline-flex items-center gap-2.5">
                 {relayUrls.includes(item) ? (
                   <span className="relative flex h-2 w-2">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-500"></span>
                   </span>
                 ) : (
                   <span className="relative flex h-2 w-2">
@@ -48,16 +48,16 @@ export function UserRelay() {
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
                   </span>
                 )}
-                <p className="max-w-[20rem] truncate text-sm font-medium leading-none">
+                <p className="max-w-[20rem] truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
                   {item}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => removeRelay(item)}
-                className="hidden h-6 w-6 items-center justify-center rounded hover:bg-white/10 group-hover:inline-flex"
+                className="hidden h-6 w-6 items-center justify-center rounded group-hover:inline-flex hover:bg-neutral-300 dark:hover:bg-neutral-700"
               >
-                <CancelIcon className="h-4 w-4 text-white" />
+                <CancelIcon className="h-4 w-4 text-neutral-900 dark:text-neutral-100" />
               </button>
             </div>
           ))}

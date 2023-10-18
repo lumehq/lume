@@ -1,7 +1,7 @@
 import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
-import { fetch } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -60,7 +60,6 @@ export function EditProfileModal() {
 
     const res = await fetch(verifyURL, {
       method: 'GET',
-      timeout: 10,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
@@ -68,7 +67,7 @@ export function EditProfileModal() {
 
     if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
-    const data = res.data as NIP05;
+    const data: NIP05 = await res.json();
     if (data.names) {
       if (data.names[localPath] !== db.account.pubkey) return false;
       return true;
@@ -139,22 +138,22 @@ export function EditProfileModal() {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-white/10 text-sm font-medium backdrop-blur-xl hover:bg-fuchsia-500"
+          className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
         >
           Edit profile
         </button>
       </Dialog.Trigger>
-      <Dialog.Portal className="relative z-10">
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
-            <div className="h-min w-full shrink-0 border-b border-white/10 bg-white/5 px-5 py-5">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-neutral-100 dark:bg-neutral-900">
+            <div className="h-min w-full shrink-0 rounded-t-xl border-b border-neutral-200 px-5 py-5 dark:border-neutral-800">
               <div className="flex items-center justify-between">
-                <Dialog.Title className="text-lg font-semibold leading-none text-white">
+                <Dialog.Title className="text-lg font-semibold leading-none text-neutral-900 dark:text-neutral-100">
                   Edit profile
                 </Dialog.Title>
-                <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
-                  <CancelIcon className="h-4 w-4 text-white/50" />
+                <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-200 dark:text-neutral-100 dark:hover:bg-neutral-800">
+                  <CancelIcon className="h-4 w-4" />
                 </Dialog.Close>
               </div>
             </div>
@@ -171,7 +170,7 @@ export function EditProfileModal() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="h-full w-full bg-white" />
+                      <div className="h-full w-full bg-black dark:bg-white" />
                     )}
                     <div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform">
                       <BannerUploader setBanner={setBanner} />
@@ -182,7 +181,7 @@ export function EditProfileModal() {
                       <Image
                         src={picture}
                         alt="user's avatar"
-                        className="h-14 w-14 rounded-lg object-cover ring-2 ring-zinc-900"
+                        className="h-14 w-14 rounded-lg object-cover ring-2 ring-neutral-900"
                       />
                       <div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform">
                         <AvatarUploader setPicture={setPicture} />
@@ -194,7 +193,7 @@ export function EditProfileModal() {
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor="name"
-                      className="text-sm font-semibold uppercase tracking-wider text-white/50"
+                      className="text-sm font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400"
                     >
                       Name
                     </label>
@@ -205,13 +204,13 @@ export function EditProfileModal() {
                         minLength: 4,
                       })}
                       spellCheck={false}
-                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                      className="relative h-11 w-full rounded-lg bg-neutral-200 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-800 dark:text-neutral-100"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor="nip05"
-                      className="text-sm font-semibold uppercase tracking-wider text-white/50"
+                      className="text-sm font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400"
                     >
                       NIP-05
                     </label>
@@ -222,17 +221,17 @@ export function EditProfileModal() {
                           minLength: 4,
                         })}
                         spellCheck={false}
-                        className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                        className="relative h-11 w-full rounded-lg bg-neutral-200 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-800 dark:text-neutral-100"
                       />
                       <div className="absolute right-2 top-1/2 -translate-y-1/2 transform">
                         {nip05.verified ? (
-                          <span className="inline-flex h-6 items-center gap-1 rounded bg-green-500 px-2 text-sm font-medium">
-                            <CheckCircleIcon className="h-4 w-4 text-white" />
+                          <span className="inline-flex h-6 items-center gap-1 rounded bg-green-500 px-2 text-sm font-medium text-white">
+                            <CheckCircleIcon className="h-4 w-4 text-black dark:text-white" />
                             Verified
                           </span>
                         ) : (
-                          <span className="inline-flex h-6 items-center gap-1 rounded bg-red-500 px-2 text-sm font-medium">
-                            <UnverifiedIcon className="h-4 w-4 text-white" />
+                          <span className="inline-flex h-6 items-center gap-1 rounded bg-red-500 px-2 text-sm font-medium text-white">
+                            <UnverifiedIcon className="h-4 w-4 text-black dark:text-white" />
                             Unverified
                           </span>
                         )}
@@ -247,20 +246,20 @@ export function EditProfileModal() {
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor="about"
-                      className="text-sm font-semibold uppercase tracking-wider text-white/50"
+                      className="text-sm font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400"
                     >
                       Bio
                     </label>
                     <textarea
                       {...register('about')}
                       spellCheck={false}
-                      className="relative h-20 w-full resize-none rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                      className="relative h-20 w-full resize-none rounded-lg bg-neutral-200 px-3 py-2 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-800 dark:text-neutral-100"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor="website"
-                      className="text-sm font-semibold uppercase tracking-wider text-white/50"
+                      className="text-sm font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400"
                     >
                       Website
                     </label>
@@ -268,13 +267,13 @@ export function EditProfileModal() {
                       type={'text'}
                       {...register('website', { required: false })}
                       spellCheck={false}
-                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                      className="relative h-11 w-full rounded-lg bg-neutral-200 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-800 dark:text-neutral-100"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor="website"
-                      className="text-sm font-semibold uppercase tracking-wider text-white/50"
+                      className="text-sm font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400"
                     >
                       Lightning address
                     </label>
@@ -282,14 +281,14 @@ export function EditProfileModal() {
                       type={'text'}
                       {...register('lud16', { required: false })}
                       spellCheck={false}
-                      className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                      className="relative h-11 w-full rounded-lg bg-neutral-200 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-800 dark:text-neutral-100"
                     />
                   </div>
                   <div>
                     <button
                       type="submit"
                       disabled={!isValid}
-                      className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-lg bg-fuchsia-500 font-medium text-white hover:bg-fuchsia-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+                      className="inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
                     >
                       {loading ? (
                         <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
