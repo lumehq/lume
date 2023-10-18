@@ -41,7 +41,8 @@ export function Composer() {
     content: JSON.parse(localStorage.getItem('editor-content') || '{}'),
     editorProps: {
       attributes: {
-        class: 'h-full markdown break-all overflow-y-auto outline-none pr-2',
+        class:
+          'h-full prose prose-neutral max-w-none select-text whitespace-pre-line leading-normal dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-1 prose-a:font-normal prose-a:text-blue-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-blue-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2 hover:prose-a:text-blue-500 break-all overflow-y-auto outline-none pr-2',
       },
     },
     onUpdate: ({ editor }) => {
@@ -114,7 +115,7 @@ export function Composer() {
     <div className="flex h-full flex-col">
       <div className="flex h-full w-full gap-3 px-4 pb-4">
         <div className="flex w-10 shrink-0 items-center justify-center">
-          <div className="h-full w-[2px] bg-white/10 backdrop-blur-xl" />
+          <div className="h-full w-[2px] bg-neutral-100 dark:bg-neutral-900" />
         </div>
         <div className="w-full">
           <EditorContent
@@ -134,15 +135,15 @@ export function Composer() {
               <button
                 type="button"
                 onClick={() => clearReply()}
-                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-white/10 px-2 backdrop-blur-xl"
+                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-neutral-300 px-2 dark:bg-neutral-700"
               >
-                <CancelIcon className="h-4 w-4 text-white" />
+                <CancelIcon className="h-4 w-4" />
               </button>
             </div>
           )}
         </div>
       </div>
-      <div className="flex items-center justify-between rounded-b-xl border-t border-white/10 bg-white/5 p-2">
+      <div className="flex items-center justify-between rounded-b-xl border-t border-neutral-200 bg-neutral-100 p-2 dark:border-neutral-800 dark:bg-neutral-900">
         <div className="inline-flex items-center gap-1">
           <MediaUploader editor={editor} />
           <MentionPopup editor={editor} />
@@ -150,13 +151,9 @@ export function Composer() {
         <button
           onClick={() => submit()}
           disabled={editor && editor.isEmpty}
-          className="inline-flex h-10 w-20 items-center justify-center rounded-lg bg-blue-500 px-2 font-semibold hover:bg-blue-600 disabled:opacity-50"
+          className="inline-flex h-9 w-20 items-center justify-center rounded-lg bg-blue-500 px-2 font-medium text-white hover:bg-blue-600 disabled:opacity-50"
         >
-          {loading === true ? (
-            <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-          ) : (
-            'Post'
-          )}
+          {loading === true ? <LoaderIcon className="h-5 w-5 animate-spin" /> : 'Post'}
         </button>
       </div>
     </div>

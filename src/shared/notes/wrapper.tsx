@@ -30,7 +30,7 @@ export function NoteWrapper({
         <div className="relative">{root && <ChildNote id={root} />}</div>
         <div className="relative">{reply && <ChildNote id={reply} root={root} />}</div>
         <div className="relative flex flex-col">
-          <User pubkey={event.pubkey} time={event.created_at} />
+          <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
           <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">

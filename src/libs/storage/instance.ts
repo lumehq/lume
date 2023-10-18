@@ -22,10 +22,14 @@ export class LumeStorage {
     return await invoke('secure_save', { key, value });
   }
 
-  public async secureLoad(key?: string) {
+  public async secureLoad(key: string) {
     const value: string = await invoke('secure_load', { key });
     if (!value) return null;
     return value;
+  }
+
+  public async secureRemove(key: string) {
+    return await invoke('secure_remove', { key });
   }
 
   public async checkAccount() {

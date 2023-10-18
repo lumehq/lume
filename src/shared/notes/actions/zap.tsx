@@ -1,6 +1,7 @@
 import { webln } from '@getalby/sdk';
 import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
+import { invoke } from '@tauri-apps/api';
 import { message } from '@tauri-apps/plugin-dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
@@ -79,9 +80,10 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
 
   useEffect(() => {
     async function getWalletConnectURL() {
-      // const uri: string = await invoke('secure_load', { key: 'nwc' });
-      setWalletConnectURL('todo');
+      const uri: string = await invoke('secure_load', { key: 'nwc' });
+      if (uri) setWalletConnectURL(uri);
     }
+
     getWalletConnectURL();
 
     return () => {
@@ -97,7 +99,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       <Dialog.Trigger asChild>
         <button
           type="button"
-          className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
+          className="group inline-flex h-7 w-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
         >
           <ZapIcon className="h-5 w-5 group-hover:text-blue-500" />
         </button>

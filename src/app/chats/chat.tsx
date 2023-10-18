@@ -29,12 +29,7 @@ export function ChatScreen() {
   const renderItem = useCallback(
     (message: NDKEvent) => {
       return (
-        <ChatMessage
-          message={message}
-          userPubkey={db.account.pubkey}
-          userPrivkey={''}
-          self={message.pubkey === db.account.pubkey}
-        />
+        <ChatMessage message={message} self={message.pubkey === db.account.pubkey} />
       );
     },
     [data]
@@ -91,17 +86,12 @@ export function ChatScreen() {
                 </p>
               </div>
             ) : (
-              <VList
-                ref={listRef}
-                className="h-full scrollbar-none"
-                mode="reverse"
-                shift={true}
-              >
+              <VList ref={listRef} className="h-full scrollbar-none" shift={true} reverse>
                 {data.map((message) => renderItem(message))}
               </VList>
             )}
           </div>
-          <div className="shrink-0 rounded-b-lg border-t border-neutral-300 bg-neutral-200 p-3 backdrop-blur-xl dark:border-neutral-700 dark:bg-neutral-800">
+          <div className="shrink-0 rounded-b-lg border-t border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
             <ChatForm
               receiverPubkey={pubkey}
               userPubkey={db.account.pubkey}

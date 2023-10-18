@@ -46,7 +46,7 @@ input::-ms-clear {
 }
 
 .ProseMirror p.is-empty::before {
-  @apply text-white/50;
+  @apply text-neutral-600 dark:text-neutral-400;
   content: attr(data-placeholder);
   float: left;
   height: 0;

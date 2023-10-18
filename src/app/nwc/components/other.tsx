@@ -71,12 +71,14 @@ export function NWCOther() {
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <div className="flex items-center justify-between pt-4">
         <div className="inline-flex items-center gap-2.5">
-          <div className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-white/10">
+          <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-700">
             <WorldIcon className="h-5 w-5" />
           </div>
           <div>
-            <h5 className="font-semibold leading-tight text-white">URI String</h5>
-            <p className="text-sm leading-tight text-white/50">
+            <h5 className="font-semibold text-neutral-900 dark:text-neutral-100">
+              URI String
+            </h5>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
               Using format nostr+walletconnect:
             </p>
           </div>
@@ -84,14 +86,14 @@ export function NWCOther() {
         <Dialog.Trigger asChild>
           <button
             type="button"
-            className="inline-flex h-9 w-min items-center justify-center rounded-md border-t border-white/10 bg-white/20 px-3 text-sm font-medium text-white hover:bg-green-500"
+            className="inline-flex h-9 w-min items-center justify-center rounded-md bg-neutral-300 px-3 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-700"
           >
             Connect
           </button>
         </Dialog.Trigger>
       </div>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
             <div className="h-min w-full shrink-0 rounded-t-xl border-b border-white/10 bg-white/5 px-5 py-5">

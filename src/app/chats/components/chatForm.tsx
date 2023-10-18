@@ -57,12 +57,12 @@ export function ChatForm({
           autoCorrect="off"
           autoCapitalize="off"
           placeholder="Message"
-          className="h-10 flex-1 resize-none bg-transparent px-3 text-neutral-900 placeholder:text-neutral-500 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-300"
+          className="h-10 flex-1 resize-none bg-transparent px-3 text-neutral-900 placeholder:text-neutral-600 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-300"
         />
         <button
           type="button"
           onClick={submit}
-          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-neutral-500 dark:text-neutral-300"
+          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-neutral-600 dark:text-neutral-300"
         >
           <EnterIcon className="h-5 w-5" />
           Send

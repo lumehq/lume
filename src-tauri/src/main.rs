@@ -98,6 +98,13 @@ fn secure_load(key: String) -> Result<String, String> {
   }
 }
 
+#[tauri::command]
+fn secure_remove(key: String) -> Result<(), ()> {
+  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let _ = entry.delete_password();
+  Ok(())
+}
+
 fn main() {
   tauri::Builder::default()
     .plugin(tauri_plugin_app::init())
@@ -140,7 +147,8 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       opengraph,
       secure_save,
-      secure_load
+      secure_load,
+      secure_remove
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

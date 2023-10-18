@@ -1,3 +1,4 @@
+import { readText } from '@tauri-apps/plugin-clipboard-manager';
 import { motion } from 'framer-motion';
 import { nip19 } from 'nostr-tools';
 import { useState } from 'react';
@@ -46,6 +47,11 @@ export function ImportAccountScreen() {
     }
   };
 
+  const pasteNsec = async () => {
+    const tempNsec = await readText();
+    setNsec(tempNsec);
+  };
+
   const submitNsec = async () => {
     if (savedPrivkey) return;
     if (nsec.length > 50 && nsec.startsWith('nsec1')) {
@@ -61,7 +67,7 @@ export function ImportAccountScreen() {
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
-      <div className="absolute left-[8px] top-4">
+      <div className="absolute left-[8px] top-2">
         {!created ? (
           <button
             onClick={() => navigate(-1)}
@@ -159,30 +165,45 @@ export function ImportAccountScreen() {
                     Enter your private key (optional):
                   </label>
                   <div className="inline-flex w-full items-center gap-2">
-                    <input
-                      name="nsec"
-                      type="text"
-                      value={nsec}
-                      onChange={(e) => setNsec(e.target.value)}
-                      spellCheck={false}
-                      autoComplete="off"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      placeholder="nsec1"
-                      className="h-11 flex-1 rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
-                    />
-                    <button
-                      type="button"
-                      onClick={submitNsec}
-                      className={twMerge(
-                        'h-11 w-24 shrink-0 rounded-lg font-semibold text-white',
-                        !savedPrivkey
-                          ? 'bg-blue-500 hover:bg-blue-600'
-                          : 'bg-teal-500 hover:bg-teal-600'
-                      )}
-                    >
-                      {savedPrivkey ? 'Saved' : 'Save'}
-                    </button>
+                    <div className="relative flex-1">
+                      <input
+                        name="nsec"
+                        type="text"
+                        value={nsec}
+                        onChange={(e) => setNsec(e.target.value)}
+                        spellCheck={false}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        placeholder="nsec1"
+                        className="h-11 w-full rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                      />
+                      {nsec.length < 5 ? (
+                        <div className="absolute right-0 top-0 inline-flex h-11 items-center justify-center px-2">
+                          <button
+                            type="button"
+                            onClick={pasteNsec}
+                            className="rounded-md bg-neutral-300 px-2 py-1 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+                          >
+                            Paste
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                    {nsec.length > 5 ? (
+                      <button
+                        type="button"
+                        onClick={submitNsec}
+                        className={twMerge(
+                          'h-11 w-24 shrink-0 rounded-lg font-semibold text-white',
+                          !savedPrivkey
+                            ? 'bg-blue-500 hover:bg-blue-600'
+                            : 'bg-teal-500 hover:bg-teal-600'
+                        )}
+                      >
+                        {savedPrivkey ? 'Saved' : 'Save'}
+                      </button>
+                    ) : null}
                   </div>
                 </div>
                 <div className="mt-3 select-text">
@@ -195,12 +216,14 @@ export function ImportAccountScreen() {
                     1. In case you store private key in Lume
                   </h5>
                   <p className="text-sm">
-                    Lume will put your nsec to{' '}
-                    {db.platform === 'macos'
-                      ? 'Apple Keychain (macOS)'
-                      : db.platform === 'windows'
-                      ? 'Credential Manager (Windows)'
-                      : 'Secret Service (Linux)'}
+                    Lume will put your private key to{' '}
+                    <b>
+                      {db.platform === 'macos'
+                        ? 'Apple Keychain (macOS)'
+                        : db.platform === 'windows'
+                        ? 'Credential Manager (Windows)'
+                        : 'Secret Service (Linux)'}
+                    </b>
                     , it will be secured by your OS
                   </p>
                   <h5 className="mt-2 font-semibold">

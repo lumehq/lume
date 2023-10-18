@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { HorizontalDotsIcon } from '@shared/icons';
+import { AccountMoreActions } from '@shared/accounts/more';
 
 import { useActivities } from '@stores/activities';
 
@@ -80,9 +80,7 @@ export function ActiveAccount() {
         </Avatar.Root>
         <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-teal-500 ring-2 ring-neutral-100 dark:ring-neutral-900" />
       </Link>
-      <div className="inline-flex items-center justify-center rounded-md">
-        <HorizontalDotsIcon className="h-4 w-4" />
-      </div>
+      <AccountMoreActions pubkey={db.account.pubkey} />
     </div>
   );
 }

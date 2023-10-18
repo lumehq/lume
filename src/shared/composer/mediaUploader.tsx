@@ -1,5 +1,5 @@
-import { message } from '@tauri-apps/plugin-dialog';
 import { UnlistenFn, listen } from '@tauri-apps/api/event';
+import { message } from '@tauri-apps/plugin-dialog';
 import { Editor } from '@tiptap/react';
 import { useEffect, useState } from 'react';
 
@@ -53,9 +53,9 @@ export function MediaUploader({ editor }: { editor: Editor }) {
     <button
       type="button"
       onClick={() => uploadToNostrBuild()}
-      className="ml-2 inline-flex h-10 w-max items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-medium text-white/80 hover:bg-white/10 hover:backdrop-blur-xl"
+      className="ml-2 inline-flex h-10 w-max items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-medium text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400"
     >
-      <MediaIcon className="h-5 w-5 text-white/80" />
+      <MediaIcon className="h-5 w-5" />
       {loading ? 'Uploading...' : 'Add media'}
     </button>
   );

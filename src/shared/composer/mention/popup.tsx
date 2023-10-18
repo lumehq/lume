@@ -19,9 +19,9 @@ export function MentionPopup({ editor }: { editor: Editor }) {
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-white/10 hover:backdrop-blur-xl"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-neutral-600 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:bg-neutral-800"
         >
-          <MentionIcon className="h-5 w-5 text-white/80" />
+          <MentionIcon className="h-5 w-5" />
         </button>
       </Popover.Trigger>
       <Popover.Content className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg bg-white/10 backdrop-blur-xl focus:outline-none">

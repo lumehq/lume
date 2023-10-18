@@ -15,12 +15,12 @@ export function TitleBar({ id, title }: { id?: string; title?: string }) {
       {id === '9999' ? (
         <div className="isolate flex -space-x-2">
           {db.account.circles
-            ?.slice(0, 4)
+            ?.slice(0, 10)
             .map((item) => <User key={item} pubkey={item} variant="ministacked" />)}
-          {db.account.circles?.length > 4 ? (
-            <div className="inline-flex h-6 w-6  items-center justify-center rounded-full bg-neutral-200 text-neutral-900 ring-1 ring-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:ring-neutral-700">
+          {db.account.circles?.length > 10 ? (
+            <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-200 text-neutral-900 ring-1 ring-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:ring-neutral-700">
               <span className="text-xs font-medium">
-                +{db.account.circles?.length - 4}
+                +{db.account.circles?.length - 10}
               </span>
             </div>
           ) : null}

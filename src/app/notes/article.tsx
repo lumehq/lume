@@ -1,7 +1,7 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { nip19 } from 'nostr-tools';
-import { AddressPointer, EventPointer } from 'nostr-tools/lib/nip19';
+import { AddressPointer, EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -58,7 +58,7 @@ export function ArticleNoteScreen() {
   };
 
   return (
-    <div className="scrollbar-none h-full w-full overflow-y-auto scroll-smooth">
+    <div className="h-full w-full overflow-y-auto scroll-smooth scrollbar-none">
       <div className="container mx-auto px-4 pt-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-5">
           <div className="col-span-1 pr-8">
@@ -66,20 +66,20 @@ export function ArticleNoteScreen() {
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-200 dark:bg-neutral-800"
               >
-                <ArrowLeftIcon className="h-5 w-5 text-white" />
+                <ArrowLeftIcon className="h-5 w-5" />
               </button>
-              <div className="flex flex-col divide-y divide-white/5 rounded-xl border border-white/10 bg-white/5">
+              <div className="flex flex-col divide-y divide-neutral-300 rounded-xl bg-neutral-200 dark:divide-neutral-700 dark:bg-neutral-800">
                 <button
                   type="button"
                   onClick={share}
-                  className="sticky top-16 inline-flex h-12 w-12 items-center justify-center rounded-t-xl "
+                  className="sticky top-16 inline-flex h-12 w-12 items-center justify-center rounded-t-xl"
                 >
                   {isCopy ? (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                    <CheckCircleIcon className="h-5 w-5 text-teal-500" />
                   ) : (
-                    <ShareIcon className="h-5 w-5 text-white" />
+                    <ShareIcon className="h-5 w-5" />
                   )}
                 </button>
                 <button
@@ -87,7 +87,7 @@ export function ArticleNoteScreen() {
                   onClick={scrollToReply}
                   className="sticky top-16 inline-flex h-12 w-12 items-center justify-center rounded-b-xl"
                 >
-                  <ReplyIcon className="h-5 w-5 text-white" />
+                  <ReplyIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -101,19 +101,19 @@ export function ArticleNoteScreen() {
               </div>
             ) : (
               <>
-                <div className="h-min w-full px-3">
-                  <div className="rounded-xl border-t border-white/10 bg-white/20 px-3 pt-3">
+                <div className="flex h-min w-full flex-col gap-1 px-3">
+                  <div>
                     <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
                     <div className="mt-2">{renderKind(data)}</div>
-                    <div>
+                    <div className="mb-3 mt-3">
                       <NoteActions
                         id={data.id}
                         pubkey={data.pubkey}
                         extraButtons={false}
                       />
-                      <NoteStats id={data.id} />
                     </div>
                   </div>
+                  <NoteStats id={data.id} />
                 </div>
                 <div ref={replyRef} className="px-3">
                   <NoteReplyForm id={data.id} pubkey={db.account.pubkey} />

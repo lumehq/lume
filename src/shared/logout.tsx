@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { LogoutIcon } from '@shared/icons';
-
 export function Logout() {
   const { db } = useStorage();
 
@@ -22,9 +20,9 @@ export function Logout() {
       <AlertDialog.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-r-lg hover:bg-white/10"
+          className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
         >
-          <LogoutIcon className="h-5 w-5 text-white" />
+          Logout
         </button>
       </AlertDialog.Trigger>
       <AlertDialog.Portal>

@@ -53,9 +53,9 @@ export function RelayList() {
           </div>
         </div>
       ) : (
-        <VList className="mt-20 h-full scrollbar-none">
+        <VList className="h-full scrollbar-none">
           <div className="inline-flex h-16 w-full items-center border-b border-neutral-100 px-3 dark:border-neutral-900">
-            <h3 className="bg-gradient-to-r from-blue-200 via-red-200 to-orange-300 bg-clip-text font-semibold text-transparent">
+            <h3 className="font-semibold text-neutral-950 dark:text-neutral-50">
               All relays used by your follows
             </h3>
           </div>

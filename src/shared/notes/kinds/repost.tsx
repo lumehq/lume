@@ -70,7 +70,11 @@ export function Repost({
         >
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
-            <User pubkey={embedEvent.pubkey} time={embedEvent.created_at} />
+            <User
+              pubkey={embedEvent.pubkey}
+              time={embedEvent.created_at}
+              eventId={embedEvent.id}
+            />
             <div className="-mt-4 flex items-start gap-3">
               <div className="w-10 shrink-0" />
               <div className="relative z-20 flex-1">
@@ -147,7 +151,7 @@ export function Repost({
       >
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
-          <User pubkey={data.pubkey} time={data.created_at} />
+          <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />
           <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
             <div className="relative z-20 flex-1">

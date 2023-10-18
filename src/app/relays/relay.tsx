@@ -25,23 +25,27 @@ export function RelayScreen() {
 
   return (
     <div className="grid h-full w-full grid-cols-3">
-      <div className="col-span-2 border-r border-white/5">
-        <div className="inline-flex h-16 w-full items-center gap-2.5 border-b border-white/5 px-3">
+      <div className="col-span-2 border-r border-neutral-100 dark:border-neutral-900">
+        <div className="inline-flex h-16 w-full items-center gap-2.5 border-b border-neutral-100 px-3 dark:border-neutral-900">
           <button type="button" onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="h-5 w-5 text-white/70 hover:text-white" />
+            <ArrowLeftIcon className="h-5 w-5 text-neutral-500 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-500" />
           </button>
-          <h3 className="font-semibold text-white">Global events</h3>
+          <h3 className="font-semibold text-neutral-950 dark:text-neutral-50">
+            Global events
+          </h3>
         </div>
         <RelayEventList relayUrl={url} />
       </div>
       <div className="col-span-1">
-        <div className="inline-flex h-16 w-full items-center border-b border-white/5 px-3">
-          <h3 className="font-semibold text-white">Information</h3>
+        <div className="inline-flex h-16 w-full items-center border-b border-neutral-100 px-3 dark:border-neutral-900">
+          <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
+            Information
+          </h3>
         </div>
         <div className="mt-4 px-3">
           <Suspense
             fallback={
-              <div className="flex items-center gap-2 text-sm font-medium text-white">
+              <div className="flex items-center gap-2 text-sm font-medium text-neutral-900 dark:text-neutral-100">
                 <LoaderIcon className="h-4 w-4 animate-spin" />
                 Loading...
               </div>
@@ -58,24 +62,28 @@ export function RelayScreen() {
               {(resolvedRelay) => (
                 <div className="flex flex-col gap-5">
                   <div>
-                    <h3 className="font-semibold leading-tight text-white">
+                    <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
                       {resolvedRelay.name}
                     </h3>
-                    <p className="text-sm font-medium text-white/70">
+                    <p className="text-sm font-medium text-neutral-600 dark:text-neutral-500">
                       {resolvedRelay.description}
                     </p>
                   </div>
                   {resolvedRelay.pubkey ? (
                     <div className="flex flex-col gap-1">
-                      <h5 className="text-sm font-semibold text-white/70">Owner:</h5>
-                      <div className="w-full rounded-lg bg-white/10 px-2 py-2">
+                      <h5 className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+                        Owner:
+                      </h5>
+                      <div className="w-full rounded-lg bg-neutral-100 px-2 py-2 dark:bg-neutral-900">
                         <User pubkey={resolvedRelay.pubkey} variant="simple" />
                       </div>
                     </div>
                   ) : null}
                   {resolvedRelay.contact ? (
                     <div>
-                      <h5 className="text-sm font-semibold text-white/70">Contact:</h5>
+                      <h5 className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+                        Contact:
+                      </h5>
                       <a
                         href={`mailto:${resolvedRelay.contact}`}
                         target="_blank"
@@ -87,7 +95,9 @@ export function RelayScreen() {
                     </div>
                   ) : null}
                   <div>
-                    <h5 className="text-sm font-semibold text-white/70">Software:</h5>
+                    <h5 className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+                      Software:
+                    </h5>
                     <a
                       href={resolvedRelay.software}
                       target="_blank"
@@ -100,7 +110,7 @@ export function RelayScreen() {
                     </a>
                   </div>
                   <div>
-                    <h5 className="text-sm font-semibold text-white/70">
+                    <h5 className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
                       Supported NIPs:
                     </h5>
                     <div className="mt-2 grid grid-cols-7 gap-2">
@@ -110,7 +120,7 @@ export function RelayScreen() {
                           href={`https://nips.be/${item}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-white/10 text-sm font-medium hover:bg-blue-600"
+                          className="inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-900"
                         >
                           {item}
                         </a>
@@ -119,7 +129,9 @@ export function RelayScreen() {
                   </div>
                   {resolvedRelay.limitation ? (
                     <div>
-                      <h5 className="text-sm font-semibold text-white/70">Limitation</h5>
+                      <h5 className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+                        Limitation
+                      </h5>
                       <div className="flex flex-col gap-2 divide-y divide-white/5">
                         {Object.keys(resolvedRelay.limitation).map((key, index) => {
                           return (
@@ -127,10 +139,10 @@ export function RelayScreen() {
                               key={index}
                               className="flex items-baseline justify-between pt-2"
                             >
-                              <p className="text-sm font-medium text-white">
+                              <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                 {titleCase(key)}:
                               </p>
-                              <p className="text-sm font-medium text-white/70">
+                              <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
                                 {resolvedRelay.limitation[key].toString()}
                               </p>
                             </div>
@@ -149,7 +161,7 @@ export function RelayScreen() {
                       >
                         Open payment website
                       </a>
-                      <span className="text-center text-xs text-white/70">
+                      <span className="text-center text-xs text-neutral-600 dark:text-neutral-400">
                         You need to make a payment to connect this relay
                       </span>
                     </div>

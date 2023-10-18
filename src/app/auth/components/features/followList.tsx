@@ -46,7 +46,7 @@ export function FollowList() {
               <User key={item} pubkey={item} variant="stacked" />
             ))}
             {data.length > 16 ? (
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-900 ring-1 ring-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:ring-neutral-700">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-900 ring-1 ring-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:ring-neutral-800">
                 <span className="text-xs font-medium">+{data.length}</span>
               </div>
             ) : null}

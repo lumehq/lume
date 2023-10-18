@@ -7,18 +7,8 @@ import { ImagePreview, LinkPreview, MentionNote, VideoPreview } from '@shared/no
 
 import { parser } from '@utils/parser';
 
-export function ChatMessage({
-  message,
-  userPubkey,
-  userPrivkey,
-  self,
-}: {
-  message: NDKEvent;
-  userPubkey: string;
-  userPrivkey: string;
-  self: boolean;
-}) {
-  const decryptedContent = useDecryptMessage(message, userPubkey, userPrivkey);
+export function ChatMessage({ message, self }: { message: NDKEvent; self: boolean }) {
+  const decryptedContent = useDecryptMessage(message);
   const richContent = parser(decryptedContent) ?? null;
 
   return (
@@ -26,17 +16,15 @@ export function ChatMessage({
       className={twMerge(
         'my-2 w-max max-w-[400px] rounded-t-xl px-3 py-3',
         self
-          ? 'ml-auto rounded-l-xl bg-blue-500'
-          : 'rounded-r-xl bg-neutral-200 dark:bg-neutral-800'
+          ? 'ml-auto rounded-l-xl bg-blue-500 text-white'
+          : 'rounded-r-xl bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
       )}
     >
       {!richContent ? (
-        <p className="text-neutral-900 dark:text-neutral-100">Decrypting...</p>
+        <p>Decrypting...</p>
       ) : (
         <div>
-          <p className="select-text whitespace-pre-line text-neutral-900 dark:text-neutral-100">
-            {richContent.parsed}
-          </p>
+          <p className="select-text whitespace-pre-line">{richContent.parsed}</p>
           <div>
             {richContent.images.length > 0 && <ImagePreview urls={richContent.images} />}
             {richContent.videos.length > 0 && <VideoPreview urls={richContent.videos} />}

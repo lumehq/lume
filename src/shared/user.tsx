@@ -216,13 +216,13 @@ export const User = memo(function User({
           loading="lazy"
           decoding="async"
           style={{ contentVisibility: 'auto' }}
-          className="inline-block h-8 w-8 rounded-full ring-1 ring-black"
+          className="inline-block h-8 w-8 rounded-full ring-1 ring-neutral-200 dark:ring-neutral-800"
         />
         <Avatar.Fallback delayMs={300}>
           <img
             src={svgURI}
             alt={pubkey}
-            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-black dark:bg-white"
+            className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-neutral-200 dark:bg-white dark:ring-neutral-800"
           />
         </Avatar.Fallback>
       </Avatar.Root>
@@ -313,7 +313,7 @@ export const User = memo(function User({
           <h5 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name || user?.display_name || user?.displayName || 'Anon'}
           </h5>
-          <div className="inline-flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-300">
+          <div className="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
             <span>{createdAt}</span>
             <span>·</span>
             <span>{displayNpub(pubkey, 16)}</span>

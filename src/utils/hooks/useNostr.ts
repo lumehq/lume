@@ -202,8 +202,31 @@ export function useNostr() {
 
   const getAllEventsSinceLastLogin = async (customSince?: number) => {
     try {
-      let since: number;
       const dbEventsEmpty = await db.isEventsEmpty();
+      const circleSetting = await db.getSettingValue('circles');
+
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const follows = await user.follows();
+      const relayList = await user.relayList();
+
+      const followsAsArr = [];
+      follows.forEach((user) => {
+        followsAsArr.push(user.pubkey);
+      });
+
+      // update user's follows
+      await db.updateAccount('follows', JSON.stringify(followsAsArr));
+      if (circleSetting !== '1')
+        await db.updateAccount('circles', JSON.stringify(followsAsArr));
+
+      // update user's relay list
+      if (relayList) {
+        for (const relay of relayList.relays) {
+          await db.createRelay(relay);
+        }
+      }
+
+      let since: number;
 
       if (!customSince) {
         if (dbEventsEmpty || db.account.last_login_at === 0) {

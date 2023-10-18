@@ -11,7 +11,7 @@ export function useDecryptMessage(message: NDKEvent) {
   useEffect(() => {
     async function decryptContent() {
       try {
-        const privkey = await db.secureLoad();
+        const privkey = await db.secureLoad(db.account.pubkey);
         const sender =
           db.account.pubkey === message.pubkey
             ? message.tags.find((el) => el[0] === 'p')[1]

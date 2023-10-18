@@ -36,9 +36,9 @@ export function ChatsScreen() {
       <div className="col-span-1 h-full overflow-y-auto border-r border-neutral-200 scrollbar-none dark:border-neutral-800">
         <div
           data-tauri-drag-region
-          className="flex h-11 w-full shrink-0 items-center border-b border-white/5 px-3"
+          className="flex h-11 w-full shrink-0 items-center border-b border-neutral-200 px-3 dark:border-neutral-800"
         >
-          <h3 className="bg-gradient-to-r from-blue-400 via-red-400 to-orange-500 bg-clip-text font-semibold text-transparent dark:from-blue-200 dark:via-red-200 dark:to-orange-300">
+          <h3 className="font-semibold text-neutral-950 dark:text-neutral-50">
             All chats
           </h3>
         </div>
