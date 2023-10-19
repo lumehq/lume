@@ -36,7 +36,7 @@ export function FileNote(props: { event?: NDKEvent }) {
   if (type === 'video') {
     return (
       <div className="mb-2 mt-3">
-        <MediaController key={url} className="aspect-video">
+        <MediaController key={url} className="aspect-video overflow-hidden rounded-lg">
           <video
             slot="media"
             src={url}

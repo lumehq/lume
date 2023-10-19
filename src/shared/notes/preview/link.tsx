@@ -10,11 +10,11 @@ export function LinkPreview({ urls }: { urls: string[] }) {
     <div className="my-2">
       {status === 'loading' ? (
         <div className="flex flex-col bg-neutral-200 dark:bg-neutral-800">
-          <div className="h-44 w-full animate-pulse bg-white/10 backdrop-blur-xl" />
+          <div className="h-44 w-full animate-pulse bg-neutral-400 dark:bg-neutral-600" />
           <div className="flex flex-col gap-2 px-3 py-3">
-            <div className="h-3 w-2/3 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-            <div className="h-3 w-3/4 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-            <span className="mt-2.5 text-sm leading-none text-white/50">
+            <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
+            <div className="h-3 w-3/4 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
+            <span className="mt-2.5 text-sm leading-none text-neutral-600 dark:text-neutral-400">
               {domain.hostname}
             </span>
           </div>
@@ -24,11 +24,11 @@ export function LinkPreview({ urls }: { urls: string[] }) {
           to={urls[0]}
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col rounded-lg bg-neutral-200 dark:bg-neutral-800"
+          className="flex flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800"
         >
           {error ? (
             <div className="flex flex-col gap-2 px-3 py-3">
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 Can&apos;t fetch open graph, click to open webpage
               </p>
               <span className="text-sm leading-none text-neutral-900 dark:text-neutral-100">

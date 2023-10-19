@@ -7,7 +7,7 @@ export function GeneralSettingsScreen() {
     <div className="h-full w-full px-3 pt-11">
       <div className="flex flex-col gap-2">
         <h1 className="text-xl font-semibold text-white">General</h1>
-        <div className="w-full rounded-xl bg-white/10 backdrop-blur-xl">
+        <div className="w-full rounded-xl bg-neutral-400 dark:bg-neutral-600">
           <div className="flex h-full w-full flex-col divide-y divide-white/5">
             <AutoStartSetting />
             <DataPath />

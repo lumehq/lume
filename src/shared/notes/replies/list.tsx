@@ -37,10 +37,8 @@ export function RepliesList({ id }: { id: string }) {
   if (!data) {
     return (
       <div className="mt-5 pb-10">
-        <div className="flex flex-col">
-          <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-            <NoteSkeleton />
-          </div>
+        <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+          <NoteSkeleton />
         </div>
       </div>
     );
@@ -48,15 +46,17 @@ export function RepliesList({ id }: { id: string }) {
 
   return (
     <div className="mt-5 pb-10">
-      <h5 className="mb-2 text-lg font-semibold text-white">
+      <h5 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
         {data?.length || 0} replies
       </h5>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2">
         {data?.length === 0 ? (
-          <div className="mt-2 flex w-full items-center justify-center rounded-xl bg-white/10 backdrop-blur-xl">
+          <div className="mt-2 flex w-full items-center justify-center rounded-xl bg-neutral-400 dark:bg-neutral-600">
             <div className="flex flex-col items-center justify-center gap-2 py-6">
               <h3 className="text-3xl">👋</h3>
-              <p className="leading-none text-white/50">Share your thought on it...</p>
+              <p className="leading-none text-neutral-600 dark:text-neutral-400">
+                Share your thought on it...
+              </p>
             </div>
           </div>
         ) : (

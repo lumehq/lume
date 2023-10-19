@@ -53,7 +53,7 @@ export function NotificationScreen() {
   }, []);
 
   return (
-    <div className="scrollbar-none h-full w-full overflow-y-auto bg-white/10 backdrop-blur-xl">
+    <div className="h-full w-full overflow-y-auto bg-neutral-400 scrollbar-none dark:bg-neutral-600">
       <div className="grid h-full grid-cols-3">
         <div className="col-span-2 flex flex-col border-r border-white/5">
           <TitleBar title="Activities in the last 24 hours" />
@@ -62,13 +62,15 @@ export function NotificationScreen() {
               <div className="flex h-full w-full items-center justify-center">
                 <div className="flex flex-col items-center gap-1.5">
                   <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-                  <p className="text-sm font-medium text-white/50">Loading</p>
+                  <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                    Loading
+                  </p>
                 </div>
               </div>
             ) : activities.length <= 1 ? (
               <div className="flex h-full w-full flex-col items-center justify-center">
                 <p className="mb-1 text-4xl">🎉</p>
-                <p className="font-medium text-white/50">
+                <p className="font-medium text-neutral-600 dark:text-neutral-400">
                   Yo!, no new activities around you in the last 24 hours
                 </p>
               </div>

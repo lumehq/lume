@@ -1,4 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AllowNotification } from '@app/auth/components/features/allowNotification';
 import { Circle } from '@app/auth/components/features/enableCircle';
@@ -7,9 +8,24 @@ import { FavoriteHashtag } from '@app/auth/components/features/favoriteHashtag';
 import { FollowList } from '@app/auth/components/features/followList';
 import { SuggestFollow } from '@app/auth/components/features/suggestFollow';
 
+import { LoaderIcon } from '@shared/icons';
+
 export function OnboardingListScreen() {
+  const navigate = useNavigate();
+
   const { state } = useLocation();
   const { newuser }: { newuser: boolean } = state;
+
+  const [loading, setLoading] = useState(false);
+
+  const completed = () => {
+    setLoading(true);
+
+    const timeout = setTimeout(() => setLoading(false), 1200);
+    clearTimeout(timeout);
+
+    navigate('/');
+  };
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
@@ -28,12 +44,13 @@ export function OnboardingListScreen() {
           <Circle />
           <OutboxModel />
           <AllowNotification />
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={completed}
             className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
           >
-            Continue
-          </Link>
+            {loading ? <LoaderIcon className="h-4 w-4 animate-spin" /> : ' Continue'}
+          </button>
         </div>
       </div>
     </div>

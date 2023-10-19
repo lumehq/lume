@@ -56,11 +56,15 @@ export function ErrorScreen() {
             </p>
           </div>
           <div className="mt-4">
-            <p className="font-medium text-white/50">
+            <p className="font-medium text-neutral-600 dark:text-neutral-400">
               Current location: {location.pathname}
             </p>
-            <p className="font-medium text-white/50">App version: {debugInfo.version}</p>
-            <p className="font-medium text-white/50">Platform: {debugInfo.os}</p>
+            <p className="font-medium text-neutral-600 dark:text-neutral-400">
+              App version: {debugInfo.version}
+            </p>
+            <p className="font-medium text-neutral-600 dark:text-neutral-400">
+              Platform: {debugInfo.os}
+            </p>
           </div>
         </div>
         <div className="flex flex-col gap-2">

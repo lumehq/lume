@@ -15,7 +15,7 @@ export function CacheTimeSetting() {
         <span className="font-medium leading-none text-neutral-200">
           Cache time (milliseconds)
         </span>
-        <span className="text-sm leading-none text-white/50">
+        <span className="text-sm leading-none text-neutral-600 dark:text-neutral-400">
           The length of time before inactive data gets removed from the cache
         </span>
       </div>

@@ -36,27 +36,36 @@ export function AccountSettingsScreen() {
         <h1 className="text-xl font-semibold text-white">Account</h1>
         <div className="flex flex-col gap-4 rounded-xl bg-white/10 p-3 backdrop-blur-xl">
           <div className="flex flex-col gap-1">
-            <label htmlFor="pubkey" className="text-base font-semibold text-white/50">
+            <label
+              htmlFor="pubkey"
+              className="text-base font-semibold text-neutral-600 dark:text-neutral-400"
+            >
               Public Key
             </label>
             <input
               readOnly
               value={db.account.pubkey}
-              className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+              className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="npub" className="text-base font-semibold text-white/50">
+            <label
+              htmlFor="npub"
+              className="text-base font-semibold text-neutral-600 dark:text-neutral-400"
+            >
               Npub
             </label>
             <input
               readOnly
               value={db.account.npub}
-              className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+              className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="privkey" className="text-base font-semibold text-white/50">
+            <label
+              htmlFor="privkey"
+              className="text-base font-semibold text-neutral-600 dark:text-neutral-400"
+            >
               Private Key
             </label>
             <div className="relative w-full">
@@ -64,7 +73,7 @@ export function AccountSettingsScreen() {
                 readOnly
                 type={privType}
                 value={privkey}
-                className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
               />
               <button
                 type="button"
@@ -75,20 +84,23 @@ export function AccountSettingsScreen() {
                   <EyeOffIcon
                     width={20}
                     height={20}
-                    className="text-white/50 group-hover:text-white"
+                    className="text-neutral-600 group-hover:text-white dark:text-neutral-400"
                   />
                 ) : (
                   <EyeOnIcon
                     width={20}
                     height={20}
-                    className="text-white/50 group-hover:text-white"
+                    className="text-neutral-600 group-hover:text-white dark:text-neutral-400"
                   />
                 )}
               </button>
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="privkey" className="text-base font-semibold text-white/50">
+            <label
+              htmlFor="privkey"
+              className="text-base font-semibold text-neutral-600 dark:text-neutral-400"
+            >
               Nsec
             </label>
             <div className="relative w-full">
@@ -96,7 +108,7 @@ export function AccountSettingsScreen() {
                 readOnly
                 type={nsecType}
                 value={nsec}
-                className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                className="relative w-full rounded-lg bg-white/10 py-3 pl-3.5 pr-11 text-white !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
               />
               <button
                 type="button"
@@ -107,13 +119,13 @@ export function AccountSettingsScreen() {
                   <EyeOffIcon
                     width={20}
                     height={20}
-                    className="text-white/50 group-hover:text-white"
+                    className="text-neutral-600 group-hover:text-white dark:text-neutral-400"
                   />
                 ) : (
                   <EyeOnIcon
                     width={20}
                     height={20}
-                    className="text-white/50 group-hover:text-white"
+                    className="text-neutral-600 group-hover:text-white dark:text-neutral-400"
                   />
                 )}
               </button>

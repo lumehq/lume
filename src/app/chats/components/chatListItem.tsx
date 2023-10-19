@@ -22,10 +22,10 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
   if (status === 'loading') {
     return (
       <div className="flex items-center gap-2.5 rounded-md px-3">
-        <div className="h-9 w-9 shrink-0 animate-pulse rounded-lg bg-white/10 backdrop-blur-xl" />
+        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-400 dark:bg-neutral-600" />
         <div className="flex w-full flex-col">
-          <div className="h-2.5 w-1/2 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
-          <div className="h-2.5 w-full animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+          <div className="h-2.5 w-1/2 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
+          <div className="h-2.5 w-full animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
         </div>
       </div>
     );

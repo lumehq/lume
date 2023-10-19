@@ -107,14 +107,14 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-neutral-400 dark:bg-neutral-600">
             <div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
               <div className="w-6" />
               <Dialog.Title className="text-center text-sm font-semibold leading-none text-white">
                 Send tip to {user?.name || user?.display_name || user?.displayName}
               </Dialog.Title>
               <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
-                <CancelIcon className="h-4 w-4 text-white/50" />
+                <CancelIcon className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
               </Dialog.Close>
             </div>
             <div className="overflow-y-auto overflow-x-hidden px-5 pb-5">
@@ -131,9 +131,9 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         max={10000} // 1M sats
                         maxLength={10000} // 1M sats
                         onValueChange={(value) => setAmount(value)}
-                        className="w-full flex-1 bg-transparent text-right text-4xl font-semibold text-white placeholder:text-white/50 focus:outline-none"
+                        className="w-full flex-1 bg-transparent text-right text-4xl font-semibold text-white placeholder:text-neutral-600 focus:outline-none dark:text-neutral-400"
                       />
-                      <span className="w-full flex-1 text-left text-4xl font-semibold text-white/50">
+                      <span className="w-full flex-1 text-left text-4xl font-semibold text-neutral-600 dark:text-neutral-400">
                         sats
                       </span>
                     </div>
@@ -185,7 +185,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                       autoCorrect="off"
                       autoCapitalize="off"
                       placeholder="Enter message (optional)"
-                      className="relative min-h-[56px] w-full resize-none rounded-lg bg-white/10 px-3 py-2 !outline-none backdrop-blur-xl placeholder:text-white/50"
+                      className="relative min-h-[56px] w-full resize-none rounded-lg bg-white/10 px-3 py-2 !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
                     />
                     <div className="flex flex-col gap-2">
                       {walletConnectURL ? (
@@ -199,14 +199,14 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                           ) : isLoading ? (
                             <span className="flex flex-col">
                               <p className="mb-px leading-none">Waiting for approval</p>
-                              <p className="text-xs leading-none text-white/70">
+                              <p className="text-xs leading-none text-neutral-600 dark:text-neutral-400">
                                 Go to your wallet and approve payment request
                               </p>
                             </span>
                           ) : (
                             <span className="flex flex-col">
                               <p className="mb-px leading-none">Send tip</p>
-                              <p className="text-xs leading-none text-white/70">
+                              <p className="text-xs leading-none text-neutral-600 dark:text-neutral-400">
                                 You&apos;re using nostr wallet connect
                               </p>
                             </span>
@@ -233,7 +233,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                     <h3 className="text-lg font-medium leading-none text-white">
                       Scan to pay
                     </h3>
-                    <span className="text-center text-sm text-white/50">
+                    <span className="text-center text-sm text-neutral-600 dark:text-neutral-400">
                       You must use Bitcoin wallet which support Lightning
                       <br />
                       such as: Blue Wallet, Bitkit, Phoenix,...

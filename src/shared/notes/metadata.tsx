@@ -100,12 +100,12 @@ export function NoteMetadata({ id }: { id: string }) {
                     content: id,
                   })
                 }
-                className="text-white/50"
+                className="text-neutral-600 dark:text-neutral-400"
               >
                 <span className="font-semibold text-white">{data.replies}</span> replies
               </button>
-              <span className="text-white/50">·</span>
-              <p className="text-white/50">
+              <span className="text-neutral-600 dark:text-neutral-400">·</span>
+              <p className="text-neutral-600 dark:text-neutral-400">
                 <span className="font-semibold text-white">
                   {compactNumber.format(data.zap)}
                 </span>{' '}

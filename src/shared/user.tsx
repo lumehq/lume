@@ -46,23 +46,23 @@ export const User = memo(function User({
   if (status === 'loading') {
     if (variant === 'avatar') {
       return (
-        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-white/10 backdrop-blur-xl" />
+        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-neutral-400 dark:bg-neutral-600" />
       );
     }
 
     if (variant === 'mention') {
       return (
         <div className="relative flex items-center gap-3">
-          <div className="relative z-10 h-6 w-6 shrink-0 animate-pulse overflow-hidden rounded bg-white/10 backdrop-blur-xl" />
-          <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+          <div className="relative z-10 h-6 w-6 shrink-0 animate-pulse overflow-hidden rounded bg-neutral-400 dark:bg-neutral-600" />
+          <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
         </div>
       );
     }
 
     return (
       <div className="flex items-start gap-3">
-        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-white/10 backdrop-blur-xl" />
-        <div className="h-3.5 w-36 animate-pulse rounded bg-white/10 backdrop-blur-xl" />
+        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-400 dark:bg-neutral-600" />
+        <div className="h-6 w-36 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
       </div>
     );
   }
@@ -327,7 +327,7 @@ export const User = memo(function User({
     <HoverCard.Root>
       <div className="relative z-10 flex items-start gap-3">
         <HoverCard.Trigger asChild>
-          <Avatar.Root className="relative top-1 shrink-0">
+          <Avatar.Root className="relative top-1 h-10 w-10 shrink-0">
             <Avatar.Image
               src={user?.picture || user?.image}
               alt={pubkey}
@@ -345,7 +345,7 @@ export const User = memo(function User({
             </Avatar.Fallback>
           </Avatar.Root>
         </HoverCard.Trigger>
-        <div className="flex flex-1 items-start gap-2">
+        <div className="flex h-6 flex-1 items-start gap-2">
           <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
             {user?.name ||
               user?.display_name ||

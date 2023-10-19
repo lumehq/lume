@@ -14,7 +14,9 @@ export function NotiMention({ event }: { event: NDKEvent }) {
       <div className="group flex items-center justify-between rounded-xl px-3 py-3 hover:bg-white/10">
         <div className="flex items-center gap-2">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-white/50">has mention you · {createdAt}</p>
+          <p className="leading-none text-neutral-600 dark:text-neutral-400">
+            has mention you · {createdAt}
+          </p>
         </div>
         <span className="hidden text-sm font-semibold text-blue-500 group-hover:block">
           View

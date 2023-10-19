@@ -24,7 +24,7 @@ export function MentionPopup({ editor }: { editor: Editor }) {
           <MentionIcon className="h-5 w-5" />
         </button>
       </Popover.Trigger>
-      <Popover.Content className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg bg-white/10 backdrop-blur-xl focus:outline-none">
+      <Popover.Content className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg bg-neutral-400 focus:outline-none dark:bg-neutral-600">
         <div className="flex flex-col gap-1 py-1">
           {db.account.follows.map((item) => (
             <button key={item} type="button" onClick={() => insertMention(item)}>

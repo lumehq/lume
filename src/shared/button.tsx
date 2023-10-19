@@ -16,7 +16,7 @@ export function Button({
   switch (preset) {
     case 'small':
       preClass =
-        'w-min h-9 px-4 bg-white/10 backdrop-blur-xl rounded-md text-sm font-medium text-white hover:bg-blue-600';
+        'w-min h-9 px-4 bg-neutral-400 dark:bg-neutral-600 rounded-md text-sm font-medium text-white hover:bg-blue-600';
       break;
     case 'publish':
       preClass =
@@ -28,7 +28,7 @@ export function Button({
       break;
     case 'large-alt':
       preClass =
-        'h-11 w-full bg-white/10 backdrop-blur-xl rounded-lg font-medium text-white hover:bg-white/20';
+        'h-11 w-full bg-neutral-400 dark:bg-neutral-600 rounded-lg font-medium text-white hover:bg-white/20';
       break;
     default:
       break;

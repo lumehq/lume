@@ -25,8 +25,8 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
-        <button type="button" className="inline-flex h-7 w-7 items-center justify-center">
-          <HorizontalDotsIcon className="h-5 w-5 text-neutral-800 hover:text-blue-500 dark:text-neutral-200" />
+        <button type="button" className="inline-flex h-6 w-6 items-center justify-center">
+          <HorizontalDotsIcon className="h-4 w-4 text-neutral-800 hover:text-blue-500 dark:text-neutral-200" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>

@@ -28,12 +28,12 @@ export function Logout() {
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-md rounded-xl bg-white/10 backdrop-blur-xl">
+          <div className="relative h-min w-full max-w-md rounded-xl bg-neutral-400 dark:bg-neutral-600">
             <div className="flex flex-col gap-2 border-b border-white/5 px-5 py-4">
               <AlertDialog.Title className="text-lg font-semibold leading-none text-white">
                 Are you sure!
               </AlertDialog.Title>
-              <AlertDialog.Description className="text-sm leading-tight text-white/50">
+              <AlertDialog.Description className="text-sm leading-tight text-neutral-600 dark:text-neutral-400">
                 You can always log back in at any time. If you just want to switch
                 accounts, you can do that by adding an existing account.
               </AlertDialog.Description>

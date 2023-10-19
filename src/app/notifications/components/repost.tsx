@@ -18,7 +18,7 @@ export function NotiRepost({ event }: { event: NDKEvent }) {
       <div className="group flex items-center justify-between rounded-xl px-3 py-3 hover:bg-white/10">
         <div className="flex items-center gap-2">
           <NotiUser pubkey={event.pubkey} />
-          <p className="leading-none text-white/50">
+          <p className="leading-none text-neutral-600 dark:text-neutral-400">
             repost{' '}
             {event.pubkey !== db.account.pubkey ? 'a post that mention you' : 'your post'}{' '}
             · {createdAt}

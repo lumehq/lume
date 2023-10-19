@@ -95,7 +95,7 @@ export function NWCOther() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-black" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-neutral-400 dark:bg-neutral-600">
             <div className="h-min w-full shrink-0 rounded-t-xl border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
@@ -103,7 +103,7 @@ export function NWCOther() {
                     Nostr Wallet Connect
                   </Dialog.Title>
                   <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
-                    <CancelIcon className="h-4 w-4 text-white/50" />
+                    <CancelIcon className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
                   </Dialog.Close>
                 </div>
               </div>
@@ -115,7 +115,7 @@ export function NWCOther() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="uri"
-                  className="text-sm font-semibold uppercase tracking-wider text-white/50"
+                  className="text-sm font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400"
                 >
                   Connect URI
                 </label>
@@ -126,7 +126,7 @@ export function NWCOther() {
                   autoComplete="off"
                   autoCorrect="off"
                   autoCapitalize="off"
-                  className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-white/50"
+                  className="relative h-11 w-full rounded-lg bg-white/10 px-3 py-1 text-white !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
                 />
                 <span className="text-sm text-red-400">
                   {errors.uri && <p>{errors.uri.message}</p>}
@@ -152,7 +152,7 @@ export function NWCOther() {
                     </>
                   )}
                 </button>
-                <span className="text-sm text-white/50">
+                <span className="text-sm text-neutral-600 dark:text-neutral-400">
                   All information will be encrypted and stored on the local machine.
                 </span>
               </div>

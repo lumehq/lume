@@ -78,7 +78,7 @@ export function NWCAlby() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-white/10 backdrop-blur-xl">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-neutral-400 dark:bg-neutral-600">
             <div className="h-min w-full shrink-0 rounded-t-xl border-b border-white/10 bg-white/5 px-5 py-5">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
@@ -86,7 +86,7 @@ export function NWCAlby() {
                     Alby integration (Beta)
                   </Dialog.Title>
                   <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
-                    <CancelIcon className="h-4 w-4 text-white/50" />
+                    <CancelIcon className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
                   </Dialog.Close>
                 </div>
               </div>
@@ -107,12 +107,12 @@ export function NWCAlby() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-2">
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   When you click &quot;Connect&quot;, a new window will open and you need
                   to click the &quot;Connect Wallet&quot; button to grant Lume permission
                   to integrate with your Alby account.
                 </p>
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   All information will be encrypted and stored on the local machine.
                 </p>
               </div>

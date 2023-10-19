@@ -21,7 +21,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-white/50'
+                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
                 )}
               >
                 <HomeIcon className="h-6 w-6" />
@@ -42,7 +42,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-white/50'
+                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
                 )}
               >
                 <ChatsIcon className="h-6 w-6" />
@@ -63,7 +63,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-white/50'
+                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
                 )}
               >
                 <RelayIcon className="h-6 w-6" />
@@ -84,7 +84,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-white/50'
+                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
                 )}
               >
                 <ExploreIcon className="h-6 w-6" />

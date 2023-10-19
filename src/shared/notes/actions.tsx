@@ -1,10 +1,8 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { FocusIcon, ThreadIcon } from '@shared/icons';
-import { MoreActions } from '@shared/notes/actions/more';
+import { FocusIcon } from '@shared/icons';
 import { NoteReaction } from '@shared/notes/actions/reaction';
 import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
@@ -50,7 +48,7 @@ export function NoteActions({
                   }
                   className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
                 >
-                  <ThreadIcon className="h-5 w-5 group-hover:text-blue-500" />
+                  <FocusIcon className="h-5 w-5 group-hover:text-blue-500" />
                 </button>
               </Tooltip.Trigger>
               <Tooltip.Portal>

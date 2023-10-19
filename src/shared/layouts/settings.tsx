@@ -14,9 +14,9 @@ export function SettingsLayout() {
               to="/"
               className="inline-flex h-7 w-7 items-center justify-center rounded hover:bg-white/10"
             >
-              <ArrowLeftIcon className="h-4 w-4 text-white/50" />
+              <ArrowLeftIcon className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
             </Link>
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-white/50">
+            <h3 className="text-[11px] font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
               Settings
             </h3>
           </div>
@@ -32,7 +32,7 @@ export function SettingsLayout() {
                 )
               }
             >
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-neutral-400 dark:bg-neutral-600">
                 <SettingsIcon className="h-4 w-4 text-white" />
               </span>
               <span className="font-medium">General</span>
@@ -48,7 +48,7 @@ export function SettingsLayout() {
                 )
               }
             >
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-white/10 backdrop-blur-xl">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded bg-neutral-400 dark:bg-neutral-600">
                 <SecureIcon className="h-4 w-4 text-white" />
               </span>
               <span className="font-medium">Backup</span>
