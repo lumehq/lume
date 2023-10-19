@@ -15,7 +15,7 @@ import {
   NoteStats,
   UnknownNote,
 } from '@shared/notes';
-import { RepliesList } from '@shared/notes/replies/list';
+import { ReplyList } from '@shared/notes/replies/list';
 import { NoteSkeleton } from '@shared/notes/skeleton';
 import { User } from '@shared/user';
 
@@ -117,7 +117,7 @@ export function ArticleNoteScreen() {
                 </div>
                 <div ref={replyRef} className="px-3">
                   <NoteReplyForm id={data.id} pubkey={db.account.pubkey} />
-                  <RepliesList id={data.id} />
+                  <ReplyList id={data.id} />
                 </div>
               </>
             )}

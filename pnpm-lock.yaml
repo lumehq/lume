@@ -179,6 +179,9 @@ dependencies:
   react-string-replace:
     specifier: ^1.1.1
     version: 1.1.1
+  react-xarrows:
+    specifier: ^2.0.2
+    version: 2.0.2(react@18.2.0)
   reactflow:
     specifier: ^11.9.4
     version: 11.9.4(@types/react@18.2.29)(react-dom@18.2.0)(react@18.2.0)
@@ -198,8 +201,8 @@ dependencies:
     specifier: ^6.3.7
     version: 6.3.7
   virtua:
-    specifier: ^0.13.0
-    version: 0.13.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.14.0
+    version: 0.14.0(react-dom@18.2.0)(react@18.2.0)
   zustand:
     specifier: ^4.4.3
     version: 4.4.3(@types/react@18.2.29)(react@18.2.0)
@@ -4688,7 +4691,6 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /log-update@5.0.1:
     resolution: {integrity: sha512-5UtUDQ/6edw4ofyljDNcOVJQ4c7OjDro4h3y8e1GQL5iYElYclVHJ3zeWchylvMaKnDbDilC8irOVyexnA/Slw==}
@@ -5947,6 +5949,17 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /react-xarrows@2.0.2(react@18.2.0):
+    resolution: {integrity: sha512-tDlAqaxHNmy0vegW/6NdhoWyXJq1LANX/WUAlHyzoHe9BwFVnJPPDghmDjYeVr7XWFmBrVTUrHsrW7GKYI6HtQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      '@types/prop-types': 15.7.9
+      lodash: 4.17.21
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -6728,8 +6741,8 @@ packages:
       vfile-message: 3.1.4
     dev: false
 
-  /virtua@0.13.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-NiM+3lhl/XMLWsT+Fc+rcMQrsAe7PDRvncu6CjP5UEgDtulIo05KAaugrJAr/ptBofP/iAnlZK/X0Bjd+UkjIQ==}
+  /virtua@0.14.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-+g3fxgFuQCqw6PpU5qzTRKhbSUGOeMEap0VbPaIRB1RiK5MfLiGXIMwID1iX1DmvUC/SqsBsJfVvlUaPNGWSVQ==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'

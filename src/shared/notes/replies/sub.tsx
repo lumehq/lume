@@ -5,7 +5,7 @@ import { User } from '@shared/user';
 
 export function SubReply({ event }: { event: NDKEvent }) {
   return (
-    <div className="relative z-10 mb-3 mt-5 flex flex-col">
+    <div className="mb-3 flex flex-col">
       <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
       <div className="-mt-4 flex items-start gap-3">
         <div className="w-10 shrink-0" />

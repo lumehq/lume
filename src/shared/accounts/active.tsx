@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useStorage } from '@libs/storage/provider';
 
 import { AccountMoreActions } from '@shared/accounts/more';
+import { NetworkStatusIndicator } from '@shared/networkStatusIndicator';
 
 import { useActivities } from '@stores/activities';
 
@@ -78,7 +79,7 @@ export function ActiveAccount() {
             />
           </Avatar.Fallback>
         </Avatar.Root>
-        <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-teal-500 ring-2 ring-neutral-100 dark:ring-neutral-900" />
+        <NetworkStatusIndicator />
       </Link>
       <AccountMoreActions pubkey={db.account.pubkey} />
     </div>

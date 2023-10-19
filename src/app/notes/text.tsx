@@ -17,7 +17,7 @@ import {
   TextNote,
   UnknownNote,
 } from '@shared/notes';
-import { RepliesList } from '@shared/notes/replies/list';
+import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
@@ -119,7 +119,7 @@ export function TextNoteScreen() {
             )}
             <div ref={replyRef} className="px-3">
               <NoteReplyForm id={id} pubkey={db.account.pubkey} />
-              <RepliesList id={id} />
+              <ReplyList id={id} />
             </div>
           </div>
           <div className="col-span-1" />

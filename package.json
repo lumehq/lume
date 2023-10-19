@@ -76,13 +76,14 @@
     "react-markdown": "^8.0.7",
     "react-router-dom": "^6.17.0",
     "react-string-replace": "^1.1.1",
+    "react-xarrows": "^2.0.2",
     "reactflow": "^11.9.4",
     "remark-gfm": "^3.0.1",
     "sonner": "^1.0.3",
     "tailwind-scrollbar": "^3.0.5",
     "tauri-controls": "^0.2.0",
     "tippy.js": "^6.3.7",
-    "virtua": "^0.13.0",
+    "virtua": "^0.14.0",
     "zustand": "^4.4.3"
   },
   "devDependencies": {

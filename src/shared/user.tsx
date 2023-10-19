@@ -32,6 +32,7 @@ export const User = memo(function User({
     | 'chat'
     | 'large'
     | 'thread'
+    | 'miniavatar'
     | 'avatar'
     | 'stacked'
     | 'ministacked';
@@ -201,6 +202,28 @@ export const User = memo(function User({
             src={svgURI}
             alt={pubkey}
             className="h-12 w-12 rounded-lg bg-black dark:bg-white"
+          />
+        </Avatar.Fallback>
+      </Avatar.Root>
+    );
+  }
+
+  if (variant === 'miniavatar') {
+    return (
+      <Avatar.Root>
+        <Avatar.Image
+          src={user?.picture || user?.image}
+          alt={pubkey}
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="h-10 w-10 rounded-lg"
+        />
+        <Avatar.Fallback delayMs={300}>
+          <img
+            src={svgURI}
+            alt={pubkey}
+            className="h-10 w-10 rounded-lg bg-black dark:bg-white"
           />
         </Avatar.Fallback>
       </Avatar.Root>
