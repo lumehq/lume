@@ -1,10 +1,4 @@
-import {
-  NDKEvent,
-  NDKFilter,
-  NDKKind,
-  NDKPrivateKeySigner,
-  NDKSubscription,
-} from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { message, open } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { LRUCache } from 'lru-cache';
@@ -318,15 +312,6 @@ export function useNostr() {
   };
 
   const createZap = async (event: NDKEvent, amount: number, message?: string) => {
-    const privkey: string = await db.secureLoad(db.account.pubkey);
-    // #TODO: show prompt
-    if (!privkey) return;
-
-    if (!ndk.signer) {
-      const signer = new NDKPrivateKeySigner(privkey);
-      ndk.signer = signer;
-    }
-
     // @ts-expect-error, NostrEvent to NDKEvent
     const ndkEvent = new NDKEvent(ndk, event);
     const res = await ndkEvent.zap(amount, message ?? 'zap from lume');

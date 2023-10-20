@@ -84,7 +84,9 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       if (uri) setWalletConnectURL(uri);
     }
 
-    getWalletConnectURL();
+    if (isOpen) {
+      getWalletConnectURL();
+    }
 
     return () => {
       setAmount('21');
@@ -92,7 +94,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       setIsCompleted(false);
       setIsLoading(false);
     };
-  }, []);
+  }, [isOpen]);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>

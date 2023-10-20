@@ -47,23 +47,25 @@ export const User = memo(function User({
   if (status === 'loading') {
     if (variant === 'avatar') {
       return (
-        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-neutral-400 dark:bg-neutral-600" />
+        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-neutral-300 dark:bg-neutral-700" />
       );
     }
 
     if (variant === 'mention') {
       return (
         <div className="relative flex items-center gap-3">
-          <div className="relative z-10 h-6 w-6 shrink-0 animate-pulse overflow-hidden rounded bg-neutral-400 dark:bg-neutral-600" />
-          <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
+          <div className="relative z-10 h-6 w-6 shrink-0 animate-pulse overflow-hidden rounded bg-neutral-300 dark:bg-neutral-700" />
+          <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
         </div>
       );
     }
 
     return (
       <div className="flex items-start gap-3">
-        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-400 dark:bg-neutral-600" />
-        <div className="h-6 w-36 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
+        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+        <div className="h-6 w-full">
+          <div className="h-3 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+        </div>
       </div>
     );
   }

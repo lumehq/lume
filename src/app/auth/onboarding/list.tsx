@@ -11,17 +11,17 @@ import { SuggestFollow } from '@app/auth/components/features/suggestFollow';
 import { LoaderIcon } from '@shared/icons';
 
 export function OnboardingListScreen() {
-  const navigate = useNavigate();
-
   const { state } = useLocation();
   const { newuser }: { newuser: boolean } = state;
 
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const completed = () => {
     setLoading(true);
 
-    const timeout = setTimeout(() => setLoading(false), 1200);
+    const timeout = setTimeout(() => setLoading(false), 200);
     clearTimeout(timeout);
 
     navigate('/');

@@ -47,6 +47,8 @@ export function ImportAccountScreen() {
       await db.secureSave(pubkey + '-bunker', localSigner.privateKey);
 
       const remoteSigner = new NDKNip46Signer(ndk, npub, localSigner);
+      await remoteSigner.blockUntilReady();
+
       ndk.signer = remoteSigner;
 
       setPubkey(pubkey);

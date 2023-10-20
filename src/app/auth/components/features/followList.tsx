@@ -35,7 +35,7 @@ export function FollowList() {
   );
 
   return (
-    <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
+    <div className="relative rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
       <h5 className="font-semibold">Your follows</h5>
       <div className="mt-2 flex w-full items-center justify-center">
         {status === 'loading' ? (
