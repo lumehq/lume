@@ -22,8 +22,7 @@ export interface DBEvent {
 }
 
 export interface Account extends NDKUserProfile {
-  id: number;
-  npub: string;
+  id: string;
   pubkey: string;
   follows: null | string[];
   circles: null | string[];

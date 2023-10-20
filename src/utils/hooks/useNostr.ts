@@ -304,20 +304,14 @@ export function useNostr() {
     kind: NDKKind | number;
     tags: string[][];
   }): Promise<NDKEvent> => {
-    const privkey: string = await db.secureLoad(db.account.pubkey);
-    // #TODO: show prompt
-    if (!privkey) return;
-
     const event = new NDKEvent(ndk);
-    const signer = new NDKPrivateKeySigner(privkey);
-
     event.content = content;
     event.kind = kind;
     event.created_at = Math.floor(Date.now() / 1000);
     event.pubkey = db.account.pubkey;
     event.tags = tags;
 
-    await event.sign(signer);
+    await event.sign();
     await event.publish();
 
     return event;

@@ -132,7 +132,7 @@ export function CreateAccountScreen() {
       </div>
       <div className="mx-auto flex w-full max-w-md flex-col gap-10">
         <h1 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Let&apos;s set up your Nostr account.
+          Let&apos;s set up your account.
         </h1>
         <div className="flex flex-col gap-3">
           {!keys ? (

@@ -1,4 +1,4 @@
-import NDK from '@nostr-dev-kit/ndk';
+import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import NDKCacheAdapterDexie from '@nostr-dev-kit/ndk-cache-dexie';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message } from '@tauri-apps/plugin-dialog';
@@ -52,9 +52,30 @@ export const NDKInstance = () => {
     }
   }
 
+  async function getSigner(instance: NDK) {
+    if (!db.account) return null;
+
+    // NIP-46 Signer
+    const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-bunker');
+    if (localSignerPrivkey) {
+      const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
+      const remoteSigner = new NDKNip46Signer(instance, db.account.id, localSigner);
+      // await remoteSigner.blockUntilReady();
+
+      return remoteSigner;
+    }
+
+    // Privkey Signer
+    const userPrivkey = await db.secureLoad(db.account.pubkey);
+    if (userPrivkey) return new NDKPrivateKeySigner(userPrivkey);
+
+    return null;
+  }
+
   async function initNDK() {
-    const explicitRelayUrls = await getExplicitRelays();
     const outboxSetting = await db.getSettingValue('outbox');
+    const explicitRelayUrls = await getExplicitRelays();
+
     const dexieAdapter = new NDKCacheAdapterDexie({ dbName: 'lume_ndkcache' });
     const instance = new NDK({
       explicitRelayUrls,
@@ -64,7 +85,11 @@ export const NDKInstance = () => {
     });
 
     try {
-      await instance.connect();
+      // connect
+      await instance.connect(2000);
+      // add signer
+      const signer = await getSigner(instance);
+      instance.signer = signer;
     } catch (error) {
       await message(`NDK instance init failed: ${error}`, {
         title: 'Lume',

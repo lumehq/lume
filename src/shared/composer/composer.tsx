@@ -1,3 +1,4 @@
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { message } from '@tauri-apps/plugin-dialog';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -7,20 +8,19 @@ import { convert } from 'html-to-text';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { useNDK } from '@libs/ndk/provider';
+
 import { MediaUploader, MentionPopup } from '@shared/composer';
 import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
 import { useComposer } from '@stores/composer';
 
-import { useNostr } from '@utils/hooks/useNostr';
-import { sendNativeNotification } from '@utils/notification';
-
 export function Composer() {
   const [loading, setLoading] = useState<boolean>(false);
   const [reply, clearReply] = useComposer((state) => [state.reply, state.clearReply]);
 
-  const { publish } = useNostr();
+  const { ndk } = useNDK();
 
   const expand = useComposer((state) => state.expand);
   const editor = useEditor({
@@ -92,18 +92,21 @@ export function Composer() {
       });
 
       // publish message
-      await publish({ content: serializedContent, kind: 1, tags });
+      const event = new NDKEvent(ndk);
+      event.content = serializedContent;
+      event.kind = NDKKind.Text;
+      event.tags = tags;
 
-      // send native notifiation
-      await sendNativeNotification('Post has been published successfully.');
-
-      // update state
-      setLoading(false);
-      // reset editor
-      editor.commands.clearContent();
-      // reset reply
-      if (reply.id) {
-        clearReply();
+      const publish = event.publish();
+      if (publish) {
+        // update state
+        setLoading(false);
+        // reset editor
+        editor.commands.clearContent();
+        // reset reply
+        if (reply.id) {
+          clearReply();
+        }
       }
     } catch {
       setLoading(false);
