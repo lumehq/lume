@@ -23,9 +23,13 @@ export class LumeStorage {
   }
 
   public async secureLoad(key: string) {
-    const value: string = await invoke('secure_load', { key });
-    if (!value) return null;
-    return value;
+    try {
+      const value: string = await invoke('secure_load', { key });
+      if (!value) return null;
+      return value;
+    } catch {
+      return null;
+    }
   }
 
   public async secureRemove(key: string) {

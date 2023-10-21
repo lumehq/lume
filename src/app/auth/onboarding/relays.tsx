@@ -1,8 +1,10 @@
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
@@ -19,8 +21,8 @@ export function OnboardRelaysScreen() {
   const [loading, setLoading] = useState(false);
   const [relays, setRelays] = useState(new Set<string>());
 
-  const { publish } = useNostr();
   const { db } = useStorage();
+  const { ndk } = useNDK();
   const { getAllRelaysByUsers } = useNostr();
   const { status, data } = useQuery(
     ['relays'],
@@ -52,7 +54,13 @@ export function OnboardRelaysScreen() {
       }
 
       const tags = Array.from(relays).map((relay) => ['r', relay.replace(/\/+$/, '')]);
-      await publish({ content: '', kind: 10002, tags: tags });
+      const event = new NDKEvent(ndk);
+      event.content = '';
+      event.kind = 10002;
+      event.created_at = Math.floor(Date.now() / 1000);
+      event.tags = tags;
+
+      await event.publish();
 
       toggleRelays();
       navigate(-1);

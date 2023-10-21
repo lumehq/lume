@@ -124,6 +124,13 @@ export default function App() {
       errorElement: <ErrorScreen />,
       children: [
         {
+          path: 'new',
+          async lazy() {
+            const { NewNoteScreen } = await import('@app/notes/new');
+            return { Component: NewNoteScreen };
+          },
+        },
+        {
           path: 'text/:id',
           async lazy() {
             const { TextNoteScreen } = await import('@app/notes/text');

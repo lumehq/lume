@@ -2,8 +2,14 @@ import { Link, NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { ActiveAccount } from '@shared/accounts/active';
-import { ComposerModal } from '@shared/composer';
-import { ChatsIcon, ExploreIcon, HomeIcon, NwcIcon, RelayIcon } from '@shared/icons';
+import {
+  ChatsIcon,
+  ComposeIcon,
+  ExploreIcon,
+  HomeIcon,
+  NwcIcon,
+  RelayIcon,
+} from '@shared/icons';
 
 export function Navigation() {
   return (
@@ -21,7 +27,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
+                    : 'text-black/50 dark:text-neutral-400'
                 )}
               >
                 <HomeIcon className="h-6 w-6" />
@@ -42,7 +48,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
+                    : 'text-black/50 dark:text-neutral-400'
                 )}
               >
                 <ChatsIcon className="h-6 w-6" />
@@ -63,7 +69,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
+                    : 'text-black/50 dark:text-neutral-400'
                 )}
               >
                 <RelayIcon className="h-6 w-6" />
@@ -84,7 +90,7 @@ export function Navigation() {
                   'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-neutral-400 dark:text-neutral-600'
+                    : 'text-black/50 dark:text-neutral-400'
                 )}
               >
                 <ExploreIcon className="h-6 w-6" />
@@ -97,7 +103,12 @@ export function Navigation() {
         </NavLink>
       </div>
       <div className="flex shrink-0 flex-col gap-3 p-1">
-        <ComposerModal />
+        <Link
+          to="/notes/new"
+          className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 text-black hover:bg-blue-500 hover:text-white dark:bg-neutral-900 dark:text-white dark:hover:bg-blue-500"
+        >
+          <ComposeIcon className="h-5 w-5" />
+        </Link>
         <Link
           to="/nwc"
           className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 hover:bg-blue-500 hover:text-white dark:bg-neutral-900 dark:hover:bg-blue-500"

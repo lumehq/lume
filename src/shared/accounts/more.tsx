@@ -44,9 +44,7 @@ export function AccountMoreActions({ pubkey }: { pubkey: string }) {
               Settings
             </Link>
           </DropdownMenu.Item>
-          <DropdownMenu.Item asChild>
-            <Logout />
-          </DropdownMenu.Item>
+          <Logout />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

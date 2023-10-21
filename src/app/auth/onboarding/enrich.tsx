@@ -1,8 +1,10 @@
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
@@ -10,10 +12,10 @@ import { User } from '@shared/user';
 
 import { useOnboarding } from '@stores/onboarding';
 
-import { useNostr } from '@utils/hooks/useNostr';
 import { arrayToNIP02 } from '@utils/transform';
 
 export function OnboardEnrichScreen() {
+  const { ndk } = useNDK();
   const { db } = useStorage();
   const { status, data } = useQuery(['trending-profiles-widget'], async () => {
     const res = await fetch('https://api.nostr.band/v0/trending/profiles');
@@ -22,7 +24,6 @@ export function OnboardEnrichScreen() {
     }
     return res.json();
   });
-  const { publish } = useNostr();
 
   const [loading, setLoading] = useState(false);
   const [follows, setFollows] = useState([]);
@@ -43,10 +44,17 @@ export function OnboardEnrichScreen() {
       setLoading(true);
 
       const tags = arrayToNIP02(follows);
-      const event = await publish({ content: '', kind: 3, tags: tags });
+
+      const event = new NDKEvent(ndk);
+      event.content = '';
+      event.kind = NDKKind.Contacts;
+      event.created_at = Math.floor(Date.now() / 1000);
+      event.tags = tags;
+
+      const publish = await event.publish();
 
       // redirect to next step
-      if (event) {
+      if (publish) {
         db.account.follows = follows;
 
         await db.updateAccount('follows', JSON.stringify(follows));

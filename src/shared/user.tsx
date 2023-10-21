@@ -317,7 +317,7 @@ export const User = memo(function User({
   if (variant === 'thread') {
     return (
       <div className="flex items-center gap-3">
-        <Avatar.Root className="shrink-0">
+        <Avatar.Root className="h-10 w-10 shrink-0">
           <Avatar.Image
             src={user?.picture || user?.image}
             alt={pubkey}

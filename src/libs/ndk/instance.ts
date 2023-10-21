@@ -68,8 +68,6 @@ export const NDKInstance = () => {
     // Privkey Signer
     const userPrivkey = await db.secureLoad(db.account.pubkey);
     if (userPrivkey) return new NDKPrivateKeySigner(userPrivkey);
-
-    return null;
   }
 
   async function initNDK() {
@@ -87,9 +85,13 @@ export const NDKInstance = () => {
     try {
       // connect
       await instance.connect(2000);
+
       // add signer
       const signer = await getSigner(instance);
       instance.signer = signer;
+
+      // update account's metadata
+      // todo
     } catch (error) {
       await message(`NDK instance init failed: ${error}`, {
         title: 'Lume',

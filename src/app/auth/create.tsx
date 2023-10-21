@@ -59,16 +59,16 @@ export function CreateAccountScreen() {
       const userNpub = nip19.npubEncode(userPubkey);
       const userNsec = nip19.nsecEncode(userPrivkey);
 
-      const event = new NDKEvent(ndk);
       const signer = new NDKPrivateKeySigner(userPrivkey);
+      ndk.signer = signer;
 
+      const event = new NDKEvent(ndk);
       event.content = JSON.stringify(profile);
       event.kind = NDKKind.Metadata;
       event.created_at = Math.floor(Date.now() / 1000);
       event.pubkey = userPubkey;
       event.tags = [];
 
-      await event.sign(signer);
       const publish = await event.publish();
 
       if (publish) {
@@ -217,7 +217,7 @@ export function CreateAccountScreen() {
                     <p className="mb-2 select-text text-sm text-neutral-800 dark:text-neutral-200">
                       Your private key is your password. If you lose this key, you will
                       lose access to your account! Copy it and keep it in a safe place.{' '}
-                      <span className="text-red-500">
+                      <span className="text-red-600">
                         There is no way to reset your private key.
                       </span>
                     </p>
