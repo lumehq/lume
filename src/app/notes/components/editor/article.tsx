@@ -13,14 +13,14 @@ import { useNDK } from '@libs/ndk/provider';
 import { MediaUploader, MentionPopup } from '@shared/composer';
 import { LoaderIcon } from '@shared/icons';
 
-export function PostEditor() {
+export function ArticleEditor() {
   const { ndk } = useNDK();
   const [loading, setLoading] = useState(false);
 
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
-      Placeholder.configure({ placeholder: 'Sharing some thoughts...' }),
+      Placeholder.configure({ placeholder: 'Type something...' }),
       Image.configure({
         HTMLAttributes: {
           class:
@@ -69,7 +69,7 @@ export function PostEditor() {
       // publish message
       const event = new NDKEvent(ndk);
       event.content = serializedContent;
-      event.kind = NDKKind.Text;
+      event.kind = NDKKind.Article;
       event.tags = tags;
 
       const publishedRelays = await event.publish();
@@ -109,9 +109,13 @@ export function PostEditor() {
           <button
             onClick={() => submit()}
             disabled={editor && editor.isEmpty}
-            className="inline-flex h-9 w-20 items-center justify-center rounded-lg bg-blue-500 px-2 font-medium text-white hover:bg-blue-600 disabled:opacity-50"
+            className="inline-flex h-9 w-max items-center justify-center rounded-lg bg-blue-500 px-2.5 font-medium text-white hover:bg-blue-600 disabled:opacity-50"
           >
-            {loading === true ? <LoaderIcon className="h-5 w-5 animate-spin" /> : 'Post'}
+            {loading === true ? (
+              <LoaderIcon className="h-5 w-5 animate-spin" />
+            ) : (
+              'Publish article'
+            )}
           </button>
         </div>
       </div>

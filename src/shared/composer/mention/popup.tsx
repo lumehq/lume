@@ -19,18 +19,29 @@ export function MentionPopup({ editor }: { editor: Editor }) {
       <Popover.Trigger asChild>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-neutral-600 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:bg-neutral-800"
+          className="inline-flex h-9 w-max items-center justify-center gap-1.5 rounded-lg bg-neutral-100 px-2 text-sm font-medium text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
         >
           <MentionIcon className="h-5 w-5" />
+          Mention
         </button>
       </Popover.Trigger>
-      <Popover.Content className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg bg-neutral-400 focus:outline-none dark:bg-neutral-600">
+      <Popover.Content
+        side="top"
+        sideOffset={5}
+        className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg border border-neutral-200 bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900"
+      >
         <div className="flex flex-col gap-1 py-1">
-          {db.account.follows.map((item) => (
-            <button key={item} type="button" onClick={() => insertMention(item)}>
-              <MentionItem pubkey={item} />
-            </button>
-          ))}
+          {db.account.follows.length > 0 ? (
+            db.account.follows.map((item) => (
+              <button key={item} type="button" onClick={() => insertMention(item)}>
+                <MentionItem pubkey={item} />
+              </button>
+            ))
+          ) : (
+            <div className="flex h-16 items-center justify-center">
+              Contact list is empty
+            </div>
+          )}
         </div>
       </Popover.Content>
     </Popover.Root>

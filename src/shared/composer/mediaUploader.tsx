@@ -1,24 +1,61 @@
-import { UnlistenFn, listen } from '@tauri-apps/api/event';
-import { message } from '@tauri-apps/plugin-dialog';
+import { message, open } from '@tauri-apps/plugin-dialog';
+import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { Editor } from '@tiptap/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { MediaIcon } from '@shared/icons';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function MediaUploader({ editor }: { editor: Editor }) {
-  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
-  const uploadToNostrBuild = async (file?: string) => {
+  const uploadToNostrBuild = async () => {
     try {
       // start loading
       setLoading(true);
 
-      const image = await upload(file, true);
-      if (image.url) {
-        editor.commands.setImage({ src: image.url });
+      const selected = await open({
+        multiple: false,
+        filters: [
+          {
+            name: 'Media',
+            extensions: [
+              'png',
+              'jpeg',
+              'jpg',
+              'gif',
+              'mp4',
+              'mp3',
+              'webm',
+              'mkv',
+              'avi',
+              'mov',
+            ],
+          },
+        ],
+      });
+
+      if (!selected) {
+        setLoading(false);
+        return;
+      }
+
+      const file = await readBinaryFile(selected.path);
+      const blob = new Blob([file]);
+
+      const data = new FormData();
+      data.append('fileToUpload', blob);
+      data.append('submit', 'Upload Image');
+
+      const res = await fetch('https://nostr.build/api/v2/upload/files', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.data[0];
+
+        editor.commands.setImage({ src: content.url });
         editor.commands.createParagraphNear();
 
         // stop loading
@@ -31,29 +68,11 @@ export function MediaUploader({ editor }: { editor: Editor }) {
     }
   };
 
-  useEffect(() => {
-    let unlisten: UnlistenFn;
-
-    async function listenDnD() {
-      unlisten = await listen('tauri://file-drop', (event) => {
-        uploadToNostrBuild(event.payload[0]);
-      });
-    }
-
-    // start listen drag and drop event
-    listenDnD();
-
-    // clean up
-    return () => {
-      unlisten();
-    };
-  }, []);
-
   return (
     <button
       type="button"
       onClick={() => uploadToNostrBuild()}
-      className="ml-2 inline-flex h-10 w-max items-center justify-center gap-1.5 rounded-lg px-2 text-sm font-medium text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400"
+      className="inline-flex h-9 w-max items-center justify-center gap-1.5 rounded-lg bg-neutral-100 px-2 text-sm font-medium text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
     >
       <MediaIcon className="h-5 w-5" />
       {loading ? 'Uploading...' : 'Add media'}

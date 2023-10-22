@@ -7,13 +7,13 @@ export function AuthLayout() {
   const { db } = useStorage();
 
   return (
-    <div className="h-screen w-screen bg-neutral-50 dark:bg-neutral-950">
+    <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
       {db.platform !== 'macos' ? (
         <WindowTitlebar />
       ) : (
         <div data-tauri-drag-region className="h-9" />
       )}
-      <div className="h-full w-full">
+      <div className="flex h-full min-h-0 w-full">
         <Outlet />
         <ScrollRestoration />
       </div>

@@ -8,6 +8,5 @@ export function toRawEvent(event: NDKEvent) {
   delete event.isParamReplaceable;
   delete event.isReplaceable;
   delete event.repost;
-  delete event.relay;
   return event;
 }

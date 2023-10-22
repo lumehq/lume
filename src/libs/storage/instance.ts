@@ -52,10 +52,10 @@ export class LumeStorage {
       const account = results[0];
 
       if (typeof account.follows === 'string')
-        account.follows = JSON.parse(account.follows);
+        account.follows = JSON.parse(account.follows) ?? [];
 
       if (typeof account.circles === 'string')
-        account.circles = JSON.parse(account.circles);
+        account.circles = JSON.parse(account.circles) ?? [];
 
       if (typeof account.last_login_at === 'string')
         account.last_login_at = parseInt(account.last_login_at);

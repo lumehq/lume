@@ -5,7 +5,7 @@ import { VList } from 'virtua';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
+import { ArrowRightCircleIcon, ArrowRightIcon, LoaderIcon } from '@shared/icons';
 import {
   MemoizedArticleNote,
   MemoizedFileNote,
@@ -18,7 +18,7 @@ import { NoteSkeleton } from '@shared/notes/skeleton';
 import { TitleBar } from '@shared/titleBar';
 import { EventLoader, WidgetWrapper } from '@shared/widgets';
 
-import { useWidgets } from '@stores/widgets';
+import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { toRawEvent } from '@utils/rawEvent';
@@ -36,6 +36,7 @@ export function LocalNetworkWidget() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
+  const setWidget = useWidgets((state) => state.setWidget);
   const isFetched = useWidgets((state) => state.isFetched);
   const dbEvents = useMemo(
     () => (data ? data.pages.flatMap((d: { data: DBEvent[] }) => d.data) : []),
@@ -83,10 +84,18 @@ export function LocalNetworkWidget() {
     [dbEvents]
   );
 
+  const openTrendingWidgets = async () => {
+    setWidget(db, {
+      kind: WidgetKinds.nostrBand.trendingAccounts,
+      title: 'Trending Accounts',
+      content: '',
+    });
+  };
+
   // subscribe for new event
   // sub will be managed by lru-cache
   useEffect(() => {
-    if (db.account && db.account.circles && dbEvents.length > 0) {
+    if (db.account && db.account.circles.length > 0 && dbEvents.length > 0) {
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
         authors: db.account.circles,
@@ -99,6 +108,31 @@ export function LocalNetworkWidget() {
       });
     }
   }, [data]);
+
+  if (db.account.circles.length < 1) {
+    return (
+      <WidgetWrapper>
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="px-8 text-center">
+            <p className="mb-2 text-3xl">👋</p>
+            <h1 className="text-lg font-semibold">You have not follow anyone yet</h1>
+            <h5 className="text-sm text-neutral-600 dark:text-neutral-400">
+              If you are new to Nostr, you can click button below to open trending users
+              and start follow some of theme
+            </h5>
+            <button
+              type="button"
+              onClick={() => openTrendingWidgets()}
+              className="mt-4 inline-flex h-9 w-max items-center justify-center gap-2 rounded-lg bg-blue-500 px-3 font-semibold text-white hover:bg-blue-600"
+            >
+              Open trending
+              <ArrowRightIcon className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </WidgetWrapper>
+    );
+  }
 
   return (
     <WidgetWrapper>
