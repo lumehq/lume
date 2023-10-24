@@ -1,15 +1,12 @@
-# Nix.flake to build Lume
-# 
-# It follows guidelines of Taiuri's Guides: 
+# Nix.flake to build Lume based on Tauri's Guides: 
 # Prerequisites -> Installing -> Setting Up Linux -> NixOS
-# https://tauri.app/v1/guides/getting-started/prerequisites/#1-system-dependencie 
+# https://tauri.app/v1/guides/getting-started/prerequisites/#1-system-dependencies
 #
 # To build Rust backend of Tauri `rust-overlay` is used
 # https://github.com/oxalica/rust-overlay
 
 {
   inputs = {
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     rust-overlay.url = "github:oxalica/rust-overlay";
@@ -57,7 +54,7 @@
             rustToolchain
             pkgs.nodejs
             pkgs.nodePackages.pnpm
-            pkgs.bun # experimental in lume
+            pkgs.bun # experimental in Lume
           ] ++ packages;
 
           shellHook =

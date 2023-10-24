@@ -47,4 +47,4 @@ Requirements:
 1. [Install Nix](https://zero-to-flakes.com/install)
 1. [Setup `direnv`](https://zero-to-flakes.com/direnv)
 
-By `cd` into the root folder of the project you will enter the `nix develop` shell. Run `direnv allow` (only once needed). Then just use run `pnpm` or `bun` (experimental) commands as descirbed above. 
+`cd` into the root folder of the project to enter `nix develop` shell. Run `direnv allow` (only once). Then run `pnpm` or `bun` (experimental) commands as described above.
