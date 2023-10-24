@@ -1,20 +1,16 @@
-import { NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
 import { useNDK } from '@libs/ndk/provider';
 
 import { LoaderIcon, RepostIcon } from '@shared/icons';
 
-import { useNostr } from '@utils/hooks/useNostr';
-import { sendNativeNotification } from '@utils/notification';
-
 export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
-  const { publish } = useNostr();
-  const { relayUrls } = useNDK();
+  const { ndk, relayUrls } = useNDK();
 
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,18 +18,26 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
 
   const submit = async () => {
     setIsLoading(true);
+
     const tags = [
       ['e', id, relayUrls[0], 'root'],
       ['p', pubkey],
     ];
-    const event = await publish({ content: '', kind: NDKKind.Repost, tags: tags });
-    if (event) {
+
+    const event = new NDKEvent(ndk);
+    event.content = '';
+    event.kind = NDKKind.Repost;
+    event.tags = tags;
+
+    const publishedRelays = await event.publish();
+    if (publishedRelays) {
       setOpen(false);
       setIsRepost(true);
-      await sendNativeNotification('Reposted successfully', 'Lume');
+
+      toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
     } else {
       setIsLoading(false);
-      await message('Repost failed, try again later', { title: 'Lume', type: 'error' });
+      toast.error('Repost failed, try again later');
     }
   };
 
@@ -63,11 +67,11 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
         </Tooltip.Portal>
       </Tooltip.Root>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl" />
+        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-white/20" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-md rounded-xl bg-neutral-400 dark:bg-neutral-600">
-            <div className="flex flex-col gap-2 border-b border-white/5 px-5 py-4">
-              <AlertDialog.Title className="text-lg font-semibold leading-none text-white">
+          <div className="relative h-min w-full max-w-md rounded-xl bg-white dark:bg-black">
+            <div className="flex flex-col gap-2 border-b border-neutral-100 px-5 py-6 dark:border-neutral-900">
+              <AlertDialog.Title className="text-lg font-semibold leading-none text-neutral-900 dark:text-neutral-100">
                 Confirm repost this post?
               </AlertDialog.Title>
               <AlertDialog.Description className="text-sm leading-tight text-neutral-600 dark:text-neutral-400">
@@ -77,14 +81,14 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
             </div>
             <div className="flex justify-end gap-2 px-3 py-3">
               <AlertDialog.Cancel asChild>
-                <button className="inline-flex h-9 w-20 items-center justify-center rounded-md  text-sm font-medium leading-none text-white outline-none hover:bg-white/10 hover:backdrop-blur-xl">
+                <button className="inline-flex h-9 w-20 items-center justify-center rounded-md text-sm font-medium text-neutral-600 outline-none hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400">
                   Cancel
                 </button>
               </AlertDialog.Cancel>
               <button
                 type="button"
                 onClick={() => submit()}
-                className="inline-flex h-9 w-28 items-center justify-center rounded-md bg-white/10 text-sm font-medium leading-none text-white outline-none hover:bg-blue-600"
+                className="inline-flex h-9 w-24 items-center justify-center rounded-md bg-blue-500 text-sm font-medium leading-none text-white outline-none hover:bg-blue-600"
               >
                 {isLoading ? (
                   <LoaderIcon className="h-4 w-4 animate-spin text-white" />

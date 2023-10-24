@@ -53,7 +53,7 @@ export function RelayList() {
           </div>
         </div>
       ) : (
-        <VList className="h-full scrollbar-none">
+        <VList className="h-full">
           <div className="inline-flex h-16 w-full items-center border-b border-neutral-100 px-3 dark:border-neutral-900">
             <h3 className="font-semibold text-neutral-950 dark:text-neutral-50">
               All relays used by your follows
@@ -103,7 +103,6 @@ export function RelayList() {
               </div>
             </div>
           ))}
-          <div className="h-16" />
         </VList>
       )}
     </div>

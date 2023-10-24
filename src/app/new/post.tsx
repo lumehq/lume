@@ -5,17 +5,22 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
+
+import { MediaUploader, MentionPopup } from '@app/new/components';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import { MediaUploader, MentionPopup } from '@shared/composer';
-import { LoaderIcon } from '@shared/icons';
+import { CancelIcon, LoaderIcon } from '@shared/icons';
+import { MentionNote } from '@shared/notes';
 
-export function PostEditor() {
-  const { ndk } = useNDK();
+export function NewPostScreen() {
+  const { ndk, relayUrls } = useNDK();
+
   const [loading, setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const editor = useEditor({
     extensions: [
@@ -46,6 +51,12 @@ export function PostEditor() {
     try {
       setLoading(true);
 
+      const reply = {
+        id: searchParams.get('id'),
+        root: searchParams.get('root'),
+        pubkey: searchParams.get('pubkey'),
+      };
+
       // get plaintext content
       const html = editor.getHTML();
       const serializedContent = convert(html, {
@@ -56,12 +67,29 @@ export function PostEditor() {
       });
 
       // define tags
-      const tags: string[][] = [];
+      let tags: string[][] = [];
+
+      // add reply to tags if present
+      if (reply.id && reply.pubkey) {
+        if (reply.root && reply.root.length > 1) {
+          tags = [
+            ['e', reply.root, relayUrls[0], 'root'],
+            ['e', reply.id, relayUrls[0], 'reply'],
+            ['p', reply.pubkey],
+          ];
+        } else {
+          tags = [
+            ['e', reply.id, relayUrls[0], 'reply'],
+            ['p', reply.pubkey],
+          ];
+        }
+      }
 
       // add hashtag to tags if present
       const hashtags = serializedContent
         .split(/\s/gm)
         .filter((s: string) => s.startsWith('#'));
+
       hashtags?.forEach((tag: string) => {
         tags.push(['t', tag.replace('#', '')]);
       });
@@ -78,6 +106,7 @@ export function PostEditor() {
         // update state
         setLoading(false);
         // reset editor
+        setSearchParams({});
         editor.commands.clearContent();
         localStorage.setItem('editor-post', '{}');
       }
@@ -87,15 +116,33 @@ export function PostEditor() {
     }
   };
 
+  useEffect(() => {
+    if (editor) editor.commands.focus('end');
+  }, [editor]);
+
   return (
     <div className="flex h-full flex-col justify-between">
-      <EditorContent
-        editor={editor}
-        spellCheck="false"
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-      />
+      <div>
+        <EditorContent
+          editor={editor}
+          spellCheck="false"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+        />
+        {searchParams.get('id') && (
+          <div className="relative max-w-lg">
+            <MentionNote id={searchParams.get('id')} />
+            <button
+              type="button"
+              onClick={() => setSearchParams({})}
+              className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-neutral-300 px-2 dark:bg-neutral-700"
+            >
+              <CancelIcon className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+      </div>
       <div className="flex h-16 w-full items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
         <span className="text-sm font-medium tabular-nums text-neutral-600 dark:text-neutral-400">
           {editor?.storage?.characterCount.characters()}

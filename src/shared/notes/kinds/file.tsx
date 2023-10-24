@@ -41,7 +41,7 @@ export function FileNote(props: { event?: NDKEvent }) {
             slot="media"
             src={url}
             poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-            preload="auto"
+            preload="none"
             muted
             crossOrigin=""
           />

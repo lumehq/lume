@@ -2,9 +2,10 @@ import * as Popover from '@radix-ui/react-popover';
 import { Editor } from '@tiptap/react';
 import { nip19 } from 'nostr-tools';
 
+import { MentionPopupItem } from '@app/new/components';
+
 import { useStorage } from '@libs/storage/provider';
 
-import { MentionItem } from '@shared/composer';
 import { MentionIcon } from '@shared/icons';
 
 export function MentionPopup({ editor }: { editor: Editor }) {
@@ -34,7 +35,7 @@ export function MentionPopup({ editor }: { editor: Editor }) {
           {db.account.follows.length > 0 ? (
             db.account.follows.map((item) => (
               <button key={item} type="button" onClick={() => insertMention(item)}>
-                <MentionItem pubkey={item} />
+                <MentionPopupItem pubkey={item} />
               </button>
             ))
           ) : (

@@ -101,15 +101,24 @@ dependencies:
   '@tiptap/extension-character-count':
     specifier: ^2.1.12
     version: 2.1.12(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)
+  '@tiptap/extension-document':
+    specifier: ^2.1.12
+    version: 2.1.12(@tiptap/core@2.1.12)
   '@tiptap/extension-image':
     specifier: ^2.1.12
     version: 2.1.12(@tiptap/core@2.1.12)
   '@tiptap/extension-mention':
     specifier: ^2.1.12
     version: 2.1.12(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)(@tiptap/suggestion@2.1.12)
+  '@tiptap/extension-paragraph':
+    specifier: ^2.1.12
+    version: 2.1.12(@tiptap/core@2.1.12)
   '@tiptap/extension-placeholder':
     specifier: ^2.1.12
     version: 2.1.12(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)
+  '@tiptap/extension-text':
+    specifier: ^2.1.12
+    version: 2.1.12(@tiptap/core@2.1.12)
   '@tiptap/pm':
     specifier: ^2.1.12
     version: 2.1.12

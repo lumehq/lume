@@ -69,7 +69,7 @@ export function NWCAlby() {
         <Dialog.Trigger asChild>
           <button
             type="button"
-            className="inline-flex h-9 w-min items-center justify-center rounded-md bg-neutral-300 px-3 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-700"
+            className="inline-flex h-9 w-min items-center justify-center rounded-lg bg-neutral-300 px-3 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-700"
           >
             Connect
           </button>

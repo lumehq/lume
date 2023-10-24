@@ -5,6 +5,7 @@ import Database from '@tauri-apps/plugin-sql';
 
 import { FULL_RELAYS } from '@stores/constants';
 
+import { rawEvent } from '@utils/transform';
 import { Account, DBEvent, Relays, Widget } from '@utils/types';
 
 export class LumeStorage {
@@ -140,6 +141,8 @@ export class LumeStorage {
   }
 
   public async createEvent(event: NDKEvent) {
+    const rawNostrEvent = rawEvent(event);
+
     let root: string;
     let reply: string;
 
@@ -155,7 +158,7 @@ export class LumeStorage {
       [
         event.id,
         this.account.id,
-        JSON.stringify(event),
+        JSON.stringify(rawNostrEvent),
         event.pubkey,
         event.kind,
         root,

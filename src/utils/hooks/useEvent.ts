@@ -1,11 +1,9 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-import { AddressPointer } from 'nostr-tools/lib/nip19';
+import { AddressPointer } from 'nostr-tools/lib/types/nip19';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
-
-import { toRawEvent } from '@utils/rawEvent';
 
 export function useEvent(
   id: undefined | string,
@@ -43,8 +41,7 @@ export function useEvent(
       const event = await ndk.fetchEvent(id);
       if (!event) return Promise.reject(new Error('event not found'));
 
-      const rawEvent = toRawEvent(event);
-      await db.createEvent(rawEvent);
+      await db.createEvent(event);
 
       return event;
     },

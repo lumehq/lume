@@ -21,7 +21,6 @@ import { EventLoader, WidgetWrapper } from '@shared/widgets';
 import { WidgetKinds, useWidgets } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
-import { toRawEvent } from '@utils/rawEvent';
 import { DBEvent } from '@utils/types';
 
 export function LocalNetworkWidget() {
@@ -103,8 +102,7 @@ export function LocalNetworkWidget() {
       };
 
       sub(filter, async (event) => {
-        const rawEvent = toRawEvent(event);
-        await db.createEvent(rawEvent);
+        await db.createEvent(event);
       });
     }
   }, [data]);

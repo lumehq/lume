@@ -52,7 +52,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
                     </h5>
                   )}
                   {data.description && (
-                    <p className="mb-2.5 line-clamp-3 break-words text-sm text-neutral-700 dark:text-neutral-400">
+                    <p className="mb-2.5 line-clamp-3 break-all text-sm text-neutral-700 dark:text-neutral-400">
                       {data.description}
                     </p>
                   )}

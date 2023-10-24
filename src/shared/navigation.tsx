@@ -104,7 +104,7 @@ export function Navigation() {
       </div>
       <div className="flex shrink-0 flex-col gap-3 p-1">
         <Link
-          to="/notes/new"
+          to="/new/"
           className="flex aspect-square h-auto w-full items-center justify-center rounded-lg bg-neutral-100 text-black hover:bg-blue-500 hover:text-white dark:bg-neutral-900 dark:text-white dark:hover:bg-blue-500"
         >
           <ComposeIcon className="h-5 w-5" />

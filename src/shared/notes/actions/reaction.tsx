@@ -1,10 +1,10 @@
-import { NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import * as Popover from '@radix-ui/react-popover';
 import { useState } from 'react';
 
-import { ReactionIcon } from '@shared/icons';
+import { useNDK } from '@libs/ndk/provider';
 
-import { useNostr } from '@utils/hooks/useNostr';
+import { ReactionIcon } from '@shared/icons';
 
 const REACTIONS = [
   {
@@ -30,10 +30,10 @@ const REACTIONS = [
 ];
 
 export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
+  const { ndk } = useNDK();
+
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
-
-  const { publish } = useNostr();
 
   const getReactionImage = (content: string) => {
     const reaction: { img: string } = REACTIONS.find((el) => el.content === content);
@@ -43,16 +43,16 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
   const react = async (content: string) => {
     setReaction(content);
 
-    const event = await publish({
-      content: content,
-      kind: NDKKind.Reaction,
-      tags: [
-        ['e', id],
-        ['p', pubkey],
-      ],
-    });
+    const event = new NDKEvent(ndk);
+    event.content = content;
+    event.kind = NDKKind.Reaction;
+    event.tags = [
+      ['e', id],
+      ['p', pubkey],
+    ];
 
-    if (event) {
+    const publishedRelays = await event.publish();
+    if (publishedRelays) {
       setOpen(false);
     }
   };

@@ -8,12 +8,12 @@ import { useNDK } from '@libs/ndk/provider';
 
 import { LoaderIcon } from '@shared/icons';
 
-export function FileEditor() {
+export function NewFileScreen() {
   const { ndk } = useNDK();
 
   const [loading, setLoading] = useState(false);
   const [isPublish, setIsPublish] = useState(false);
-  const [metadata, setMetadata] = useState(null);
+  const [metadata, setMetadata] = useState<string[][] | null>(null);
   const [caption, setCaption] = useState('');
 
   const uploadFile = async () => {
@@ -105,11 +105,11 @@ export function FileEditor() {
 
   return (
     <div className="h-full">
-      <div className="flex flex-col gap-4">
+      <div className="flex h-96 gap-4 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
         <button
           type="button"
           onClick={uploadFile}
-          className="flex h-72 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-neutral-200 bg-neutral-100 hover:border-blue-500 hover:text-blue-500 dark:border-neutral-800 dark:bg-neutral-900"
+          className="flex h-full flex-1 flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50 p-2 hover:border-blue-500 hover:text-blue-500 dark:border-neutral-800 dark:bg-neutral-950"
         >
           {loading ? (
             <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />
@@ -127,35 +127,47 @@ export function FileEditor() {
               <img
                 src={metadata[0][1]}
                 alt={metadata[1][1]}
-                className="h-56 w-56 rounded-lg object-cover shadow-lg"
+                className="aspect-square h-full w-full rounded-lg object-cover shadow-lg"
               />
             </div>
           )}
         </button>
-        <div className="mx-auto w-full max-w-sm">
-          <div className="inline-flex w-full items-center gap-2">
-            <input
-              name="caption"
-              type="text"
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              spellCheck={false}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              placeholder="Caption (Optional)..."
-              className="h-11 flex-1 rounded-lg bg-neutral-100 px-3 placeholder:text-neutral-500 dark:bg-neutral-900 dark:placeholder:text-neutral-400"
-            />
-            <button
-              type="button"
-              onClick={submit}
-              disabled={!metadata}
-              className="inline-flex h-11 w-20 shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
-            >
-              {isPublish ? <LoaderIcon className="h-4 w-4 animate-spin" /> : 'Share'}
-            </button>
+        {metadata ? (
+          <div className="flex h-full flex-1 flex-col justify-between">
+            <div className="flex flex-col gap-2 py-2">
+              {metadata.map((item, index) => (
+                <div key={index} className="flex min-w-0 gap-2">
+                  <h5 className="w-24 shrink-0 truncate font-semibold capitalize text-neutral-600 dark:text-neutral-400">
+                    {item[0]}
+                  </h5>
+                  <p className="w-72 truncate">{item[1]}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-2">
+              <input
+                name="caption"
+                type="text"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                spellCheck={false}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                placeholder="Caption (Optional)..."
+                className="h-11 w-full rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-900 dark:placeholder:text-neutral-400"
+              />
+              <button
+                type="button"
+                onClick={submit}
+                disabled={!metadata}
+                className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+              >
+                {isPublish ? <LoaderIcon className="h-4 w-4 animate-spin" /> : 'Share'}
+              </button>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

@@ -73,3 +73,8 @@ export * from './explore2';
 export * from './home';
 export * from './chats';
 export * from './community';
+export * from './heading1';
+export * from './heading2';
+export * from './heading3';
+export * from './bold';
+export * from './italic';

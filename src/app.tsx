@@ -6,6 +6,7 @@ import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
+import { NewScreen } from '@app/new';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -119,17 +120,38 @@ export default function App() {
       ],
     },
     {
+      path: '/new',
+      element: <NewScreen />,
+      errorElement: <ErrorScreen />,
+      children: [
+        {
+          path: '',
+          async lazy() {
+            const { NewPostScreen } = await import('@app/new/post');
+            return { Component: NewPostScreen };
+          },
+        },
+        {
+          path: 'article',
+          async lazy() {
+            const { NewArticleScreen } = await import('@app/new/article');
+            return { Component: NewArticleScreen };
+          },
+        },
+        {
+          path: 'file',
+          async lazy() {
+            const { NewFileScreen } = await import('@app/new/file');
+            return { Component: NewFileScreen };
+          },
+        },
+      ],
+    },
+    {
       path: '/notes',
       element: <NoteLayout />,
       errorElement: <ErrorScreen />,
       children: [
-        {
-          path: 'new',
-          async lazy() {
-            const { NewNoteScreen } = await import('@app/notes/new');
-            return { Component: NewNoteScreen };
-          },
-        },
         {
           path: 'text/:id',
           async lazy() {

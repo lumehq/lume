@@ -1,11 +1,12 @@
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { nip04 } from 'nostr-tools';
 import { useCallback, useState } from 'react';
 
 import { MediaUploader } from '@app/chats/components/mediaUploader';
 
-import { EnterIcon } from '@shared/icons';
+import { useNDK } from '@libs/ndk/provider';
 
-import { useNostr } from '@utils/hooks/useNostr';
+import { EnterIcon } from '@shared/icons';
 
 export function ChatForm({
   receiverPubkey,
@@ -15,7 +16,7 @@ export function ChatForm({
   userPubkey: string;
   userPrivkey: string;
 }) {
-  const { publish } = useNostr();
+  const { ndk } = useNDK();
   const [value, setValue] = useState('');
 
   const encryptMessage = useCallback(async () => {
@@ -26,8 +27,12 @@ export function ChatForm({
     const message = await encryptMessage();
     const tags = [['p', receiverPubkey]];
 
-    // publish message
-    await publish({ content: message, kind: 4, tags });
+    const event = new NDKEvent(ndk);
+    event.content = message;
+    event.kind = NDKKind.EncryptedDirectMessage;
+    event.tags = tags;
+
+    await event.publish();
 
     // reset state
     setValue('');

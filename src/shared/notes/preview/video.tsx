@@ -18,7 +18,7 @@ export const VideoPreview = memo(function VideoPreview({ urls }: { urls: string[
             slot="media"
             src={url}
             poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-            preload="auto"
+            preload="none"
             muted
           />
           <MediaControlBar>

@@ -80,7 +80,7 @@ export const User = memo(function User({
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="h-6 w-6 rounded"
+            className="h-6 w-6 rounded-md"
           />
           <Avatar.Fallback delayMs={300}>
             <img
@@ -91,14 +91,14 @@ export const User = memo(function User({
           </Avatar.Fallback>
         </Avatar.Root>
         <div className="flex flex-1 items-baseline gap-2">
-          <h5 className="max-w-[10rem] truncate font-semibold  text-neutral-900 dark:text-neutral-100">
+          <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
             {user?.name ||
               user?.display_name ||
               user?.displayName ||
               displayNpub(pubkey, 16)}
           </h5>
-          <span className="text-neutral-500 dark:text-neutral-300">·</span>
-          <span className="text-neutral-500 dark:text-neutral-300">{createdAt}</span>
+          <span className="text-neutral-600 dark:text-neutral-400">·</span>
+          <span className="text-neutral-600 dark:text-neutral-400">{createdAt}</span>
         </div>
       </div>
     );

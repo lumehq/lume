@@ -1,8 +1,7 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { ReplyIcon } from '@shared/icons';
-
-import { useComposer } from '@stores/composer';
 
 export function NoteReply({
   id,
@@ -13,14 +12,23 @@ export function NoteReply({
   pubkey: string;
   root?: string;
 }) {
-  const setReply = useComposer((state) => state.setReply);
+  const navigate = useNavigate();
 
   return (
     <Tooltip.Root delayDuration={150}>
       <Tooltip.Trigger asChild>
         <button
           type="button"
-          onClick={() => setReply(id, pubkey, root)}
+          onClick={() =>
+            navigate({
+              pathname: '/new/',
+              search: createSearchParams({
+                id,
+                pubkey,
+                root,
+              }).toString(),
+            })
+          }
           className="group inline-flex h-7 w-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
         >
           <ReplyIcon className="h-5 w-5 group-hover:text-blue-500" />

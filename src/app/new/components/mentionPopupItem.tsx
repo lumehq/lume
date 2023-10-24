@@ -3,7 +3,7 @@ import { Image } from '@shared/image';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
-export function MentionItem({ pubkey, embed }: { pubkey: string; embed?: string }) {
+export function MentionPopupItem({ pubkey, embed }: { pubkey: string; embed?: string }) {
   const { status, user } = useProfile(pubkey, embed);
 
   if (status === 'loading') {

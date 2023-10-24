@@ -38,7 +38,7 @@ export function NoteWrapper({
                 children,
                 event.kind === 1 ? { content: event.content } : { event: event }
               )}
-              <NoteActions id={event.id} pubkey={event.pubkey} />
+              <NoteActions id={event.id} pubkey={event.pubkey} root={root} />
             </div>
           </div>
         </div>

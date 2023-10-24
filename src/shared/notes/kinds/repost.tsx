@@ -2,7 +2,6 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { memo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -113,24 +112,17 @@ export function Repost({
         >
           <div className="relative flex flex-col">
             <div className="relative z-10 flex items-start gap-3">
-              <div className="inline-flex h-11 w-11 items-end justify-center rounded-lg bg-black pb-1">
-                <img src="/lume.png" alt="lume" className="h-auto w-1/3" />
-              </div>
-              <h5 className="truncate font-semibold leading-none text-white">
-                Lume <span className="text-green-500">(System)</span>
+              <div className="inline-flex h-10 w-10 shrink-0 items-end justify-center rounded-lg bg-black"></div>
+              <h5 className="truncate font-semibold leading-none text-neutral-900 dark:text-neutral-100">
+                Lume <span className="text-teal-500">(System)</span>
               </h5>
             </div>
             <div className="-mt-4 flex items-start gap-3">
-              <div className="w-11 shrink-0" />
-              <div>
-                <div className="relative z-20 mt-1 flex-1 select-text">
-                  <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
-                    Lume cannot find this post with your current relays, but you can view
-                    it via njump.me.{' '}
-                    <Link to={noteLink} className="text-blue-500">
-                      Learn more
-                    </Link>
-                  </div>
+              <div className="w-10 shrink-0" />
+              <div className="flex-1">
+                <div className="prose prose-neutral max-w-none select-text whitespace-pre-line break-all leading-normal dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-1 prose-a:font-normal prose-a:text-blue-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-blue-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:break-all prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2 hover:prose-a:text-blue-500">
+                  Lume cannot find this post with your current relay set, but you can view
+                  it via njump.me
                 </div>
                 <LinkPreview urls={[noteLink]} />
               </div>
