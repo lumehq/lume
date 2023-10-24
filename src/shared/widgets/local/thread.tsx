@@ -57,6 +57,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
         <hr className="my-4 h-px w-full border-none bg-neutral-100" />
         <NoteReplyForm id={params.content} />
         <ReplyList id={params.content} />
+        <div className="h-10" />
       </div>
     </WidgetWrapper>
   );

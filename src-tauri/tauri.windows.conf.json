@@ -5,7 +5,7 @@
       {
         "width": 1080,
         "height": 800,
-        "minWidth": 1080,
+        "minWidth": 560,
         "minHeight": 800,
         "resizable": true,
         "title": "Lume",

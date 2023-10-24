@@ -50,15 +50,15 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   return (
     <>
-      <div className="h-56 w-full">
+      <div className="h-56 w-full overflow-hidden rounded-tl-lg">
         {user.banner ? (
           <img
             src={user.banner}
             alt="user banner"
-            className="h-full w-full object-cover"
+            className="h-full w-full rounded-tl-lg object-cover"
           />
         ) : (
-          <div className="h-full w-full bg-neutral-100 dark:bg-neutral-900" />
+          <div className="h-full w-full rounded-tl-lg bg-neutral-100 dark:bg-neutral-900" />
         )}
       </div>
       <div className="-mt-7 flex w-full flex-col items-center px-5">

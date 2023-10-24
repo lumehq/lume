@@ -55,7 +55,7 @@ export function ActiveAccount() {
 
   if (status === 'loading') {
     return (
-      <div className="aspect-square h-auto w-full animate-pulse rounded-lg bg-white/10" />
+      <div className="aspect-square h-auto w-full animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
     );
   }
 

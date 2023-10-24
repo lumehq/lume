@@ -1,24 +1,62 @@
+import { message, open } from '@tauri-apps/plugin-dialog';
+import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, PlusIcon } from '@shared/icons';
-
-import { useNostr } from '@utils/hooks/useNostr';
 
 export function BannerUploader({
   setBanner,
 }: {
   setBanner: Dispatch<SetStateAction<string>>;
 }) {
-  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const uploadBanner = async () => {
-    setLoading(true);
-    const image = await upload(null);
-    if (image.url) {
-      setBanner(image.url);
+    try {
+      // start loading
+      setLoading(true);
+
+      const selected = await open({
+        multiple: false,
+        filters: [
+          {
+            name: 'Image',
+            extensions: ['png', 'jpeg', 'jpg', 'gif'],
+          },
+        ],
+      });
+
+      if (!selected) {
+        setLoading(false);
+        return;
+      }
+
+      const file = await readBinaryFile(selected.path);
+      const blob = new Blob([file]);
+
+      const data = new FormData();
+      data.append('fileToUpload', blob);
+      data.append('submit', 'Upload Image');
+
+      const res = await fetch('https://nostr.build/api/v2/upload/files', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.data[0];
+
+        setBanner(content.url);
+
+        // stop loading
+        setLoading(false);
+      }
+    } catch (e) {
+      // stop loading
+      setLoading(false);
+      await message(`Upload failed, error: ${e}`, { title: 'Lume', type: 'error' });
     }
-    setLoading(false);
   };
 
   return (

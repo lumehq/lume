@@ -1,7 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { nip19 } from 'nostr-tools';
 import { memo } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -68,13 +67,6 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
           </h5>
         </div>
         <div className="mt-1.5">
-          <div className="mb-1 select-text rounded-lg bg-white/5 p-1.5 text-sm">
-            Lume cannot find this post with your current relays, but you can view it via
-            njump.me.{' '}
-            <Link to={noteLink} className="text-blue-500">
-              Learn more
-            </Link>
-          </div>
           <LinkPreview urls={[noteLink]} />
         </div>
       </div>
@@ -87,10 +79,10 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       onKeyDown={(e) => openThread(e, id)}
       role="button"
       tabIndex={0}
-      className="mt-3 cursor-default rounded-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800"
+      className="mt-3 cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
     >
       <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
-      <div className="mt-1.5">{renderKind(data)}</div>
+      <div className="mt-1">{renderKind(data)}</div>
     </div>
   );
 });

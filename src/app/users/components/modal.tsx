@@ -1,18 +1,22 @@
-import { NDKEvent, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { message, open } from '@tauri-apps/plugin-dialog';
+import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { AvatarUploader } from '@shared/avatarUploader';
-import { BannerUploader } from '@shared/bannerUploader';
-import { CancelIcon, CheckCircleIcon, LoaderIcon, UnverifiedIcon } from '@shared/icons';
-import { Image } from '@shared/image';
-
-import { useNostr } from '@utils/hooks/useNostr';
+import {
+  CancelIcon,
+  CheckCircleIcon,
+  LoaderIcon,
+  PlusIcon,
+  UnverifiedIcon,
+} from '@shared/icons';
 
 interface NIP05 {
   names: {
@@ -25,12 +29,12 @@ export function EditProfileModal() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [picture, setPicture] = useState('https://void.cat/d/5VKmKyuHyxrNMf9bWSVPih');
-  const [banner, setBanner] = useState(null);
+  const [picture, setPicture] = useState('');
+  const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: false, text: '' });
 
   const { db } = useStorage();
-  const { publish } = useNostr();
+  const { ndk } = useNDK();
   const {
     register,
     handleSubmit,
@@ -75,11 +79,105 @@ export function EditProfileModal() {
     return false;
   };
 
+  const uploadAvatar = async () => {
+    try {
+      // start loading
+      setLoading(true);
+
+      const selected = await open({
+        multiple: false,
+        filters: [
+          {
+            name: 'Image',
+            extensions: ['png', 'jpeg', 'jpg', 'gif'],
+          },
+        ],
+      });
+
+      if (!selected) {
+        setLoading(false);
+        return;
+      }
+
+      const file = await readBinaryFile(selected.path);
+      const blob = new Blob([file]);
+
+      const data = new FormData();
+      data.append('fileToUpload', blob);
+      data.append('submit', 'Upload Image');
+
+      const res = await fetch('https://nostr.build/api/v2/upload/files', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.data[0];
+
+        setPicture(content.url);
+
+        // stop loading
+        setLoading(false);
+      }
+    } catch (e) {
+      // stop loading
+      setLoading(false);
+      await message(`Upload failed, error: ${e}`, { title: 'Lume', type: 'error' });
+    }
+  };
+
+  const uploadBanner = async () => {
+    try {
+      // start loading
+      setLoading(true);
+
+      const selected = await open({
+        multiple: false,
+        filters: [
+          {
+            name: 'Image',
+            extensions: ['png', 'jpeg', 'jpg', 'gif'],
+          },
+        ],
+      });
+
+      if (!selected) {
+        setLoading(false);
+        return;
+      }
+
+      const file = await readBinaryFile(selected.path);
+      const blob = new Blob([file]);
+
+      const data = new FormData();
+      data.append('fileToUpload', blob);
+      data.append('submit', 'Upload Image');
+
+      const res = await fetch('https://nostr.build/api/v2/upload/files', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.data[0];
+
+        setBanner(content.url);
+
+        // stop loading
+        setLoading(false);
+      }
+    } catch (e) {
+      // stop loading
+      setLoading(false);
+      await message(`Upload failed, error: ${e}`, { title: 'Lume', type: 'error' });
+    }
+  };
+
   const onSubmit = async (data: NDKUserProfile) => {
     // start loading
     setLoading(true);
-
-    let event: NDKEvent;
 
     const content = {
       ...data,
@@ -89,14 +187,14 @@ export function EditProfileModal() {
       image: data.picture,
     };
 
+    const event = new NDKEvent(ndk);
+    event.kind = NDKKind.Metadata;
+    event.tags = [];
+
     if (data.nip05) {
       const nip05IsVerified = await verifyNIP05(data.nip05);
       if (nip05IsVerified) {
-        event = await publish({
-          content: JSON.stringify({ ...content, nip05: data.nip05 }),
-          kind: 0,
-          tags: [],
-        });
+        event.content = JSON.stringify({ ...content, nip05: data.nip05 });
       } else {
         setNIP05((prev) => ({ ...prev, verified: false }));
         setError('nip05', {
@@ -105,14 +203,12 @@ export function EditProfileModal() {
         });
       }
     } else {
-      event = await publish({
-        content: JSON.stringify(content),
-        kind: 0,
-        tags: [],
-      });
+      event.content = JSON.stringify(content);
     }
 
-    if (event.id) {
+    const publishedRelays = await event.publish();
+
+    if (publishedRelays) {
       // invalid cache
       queryClient.invalidateQueries(['user', db.account.pubkey]);
       // reset form
@@ -144,7 +240,7 @@ export function EditProfileModal() {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-white dark:bg-black" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-xl rounded-xl bg-neutral-100 dark:bg-neutral-900">
             <div className="h-min w-full shrink-0 rounded-t-xl border-b border-neutral-200 px-5 py-5 dark:border-neutral-800">
@@ -173,18 +269,30 @@ export function EditProfileModal() {
                       <div className="h-full w-full bg-black dark:bg-white" />
                     )}
                     <div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform">
-                      <BannerUploader setBanner={setBanner} />
+                      <button
+                        type="button"
+                        onClick={() => uploadBanner()}
+                        className="inline-flex h-full w-full items-center justify-center bg-black/50"
+                      >
+                        <PlusIcon className="h-5 w-5" />
+                      </button>
                     </div>
                   </div>
                   <div className="mb-5 px-4">
-                    <div className="relative z-10 -mt-7 h-14 w-14">
-                      <Image
+                    <div className="relative z-10 -mt-7 h-14 w-14 overflow-hidden rounded-xl ring-2 ring-neutral-900">
+                      <img
                         src={picture}
                         alt="user's avatar"
-                        className="h-14 w-14 rounded-lg object-cover ring-2 ring-neutral-900"
+                        className="h-14 w-14 rounded-xl object-cover"
                       />
                       <div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform">
-                        <AvatarUploader setPicture={setPicture} />
+                        <button
+                          type="button"
+                          onClick={() => uploadAvatar()}
+                          className="inline-flex h-full w-full items-center justify-center rounded-xl bg-black/50"
+                        >
+                          <PlusIcon className="h-5 w-5" />
+                        </button>
                       </div>
                     </div>
                   </div>

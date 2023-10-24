@@ -8,9 +8,6 @@ dependencies:
   '@evilmartians/harmony':
     specifier: ^1.1.0
     version: 1.1.0
-  '@formkit/auto-animate':
-    specifier: ^0.8.0
-    version: 0.8.0
   '@getalby/sdk':
     specifier: ^2.5.0
     version: 2.5.0
@@ -21,8 +18,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(typescript@5.2.2)
   '@nostr-fetch/adapter-ndk':
-    specifier: ^0.12.2
-    version: 0.12.2(@nostr-dev-kit/ndk@2.0.3)(nostr-fetch@0.13.0)
+    specifier: ^0.13.0
+    version: 0.13.0(@nostr-dev-kit/ndk@2.0.3)(nostr-fetch@0.13.0)
   '@radix-ui/react-alert-dialog':
     specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.2.14)(@types/react@18.2.29)(react-dom@18.2.0)(react@18.2.0)
@@ -51,7 +48,7 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.14)(@types/react@18.2.29)(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-query':
-    specifier: ^4.36.1
+    specifier: 4.36.1
     version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
   '@tauri-apps/api':
     specifier: 2.0.0-alpha.8
@@ -194,9 +191,6 @@ dependencies:
   react-string-replace:
     specifier: ^1.1.1
     version: 1.1.1
-  react-xarrows:
-    specifier: ^2.0.2
-    version: 2.0.2(react@18.2.0)
   reactflow:
     specifier: ^11.9.4
     version: 11.9.4(@types/react@18.2.29)(react-dom@18.2.0)(react@18.2.0)
@@ -865,10 +859,6 @@ packages:
     resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
     dev: false
 
-  /@formkit/auto-animate@0.8.0:
-    resolution: {integrity: sha512-G8f7489ka0mWyi+1IEZT+xgIwcpWtRMmE2x+IrVoQ+KM1cP6VDj/TbujZjwxdb0P8w8b16/qBfViRmydbYHwMw==}
-    dev: false
-
   /@getalby/sdk@2.5.0:
     resolution: {integrity: sha512-MRLgI6WxCCLgrar+qDqm/UhKs+V6yXzNm4y1bJRAuN72nkKT+TjTJHCmk9GjTngR3FrOfLbeMsPwBxCmbvfrLQ==}
     engines: {node: '>=14'}
@@ -1003,22 +993,15 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-fetch/adapter-ndk@0.12.2(@nostr-dev-kit/ndk@2.0.3)(nostr-fetch@0.13.0):
-    resolution: {integrity: sha512-+7EVuxS5DDZvNo6qbfFp7xRHwIyjyi36hYkiQFDjbQ4gX5LKo9RIPB1P+1XGkOSDFshypTbovZCaFunscJ/zhQ==}
+  /@nostr-fetch/adapter-ndk@0.13.0(@nostr-dev-kit/ndk@2.0.3)(nostr-fetch@0.13.0):
+    resolution: {integrity: sha512-pTpAmwdaDUymdaVbYDoBV0A+LvOj6VIQqhrcfsWlr2+O4vbOy5DLqE3189xFZhkW0I+eT9m18H9YxbHUZS85hw==}
     peerDependencies:
-      '@nostr-dev-kit/ndk': ^0.7.5
-      nostr-fetch: ^0.12.2
+      '@nostr-dev-kit/ndk': ^0.8.4
+      nostr-fetch: ^0.13.0
     dependencies:
       '@nostr-dev-kit/ndk': 2.0.3(typescript@5.2.2)
-      '@nostr-fetch/kernel': 0.12.2
+      '@nostr-fetch/kernel': 0.13.0
       nostr-fetch: 0.13.0
-    dev: false
-
-  /@nostr-fetch/kernel@0.12.2:
-    resolution: {integrity: sha512-ja7StOV33NmdtAMGfQIS0/R0dAkLRm3QxN6u/YAQdp5mXER4BYxiQKxUS/dCoTCSX986MH2zp9Fm0f76u4VaNQ==}
-    dependencies:
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
     dev: false
 
   /@nostr-fetch/kernel@0.13.0:
@@ -4832,6 +4815,7 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: true
 
   /log-update@5.0.1:
     resolution: {integrity: sha512-5UtUDQ/6edw4ofyljDNcOVJQ4c7OjDro4h3y8e1GQL5iYElYclVHJ3zeWchylvMaKnDbDilC8irOVyexnA/Slw==}
@@ -6092,17 +6076,6 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.6.2
-    dev: false
-
-  /react-xarrows@2.0.2(react@18.2.0):
-    resolution: {integrity: sha512-tDlAqaxHNmy0vegW/6NdhoWyXJq1LANX/WUAlHyzoHe9BwFVnJPPDghmDjYeVr7XWFmBrVTUrHsrW7GKYI6HtQ==}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      '@types/prop-types': 15.7.9
-      lodash: 4.17.21
-      prop-types: 15.8.1
-      react: 18.2.0
     dev: false
 
   /react@18.2.0:

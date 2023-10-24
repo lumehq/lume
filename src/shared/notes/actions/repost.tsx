@@ -67,7 +67,7 @@ export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
         </Tooltip.Portal>
       </Tooltip.Root>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-white/20" />
+        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-md rounded-xl bg-white dark:bg-black">
             <div className="flex flex-col gap-2 border-b border-neutral-100 px-5 py-6 dark:border-neutral-900">
