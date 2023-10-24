@@ -18,6 +18,8 @@ out
 *.db-journal
 bun.lockb
 
+.direnv
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
