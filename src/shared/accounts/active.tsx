@@ -4,6 +4,7 @@ import { minidenticon } from 'minidenticons';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { AccountMoreActions } from '@shared/accounts/more';
@@ -17,6 +18,7 @@ import { sendNativeNotification } from '@utils/notification';
 
 export function ActiveAccount() {
   const { db } = useStorage();
+  const { ndk } = useNDK();
   const { status, user } = useProfile(db.account.pubkey);
   const { sub } = useNostr();
 
@@ -27,24 +29,38 @@ export function ActiveAccount() {
 
   useEffect(() => {
     const filter: NDKFilter = {
-      '#p': [db.account.pubkey],
       kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
       since: Math.floor(Date.now() / 1000),
+      '#p': [db.account.pubkey],
     };
 
     sub(
       filter,
       async (event) => {
         addActivity(event);
+
+        const user = ndk.getUser({ hexpubkey: event.pubkey });
+        await user.fetchProfile();
+
         switch (event.kind) {
           case NDKKind.Text:
-            return await sendNativeNotification('Mention');
+            return await sendNativeNotification(
+              `${user.profile.displayName || user.profile.name} has replied to your note`
+            );
           case NDKKind.Repost:
-            return await sendNativeNotification('Repost');
+            return await sendNativeNotification(
+              `${user.profile.displayName || user.profile.name} has reposted to your note`
+            );
           case NDKKind.Reaction:
-            return await sendNativeNotification('Reaction');
+            return await sendNativeNotification(
+              `${user.profile.displayName || user.profile.name} has reacted ${
+                event.content
+              } to your note`
+            );
           case NDKKind.Zap:
-            return await sendNativeNotification('Zap');
+            return await sendNativeNotification(
+              `${user.profile.displayName || user.profile.name} has zapped to your note`
+            );
           default:
             break;
         }
@@ -71,7 +87,7 @@ export function ActiveAccount() {
             style={{ contentVisibility: 'auto' }}
             className="aspect-square h-auto w-full rounded-md"
           />
-          <Avatar.Fallback delayMs={300}>
+          <Avatar.Fallback delayMs={150}>
             <img
               src={svgURI}
               alt={db.account.pubkeypubkey}

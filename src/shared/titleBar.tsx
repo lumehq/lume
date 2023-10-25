@@ -26,7 +26,7 @@ export function TitleBar({ id, title }: { id?: string; title?: string }) {
           ) : null}
         </div>
       ) : (
-        <h3 className="text-sm font-medium tracking-wide text-neutral-900 dark:text-neutral-100">
+        <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
           {title}
         </h3>
       )}

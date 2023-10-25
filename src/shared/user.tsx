@@ -28,6 +28,7 @@ export const User = memo(function User({
     | 'default'
     | 'simple'
     | 'mention'
+    | 'notify'
     | 'repost'
     | 'chat'
     | 'large'
@@ -51,7 +52,7 @@ export const User = memo(function User({
       );
     }
 
-    if (variant === 'mention') {
+    if (variant === 'mention' || variant === 'notify') {
       return (
         <div className="relative flex items-center gap-3">
           <div className="relative z-10 h-6 w-6 shrink-0 animate-pulse overflow-hidden rounded bg-neutral-300 dark:bg-neutral-700" />
@@ -86,7 +87,7 @@ export const User = memo(function User({
             <img
               src={svgURI}
               alt={pubkey}
-              className="h-6 w-6 rounded bg-black dark:bg-white"
+              className="h-6 w-6 rounded-md bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
@@ -100,6 +101,36 @@ export const User = memo(function User({
           <span className="text-neutral-600 dark:text-neutral-400">·</span>
           <span className="text-neutral-600 dark:text-neutral-400">{createdAt}</span>
         </div>
+      </div>
+    );
+  }
+
+  if (variant === 'notify') {
+    return (
+      <div className="flex items-center gap-2">
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="h-8 w-8 rounded-lg"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-8 w-8 rounded-lg bg-black dark:bg-white"
+            />
+          </Avatar.Fallback>
+        </Avatar.Root>
+        <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+          {user?.name ||
+            user?.display_name ||
+            user?.displayName ||
+            displayNpub(pubkey, 16)}
+        </h5>
       </div>
     );
   }

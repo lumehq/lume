@@ -1,6 +1,4 @@
 import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
-import { message, open } from '@tauri-apps/plugin-dialog';
-import { fetch } from '@tauri-apps/plugin-http';
 import { LRUCache } from 'lru-cache';
 import { NostrEventExt } from 'nostr-fetch';
 import { useMemo } from 'react';
@@ -10,7 +8,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { nHoursAgo } from '@utils/date';
 import { getMultipleRandom } from '@utils/transform';
-import { NDKEventWithReplies, NostrBuildResponse } from '@utils/types';
+import { NDKEventWithReplies } from '@utils/types';
 
 export function useNostr() {
   const { db } = useStorage();
@@ -53,9 +51,6 @@ export function useNostr() {
     list.forEach((item) => {
       tags.push(['p', item]);
     });
-
-    // publish event
-    publish({ content: '', kind: NDKKind.Contacts, tags: tags });
   };
 
   const removeContact = async (pubkey: string) => {
@@ -66,30 +61,17 @@ export function useNostr() {
     list.forEach((item) => {
       tags.push(['p', item]);
     });
-
-    // publish event
-    publish({ content: '', kind: NDKKind.Contacts, tags: tags });
   };
 
-  const fetchActivities = async () => {
+  const getAllActivities = async (limit?: number) => {
     try {
-      const events = await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [
-            NDKKind.Text,
-            NDKKind.Contacts,
-            NDKKind.Repost,
-            NDKKind.Reaction,
-            NDKKind.Zap,
-          ],
-          '#p': [db.account.pubkey],
-        },
-        { since: nHoursAgo(24) },
-        { sort: true }
-      );
+      const events = await ndk.fetchEvents({
+        kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
+        '#p': [db.account.pubkey],
+        limit: limit ?? 100,
+      });
 
-      return events as unknown as NDKEvent[];
+      return [...events];
     } catch (e) {
       console.error('Error fetching activities', e);
     }
@@ -289,115 +271,12 @@ export function useNostr() {
     return relayMap;
   };
 
-  const publish = async ({
-    content,
-    kind,
-    tags,
-  }: {
-    content: string;
-    kind: NDKKind | number;
-    tags: string[][];
-  }): Promise<NDKEvent> => {
-    const event = new NDKEvent(ndk);
-    event.content = content;
-    event.kind = kind;
-    event.created_at = Math.floor(Date.now() / 1000);
-    event.pubkey = db.account.pubkey;
-    event.tags = tags;
-
-    await event.sign();
-    await event.publish();
-
-    return event;
-  };
-
   const createZap = async (event: NDKEvent, amount: number, message?: string) => {
     // @ts-expect-error, NostrEvent to NDKEvent
     const ndkEvent = new NDKEvent(ndk, event);
     const res = await ndkEvent.zap(amount, message ?? 'zap from lume');
 
     return res;
-  };
-
-  const upload = async (file: null | string, nip94?: boolean) => {
-    try {
-      let filepath = file;
-
-      if (!file) {
-        const selected = await open({
-          multiple: false,
-          filters: [
-            {
-              name: 'Media',
-              extensions: [
-                'png',
-                'jpeg',
-                'jpg',
-                'gif',
-                'mp4',
-                'mp3',
-                'webm',
-                'mkv',
-                'avi',
-                'mov',
-              ],
-            },
-          ],
-        });
-        if (Array.isArray(selected)) {
-          // user selected multiple files
-        } else if (selected === null) {
-          return {
-            url: null,
-            error: 'Cancelled',
-          };
-        } else {
-          filepath = selected.path;
-        }
-      }
-
-      const formData = new FormData();
-      formData.append('file', filepath);
-
-      const res: NostrBuildResponse = await fetch(
-        'https://nostr.build/api/v2/upload/files',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'multipart/form-data' },
-          body: formData,
-        }
-      );
-
-      if (res.ok) {
-        const data = res.data.data[0];
-        const url = data.url;
-
-        if (nip94) {
-          const tags = [
-            ['url', url],
-            ['x', data.sha256 ?? ''],
-            ['m', data.mime ?? 'application/octet-stream'],
-            ['size', data.size.toString() ?? '0'],
-            ['dim', `${data.dimensions.width}x${data.dimensions.height}` ?? '0'],
-            ['blurhash', data.blurhash ?? ''],
-          ];
-
-          await publish({ content: '', kind: 1063, tags: tags });
-        }
-
-        return {
-          url: url,
-          error: null,
-        };
-      }
-
-      return {
-        url: null,
-        error: 'Upload failed',
-      };
-    } catch (e) {
-      await message(e, { title: 'Lume', type: 'error' });
-    }
   };
 
   return {
@@ -409,11 +288,9 @@ export function useNostr() {
     getContactsByPubkey,
     getEventsByPubkey,
     getAllRelaysByUsers,
-    fetchActivities,
+    getAllActivities,
     fetchNIP04Messages,
     fetchAllReplies,
-    publish,
     createZap,
-    upload,
   };
 }

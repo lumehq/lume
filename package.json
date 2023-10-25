@@ -87,7 +87,7 @@
     "tauri-controls": "^0.2.0",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.2",
-    "virtua": "^0.14.0",
+    "virtua": "^0.15.0",
     "zustand": "^4.4.3"
   },
   "devDependencies": {

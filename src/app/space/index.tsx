@@ -17,6 +17,7 @@ import {
   LocalFilesWidget,
   LocalFollowsWidget,
   LocalNetworkWidget,
+  LocalNotificationWidget,
   LocalThreadWidget,
   LocalUserWidget,
   TrendingAccountsWidget,
@@ -74,6 +75,8 @@ export function SpaceScreen() {
           return <WidgetList key={widget.id} params={widget} />;
         case WidgetKinds.other.learnNostr:
           return <LearnNostrWidget key={widget.id} params={widget} />;
+        case WidgetKinds.local.notification:
+          return <LocalNotificationWidget key={widget.id} params={widget} />;
         default:
           return null;
       }
@@ -83,7 +86,7 @@ export function SpaceScreen() {
 
   useEffect(() => {
     fetchWidgets(db);
-  }, [fetchWidgets]);
+  }, []);
 
   return (
     <VList

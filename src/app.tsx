@@ -66,13 +66,6 @@ export default function App() {
           },
         },
         {
-          path: 'notifications',
-          async lazy() {
-            const { NotificationScreen } = await import('@app/notifications');
-            return { Component: NotificationScreen };
-          },
-        },
-        {
           path: 'nwc',
           async lazy() {
             const { NWCScreen } = await import('@app/nwc');

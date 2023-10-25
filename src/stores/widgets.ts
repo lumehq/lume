@@ -24,6 +24,7 @@ export const WidgetKinds = {
     user: 104,
     thread: 105,
     follows: 106,
+    notification: 107,
   },
   global: {
     feeds: 1000,
@@ -110,6 +111,11 @@ export const DefaultWidgets: Array<WidgetGroup> = [
     title: 'Other',
     data: [
       {
+        kind: WidgetKinds.local.notification,
+        title: 'Notification',
+        description: 'Everything happens around you',
+      },
+      {
         kind: WidgetKinds.other.learnNostr,
         title: 'Learn Nostr',
         description: 'All things you need to know about Nostr',
@@ -125,9 +131,14 @@ export const useWidgets = create<WidgetState>()(
       isFetched: false,
       fetchWidgets: async (db: LumeStorage) => {
         const dbWidgets = await db.getWidgets();
-        console.log('db widgets: ', dbWidgets);
 
-        // default: add network widget
+        dbWidgets.unshift({
+          id: '9998',
+          title: 'Notification',
+          content: '',
+          kind: WidgetKinds.local.notification,
+        });
+
         dbWidgets.unshift({
           id: '9999',
           title: '',
