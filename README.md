@@ -39,3 +39,12 @@ Generate production build
 ```
 pnpm tauri build
 ```
+
+#### Nix 
+
+Requirements:
+
+1. [Install Nix](https://zero-to-flakes.com/install)
+1. [Setup `direnv`](https://zero-to-flakes.com/direnv)
+
+`cd` into the root folder of the project to enter `nix develop` shell. Run `direnv allow` (only once). Then run `pnpm` or `bun` (experimental) commands as described above.
