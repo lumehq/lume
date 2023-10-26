@@ -28,7 +28,10 @@ const NDKProvider = ({ children }: PropsWithChildren<object>) => {
         data-tauri-drag-region
         className="flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
       >
-        <LoaderIcon className="h-8 w-8 animate-spin text-neutral-950 dark:text-neutral-50" />
+        <div className="flex flex-col items-center justify-center gap-2 text-center">
+          <LoaderIcon className="h-7 w-7 animate-spin text-neutral-950 dark:text-neutral-50" />
+          <p className="font-semibold">Connecting to relays</p>
+        </div>
       </div>
     );
   }

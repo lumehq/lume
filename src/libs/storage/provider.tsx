@@ -1,10 +1,14 @@
 import { appConfigDir } from '@tauri-apps/api/path';
 import { message } from '@tauri-apps/plugin-dialog';
 import { platform } from '@tauri-apps/plugin-os';
+import { relaunch } from '@tauri-apps/plugin-process';
 import Database from '@tauri-apps/plugin-sql';
+import { check } from '@tauri-apps/plugin-updater';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
 import { LumeStorage } from '@libs/storage/instance';
+
+import { LoaderIcon } from '@shared/icons';
 
 interface StorageContext {
   db: LumeStorage;
@@ -16,6 +20,7 @@ const StorageContext = createContext<StorageContext>({
 
 const StorageProvider = ({ children }: PropsWithChildren<object>) => {
   const [db, setDB] = useState<LumeStorage>(undefined);
+  const [isNewVersion, setIsNewVersion] = useState(false);
 
   const initLumeStorage = async () => {
     try {
@@ -25,6 +30,15 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 
       const lumeStorage = new LumeStorage(sqlite, platformName);
       if (!lumeStorage.account) await lumeStorage.getActiveAccount();
+
+      // check update
+      const update = await check();
+      if (update) {
+        setIsNewVersion(true);
+
+        await update.downloadAndInstall();
+        await relaunch();
+      }
 
       setDB(lumeStorage);
       console.info(dir);
@@ -40,9 +54,23 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
     if (!db) initLumeStorage();
   }, []);
 
-  if (db) {
-    return <StorageContext.Provider value={{ db }}>{children}</StorageContext.Provider>;
+  if (!db) {
+    return (
+      <div
+        data-tauri-drag-region
+        className="flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
+      >
+        <div className="flex flex-col items-center justify-center gap-2 text-center">
+          <LoaderIcon className="h-7 w-7 animate-spin text-neutral-950 dark:text-neutral-50" />
+          <p className="font-semibold">
+            {isNewVersion ? 'Found a new version, updating' : 'Checking for updates'}
+          </p>
+        </div>
+      </div>
+    );
   }
+
+  return <StorageContext.Provider value={{ db }}>{children}</StorageContext.Provider>;
 };
 
 const useStorage = () => {

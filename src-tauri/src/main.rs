@@ -107,6 +107,13 @@ fn secure_remove(key: String) -> Result<(), ()> {
 
 fn main() {
   tauri::Builder::default()
+    .setup(|app| {
+      #[cfg(desktop)]
+      app
+        .handle()
+        .plugin(tauri_plugin_updater::Builder::new().build())?;
+      Ok(())
+    })
     .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
