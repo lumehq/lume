@@ -1,40 +1,61 @@
+import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { UserStats } from '@app/users/components/stats';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { NIP05 } from '@shared/nip05';
 
-import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
   const { db } = useStorage();
+  const { ndk } = useNDK();
   const { user } = useProfile(pubkey);
-  const { addContact, removeContact } = useNostr();
 
   const [followed, setFollowed] = useState(false);
 
-  const followUser = (pubkey: string) => {
+  const follow = async (pubkey: string) => {
     try {
-      addContact(pubkey);
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const contacts = await user.follows();
+      const add = await user.follow(new NDKUser({ hexpubkey: pubkey }), contacts);
 
-      // update state
-      setFollowed(true);
+      if (add) {
+        setFollowed(true);
+      } else {
+        toast('You already follow this user');
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const unfollowUser = (pubkey: string) => {
+  const unfollow = async (pubkey: string) => {
     try {
-      removeContact(pubkey);
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const contacts = await user.follows();
+      contacts.delete(new NDKUser({ hexpubkey: pubkey }));
 
-      // update state
-      setFollowed(false);
+      let list: string[][];
+      contacts.forEach((el) =>
+        list.push(['p', el.pubkey, el.relayUrls?.[0] || '', el.profile?.name || ''])
+      );
+
+      const event = new NDKEvent(ndk);
+      event.content = '';
+      event.kind = NDKKind.Contacts;
+      event.tags = list;
+
+      const publishedRelays = await event.publish();
+      if (publishedRelays) {
+        setFollowed(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +82,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           {followed ? (
             <button
               type="button"
-              onClick={() => unfollowUser(pubkey)}
+              onClick={() => unfollow(pubkey)}
               className="inline-flex h-9 w-28 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
             >
               Unfollow
@@ -69,7 +90,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           ) : (
             <button
               type="button"
-              onClick={() => followUser(pubkey)}
+              onClick={() => follow(pubkey)}
               className="inline-flex h-9 w-28 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
             >
               Follow

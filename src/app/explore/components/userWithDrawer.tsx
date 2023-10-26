@@ -1,14 +1,16 @@
+import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { NIP05 } from '@shared/nip05';
 import { TextNote } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
@@ -19,27 +21,48 @@ export const UserWithDrawer = memo(function UserWithDrawer({
 }: {
   pubkey: string;
 }) {
-  const { addContact, removeContact } = useNostr();
   const { db } = useStorage();
+  const { ndk } = useNDK();
   const { status, user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
 
-  const followUser = (pubkey: string) => {
+  const follow = async (pubkey: string) => {
     try {
-      addContact(pubkey);
-      // update state
-      setFollowed(true);
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const contacts = await user.follows();
+      const add = await user.follow(new NDKUser({ hexpubkey: pubkey }), contacts);
+
+      if (add) {
+        setFollowed(true);
+      } else {
+        toast('You already follow this user');
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const unfollowUser = (pubkey: string) => {
+  const unfollow = async (pubkey: string) => {
     try {
-      removeContact(pubkey);
-      // update state
-      setFollowed(false);
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const contacts = await user.follows();
+      contacts.delete(new NDKUser({ hexpubkey: pubkey }));
+
+      let list: string[][];
+      contacts.forEach((el) =>
+        list.push(['p', el.pubkey, el.relayUrls?.[0] || '', el.profile?.name || ''])
+      );
+
+      const event = new NDKEvent(ndk);
+      event.content = '';
+      event.kind = NDKKind.Contacts;
+      event.tags = list;
+
+      const publishedRelays = await event.publish();
+      if (publishedRelays) {
+        setFollowed(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -100,7 +123,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
                       {followed ? (
                         <button
                           type="button"
-                          onClick={() => unfollowUser(pubkey)}
+                          onClick={() => unfollow(pubkey)}
                           className="inline-flex h-9 w-36 items-center justify-center rounded-lg bg-neutral-300  text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-700"
                         >
                           Unfollow
@@ -108,7 +131,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
                       ) : (
                         <button
                           type="button"
-                          onClick={() => followUser(pubkey)}
+                          onClick={() => follow(pubkey)}
                           className="inline-flex h-9 w-36 items-center justify-center rounded-lg bg-neutral-300 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-700"
                         >
                           Follow

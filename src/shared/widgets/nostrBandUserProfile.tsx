@@ -1,12 +1,13 @@
+import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { FollowIcon, UnfollowIcon } from '@shared/icons';
 import { Image } from '@shared/image';
 
-import { useNostr } from '@utils/hooks/useNostr';
 import { compactNumber } from '@utils/number';
 import { shortenKey } from '@utils/shortenKey';
 
@@ -17,7 +18,7 @@ export interface Profile {
 
 export function NostrBandUserProfile({ data }: { data: Profile }) {
   const { db } = useStorage();
-  const { addContact, removeContact } = useNostr();
+  const { ndk } = useStorage();
   const { status, data: userStats } = useQuery(
     ['user-stats', data.pubkey],
     async () => {
@@ -37,21 +38,42 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
 
   const [followed, setFollowed] = useState(false);
 
-  const followUser = (pubkey: string) => {
+  const follow = async (pubkey: string) => {
     try {
-      addContact(pubkey);
-      // update state
-      setFollowed(true);
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const contacts = await user.follows();
+      const add = await user.follow(new NDKUser({ hexpubkey: pubkey }), contacts);
+
+      if (add) {
+        setFollowed(true);
+      } else {
+        toast('You already follow this user');
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const unfollowUser = (pubkey: string) => {
+  const unfollow = async (pubkey: string) => {
     try {
-      removeContact(pubkey);
-      // update state
-      setFollowed(false);
+      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const contacts = await user.follows();
+      contacts.delete(new NDKUser({ hexpubkey: pubkey }));
+
+      let list: string[][];
+      contacts.forEach((el) =>
+        list.push(['p', el.pubkey, el.relayUrls?.[0] || '', el.profile?.name || ''])
+      );
+
+      const event = new NDKEvent(ndk);
+      event.content = '';
+      event.kind = NDKKind.Contacts;
+      event.tags = list;
+
+      const publishedRelays = await event.publish();
+      if (publishedRelays) {
+        setFollowed(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -93,7 +115,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
             {followed ? (
               <button
                 type="button"
-                onClick={() => unfollowUser(data.pubkey)}
+                onClick={() => unfollow(data.pubkey)}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-200 text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-white dark:bg-neutral-800 dark:text-neutral-100 dark:hover:text-white"
               >
                 <UnfollowIcon className="h-4 w-4" />
@@ -101,7 +123,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
             ) : (
               <button
                 type="button"
-                onClick={() => followUser(data.pubkey)}
+                onClick={() => follow(data.pubkey)}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-200 text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-white dark:bg-neutral-800 dark:text-neutral-100 dark:hover:text-white"
               >
                 <FollowIcon className="h-4 w-4" />

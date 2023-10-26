@@ -46,26 +46,6 @@ export function useNostr() {
     }
   };
 
-  const addContact = async (pubkey: string) => {
-    const list = new Set(db.account.follows);
-    list.add(pubkey);
-
-    const tags = [];
-    list.forEach((item) => {
-      tags.push(['p', item]);
-    });
-  };
-
-  const removeContact = async (pubkey: string) => {
-    const list = new Set(db.account.follows);
-    list.delete(pubkey);
-
-    const tags = [];
-    list.forEach((item) => {
-      tags.push(['p', item]);
-    });
-  };
-
   const getAllActivities = async (limit?: number) => {
     try {
       const events = await ndk.fetchEvents({
@@ -261,8 +241,6 @@ export function useNostr() {
 
   return {
     sub,
-    addContact,
-    removeContact,
     getAllNIP04Chats,
     getAllEventsSinceLastLogin,
     getContactsByPubkey,
