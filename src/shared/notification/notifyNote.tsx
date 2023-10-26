@@ -1,33 +1,38 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 
+import { useStorage } from '@libs/storage/provider';
+
 import {
   ArticleNote,
   FileNote,
-  NoteActions,
   NoteSkeleton,
   TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { User } from '@shared/user';
 
+import { WidgetKinds, useWidgets } from '@stores/widgets';
+
 import { formatCreatedAt } from '@utils/createdAt';
 import { useEvent } from '@utils/hooks/useEvent';
 
-export function NotifyNote({
-  id,
-  user,
-  content,
-  kind,
-  time,
-}: {
-  id: string;
-  user: string;
-  content: string;
-  kind: NDKKind | number;
-  time: number;
-}) {
-  const createdAt = formatCreatedAt(time, false);
-  const { status, data } = useEvent(id);
+export function NotifyNote({ event }: { event: NDKEvent }) {
+  const createdAt = formatCreatedAt(event.created_at, false);
+  const rootEventId = event.tags.find((el) => el[0] === 'e')?.[1];
+
+  const { db } = useStorage();
+  const { status, data } = useEvent(rootEventId);
+
+  const setWidget = useWidgets((state) => state.setWidget);
+
+  const openThread = (event, thread: string) => {
+    const selection = window.getSelection();
+    if (selection.toString().length === 0) {
+      setWidget(db, { kind: WidgetKinds.local.thread, title: 'Thread', content: thread });
+    } else {
+      event.stopPropagation();
+    }
+  };
 
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
@@ -47,7 +52,7 @@ export function NotifyNote({
       case NDKKind.Text:
         return 'replied';
       case NDKKind.Reaction:
-        return `reacted ${content}`;
+        return `reacted ${event.content}`;
       case NDKKind.Repost:
         return 'reposted';
       case NDKKind.Zap:
@@ -68,28 +73,29 @@ export function NotifyNote({
   }
 
   return (
-    <div className="mb-5 flex h-min w-full flex-col gap-2 px-3 pb-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <User pubkey={user} variant="notify" />
-          <p className="font-medium text-neutral-600 dark:text-neutral-400">
-            {renderText(kind)}
-          </p>
-        </div>
-        <span className="font-medium text-neutral-600 dark:text-neutral-400">
-          {createdAt}
-        </span>
-      </div>
-      <div className="relative overflow-hidden rounded-xl bg-neutral-100 px-3 py-4 dark:bg-neutral-900">
-        <div className="relative flex flex-col">
-          <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />
-          <div className="-mt-4 flex items-start gap-3">
-            <div className="w-10 shrink-0" />
-            <div className="relative z-20 flex-1">
-              {renderKind(data)}
-              <NoteActions id={data.id} pubkey={data.pubkey} />
+    <div className="h-min w-full px-3 pb-3">
+      <div className="flex flex-col gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <User pubkey={event.pubkey} variant="notify" />
+              <p className="font-medium text-neutral-600 dark:text-neutral-400">
+                {renderText(event.kind)}
+              </p>
             </div>
+            <span className="text-neutral-500 dark:text-neutral-400">{createdAt}</span>
           </div>
+          {event.kind === 1 ? <TextNote content={event.content} /> : null}
+        </div>
+        <div
+          onClick={(e) => openThread(e, data.id)}
+          onKeyDown={(e) => openThread(e, data.id)}
+          role="button"
+          tabIndex={0}
+          className="cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
+        >
+          <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
+          <div className="mt-1">{renderKind(data)}</div>
         </div>
       </div>
     </div>

@@ -90,9 +90,12 @@ export function SpaceScreen() {
 
   return (
     <VList
-      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none"
+      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
       horizontal
       ref={vlistRef}
+      initialItemSize={420}
+      aria-current="step"
+      tabIndex={0}
     >
       {!widgets ? (
         <div className="flex h-full w-[420px] flex-col items-center justify-center">

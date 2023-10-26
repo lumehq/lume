@@ -5,15 +5,12 @@ import { EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
 import {
   ArticleNote,
   FileNote,
   NoteActions,
   NoteReplyForm,
-  NoteStats,
   TextNote,
   UnknownNote,
 } from '@shared/notes';
@@ -23,15 +20,11 @@ import { User } from '@shared/user';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function TextNoteScreen() {
+  const { id } = useParams();
+  const { status, data } = useEvent(id);
+
   const navigate = useNavigate();
   const replyRef = useRef(null);
-
-  const { id } = useParams();
-
-  console.log(id);
-
-  const { db } = useStorage();
-  const { status, data } = useEvent(id);
 
   const [isCopy, setIsCopy] = useState(false);
 
@@ -64,67 +57,62 @@ export function TextNoteScreen() {
   };
 
   return (
-    <div className="h-full w-full overflow-y-auto scroll-smooth scrollbar-none">
-      <div className="container mx-auto px-4 pt-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-5">
-          <div className="col-span-1 pr-8">
-            <div className="sticky top-16 flex flex-col items-end gap-4">
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-200 dark:bg-neutral-800"
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-              </button>
-              <div className="flex flex-col divide-y divide-neutral-300 rounded-xl bg-neutral-200 dark:divide-neutral-700 dark:bg-neutral-800">
-                <button
-                  type="button"
-                  onClick={share}
-                  className="sticky top-16 inline-flex h-12 w-12 items-center justify-center rounded-t-xl"
-                >
-                  {isCopy ? (
-                    <CheckCircleIcon className="h-5 w-5 text-teal-500" />
-                  ) : (
-                    <ShareIcon className="h-5 w-5" />
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={scrollToReply}
-                  className="sticky top-16 inline-flex h-12 w-12 items-center justify-center rounded-b-xl"
-                >
-                  <ReplyIcon className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
+    <div className="container mx-auto grid grid-cols-8 scroll-smooth px-4">
+      <div className="col-span-1">
+        <div className="flex flex-col items-end gap-4">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900"
+          >
+            <ArrowLeftIcon className="h-5 w-5" />
+          </button>
+          <div className="flex flex-col divide-y divide-neutral-200 rounded-xl bg-neutral-100 dark:divide-neutral-800 dark:bg-neutral-900">
+            <button
+              type="button"
+              onClick={share}
+              className="inline-flex h-12 w-12 items-center justify-center rounded-t-xl"
+            >
+              {isCopy ? (
+                <CheckCircleIcon className="h-5 w-5 text-teal-500" />
+              ) : (
+                <ShareIcon className="h-5 w-5" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={scrollToReply}
+              className="inline-flex h-12 w-12 items-center justify-center rounded-b-xl"
+            >
+              <ReplyIcon className="h-5 w-5" />
+            </button>
           </div>
-          <div className="col-span-3 flex flex-col gap-1.5">
-            {status === 'loading' ? (
-              <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-                  Loading...
-                </div>
-              </div>
-            ) : (
-              <div className="flex h-min w-full flex-col px-3">
-                <div className="rounded-xl bg-neutral-100 px-3 pt-3 dark:bg-neutral-900">
-                  <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
-                  <div className="mt-2">{renderKind(data)}</div>
-                  <div className="mb-3">
-                    <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
-                  </div>
-                </div>
-                <NoteStats id={id} />
-              </div>
-            )}
-            <div ref={replyRef} className="px-3">
-              <NoteReplyForm id={id} pubkey={db.account.pubkey} />
-              <ReplyList id={id} />
-            </div>
-          </div>
-          <div className="col-span-1" />
         </div>
       </div>
+      <div className="relative col-span-6 flex flex-col overflow-y-auto">
+        <div className="mx-auto w-full max-w-2xl">
+          {status === 'loading' ? (
+            <div className="px-3 py-1.5">Loading...</div>
+          ) : (
+            <div className="flex h-min w-full flex-col px-3">
+              <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
+                <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
+                <div className="mt-3">{renderKind(data)}</div>
+                <div className="mt-3">
+                  <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={replyRef} className="px-3">
+            <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
+              <NoteReplyForm id={id} />
+            </div>
+            <ReplyList id={id} />
+          </div>
+        </div>
+      </div>
+      <div className="col-span-1" />
     </div>
   );
 }

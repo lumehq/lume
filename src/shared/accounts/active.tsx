@@ -2,7 +2,7 @@ import { NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
@@ -22,14 +22,23 @@ export function ActiveAccount() {
   const { status, user } = useProfile(db.account.pubkey);
   const { sub } = useNostr();
 
+  const location = useLocation();
   const addActivity = useActivities((state) => state.addActivity);
+  const addNewMessage = useActivities((state) => state.addNewMessage);
+
   const svgURI =
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(minidenticon(db.account.pubkey, 90, 50));
 
   useEffect(() => {
     const filter: NDKFilter = {
-      kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
+      kinds: [
+        NDKKind.Text,
+        NDKKind.EncryptedDirectMessage,
+        NDKKind.Repost,
+        NDKKind.Reaction,
+        NDKKind.Zap,
+      ],
       since: Math.floor(Date.now() / 1000),
       '#p': [db.account.pubkey],
     };
@@ -37,7 +46,11 @@ export function ActiveAccount() {
     sub(
       filter,
       async (event) => {
-        addActivity(event);
+        console.log('receive event: ', event.id);
+
+        if (event.kind !== NDKKind.EncryptedDirectMessage) {
+          addActivity(event);
+        }
 
         const user = ndk.getUser({ hexpubkey: event.pubkey });
         await user.fetchProfile();
@@ -47,6 +60,18 @@ export function ActiveAccount() {
             return await sendNativeNotification(
               `${user.profile.displayName || user.profile.name} has replied to your note`
             );
+          case NDKKind.EncryptedDirectMessage: {
+            if (location.pathname !== '/chats') {
+              addNewMessage();
+              return await sendNativeNotification(
+                `${
+                  user.profile.displayName || user.profile.name
+                } has send you a encrypted message`
+              );
+            } else {
+              break;
+            }
+          }
           case NDKKind.Repost:
             return await sendNativeNotification(
               `${user.profile.displayName || user.profile.name} has reposted to your note`

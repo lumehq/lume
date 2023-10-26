@@ -55,8 +55,10 @@ export const NDKInstance = () => {
   async function getSigner(instance: NDK) {
     if (!db.account) return null;
 
-    // NIP-46 Signer
     const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-bunker');
+    const userPrivkey = await db.secureLoad(db.account.pubkey);
+
+    // NIP-46 Signer
     if (localSignerPrivkey) {
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
       const remoteSigner = new NDKNip46Signer(instance, db.account.id, localSigner);
@@ -66,8 +68,9 @@ export const NDKInstance = () => {
     }
 
     // Privkey Signer
-    const userPrivkey = await db.secureLoad(db.account.pubkey);
-    if (userPrivkey) return new NDKPrivateKeySigner(userPrivkey);
+    if (userPrivkey) {
+      return new NDKPrivateKeySigner(userPrivkey);
+    }
   }
 
   async function initNDK() {
@@ -91,7 +94,30 @@ export const NDKInstance = () => {
       instance.signer = signer;
 
       // update account's metadata
-      // todo
+      if (db.account) {
+        const circleSetting = await db.getSettingValue('circles');
+
+        const user = instance.getUser({ hexpubkey: db.account.pubkey });
+        const follows = await user.follows();
+        const relayList = await user.relayList();
+
+        const followsAsArr = [];
+        follows.forEach((user) => {
+          followsAsArr.push(user.pubkey);
+        });
+
+        // update user's follows
+        await db.updateAccount('follows', JSON.stringify(followsAsArr));
+        if (circleSetting !== '1')
+          await db.updateAccount('circles', JSON.stringify(followsAsArr));
+
+        // update user's relay list
+        if (relayList) {
+          for (const relay of relayList.relays) {
+            await db.createRelay(relay);
+          }
+        }
+      }
     } catch (error) {
       await message(`NDK instance init failed: ${error}`, {
         title: 'Lume',

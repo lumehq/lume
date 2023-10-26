@@ -11,7 +11,13 @@ import {
   RelayIcon,
 } from '@shared/icons';
 
+import { useActivities } from '@stores/activities';
+
+import { compactNumber } from '@utils/number';
+
 export function Navigation() {
+  const newMessages = useActivities((state) => state.newMessages);
+
   return (
     <div className="flex h-full w-full flex-col justify-between p-3">
       <div className="flex flex-1 flex-col gap-5">
@@ -45,13 +51,18 @@ export function Navigation() {
             <>
               <div
                 className={twMerge(
-                  'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
+                  'relative inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
                   isActive
                     ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
                     : 'text-black/50 dark:text-neutral-400'
                 )}
               >
                 <ChatsIcon className="h-6 w-6" />
+                {newMessages > 0 ? (
+                  <div className="absolute right-0 top-0 inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[9px] font-medium text-white">
+                    {compactNumber.format(newMessages)}
+                  </div>
+                ) : null}
               </div>
               <div className="text-sm font-medium text-black dark:text-white">Chats</div>
             </>

@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useCallback } from 'react';
+import { WVList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
 import {
@@ -41,7 +42,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full overflow-y-auto px-3 scrollbar-none">
+      <WVList className="flex-1 overflow-y-auto px-3">
         {status === 'loading' ? (
           <div className="flex h-16 items-center justify-center rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
             <LoaderIcon className="h-5 w-5 animate-spin" />
@@ -58,7 +59,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
         <NoteReplyForm id={params.content} />
         <ReplyList id={params.content} />
         <div className="h-10" />
-      </div>
+      </WVList>
     </WidgetWrapper>
   );
 }

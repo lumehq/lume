@@ -30,17 +30,20 @@ export function useNostr() {
   ) => {
     if (!ndk) throw new Error('NDK instance not found');
 
-    const subEvent = ndk.subscribe(filter, {
-      closeOnEose: false,
-      groupable: groupable ?? true,
-    });
+    const key = JSON.stringify(filter);
+    if (!subManager.get(key)) {
+      const subEvent = ndk.subscribe(filter, {
+        closeOnEose: false,
+        groupable: groupable ?? true,
+      });
 
-    subEvent.addListener('event', (event: NDKEvent) => {
-      callback(event);
-    });
+      subEvent.addListener('event', (event: NDKEvent) => {
+        callback(event);
+      });
 
-    subManager.set(JSON.stringify(filter), subEvent);
-    console.log('current active sub: ', subManager.size);
+      subManager.set(JSON.stringify(filter), subEvent);
+      console.log('sub: ', key);
+    }
   };
 
   const addContact = async (pubkey: string) => {
@@ -68,7 +71,7 @@ export function useNostr() {
       const events = await ndk.fetchEvents({
         kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
         '#p': [db.account.pubkey],
-        limit: limit ?? 100,
+        limit: limit ?? 50,
       });
 
       return [...events];
@@ -179,31 +182,8 @@ export function useNostr() {
   const getAllEventsSinceLastLogin = async (customSince?: number) => {
     try {
       const dbEventsEmpty = await db.isEventsEmpty();
-      const circleSetting = await db.getSettingValue('circles');
-
-      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
-      const follows = await user.follows();
-      const relayList = await user.relayList();
-
-      const followsAsArr = [];
-      follows.forEach((user) => {
-        followsAsArr.push(user.pubkey);
-      });
-
-      // update user's follows
-      await db.updateAccount('follows', JSON.stringify(followsAsArr));
-      if (circleSetting !== '1')
-        await db.updateAccount('circles', JSON.stringify(followsAsArr));
-
-      // update user's relay list
-      if (relayList) {
-        for (const relay of relayList.relays) {
-          await db.createRelay(relay);
-        }
-      }
 
       let since: number;
-
       if (!customSince) {
         if (dbEventsEmpty || db.account.last_login_at === 0) {
           since = db.account.circles.length > 500 ? nHoursAgo(12) : nHoursAgo(24);

@@ -67,9 +67,9 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="h-full scrollbar-none">
+          <VList className="h-full" style={{ contentVisibility: 'auto' }}>
             {data.map((item) => renderItem(item))}
-            <div className="h-16" />
+            <div className="h-14" />
           </VList>
         )}
       </div>

@@ -57,7 +57,7 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="h-full scrollbar-none">
+          <VList className="h-full">
             {data.map((item: Profile) => (
               <NostrBandUserProfile key={item.pubkey} data={item} />
             ))}

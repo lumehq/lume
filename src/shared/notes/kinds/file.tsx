@@ -13,8 +13,6 @@ import {
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Image } from '@shared/image';
-
 import { fileType } from '@utils/nip94';
 
 export function FileNote(props: { event?: NDKEvent }) {
@@ -24,10 +22,13 @@ export function FileNote(props: { event?: NDKEvent }) {
   if (type === 'image') {
     return (
       <div className="mb-2 mt-3">
-        <Image
+        <img
           src={url}
           alt={props.event.content}
           className="h-auto w-full rounded-lg object-cover"
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
         />
       </div>
     );

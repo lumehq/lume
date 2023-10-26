@@ -145,7 +145,7 @@ export function LocalNetworkWidget() {
         ) : dbEvents.length === 0 ? (
           <EventLoader firstTime={true} />
         ) : (
-          <VList className="h-full scrollbar-none">
+          <VList className="h-full" style={{ contentVisibility: 'auto' }}>
             {!isFetched ? <EventLoader firstTime={false} /> : null}
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">

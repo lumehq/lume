@@ -85,6 +85,9 @@ export function ImportAccountScreen() {
       try {
         const privkey = nip19.decode(nsec).data as string;
         await db.secureSave(pubkey, privkey);
+
+        ndk.signer = new NDKPrivateKeySigner(privkey);
+
         setSavedPrivkey(true);
       } catch (e) {
         return toast(`nsec invalid: ${e}`);

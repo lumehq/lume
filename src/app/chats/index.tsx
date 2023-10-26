@@ -36,7 +36,7 @@ export function ChatsScreen() {
       <div className="col-span-1 h-full overflow-y-auto border-r border-neutral-200 scrollbar-none dark:border-neutral-800">
         <div
           data-tauri-drag-region
-          className="flex h-11 w-full shrink-0 items-center border-b border-neutral-200 px-3 dark:border-neutral-800"
+          className="flex h-11 w-full shrink-0 items-center border-b border-neutral-100 px-3 dark:border-neutral-900"
         >
           <h3 className="font-semibold text-neutral-950 dark:text-neutral-50">
             All chats
@@ -50,6 +50,12 @@ export function ChatsScreen() {
                 <h5 className="text-neutral-900 dark:text-neutral-100">
                   Loading messages...
                 </h5>
+              </div>
+            </div>
+          ) : data.length < 1 ? (
+            <div className="flex h-full w-full items-center justify-center pb-16">
+              <div className="inline-flex flex-col items-center justify-center gap-2">
+                <h5 className="text-neutral-900 dark:text-neutral-100">No message</h5>
               </div>
             </div>
           ) : (

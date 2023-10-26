@@ -104,7 +104,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="h-full scrollbar-none">
+          <VList className="h-full" style={{ contentVisibility: 'auto' }}>
             {dbEvents.map((item) => renderItem(item))}
             <div className="flex items-center justify-center px-3 py-1.5">
               {dbEvents.length > 0 ? (
@@ -132,7 +132,7 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
                 </button>
               ) : null}
             </div>
-            <div className="h-16" />
+            <div className="h-14" />
           </VList>
         )}
       </div>

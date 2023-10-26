@@ -81,7 +81,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full overflow-y-auto scrollbar-none">
+      <WVList className="flex-1 overflow-y-auto">
         <div className="px-3 pt-1.5">
           <UserProfile pubkey={params.content} />
         </div>
@@ -107,11 +107,11 @@ export function LocalUserWidget({ params }: { params: Widget }) {
                 </div>
               </div>
             ) : (
-              <WVList>{data.map((item) => renderItem(item))}</WVList>
+              data.map((item) => renderItem(item))
             )}
           </div>
         </div>
-      </div>
+      </WVList>
     </WidgetWrapper>
   );
 }

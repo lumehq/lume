@@ -25,18 +25,8 @@ export function LocalNotificationWidget({ params }: { params: Widget }) {
 
   const renderEvent = useCallback(
     (event: NDKEvent) => {
-      const rootEventId = event.tags.find((el) => el[0] === 'e')?.[1];
-      if (!rootEventId) return null;
       if (event.pubkey === db.account.pubkey) return null;
-      return (
-        <NotifyNote
-          id={rootEventId}
-          user={event.pubkey}
-          content={event.content}
-          kind={event.kind}
-          time={event.created_at}
-        />
-      );
+      return <NotifyNote key={event.id} event={event} />;
     },
     [activities]
   );
@@ -53,7 +43,7 @@ export function LocalNotificationWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <div className="h-full px-3">
+      <div className="flex-1">
         {!activities ? (
           <div className="flex h-full w-full items-center justify-center">
             <div className="flex flex-col items-center gap-1.5">
@@ -71,8 +61,9 @@ export function LocalNotificationWidget({ params }: { params: Widget }) {
             </p>
           </div>
         ) : (
-          <VList className="h-full overflow-y-auto scrollbar-none">
+          <VList className="h-full" style={{ contentVisibility: 'auto' }}>
             {activities.map((event) => renderEvent(event))}
+            <div className="h-14" />
           </VList>
         )}
       </div>

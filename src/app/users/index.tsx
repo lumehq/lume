@@ -2,7 +2,6 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { WVList } from 'virtua';
 
 import { UserProfile } from '@app/users/components/profile';
 
@@ -11,14 +10,11 @@ import { useNDK } from '@libs/ndk/provider';
 import {
   ArticleNote,
   FileNote,
-  NoteSkeleton,
   NoteWrapper,
   Repost,
   TextNote,
   UnknownNote,
 } from '@shared/notes';
-
-import { nHoursAgo } from '@utils/date';
 
 export function UserScreen() {
   const { pubkey } = useParams();
@@ -27,9 +23,10 @@ export function UserScreen() {
     const events = await ndk.fetchEvents({
       kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
       authors: [pubkey],
-      since: nHoursAgo(48),
+      limit: 50,
     });
-    return [...events] as unknown as NDKEvent[];
+    const sorted = [...events].sort((a, b) => b.created_at - a.created_at);
+    return sorted;
   });
 
   // render event match event kind
@@ -68,20 +65,16 @@ export function UserScreen() {
   );
 
   return (
-    <div className="relative h-full w-full overflow-y-auto scrollbar-none">
+    <div className="relative h-full w-full overflow-y-auto">
       <div data-tauri-drag-region className="absolute left-0 top-0 h-11 w-full" />
       <UserProfile pubkey={pubkey} />
-      <div className="mt-6 h-full w-full border-t border-white/5 px-1.5">
-        <h3 className="mb-2 pt-4 text-center text-lg font-semibold leading-none text-white">
+      <div className="mt-6 h-full w-full border-t border-neutral-100 px-1.5 dark:border-neutral-900">
+        <h3 className="mb-2 pt-4 text-center text-lg font-semibold leading-none text-neutral-900 dark:text-neutral-100">
           Latest posts
         </h3>
         <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
           {status === 'loading' ? (
-            <div className="px-3 py-1.5">
-              <div className="rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
-                <NoteSkeleton />
-              </div>
-            </div>
+            <div>Loading...</div>
           ) : data.length === 0 ? (
             <div className="px-3 py-1.5">
               <div className="rounded-xl bg-neutral-100 px-3 py-6 dark:bg-neutral-900">
@@ -93,10 +86,7 @@ export function UserScreen() {
               </div>
             </div>
           ) : (
-            <WVList>
-              {data.map((item) => renderItem(item))}
-              <div className="h-16" />
-            </WVList>
+            data.map((item) => renderItem(item))
           )}
         </div>
       </div>

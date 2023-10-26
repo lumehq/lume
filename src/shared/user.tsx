@@ -115,13 +115,13 @@ export const User = memo(function User({
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="h-8 w-8 rounded-lg"
+            className="h-8 w-8 rounded-md"
           />
           <Avatar.Fallback delayMs={300}>
             <img
               src={svgURI}
               alt={pubkey}
-              className="h-8 w-8 rounded-lg bg-black dark:bg-white"
+              className="h-8 w-8 rounded-md bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
@@ -416,10 +416,10 @@ export const User = memo(function User({
       </div>
       <HoverCard.Portal>
         <HoverCard.Content
-          className="w-[300px] overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-3xl data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all focus:outline-none"
+          className="ml-4 w-[300px] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 shadow-lg data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all focus:outline-none dark:border-neutral-800 dark:bg-neutral-900"
           sideOffset={5}
         >
-          <div className="flex gap-2.5 border-b border-white/5 px-3 py-3">
+          <div className="flex gap-2.5 border-b border-neutral-200 px-3 py-3 dark:border-neutral-800">
             <Avatar.Root className="shrink-0">
               <Avatar.Image
                 src={user?.picture || user?.image}
@@ -427,13 +427,13 @@ export const User = memo(function User({
                 loading="lazy"
                 decoding="async"
                 style={{ contentVisibility: 'auto' }}
-                className="h-10 w-10 rounded-lg border border-white/5"
+                className="h-10 w-10 rounded-lg"
               />
               <Avatar.Fallback delayMs={300}>
                 <img
                   src={svgURI}
                   alt={pubkey}
-                  className="h-10 w-10 rounded-lg border border-white/5 bg-black dark:bg-white"
+                  className="h-10 w-10 rounded-lg bg-black dark:bg-white"
                 />
               </Avatar.Fallback>
             </Avatar.Root>
@@ -467,13 +467,13 @@ export const User = memo(function User({
           <div className="flex items-center gap-2 px-3 py-3">
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-blue-600"
+              className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-neutral-200 text-sm font-semibold hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
             >
               View profile
             </Link>
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-white/10 text-sm font-semibold backdrop-blur-xl hover:bg-blue-600"
+              className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-neutral-200 text-sm font-semibold hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
             >
               Message
             </Link>

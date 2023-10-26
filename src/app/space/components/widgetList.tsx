@@ -4,6 +4,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import {
   ArticleIcon,
+  BellIcon,
   FileIcon,
   FollowsIcon,
   GroupFeedsIcon,
@@ -50,16 +51,18 @@ export function WidgetList({ params }: { params: Widget }) {
           );
         case WidgetKinds.tmp.xhashtag:
           return (
-            <HashtagIcon className="h-5 w-4 text-neutral-900 dark:text-neutral-100" />
+            <HashtagIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
           );
         case WidgetKinds.nostrBand.trendingAccounts:
         case WidgetKinds.nostrBand.trendingNotes:
           return (
-            <TrendingIcon className="h-5 w-4 text-neutral-900 dark:text-neutral-100" />
+            <TrendingIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
           );
+        case WidgetKinds.local.notification:
+          return <BellIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
         case WidgetKinds.other.learnNostr:
           return (
-            <ThreadsIcon className="h-5 w-4 text-neutral-900 dark:text-neutral-100" />
+            <ThreadsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
           );
         default:
           return null;
@@ -75,7 +78,7 @@ export function WidgetList({ params }: { params: Widget }) {
           <h3 className="text-sm font-semibold text-neutral-500 dark:text-neutral-300">
             {row.title}
           </h3>
-          <div className="flex flex-col divide-y divide-neutral-200 overflow-hidden rounded-xl bg-neutral-100 dark:divide-neutral-800 dark:bg-neutral-900">
+          <div className="flex flex-col divide-y divide-neutral-100 overflow-hidden rounded-xl bg-neutral-50 dark:divide-neutral-900 dark:bg-neutral-950">
             {row.data.map((item, index) => (
               <button
                 onClick={() => openWidget(item)}

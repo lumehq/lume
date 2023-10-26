@@ -48,7 +48,7 @@ export function ReplyList({ id }: { id: string }) {
   return (
     <div className="mt-3 flex flex-col gap-5">
       {data?.length === 0 ? (
-        <div className="mt-2 flex w-full items-center justify-center rounded-xl bg-neutral-400 dark:bg-neutral-600">
+        <div className="mt-2 flex w-full items-center justify-center">
           <div className="flex flex-col items-center justify-center gap-2 py-6">
             <h3 className="text-3xl">👋</h3>
             <p className="leading-none text-neutral-600 dark:text-neutral-400">
