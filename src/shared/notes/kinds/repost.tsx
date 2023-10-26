@@ -90,7 +90,7 @@ export function Repost({
   if (status === 'loading') {
     return (
       <div className="h-min w-full px-3 pb-3">
-        <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
           <NoteSkeleton />
         </div>
       </div>

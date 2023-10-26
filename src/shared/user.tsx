@@ -61,6 +61,12 @@ export const User = memo(function User({
       );
     }
 
+    if (variant === 'stacked') {
+      return (
+        <div className="h-8 w-8 animate-pulse rounded-full bg-neutral-300 dark:bg-neutral-700" />
+      );
+    }
+
     return (
       <div className="flex items-start gap-3">
         <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
