@@ -145,11 +145,19 @@ export function CreateAccountScreen() {
                   <div className="flex flex-col gap-1">
                     <span className="font-semibold">Avatar</span>
                     <div className="relative flex h-36 w-full items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800">
-                      <img
-                        src={picture || svgURI}
-                        alt="user's avatar"
-                        className="h-14 w-14 rounded-lg bg-black object-cover dark:bg-white"
-                      />
+                      {picture.length > 0 ? (
+                        <img
+                          src={picture}
+                          alt="user's avatar"
+                          className="h-14 w-14 rounded-xl"
+                        />
+                      ) : (
+                        <img
+                          src={svgURI}
+                          alt="user's avatar"
+                          className="h-14 w-14 rounded-xl bg-black dark:bg-white"
+                        />
+                      )}
                       <div className="absolute bottom-2 right-2">
                         <AvatarUploader setPicture={setPicture} />
                       </div>
