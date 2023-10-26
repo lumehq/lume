@@ -61,7 +61,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.lume.nu",
+      "identifier": "nu.lume",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
