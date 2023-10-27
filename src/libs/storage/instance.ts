@@ -1,5 +1,5 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/primitives';
 import { Platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
 

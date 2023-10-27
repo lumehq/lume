@@ -1,5 +1,6 @@
 import { message, open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
+import { fetch } from '@tauri-apps/plugin-http';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, PlusIcon } from '@shared/icons';

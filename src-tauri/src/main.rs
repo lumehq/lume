@@ -114,7 +114,6 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())?;
       Ok(())
     })
-    .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
@@ -125,7 +124,6 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_window::init())
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(

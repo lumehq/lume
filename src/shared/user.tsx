@@ -4,6 +4,7 @@ import { minidenticon } from 'minidenticons';
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import rehypeExternalLinks from 'rehype-external-links';
 import remarkGfm from 'remark-gfm';
 
 import { RepostIcon, WorldIcon } from '@shared/icons';
@@ -168,10 +169,10 @@ export const User = memo(function User({
             </p>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeExternalLinks({ target: '_blank' })]}
               className="markdown-simple line-clamp-6 whitespace-pre-line break-all"
               disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
               unwrapDisallowed={true}
-              linkTarget={'_blank'}
             >
               {user?.about || user?.bio || 'No bio'}
             </ReactMarkdown>

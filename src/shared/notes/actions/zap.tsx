@@ -1,7 +1,7 @@
 import { webln } from '@getalby/sdk';
 import { SendPaymentResponse } from '@getalby/sdk/dist/types';
 import * as Dialog from '@radix-ui/react-dialog';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/primitives';
 import { message } from '@tauri-apps/plugin-dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
