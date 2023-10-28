@@ -6,7 +6,7 @@ import { displayNpub } from '@utils/shortenKey';
 export function MentionPopupItem({ pubkey, embed }: { pubkey: string; embed?: string }) {
   const { status, user } = useProfile(pubkey, embed);
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex items-center gap-2.5 px-2">
         <div className="relative h-8 w-8 shrink-0 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />

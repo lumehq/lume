@@ -9,9 +9,9 @@ import { User } from '@shared/user';
 export function FollowList() {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['follows'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['follows'],
+    queryFn: async () => {
       const user = ndk.getUser({ hexpubkey: db.account.pubkey });
       const follows = await user.follows();
       const followsAsArr = [];
@@ -29,16 +29,14 @@ export function FollowList() {
 
       return followsAsArr;
     },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <div className="relative rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
       <h5 className="font-semibold">Your follows</h5>
       <div className="mt-2 flex w-full items-center justify-center">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <LoaderIcon className="h-4 w-4 animate-spin text-neutral-900 dark:text-neutral-100" />
         ) : (
           <div className="isolate flex -space-x-2">

@@ -15,9 +15,9 @@ import { Widget } from '@utils/types';
 
 export function GlobalFilesWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['global-file-sharing'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['global-file-sharing'],
+    queryFn: async () => {
       const events = await ndk.fetchEvents({
         // @ts-expect-error, NDK not support file metadata yet
         kinds: [1063],
@@ -26,8 +26,8 @@ export function GlobalFilesWidget({ params }: { params: Widget }) {
       const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
       return sortedEvents;
     },
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   // render event match event kind
   const renderItem = useCallback(
@@ -45,7 +45,7 @@ export function GlobalFilesWidget({ params }: { params: Widget }) {
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
       <div className="flex-1">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />

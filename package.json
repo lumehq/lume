@@ -63,7 +63,7 @@
     "html-to-text": "^9.0.5",
     "light-bolt11-decoder": "^3.0.0",
     "lru-cache": "^10.0.1",
-    "media-chrome": "^1.4.4",
+    "media-chrome": "^1.4.5",
     "million": "^2.6.4",
     "minidenticons": "^4.2.0",
     "nostr-fetch": "^0.13.0",
@@ -86,7 +86,7 @@
     "tauri-controls": "^0.2.0",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.2",
-    "virtua": "^0.15.4",
+    "virtua": "^0.15.6",
     "zustand": "^4.4.4"
   },
   "devDependencies": {

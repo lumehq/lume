@@ -25,7 +25,10 @@ export function RelayForm() {
         const res = await db.createRelay(url);
         if (!res) return setError("You're already using this relay");
 
-        queryClient.invalidateQueries(['user-relay']);
+        queryClient.invalidateQueries({
+          queryKey: ['user-relay'],
+        });
+
         setError('');
         setUrl('');
       } else {

@@ -46,7 +46,7 @@ export const User = memo(function User({
   const svgURI =
     'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     if (variant === 'avatar') {
       return (
         <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-neutral-300 dark:bg-neutral-700" />

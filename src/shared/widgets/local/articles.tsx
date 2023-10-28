@@ -17,6 +17,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['local-articles'],
+      initialPageParam: 0,
       queryFn: async ({ pageParam = 0 }) => {
         return await db.getAllEventsByKinds([NDKKind.Article], 20, pageParam);
       },
@@ -45,7 +46,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
       <div className="flex-1">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />

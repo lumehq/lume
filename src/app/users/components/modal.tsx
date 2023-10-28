@@ -210,7 +210,9 @@ export function EditProfileModal() {
 
     if (publishedRelays) {
       // invalid cache
-      queryClient.invalidateQueries(['user', db.account.pubkey]);
+      queryClient.invalidateQueries({
+        queryKey: ['user', db.account.pubkey]
+      });
       // reset form
       reset();
       // reset state

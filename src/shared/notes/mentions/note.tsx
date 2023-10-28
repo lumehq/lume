@@ -46,7 +46,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
     }
   };
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="mt-3 cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
         <NoteSkeleton />

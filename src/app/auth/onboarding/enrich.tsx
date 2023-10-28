@@ -17,12 +17,15 @@ import { arrayToNIP02 } from '@utils/transform';
 export function OnboardEnrichScreen() {
   const { ndk } = useNDK();
   const { db } = useStorage();
-  const { status, data } = useQuery(['trending-profiles-widget'], async () => {
-    const res = await fetch('https://api.nostr.band/v0/trending/profiles');
-    if (!res.ok) {
-      throw new Error('Error');
-    }
-    return res.json();
+  const { status, data } = useQuery({
+    queryKey: ['trending-profiles-widget'],
+    queryFn: async () => {
+      const res = await fetch('https://api.nostr.band/v0/trending/profiles');
+      if (!res.ok) {
+        throw new Error('Error');
+      }
+      return res.json();
+    },
   });
 
   const [loading, setLoading] = useState(false);
@@ -90,7 +93,7 @@ export function OnboardEnrichScreen() {
         </h1>
       </div>
       <div className="flex w-full flex-nowrap items-center gap-4 overflow-x-auto px-4 scrollbar-none">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center">
             <LoaderIcon className="h-4 w-4 animate-spin text-neutral-900 dark:text-neutral-100" />
           </div>

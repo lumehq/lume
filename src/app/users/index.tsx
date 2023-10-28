@@ -19,14 +19,18 @@ import {
 export function UserScreen() {
   const { pubkey } = useParams();
   const { ndk } = useNDK();
-  const { status, data } = useQuery(['user-feed', pubkey], async () => {
-    const events = await ndk.fetchEvents({
-      kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
-      authors: [pubkey],
-      limit: 50,
-    });
-    const sorted = [...events].sort((a, b) => b.created_at - a.created_at);
-    return sorted;
+  const { status, data } = useQuery({
+    queryKey: ['user-feed', pubkey],
+    queryFn: async () => {
+      const events = await ndk.fetchEvents({
+        kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
+        authors: [pubkey],
+        limit: 50,
+      });
+      const sorted = [...events].sort((a, b) => b.created_at - a.created_at);
+      return sorted;
+    },
+    refetchOnWindowFocus: false,
   });
 
   // render event match event kind
@@ -73,7 +77,7 @@ export function UserScreen() {
           Latest posts
         </h3>
         <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
-          {status === 'loading' ? (
+          {status === 'pending' ? (
             <div>Loading...</div>
           ) : data.length === 0 ? (
             <div className="px-3 py-1.5">

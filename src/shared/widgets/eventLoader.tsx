@@ -29,7 +29,9 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
         setProgress(100);
         setIsFetched();
         // invalidate queries
-        queryClient.invalidateQueries(['local-network-widget']);
+        queryClient.invalidateQueries({
+          queryKey: ['local-network-widget']
+        });
         await db.updateLastLogin();
       }
     }

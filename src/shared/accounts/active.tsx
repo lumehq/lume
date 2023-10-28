@@ -94,7 +94,7 @@ export function ActiveAccount() {
     );
   }, []);
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="aspect-square h-auto w-full animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
     );

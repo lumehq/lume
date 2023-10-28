@@ -23,9 +23,9 @@ import { Widget } from '@utils/types';
 
 export function LocalUserWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['user-posts', params.content],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['user-posts', params.content],
+    queryFn: async () => {
       const events = await ndk.fetchEvents({
         // @ts-expect-error, NDK not support file metadata yet
         kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
@@ -35,13 +35,11 @@ export function LocalUserWidget({ params }: { params: Widget }) {
       const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
       return sortedEvents;
     },
-    {
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
 
   // render event match event kind
   const renderItem = useCallback(
@@ -90,7 +88,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
             Latest posts
           </h3>
           <div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
-            {status === 'loading' ? (
+            {status === 'pending' ? (
               <div className="px-3 py-1.5">
                 <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
                   <NoteSkeleton />

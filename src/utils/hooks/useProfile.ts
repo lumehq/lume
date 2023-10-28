@@ -9,9 +9,9 @@ export function useProfile(pubkey: string, embed?: string) {
     status,
     data: user,
     error,
-  } = useQuery(
-    ['user', pubkey],
-    async () => {
+  } = useQuery({
+    queryKey: ['user', pubkey],
+    queryFn: async () => {
       if (embed) {
         const profile: NDKUserProfile = JSON.parse(embed);
         return profile;
@@ -21,15 +21,13 @@ export function useProfile(pubkey: string, embed?: string) {
       const user = ndk.getUser({ hexpubkey: cleanPubkey });
       return await user.fetchProfile();
     },
-    {
-      enabled: !!ndk,
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: 2,
-    }
-  );
+    enabled: !!ndk,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 2,
+  });
 
   return { status, user, error };
 }

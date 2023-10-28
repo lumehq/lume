@@ -62,7 +62,7 @@ export function NotifyNote({ event }: { event: NDKEvent }) {
     }
   };
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="h-min w-full px-3 pb-3">
         <div className="relative overflow-hidden rounded-xl bg-white/10 px-3 py-3 backdrop-blur-xl">

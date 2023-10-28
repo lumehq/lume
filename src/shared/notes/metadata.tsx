@@ -17,9 +17,9 @@ export function NoteMetadata({ id }: { id: string }) {
 
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['note-metadata', id],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['note-metadata', id],
+    queryFn: async () => {
       let replies = 0;
       let zap = 0;
       const users = [];
@@ -53,14 +53,12 @@ export function NoteMetadata({ id }: { id: string }) {
 
       return { replies, users, zap };
     },
-    {
-      enabled: !!ndk,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    }
-  );
+    enabled: !!ndk,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="relative z-10 flex items-center gap-3 pb-3">
         <div className="mt-2 h-6 w-11 shrink-0"></div>

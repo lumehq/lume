@@ -51,43 +51,43 @@ dependencies:
     specifier: ^5.0.5
     version: 5.0.5(react-dom@18.2.0)(react@18.2.0)
   '@tauri-apps/api':
-    specifier: ^2.0.0-alpha.9
+    specifier: 2.0.0-alpha.9
     version: 2.0.0-alpha.9
   '@tauri-apps/cli':
-    specifier: ^2.0.0-alpha.16
+    specifier: 2.0.0-alpha.16
     version: 2.0.0-alpha.16
   '@tauri-apps/plugin-clipboard-manager':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-dialog':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-fs':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-http':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-notification':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-os':
-    specifier: ^2.0.0-alpha.3
+    specifier: 2.0.0-alpha.3
     version: 2.0.0-alpha.3
   '@tauri-apps/plugin-process':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-shell':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-sql':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-updater':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-upload':
-    specifier: ^2.0.0-alpha.2
+    specifier: 2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tiptap/extension-character-count':
     specifier: ^2.1.12
@@ -141,8 +141,8 @@ dependencies:
     specifier: ^10.0.1
     version: 10.0.1
   media-chrome:
-    specifier: ^1.4.4
-    version: 1.4.4
+    specifier: ^1.4.5
+    version: 1.4.5
   million:
     specifier: ^2.6.4
     version: 2.6.4
@@ -210,8 +210,8 @@ dependencies:
     specifier: ^0.8.2
     version: 0.8.2(@tiptap/core@2.1.12)
   virtua:
-    specifier: ^0.15.4
-    version: 0.15.4(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.15.6
+    version: 0.15.6(react-dom@18.2.0)(react@18.2.0)
   zustand:
     specifier: ^4.4.4
     version: 4.4.4(@types/react@18.2.33)(react@18.2.0)
@@ -2549,9 +2549,9 @@ packages:
       prosemirror-schema-list: 1.3.0
       prosemirror-state: 1.4.3
       prosemirror-tables: 1.3.4
-      prosemirror-trailing-node: 2.0.7(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.1)
+      prosemirror-trailing-node: 2.0.7(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.2)
       prosemirror-transform: 1.8.0
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
     dev: false
 
   /@tiptap/react@2.1.12(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)(react-dom@18.2.0)(react@18.2.0):
@@ -3047,16 +3047,16 @@ packages:
       - '@swc/helpers'
     dev: true
 
-  /acorn-jsx@5.3.2(acorn@8.11.1):
+  /acorn-jsx@5.3.2(acorn@8.11.2):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      acorn: 8.11.1
+      acorn: 8.11.2
     dev: true
 
-  /acorn@8.11.1:
-    resolution: {integrity: sha512-IJTNCJMRHfRfb8un89z1QtS0x890C2QUrUxFMK8zy+RizcId6mfnqOf68Bu9YkDgpLYuvCm6aYbwDatXVZPjMQ==}
+  /acorn@8.11.2:
+    resolution: {integrity: sha512-nc0Axzp/0FILLEVsm4fNwLCwMttvhEI263QtVPQcbpfZZ3ts0hLsZGOpE6czNlid7CJ9MlyH8reXkpsf3YUY4w==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -3217,7 +3217,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001554
+      caniuse-lite: 1.0.30001555
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3269,8 +3269,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001554
-      electron-to-chromium: 1.4.568
+      caniuse-lite: 1.0.30001555
+      electron-to-chromium: 1.4.569
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
 
@@ -3299,8 +3299,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite@1.0.30001554:
-    resolution: {integrity: sha512-A2E3U//MBwbJVzebddm1YfNp7Nud5Ip+IPn4BozBmn4KqVX7AvluoIDFWjsv5OkGnKUXQVmMSoMKLa3ScCblcQ==}
+  /caniuse-lite@1.0.30001555:
+    resolution: {integrity: sha512-NzbUFKUnJ3DTcq6YyZB6+qqhfD112uR3uoEnkmfzm2wVzUNsFkU7AwBjKQ654Sp5cau0JxhFyRSn/tQZ+XfygA==}
 
   /case-anything@2.1.13:
     resolution: {integrity: sha512-zlOQ80VrQ2Ue+ymH5OuM/DlDq64mEm+B9UTdHULv5osUMD6HalNTblf2b1u/m6QecjsnOkBpqVZ+XPwIVsy7Ng==}
@@ -3674,8 +3674,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.568:
-    resolution: {integrity: sha512-3TCOv8+BY6Ltpt1/CmGBMups2IdKOyfEmz4J8yIS4xLSeMm0Rf+psSaxLuswG9qMKt+XbNbmADybtXGpTFlbDg==}
+  /electron-to-chromium@1.4.569:
+    resolution: {integrity: sha512-LsrJjZ0IbVy12ApW3gpYpcmHS3iRxH4bkKOW98y1/D+3cvDUWGcbzbsFinfUS8knpcZk/PG/2p/RnkMCYN7PVg==}
 
   /emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
@@ -3988,8 +3988,8 @@ packages:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      acorn: 8.11.1
-      acorn-jsx: 5.3.2(acorn@8.11.1)
+      acorn: 8.11.2
+      acorn-jsx: 5.3.2(acorn@8.11.2)
       eslint-visitor-keys: 3.4.3
     dev: true
 
@@ -5026,8 +5026,8 @@ packages:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
     dev: false
 
-  /media-chrome@1.4.4:
-    resolution: {integrity: sha512-L3EImWE2ft3dEXnku7mwEl71L8GWFvsnqQQsmtlbuLqekCkIACjL1KjLErReALB9JmrY19ffB4GeGZjLZDwALg==}
+  /media-chrome@1.4.5:
+    resolution: {integrity: sha512-WRi+4XV4oCx8nwUEhhKxqF78mdQDVTPHgq2g/Mkt8C8lmIaca9WwnahZ0MHx8fy8XAEaiIv1B25555lpvZncJQ==}
     dev: false
 
   /merge-stream@2.0.0:
@@ -5791,7 +5791,7 @@ packages:
     dependencies:
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.8.0
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
     dev: false
 
   /prosemirror-gapcursor@1.3.2:
@@ -5800,7 +5800,7 @@ packages:
       prosemirror-keymap: 1.2.2
       prosemirror-model: 1.19.3
       prosemirror-state: 1.4.3
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
     dev: false
 
   /prosemirror-history@1.3.2:
@@ -5808,7 +5808,7 @@ packages:
     dependencies:
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.8.0
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
       rope-sequence: 1.3.4
     dev: false
 
@@ -5867,7 +5867,7 @@ packages:
     dependencies:
       prosemirror-model: 1.19.3
       prosemirror-transform: 1.8.0
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
     dev: false
 
   /prosemirror-tables@1.3.4:
@@ -5877,10 +5877,10 @@ packages:
       prosemirror-model: 1.19.3
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.8.0
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
     dev: false
 
-  /prosemirror-trailing-node@2.0.7(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.1):
+  /prosemirror-trailing-node@2.0.7(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.2):
     resolution: {integrity: sha512-8zcZORYj/8WEwsGo6yVCRXFMOfBo0Ub3hCUvmoWIZYfMP26WqENU0mpEP27w7mt8buZWuGrydBewr0tOArPb1Q==}
     peerDependencies:
       prosemirror-model: ^1.19.0
@@ -5892,7 +5892,7 @@ packages:
       escape-string-regexp: 4.0.0
       prosemirror-model: 1.19.3
       prosemirror-state: 1.4.3
-      prosemirror-view: 1.32.1
+      prosemirror-view: 1.32.2
     dev: false
 
   /prosemirror-transform@1.8.0:
@@ -5901,8 +5901,8 @@ packages:
       prosemirror-model: 1.19.3
     dev: false
 
-  /prosemirror-view@1.32.1:
-    resolution: {integrity: sha512-9SnB4HBgRczzTyIMZLPE1iszegL04hNfUyS8uPtP1RPxNM2NTCiIs8KwNsJU4nbZO9rxJTwVTv7Jm3zU4CR78A==}
+  /prosemirror-view@1.32.2:
+    resolution: {integrity: sha512-l2RQUGaiDI8SG8ZjWIkjT8yjGmNwdzMFMzQmxv/Kh8Vx+ICnz5R+K0mrOS16rhfjX7n2t4emU0goh7TerQC3mw==}
     dependencies:
       prosemirror-model: 1.19.3
       prosemirror-state: 1.4.3
@@ -6795,7 +6795,7 @@ packages:
   /unplugin@1.5.0:
     resolution: {integrity: sha512-9ZdRwbh/4gcm1JTOkp9lAkIDrtOyOxgHmY7cjuwI8L/2RTikMcVG25GsZwNAgRuap3iDw2jeq7eoqtAsz5rW3A==}
     dependencies:
-      acorn: 8.11.1
+      acorn: 8.11.2
       chokidar: 3.5.3
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.5.0
@@ -6887,8 +6887,8 @@ packages:
       vfile-message: 4.0.2
     dev: false
 
-  /virtua@0.15.4(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-gC52UMvipt5ejDuolszdMAIapoDZul3cpsYIznjEUUbws169/dFHRwzzoI7e5niViDBBt6e+N4RnicGdcuc0UQ==}
+  /virtua@0.15.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-j9EfyAmpp6VwuHmnXkWpzciHRdlY7XGPzZg3ZqOPFW+phNUnFQALYdrThc3CYHZFsj380ieIegdjPGS+Qbkuyg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'

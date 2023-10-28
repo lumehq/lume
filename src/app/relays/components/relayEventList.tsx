@@ -17,9 +17,9 @@ import {
 
 export function RelayEventList({ relayUrl }: { relayUrl: string }) {
   const { fetcher } = useNDK();
-  const { status, data } = useQuery(
-    ['relay-event'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['relay-event'],
+    queryFn: async () => {
       const url = 'wss://' + relayUrl;
       const events = await fetcher.fetchLatestEvents(
         [url],
@@ -30,8 +30,8 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
       );
       return events as unknown as NDKEvent[];
     },
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   const renderItem = useCallback(
     (event: NDKEvent) => {
@@ -70,7 +70,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
   return (
     <div className="h-full">
       <div className="mx-auto w-full max-w-[500px]">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-white" />
@@ -78,7 +78,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
             </div>
           </div>
         ) : (
-          <VList className="scrollbar-none h-full">
+          <VList className="h-full scrollbar-none">
             <div className="h-10" />
             {data.map((item) => renderItem(item))}
             <div className="h-16" />

@@ -28,9 +28,9 @@ export function Repost({
     event.content.length > 0 ? JSON.parse(event.content) : null;
 
   const { ndk } = useNDK();
-  const { status, isError, data } = useQuery(
-    ['repost', event.id],
-    async () => {
+  const { status, isError, data } = useQuery({
+    queryKey: ['repost', event.id],
+    queryFn: async () => {
       const id = event.tags.find((el) => el[0] === 'e')[1];
       if (!id) throw new Error('wrong id');
 
@@ -39,11 +39,9 @@ export function Repost({
 
       return ndkEvent;
     },
-    {
-      enabled: embedEvent === null,
-      refetchOnWindowFocus: false,
-    }
-  );
+    enabled: embedEvent === null,
+    refetchOnWindowFocus: false,
+  });
 
   const renderKind = useCallback((repostEvent: NDKEvent) => {
     switch (repostEvent.kind) {
@@ -87,7 +85,7 @@ export function Repost({
     );
   }
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="h-min w-full px-3 pb-3">
         <div className="relative overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">

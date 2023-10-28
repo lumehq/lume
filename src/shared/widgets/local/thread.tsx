@@ -43,7 +43,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
       <WVList className="flex-1 overflow-y-auto px-3">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-16 items-center justify-center rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
             <LoaderIcon className="h-5 w-5 animate-spin" />
           </div>

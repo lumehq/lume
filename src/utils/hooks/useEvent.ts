@@ -12,9 +12,9 @@ export function useEvent(
 ) {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['event', id],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['event', id],
+    queryFn: async () => {
       // return event refer from naddr
       if (naddr) {
         const rEvents = await ndk.fetchEvents({
@@ -45,11 +45,9 @@ export function useEvent(
 
       return event;
     },
-    {
-      enabled: !!ndk,
-      refetchOnWindowFocus: false,
-    }
-  );
+    enabled: !!ndk,
+    refetchOnWindowFocus: false,
+  });
 
   return { status, data };
 }

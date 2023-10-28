@@ -14,9 +14,9 @@ import { Widget } from '@utils/types';
 
 export function GlobalArticlesWidget({ params }: { params: Widget }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['global-articles'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['global-articles'],
+    queryFn: async () => {
       const events = await ndk.fetchEvents({
         kinds: [NDKKind.Article],
         limit: 200,
@@ -24,8 +24,8 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
       const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
       return sortedEvents;
     },
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   // render event match event kind
   const renderItem = useCallback(
@@ -43,7 +43,7 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
       <div className="flex-1">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />

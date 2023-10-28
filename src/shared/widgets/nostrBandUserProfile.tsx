@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { FollowIcon, UnfollowIcon } from '@shared/icons';
@@ -18,20 +19,18 @@ export interface Profile {
 
 export function NostrBandUserProfile({ data }: { data: Profile }) {
   const { db } = useStorage();
-  const { ndk } = useStorage();
-  const { status, data: userStats } = useQuery(
-    ['user-stats', data.pubkey],
-    async () => {
+  const { ndk } = useNDK();
+  const { status, data: userStats } = useQuery({
+    queryKey: ['user-stats', data.pubkey],
+    queryFn: async () => {
       const res = await fetch(`https://api.nostr.band/v0/stats/profile/${data.pubkey}`);
       return res.json();
     },
-    {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    }
-  );
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
   const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
   const profile = embedProfile;
@@ -137,7 +136,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
           </p>
         </div>
         <div className="mt-8">
-          {status === 'loading' ? (
+          {status === 'pending' ? (
             <p>Loading...</p>
           ) : (
             <div className="flex w-full items-center gap-8">

@@ -8,7 +8,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 
   return (
     <div className="my-2">
-      {status === 'loading' ? (
+      {status === 'pending' ? (
         <div className="flex flex-col bg-neutral-200 dark:bg-neutral-800">
           <div className="h-44 w-full animate-pulse bg-neutral-400 dark:bg-neutral-600" />
           <div className="flex flex-col gap-2 px-3 py-3">

@@ -22,8 +22,12 @@ export function ChatScreen() {
   const { ndk } = useNDK();
   const { pubkey } = useParams();
   const { fetchNIP04Messages } = useNostr();
-  const { status, data } = useQuery(['nip04-dm', pubkey], async () => {
-    return await fetchNIP04Messages(pubkey);
+  const { status, data } = useQuery({
+    queryKey: ['nip04-dm', pubkey],
+    queryFn: async () => {
+      return await fetchNIP04Messages(pubkey);
+    },
+    refetchOnWindowFocus: false,
   });
 
   const renderItem = useCallback(
@@ -69,7 +73,7 @@ export function ChatScreen() {
             <User pubkey={pubkey} variant="simple" />
           </div>
           <div className="h-full w-full flex-1 px-3 py-3">
-            {status === 'loading' ? (
+            {status === 'pending' ? (
               <div className="flex h-full w-full items-center justify-center">
                 <div className="flex flex-col items-center gap-1.5">
                   <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />

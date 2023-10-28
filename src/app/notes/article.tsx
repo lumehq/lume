@@ -72,7 +72,7 @@ export function ArticleNoteScreen() {
       </div>
       <div className="relative col-span-6 flex flex-col overflow-y-auto">
         <div className="mx-auto w-full max-w-2xl">
-          {status === 'loading' ? (
+          {status === 'pending' ? (
             <div className="px-3 py-1.5">Loading...</div>
           ) : (
             <div className="flex h-min w-full flex-col px-3">

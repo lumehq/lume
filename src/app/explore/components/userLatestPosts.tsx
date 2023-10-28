@@ -16,8 +16,12 @@ import { useNostr } from '@utils/hooks/useNostr';
 
 export function UserLatestPosts({ pubkey }: { pubkey: string }) {
   const { getEventsByPubkey } = useNostr();
-  const { status, data } = useQuery(['user-posts', pubkey], async () => {
-    return await getEventsByPubkey(pubkey);
+  const { status, data } = useQuery({
+    queryKey: ['user-posts', pubkey],
+    queryFn: async () => {
+      return await getEventsByPubkey(pubkey);
+    },
+    refetchOnWindowFocus: false,
   });
 
   const renderItem = useCallback(
@@ -60,7 +64,7 @@ export function UserLatestPosts({ pubkey }: { pubkey: string }) {
         Latest post
       </h3>
       <div>
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="px-3">
             <div className="inline-flex h-16 w-full items-center justify-center gap-1.5 rounded-lg bg-neutral-300 text-sm font-medium dark:bg-neutral-700">
               <LoaderIcon className="h-4 w-4 animate-spin" />

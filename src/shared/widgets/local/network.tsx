@@ -29,6 +29,7 @@ export function LocalNetworkWidget() {
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['local-network-widget'],
+      initialPageParam: 0,
       queryFn: async ({ pageParam = 0 }) => {
         return await db.getAllEvents(20, pageParam);
       },
@@ -136,7 +137,7 @@ export function LocalNetworkWidget() {
     <WidgetWrapper>
       <TitleBar id="9999" />
       <div className="flex-1">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <NoteSkeleton />

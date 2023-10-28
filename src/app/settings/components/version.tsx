@@ -1,17 +1,4 @@
-import { getVersion } from '@tauri-apps/plugin-app';
-import { useEffect, useState } from 'react';
-
 export function VersionSetting() {
-  const [version, setVersion] = useState<string>('');
-
-  useEffect(() => {
-    async function checkVersion() {
-      const appVersion = await getVersion();
-      setVersion(appVersion);
-    }
-    checkVersion();
-  }, []);
-
   return (
     <div className="inline-flex items-center justify-between px-5 py-4">
       <div className="flex flex-col gap-1">
@@ -21,7 +8,7 @@ export function VersionSetting() {
         </span>
       </div>
       <div className="inline-flex items-center gap-2">
-        <span className="font-medium text-neutral-300">{version}</span>
+        <span className="font-medium text-neutral-300">2</span>
       </div>
     </div>
   );
