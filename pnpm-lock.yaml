@@ -51,43 +51,43 @@ dependencies:
     specifier: ^5.0.5
     version: 5.0.5(react-dom@18.2.0)(react@18.2.0)
   '@tauri-apps/api':
-    specifier: 2.0.0-alpha.9
+    specifier: ^2.0.0-alpha.9
     version: 2.0.0-alpha.9
   '@tauri-apps/cli':
-    specifier: 2.0.0-alpha.16
+    specifier: ^2.0.0-alpha.16
     version: 2.0.0-alpha.16
   '@tauri-apps/plugin-clipboard-manager':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-dialog':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-fs':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-http':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-notification':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-os':
-    specifier: 2.0.0-alpha.3
+    specifier: ^2.0.0-alpha.3
     version: 2.0.0-alpha.3
   '@tauri-apps/plugin-process':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-shell':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-sql':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-updater':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tauri-apps/plugin-upload':
-    specifier: 2.0.0-alpha.2
+    specifier: ^2.0.0-alpha.2
     version: 2.0.0-alpha.2
   '@tiptap/extension-character-count':
     specifier: ^2.1.12
