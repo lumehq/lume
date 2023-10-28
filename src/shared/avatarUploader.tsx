@@ -1,15 +1,16 @@
-import { message, open } from '@tauri-apps/plugin-dialog';
-import { readBinaryFile } from '@tauri-apps/plugin-fs';
-import { fetch } from '@tauri-apps/plugin-http';
+import { message } from '@tauri-apps/plugin-dialog';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, PlusIcon } from '@shared/icons';
+
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function AvatarUploader({
   setPicture,
 }: {
   setPicture: Dispatch<SetStateAction<string>>;
 }) {
+  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const uploadAvatar = async () => {
@@ -17,42 +18,14 @@ export function AvatarUploader({
       // start loading
       setLoading(true);
 
-      const selected = await open({
-        multiple: false,
-        filters: [
-          {
-            name: 'Image',
-            extensions: ['png', 'jpeg', 'jpg', 'gif'],
-          },
-        ],
-      });
+      const image = await upload();
 
-      if (!selected) {
-        setLoading(false);
-        return;
-      }
-
-      const file = await readBinaryFile(selected.path);
-      const blob = new Blob([file]);
-
-      const data = new FormData();
-      data.append('fileToUpload', blob);
-      data.append('submit', 'Upload Image');
-
-      const res = await fetch('https://nostr.build/api/v2/upload/files', {
-        method: 'POST',
-        body: data,
-      });
-
-      if (res.ok) {
-        const json = await res.json();
-        const content = json.data[0];
-
-        setPicture(content.url);
-
-        // stop loading
+      if (image) {
+        setPicture(image);
         setLoading(false);
       }
+
+      return;
     } catch (e) {
       // stop loading
       setLoading(false);

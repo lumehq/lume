@@ -3,20 +3,25 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { LoaderIcon, MediaIcon } from '@shared/icons';
 
+import { useNostr } from '@utils/hooks/useNostr';
+
 export function MediaUploader({
   setState,
 }: {
   setState: Dispatch<SetStateAction<string>>;
 }) {
+  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const uploadMedia = async () => {
     setLoading(true);
-    const image = await upload(null);
-    if (image.url) {
-      setState((prev: string) => `${prev}\n${image.url}`);
+
+    const image = await upload(['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov']);
+
+    if (image) {
+      setState((prev: string) => `${prev}\n${image}`);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

@@ -1,4 +1,7 @@
 import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
+import { open } from '@tauri-apps/plugin-dialog';
+import { readBinaryFile } from '@tauri-apps/plugin-fs';
+import { fetch } from '@tauri-apps/plugin-http';
 import { LRUCache } from 'lru-cache';
 import { NostrEventExt } from 'nostr-fetch';
 import { useMemo } from 'react';
@@ -239,6 +242,41 @@ export function useNostr() {
     return res;
   };
 
+  const upload = async (ext: string[] = []) => {
+    const defaultExts = ['png', 'jpeg', 'jpg', 'gif'].concat(ext);
+
+    const selected = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'Image',
+          extensions: defaultExts,
+        },
+      ],
+    });
+
+    if (!selected) return null;
+
+    const file = await readBinaryFile(selected.path);
+    const blob = new Blob([file]);
+
+    const data = new FormData();
+    data.append('fileToUpload', blob);
+    data.append('submit', 'Upload Image');
+
+    const res = await fetch('https://nostr.build/api/v2/upload/files', {
+      method: 'POST',
+      body: data,
+    });
+
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    const content = json.data[0];
+
+    return content.url as string;
+  };
+
   return {
     sub,
     getAllNIP04Chats,
@@ -250,5 +288,6 @@ export function useNostr() {
     fetchNIP04Messages,
     fetchAllReplies,
     createZap,
+    upload,
   };
 }
