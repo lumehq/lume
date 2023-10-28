@@ -2,10 +2,7 @@ import * as Avatar from '@radix-ui/react-avatar';
 import * as HoverCard from '@radix-ui/react-hover-card';
 import { minidenticon } from 'minidenticons';
 import { memo } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
-import rehypeExternalLinks from 'rehype-external-links';
-import remarkGfm from 'remark-gfm';
 
 import { RepostIcon, WorldIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
@@ -46,39 +43,16 @@ export const User = memo(function User({
   const svgURI =
     'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
 
-  if (status === 'pending') {
-    if (variant === 'avatar') {
+  if (variant === 'mention') {
+    if (status === 'pending') {
       return (
-        <div className="h-12 w-12 animate-pulse overflow-hidden rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-      );
-    }
-
-    if (variant === 'mention' || variant === 'notify') {
-      return (
-        <div className="relative flex items-center gap-3">
-          <div className="relative z-10 h-6 w-6 shrink-0 animate-pulse overflow-hidden rounded bg-neutral-300 dark:bg-neutral-700" />
+        <div className="flex items-center gap-2">
+          <div className="h-6 w-6 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
           <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
         </div>
       );
     }
 
-    if (variant === 'stacked') {
-      return (
-        <div className="h-8 w-8 animate-pulse rounded-full bg-neutral-300 dark:bg-neutral-700" />
-      );
-    }
-
-    return (
-      <div className="flex items-start gap-3">
-        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-        <div className="h-6 w-full">
-          <div className="h-3 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-        </div>
-      </div>
-    );
-  }
-
-  if (variant === 'mention') {
     return (
       <div className="flex items-center gap-2">
         <Avatar.Root className="shrink-0">
@@ -113,6 +87,15 @@ export const User = memo(function User({
   }
 
   if (variant === 'notify') {
+    if (status === 'pending') {
+      return (
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+        </div>
+      );
+    }
+
     return (
       <div className="flex items-center gap-2">
         <Avatar.Root className="shrink-0">
@@ -143,6 +126,19 @@ export const User = memo(function User({
   }
 
   if (variant === 'large') {
+    if (status === 'pending') {
+      return (
+        <div className="flex items-center gap-2.5">
+          <div className="h-14 w-14 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+          <div>
+            <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="flex h-full w-full flex-col gap-2.5">
         <Avatar.Root className="shrink-0">
@@ -167,15 +163,9 @@ export const User = memo(function User({
             <p className="max-w-[15rem] truncate text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {user?.name || user?.display_name || user?.displayName}
             </p>
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeExternalLinks({ target: '_blank' })]}
-              className="markdown-simple line-clamp-6 whitespace-pre-line break-all"
-              disallowedElements={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
-              unwrapDisallowed={true}
-            >
+            <p className="break-p prose prose-neutral max-w-none select-text whitespace-pre-line leading-normal dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-1 prose-a:font-normal prose-a:text-blue-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-blue-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2 hover:prose-a:text-blue-500">
               {user?.about || user?.bio || 'No bio'}
-            </ReactMarkdown>
+            </p>
           </div>
           <div className="flex flex-col gap-2">
             {user?.website ? (
@@ -195,6 +185,18 @@ export const User = memo(function User({
   }
 
   if (variant === 'simple') {
+    if (status === 'pending') {
+      return (
+        <div className="flex items-center gap-2.5">
+          <div className="h-11 w-11 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+          <div className="flex w-full flex-col items-start">
+            <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="flex items-center gap-2.5">
         <Avatar.Root className="shrink-0">
@@ -227,6 +229,12 @@ export const User = memo(function User({
   }
 
   if (variant === 'avatar') {
+    if (status === 'pending') {
+      return (
+        <div className="h-12 w-12 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+      );
+    }
+
     return (
       <Avatar.Root>
         <Avatar.Image
@@ -249,6 +257,12 @@ export const User = memo(function User({
   }
 
   if (variant === 'miniavatar') {
+    if (status === 'pending') {
+      return (
+        <div className="h-10 w-10 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+      );
+    }
+
     return (
       <Avatar.Root>
         <Avatar.Image
@@ -271,6 +285,12 @@ export const User = memo(function User({
   }
 
   if (variant === 'stacked') {
+    if (status === 'pending') {
+      return (
+        <div className="inline-block h-8 w-8 animate-pulse rounded-full bg-neutral-300 ring-1 ring-neutral-200 dark:bg-neutral-700 dark:ring-neutral-800" />
+      );
+    }
+
     return (
       <Avatar.Root>
         <Avatar.Image
@@ -293,6 +313,12 @@ export const User = memo(function User({
   }
 
   if (variant === 'ministacked') {
+    if (status === 'pending') {
+      return (
+        <div className="inline-block h-6 w-6 animate-pulse rounded-full bg-neutral-300 ring-1 ring-white dark:ring-black" />
+      );
+    }
+
     return (
       <Avatar.Root>
         <Avatar.Image
@@ -315,6 +341,20 @@ export const User = memo(function User({
   }
 
   if (variant === 'repost') {
+    if (status === 'pending') {
+      return (
+        <div className="flex gap-3">
+          <div className="inline-flex h-10 w-10 items-center justify-center">
+            <RepostIcon className="h-5 w-5 text-blue-500" />
+          </div>
+          <div className="inline-flex items-center gap-2">
+            <div className="h-6 w-6 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="flex gap-3">
         <div className="inline-flex h-10 w-10 items-center justify-center">
@@ -353,6 +393,18 @@ export const User = memo(function User({
   }
 
   if (variant === 'thread') {
+    if (status === 'pending') {
+      return (
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+          <div className="flex flex-1 flex-col">
+            <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="flex items-center gap-3">
         <Avatar.Root className="h-10 w-10 shrink-0">
@@ -381,6 +433,17 @@ export const User = memo(function User({
             <span>·</span>
             <span>{displayNpub(pubkey, 16)}</span>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'pending') {
+    return (
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+        <div className="flex h-6 flex-1 items-start gap-2">
+          <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
         </div>
       </div>
     );
