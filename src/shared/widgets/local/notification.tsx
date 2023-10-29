@@ -10,6 +10,7 @@ import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
 import { useActivities } from '@stores/activities';
+import { useWidgets } from '@stores/widgets';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { Widget } from '@utils/types';
@@ -22,6 +23,8 @@ export function LocalNotificationWidget({ params }: { params: Widget }) {
     state.activities,
     state.setActivities,
   ]);
+
+  const isFetched = useWidgets((state) => state.isFetched);
 
   const renderEvent = useCallback(
     (event: NDKEvent) => {
@@ -37,8 +40,8 @@ export function LocalNotificationWidget({ params }: { params: Widget }) {
       setActivities(events);
     }
 
-    getActivities();
-  }, []);
+    if (isFetched) getActivities();
+  }, [isFetched]);
 
   return (
     <WidgetWrapper>

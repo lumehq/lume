@@ -189,7 +189,7 @@ export const User = memo(function User({
       return (
         <div className="flex items-center gap-2.5">
           <div className="h-11 w-11 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-          <div className="flex w-full flex-col items-start">
+          <div className="flex w-full flex-col items-start gap-1">
             <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
             <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
           </div>

@@ -6,7 +6,15 @@ import Database from '@tauri-apps/plugin-sql';
 import { FULL_RELAYS } from '@stores/constants';
 
 import { rawEvent } from '@utils/transform';
-import { Account, DBEvent, Relays, Widget } from '@utils/types';
+import type {
+  Account,
+  DBEvent,
+  NDKCacheEvent,
+  NDKCacheEventTag,
+  NDKCacheUser,
+  Relays,
+  Widget,
+} from '@utils/types';
 
 export class LumeStorage {
   public db: Database;
@@ -35,6 +43,115 @@ export class LumeStorage {
 
   public async secureRemove(key: string) {
     return await invoke('secure_remove', { key });
+  }
+
+  public async getCacheUser(pubkey: string) {
+    const results: Array<NDKCacheUser> = await this.db.select(
+      'SELECT * FROM ndk_users WHERE pubkey = $1 ORDER BY pubkey DESC LIMIT 1;',
+      [pubkey]
+    );
+
+    if (results.length < 1) return null;
+
+    if (typeof results[0].profile === 'string')
+      results[0].profile = JSON.parse(results[0].profile);
+
+    return results[0];
+  }
+
+  public async getCacheEvent(id: string) {
+    const results: Array<NDKCacheEvent> = await this.db.select(
+      'SELECT * FROM ndk_events WHERE id = $1 ORDER BY id DESC LIMIT 1;',
+      [id]
+    );
+
+    if (results.length < 1) return null;
+    return results[0];
+  }
+
+  public async getCacheEvents(ids: string[]) {
+    const idsArr = `'${ids.join("','")}'`;
+
+    const results: Array<NDKCacheEvent> = await this.db.select(
+      `SELECT * FROM ndk_events WHERE id IN (${idsArr}) ORDER BY id;`
+    );
+
+    if (results.length < 1) return [];
+    return results;
+  }
+
+  public async getCacheEventsByPubkey(pubkey: string) {
+    const results: Array<NDKCacheEvent> = await this.db.select(
+      'SELECT * FROM ndk_events WHERE pubkey = $1 ORDER BY id;',
+      [pubkey]
+    );
+
+    if (results.length < 1) return [];
+    return results;
+  }
+
+  public async getCacheEventsByKind(kind: number) {
+    const results: Array<NDKCacheEvent> = await this.db.select(
+      'SELECT * FROM ndk_events WHERE kind = $1 ORDER BY id;',
+      [kind]
+    );
+
+    if (results.length < 1) return [];
+    return results;
+  }
+
+  public async getCacheEventsByKindAndAuthor(kind: number, pubkey: string) {
+    const results: Array<NDKCacheEvent> = await this.db.select(
+      'SELECT * FROM ndk_events WHERE kind = $1 AND pubkey = $2 ORDER BY id;',
+      [kind, pubkey]
+    );
+
+    if (results.length < 1) return [];
+    return results;
+  }
+
+  public async getCacheEventTagsByTagValue(tagValue: string) {
+    const results: Array<NDKCacheEventTag> = await this.db.select(
+      'SELECT * FROM ndk_eventtags WHERE tagValue = $1 ORDER BY id;',
+      [tagValue]
+    );
+
+    if (results.length < 1) return [];
+    return results;
+  }
+
+  public async setCacheEvent({
+    id,
+    pubkey,
+    content,
+    kind,
+    createdAt,
+    relay,
+    event,
+  }: NDKCacheEvent) {
+    return await this.db.execute(
+      'INSERT OR IGNORE INTO ndk_events (id, pubkey, content, kind, createdAt, relay, event) VALUES ($1, $2, $3, $4, $5, $6, $7);',
+      [id, pubkey, content, kind, createdAt, relay, event]
+    );
+  }
+
+  public async setCacheEventTag({ id, eventId, tag, value, tagValue }: NDKCacheEventTag) {
+    return await this.db.execute(
+      'INSERT OR IGNORE INTO ndk_eventtags (id, eventId, tag, value, tagValue) VALUES ($1, $2, $3, $4, $5);',
+      [id, eventId, tag, value, tagValue]
+    );
+  }
+
+  public async setCacheProfiles(profiles: Array<NDKCacheUser>) {
+    return await Promise.all(
+      profiles.map(
+        async (profile) =>
+          await this.db.execute(
+            'INSERT OR IGNORE INTO ndk_users (pubkey, profile, createdAt) VALUES ($1, $2, $3);',
+            [profile.pubkey, profile.profile, profile.createdAt]
+          )
+      )
+    );
   }
 
   public async checkAccount() {

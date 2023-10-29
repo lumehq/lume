@@ -3,14 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { AddressPointer } from 'nostr-tools/lib/types/nip19';
 
 import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
 
 export function useEvent(
   id: undefined | string,
   naddr?: undefined | AddressPointer,
   embed?: undefined | string
 ) {
-  const { db } = useStorage();
   const { ndk } = useNDK();
   const { status, data } = useQuery({
     queryKey: ['event', id],
@@ -33,20 +31,16 @@ export function useEvent(
         return event;
       }
 
-      // get event from db
-      const dbEvent = await db.getEventByID(id);
-      if (dbEvent) return dbEvent;
-
-      // get event from relay if event in db not present
+      // get event from relay
       const event = await ndk.fetchEvent(id);
       if (!event) return Promise.reject(new Error('event not found'));
 
-      await db.createEvent(event);
-
       return event;
     },
-    enabled: !!ndk,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 
   return { status, data };

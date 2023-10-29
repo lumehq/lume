@@ -1,11 +1,11 @@
 import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
-import NDKCacheAdapterDexie from '@nostr-dev-kit/ndk-cache-dexie';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { message } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 
+import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
 export const NDKInstance = () => {
@@ -77,7 +77,7 @@ export const NDKInstance = () => {
     const outboxSetting = await db.getSettingValue('outbox');
     const explicitRelayUrls = await getExplicitRelays();
 
-    const dexieAdapter = new NDKCacheAdapterDexie({ dbName: 'lume_ndkcache' });
+    const dexieAdapter = new NDKCacheAdapterTauri(db);
     const instance = new NDK({
       explicitRelayUrls,
       cacheAdapter: dexieAdapter,

@@ -19,19 +19,18 @@ export function EventLoader({ firstTime }: { firstTime: boolean }) {
   useEffect(() => {
     async function getEvents() {
       const events = await getAllEventsSinceLastLogin();
-      console.log('total new events has found: ', events.data.length);
+      console.log('total new events has found: ', events.length);
 
-      const promises = await Promise.all(
-        events.data.map(async (event) => await db.createEvent(event))
-      );
-
-      if (promises) {
+      if (events) {
         setProgress(100);
         setIsFetched();
+
         // invalidate queries
-        queryClient.invalidateQueries({
-          queryKey: ['local-network-widget']
+        await queryClient.invalidateQueries({
+          queryKey: ['local-network-widget'],
         });
+
+        // update last login time, use for next fetch
         await db.updateLastLogin();
       }
     }

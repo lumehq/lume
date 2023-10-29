@@ -128,12 +128,20 @@ fn main() {
       tauri_plugin_sql::Builder::default()
         .add_migrations(
           "sqlite:lume_v2.db",
-          vec![Migration {
-            version: 20230418013219,
-            description: "initial data",
-            sql: include_str!("../migrations/20230418013219_initial_data.sql"),
-            kind: MigrationKind::Up,
-          }],
+          vec![
+            Migration {
+              version: 20230418013219,
+              description: "initial data",
+              sql: include_str!("../migrations/20230418013219_initial_data.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20231028083224,
+              description: "add ndk cache table",
+              sql: include_str!("../migrations/20231028083224_add_ndk_cache_table.sql"),
+              kind: MigrationKind::Up,
+            },
+          ],
         )
         .build(),
     )

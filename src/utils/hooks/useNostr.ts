@@ -186,10 +186,9 @@ export function useNostr() {
         { since: since }
       )) as unknown as NDKEvent[];
 
-      return { status: 'ok', message: 'fetch completed', data: events };
+      return events;
     } catch (e) {
       console.error('prefetch events failed, error: ', e);
-      return { status: 'failed', message: e };
     }
   };
 

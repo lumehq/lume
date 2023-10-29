@@ -22,12 +22,10 @@ export function useProfile(pubkey: string, embed?: string) {
 
       return await user.fetchProfile();
     },
-    enabled: !!ndk,
     staleTime: Infinity,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    retry: 2,
   });
 
   return { status, user, error };
