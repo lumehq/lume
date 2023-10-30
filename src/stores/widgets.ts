@@ -132,12 +132,14 @@ export const useWidgets = create<WidgetState>()(
       fetchWidgets: async (db: LumeStorage) => {
         const dbWidgets = await db.getWidgets();
 
+        /*
         dbWidgets.unshift({
           id: '9998',
           title: 'Notification',
           content: '',
           kind: WidgetKinds.local.notification,
         });
+        */
 
         dbWidgets.unshift({
           id: '9999',

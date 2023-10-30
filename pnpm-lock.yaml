@@ -47,9 +47,15 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.14)(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0)
+  '@tanstack/query-sync-storage-persister':
+    specifier: ^5.4.3
+    version: 5.4.3
   '@tanstack/react-query':
     specifier: ^5.0.5
     version: 5.0.5(react-dom@18.2.0)(react@18.2.0)
+  '@tanstack/react-query-persist-client':
+    specifier: ^5.4.3
+    version: 5.4.3(@tanstack/react-query@5.0.5)(react-dom@18.2.0)(react@18.2.0)
   '@tauri-apps/api':
     specifier: ^2.0.0-alpha.9
     version: 2.0.0-alpha.9
@@ -2094,6 +2100,36 @@ packages:
 
   /@tanstack/query-core@5.0.5:
     resolution: {integrity: sha512-MThCETMkHDHTnFZHp71L+SqTtD5d6XHftFCVR1xRJdWM3qGrlQ2VCXaj0SKVcyJej2e1Opa2c7iknu1llxCDNQ==}
+    dev: false
+
+  /@tanstack/query-core@5.4.3:
+    resolution: {integrity: sha512-fnI9ORjcuLGm1sNrKatKIosRQUpuqcD4SV7RqRSVmj8JSicX2aoMyKryHEBpVQvf6N4PaBVgBxQomjsbsGPssQ==}
+    dev: false
+
+  /@tanstack/query-persist-client-core@5.4.3:
+    resolution: {integrity: sha512-0MZazQMVXmmVyf/ce2ug0CoSkT02VA4ZhkT3F1/tIINxGuH2KlhKWQc9puqJzTazUpXfRdBK9+lMPqpkA16FEQ==}
+    dependencies:
+      '@tanstack/query-core': 5.4.3
+    dev: false
+
+  /@tanstack/query-sync-storage-persister@5.4.3:
+    resolution: {integrity: sha512-53e2O8lLaeBZ26myG6zQt5Ix16XmkcqJrsrSP2ZZzP5Ii6XwBq061djaEMTNbWYenYpmDqQIxAye/J6zQZ0QiA==}
+    dependencies:
+      '@tanstack/query-core': 5.4.3
+      '@tanstack/query-persist-client-core': 5.4.3
+    dev: false
+
+  /@tanstack/react-query-persist-client@5.4.3(@tanstack/react-query@5.0.5)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-gpusG6IG6rnmdRT3onSjmRVG60K3BlsdUQifBVeLdi4uen1rvRAiB5a7jr4hFVMItzS9C4jBxJMWt/DmZpy6Ow==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.4.3
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.4.3
+      '@tanstack/react-query': 5.0.5(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@tanstack/react-query@5.0.5(react-dom@18.2.0)(react@18.2.0):

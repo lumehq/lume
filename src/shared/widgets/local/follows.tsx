@@ -46,8 +46,6 @@ export function LocalFollowsWidget({ params }: { params: Widget }) {
             <NoteWrapper
               key={dbEvent.id + dbEvent.root_id + dbEvent.reply_id}
               event={event}
-              root={dbEvent.root_id}
-              reply={dbEvent.reply_id}
             >
               <MemoizedTextNote />
             </NoteWrapper>

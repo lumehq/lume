@@ -16,10 +16,10 @@ import {
   LocalFeedsWidget,
   LocalFilesWidget,
   LocalFollowsWidget,
-  LocalNetworkWidget,
   LocalNotificationWidget,
   LocalThreadWidget,
   LocalUserWidget,
+  NewsfeedWidget,
   TrendingAccountsWidget,
   TrendingNotesWidget,
   XfeedsWidget,
@@ -44,7 +44,7 @@ export function SpaceScreen() {
       if (!widget) return;
       switch (widget.kind) {
         case WidgetKinds.local.network:
-          return <LocalNetworkWidget key={widget.id} />;
+          return <NewsfeedWidget key={widget.id} />;
         case WidgetKinds.local.follows:
           return <LocalFollowsWidget key={widget.id} params={widget} />;
         case WidgetKinds.local.feeds:
