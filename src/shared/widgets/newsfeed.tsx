@@ -124,7 +124,13 @@ export function NewsfeedWidget() {
       sub(
         filter,
         async (event) => {
-          queryClient.setQueryData(['newsfeed'], (old: NDKEvent[]) => [event, ...old]);
+          queryClient.setQueryData(
+            ['newsfeed'],
+            (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
+              ...prev,
+              pages: [[event], ...prev.pages],
+            })
+          );
         },
         false,
         'newsfeed'

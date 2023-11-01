@@ -75,13 +75,14 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   }
 
   return (
-    <button
-      type="button"
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
+    <div
+      role="button"
       onClick={(e) => openThread(e, id)}
       className="mt-3 cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
     >
       <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
       <div className="mt-1 text-left">{renderKind(data)}</div>
-    </button>
+    </div>
   );
 });

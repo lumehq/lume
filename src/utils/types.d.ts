@@ -1,9 +1,8 @@
 import { type NDKEvent, type NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { type Response } from '@tauri-apps/plugin-http';
-import { ReactNode } from 'react';
 
 export interface RichContent {
-  parsed: string | ReactNode[];
+  parsed: string;
   images: string[];
   videos: string[];
   links: string[];

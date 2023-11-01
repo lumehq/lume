@@ -77,10 +77,13 @@ export function NotificationWidget() {
       sub(
         filter,
         async (event) => {
-          queryClient.setQueryData(['notification'], (old: NDKEvent[]) => [
-            event,
-            ...old,
-          ]);
+          queryClient.setQueryData(
+            ['notification'],
+            (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
+              ...prev,
+              pages: [[event], ...prev.pages],
+            })
+          );
 
           const user = ndk.getUser({ hexpubkey: event.pubkey });
           await user.fetchProfile();
