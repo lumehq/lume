@@ -1,14 +1,14 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { FocusIcon } from '@shared/icons';
 import { NoteReaction } from '@shared/notes/actions/reaction';
 import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
-import { WidgetKinds, useWidgets } from '@stores/widgets';
+import { WidgetKinds } from '@stores/constants';
+
+import { useWidget } from '@utils/hooks/useWidget';
 
 export function NoteActions({
   id,
@@ -21,8 +21,7 @@ export function NoteActions({
   extraButtons?: boolean;
   root?: string;
 }) {
-  const { db } = useStorage();
-  const setWidget = useWidgets((state) => state.setWidget);
+  const { addWidget } = useWidget();
 
   return (
     <Tooltip.Provider>
@@ -40,7 +39,7 @@ export function NoteActions({
                 <button
                   type="button"
                   onClick={() =>
-                    setWidget(db, {
+                    addWidget.mutate({
                       kind: WidgetKinds.local.thread,
                       title: 'Thread',
                       content: id,

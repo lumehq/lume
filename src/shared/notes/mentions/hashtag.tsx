@@ -1,24 +1,15 @@
-import { useStorage } from '@libs/storage/provider';
+import { WidgetKinds } from '@stores/constants';
 
-import { WidgetKinds, useWidgets } from '@stores/widgets';
+import { useWidget } from '@utils/hooks/useWidget';
 
 export function Hashtag({ tag }: { tag: string }) {
-  const { db } = useStorage();
-  const setWidget = useWidgets((state) => state.setWidget);
+  const { addWidget } = useWidget();
 
   return (
-    <span
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       onClick={() =>
-        setWidget(db, {
-          kind: WidgetKinds.global.hashtag,
-          title: tag,
-          content: tag.replace('#', ''),
-        })
-      }
-      onKeyDown={() =>
-        setWidget(db, {
+        addWidget.mutate({
           kind: WidgetKinds.global.hashtag,
           title: tag,
           content: tag.replace('#', ''),
@@ -27,6 +18,6 @@ export function Hashtag({ tag }: { tag: string }) {
       className="cursor-default break-all text-blue-500 hover:text-blue-600"
     >
       {tag}
-    </span>
+    </button>
   );
 }

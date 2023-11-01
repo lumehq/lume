@@ -12,10 +12,10 @@ import { User } from '@shared/user';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function ArticleNoteScreen() {
+  const { id } = useParams();
+
   const navigate = useNavigate();
   const replyRef = useRef(null);
-
-  const { id } = useParams();
 
   const naddr = id.startsWith('naddr') ? (nip19.decode(id).data as AddressPointer) : null;
   const { status, data } = useEvent(id, naddr);
@@ -72,7 +72,7 @@ export function ArticleNoteScreen() {
       </div>
       <div className="relative col-span-6 flex flex-col overflow-y-auto">
         <div className="mx-auto w-full max-w-2xl">
-          {status === 'loading' ? (
+          {status === 'pending' ? (
             <div className="px-3 py-1.5">Loading...</div>
           ) : (
             <div className="flex h-min w-full flex-col px-3">

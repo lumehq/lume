@@ -14,9 +14,9 @@ interface Response {
 }
 
 export function TrendingNotesWidget({ params }: { params: Widget }) {
-  const { status, data } = useQuery(
-    ['trending-notes-widget'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['trending-notes-widget'],
+    queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/notes');
       if (!res.ok) {
         throw new Error('failed to fecht trending notes');
@@ -25,19 +25,17 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
       if (!json.notes) return null;
       return json.notes;
     },
-    {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    }
-  );
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title="Trending Notes" />
       <div className="flex-1">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />

@@ -5,60 +5,30 @@ import type {
   NDKFilter,
   NDKSubscription,
   NDKUserProfile,
+  NostrEvent,
 } from '@nostr-dev-kit/ndk';
-import _debug from 'debug';
+import { LRUCache } from 'lru-cache';
 import { matchFilter } from 'nostr-tools';
-import { LRUCache } from 'typescript-lru-cache';
 
-import { createDatabase, db } from './db';
+import { LumeStorage } from '@libs/storage/instance';
 
-export { db } from './db';
-
-interface NDKCacheAdapterDexieOptions {
-  /**
-   * The name of the database to use
-   */
-  dbName?: string;
-
-  /**
-   * Debug instance to use for logging
-   */
-  debug?: debug.IDebugger;
-
-  /**
-   * The number of seconds to store events in Dexie (IndexedDB) before they expire
-   * Defaults to 3600 seconds (1 hour)
-   */
-  expirationTime?: number;
-
-  /**
-   * Number of profiles to keep in an LRU cache
-   */
-  profileCacheSize?: number | 'disabled';
-}
-
-export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
-  public debug: debug.Debugger;
-  private expirationTime;
-  readonly locking;
+export default class NDKCacheAdapterTauri implements NDKCacheAdapter {
+  public db: LumeStorage;
   public profiles?: LRUCache<Hexpubkey, NDKUserProfile>;
   private dirtyProfiles: Set<Hexpubkey> = new Set();
+  readonly locking: boolean;
 
-  constructor(opts: NDKCacheAdapterDexieOptions = {}) {
-    createDatabase(opts.dbName || 'ndk');
-    this.debug = opts.debug || _debug('ndk:dexie-adapter');
+  constructor(db: LumeStorage) {
+    this.db = db;
     this.locking = true;
-    this.expirationTime = opts.expirationTime || 3600;
 
-    if (opts.profileCacheSize !== 'disabled') {
-      this.profiles = new LRUCache({
-        maxSize: opts.profileCacheSize || 100000,
-      });
+    this.profiles = new LRUCache({
+      max: 100000,
+    });
 
-      setInterval(() => {
-        this.dumpProfiles();
-      }, 1000 * 10);
-    }
+    setInterval(() => {
+      this.dumpProfiles();
+    }, 1000 * 10);
   }
 
   public async query(subscription: NDKSubscription): Promise<void> {
@@ -73,9 +43,9 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
     let profile = this.profiles.get(pubkey);
 
     if (!profile) {
-      const user = await db.users.get({ pubkey });
+      const user = await this.db.getCacheUser(pubkey);
       if (user) {
-        profile = user.profile;
+        profile = user.profile as NDKUserProfile;
         this.profiles.set(pubkey, profile);
       }
     }
@@ -126,7 +96,7 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
 
       if (event.isParamReplaceable()) {
         const replaceableId = `${event.kind}:${event.pubkey}:${event.tagId()}`;
-        const existingEvent = await db.events.where({ id: replaceableId }).first();
+        const existingEvent = await this.db.getCacheEvent(replaceableId);
         if (
           existingEvent &&
           event.created_at &&
@@ -137,7 +107,7 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
       }
 
       if (addEvent) {
-        db.events.put({
+        this.db.setCacheEvent({
           id: event.tagId(),
           pubkey: event.pubkey,
           content: event.content,
@@ -153,7 +123,7 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
           event.tags.forEach((tag) => {
             if (tag[0].length !== 1) return;
 
-            db.eventTags.put({
+            this.db.setCacheEventTag({
               id: `${event.id}:${tag[0]}:${tag[1]}`,
               eventId: event.id,
               tag: tag[0],
@@ -182,9 +152,9 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
 
     if (hasAllKeys && filter.authors) {
       for (const pubkey of filter.authors) {
-        const events = await db.events.where({ pubkey }).toArray();
+        const events = await this.db.getCacheEventsByPubkey(pubkey);
         for (const event of events) {
-          let rawEvent;
+          let rawEvent: NostrEvent;
           try {
             rawEvent = JSON.parse(event.event);
           } catch (e) {
@@ -218,9 +188,9 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
 
     if (hasAllKeys && filter.kinds) {
       for (const kind of filter.kinds) {
-        const events = await db.events.where({ kind }).toArray();
+        const events = await this.db.getCacheEventsByKind(kind);
         for (const event of events) {
-          let rawEvent;
+          let rawEvent: NostrEvent;
           try {
             rawEvent = JSON.parse(event.event);
           } catch (e) {
@@ -252,10 +222,10 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
 
     if (hasAllKeys && filter.ids) {
       for (const id of filter.ids) {
-        const event = await db.events.where({ id }).first();
+        const event = await this.db.getCacheEvent(id);
         if (!event) continue;
 
-        let rawEvent;
+        let rawEvent: NostrEvent;
         try {
           rawEvent = JSON.parse(event.event);
         } catch (e) {
@@ -295,10 +265,10 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
         for (const author of filter.authors) {
           for (const dTag of filter['#d']) {
             const replaceableId = `${kind}:${author}:${dTag}`;
-            const event = await db.events.where({ id: replaceableId }).first();
+            const event = await this.db.getCacheEvent(replaceableId);
             if (!event) continue;
 
-            let rawEvent;
+            let rawEvent: NostrEvent;
             try {
               rawEvent = JSON.parse(event.event);
             } catch (e) {
@@ -335,10 +305,10 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
     if (filter.kinds && filter.authors) {
       for (const kind of filter.kinds) {
         for (const author of filter.authors) {
-          const events = await db.events.where({ kind, pubkey: author }).toArray();
+          const events = await this.db.getCacheEventsByKindAndAuthor(kind, author);
 
           for (const event of events) {
-            let rawEvent;
+            let rawEvent: NostrEvent;
             try {
               rawEvent = JSON.parse(event.event);
             } catch (e) {
@@ -400,12 +370,12 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
       }
 
       for (const value of values) {
-        const eventTags = await db.eventTags.where({ tagValue: tag + value }).toArray();
+        const eventTags = await this.db.getCacheEventTagsByTagValue(tag + value);
         if (!eventTags.length) continue;
 
         const eventIds = eventTags.map((t) => t.eventId);
 
-        const events = await db.events.where('id').anyOf(eventIds).toArray();
+        const events = await this.db.getCacheEvents(eventIds);
         for (const event of events) {
           let rawEvent;
           try {
@@ -441,13 +411,13 @@ export default class NDKCacheAdapterDexie implements NDKCacheAdapter {
 
       profiles.push({
         pubkey,
-        profile,
+        profile: JSON.stringify(profile),
         createdAt: Date.now(),
       });
     }
 
     if (profiles.length) {
-      await db.users.bulkPut(profiles);
+      await this.db.setCacheProfiles(profiles);
     }
 
     this.dirtyProfiles.clear();

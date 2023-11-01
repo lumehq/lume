@@ -5,7 +5,7 @@ import { useProfile } from '@utils/hooks/useProfile';
 export const GroupTitle = memo(function GroupTitle({ pubkey }: { pubkey: string }) {
   const { status, user } = useProfile(pubkey);
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return <div className="h-3 w-24 animate-pulse rounded bg-white/10" />;
   }
 

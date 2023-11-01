@@ -2,7 +2,6 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { memo, useCallback } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -17,20 +16,14 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-export function Repost({
-  event,
-  lighter = false,
-}: {
-  event: NDKEvent;
-  lighter?: boolean;
-}) {
+export function Repost({ event }: { event: NDKEvent }) {
   const embedEvent: null | NDKEvent =
     event.content.length > 0 ? JSON.parse(event.content) : null;
 
   const { ndk } = useNDK();
-  const { status, isError, data } = useQuery(
-    ['repost', event.id],
-    async () => {
+  const { status, isError, data } = useQuery({
+    queryKey: ['repost', event.id],
+    queryFn: async () => {
       const id = event.tags.find((el) => el[0] === 'e')[1];
       if (!id) throw new Error('wrong id');
 
@@ -39,11 +32,9 @@ export function Repost({
 
       return ndkEvent;
     },
-    {
-      enabled: embedEvent === null,
-      refetchOnWindowFocus: false,
-    }
-  );
+    enabled: embedEvent === null,
+    refetchOnWindowFocus: false,
+  });
 
   const renderKind = useCallback((repostEvent: NDKEvent) => {
     switch (repostEvent.kind) {
@@ -61,12 +52,7 @@ export function Repost({
   if (embedEvent) {
     return (
       <div className="h-min w-full px-3 pb-3">
-        <div
-          className={twMerge(
-            'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
-            !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
-          )}
-        >
+        <div className="relative flex flex-col gap-1 overflow-hidden rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col">
             <User
@@ -87,7 +73,7 @@ export function Repost({
     );
   }
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="h-min w-full px-3 pb-3">
         <div className="relative overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
@@ -104,12 +90,7 @@ export function Repost({
 
     return (
       <div className="h-min w-full px-3 pb-3">
-        <div
-          className={twMerge(
-            'relative overflow-hidden rounded-xl px-3 py-3',
-            !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
-          )}
-        >
+        <div className="relative overflow-hidden rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
           <div className="relative flex flex-col">
             <div className="relative z-10 flex items-start gap-3">
               <div className="inline-flex h-10 w-10 shrink-0 items-end justify-center rounded-lg bg-black"></div>
@@ -135,12 +116,7 @@ export function Repost({
 
   return (
     <div className="h-min w-full px-3 pb-3">
-      <div
-        className={twMerge(
-          'relative flex flex-col gap-1 overflow-hidden rounded-xl px-3 py-3',
-          !lighter ? 'bg-neutral-100 dark:bg-neutral-900' : 'bg-transparent'
-        )}
-      >
+      <div className="relative flex flex-col gap-1 overflow-hidden rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col">
           <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />

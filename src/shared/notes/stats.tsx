@@ -10,9 +10,9 @@ import { compactNumber } from '@utils/number';
 
 export function NoteStats({ id }: { id: string }) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery(
-    ['note-stats', id],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['note-stats', id],
+    queryFn: async () => {
       let reactions = 0;
       let reposts = 0;
       let zaps = 0;
@@ -48,10 +48,11 @@ export function NoteStats({ id }: { id: string }) {
 
       return { reposts, reactions, zaps };
     },
-    { refetchOnWindowFocus: false, refetchOnReconnect: false }
-  );
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex h-11 items-center">
         <LoaderIcon className="h-4 w-4 animate-spin text-white" />

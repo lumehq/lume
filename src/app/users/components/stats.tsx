@@ -5,15 +5,19 @@ import { LoaderIcon } from '@shared/icons';
 import { compactNumber } from '@utils/number';
 
 export function UserStats({ pubkey }: { pubkey: string }) {
-  const { status, data } = useQuery(['user-metadata', pubkey], async () => {
-    const res = await fetch(`https://api.nostr.band/v0/stats/profile/${pubkey}`);
-    if (!res.ok) {
-      throw new Error('Error');
-    }
-    return await res.json();
+  const { status, data } = useQuery({
+    queryKey: ['user-metadata', pubkey],
+
+    ...async () => {
+      const res = await fetch(`https://api.nostr.band/v0/stats/profile/${pubkey}`);
+      if (!res.ok) {
+        throw new Error('Error');
+      }
+      return await res.json();
+    },
   });
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex w-full items-center justify-center">
         <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />

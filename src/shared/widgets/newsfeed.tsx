@@ -1,9 +1,10 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { NDKEvent, NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
@@ -18,15 +19,17 @@ import {
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { FETCH_LIMIT } from '@stores/constants';
+import { useNostr } from '@utils/hooks/useNostr';
 
-import { Widget } from '@utils/types';
+export function NewsfeedWidget() {
+  const queryClient = useQueryClient();
 
-export function LocalFeedsWidget({ params }: { params: Widget }) {
+  const { db } = useStorage();
+  const { sub } = useNostr();
   const { relayUrls, ndk, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['group-feeds-' + params.id],
+      queryKey: ['newsfeed'],
       initialPageParam: 0,
       queryFn: async ({
         signal,
@@ -35,13 +38,16 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
         signal: AbortSignal;
         pageParam: number;
       }) => {
+        const rootIds = new Set();
+        const dedupQueue = new Set();
+
         const events = await fetcher.fetchLatestEvents(
           relayUrls,
           {
             kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-            authors: JSON.parse(params.content),
+            authors: db.account.circles,
           },
-          FETCH_LIMIT,
+          50,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
         );
 
@@ -49,15 +55,24 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
           return new NDKEvent(ndk, event);
         });
 
-        return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+        ndkEvents.forEach((event) => {
+          const tags = event.tags.filter((el) => el[0] === 'e');
+          if (tags && tags.length > 0) {
+            const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
+            if (rootIds.has(rootId)) return dedupQueue.add(event.id);
+            rootIds.add(rootId);
+          }
+        });
+
+        return ndkEvents
+          .filter((event) => !dedupQueue.has(event.id))
+          .sort((a, b) => b.created_at - a.created_at);
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);
         if (!lastEvent) return;
         return lastEvent.created_at - 1;
       },
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
     });
 
   const allEvents = useMemo(
@@ -96,9 +111,36 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (status === 'success' && db.account && db.account.circles.length > 0) {
+      queryClient.fetchQuery({ queryKey: ['notification'] });
+
+      const filter: NDKFilter = {
+        kinds: [NDKKind.Text, NDKKind.Repost],
+        authors: db.account.circles,
+        since: Math.floor(Date.now() / 1000),
+      };
+
+      sub(
+        filter,
+        async (event) => {
+          queryClient.setQueryData(
+            ['newsfeed'],
+            (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
+              ...prev,
+              pages: [[event], ...prev.pages],
+            })
+          );
+        },
+        false,
+        'newsfeed'
+      );
+    }
+  }, [status]);
+
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title={params.title} />
+      <TitleBar id="9999" isLive />
       <VList className="flex-1">
         {status === 'pending' ? (
           <div className="px-3 py-1.5">

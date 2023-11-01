@@ -1,11 +1,10 @@
 import { Resolver, useForm } from 'react-hook-form';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { ArrowRightCircleIcon } from '@shared/icons';
 
-import { WidgetKinds, useWidgets } from '@stores/widgets';
+import { WidgetKinds } from '@stores/constants';
 
+import { useWidget } from '@utils/hooks/useWidget';
 import { Widget } from '@utils/types';
 
 type FormValues = {
@@ -27,12 +26,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 export function XhashtagWidget({ params }: { params: Widget }) {
-  const [setWidget, removeWidget] = useWidgets((state) => [
-    state.setWidget,
-    state.removeWidget,
-  ]);
-
-  const { db } = useStorage();
+  const { addWidget, removeWidget } = useWidget();
   const {
     register,
     setError,
@@ -41,18 +35,18 @@ export function XhashtagWidget({ params }: { params: Widget }) {
   } = useForm<FormValues>({ resolver });
 
   const cancel = () => {
-    removeWidget(db, params.id);
+    removeWidget.mutate(params.id);
   };
 
   const onSubmit = async (data: FormValues) => {
     try {
-      setWidget(db, {
+      addWidget.mutate({
         kind: WidgetKinds.global.hashtag,
         title: data.hashtag,
         content: data.hashtag.replace('#', ''),
       });
       // remove temp widget
-      removeWidget(db, params.id);
+      removeWidget.mutate(params.id);
     } catch (e) {
       setError('hashtag', {
         type: 'custom',

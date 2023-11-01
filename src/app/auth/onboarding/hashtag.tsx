@@ -6,8 +6,8 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
+import { WidgetKinds } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
-import { WidgetKinds } from '@stores/widgets';
 
 const data = [
   { hashtag: '#bitcoin' },

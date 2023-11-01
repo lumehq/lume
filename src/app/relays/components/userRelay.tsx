@@ -12,22 +12,24 @@ export function UserRelay() {
 
   const { relayUrls } = useNDK();
   const { db } = useStorage();
-  const { status, data } = useQuery(
-    ['user-relay'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['user-relay'],
+    queryFn: async () => {
       return await db.getExplicitRelayUrls();
     },
-    { refetchOnWindowFocus: false }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   const removeRelay = async (relayUrl: string) => {
     await db.removeRelay(relayUrl);
-    queryClient.invalidateQueries(['user-relay']);
+    queryClient.invalidateQueries({
+      queryKey: ['user-relay'],
+    });
   };
 
   return (
     <div className="mt-3 px-3">
-      {status === 'loading' ? (
+      {status === 'pending' ? (
         <p>Loading...</p>
       ) : (
         <div className="flex flex-col gap-2">

@@ -20,9 +20,9 @@ export const NIP05 = memo(function NIP05({
   nip05: string;
   className?: string;
 }) {
-  const { status, data } = useQuery(
-    ['nip05', nip05],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['nip05', nip05],
+    queryFn: async () => {
       try {
         const localPath = nip05.split('@')[0];
         const service = nip05.split('@')[1];
@@ -47,15 +47,13 @@ export const NIP05 = memo(function NIP05({
         throw new Error(`Failed to verify NIP-05, error: ${e}`);
       }
     },
-    {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    }
-  );
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     <div className="h-3 w-20 animate-pulse rounded bg-white/10" />;
   }
 

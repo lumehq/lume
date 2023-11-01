@@ -30,7 +30,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
     }
   };
 
-  if (status === 'loading') {
+  if (status === 'pending') {
     return (
       <>
         <div className="absolute bottom-0 left-[18px] h-[calc(100%-3.4rem)] w-0.5 bg-gradient-to-t from-black/20 to-black/10 dark:from-white/20 dark:to-white/10" />

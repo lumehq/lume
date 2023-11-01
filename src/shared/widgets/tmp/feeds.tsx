@@ -5,17 +5,15 @@ import { useStorage } from '@libs/storage/provider';
 import { ArrowRightCircleIcon, CheckCircleIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
-import { WidgetKinds, useWidgets } from '@stores/widgets';
+import { WidgetKinds } from '@stores/constants';
 
+import { useWidget } from '@utils/hooks/useWidget';
 import { Widget } from '@utils/types';
 
 export function XfeedsWidget({ params }: { params: Widget }) {
   const { db } = useStorage();
+  const { addWidget, removeWidget } = useWidget();
 
-  const [setWidget, removeWidget] = useWidgets((state) => [
-    state.setWidget,
-    state.removeWidget,
-  ]);
   const [title, setTitle] = useState<string>('');
   const [groups, setGroups] = useState<Array<string>>([]);
 
@@ -28,17 +26,17 @@ export function XfeedsWidget({ params }: { params: Widget }) {
   };
 
   const cancel = () => {
-    removeWidget(db, params.id);
+    removeWidget.mutate(params.id);
   };
 
   const submit = async () => {
-    setWidget(db, {
+    addWidget.mutate({
       kind: WidgetKinds.local.feeds,
       title: title || 'Group',
       content: JSON.stringify(groups),
     });
     // remove temp widget
-    removeWidget(db, params.id);
+    removeWidget.mutate(params.id);
   };
 
   return (

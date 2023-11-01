@@ -13,9 +13,9 @@ interface Response {
 }
 
 export function TrendingAccountsWidget({ params }: { params: Widget }) {
-  const { status, data } = useQuery(
-    ['trending-profiles-widget'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['trending-profiles-widget'],
+    queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/profiles');
       if (!res.ok) {
         throw new Error('Error');
@@ -24,19 +24,17 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
       if (!json.profiles) return [];
       return json.profiles;
     },
-    {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    }
-  );
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title="Trending Accounts" />
       <div className="flex-1">
-        {status === 'loading' ? (
+        {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
               <LoaderIcon className="h-5 w-5 animate-spin text-black dark:text-white" />

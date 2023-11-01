@@ -1,11 +1,13 @@
-import { message, open } from '@tauri-apps/plugin-dialog';
-import { readBinaryFile } from '@tauri-apps/plugin-fs';
+import { message } from '@tauri-apps/plugin-dialog';
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
 
 import { MediaIcon } from '@shared/icons';
 
+import { useNostr } from '@utils/hooks/useNostr';
+
 export function MediaUploader({ editor }: { editor: Editor }) {
+  const { upload } = useNostr();
   const [loading, setLoading] = useState(false);
 
   const uploadToNostrBuild = async () => {
@@ -13,52 +15,12 @@ export function MediaUploader({ editor }: { editor: Editor }) {
       // start loading
       setLoading(true);
 
-      const selected = await open({
-        multiple: false,
-        filters: [
-          {
-            name: 'Media',
-            extensions: [
-              'png',
-              'jpeg',
-              'jpg',
-              'gif',
-              'mp4',
-              'mp3',
-              'webm',
-              'mkv',
-              'avi',
-              'mov',
-            ],
-          },
-        ],
-      });
+      const image = await upload(['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov']);
 
-      if (!selected) {
-        setLoading(false);
-        return;
-      }
-
-      const file = await readBinaryFile(selected.path);
-      const blob = new Blob([file]);
-
-      const data = new FormData();
-      data.append('fileToUpload', blob);
-      data.append('submit', 'Upload Image');
-
-      const res = await fetch('https://nostr.build/api/v2/upload/files', {
-        method: 'POST',
-        body: data,
-      });
-
-      if (res.ok) {
-        const json = await res.json();
-        const content = json.data[0];
-
-        editor.commands.setImage({ src: content.url });
+      if (image) {
+        editor.commands.setImage({ src: image });
         editor.commands.createParagraphNear();
 
-        // stop loading
         setLoading(false);
       }
     } catch (e) {

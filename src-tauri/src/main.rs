@@ -114,7 +114,6 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())?;
       Ok(())
     })
-    .plugin(tauri_plugin_app::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
@@ -125,17 +124,24 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_window::init())
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
           "sqlite:lume_v2.db",
-          vec![Migration {
-            version: 20230418013219,
-            description: "initial data",
-            sql: include_str!("../migrations/20230418013219_initial_data.sql"),
-            kind: MigrationKind::Up,
-          }],
+          vec![
+            Migration {
+              version: 20230418013219,
+              description: "initial data",
+              sql: include_str!("../migrations/20230418013219_initial_data.sql"),
+              kind: MigrationKind::Up,
+            },
+            Migration {
+              version: 20231028083224,
+              description: "add ndk cache table",
+              sql: include_str!("../migrations/20231028083224_add_ndk_cache_table.sql"),
+              kind: MigrationKind::Up,
+            },
+          ],
         )
         .build(),
     )

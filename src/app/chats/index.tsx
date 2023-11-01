@@ -11,18 +11,16 @@ import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatsScreen() {
   const { getAllNIP04Chats } = useNostr();
-  const { status, data } = useQuery(
-    ['nip04-chats'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['nip04-chats'],
+    queryFn: async () => {
       return await getAllNIP04Chats();
     },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      staleTime: Infinity,
-    }
-  );
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
+  });
 
   const renderItem = useCallback(
     (event: NDKEvent) => {
@@ -43,7 +41,7 @@ export function ChatsScreen() {
           </h3>
         </div>
         <div className="flex h-full flex-col gap-1">
-          {status === 'loading' ? (
+          {status === 'pending' ? (
             <div className="flex h-full w-full items-center justify-center pb-16">
               <div className="inline-flex flex-col items-center justify-center gap-2">
                 <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />

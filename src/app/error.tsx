@@ -8,7 +8,6 @@ interface RouteError {
 
 interface DebugInfo {
   os: null | string;
-  version: null | string;
   appDir: null | string;
 }
 
@@ -18,24 +17,20 @@ export function ErrorScreen() {
 
   const [debugInfo, setDebugInfo] = useState<DebugInfo>({
     os: null,
-    version: null,
     appDir: null,
   });
 
   useEffect(() => {
     async function getInformation() {
       const { platform, version } = await import('@tauri-apps/plugin-os');
-      const { getVersion } = await import('@tauri-apps/plugin-app');
       const { appConfigDir } = await import('@tauri-apps/api/path');
 
       const platformName = await platform();
       const osVersion = await version();
-      const appVersion = await getVersion();
       const appDir = await appConfigDir();
 
       setDebugInfo({
         os: platformName + ' ' + osVersion,
-        version: appVersion,
         appDir: appDir,
       });
     }
@@ -58,9 +53,6 @@ export function ErrorScreen() {
           <div className="mt-4">
             <p className="font-medium text-neutral-600 dark:text-neutral-400">
               Current location: {location.pathname}
-            </p>
-            <p className="font-medium text-neutral-600 dark:text-neutral-400">
-              App version: {debugInfo.version}
             </p>
             <p className="font-medium text-neutral-600 dark:text-neutral-400">
               Platform: {debugInfo.os}

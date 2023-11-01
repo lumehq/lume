@@ -24,15 +24,13 @@ export function OnboardRelaysScreen() {
   const { db } = useStorage();
   const { ndk } = useNDK();
   const { getAllRelaysByUsers } = useNostr();
-  const { status, data } = useQuery(
-    ['relays'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['relays'],
+    queryFn: async () => {
       return await getAllRelaysByUsers();
     },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+    refetchOnWindowFocus: false,
+  });
 
   const toggleRelay = (relay: string) => {
     if (relays.has(relay)) {
@@ -89,7 +87,7 @@ export function OnboardRelaysScreen() {
         </h1>
         <div className="flex flex-col gap-4">
           <div className="flex h-[420px] w-full flex-col overflow-y-auto rounded-xl bg-neutral-100 dark:bg-neutral-900">
-            {status === 'loading' ? (
+            {status === 'pending' ? (
               <div className="flex h-full w-full items-center justify-center">
                 <LoaderIcon className="h-4 w-4 animate-spin text-neutral-900 dark:text-neutral-100" />
               </div>

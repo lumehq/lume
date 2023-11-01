@@ -1,30 +1,26 @@
 import { memo } from 'react';
 
-import { useStorage } from '@libs/storage/provider';
-
-import { WidgetKinds, useWidgets } from '@stores/widgets';
+import { WidgetKinds } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
+import { useWidget } from '@utils/hooks/useWidget';
 
 export const MentionUser = memo(function MentionUser({ pubkey }: { pubkey: string }) {
-  const { db } = useStorage();
   const { user } = useProfile(pubkey);
-
-  const setWidget = useWidgets((state) => state.setWidget);
+  const { addWidget } = useWidget();
 
   return (
-    <span
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       onClick={() =>
-        setWidget(db, {
+        addWidget.mutate({
           kind: WidgetKinds.local.user,
           title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
         })
       }
       onKeyDown={() =>
-        setWidget(db, {
+        addWidget.mutate({
           kind: WidgetKinds.local.user,
           title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
@@ -38,6 +34,6 @@ export const MentionUser = memo(function MentionUser({ pubkey }: { pubkey: strin
           user?.displayName ||
           user?.username ||
           'unknown')}
-    </span>
+    </button>
   );
 });

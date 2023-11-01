@@ -17,18 +17,16 @@ export function RelayList() {
 
   const { getAllRelaysByUsers } = useNostr();
   const { db } = useStorage();
-  const { status, data } = useQuery(
-    ['relays'],
-    async () => {
+  const { status, data } = useQuery({
+    queryKey: ['relays'],
+    queryFn: async () => {
       return await getAllRelaysByUsers();
     },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      staleTime: Infinity,
-    }
-  );
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
+  });
 
   const inspectRelay = (relayUrl: string) => {
     const url = new URL(relayUrl);
@@ -40,12 +38,14 @@ export function RelayList() {
     const res = await db.createRelay(url);
 
     if (!res) await message("You're aldready connected to this relay");
-    queryClient.invalidateQueries(['user-relay']);
+    queryClient.invalidateQueries({
+      queryKey: ['user-relay'],
+    });
   };
 
   return (
     <div className="col-span-2 border-r border-neutral-100 dark:border-neutral-900">
-      {status === 'loading' ? (
+      {status === 'pending' ? (
         <div className="flex h-full w-full items-center justify-center pb-10">
           <div className="inline-flex flex-col items-center justify-center gap-2">
             <LoaderIcon className="h-5 w-5 animate-spin text-neutral-900 dark:text-neutral-100" />

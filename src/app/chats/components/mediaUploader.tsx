@@ -15,11 +15,13 @@ export function MediaUploader({
 
   const uploadMedia = async () => {
     setLoading(true);
-    const image = await upload(null);
-    if (image.url) {
-      setState((prev: string) => `${prev}\n${image.url}`);
+
+    const image = await upload(['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov']);
+
+    if (image) {
+      setState((prev: string) => `${prev}\n${image}`);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
