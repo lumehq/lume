@@ -140,7 +140,7 @@ export function NewsfeedWidget() {
 
   return (
     <WidgetWrapper>
-      <TitleBar id="9999" />
+      <TitleBar id="9999" isLive />
       <VList className="flex-1">
         {status === 'pending' ? (
           <div className="px-3 py-1.5">

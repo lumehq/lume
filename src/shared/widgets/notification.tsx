@@ -134,7 +134,7 @@ export function NotificationWidget() {
 
   return (
     <WidgetWrapper>
-      <TitleBar id="9998" title="Notification" />
+      <TitleBar id="9998" title="Notification" isLive />
       <VList className="flex-1">
         {status === 'pending' ? (
           <div className="px-3 py-1.5">
