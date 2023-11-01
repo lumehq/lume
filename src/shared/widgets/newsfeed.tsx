@@ -1,6 +1,6 @@
 import { NDKEvent, NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -19,92 +19,66 @@ import {
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { nHoursAgo } from '@utils/date';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function NewsfeedWidget() {
+  const queryClient = useQueryClient();
+
   const { db } = useStorage();
   const { sub } = useNostr();
   const { relayUrls, ndk, fetcher } = useNDK();
-  const { status, data } = useQuery({
-    queryKey: ['newsfeed'],
-    queryFn: async ({ signal }: { signal: AbortSignal }) => {
-      const rootIds = new Set();
-      const dedupQueue = new Set();
+  const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ['newsfeed'],
+      initialPageParam: 0,
+      queryFn: async ({
+        signal,
+        pageParam,
+      }: {
+        signal: AbortSignal;
+        pageParam: number;
+      }) => {
+        const rootIds = new Set();
+        const dedupQueue = new Set();
 
-      const events = await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.circles,
-        },
-        {
-          since: db.account.last_login_at === 0 ? nHoursAgo(4) : db.account.last_login_at,
-        },
-        { abortSignal: signal }
-      );
+        const events = await fetcher.fetchLatestEvents(
+          relayUrls,
+          {
+            kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+            authors: db.account.circles,
+          },
+          50,
+          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
+        );
 
-      const ndkEvents = events.map((event) => {
-        return new NDKEvent(ndk, event);
-      });
+        const ndkEvents = events.map((event) => {
+          return new NDKEvent(ndk, event);
+        });
 
-      ndkEvents.forEach((event) => {
-        const tags = event.tags.filter((el) => el[0] === 'e');
-        if (tags && tags.length > 0) {
-          const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
-          if (rootIds.has(rootId)) return dedupQueue.add(event.id);
-          rootIds.add(rootId);
-        }
-      });
+        ndkEvents.forEach((event) => {
+          const tags = event.tags.filter((el) => el[0] === 'e');
+          if (tags && tags.length > 0) {
+            const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
+            if (rootIds.has(rootId)) return dedupQueue.add(event.id);
+            rootIds.add(rootId);
+          }
+        });
 
-      return ndkEvents
-        .filter((event) => !dedupQueue.has(event.id))
-        .sort((a, b) => b.created_at - a.created_at);
-    },
-  });
+        return ndkEvents
+          .filter((event) => !dedupQueue.has(event.id))
+          .sort((a, b) => b.created_at - a.created_at);
+      },
+      getNextPageParam: (lastPage) => {
+        const lastEvent = lastPage.at(-1);
+        if (!lastEvent) return;
+        return lastEvent.created_at - 1;
+      },
+    });
 
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: async () => {
-      const currentLastEvent = data.at(-1);
-      const lastCreatedAt = currentLastEvent.created_at - 1;
-
-      const rootIds = new Set();
-      const dedupQueue = new Set();
-
-      const events = await fetcher.fetchLatestEvents(
-        relayUrls,
-        {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.circles,
-        },
-        100,
-        {
-          asOf: lastCreatedAt,
-        }
-      );
-
-      const ndkEvents = events.map((event) => {
-        return new NDKEvent(ndk, event);
-      });
-
-      ndkEvents.forEach((event) => {
-        const tags = event.tags.filter((el) => el[0] === 'e');
-        if (tags && tags.length > 0) {
-          const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
-          if (rootIds.has(rootId)) return dedupQueue.add(event.id);
-          rootIds.add(rootId);
-        }
-      });
-
-      return ndkEvents
-        .filter((event) => !dedupQueue.has(event.id))
-        .sort((a, b) => b.created_at - a.created_at);
-    },
-    onSuccess: async (data) => {
-      queryClient.setQueryData(['newsfeed'], (old: NDKEvent[]) => [...old, ...data]);
-    },
-  });
+  const allEvents = useMemo(
+    () => (data ? data.pages.flatMap((page) => page) : []),
+    [data]
+  );
 
   const renderItem = useCallback((event: NDKEvent) => {
     switch (event.kind) {
@@ -138,46 +112,55 @@ export function NewsfeedWidget() {
   }, []);
 
   useEffect(() => {
-    if (db.account && db.account.circles.length > 0) {
+    if (status === 'success' && db.account && db.account.circles.length > 0) {
+      queryClient.fetchQuery({ queryKey: ['notification'] });
+
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
         authors: db.account.circles,
         since: Math.floor(Date.now() / 1000),
       };
 
-      sub(filter, async (event) => {
-        queryClient.setQueryData(['newsfeed'], (old: NDKEvent[]) => [event, ...old]);
-      });
+      sub(
+        filter,
+        async (event) => {
+          queryClient.setQueryData(['newsfeed'], (old: NDKEvent[]) => [event, ...old]);
+        },
+        false,
+        'newsfeed'
+      );
     }
-  }, []);
+  }, [status]);
 
   return (
     <WidgetWrapper>
       <TitleBar id="9999" />
       <VList className="flex-1">
         {status === 'pending' ? (
-          <div>
-            <div className="px-3 py-1.5">
-              <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-                <NoteSkeleton />
-              </div>
-            </div>
-            <div className="flex h-11 items-center justify-center">
-              <LoaderIcon className="h-4 w-4 animate-spin" />
+          <div className="px-3 py-1.5">
+            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+              <NoteSkeleton />
             </div>
           </div>
         ) : (
-          data.map((item) => renderItem(item))
+          allEvents.map((item) => renderItem(item))
         )}
         <div className="flex h-16 items-center justify-center px-3 pb-3">
-          {data ? (
+          {hasNextPage ? (
             <button
               type="button"
-              onClick={() => mutation.mutate()}
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
               className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
             >
-              <ArrowRightCircleIcon className="h-5 w-5" />
-              Load more
+              {isFetchingNextPage ? (
+                <LoaderIcon className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <ArrowRightCircleIcon className="h-5 w-5" />
+                  Load more
+                </>
+              )}
             </button>
           ) : null}
         </div>

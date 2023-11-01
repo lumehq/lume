@@ -11,12 +11,10 @@ import {
   RelayIcon,
 } from '@shared/icons';
 
-import { useActivities } from '@stores/activities';
-
 import { compactNumber } from '@utils/number';
 
 export function Navigation() {
-  const newMessages = useActivities((state) => state.newMessages);
+  const newMessages = 0;
 
   return (
     <div className="flex h-full w-full flex-col justify-between p-3">

@@ -2,8 +2,6 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { nip19 } from 'nostr-tools';
 import { memo } from 'react';
 
-import { useStorage } from '@libs/storage/provider';
-
 import {
   ArticleNote,
   FileNote,
@@ -14,20 +12,23 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WidgetKinds, useWidgets } from '@stores/widgets';
+import { WidgetKinds } from '@stores/constants';
 
 import { useEvent } from '@utils/hooks/useEvent';
+import { useWidget } from '@utils/hooks/useWidget';
 
 export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
-  const { db } = useStorage();
   const { status, data } = useEvent(id);
-
-  const setWidget = useWidgets((state) => state.setWidget);
+  const { addWidget } = useWidget();
 
   const openThread = (event, thread: string) => {
     const selection = window.getSelection();
     if (selection.toString().length === 0) {
-      setWidget(db, { kind: WidgetKinds.local.thread, title: 'Thread', content: thread });
+      addWidget.mutate({
+        kind: WidgetKinds.local.thread,
+        title: 'Thread',
+        content: thread,
+      });
     } else {
       event.stopPropagation();
     }
@@ -74,15 +75,13 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   }
 
   return (
-    <div
+    <button
+      type="button"
       onClick={(e) => openThread(e, id)}
-      onKeyDown={(e) => openThread(e, id)}
-      role="button"
-      tabIndex={0}
       className="mt-3 cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
     >
       <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
-      <div className="mt-1">{renderKind(data)}</div>
-    </div>
+      <div className="mt-1 text-left">{renderKind(data)}</div>
+    </button>
   );
 });

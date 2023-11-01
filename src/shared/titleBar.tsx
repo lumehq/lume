@@ -3,11 +3,11 @@ import { useStorage } from '@libs/storage/provider';
 import { CancelIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
-import { useWidgets } from '@stores/widgets';
+import { useWidget } from '@utils/hooks/useWidget';
 
 export function TitleBar({ id, title }: { id?: string; title?: string }) {
   const { db } = useStorage();
-  const remove = useWidgets((state) => state.removeWidget);
+  const { removeWidget } = useWidget();
 
   return (
     <div className="flex h-11 w-full shrink-0 items-center justify-between overflow-hidden px-3">
@@ -33,7 +33,7 @@ export function TitleBar({ id, title }: { id?: string; title?: string }) {
       {id !== '9999' ? (
         <button
           type="button"
-          onClick={() => remove(db, id)}
+          onClick={() => removeWidget.mutate(id)}
           className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-neutral-900 backdrop-blur-xl hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
         >
           <CancelIcon className="h-3 w-3" />

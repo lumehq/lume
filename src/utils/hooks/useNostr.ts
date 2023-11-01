@@ -29,11 +29,12 @@ export function useNostr() {
   const sub = async (
     filter: NDKFilter,
     callback: (event: NDKEvent) => void,
-    groupable?: boolean
+    groupable?: boolean,
+    subKey?: string
   ) => {
     if (!ndk) throw new Error('NDK instance not found');
 
-    const key = JSON.stringify(filter);
+    const key = subKey ?? JSON.stringify(filter);
     if (!subManager.get(key)) {
       const subEvent = ndk.subscribe(filter, {
         closeOnEose: false,

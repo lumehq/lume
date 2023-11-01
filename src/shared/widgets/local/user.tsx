@@ -26,14 +26,30 @@ export function LocalUserWidget({ params }: { params: Widget }) {
   const { status, data } = useQuery({
     queryKey: ['user-posts', params.content],
     queryFn: async () => {
+      const rootIds = new Set();
+      const dedupQueue = new Set();
+
       const events = await ndk.fetchEvents({
         // @ts-expect-error, NDK not support file metadata yet
         kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
         authors: [params.content],
         since: nHoursAgo(24),
       });
-      const sortedEvents = [...events].sort((x, y) => y.created_at - x.created_at);
-      return sortedEvents;
+
+      const ndkEvents = [...events];
+
+      ndkEvents.forEach((event) => {
+        const tags = event.tags.filter((el) => el[0] === 'e');
+        if (tags && tags.length > 0) {
+          const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
+          if (rootIds.has(rootId)) return dedupQueue.add(event.id);
+          rootIds.add(rootId);
+        }
+      });
+
+      return ndkEvents
+        .filter((event) => !dedupQueue.has(event.id))
+        .sort((a, b) => b.created_at - a.created_at);
     },
     staleTime: Infinity,
     refetchOnMount: false,

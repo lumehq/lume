@@ -254,7 +254,8 @@ export class LumeStorage {
   }
 
   public async removeWidget(id: string) {
-    return await this.db.execute('DELETE FROM widgets WHERE id = $1;', [id]);
+    const res = await this.db.execute('DELETE FROM widgets WHERE id = $1;', [id]);
+    if (res) return id;
   }
 
   public async createEvent(event: NDKEvent) {
