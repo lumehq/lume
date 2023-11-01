@@ -41,7 +41,7 @@ export function parser(content: string) {
         const url = new URL(word);
         url.search = '';
 
-        if (url.pathname.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
+        if (url.pathname.match(/\.(jpg|jpeg|gif|png|webp|avif|tiff)$/)) {
           // image url
           richContent.images.push(word);
           // remove url from original content

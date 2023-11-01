@@ -1,5 +1,5 @@
 export function fileType(url: string) {
-  if (url.match(/\.(jpg|jpeg|gif|png|webp|avif)$/)) {
+  if (url.match(/\.(jpg|jpeg|gif|png|webp|avif|tiff)$/)) {
     return 'image';
   }
 
