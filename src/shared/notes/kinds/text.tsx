@@ -26,7 +26,7 @@ export function TextNote(props: { content?: string; truncate?: boolean }) {
   }
 
   return (
-    <div>
+    <div className="flex w-full flex-col items-start gap-2">
       <Markdown
         options={{
           overrides: {

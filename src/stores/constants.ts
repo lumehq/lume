@@ -43,7 +43,7 @@ export const WidgetKinds = {
 
 export const DefaultWidgets: Array<WidgetGroup> = [
   {
-    title: 'Circles / Follows',
+    title: 'Local',
     data: [
       {
         kind: WidgetKinds.tmp.xfeed,

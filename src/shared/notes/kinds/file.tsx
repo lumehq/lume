@@ -1,4 +1,6 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { downloadDir } from '@tauri-apps/api/path';
+import { download } from '@tauri-apps/plugin-upload';
 import {
   MediaControlBar,
   MediaController,
@@ -9,7 +11,9 @@ import {
   MediaVolumeRange,
 } from 'media-chrome/dist/react';
 import { memo } from 'react';
-import { Link } from 'react-router-dom';
+
+import { DownloadIcon } from '@shared/icons';
+import { LinkPreview } from '@shared/notes';
 
 import { fileType } from '@utils/nip94';
 
@@ -17,56 +21,58 @@ export function FileNote(props: { event?: NDKEvent }) {
   const url = props.event.tags.find((el) => el[0] === 'url')[1];
   const type = fileType(url);
 
+  const downloadImage = async (url: string) => {
+    const downloadDirPath = await downloadDir();
+    const filename = url.substring(url.lastIndexOf('/') + 1);
+    return await download(url, downloadDirPath + `/${filename}`);
+  };
+
   if (type === 'image') {
     return (
-      <div className="mb-2 mt-3">
+      <div key={url} className="group relative mt-2">
         <img
           src={url}
-          alt={props.event.content}
-          className="h-auto w-full rounded-lg object-cover"
-          loading="lazy"
-          decoding="async"
-          style={{ contentVisibility: 'auto' }}
+          alt={url}
+          className="h-auto w-full rounded-lg border border-neutral-300 object-cover dark:border-neutral-700"
         />
+        <button
+          type="button"
+          onClick={() => downloadImage(url)}
+          className="absolute right-2 top-2 hidden h-10 w-10 items-center justify-center rounded-lg bg-black/50 backdrop-blur-xl group-hover:inline-flex hover:bg-blue-500"
+        >
+          <DownloadIcon className="h-5 w-5 text-white" />
+        </button>
       </div>
     );
   }
 
   if (type === 'video') {
     return (
-      <div className="mb-2 mt-3">
-        <MediaController
-          key={url}
-          className="aspect-video w-full overflow-hidden rounded-lg"
-        >
-          <video
-            slot="media"
-            src={url}
-            poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-            preload="none"
-            muted
-          />
-          <MediaControlBar>
-            <MediaPlayButton></MediaPlayButton>
-            <MediaTimeRange></MediaTimeRange>
-            <MediaTimeDisplay showDuration></MediaTimeDisplay>
-            <MediaMuteButton></MediaMuteButton>
-            <MediaVolumeRange></MediaVolumeRange>
-          </MediaControlBar>
-        </MediaController>
-      </div>
+      <MediaController
+        key={url}
+        className="mt-2 aspect-video w-full overflow-hidden rounded-lg"
+      >
+        <video
+          slot="media"
+          src={url}
+          poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
+          preload="none"
+          muted
+        />
+        <MediaControlBar>
+          <MediaPlayButton></MediaPlayButton>
+          <MediaTimeRange></MediaTimeRange>
+          <MediaTimeDisplay showDuration></MediaTimeDisplay>
+          <MediaMuteButton></MediaMuteButton>
+          <MediaVolumeRange></MediaVolumeRange>
+        </MediaControlBar>
+      </MediaController>
     );
   }
 
   return (
-    <div className="mb-2">
-      <Link
-        to={url}
-        target="_blank"
-        className="break-all font-normal text-blue-500 hover:text-blue-600"
-      >
-        {url}
-      </Link>
+    <div className="mt-2">
+      <LinkPreview urls={[url]} />
     </div>
   );
 }

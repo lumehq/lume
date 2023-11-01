@@ -11,7 +11,7 @@ import { memo } from 'react';
 
 export const VideoPreview = memo(function VideoPreview({ urls }: { urls: string[] }) {
   return (
-    <div className="my-2 flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       {urls.map((url) => (
         <MediaController key={url} className="aspect-video overflow-hidden rounded-lg">
           <video

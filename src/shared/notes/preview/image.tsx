@@ -11,7 +11,7 @@ export function ImagePreview({ urls }: { urls: string[] }) {
   };
 
   return (
-    <div className="my-2 flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       {urls.map((url) => (
         <div key={url} className="group relative">
           <img
