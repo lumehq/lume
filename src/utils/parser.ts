@@ -74,33 +74,45 @@ export function parser(content: string) {
       // nostr account references (depreciated)
       if (word.startsWith('@npub1')) {
         const npub = word.replace('@', '').replace(/[^a-zA-Z0-9 ]/g, '');
-        return word.replace(
-          word,
-          `<MentionUser pubkey='${nip19.decode(npub).data as string}' />`
-        );
+        try {
+          const pubkey = nip19.decode(npub).data as string;
+          return word.replace(word, `<MentionUser pubkey='${pubkey}' />`);
+        } catch {
+          return word;
+        }
       }
 
       // nostr account references
       if (word.startsWith('nostr:npub1') || word.startsWith('npub1')) {
         const npub = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
-        return word.replace(
-          word,
-          `<MentionUser pubkey='${nip19.decode(npub).data as string}' />`
-        );
+        try {
+          const pubkey = nip19.decode(npub).data as string;
+          return word.replace(word, `<MentionUser pubkey='${pubkey}' />`);
+        } catch {
+          return word;
+        }
       }
 
       // nostr profile references
       if (word.startsWith('nostr:nprofile1') || word.startsWith('nprofile1')) {
         const nprofile = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
-        const decoded = nip19.decode(nprofile).data as ProfilePointer;
-        return word.replace(word, `<MentionUser pubkey='${decoded.pubkey}' />`);
+        try {
+          const decoded = nip19.decode(nprofile).data as ProfilePointer;
+          return word.replace(word, `<MentionUser pubkey='${decoded.pubkey}' />`);
+        } catch {
+          return word;
+        }
       }
 
       // nostr address references
       if (word.startsWith('nostr:naddr1') || word.startsWith('naddr1')) {
         const naddr = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
-        const decoded = nip19.decode(naddr).data as AddressPointer;
-        return word.replace(word, `<MentionUser pubkey='${decoded.pubkey}' />`);
+        try {
+          const decoded = nip19.decode(naddr).data as AddressPointer;
+          return word.replace(word, `<MentionUser pubkey='${decoded.pubkey}' />`);
+        } catch {
+          return word;
+        }
       }
 
       // lightning invoice
@@ -111,16 +123,25 @@ export function parser(content: string) {
       // nostr note references
       if (word.startsWith('nostr:note1') || word.startsWith('note1')) {
         const note = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
-        richContent.notes.push(nip19.decode(note).data as string);
-        return word.replace(word, '');
+        try {
+          const eventId = nip19.decode(note).data as string;
+          richContent.notes.push(eventId);
+          return word.replace(word, '');
+        } catch {
+          return word;
+        }
       }
 
       // nostr event references
       if (word.startsWith('nostr:nevent1') || word.startsWith('nevent1')) {
         const nevent = word.replace('nostr:', '').replace(/[^a-zA-Z0-9 ]/g, '');
-        const decoded = nip19.decode(nevent).data as EventPointer;
-        richContent.notes.push(decoded.id);
-        return word.replace(word, '');
+        try {
+          const decoded = nip19.decode(nevent).data as EventPointer;
+          richContent.notes.push(decoded.id);
+          return word.replace(word, '');
+        } catch {
+          return word;
+        }
       }
 
       return word;
