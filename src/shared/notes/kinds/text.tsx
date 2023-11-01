@@ -42,6 +42,11 @@ export function TextNote(props: { content?: string; truncate?: boolean }) {
             Invoice: {
               component: Invoice,
             },
+            a: {
+              props: {
+                target: '_blank',
+              },
+            },
           },
           slugify: (str) => str,
           forceBlock: true,

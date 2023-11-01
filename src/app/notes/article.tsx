@@ -12,10 +12,10 @@ import { User } from '@shared/user';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function ArticleNoteScreen() {
+  const { id } = useParams();
+
   const navigate = useNavigate();
   const replyRef = useRef(null);
-
-  const { id } = useParams();
 
   const naddr = id.startsWith('naddr') ? (nip19.decode(id).data as AddressPointer) : null;
   const { status, data } = useEvent(id, naddr);
