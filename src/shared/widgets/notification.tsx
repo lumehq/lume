@@ -54,6 +54,10 @@ export function NotificationWidget() {
         return lastEvent.created_at - 1;
       },
       enabled: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: Infinity,
     });
 
   const allEvents = useMemo(

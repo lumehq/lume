@@ -1,4 +1,6 @@
 import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
+import * as Avatar from '@radix-ui/react-avatar';
+import { minidenticon } from 'minidenticons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -9,7 +11,6 @@ import { UserStats } from '@app/users/components/stats';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { Image } from '@shared/image';
 import { NIP05 } from '@shared/nip05';
 
 import { useProfile } from '@utils/hooks/useProfile';
@@ -21,6 +22,9 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
+
+  const svgURI =
+    'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
 
   const follow = async (pubkey: string) => {
     try {
@@ -85,11 +89,23 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
         )}
       </div>
       <div className="-mt-7 flex w-full flex-col items-center px-5">
-        <Image
-          src={user.picture || user.image}
-          alt={pubkey}
-          className="h-14 w-14 rounded-lg ring-2 ring-neutral-100 dark:ring-neutral-900"
-        />
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            loading="lazy"
+            decoding="async"
+            style={{ contentVisibility: 'auto' }}
+            className="h-14 w-14 rounded-lg bg-white ring-2 ring-neutral-100 dark:ring-neutral-900"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img
+              src={svgURI}
+              alt={pubkey}
+              className="h-14 w-14 rounded-lg bg-black dark:bg-white"
+            />
+          </Avatar.Fallback>
+        </Avatar.Root>
         <div className="mt-2 flex flex-1 flex-col gap-6">
           <div className="flex flex-col items-center gap-1">
             <div className="inline-flex flex-col items-center">
@@ -100,7 +116,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
                 <NIP05
                   pubkey={pubkey}
                   nip05={user?.nip05}
-                  className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-400"
+                  className="text-neutral-600 dark:text-neutral-400"
                 />
               ) : (
                 <span className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-400">

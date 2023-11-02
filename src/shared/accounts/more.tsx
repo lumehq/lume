@@ -1,15 +1,14 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { useStorage } from '@libs/storage/provider';
 
 import { HorizontalDotsIcon } from '@shared/icons';
 import { Logout } from '@shared/logout';
 
-export function AccountMoreActions({ pubkey }: { pubkey: string }) {
-  const [open, setOpen] = useState(false);
-
+export function AccountMoreActions() {
   return (
-    <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+    <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
@@ -20,14 +19,6 @@ export function AccountMoreActions({ pubkey }: { pubkey: string }) {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="ml-2 flex w-[200px] flex-col overflow-hidden rounded-xl bg-blue-500 p-2 focus:outline-none">
-          <DropdownMenu.Item asChild>
-            <Link
-              to={`/users/${pubkey}`}
-              className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
-            >
-              Profile
-            </Link>
-          </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
             <Link
               to={`/settings/backup`}

@@ -110,6 +110,13 @@ export default function App() {
             },
           ],
         },
+        {
+          path: 'personal',
+          async lazy() {
+            const { PersonalScreen } = await import('@app/personal');
+            return { Component: PersonalScreen };
+          },
+        },
       ],
     },
     {
