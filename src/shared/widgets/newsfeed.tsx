@@ -1,4 +1,4 @@
-import { NDKEvent, NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
@@ -25,7 +25,6 @@ export function NewsfeedWidget() {
   const queryClient = useQueryClient();
 
   const { db } = useStorage();
-  const { sub } = useNostr();
   const { relayUrls, ndk, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
@@ -112,6 +111,8 @@ export function NewsfeedWidget() {
   }, []);
 
   useEffect(() => {
+    let sub: NDKSubscription = undefined;
+
     if (status === 'success' && db.account && db.account.circles.length > 0) {
       queryClient.fetchQuery({ queryKey: ['notification'] });
 
@@ -121,21 +122,21 @@ export function NewsfeedWidget() {
         since: Math.floor(Date.now() / 1000),
       };
 
-      sub(
-        filter,
-        async (event) => {
-          queryClient.setQueryData(
-            ['newsfeed'],
-            (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
-              ...prev,
-              pages: [[event], ...prev.pages],
-            })
-          );
-        },
-        false,
-        'newsfeed'
-      );
+      sub = ndk.subscribe(filter, { closeOnEose: false, groupable: false });
+      sub.addListener('event', async (event: NDKEvent) => {
+        await queryClient.setQueryData(
+          ['newsfeed'],
+          (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
+            ...prev,
+            pages: [[event], ...prev.pages],
+          })
+        );
+      });
     }
+
+    return () => {
+      if (sub) sub.stop();
+    };
   }, [status]);
 
   return (

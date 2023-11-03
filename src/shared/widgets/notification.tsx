@@ -54,6 +54,10 @@ export function NotificationWidget() {
         return lastEvent.created_at - 1;
       },
       enabled: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: Infinity,
     });
 
   const allEvents = useMemo(
@@ -85,7 +89,7 @@ export function NotificationWidget() {
             })
           );
 
-          const user = ndk.getUser({ hexpubkey: event.pubkey });
+          const user = ndk.getUser({ pubkey: event.pubkey });
           await user.fetchProfile();
 
           switch (event.kind) {

@@ -97,7 +97,7 @@ export const NDKInstance = () => {
       if (db.account) {
         const circleSetting = await db.getSettingValue('circles');
 
-        const user = instance.getUser({ hexpubkey: db.account.pubkey });
+        const user = instance.getUser({ pubkey: db.account.pubkey });
         const follows = await user.follows();
         const relayList = await user.relayList();
 

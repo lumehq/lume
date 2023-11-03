@@ -12,7 +12,7 @@ export function FollowList() {
   const { status, data } = useQuery({
     queryKey: ['follows'],
     queryFn: async () => {
-      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const user = ndk.getUser({ pubkey: db.account.pubkey });
       const follows = await user.follows();
       const followsAsArr = [];
 

@@ -194,7 +194,7 @@ export function useNostr() {
   };
 
   const getContactsByPubkey = async (pubkey: string) => {
-    const user = ndk.getUser({ hexpubkey: pubkey });
+    const user = ndk.getUser({ pubkey: pubkey });
     const follows = [...(await user.follows())].map((user) => user.hexpubkey);
     return getMultipleRandom([...follows], 10);
   };

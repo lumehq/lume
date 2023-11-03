@@ -70,7 +70,6 @@ export function UserScreen() {
 
   return (
     <div className="relative h-full w-full overflow-y-auto">
-      <div data-tauri-drag-region className="absolute left-0 top-0 h-11 w-full" />
       <UserProfile pubkey={pubkey} />
       <div className="mt-6 h-full w-full border-t border-neutral-100 px-1.5 dark:border-neutral-900">
         <h3 className="mb-2 pt-4 text-center text-lg font-semibold leading-none text-neutral-900 dark:text-neutral-100">

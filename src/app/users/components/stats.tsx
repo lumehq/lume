@@ -6,15 +6,22 @@ import { compactNumber } from '@utils/number';
 
 export function UserStats({ pubkey }: { pubkey: string }) {
   const { status, data } = useQuery({
-    queryKey: ['user-metadata', pubkey],
+    queryKey: ['user-stats', pubkey],
+    queryFn: async ({ signal }: { signal: AbortSignal }) => {
+      const res = await fetch(`https://api.nostr.band/v0/stats/profile/${pubkey}`, {
+        signal,
+      });
 
-    ...async () => {
-      const res = await fetch(`https://api.nostr.band/v0/stats/profile/${pubkey}`);
       if (!res.ok) {
         throw new Error('Error');
       }
+
       return await res.json();
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 
   if (status === 'pending') {

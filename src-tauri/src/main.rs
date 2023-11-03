@@ -5,7 +5,6 @@
 
 use keyring::Entry;
 use std::time::Duration;
-use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
 use webpage::{Webpage, WebpageOptions};
@@ -149,12 +148,6 @@ fn main() {
       MacosLauncher::LaunchAgent,
       Some(vec!["--flag1", "--flag2"]),
     ))
-    .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
-      println!("{}, {argv:?}, {cwd}", app.package_info().name);
-      app
-        .emit_all("single-instance", Payload { args: argv, cwd })
-        .unwrap();
-    }))
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_store::Builder::default().build())
     .invoke_handler(tauri::generate_handler![

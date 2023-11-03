@@ -24,8 +24,8 @@ export function ActiveAccount() {
   }
 
   return (
-    <div className="flex flex-col gap-1 rounded-lg bg-neutral-100 p-1 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-      <Link to={`/users/${db.account.pubkey}`} className="relative inline-block">
+    <div className="flex flex-col gap-1 rounded-lg bg-neutral-100 p-1 ring-1 ring-transparent hover:bg-neutral-200 hover:ring-blue-500 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+      <Link to="/personal" className="relative inline-block">
         <Avatar.Root>
           <Avatar.Image
             src={user?.picture || user?.image}
@@ -38,14 +38,14 @@ export function ActiveAccount() {
           <Avatar.Fallback delayMs={150}>
             <img
               src={svgURI}
-              alt={db.account.pubkeypubkey}
+              alt={db.account.pubkey}
               className="aspect-square h-auto w-full rounded-md bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
         <NetworkStatusIndicator />
       </Link>
-      <AccountMoreActions pubkey={db.account.pubkey} />
+      <AccountMoreActions />
     </div>
   );
 }
