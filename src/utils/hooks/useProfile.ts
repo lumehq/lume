@@ -18,7 +18,7 @@ export function useProfile(pubkey: string, embed?: string) {
       }
 
       const cleanPubkey = pubkey.replace(/[^a-zA-Z0-9]/g, '');
-      const user = ndk.getUser({ hexpubkey: cleanPubkey });
+      const user = ndk.getUser({ pubkey: cleanPubkey });
 
       return await user.fetchProfile();
     },

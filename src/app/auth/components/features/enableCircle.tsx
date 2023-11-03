@@ -23,7 +23,7 @@ export function Circle() {
   const enableLinks = async () => {
     setLoading(true);
 
-    const users = ndk.getUser({ hexpubkey: db.account.pubkey });
+    const users = ndk.getUser({ pubkey: db.account.pubkey });
     const follows = await users.follows();
 
     if (follows.size === 0) {

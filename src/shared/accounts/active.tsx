@@ -24,7 +24,7 @@ export function ActiveAccount() {
   }
 
   return (
-    <div className="flex flex-col gap-1 rounded-lg bg-neutral-100 p-1 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+    <div className="flex flex-col gap-1 rounded-lg bg-neutral-100 p-1 ring-1 ring-transparent hover:bg-neutral-200 hover:ring-blue-500 dark:bg-neutral-900 dark:hover:bg-neutral-800">
       <Link to="/personal" className="relative inline-block">
         <Avatar.Root>
           <Avatar.Image

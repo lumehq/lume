@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { LoaderIcon } from '@shared/icons';
+import { EditIcon, LoaderIcon } from '@shared/icons';
 
 import { compactNumber } from '@utils/number';
 
@@ -13,7 +14,7 @@ export function RelayCard() {
   const { status, data } = useQuery({
     queryKey: ['relays'],
     queryFn: async () => {
-      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const user = ndk.getUser({ pubkey: db.account.pubkey });
       return await user.relayList();
     },
     refetchOnWindowFocus: false,
@@ -28,10 +29,19 @@ export function RelayCard() {
       ) : (
         <div className="flex h-full w-full flex-col justify-between p-4">
           <h3 className="pt-1 text-5xl font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
-            {compactNumber.format(data.relays.length)}
+            {compactNumber.format(data?.relays?.length)}
           </h3>
-          <div className="mt-auto text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">
-            Relays
+          <div className="mt-auto flex h-6 w-full items-center justify-between">
+            <p className="text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">
+              Relays
+            </p>
+            <Link
+              to="/relays"
+              className="inline-flex h-6 w-max items-center gap-1 rounded-full bg-neutral-200 px-2.5 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+            >
+              <EditIcon className="h-3 w-3" />
+              Edit
+            </Link>
           </div>
         </div>
       )}

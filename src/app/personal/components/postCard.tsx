@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -41,8 +42,16 @@ export function PostCard() {
           <h3 className="pt-1 text-5xl font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
             {compactNumber.format(data.stats[db.account.pubkey].pub_note_count)}
           </h3>
-          <div className="mt-auto text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">
-            Posts
+          <div className="mt-auto flex h-6 w-full items-center justify-between">
+            <p className="text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">
+              Posts
+            </p>
+            <Link
+              to={`/users/${db.account.pubkey}`}
+              className="inline-flex h-6 w-max items-center gap-1 rounded-full bg-neutral-200 px-2.5 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+            >
+              View
+            </Link>
           </div>
         </div>
       )}

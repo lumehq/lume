@@ -22,9 +22,9 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const follow = async (pubkey: string) => {
     try {
-      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
-      const add = await user.follow(new NDKUser({ hexpubkey: pubkey }), contacts);
+      const add = await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
 
       if (add) {
         setFollowed(true);
@@ -38,14 +38,12 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const unfollow = async (pubkey: string) => {
     try {
-      const user = ndk.getUser({ hexpubkey: db.account.pubkey });
+      const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
-      contacts.delete(new NDKUser({ hexpubkey: pubkey }));
+      contacts.delete(new NDKUser({ pubkey: pubkey }));
 
       let list: string[][];
-      contacts.forEach((el) =>
-        list.push(['p', el.pubkey, el.relayUrls?.[0] || '', el.profile?.name || ''])
-      );
+      contacts.forEach((el) => list.push(['p', el.pubkey, el.relayUrls?.[0] || '', '']));
 
       const event = new NDKEvent(ndk);
       event.content = '';

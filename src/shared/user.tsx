@@ -115,7 +115,7 @@ export const User = memo(function User({
             />
           </Avatar.Fallback>
         </Avatar.Root>
-        <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+        <h5 className="max-w-[10rem] truncate font-medium text-neutral-900 dark:text-neutral-100">
           {user?.name ||
             user?.display_name ||
             user?.displayName ||

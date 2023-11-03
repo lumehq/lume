@@ -1,9 +1,10 @@
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
+import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';
 
-import { LoaderIcon } from '@shared/icons';
+import { EditIcon, LoaderIcon } from '@shared/icons';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
@@ -23,7 +24,16 @@ export function ProfileCard() {
           <LoaderIcon className="h-4 w-4 animate-spin" />
         </div>
       ) : (
-        <div className="flex h-full w-full flex-col justify-end p-4">
+        <div className="flex h-full w-full flex-col justify-between p-4">
+          <div className="flex h-10 w-full justify-end">
+            <Link
+              to="/personal/edit-profile"
+              className="inline-flex h-8 w-20 items-center justify-center gap-1.5 rounded-full bg-neutral-200 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-600"
+            >
+              <EditIcon className="h-4 w-4" />
+              Edit
+            </Link>
+          </div>
           <div className="flex flex-col gap-2.5">
             <Avatar.Root className="shrink-0">
               <Avatar.Image

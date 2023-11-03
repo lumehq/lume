@@ -89,7 +89,7 @@ export function NotificationWidget() {
             })
           );
 
-          const user = ndk.getUser({ hexpubkey: event.pubkey });
+          const user = ndk.getUser({ pubkey: event.pubkey });
           await user.fetchProfile();
 
           switch (event.kind) {

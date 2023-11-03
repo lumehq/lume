@@ -43,7 +43,7 @@ export function ZapCard() {
               data.stats[db.account.pubkey].zaps_received.msats / 1000
             )}
           </h3>
-          <div className="mt-auto text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">
+          <div className="mt-auto flex h-6 items-center text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">
             Sats received
           </div>
         </div>

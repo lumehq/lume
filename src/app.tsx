@@ -110,11 +110,32 @@ export default function App() {
             },
           ],
         },
+      ],
+    },
+    {
+      path: '/personal',
+      element: <AppLayout />,
+      errorElement: <ErrorScreen />,
+      children: [
         {
-          path: 'personal',
+          path: '',
           async lazy() {
             const { PersonalScreen } = await import('@app/personal');
             return { Component: PersonalScreen };
+          },
+        },
+        {
+          path: 'edit-profile',
+          async lazy() {
+            const { EditProfileScreen } = await import('@app/personal/editProfile');
+            return { Component: EditProfileScreen };
+          },
+        },
+        {
+          path: 'edit-contact',
+          async lazy() {
+            const { EditContactScreen } = await import('@app/personal/editContact');
+            return { Component: EditContactScreen };
           },
         },
       ],

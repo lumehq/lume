@@ -14,7 +14,7 @@ export function useDecryptMessage(message: NDKEvent) {
     async function decryptContent() {
       try {
         const sender = new NDKUser({
-          hexpubkey:
+          pubkey:
             db.account.pubkey === message.pubkey
               ? message.tags.find((el) => el[0] === 'p')[1]
               : message.pubkey,
