@@ -25,7 +25,17 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 root.render(
-  <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
+  <PersistQueryClientProvider
+    client={queryClient}
+    persistOptions={{
+      persister,
+      dehydrateOptions: {
+        shouldDehydrateQuery: (query) => {
+          if (query.queryKey !== 'widgets') return true;
+        },
+      },
+    }}
+  >
     <StorageProvider>
       <NDKProvider>
         <Toaster position="top-center" closeButton />
