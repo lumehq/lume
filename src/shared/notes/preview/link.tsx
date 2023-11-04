@@ -6,9 +6,9 @@ function isImage(url: string) {
   return /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif)$/.test(url);
 }
 
-export function LinkPreview({ urls }: { urls: string[] }) {
-  const { status, data } = useOpenGraph(urls[0]);
-  const domain = new URL(urls[0]);
+export function LinkPreview({ url }: { url: string }) {
+  const domain = new URL(url);
+  const { status, data } = useOpenGraph(url);
 
   if (status === 'pending') {
     return (
@@ -27,7 +27,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
 
   return (
     <Link
-      to={urls[0]}
+      to={url}
       target="_blank"
       rel="noreferrer"
       className="flex w-full flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800"
@@ -35,7 +35,7 @@ export function LinkPreview({ urls }: { urls: string[] }) {
       {isImage(data.image) ? (
         <img
           src={data.image}
-          alt={urls[0]}
+          alt={url}
           className="h-44 w-full rounded-t-lg bg-white object-cover"
         />
       ) : null}

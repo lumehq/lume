@@ -54,7 +54,7 @@ export const User = memo(function User({
     }
 
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex h-6 items-center gap-2">
         <Avatar.Root className="shrink-0">
           <Avatar.Image
             src={user?.picture || user?.image}

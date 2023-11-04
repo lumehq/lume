@@ -75,7 +75,7 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   if (status === 'pending') {
     return (
-      <div className="h-min w-full px-3 pb-3">
+      <div className="w-full px-3 pb-3">
         <div className="relative overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
           <NoteSkeleton />
         </div>
@@ -105,7 +105,7 @@ export function Repost({ event }: { event: NDKEvent }) {
                   Lume cannot find this post with your current relay set, but you can view
                   it via njump.me
                 </div>
-                <LinkPreview urls={[noteLink]} />
+                <LinkPreview url={noteLink} />
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export function Repost({ event }: { event: NDKEvent }) {
           <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />
           <div className="-mt-4 flex items-start gap-3">
             <div className="w-10 shrink-0" />
-            <div className="relative z-20 flex-1">
+            <div className="relative z-20 min-w-0 flex-1">
               {renderKind(data)}
               <NoteActions id={data.id} pubkey={data.pubkey} />
             </div>

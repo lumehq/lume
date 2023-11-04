@@ -60,7 +60,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
                 Lume cannot find this post with your current relay set, but you can view
                 it via njump.me
               </div>
-              <LinkPreview urls={[noteLink]} />
+              <LinkPreview url={noteLink} />
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ export function ChildNote({ id, root }: { id: string; root?: string }) {
         <User pubkey={data.pubkey} time={data.created_at} eventId={data.id} />
         <div className="-mt-4 flex items-start gap-3">
           <div className="w-10 shrink-0" />
-          <div className="relative z-20 flex-1">
+          <div className="relative z-20 min-w-0 flex-1">
             {renderKind(data)}
             <NoteActions id={data.id} pubkey={data.pubkey} root={root} />
           </div>

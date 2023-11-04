@@ -52,13 +52,7 @@ export function FileNote(props: { event?: NDKEvent }) {
         key={url}
         className="mt-2 aspect-video w-full overflow-hidden rounded-lg"
       >
-        <video
-          slot="media"
-          src={url}
-          poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-          preload="none"
-          muted
-        />
+        <video slot="media" src={url} preload="metadata" muted />
         <MediaControlBar>
           <MediaPlayButton></MediaPlayButton>
           <MediaTimeRange></MediaTimeRange>
@@ -72,7 +66,7 @@ export function FileNote(props: { event?: NDKEvent }) {
 
   return (
     <div className="mt-2">
-      <LinkPreview urls={[url]} />
+      <LinkPreview url={url} />
     </div>
   );
 }

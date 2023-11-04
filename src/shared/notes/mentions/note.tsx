@@ -49,7 +49,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   if (status === 'pending') {
     return (
-      <div className="w-full cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
+      <div className="my-2 w-full cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
         <NoteSkeleton />
       </div>
     );
@@ -58,17 +58,15 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   if (status === 'error') {
     const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
     return (
-      <div className="w-full rounded-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800">
+      <div className="my-2 w-full rounded-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800">
         <div className="flex items-center gap-2">
-          <div className="inline-flex h-6 w-6 items-end justify-center rounded bg-black pb-1">
-            <img src="/lume.png" alt="lume" className="h-auto w-1/3" />
-          </div>
-          <h5 className="truncate font-semibold leading-none text-white">
+          <div className="inline-flex h-6 w-6 items-end justify-center rounded-md bg-black pb-1"></div>
+          <h5 className="truncate font-semibold">
             Lume <span className="text-green-500">(System)</span>
           </h5>
         </div>
         <div className="mt-1.5">
-          <LinkPreview urls={[noteLink]} />
+          <LinkPreview url={noteLink} />
         </div>
       </div>
     );
@@ -79,7 +77,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
     <div
       role="button"
       onClick={(e) => openThread(e, id)}
-      className="w-full cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
+      className="my-2 w-full cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
     >
       <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
       <div className="mt-1 text-left">{renderKind(data)}</div>

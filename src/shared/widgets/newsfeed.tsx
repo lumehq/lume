@@ -19,8 +19,6 @@ import {
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function NewsfeedWidget() {
   const queryClient = useQueryClient();
 
@@ -138,6 +136,8 @@ export function NewsfeedWidget() {
       if (sub) sub.stop();
     };
   }, [status]);
+
+  console.log('RERENDER');
 
   return (
     <WidgetWrapper>
