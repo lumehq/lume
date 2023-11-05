@@ -1,15 +1,13 @@
-import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo } from 'react';
-import { VList } from 'virtua';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useCallback, useMemo, useRef } from 'react';
+import { VList, VListHandle } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
-  MemoizedArticleNote,
-  MemoizedFileNote,
   MemoizedRepost,
   MemoizedTextNote,
   NoteSkeleton,
@@ -19,9 +17,9 @@ import {
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-export function NewsfeedWidget() {
-  const queryClient = useQueryClient();
+import { LiveUpdater } from './liveUpdater';
 
+export function NewsfeedWidget() {
   const { db } = useStorage();
   const { relayUrls, ndk, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
@@ -41,10 +39,10 @@ export function NewsfeedWidget() {
         const events = await fetcher.fetchLatestEvents(
           relayUrls,
           {
-            kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+            kinds: [NDKKind.Text, NDKKind.Repost],
             authors: db.account.circles,
           },
-          50,
+          20,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
         );
 
@@ -70,79 +68,42 @@ export function NewsfeedWidget() {
         if (!lastEvent) return;
         return lastEvent.created_at - 1;
       },
+      refetchOnWindowFocus: false,
     });
 
+  const ref = useRef<VListHandle>();
   const allEvents = useMemo(
     () => (data ? data.pages.flatMap((page) => page) : []),
     [data]
   );
 
-  const renderItem = useCallback((event: NDKEvent) => {
-    switch (event.kind) {
-      case NDKKind.Text:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <MemoizedTextNote />
-          </NoteWrapper>
-        );
-      case NDKKind.Repost:
-        return <MemoizedRepost key={event.id} event={event} />;
-      case 1063:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <MemoizedFileNote />
-          </NoteWrapper>
-        );
-      case NDKKind.Article:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <MemoizedArticleNote />
-          </NoteWrapper>
-        );
-      default:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <UnknownNote />
-          </NoteWrapper>
-        );
-    }
-  }, []);
-
-  useEffect(() => {
-    let sub: NDKSubscription = undefined;
-
-    if (status === 'success' && db.account && db.account.circles.length > 0) {
-      queryClient.fetchQuery({ queryKey: ['notification'] });
-
-      const filter: NDKFilter = {
-        kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: db.account.circles,
-        since: Math.floor(Date.now() / 1000),
-      };
-
-      sub = ndk.subscribe(filter, { closeOnEose: false, groupable: false });
-      sub.addListener('event', async (event: NDKEvent) => {
-        await queryClient.setQueryData(
-          ['newsfeed'],
-          (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
-            ...prev,
-            pages: [[event], ...prev.pages],
-          })
-        );
-      });
-    }
-
-    return () => {
-      if (sub) sub.stop();
-    };
-  }, [status]);
-
-  console.log('RERENDER');
+  const renderItem = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return (
+            <NoteWrapper key={event.id} event={event}>
+              <MemoizedTextNote />
+            </NoteWrapper>
+          );
+        case NDKKind.Repost:
+          return <MemoizedRepost key={event.id} event={event} />;
+        default:
+          return (
+            <NoteWrapper key={event.id} event={event}>
+              <UnknownNote />
+            </NoteWrapper>
+          );
+      }
+    },
+    [data]
+  );
 
   return (
     <WidgetWrapper>
       <TitleBar id="9999" isLive />
-      <VList className="flex-1">
+      <LiveUpdater status={status} ref={ref} />
+      <VList className="flex-1" ref={ref} overscan={2}>
         {status === 'pending' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">

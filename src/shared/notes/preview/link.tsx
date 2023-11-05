@@ -12,7 +12,7 @@ export function LinkPreview({ url }: { url: string }) {
 
   if (status === 'pending') {
     return (
-      <div className="flex w-full flex-col bg-neutral-200 dark:bg-neutral-800">
+      <div className="mt-2 flex w-full flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800">
         <div className="h-44 w-full animate-pulse bg-neutral-400 dark:bg-neutral-600" />
         <div className="flex flex-col gap-2 px-3 py-3">
           <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
@@ -30,7 +30,7 @@ export function LinkPreview({ url }: { url: string }) {
       to={url}
       target="_blank"
       rel="noreferrer"
-      className="flex w-full flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800"
+      className="mt-2 flex w-full flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800"
     >
       {isImage(data.image) ? (
         <img
@@ -42,19 +42,19 @@ export function LinkPreview({ url }: { url: string }) {
       <div className="flex flex-col items-start px-3 py-3">
         <div className="flex flex-col items-start gap-1 text-left">
           {data.title && (
-            <h5 className="line-clamp-1 text-base font-semibold text-neutral-900 dark:text-neutral-100">
+            <div className="line-clamp-1 text-base font-semibold text-neutral-900 dark:text-neutral-100">
               {data.title}
-            </h5>
+            </div>
           )}
           {data.description ? (
-            <p className="mb-2.5 line-clamp-3 break-all text-sm text-neutral-700 dark:text-neutral-400">
+            <div className="mb-2 line-clamp-3 break-all text-sm text-neutral-700 dark:text-neutral-400">
               {data.description}
-            </p>
+            </div>
           ) : null}
         </div>
-        <span className="break-all text-sm text-neutral-600 dark:text-neutral-400">
+        <div className="break-all text-sm text-neutral-600 dark:text-neutral-400">
           {domain.hostname}
-        </span>
+        </div>
       </div>
     </Link>
   );

@@ -4,11 +4,10 @@ import { download } from '@tauri-apps/plugin-upload';
 import {
   MediaControlBar,
   MediaController,
+  MediaFullscreenButton,
   MediaMuteButton,
   MediaPlayButton,
-  MediaTimeDisplay,
   MediaTimeRange,
-  MediaVolumeRange,
 } from 'media-chrome/dist/react';
 import { memo } from 'react';
 
@@ -56,9 +55,8 @@ export function FileNote(props: { event?: NDKEvent }) {
         <MediaControlBar>
           <MediaPlayButton></MediaPlayButton>
           <MediaTimeRange></MediaTimeRange>
-          <MediaTimeDisplay showDuration></MediaTimeDisplay>
           <MediaMuteButton></MediaMuteButton>
-          <MediaVolumeRange></MediaVolumeRange>
+          <MediaFullscreenButton></MediaFullscreenButton>
         </MediaControlBar>
       </MediaController>
     );

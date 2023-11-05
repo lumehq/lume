@@ -100,7 +100,7 @@ export function SpaceScreen() {
 
   if (status === 'pending') {
     return (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center bg-white dark:bg-black">
         <LoaderIcon className="h-5 w-5 animate-spin" />
       </div>
     );

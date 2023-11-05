@@ -60,11 +60,11 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
         data-tauri-drag-region
         className="flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
       >
-        <div className="flex flex-col items-center justify-center gap-2 text-center">
-          <LoaderIcon className="h-7 w-7 animate-spin text-neutral-950 dark:text-neutral-50" />
-          <p className="font-semibold">
-            {isNewVersion ? 'Found a new version, updating' : 'Checking for updates'}
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <p className="text-xl font-medium">
+            {isNewVersion ? 'Found a new version, updating' : 'Checking for updates...'}
           </p>
+          <LoaderIcon className="h-7 w-7 animate-spin" />
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
 import * as Avatar from '@radix-ui/react-avatar';
 import * as HoverCard from '@radix-ui/react-hover-card';
 import { minidenticon } from 'minidenticons';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { RepostIcon, WorldIcon } from '@shared/icons';
@@ -39,9 +39,11 @@ export const User = memo(function User({
 }) {
   const { status, user } = useProfile(pubkey, embedProfile);
 
-  const createdAt = formatCreatedAt(time, variant === 'chat');
-  const svgURI =
-    'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
+  const createdAt = useMemo(() => formatCreatedAt(time, variant === 'chat'), [pubkey]);
+  const svgURI = useMemo(
+    () => 'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50)),
+    [pubkey]
+  );
 
   if (variant === 'mention') {
     if (status === 'pending') {

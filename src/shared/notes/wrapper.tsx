@@ -16,9 +16,12 @@ export function NoteWrapper({
       return event.tags[0][1];
     }
     return event.tags.find((el) => el[3] === 'root')?.[1];
-  }, [event]);
+  }, [event.id]);
 
-  const reply = useMemo(() => event.tags.find((el) => el[3] === 'reply')?.[1], []);
+  const reply = useMemo(
+    () => event.tags.find((el) => el[3] === 'reply')?.[1],
+    [event.id]
+  );
 
   return (
     <div className="h-min w-full px-3 pb-3">

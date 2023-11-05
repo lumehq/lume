@@ -3,7 +3,14 @@ import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
-import { Hashtag, MentionNote, MentionUser } from '@shared/notes';
+import {
+  Hashtag,
+  ImagePreview,
+  LinkPreview,
+  MentionNote,
+  MentionUser,
+  VideoPreview,
+} from '@shared/notes';
 
 const NOSTR_MENTIONS = [
   '@npub1',
@@ -42,17 +49,10 @@ export function useRichContent(content: string) {
   const text = content;
   const words = text.split(/(\s+)/);
 
-  const images = words
-    .filter((word) => IMAGES.some((el) => word.endsWith(el)))
-    .map((item: string) => item);
-
-  const videos = words
-    .filter((word) => VIDEOS.some((el) => word.endsWith(el)))
-    .map((item: string) => item);
-
+  const images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
+  const videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
   const hashtags = words.filter((word) => word.startsWith('#'));
   const events = words.filter((word) => NOSTR_EVENTS.some((el) => word.startsWith(el)));
-
   const mentions = words.filter((word) =>
     NOSTR_MENTIONS.some((el) => word.startsWith(el))
   );
@@ -60,15 +60,17 @@ export function useRichContent(content: string) {
   try {
     if (images.length) {
       images.forEach((image) => {
-        // @ts-expect-error, it is string at this time
-        parsedContent = parsedContent.replace(image, '');
+        parsedContent = reactStringReplace(parsedContent, image, (match, i) => (
+          <ImagePreview key={match + i} url={match} />
+        ));
       });
     }
 
     if (videos.length) {
       videos.forEach((video) => {
-        // @ts-expect-error, it is string at this time
-        parsedContent = parsedContent.replace(video, '');
+        parsedContent = reactStringReplace(parsedContent, video, (match, i) => (
+          <VideoPreview key={match + i} url={match} />
+        ));
       });
     }
 
@@ -82,7 +84,7 @@ export function useRichContent(content: string) {
 
     if (events.length) {
       events.forEach((event) => {
-        const address = event.replace('nostr:', '');
+        const address = event.replace('nostr:', '').replace(/[^a-zA-Z0-9]/g, '');
         const decoded = nip19.decode(address);
 
         if (decoded.type === 'note') {
@@ -101,7 +103,10 @@ export function useRichContent(content: string) {
 
     if (mentions.length) {
       mentions.forEach((mention) => {
-        const address = mention.replace('nostr:', '').replace('@', '');
+        const address = mention
+          .replace('nostr:', '')
+          .replace('@', '')
+          .replace(/[^a-zA-Z0-9]/g, '');
         const decoded = nip19.decode(address);
 
         if (decoded.type === 'npub') {
@@ -119,18 +124,18 @@ export function useRichContent(content: string) {
     }
 
     parsedContent = reactStringReplace(parsedContent, /(https?:\/\/\S+)/g, (match, i) => {
-      if (!linkPreview) {
-        linkPreview = match;
-        if (content.length < 500) return null;
-      }
-
       const url = new URL(match);
       url.search = '';
+
+      if (!linkPreview) {
+        linkPreview = match;
+        return <LinkPreview key={match + i} url={url.toString()} />;
+      }
 
       return (
         <Link
           key={match + i}
-          to={url}
+          to={url.toString()}
           target="_blank"
           rel="noreferrer"
           className="break-all font-normal text-blue-500 hover:text-blue-600"
@@ -141,12 +146,12 @@ export function useRichContent(content: string) {
     });
 
     if (typeof parsedContent[0] === 'string') {
-      parsedContent[0] = parsedContent[0].trim();
+      parsedContent[0] = parsedContent[0].trimStart();
     }
 
-    return { parsedContent, images, videos, linkPreview };
+    return { parsedContent };
   } catch (e) {
     console.warn('[parser] parse failed: ', e);
-    return { parsedContent, images, videos, linkPreview };
+    return { parsedContent };
   }
 }

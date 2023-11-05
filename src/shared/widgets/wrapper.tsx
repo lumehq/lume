@@ -21,7 +21,7 @@ export function WidgetWrapper({
       minWidth={420}
       maxWidth={600}
       className={twMerge(
-        'flex flex-col border-r-2 border-neutral-50 hover:border-neutral-100 dark:border-neutral-950 dark:hover:border-neutral-900',
+        'relative flex flex-col border-r-2 border-neutral-50 hover:border-neutral-100 dark:border-neutral-950 dark:hover:border-neutral-900',
         className
       )}
       enable={{ right: true }}

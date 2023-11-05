@@ -38,7 +38,7 @@ export function NotificationWidget() {
             kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
             '#p': [db.account.pubkey],
           },
-          50,
+          20,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
         );
 
@@ -139,7 +139,7 @@ export function NotificationWidget() {
   return (
     <WidgetWrapper>
       <TitleBar id="9998" title="Notification" isLive />
-      <VList className="flex-1">
+      <VList className="flex-1" overscan={2}>
         {status === 'pending' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">

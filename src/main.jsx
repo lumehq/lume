@@ -31,7 +31,8 @@ root.render(
       persister,
       dehydrateOptions: {
         shouldDehydrateQuery: (query) => {
-          if (query.queryKey !== 'widgets') return true;
+          if (query.queryKey === 'widgets') return false;
+          return true;
         },
       },
     }}

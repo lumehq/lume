@@ -36,18 +36,21 @@ export function Repost({ event }: { event: NDKEvent }) {
     refetchOnWindowFocus: false,
   });
 
-  const renderKind = useCallback((repostEvent: NDKEvent) => {
-    switch (repostEvent.kind) {
-      case NDKKind.Text:
-        return <TextNote content={repostEvent.content} />;
-      case NDKKind.Article:
-        return <ArticleNote event={repostEvent} />;
-      case 1063:
-        return <FileNote event={repostEvent} />;
-      default:
-        return <UnknownNote event={repostEvent} />;
-    }
-  }, []);
+  const renderKind = useCallback(
+    (repostEvent: NDKEvent) => {
+      switch (repostEvent.kind) {
+        case NDKKind.Text:
+          return <TextNote content={repostEvent.content} />;
+        case NDKKind.Article:
+          return <ArticleNote event={repostEvent} />;
+        case 1063:
+          return <FileNote event={repostEvent} />;
+        default:
+          return <UnknownNote event={repostEvent} />;
+      }
+    },
+    [event.id]
+  );
 
   if (embedEvent) {
     return (

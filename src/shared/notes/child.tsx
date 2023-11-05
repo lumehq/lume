@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { nip19 } from 'nostr-tools';
+import { useCallback } from 'react';
 
 import {
   ArticleNote,
@@ -17,18 +18,21 @@ import { useEvent } from '@utils/hooks/useEvent';
 export function ChildNote({ id, root }: { id: string; root?: string }) {
   const { status, data } = useEvent(id);
 
-  const renderKind = (event: NDKEvent) => {
-    switch (event.kind) {
-      case NDKKind.Text:
-        return <TextNote content={event.content} />;
-      case NDKKind.Article:
-        return <ArticleNote event={event} />;
-      case 1063:
-        return <FileNote event={event} />;
-      default:
-        return <UnknownNote event={event} />;
-    }
-  };
+  const renderKind = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return <TextNote content={event.content} />;
+        case NDKKind.Article:
+          return <ArticleNote event={event} />;
+        case 1063:
+          return <FileNote event={event} />;
+        default:
+          return <UnknownNote event={event} />;
+      }
+    },
+    [id]
+  );
 
   if (status === 'pending') {
     return (
