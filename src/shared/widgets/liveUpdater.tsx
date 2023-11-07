@@ -1,20 +1,13 @@
 import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { QueryStatus, useQueryClient } from '@tanstack/react-query';
-import { forwardRef, useEffect, useState } from 'react';
-import { VListHandle } from 'virtua';
+import { useEffect, useState } from 'react';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ChevronUpIcon } from '@shared/icons';
 
-export const LiveUpdater = forwardRef(function LiveUpdater({
-  status,
-  ref,
-}: {
-  status: QueryStatus;
-  ref: VListHandle;
-}) {
+export function LiveUpdater({ status }: { status: QueryStatus }) {
   const { db } = useStorage();
   const { ndk } = useNDK();
 
@@ -32,9 +25,6 @@ export const LiveUpdater = forwardRef(function LiveUpdater({
 
     // reset
     setEvents([]);
-
-    // scroll to top
-    ref.scrollToIndex(0, { smooth: true });
   };
 
   useEffect(() => {
@@ -74,4 +64,4 @@ export const LiveUpdater = forwardRef(function LiveUpdater({
       </button>
     </div>
   );
-});
+}

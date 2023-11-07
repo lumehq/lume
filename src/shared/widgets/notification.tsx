@@ -7,8 +7,7 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { NoteSkeleton } from '@shared/notes';
-import { NotifyNote } from '@shared/notification/notifyNote';
+import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -67,7 +66,7 @@ export function NotificationWidget() {
 
   const renderEvent = useCallback((event: NDKEvent) => {
     if (event.pubkey === db.account.pubkey) return null;
-    return <NotifyNote key={event.id} event={event} />;
+    return <MemoizedNotifyNote key={event.id} event={event} />;
   }, []);
 
   useEffect(() => {

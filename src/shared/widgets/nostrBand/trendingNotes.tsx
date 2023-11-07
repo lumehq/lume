@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { VList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
-import { NoteWrapper, TextNote } from '@shared/notes';
+import { MemoizedTextNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -58,9 +58,7 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
         ) : (
           <VList className="h-full">
             {data.map((item) => (
-              <NoteWrapper key={item.event.id} event={item.event}>
-                <TextNote content={item.event.content} />
-              </NoteWrapper>
+              <MemoizedTextNote key={item.event.id} event={item.event} />
             ))}
             <div className="h-16" />
           </VList>

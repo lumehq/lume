@@ -7,7 +7,7 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { ArticleNote, NoteWrapper } from '@shared/notes';
+import { MemoizedArticleNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -82,11 +82,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          allEvents.map((item) => (
-            <NoteWrapper key={item.id} event={item}>
-              <ArticleNote />
-            </NoteWrapper>
-          ))
+          allEvents.map((item) => <MemoizedArticleNote key={item.id} event={item} />)
         )}
         <div className="flex h-16 items-center justify-center px-3 pb-3">
           {hasNextPage ? (

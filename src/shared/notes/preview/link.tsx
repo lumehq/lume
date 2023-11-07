@@ -25,12 +25,25 @@ export function LinkPreview({ url }: { url: string }) {
     );
   }
 
+  if (!data.title && !data.image) {
+    return (
+      <Link
+        to={url}
+        target="_blank"
+        rel="noreferrer"
+        className="text-blue-500 hover:text-blue-600"
+      >
+        {url}
+      </Link>
+    );
+  }
+
   return (
     <Link
       to={url}
       target="_blank"
       rel="noreferrer"
-      className="mt-2 flex w-full flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800"
+      className="flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900"
     >
       {isImage(data.image) ? (
         <img
@@ -41,11 +54,11 @@ export function LinkPreview({ url }: { url: string }) {
       ) : null}
       <div className="flex flex-col items-start px-3 py-3">
         <div className="flex flex-col items-start gap-1 text-left">
-          {data.title && (
-            <div className="line-clamp-1 text-base font-semibold text-neutral-900 dark:text-neutral-100">
+          {data.title ? (
+            <div className="break-all text-base font-semibold text-neutral-900 dark:text-neutral-100">
               {data.title}
             </div>
-          )}
+          ) : null}
           {data.description ? (
             <div className="mb-2 line-clamp-3 break-all text-sm text-neutral-700 dark:text-neutral-400">
               {data.description}

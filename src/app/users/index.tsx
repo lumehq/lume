@@ -7,14 +7,7 @@ import { UserProfile } from '@app/users/components/profile';
 
 import { useNDK } from '@libs/ndk/provider';
 
-import {
-  ArticleNote,
-  FileNote,
-  NoteWrapper,
-  Repost,
-  TextNote,
-  UnknownNote,
-} from '@shared/notes';
+import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 
 export function UserScreen() {
   const { pubkey } = useParams();
@@ -23,9 +16,9 @@ export function UserScreen() {
     queryKey: ['user-feed', pubkey],
     queryFn: async () => {
       const events = await ndk.fetchEvents({
-        kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Article],
+        kinds: [NDKKind.Text, NDKKind.Repost],
         authors: [pubkey],
-        limit: 50,
+        limit: 20,
       });
       const sorted = [...events].sort((a, b) => b.created_at - a.created_at);
       return sorted;
@@ -38,31 +31,11 @@ export function UserScreen() {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <TextNote />
-            </NoteWrapper>
-          );
+          return <MemoizedTextNote key={event.id} event={event} />;
         case NDKKind.Repost:
-          return <Repost key={event.id} event={event} />;
-        case 1063:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <FileNote />
-            </NoteWrapper>
-          );
-        case NDKKind.Article:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <ArticleNote />
-            </NoteWrapper>
-          );
+          return <MemoizedRepost key={event.id} event={event} />;
         default:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <UnknownNote />
-            </NoteWrapper>
-          );
+          return <UnknownNote key={event.id} event={event} />;
       }
     },
     [data]

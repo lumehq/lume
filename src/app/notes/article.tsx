@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
-import { ArticleDetailNote, NoteActions, NoteReplyForm } from '@shared/notes';
+import { NoteActions, NoteReplyForm } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
 
@@ -78,9 +78,7 @@ export function ArticleNoteScreen() {
             <div className="flex h-min w-full flex-col px-3">
               <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
                 <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
-                <div className="mt-3">
-                  <ArticleDetailNote event={data} />
-                </div>
+                <div className="mt-3">{data.content}</div>
                 <div className="mt-3">
                   <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
                 </div>

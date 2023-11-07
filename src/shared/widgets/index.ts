@@ -13,3 +13,4 @@ export * from './tmp/feeds';
 export * from './tmp/hashtag';
 export * from './newsfeed';
 export * from './notification';
+export * from './liveUpdater';

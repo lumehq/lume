@@ -50,6 +50,26 @@ export function useNostr() {
     }
   };
 
+  const getEventThread = (event: NDKEvent) => {
+    let rootEventId: string;
+    let replyEventId: string;
+
+    if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
+      rootEventId = event.tags[0][1];
+    }
+
+    rootEventId = event.tags.find((el) => el[3] === 'root')?.[1] || null;
+    // eslint-disable-next-line prefer-const
+    replyEventId = event.tags.find((el) => el[3] === 'reply')?.[1] || null;
+
+    if (!rootEventId && !replyEventId) return null;
+
+    return {
+      rootEventId,
+      replyEventId,
+    };
+  };
+
   const getAllActivities = async (limit?: number) => {
     try {
       const events = await ndk.fetchEvents({
@@ -163,36 +183,6 @@ export function useNostr() {
     return dedup;
   };
 
-  const getAllEventsSinceLastLogin = async (customSince?: number) => {
-    try {
-      const dbEventsEmpty = await db.isEventsEmpty();
-
-      let since: number;
-      if (!customSince) {
-        if (dbEventsEmpty || db.account.last_login_at === 0) {
-          since = db.account.circles.length > 500 ? nHoursAgo(12) : nHoursAgo(24);
-        } else {
-          since = db.account.last_login_at;
-        }
-      } else {
-        since = customSince;
-      }
-
-      const events = (await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.circles,
-        },
-        { since: since }
-      )) as unknown as NDKEvent[];
-
-      return events;
-    } catch (e) {
-      console.error('prefetch events failed, error: ', e);
-    }
-  };
-
   const getContactsByPubkey = async (pubkey: string) => {
     const user = ndk.getUser({ pubkey: pubkey });
     const follows = [...(await user.follows())].map((user) => user.hexpubkey);
@@ -279,8 +269,8 @@ export function useNostr() {
 
   return {
     sub,
+    getEventThread,
     getAllNIP04Chats,
-    getAllEventsSinceLastLogin,
     getContactsByPubkey,
     getEventsByPubkey,
     getAllRelaysByUsers,

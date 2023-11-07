@@ -1,4 +1,4 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKTag } from '@nostr-dev-kit/ndk';
 import { downloadDir } from '@tauri-apps/api/path';
 import { download } from '@tauri-apps/plugin-upload';
 import {
@@ -10,14 +10,14 @@ import {
   MediaTimeRange,
 } from 'media-chrome/dist/react';
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
 import { DownloadIcon } from '@shared/icons';
-import { LinkPreview } from '@shared/notes';
 
 import { fileType } from '@utils/nip94';
 
-export function FileNote(props: { event?: NDKEvent }) {
-  const url = props.event.tags.find((el) => el[0] === 'url')[1];
+export function FileKind({ tags }: { tags: NDKTag[] }) {
+  const url = tags.find((el) => el[0] === 'url')[1];
   const type = fileType(url);
 
   const downloadImage = async (url: string) => {
@@ -28,11 +28,14 @@ export function FileNote(props: { event?: NDKEvent }) {
 
   if (type === 'image') {
     return (
-      <div key={url} className="group relative mt-2">
+      <div key={url} className="group">
         <img
           src={url}
           alt={url}
-          className="h-auto w-full rounded-lg border border-neutral-300 object-cover dark:border-neutral-700"
+          loading="lazy"
+          decoding="async"
+          style={{ contentVisibility: 'auto' }}
+          className="h-auto w-full object-cover"
         />
         <button
           type="button"
@@ -49,7 +52,7 @@ export function FileNote(props: { event?: NDKEvent }) {
     return (
       <MediaController
         key={url}
-        className="mt-2 aspect-video w-full overflow-hidden rounded-lg"
+        className="aspect-video w-full overflow-hidden rounded-lg"
       >
         <video slot="media" src={url} preload="metadata" muted />
         <MediaControlBar>
@@ -63,10 +66,15 @@ export function FileNote(props: { event?: NDKEvent }) {
   }
 
   return (
-    <div className="mt-2">
-      <LinkPreview url={url} />
-    </div>
+    <Link
+      to={url}
+      target="_blank"
+      rel="noreferrer"
+      className="text-blue-500 hover:text-blue-600"
+    >
+      {url}
+    </Link>
   );
 }
 
-export const MemoizedFileNote = memo(FileNote);
+export const MemoizedFileKind = memo(FileKind);

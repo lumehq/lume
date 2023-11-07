@@ -1,14 +1,12 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
-import { nip19 } from 'nostr-tools';
 import { memo } from 'react';
 
+import { PlusIcon } from '@shared/icons';
 import {
-  ArticleNote,
-  FileNote,
-  LinkPreview,
+  MemoizedArticleKind,
+  MemoizedFileKind,
+  MemoizedTextKind,
   NoteSkeleton,
-  TextNote,
-  UnknownNote,
 } from '@shared/notes';
 import { User } from '@shared/user';
 
@@ -21,66 +19,33 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const { status, data } = useEvent(id);
   const { addWidget } = useWidget();
 
-  const openThread = (event, thread: string) => {
-    const selection = window.getSelection();
-    if (selection.toString().length === 0) {
-      addWidget.mutate({
-        kind: WidgetKinds.local.thread,
-        title: 'Thread',
-        content: thread,
-      });
-    } else {
-      event.stopPropagation();
-    }
-  };
-
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
       case NDKKind.Text:
-        return <TextNote content={event.content} />;
+        return <MemoizedTextKind content={event.content} />;
       case NDKKind.Article:
-        return <ArticleNote event={event} />;
+        return <MemoizedArticleKind id={event.id} tags={event.tags} />;
       case 1063:
-        return <FileNote event={event} />;
+        return <MemoizedFileKind tags={event.tags} />;
       default:
-        return <UnknownNote event={event} />;
+        return null;
     }
   };
 
   if (status === 'pending') {
     return (
-      <div className="my-2 w-full cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
+      <div className="w-full cursor-default rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
         <NoteSkeleton />
       </div>
     );
   }
 
-  if (status === 'error') {
-    const noteLink = `https://njump.me/${nip19.noteEncode(id)}`;
-    return (
-      <div className="my-2 w-full rounded-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800">
-        <div className="flex items-center gap-2">
-          <div className="inline-flex h-6 w-6 items-end justify-center rounded-md bg-black pb-1"></div>
-          <h5 className="truncate font-semibold">
-            Lume <span className="text-green-500">(System)</span>
-          </h5>
-        </div>
-        <div className="mt-1.5">
-          <LinkPreview url={noteLink} />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
-    <div
-      role="button"
-      onClick={(e) => openThread(e, id)}
-      className="my-2 w-full cursor-default rounded-lg border border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800"
-    >
-      <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
-      <div className="mt-1 text-left">{renderKind(data)}</div>
+    <div className="my-2 flex w-full cursor-default flex-col gap-1 rounded-lg bg-neutral-100 dark:bg-neutral-900">
+      <div className="px-3 pt-3">
+        <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
+      </div>
+      <div>{renderKind(data)}</div>
     </div>
   );
 });

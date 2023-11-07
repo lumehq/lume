@@ -7,12 +7,9 @@ import { useNDK } from '@libs/ndk/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
-  MemoizedArticleNote,
-  MemoizedFileNote,
   MemoizedRepost,
   MemoizedTextNote,
   NoteSkeleton,
-  NoteWrapper,
   UnknownNote,
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
@@ -38,7 +35,7 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
         const events = await fetcher.fetchLatestEvents(
           relayUrls,
           {
-            kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+            kinds: [NDKKind.Text, NDKKind.Repost],
             authors: JSON.parse(params.content),
           },
           FETCH_LIMIT,
@@ -65,36 +62,19 @@ export function LocalFeedsWidget({ params }: { params: Widget }) {
     [data]
   );
 
-  const renderItem = useCallback((event: NDKEvent) => {
-    switch (event.kind) {
-      case NDKKind.Text:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <MemoizedTextNote />
-          </NoteWrapper>
-        );
-      case NDKKind.Repost:
-        return <MemoizedRepost key={event.id} event={event} />;
-      case 1063:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <MemoizedFileNote />
-          </NoteWrapper>
-        );
-      case NDKKind.Article:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <MemoizedArticleNote />
-          </NoteWrapper>
-        );
-      default:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <UnknownNote />
-          </NoteWrapper>
-        );
-    }
-  }, []);
+  const renderItem = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return <MemoizedTextNote key={event.id} event={event} />;
+        case NDKKind.Repost:
+          return <MemoizedRepost key={event.id} event={event} />;
+        default:
+          return <UnknownNote key={event.id} event={event} />;
+      }
+    },
+    [data]
+  );
 
   return (
     <WidgetWrapper>

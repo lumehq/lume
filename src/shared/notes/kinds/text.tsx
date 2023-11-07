@@ -2,22 +2,24 @@ import { memo } from 'react';
 
 import { useRichContent } from '@utils/hooks/useRichContent';
 
-export function TextNote(props: { content?: string; truncate?: boolean }) {
-  const { parsedContent } = useRichContent(props.content);
+export function TextKind({ content, truncate }: { content: string; truncate?: boolean }) {
+  const { parsedContent } = useRichContent(content);
 
-  if (props.truncate) {
+  if (truncate) {
     return (
       <div className="break-p select-text whitespace-pre-line leading-normal text-neutral-900 dark:text-neutral-100">
-        {props.content}
+        {content}
       </div>
     );
   }
 
   return (
-    <div className="break-p select-text whitespace-pre-line leading-normal text-neutral-900 dark:text-neutral-100">
-      {parsedContent}
+    <div className={'min-w-0 px-3'}>
+      <div className="break-p select-text whitespace-pre-line leading-normal text-neutral-900 dark:text-neutral-100">
+        {parsedContent}
+      </div>
     </div>
   );
 }
 
-export const MemoizedTextNote = memo(TextNote);
+export const MemoizedTextKind = memo(TextKind);

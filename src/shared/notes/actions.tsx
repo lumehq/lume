@@ -25,15 +25,9 @@ export function NoteActions({
 
   return (
     <Tooltip.Provider>
-      <div className="-ml-1 mt-2 inline-flex w-full items-center">
-        <div className="inline-flex items-center gap-10">
-          <NoteReply id={id} pubkey={pubkey} root={root} />
-          <NoteReaction id={id} pubkey={pubkey} />
-          <NoteRepost id={id} pubkey={pubkey} />
-          <NoteZap id={id} pubkey={pubkey} />
-        </div>
+      <div className="flex h-14 items-center justify-between px-3">
         {extraButtons && (
-          <div className="ml-auto inline-flex items-center gap-3">
+          <div className="inline-flex items-center gap-3">
             <Tooltip.Root delayDuration={150}>
               <Tooltip.Trigger asChild>
                 <button
@@ -45,9 +39,10 @@ export function NoteActions({
                       content: id,
                     })
                   }
-                  className="group inline-flex h-7 w-7 items-center justify-center text-neutral-500 dark:text-neutral-300"
+                  className="inline-flex h-7 w-max items-center justify-center gap-2 rounded-full bg-neutral-100 px-2 text-sm font-medium dark:bg-neutral-900"
                 >
-                  <FocusIcon className="h-5 w-5 group-hover:text-blue-500" />
+                  <FocusIcon className="h-4 w-4" />
+                  Open
                 </button>
               </Tooltip.Trigger>
               <Tooltip.Portal>
@@ -59,6 +54,12 @@ export function NoteActions({
             </Tooltip.Root>
           </div>
         )}
+        <div className="inline-flex items-center gap-10">
+          <NoteReply id={id} pubkey={pubkey} root={root} />
+          <NoteReaction id={id} pubkey={pubkey} />
+          <NoteRepost id={id} pubkey={pubkey} />
+          <NoteZap id={id} pubkey={pubkey} />
+        </div>
       </div>
     </Tooltip.Provider>
   );

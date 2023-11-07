@@ -6,14 +6,7 @@ import { VList } from 'virtua';
 import { useNDK } from '@libs/ndk/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import {
-  ArticleNote,
-  FileNote,
-  NoteWrapper,
-  Repost,
-  TextNote,
-  UnknownNote,
-} from '@shared/notes';
+import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -37,7 +30,7 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
         const events = await fetcher.fetchLatestEvents(
           relayUrls,
           {
-            kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+            kinds: [NDKKind.Text, NDKKind.Repost],
             '#t': [params.content],
           },
           FETCH_LIMIT,
@@ -65,36 +58,19 @@ export function GlobalHashtagWidget({ params }: { params: Widget }) {
   );
 
   // render event match event kind
-  const renderItem = useCallback((event: NDKEvent) => {
-    switch (event.kind) {
-      case NDKKind.Text:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <TextNote />
-          </NoteWrapper>
-        );
-      case NDKKind.Repost:
-        return <Repost key={event.id} event={event} />;
-      case 1063:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <FileNote />
-          </NoteWrapper>
-        );
-      case NDKKind.Article:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <ArticleNote />
-          </NoteWrapper>
-        );
-      default:
-        return (
-          <NoteWrapper key={event.id} event={event}>
-            <UnknownNote />
-          </NoteWrapper>
-        );
-    }
-  }, []);
+  const renderItem = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return <MemoizedTextNote key={event.id} event={event} />;
+        case NDKKind.Repost:
+          return <MemoizedRepost key={event.id} event={event} />;
+        default:
+          return <UnknownNote key={event.id} event={event} />;
+      }
+    },
+    [data]
+  );
 
   return (
     <WidgetWrapper>

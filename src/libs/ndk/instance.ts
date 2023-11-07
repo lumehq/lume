@@ -77,10 +77,10 @@ export const NDKInstance = () => {
     const outboxSetting = await db.getSettingValue('outbox');
     const explicitRelayUrls = await getExplicitRelays();
 
-    const dexieAdapter = new NDKCacheAdapterTauri(db);
+    const tauriAdapter = new NDKCacheAdapterTauri(db);
     const instance = new NDK({
       explicitRelayUrls,
-      cacheAdapter: dexieAdapter,
+      cacheAdapter: tauriAdapter,
       outboxRelayUrls: ['wss://purplepag.es'],
       enableOutboxModel: outboxSetting === '1',
     });

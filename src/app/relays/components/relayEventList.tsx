@@ -6,14 +6,7 @@ import { VList } from 'virtua';
 import { useNDK } from '@libs/ndk/provider';
 
 import { LoaderIcon } from '@shared/icons';
-import {
-  ArticleNote,
-  FileNote,
-  NoteWrapper,
-  Repost,
-  TextNote,
-  UnknownNote,
-} from '@shared/notes';
+import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 
 export function RelayEventList({ relayUrl }: { relayUrl: string }) {
   const { fetcher } = useNDK();
@@ -24,9 +17,9 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
       const events = await fetcher.fetchLatestEvents(
         [url],
         {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+          kinds: [NDKKind.Text, NDKKind.Repost],
         },
-        100
+        20
       );
       return events as unknown as NDKEvent[];
     },
@@ -37,31 +30,11 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <TextNote />
-            </NoteWrapper>
-          );
+          return <MemoizedTextNote key={event.id} event={event} />;
         case NDKKind.Repost:
-          return <Repost key={event.id} event={event} />;
-        case 1063:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <FileNote />
-            </NoteWrapper>
-          );
-        case NDKKind.Article:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <ArticleNote />
-            </NoteWrapper>
-          );
+          return <MemoizedRepost key={event.id} event={event} />;
         default:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <UnknownNote />
-            </NoteWrapper>
-          );
+          return <UnknownNote key={event.id} event={event} />;
       }
     },
     [data]

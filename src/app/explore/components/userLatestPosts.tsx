@@ -3,14 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import { LoaderIcon } from '@shared/icons';
-import {
-  ArticleNote,
-  FileNote,
-  NoteWrapper,
-  Repost,
-  TextNote,
-  UnknownNote,
-} from '@shared/notes';
+import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
@@ -28,31 +21,11 @@ export function UserLatestPosts({ pubkey }: { pubkey: string }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <TextNote />
-            </NoteWrapper>
-          );
+          return <MemoizedTextNote key={event.id} event={event} />;
         case NDKKind.Repost:
-          return <Repost key={event.id} event={event} />;
-        case 1063:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <FileNote />
-            </NoteWrapper>
-          );
-        case NDKKind.Article:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <ArticleNote />
-            </NoteWrapper>
-          );
+          return <MemoizedRepost key={event.id} event={event} />;
         default:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <UnknownNote />
-            </NoteWrapper>
-          );
+          return <UnknownNote key={event.id} event={event} />;
       }
     },
     [data]

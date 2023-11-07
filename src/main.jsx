@@ -1,6 +1,4 @@
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { QueryClient } from '@tanstack/react-query';
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 
@@ -17,31 +15,16 @@ const queryClient = new QueryClient({
   },
 });
 
-const persister = createSyncStoragePersister({
-  storage: window.localStorage,
-});
-
 const container = document.getElementById('root');
 const root = createRoot(container);
 
 root.render(
-  <PersistQueryClientProvider
-    client={queryClient}
-    persistOptions={{
-      persister,
-      dehydrateOptions: {
-        shouldDehydrateQuery: (query) => {
-          if (query.queryKey === 'widgets') return false;
-          return true;
-        },
-      },
-    }}
-  >
+  <QueryClientProvider client={queryClient}>
     <StorageProvider>
       <NDKProvider>
         <Toaster position="top-center" closeButton />
         <App />
       </NDKProvider>
     </StorageProvider>
-  </PersistQueryClientProvider>
+  </QueryClientProvider>
 );

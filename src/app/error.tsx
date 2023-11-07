@@ -39,10 +39,10 @@ export function ErrorScreen() {
   }, []);
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center bg-white dark:bg-black">
       <div className="flex w-full flex-col gap-4 px-4 md:max-w-lg md:px-0">
         <div className="flex flex-col">
-          <h1 className="mb-1 text-2xl font-semibold text-white">
+          <h1 className="mb-1 text-2xl font-semibold">
             Sorry, an unexpected error has occurred.
           </h1>
           <div className="mt-4 inline-flex h-16 items-center justify-center rounded-xl border border-dashed border-red-400 bg-red-200/10 px-5">
@@ -64,19 +64,19 @@ export function ErrorScreen() {
             href="https://github.com/luminous-devs/lume/issues/new"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium"
           >
             Click here to report the issue on GitHub
           </a>
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium"
           >
             Reload app
           </button>
           <button
             type="button"
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium text-white backdrop-blur-xl hover:bg-white/10"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium"
           >
             Reset app
           </button>

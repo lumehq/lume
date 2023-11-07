@@ -6,12 +6,9 @@ import { WVList } from 'virtua';
 import { useNDK } from '@libs/ndk/provider';
 
 import {
-  ArticleNote,
-  FileNote,
+  MemoizedRepost,
+  MemoizedTextNote,
   NoteSkeleton,
-  NoteWrapper,
-  Repost,
-  TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
@@ -30,8 +27,7 @@ export function LocalUserWidget({ params }: { params: Widget }) {
       const dedupQueue = new Set();
 
       const events = await ndk.fetchEvents({
-        // @ts-expect-error, NDK not support file metadata yet
-        kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
+        kinds: [NDKKind.Text, NDKKind.Repost],
         authors: [params.content],
         since: nHoursAgo(24),
       });
@@ -62,31 +58,11 @@ export function LocalUserWidget({ params }: { params: Widget }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <TextNote />
-            </NoteWrapper>
-          );
+          return <MemoizedTextNote key={event.id} event={event} />;
         case NDKKind.Repost:
-          return <Repost key={event.id} event={event} />;
-        case 1063:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <FileNote />
-            </NoteWrapper>
-          );
-        case NDKKind.Article:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <ArticleNote />
-            </NoteWrapper>
-          );
+          return <MemoizedRepost key={event.id} event={event} />;
         default:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <UnknownNote />
-            </NoteWrapper>
-          );
+          return <UnknownNote key={event.id} event={event} />;
       }
     },
     [data]

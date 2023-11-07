@@ -11,13 +11,11 @@ import {
   MemoizedRepost,
   MemoizedTextNote,
   NoteSkeleton,
-  NoteWrapper,
   UnknownNote,
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
-
-import { LiveUpdater } from './liveUpdater';
+import { LiveUpdater } from '@shared/widgets';
 
 export function NewsfeedWidget() {
   const { db } = useStorage();
@@ -81,19 +79,11 @@ export function NewsfeedWidget() {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <MemoizedTextNote />
-            </NoteWrapper>
-          );
+          return <MemoizedTextNote key={event.id} event={event} />;
         case NDKKind.Repost:
           return <MemoizedRepost key={event.id} event={event} />;
         default:
-          return (
-            <NoteWrapper key={event.id} event={event}>
-              <UnknownNote />
-            </NoteWrapper>
-          );
+          return <UnknownNote key={event.id} event={event} />;
       }
     },
     [data]
@@ -102,7 +92,7 @@ export function NewsfeedWidget() {
   return (
     <WidgetWrapper>
       <TitleBar id="9999" isLive />
-      <LiveUpdater status={status} ref={ref} />
+      <LiveUpdater status={status} />
       <VList className="flex-1" ref={ref} overscan={2}>
         {status === 'pending' ? (
           <div className="px-3 py-1.5">
