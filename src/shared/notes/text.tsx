@@ -4,11 +4,15 @@ import { memo } from 'react';
 import { ChildNote, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
 
+import { WidgetKinds } from '@stores/constants';
+
 import { useNostr } from '@utils/hooks/useNostr';
 import { useRichContent } from '@utils/hooks/useRichContent';
+import { useWidget } from '@utils/hooks/useWidget';
 
 export function TextNote({ event }: { event: NDKEvent }) {
   const { parsedContent } = useRichContent(event.content);
+  const { addWidget } = useWidget();
   const { getEventThread } = useNostr();
 
   const thread = getEventThread(event);
@@ -22,6 +26,19 @@ export function TextNote({ event }: { event: NDKEvent }) {
             <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
               {thread.rootEventId ? <ChildNote id={thread.rootEventId} isRoot /> : null}
               {thread.replyEventId ? <ChildNote id={thread.replyEventId} /> : null}
+              <button
+                type="button"
+                onClick={() =>
+                  addWidget.mutate({
+                    kind: WidgetKinds.local.thread,
+                    title: 'Thread',
+                    content: thread.rootEventId,
+                  })
+                }
+                className="self-start text-blue-500 hover:text-blue-600"
+              >
+                Show full thread
+              </button>
             </div>
           </div>
         ) : null}

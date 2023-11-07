@@ -2,7 +2,12 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
 
 import { ShareIcon } from '@shared/icons';
-import { MemoizedArticleKind, MemoizedFileKind, NoteSkeleton } from '@shared/notes';
+import {
+  MemoizedArticleKind,
+  MemoizedFileKind,
+  MemoizedTextKind,
+  NoteSkeleton,
+} from '@shared/notes';
 import { User } from '@shared/user';
 
 import { WidgetKinds } from '@stores/constants';
@@ -21,11 +26,7 @@ export function NotifyNote({ event }: { event: NDKEvent }) {
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
       case NDKKind.Text:
-        return (
-          <div className="break-p line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
-            {event.content}
-          </div>
-        );
+        return <MemoizedTextKind key={event.id} content={event.content} textmode />;
       case NDKKind.Article:
         return <MemoizedArticleKind key={event.id} id={event.id} tags={event.tags} />;
       case 1063:

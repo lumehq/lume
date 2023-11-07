@@ -1,7 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
 
-import { PlusIcon } from '@shared/icons';
 import {
   MemoizedArticleKind,
   MemoizedFileKind,
@@ -22,7 +21,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
       case NDKKind.Text:
-        return <MemoizedTextKind content={event.content} />;
+        return <MemoizedTextKind content={event.content} textmode />;
       case NDKKind.Article:
         return <MemoizedArticleKind id={event.id} tags={event.tags} />;
       case 1063:
@@ -42,10 +41,25 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
 
   return (
     <div className="my-2 flex w-full cursor-default flex-col gap-1 rounded-lg bg-neutral-100 dark:bg-neutral-900">
-      <div className="px-3 pt-3">
+      <div className="mt-3 px-3">
         <User pubkey={data.pubkey} time={data.created_at} variant="mention" />
       </div>
-      <div>{renderKind(data)}</div>
+      <div className="mt-1 px-3 pb-3">
+        {renderKind(data)}
+        <button
+          type="button"
+          onClick={() =>
+            addWidget.mutate({
+              kind: WidgetKinds.local.thread,
+              title: 'Thread',
+              content: data.id,
+            })
+          }
+          className="mt-2 text-blue-500 hover:text-blue-600"
+        >
+          Show more
+        </button>
+      </div>
     </div>
   );
 });

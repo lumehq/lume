@@ -4,13 +4,11 @@ import { WVList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
 import {
-  MemoizedArticleNote,
-  MemoizedFileNote,
-  MemoizedTextNote,
+  MemoizedArticleKind,
+  MemoizedFileKind,
+  MemoizedTextKind,
   NoteActions,
   NoteReplyForm,
-  NoteStats,
-  UnknownNote,
 } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
 import { TitleBar } from '@shared/titleBar';
@@ -27,13 +25,13 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return <MemoizedTextNote content={event.content} />;
+          return <MemoizedTextKind content={event.content} />;
         case NDKKind.Article:
-          return <MemoizedArticleNote event={event} />;
+          return <MemoizedArticleKind id={event.id} tags={event.tags} />;
         case 1063:
-          return <MemoizedFileNote event={event} />;
+          return <MemoizedFileKind tags={event.tags} />;
         default:
-          return <UnknownNote event={event} />;
+          return null;
       }
     },
     [data]
@@ -42,23 +40,22 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title={params.title} />
-      <WVList className="flex-1 overflow-y-auto px-3">
+      <WVList className="flex-1 overflow-y-auto px-3 pb-5">
         {status === 'pending' ? (
-          <div className="flex h-16 items-center justify-center rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+          <div className="flex h-16 items-center justify-center rounded-xl bg-neutral-50 px-3 py-3 dark:bg-neutral-950">
             <LoaderIcon className="h-5 w-5 animate-spin" />
           </div>
         ) : (
-          <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-            <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
-            <div className="mt-2">{renderKind(data)}</div>
-            <NoteActions id={params.content} pubkey={data.pubkey} extraButtons={false} />
-          </div>
+          <>
+            <div className="flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950">
+              <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
+              {renderKind(data)}
+              <NoteActions id={data.id} pubkey={data.pubkey} />
+            </div>
+            <NoteReplyForm eventId={params.content} />
+            <ReplyList eventId={data.id} />
+          </>
         )}
-        <NoteStats id={params.content} />
-        <hr className="my-4 h-px w-full border-none bg-neutral-100" />
-        <NoteReplyForm id={params.content} />
-        <ReplyList id={params.content} />
-        <div className="h-10" />
       </WVList>
     </WidgetWrapper>
   );

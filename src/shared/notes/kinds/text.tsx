@@ -2,13 +2,13 @@ import { memo } from 'react';
 
 import { useRichContent } from '@utils/hooks/useRichContent';
 
-export function TextKind({ content, truncate }: { content: string; truncate?: boolean }) {
-  const { parsedContent } = useRichContent(content);
+export function TextKind({ content, textmode }: { content: string; textmode?: boolean }) {
+  const { parsedContent } = useRichContent(content, textmode);
 
-  if (truncate) {
+  if (textmode) {
     return (
-      <div className="break-p select-text whitespace-pre-line leading-normal text-neutral-900 dark:text-neutral-100">
-        {content}
+      <div className="break-p line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
+        {parsedContent}
       </div>
     );
   }

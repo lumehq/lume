@@ -42,17 +42,23 @@ const VIDEOS = [
   '.m3u8',
 ];
 
-export function useRichContent(content: string) {
+export function useRichContent(content: string, textmode: boolean = false) {
   let parsedContent: string | ReactNode[] = content;
   let linkPreview: string;
+  let images: string[] = [];
+  let videos: string[] = [];
+  let events: string[] = [];
 
   const text = content;
   const words = text.split(/(\s+)/);
 
-  const images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
-  const videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
+  if (!textmode) {
+    images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
+    videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
+    events = words.filter((word) => NOSTR_EVENTS.some((el) => word.startsWith(el)));
+  }
+
   const hashtags = words.filter((word) => word.startsWith('#'));
-  const events = words.filter((word) => NOSTR_EVENTS.some((el) => word.startsWith(el)));
   const mentions = words.filter((word) =>
     NOSTR_MENTIONS.some((el) => word.startsWith(el))
   );
@@ -127,7 +133,7 @@ export function useRichContent(content: string) {
       const url = new URL(match);
       url.search = '';
 
-      if (!linkPreview) {
+      if (!linkPreview && !textmode) {
         linkPreview = match;
         return <LinkPreview key={match + i} url={url.toString()} />;
       }

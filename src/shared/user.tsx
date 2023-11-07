@@ -102,7 +102,7 @@ export const User = memo(function User({
 
     return (
       <div className="flex items-center gap-2">
-        <Avatar.Root className="shrink-0">
+        <Avatar.Root className="h-8 w-8 shrink-0">
           <Avatar.Image
             src={user?.picture || user?.image}
             alt={pubkey}
@@ -308,14 +308,16 @@ export const User = memo(function User({
             />
           </Avatar.Fallback>
         </Avatar.Root>
-        <div className="absolute left-2 top-2 font-semibold leading-tight">
-          {user?.display_name ||
-            user?.name ||
-            user?.displayName ||
-            displayNpub(pubkey, 16)}{' '}
-          <span className="font-normal text-neutral-700 dark:text-neutral-300">
+        <div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
+          <div className="w-full max-w-[10rem] truncate">
+            {user?.display_name ||
+              user?.name ||
+              user?.displayName ||
+              displayNpub(pubkey, 16)}{' '}
+          </div>
+          <div className="font-normal text-neutral-700 dark:text-neutral-300">
             {subtext}:
-          </span>
+          </div>
         </div>
       </>
     );
@@ -440,20 +442,20 @@ export const User = memo(function User({
     }
 
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex h-16 items-center gap-3 px-3">
         <Avatar.Root className="h-10 w-10 shrink-0">
           <Avatar.Image
             src={user?.picture || user?.image}
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-10 w-10 rounded-lg"
+            className="h-10 w-10 rounded-lg ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
           />
           <Avatar.Fallback delayMs={300}>
             <img
               src={svgURI}
               alt={pubkey}
-              className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+              className="h-10 w-10 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
             />
           </Avatar.Fallback>
         </Avatar.Root>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { NavArrowDownIcon } from '@shared/icons';
-import { MemoizedTextNote, NoteActions, SubReply } from '@shared/notes';
+import { MemoizedTextKind, NoteActions, SubReply } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { NDKEventWithReplies } from '@utils/types';
@@ -12,23 +12,20 @@ export function Reply({ event, root }: { event: NDKEventWithReplies; root?: stri
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative">
-      <div className="relative flex flex-col">
+    <div>
+      <div className="flex flex-col gap-2">
         <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
-        <div className="-mt-4 flex items-start gap-3">
-          <div className="w-10 shrink-0" />
-          <div className="relative z-10 flex-1">
-            <MemoizedTextNote content={event.content} />
-            <NoteActions
-              id={event.id}
-              pubkey={event.pubkey}
-              root={root}
-              extraButtons={false}
-            />
-          </div>
+        <MemoizedTextKind content={event.content} />
+        <div className="-ml-1">
+          <NoteActions
+            id={event.id}
+            pubkey={event.pubkey}
+            root={root}
+            extraButtons={false}
+          />
         </div>
       </div>
-      <div className="pl-[48px]">
+      <div className="pl-4">
         <Collapsible.Root open={open} onOpenChange={setOpen}>
           {event.replies?.length > 0 ? (
             <div>
