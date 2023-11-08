@@ -19,9 +19,24 @@ export function useWidget() {
 
   const removeWidget = useMutation({
     mutationFn: async (id: string) => {
-      return await db.removeWidget(id);
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['widgets'] });
+
+      // Snapshot the previous value
+      const prevWidgets = queryClient.getQueryData(['widgets']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['widgets'], (prev: Widget[]) =>
+        prev.filter((t) => t.id !== id)
+      );
+
+      // Update in database
+      await db.removeWidget(id);
+
+      // Return a context object with the snapshotted value
+      return { prevWidgets };
     },
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['widgets'] });
     },
   });

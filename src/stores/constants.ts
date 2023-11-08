@@ -10,6 +10,37 @@ export const FULL_RELAYS = [
 
 export const FETCH_LIMIT = 20;
 
+export const HASHTAGS = [
+  { hashtag: '#food' },
+  { hashtag: '#gaming' },
+  { hashtag: '#nsfw' },
+  { hashtag: '#bitcoin' },
+  { hashtag: '#nostr' },
+  { hashtag: '#nostrdesign' },
+  { hashtag: '#security' },
+  { hashtag: '#zap' },
+  { hashtag: '#LFG' },
+  { hashtag: '#zapchain' },
+  { hashtag: '#shitcoin' },
+  { hashtag: '#plebchain' },
+  { hashtag: '#nodes' },
+  { hashtag: '#hodl' },
+  { hashtag: '#stacksats' },
+  { hashtag: '#nokyc' },
+  { hashtag: '#meme' },
+  { hashtag: '#memes' },
+  { hashtag: '#memestr' },
+  { hashtag: '#nostriches' },
+  { hashtag: '#dev' },
+  { hashtag: '#anime' },
+  { hashtag: '#waifu' },
+  { hashtag: '#manga' },
+  { hashtag: '#lume' },
+  { hashtag: '#snort' },
+  { hashtag: '#damus' },
+  { hashtag: '#primal' },
+];
+
 export const WidgetKinds = {
   local: {
     network: 100,

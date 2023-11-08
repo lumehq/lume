@@ -34,7 +34,7 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
   return (
     <WidgetWrapper>
       <TitleBar id={params.id} title="Trending Notes" />
-      <div className="flex-1">
+      <VList className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
@@ -56,14 +56,9 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="h-full">
-            {data.map((item) => (
-              <MemoizedTextNote key={item.event.id} event={item.event} />
-            ))}
-            <div className="h-16" />
-          </VList>
+          data.map((item) => <MemoizedTextNote key={item.event.id} event={item.event} />)
         )}
-      </div>
+      </VList>
     </WidgetWrapper>
   );
 }

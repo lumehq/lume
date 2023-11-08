@@ -6,36 +6,8 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
-import { WidgetKinds } from '@stores/constants';
+import { HASHTAGS, WidgetKinds } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
-
-const data = [
-  { hashtag: '#bitcoin' },
-  { hashtag: '#nostr' },
-  { hashtag: '#nostrdesign' },
-  { hashtag: '#security' },
-  { hashtag: '#zap' },
-  { hashtag: '#LFG' },
-  { hashtag: '#zapchain' },
-  { hashtag: '#shitcoin' },
-  { hashtag: '#plebchain' },
-  { hashtag: '#nodes' },
-  { hashtag: '#hodl' },
-  { hashtag: '#stacksats' },
-  { hashtag: '#nokyc' },
-  { hashtag: '#meme' },
-  { hashtag: '#memes' },
-  { hashtag: '#memestr' },
-  { hashtag: '#nostriches' },
-  { hashtag: '#dev' },
-  { hashtag: '#anime' },
-  { hashtag: '#waifu' },
-  { hashtag: '#manga' },
-  { hashtag: '#lume' },
-  { hashtag: '#snort' },
-  { hashtag: '#damus' },
-  { hashtag: '#primal' },
-];
 
 export function OnboardHashtagScreen() {
   const { db } = useStorage();
@@ -93,7 +65,7 @@ export function OnboardHashtagScreen() {
         </h1>
         <div className="flex flex-col gap-4">
           <div className="flex h-[420px] w-full flex-col overflow-y-auto rounded-xl bg-neutral-100 dark:bg-neutral-900">
-            {data.map((item: { hashtag: string }) => (
+            {HASHTAGS.map((item: { hashtag: string }) => (
               <button
                 key={item.hashtag}
                 type="button"

@@ -190,7 +190,7 @@ export const User = memo(function User({
     if (status === 'pending') {
       return (
         <div className="flex items-center gap-2.5">
-          <div className="h-11 w-11 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+          <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
           <div className="flex w-full flex-col items-start gap-1">
             <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
             <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
@@ -201,19 +201,19 @@ export const User = memo(function User({
 
     return (
       <div className="flex items-center gap-2.5">
-        <Avatar.Root className="shrink-0">
+        <Avatar.Root className="h-10 w-10 shrink-0">
           <Avatar.Image
             src={user?.picture || user?.image}
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-11 w-11 rounded-lg"
+            className="h-10 w-10 rounded-lg object-cover"
           />
           <Avatar.Fallback delayMs={300}>
             <img
               src={svgURI}
               alt={pubkey}
-              className="h-11 w-11 rounded-lg bg-black dark:bg-white"
+              className="h-10 w-10 rounded-lg bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
