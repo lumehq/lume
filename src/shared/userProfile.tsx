@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { UserStats } from '@app/users/components/stats';
-
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
@@ -71,10 +69,9 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
         <img
           src={user?.picture || user?.image}
           alt={pubkey}
-          className="h-12 w-12 shrink-0 rounded-lg"
+          className="h-12 w-12 shrink-0 rounded-lg object-cover"
           loading="lazy"
           decoding="async"
-          style={{ contentVisibility: 'auto' }}
         />
         <div className="inline-flex items-center gap-2">
           {followed ? (
@@ -102,7 +99,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           </Link>
         </div>
       </div>
-      <div className="mt-2 flex flex-1 flex-col">
+      <div className="mt-2 flex flex-1 flex-col gap-1.5">
         <div className="flex flex-col">
           <h5 className="text-lg font-semibold">
             {user?.name || user?.display_name || user?.displayName || 'Anon'}
@@ -119,11 +116,8 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             </span>
           )}
         </div>
-        <div className="flex flex-col gap-3">
-          <p className="mb-3 mt-2 max-w-[500px] select-text break-words text-neutral-900 dark:text-neutral-100">
-            {user?.about}
-          </p>
-          <UserStats pubkey={pubkey} />
+        <div className="max-w-[500px] select-text break-words text-neutral-900 dark:text-neutral-100">
+          {user?.about}
         </div>
       </div>
     </div>

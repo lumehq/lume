@@ -48,6 +48,7 @@ export function ReplyList({ eventId }: { eventId: string }) {
 
   return (
     <div className="mt-3 flex flex-col gap-5">
+      <h3 className="font-semibold">Replies</h3>
       {data?.length === 0 ? (
         <div className="mt-2 flex w-full items-center justify-center">
           <div className="flex flex-col items-center justify-center gap-2 py-6">

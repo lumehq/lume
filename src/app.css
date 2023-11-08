@@ -114,6 +114,9 @@ input::-ms-clear {
   inset: 20px 20px auto auto;
   cursor: zoom-out;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 [data-rmiz-content="found"] img,
@@ -153,7 +156,8 @@ input::-ms-clear {
 }
 
 [data-rmiz-modal-overlay="visible"] {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(4px);
 }
 
 [data-rmiz-modal-content] {

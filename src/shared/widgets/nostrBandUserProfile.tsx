@@ -7,7 +7,6 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { FollowIcon, UnfollowIcon } from '@shared/icons';
-import { Image } from '@shared/image';
 
 import { compactNumber } from '@utils/number';
 import { shortenKey } from '@utils/shortenKey';
@@ -95,8 +94,9 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
       <div className="rounded-xl bg-neutral-100 px-5 py-5 dark:bg-neutral-900">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-2">
-            <Image
+            <img
               src={profile.picture}
+              alt={data.pubkey}
               className="h-11 w-11 shrink-0 rounded-lg object-cover"
             />
             <div className="inline-flex flex-col">
@@ -128,12 +128,10 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
             )}
           </div>
         </div>
-        <div className="mt-2">
-          <p className="whitespace-pre-line break-words text-neutral-900 dark:text-neutral-100">
-            {profile.about || profile.bio}
-          </p>
+        <div className="mt-2 whitespace-pre-line break-words text-neutral-900 dark:text-neutral-100">
+          {profile.about || profile.bio}
         </div>
-        <div className="mt-8">
+        <div className="mt-5">
           {status === 'pending' ? (
             <p>Loading...</p>
           ) : (

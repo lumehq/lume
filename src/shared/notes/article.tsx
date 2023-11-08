@@ -35,11 +35,11 @@ export function ArticleNote({ event }: { event: NDKEvent }) {
     <div className="mb-3 h-min w-full px-3">
       <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
         <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
-        <div>
+        <div className="px-3">
           <Link
             to={`/notes/article/${event.id}`}
             preventScrollReset={true}
-            className="flex w-full flex-col rounded-lg border border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900"
+            className="flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900"
           >
             {metadata.image && (
               <img
@@ -48,7 +48,7 @@ export function ArticleNote({ event }: { event: NDKEvent }) {
                 className="h-56 w-full rounded-t-lg object-cover"
               />
             )}
-            <div className="flex flex-col gap-1 rounded-b-lg bg-neutral-200 px-3 py-3 dark:bg-neutral-800">
+            <div className="flex flex-col gap-1 rounded-b-lg rounded-t-lg bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
               <h5 className="break-all font-semibold text-neutral-900 dark:text-neutral-100">
                 {metadata.title}
               </h5>

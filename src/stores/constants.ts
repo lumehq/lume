@@ -8,7 +8,7 @@ export const FULL_RELAYS = [
   'wss://nostr.mutinywallet.com',
 ];
 
-export const FETCH_LIMIT = 50;
+export const FETCH_LIMIT = 20;
 
 export const WidgetKinds = {
   local: {

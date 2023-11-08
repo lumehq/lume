@@ -12,25 +12,15 @@ export function Reply({ event, root }: { event: NDKEventWithReplies; root?: stri
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
-      <div className="flex flex-col gap-2">
-        <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
-        <MemoizedTextKind content={event.content} />
-        <div className="-ml-1">
-          <NoteActions
-            id={event.id}
-            pubkey={event.pubkey}
-            root={root}
-            extraButtons={false}
-          />
-        </div>
-      </div>
-      <div className="pl-4">
-        <Collapsible.Root open={open} onOpenChange={setOpen}>
-          {event.replies?.length > 0 ? (
-            <div>
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <div className="rounded-xl bg-neutral-50 dark:bg-neutral-950">
+        <div className="flex flex-col gap-2 pt-3">
+          <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
+          <MemoizedTextKind content={event.content} />
+          <div className="-ml-1 flex items-center justify-between">
+            {event.replies?.length > 0 ? (
               <Collapsible.Trigger asChild>
-                <div className="inline-flex h-10 items-center gap-1 font-semibold text-blue-500">
+                <div className="ml-4 inline-flex h-14 items-center gap-1 font-semibold text-blue-500">
                   <NavArrowDownIcon
                     className={twMerge('h-3 w-3', open ? 'rotate-180 transform' : '')}
                   />
@@ -39,13 +29,23 @@ export function Reply({ event, root }: { event: NDKEventWithReplies; root?: stri
                     (event.replies?.length === 1 ? 'reply' : 'replies')}
                 </div>
               </Collapsible.Trigger>
-              <Collapsible.Content>
-                {event.replies?.map((sub) => <SubReply key={sub.id} event={sub} />)}
-              </Collapsible.Content>
-            </div>
+            ) : null}
+            <NoteActions
+              id={event.id}
+              pubkey={event.pubkey}
+              root={root}
+              extraButtons={false}
+            />
+          </div>
+        </div>
+        <div className={twMerge('px-3', open ? 'pb-3' : '')}>
+          {event.replies?.length > 0 ? (
+            <Collapsible.Content>
+              {event.replies?.map((sub) => <SubReply key={sub.id} event={sub} />)}
+            </Collapsible.Content>
           ) : null}
-        </Collapsible.Root>
+        </div>
       </div>
-    </div>
+    </Collapsible.Root>
   );
 }

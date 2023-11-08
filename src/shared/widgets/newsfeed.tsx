@@ -17,6 +17,8 @@ import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 import { LiveUpdater } from '@shared/widgets';
 
+import { FETCH_LIMIT } from '@stores/constants';
+
 export function NewsfeedWidget() {
   const { db } = useStorage();
   const { relayUrls, ndk, fetcher } = useNDK();
@@ -40,7 +42,7 @@ export function NewsfeedWidget() {
             kinds: [NDKKind.Text, NDKKind.Repost],
             authors: db.account.circles,
           },
-          20,
+          FETCH_LIMIT,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
         );
 

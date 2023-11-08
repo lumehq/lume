@@ -49,7 +49,7 @@ export function LinkPreview({ url }: { url: string }) {
         <img
           src={data.image}
           alt={url}
-          className="h-44 w-full rounded-t-lg bg-white object-cover"
+          className="h-48 w-full rounded-t-lg bg-white object-cover"
         />
       ) : null}
       <div className="flex flex-col items-start px-3 py-3">

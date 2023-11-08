@@ -6,7 +6,6 @@ export * from './child';
 export * from './notify';
 export * from './unknown';
 export * from './skeleton';
-export * from './stats';
 export * from './actions';
 export * from './actions/reaction';
 export * from './actions/reply';

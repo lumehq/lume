@@ -3,7 +3,7 @@ import { download } from '@tauri-apps/plugin-upload';
 import { SyntheticEvent } from 'react';
 import Zoom from 'react-medium-image-zoom';
 
-import { DownloadIcon } from '@shared/icons';
+import { CancelIcon, DownloadIcon } from '@shared/icons';
 
 export function ImagePreview({ url }: { url: string }) {
   const downloadImage = async (url: string) => {
@@ -17,7 +17,7 @@ export function ImagePreview({ url }: { url: string }) {
   };
 
   return (
-    <Zoom key={url} zoomMargin={50}>
+    <Zoom key={url} zoomMargin={50} IconUnzoom={() => <CancelIcon className="h-4 w-4" />}>
       <div className="group relative mt-2">
         <img
           src={url}

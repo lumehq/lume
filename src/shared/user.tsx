@@ -298,7 +298,7 @@ export const User = memo(function User({
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-10 w-10 rounded-lg"
+            className="h-10 w-10 rounded-lg object-cover"
           />
           <Avatar.Fallback delayMs={300}>
             <img

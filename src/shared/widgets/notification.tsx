@@ -11,6 +11,8 @@ import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
+import { FETCH_LIMIT } from '@stores/constants';
+
 import { useNostr } from '@utils/hooks/useNostr';
 import { sendNativeNotification } from '@utils/notification';
 
@@ -37,7 +39,7 @@ export function NotificationWidget() {
             kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
             '#p': [db.account.pubkey],
           },
-          20,
+          FETCH_LIMIT,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
         );
 

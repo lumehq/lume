@@ -1,5 +1,3 @@
-import { Image } from '@shared/image';
-
 import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
@@ -20,7 +18,7 @@ export function MentionPopupItem({ pubkey, embed }: { pubkey: string; embed?: st
 
   return (
     <div className="flex h-11 items-center justify-start gap-2.5 px-2 hover:bg-neutral-200 dark:bg-neutral-800">
-      <Image
+      <img
         src={user.picture || user.image}
         alt={pubkey}
         className="shirnk-0 h-8 w-8 rounded-md object-cover"
