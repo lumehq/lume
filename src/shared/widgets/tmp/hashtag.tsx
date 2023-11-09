@@ -3,7 +3,7 @@ import { Resolver, useForm } from 'react-hook-form';
 import { ArrowRightCircleIcon, CancelIcon } from '@shared/icons';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { HASHTAGS, WidgetKinds } from '@stores/constants';
+import { HASHTAGS, WIDGET_KIND } from '@stores/constants';
 
 import { useWidget } from '@utils/hooks/useWidget';
 import { Widget } from '@utils/types';
@@ -39,7 +39,7 @@ export function XhashtagWidget({ params }: { params: Widget }) {
   const onSubmit = async (data: FormValues) => {
     try {
       addWidget.mutate({
-        kind: WidgetKinds.global.hashtag,
+        kind: WIDGET_KIND.global.hashtag,
         title: data.hashtag,
         content: data.hashtag.replace('#', ''),
       });

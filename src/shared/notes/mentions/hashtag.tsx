@@ -1,4 +1,4 @@
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { useWidget } from '@utils/hooks/useWidget';
 
@@ -10,7 +10,7 @@ export function Hashtag({ tag }: { tag: string }) {
       type="button"
       onClick={() =>
         addWidget.mutate({
-          kind: WidgetKinds.global.hashtag,
+          kind: WIDGET_KIND.global.hashtag,
           title: tag,
           content: tag.replace('#', ''),
         })

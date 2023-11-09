@@ -43,6 +43,7 @@ export interface WidgetGroup {
 export interface WidgetGroupItem {
   title: string;
   description: string;
+  content: string;
   kind: number;
   icon?: string;
 }

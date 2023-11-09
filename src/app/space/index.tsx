@@ -25,7 +25,7 @@ import {
   XhashtagWidget,
 } from '@shared/widgets';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { Widget } from '@utils/types';
 
@@ -43,13 +43,13 @@ export function SpaceScreen() {
           id: '9998',
           title: 'Notification',
           content: '',
-          kind: WidgetKinds.local.notification,
+          kind: WIDGET_KIND.local.notification,
         },
         {
           id: '9999',
           title: 'Newsfeed',
           content: '',
-          kind: WidgetKinds.local.network,
+          kind: WIDGET_KIND.local.network,
         },
       ];
 
@@ -63,35 +63,35 @@ export function SpaceScreen() {
 
   const renderItem = useCallback((widget: Widget) => {
     switch (widget.kind) {
-      case WidgetKinds.local.feeds:
+      case WIDGET_KIND.local.feeds:
         return <LocalFeedsWidget key={widget.id} params={widget} />;
-      case WidgetKinds.local.files:
+      case WIDGET_KIND.local.files:
         return <LocalFilesWidget key={widget.id} params={widget} />;
-      case WidgetKinds.local.articles:
+      case WIDGET_KIND.local.articles:
         return <LocalArticlesWidget key={widget.id} params={widget} />;
-      case WidgetKinds.local.user:
+      case WIDGET_KIND.local.user:
         return <LocalUserWidget key={widget.id} params={widget} />;
-      case WidgetKinds.local.thread:
+      case WIDGET_KIND.local.thread:
         return <LocalThreadWidget key={widget.id} params={widget} />;
-      case WidgetKinds.global.hashtag:
+      case WIDGET_KIND.global.hashtag:
         return <GlobalHashtagWidget key={widget.id} params={widget} />;
-      case WidgetKinds.global.articles:
+      case WIDGET_KIND.global.articles:
         return <GlobalArticlesWidget key={widget.id} params={widget} />;
-      case WidgetKinds.global.files:
+      case WIDGET_KIND.global.files:
         return <GlobalFilesWidget key={widget.id} params={widget} />;
-      case WidgetKinds.nostrBand.trendingAccounts:
+      case WIDGET_KIND.nostrBand.trendingAccounts:
         return <TrendingAccountsWidget key={widget.id} params={widget} />;
-      case WidgetKinds.nostrBand.trendingNotes:
+      case WIDGET_KIND.nostrBand.trendingNotes:
         return <TrendingNotesWidget key={widget.id} params={widget} />;
-      case WidgetKinds.tmp.xfeed:
+      case WIDGET_KIND.tmp.xfeed:
         return <XfeedsWidget key={widget.id} params={widget} />;
-      case WidgetKinds.tmp.xhashtag:
+      case WIDGET_KIND.tmp.xhashtag:
         return <XhashtagWidget key={widget.id} params={widget} />;
-      case WidgetKinds.tmp.list:
+      case WIDGET_KIND.tmp.list:
         return <WidgetList key={widget.id} params={widget} />;
-      case WidgetKinds.local.notification:
+      case WIDGET_KIND.local.notification:
         return <NotificationWidget key={widget.id} />;
-      case WidgetKinds.local.network:
+      case WIDGET_KIND.local.network:
         return <NewsfeedWidget key={widget.id} />;
       default:
         return null;

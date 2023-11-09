@@ -6,7 +6,7 @@ import { NoteReply } from '@shared/notes/actions/reply';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { useWidget } from '@utils/hooks/useWidget';
 
@@ -34,7 +34,7 @@ export function NoteActions({
                   type="button"
                   onClick={() =>
                     addWidget.mutate({
-                      kind: WidgetKinds.local.thread,
+                      kind: WIDGET_KIND.local.thread,
                       title: 'Thread',
                       content: id,
                     })

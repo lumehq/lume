@@ -9,7 +9,7 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { useWidget } from '@utils/hooks/useWidget';
@@ -50,7 +50,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
           type="button"
           onClick={() =>
             addWidget.mutate({
-              kind: WidgetKinds.local.thread,
+              kind: WIDGET_KIND.local.thread,
               title: 'Thread',
               content: data.id,
             })

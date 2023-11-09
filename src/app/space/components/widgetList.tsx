@@ -13,7 +13,7 @@ import {
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { DefaultWidgets, WidgetKinds } from '@stores/constants';
+import { DEFAULT_WIDGETS, WIDGET_KIND } from '@stores/constants';
 
 import { useWidget } from '@utils/hooks/useWidget';
 import { Widget, WidgetGroup, WidgetGroupItem } from '@utils/types';
@@ -22,55 +22,48 @@ export function WidgetList({ params }: { params: Widget }) {
   const { addWidget, removeWidget } = useWidget();
 
   const open = (item: WidgetGroupItem) => {
-    addWidget.mutate({ kind: item.kind, title: item.title, content: '' });
+    addWidget.mutate({
+      kind: item.kind,
+      title: item.title,
+      content: JSON.stringify(item.content),
+    });
     removeWidget.mutate(params.id);
   };
 
-  const renderIcon = useCallback(
-    (kind: number) => {
-      switch (kind) {
-        case WidgetKinds.tmp.xfeed:
-          return (
-            <GroupFeedsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
-          );
-        case WidgetKinds.local.follows:
-          return (
-            <FollowsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
-          );
-        case WidgetKinds.local.files:
-        case WidgetKinds.global.files:
-          return <FileIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
-        case WidgetKinds.local.articles:
-        case WidgetKinds.global.articles:
-          return (
-            <ArticleIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
-          );
-        case WidgetKinds.tmp.xhashtag:
-          return (
-            <HashtagIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
-          );
-        case WidgetKinds.nostrBand.trendingAccounts:
-        case WidgetKinds.nostrBand.trendingNotes:
-          return (
-            <TrendingIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
-          );
-        case WidgetKinds.local.notification:
-          return <BellIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
-        case WidgetKinds.other.learnNostr:
-          return (
-            <ThreadsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
-          );
-        default:
-          return null;
-      }
-    },
-    [DefaultWidgets]
-  );
+  const renderIcon = useCallback((kind: number) => {
+    switch (kind) {
+      case WIDGET_KIND.tmp.xfeed:
+        return (
+          <GroupFeedsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
+        );
+      case WIDGET_KIND.local.follows:
+        return <FollowsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
+      case WIDGET_KIND.local.files:
+      case WIDGET_KIND.global.files:
+        return <FileIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
+      case WIDGET_KIND.local.articles:
+      case WIDGET_KIND.global.articles:
+        return <ArticleIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
+      case WIDGET_KIND.tmp.xhashtag:
+        return <HashtagIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
+      case WIDGET_KIND.nostrBand.trendingAccounts:
+      case WIDGET_KIND.nostrBand.trendingNotes:
+        return (
+          <TrendingIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
+        );
+      case WIDGET_KIND.local.notification:
+        return <BellIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
+      case WIDGET_KIND.other.learnNostr:
+        return <ThreadsIcon className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />;
+      default:
+        return null;
+    }
+  }, []);
 
   const renderItem = useCallback((row: WidgetGroup, index: number) => {
     return (
       <div key={index} className="flex flex-col gap-2">
-        <h3 className="text-sm font-semibold">{row.title}</h3>
+        <h3 className="font-semibold">{row.title}</h3>
         <div className="flex flex-col divide-y divide-neutral-200 overflow-hidden rounded-xl bg-neutral-100 dark:divide-neutral-800 dark:bg-neutral-900">
           {row.data.map((item, index) => (
             <button
@@ -111,7 +104,7 @@ export function WidgetList({ params }: { params: Widget }) {
       <TitleBar id={params.id} title="Add widget" />
       <div className="flex-1 overflow-y-auto pb-10 scrollbar-none">
         <div className="flex flex-col gap-6 px-3">
-          {DefaultWidgets.map((row: WidgetGroup, index: number) =>
+          {DEFAULT_WIDGETS.map((row: WidgetGroup, index: number) =>
             renderItem(row, index)
           )}
           <div className="border-t border-neutral-200 pt-6 dark:border-neutral-800">

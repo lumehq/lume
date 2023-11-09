@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { ChildNote, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { useRichContent } from '@utils/hooks/useRichContent';
@@ -30,7 +30,7 @@ export function TextNote({ event }: { event: NDKEvent }) {
                 type="button"
                 onClick={() =>
                   addWidget.mutate({
-                    kind: WidgetKinds.local.thread,
+                    kind: WIDGET_KIND.local.thread,
                     title: 'Thread',
                     content: thread.rootEventId,
                   })

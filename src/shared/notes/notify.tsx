@@ -10,7 +10,7 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { formatCreatedAt } from '@utils/createdAt';
 import { useEvent } from '@utils/hooks/useEvent';
@@ -91,7 +91,7 @@ export function NotifyNote({ event }: { event: NDKEvent }) {
             type="button"
             onClick={() =>
               addWidget.mutate({
-                kind: WidgetKinds.local.thread,
+                kind: WIDGET_KIND.local.thread,
                 title: 'Thread',
                 content: data.id,
               })

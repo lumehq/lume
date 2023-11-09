@@ -6,7 +6,7 @@ import { useStorage } from '@libs/storage/provider';
 
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
-import { HASHTAGS, WidgetKinds } from '@stores/constants';
+import { HASHTAGS, WIDGET_KIND } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
 
 export function OnboardHashtagScreen() {
@@ -35,7 +35,7 @@ export function OnboardHashtagScreen() {
       setLoading(true);
 
       for (const tag of tags) {
-        await db.createWidget(WidgetKinds.global.hashtag, tag, tag.replace('#', ''));
+        await db.createWidget(WIDGET_KIND.global.hashtag, tag, tag.replace('#', ''));
       }
 
       setHashtag();

@@ -6,7 +6,7 @@ import { ArrowRightCircleIcon, CancelIcon, CheckCircleIcon } from '@shared/icons
 import { User } from '@shared/user';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { useWidget } from '@utils/hooks/useWidget';
 import { Widget } from '@utils/types';
@@ -28,7 +28,7 @@ export function XfeedsWidget({ params }: { params: Widget }) {
 
   const submit = async () => {
     addWidget.mutate({
-      kind: WidgetKinds.local.feeds,
+      kind: WIDGET_KIND.local.feeds,
       title: title || 'Group',
       content: JSON.stringify(groups),
     });

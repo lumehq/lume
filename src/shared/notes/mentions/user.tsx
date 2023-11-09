@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { WidgetKinds } from '@stores/constants';
+import { WIDGET_KIND } from '@stores/constants';
 
 import { useProfile } from '@utils/hooks/useProfile';
 import { useWidget } from '@utils/hooks/useWidget';
@@ -14,14 +14,14 @@ export const MentionUser = memo(function MentionUser({ pubkey }: { pubkey: strin
       type="button"
       onClick={() =>
         addWidget.mutate({
-          kind: WidgetKinds.local.user,
+          kind: WIDGET_KIND.local.user,
           title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
         })
       }
       onKeyDown={() =>
         addWidget.mutate({
-          kind: WidgetKinds.local.user,
+          kind: WIDGET_KIND.local.user,
           title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
         })
