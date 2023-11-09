@@ -1,12 +1,14 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { FetchFilter } from 'nostr-fetch';
 import { useMemo } from 'react';
 import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
+import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { MemoizedArticleNote } from '@shared/notes';
+import { MemoizedFileNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -14,11 +16,12 @@ import { FETCH_LIMIT } from '@stores/constants';
 
 import { Widget } from '@utils/types';
 
-export function GlobalArticlesWidget({ params }: { params: Widget }) {
+export function FileWidget({ widget }: { widget: Widget }) {
+  const { db } = useStorage();
   const { ndk, relayUrls, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['global-articles'],
+      queryKey: ['widget-' + widget.id],
       initialPageParam: 0,
       queryFn: async ({
         signal,
@@ -27,14 +30,24 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
         signal: AbortSignal;
         pageParam: number;
       }) => {
-        const events = await fetcher.fetchLatestEvents(
-          relayUrls,
-          {
-            kinds: [NDKKind.Article],
-          },
-          FETCH_LIMIT,
-          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
-        );
+        let filter: FetchFilter;
+        const content = JSON.parse(widget.content);
+
+        if (content.global) {
+          filter = {
+            kinds: [1063],
+          };
+        } else {
+          filter = {
+            kinds: [1063],
+            authors: db.account.circles,
+          };
+        }
+
+        const events = await fetcher.fetchLatestEvents(relayUrls, filter, FETCH_LIMIT, {
+          asOf: pageParam === 0 ? undefined : pageParam,
+          abortSignal: signal,
+        });
 
         const ndkEvents = events.map((event) => {
           return new NDKEvent(ndk, event);
@@ -58,7 +71,7 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title={params.title} />
+      <TitleBar id={widget.id} title={widget.title} />
       <VList className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center">
@@ -70,7 +83,7 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
                 <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
-                  Oops, it looks like there are no articles.
+                  Oops, it looks like there are no files.
                 </h3>
                 <p className="text-neutral-500 dark:text-neutral-400">
                   You can close this widget
@@ -79,7 +92,7 @@ export function GlobalArticlesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          allEvents.map((item) => <MemoizedArticleNote key={item.id} event={item} />)
+          allEvents.map((item) => <MemoizedFileNote key={item.id} event={item} />)
         )}
         <div className="flex h-16 items-center justify-center px-3 pb-3">
           {hasNextPage ? (

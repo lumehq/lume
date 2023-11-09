@@ -10,7 +10,7 @@ export function Hashtag({ tag }: { tag: string }) {
       type="button"
       onClick={() =>
         addWidget.mutate({
-          kind: WIDGET_KIND.global.hashtag,
+          kind: WIDGET_KIND.hashtag,
           title: tag,
           content: tag.replace('#', ''),
         })

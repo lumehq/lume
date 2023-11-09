@@ -14,8 +14,7 @@ import {
   UnknownNote,
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
-import { WidgetWrapper } from '@shared/widgets';
-import { LiveUpdater } from '@shared/widgets';
+import { LiveUpdater, WidgetWrapper } from '@shared/widgets';
 
 import { FETCH_LIMIT } from '@stores/constants';
 

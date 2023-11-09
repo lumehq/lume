@@ -2,16 +2,12 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useStorage } from '@libs/storage/provider';
-
 import { ArrowLeftIcon, CheckCircleIcon, LoaderIcon } from '@shared/icons';
 
-import { HASHTAGS, WIDGET_KIND } from '@stores/constants';
+import { HASHTAGS } from '@stores/constants';
 import { useOnboarding } from '@stores/onboarding';
 
 export function OnboardHashtagScreen() {
-  const { db } = useStorage();
-
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(new Set<string>());
 
@@ -33,10 +29,6 @@ export function OnboardHashtagScreen() {
   const submit = async () => {
     try {
       setLoading(true);
-
-      for (const tag of tags) {
-        await db.createWidget(WIDGET_KIND.global.hashtag, tag, tag.replace('#', ''));
-      }
 
       setHashtag();
       navigate(-1);

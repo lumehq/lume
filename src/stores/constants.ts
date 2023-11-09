@@ -42,35 +42,18 @@ export const HASHTAGS = [
 ];
 
 export const WIDGET_KIND = {
-  local: {
-    network: 100,
-    feeds: 101,
-    files: 102,
-    articles: 103,
-    user: 104,
-    thread: 105,
-    follows: 106,
-    notification: 107,
-  },
-  global: {
-    feeds: 1000,
-    files: 1001,
-    articles: 1002,
-    hashtag: 1003,
-    topic: 108,
-  },
-  nostrBand: {
-    trendingAccounts: 1,
-    trendingNotes: 2,
-  },
-  other: {
-    learnNostr: 90000,
-  },
-  tmp: {
-    list: 10000,
-    xfeed: 10001,
-    xhashtag: 10002,
-  },
+  user: 1,
+  thread: 2,
+  group: 3,
+  article: 4,
+  file: 5,
+  trendingNotes: 6,
+  trendingAccounts: 7,
+  topic: 8,
+  hashtag: 9,
+  notification: 9998,
+  newsfeed: 9999,
+  list: 10000,
 };
 
 export const TOPICS = [

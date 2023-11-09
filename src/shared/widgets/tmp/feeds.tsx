@@ -28,7 +28,7 @@ export function XfeedsWidget({ params }: { params: Widget }) {
 
   const submit = async () => {
     addWidget.mutate({
-      kind: WIDGET_KIND.local.feeds,
+      kind: WIDGET_KIND.group,
       title: title || 'Group',
       content: JSON.stringify(groups),
     });

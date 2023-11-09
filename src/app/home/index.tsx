@@ -2,34 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
 
-import { ToggleWidgetList } from '@app/space/components/toggle';
-import { WidgetList } from '@app/space/components/widgetList';
-
 import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import {
-  GlobalArticlesWidget,
-  GlobalFilesWidget,
-  GlobalHashtagWidget,
-  LocalArticlesWidget,
-  LocalFeedsWidget,
-  LocalFilesWidget,
-  LocalThreadWidget,
-  LocalUserWidget,
   NewsfeedWidget,
   NotificationWidget,
-  TrendingAccountsWidget,
-  TrendingNotesWidget,
-  XfeedsWidget,
-  XhashtagWidget,
+  ToggleWidgetList,
+  WidgetList,
 } from '@shared/widgets';
 
 import { WIDGET_KIND } from '@stores/constants';
 
 import { Widget } from '@utils/types';
 
-export function SpaceScreen() {
+export function HomeScreen() {
   const ref = useRef<VListHandle>(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -40,16 +27,16 @@ export function SpaceScreen() {
       const dbWidgets = await db.getWidgets();
       const defaultWidgets = [
         {
-          id: '9998',
-          title: 'Notification',
-          content: '',
-          kind: WIDGET_KIND.local.notification,
-        },
-        {
-          id: '9999',
+          id: '99999',
           title: 'Newsfeed',
           content: '',
-          kind: WIDGET_KIND.local.network,
+          kind: WIDGET_KIND.newsfeed,
+        },
+        {
+          id: '99998',
+          title: 'Notification',
+          content: '',
+          kind: WIDGET_KIND.notification,
         },
       ];
 
@@ -63,36 +50,12 @@ export function SpaceScreen() {
 
   const renderItem = useCallback((widget: Widget) => {
     switch (widget.kind) {
-      case WIDGET_KIND.local.feeds:
-        return <LocalFeedsWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.local.files:
-        return <LocalFilesWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.local.articles:
-        return <LocalArticlesWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.local.user:
-        return <LocalUserWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.local.thread:
-        return <LocalThreadWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.global.hashtag:
-        return <GlobalHashtagWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.global.articles:
-        return <GlobalArticlesWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.global.files:
-        return <GlobalFilesWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.nostrBand.trendingAccounts:
-        return <TrendingAccountsWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.nostrBand.trendingNotes:
-        return <TrendingNotesWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.tmp.xfeed:
-        return <XfeedsWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.tmp.xhashtag:
-        return <XhashtagWidget key={widget.id} params={widget} />;
-      case WIDGET_KIND.tmp.list:
-        return <WidgetList key={widget.id} params={widget} />;
-      case WIDGET_KIND.local.notification:
+      case WIDGET_KIND.notification:
         return <NotificationWidget key={widget.id} />;
-      case WIDGET_KIND.local.network:
+      case WIDGET_KIND.newsfeed:
         return <NewsfeedWidget key={widget.id} />;
+      case WIDGET_KIND.list:
+        return <WidgetList key={widget.id} widget={widget} />;
       default:
         return null;
     }
@@ -108,14 +71,15 @@ export function SpaceScreen() {
 
   return (
     <VList
-      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
-      horizontal
       ref={ref}
+      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
       initialItemSize={420}
       tabIndex={0}
+      horizontal
       onKeyDown={(e) => {
         if (!ref.current) return;
         switch (e.code) {
+          case 'ArrowUp':
           case 'ArrowLeft': {
             e.preventDefault();
             const prevIndex = Math.max(selectedIndex - 1, 0);
@@ -126,6 +90,7 @@ export function SpaceScreen() {
             });
             break;
           }
+          case 'ArrowDown':
           case 'ArrowRight': {
             e.preventDefault();
             const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
@@ -136,6 +101,8 @@ export function SpaceScreen() {
             });
             break;
           }
+          default:
+            break;
         }
       }}
     >

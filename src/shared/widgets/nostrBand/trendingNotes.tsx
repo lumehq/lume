@@ -13,9 +13,9 @@ interface Response {
   notes: Array<{ event: NDKEvent }>;
 }
 
-export function TrendingNotesWidget({ params }: { params: Widget }) {
+export function TrendingNotesWidget({ widget }: { widget: Widget }) {
   const { status, data } = useQuery({
-    queryKey: ['trending-notes-widget'],
+    queryKey: ['widget-' + widget.id],
     queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/notes');
       if (!res.ok) {
@@ -33,7 +33,7 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title="Trending Notes" />
+      <TitleBar id={widget.id} title="Trending Notes" />
       <VList className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">

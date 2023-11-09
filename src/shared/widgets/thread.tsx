@@ -18,8 +18,8 @@ import { WidgetWrapper } from '@shared/widgets';
 import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';
 
-export function LocalThreadWidget({ params }: { params: Widget }) {
-  const { status, data } = useEvent(params.content);
+export function ThreadWidget({ widget }: { widget: Widget }) {
+  const { status, data } = useEvent(widget.content);
 
   const renderKind = useCallback(
     (event: NDKEvent) => {
@@ -39,7 +39,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title={params.title} />
+      <TitleBar id={widget.id} title={widget.title} />
       <WVList className="flex-1 overflow-y-auto px-3 pb-5">
         {status === 'pending' ? (
           <div className="flex h-16 items-center justify-center rounded-xl bg-neutral-50 px-3 py-3 dark:bg-neutral-950">
@@ -52,7 +52,7 @@ export function LocalThreadWidget({ params }: { params: Widget }) {
               {renderKind(data)}
               <NoteActions id={data.id} pubkey={data.pubkey} />
             </div>
-            <NoteReplyForm eventId={params.content} />
+            <NoteReplyForm eventId={widget.content} />
             <ReplyList eventId={data.id} />
           </>
         )}

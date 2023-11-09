@@ -14,7 +14,7 @@ export function ToggleWidgetList() {
         <button
           type="button"
           onClick={() =>
-            addWidget.mutate({ kind: WIDGET_KIND.tmp.list, title: '', content: '' })
+            addWidget.mutate({ kind: WIDGET_KIND.list, title: '', content: '' })
           }
           className="inline-flex h-9 items-center gap-2 rounded-full bg-neutral-200 px-3 text-neutral-900 hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
         >

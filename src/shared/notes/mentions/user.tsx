@@ -14,14 +14,7 @@ export const MentionUser = memo(function MentionUser({ pubkey }: { pubkey: strin
       type="button"
       onClick={() =>
         addWidget.mutate({
-          kind: WIDGET_KIND.local.user,
-          title: user?.name || user?.display_name || user?.displayName,
-          content: pubkey,
-        })
-      }
-      onKeyDown={() =>
-        addWidget.mutate({
-          kind: WIDGET_KIND.local.user,
+          kind: WIDGET_KIND.user,
           title: user?.name || user?.display_name || user?.displayName,
           content: pubkey,
         })

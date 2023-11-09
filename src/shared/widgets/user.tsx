@@ -18,17 +18,17 @@ import { WidgetWrapper } from '@shared/widgets';
 import { nHoursAgo } from '@utils/date';
 import { Widget } from '@utils/types';
 
-export function LocalUserWidget({ params }: { params: Widget }) {
+export function UserWidget({ widget }: { widget: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery({
-    queryKey: ['user-posts', params.content],
+    queryKey: ['widget-' + widget.id],
     queryFn: async () => {
       const rootIds = new Set();
       const dedupQueue = new Set();
 
       const events = await ndk.fetchEvents({
         kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: [params.content],
+        authors: [widget.content],
         since: nHoursAgo(24),
       });
 
@@ -70,10 +70,10 @@ export function LocalUserWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title={params.title} />
+      <TitleBar id={widget.id} title={widget.title} />
       <WVList className="flex-1 overflow-y-auto">
         <div className="px-3 pt-1.5">
-          <UserProfile pubkey={params.content} />
+          <UserProfile pubkey={widget.content} />
         </div>
         <div>
           <h3 className="mb-3 mt-4 px-3 text-lg font-semibold text-neutral-900 dark:text-neutral-100">

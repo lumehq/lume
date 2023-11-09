@@ -1,13 +1,12 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { VList } from 'virtua';
 
 import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { MemoizedArticleNote } from '@shared/notes';
+import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -15,12 +14,11 @@ import { FETCH_LIMIT } from '@stores/constants';
 
 import { Widget } from '@utils/types';
 
-export function LocalArticlesWidget({ params }: { params: Widget }) {
-  const { db } = useStorage();
+export function HashtagWidget({ widget }: { widget: Widget }) {
   const { ndk, relayUrls, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['local-articles'],
+      queryKey: ['widget-' + widget.id],
       initialPageParam: 0,
       queryFn: async ({
         signal,
@@ -32,8 +30,8 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
         const events = await fetcher.fetchLatestEvents(
           relayUrls,
           {
-            kinds: [NDKKind.Article],
-            authors: db.account.circles,
+            kinds: [NDKKind.Text, NDKKind.Repost],
+            '#t': [widget.content],
           },
           FETCH_LIMIT,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
@@ -59,9 +57,24 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
     [data]
   );
 
+  // render event match event kind
+  const renderItem = useCallback(
+    (event: NDKEvent) => {
+      switch (event.kind) {
+        case NDKKind.Text:
+          return <MemoizedTextNote key={event.id} event={event} />;
+        case NDKKind.Repost:
+          return <MemoizedRepost key={event.id} event={event} />;
+        default:
+          return <UnknownNote key={event.id} event={event} />;
+      }
+    },
+    [data]
+  );
+
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title={params.title} />
+      <TitleBar id={widget.id} title={widget.title} />
       <VList className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center">
@@ -73,7 +86,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
               <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
               <div className="text-center">
                 <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
-                  Oops, it looks like there are no articles.
+                  Oops, it looks like there are no events related to {widget.content}.
                 </h3>
                 <p className="text-neutral-500 dark:text-neutral-400">
                   You can close this widget
@@ -82,7 +95,7 @@ export function LocalArticlesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          allEvents.map((item) => <MemoizedArticleNote key={item.id} event={item} />)
+          allEvents.map((item) => renderItem(item))
         )}
         <div className="flex h-16 items-center justify-center px-3 pb-3">
           {hasNextPage ? (

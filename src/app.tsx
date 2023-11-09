@@ -54,8 +54,8 @@ export default function App() {
         {
           path: '',
           async lazy() {
-            const { SpaceScreen } = await import('@app/space');
-            return { Component: SpaceScreen };
+            const { HomeScreen } = await import('@app/home');
+            return { Component: HomeScreen };
           },
         },
         {

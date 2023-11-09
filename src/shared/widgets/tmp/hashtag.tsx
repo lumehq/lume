@@ -39,7 +39,7 @@ export function XhashtagWidget({ params }: { params: Widget }) {
   const onSubmit = async (data: FormValues) => {
     try {
       addWidget.mutate({
-        kind: WIDGET_KIND.global.hashtag,
+        kind: WIDGET_KIND.hashtag,
         title: data.hashtag,
         content: data.hashtag.replace('#', ''),
       });

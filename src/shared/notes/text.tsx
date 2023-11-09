@@ -30,7 +30,7 @@ export function TextNote({ event }: { event: NDKEvent }) {
                 type="button"
                 onClick={() =>
                   addWidget.mutate({
-                    kind: WIDGET_KIND.local.thread,
+                    kind: WIDGET_KIND.thread,
                     title: 'Thread',
                     content: thread.rootEventId,
                   })

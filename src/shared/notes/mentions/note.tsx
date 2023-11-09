@@ -50,7 +50,7 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
           type="button"
           onClick={() =>
             addWidget.mutate({
-              kind: WIDGET_KIND.local.thread,
+              kind: WIDGET_KIND.thread,
               title: 'Thread',
               content: data.id,
             })
