@@ -15,7 +15,7 @@ interface Response {
   profiles: Array<{ pubkey: string }>;
 }
 
-export function TrendingAccountsWidget({ params }: { params: Widget }) {
+export function TrendingAccountsWidget({ widget }: { widget: Widget }) {
   const { status, data } = useQuery({
     queryKey: ['trending-profiles-widget'],
     queryFn: async () => {
@@ -35,7 +35,7 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title="Trending Accounts" />
+      <TitleBar id={widget.id} title="Trending Accounts" />
       <div className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">

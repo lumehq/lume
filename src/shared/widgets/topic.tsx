@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { FetchFilter } from 'nostr-fetch';
 import { useCallback, useMemo } from 'react';
 import { VList } from 'virtua';
 
@@ -33,18 +34,18 @@ export function TopicWidget({ widget }: { widget: Widget }) {
         pageParam: number;
       }) => {
         const hashtags: string[] = JSON.parse(widget.content as string);
+        const filter: FetchFilter = {
+          kinds: [NDKKind.Text, NDKKind.Repost],
+          '#t': hashtags.map((tag) => tag.replace('#', '')),
+        };
+
         const rootIds = new Set();
         const dedupQueue = new Set();
 
-        const events = await fetcher.fetchLatestEvents(
-          relayUrls,
-          {
-            kinds: [NDKKind.Text, NDKKind.Repost],
-            '#t': hashtags,
-          },
-          FETCH_LIMIT,
-          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
-        );
+        const events = await fetcher.fetchLatestEvents(relayUrls, filter, FETCH_LIMIT, {
+          asOf: pageParam === 0 ? undefined : pageParam,
+          abortSignal: signal,
+        });
 
         const ndkEvents = events.map((event) => {
           return new NDKEvent(ndk, event);

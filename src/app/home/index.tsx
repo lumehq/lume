@@ -6,9 +6,18 @@ import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import {
+  ArticleWidget,
+  FileWidget,
+  GroupWidget,
+  HashtagWidget,
   NewsfeedWidget,
   NotificationWidget,
+  ThreadWidget,
   ToggleWidgetList,
+  TopicWidget,
+  TrendingAccountsWidget,
+  TrendingNotesWidget,
+  UserWidget,
   WidgetList,
 } from '@shared/widgets';
 
@@ -54,6 +63,24 @@ export function HomeScreen() {
         return <NotificationWidget key={widget.id} />;
       case WIDGET_KIND.newsfeed:
         return <NewsfeedWidget key={widget.id} />;
+      case WIDGET_KIND.topic:
+        return <TopicWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.user:
+        return <UserWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.thread:
+        return <ThreadWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.article:
+        return <ArticleWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.file:
+        return <FileWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.hashtag:
+        return <HashtagWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.group:
+        return <GroupWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.trendingNotes:
+        return <TrendingNotesWidget key={widget.id} widget={widget} />;
+      case WIDGET_KIND.trendingAccounts:
+        return <TrendingAccountsWidget key={widget.id} widget={widget} />;
       case WIDGET_KIND.list:
         return <WidgetList key={widget.id} widget={widget} />;
       default:
