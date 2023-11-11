@@ -15,7 +15,7 @@ export function TextKind({ content, textmode }: { content: string; textmode?: bo
 
   return (
     <div className={'min-w-0 px-3'}>
-      <div className="break-p select-text whitespace-pre-line leading-normal text-neutral-900 dark:text-neutral-100">
+      <div className="break-p select-text leading-normal text-neutral-900 dark:text-neutral-100">
         {parsedContent}
       </div>
     </div>

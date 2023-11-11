@@ -49,8 +49,8 @@ export function useRichContent(content: string, textmode: boolean = false) {
   let videos: string[] = [];
   let events: string[] = [];
 
-  const text = content;
-  const words = text.split(/(\s+)/);
+  const text = content.replace(/\n\s*\n/g, '\n');
+  const words = text.split(/( |\n)/);
 
   if (!textmode) {
     images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
@@ -149,6 +149,10 @@ export function useRichContent(content: string, textmode: boolean = false) {
           {url.toString()}
         </Link>
       );
+    });
+
+    parsedContent = reactStringReplace(parsedContent, '\n', (match, i) => {
+      return <div key={'n-' + i} className="h-2" />;
     });
 
     if (typeof parsedContent[0] === 'string') {

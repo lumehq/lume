@@ -18,7 +18,7 @@ export function ImagePreview({ url }: { url: string }) {
 
   return (
     <Zoom key={url} zoomMargin={50} IconUnzoom={() => <CancelIcon className="h-4 w-4" />}>
-      <div className="group relative mt-2">
+      <div className="group relative my-2">
         <img
           src={url}
           alt={url}

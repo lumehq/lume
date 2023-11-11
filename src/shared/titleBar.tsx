@@ -51,7 +51,7 @@ export function TitleBar({
         )}
       </div>
       <div className="col-span-1 flex justify-end">
-        {id !== '9999' ? (
+        {id !== '9999' && id !== '9998' ? (
           <button
             type="button"
             onClick={() => removeWidget.mutate(id)}

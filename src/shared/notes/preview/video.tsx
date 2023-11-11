@@ -12,7 +12,7 @@ export function VideoPreview({ url }: { url: string }) {
   return (
     <MediaController
       key={url}
-      className="mt-2 aspect-video w-full overflow-hidden rounded-lg"
+      className="my-2 aspect-video w-full overflow-hidden rounded-lg"
     >
       <video slot="media" src={url} preload="metadata" muted />
       <MediaLoadingIndicator slot="centered-chrome"></MediaLoadingIndicator>
