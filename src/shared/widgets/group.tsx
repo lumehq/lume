@@ -23,7 +23,7 @@ export function GroupWidget({ widget }: { widget: Widget }) {
   const { relayUrls, ndk, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['widget-' + widget.id],
+      queryKey: [`widget-${widget.id}`],
       initialPageParam: 0,
       queryFn: async ({
         signal,

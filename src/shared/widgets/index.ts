@@ -13,3 +13,5 @@ export * from './other/wrapper';
 export * from './other/liveUpdater';
 export * from './other/toggleWidgetList';
 export * from './other/widgetList';
+export * from './other/addGroupFeeds';
+export * from './other/addHashtagFeeds';

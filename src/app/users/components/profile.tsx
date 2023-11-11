@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { EditProfileModal } from '@app/users/components/modal';
 import { UserStats } from '@app/users/components/stats';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -157,12 +156,6 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             >
               Message
             </Link>
-            {db.account.pubkey === pubkey && (
-              <>
-                <span className="mx-2 inline-flex h-4 w-px bg-neutral-200 dark:bg-neutral-800" />
-                <EditProfileModal />
-              </>
-            )}
           </div>
         </div>
       </div>
