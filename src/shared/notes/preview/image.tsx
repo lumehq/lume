@@ -40,7 +40,7 @@ export function ImagePreview({ url }: { url: string }) {
         decoding="async"
         style={{ contentVisibility: 'auto' }}
         onError={fallback}
-        className="h-auto w-full rounded-lg border border-neutral-300/50 object-cover dark:border-neutral-700/50"
+        className="h-auto w-full rounded-lg border border-neutral-200/50 object-cover dark:border-neutral-800/50"
       />
       <button
         type="button"

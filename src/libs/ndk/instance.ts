@@ -4,6 +4,7 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
@@ -36,11 +37,11 @@ export const NDKInstance = () => {
           });
 
           if (!res.ok) {
-            console.info(`${relay} is not working, skipping...`);
+            toast.warning(`${relay} is not working, skipping...`);
             onlineRelays.delete(relay);
           }
         } catch {
-          console.warn(`${relay} is not working, skipping...`);
+          toast.warning(`${relay} is not working, skipping...`);
           onlineRelays.delete(relay);
         }
       }

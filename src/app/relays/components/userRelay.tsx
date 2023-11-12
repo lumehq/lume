@@ -36,7 +36,7 @@ export function UserRelay() {
           {data.map((item) => (
             <div
               key={item}
-              className="group flex h-10 items-center justify-between rounded-lg bg-neutral-200 pl-3 pr-1.5 dark:bg-neutral-800"
+              className="group flex h-10 items-center justify-between rounded-lg bg-neutral-100 pl-3 pr-1.5 dark:bg-neutral-900"
             >
               <div className="inline-flex items-center gap-2.5">
                 {relayUrls.includes(item) ? (

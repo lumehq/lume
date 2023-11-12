@@ -1,4 +1,5 @@
 import { message } from '@tauri-apps/plugin-dialog';
+import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 

@@ -17,7 +17,7 @@ interface Response {
 
 export function TrendingAccountsWidget({ widget }: { widget: Widget }) {
   const { status, data } = useQuery({
-    queryKey: ['trending-profiles-widget'],
+    queryKey: ['trending-users'],
     queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/profiles');
       if (!res.ok) {

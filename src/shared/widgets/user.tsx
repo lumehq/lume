@@ -21,7 +21,7 @@ import { Widget } from '@utils/types';
 export function UserWidget({ widget }: { widget: Widget }) {
   const { ndk } = useNDK();
   const { status, data } = useQuery({
-    queryKey: ['widget-' + widget.id],
+    queryKey: ['user-posts', widget.id],
     queryFn: async () => {
       const rootIds = new Set();
       const dedupQueue = new Set();

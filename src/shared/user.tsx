@@ -150,7 +150,7 @@ export const User = memo(function User({
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-14 w-14 rounded-lg"
+            className="h-14 w-14 rounded-lg object-cover"
           />
           <Avatar.Fallback delayMs={300}>
             <img
@@ -475,8 +475,8 @@ export const User = memo(function User({
 
   if (status === 'pending') {
     return (
-      <div className="flex items-start gap-3">
-        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+      <div className="flex items-center gap-3 px-3">
+        <div className="h-9 w-9 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
         <div className="h-6 flex-1">
           <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
         </div>

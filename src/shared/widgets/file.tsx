@@ -21,7 +21,7 @@ export function FileWidget({ widget }: { widget: Widget }) {
   const { ndk, relayUrls, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['widget-media'],
+      queryKey: ['media', widget.id],
       initialPageParam: 0,
       queryFn: async ({
         signal,

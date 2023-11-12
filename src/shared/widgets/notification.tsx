@@ -148,9 +148,9 @@ export function NotificationWidget() {
             </div>
           </div>
         ) : allEvents.length < 1 ? (
-          <div className="flex h-full w-full flex-col items-center justify-center">
-            <p className="mb-1 text-4xl">🎉</p>
-            <p className="text-center font-medium text-neutral-600 dark:text-neutral-400">
+          <div className="flex h-[400px] w-full flex-col items-center justify-center">
+            <p className="mb-2 text-4xl">🎉</p>
+            <p className="text-center font-medium text-neutral-900 dark:text-neutral-100">
               Hmm! Nothing new yet.
             </p>
           </div>

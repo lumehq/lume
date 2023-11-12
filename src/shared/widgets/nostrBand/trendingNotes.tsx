@@ -15,7 +15,7 @@ interface Response {
 
 export function TrendingNotesWidget({ widget }: { widget: Widget }) {
   const { status, data } = useQuery({
-    queryKey: ['widget-' + widget.id],
+    queryKey: ['trending-posts'],
     queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/notes');
       if (!res.ok) {

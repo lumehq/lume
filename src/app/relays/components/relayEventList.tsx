@@ -11,7 +11,7 @@ import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 export function RelayEventList({ relayUrl }: { relayUrl: string }) {
   const { fetcher } = useNDK();
   const { status, data } = useQuery({
-    queryKey: ['relay-event'],
+    queryKey: ['relay-events', relayUrl],
     queryFn: async () => {
       const url = 'wss://' + relayUrl;
       const events = await fetcher.fetchLatestEvents(
@@ -42,7 +42,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
 
   return (
     <div className="h-full">
-      <div className="mx-auto w-full max-w-[500px]">
+      <VList className="mx-auto w-full max-w-[500px] scrollbar-none">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center">
             <div className="inline-flex flex-col items-center justify-center gap-2">
@@ -51,13 +51,9 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
             </div>
           </div>
         ) : (
-          <VList className="h-full scrollbar-none">
-            <div className="h-10" />
-            {data.map((item) => renderItem(item))}
-            <div className="h-16" />
-          </VList>
+          data.map((item) => renderItem(item))
         )}
-      </div>
+      </VList>
     </div>
   );
 }

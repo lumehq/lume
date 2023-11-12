@@ -49,7 +49,7 @@ export function useRichContent(content: string, textmode: boolean = false) {
   let videos: string[] = [];
   let events: string[] = [];
 
-  const text = content.replace(/\n\s*\n/g, '\n');
+  const text = content.replace(/\n+/g, '\n');
   const words = text.split(/( |\n)/);
 
   if (!textmode) {

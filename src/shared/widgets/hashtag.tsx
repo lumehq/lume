@@ -18,7 +18,7 @@ export function HashtagWidget({ widget }: { widget: Widget }) {
   const { ndk, relayUrls, fetcher } = useNDK();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: [`widget-${widget.content}`],
+      queryKey: ['hashtag', widget.id],
       initialPageParam: 0,
       queryFn: async ({
         signal,
