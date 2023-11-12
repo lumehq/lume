@@ -1,4 +1,10 @@
-import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
+import {
+  NDKEvent,
+  NDKFilter,
+  NDKKind,
+  NDKSubscription,
+  NDKTag,
+} from '@nostr-dev-kit/ndk';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
@@ -50,19 +56,29 @@ export function useNostr() {
     }
   };
 
-  const getEventThread = (event: NDKEvent) => {
-    let rootEventId: string;
-    let replyEventId: string;
+  const getEventThread = (tags: NDKTag[]) => {
+    let rootEventId: string = null;
+    let replyEventId: string = null;
 
-    if (event.tags?.[0]?.[0] === 'e' && !event.tags?.[0]?.[3]) {
-      rootEventId = event.tags[0][1];
+    const events = tags.filter((el) => el[0] === 'e');
+
+    if (!events.length) return null;
+
+    if (events.length === 1)
+      return {
+        rootEventId: events[0][1],
+        replyEventId: null,
+      };
+
+    if (events.length > 1) {
+      rootEventId = events.find((el) => el[3] === 'root')?.[1];
+      replyEventId = events.find((el) => el[3] === 'reply')?.[1];
+
+      if (!rootEventId && !replyEventId) {
+        rootEventId = events[0][1];
+        replyEventId = events[1][1];
+      }
     }
-
-    rootEventId = event.tags.find((el) => el[3] === 'root')?.[1] || null;
-    // eslint-disable-next-line prefer-const
-    replyEventId = event.tags.find((el) => el[3] === 'reply')?.[1] || null;
-
-    if (!rootEventId && !replyEventId) return null;
 
     return {
       rootEventId,

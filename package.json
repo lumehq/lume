@@ -80,7 +80,6 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
     "react-hotkeys-hook": "^4.4.1",
-    "react-medium-image-zoom": "^5.1.8",
     "react-router-dom": "^6.18.0",
     "react-string-replace": "^1.1.1",
     "reactflow": "^11.10.1",

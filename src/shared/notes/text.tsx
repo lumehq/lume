@@ -15,7 +15,7 @@ export function TextNote({ event }: { event: NDKEvent }) {
   const { addWidget } = useWidget();
   const { getEventThread } = useNostr();
 
-  const thread = getEventThread(event);
+  const thread = getEventThread(event.tags);
 
   return (
     <div className="mb-3 h-min w-full px-3">

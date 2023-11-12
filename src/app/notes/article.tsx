@@ -87,9 +87,9 @@ export function ArticleNoteScreen() {
           )}
           <div ref={replyRef} className="px-3">
             <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
-              <NoteReplyForm id={id} />
+              <NoteReplyForm eventId={id} />
             </div>
-            <ReplyList id={id} />
+            <ReplyList eventId={id} />
           </div>
         </div>
       </div>

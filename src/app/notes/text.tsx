@@ -6,14 +6,7 @@ import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
-import {
-  ArticleNote,
-  FileNote,
-  NoteActions,
-  NoteReplyForm,
-  TextNote,
-  UnknownNote,
-} from '@shared/notes';
+import { MemoizedTextKind, NoteActions, NoteReplyForm, UnknownNote } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
 
@@ -46,11 +39,7 @@ export function TextNoteScreen() {
   const renderKind = (event: NDKEvent) => {
     switch (event.kind) {
       case NDKKind.Text:
-        return <TextNote content={event.content} />;
-      case NDKKind.Article:
-        return <ArticleNote event={event} />;
-      case 1063:
-        return <FileNote event={event} />;
+        return <MemoizedTextKind content={event.content} />;
       default:
         return <UnknownNote event={event} />;
     }
@@ -106,9 +95,9 @@ export function TextNoteScreen() {
           )}
           <div ref={replyRef} className="px-3">
             <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
-              <NoteReplyForm id={id} />
+              <NoteReplyForm eventId={id} />
             </div>
-            <ReplyList id={id} />
+            <ReplyList eventId={id} />
           </div>
         </div>
       </div>

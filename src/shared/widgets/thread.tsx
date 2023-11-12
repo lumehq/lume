@@ -4,6 +4,7 @@ import { WVList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
 import {
+  ChildNote,
   MemoizedArticleKind,
   MemoizedFileKind,
   MemoizedTextKind,
@@ -16,16 +17,33 @@ import { User } from '@shared/user';
 import { WidgetWrapper } from '@shared/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
+import { useNostr } from '@utils/hooks/useNostr';
 import { Widget } from '@utils/types';
 
 export function ThreadWidget({ widget }: { widget: Widget }) {
   const { status, data } = useEvent(widget.content);
+  const { getEventThread } = useNostr();
 
   const renderKind = useCallback(
     (event: NDKEvent) => {
+      const thread = getEventThread(event.tags);
       switch (event.kind) {
         case NDKKind.Text:
-          return <MemoizedTextKind content={event.content} />;
+          return (
+            <>
+              {thread ? (
+                <div className="mb-2 w-full px-3">
+                  <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+                    {thread.rootEventId ? (
+                      <ChildNote id={thread.rootEventId} isRoot />
+                    ) : null}
+                    {thread.replyEventId ? <ChildNote id={thread.replyEventId} /> : null}
+                  </div>
+                </div>
+              ) : null}
+              <MemoizedTextKind content={event.content} />
+            </>
+          );
         case NDKKind.Article:
           return <MemoizedArticleKind id={event.id} tags={event.tags} />;
         case 1063:
