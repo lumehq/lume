@@ -28,7 +28,7 @@ export function FileKind({ tags }: { tags: NDKTag[] }) {
 
   if (type === 'image') {
     return (
-      <div key={url} className="group">
+      <div key={url} className="group relative">
         <img
           src={url}
           alt={url}

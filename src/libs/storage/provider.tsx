@@ -4,11 +4,14 @@ import { platform } from '@tauri-apps/plugin-os';
 import { relaunch } from '@tauri-apps/plugin-process';
 import Database from '@tauri-apps/plugin-sql';
 import { check } from '@tauri-apps/plugin-updater';
+import Markdown from 'markdown-to-jsx';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
 import { LumeStorage } from '@libs/storage/instance';
 
 import { LoaderIcon } from '@shared/icons';
+
+import { QUOTES } from '@stores/constants';
 
 interface StorageContext {
   db: LumeStorage;
@@ -54,21 +57,38 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
     if (!db) initLumeStorage();
   }, []);
 
-  if (!db) {
+  if (!db)
     return (
       <div
         data-tauri-drag-region
-        className="flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
+        className="relative flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
       >
-        <div className="flex flex-col items-center justify-center gap-4 text-center">
-          <p className="text-xl font-medium">
+        <div className="flex max-w-2xl flex-col items-start gap-1">
+          <h5 className="font-semibold uppercase">TIP:</h5>
+          <Markdown
+            options={{
+              overrides: {
+                a: {
+                  props: {
+                    className: 'text-blue-500 hover:text-blue-600',
+                    target: '_blank',
+                  },
+                },
+              },
+            }}
+            className="text-4xl font-semibold leading-snug text-neutral-300 dark:text-neutral-700"
+          >
+            {QUOTES[Math.floor(Math.random() * QUOTES.length)]}
+          </Markdown>
+        </div>
+        <div className="absolute bottom-5 right-5 inline-flex items-center gap-2.5">
+          <LoaderIcon className="h-6 w-6 animate-spin text-blue-500" />
+          <p className="font-semibold">
             {isNewVersion ? 'Found a new version, updating' : 'Checking for updates...'}
           </p>
-          <LoaderIcon className="h-7 w-7 animate-spin" />
         </div>
       </div>
     );
-  }
 
   return <StorageContext.Provider value={{ db }}>{children}</StorageContext.Provider>;
 };

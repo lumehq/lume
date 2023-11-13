@@ -1,3 +1,4 @@
+// inspired by: https://github.com/nostr-dev-kit/ndk/tree/master/ndk-cache-dexie
 import { NDKEvent, NDKRelay, profileFromEvent } from '@nostr-dev-kit/ndk';
 import type {
   Hexpubkey,

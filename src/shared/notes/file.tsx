@@ -32,7 +32,7 @@ export function FileNote({ event }: { event: NDKEvent }) {
     switch (type) {
       case 'image':
         return (
-          <div key={url} className="group">
+          <div key={url} className="group relative">
             <img
               src={url}
               alt={url}
