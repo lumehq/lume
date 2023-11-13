@@ -1,24 +1,21 @@
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import Markdown from 'markdown-to-jsx';
 import { nip19 } from 'nostr-tools';
-import { AddressPointer, EventPointer } from 'nostr-tools/lib/types/nip19';
-import { useRef, useState } from 'react';
+import { EventPointer } from 'nostr-tools/lib/types/nip19';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
-import { NoteActions, NoteReplyForm } from '@shared/notes';
+import { ArrowLeftIcon, CheckCircleIcon, ShareIcon } from '@shared/icons';
+import { NoteReplyForm } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
-import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function ArticleNoteScreen() {
-  const { id } = useParams();
-
   const navigate = useNavigate();
-  const replyRef = useRef(null);
 
-  const naddr = id.startsWith('naddr') ? (nip19.decode(id).data as AddressPointer) : null;
-  const { status, data } = useEvent(id, naddr);
+  const { id } = useParams();
+  const { status, data } = useEvent(id);
 
   const [isCopy, setIsCopy] = useState(false);
 
@@ -33,12 +30,8 @@ export function ArticleNoteScreen() {
     setTimeout(() => setIsCopy(false), 2000);
   };
 
-  const scrollToReply = () => {
-    replyRef.current.scrollIntoView();
-  };
-
   return (
-    <div className="container mx-auto grid grid-cols-8 scroll-smooth px-4">
+    <div className="grid grid-cols-12 gap-4 scroll-smooth px-4">
       <div className="col-span-1">
         <div className="flex flex-col items-end gap-4">
           <button
@@ -48,52 +41,46 @@ export function ArticleNoteScreen() {
           >
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
-          <div className="flex flex-col divide-y divide-neutral-200 rounded-xl bg-neutral-100 dark:divide-neutral-800 dark:bg-neutral-900">
-            <button
-              type="button"
-              onClick={share}
-              className="inline-flex h-12 w-12 items-center justify-center rounded-t-xl"
-            >
-              {isCopy ? (
-                <CheckCircleIcon className="h-5 w-5 text-teal-500" />
-              ) : (
-                <ShareIcon className="h-5 w-5" />
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={scrollToReply}
-              className="inline-flex h-12 w-12 items-center justify-center rounded-b-xl"
-            >
-              <ReplyIcon className="h-5 w-5" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={share}
+            className="inline-flex h-12 w-12 items-center justify-center rounded-t-xl"
+          >
+            {isCopy ? (
+              <CheckCircleIcon className="h-5 w-5 text-teal-500" />
+            ) : (
+              <ShareIcon className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
-      <div className="relative col-span-6 flex flex-col overflow-y-auto">
-        <div className="mx-auto w-full max-w-2xl">
-          {status === 'pending' ? (
-            <div className="px-3 py-1.5">Loading...</div>
-          ) : (
-            <div className="flex h-min w-full flex-col px-3">
-              <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
-                <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
-                <div className="mt-3">{data.content}</div>
-                <div className="mt-3">
-                  <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
-                </div>
-              </div>
-            </div>
-          )}
-          <div ref={replyRef} className="px-3">
-            <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
-              <NoteReplyForm eventId={id} />
-            </div>
-            <ReplyList eventId={id} />
-          </div>
-        </div>
+      <div className="col-span-7 overflow-y-auto px-3 xl:col-span-8">
+        {status === 'pending' ? (
+          <div className="px-3 py-1.5">Loading...</div>
+        ) : (
+          <Markdown
+            options={{
+              overrides: {
+                a: {
+                  props: {
+                    className: 'text-blue-500 hover:text-blue-600',
+                    target: '_blank',
+                  },
+                },
+              },
+            }}
+            className="break-p prose-lg prose-neutral dark:prose-invert prose-ul:list-disc"
+          >
+            {data.content}
+          </Markdown>
+        )}
       </div>
-      <div className="col-span-1" />
+      <div className="col-span-4 border-l border-neutral-100 px-3 dark:border-neutral-900 xl:col-span-3">
+        <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
+          <NoteReplyForm eventId={id} />
+        </div>
+        <ReplyList eventId={id} />
+      </div>
     </div>
   );
 }

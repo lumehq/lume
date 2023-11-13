@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { nip19 } from 'nostr-tools';
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
@@ -43,13 +44,13 @@ const VIDEOS = [
 ];
 
 export function useRichContent(content: string, textmode: boolean = false) {
-  let parsedContent: string | ReactNode[] = content;
+  let parsedContent: string | ReactNode[] = content.replace(/\n+/g, '\n');
   let linkPreview: string;
   let images: string[] = [];
   let videos: string[] = [];
   let events: string[] = [];
 
-  const text = content.replace(/\n+/g, '\n');
+  const text = parsedContent;
   const words = text.split(/( |\n)/);
 
   if (!textmode) {
@@ -151,8 +152,8 @@ export function useRichContent(content: string, textmode: boolean = false) {
       );
     });
 
-    parsedContent = reactStringReplace(parsedContent, '\n', (match, i) => {
-      return <div key={'n-' + i} className="h-2" />;
+    parsedContent = reactStringReplace(parsedContent, '\n', () => {
+      return <div key={nanoid()} className="h-3" />;
     });
 
     if (typeof parsedContent[0] === 'string') {

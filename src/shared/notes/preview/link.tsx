@@ -12,11 +12,11 @@ export function LinkPreview({ url }: { url: string }) {
 
   if (status === 'pending') {
     return (
-      <div className="mt-2 flex w-full flex-col rounded-lg border border-neutral-300 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-800">
-        <div className="h-44 w-full animate-pulse bg-neutral-400 dark:bg-neutral-600" />
+      <div className="my-2 flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900">
+        <div className="h-48 w-full animate-pulse bg-neutral-300 dark:bg-neutral-700" />
         <div className="flex flex-col gap-2 px-3 py-3">
-          <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
-          <div className="h-3 w-3/4 animate-pulse rounded bg-neutral-400 dark:bg-neutral-600" />
+          <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          <div className="h-3 w-3/4 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
           <span className="mt-2.5 text-sm leading-none text-neutral-600 dark:text-neutral-400">
             {domain.hostname}
           </span>

@@ -1,18 +1,19 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
+import { nip19 } from 'nostr-tools';
 import { AddressPointer } from 'nostr-tools/lib/types/nip19';
 
 import { useNDK } from '@libs/ndk/provider';
 
-export function useEvent(
-  id: undefined | string,
-  naddr?: undefined | AddressPointer,
-  embed?: undefined | string
-) {
+export function useEvent(id: undefined | string, embed?: undefined | string) {
   const { ndk } = useNDK();
   const { status, data } = useQuery({
     queryKey: ['event', id],
     queryFn: async () => {
+      const naddr = id.startsWith('naddr')
+        ? (nip19.decode(id).data as AddressPointer)
+        : null;
+
       // return event refer from naddr
       if (naddr) {
         const rEvents = await ndk.fetchEvents({
@@ -20,8 +21,10 @@ export function useEvent(
           '#d': [naddr.identifier],
           authors: [naddr.pubkey],
         });
+
         const rEvent = [...rEvents].slice(-1)[0];
         if (!rEvent) return Promise.reject(new Error('event not found'));
+
         return rEvent;
       }
 

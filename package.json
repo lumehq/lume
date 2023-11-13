@@ -65,6 +65,7 @@
     "markdown-to-jsx": "^7.3.2",
     "media-chrome": "^1.5.2",
     "minidenticons": "^4.2.0",
+    "nanoid": "^5.0.3",
     "nostr-fetch": "^0.13.1",
     "nostr-tools": "^1.17.0",
     "qrcode.react": "^3.1.0",

@@ -6,18 +6,26 @@ import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
-import { MemoizedTextKind, NoteActions, NoteReplyForm, UnknownNote } from '@shared/notes';
+import {
+  ChildNote,
+  MemoizedTextKind,
+  NoteActions,
+  NoteReplyForm,
+  UnknownNote,
+} from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function TextNoteScreen() {
-  const { id } = useParams();
-  const { status, data } = useEvent(id);
-
   const navigate = useNavigate();
   const replyRef = useRef(null);
+
+  const { id } = useParams();
+  const { status, data } = useEvent(id);
+  const { getEventThread } = useNostr();
 
   const [isCopy, setIsCopy] = useState(false);
 
@@ -37,9 +45,24 @@ export function TextNoteScreen() {
   };
 
   const renderKind = (event: NDKEvent) => {
+    const thread = getEventThread(event.tags);
     switch (event.kind) {
       case NDKKind.Text:
-        return <MemoizedTextKind content={event.content} />;
+        return (
+          <>
+            {thread ? (
+              <div className="mb-2 w-full px-3">
+                <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+                  {thread.rootEventId ? (
+                    <ChildNote id={thread.rootEventId} isRoot />
+                  ) : null}
+                  {thread.replyEventId ? <ChildNote id={thread.replyEventId} /> : null}
+                </div>
+              </div>
+            ) : null}
+            <MemoizedTextKind content={event.content} />
+          </>
+        );
       default:
         return <UnknownNote event={event} />;
     }

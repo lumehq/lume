@@ -14,7 +14,13 @@ import { WIDGET_KIND } from '@stores/constants';
 import { useEvent } from '@utils/hooks/useEvent';
 import { useWidget } from '@utils/hooks/useWidget';
 
-export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
+export const MentionNote = memo(function MentionNote({
+  id,
+  editing,
+}: {
+  id: string;
+  editing?: boolean;
+}) {
   const { status, data } = useEvent(id);
   const { addWidget } = useWidget();
 
@@ -46,19 +52,21 @@ export const MentionNote = memo(function MentionNote({ id }: { id: string }) {
       </div>
       <div className="mt-1 px-3 pb-3">
         {renderKind(data)}
-        <button
-          type="button"
-          onClick={() =>
-            addWidget.mutate({
-              kind: WIDGET_KIND.thread,
-              title: 'Thread',
-              content: data.id,
-            })
-          }
-          className="mt-2 text-blue-500 hover:text-blue-600"
-        >
-          Show more
-        </button>
+        {!editing ? (
+          <button
+            type="button"
+            onClick={() =>
+              addWidget.mutate({
+                kind: WIDGET_KIND.thread,
+                title: 'Thread',
+                content: data.id,
+              })
+            }
+            className="mt-2 text-blue-500 hover:text-blue-600"
+          >
+            Show more
+          </button>
+        ) : null}
       </div>
     </div>
   );
