@@ -9,7 +9,7 @@ export function SubReply({ event }: { event: NDKEvent }) {
       <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
       <MemoizedTextKind content={event.content} />
       <div className="-ml-1">
-        <NoteActions id={event.id} pubkey={event.pubkey} extraButtons={false} />
+        <NoteActions event={event} canOpenEvent={false} />
       </div>
     </div>
   );

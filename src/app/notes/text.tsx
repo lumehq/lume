@@ -111,14 +111,14 @@ export function TextNoteScreen() {
                 <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
                 <div className="mt-3">{renderKind(data)}</div>
                 <div className="mt-3">
-                  <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
+                  <NoteActions event={data} canOpenEvent={false} />
                 </div>
               </div>
             </div>
           )}
           <div ref={replyRef} className="px-3">
             <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
-              <NoteReplyForm eventId={id} />
+              <NoteReplyForm rootEvent={data} />
             </div>
             <ReplyList eventId={id} />
           </div>

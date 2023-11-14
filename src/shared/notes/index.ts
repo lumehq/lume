@@ -8,7 +8,6 @@ export * from './unknown';
 export * from './skeleton';
 export * from './actions';
 export * from './actions/reaction';
-export * from './actions/reply';
 export * from './actions/repost';
 export * from './actions/zap';
 export * from './actions/more';

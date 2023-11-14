@@ -1,8 +1,7 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as Popover from '@radix-ui/react-popover';
 import { useState } from 'react';
-
-import { useNDK } from '@libs/ndk/provider';
+import { toast } from 'sonner';
 
 import { ReactionIcon } from '@shared/icons';
 
@@ -29,9 +28,7 @@ const REACTIONS = [
   },
 ];
 
-export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
-  const { ndk } = useNDK();
-
+export function NoteReaction({ event }: { event: NDKEvent }) {
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
 
@@ -41,19 +38,14 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   const react = async (content: string) => {
-    setReaction(content);
+    try {
+      setReaction(content);
 
-    const event = new NDKEvent(ndk);
-    event.content = content;
-    event.kind = NDKKind.Reaction;
-    event.tags = [
-      ['e', id],
-      ['p', pubkey],
-    ];
-
-    const publishedRelays = await event.publish();
-    if (publishedRelays) {
+      // react
+      await event.react(content);
       setOpen(false);
+    } catch (e) {
+      toast.error(e);
     }
   };
 

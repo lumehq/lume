@@ -47,7 +47,7 @@ export function TextNote({ event }: { event: NDKEvent }) {
             {parsedContent}
           </div>
         </div>
-        <NoteActions id={event.id} pubkey={event.pubkey} />
+        <NoteActions event={event} rootEventId={thread?.rootEventId} />
       </div>
     </div>
   );

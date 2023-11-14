@@ -4,25 +4,39 @@ import { toast } from 'sonner';
 
 import { useNDK } from '@libs/ndk/provider';
 
+import { LoaderIcon } from '@shared/icons';
 import { ReplyMediaUploader } from '@shared/notes';
 
-export function NoteReplyForm({ eventId }: { eventId: string }) {
-  const { ndk, relayUrls } = useNDK();
+export function NoteReplyForm({ rootEvent }: { rootEvent: NDKEvent }) {
+  const { ndk } = useNDK();
+
   const [value, setValue] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const submit = async () => {
-    const tags = [['e', eventId, relayUrls[0], 'root']];
+    try {
+      setLoading(true);
 
-    // publish event
-    const event = new NDKEvent(ndk);
-    event.content = value;
-    event.kind = NDKKind.Text;
-    event.tags = tags;
+      const event = new NDKEvent(ndk);
+      event.content = value;
+      event.kind = NDKKind.Text;
 
-    const publishedRelays = await event.publish();
-    if (publishedRelays) {
-      toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
-      setValue('');
+      // tag root event
+      event.tag(rootEvent, 'reply');
+
+      // publish event
+      const publishedRelays = await event.publish();
+
+      if (publishedRelays) {
+        toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
+
+        // reset state
+        setValue('');
+        setLoading(false);
+      }
+    } catch (e) {
+      setLoading(false);
+      toast.error(e);
     }
   };
 
@@ -40,9 +54,9 @@ export function NoteReplyForm({ eventId }: { eventId: string }) {
         <button
           onClick={() => submit()}
           disabled={value.length === 0 ? true : false}
-          className="h-9 w-20 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
+          className="inline-flex h-9 w-20 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
         >
-          Reply
+          {loading ? <LoaderIcon className="h-4 w-4 animate-spin" /> : 'Reply'}
         </button>
       </div>
     </div>

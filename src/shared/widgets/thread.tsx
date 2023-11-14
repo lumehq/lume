@@ -68,9 +68,9 @@ export function ThreadWidget({ widget }: { widget: Widget }) {
             <div className="flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950">
               <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
               {renderKind(data)}
-              <NoteActions id={data.id} pubkey={data.pubkey} />
+              <NoteActions event={data} />
             </div>
-            <NoteReplyForm eventId={widget.content} />
+            <NoteReplyForm rootEvent={data} />
             <ReplyList eventId={data.id} />
           </>
         )}

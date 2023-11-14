@@ -84,7 +84,7 @@ export function FileNote({ event }: { event: NDKEvent }) {
       <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
         <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
         <div className="relative mt-2">{renderFileType()}</div>
-        <NoteActions id={event.id} pubkey={event.pubkey} />
+        <NoteActions event={event} />
       </div>
     </div>
   );

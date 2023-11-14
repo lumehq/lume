@@ -1,5 +1,6 @@
 import { webln } from '@getalby/sdk';
 import { SendPaymentResponse } from '@getalby/sdk/dist/types';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { invoke } from '@tauri-apps/api/primitives';
 import { message } from '@tauri-apps/plugin-dialog';
@@ -9,16 +10,13 @@ import CurrencyInput from 'react-currency-input-field';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
-import { useEvent } from '@utils/hooks/useEvent';
-import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
 import { compactNumber } from '@utils/number';
 
-export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
-  const { createZap } = useNostr();
-  const { user } = useProfile(pubkey);
-  const { data: event } = useEvent(id);
+export function NoteZap({ event }: { event: NDKEvent }) {
+  const nwc = useRef(null);
+  const { user } = useProfile(event.pubkey);
 
   const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
   const [amount, setAmount] = useState<string>('21');
@@ -28,12 +26,10 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const nwc = useRef(null);
-
   const createZapRequest = async () => {
     try {
       const zapAmount = parseInt(amount) * 1000;
-      const res = await createZap(event, zapAmount, zapMessage);
+      const res = await event.zap(zapAmount, zapMessage);
 
       if (!res)
         return await message('Cannot create zap request', {

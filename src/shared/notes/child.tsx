@@ -6,7 +6,7 @@ import { useEvent } from '@utils/hooks/useEvent';
 export function ChildNote({ id, isRoot }: { id: string; isRoot?: boolean }) {
   const { status, data } = useEvent(id);
 
-  if (status === 'pending') {
+  if (status === 'pending' || !data) {
     return <NoteSkeleton />;
   }
 

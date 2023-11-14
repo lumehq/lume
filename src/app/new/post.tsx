@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind, NDKTag } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import CharacterCount from '@tiptap/extension-character-count';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -21,7 +21,7 @@ import { WIDGET_KIND } from '@stores/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NewPostScreen() {
-  const { ndk, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { addWidget } = useWidget();
 
   const [loading, setLoading] = useState(false);
@@ -56,12 +56,6 @@ export function NewPostScreen() {
     try {
       setLoading(true);
 
-      const reply = {
-        id: searchParams.get('id'),
-        root: searchParams.get('root'),
-        pubkey: searchParams.get('pubkey'),
-      };
-
       // get plaintext content
       const html = editor.getHTML();
       const serializedContent = convert(html, {
@@ -71,37 +65,23 @@ export function NewPostScreen() {
         ],
       });
 
-      // define tags
-      let tags: NDKTag[] = [];
-
-      // add reply to tags if present
-      if (reply.id && reply.pubkey) {
-        if (reply.root) {
-          tags = [
-            ['e', reply.root, relayUrls[0], 'root'],
-            ['e', reply.id, relayUrls[0], 'reply'],
-            ['p', reply.pubkey],
-          ];
-        } else {
-          tags = [
-            ['e', reply.id, relayUrls[0], 'reply'],
-            ['p', reply.pubkey],
-          ];
-        }
-      }
-
-      // add hashtag to tags if present
-      const hashtags = serializedContent
-        .split(/\s/gm)
-        .filter((s: string) => s.startsWith('#'));
-      hashtags?.forEach((tag: string) => {
-        tags.push(['t', tag.replace('#', '')]);
-      });
-
       const event = new NDKEvent(ndk);
       event.content = serializedContent;
       event.kind = NDKKind.Text;
-      event.tags = tags;
+
+      // add reply to tags if present
+      const replyTo = searchParams.get('replyTo');
+      const rootReplyTo = searchParams.get('rootReplyTo');
+
+      if (rootReplyTo) {
+        const rootEvent = await ndk.fetchEvent(rootReplyTo);
+        event.tag(rootEvent, 'root');
+      }
+
+      if (replyTo) {
+        const replyEvent = await ndk.fetchEvent(replyTo);
+        event.tag(replyEvent, 'reply');
+      }
 
       // publish event
       const publishedRelays = await event.publish();
@@ -114,7 +94,7 @@ export function NewPostScreen() {
         setSearchParams({});
 
         // open new widget with this event id
-        if (!reply.id && !reply.pubkey) {
+        if (!replyTo) {
           addWidget.mutate({
             title: 'Thread',
             content: event.id,
@@ -146,9 +126,9 @@ export function NewPostScreen() {
           autoCorrect="off"
           autoCapitalize="off"
         />
-        {searchParams.get('id') && (
+        {searchParams.get('replyTo') && (
           <div className="relative max-w-lg">
-            <MentionNote id={searchParams.get('id')} editing />
+            <MentionNote id={searchParams.get('replyTo')} editing />
             <button
               type="button"
               onClick={() => setSearchParams({})}

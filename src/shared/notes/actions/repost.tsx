@@ -1,41 +1,30 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
-import { useNDK } from '@libs/ndk/provider';
-
 import { LoaderIcon, RepostIcon } from '@shared/icons';
 
-export function NoteRepost({ id, pubkey }: { id: string; pubkey: string }) {
-  const { ndk, relayUrls } = useNDK();
-
+export function NoteRepost({ event }: { event: NDKEvent }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRepost, setIsRepost] = useState(false);
 
   const submit = async () => {
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const tags = [
-      ['e', id, relayUrls[0], 'root'],
-      ['p', pubkey],
-    ];
+      // repsot
+      await event.repost(true);
 
-    const event = new NDKEvent(ndk);
-    event.content = '';
-    event.kind = NDKKind.Repost;
-    event.tags = tags;
-
-    const publishedRelays = await event.publish();
-    if (publishedRelays) {
+      // reset state
       setOpen(false);
       setIsRepost(true);
 
-      toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
-    } else {
+      toast.success("You've reposted this post successfully");
+    } catch (e) {
       setIsLoading(false);
       toast.error('Repost failed, try again later');
     }

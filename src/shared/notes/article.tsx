@@ -63,7 +63,7 @@ export function ArticleNote({ event }: { event: NDKEvent }) {
             </div>
           </Link>
         </div>
-        <NoteActions id={event.id} pubkey={event.pubkey} />
+        <NoteActions event={event} />
       </div>
     </div>
   );

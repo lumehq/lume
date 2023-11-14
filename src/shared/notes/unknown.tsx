@@ -21,7 +21,7 @@ export function UnknownNote({ event }: { event: NDKEvent }) {
             {event.content.toString()}
           </div>
         </div>
-        <NoteActions id={event.id} pubkey={event.pubkey} />
+        <NoteActions event={event} />
       </div>
     </div>
   );

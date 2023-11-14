@@ -40,7 +40,7 @@ export function ZapCard() {
         <div className="flex h-full w-full flex-col justify-between p-4">
           <h3 className="pt-1 text-5xl font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
             {compactNumber.format(
-              data.stats[db.account.pubkey].zaps_received.msats / 1000
+              data?.stats[db.account.pubkey]?.zaps_received?.msats / 1000 || 0
             )}
           </h3>
           <div className="mt-auto flex h-6 items-center text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">

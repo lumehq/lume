@@ -15,7 +15,10 @@ export function RelayCard() {
     queryKey: ['relays'],
     queryFn: async () => {
       const user = ndk.getUser({ pubkey: db.account.pubkey });
-      return await user.relayList();
+      const relays = await user.relayList();
+
+      if (!relays) return Promise.reject(new Error("user's relay set not found"));
+      return relays;
     },
     refetchOnWindowFocus: false,
   });
@@ -29,7 +32,7 @@ export function RelayCard() {
       ) : (
         <div className="flex h-full w-full flex-col justify-between p-4">
           <h3 className="pt-1 text-5xl font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
-            {compactNumber.format(data?.relays?.length)}
+            {compactNumber.format(data?.relays?.length || 0)}
           </h3>
           <div className="mt-auto flex h-6 w-full items-center justify-between">
             <p className="text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">

@@ -23,8 +23,8 @@ export function useEvent(id: undefined | string, embed?: undefined | string) {
         });
 
         const rEvent = [...rEvents].slice(-1)[0];
-        if (!rEvent) return Promise.reject(new Error('event not found'));
 
+        if (!rEvent) return Promise.reject(new Error('event not found'));
         return rEvent;
       }
 
@@ -36,8 +36,8 @@ export function useEvent(id: undefined | string, embed?: undefined | string) {
 
       // get event from relay
       const event = await ndk.fetchEvent(id);
-      if (!event) return Promise.reject(new Error('event not found'));
 
+      if (!event) return Promise.reject(new Error('event not found'));
       return event;
     },
     refetchOnWindowFocus: false,

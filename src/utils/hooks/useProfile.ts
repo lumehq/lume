@@ -20,6 +20,7 @@ export function useProfile(pubkey: string, embed?: string) {
       const cleanPubkey = pubkey.replace(/[^a-zA-Z0-9]/g, '');
       const user = ndk.getUser({ pubkey: cleanPubkey });
 
+      if (!user) return Promise.reject(new Error("user's profile not found"));
       return await user.fetchProfile();
     },
     staleTime: Infinity,
