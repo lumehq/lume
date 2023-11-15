@@ -26,6 +26,9 @@ export const NDKInstance = () => {
       const relays = await db.getExplicitRelayUrls();
       const onlineRelays = new Set(relays);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
       for (const relay of relays) {
         try {
           const url = new URL(relay);
@@ -34,6 +37,7 @@ export const NDKInstance = () => {
             headers: {
               Accept: 'application/nostr+json',
             },
+            signal: controller.signal,
           });
 
           if (!res.ok) {
@@ -45,6 +49,8 @@ export const NDKInstance = () => {
         } catch {
           toast.warning(`${relay} is not working, skipping...`);
           onlineRelays.delete(relay);
+        } finally {
+          clearTimeout(timeoutId);
         }
       }
 
