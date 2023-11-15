@@ -20,9 +20,9 @@ const root = createRoot(container);
 
 root.render(
   <QueryClientProvider client={queryClient}>
+    <Toaster position="top-center" closeButton />
     <StorageProvider>
       <NDKProvider>
-        <Toaster position="top-center" closeButton />
         <App />
       </NDKProvider>
     </StorageProvider>

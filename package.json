@@ -80,7 +80,7 @@
     "reactflow": "^11.10.1",
     "sonner": "^1.2.0",
     "tailwind-scrollbar": "^3.0.5",
-    "tauri-controls": "^0.2.0",
+    "tauri-controls": "github:reyamir/tauri-controls",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.4",
     "virtua": "^0.16.2",

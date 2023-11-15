@@ -40,6 +40,8 @@ export const NDKInstance = () => {
             toast.warning(`${relay} is not working, skipping...`);
             onlineRelays.delete(relay);
           }
+
+          toast.success(`Connected to ${relay}`);
         } catch {
           toast.warning(`${relay} is not working, skipping...`);
           onlineRelays.delete(relay);

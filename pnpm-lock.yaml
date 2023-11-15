@@ -192,8 +192,8 @@ dependencies:
     specifier: ^3.0.5
     version: 3.0.5(tailwindcss@3.3.5)
   tauri-controls:
-    specifier: ^0.2.0
-    version: 0.2.0(@tauri-apps/plugin-os@2.0.0-alpha.4)(@tauri-apps/plugin-window@2.0.0-alpha.1)(clsx@2.0.0)(react-dom@18.2.0)(react@18.2.0)(tailwind-merge@1.14.0)
+    specifier: github:reyamir/tauri-controls
+    version: github.com/reyamir/tauri-controls/15e98afd9abd588144d2ac36db6833f2ca6e1405
   tippy.js:
     specifier: ^6.3.7
     version: 6.3.7
@@ -1994,16 +1994,6 @@ packages:
     engines: {node: '>= 18', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
-  /@tauri-apps/api@2.0.0-alpha.6:
-    resolution: {integrity: sha512-ZMOc3eu9amwvkC6M69h3hWt4/EsFaAXmtkiw4xd2LN59/lTb4ZQiVfq2QKlRcu1rj3n/Tcr7U30ZopvHwXBGIg==}
-    engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
-    dev: false
-
-  /@tauri-apps/api@2.0.0-alpha.8:
-    resolution: {integrity: sha512-3hZ+7EzUA11KN+O/Y4KgmjR+ldhXLdNllkw//hv/AaNsktEopCRBuKfVRLzVK3yov+Z+GzgxqFlwgJ1v6g1iKw==}
-    engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
-    dev: false
-
   /@tauri-apps/cli-darwin-arm64@2.0.0-alpha.17:
     resolution: {integrity: sha512-WDqekRiVwMu/hKsf/xBHcfi/YZ7X9o6Piy4Qolt+YYyfi4wh5ZYZnom+7kIZBlSCc32gtXGViBXEivhcKzFQ3w==}
     engines: {node: '>= 10'}
@@ -2175,12 +2165,6 @@ packages:
     resolution: {integrity: sha512-xfqO1Gr3xpEGq5LTJqX7lxamFRfASgzBH5KXk/bumj9j+M6RzfL6H4gC+fUKM85RYu1+j8lqXT947Pgd6JmKNA==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.11
-    dev: false
-
-  /@tauri-apps/plugin-window@2.0.0-alpha.1:
-    resolution: {integrity: sha512-dFOAgal/3Txz3SQ+LNQq0AK1EPC+acdaFlwPVB/6KXUZYmaFleIlzgxDVoJCQ+/xOhxvYrdQaFLefh0I/Kldbg==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.6
     dev: false
 
   /@tiptap/core@2.1.12(@tiptap/pm@2.1.12):
@@ -5810,25 +5794,6 @@ packages:
     transitivePeerDependencies:
       - ts-node
 
-  /tauri-controls@0.2.0(@tauri-apps/plugin-os@2.0.0-alpha.4)(@tauri-apps/plugin-window@2.0.0-alpha.1)(clsx@2.0.0)(react-dom@18.2.0)(react@18.2.0)(tailwind-merge@1.14.0):
-    resolution: {integrity: sha512-/IDXLhcqGRjNN7QKfzgyr2y4QfnWT9MSIdqxrjH2oElXyngSo/cQltTb8LT6h/sH/7gRiSQMvQBEmavfn9Hk0w==}
-    peerDependencies:
-      '@tauri-apps/plugin-os': 2.0.0-alpha.2
-      '@tauri-apps/plugin-window': 2.0.0-alpha.1
-      clsx: ^2.0.0
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      tailwind-merge: ^1.14.0
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.8
-      '@tauri-apps/plugin-os': 2.0.0-alpha.4
-      '@tauri-apps/plugin-window': 2.0.0-alpha.1
-      clsx: 2.0.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      tailwind-merge: 1.14.0
-    dev: false
-
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
@@ -6286,4 +6251,17 @@ packages:
       '@types/react': 18.2.37
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  github.com/reyamir/tauri-controls/15e98afd9abd588144d2ac36db6833f2ca6e1405:
+    resolution: {tarball: https://codeload.github.com/reyamir/tauri-controls/tar.gz/15e98afd9abd588144d2ac36db6833f2ca6e1405}
+    name: tauri-controls
+    version: 0.3.0
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.11
+      '@tauri-apps/plugin-os': 2.0.0-alpha.4
+      clsx: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tailwind-merge: 1.14.0
     dev: false
