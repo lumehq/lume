@@ -45,7 +45,10 @@ export function ArticleNote({ event }: { event: NDKEvent }) {
               <img
                 src={metadata.image}
                 alt={metadata.title}
-                className="h-56 w-full rounded-t-lg object-cover"
+                loading="lazy"
+                decoding="async"
+                style={{ contentVisibility: 'auto' }}
+                className="h-auto w-full rounded-t-lg object-cover"
               />
             )}
             <div className="flex flex-col gap-1 rounded-b-lg rounded-t-lg bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
