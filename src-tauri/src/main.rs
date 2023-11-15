@@ -113,16 +113,6 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())?;
       Ok(())
     })
-    .plugin(tauri_plugin_clipboard_manager::init())
-    .plugin(tauri_plugin_dialog::init())
-    .plugin(tauri_plugin_fs::init())
-    .plugin(tauri_plugin_http::init())
-    .plugin(tauri_plugin_notification::init())
-    .plugin(tauri_plugin_os::init())
-    .plugin(tauri_plugin_process::init())
-    .plugin(tauri_plugin_shell::init())
-    .plugin(tauri_plugin_upload::init())
-    .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -148,8 +138,16 @@ fn main() {
       MacosLauncher::LaunchAgent,
       Some(vec!["--flag1", "--flag2"]),
     ))
+    .plugin(tauri_plugin_clipboard_manager::init())
+    .plugin(tauri_plugin_dialog::init())
+    .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_http::init())
+    .plugin(tauri_plugin_notification::init())
+    .plugin(tauri_plugin_os::init())
+    .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
-    .plugin(tauri_plugin_store::Builder::default().build())
+    .plugin(tauri_plugin_upload::init())
     .invoke_handler(tauri::generate_handler![
       opengraph,
       secure_save,
