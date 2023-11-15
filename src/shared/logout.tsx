@@ -5,10 +5,10 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 export function Logout() {
-  const navigate = useNavigate();
-
   const { db } = useStorage();
   const { ndk } = useNDK();
+
+  const navigate = useNavigate();
 
   const logout = async () => {
     ndk.signer = null;

@@ -60,7 +60,7 @@
       ],
       "copyright": "",
       "identifier": "com.lume.nu",
-      "longDescription": "",
+      "longDescription": "The communication app build on Nostr Protocol",
       "shortDescription": "",
       "targets": "all",
       "updater": {

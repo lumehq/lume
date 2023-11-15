@@ -260,15 +260,8 @@ export default function App() {
         {
           path: '',
           async lazy() {
-            const { GeneralSettingsScreen } = await import('@app/settings/general');
-            return { Component: GeneralSettingsScreen };
-          },
-        },
-        {
-          path: 'backup',
-          async lazy() {
-            const { AccountSettingsScreen } = await import('@app/settings/account');
-            return { Component: AccountSettingsScreen };
+            const { SettingsScreen } = await import('@app/settings');
+            return { Component: SettingsScreen };
           },
         },
       ],
