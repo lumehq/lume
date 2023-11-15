@@ -19,23 +19,13 @@ export function AccountMoreActions() {
         <DropdownMenu.Content className="ml-2 flex w-[200px] flex-col overflow-hidden rounded-xl bg-blue-500 p-2 focus:outline-none">
           <DropdownMenu.Item asChild>
             <Link
-              to="/personal"
-              className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
-            >
-              Dashboard
-            </Link>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item asChild>
-            <Link
-              to="/settings"
+              to="/settings/"
               className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
             >
               Settings
             </Link>
           </DropdownMenu.Item>
-          <DropdownMenu.Item asChild>
-            <Logout />
-          </DropdownMenu.Item>
+          <Logout />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

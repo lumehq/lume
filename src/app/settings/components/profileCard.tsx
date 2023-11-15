@@ -27,7 +27,7 @@ export function ProfileCard() {
         <div className="flex h-full w-full flex-col justify-between p-4">
           <div className="flex h-10 w-full justify-end">
             <Link
-              to="/personal/edit-profile"
+              to="/settings/edit-profile"
               className="inline-flex h-8 w-20 items-center justify-center gap-1.5 rounded-full bg-neutral-200 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-600"
             >
               <EditIcon className="h-4 w-4" />

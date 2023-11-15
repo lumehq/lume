@@ -37,7 +37,7 @@ export function ContactCard() {
               Contacts
             </p>
             <Link
-              to="/personal/edit-contact"
+              to="/settings/edit-contact"
               className="inline-flex h-6 w-max items-center gap-1 rounded-full bg-neutral-200 px-2.5 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
             >
               <EditIcon className="h-3 w-3" />
