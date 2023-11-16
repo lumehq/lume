@@ -435,6 +435,14 @@ export class LumeStorage {
     );
   }
 
+  public async getAllSettings() {
+    const results: { key: string; value: string }[] = await this.db.select(
+      'SELECT * FROM settings ORDER BY id DESC;'
+    );
+    if (results.length < 1) return null;
+    return results;
+  }
+
   public async getSettingValue(key: string) {
     const results: { key: string; value: string }[] = await this.db.select(
       'SELECT * FROM settings WHERE key = $1 ORDER BY id DESC LIMIT 1;',
