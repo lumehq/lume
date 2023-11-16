@@ -12,14 +12,14 @@ import { QUOTES } from '@stores/constants';
 
 interface NDKContext {
   ndk: undefined | NDK;
+  fetcher: undefined | NostrFetcher;
   relayUrls: string[];
-  fetcher: NostrFetcher;
 }
 
 const NDKContext = createContext<NDKContext>({
   ndk: undefined,
-  relayUrls: [],
   fetcher: undefined,
+  relayUrls: [],
 });
 
 const NDKProvider = ({ children }: PropsWithChildren<object>) => {

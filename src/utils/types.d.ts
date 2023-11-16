@@ -139,3 +139,22 @@ export interface NDKCacheEventTag {
   value: string;
   tagValue: string;
 }
+
+export interface NIP11 {
+  name: string;
+  description: string;
+  pubkey: string;
+  contact: string;
+  supported_nips: number[];
+  software: string;
+  version: string;
+  limitation: {
+    [key: string]: string | number | boolean;
+  };
+  relay_countries: string[];
+  language_tags: string[];
+  tags: string[];
+  posting_policy: string;
+  payments_url: string;
+  icon: string[];
+}

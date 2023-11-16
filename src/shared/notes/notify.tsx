@@ -86,7 +86,7 @@ export function NotifyNote({ event }: { event: NDKEvent }) {
           </div>
         </div>
         <div className="flex gap-2">
-          <div className="flex-1">{renderKind(data)}</div>
+          <div className="flex-1">{data ? renderKind(data) : <p>Loading...</p>}</div>
           <button
             type="button"
             onClick={() =>
