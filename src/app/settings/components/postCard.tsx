@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { fetch } from '@tauri-apps/plugin-http';
 import { Link } from 'react-router-dom';
 
 import { useStorage } from '@libs/storage/provider';

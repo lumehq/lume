@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { fetch } from '@tauri-apps/plugin-http';
 
 import { useStorage } from '@libs/storage/provider';
 
