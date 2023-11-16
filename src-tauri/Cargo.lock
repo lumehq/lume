@@ -370,9 +370,9 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
 name = "auto-launch"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5904a4d734f0235edf29aab320a14899f3e090446e594ff96508a6215f76f89c"
+checksum = "1f012b8cc0c850f34117ec8252a44418f2e34a2cf501de89e29b241ae5f79471"
 dependencies = [
  "dirs",
  "thiserror",
@@ -425,6 +425,15 @@ name = "base64ct"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c3c1a368f70d6cf7302d78f8f7093da241fb8e8807c05cc9e51a125895a6d5b"
+
+[[package]]
+name = "bincode"
+version = "1.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1f45e9417d87227c7a56d22e471c6206462cba514c7590c09aff4cf6d1ddcad"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "bitflags"
@@ -2626,6 +2635,7 @@ dependencies = [
  "tauri-plugin-store",
  "tauri-plugin-updater",
  "tauri-plugin-upload",
+ "tauri-plugin-window-state",
  "webpage",
 ]
 
@@ -3915,20 +3925,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ring"
-version = "0.17.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb0205304757e5d899b9c2e448b867ffd03ae7f988002e47cd24954391394d0b"
-dependencies = [
- "cc",
- "getrandom 0.2.10",
- "libc",
- "spin 0.9.8",
- "untrusted",
- "windows-sys 0.48.0",
-]
-
-[[package]]
 name = "rsa"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3988,36 +3984,6 @@ dependencies = [
  "libc",
  "linux-raw-sys 0.4.10",
  "windows-sys 0.48.0",
-]
-
-[[package]]
-name = "rustls"
-version = "0.21.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "446e14c5cda4f3f30fe71863c34ec70f5ac79d6087097ad0bb433e1be5edf04c"
-dependencies = [
- "ring",
- "rustls-webpki",
- "sct",
-]
-
-[[package]]
-name = "rustls-pemfile"
-version = "1.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d3987094b1d07b653b7dfdc3f70ce9a1da9c51ac18c1b06b662e4f9a0e9f4b2"
-dependencies = [
- "base64",
-]
-
-[[package]]
-name = "rustls-webpki"
-version = "0.101.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b6275d1ee7a1cd780b64aca7726599a1dbc893b1e64144529e55c3c2f745765"
-dependencies = [
- "ring",
- "untrusted",
 ]
 
 [[package]]
@@ -4091,16 +4057,6 @@ name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
-
-[[package]]
-name = "sct"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da046153aa2352493d6cb7da4b6e5c0c057d8a1d0a9aa8560baffdd945acd414"
-dependencies = [
- "ring",
- "untrusted",
-]
 
 [[package]]
 name = "secret-service"
@@ -4532,8 +4488,6 @@ dependencies = [
  "once_cell",
  "paste",
  "percent-encoding",
- "rustls",
- "rustls-pemfile",
  "serde",
  "serde_json",
  "sha2",
@@ -4545,7 +4499,6 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "url",
- "webpki-roots",
 ]
 
 [[package]]
@@ -5034,7 +4987,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "auto-launch",
  "log",
@@ -5047,7 +5000,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-cli"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "clap",
  "log",
@@ -5060,7 +5013,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "arboard",
  "log",
@@ -5074,7 +5027,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-dialog"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "glib 0.16.9",
  "log",
@@ -5091,7 +5044,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-fs"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "anyhow",
  "glob",
@@ -5104,7 +5057,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "data-url",
  "glob",
@@ -5121,7 +5074,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-notification"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "log",
  "notify-rust",
@@ -5139,7 +5092,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-os"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "gethostname 0.4.3",
  "log",
@@ -5155,7 +5108,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "tauri",
 ]
@@ -5163,7 +5116,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-shell"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "encoding_rs",
  "log",
@@ -5180,7 +5133,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-single-instance"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "log",
  "serde",
@@ -5194,7 +5147,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-sql"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "futures-core",
  "log",
@@ -5210,7 +5163,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-store"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "log",
  "serde",
@@ -5222,7 +5175,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "base64",
  "dirs-next",
@@ -5248,7 +5201,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-upload"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#d4d1633c4d0b63b26db987037d1ed7e57d5cefbe"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
 dependencies = [
  "futures-util",
  "log",
@@ -5260,6 +5213,20 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-util",
+]
+
+[[package]]
+name = "tauri-plugin-window-state"
+version = "2.0.0-alpha.4"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#a3ca64275adf8e4b60e8fc57a4a835fd0f71a1d5"
+dependencies = [
+ "bincode",
+ "bitflags 2.4.1",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
 ]
 
 [[package]]
@@ -5745,12 +5712,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39ec24b3121d976906ece63c9daad25b85969647682eee313cb5779fdd69e14e"
 
 [[package]]
-name = "untrusted"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ecb6da28b8a351d773b68d5825ac39017e680750f980f3a1a85cd8dd28a47c1"
-
-[[package]]
 name = "url"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6008,15 +5969,6 @@ dependencies = [
  "markup5ever_rcdom",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "webpki-roots"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b291546d5d9d1eab74f069c77749f2cb8504a12caa20f0f2de93ddbf6f411888"
-dependencies = [
- "rustls-webpki",
 ]
 
 [[package]]
