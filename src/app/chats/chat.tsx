@@ -1,5 +1,5 @@
 import { NDKEvent, NDKSubscription } from '@nostr-dev-kit/ndk';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { VList, VListHandle } from 'virtua';
@@ -16,8 +16,6 @@ import { User } from '@shared/user';
 import { useNostr } from '@utils/hooks/useNostr';
 
 export function ChatScreen() {
-  const listRef = useRef<VListHandle>(null);
-
   const { db } = useStorage();
   const { ndk } = useNDK();
   const { pubkey } = useParams();
@@ -30,10 +28,39 @@ export function ChatScreen() {
     refetchOnWindowFocus: false,
   });
 
+  const queryClient = useQueryClient();
+  const listRef = useRef<VListHandle>(null);
+
+  const newMessage = useMutation({
+    mutationFn: async (event: NDKEvent) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['nip04-dm', pubkey] });
+
+      // Snapshot the previous value
+      const prevMessages = queryClient.getQueryData(['nip04-dm', pubkey]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['nip04-dm', pubkey], (prev: NDKEvent[]) => [
+        ...prev,
+        event,
+      ]);
+
+      // Return a context object with the snapshotted value
+      return { prevMessages };
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['nip04-dm', pubkey] });
+    },
+  });
+
   const renderItem = useCallback(
     (message: NDKEvent) => {
       return (
-        <ChatMessage message={message} self={message.pubkey === db.account.pubkey} />
+        <ChatMessage
+          key={message.id}
+          message={message}
+          isSelf={message.pubkey === db.account.pubkey}
+        />
       );
     },
     [data]
@@ -57,7 +84,7 @@ export function ChatScreen() {
     );
 
     sub.addListener('event', (event) => {
-      console.log(event);
+      newMessage.mutate(event);
     });
 
     return () => {
@@ -96,11 +123,7 @@ export function ChatScreen() {
             )}
           </div>
           <div className="shrink-0 rounded-b-lg border-t border-neutral-300 bg-neutral-200 p-3 dark:border-neutral-700 dark:bg-neutral-800">
-            <ChatForm
-              receiverPubkey={pubkey}
-              userPubkey={db.account.pubkey}
-              userPrivkey={''}
-            />
+            <ChatForm receiverPubkey={pubkey} />
           </div>
         </div>
       </div>
