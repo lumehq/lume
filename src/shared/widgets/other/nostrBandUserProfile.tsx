@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -22,6 +23,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
   const { ndk } = useNDK();
 
   const [followed, setFollowed] = useState(false);
+  const navigate = useNavigate();
 
   const follow = async (pubkey: string) => {
     try {
@@ -41,6 +43,8 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
 
   const unfollow = async (pubkey: string) => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
       contacts.delete(new NDKUser({ pubkey: pubkey }));

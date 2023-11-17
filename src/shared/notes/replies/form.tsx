@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -9,12 +10,15 @@ import { ReplyMediaUploader } from '@shared/notes';
 
 export function NoteReplyForm({ rootEvent }: { rootEvent: NDKEvent }) {
   const { ndk } = useNDK();
+  const navigate = useNavigate();
 
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
 
   const submit = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setLoading(true);
 
       const event = new NDKEvent(ndk);

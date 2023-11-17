@@ -2,7 +2,7 @@ import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { UserStats } from '@app/users/components/stats';
@@ -21,6 +21,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
+  const navigate = useNavigate();
 
   const svgURI =
     'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
@@ -43,6 +44,8 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const unfollow = async (pubkey: string) => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
       contacts.delete(new NDKUser({ pubkey: pubkey }));

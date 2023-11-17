@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
@@ -13,6 +14,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 
 export function EditProfileScreen() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState('');
@@ -46,10 +48,11 @@ export function EditProfileScreen() {
 
   const uploadAvatar = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setLoading(true);
 
       const image = await upload();
-
       if (image) {
         setPicture(image);
         setLoading(false);

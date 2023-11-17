@@ -2,6 +2,7 @@ import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { message, open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useNDK } from '@libs/ndk/provider';
@@ -10,6 +11,7 @@ import { LoaderIcon } from '@shared/icons';
 
 export function NewFileScreen() {
   const { ndk } = useNDK();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [isPublish, setIsPublish] = useState(false);
@@ -84,6 +86,8 @@ export function NewFileScreen() {
 
   const submit = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setIsPublish(true);
 
       const event = new NDKEvent(ndk);

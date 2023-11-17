@@ -2,8 +2,11 @@ import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { LoaderIcon, RepostIcon } from '@shared/icons';
 
@@ -12,8 +15,13 @@ export function NoteRepost({ event }: { event: NDKEvent }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isRepost, setIsRepost] = useState(false);
 
+  const { ndk } = useNDK();
+  const navigate = useNavigate();
+
   const submit = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setIsLoading(true);
 
       // repsot

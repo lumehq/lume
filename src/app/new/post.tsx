@@ -6,7 +6,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { MediaUploader, MentionPopup } from '@app/new/components';
@@ -27,6 +27,7 @@ export function NewPostScreen() {
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const navigate = useNavigate();
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
@@ -54,6 +55,8 @@ export function NewPostScreen() {
 
   const submit = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setLoading(true);
 
       // get plaintext content

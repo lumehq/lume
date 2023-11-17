@@ -7,13 +7,13 @@ import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
-import { NewScreen } from '@app/new';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
+import { NewLayout } from '@shared/layouts/new';
 import { NoteLayout } from '@shared/layouts/note';
 import { SettingsLayout } from '@shared/layouts/settings';
 
@@ -115,7 +115,7 @@ export default function App() {
     },
     {
       path: '/new',
-      element: <NewScreen />,
+      element: <NewLayout />,
       errorElement: <ErrorScreen />,
       children: [
         {
@@ -137,6 +137,13 @@ export default function App() {
           async lazy() {
             const { NewFileScreen } = await import('@app/new/file');
             return { Component: NewFileScreen };
+          },
+        },
+        {
+          path: 'privkey',
+          async lazy() {
+            const { NewPrivkeyScreen } = await import('@app/new/privkey');
+            return { Component: NewPrivkeyScreen };
           },
         },
       ],

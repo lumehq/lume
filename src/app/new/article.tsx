@@ -5,6 +5,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import { Markdown } from 'tiptap-markdown';
@@ -31,6 +32,7 @@ export function NewArticleScreen() {
   const [summary, setSummary] = useState({ open: false, content: '' });
   const [cover, setCover] = useState('');
 
+  const navigate = useNavigate();
   const ident = useMemo(() => String(Date.now()), []);
   const editor = useEditor({
     extensions: [
@@ -65,6 +67,8 @@ export function NewArticleScreen() {
 
   const submit = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setLoading(true);
 
       // get markdown content

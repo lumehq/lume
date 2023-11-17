@@ -7,6 +7,9 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
+import { useNavigate } from 'react-router-dom';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
@@ -16,6 +19,9 @@ import { compactNumber } from '@utils/number';
 
 export function NoteZap({ event }: { event: NDKEvent }) {
   const nwc = useRef(null);
+  const navigate = useNavigate();
+
+  const { ndk } = useNDK();
   const { user } = useProfile(event.pubkey);
 
   const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
@@ -28,6 +34,8 @@ export function NoteZap({ event }: { event: NDKEvent }) {
 
   const createZapRequest = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       const zapAmount = parseInt(amount) * 1000;
       const res = await event.zap(zapAmount, zapMessage);
 

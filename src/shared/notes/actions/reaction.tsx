@@ -1,7 +1,10 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as Popover from '@radix-ui/react-popover';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { ReactionIcon } from '@shared/icons';
 
@@ -32,6 +35,9 @@ export function NoteReaction({ event }: { event: NDKEvent }) {
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
 
+  const { ndk } = useNDK();
+  const navigate = useNavigate();
+
   const getReactionImage = (content: string) => {
     const reaction: { img: string } = REACTIONS.find((el) => el.content === content);
     return reaction.img;
@@ -39,6 +45,8 @@ export function NoteReaction({ event }: { event: NDKEvent }) {
 
   const react = async (content: string) => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setReaction(content);
 
       // react
