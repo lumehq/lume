@@ -4,7 +4,10 @@ import { VList } from 'virtua';
 import { LoaderIcon } from '@shared/icons';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
-import { NostrBandUserProfile, type Profile } from '@shared/widgets/nostrBandUserProfile';
+import {
+  NostrBandUserProfile,
+  type Profile,
+} from '@shared/widgets/other/nostrBandUserProfile';
 
 import { Widget } from '@utils/types';
 
@@ -12,9 +15,9 @@ interface Response {
   profiles: Array<{ pubkey: string }>;
 }
 
-export function TrendingAccountsWidget({ params }: { params: Widget }) {
+export function TrendingAccountsWidget({ widget }: { widget: Widget }) {
   const { status, data } = useQuery({
-    queryKey: ['trending-profiles-widget'],
+    queryKey: ['trending-users'],
     queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/profiles');
       if (!res.ok) {
@@ -32,7 +35,7 @@ export function TrendingAccountsWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title="Trending Accounts" />
+      <TitleBar id={widget.id} title="Trending Accounts" />
       <div className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">

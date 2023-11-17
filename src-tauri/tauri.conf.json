@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Lume",
-    "version": "2.0.1"
+    "version": "2.1.0"
   },
   "plugins": {
     "fs": {
@@ -36,7 +36,6 @@
       "open": true
     },
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4RjAzODFBREQ4MkM3RTEKUldUaHg0TGRHamp3NkI5bnhoOEVjanlHWFNzQ2Q3NDhubFFLUmJpSHJ1L2FqNnB3alF1Y2R3U3gK",
       "endpoints": [
         "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
         "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
@@ -46,15 +45,12 @@
   "tauri": {
     "bundle": {
       "active": true,
-      "appimage": {
-        "bundleMediaFramework": true
-      },
       "category": "SocialNetworking",
-      "copyright": "",
       "deb": {
         "depends": []
       },
       "externalBin": [],
+      "resources": [],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -62,8 +58,21 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
+      "copyright": "",
       "identifier": "com.lume.nu",
-      "longDescription": "",
+      "longDescription": "The communication app build on Nostr Protocol",
+      "shortDescription": "",
+      "targets": "all",
+      "updater": {
+        "active": true,
+        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU3OTdCMkM3RjU5QzE2NzkKUldSNUZwejF4N0tYNTVHYjMrU0JkL090SlEyNUVLYU5TM2hTU3RXSWtEWngrZWJ4a0pydUhXZHEK",
+        "windows": {
+          "installMode": "quiet"
+        }
+      },
+      "appimage": {
+        "bundleMediaFramework": true
+      },
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -73,10 +82,6 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "updater": {},
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",

@@ -4,6 +4,7 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
@@ -25,6 +26,9 @@ export const NDKInstance = () => {
       const relays = await db.getExplicitRelayUrls();
       const onlineRelays = new Set(relays);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
       for (const relay of relays) {
         try {
           const url = new URL(relay);
@@ -33,15 +37,20 @@ export const NDKInstance = () => {
             headers: {
               Accept: 'application/nostr+json',
             },
+            signal: controller.signal,
           });
 
           if (!res.ok) {
-            console.info(`${relay} is not working, skipping...`);
+            toast.warning(`${relay} is not working, skipping...`);
             onlineRelays.delete(relay);
           }
+
+          toast.success(`Connected to ${relay}`);
         } catch {
-          console.warn(`${relay} is not working, skipping...`);
+          toast.warning(`${relay} is not working, skipping...`);
           onlineRelays.delete(relay);
+        } finally {
+          clearTimeout(timeoutId);
         }
       }
 
@@ -77,10 +86,10 @@ export const NDKInstance = () => {
     const outboxSetting = await db.getSettingValue('outbox');
     const explicitRelayUrls = await getExplicitRelays();
 
-    const dexieAdapter = new NDKCacheAdapterTauri(db);
+    const tauriAdapter = new NDKCacheAdapterTauri(db);
     const instance = new NDK({
       explicitRelayUrls,
-      cacheAdapter: dexieAdapter,
+      cacheAdapter: tauriAdapter,
       outboxRelayUrls: ['wss://purplepag.es'],
       enableOutboxModel: outboxSetting === '1',
     });

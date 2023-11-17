@@ -30,20 +30,12 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-300 bg-neutral-200 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800">
-          <DropdownMenu.Item asChild>
-            <Link
-              to={`/notes/text/${id}`}
-              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
-            >
-              Focus
-            </Link>
-          </DropdownMenu.Item>
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900">
           <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => copyLink()}
-              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               Copy shareable link
             </button>
@@ -52,7 +44,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
             <button
               type="button"
               onClick={() => copyID()}
-              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               Copy ID
             </button>
@@ -60,7 +52,7 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
           <DropdownMenu.Item asChild>
             <Link
               to={`/users/${pubkey}`}
-              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-300 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-700"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               View profile
             </Link>

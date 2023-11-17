@@ -1,10 +1,11 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind, NDKTag } from '@nostr-dev-kit/ndk';
 import CharacterCount from '@tiptap/extension-character-count';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import { Markdown } from 'tiptap-markdown';
@@ -31,6 +32,7 @@ export function NewArticleScreen() {
   const [summary, setSummary] = useState({ open: false, content: '' });
   const [cover, setCover] = useState('');
 
+  const navigate = useNavigate();
   const ident = useMemo(() => String(Date.now()), []);
   const editor = useEditor({
     extensions: [
@@ -65,13 +67,15 @@ export function NewArticleScreen() {
 
   const submit = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       setLoading(true);
 
       // get markdown content
       const content = editor.storage.markdown.getMarkdown();
 
       // define tags
-      const tags: string[][] = [
+      const tags: NDKTag[] = [
         ['d', ident],
         ['title', title],
         ['image', cover],
@@ -85,17 +89,20 @@ export function NewArticleScreen() {
         tags.push(['t', tag.replace('#', '')]);
       });
 
-      // publish message
       const event = new NDKEvent(ndk);
       event.content = content;
       event.kind = NDKKind.Article;
       event.tags = tags;
 
+      // publish
       const publishedRelays = await event.publish();
+
       if (publishedRelays) {
         toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
+
         // update state
         setLoading(false);
+
         // reset editor
         editor.commands.clearContent();
         localStorage.setItem('editor-article', '{}');
@@ -235,7 +242,7 @@ export function NewArticleScreen() {
         <div className="flex h-16 w-full items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
           <div className="inline-flex items-center gap-3">
             <span className="text-sm font-medium tabular-nums text-neutral-600 dark:text-neutral-400">
-              {editor?.storage?.characterCount.characters()}
+              {editor?.storage?.characterCount.characters()} characters
             </span>
             <span className="text-sm font-medium tabular-nums text-neutral-600 dark:text-neutral-400">
               -

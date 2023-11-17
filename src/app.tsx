@@ -1,4 +1,5 @@
 import { message } from '@tauri-apps/plugin-dialog';
+import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 
@@ -6,13 +7,13 @@ import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
-import { NewScreen } from '@app/new';
 
 import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
+import { NewLayout } from '@shared/layouts/new';
 import { NoteLayout } from '@shared/layouts/note';
 import { SettingsLayout } from '@shared/layouts/settings';
 
@@ -54,8 +55,8 @@ export default function App() {
         {
           path: '',
           async lazy() {
-            const { SpaceScreen } = await import('@app/space');
-            return { Component: SpaceScreen };
+            const { HomeScreen } = await import('@app/home');
+            return { Component: HomeScreen };
           },
         },
         {
@@ -113,36 +114,8 @@ export default function App() {
       ],
     },
     {
-      path: '/personal',
-      element: <AppLayout />,
-      errorElement: <ErrorScreen />,
-      children: [
-        {
-          path: '',
-          async lazy() {
-            const { PersonalScreen } = await import('@app/personal');
-            return { Component: PersonalScreen };
-          },
-        },
-        {
-          path: 'edit-profile',
-          async lazy() {
-            const { EditProfileScreen } = await import('@app/personal/editProfile');
-            return { Component: EditProfileScreen };
-          },
-        },
-        {
-          path: 'edit-contact',
-          async lazy() {
-            const { EditContactScreen } = await import('@app/personal/editContact');
-            return { Component: EditContactScreen };
-          },
-        },
-      ],
-    },
-    {
       path: '/new',
-      element: <NewScreen />,
+      element: <NewLayout />,
       errorElement: <ErrorScreen />,
       children: [
         {
@@ -164,6 +137,13 @@ export default function App() {
           async lazy() {
             const { NewFileScreen } = await import('@app/new/file');
             return { Component: NewFileScreen };
+          },
+        },
+        {
+          path: 'privkey',
+          async lazy() {
+            const { NewPrivkeyScreen } = await import('@app/new/privkey');
+            return { Component: NewPrivkeyScreen };
           },
         },
       ],
@@ -259,15 +239,50 @@ export default function App() {
         {
           path: '',
           async lazy() {
-            const { GeneralSettingsScreen } = await import('@app/settings/general');
-            return { Component: GeneralSettingsScreen };
+            const { UserSettingScreen } = await import('@app/settings');
+            return { Component: UserSettingScreen };
+          },
+        },
+        {
+          path: 'edit-profile',
+          async lazy() {
+            const { EditProfileScreen } = await import('@app/settings/editProfile');
+            return { Component: EditProfileScreen };
+          },
+        },
+        {
+          path: 'edit-contact',
+          async lazy() {
+            const { EditContactScreen } = await import('@app/settings/editContact');
+            return { Component: EditContactScreen };
+          },
+        },
+        {
+          path: 'general',
+          async lazy() {
+            const { GeneralSettingScreen } = await import('@app/settings/general');
+            return { Component: GeneralSettingScreen };
           },
         },
         {
           path: 'backup',
           async lazy() {
-            const { AccountSettingsScreen } = await import('@app/settings/account');
-            return { Component: AccountSettingsScreen };
+            const { BackupSettingScreen } = await import('@app/settings/backup');
+            return { Component: BackupSettingScreen };
+          },
+        },
+        {
+          path: 'advanced',
+          async lazy() {
+            const { AdvancedSettingScreen } = await import('@app/settings/advanced');
+            return { Component: AdvancedSettingScreen };
+          },
+        },
+        {
+          path: 'about',
+          async lazy() {
+            const { AboutScreen } = await import('@app/settings/about');
+            return { Component: AboutScreen };
           },
         },
       ],

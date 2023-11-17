@@ -1,18 +1,15 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 
-import { MemoizedTextNote, NoteActions } from '@shared/notes';
+import { MemoizedTextKind, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
 
 export function SubReply({ event }: { event: NDKEvent }) {
   return (
-    <div className="mb-3 flex flex-col">
+    <div className="flex flex-col gap-2 rounded-lg bg-neutral-100 pt-3 dark:bg-neutral-900">
       <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
-      <div className="-mt-4 flex items-start gap-3">
-        <div className="w-10 shrink-0" />
-        <div className="flex-1">
-          <MemoizedTextNote content={event.content} />
-          <NoteActions id={event.id} pubkey={event.pubkey} extraButtons={false} />
-        </div>
+      <MemoizedTextKind content={event.content} />
+      <div className="-ml-1">
+        <NoteActions event={event} canOpenEvent={false} />
       </div>
     </div>
   );

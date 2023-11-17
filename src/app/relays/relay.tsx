@@ -4,6 +4,8 @@ import { Await, useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
+import { NIP11 } from '@utils/types';
+
 import { RelayEventList } from './components/relayEventList';
 
 export function RelayScreen() {
@@ -59,7 +61,7 @@ export function RelayScreen() {
                 </div>
               }
             >
-              {(resolvedRelay) => (
+              {(resolvedRelay: NIP11) => (
                 <div className="flex flex-col gap-5">
                   <div>
                     <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
@@ -114,7 +116,7 @@ export function RelayScreen() {
                       Supported NIPs:
                     </h5>
                     <div className="mt-2 grid grid-cols-7 gap-2">
-                      {resolvedRelay.supported_nips.map((item: string) => (
+                      {resolvedRelay.supported_nips.map((item) => (
                         <a
                           key={item}
                           href={`https://nips.be/${item}`}

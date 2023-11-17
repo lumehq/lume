@@ -11,10 +11,10 @@ export function FavoriteHashtag() {
     <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
       <div className="flex items-start justify-between">
         <div>
-          <h5 className="font-semibold">Favorite hashtag</h5>
+          <h5 className="font-semibold">Favorite topic</h5>
           <p className="text-sm">
-            By adding favorite hashtag, Lume will display all contents related to this
-            hashtag as a column
+            By adding favorite topic, Lume will display all contents related to this topic
+            for you
           </p>
         </div>
         {hashtag ? (

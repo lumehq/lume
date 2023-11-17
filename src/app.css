@@ -10,6 +10,10 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
+
+  .prose :where(iframe):not(:where([class~="not-prose"] *)) {
+		@apply aspect-video w-full h-auto mx-auto;
+	}
 }
 
 html {

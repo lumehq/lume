@@ -165,7 +165,7 @@ export function ImportAccountScreen() {
             >
               <h5 className="mb-1.5 font-semibold">Account found</h5>
               <div className="flex w-full flex-col gap-2">
-                <div className="flex h-full w-full items-center justify-between rounded-lg bg-neutral-200 p-2">
+                <div className="flex h-full w-full items-center justify-between rounded-lg bg-neutral-200 p-2 dark:bg-neutral-800">
                   <User pubkey={pubkey} variant="simple" />
                   <button
                     type="button"

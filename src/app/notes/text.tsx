@@ -7,24 +7,25 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
 import {
-  ArticleNote,
-  FileNote,
+  ChildNote,
+  MemoizedTextKind,
   NoteActions,
   NoteReplyForm,
-  TextNote,
   UnknownNote,
 } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
+import { useNostr } from '@utils/hooks/useNostr';
 
 export function TextNoteScreen() {
-  const { id } = useParams();
-  const { status, data } = useEvent(id);
-
   const navigate = useNavigate();
   const replyRef = useRef(null);
+
+  const { id } = useParams();
+  const { status, data } = useEvent(id);
+  const { getEventThread } = useNostr();
 
   const [isCopy, setIsCopy] = useState(false);
 
@@ -44,13 +45,24 @@ export function TextNoteScreen() {
   };
 
   const renderKind = (event: NDKEvent) => {
+    const thread = getEventThread(event.tags);
     switch (event.kind) {
       case NDKKind.Text:
-        return <TextNote content={event.content} />;
-      case NDKKind.Article:
-        return <ArticleNote event={event} />;
-      case 1063:
-        return <FileNote event={event} />;
+        return (
+          <>
+            {thread ? (
+              <div className="mb-2 w-full px-3">
+                <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+                  {thread.rootEventId ? (
+                    <ChildNote id={thread.rootEventId} isRoot />
+                  ) : null}
+                  {thread.replyEventId ? <ChildNote id={thread.replyEventId} /> : null}
+                </div>
+              </div>
+            ) : null}
+            <MemoizedTextKind content={event.content} />
+          </>
+        );
       default:
         return <UnknownNote event={event} />;
     }
@@ -99,16 +111,16 @@ export function TextNoteScreen() {
                 <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
                 <div className="mt-3">{renderKind(data)}</div>
                 <div className="mt-3">
-                  <NoteActions id={id} pubkey={data.pubkey} extraButtons={false} />
+                  <NoteActions event={data} canOpenEvent={false} />
                 </div>
               </div>
             </div>
           )}
           <div ref={replyRef} className="px-3">
             <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
-              <NoteReplyForm id={id} />
+              <NoteReplyForm rootEvent={data} />
             </div>
-            <ReplyList id={id} />
+            <ReplyList eventId={id} />
           </div>
         </div>
       </div>

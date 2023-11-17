@@ -3,13 +3,8 @@ import { twMerge } from 'tailwind-merge';
 
 import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
-import { ImagePreview, LinkPreview, MentionNote, VideoPreview } from '@shared/notes';
-
-import { parser } from '@utils/parser';
-
 export function ChatMessage({ message, self }: { message: NDKEvent; self: boolean }) {
   const decryptedContent = useDecryptMessage(message);
-  const richContent = parser(decryptedContent) ?? null;
 
   return (
     <div
@@ -20,20 +15,11 @@ export function ChatMessage({ message, self }: { message: NDKEvent; self: boolea
           : 'rounded-r-xl bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
       )}
     >
-      {!richContent ? (
+      {!decryptedContent ? (
         <p>Decrypting...</p>
       ) : (
         <div>
-          <p className="select-text whitespace-pre-line">{richContent.parsed}</p>
-          <div>
-            {richContent.images.length > 0 && <ImagePreview urls={richContent.images} />}
-            {richContent.videos.length > 0 && <VideoPreview urls={richContent.videos} />}
-            {richContent.links.length > 0 && <LinkPreview urls={richContent.links} />}
-            {richContent.notes.length > 0 &&
-              richContent.notes.map((note: string) => (
-                <MentionNote key={note} id={note} />
-              ))}
-          </div>
+          <p className="select-text whitespace-pre-line">{decryptedContent}</p>
         </div>
       )}
     </div>

@@ -31,7 +31,7 @@ export function OnboardingListScreen() {
     <div className="relative flex h-full w-full items-center justify-center">
       <div className="mx-auto flex w-full max-w-md flex-col gap-10">
         <div className="text-center">
-          <h1 className="text-2xl text-neutral-900 dark:text-neutral-100">
+          <h1 className="text-2xl font-light text-neutral-900 dark:text-neutral-100">
             You&apos;re almost ready to use Lume.
           </h1>
           <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">

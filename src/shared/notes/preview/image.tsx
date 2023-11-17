@@ -1,33 +1,58 @@
 import { downloadDir } from '@tauri-apps/api/path';
+import { Window } from '@tauri-apps/api/window';
 import { download } from '@tauri-apps/plugin-upload';
+import { SyntheticEvent, useState } from 'react';
 
-import { DownloadIcon } from '@shared/icons';
+import { CheckCircleIcon, DownloadIcon } from '@shared/icons';
 
-export function ImagePreview({ urls }: { urls: string[] }) {
-  const downloadImage = async (url: string) => {
-    const downloadDirPath = await downloadDir();
-    const filename = url.substring(url.lastIndexOf('/') + 1);
-    return await download(url, downloadDirPath + `/${filename}`);
+export function ImagePreview({ url }: { url: string }) {
+  const [downloaded, setDownloaded] = useState(false);
+
+  const downloadImage = async (e: { stopPropagation: () => void }) => {
+    try {
+      e.stopPropagation();
+
+      const downloadDirPath = await downloadDir();
+      const filename = url.substring(url.lastIndexOf('/') + 1);
+      await download(url, downloadDirPath + `/${filename}`);
+
+      setDownloaded(true);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const open = () => {
+    return new Window('image-viewer', { url, title: 'Image Viewer' });
+  };
+
+  const fallback = (event: SyntheticEvent<HTMLImageElement, Event>) => {
+    event.currentTarget.src = '/fallback-image.jpg';
   };
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      {urls.map((url) => (
-        <div key={url} className="group relative">
-          <img
-            src={url}
-            alt={url}
-            className="h-auto w-full rounded-lg border border-neutral-300 object-cover dark:border-neutral-700"
-          />
-          <button
-            type="button"
-            onClick={() => downloadImage(url)}
-            className="absolute right-2 top-2 hidden h-10 w-10 items-center justify-center rounded-lg bg-black/50 backdrop-blur-xl group-hover:inline-flex hover:bg-blue-500"
-          >
-            <DownloadIcon className="h-5 w-5 text-white" />
-          </button>
-        </div>
-      ))}
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div onClick={open} className="group relative my-2">
+      <img
+        src={url}
+        alt={url}
+        loading="lazy"
+        decoding="async"
+        style={{ contentVisibility: 'auto' }}
+        onError={fallback}
+        className="h-auto w-full rounded-lg border border-neutral-200/50 object-cover dark:border-neutral-800/50"
+      />
+      <button
+        type="button"
+        onClick={(e) => downloadImage(e)}
+        className="absolute right-2 top-2 z-10 hidden h-10 w-10 items-center justify-center rounded-lg bg-blue-500 group-hover:inline-flex hover:bg-blue-600"
+      >
+        {downloaded ? (
+          <CheckCircleIcon className="h-5 w-5 text-white" />
+        ) : (
+          <DownloadIcon className="h-5 w-5 text-white" />
+        )}
+      </button>
     </div>
   );
 }

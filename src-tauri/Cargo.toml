@@ -1,6 +1,6 @@
 [package]
 name = "lume"
-version = "2.0.1"
+version = "2.1.0"
 description = "the communication app"
 authors = ["Ren Amamiya"]
 license = "GPL-3.0"
@@ -32,6 +32,7 @@ tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-wo
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v2", features = [
   "sqlite",
 ] }

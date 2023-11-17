@@ -1,35 +1,27 @@
 import {
   MediaControlBar,
   MediaController,
+  MediaFullscreenButton,
+  MediaLoadingIndicator,
   MediaMuteButton,
   MediaPlayButton,
-  MediaTimeDisplay,
   MediaTimeRange,
-  MediaVolumeRange,
 } from 'media-chrome/dist/react';
-import { memo } from 'react';
 
-export const VideoPreview = memo(function VideoPreview({ urls }: { urls: string[] }) {
+export function VideoPreview({ url }: { url: string }) {
   return (
-    <div className="flex w-full flex-col gap-2">
-      {urls.map((url) => (
-        <MediaController key={url} className="aspect-video overflow-hidden rounded-lg">
-          <video
-            slot="media"
-            src={url}
-            poster={`https://thumbnail.video/api/get?url=${url}&seconds=1`}
-            preload="none"
-            muted
-          />
-          <MediaControlBar>
-            <MediaPlayButton></MediaPlayButton>
-            <MediaTimeRange></MediaTimeRange>
-            <MediaTimeDisplay showDuration></MediaTimeDisplay>
-            <MediaMuteButton></MediaMuteButton>
-            <MediaVolumeRange></MediaVolumeRange>
-          </MediaControlBar>
-        </MediaController>
-      ))}
-    </div>
+    <MediaController
+      key={url}
+      className="my-2 aspect-video w-full overflow-hidden rounded-lg"
+    >
+      <video slot="media" src={url} preload="metadata" muted />
+      <MediaLoadingIndicator slot="centered-chrome"></MediaLoadingIndicator>
+      <MediaControlBar>
+        <MediaPlayButton></MediaPlayButton>
+        <MediaTimeRange></MediaTimeRange>
+        <MediaMuteButton></MediaMuteButton>
+        <MediaFullscreenButton></MediaFullscreenButton>
+      </MediaControlBar>
+    </MediaController>
   );
-});
+}

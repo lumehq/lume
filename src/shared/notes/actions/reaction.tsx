@@ -1,6 +1,8 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as Popover from '@radix-ui/react-popover';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useNDK } from '@libs/ndk/provider';
 
@@ -29,11 +31,12 @@ const REACTIONS = [
   },
 ];
 
-export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
-  const { ndk } = useNDK();
-
+export function NoteReaction({ event }: { event: NDKEvent }) {
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
+
+  const { ndk } = useNDK();
+  const navigate = useNavigate();
 
   const getReactionImage = (content: string) => {
     const reaction: { img: string } = REACTIONS.find((el) => el.content === content);
@@ -41,19 +44,16 @@ export function NoteReaction({ id, pubkey }: { id: string; pubkey: string }) {
   };
 
   const react = async (content: string) => {
-    setReaction(content);
+    try {
+      if (!ndk.signer) return navigate('/new/privkey');
 
-    const event = new NDKEvent(ndk);
-    event.content = content;
-    event.kind = NDKKind.Reaction;
-    event.tags = [
-      ['e', id],
-      ['p', pubkey],
-    ];
+      setReaction(content);
 
-    const publishedRelays = await event.publish();
-    if (publishedRelays) {
+      // react
+      await event.react(content);
       setOpen(false);
+    } catch (e) {
+      toast.error(e);
     }
   };
 

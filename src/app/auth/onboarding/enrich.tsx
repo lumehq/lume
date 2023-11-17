@@ -47,7 +47,6 @@ export function OnboardEnrichScreen() {
       setLoading(true);
 
       const tags = arrayToNIP02(follows);
-
       const event = new NDKEvent(ndk);
       event.content = '';
       event.kind = NDKKind.Contacts;

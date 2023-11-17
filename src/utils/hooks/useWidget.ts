@@ -17,14 +17,55 @@ export function useWidget() {
     },
   });
 
-  const removeWidget = useMutation({
-    mutationFn: async (id: string) => {
-      return await db.removeWidget(id);
+  const replaceWidget = useMutation({
+    mutationFn: async ({ currentId, widget }: { currentId: string; widget: Widget }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['widgets'] });
+
+      // Snapshot the previous value
+      const prevWidgets = queryClient.getQueryData(['widgets']);
+
+      // create new widget
+      await db.removeWidget(currentId);
+      const newWidget = await db.createWidget(widget.kind, widget.title, widget.content);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['widgets'], (prev: Widget[]) => [
+        ...prev.filter((t) => t.id !== currentId),
+        newWidget,
+      ]);
+
+      // Return a context object with the snapshotted value
+      return { prevWidgets };
     },
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['widgets'] });
     },
   });
 
-  return { addWidget, removeWidget };
+  const removeWidget = useMutation({
+    mutationFn: async (id: string) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['widgets'] });
+
+      // Snapshot the previous value
+      const prevWidgets = queryClient.getQueryData(['widgets']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['widgets'], (prev: Widget[]) =>
+        prev.filter((t) => t.id !== id)
+      );
+
+      // Update in database
+      await db.removeWidget(id);
+
+      // Return a context object with the snapshotted value
+      return { prevWidgets };
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['widgets'] });
+    },
+  });
+
+  return { addWidget, replaceWidget, removeWidget };
 }

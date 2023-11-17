@@ -406,7 +406,7 @@ export class LumeStorage {
       `SELECT * FROM relays WHERE account_id = "${this.account.id}" ORDER BY id DESC LIMIT 50;`
     );
 
-    if (!result || result.length < 1) return FULL_RELAYS;
+    if (!result || !result.length) return FULL_RELAYS;
     return result.map((el) => el.relay);
   }
 
@@ -433,6 +433,14 @@ export class LumeStorage {
       'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
       [key, value]
     );
+  }
+
+  public async getAllSettings() {
+    const results: { key: string; value: string }[] = await this.db.select(
+      'SELECT * FROM settings ORDER BY id DESC;'
+    );
+    if (results.length < 1) return null;
+    return results;
   }
 
   public async getSettingValue(key: string) {

@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { fetch } from '@tauri-apps/plugin-http';
 
 import { LoaderIcon } from '@shared/icons';
 
@@ -40,7 +41,7 @@ export function UserStats({ pubkey }: { pubkey: string }) {
     <div className="flex w-full items-center justify-center gap-10">
       <div className="inline-flex flex-col items-center gap-1">
         <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
-          {compactNumber.format(data.stats[pubkey].followers_pubkey_count) ?? 0}
+          {compactNumber.format(data?.stats[pubkey]?.followers_pubkey_count) ?? 0}
         </span>
         <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
           Followers
@@ -48,7 +49,7 @@ export function UserStats({ pubkey }: { pubkey: string }) {
       </div>
       <div className="inline-flex flex-col items-center gap-1">
         <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
-          {compactNumber.format(data.stats[pubkey].pub_following_pubkey_count) ?? 0}
+          {compactNumber.format(data?.stats[pubkey]?.pub_following_pubkey_count) ?? 0}
         </span>
         <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
           Following
@@ -56,9 +57,7 @@ export function UserStats({ pubkey }: { pubkey: string }) {
       </div>
       <div className="inline-flex flex-col items-center gap-1">
         <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
-          {data.stats[pubkey].zaps_received
-            ? compactNumber.format(data.stats[pubkey].zaps_received.msats / 1000)
-            : 0}
+          {compactNumber.format(data?.stats[pubkey]?.zaps_received?.msats / 1000 ?? 0)}
         </span>
         <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
           Zaps received
@@ -66,9 +65,7 @@ export function UserStats({ pubkey }: { pubkey: string }) {
       </div>
       <div className="inline-flex flex-col items-center gap-1">
         <span className="font-semibold leading-none text-neutral-900 dark:text-neutral-100">
-          {data.stats[pubkey].zaps_sent
-            ? compactNumber.format(data.stats[pubkey].zaps_sent.msats / 1000)
-            : 0}
+          {compactNumber.format(data?.stats[pubkey]?.zaps_sent?.msats / 1000 ?? 0)}
         </span>
         <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
           Zaps sent

@@ -1,4 +1,10 @@
-import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
+import {
+  NDKEvent,
+  NDKFilter,
+  NDKKind,
+  NDKSubscription,
+  NDKTag,
+} from '@nostr-dev-kit/ndk';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
@@ -48,6 +54,36 @@ export function useNostr() {
       subManager.set(JSON.stringify(filter), subEvent);
       console.log('sub: ', key);
     }
+  };
+
+  const getEventThread = (tags: NDKTag[]) => {
+    let rootEventId: string = null;
+    let replyEventId: string = null;
+
+    const events = tags.filter((el) => el[0] === 'e');
+
+    if (!events.length) return null;
+
+    if (events.length === 1)
+      return {
+        rootEventId: events[0][1],
+        replyEventId: null,
+      };
+
+    if (events.length > 1) {
+      rootEventId = events.find((el) => el[3] === 'root')?.[1];
+      replyEventId = events.find((el) => el[3] === 'reply')?.[1];
+
+      if (!rootEventId && !replyEventId) {
+        rootEventId = events[0][1];
+        replyEventId = events[1][1];
+      }
+    }
+
+    return {
+      rootEventId,
+      replyEventId,
+    };
   };
 
   const getAllActivities = async (limit?: number) => {
@@ -163,36 +199,6 @@ export function useNostr() {
     return dedup;
   };
 
-  const getAllEventsSinceLastLogin = async (customSince?: number) => {
-    try {
-      const dbEventsEmpty = await db.isEventsEmpty();
-
-      let since: number;
-      if (!customSince) {
-        if (dbEventsEmpty || db.account.last_login_at === 0) {
-          since = db.account.circles.length > 500 ? nHoursAgo(12) : nHoursAgo(24);
-        } else {
-          since = db.account.last_login_at;
-        }
-      } else {
-        since = customSince;
-      }
-
-      const events = (await fetcher.fetchAllEvents(
-        relayUrls,
-        {
-          kinds: [NDKKind.Text, NDKKind.Repost, 1063, NDKKind.Article],
-          authors: db.account.circles,
-        },
-        { since: since }
-      )) as unknown as NDKEvent[];
-
-      return events;
-    } catch (e) {
-      console.error('prefetch events failed, error: ', e);
-    }
-  };
-
   const getContactsByPubkey = async (pubkey: string) => {
     const user = ndk.getUser({ pubkey: pubkey });
     const follows = [...(await user.follows())].map((user) => user.hexpubkey);
@@ -279,8 +285,8 @@ export function useNostr() {
 
   return {
     sub,
+    getEventThread,
     getAllNIP04Chats,
-    getAllEventsSinceLastLogin,
     getContactsByPubkey,
     getEventsByPubkey,
     getAllRelaysByUsers,

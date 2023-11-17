@@ -2,14 +2,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { ActiveAccount } from '@shared/accounts/active';
-import {
-  ChatsIcon,
-  ComposeIcon,
-  ExploreIcon,
-  HomeIcon,
-  NwcIcon,
-  RelayIcon,
-} from '@shared/icons';
+import { ChatsIcon, ComposeIcon, HomeIcon, NwcIcon, RelayIcon } from '@shared/icons';
 
 import { compactNumber } from '@utils/number';
 
@@ -84,29 +77,6 @@ export function Navigation() {
                 <RelayIcon className="h-6 w-6" />
               </div>
               <div className="text-sm font-medium text-black dark:text-white">Relays</div>
-            </>
-          )}
-        </NavLink>
-        <NavLink
-          to="/explore"
-          preventScrollReset={true}
-          className="inline-flex flex-col items-center justify-center"
-        >
-          {({ isActive }) => (
-            <>
-              <div
-                className={twMerge(
-                  'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
-                  isActive
-                    ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
-                    : 'text-black/50 dark:text-neutral-400'
-                )}
-              >
-                <ExploreIcon className="h-6 w-6" />
-              </div>
-              <div className="text-sm font-medium text-black dark:text-white">
-                Explore
-              </div>
             </>
           )}
         </NavLink>

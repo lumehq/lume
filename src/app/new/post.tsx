@@ -6,7 +6,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { MediaUploader, MentionPopup } from '@app/new/components';
@@ -16,12 +16,18 @@ import { useNDK } from '@libs/ndk/provider';
 import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
+import { WIDGET_KIND } from '@stores/constants';
+
+import { useWidget } from '@utils/hooks/useWidget';
+
 export function NewPostScreen() {
-  const { ndk, relayUrls } = useNDK();
+  const { ndk } = useNDK();
+  const { addWidget } = useWidget();
 
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const navigate = useNavigate();
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
@@ -49,13 +55,9 @@ export function NewPostScreen() {
 
   const submit = async () => {
     try {
-      setLoading(true);
+      if (!ndk.signer) return navigate('/new/privkey');
 
-      const reply = {
-        id: searchParams.get('id'),
-        root: searchParams.get('root'),
-        pubkey: searchParams.get('pubkey'),
-      };
+      setLoading(true);
 
       // get plaintext content
       const html = editor.getHTML();
@@ -66,47 +68,44 @@ export function NewPostScreen() {
         ],
       });
 
-      // define tags
-      let tags: string[][] = [];
-
-      // add reply to tags if present
-      if (reply.id && reply.pubkey) {
-        if (reply.root && reply.root.length > 1) {
-          tags = [
-            ['e', reply.root, relayUrls[0], 'root'],
-            ['e', reply.id, relayUrls[0], 'reply'],
-            ['p', reply.pubkey],
-          ];
-        } else {
-          tags = [
-            ['e', reply.id, relayUrls[0], 'reply'],
-            ['p', reply.pubkey],
-          ];
-        }
-      }
-
-      // add hashtag to tags if present
-      const hashtags = serializedContent
-        .split(/\s/gm)
-        .filter((s: string) => s.startsWith('#'));
-
-      hashtags?.forEach((tag: string) => {
-        tags.push(['t', tag.replace('#', '')]);
-      });
-
-      // publish message
       const event = new NDKEvent(ndk);
       event.content = serializedContent;
       event.kind = NDKKind.Text;
-      event.tags = tags;
 
+      // add reply to tags if present
+      const replyTo = searchParams.get('replyTo');
+      const rootReplyTo = searchParams.get('rootReplyTo');
+
+      if (rootReplyTo) {
+        const rootEvent = await ndk.fetchEvent(rootReplyTo);
+        event.tag(rootEvent, 'root');
+      }
+
+      if (replyTo) {
+        const replyEvent = await ndk.fetchEvent(replyTo);
+        event.tag(replyEvent, 'reply');
+      }
+
+      // publish event
       const publishedRelays = await event.publish();
+
       if (publishedRelays) {
         toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
+
         // update state
         setLoading(false);
-        // reset editor
         setSearchParams({});
+
+        // open new widget with this event id
+        if (!replyTo) {
+          addWidget.mutate({
+            title: 'Thread',
+            content: event.id,
+            kind: WIDGET_KIND.thread,
+          });
+        }
+
+        // reset editor
         editor.commands.clearContent();
         localStorage.setItem('editor-post', '{}');
       }
@@ -130,22 +129,22 @@ export function NewPostScreen() {
           autoCorrect="off"
           autoCapitalize="off"
         />
-        {searchParams.get('id') && (
+        {searchParams.get('replyTo') && (
           <div className="relative max-w-lg">
-            <MentionNote id={searchParams.get('id')} />
+            <MentionNote id={searchParams.get('replyTo')} editing />
             <button
               type="button"
               onClick={() => setSearchParams({})}
-              className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-neutral-300 px-2 dark:bg-neutral-700"
+              className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-neutral-200 px-2 dark:bg-neutral-800"
             >
-              <CancelIcon className="h-4 w-4" />
+              <CancelIcon className="h-5 w-5" />
             </button>
           </div>
         )}
       </div>
       <div className="flex h-16 w-full items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
         <span className="text-sm font-medium tabular-nums text-neutral-600 dark:text-neutral-400">
-          {editor?.storage?.characterCount.characters()}
+          {editor?.storage?.characterCount.characters()} characters
         </span>
         <div className="flex items-center">
           <div className="inline-flex items-center gap-2">

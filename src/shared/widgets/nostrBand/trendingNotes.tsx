@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { VList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
-import { NoteWrapper, TextNote } from '@shared/notes';
+import { MemoizedTextNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
@@ -13,9 +13,9 @@ interface Response {
   notes: Array<{ event: NDKEvent }>;
 }
 
-export function TrendingNotesWidget({ params }: { params: Widget }) {
+export function TrendingNotesWidget({ widget }: { widget: Widget }) {
   const { status, data } = useQuery({
-    queryKey: ['trending-notes-widget'],
+    queryKey: ['trending-posts'],
     queryFn: async () => {
       const res = await fetch('https://api.nostr.band/v0/trending/notes');
       if (!res.ok) {
@@ -33,8 +33,8 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
 
   return (
     <WidgetWrapper>
-      <TitleBar id={params.id} title="Trending Notes" />
-      <div className="flex-1">
+      <TitleBar id={widget.id} title="Trending Notes" />
+      <VList className="flex-1">
         {status === 'pending' ? (
           <div className="flex h-full w-full items-center justify-center ">
             <div className="inline-flex flex-col items-center justify-center gap-2">
@@ -56,16 +56,9 @@ export function TrendingNotesWidget({ params }: { params: Widget }) {
             </div>
           </div>
         ) : (
-          <VList className="h-full">
-            {data.map((item) => (
-              <NoteWrapper key={item.event.id} event={item.event}>
-                <TextNote content={item.event.content} />
-              </NoteWrapper>
-            ))}
-            <div className="h-16" />
-          </VList>
+          data.map((item) => <MemoizedTextNote key={item.event.id} event={item.event} />)
         )}
-      </div>
+      </VList>
     </WidgetWrapper>
   );
 }

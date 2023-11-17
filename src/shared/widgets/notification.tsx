@@ -7,10 +7,11 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import { NoteSkeleton } from '@shared/notes';
-import { NotifyNote } from '@shared/notification/notifyNote';
+import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
+
+import { FETCH_LIMIT } from '@stores/constants';
 
 import { useNostr } from '@utils/hooks/useNostr';
 import { sendNativeNotification } from '@utils/notification';
@@ -38,7 +39,7 @@ export function NotificationWidget() {
             kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
             '#p': [db.account.pubkey],
           },
-          50,
+          FETCH_LIMIT,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
         );
 
@@ -67,7 +68,7 @@ export function NotificationWidget() {
 
   const renderEvent = useCallback((event: NDKEvent) => {
     if (event.pubkey === db.account.pubkey) return null;
-    return <NotifyNote key={event.id} event={event} />;
+    return <MemoizedNotifyNote key={event.id} event={event} />;
   }, []);
 
   useEffect(() => {
@@ -139,7 +140,7 @@ export function NotificationWidget() {
   return (
     <WidgetWrapper>
       <TitleBar id="9998" title="Notification" isLive />
-      <VList className="flex-1">
+      <VList className="flex-1" overscan={2}>
         {status === 'pending' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
@@ -147,9 +148,9 @@ export function NotificationWidget() {
             </div>
           </div>
         ) : allEvents.length < 1 ? (
-          <div className="flex h-full w-full flex-col items-center justify-center">
-            <p className="mb-1 text-4xl">🎉</p>
-            <p className="text-center font-medium text-neutral-600 dark:text-neutral-400">
+          <div className="flex h-[400px] w-full flex-col items-center justify-center">
+            <p className="mb-2 text-4xl">🎉</p>
+            <p className="text-center font-medium text-neutral-900 dark:text-neutral-100">
               Hmm! Nothing new yet.
             </p>
           </div>

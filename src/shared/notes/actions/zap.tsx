@@ -1,24 +1,28 @@
 import { webln } from '@getalby/sdk';
 import { SendPaymentResponse } from '@getalby/sdk/dist/types';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as Dialog from '@radix-ui/react-dialog';
 import { invoke } from '@tauri-apps/api/primitives';
 import { message } from '@tauri-apps/plugin-dialog';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
+import { useNavigate } from 'react-router-dom';
+
+import { useNDK } from '@libs/ndk/provider';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
-import { useEvent } from '@utils/hooks/useEvent';
-import { useNostr } from '@utils/hooks/useNostr';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
 import { compactNumber } from '@utils/number';
 
-export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
-  const { createZap } = useNostr();
-  const { user } = useProfile(pubkey);
-  const { data: event } = useEvent(id);
+export function NoteZap({ event }: { event: NDKEvent }) {
+  const nwc = useRef(null);
+  const navigate = useNavigate();
+
+  const { ndk } = useNDK();
+  const { user } = useProfile(event.pubkey);
 
   const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
   const [amount, setAmount] = useState<string>('21');
@@ -28,12 +32,12 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const nwc = useRef(null);
-
   const createZapRequest = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+
       const zapAmount = parseInt(amount) * 1000;
-      const res = await createZap(event, zapAmount, zapMessage);
+      const res = await event.zap(zapAmount, zapMessage);
 
       if (!res)
         return await message('Cannot create zap request', {
@@ -84,9 +88,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
       if (uri) setWalletConnectURL(uri);
     }
 
-    if (isOpen) {
-      getWalletConnectURL();
-    }
+    if (isOpen) getWalletConnectURL();
 
     return () => {
       setAmount('21');
@@ -107,16 +109,16 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
         <Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-          <div className="relative h-min w-full max-w-xl rounded-xl bg-neutral-400 dark:bg-neutral-600">
+          <div className="relative h-min w-full max-w-xl rounded-xl bg-white dark:bg-black">
             <div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
               <div className="w-6" />
-              <Dialog.Title className="text-center text-sm font-semibold leading-none text-white">
+              <Dialog.Title className="text-center font-semibold">
                 Send tip to {user?.name || user?.display_name || user?.displayName}
               </Dialog.Title>
-              <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md backdrop-blur-xl hover:bg-white/10">
-                <CancelIcon className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
+              <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-900">
+                <CancelIcon className="h-4 w-4" />
               </Dialog.Close>
             </div>
             <div className="overflow-y-auto overflow-x-hidden px-5 pb-5">
@@ -133,7 +135,7 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         max={10000} // 1M sats
                         maxLength={10000} // 1M sats
                         onValueChange={(value) => setAmount(value)}
-                        className="w-full flex-1 bg-transparent text-right text-4xl font-semibold text-white placeholder:text-neutral-600 focus:outline-none dark:text-neutral-400"
+                        className="w-full flex-1 bg-transparent text-right text-4xl font-semibold placeholder:text-neutral-600 focus:outline-none dark:text-neutral-400"
                       />
                       <span className="w-full flex-1 text-left text-4xl font-semibold text-neutral-600 dark:text-neutral-400">
                         sats
@@ -143,35 +145,35 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                       <button
                         type="button"
                         onClick={() => setAmount('69')}
-                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                        className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                       >
                         69 sats
                       </button>
                       <button
                         type="button"
                         onClick={() => setAmount('100')}
-                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                        className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                       >
                         100 sats
                       </button>
                       <button
                         type="button"
                         onClick={() => setAmount('200')}
-                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                        className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                       >
                         200 sats
                       </button>
                       <button
                         type="button"
                         onClick={() => setAmount('500')}
-                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                        className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                       >
                         500 sats
                       </button>
                       <button
                         type="button"
                         onClick={() => setAmount('1000')}
-                        className="w-max rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-sm font-medium hover:bg-white/10"
+                        className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                       >
                         1K sats
                       </button>
@@ -187,28 +189,28 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                       autoCorrect="off"
                       autoCapitalize="off"
                       placeholder="Enter message (optional)"
-                      className="relative min-h-[56px] w-full resize-none rounded-lg bg-white/10 px-3 py-2 !outline-none backdrop-blur-xl placeholder:text-neutral-600 dark:text-neutral-400"
+                      className="w-full resize-none rounded-lg bg-neutral-100 px-3 py-3 !outline-none placeholder:text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400"
                     />
                     <div className="flex flex-col gap-2">
                       {walletConnectURL ? (
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
+                          className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
                         >
                           {isCompleted ? (
                             <p>Successfully tipped</p>
                           ) : isLoading ? (
                             <span className="flex flex-col">
-                              <p className="mb-px leading-none">Waiting for approval</p>
-                              <p className="text-xs leading-none text-neutral-600 dark:text-neutral-400">
+                              <p>Waiting for approval</p>
+                              <p className="text-xs text-neutral-600 dark:text-neutral-400">
                                 Go to your wallet and approve payment request
                               </p>
                             </span>
                           ) : (
                             <span className="flex flex-col">
-                              <p className="mb-px leading-none">Send tip</p>
-                              <p className="text-xs leading-none text-neutral-600 dark:text-neutral-400">
+                              <p>Send tip</p>
+                              <p className="text-xs text-neutral-600 dark:text-neutral-400">
                                 You&apos;re using nostr wallet connect
                               </p>
                             </span>
@@ -218,9 +220,9 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium hover:bg-blue-600"
+                          className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
                         >
-                          <p>Create Lightning invoice</p>
+                          Create Lightning invoice
                         </button>
                       )}
                     </div>
@@ -228,13 +230,11 @@ export function NoteZap({ id, pubkey }: { id: string; pubkey: string }) {
                 </>
               ) : (
                 <div className="mt-3 flex flex-col items-center justify-center gap-4">
-                  <div className="rounded-md bg-white p-3">
+                  <div className="rounded-md bg-neutral-100 p-3 dark:bg-neutral-900">
                     <QRCodeSVG value={invoice} size={256} />
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <h3 className="text-lg font-medium leading-none text-white">
-                      Scan to pay
-                    </h3>
+                    <h3 className="text-lg font-medium">Scan to pay</h3>
                     <span className="text-center text-sm text-neutral-600 dark:text-neutral-400">
                       You must use Bitcoin wallet which support Lightning
                       <br />
