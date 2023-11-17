@@ -16,7 +16,7 @@ export function ToggleWidgetList() {
           onClick={() =>
             addWidget.mutate({ kind: WIDGET_KIND.list, title: '', content: '' })
           }
-          className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+          className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
         >
           <PlusIcon className="h-5 w-5" />
         </button>

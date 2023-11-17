@@ -541,7 +541,7 @@ export const User = memo(function User({
               </Avatar.Fallback>
             </Avatar.Root>
             <div className="flex flex-1 flex-col gap-2">
-              <div className="inline-flex flex-col gap-1">
+              <div className="inline-flex flex-col">
                 <h5 className="text-sm font-semibold">
                   {user?.name ||
                     user?.display_name ||

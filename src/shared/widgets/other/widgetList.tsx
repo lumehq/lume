@@ -65,9 +65,9 @@ export function WidgetList({ widget }: { widget: Widget }) {
             <div className="flex flex-col gap-3">
               <AddGroupFeeds currentWidgetId={widget.id} />
               <AddHashtagFeeds currentWidgetId={widget.id} />
-              <div className="inline-flex h-14 w-full items-center justify-between rounded-lg bg-white px-3 hover:shadow-md hover:shadow-neutral-200/50 dark:hover:shadow-neutral-800/50">
+              <div className="inline-flex h-14 w-full items-center justify-between rounded-lg bg-neutral-50 px-3 hover:shadow-md hover:shadow-neutral-200/50 dark:bg-neutral-950 dark:hover:shadow-neutral-800/50">
                 <div className="inline-flex items-center gap-2.5">
-                  <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-neutral-100">
+                  <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-900">
                     <ArticleIcon className="h-4 w-4" />
                   </div>
                   <p className="font-medium">Articles</p>
@@ -90,9 +90,9 @@ export function WidgetList({ widget }: { widget: Widget }) {
                   Add
                 </button>
               </div>
-              <div className="inline-flex h-14 w-full items-center justify-between rounded-lg bg-white px-3 hover:shadow-md hover:shadow-neutral-200/50 dark:hover:shadow-neutral-800/50">
+              <div className="inline-flex h-14 w-full items-center justify-between rounded-lg bg-neutral-50 px-3 hover:shadow-md hover:shadow-neutral-200/50 dark:bg-neutral-950 dark:hover:shadow-neutral-800/50">
                 <div className="inline-flex items-center gap-2.5">
-                  <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-neutral-100">
+                  <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-900">
                     <MediaIcon className="h-4 w-4" />
                   </div>
                   <p className="font-medium">Media</p>
