@@ -1,5 +1,8 @@
 import * as Switch from '@radix-ui/react-switch';
+import { invoke } from '@tauri-apps/api/primitives';
+import { getCurrent } from '@tauri-apps/api/window';
 import { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -16,8 +19,20 @@ export function GeneralSettingScreen() {
     appearance: 'system',
   });
 
+  const changeTheme = async (theme: 'light' | 'dark' | 'auto') => {
+    await invoke('plugin:theme|set_theme', {
+      theme,
+    });
+    await db.createSetting('appearance', theme);
+    // update state
+    setSettings((prev) => ({ ...prev, appearance: theme }));
+  };
+
   useEffect(() => {
     async function loadSettings() {
+      const theme = await getCurrent().theme();
+      setSettings((prev) => ({ ...prev, appearance: theme }));
+
       const data = await db.getAllSettings();
       if (!data) return;
 
@@ -50,12 +65,6 @@ export function GeneralSettingScreen() {
           setSettings((prev) => ({
             ...prev,
             notification: item.value === '1' ? true : false,
-          }));
-
-        if (item.key === 'appearance')
-          setSettings((prev) => ({
-            ...prev,
-            appearance: item.value,
           }));
       });
     }
@@ -133,9 +142,17 @@ export function GeneralSettingScreen() {
           <div className="flex flex-1 gap-6">
             <button
               type="button"
+              onClick={() => changeTheme('light')}
               className="flex flex-col items-center justify-center gap-0.5"
             >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+              <div
+                className={twMerge(
+                  'inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                  settings.appearance === 'light'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900'
+                )}
+              >
                 <LightIcon className="h-5 w-5" />
               </div>
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -144,9 +161,17 @@ export function GeneralSettingScreen() {
             </button>
             <button
               type="button"
+              onClick={() => changeTheme('dark')}
               className="flex flex-col items-center justify-center gap-0.5"
             >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+              <div
+                className={twMerge(
+                  'inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                  settings.appearance === 'dark'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900'
+                )}
+              >
                 <DarkIcon className="h-5 w-5" />
               </div>
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -155,9 +180,17 @@ export function GeneralSettingScreen() {
             </button>
             <button
               type="button"
+              onClick={() => changeTheme('auto')}
               className="flex flex-col items-center justify-center gap-0.5"
             >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+              <div
+                className={twMerge(
+                  'inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                  settings.appearance === 'auto'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900'
+                )}
+              >
                 <SystemModeIcon className="h-5 w-5" />
               </div>
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">

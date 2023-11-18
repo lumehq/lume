@@ -7,6 +7,7 @@ use keyring::Entry;
 use std::time::Duration;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
+use tauri_plugin_theme::ThemePlugin;
 use webpage::{Webpage, WebpageOptions};
 
 #[derive(Clone, serde::Serialize)]
@@ -105,6 +106,7 @@ fn secure_remove(key: String) -> Result<(), ()> {
 }
 
 fn main() {
+  let mut ctx = tauri::generate_context!();
   tauri::Builder::default()
     .setup(|app| {
       #[cfg(desktop)]
@@ -113,6 +115,7 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())?;
       Ok(())
     })
+    .plugin(ThemePlugin::init(ctx.config_mut()))
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -154,6 +157,6 @@ fn main() {
       secure_load,
       secure_remove
     ])
-    .run(tauri::generate_context!())
+    .run(ctx)
     .expect("error while running tauri application");
 }
