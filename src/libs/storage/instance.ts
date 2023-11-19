@@ -429,10 +429,20 @@ export class LumeStorage {
   }
 
   public async createSetting(key: string, value: string) {
-    return await this.db.execute(
-      'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
-      [key, value]
-    );
+    const currentSetting = await this.getSettingValue(key);
+
+    if (!currentSetting)
+      return await this.db.execute(
+        'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
+        [key, value]
+      );
+
+    const currentValue = !!parseInt(currentSetting);
+
+    return await this.db.execute('UPDATE settings SET value = $1 WHERE key = $2;', [
+      +!currentValue,
+      key,
+    ]);
   }
 
   public async getAllSettings() {
@@ -450,6 +460,12 @@ export class LumeStorage {
     );
     if (results.length < 1) return null;
     return results[0].value;
+  }
+
+  public async clearCache() {
+    await this.db.execute('DELETE FROM ndk_events;');
+    await this.db.execute('DELETE FROM ndk_eventtags;');
+    await this.db.execute('DELETE FROM ndk_users;');
   }
 
   public async accountLogout() {
