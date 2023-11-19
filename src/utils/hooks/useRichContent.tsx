@@ -4,6 +4,8 @@ import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
+import { useStorage } from '@libs/storage/provider';
+
 import {
   Hashtag,
   ImagePreview,
@@ -44,6 +46,8 @@ const VIDEOS = [
 ];
 
 export function useRichContent(content: string, textmode: boolean = false) {
+  const { db } = useStorage();
+
   let parsedContent: string | ReactNode[] = content.replace(/\n+/g, '\n');
   let linkPreview: string;
   let images: string[] = [];
@@ -54,8 +58,10 @@ export function useRichContent(content: string, textmode: boolean = false) {
   const words = text.split(/( |\n)/);
 
   if (!textmode) {
-    images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
-    videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
+    if (db.settings.media) {
+      images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
+      videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
+    }
     events = words.filter((word) => NOSTR_EVENTS.some((el) => word.startsWith(el)));
   }
 
@@ -83,9 +89,10 @@ export function useRichContent(content: string, textmode: boolean = false) {
 
     if (hashtags.length) {
       hashtags.forEach((hashtag) => {
-        parsedContent = reactStringReplace(parsedContent, hashtag, (match, i) => (
-          <Hashtag key={match + i} tag={hashtag} />
-        ));
+        parsedContent = reactStringReplace(parsedContent, hashtag, (match, i) => {
+          if (db.settings.hashtag) return <Hashtag key={match + i} tag={hashtag} />;
+          return null;
+        });
       });
     }
 

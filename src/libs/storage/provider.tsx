@@ -1,4 +1,3 @@
-import { appConfigDir } from '@tauri-apps/api/path';
 import { message } from '@tauri-apps/plugin-dialog';
 import { platform } from '@tauri-apps/plugin-os';
 import { relaunch } from '@tauri-apps/plugin-process';
@@ -29,10 +28,21 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
     try {
       const sqlite = await Database.load('sqlite:lume_v2.db');
       const platformName = await platform();
-      const dir = await appConfigDir();
 
       const lumeStorage = new LumeStorage(sqlite, platformName);
       if (!lumeStorage.account) await lumeStorage.getActiveAccount();
+
+      const settings = await lumeStorage.getAllSettings();
+      if (settings) {
+        settings.forEach((item) => {
+          if (item.key === 'outbox') lumeStorage.settings.outbox = !!parseInt(item.value);
+
+          if (item.key === 'media') lumeStorage.settings.media = !!parseInt(item.value);
+
+          if (item.key === 'hashtag')
+            lumeStorage.settings.hashtag = !!parseInt(item.value);
+        });
+      }
 
       // check update
       const update = await check();
@@ -44,7 +54,6 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
       }
 
       setDB(lumeStorage);
-      console.info(dir);
     } catch (e) {
       await message(`Cannot initialize database: ${e}`, {
         title: 'Lume',

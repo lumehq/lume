@@ -1,5 +1,10 @@
 import * as Switch from '@radix-ui/react-switch';
+import { invoke } from '@tauri-apps/api/primitives';
+import { getCurrent } from '@tauri-apps/api/window';
+import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
+import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { useStorage } from '@libs/storage/provider';
 
@@ -16,46 +21,89 @@ export function GeneralSettingScreen() {
     appearance: 'system',
   });
 
+  const changeTheme = async (theme: 'light' | 'dark' | 'auto') => {
+    await invoke('plugin:theme|set_theme', { theme });
+    // update state
+    setSettings((prev) => ({ ...prev, appearance: theme }));
+  };
+
+  const toggleAutolaunch = async () => {
+    if (!settings.autolaunch) {
+      await enable();
+      // update state
+      setSettings((prev) => ({ ...prev, autolaunch: true }));
+    } else {
+      await disable();
+      // update state
+      setSettings((prev) => ({ ...prev, autolaunch: false }));
+    }
+  };
+
+  const toggleOutbox = async () => {
+    await db.createSetting('outbox', String(+!settings.outbox));
+    // update state
+    setSettings((prev) => ({ ...prev, outbox: !settings.outbox }));
+  };
+
+  const toggleMedia = async () => {
+    await db.createSetting('media', String(+!settings.media));
+    db.settings.media = !settings.media;
+    // update state
+    setSettings((prev) => ({ ...prev, media: !settings.media }));
+  };
+
+  const toggleHashtag = async () => {
+    await db.createSetting('hashtag', String(+!settings.hashtag));
+    db.settings.hashtag = !settings.hashtag;
+    // update state
+    setSettings((prev) => ({ ...prev, hashtag: !settings.hashtag }));
+  };
+
+  const toggleNofitication = async () => {
+    if (settings.notification) return;
+
+    await requestPermission();
+    // update state
+    setSettings((prev) => ({ ...prev, notification: !settings.notification }));
+  };
+
   useEffect(() => {
     async function loadSettings() {
+      const theme = await getCurrent().theme();
+      setSettings((prev) => ({ ...prev, appearance: theme }));
+
+      const autostart = await isEnabled();
+      setSettings((prev) => ({ ...prev, autolaunch: autostart }));
+
+      const permissionGranted = await isPermissionGranted();
+      setSettings((prev) => ({ ...prev, notification: permissionGranted }));
+
       const data = await db.getAllSettings();
       if (!data) return;
 
       data.forEach((item) => {
-        if (item.key === 'autolaunch')
-          setSettings((prev) => ({
-            ...prev,
-            autolaunch: item.value === '1' ? true : false,
-          }));
-
         if (item.key === 'outbox')
           setSettings((prev) => ({
             ...prev,
-            outbox: item.value === '1' ? true : false,
+            outbox: !!parseInt(item.value),
           }));
 
         if (item.key === 'media')
           setSettings((prev) => ({
             ...prev,
-            media: item.value === '1' ? true : false,
+            media: !!parseInt(item.value),
           }));
 
         if (item.key === 'hashtag')
           setSettings((prev) => ({
             ...prev,
-            hashtag: item.value === '1' ? true : false,
+            hashtag: !!parseInt(item.value),
           }));
 
         if (item.key === 'notification')
           setSettings((prev) => ({
             ...prev,
-            notification: item.value === '1' ? true : false,
-          }));
-
-        if (item.key === 'appearance')
-          setSettings((prev) => ({
-            ...prev,
-            appearance: item.value,
+            notification: !!parseInt(item.value),
           }));
       });
     }
@@ -73,6 +121,7 @@ export function GeneralSettingScreen() {
           </div>
           <Switch.Root
             checked={settings.autolaunch}
+            onClick={() => toggleAutolaunch()}
             className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
           >
             <Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -85,6 +134,7 @@ export function GeneralSettingScreen() {
           </div>
           <Switch.Root
             checked={settings.outbox}
+            onClick={() => toggleOutbox()}
             className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
           >
             <Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -97,6 +147,7 @@ export function GeneralSettingScreen() {
           </div>
           <Switch.Root
             checked={settings.media}
+            onClick={() => toggleMedia()}
             className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
           >
             <Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -109,6 +160,7 @@ export function GeneralSettingScreen() {
           </div>
           <Switch.Root
             checked={settings.hashtag}
+            onClick={() => toggleHashtag()}
             className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
           >
             <Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -123,6 +175,8 @@ export function GeneralSettingScreen() {
           </div>
           <Switch.Root
             checked={settings.notification}
+            disabled={settings.notification}
+            onClick={() => toggleNofitication()}
             className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
           >
             <Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -133,9 +187,17 @@ export function GeneralSettingScreen() {
           <div className="flex flex-1 gap-6">
             <button
               type="button"
+              onClick={() => changeTheme('light')}
               className="flex flex-col items-center justify-center gap-0.5"
             >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+              <div
+                className={twMerge(
+                  'inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                  settings.appearance === 'light'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900'
+                )}
+              >
                 <LightIcon className="h-5 w-5" />
               </div>
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -144,9 +206,17 @@ export function GeneralSettingScreen() {
             </button>
             <button
               type="button"
+              onClick={() => changeTheme('dark')}
               className="flex flex-col items-center justify-center gap-0.5"
             >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+              <div
+                className={twMerge(
+                  'inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                  settings.appearance === 'dark'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900'
+                )}
+              >
                 <DarkIcon className="h-5 w-5" />
               </div>
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -155,9 +225,17 @@ export function GeneralSettingScreen() {
             </button>
             <button
               type="button"
+              onClick={() => changeTheme('auto')}
               className="flex flex-col items-center justify-center gap-0.5"
             >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+              <div
+                className={twMerge(
+                  'inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                  settings.appearance === 'auto'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900'
+                )}
+              >
                 <SystemModeIcon className="h-5 w-5" />
               </div>
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">

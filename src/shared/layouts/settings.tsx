@@ -35,7 +35,8 @@ export function SettingsLayout() {
           </div>
           <div className="flex items-center gap-0.5">
             <NavLink
-              to="/settings/"
+              to="/settings"
+              end
               className={({ isActive }) =>
                 twMerge(
                   'flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900',

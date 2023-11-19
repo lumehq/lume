@@ -35,6 +35,7 @@
     "@tanstack/react-query": "^5.8.4",
     "@tauri-apps/api": "2.0.0-alpha.11",
     "@tauri-apps/cli": "2.0.0-alpha.17",
+    "@tauri-apps/plugin-autostart": "2.0.0-alpha.3",
     "@tauri-apps/plugin-clipboard-manager": "2.0.0-alpha.3",
     "@tauri-apps/plugin-dialog": "2.0.0-alpha.3",
     "@tauri-apps/plugin-fs": "2.0.0-alpha.3",
