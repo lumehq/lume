@@ -47,12 +47,14 @@ export function GeneralSettingScreen() {
 
   const toggleMedia = async () => {
     await db.createSetting('media', String(+!settings.media));
+    db.settings.media = !settings.media;
     // update state
     setSettings((prev) => ({ ...prev, media: !settings.media }));
   };
 
   const toggleHashtag = async () => {
     await db.createSetting('hashtag', String(+!settings.hashtag));
+    db.settings.hashtag = !settings.hashtag;
     // update state
     setSettings((prev) => ({ ...prev, hashtag: !settings.hashtag }));
   };
