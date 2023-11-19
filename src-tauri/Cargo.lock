@@ -2612,7 +2612,7 @@ dependencies = [
 
 [[package]]
 name = "lume"
-version = "2.1.0"
+version = "2.1.1"
 dependencies = [
  "keyring",
  "serde",
