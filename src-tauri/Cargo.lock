@@ -5233,7 +5233,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-theme"
 version = "0.2.0"
-source = "git+https://github.com/reyamir/tauri-plugin-theme?branch=tauri-v2#a82931ac1cf32f02176d8bd29cbbae1e9ce79bb5"
+source = "git+https://github.com/reyamir/tauri-plugin-theme?branch=tauri-v2#f8a64ccf73c8afbfef6d124cd43929ec9d22de44"
 dependencies = [
  "cocoa 0.25.0",
  "futures-lite 1.13.0",
