@@ -199,7 +199,7 @@ dependencies:
     version: 3.0.5(tailwindcss@3.3.5)
   tauri-controls:
     specifier: github:reyamir/tauri-controls
-    version: github.com/reyamir/tauri-controls/15e98afd9abd588144d2ac36db6833f2ca6e1405
+    version: github.com/reyamir/tauri-controls/079b1262f9b75c84b97613174836101b01d61c37(@tauri-apps/api@2.0.0-alpha.11)(@tauri-apps/plugin-os@2.0.0-alpha.4)(clsx@2.0.0)(react-dom@18.2.0)(react@18.2.0)(tailwind-merge@1.14.0)
   tippy.js:
     specifier: ^6.3.7
     version: 6.3.7
@@ -6296,10 +6296,18 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/reyamir/tauri-controls/15e98afd9abd588144d2ac36db6833f2ca6e1405:
-    resolution: {tarball: https://codeload.github.com/reyamir/tauri-controls/tar.gz/15e98afd9abd588144d2ac36db6833f2ca6e1405}
+  github.com/reyamir/tauri-controls/079b1262f9b75c84b97613174836101b01d61c37(@tauri-apps/api@2.0.0-alpha.11)(@tauri-apps/plugin-os@2.0.0-alpha.4)(clsx@2.0.0)(react-dom@18.2.0)(react@18.2.0)(tailwind-merge@1.14.0):
+    resolution: {tarball: https://codeload.github.com/reyamir/tauri-controls/tar.gz/079b1262f9b75c84b97613174836101b01d61c37}
+    id: github.com/reyamir/tauri-controls/079b1262f9b75c84b97613174836101b01d61c37
     name: tauri-controls
     version: 0.3.0
+    peerDependencies:
+      '@tauri-apps/api': ^2.0.0-alpha.11
+      '@tauri-apps/plugin-os': ^2.0.0-alpha.3
+      clsx: ^2.0.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      tailwind-merge: ^1.14.0
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.11
       '@tauri-apps/plugin-os': 2.0.0-alpha.4
