@@ -3,6 +3,7 @@ import { relaunch } from '@tauri-apps/plugin-process';
 import { Update, check } from '@tauri-apps/plugin-updater';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export function AboutScreen() {
   const [version, setVersion] = useState('');
@@ -10,7 +11,8 @@ export function AboutScreen() {
 
   const checkUpdate = async () => {
     const update = await check();
-    if (update) setNewUpdate(update);
+    if (!update) toast.info('There is no update available');
+    setNewUpdate(update);
   };
 
   const installUpdate = async () => {
