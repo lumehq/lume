@@ -13,6 +13,7 @@ import { DarkIcon, LightIcon, SystemModeIcon } from '@shared/icons';
 export function GeneralSettingScreen() {
   const { db } = useStorage();
   const [settings, setSettings] = useState({
+    autoupdate: false,
     autolaunch: false,
     outbox: false,
     media: true,
@@ -59,6 +60,13 @@ export function GeneralSettingScreen() {
     setSettings((prev) => ({ ...prev, hashtag: !settings.hashtag }));
   };
 
+  const toggleAutoupdate = async () => {
+    await db.createSetting('autoupdate', String(+!settings.autoupdate));
+    db.settings.autoupdate = !settings.autoupdate;
+    // update state
+    setSettings((prev) => ({ ...prev, autoupdate: !settings.autoupdate }));
+  };
+
   const toggleNofitication = async () => {
     if (settings.notification) return;
 
@@ -82,6 +90,12 @@ export function GeneralSettingScreen() {
       if (!data) return;
 
       data.forEach((item) => {
+        if (item.key === 'autoupdate')
+          setSettings((prev) => ({
+            ...prev,
+            autoupdate: !!parseInt(item.value),
+          }));
+
         if (item.key === 'outbox')
           setSettings((prev) => ({
             ...prev,
@@ -114,6 +128,19 @@ export function GeneralSettingScreen() {
   return (
     <div className="mx-auto w-full max-w-lg">
       <div className="flex flex-col gap-6">
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-8">
+            <div className="w-24 shrink-0 text-end text-sm font-semibold">Updater</div>
+            <div className="text-sm">Auto download new update at Login</div>
+          </div>
+          <Switch.Root
+            checked={settings.autoupdate}
+            onClick={() => toggleAutoupdate()}
+            className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+          >
+            <Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+          </Switch.Root>
+        </div>
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="w-24 shrink-0 text-end text-sm font-semibold">Startup</div>
