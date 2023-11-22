@@ -33,6 +33,8 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
       if (!lumeStorage.account) await lumeStorage.getActiveAccount();
 
       const settings = await lumeStorage.getAllSettings();
+      let autoUpdater = false;
+
       if (settings) {
         settings.forEach((item) => {
           if (item.key === 'outbox') lumeStorage.settings.outbox = !!parseInt(item.value);
@@ -41,16 +43,23 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 
           if (item.key === 'hashtag')
             lumeStorage.settings.hashtag = !!parseInt(item.value);
+
+          if (item.key === 'autoupdate') {
+            if (parseInt(item.value)) autoUpdater = true;
+          }
         });
       }
 
-      // check update
-      const update = await check();
-      if (update) {
-        setIsNewVersion(true);
+      if (autoUpdater) {
+        // check update
+        const update = await check();
+        // install new version
+        if (update) {
+          setIsNewVersion(true);
 
-        await update.downloadAndInstall();
-        await relaunch();
+          await update.downloadAndInstall();
+          await relaunch();
+        }
       }
 
       setDB(lumeStorage);
@@ -93,7 +102,7 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
         <div className="absolute bottom-5 right-5 inline-flex items-center gap-2.5">
           <LoaderIcon className="h-6 w-6 animate-spin text-blue-500" />
           <p className="font-semibold">
-            {isNewVersion ? 'Found a new version, updating' : 'Checking for updates...'}
+            {isNewVersion ? 'Found a new version, updating...' : 'Starting...'}
           </p>
         </div>
       </div>

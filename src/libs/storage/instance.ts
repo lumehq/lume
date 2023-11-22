@@ -20,13 +20,18 @@ export class LumeStorage {
   public db: Database;
   public account: Account | null;
   public platform: Platform | null;
-  public settings: { outbox: boolean; media: boolean; hashtag: boolean };
+  public settings: {
+    autoupdate: boolean;
+    outbox: boolean;
+    media: boolean;
+    hashtag: boolean;
+  };
 
   constructor(sqlite: Database, platform: Platform) {
     this.db = sqlite;
     this.account = null;
     this.platform = platform;
-    this.settings = { outbox: false, media: true, hashtag: true };
+    this.settings = { autoupdate: false, outbox: false, media: true, hashtag: true };
   }
 
   public async secureSave(key: string, value: string) {
