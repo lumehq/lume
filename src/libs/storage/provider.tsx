@@ -20,7 +20,7 @@ const StorageContext = createContext<StorageContext>({
   db: undefined,
 });
 
-const StorageProvider = ({ children }: PropsWithChildren<object>) => {
+const StorageInstance = () => {
   const [db, setDB] = useState<LumeStorage>(undefined);
   const [isNewVersion, setIsNewVersion] = useState(false);
 
@@ -74,6 +74,12 @@ const StorageProvider = ({ children }: PropsWithChildren<object>) => {
   useEffect(() => {
     if (!db) initLumeStorage();
   }, []);
+
+  return { db, isNewVersion };
+};
+
+const StorageProvider = ({ children }: PropsWithChildren<object>) => {
+  const { db, isNewVersion } = StorageInstance();
 
   if (!db)
     return (
