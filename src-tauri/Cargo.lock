@@ -2678,7 +2678,6 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-process",
  "tauri-plugin-shell",
- "tauri-plugin-single-instance",
  "tauri-plugin-sql",
  "tauri-plugin-store",
  "tauri-plugin-theme",
@@ -5175,20 +5174,6 @@ dependencies = [
  "shared_child",
  "tauri",
  "thiserror",
-]
-
-[[package]]
-name = "tauri-plugin-single-instance"
-version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
-dependencies = [
- "log",
- "serde",
- "serde_json",
- "tauri",
- "thiserror",
- "windows-sys 0.48.0",
- "zbus",
 ]
 
 [[package]]
