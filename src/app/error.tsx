@@ -57,7 +57,7 @@ export function ErrorScreen() {
             Sorry, an unexpected error has occurred.
           </h1>
           <h3 className="text-3xl font-semibold leading-snug text-white">
-            Don&apos;t be panic, your account is safe.
+            Don&apos;t panic, your account is safe.
             <br />
             Here are what things you can do:
           </h3>
@@ -65,7 +65,7 @@ export function ErrorScreen() {
         <div className="flex w-full flex-col gap-3">
           <div className="flex items-center justify-between rounded-xl bg-blue-700 px-3 py-4">
             <div className="text-xl font-semibold text-white">
-              1. Try close and re-open app
+              1. Try to close and re-open the app
             </div>
             <button
               type="button"
@@ -112,12 +112,12 @@ export function ErrorScreen() {
           <div className="rounded-xl bg-blue-700 px-3 py-4">
             <div className="flex w-full flex-col gap-1.5">
               <div className="text-xl font-semibold text-white">
-                4. Use other Nostr client
+                4. Use another Nostr client
               </div>
               <div className="select-text text-lg font-medium text-blue-300">
                 <p>
-                  While waiting Lume&apos;s Devs release the bug fixes, you always can use
-                  other Nostr client with your account:
+                  While waiting for Lume&apos;s Devs to release the bug fixes, you always can use
+                  other Nostr clients with your account:
                 </p>
                 <div className="mt-2 flex flex-col gap-1 text-white">
                   <a href="https://snort.social" className="hover:!underline">
