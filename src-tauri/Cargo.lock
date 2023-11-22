@@ -154,9 +154,9 @@ checksum = "a4668cab20f66d8d020e1fbc0ebe47217433c1b6c8f2040faf858554e394ace6"
 
 [[package]]
 name = "arboard"
-version = "3.2.1"
+version = "3.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ac57f2b058a76363e357c056e4f74f1945bf734d37b8b3ef49066c4787dde0fc"
+checksum = "aafb29b107435aa276664c1db8954ac27a6e105cdad3c88287a199eb0e313c08"
 dependencies = [
  "clipboard-win",
  "core-graphics 0.22.3",
@@ -637,9 +637,9 @@ dependencies = [
 
 [[package]]
 name = "cargo_toml"
-version = "0.16.3"
+version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e3f9629bc6c4388ea699781dc988c2b99766d7679b151c81990b4fa1208fafd3"
+checksum = "4d1ece59890e746567b467253aea0adbe8a21784d0b025d8a306f66c391c2957"
 dependencies = [
  "serde",
  "toml 0.8.8",
@@ -1776,9 +1776,9 @@ dependencies = [
 
 [[package]]
 name = "gethostname"
-version = "0.2.3"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1ebd34e35c46e00bb73e81363248d627782724609fe1b6396f553f68fe3862e"
+checksum = "bb65d4ba3173c56a500b555b532f72c42e8d1fe64962b518897f8959fae2c177"
 dependencies = [
  "libc",
  "winapi",
@@ -2660,7 +2660,7 @@ dependencies = [
 
 [[package]]
 name = "lume"
-version = "2.1.1"
+version = "2.1.2"
 dependencies = [
  "keyring",
  "serde",
@@ -2841,9 +2841,9 @@ dependencies = [
 
 [[package]]
 name = "muda"
-version = "0.10.0"
+version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9767ce3b12d2928f17ff4f91b29e7e872a8594033d82bf00e56017cc23bb8410"
+checksum = "b564d551449738387fb4541aef5fbfceaa81b2b732f2534c1c7c89dc7d673eaa"
 dependencies = [
  "cocoa 0.25.0",
  "crossbeam-channel",
@@ -2852,8 +2852,9 @@ dependencies = [
  "objc",
  "once_cell",
  "png",
+ "serde",
  "thiserror",
- "windows-sys 0.48.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2926,18 +2927,6 @@ checksum = "8f3790c00a0150112de0f4cd161e3d7fc4b2d8a5542ffc35f099a2562aecb35c"
 dependencies = [
  "bitflags 1.3.2",
  "cc",
- "cfg-if",
- "libc",
- "memoffset 0.6.5",
-]
-
-[[package]]
-name = "nix"
-version = "0.24.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa52e972a9a719cecb6864fb88568781eb706bac2cd1d4f04a648542dbf78069"
-dependencies = [
- "bitflags 1.3.2",
  "cfg-if",
  "libc",
  "memoffset 0.6.5",
@@ -3984,9 +3973,9 @@ dependencies = [
 
 [[package]]
 name = "rsa"
-version = "0.9.3"
+version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86ef35bf3e7fe15a53c4ab08a998e42271eab13eb0db224126bc7bc4c4bad96d"
+checksum = "6a3211b01eea83d80687da9eef70e39d65144a3894866a5153a2723e425a157f"
 dependencies = [
  "const-oid",
  "digest",
@@ -4189,18 +4178,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.192"
+version = "1.0.193"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bca2a08484b285dcb282d0f67b26cadc0df8b19f8c12502c13d966bf9482f001"
+checksum = "25dd9975e68d0cb5aa1120c288333fc98731bd1dd12f561e468ea4728c042b89"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.192"
+version = "1.0.193"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6c7207fbec9faa48073f3e3074cbe553af6ea512d7c21ba46e434e70ea9fbc1"
+checksum = "43576ca501357b9b071ac53cdc7da8ef0cbd9493d8df094cd821777ea6e894d3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4935,9 +4924,9 @@ checksum = "14c39fd04924ca3a864207c66fc2cd7d22d7c016007f9ce846cbb9326331930a"
 
 [[package]]
 name = "tauri"
-version = "2.0.0-alpha.17"
+version = "2.0.0-alpha.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "892f45e7f10c9481488633f506496eeb3c69034c17fc71d5562d1e87b5442f78"
+checksum = "6dc6ec8c246fa16092a3e650de2f10f3af3362915b7caab1aeed364a60829fcc"
 dependencies = [
  "anyhow",
  "bytes",
@@ -4983,9 +4972,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-build"
-version = "2.0.0-alpha.11"
+version = "2.0.0-alpha.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d5f06f1cbb5507f4de803f8e1fab01c71cb9515297a90d3adba4fa6c06a194c"
+checksum = "f0997a36aa2a1431500ef6ef92e7076521ae3258a8f73914b49ba876361ba2fe"
 dependencies = [
  "anyhow",
  "cargo_toml",
@@ -5004,9 +4993,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-codegen"
-version = "2.0.0-alpha.10"
+version = "2.0.0-alpha.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28094b389b0981aba46eeba7dcda6216c23fdf7288b2e0414e69fbc55aa55676"
+checksum = "71c36db748f557c1f89f075e37ab22ad77e8798fb9432367cf4013ea364811de"
 dependencies = [
  "base64",
  "brotli",
@@ -5030,14 +5019,14 @@ dependencies = [
 
 [[package]]
 name = "tauri-macros"
-version = "2.0.0-alpha.10"
+version = "2.0.0-alpha.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1df582259285a81324d4d38846433bfd3c0440c7a268f730acb7c29350f25cf"
+checksum = "83c895e684477cfb07aeeb0fdb11076bee98219806b68d1f3ddf99d893038a93"
 dependencies = [
  "heck",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.39",
  "tauri-codegen",
  "tauri-utils",
 ]
@@ -5045,7 +5034,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "auto-launch",
  "log",
@@ -5058,7 +5047,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-cli"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "clap",
  "log",
@@ -5071,7 +5060,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "arboard",
  "log",
@@ -5085,7 +5074,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-dialog"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "glib 0.16.9",
  "log",
@@ -5102,7 +5091,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-fs"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "anyhow",
  "glob",
@@ -5115,7 +5104,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "data-url",
  "glob",
@@ -5132,7 +5121,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-notification"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "log",
  "notify-rust",
@@ -5150,7 +5139,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-os"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "gethostname 0.4.3",
  "log",
@@ -5166,7 +5155,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "tauri",
 ]
@@ -5174,7 +5163,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-shell"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "encoding_rs",
  "log",
@@ -5191,7 +5180,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-single-instance"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "log",
  "serde",
@@ -5205,7 +5194,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-sql"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "futures-core",
  "log",
@@ -5221,7 +5210,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-store"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "log",
  "serde",
@@ -5232,11 +5221,12 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-theme"
-version = "0.2.0"
-source = "git+https://github.com/reyamir/tauri-plugin-theme?branch=tauri-v2#1b8bab206915329f40e0382eb752bcbdbc2e43f0"
+version = "0.3.0"
+source = "git+https://github.com/wyhaya/tauri-plugin-theme#cccc9b3fbc308a475ef8720f3535ae657ce1924b"
 dependencies = [
  "cocoa 0.25.0",
- "futures-lite 1.13.0",
+ "dirs-next",
+ "futures-lite 2.0.1",
  "gtk",
  "once_cell",
  "serde",
@@ -5248,7 +5238,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "base64",
  "dirs-next",
@@ -5274,7 +5264,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-upload"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "futures-util",
  "log",
@@ -5291,7 +5281,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window-state"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#5a8bbe296704f679063ef8b820d582d7f728400b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#445c1e6cb6971ef644a08d1224fc689923be301b"
 dependencies = [
  "bincode",
  "bitflags 2.4.1",
@@ -5304,9 +5294,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime"
-version = "1.0.0-alpha.4"
+version = "1.0.0-alpha.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f46889d91efc090ac4031c7c423c30c5280d6984cb071b729b748d643aa3df40"
+checksum = "16cc441e5bcb3332a0af069b7580083104aacf09b66e27938b47517790d7b384"
 dependencies = [
  "gtk",
  "http",
@@ -5322,9 +5312,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime-wry"
-version = "1.0.0-alpha.5"
+version = "1.0.0-alpha.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b083797e147019c318db883a51868014751b578ba0d1ef3aadd34199a3bbcf61"
+checksum = "7c9229a7caf9c63eeaf4389789e1c983757135f4ece3355d0ae647c492682f61"
 dependencies = [
  "cocoa 0.24.1",
  "gtk",
@@ -5342,9 +5332,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-utils"
-version = "2.0.0-alpha.10"
+version = "2.0.0-alpha.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68e138783ca404416a4afe34f22f804d533c28fb73f87870f365c6ecdcee6c23"
+checksum = "ce0dbf67341adad8d48255d605b45b25bf1c7445116355e61ed6219d204e94e0"
 dependencies = [
  "brotli",
  "ctor",
@@ -5367,7 +5357,7 @@ dependencies = [
  "thiserror",
  "url",
  "walkdir",
- "windows 0.51.1",
+ "windows-version",
 ]
 
 [[package]]
@@ -5718,9 +5708,9 @@ dependencies = [
 
 [[package]]
 name = "tray-icon"
-version = "0.10.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a7dce8a4b6d7a566ca78fa43f37efc7a3ec427480828d35fe3474c4f0c75396"
+checksum = "5375d350db4ccd3c783a4c683be535e70df5c62b07a824e7bcd6d43ef6d74181"
 dependencies = [
  "cocoa 0.25.0",
  "core-graphics 0.23.1",
@@ -5731,8 +5721,9 @@ dependencies = [
  "objc",
  "once_cell",
  "png",
+ "serde",
  "thiserror",
- "windows-sys 0.48.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -5831,9 +5822,9 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
 name = "uuid"
-version = "1.6.0"
+version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c58fe91d841bc04822c9801002db4ea904b9e4b8e6bbad25127b46eff8dc516b"
+checksum = "5e395fcf16a7a3d8127ec99782007af141946b4795001f876d54fb0d55978560"
 dependencies = [
  "getrandom 0.2.11",
 ]
@@ -6522,12 +6513,12 @@ dependencies = [
 
 [[package]]
 name = "x11rb"
-version = "0.10.1"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "592b4883219f345e712b3209c62654ebda0bb50887f330cbd018d0f654bfd507"
+checksum = "b1641b26d4dec61337c35a1b1aaf9e3cba8f46f0b43636c609ab0291a648040a"
 dependencies = [
- "gethostname 0.2.3",
- "nix 0.24.3",
+ "gethostname 0.3.0",
+ "nix 0.26.4",
  "winapi",
  "winapi-wsapoll",
  "x11rb-protocol",
@@ -6535,11 +6526,11 @@ dependencies = [
 
 [[package]]
 name = "x11rb-protocol"
-version = "0.10.0"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "56b245751c0ac9db0e006dc812031482784e434630205a93c73cfefcaabeac67"
+checksum = "82d6c3f9a0fb6701fab8f6cea9b0c0bd5d6876f1f89f7fada07e558077c344bc"
 dependencies = [
- "nix 0.24.3",
+ "nix 0.26.4",
 ]
 
 [[package]]
