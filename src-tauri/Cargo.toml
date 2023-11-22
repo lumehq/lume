@@ -33,7 +33,7 @@ tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspac
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-theme = { git = "https://github.com/reyamir/tauri-plugin-theme", branch = "tauri-v2" }
+tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
 tauri-plugin-sql = { git = "hhttps://github.com/tauri-apps/plugins-workspace", branch = "v2", features = [
   "sqlite",
 ] }
