@@ -1,5 +1,6 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
@@ -11,15 +12,21 @@ export function Logout() {
   const navigate = useNavigate();
 
   const logout = async () => {
-    ndk.signer = null;
+    try {
+      ndk.signer = null;
 
-    // remove account
-    await db.accountLogout();
-    await db.secureRemove(db.account.pubkey);
-    await db.secureRemove(db.account.pubkey + '-bunker');
+      // remove private key
+      await db.secureRemove(db.account.pubkey);
+      await db.secureRemove(db.account.pubkey + '-bunker');
 
-    // redirect to welcome screen
-    navigate('/auth/welcome');
+      // logout
+      await db.accountLogout();
+
+      // redirect to welcome screen
+      navigate('/auth/welcome');
+    } catch (e) {
+      toast.error(e);
+    }
   };
 
   return (
@@ -33,7 +40,7 @@ export function Logout() {
         </button>
       </AlertDialog.Trigger>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-2xl dark:bg-white/50" />
+        <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
         <AlertDialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
           <div className="relative h-min w-full max-w-md rounded-xl bg-neutral-100 dark:bg-neutral-900">
             <div className="flex flex-col gap-1 border-b border-white/5 px-5 py-4">
@@ -54,13 +61,15 @@ export function Logout() {
                   Cancel
                 </button>
               </AlertDialog.Cancel>
-              <button
-                type="button"
-                onClick={() => logout()}
-                className="inline-flex h-9 items-center justify-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white outline-none hover:bg-red-600"
-              >
-                Logout
-              </button>
+              <AlertDialog.Action asChild>
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  className="inline-flex h-9 items-center justify-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white outline-none hover:bg-red-600"
+                >
+                  Logout
+                </button>
+              </AlertDialog.Action>
             </div>
           </div>
         </AlertDialog.Content>
