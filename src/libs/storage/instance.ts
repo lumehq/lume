@@ -163,7 +163,7 @@ export class LumeStorage {
 
   public async checkAccount() {
     const result: Array<{ total: string }> = await this.db.select(
-      'SELECT COUNT(*) AS "total" FROM accounts;'
+      'SELECT COUNT(*) AS "total" FROM accounts WHERE is_active = "1" ORDER BY id DESC LIMIT 1;'
     );
     return parseInt(result[0].total);
   }

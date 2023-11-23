@@ -45,8 +45,6 @@ export function CreateAccountScreen() {
 
   const onSubmit = async (data: { name: string; about: string }) => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
-
       setLoading(true);
 
       const profile = {
