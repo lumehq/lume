@@ -71,7 +71,7 @@ export const NDKInstance = () => {
     if (localSignerPrivkey) {
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
       const remoteSigner = new NDKNip46Signer(instance, db.account.id, localSigner);
-      await remoteSigner.blockUntilReady();
+      // await remoteSigner.blockUntilReady();
 
       return remoteSigner;
     }

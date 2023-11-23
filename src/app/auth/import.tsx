@@ -47,7 +47,7 @@ export function ImportAccountScreen() {
       await db.secureSave(pubkey + '-bunker', localSigner.privateKey);
 
       const remoteSigner = new NDKNip46Signer(ndk, npub, localSigner);
-      await remoteSigner.blockUntilReady();
+      // await remoteSigner.blockUntilReady();
 
       ndk.signer = remoteSigner;
 
@@ -259,8 +259,8 @@ export function ImportAccountScreen() {
                         {db.platform === 'macos'
                           ? 'Apple Keychain (macOS)'
                           : db.platform === 'windows'
-                          ? 'Credential Manager (Windows)'
-                          : 'Secret Service (Linux)'}
+                            ? 'Credential Manager (Windows)'
+                            : 'Secret Service (Linux)'}
                       </b>
                       , it will be secured by your OS
                     </p>
