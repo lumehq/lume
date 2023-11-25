@@ -39,7 +39,6 @@ export const NIP05 = memo(function NIP05({
         if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
         const data: NIP05 = await res.json();
-
         if (data.names) {
           if (data.names[localPath] !== pubkey) return false;
           return true;

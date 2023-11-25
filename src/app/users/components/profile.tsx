@@ -21,8 +21,8 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const svgURI =
     'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
 
@@ -78,9 +78,9 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   return (
     <>
       <div className="h-56 w-full overflow-hidden rounded-tl-lg">
-        {user.banner ? (
+        {user?.banner ? (
           <img
-            src={user.banner}
+            src={user?.banner}
             alt="user banner"
             className="h-full w-full rounded-tl-lg object-cover"
           />
@@ -112,10 +112,10 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               <h5 className="text-center text-xl font-semibold text-neutral-900 dark:text-neutral-100">
                 {user.name || user.display_name || user.displayName || 'No name'}
               </h5>
-              {user.nip05 ? (
+              {user?.nip05 ? (
                 <NIP05
                   pubkey={pubkey}
-                  nip05={user?.nip05}
+                  nip05={user.nip05}
                   className="text-neutral-600 dark:text-neutral-400"
                 />
               ) : (
@@ -125,7 +125,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
               )}
             </div>
             <div className="flex flex-col gap-6">
-              {user.about || user.bio ? (
+              {user?.about || user?.bio ? (
                 <p className="mt-2 max-w-[500px] select-text break-words text-center text-neutral-900 dark:text-neutral-100">
                   {user.about || user.bio}
                 </p>

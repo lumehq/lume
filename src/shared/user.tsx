@@ -222,7 +222,7 @@ export const User = memo(function User({
             {user?.name || user?.display_name || user?.displayName}
           </h3>
           <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/70">
-            {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
+            {user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
       </div>
@@ -551,7 +551,7 @@ export const User = memo(function User({
                 {user?.nip05 ? (
                   <NIP05
                     pubkey={pubkey}
-                    nip05={user?.nip05}
+                    nip05={user.nip05}
                     className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300"
                   />
                 ) : (
