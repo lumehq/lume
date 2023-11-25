@@ -12,6 +12,7 @@ import type {
   NDKCacheEvent,
   NDKCacheEventTag,
   NDKCacheUser,
+  NDKCacheUserProfile,
   Relays,
   Widget,
 } from '@utils/types';
@@ -50,6 +51,20 @@ export class LumeStorage {
 
   public async secureRemove(key: string) {
     return await invoke('secure_remove', { key });
+  }
+
+  public async getAllCacheUsers() {
+    const results: Array<NDKCacheUser> = await this.db.select(
+      'SELECT * FROM ndk_users ORDER BY createdAt DESC;'
+    );
+
+    if (!results.length) return [];
+
+    const users: NDKCacheUserProfile[] = results.map((item) => ({
+      pubkey: item.pubkey,
+      ...JSON.parse(item.profile as string),
+    }));
+    return users;
   }
 
   public async getCacheUser(pubkey: string) {

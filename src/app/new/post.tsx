@@ -1,10 +1,12 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import CharacterCount from '@tiptap/extension-character-count';
 import Image from '@tiptap/extension-image';
+import Mention from '@tiptap/extension-mention';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
+import { nip19 } from 'nostr-tools';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,11 +20,13 @@ import { MentionNote } from '@shared/notes';
 
 import { WIDGET_KIND } from '@stores/constants';
 
+import { useSuggestion } from '@utils/hooks/useSuggestion';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NewPostScreen() {
   const { ndk } = useNDK();
   const { addWidget } = useWidget();
+  const { suggestion } = useSuggestion();
 
   const [loading, setLoading] = useState(false);
   const [height, setHeight] = useState(0);
@@ -41,6 +45,14 @@ export function NewPostScreen() {
         },
       }),
       CharacterCount.configure(),
+      Mention.configure({
+        suggestion,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        renderLabel({ options, node }) {
+          const npub = nip19.npubEncode(node.attrs.id);
+          return `nostr:${npub}`;
+        },
+      }),
     ],
     content: JSON.parse(localStorage.getItem('editor-post') || '{}'),
     editorProps: {

@@ -122,6 +122,10 @@ export interface NDKCacheUser {
   createdAt: number;
 }
 
+export interface NDKCacheUserProfile extends NDKUserProfile {
+  pubkey: string;
+}
+
 export interface NDKCacheEvent {
   id: string;
   pubkey: string;
