@@ -4,7 +4,7 @@ import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
@@ -27,12 +27,14 @@ import {
 export function NewArticleScreen() {
   const { ndk } = useNDK();
 
+  const [height, setHeight] = useState(0);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState({ open: false, content: '' });
   const [cover, setCover] = useState('');
 
   const navigate = useNavigate();
+  const containerRef = useRef(null);
   const ident = useMemo(() => String(Date.now()), []);
   const editor = useEditor({
     extensions: [
@@ -113,10 +115,18 @@ export function NewArticleScreen() {
     }
   };
 
+  useLayoutEffect(() => {
+    setHeight(containerRef.current.clientHeight);
+  }, []);
+
   return (
     <div className="flex flex-1 flex-col justify-between">
       <div className="flex-1 overflow-y-auto">
-        <div className="flex flex-col gap-4">
+        <div
+          className="flex flex-col gap-4"
+          ref={containerRef}
+          style={{ height: `${height}px` }}
+        >
           {cover ? (
             <img
               src={cover}
