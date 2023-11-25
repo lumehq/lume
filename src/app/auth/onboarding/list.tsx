@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AllowNotification } from '@app/auth/components/features/allowNotification';
-import { Circle } from '@app/auth/components/features/enableCircle';
 import { OutboxModel } from '@app/auth/components/features/enableOutbox';
 import { FavoriteHashtag } from '@app/auth/components/features/favoriteHashtag';
 import { FollowList } from '@app/auth/components/features/followList';
@@ -41,7 +40,6 @@ export function OnboardingListScreen() {
         <div className="flex flex-col gap-3">
           {newuser ? <SuggestFollow /> : <FollowList />}
           <FavoriteHashtag />
-          <Circle />
           <OutboxModel />
           <AllowNotification />
           <button

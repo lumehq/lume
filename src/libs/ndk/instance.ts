@@ -61,29 +61,26 @@ export const NDKInstance = () => {
     }
   }
 
-  async function getSigner(instance: NDK) {
-    if (!db.account) return null;
-
-    const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-bunker');
-    const userPrivkey = await db.secureLoad(db.account.pubkey);
+  async function getSigner(nsecbunker?: boolean) {
+    if (!db.account) return;
 
     // NIP-46 Signer
-    if (localSignerPrivkey) {
+    if (nsecbunker) {
+      const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-nsecbunker');
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
-      const remoteSigner = new NDKNip46Signer(instance, db.account.id, localSigner);
       // await remoteSigner.blockUntilReady();
-
-      return remoteSigner;
+      return new NDKNip46Signer(ndk, db.account.id, localSigner);
     }
 
-    // Privkey Signer
-    if (userPrivkey) {
-      return new NDKPrivateKeySigner(userPrivkey);
-    }
+    // Private key Signer
+    const userPrivkey = await db.secureLoad(db.account.pubkey);
+    return new NDKPrivateKeySigner(userPrivkey);
   }
 
   async function initNDK() {
     const outboxSetting = await db.getSettingValue('outbox');
+    const bunkerSetting = await db.getSettingValue('nsecbunker');
+    const signer = await getSigner(!!parseInt(bunkerSetting));
     const explicitRelayUrls = await getExplicitRelays();
 
     const tauriAdapter = new NDKCacheAdapterTauri(db);
@@ -91,34 +88,23 @@ export const NDKInstance = () => {
       explicitRelayUrls,
       cacheAdapter: tauriAdapter,
       outboxRelayUrls: ['wss://purplepag.es'],
-      enableOutboxModel: outboxSetting === '1',
+      blacklistRelayUrls: [],
+      enableOutboxModel: !!parseInt(outboxSetting),
     });
+    instance.signer = signer;
 
     try {
       // connect
       await instance.connect(2000);
 
-      // add signer
-      const signer = await getSigner(instance);
-      instance.signer = signer;
-
       // update account's metadata
       if (db.account) {
-        const circleSetting = await db.getSettingValue('circles');
-
         const user = instance.getUser({ pubkey: db.account.pubkey });
-        const follows = await user.follows();
+        const follows = [...(await user.follows())].map((user) => user.pubkey);
         const relayList = await user.relayList();
 
-        const followsAsArr = [];
-        follows.forEach((user) => {
-          followsAsArr.push(user.pubkey);
-        });
-
         // update user's follows
-        await db.updateAccount('follows', JSON.stringify(followsAsArr));
-        if (circleSetting !== '1')
-          await db.updateAccount('circles', JSON.stringify(followsAsArr));
+        await db.updateAccount('follows', JSON.stringify(follows));
 
         // update user's relay list
         if (relayList) {

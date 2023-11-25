@@ -44,7 +44,8 @@ export function ImportAccountScreen() {
     try {
       const pubkey = nip19.decode(npub.split('#')[0]).data as string;
       const localSigner = NDKPrivateKeySigner.generate();
-      await db.secureSave(pubkey + '-bunker', localSigner.privateKey);
+      await db.createSetting('nsecbunker', '1');
+      await db.secureSave(pubkey + '-nsecbunker', localSigner.privateKey);
 
       const remoteSigner = new NDKNip46Signer(ndk, npub, localSigner);
       // await remoteSigner.blockUntilReady();

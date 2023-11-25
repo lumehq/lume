@@ -438,7 +438,7 @@ export class LumeStorage {
       [relay, this.account.id]
     );
 
-    if (existRelays.length > 0) return false;
+    if (!existRelays.length) return;
 
     return await this.db.execute(
       'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES ($1, $2, $3);',
@@ -480,7 +480,7 @@ export class LumeStorage {
       'SELECT * FROM settings WHERE key = $1 ORDER BY id DESC LIMIT 1;',
       [key]
     );
-    if (results.length < 1) return null;
+    if (!results.length) return '0';
     return results[0].value;
   }
 
