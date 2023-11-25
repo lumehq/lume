@@ -5,7 +5,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -25,9 +25,11 @@ export function NewPostScreen() {
   const { addWidget } = useWidget();
 
   const [loading, setLoading] = useState(false);
+  const [height, setHeight] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const navigate = useNavigate();
+  const containerRef = useRef(null);
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
@@ -115,34 +117,40 @@ export function NewPostScreen() {
     }
   };
 
+  useLayoutEffect(() => {
+    setHeight(containerRef.current.clientHeight);
+  }, []);
+
   useEffect(() => {
     if (editor) editor.commands.focus('end');
   }, [editor]);
 
   return (
-    <div className="flex h-full flex-col justify-between">
-      <div>
-        <EditorContent
-          editor={editor}
-          spellCheck="false"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-        />
-        {searchParams.get('replyTo') && (
-          <div className="relative max-w-lg">
-            <MentionNote id={searchParams.get('replyTo')} editing />
-            <button
-              type="button"
-              onClick={() => setSearchParams({})}
-              className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-neutral-200 px-2 dark:bg-neutral-800"
-            >
-              <CancelIcon className="h-5 w-5" />
-            </button>
-          </div>
-        )}
+    <div className="flex flex-1 flex-col gap-4">
+      <div className="flex-1 overflow-y-auto">
+        <div ref={containerRef} style={{ height: `${height}px` }}>
+          <EditorContent
+            editor={editor}
+            spellCheck="false"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+          />
+          {searchParams.get('replyTo') && (
+            <div className="relative max-w-lg">
+              <MentionNote id={searchParams.get('replyTo')} editing />
+              <button
+                type="button"
+                onClick={() => setSearchParams({})}
+                className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded bg-neutral-200 px-2 dark:bg-neutral-800"
+              >
+                <CancelIcon className="h-5 w-5" />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="flex h-16 w-full items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
+      <div className="inline-flex h-16 w-full items-center justify-between border-t border-neutral-100 bg-neutral-50 dark:border-neutral-900 dark:bg-neutral-950">
         <span className="text-sm font-medium tabular-nums text-neutral-600 dark:text-neutral-400">
           {editor?.storage?.characterCount.characters()} characters
         </span>

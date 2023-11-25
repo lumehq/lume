@@ -21,7 +21,7 @@ export function OutboxModel() {
     <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h5 className="font-semibold">Enable Outbox (experiment)</h5>
+          <h5 className="font-semibold">Enable Outbox</h5>
           <p className="text-sm">
             When you request information about a user, Lume will automatically query the
             user&apos;s outbox relays and subsequent queries will favour using those
