@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router-dom';
+import { NavLink, Outlet, ScrollRestoration, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { WindowTitlebar } from 'tauri-controls';
 
@@ -15,6 +15,7 @@ import {
 
 export function SettingsLayout() {
   const { db } = useStorage();
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
@@ -26,16 +27,17 @@ export function SettingsLayout() {
       <div className="flex h-full min-h-0 w-full flex-col gap-8 overflow-y-auto pb-10">
         <div className="flex h-20 w-full items-center justify-between border-b border-neutral-200 px-2 pb-2 dark:border-neutral-900">
           <div>
-            <Link
-              to="/"
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
               className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900"
             >
               <ArrowLeftIcon className="h-5 w-5" />
-            </Link>
+            </button>
           </div>
           <div className="flex items-center gap-0.5">
             <NavLink
-              to="/settings"
+              to="/settings/"
               end
               className={({ isActive }) =>
                 twMerge(

@@ -57,7 +57,7 @@ export function ProfileCard() {
                 {user?.display_name || user?.name}
               </h3>
               <p className="text-lg text-neutral-700 dark:text-neutral-300">
-                {user.nip05 || displayNpub(db.account.pubkey, 16)}
+                {user?.nip05 || displayNpub(db.account.pubkey, 16)}
               </p>
             </div>
           </div>

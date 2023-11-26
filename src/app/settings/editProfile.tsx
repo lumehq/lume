@@ -184,10 +184,7 @@ export function EditProfileScreen() {
             </label>
             <input
               type={'text'}
-              {...register('display_name', {
-                required: true,
-                minLength: 4,
-              })}
+              {...register('display_name')}
               spellCheck={false}
               className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
             />
@@ -201,10 +198,7 @@ export function EditProfileScreen() {
             </label>
             <input
               type={'text'}
-              {...register('name', {
-                required: true,
-                minLength: 4,
-              })}
+              {...register('name')}
               spellCheck={false}
               className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
             />
@@ -218,10 +212,7 @@ export function EditProfileScreen() {
             </label>
             <div className="relative">
               <input
-                {...register('nip05', {
-                  required: true,
-                  minLength: 4,
-                })}
+                {...register('nip05')}
                 spellCheck={false}
                 className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
               />
