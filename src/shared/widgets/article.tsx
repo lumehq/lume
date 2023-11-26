@@ -40,7 +40,7 @@ export function ArticleWidget({ widget }: { widget: Widget }) {
         } else {
           filter = {
             kinds: [NDKKind.Article],
-            authors: db.account.circles,
+            authors: db.account.follows,
           };
         }
 

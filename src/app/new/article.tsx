@@ -4,7 +4,7 @@ import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, FloatingMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
@@ -27,12 +27,14 @@ import {
 export function NewArticleScreen() {
   const { ndk } = useNDK();
 
+  const [height, setHeight] = useState(0);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState({ open: false, content: '' });
   const [cover, setCover] = useState('');
 
   const navigate = useNavigate();
+  const containerRef = useRef(null);
   const ident = useMemo(() => String(Date.now()), []);
   const editor = useEditor({
     extensions: [
@@ -113,123 +115,133 @@ export function NewArticleScreen() {
     }
   };
 
+  useLayoutEffect(() => {
+    setHeight(containerRef.current.clientHeight);
+  }, []);
+
   return (
-    <div className="flex h-full flex-col justify-between">
-      <div className="flex flex-col gap-4">
-        {cover ? (
-          <img
-            src={cover}
-            alt="post cover"
-            className="h-72 w-full rounded-lg object-cover"
-          />
-        ) : null}
-        <div className="group flex justify-between gap-2">
-          <input
-            name="title"
-            className="h-9 flex-1 border-none bg-transparent text-2xl font-semibold text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-600"
-            placeholder="Untitled"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <div
-            className={twMerge(
-              'inline-flex shrink-0 gap-2 group-hover:inline-flex',
-              title.length > 0 ? '' : 'hidden'
-            )}
-          >
-            <ArticleCoverUploader setCover={setCover} />
-            <button
-              type="button"
-              onClick={() => setSummary((prev) => ({ ...prev, open: !prev.open }))}
-              className="inline-flex h-9 w-max items-center gap-2 rounded-lg bg-neutral-100 px-2.5 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-800"
+    <div className="flex flex-1 flex-col justify-between">
+      <div className="flex-1 overflow-y-auto">
+        <div
+          className="flex flex-col gap-4"
+          ref={containerRef}
+          style={{ height: `${height}px` }}
+        >
+          {cover ? (
+            <img
+              src={cover}
+              alt="post cover"
+              className="h-72 w-full rounded-lg object-cover"
+            />
+          ) : null}
+          <div className="group flex justify-between gap-2">
+            <input
+              name="title"
+              className="h-9 flex-1 border-none bg-transparent text-2xl font-semibold text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-600"
+              placeholder="Untitled"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <div
+              className={twMerge(
+                'inline-flex shrink-0 gap-2 group-hover:inline-flex',
+                title.length > 0 ? '' : 'hidden'
+              )}
             >
-              <ThreadsIcon className="h-4 w-4" />
-              Add summary
-            </button>
-          </div>
-        </div>
-        {summary.open ? (
-          <div className="flex gap-3">
-            <div className="h-16 w-1 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-800" />
-            <div className="flex-1">
-              <textarea
-                className="h-16 w-full border-none bg-transparent px-1 py-1 text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-600"
-                placeholder="A brief summary of your article"
-                value={summary.content}
-                onChange={(e) =>
-                  setSummary((prev) => ({ ...prev, content: e.target.value }))
-                }
-              />
+              <ArticleCoverUploader setCover={setCover} />
+              <button
+                type="button"
+                onClick={() => setSummary((prev) => ({ ...prev, open: !prev.open }))}
+                className="inline-flex h-9 w-max items-center gap-2 rounded-lg bg-neutral-100 px-2.5 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-800"
+              >
+                <ThreadsIcon className="h-4 w-4" />
+                Add summary
+              </button>
             </div>
           </div>
-        ) : null}
-        <div>
-          {editor && (
-            <FloatingMenu
+          {summary.open ? (
+            <div className="flex gap-3">
+              <div className="h-16 w-1 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-800" />
+              <div className="flex-1">
+                <textarea
+                  className="h-16 w-full border-none bg-transparent px-1 py-1 text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-600"
+                  placeholder="A brief summary of your article"
+                  value={summary.content}
+                  onChange={(e) =>
+                    setSummary((prev) => ({ ...prev, content: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
+          <div>
+            {editor && (
+              <FloatingMenu
+                editor={editor}
+                tippyOptions={{ duration: 100 }}
+                className="ml-36 inline-flex h-10 items-center gap-1 rounded-lg border border-neutral-200 bg-neutral-100 px-px dark:border-neutral-800 dark:bg-neutral-900"
+              >
+                <button
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                  className={twMerge(
+                    'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
+                    editor.isActive('heading', { level: 1 })
+                      ? 'bg-white shadow dark:bg-black'
+                      : ''
+                  )}
+                >
+                  <Heading1Icon className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                  className={twMerge(
+                    'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
+                    editor.isActive('heading', { level: 2 })
+                      ? 'bg-white shadow dark:bg-black'
+                      : ''
+                  )}
+                >
+                  <Heading2Icon className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                  className={twMerge(
+                    'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
+                    editor.isActive('heading', { level: 3 })
+                      ? 'bg-white shadow dark:bg-black'
+                      : ''
+                  )}
+                >
+                  <Heading3Icon className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                  className={twMerge(
+                    'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
+                    editor.isActive('bold') ? 'bg-white shadow dark:bg-black' : ''
+                  )}
+                >
+                  <BoldIcon className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                  className={twMerge(
+                    'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
+                    editor.isActive('italic') ? 'bg-white shadow dark:bg-black' : ''
+                  )}
+                >
+                  <ItalicIcon className="h-5 w-5" />
+                </button>
+              </FloatingMenu>
+            )}
+            <EditorContent
               editor={editor}
-              tippyOptions={{ duration: 100 }}
-              className="ml-36 inline-flex h-10 items-center gap-1 rounded-lg border border-neutral-200 bg-neutral-100 px-px dark:border-neutral-800 dark:bg-neutral-900"
-            >
-              <button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                className={twMerge(
-                  'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
-                  editor.isActive('heading', { level: 1 })
-                    ? 'bg-white shadow dark:bg-black'
-                    : ''
-                )}
-              >
-                <Heading1Icon className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                className={twMerge(
-                  'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
-                  editor.isActive('heading', { level: 2 })
-                    ? 'bg-white shadow dark:bg-black'
-                    : ''
-                )}
-              >
-                <Heading2Icon className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                className={twMerge(
-                  'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
-                  editor.isActive('heading', { level: 3 })
-                    ? 'bg-white shadow dark:bg-black'
-                    : ''
-                )}
-              >
-                <Heading3Icon className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                className={twMerge(
-                  'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
-                  editor.isActive('bold') ? 'bg-white shadow dark:bg-black' : ''
-                )}
-              >
-                <BoldIcon className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-                className={twMerge(
-                  'inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-900 hover:bg-neutral-50 dark:text-neutral-100 dark:hover:bg-neutral-950',
-                  editor.isActive('italic') ? 'bg-white shadow dark:bg-black' : ''
-                )}
-              >
-                <ItalicIcon className="h-5 w-5" />
-              </button>
-            </FloatingMenu>
-          )}
-          <EditorContent
-            editor={editor}
-            spellCheck="false"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-          />
+              spellCheck="false"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+            />
+          </div>
         </div>
       </div>
       <div>

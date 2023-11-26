@@ -12,6 +12,7 @@ import type {
   NDKCacheEvent,
   NDKCacheEventTag,
   NDKCacheUser,
+  NDKCacheUserProfile,
   Relays,
   Widget,
 } from '@utils/types';
@@ -50,6 +51,20 @@ export class LumeStorage {
 
   public async secureRemove(key: string) {
     return await invoke('secure_remove', { key });
+  }
+
+  public async getAllCacheUsers() {
+    const results: Array<NDKCacheUser> = await this.db.select(
+      'SELECT * FROM ndk_users ORDER BY createdAt DESC;'
+    );
+
+    if (!results.length) return [];
+
+    const users: NDKCacheUserProfile[] = results.map((item) => ({
+      pubkey: item.pubkey,
+      ...JSON.parse(item.profile as string),
+    }));
+    return users;
   }
 
   public async getCacheUser(pubkey: string) {
@@ -423,7 +438,7 @@ export class LumeStorage {
       [relay, this.account.id]
     );
 
-    if (existRelays.length > 0) return false;
+    if (!existRelays.length) return;
 
     return await this.db.execute(
       'INSERT OR IGNORE INTO relays (account_id, relay, purpose) VALUES ($1, $2, $3);',
@@ -436,7 +451,7 @@ export class LumeStorage {
   }
 
   public async createSetting(key: string, value: string) {
-    const currentSetting = await this.getSettingValue(key);
+    const currentSetting = await this.checkSettingValue(key);
 
     if (!currentSetting)
       return await this.db.execute(
@@ -460,12 +475,21 @@ export class LumeStorage {
     return results;
   }
 
+  public async checkSettingValue(key: string) {
+    const results: { key: string; value: string }[] = await this.db.select(
+      'SELECT * FROM settings WHERE key = $1 ORDER BY id DESC LIMIT 1;',
+      [key]
+    );
+    if (!results.length) return false;
+    return results[0].value;
+  }
+
   public async getSettingValue(key: string) {
     const results: { key: string; value: string }[] = await this.db.select(
       'SELECT * FROM settings WHERE key = $1 ORDER BY id DESC LIMIT 1;',
       [key]
     );
-    if (results.length < 1) return null;
+    if (!results.length) return '0';
     return results[0].value;
   }
 

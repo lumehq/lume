@@ -40,7 +40,7 @@ export function FileWidget({ widget }: { widget: Widget }) {
         } else {
           filter = {
             kinds: [1063],
-            authors: db.account.circles,
+            authors: db.account.follows,
           };
         }
 

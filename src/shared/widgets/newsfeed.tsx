@@ -39,7 +39,7 @@ export function NewsfeedWidget() {
           relayUrls,
           {
             kinds: [NDKKind.Text, NDKKind.Repost],
-            authors: db.account.circles,
+            authors: db.account.follows,
           },
           FETCH_LIMIT,
           { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }

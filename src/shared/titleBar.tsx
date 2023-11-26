@@ -33,13 +33,13 @@ export function TitleBar({
       <div className="col-span-1 flex justify-center">
         {id === '9999' ? (
           <div className="isolate flex -space-x-2">
-            {db.account.circles
+            {db.account.follows
               ?.slice(0, 8)
               .map((item) => <User key={item} pubkey={item} variant="ministacked" />)}
-            {db.account.circles?.length > 8 ? (
+            {db.account.follows?.length > 8 ? (
               <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-300 text-neutral-900 ring-1 ring-white dark:bg-neutral-700 dark:text-neutral-100 dark:ring-black">
                 <span className="text-[8px] font-medium">
-                  +{db.account.circles?.length - 8}
+                  +{db.account.follows?.length - 8}
                 </span>
               </div>
             ) : null}
