@@ -13,7 +13,10 @@ export function useSuggestion() {
     items: async ({ query }) => {
       const users = await db.getAllCacheUsers();
       return users
-        .filter((item) => item.name.toLowerCase().startsWith(query.toLowerCase()))
+        .filter((item) => {
+          if (item.name) return item.name.toLowerCase().startsWith(query.toLowerCase());
+          return item.displayName.toLowerCase().startsWith(query.toLowerCase());
+        })
         .slice(0, 5);
     },
     render: () => {
