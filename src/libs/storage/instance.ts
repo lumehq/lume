@@ -451,7 +451,7 @@ export class LumeStorage {
   }
 
   public async createSetting(key: string, value: string) {
-    const currentSetting = await this.getSettingValue(key);
+    const currentSetting = await this.checkSettingValue(key);
 
     if (!currentSetting)
       return await this.db.execute(
@@ -473,6 +473,15 @@ export class LumeStorage {
     );
     if (results.length < 1) return null;
     return results;
+  }
+
+  public async checkSettingValue(key: string) {
+    const results: { key: string; value: string }[] = await this.db.select(
+      'SELECT * FROM settings WHERE key = $1 ORDER BY id DESC LIMIT 1;',
+      [key]
+    );
+    if (!results.length) return false;
+    return results[0].value;
   }
 
   public async getSettingValue(key: string) {

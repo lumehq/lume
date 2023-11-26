@@ -13,21 +13,13 @@ export function FollowList() {
     queryKey: ['follows'],
     queryFn: async () => {
       const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const follows = await user.follows();
-      const followsAsArr = [];
-
-      follows.forEach((user) => {
-        followsAsArr.push(user.pubkey);
-      });
+      const follows = [...(await user.follows())].map((user) => user.pubkey);
 
       // update db
-      await db.updateAccount('follows', JSON.stringify(followsAsArr));
-      await db.updateAccount('circles', JSON.stringify(followsAsArr));
+      await db.updateAccount('follows', JSON.stringify(follows));
+      db.account.follows = follows;
 
-      db.account.follows = followsAsArr;
-      db.account.circles = followsAsArr;
-
-      return followsAsArr;
+      return follows;
     },
     refetchOnWindowFocus: false,
   });

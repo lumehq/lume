@@ -30,12 +30,12 @@ export function LiveUpdater({ status }: { status: QueryStatus }) {
   useEffect(() => {
     let sub: NDKSubscription = undefined;
 
-    if (status === 'success' && db.account && db.account.circles.length > 0) {
+    if (status === 'success' && db.account && db.account.follows.length > 0) {
       queryClient.fetchQuery({ queryKey: ['notification'] });
 
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: db.account.circles,
+        authors: db.account.follows,
         since: Math.floor(Date.now() / 1000),
       };
 
