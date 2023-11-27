@@ -26,44 +26,48 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   const svgURI =
     'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50));
 
-  const follow = async (pubkey: string) => {
+  const follow = async () => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+      setFollowed(true);
+
       const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
       const add = await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
 
-      if (add) {
-        setFollowed(true);
-      } else {
-        toast('You already follow this user');
+      if (!add) {
+        toast.success('You already follow this user');
+        setFollowed(false);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      toast.error(e);
+      setFollowed(false);
     }
   };
 
-  const unfollow = async (pubkey: string) => {
+  const unfollow = async () => {
     try {
       if (!ndk.signer) return navigate('/new/privkey');
+      setFollowed(false);
 
       const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
       contacts.delete(new NDKUser({ pubkey: pubkey }));
 
-      let list: string[][];
-      contacts.forEach((el) => list.push(['p', el.pubkey, el.relayUrls?.[0] || '', '']));
-
+      const list = [...contacts].map((item) => [
+        'p',
+        item.pubkey,
+        item.relayUrls?.[0] || '',
+        '',
+      ]);
       const event = new NDKEvent(ndk);
       event.content = '';
       event.kind = NDKKind.Contacts;
       event.tags = list;
 
-      const publishedRelays = await event.publish();
-      if (publishedRelays) {
-        setFollowed(false);
-      }
-    } catch (error) {
-      console.log(error);
+      await event.publish();
+    } catch (e) {
+      toast.error(e);
     }
   };
 
@@ -139,23 +143,23 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             {followed ? (
               <button
                 type="button"
-                onClick={() => unfollow(pubkey)}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
+                onClick={unfollow}
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-500 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
               >
                 Unfollow
               </button>
             ) : (
               <button
                 type="button"
-                onClick={() => follow(pubkey)}
-                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
+                onClick={follow}
+                className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-500 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
               >
                 Follow
               </button>
             )}
             <Link
               to={`/chats/${pubkey}`}
-              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
+              className="inline-flex h-10 w-36 items-center justify-center rounded-md bg-neutral-200 text-sm font-medium text-neutral-900 backdrop-blur-xl hover:bg-blue-500 hover:text-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-neutral-100"
             >
               Message
             </Link>

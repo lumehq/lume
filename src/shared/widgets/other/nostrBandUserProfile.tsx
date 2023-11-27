@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
+import { NDKUser } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { FollowIcon, UnfollowIcon } from '@shared/icons';
+import { FollowIcon } from '@shared/icons';
 
 import { shortenKey } from '@utils/shortenKey';
 
@@ -16,53 +16,30 @@ export interface Profile {
 }
 
 export function NostrBandUserProfile({ data }: { data: Profile }) {
-  const embedProfile = data.profile ? JSON.parse(data.profile.content) : null;
-  const profile = embedProfile;
-
   const { db } = useStorage();
   const { ndk } = useNDK();
 
   const [followed, setFollowed] = useState(false);
   const navigate = useNavigate();
 
+  const profile = data.profile ? JSON.parse(data.profile.content) : null;
+
   const follow = async (pubkey: string) => {
     try {
+      if (!ndk.signer) return navigate('/new/privkey');
+      setFollowed(true);
+
       const user = ndk.getUser({ pubkey: db.account.pubkey });
       const contacts = await user.follows();
       const add = await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
 
-      if (add) {
-        setFollowed(true);
-      } else {
-        toast('You already follow this user');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const unfollow = async (pubkey: string) => {
-    try {
-      if (!ndk.signer) return navigate('/new/privkey');
-
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const contacts = await user.follows();
-      contacts.delete(new NDKUser({ pubkey: pubkey }));
-
-      let list: string[][];
-      contacts.forEach((el) => list.push(['p', el.pubkey, el.relayUrls?.[0] || '', '']));
-
-      const event = new NDKEvent(ndk);
-      event.content = '';
-      event.kind = NDKKind.Contacts;
-      event.tags = list;
-
-      const publishedRelays = await event.publish();
-      if (publishedRelays) {
+      if (!add) {
+        toast.success('You already follow this user');
         setFollowed(false);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      toast.error(e);
+      setFollowed(false);
     }
   };
 
@@ -100,15 +77,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
             </div>
           </div>
           <div className="inline-flex items-center gap-2">
-            {followed ? (
-              <button
-                type="button"
-                onClick={() => unfollow(data.pubkey)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-200 text-neutral-900 backdrop-blur-xl hover:bg-blue-600 hover:text-white dark:bg-neutral-800 dark:text-neutral-100 dark:hover:text-white"
-              >
-                <UnfollowIcon className="h-4 w-4" />
-              </button>
-            ) : (
+            {!followed ? (
               <button
                 type="button"
                 onClick={() => follow(data.pubkey)}
@@ -116,7 +85,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
               >
                 <FollowIcon className="h-4 w-4" />
               </button>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="mt-2 line-clamp-5 whitespace-pre-line break-all text-neutral-900 dark:text-neutral-100">

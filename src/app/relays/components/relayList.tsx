@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { message } from '@tauri-apps/plugin-dialog';
 import { normalizeRelayUrl } from 'nostr-fetch';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { VList } from 'virtua';
 
 import { useStorage } from '@libs/storage/provider';
@@ -37,10 +37,14 @@ export function RelayList() {
     const url = normalizeRelayUrl(relayUrl);
     const res = await db.createRelay(url);
 
-    if (!res) await message("You're aldready connected to this relay");
-    queryClient.invalidateQueries({
-      queryKey: ['user-relay'],
-    });
+    if (res) {
+      toast.info('Connected. You need to restart app to take effect');
+      queryClient.invalidateQueries({
+        queryKey: ['user-relay'],
+      });
+    } else {
+      toast.warning("You're aldready connected to this relay");
+    }
   };
 
   return (
