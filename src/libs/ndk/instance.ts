@@ -1,7 +1,8 @@
 import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { message } from '@tauri-apps/plugin-dialog';
+import { ask } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
+import { relaunch } from '@tauri-apps/plugin-process';
 import { NostrFetcher } from 'nostr-fetch';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -78,50 +79,57 @@ export const NDKInstance = () => {
   }
 
   async function initNDK() {
-    const outboxSetting = await db.getSettingValue('outbox');
-    const bunkerSetting = await db.getSettingValue('nsecbunker');
-    const signer = await getSigner(!!parseInt(bunkerSetting));
-    const explicitRelayUrls = await getExplicitRelays();
-
-    const tauriAdapter = new NDKCacheAdapterTauri(db);
-    const instance = new NDK({
-      explicitRelayUrls,
-      cacheAdapter: tauriAdapter,
-      outboxRelayUrls: ['wss://purplepag.es'],
-      blacklistRelayUrls: [],
-      enableOutboxModel: !!parseInt(outboxSetting),
-    });
-    instance.signer = signer;
-
     try {
+      const outboxSetting = await db.getSettingValue('outbox');
+      const bunkerSetting = await db.getSettingValue('nsecbunker');
+      const signer = await getSigner(!!parseInt(bunkerSetting));
+      const explicitRelayUrls = await getExplicitRelays();
+
+      const tauriAdapter = new NDKCacheAdapterTauri(db);
+      const instance = new NDK({
+        explicitRelayUrls,
+        cacheAdapter: tauriAdapter,
+        outboxRelayUrls: ['wss://purplepag.es'],
+        blacklistRelayUrls: [],
+        enableOutboxModel: !!parseInt(outboxSetting),
+      });
+      instance.signer = signer;
+
       // connect
-      await instance.connect(2000);
+      await instance.connect();
 
       // update account's metadata
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
-        const follows = [...(await user.follows())].map((user) => user.pubkey);
-        const relayList = await user.relayList();
+        if (user) {
+          const follows = [...(await user.follows())].map((user) => user.pubkey);
+          const relayList = await user.relayList();
 
-        // update user's follows
-        await db.updateAccount('follows', JSON.stringify(follows));
+          // update user's follows
+          await db.updateAccount('follows', JSON.stringify(follows));
 
-        // update user's relay list
-        if (relayList) {
-          for (const relay of relayList.relays) {
-            await db.createRelay(relay);
-          }
+          if (relayList)
+            // update user's relays
+            for (const relay of relayList.relays) {
+              await db.createRelay(relay);
+            }
         }
       }
-    } catch (error) {
-      await message(`NDK instance init failed: ${error}`, {
-        title: 'Lume',
-        type: 'error',
-      });
-    }
 
-    setNDK(instance);
-    setRelayUrls(explicitRelayUrls);
+      setNDK(instance);
+      setRelayUrls(explicitRelayUrls);
+    } catch (e) {
+      const yes = await ask(
+        `Something wrong, Lume is not working as expected, do you want to relaunch app?`,
+        {
+          title: 'Lume',
+          type: 'error',
+          okLabel: 'Yes',
+        }
+      );
+
+      if (yes) relaunch();
+    }
   }
 
   useEffect(() => {
