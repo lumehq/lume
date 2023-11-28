@@ -69,12 +69,14 @@ export const NDKInstance = () => {
     if (nsecbunker) {
       const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-nsecbunker');
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
+      if (!localSigner) return null;
       // await remoteSigner.blockUntilReady();
       return new NDKNip46Signer(ndk, db.account.id, localSigner);
     }
 
     // Private key Signer
     const userPrivkey = await db.secureLoad(db.account.pubkey);
+    if (!userPrivkey) return null;
     return new NDKPrivateKeySigner(userPrivkey);
   }
 

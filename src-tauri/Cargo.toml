@@ -1,6 +1,6 @@
 [package]
 name = "lume"
-version = "2.1.6"
+version = "2.1.7"
 description = "the communication app"
 authors = ["Ren Amamiya"]
 license = "GPL-3.0"
