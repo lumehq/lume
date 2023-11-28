@@ -18,7 +18,7 @@
     "**/*.{ts, tsx, css, md, html, json}": "prettier --cache --write"
   },
   "dependencies": {
-    "@evilmartians/harmony": "^1.1.0",
+    "@evilmartians/harmony": "^1.2.0",
     "@getalby/sdk": "^2.7.0",
     "@nostr-dev-kit/ndk": "^2.1.1",
     "@nostr-fetch/adapter-ndk": "^0.13.1",
@@ -86,18 +86,18 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.4",
     "virtua": "^0.16.7",
-    "zustand": "^4.4.6"
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/html-to-text": "^9.0.4",
     "@types/node": "^20.10.0",
-    "@types/react": "^18.2.38",
+    "@types/react": "^18.2.39",
     "@types/react-dom": "^18.2.17",
     "@types/youtube-player": "^5.5.11",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.16",
     "clsx": "^2.0.0",

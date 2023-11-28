@@ -731,9 +731,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.4.8"
+version = "4.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2275f18819641850fa26c89acc84d465c1bf91ce57bc2748b28c420473352f64"
+checksum = "46ca43acc1b21c6cc2d1d3129c19e323a613935b5bc28fb3b33b5b2e5fb00030"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -741,9 +741,9 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.4.8"
+version = "4.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07cdf1b148b25c1e1f7a42225e30a0d99a615cd4637eae7365548dd4529b95bc"
+checksum = "63361bae7eef3771745f02d8d892bec2fee5f6e34af316ba556e7f97a7069ff1"
 dependencies = [
  "anstream",
  "anstyle",
@@ -2088,9 +2088,9 @@ checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 
 [[package]]
 name = "hashbrown"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f93e7192158dbcda357bdec5fb5788eebf8bbac027f3f33e719d29135ae84156"
+checksum = "290f1a1d9242c78d09ce40a5e87e7554ee637af1351968159f4952f028f75604"
 dependencies = [
  "ahash",
  "allocator-api2",
@@ -2102,7 +2102,7 @@ version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8094feaf31ff591f651a2664fb9cfd92bba7a60ce3197265e9482ebe753c8f7"
 dependencies = [
- "hashbrown 0.14.2",
+ "hashbrown 0.14.3",
 ]
 
 [[package]]
@@ -2320,7 +2320,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d530e1a18b1cb4c484e6e34556a0d948706958449fca0cab753d649f2bce3d1f"
 dependencies = [
  "equivalent",
- "hashbrown 0.14.2",
+ "hashbrown 0.14.3",
  "serde",
 ]
 
@@ -2470,9 +2470,9 @@ checksum = "bc0000e42512c92e31c2252315bda326620a4e034105e900c98ec492fa077b3e"
 
 [[package]]
 name = "js-sys"
-version = "0.3.65"
+version = "0.3.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54c0c35952f67de54bb584e9fd912b3023117cbafc0a77d8f3dee1fb5f572fe8"
+checksum = "cee9c64da59eae3b50095c18d3e74f8b73c0b86d2792824ff01bbce68ba229ca"
 dependencies = [
  "wasm-bindgen",
 ]
@@ -3704,9 +3704,9 @@ checksum = "dc375e1527247fe1a97d8b7156678dfe7c1af2fc075c9a4db3690ecd2a148068"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.69"
+version = "1.0.70"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "134c189feb4956b20f6f547d2cf727d4c0fe06722b20a0eec87ed445a97f92da"
+checksum = "39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b"
 dependencies = [
  "unicode-ident",
 ]
@@ -5056,7 +5056,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "auto-launch",
  "log",
@@ -5069,7 +5069,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-cli"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "clap",
  "log",
@@ -5082,7 +5082,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "arboard",
  "log",
@@ -5096,7 +5096,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-dialog"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "glib 0.16.9",
  "log",
@@ -5113,7 +5113,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-fs"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "anyhow",
  "glob",
@@ -5126,7 +5126,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "data-url",
  "glob",
@@ -5143,7 +5143,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-notification"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "log",
  "notify-rust",
@@ -5161,7 +5161,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-os"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "gethostname 0.4.3",
  "log",
@@ -5177,7 +5177,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "tauri",
 ]
@@ -5185,7 +5185,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-shell"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "encoding_rs",
  "log",
@@ -5202,7 +5202,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-sql"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "futures-core",
  "log",
@@ -5218,7 +5218,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-store"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "log",
  "serde",
@@ -5246,7 +5246,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "base64",
  "dirs-next",
@@ -5272,7 +5272,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-upload"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "futures-util",
  "log",
@@ -5289,7 +5289,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window-state"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#f49b391f10515db4465da32d839c5cc43ebdb3d3"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
 dependencies = [
  "bincode",
  "bitflags 2.4.1",
@@ -5926,9 +5926,9 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.88"
+version = "0.2.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7daec296f25a1bae309c0cd5c29c4b260e510e6d813c286b19eaadf409d40fce"
+checksum = "0ed0d4f68a3015cc185aff4db9506a015f4b96f95303897bfa23f846db54064e"
 dependencies = [
  "cfg-if",
  "wasm-bindgen-macro",
@@ -5936,9 +5936,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-backend"
-version = "0.2.88"
+version = "0.2.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e397f4664c0e4e428e8313a469aaa58310d302159845980fd23b0f22a847f217"
+checksum = "1b56f625e64f3a1084ded111c4d5f477df9f8c92df113852fa5a374dbda78826"
 dependencies = [
  "bumpalo",
  "log",
@@ -5951,9 +5951,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-futures"
-version = "0.4.38"
+version = "0.4.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9afec9963e3d0994cac82455b2b3502b81a7f40f9a0d32181f7528d9f4b43e02"
+checksum = "ac36a15a220124ac510204aec1c3e5db8a22ab06fd6706d881dc6149f8ed9a12"
 dependencies = [
  "cfg-if",
  "js-sys",
@@ -5963,9 +5963,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.88"
+version = "0.2.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5961017b3b08ad5f3fe39f1e79877f8ee7c23c5e5fd5eb80de95abc41f1f16b2"
+checksum = "0162dbf37223cd2afce98f3d0785506dcb8d266223983e4b5b525859e6e182b2"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -5973,9 +5973,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.88"
+version = "0.2.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5353b8dab669f5e10f5bd76df26a9360c748f054f862ff5f3f8aae0c7fb3907"
+checksum = "f0eb82fcb7930ae6219a7ecfd55b217f5f0893484b7a13022ebb2b2bf20b5283"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5986,9 +5986,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.88"
+version = "0.2.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d046c5d029ba91a1ed14da14dca44b68bf2f124cfbaf741c54151fdb3e0750b"
+checksum = "7ab9b36309365056cd639da3134bf87fa8f3d86008abf99e612384a6eecd459f"
 
 [[package]]
 name = "wasm-streams"
