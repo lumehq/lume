@@ -30,7 +30,7 @@ export function LiveUpdater({ status }: { status: QueryStatus }) {
   useEffect(() => {
     let sub: NDKSubscription = undefined;
 
-    if (status === 'success' && db.account && db.account.follows.length > 0) {
+    if (status === 'success' && db.account && db.account?.follows?.length > 0) {
       queryClient.fetchQuery({ queryKey: ['notification'] });
 
       const filter: NDKFilter = {

@@ -1,4 +1,5 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -10,6 +11,7 @@ export function Logout() {
   const { ndk } = useNDK();
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const logout = async () => {
     try {
@@ -21,6 +23,9 @@ export function Logout() {
 
       // logout
       await db.accountLogout();
+
+      // clear cache
+      queryClient.clear();
 
       // redirect to welcome screen
       navigate('/auth/welcome');
