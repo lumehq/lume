@@ -3,7 +3,6 @@ import { invoke } from '@tauri-apps/api/primitives';
 import { Platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
 
-import { FULL_RELAYS } from '@utils/constants';
 import { rawEvent } from '@utils/transform';
 import type {
   Account,
@@ -397,17 +396,6 @@ export class LumeStorage {
     );
 
     return results.length < 1;
-  }
-
-  public async getExplicitRelayUrls() {
-    if (!this.account) return FULL_RELAYS;
-
-    const result: Relays[] = await this.db.select(
-      `SELECT * FROM relays WHERE account_id = "${this.account.id}" ORDER BY id DESC LIMIT 50;`
-    );
-
-    if (!result || !result.length) return FULL_RELAYS;
-    return result.map((el) => el.relay);
   }
 
   public async createRelay(relay: string, purpose?: string) {

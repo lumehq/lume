@@ -8,7 +8,7 @@ import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { useQueryClient } from '@tanstack/react-query';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { relaunch } from '@tauri-apps/plugin-process';
-import { NostrFetcher } from 'nostr-fetch';
+import { NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
 import { useEffect, useState } from 'react';
 
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
@@ -51,7 +51,12 @@ export const NDKInstance = () => {
       const outbox = !!parseInt(outboxSetting);
 
       const signer = await getSigner(bunker);
-      const explicitRelayUrls = await db.getExplicitRelayUrls();
+      const explicitRelayUrls = normalizeRelayUrlSet([
+        'wss://relay.damus.io',
+        'wss://relay.nostr.band',
+        'wss://nos.lol',
+        'wss://nostr.mutinywallet.com',
+      ]);
 
       const tauriAdapter = new NDKCacheAdapterTauri(db);
       const instance = new NDK({
