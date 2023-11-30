@@ -1,66 +1,28 @@
-import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
+import NDK, {
+  NDKEvent,
+  NDKKind,
+  NDKNip46Signer,
+  NDKPrivateKeySigner,
+} from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
+import { useQueryClient } from '@tanstack/react-query';
 import { ask } from '@tauri-apps/plugin-dialog';
-import { fetch } from '@tauri-apps/plugin-http';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { NostrFetcher } from 'nostr-fetch';
-import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
+import { FETCH_LIMIT } from '@stores/constants';
+
 export const NDKInstance = () => {
-  const [ndk, setNDK] = useState<NDK | undefined>(undefined);
-  const [relayUrls, setRelayUrls] = useState<string[]>([]);
-
   const { db } = useStorage();
-  const fetcher = useMemo(
-    () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : null),
-    [ndk]
-  );
+  const queryClient = useQueryClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async function getExplicitRelays() {
-    try {
-      // get relays
-      const relays = await db.getExplicitRelayUrls();
-      const onlineRelays = new Set(relays);
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-      for (const relay of relays) {
-        try {
-          const url = new URL(relay);
-          const res = await fetch(`https://${url.hostname}`, {
-            method: 'GET',
-            headers: {
-              Accept: 'application/nostr+json',
-            },
-            signal: controller.signal,
-          });
-
-          if (!res.ok) {
-            toast.warning(`${relay} is not working, skipping...`);
-            onlineRelays.delete(relay);
-          }
-
-          toast.success(`Connected to ${relay}`);
-        } catch {
-          toast.warning(`${relay} is not working, skipping...`);
-          onlineRelays.delete(relay);
-        } finally {
-          clearTimeout(timeoutId);
-        }
-      }
-
-      // return all online relays
-      return [...onlineRelays];
-    } catch (e) {
-      console.error(e);
-    }
-  }
+  const [ndk, setNDK] = useState<NDK | undefined>(undefined);
+  const [fetcher, setFetcher] = useState<NostrFetcher | undefined>(undefined);
+  const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
   async function getSigner(nsecbunker?: boolean) {
     if (!db.account) return;
@@ -104,17 +66,88 @@ export const NDKInstance = () => {
 
       // connect
       await instance.connect();
+      const tmpFetcher = NostrFetcher.withCustomPool(ndkAdapter(instance));
 
       // update account's metadata
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
-        if (user) {
-          db.account.contacts = [...(await user.follows())].map((user) => user.pubkey);
-          db.account.relayList = await user.relayList();
-        }
+        db.account.contacts = [...(await user.follows())].map((user) => user.pubkey);
+        db.account.relayList = await user.relayList();
+
+        // prefetch data
+        await queryClient.prefetchInfiniteQuery({
+          queryKey: ['newsfeed'],
+          initialPageParam: 0,
+          queryFn: async ({
+            signal,
+            pageParam,
+          }: {
+            signal: AbortSignal;
+            pageParam: number;
+          }) => {
+            const rootIds = new Set();
+            const dedupQueue = new Set();
+
+            const events = await tmpFetcher.fetchLatestEvents(
+              explicitRelayUrls,
+              {
+                kinds: [NDKKind.Text, NDKKind.Repost],
+                authors: db.account.contacts,
+              },
+              FETCH_LIMIT,
+              { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
+            );
+
+            const ndkEvents = events.map((event) => {
+              return new NDKEvent(ndk, event);
+            });
+
+            ndkEvents.forEach((event) => {
+              const tags = event.tags.filter((el) => el[0] === 'e');
+              if (tags && tags.length > 0) {
+                const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
+                if (rootIds.has(rootId)) return dedupQueue.add(event.id);
+                rootIds.add(rootId);
+              }
+            });
+
+            return ndkEvents
+              .filter((event) => !dedupQueue.has(event.id))
+              .sort((a, b) => b.created_at - a.created_at);
+          },
+        });
+
+        await queryClient.prefetchInfiniteQuery({
+          queryKey: ['notification'],
+          initialPageParam: 0,
+          queryFn: async ({
+            signal,
+            pageParam,
+          }: {
+            signal: AbortSignal;
+            pageParam: number;
+          }) => {
+            const events = await tmpFetcher.fetchLatestEvents(
+              explicitRelayUrls,
+              {
+                kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
+                '#p': [db.account.pubkey],
+              },
+              FETCH_LIMIT,
+              { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
+            );
+
+            const ndkEvents = events.map((event) => {
+              return new NDKEvent(ndk, event);
+            });
+
+            return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+          },
+        });
       }
 
       setNDK(instance);
+      setFetcher(tmpFetcher);
       setRelayUrls(explicitRelayUrls);
     } catch (e) {
       const yes = await ask(
@@ -135,7 +168,7 @@ export const NDKInstance = () => {
 
   return {
     ndk,
-    relayUrls,
     fetcher,
+    relayUrls,
   };
 };

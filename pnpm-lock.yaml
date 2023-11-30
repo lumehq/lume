@@ -53,6 +53,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^5.8.7
     version: 5.8.7(react-dom@18.2.0)(react@18.2.0)
+  '@tanstack/react-query-devtools':
+    specifier: ^5.10.0
+    version: 5.10.0(@tanstack/react-query@5.8.7)(react@18.2.0)
   '@tauri-apps/api':
     specifier: 2.0.0-alpha.11
     version: 2.0.0-alpha.11
@@ -2056,6 +2059,21 @@ packages:
 
   /@tanstack/query-core@5.8.7:
     resolution: {integrity: sha512-58xOSkxxZK4SGQ/uzX8MDZHLGZCkxlgkPxnfhxUOL2uchnNHyay2UVcR3mQNMgaMwH1e2l+0n+zfS7+UJ/MAJw==}
+    dev: false
+
+  /@tanstack/query-devtools@5.10.0:
+    resolution: {integrity: sha512-ZN17ZHiPFc8B1AZplueTLI6qxqNPuelV/8Q6gx2coNac2++AD1gq8NvCQxfq9HoaqFJM8xqS3oPYxa3HZZTo8w==}
+    dev: false
+
+  /@tanstack/react-query-devtools@5.10.0(@tanstack/react-query@5.8.7)(react@18.2.0):
+    resolution: {integrity: sha512-amQN/6BdSMiYtILISk5j3IrZZiWz+HOHjJdcJNZHaTpzS7aIM1Z82bghCSoPdBtS7P1KbdoW35aD4glm9EkIuQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.10.0
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-devtools': 5.10.0
+      '@tanstack/react-query': 5.8.7(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@tanstack/react-query@5.8.7(react-dom@18.2.0)(react@18.2.0):

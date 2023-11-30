@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 
@@ -20,6 +21,7 @@ const root = createRoot(container);
 
 root.render(
   <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={false} />
     <Toaster position="top-center" closeButton theme="system" />
     <StorageProvider>
       <NDKProvider>
