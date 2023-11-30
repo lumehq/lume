@@ -12,8 +12,7 @@ import {
 } from '@shared/icons';
 import { User } from '@shared/user';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function AddGroupFeeds({ currentWidgetId }: { currentWidgetId: string }) {

@@ -38,7 +38,7 @@ export function useProfile(pubkey: string, embed?: string) {
         );
       return profile;
     },
-    initialData: () => queryClient.getQueryData(['user', pubkey]),
+    initialData: () => queryClient.getQueryData(['user', pubkey]) as NDKUserProfile,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 2,

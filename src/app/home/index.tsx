@@ -21,8 +21,7 @@ import {
   WidgetList,
 } from '@shared/widgets';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function HomeScreen() {

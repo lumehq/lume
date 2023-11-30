@@ -5,8 +5,7 @@ import { ReplyIcon, RepostIcon } from '@shared/icons';
 import { ChildNote, TextKind } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { formatCreatedAt } from '@utils/createdAt';
 import { useNostr } from '@utils/hooks/useNostr';
 import { useWidget } from '@utils/hooks/useWidget';

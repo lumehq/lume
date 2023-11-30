@@ -2,8 +2,7 @@ import { ArticleIcon, MediaIcon, PlusIcon } from '@shared/icons';
 import { TitleBar } from '@shared/titleBar';
 import { AddGroupFeeds, AddHashtagFeeds, WidgetWrapper } from '@shared/widgets';
 
-import { TOPICS, WIDGET_KIND } from '@stores/constants';
-
+import { TOPICS, WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 import { Widget } from '@utils/types';
 

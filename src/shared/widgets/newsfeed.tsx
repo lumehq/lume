@@ -16,7 +16,7 @@ import {
 import { TitleBar } from '@shared/titleBar';
 import { LiveUpdater, WidgetWrapper } from '@shared/widgets';
 
-import { FETCH_LIMIT } from '@stores/constants';
+import { FETCH_LIMIT } from '@utils/constants';
 
 export function NewsfeedWidget() {
   const { db } = useStorage();

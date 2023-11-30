@@ -8,7 +8,7 @@ import { NDKInstance } from '@libs/ndk/instance';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { QUOTES } from '@stores/constants';
+import { QUOTES } from '@utils/constants';
 
 interface NDKContext {
   ndk: undefined | NDK;

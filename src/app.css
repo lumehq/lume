@@ -1,4 +1,4 @@
-@import 'reactflow/dist/style.css';
+/* @import 'reactflow/dist/style.css'; */
 
 @tailwind base;
 @tailwind components;
@@ -50,19 +50,15 @@ input::-ms-clear {
   --video-brand: var(--brand-color);
   --video-focus-ring-color: var(--focus-color);
   --video-border-radius: 8px;
-  width: 100%;
+  @apply w-full;
 }
 
 .player[data-view-type='video'] {
-  aspect-ratio: 16 /9;
+  @apply aspect-video;
 }
 
 .ProseMirror p.is-empty::before {
-  @apply text-neutral-600 dark:text-neutral-400;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
+  @apply text-neutral-600 dark:text-neutral-400 float-left h-0 pointer-events-none content-[attr(data-placeholder)];
 }
 
 .ProseMirror img.ProseMirror-selectednode {

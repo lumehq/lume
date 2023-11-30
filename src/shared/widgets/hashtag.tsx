@@ -10,8 +10,7 @@ import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { FETCH_LIMIT } from '@stores/constants';
-
+import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function HashtagWidget({ widget }: { widget: Widget }) {

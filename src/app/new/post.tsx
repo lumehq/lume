@@ -18,8 +18,7 @@ import { useNDK } from '@libs/ndk/provider';
 import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { useSuggestion } from '@utils/hooks/useSuggestion';
 import { useWidget } from '@utils/hooks/useWidget';
 

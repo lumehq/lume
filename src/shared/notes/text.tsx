@@ -4,8 +4,7 @@ import { memo } from 'react';
 import { ChildNote, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { useNostr } from '@utils/hooks/useNostr';
 import { useRichContent } from '@utils/hooks/useRichContent';
 import { useWidget } from '@utils/hooks/useWidget';

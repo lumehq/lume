@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
-import { FETCH_LIMIT } from '@stores/constants';
+import { FETCH_LIMIT } from '@utils/constants';
 
 export const NDKInstance = () => {
   const { db } = useStorage();

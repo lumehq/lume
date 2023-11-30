@@ -3,8 +3,7 @@ import { invoke } from '@tauri-apps/api/primitives';
 import { Platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
 
-import { FULL_RELAYS } from '@stores/constants';
-
+import { FULL_RELAYS } from '@utils/constants';
 import { rawEvent } from '@utils/transform';
 import type {
   Account,

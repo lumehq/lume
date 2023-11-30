@@ -10,7 +10,7 @@ import { LumeStorage } from '@libs/storage/instance';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { QUOTES } from '@stores/constants';
+import { QUOTES } from '@utils/constants';
 
 interface StorageContext {
   db: LumeStorage;
