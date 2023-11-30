@@ -76,7 +76,9 @@ export const NDKInstance = () => {
       // update account's metadata
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
-        db.account.contacts = [...(await user.follows())].map((user) => user.pubkey);
+        db.account.contacts = [...(await user.follows(undefined, outbox))].map(
+          (user) => user.pubkey
+        );
         db.account.relayList = await user.relayList();
 
         // prefetch data
