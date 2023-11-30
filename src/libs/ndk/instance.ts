@@ -64,6 +64,10 @@ export const NDKInstance = () => {
         cacheAdapter: tauriAdapter,
         outboxRelayUrls: ['wss://purplepag.es'],
         enableOutboxModel: outbox,
+        autoConnectUserRelays: true,
+        autoFetchUserMutelist: true,
+        clientName: 'Lume',
+        clientNip89: 'Lume',
       });
 
       // add signer if exist
@@ -76,10 +80,10 @@ export const NDKInstance = () => {
       // update account's metadata
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
+        instance.activeUser = user;
         db.account.contacts = [...(await user.follows(undefined, outbox))].map(
           (user) => user.pubkey
         );
-        db.account.relayList = await user.relayList();
 
         // prefetch data
         await queryClient.prefetchInfiniteQuery({
