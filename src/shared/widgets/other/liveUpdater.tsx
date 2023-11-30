@@ -35,7 +35,7 @@ export function LiveUpdater({ status }: { status: QueryStatus }) {
 
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: db.account.follows,
+        authors: db.account.contacts,
         since: Math.floor(Date.now() / 1000),
       };
 

@@ -15,7 +15,7 @@ import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
 import { AvatarUploader } from '@shared/avatarUploader';
-import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
+import { ArrowLeftIcon, InfoIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function CreateAccountScreen() {
@@ -123,33 +123,33 @@ export function CreateAccountScreen() {
         {!keys ? (
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 text-sm font-medium"
+            className="group inline-flex items-center gap-2 text-sm font-medium"
           >
-            <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
-              <ArrowLeftIcon className="h-5 w-5" />
+            <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200 text-neutral-800 group-hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-200 dark:group-hover:bg-neutral-700">
+              <ArrowLeftIcon className="h-4 w-4" />
             </div>
             Back
           </button>
         ) : null}
       </div>
       <div className="mx-auto flex w-full max-w-md flex-col gap-10">
-        <h1 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-center text-2xl font-semibold">
           Let&apos;s set up your account.
         </h1>
         <div className="flex flex-col gap-3">
           {!keys ? (
-            <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
+            <div className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950">
               <form onSubmit={handleSubmit(onSubmit)} className="mb-0 flex flex-col">
                 <input type={'hidden'} {...register('picture')} value={picture} />
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <span className="font-semibold">Avatar</span>
-                    <div className="relative flex h-36 w-full items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800">
+                    <div className="flex h-36 w-full flex-col items-center justify-center gap-3 rounded-lg bg-neutral-100 dark:bg-neutral-900">
                       {picture.length > 0 ? (
                         <img
                           src={picture}
                           alt="user's avatar"
-                          className="h-14 w-14 rounded-xl"
+                          className="h-14 w-14 rounded-xl object-cover"
                         />
                       ) : (
                         <img
@@ -158,9 +158,7 @@ export function CreateAccountScreen() {
                           className="h-14 w-14 rounded-xl bg-black dark:bg-white"
                         />
                       )}
-                      <div className="absolute bottom-2 right-2">
-                        <AvatarUploader setPicture={setPicture} />
-                      </div>
+                      <AvatarUploader setPicture={setPicture} />
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
@@ -174,7 +172,7 @@ export function CreateAccountScreen() {
                         minLength: 1,
                       })}
                       spellCheck={false}
-                      className="h-11 rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                      className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -184,20 +182,29 @@ export function CreateAccountScreen() {
                     <textarea
                       {...register('about')}
                       spellCheck={false}
-                      className="relative h-20 w-full resize-none rounded-lg bg-neutral-200 px-3 py-2 !outline-none placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                      className="relative h-24 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 !outline-none placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                     />
                   </div>
-                  <button
-                    type="submit"
-                    disabled={!isDirty || !isValid}
-                    className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <LoaderIcon className="h-5 w-4 animate-spin" />
-                    ) : (
-                      'Create and Continue'
-                    )}
-                  </button>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2 rounded-lg bg-blue-100 p-3 text-sm text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      <InfoIcon className="h-8 w-8" />
+                      <p>
+                        There are many more settings you can configure from the
+                        &quot;Settings&quot; screen. Be sure to visit it later.
+                      </p>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={!isDirty || !isValid}
+                      className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <LoaderIcon className="h-4 w-4 animate-spin" />
+                      ) : (
+                        'Create and Continue'
+                      )}
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
@@ -209,7 +216,7 @@ export function CreateAccountScreen() {
                   opacity: 1,
                   y: 0,
                 }}
-                className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+                className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950"
               >
                 <User pubkey={keys.pubkey} variant="simple" />
               </motion.div>
@@ -219,7 +226,7 @@ export function CreateAccountScreen() {
                   opacity: 1,
                   y: 0,
                 }}
-                className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+                className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950"
               >
                 <div className="flex flex-col gap-1.5">
                   <h5 className="font-semibold">Backup account</h5>
@@ -227,7 +234,7 @@ export function CreateAccountScreen() {
                     <p className="mb-2 select-text text-sm text-neutral-800 dark:text-neutral-200">
                       Your private key is your password. If you lose this key, you will
                       lose access to your account! Copy it and keep it in a safe place.{' '}
-                      <span className="text-red-600">
+                      <span className="text-red-500">
                         There is no way to reset your private key.
                       </span>
                     </p>
@@ -247,13 +254,13 @@ export function CreateAccountScreen() {
                           value={
                             keys.nsec.substring(0, 10) + '**************************'
                           }
-                          className="h-11 w-full rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                          className="h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                         />
                         <div className="absolute right-0 top-0 inline-flex h-11 items-center justify-center px-2">
                           <button
                             type="button"
                             onClick={copyNsec}
-                            className="rounded-md bg-neutral-300 px-2 py-1 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+                            className="rounded-md bg-neutral-200 px-2 py-1 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600"
                           >
                             Copy
                           </button>
@@ -267,7 +274,7 @@ export function CreateAccountScreen() {
                       <input
                         readOnly
                         value={keys.npub}
-                        className="h-11 rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                        className="h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                       />
                     </div>
                   </div>
@@ -275,7 +282,7 @@ export function CreateAccountScreen() {
                     <button
                       type="button"
                       onClick={() => download()}
-                      className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+                      className="mt-1 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
                     >
                       Download account keys
                     </button>
@@ -291,9 +298,9 @@ export function CreateAccountScreen() {
                 opacity: 1,
                 y: 0,
               }}
-              className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+              className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
               type="button"
-              onClick={() => navigate('/auth/onboarding', { state: { newuser: true } })}
+              onClick={() => navigate('/auth/onboarding')}
             >
               Finish
             </motion.button>

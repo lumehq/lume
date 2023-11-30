@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
 
-export function OnboardingScreen() {
+export function OnboardingLayout() {
   return <Outlet />;
 }

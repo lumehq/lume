@@ -3,7 +3,6 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 
-import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
@@ -15,6 +14,7 @@ import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
 import { NewLayout } from '@shared/layouts/new';
 import { NoteLayout } from '@shared/layouts/note';
+import { OnboardingLayout } from '@shared/layouts/onboarding';
 import { SettingsLayout } from '@shared/layouts/settings';
 
 import './app.css';
@@ -197,34 +197,21 @@ export default function App() {
         },
         {
           path: 'onboarding',
-          element: <OnboardingScreen />,
+          element: <OnboardingLayout />,
           errorElement: <ErrorScreen />,
           children: [
             {
               path: '',
               async lazy() {
-                const { OnboardingListScreen } = await import(
-                  '@app/auth/onboarding/list'
-                );
-                return { Component: OnboardingListScreen };
+                const { OnboardingScreen } = await import('@app/auth/onboarding');
+                return { Component: OnboardingScreen };
               },
             },
             {
-              path: 'enrich',
+              path: 'follow',
               async lazy() {
-                const { OnboardEnrichScreen } = await import(
-                  '@app/auth/onboarding/enrich'
-                );
-                return { Component: OnboardEnrichScreen };
-              },
-            },
-            {
-              path: 'hashtag',
-              async lazy() {
-                const { OnboardHashtagScreen } = await import(
-                  '@app/auth/onboarding/hashtag'
-                );
-                return { Component: OnboardHashtagScreen };
+                const { FollowScreen } = await import('@app/auth/follow');
+                return { Component: FollowScreen };
               },
             },
           ],

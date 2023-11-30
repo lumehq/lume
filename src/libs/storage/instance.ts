@@ -188,20 +188,9 @@ export class LumeStorage {
       'SELECT * FROM accounts WHERE is_active = "1" ORDER BY id DESC LIMIT 1;'
     );
 
-    if (results.length > 0) {
-      const account = results[0];
-
-      if (typeof account.follows === 'string')
-        account.follows = JSON.parse(account.follows) ?? [];
-
-      if (typeof account.circles === 'string')
-        account.circles = JSON.parse(account.circles) ?? [];
-
-      if (typeof account.last_login_at === 'string')
-        account.last_login_at = parseInt(account.last_login_at);
-
-      this.account = account;
-      return account;
+    if (results.length) {
+      this.account = results[0];
+      this.account.contacts = [];
     } else {
       console.log('no active account, please create new account');
       return null;
@@ -214,7 +203,7 @@ export class LumeStorage {
       [pubkey]
     );
 
-    if (existAccounts.length > 0) {
+    if (existAccounts.length) {
       await this.db.execute("UPDATE accounts SET is_active = '1' WHERE pubkey = $1;", [
         pubkey,
       ]);
@@ -225,8 +214,7 @@ export class LumeStorage {
       );
     }
 
-    const account = await this.getActiveAccount();
-    return account;
+    return await this.getActiveAccount();
   }
 
   public async updateAccount(column: string, value: string) {
@@ -239,15 +227,6 @@ export class LumeStorage {
       const account = await this.getActiveAccount();
       return account;
     }
-  }
-
-  public async updateLastLogin() {
-    const now = Math.floor(Date.now() / 1000);
-    this.account.last_login_at = now;
-    return await this.db.execute(
-      'UPDATE accounts SET last_login_at = $1 WHERE id = $2;',
-      [now, this.account.id]
-    );
   }
 
   public async getWidgets() {

@@ -54,7 +54,6 @@ export function NotificationWidget() {
         if (!lastEvent) return;
         return lastEvent.created_at - 1;
       },
-      enabled: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

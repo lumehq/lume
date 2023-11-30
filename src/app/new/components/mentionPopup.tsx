@@ -32,8 +32,8 @@ export function MentionPopup({ editor }: { editor: Editor }) {
         className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg border border-neutral-200 bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900"
       >
         <div className="flex flex-col gap-1 py-1">
-          {db.account.follows.length > 0 ? (
-            db.account.follows.map((item) => (
+          {db.account.contacts.length > 0 ? (
+            db.account.contacts.map((item) => (
               <button key={item} type="button" onClick={() => insertMention(item)}>
                 <MentionPopupItem pubkey={item} />
               </button>

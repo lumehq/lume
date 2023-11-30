@@ -1,7 +1,7 @@
 import { message } from '@tauri-apps/plugin-dialog';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { LoaderIcon, PlusIcon } from '@shared/icons';
+import { LoaderIcon } from '@shared/icons';
 
 import { useNostr } from '@utils/hooks/useNostr';
 
@@ -37,14 +37,9 @@ export function AvatarUploader({
     <button
       type="button"
       onClick={() => uploadAvatar()}
-      className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-100 px-1.5 py-1 text-sm font-medium text-blue-500 hover:border-blue-300 hover:bg-blue-200 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-500 dark:hover:border-blue-800 dark:hover:bg-blue-800"
+      className="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-100 px-2 py-1.5 text-sm font-medium text-blue-500 hover:border-blue-300 hover:bg-blue-200 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-500 dark:hover:border-blue-800 dark:hover:bg-blue-800"
     >
-      {loading ? (
-        <LoaderIcon className="h-4 w-4 animate-spin" />
-      ) : (
-        <PlusIcon className="h-4 w-4" />
-      )}
-      Change avatar
+      {loading ? <LoaderIcon className="h-4 w-4 animate-spin" /> : 'Change avatar'}
     </button>
   );
 }

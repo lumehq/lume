@@ -7,7 +7,7 @@ export function WelcomeScreen() {
         <div className="text-center">
           <img src="/icon.png" alt="Lume's logo" className="mx-auto mb-1 h-auto w-16" />
           <h1 className="text-2xl">
-            Welcome to <span className="font-semibold">Lume</span>
+            Welcome to <span className="font-bold">Lume</span>
           </h1>
         </div>
         <div className="flex flex-col gap-2 px-8">

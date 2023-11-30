@@ -10,20 +10,21 @@ import { twMerge } from 'tailwind-merge';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { ArrowLeftIcon } from '@shared/icons';
+import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function ImportAccountScreen() {
-  const navigate = useNavigate();
-
   const { db } = useStorage();
   const { ndk } = useNDK();
 
   const [npub, setNpub] = useState<string>('');
   const [nsec, setNsec] = useState<string>('');
   const [pubkey, setPubkey] = useState<undefined | string>(undefined);
+  const [loading, setLoading] = useState(false);
   const [created, setCreated] = useState({ ok: false, remote: false });
   const [savedPrivkey, setSavedPrivkey] = useState(false);
+
+  const navigate = useNavigate();
 
   const submitNpub = async () => {
     if (npub.length < 6) return toast.error('You must enter valid npub');
@@ -44,8 +45,9 @@ export function ImportAccountScreen() {
     try {
       const pubkey = nip19.decode(npub.split('#')[0]).data as string;
       const localSigner = NDKPrivateKeySigner.generate();
+
       await db.createSetting('nsecbunker', '1');
-      await db.secureSave(pubkey + '-nsecbunker', localSigner.privateKey);
+      await db.secureSave(`${pubkey}-nsecbunker`, localSigner.privateKey);
 
       const remoteSigner = new NDKNip46Signer(ndk, npub, localSigner);
       // await remoteSigner.blockUntilReady();
@@ -66,12 +68,25 @@ export function ImportAccountScreen() {
 
   const createAccount = async () => {
     try {
-      await db.createAccount(npub, pubkey);
-      setCreated((prev) => ({ ...prev, ok: true }));
+      setLoading(true);
 
-      if (created.remote) navigate('/auth/onboarding', { state: { newuser: false } });
+      // add account to db
+      await db.createAccount(npub, pubkey);
+
+      // get account metadata
+      const user = ndk.getUser({ pubkey });
+      if (user) {
+        db.account.contacts = [...(await user.follows())].map((user) => user.pubkey);
+        db.account.relayList = await user.relayList();
+      }
+
+      setCreated((prev) => ({ ...prev, ok: true }));
+      setLoading(false);
+
+      if (created.remote) navigate('/auth/onboarding');
     } catch (e) {
-      return toast(`Create account failed: ${e}`);
+      setLoading(false);
+      return toast.error(e);
     }
   };
 
@@ -112,11 +127,9 @@ export function ImportAccountScreen() {
         ) : null}
       </div>
       <div className="mx-auto flex w-full max-w-md flex-col gap-10">
-        <h1 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Import your account.
-        </h1>
+        <h1 className="text-center text-2xl font-semibold">Import your account.</h1>
         <div className="flex flex-col gap-3">
-          <div className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
+          <div className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="npub" className="font-semibold">
                 Enter your public key:
@@ -132,21 +145,21 @@ export function ImportAccountScreen() {
                   autoCorrect="off"
                   autoCapitalize="off"
                   placeholder="npub1"
-                  className="h-11 w-full rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                  className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                 />
                 {!pubkey ? (
                   <div className="flex flex-col gap-2">
                     <button
                       type="button"
                       onClick={submitNpub}
-                      className="h-9 w-full shrink-0 rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+                      className="h-11 w-full shrink-0 rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
                     >
                       Continue
                     </button>
                     <button
                       type="button"
                       onClick={connectNsecBunker}
-                      className="h-9 w-full shrink-0 rounded-lg bg-neutral-200 font-semibold text-neutral-900 hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
+                      className="h-11 w-full shrink-0 rounded-lg bg-neutral-200 font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                     >
                       Continue with nsecBunker
                     </button>
@@ -162,16 +175,16 @@ export function ImportAccountScreen() {
                 opacity: 1,
                 y: 0,
               }}
-              className="rounded-xl bg-neutral-100 p-3 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+              className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950"
             >
               <h5 className="mb-1.5 font-semibold">Account found</h5>
               <div className="flex w-full flex-col gap-2">
-                <div className="flex h-full w-full items-center justify-between rounded-lg bg-neutral-200 p-2 dark:bg-neutral-800">
+                <div className="flex h-full w-full items-center justify-between rounded-lg bg-neutral-100 px-4 py-3 dark:bg-neutral-900">
                   <User pubkey={pubkey} variant="simple" />
                   <button
                     type="button"
                     onClick={changeAccount}
-                    className="h-8 w-20 shrink-0 rounded-lg bg-neutral-300 text-sm font-medium text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                    className="h-8 w-20 shrink-0 rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                   >
                     Change
                   </button>
@@ -180,9 +193,13 @@ export function ImportAccountScreen() {
                   <button
                     type="button"
                     onClick={createAccount}
-                    className="h-9 w-full shrink-0 rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+                    className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
                   >
-                    Continue
+                    {loading ? (
+                      <LoaderIcon className="h-4 w-4 animate-spin" />
+                    ) : (
+                      'Continue'
+                    )}
                   </button>
                 ) : null}
               </div>
@@ -215,7 +232,7 @@ export function ImportAccountScreen() {
                           autoCorrect="off"
                           autoCapitalize="off"
                           placeholder="nsec1"
-                          className="h-11 w-full rounded-lg bg-neutral-200 px-3 placeholder:text-neutral-500 dark:bg-neutral-800 dark:placeholder:text-neutral-400"
+                          className="h-11 w-full rounded-lg border-transparent bg-neutral-200 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-800 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                         />
                         {nsec.length < 5 ? (
                           <div className="absolute right-0 top-0 inline-flex h-11 items-center justify-center px-2">
@@ -282,11 +299,9 @@ export function ImportAccountScreen() {
                   opacity: 1,
                   y: 0,
                 }}
-                className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+                className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
                 type="button"
-                onClick={() =>
-                  navigate('/auth/onboarding', { state: { newuser: false } })
-                }
+                onClick={() => navigate('/auth/onboarding')}
               >
                 Continue
               </motion.button>

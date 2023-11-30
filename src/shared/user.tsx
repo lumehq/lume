@@ -4,7 +4,7 @@ import { minidenticon } from 'minidenticons';
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { RepostIcon, WorldIcon } from '@shared/icons';
+import { RepostIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
 import { MoreActions } from '@shared/notes';
 
@@ -133,9 +133,8 @@ export const User = memo(function User({
       return (
         <div className="flex items-center gap-2.5">
           <div className="h-14 w-14 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-          <div>
+          <div className="flex flex-col gap-1.5">
             <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
             <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
           </div>
         </div>
@@ -150,37 +149,23 @@ export const User = memo(function User({
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-14 w-14 rounded-lg object-cover"
+            className="h-11 w-11 rounded-lg object-cover"
           />
           <Avatar.Fallback delayMs={300}>
             <img
               src={svgURI}
               alt={pubkey}
-              className="h-14 w-14 rounded-lg bg-black dark:bg-white"
+              className="h-11 w-11 rounded-lg bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
-        <div className="flex h-full flex-col items-start justify-between">
-          <div className="flex flex-col items-start gap-1 text-start">
-            <p className="max-w-[15rem] truncate text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-              {user?.name || user?.display_name || user?.displayName}
-            </p>
-            <p className="break-p prose prose-neutral max-w-none select-text whitespace-pre-line leading-normal dark:prose-invert prose-headings:mb-1 prose-headings:mt-3 prose-p:mb-0 prose-p:mt-0 prose-p:last:mb-1 prose-a:font-normal prose-a:text-blue-500 prose-blockquote:mb-1 prose-blockquote:mt-1 prose-blockquote:border-l-[2px] prose-blockquote:border-blue-500 prose-blockquote:pl-2 prose-pre:whitespace-pre-wrap prose-pre:bg-white/10 prose-ol:m-0 prose-ol:mb-1 prose-ul:mb-1 prose-ul:mt-1 prose-img:mb-2 prose-img:mt-3 prose-hr:mx-0 prose-hr:my-2 hover:prose-a:text-blue-500">
-              {user?.about || user?.bio || 'No bio'}
-            </p>
-          </div>
-          <div className="flex flex-col gap-2">
-            {user?.website ? (
-              <Link
-                to={user?.website}
-                target="_blank"
-                className="inline-flex items-center gap-2 text-sm text-neutral-900 dark:text-neutral-100/70"
-              >
-                <WorldIcon className="h-4 w-4" />
-                <p className="max-w-[10rem] truncate">{user?.website}</p>
-              </Link>
-            ) : null}
-          </div>
+        <div className="flex flex-col items-start text-start">
+          <p className="max-w-[15rem] truncate text-lg font-semibold">
+            {user?.name || user?.display_name || user?.displayName}
+          </p>
+          <p className="break-p prose prose-neutral max-w-none select-text whitespace-pre-line leading-normal dark:prose-invert">
+            {user?.about || user?.bio || 'No bio'}
+          </p>
         </div>
       </div>
     );

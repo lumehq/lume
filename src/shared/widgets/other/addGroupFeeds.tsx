@@ -96,7 +96,7 @@ export function AddGroupFeeds({ currentWidgetId }: { currentWidgetId: string }) 
                   Users
                 </span>
                 <div className="flex h-[420px] flex-col overflow-y-auto rounded-xl bg-neutral-100 py-2 dark:bg-neutral-900">
-                  {db.account.follows.map((item: string) => (
+                  {db.account.contacts.map((item: string) => (
                     <button
                       key={item}
                       type="button"

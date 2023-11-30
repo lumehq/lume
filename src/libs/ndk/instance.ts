@@ -20,7 +20,7 @@ export const NDKInstance = () => {
     [ndk]
   );
 
-  // TODO: fully support NIP-11
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function getExplicitRelays() {
     try {
       // get relays
@@ -68,13 +68,13 @@ export const NDKInstance = () => {
     // NIP-46 Signer
     if (nsecbunker) {
       const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-nsecbunker');
+      if (!localSignerPrivkey) return null;
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
-      if (!localSigner) return null;
       // await remoteSigner.blockUntilReady();
       return new NDKNip46Signer(ndk, db.account.id, localSigner);
     }
 
-    // Private key Signer
+    // Private Key Signer
     const userPrivkey = await db.secureLoad(db.account.pubkey);
     if (!userPrivkey) return null;
     return new NDKPrivateKeySigner(userPrivkey);
@@ -84,18 +84,23 @@ export const NDKInstance = () => {
     try {
       const outboxSetting = await db.getSettingValue('outbox');
       const bunkerSetting = await db.getSettingValue('nsecbunker');
-      const signer = await getSigner(!!parseInt(bunkerSetting));
-      const explicitRelayUrls = await getExplicitRelays();
+
+      const bunker = !!parseInt(bunkerSetting);
+      const outbox = !!parseInt(outboxSetting);
+
+      const signer = await getSigner(bunker);
+      const explicitRelayUrls = await db.getExplicitRelayUrls();
 
       const tauriAdapter = new NDKCacheAdapterTauri(db);
       const instance = new NDK({
         explicitRelayUrls,
         cacheAdapter: tauriAdapter,
         outboxRelayUrls: ['wss://purplepag.es'],
-        blacklistRelayUrls: [],
-        enableOutboxModel: !!parseInt(outboxSetting),
+        enableOutboxModel: outbox,
       });
-      instance.signer = signer;
+
+      // add signer if exist
+      if (signer) instance.signer = signer;
 
       // connect
       await instance.connect();
@@ -104,17 +109,8 @@ export const NDKInstance = () => {
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
         if (user) {
-          const follows = [...(await user.follows())].map((user) => user.pubkey);
-          const relayList = await user.relayList();
-
-          // update user's follows
-          await db.updateAccount('follows', JSON.stringify(follows));
-
-          if (relayList)
-            // update user's relays
-            for (const relay of relayList.relays) {
-              await db.createRelay(relay);
-            }
+          db.account.contacts = [...(await user.follows())].map((user) => user.pubkey);
+          db.account.relayList = await user.relayList();
         }
       }
 
@@ -129,7 +125,6 @@ export const NDKInstance = () => {
           okLabel: 'Yes',
         }
       );
-
       if (yes) relaunch();
     }
   }
