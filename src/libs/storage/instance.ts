@@ -73,7 +73,7 @@ export class LumeStorage {
       [pubkey]
     );
 
-    if (results.length < 1) return null;
+    if (!results.length) return null;
 
     if (typeof results[0].profile === 'string')
       results[0].profile = JSON.parse(results[0].profile);
@@ -87,7 +87,7 @@ export class LumeStorage {
       [id]
     );
 
-    if (results.length < 1) return null;
+    if (!results.length) return null;
     return results[0];
   }
 
@@ -98,7 +98,7 @@ export class LumeStorage {
       `SELECT * FROM ndk_events WHERE id IN (${idsArr}) ORDER BY id;`
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -108,7 +108,7 @@ export class LumeStorage {
       [pubkey]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -118,7 +118,7 @@ export class LumeStorage {
       [kind]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -128,7 +128,7 @@ export class LumeStorage {
       [kind, pubkey]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -138,7 +138,7 @@ export class LumeStorage {
       [tagValue]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 

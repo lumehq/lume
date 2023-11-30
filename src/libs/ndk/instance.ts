@@ -66,7 +66,7 @@ export const NDKInstance = () => {
 
       // connect
       await instance.connect();
-      const tmpFetcher = NostrFetcher.withCustomPool(ndkAdapter(instance));
+      const _fetcher = NostrFetcher.withCustomPool(ndkAdapter(instance));
 
       // update account's metadata
       if (db.account) {
@@ -88,7 +88,7 @@ export const NDKInstance = () => {
             const rootIds = new Set();
             const dedupQueue = new Set();
 
-            const events = await tmpFetcher.fetchLatestEvents(
+            const events = await _fetcher.fetchLatestEvents(
               explicitRelayUrls,
               {
                 kinds: [NDKKind.Text, NDKKind.Repost],
@@ -127,7 +127,7 @@ export const NDKInstance = () => {
             signal: AbortSignal;
             pageParam: number;
           }) => {
-            const events = await tmpFetcher.fetchLatestEvents(
+            const events = await _fetcher.fetchLatestEvents(
               explicitRelayUrls,
               {
                 kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
@@ -147,7 +147,7 @@ export const NDKInstance = () => {
       }
 
       setNDK(instance);
-      setFetcher(tmpFetcher);
+      setFetcher(_fetcher);
       setRelayUrls(explicitRelayUrls);
     } catch (e) {
       const yes = await ask(

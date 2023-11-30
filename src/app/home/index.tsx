@@ -36,16 +36,16 @@ export function HomeScreen() {
       const dbWidgets = await db.getWidgets();
       const defaultWidgets = [
         {
-          id: '9998',
-          title: 'Notification',
-          content: '',
-          kind: WIDGET_KIND.notification,
-        },
-        {
           id: '9999',
           title: 'Newsfeed',
           content: '',
           kind: WIDGET_KIND.newsfeed,
+        },
+        {
+          id: '9998',
+          title: 'Notification',
+          content: '',
+          kind: WIDGET_KIND.notification,
         },
       ];
 

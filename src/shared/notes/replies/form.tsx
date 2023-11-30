@@ -50,7 +50,7 @@ export function NoteReplyForm({ rootEvent }: { rootEvent: NDKEvent }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Reply to this post..."
-        className="h-28 w-full resize-none rounded-t-xl bg-neutral-100 px-5 py-4 text-neutral-900 !outline-none placeholder:text-neutral-600 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-400"
+        className="h-28 w-full resize-none rounded-t-xl border-transparent bg-neutral-100 px-5 py-4 text-neutral-900 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
         spellCheck={false}
       />
       <div className="inline-flex items-center justify-end gap-2 rounded-b-xl p-2">
