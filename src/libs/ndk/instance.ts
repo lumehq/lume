@@ -29,14 +29,22 @@ export const NDKInstance = () => {
 
     // NIP-46 Signer
     if (nsecbunker) {
-      const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-nsecbunker');
+      const localSignerPrivkey = await db.secureLoad(`${db.account.pubkey}-nsecbunker`);
       if (!localSignerPrivkey) return null;
+
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
-      // await remoteSigner.blockUntilReady();
-      return new NDKNip46Signer(ndk, db.account.id, localSigner);
+      const bunker = new NDK({
+        explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
+      });
+      bunker.connect();
+
+      const remoteSigner = new NDKNip46Signer(bunker, db.account.id, localSigner);
+      await remoteSigner.blockUntilReady();
+
+      return remoteSigner;
     }
 
-    // Private Key Signer
+    // Privkey Signer
     const userPrivkey = await db.secureLoad(db.account.pubkey);
     if (!userPrivkey) return null;
     return new NDKPrivateKeySigner(userPrivkey);
@@ -46,17 +54,15 @@ export const NDKInstance = () => {
     try {
       const outboxSetting = await db.getSettingValue('outbox');
       const bunkerSetting = await db.getSettingValue('nsecbunker');
-
-      const bunker = !!parseInt(bunkerSetting);
-      const outbox = !!parseInt(outboxSetting);
-
-      const signer = await getSigner(bunker);
       const explicitRelayUrls = normalizeRelayUrlSet([
         'wss://relay.damus.io',
         'wss://relay.nostr.band',
         'wss://nos.lol',
         'wss://nostr.mutinywallet.com',
       ]);
+
+      const bunker = !!parseInt(bunkerSetting);
+      const outbox = !!parseInt(outboxSetting);
 
       const tauriAdapter = new NDKCacheAdapterTauri(db);
       const instance = new NDK({
@@ -67,10 +73,11 @@ export const NDKInstance = () => {
         autoConnectUserRelays: true,
         autoFetchUserMutelist: true,
         clientName: 'Lume',
-        clientNip89: 'Lume',
+        // clientNip89: '',
       });
 
       // add signer if exist
+      const signer = await getSigner(bunker);
       if (signer) instance.signer = signer;
 
       // connect
@@ -85,7 +92,7 @@ export const NDKInstance = () => {
           (user) => user.pubkey
         );
 
-        // prefetch data
+        // prefetch newsfeed
         await queryClient.prefetchInfiniteQuery({
           queryKey: ['newsfeed'],
           initialPageParam: 0,
@@ -128,6 +135,7 @@ export const NDKInstance = () => {
           },
         });
 
+        // prefetch notification
         await queryClient.prefetchInfiniteQuery({
           queryKey: ['notification'],
           initialPageParam: 0,
@@ -161,14 +169,12 @@ export const NDKInstance = () => {
       setFetcher(_fetcher);
       setRelayUrls(explicitRelayUrls);
     } catch (e) {
-      const yes = await ask(
-        `Something wrong, Lume is not working as expected, do you want to relaunch app?`,
-        {
-          title: 'Lume',
-          type: 'error',
-          okLabel: 'Yes',
-        }
-      );
+      console.error(e);
+      const yes = await ask(e, {
+        title: 'Lume',
+        type: 'error',
+        okLabel: 'Yes',
+      });
       if (yes) relaunch();
     }
   }

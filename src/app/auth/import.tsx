@@ -1,4 +1,4 @@
-import { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
+import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { readText } from '@tauri-apps/plugin-clipboard-manager';
 import { motion } from 'framer-motion';
 import { nip19 } from 'nostr-tools';
@@ -49,8 +49,13 @@ export function ImportAccountScreen() {
       await db.createSetting('nsecbunker', '1');
       await db.secureSave(`${pubkey}-nsecbunker`, localSigner.privateKey);
 
-      const remoteSigner = new NDKNip46Signer(ndk, npub, localSigner);
-      // await remoteSigner.blockUntilReady();
+      const bunker = new NDK({
+        explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
+      });
+      bunker.connect();
+
+      const remoteSigner = new NDKNip46Signer(bunker, npub, localSigner);
+      await remoteSigner.blockUntilReady();
 
       ndk.signer = remoteSigner;
 

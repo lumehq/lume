@@ -124,10 +124,10 @@ export function NotifyNote({ event }: { event: NDKEvent }) {
           <div className="flex flex-col gap-2">
             <div className="w-full px-3">
               <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
-                {thread.replyEventId ? (
-                  <ChildNote id={thread.replyEventId} />
-                ) : thread.rootEventId ? (
-                  <ChildNote id={thread.rootEventId} isRoot />
+                {thread?.replyEventId ? (
+                  <ChildNote id={thread?.replyEventId} />
+                ) : thread?.rootEventId ? (
+                  <ChildNote id={thread?.rootEventId} isRoot />
                 ) : null}
                 <button
                   type="button"
