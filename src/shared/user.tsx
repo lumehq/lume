@@ -207,7 +207,7 @@ export const User = memo(function User({
             {user?.name || user?.display_name || user?.displayName}
           </h3>
           <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/70">
-            {user?.username || displayNpub(pubkey, 16)}
+            {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
           </p>
         </div>
       </div>

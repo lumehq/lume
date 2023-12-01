@@ -189,7 +189,7 @@ export function ImportAccountScreen() {
                   <button
                     type="button"
                     onClick={changeAccount}
-                    className="h-8 w-20 shrink-0 rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                    className="h-8 w-max shrink-0 rounded-lg bg-neutral-200 px-2.5 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                   >
                     Change
                   </button>

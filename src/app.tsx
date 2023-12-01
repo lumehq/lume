@@ -14,7 +14,6 @@ import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
 import { NewLayout } from '@shared/layouts/new';
 import { NoteLayout } from '@shared/layouts/note';
-import { OnboardingLayout } from '@shared/layouts/onboarding';
 import { SettingsLayout } from '@shared/layouts/settings';
 
 import './app.css';
@@ -197,24 +196,45 @@ export default function App() {
         },
         {
           path: 'onboarding',
-          element: <OnboardingLayout />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { OnboardingScreen } = await import('@app/auth/onboarding');
-                return { Component: OnboardingScreen };
-              },
-            },
-            {
-              path: 'follow',
-              async lazy() {
-                const { FollowScreen } = await import('@app/auth/follow');
-                return { Component: FollowScreen };
-              },
-            },
-          ],
+          async lazy() {
+            const { OnboardingScreen } = await import('@app/auth/onboarding');
+            return { Component: OnboardingScreen };
+          },
+        },
+        {
+          path: 'follow',
+          async lazy() {
+            const { FollowScreen } = await import('@app/auth/follow');
+            return { Component: FollowScreen };
+          },
+        },
+        {
+          path: 'finish',
+          async lazy() {
+            const { FinishScreen } = await import('@app/auth/finish');
+            return { Component: FinishScreen };
+          },
+        },
+        {
+          path: 'tutorials/note',
+          async lazy() {
+            const { TutorialNoteScreen } = await import('@app/auth/tutorials/note');
+            return { Component: TutorialNoteScreen };
+          },
+        },
+        {
+          path: 'tutorials/widget',
+          async lazy() {
+            const { TutorialWidgetScreen } = await import('@app/auth/tutorials/widget');
+            return { Component: TutorialWidgetScreen };
+          },
+        },
+        {
+          path: 'tutorials/posting',
+          async lazy() {
+            const { TutorialPostingScreen } = await import('@app/auth/tutorials/posting');
+            return { Component: TutorialPostingScreen };
+          },
         },
       ],
     },

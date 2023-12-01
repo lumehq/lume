@@ -253,7 +253,7 @@ dependencies = [
  "futures-lite 2.0.1",
  "parking",
  "polling 3.3.1",
- "rustix 0.38.25",
+ "rustix 0.38.26",
  "slab",
  "tracing",
  "windows-sys 0.52.0",
@@ -292,7 +292,7 @@ dependencies = [
  "cfg-if",
  "event-listener 3.1.0",
  "futures-lite 1.13.0",
- "rustix 0.38.25",
+ "rustix 0.38.26",
  "windows-sys 0.48.0",
 ]
 
@@ -319,7 +319,7 @@ dependencies = [
  "cfg-if",
  "futures-core",
  "futures-io",
- "rustix 0.38.25",
+ "rustix 0.38.26",
  "signal-hook-registry",
  "slab",
  "windows-sys 0.48.0",
@@ -382,9 +382,9 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
 name = "atomic-write-file"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ae364a6c1301604bbc6dfbf8c385c47ff82301dd01eef506195a029196d8d04"
+checksum = "edcdbedc2236483ab103a53415653d6b4442ea6141baf1ffa85df29635e88436"
 dependencies = [
  "nix 0.27.1",
  "rand 0.8.5",
@@ -890,9 +890,9 @@ checksum = "6245d59a3e82a7fc217c5828a6692dbc6dfb63a0c8c90495621f7b9d79704a0e"
 
 [[package]]
 name = "core-foundation"
-version = "0.9.3"
+version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "194a7a9e6de53fa55116934067c844d9d749312f75c6f6d0980e8c252f8c2146"
+checksum = "91e195e091a93c46f7102ec7818a2aa394e1e1771c3ab4825963fa03e45afb8f"
 dependencies = [
  "core-foundation-sys",
  "libc",
@@ -900,9 +900,9 @@ dependencies = [
 
 [[package]]
 name = "core-foundation-sys"
-version = "0.8.4"
+version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
+checksum = "06ea2b9bc92be3c2baa9334a323ebca2d6f074ff852cd1d7b11064035cd3868f"
 
 [[package]]
 name = "core-graphics"
@@ -932,9 +932,9 @@ dependencies = [
 
 [[package]]
 name = "core-graphics-types"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2bb142d41022986c1d8ff29103a1411c8a3dfad3552f87a4f8dc50d61d4f4e33"
+checksum = "45390e6114f68f718cc7a830514a96f903cccd70d02a8f6d9f643ac4ba45afaf"
 dependencies = [
  "bitflags 1.3.2",
  "core-foundation",
@@ -1419,7 +1419,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ef033ed5e9bad94e55838ca0ca906db0e043f517adda0c8b79c7a8c66c93c1b5"
 dependencies = [
  "cfg-if",
- "rustix 0.38.25",
+ "rustix 0.38.26",
  "windows-sys 0.48.0",
 ]
 
@@ -2643,9 +2643,9 @@ checksum = "ef53942eb7bf7ff43a617b3e2c1c4a5ecf5944a7c1bc12d7ee39bbb15e5c1519"
 
 [[package]]
 name = "linux-raw-sys"
-version = "0.4.11"
+version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "969488b55f8ac402214f3f5fd243ebb7206cf82de60d3172994707a4bcc2b829"
+checksum = "c4cd1a83af159aa67994778be9070f0ae1bd732942279cabb14f86f986a21456"
 
 [[package]]
 name = "lock_api"
@@ -3640,7 +3640,7 @@ dependencies = [
  "cfg-if",
  "concurrent-queue",
  "pin-project-lite",
- "rustix 0.38.25",
+ "rustix 0.38.26",
  "tracing",
  "windows-sys 0.52.0",
 ]
@@ -4052,15 +4052,15 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "0.38.25"
+version = "0.38.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc99bc2d4f1fed22595588a013687477aedf3cdcfb26558c559edb67b4d9b22e"
+checksum = "9470c4bf8246c8daf25f9598dca807fb6510347b1e1cfa55749113850c79d88a"
 dependencies = [
  "bitflags 2.4.1",
  "errno",
  "libc",
- "linux-raw-sys 0.4.11",
- "windows-sys 0.48.0",
+ "linux-raw-sys 0.4.12",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -5066,7 +5066,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "auto-launch",
  "log",
@@ -5079,7 +5079,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-cli"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "clap",
  "log",
@@ -5092,7 +5092,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "arboard",
  "log",
@@ -5106,7 +5106,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-dialog"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "glib 0.16.9",
  "log",
@@ -5123,7 +5123,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-fs"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "anyhow",
  "glob",
@@ -5136,7 +5136,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "data-url",
  "glob",
@@ -5153,7 +5153,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-notification"
 version = "2.0.0-alpha.5"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "log",
  "notify-rust",
@@ -5171,7 +5171,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-os"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "gethostname 0.4.3",
  "log",
@@ -5187,7 +5187,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "tauri",
 ]
@@ -5195,7 +5195,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-shell"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "encoding_rs",
  "log",
@@ -5212,7 +5212,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-sql"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "futures-core",
  "log",
@@ -5228,7 +5228,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-store"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "log",
  "serde",
@@ -5256,7 +5256,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "base64",
  "dirs-next",
@@ -5282,7 +5282,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-upload"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "futures-util",
  "log",
@@ -5299,7 +5299,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window-state"
 version = "2.0.0-alpha.4"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#2e2c0a1b958fcbc7de855ef1d305b11855f2eb8e"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#e7c72c9816d14a218e702dd233a6cfec957c2ee6"
 dependencies = [
  "bincode",
  "bitflags 2.4.1",
@@ -5407,7 +5407,7 @@ dependencies = [
  "cfg-if",
  "fastrand 2.0.1",
  "redox_syscall 0.4.1",
- "rustix 0.38.25",
+ "rustix 0.38.26",
  "windows-sys 0.48.0",
 ]
 
@@ -6655,18 +6655,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.7.26"
+version = "0.7.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e97e415490559a91254a2979b4829267a57d2fcd741a98eee8b722fb57289aa0"
+checksum = "f43de342578a3a14a9314a2dab1942cbfcbe5686e1f91acdc513058063eafe18"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.7.26"
+version = "0.7.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd7e48ccf166952882ca8bd778a43502c64f33bf94c12ebe2a7f08e5a0f6689f"
+checksum = "e1012d89e3acb79fad7a799ce96866cfb8098b74638465ea1b1533d35900ca90"
 dependencies = [
  "proc-macro2",
  "quote",

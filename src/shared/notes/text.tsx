@@ -1,5 +1,6 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { ChildNote, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
@@ -9,7 +10,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 import { useRichContent } from '@utils/hooks/useRichContent';
 import { useWidget } from '@utils/hooks/useWidget';
 
-export function TextNote({ event }: { event: NDKEvent }) {
+export function TextNote({ event, className }: { event: NDKEvent; className?: string }) {
   const { parsedContent } = useRichContent(event.content);
   const { addWidget } = useWidget();
   const { getEventThread } = useNostr();
@@ -17,7 +18,7 @@ export function TextNote({ event }: { event: NDKEvent }) {
   const thread = getEventThread(event.tags);
 
   return (
-    <div className="mb-3 h-min w-full px-3">
+    <div className={twMerge('mb-3 h-min w-full px-3', className)}>
       <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
         <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
         {thread ? (

@@ -13,13 +13,13 @@ export function WelcomeScreen() {
         <div className="flex flex-col gap-2 px-8">
           <Link
             to="/auth/create"
-            className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600"
           >
             Create new account
           </Link>
           <Link
             to="/auth/import"
-            className="inline-flex h-10 w-full items-center justify-center rounded-lg font-medium text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg font-medium text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
           >
             Log in
           </Link>
