@@ -1,22 +1,18 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { normalizeRelayUrl } from 'nostr-fetch';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 import { VList } from 'virtua';
-
-import { useStorage } from '@libs/storage/provider';
 
 import { LoaderIcon, PlusIcon, ShareIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 import { useNostr } from '@utils/hooks/useNostr';
+import { useRelay } from '@utils/hooks/useRelay';
 
 export function RelayList() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { getAllRelaysByUsers } = useNostr();
-  const { db } = useStorage();
+  const { connectRelay } = useRelay();
   const { status, data } = useQuery({
     queryKey: ['relays'],
     queryFn: async () => {
@@ -33,20 +29,6 @@ export function RelayList() {
     navigate(`/relays/${url.hostname}`);
   };
 
-  const connectRelay = async (relayUrl: string) => {
-    const url = normalizeRelayUrl(relayUrl);
-    const res = await db.createRelay(url);
-
-    if (res) {
-      toast.info('Connected. You need to restart app to take effect');
-      queryClient.invalidateQueries({
-        queryKey: ['user-relay'],
-      });
-    } else {
-      toast.warning("You're aldready connected to this relay");
-    }
-  };
-
   return (
     <div className="col-span-2 border-r border-neutral-100 dark:border-neutral-900">
       {status === 'pending' ? (
@@ -59,9 +41,7 @@ export function RelayList() {
       ) : (
         <VList className="h-full">
           <div className="inline-flex h-16 w-full items-center border-b border-neutral-100 px-3 dark:border-neutral-900">
-            <h3 className="font-semibold text-neutral-950 dark:text-neutral-50">
-              All relays
-            </h3>
+            <h3 className="font-semibold">Relay discovery</h3>
           </div>
           {[...data].map(([key, value]) => (
             <div
@@ -80,7 +60,7 @@ export function RelayList() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => connectRelay(key)}
+                    onClick={() => connectRelay.mutate(key)}
                     className="inline-flex h-6 w-6 items-center justify-center rounded text-neutral-900 hover:bg-neutral-200 dark:text-neutral-100 dark:hover:bg-neutral-800"
                   >
                     <PlusIcon className="h-3 w-3" />

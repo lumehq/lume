@@ -66,7 +66,7 @@ export function FollowScreen() {
   const submit = async () => {
     try {
       setLoading(true);
-      if (!follows.length) navigate('/');
+      if (!follows.length) return navigate('/auth/finish');
 
       const event = new NDKEvent(ndk);
       event.kind = NDKKind.Contacts;
@@ -81,7 +81,8 @@ export function FollowScreen() {
           if (item.startsWith('npub')) return nip19.decode(item).data as string;
           return item;
         });
-        navigate('/auth/finish');
+
+        return navigate('/auth/finish');
       }
     } catch (e) {
       setLoading(false);

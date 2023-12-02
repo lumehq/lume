@@ -1,7 +1,7 @@
 import { NDKEvent, NDKKind, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { downloadDir } from '@tauri-apps/api/path';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-import { message, save } from '@tauri-apps/plugin-dialog';
+import { save } from '@tauri-apps/plugin-dialog';
 import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { motion } from 'framer-motion';
 import { minidenticon } from 'minidenticons';
@@ -67,7 +67,6 @@ export function CreateAccountScreen() {
       const event = new NDKEvent(ndk);
       event.content = JSON.stringify(profile);
       event.kind = NDKKind.Metadata;
-      event.created_at = Math.floor(Date.now() / 1000);
       event.pubkey = userPubkey;
       event.tags = [];
 
@@ -76,6 +75,16 @@ export function CreateAccountScreen() {
       if (publish) {
         await db.createAccount(userNpub, userPubkey);
         await db.secureSave(userPubkey, userPrivkey);
+
+        const relayListEvent = new NDKEvent(ndk);
+        relayListEvent.kind = NDKKind.RelayList;
+        relayListEvent.tags = [...ndk.pool.relays.values()].map((item) => [
+          'r',
+          item.url,
+        ]);
+
+        await relayListEvent.publish();
+
         setKeys({
           npub: userNpub,
           nsec: userNsec,
@@ -88,7 +97,7 @@ export function CreateAccountScreen() {
         setLoading(false);
       }
     } catch (e) {
-      return toast(e);
+      return toast.error(e);
     }
   };
 
@@ -113,7 +122,7 @@ export function CreateAccountScreen() {
         setDownloaded(true);
       } // else { user cancel action }
     } catch (e) {
-      await message(e, { title: 'Cannot download account keys', type: 'error' });
+      return toast.error(e);
     }
   };
 

@@ -72,7 +72,7 @@ export const NDKInstance = () => {
         enableOutboxModel: outbox,
         autoConnectUserRelays: true,
         autoFetchUserMutelist: true,
-        clientName: 'Lume',
+        // clientName: 'Lume',
         // clientNip89: '',
       });
 

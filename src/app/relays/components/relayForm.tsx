@@ -1,69 +1,62 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { NDKRelayUrl } from '@nostr-dev-kit/ndk';
+import { normalizeRelayUrl } from 'nostr-fetch';
 import { useState } from 'react';
-
-import { useStorage } from '@libs/storage/provider';
+import { toast } from 'sonner';
 
 import { PlusIcon } from '@shared/icons';
+
+import { useRelay } from '@utils/hooks/useRelay';
 
 const domainRegex = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/;
 
 export function RelayForm() {
-  const { db } = useStorage();
-  const queryClient = useQueryClient();
+  const { connectRelay } = useRelay();
+  const [relay, setRelay] = useState<{
+    url: NDKRelayUrl;
+    purpose: 'read' | 'write' | undefined;
+  }>({ url: '', purpose: undefined });
 
-  const [url, setUrl] = useState('');
-  const [error, setError] = useState('');
-
-  const createRelay = async () => {
-    if (url.length < 1) return setError('Please enter relay url');
+  const create = () => {
+    if (relay.url.length < 1) return toast.info('Please enter relay url');
     try {
-      const relay = new URL(url.replace(/\s/g, ''));
+      const relayUrl = new URL(relay.url.replace(/\s/g, ''));
       if (
-        domainRegex.test(relay.host) &&
-        (relay.protocol === 'wss:' || relay.protocol === 'ws:')
+        domainRegex.test(relayUrl.host) &&
+        (relayUrl.protocol === 'wss:' || relayUrl.protocol === 'ws:')
       ) {
-        const res = await db.createRelay(url);
-        if (!res) return setError("You're already using this relay");
-
-        queryClient.invalidateQueries({
-          queryKey: ['user-relay'],
-        });
-
-        setError('');
-        setUrl('');
+        connectRelay.mutate(normalizeRelayUrl(relay.url));
+        setRelay({ url: '', purpose: undefined });
       } else {
-        return setError(
+        return toast.error(
           'URL is invalid, a relay must use websocket protocol (start with wss:// or ws://). Please check again'
         );
       }
     } catch {
-      return setError('Relay URL is not valid. Please check again');
+      return toast.error('Relay URL is not valid. Please check again');
     }
   };
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex h-10 items-center justify-between rounded-lg bg-neutral-200 pr-1.5 dark:bg-neutral-800">
+      <div className="flex gap-2">
         <input
-          className="h-full w-full bg-transparent pl-3 pr-1.5 text-neutral-900 placeholder:text-neutral-600 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-400"
-          type="url"
+          className="h-11 flex-1 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
           placeholder="wss://"
           spellCheck={false}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          value={relay.url}
+          onChange={(e) => setRelay((prev) => ({ ...prev, url: e.target.value }))}
         />
         <button
           type="button"
-          onClick={() => createRelay()}
-          className="inline-flex h-6 w-6 items-center justify-center rounded bg-blue-500 text-white hover:bg-blue-600"
+          onClick={() => create()}
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600"
         >
-          <PlusIcon className="h-4 w-4" />
+          <PlusIcon className="h-5 w-5" />
         </button>
       </div>
-      <span className="text-sm text-red-400">{error}</span>
     </div>
   );
 }
