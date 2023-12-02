@@ -18,7 +18,7 @@ export function OnboardingScreen() {
   });
 
   const next = () => {
-    if (!db.account.contacts) return navigate('/auth/follow');
+    if (!db.account.contacts.length) return navigate('/auth/follow');
     return navigate('/auth/finish');
   };
 

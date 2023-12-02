@@ -236,6 +236,13 @@ export default function App() {
             return { Component: TutorialPostingScreen };
           },
         },
+        {
+          path: 'tutorials/finish',
+          async lazy() {
+            const { TutorialFinishScreen } = await import('@app/auth/tutorials/finish');
+            return { Component: TutorialFinishScreen };
+          },
+        },
       ],
     },
     {

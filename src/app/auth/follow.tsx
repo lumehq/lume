@@ -81,7 +81,7 @@ export function FollowScreen() {
           if (item.startsWith('npub')) return nip19.decode(item).data as string;
           return item;
         });
-        navigate('/');
+        navigate('/auth/finish');
       }
     } catch (e) {
       setLoading(false);

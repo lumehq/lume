@@ -51,7 +51,7 @@ export function TutorialWidgetScreen() {
               Back
             </Link>
             <Link
-              to="/auth/tutorials/posting"
+              to="/auth/tutorials/finish"
               className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600"
             >
               Continue
