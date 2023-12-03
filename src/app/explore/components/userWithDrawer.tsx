@@ -67,7 +67,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
   };
 
   useEffect(() => {
-    if (db.account.follows.includes(pubkey)) {
+    if (db.account.contacts.includes(pubkey)) {
       setFollowed(true);
     }
   }, []);

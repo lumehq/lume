@@ -219,7 +219,7 @@ export function useNostr() {
     const relayMap = new Map<string, string[]>();
     const relayEvents = fetcher.fetchLatestEventsPerAuthor(
       {
-        authors: db.account.follows,
+        authors: db.account.contacts,
         relayUrls: relayUrls,
       },
       { kinds: [NDKKind.RelayList] },

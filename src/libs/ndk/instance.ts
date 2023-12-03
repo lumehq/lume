@@ -1,80 +1,50 @@
-import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
+import NDK, {
+  NDKEvent,
+  NDKKind,
+  NDKNip46Signer,
+  NDKPrivateKeySigner,
+} from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
+import { useQueryClient } from '@tanstack/react-query';
 import { ask } from '@tauri-apps/plugin-dialog';
-import { fetch } from '@tauri-apps/plugin-http';
 import { relaunch } from '@tauri-apps/plugin-process';
-import { NostrFetcher } from 'nostr-fetch';
-import { useEffect, useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
+import { useEffect, useState } from 'react';
 
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
 
+import { FETCH_LIMIT } from '@utils/constants';
+
 export const NDKInstance = () => {
-  const [ndk, setNDK] = useState<NDK | undefined>(undefined);
-  const [relayUrls, setRelayUrls] = useState<string[]>([]);
-
   const { db } = useStorage();
-  const fetcher = useMemo(
-    () => (ndk ? NostrFetcher.withCustomPool(ndkAdapter(ndk)) : null),
-    [ndk]
-  );
+  const queryClient = useQueryClient();
 
-  // TODO: fully support NIP-11
-  async function getExplicitRelays() {
-    try {
-      // get relays
-      const relays = await db.getExplicitRelayUrls();
-      const onlineRelays = new Set(relays);
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-      for (const relay of relays) {
-        try {
-          const url = new URL(relay);
-          const res = await fetch(`https://${url.hostname}`, {
-            method: 'GET',
-            headers: {
-              Accept: 'application/nostr+json',
-            },
-            signal: controller.signal,
-          });
-
-          if (!res.ok) {
-            toast.warning(`${relay} is not working, skipping...`);
-            onlineRelays.delete(relay);
-          }
-
-          toast.success(`Connected to ${relay}`);
-        } catch {
-          toast.warning(`${relay} is not working, skipping...`);
-          onlineRelays.delete(relay);
-        } finally {
-          clearTimeout(timeoutId);
-        }
-      }
-
-      // return all online relays
-      return [...onlineRelays];
-    } catch (e) {
-      console.error(e);
-    }
-  }
+  const [ndk, setNDK] = useState<NDK | undefined>(undefined);
+  const [fetcher, setFetcher] = useState<NostrFetcher | undefined>(undefined);
+  const [relayUrls, setRelayUrls] = useState<string[]>([]);
 
   async function getSigner(nsecbunker?: boolean) {
     if (!db.account) return;
 
     // NIP-46 Signer
     if (nsecbunker) {
-      const localSignerPrivkey = await db.secureLoad(db.account.pubkey + '-nsecbunker');
+      const localSignerPrivkey = await db.secureLoad(`${db.account.pubkey}-nsecbunker`);
+      if (!localSignerPrivkey) return null;
+
       const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
-      if (!localSigner) return null;
-      // await remoteSigner.blockUntilReady();
-      return new NDKNip46Signer(ndk, db.account.id, localSigner);
+      const bunker = new NDK({
+        explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
+      });
+      bunker.connect();
+
+      const remoteSigner = new NDKNip46Signer(bunker, db.account.id, localSigner);
+      await remoteSigner.blockUntilReady();
+
+      return remoteSigner;
     }
 
-    // Private key Signer
+    // Privkey Signer
     const userPrivkey = await db.secureLoad(db.account.pubkey);
     if (!userPrivkey) return null;
     return new NDKPrivateKeySigner(userPrivkey);
@@ -84,52 +54,127 @@ export const NDKInstance = () => {
     try {
       const outboxSetting = await db.getSettingValue('outbox');
       const bunkerSetting = await db.getSettingValue('nsecbunker');
-      const signer = await getSigner(!!parseInt(bunkerSetting));
-      const explicitRelayUrls = await getExplicitRelays();
+      const explicitRelayUrls = normalizeRelayUrlSet([
+        'wss://relay.damus.io',
+        'wss://relay.nostr.band',
+        'wss://nos.lol',
+        'wss://nostr.mutinywallet.com',
+      ]);
+
+      const bunker = !!parseInt(bunkerSetting);
+      const outbox = !!parseInt(outboxSetting);
 
       const tauriAdapter = new NDKCacheAdapterTauri(db);
       const instance = new NDK({
         explicitRelayUrls,
         cacheAdapter: tauriAdapter,
         outboxRelayUrls: ['wss://purplepag.es'],
-        blacklistRelayUrls: [],
-        enableOutboxModel: !!parseInt(outboxSetting),
+        enableOutboxModel: outbox,
+        autoConnectUserRelays: true,
+        autoFetchUserMutelist: true,
+        // clientName: 'Lume',
+        // clientNip89: '',
       });
-      instance.signer = signer;
+
+      // add signer if exist
+      const signer = await getSigner(bunker);
+      if (signer) instance.signer = signer;
 
       // connect
       await instance.connect();
+      const _fetcher = NostrFetcher.withCustomPool(ndkAdapter(instance));
 
       // update account's metadata
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
-        if (user) {
-          const follows = [...(await user.follows())].map((user) => user.pubkey);
-          const relayList = await user.relayList();
+        instance.activeUser = user;
+        db.account.contacts = [...(await user.follows(undefined, outbox))].map(
+          (user) => user.pubkey
+        );
 
-          // update user's follows
-          await db.updateAccount('follows', JSON.stringify(follows));
+        // prefetch newsfeed
+        await queryClient.prefetchInfiniteQuery({
+          queryKey: ['newsfeed'],
+          initialPageParam: 0,
+          queryFn: async ({
+            signal,
+            pageParam,
+          }: {
+            signal: AbortSignal;
+            pageParam: number;
+          }) => {
+            const rootIds = new Set();
+            const dedupQueue = new Set();
 
-          if (relayList)
-            // update user's relays
-            for (const relay of relayList.relays) {
-              await db.createRelay(relay);
-            }
-        }
+            const events = await _fetcher.fetchLatestEvents(
+              explicitRelayUrls,
+              {
+                kinds: [NDKKind.Text, NDKKind.Repost],
+                authors: db.account.contacts,
+              },
+              FETCH_LIMIT,
+              { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
+            );
+
+            const ndkEvents = events.map((event) => {
+              return new NDKEvent(ndk, event);
+            });
+
+            ndkEvents.forEach((event) => {
+              const tags = event.tags.filter((el) => el[0] === 'e');
+              if (tags && tags.length > 0) {
+                const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
+                if (rootIds.has(rootId)) return dedupQueue.add(event.id);
+                rootIds.add(rootId);
+              }
+            });
+
+            return ndkEvents
+              .filter((event) => !dedupQueue.has(event.id))
+              .sort((a, b) => b.created_at - a.created_at);
+          },
+        });
+
+        // prefetch notification
+        await queryClient.prefetchInfiniteQuery({
+          queryKey: ['notification'],
+          initialPageParam: 0,
+          queryFn: async ({
+            signal,
+            pageParam,
+          }: {
+            signal: AbortSignal;
+            pageParam: number;
+          }) => {
+            const events = await _fetcher.fetchLatestEvents(
+              explicitRelayUrls,
+              {
+                kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
+                '#p': [db.account.pubkey],
+              },
+              FETCH_LIMIT,
+              { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
+            );
+
+            const ndkEvents = events.map((event) => {
+              return new NDKEvent(ndk, event);
+            });
+
+            return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+          },
+        });
       }
 
       setNDK(instance);
+      setFetcher(_fetcher);
       setRelayUrls(explicitRelayUrls);
     } catch (e) {
-      const yes = await ask(
-        `Something wrong, Lume is not working as expected, do you want to relaunch app?`,
-        {
-          title: 'Lume',
-          type: 'error',
-          okLabel: 'Yes',
-        }
-      );
-
+      console.error(e);
+      const yes = await ask(e, {
+        title: 'Lume',
+        type: 'error',
+        okLabel: 'Yes',
+      });
       if (yes) relaunch();
     }
   }
@@ -140,7 +185,7 @@ export const NDKInstance = () => {
 
   return {
     ndk,
-    relayUrls,
     fetcher,
+    relayUrls,
   };
 };

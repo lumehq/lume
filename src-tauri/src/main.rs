@@ -115,7 +115,6 @@ fn main() {
         .plugin(tauri_plugin_updater::Builder::new().build())?;
       Ok(())
     })
-    .plugin(ThemePlugin::init(ctx.config_mut()))
     .plugin(
       tauri_plugin_sql::Builder::default()
         .add_migrations(
@@ -133,10 +132,17 @@ fn main() {
               sql: include_str!("../migrations/20231028083224_add_ndk_cache_table.sql"),
               kind: MigrationKind::Up,
             },
+            Migration {
+              version: 20231130105202,
+              description: "clean up table",
+              sql: include_str!("../migrations/20231130105202_clean_up_table.sql"),
+              kind: MigrationKind::Up,
+            },
           ],
         )
         .build(),
     )
+    .plugin(ThemePlugin::init(ctx.config_mut()))
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())

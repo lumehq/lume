@@ -11,8 +11,7 @@ import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { FETCH_LIMIT } from '@stores/constants';
-
+import { FETCH_LIMIT } from '@utils/constants';
 import { useNostr } from '@utils/hooks/useNostr';
 import { sendNativeNotification } from '@utils/notification';
 
@@ -54,7 +53,6 @@ export function NotificationWidget() {
         if (!lastEvent) return;
         return lastEvent.created_at - 1;
       },
-      enabled: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

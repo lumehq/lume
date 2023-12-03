@@ -28,7 +28,7 @@ export function ExploreScreen() {
   const { getContactsByPubkey } = useNostr();
   const { project } = useReactFlow();
 
-  const defaultContacts = useMemo(() => getMultipleRandom(db.account.follows, 10), []);
+  const defaultContacts = useMemo(() => getMultipleRandom(db.account.contacts, 10), []);
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
 

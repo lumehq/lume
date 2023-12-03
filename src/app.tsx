@@ -3,7 +3,6 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ReactFlowProvider } from 'reactflow';
 
-import { OnboardingScreen } from '@app/auth/onboarding';
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
@@ -197,37 +196,52 @@ export default function App() {
         },
         {
           path: 'onboarding',
-          element: <OnboardingScreen />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: '',
-              async lazy() {
-                const { OnboardingListScreen } = await import(
-                  '@app/auth/onboarding/list'
-                );
-                return { Component: OnboardingListScreen };
-              },
-            },
-            {
-              path: 'enrich',
-              async lazy() {
-                const { OnboardEnrichScreen } = await import(
-                  '@app/auth/onboarding/enrich'
-                );
-                return { Component: OnboardEnrichScreen };
-              },
-            },
-            {
-              path: 'hashtag',
-              async lazy() {
-                const { OnboardHashtagScreen } = await import(
-                  '@app/auth/onboarding/hashtag'
-                );
-                return { Component: OnboardHashtagScreen };
-              },
-            },
-          ],
+          async lazy() {
+            const { OnboardingScreen } = await import('@app/auth/onboarding');
+            return { Component: OnboardingScreen };
+          },
+        },
+        {
+          path: 'follow',
+          async lazy() {
+            const { FollowScreen } = await import('@app/auth/follow');
+            return { Component: FollowScreen };
+          },
+        },
+        {
+          path: 'finish',
+          async lazy() {
+            const { FinishScreen } = await import('@app/auth/finish');
+            return { Component: FinishScreen };
+          },
+        },
+        {
+          path: 'tutorials/note',
+          async lazy() {
+            const { TutorialNoteScreen } = await import('@app/auth/tutorials/note');
+            return { Component: TutorialNoteScreen };
+          },
+        },
+        {
+          path: 'tutorials/widget',
+          async lazy() {
+            const { TutorialWidgetScreen } = await import('@app/auth/tutorials/widget');
+            return { Component: TutorialWidgetScreen };
+          },
+        },
+        {
+          path: 'tutorials/posting',
+          async lazy() {
+            const { TutorialPostingScreen } = await import('@app/auth/tutorials/posting');
+            return { Component: TutorialPostingScreen };
+          },
+        },
+        {
+          path: 'tutorials/finish',
+          async lazy() {
+            const { TutorialFinishScreen } = await import('@app/auth/tutorials/finish');
+            return { Component: TutorialFinishScreen };
+          },
         },
       ],
     },

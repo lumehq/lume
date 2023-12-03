@@ -39,7 +39,7 @@ export function BackupSettingScreen() {
                 readOnly
                 type={showPassword ? 'text' : 'password'}
                 value={nip19.nsecEncode(privkey)}
-                className="relative h-11 w-full resize-none rounded-lg bg-neutral-200 py-1 pl-3 pr-11 text-neutral-900 !outline-none placeholder:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
+                className="relative h-11 w-full resize-none rounded-lg border-none bg-neutral-200 py-1 pl-3 pr-11 text-neutral-900 !outline-none placeholder:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
               />
               <button
                 type="button"

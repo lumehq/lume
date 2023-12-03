@@ -186,7 +186,7 @@ export function EditProfileScreen() {
               type={'text'}
               {...register('display_name')}
               spellCheck={false}
-              className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
+              className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -200,7 +200,7 @@ export function EditProfileScreen() {
               type={'text'}
               {...register('name')}
               spellCheck={false}
-              className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
+              className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -214,7 +214,7 @@ export function EditProfileScreen() {
               <input
                 {...register('nip05')}
                 spellCheck={false}
-                className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
+                className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 transform">
                 {nip05.verified ? (
@@ -247,7 +247,7 @@ export function EditProfileScreen() {
               type={'text'}
               {...register('website', { required: false })}
               spellCheck={false}
-              className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
+              className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -261,7 +261,7 @@ export function EditProfileScreen() {
               type={'text'}
               {...register('lud16', { required: false })}
               spellCheck={false}
-              className="relative h-11 w-full rounded-lg bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
+              className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -274,14 +274,14 @@ export function EditProfileScreen() {
             <textarea
               {...register('about')}
               spellCheck={false}
-              className="relative h-20 w-full resize-none rounded-lg bg-neutral-100 px-3 py-2 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 dark:bg-neutral-900 dark:text-neutral-100"
+              className="relative h-20 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
           <div>
             <button
               type="submit"
               disabled={!isValid}
-              className="mx-auto inline-flex h-9 w-full transform items-center justify-center gap-1 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+              className="mx-auto inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
             >
               {loading ? (
                 <LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />

@@ -7,14 +7,14 @@ export function TextKind({ content, textmode }: { content: string; textmode?: bo
 
   if (textmode) {
     return (
-      <div className="break-p line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
+      <div className="line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
         {parsedContent}
       </div>
     );
   }
 
   return (
-    <div className={'min-w-0 px-3'}>
+    <div className="min-w-0 px-3">
       <div className="break-p select-text leading-normal text-neutral-900 dark:text-neutral-100">
         {parsedContent}
       </div>

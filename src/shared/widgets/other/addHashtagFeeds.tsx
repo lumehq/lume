@@ -3,8 +3,7 @@ import { Resolver, useForm } from 'react-hook-form';
 
 import { CancelIcon, GroupFeedsIcon, PlusIcon } from '@shared/icons';
 
-import { HASHTAGS, WIDGET_KIND } from '@stores/constants';
-
+import { HASHTAGS, WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 
 type FormValues = {

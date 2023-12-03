@@ -21,8 +21,7 @@ import {
   WidgetList,
 } from '@shared/widgets';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function HomeScreen() {
@@ -36,16 +35,16 @@ export function HomeScreen() {
       const dbWidgets = await db.getWidgets();
       const defaultWidgets = [
         {
-          id: '9998',
-          title: 'Notification',
-          content: '',
-          kind: WIDGET_KIND.notification,
-        },
-        {
           id: '9999',
           title: 'Newsfeed',
           content: '',
           kind: WIDGET_KIND.newsfeed,
+        },
+        {
+          id: '9998',
+          title: 'Notification',
+          content: '',
+          kind: WIDGET_KIND.notification,
         },
       ];
 

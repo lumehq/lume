@@ -116,17 +116,32 @@ export function ErrorScreen() {
               </div>
               <div className="select-text text-lg font-medium text-blue-300">
                 <p>
-                  While waiting for Lume&apos;s Devs to release the bug fixes, you always can use
-                  other Nostr clients with your account:
+                  While waiting for Lume&apos;s Devs to release the bug fixes, you always
+                  can use other Nostr clients with your account:
                 </p>
                 <div className="mt-2 flex flex-col gap-1 text-white">
-                  <a href="https://snort.social" className="hover:!underline">
+                  <a
+                    className="hover:!underline"
+                    href="https://snort.social"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     snort.social
                   </a>
-                  <a href="https://primal.net" className="hover:!underline">
+                  <a
+                    className="hover:!underline"
+                    href="https://primal.net"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     primal.net
                   </a>
-                  <a href="https://nostrudel.ninja" className="hover:!underline">
+                  <a
+                    className="hover:!underline"
+                    href="https://nostrudel.ninja"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     nostrudel.ninja
                   </a>
                 </div>

@@ -12,8 +12,7 @@ import { MemoizedArticleNote } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { FETCH_LIMIT } from '@stores/constants';
-
+import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function ArticleWidget({ widget }: { widget: Widget }) {
@@ -40,7 +39,7 @@ export function ArticleWidget({ widget }: { widget: Widget }) {
         } else {
           filter = {
             kinds: [NDKKind.Article],
-            authors: db.account.follows,
+            authors: db.account.contacts,
           };
         }
 

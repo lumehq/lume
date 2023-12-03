@@ -1,7 +1,6 @@
 import { memo } from 'react';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { useProfile } from '@utils/hooks/useProfile';
 import { useWidget } from '@utils/hooks/useWidget';
 

@@ -54,7 +54,7 @@ export function ChatForm({ receiverPubkey }: { receiverPubkey: string }) {
           autoCorrect="off"
           autoCapitalize="off"
           placeholder="Message..."
-          className="h-10 flex-1 resize-none bg-transparent px-3 text-neutral-900 placeholder:text-neutral-600 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-300"
+          className="h-10 flex-1 resize-none border-none bg-transparent px-3 text-neutral-900 placeholder:text-neutral-600 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-100 dark:placeholder:text-neutral-300"
         />
         <button
           type="button"

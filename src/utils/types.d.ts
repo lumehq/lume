@@ -1,4 +1,4 @@
-import { type NDKEvent, type NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { type NDKEvent, NDKRelayList, type NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { type Response } from '@tauri-apps/plugin-http';
 
 export interface RichContent {
@@ -21,18 +21,16 @@ export interface DBEvent {
   richContent?: RichContent;
 }
 
-export interface Account extends NDKUserProfile {
+export interface Account {
   id: string;
   pubkey: string;
-  follows: null | string[];
-  circles: null | string[];
   is_active: number;
-  last_login_at: number;
-}
-
-export interface Profile extends NDKUserProfile {
-  ident?: string;
-  pubkey?: string;
+  contacts: string[];
+  relayList: NDKRelayList;
+  /**
+   * @deprecated Use contacts instead
+   */
+  follows: string[];
 }
 
 export interface WidgetGroup {

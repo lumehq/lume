@@ -1,8 +1,7 @@
 import { PlusIcon } from '@shared/icons';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function ToggleWidgetList() {

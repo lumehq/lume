@@ -137,7 +137,7 @@ export function NewArticleScreen() {
           <div className="group flex justify-between gap-2">
             <input
               name="title"
-              className="h-9 flex-1 border-none bg-transparent text-2xl font-semibold text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-600"
+              className="h-9 flex-1 border-none bg-transparent px-0 text-2xl font-semibold text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 focus:border-none focus:outline-none focus:ring-0 dark:text-neutral-100 dark:placeholder:text-neutral-600"
               placeholder="Untitled"
               value={title}
               onChange={(e) => setTitle(e.target.value)}

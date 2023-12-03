@@ -113,12 +113,6 @@ export function GeneralSettingScreen() {
             ...prev,
             hashtag: !!parseInt(item.value),
           }));
-
-        if (item.key === 'notification')
-          setSettings((prev) => ({
-            ...prev,
-            notification: !!parseInt(item.value),
-          }));
       });
     }
 

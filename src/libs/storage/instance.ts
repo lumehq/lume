@@ -3,8 +3,6 @@ import { invoke } from '@tauri-apps/api/primitives';
 import { Platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
 
-import { FULL_RELAYS } from '@stores/constants';
-
 import { rawEvent } from '@utils/transform';
 import type {
   Account,
@@ -73,7 +71,7 @@ export class LumeStorage {
       [pubkey]
     );
 
-    if (results.length < 1) return null;
+    if (!results.length) return null;
 
     if (typeof results[0].profile === 'string')
       results[0].profile = JSON.parse(results[0].profile);
@@ -87,7 +85,7 @@ export class LumeStorage {
       [id]
     );
 
-    if (results.length < 1) return null;
+    if (!results.length) return null;
     return results[0];
   }
 
@@ -98,7 +96,7 @@ export class LumeStorage {
       `SELECT * FROM ndk_events WHERE id IN (${idsArr}) ORDER BY id;`
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -108,7 +106,7 @@ export class LumeStorage {
       [pubkey]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -118,7 +116,7 @@ export class LumeStorage {
       [kind]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -128,7 +126,7 @@ export class LumeStorage {
       [kind, pubkey]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -138,7 +136,7 @@ export class LumeStorage {
       [tagValue]
     );
 
-    if (results.length < 1) return [];
+    if (!results.length) return [];
     return results;
   }
 
@@ -188,20 +186,9 @@ export class LumeStorage {
       'SELECT * FROM accounts WHERE is_active = "1" ORDER BY id DESC LIMIT 1;'
     );
 
-    if (results.length > 0) {
-      const account = results[0];
-
-      if (typeof account.follows === 'string')
-        account.follows = JSON.parse(account.follows) ?? [];
-
-      if (typeof account.circles === 'string')
-        account.circles = JSON.parse(account.circles) ?? [];
-
-      if (typeof account.last_login_at === 'string')
-        account.last_login_at = parseInt(account.last_login_at);
-
-      this.account = account;
-      return account;
+    if (results.length) {
+      this.account = results[0];
+      this.account.contacts = [];
     } else {
       console.log('no active account, please create new account');
       return null;
@@ -214,7 +201,7 @@ export class LumeStorage {
       [pubkey]
     );
 
-    if (existAccounts.length > 0) {
+    if (existAccounts.length) {
       await this.db.execute("UPDATE accounts SET is_active = '1' WHERE pubkey = $1;", [
         pubkey,
       ]);
@@ -225,8 +212,7 @@ export class LumeStorage {
       );
     }
 
-    const account = await this.getActiveAccount();
-    return account;
+    return await this.getActiveAccount();
   }
 
   public async updateAccount(column: string, value: string) {
@@ -239,15 +225,6 @@ export class LumeStorage {
       const account = await this.getActiveAccount();
       return account;
     }
-  }
-
-  public async updateLastLogin() {
-    const now = Math.floor(Date.now() / 1000);
-    this.account.last_login_at = now;
-    return await this.db.execute(
-      'UPDATE accounts SET last_login_at = $1 WHERE id = $2;',
-      [now, this.account.id]
-    );
   }
 
   public async getWidgets() {
@@ -419,17 +396,6 @@ export class LumeStorage {
     );
 
     return results.length < 1;
-  }
-
-  public async getExplicitRelayUrls() {
-    if (!this.account) return FULL_RELAYS;
-
-    const result: Relays[] = await this.db.select(
-      `SELECT * FROM relays WHERE account_id = "${this.account.id}" ORDER BY id DESC LIMIT 50;`
-    );
-
-    if (!result || !result.length) return FULL_RELAYS;
-    return result.map((el) => el.relay);
   }
 
   public async createRelay(relay: string, purpose?: string) {

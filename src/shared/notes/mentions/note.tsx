@@ -9,8 +9,7 @@ import {
 } from '@shared/notes';
 import { User } from '@shared/user';
 
-import { WIDGET_KIND } from '@stores/constants';
-
+import { WIDGET_KIND } from '@utils/constants';
 import { useEvent } from '@utils/hooks/useEvent';
 import { useWidget } from '@utils/hooks/useWidget';
 

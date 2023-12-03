@@ -62,7 +62,7 @@ export function NewPrivkeyScreen() {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
-          className="h-11 w-full rounded-lg bg-neutral-100 px-3 py-2 placeholder:text-neutral-500 dark:bg-neutral-900 dark:placeholder:text-neutral-400"
+          className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
         />
         <div className="mt-2 flex flex-col gap-2">
           <button

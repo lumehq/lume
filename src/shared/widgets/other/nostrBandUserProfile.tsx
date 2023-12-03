@@ -44,7 +44,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
   };
 
   useEffect(() => {
-    if (db.account.follows.includes(data.pubkey)) {
+    if (db.account.contacts.includes(data.pubkey)) {
       setFollowed(true);
     }
   }, []);
