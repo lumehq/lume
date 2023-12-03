@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Lume",
-    "version": "2.1.7"
+    "version": "2.2.0"
   },
   "plugins": {
     "fs": {
