@@ -11,7 +11,7 @@ export function NWCScreen() {
   const [walletConnectURL, setWalletConnectURL] = useState<null | string>(null);
 
   const remove = async () => {
-    await db.secureRemove('nwc');
+    await db.secureRemove(`${db.account.pubkey}-nwc`);
     setWalletConnectURL(null);
   };
 
@@ -41,16 +41,16 @@ export function NWCScreen() {
                 <CheckCircleIcon className="h-4 w-4" />
                 <div>You&apos;re using nostr wallet connect</div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <textarea
                   readOnly
                   value={walletConnectURL.substring(0, 120) + '****'}
-                  className="relative h-40 w-full resize-none rounded-lg bg-neutral-200 px-3 py-1 text-neutral-900 !outline-none placeholder:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
+                  className="h-40 w-full resize-none rounded-lg border-transparent bg-neutral-200 px-3 py-3 text-neutral-900 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
                 />
                 <button
                   type="button"
                   onClick={() => remove()}
-                  className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-neutral-200 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:bg-neutral-800 dark:text-neutral-100"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-neutral-200 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:bg-neutral-800 dark:text-neutral-100"
                 >
                   Remove connection
                 </button>

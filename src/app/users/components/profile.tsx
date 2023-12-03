@@ -100,7 +100,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="h-14 w-14 rounded-lg bg-white ring-2 ring-neutral-100 dark:ring-neutral-900"
+            className="h-14 w-14 rounded-lg bg-white object-cover ring-2 ring-neutral-100 dark:ring-neutral-900"
           />
           <Avatar.Fallback delayMs={300}>
             <img

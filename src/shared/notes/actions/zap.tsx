@@ -10,6 +10,7 @@ import CurrencyInput from 'react-currency-input-field';
 import { useNavigate } from 'react-router-dom';
 
 import { useNDK } from '@libs/ndk/provider';
+import { useStorage } from '@libs/storage/provider';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
@@ -21,6 +22,7 @@ export function NoteZap({ event }: { event: NDKEvent }) {
   const nwc = useRef(null);
   const navigate = useNavigate();
 
+  const { db } = useStorage();
   const { ndk } = useNDK();
   const { user } = useProfile(event.pubkey);
 
@@ -84,7 +86,9 @@ export function NoteZap({ event }: { event: NDKEvent }) {
 
   useEffect(() => {
     async function getWalletConnectURL() {
-      const uri: string = await invoke('secure_load', { key: 'nwc' });
+      const uri: string = await invoke('secure_load', {
+        key: `${db.account.pubkey}-nwc`,
+      });
       if (uri) setWalletConnectURL(uri);
     }
 
@@ -135,7 +139,7 @@ export function NoteZap({ event }: { event: NDKEvent }) {
                         max={10000} // 1M sats
                         maxLength={10000} // 1M sats
                         onValueChange={(value) => setAmount(value)}
-                        className="w-full flex-1 bg-transparent text-right text-4xl font-semibold placeholder:text-neutral-600 focus:outline-none dark:text-neutral-400"
+                        className="w-full flex-1 border-none bg-transparent text-right text-4xl font-semibold placeholder:text-neutral-600 focus:outline-none focus:ring-0 dark:text-neutral-400"
                       />
                       <span className="w-full flex-1 text-left text-4xl font-semibold text-neutral-600 dark:text-neutral-400">
                         sats
@@ -189,28 +193,28 @@ export function NoteZap({ event }: { event: NDKEvent }) {
                       autoCorrect="off"
                       autoCapitalize="off"
                       placeholder="Enter message (optional)"
-                      className="w-full resize-none rounded-lg bg-neutral-100 px-3 py-3 !outline-none placeholder:text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400"
+                      className="w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-3 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-400"
                     />
                     <div className="flex flex-col gap-2">
                       {walletConnectURL ? (
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
                         >
                           {isCompleted ? (
-                            <p>Successfully tipped</p>
+                            <p className="leading-tight">Successfully zapped</p>
                           ) : isLoading ? (
                             <span className="flex flex-col">
-                              <p>Waiting for approval</p>
-                              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                              <p className="leading-tight">Waiting for approval</p>
+                              <p className="text-xs leading-tight text-neutral-100">
                                 Go to your wallet and approve payment request
                               </p>
                             </span>
                           ) : (
                             <span className="flex flex-col">
-                              <p>Send tip</p>
-                              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                              <p className="leading-tight">Send zap</p>
+                              <p className="text-xs leading-tight text-neutral-100">
                                 You&apos;re using nostr wallet connect
                               </p>
                             </span>
@@ -220,7 +224,7 @@ export function NoteZap({ event }: { event: NDKEvent }) {
                         <button
                           type="button"
                           onClick={() => createZapRequest()}
-                          className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
+                          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
                         >
                           Create Lightning invoice
                         </button>
@@ -234,7 +238,7 @@ export function NoteZap({ event }: { event: NDKEvent }) {
                     <QRCodeSVG value={invoice} size={256} />
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <h3 className="text-lg font-medium">Scan to pay</h3>
+                    <h3 className="text-lg font-medium">Scan to zap</h3>
                     <span className="text-center text-sm text-neutral-600 dark:text-neutral-400">
                       You must use Bitcoin wallet which support Lightning
                       <br />

@@ -12,7 +12,7 @@ import { useRelay } from '@utils/hooks/useRelay';
 
 export function UserRelayList() {
   const { db } = useStorage();
-  const { ndk, relayUrls } = useNDK();
+  const { ndk } = useNDK();
   const { removeRelay } = useRelay();
   const { status, data } = useQuery({
     queryKey: ['relays', db.account.pubkey],
@@ -31,6 +31,8 @@ export function UserRelayList() {
     refetchOnWindowFocus: false,
   });
 
+  const currentRelays = new Set([...ndk.pool.relays.values()].map((item) => item.url));
+
   return (
     <div className="col-span-1">
       <div className="inline-flex h-16 w-full items-center border-b border-neutral-100 px-3 dark:border-neutral-900">
@@ -47,10 +49,10 @@ export function UserRelayList() {
           data.map((item) => (
             <div
               key={item[1]}
-              className="group flex h-11 items-center justify-between rounded-lg bg-neutral-100 pl-3 pr-1.5 dark:bg-neutral-900"
+              className="group flex h-11 items-center justify-between rounded-lg bg-neutral-100 px-3 dark:bg-neutral-900"
             >
-              <div className="inline-flex items-center gap-2.5">
-                {relayUrls.includes(item[1]) ? (
+              <div className="inline-flex items-baseline gap-2">
+                {currentRelays.has(item[1]) ? (
                   <span className="relative flex h-2 w-2">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-500"></span>
@@ -65,13 +67,20 @@ export function UserRelayList() {
                   {item[1]}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => removeRelay.mutate(item[1])}
-                className="hidden h-6 w-6 items-center justify-center rounded group-hover:inline-flex hover:bg-neutral-300 dark:hover:bg-neutral-700"
-              >
-                <CancelIcon className="h-4 w-4 text-neutral-900 dark:text-neutral-100" />
-              </button>
+              <div className="inline-flex items-center gap-2">
+                {item[2] ? (
+                  <div className="inline-flex h-6 w-max items-center justify-center rounded bg-neutral-200 px-2 text-xs font-medium capitalize dark:bg-neutral-900">
+                    {item[2]}
+                  </div>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => removeRelay.mutate(item[1])}
+                  className="hidden h-6 w-6 items-center justify-center rounded group-hover:inline-flex hover:bg-neutral-300 dark:hover:bg-neutral-700"
+                >
+                  <CancelIcon className="h-4 w-4 text-neutral-900 dark:text-neutral-100" />
+                </button>
+              </div>
             </div>
           ))
         )}

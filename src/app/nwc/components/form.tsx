@@ -43,21 +43,19 @@ export function NWCForm({ setWalletConnectURL }) {
 
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
-      <div className="flex flex-col gap-1.5">
-        <textarea
-          name="walletConnectURL"
-          value={uri}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={false}
-          onChange={(e) => setUri(e.target.value)}
-          placeholder="nostr+walletconnect://"
-          className="h-40 w-full resize-none rounded-lg bg-neutral-200 px-3 py-3 text-neutral-900 !outline-none placeholder:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
-        />
-      </div>
+      <textarea
+        name="walletConnectURL"
+        value={uri}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus={false}
+        onChange={(e) => setUri(e.target.value)}
+        placeholder="nostr+walletconnect://"
+        className="h-40 w-full resize-none rounded-lg border-transparent bg-neutral-200 px-3 py-3 text-neutral-900 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
+      />
       <button
         type="button"
         onClick={submit}
-        className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600"
+        className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600"
       >
         {loading ? <LoaderIcon className="h-4 w-4 animate-spin" /> : 'Connect'}
       </button>
