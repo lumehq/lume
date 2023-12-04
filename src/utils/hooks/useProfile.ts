@@ -8,9 +8,9 @@ export function useProfile(pubkey: string, embed?: string) {
   const queryClient = useQueryClient();
   const { ndk } = useNDK();
   const {
-    status,
+    isFetching,
+    isError,
     data: user,
-    error,
   } = useQuery({
     queryKey: ['user', pubkey],
     queryFn: async () => {
@@ -44,5 +44,5 @@ export function useProfile(pubkey: string, embed?: string) {
     retry: 2,
   });
 
-  return { status, user, error };
+  return { isFetching, isError, user };
 }

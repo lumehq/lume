@@ -40,7 +40,7 @@ export const User = memo(function User({
   embedProfile?: string;
   subtext?: string;
 }) {
-  const { status, user } = useProfile(pubkey, embedProfile);
+  const { isFetching, user } = useProfile(pubkey, embedProfile);
 
   const createdAt = useMemo(() => formatCreatedAt(time, variant === 'chat'), [pubkey]);
   const svgURI = useMemo(
@@ -49,7 +49,7 @@ export const User = memo(function User({
   );
 
   if (variant === 'mention') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="flex items-center gap-2">
           <div className="h-6 w-6 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
@@ -91,7 +91,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'notify') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
@@ -129,7 +129,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'large') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="flex items-center gap-2.5">
           <div className="h-14 w-14 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
@@ -172,7 +172,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'simple') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="flex items-center gap-2.5">
           <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
@@ -215,7 +215,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'avatar') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="h-12 w-12 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
       );
@@ -242,7 +242,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'miniavatar') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
       );
@@ -269,7 +269,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'childnote') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
       );
@@ -309,7 +309,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'stacked') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="inline-block h-8 w-8 animate-pulse rounded-full bg-neutral-300 ring-1 ring-neutral-200 dark:bg-neutral-700 dark:ring-neutral-800" />
       );
@@ -336,7 +336,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'ministacked') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="inline-block h-6 w-6 animate-pulse rounded-full bg-neutral-300 ring-1 ring-white dark:ring-black" />
       );
@@ -363,7 +363,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'repost') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="flex gap-3">
           <div className="inline-flex h-10 w-10 items-center justify-center">
@@ -389,7 +389,7 @@ export const User = memo(function User({
               alt={pubkey}
               loading="lazy"
               decoding="async"
-              className="h-6 w-6 rounded"
+              className="h-6 w-6 rounded object-cover"
             />
             <Avatar.Fallback delayMs={300}>
               <img
@@ -414,7 +414,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'thread') {
-    if (status === 'pending') {
+    if (isFetching) {
       return (
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
@@ -434,7 +434,7 @@ export const User = memo(function User({
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-10 w-10 rounded-lg ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
+            className="h-10 w-10 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
           />
           <Avatar.Fallback delayMs={300}>
             <img
@@ -458,7 +458,7 @@ export const User = memo(function User({
     );
   }
 
-  if (status === 'pending') {
+  if (isFetching) {
     return (
       <div className="flex items-center gap-3 px-3">
         <div className="h-9 w-9 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
@@ -515,7 +515,7 @@ export const User = memo(function User({
                 alt={pubkey}
                 loading="lazy"
                 decoding="async"
-                className="h-10 w-10 rounded-lg"
+                className="h-10 w-10 rounded-lg object-cover"
               />
               <Avatar.Fallback delayMs={300}>
                 <img
