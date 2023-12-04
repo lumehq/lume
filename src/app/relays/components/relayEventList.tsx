@@ -1,5 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
+import { normalizeRelayUrl } from 'nostr-fetch';
 import { useCallback } from 'react';
 import { VList } from 'virtua';
 
@@ -15,7 +16,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
     queryFn: async () => {
       const url = 'wss://' + relayUrl;
       const events = await fetcher.fetchLatestEvents(
-        [url],
+        [normalizeRelayUrl(url)],
         {
           kinds: [NDKKind.Text, NDKKind.Repost],
         },
@@ -24,6 +25,8 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
       return events as unknown as NDKEvent[];
     },
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   });
 
   const renderItem = useCallback(
@@ -41,19 +44,18 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
   );
 
   return (
-    <div className="h-full">
-      <VList className="mx-auto w-full max-w-[500px] scrollbar-none">
-        {status === 'pending' ? (
-          <div className="flex h-full w-full items-center justify-center">
-            <div className="inline-flex flex-col items-center justify-center gap-2">
-              <LoaderIcon className="h-5 w-5 animate-spin text-white" />
-              <p className="text-sm font-medium text-white/80">Loading newsfeed...</p>
-            </div>
+    <VList className="mx-auto h-full w-full max-w-[500px] pt-10 scrollbar-none">
+      {status === 'pending' ? (
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="inline-flex flex-col items-center justify-center gap-2">
+            <LoaderIcon className="h-5 w-5 animate-spin text-white" />
+            <p className="text-sm font-medium text-white/80">Loading newsfeed...</p>
           </div>
-        ) : (
-          data.map((item) => renderItem(item))
-        )}
-      </VList>
-    </div>
+        </div>
+      ) : (
+        data.map((item) => renderItem(item))
+      )}
+      <div className="h-20" />
+    </VList>
   );
 }

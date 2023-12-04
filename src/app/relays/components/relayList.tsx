@@ -9,8 +9,6 @@ import { useNostr } from '@utils/hooks/useNostr';
 import { useRelay } from '@utils/hooks/useRelay';
 
 export function RelayList() {
-  const navigate = useNavigate();
-
   const { getAllRelaysByUsers } = useNostr();
   const { connectRelay } = useRelay();
   const { status, data } = useQuery({
@@ -23,6 +21,8 @@ export function RelayList() {
     refetchOnReconnect: false,
     staleTime: Infinity,
   });
+
+  const navigate = useNavigate();
 
   const inspectRelay = (relayUrl: string) => {
     const url = new URL(relayUrl);

@@ -27,7 +27,7 @@ export function ActiveAccount() {
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="aspect-square h-auto w-full rounded-md"
+            className="aspect-square h-auto w-full rounded-md object-cover"
           />
           <Avatar.Fallback delayMs={150}>
             <img
