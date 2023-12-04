@@ -50,6 +50,9 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.17)(@types/react@18.2.41)(react-dom@18.2.0)(react@18.2.0)
+  '@tanstack/query-persist-client-core':
+    specifier: ^5.12.1
+    version: 5.12.1
   '@tanstack/react-query':
     specifier: ^5.12.2
     version: 5.12.2(react@18.2.0)
@@ -2076,6 +2079,12 @@ packages:
 
   /@tanstack/query-devtools@5.12.1:
     resolution: {integrity: sha512-AUWLgdZEYq/ckMZrtKpofOwqxuFiEIdy3gZOh/ouIBVra9ijXVTxYt5cZFSjXJT4q/o0DMii6xMZuIJx2qXZ6g==}
+    dev: false
+
+  /@tanstack/query-persist-client-core@5.12.1:
+    resolution: {integrity: sha512-ymXGe7xxEvnHpoPUOElLkrbwQt+sC3ONsBWfFzA1Ss2Av6e9HCADWgk9frE0T6kAtXP0hVksLRafbCpG6kpIHQ==}
+    dependencies:
+      '@tanstack/query-core': 5.12.1
     dev: false
 
   /@tanstack/react-query-devtools@5.12.2(@tanstack/react-query@5.12.2)(react@18.2.0):
