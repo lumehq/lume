@@ -131,6 +131,9 @@ dependencies:
   '@tiptap/suggestion':
     specifier: ^2.1.13
     version: 2.1.13(@tiptap/core@2.1.13)(@tiptap/pm@2.1.13)
+  '@vidstack/react':
+    specifier: ^1.8.3
+    version: 1.8.3(@types/react@18.2.41)(react@18.2.0)
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -149,9 +152,6 @@ dependencies:
   markdown-to-jsx:
     specifier: ^7.3.2
     version: 7.3.2(react@18.2.0)
-  media-chrome:
-    specifier: ^1.5.4
-    version: 1.5.4
   minidenticons:
     specifier: ^4.2.0
     version: 4.2.0
@@ -2979,6 +2979,18 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
+  /@vidstack/react@1.8.3(@types/react@18.2.41)(react@18.2.0):
+    resolution: {integrity: sha512-QCyHy6e3LpzfajtjrhJPXzGYbBrBCUE5qYAatKXX+nxWqRvspa0fJPlnGeWb+tg6DlDsgwDLFjGNWj8qUeUVXQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/react': ^18.0.0
+      react: ^18.0.0
+    dependencies:
+      '@types/react': 18.2.41
+      media-captions: 1.0.2
+      react: 18.2.0
+    dev: false
+
   /@vitejs/plugin-react-swc@3.5.0(vite@4.5.0):
     resolution: {integrity: sha512-1PrOvAaDpqlCV+Up8RkAh9qaiUjoDUcjtttyhXDKw53XA6Ve16SOp6cCOpRs8Dj8DqUQs6eTW5YkLcLJjrXAig==}
     peerDependencies:
@@ -4780,8 +4792,9 @@ packages:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
     dev: false
 
-  /media-chrome@1.5.4:
-    resolution: {integrity: sha512-BKWxw21Y6WZX4WX5WfwtmyMlnCKf4IrVbG7n5dWbQQew1ZFtKEUjR0xYqKDqOi1fkZkP3T2j2+MCRNuRB5YT+A==}
+  /media-captions@1.0.2:
+    resolution: {integrity: sha512-QxAFc+XTGZeMx+ZvLtMxEDgAjd0kr1LJ2NekLr1cw/UKENOxK7B9g6HwtuTQzCXxmb4Dknd4T8M7FOqqCK9buA==}
+    engines: {node: '>=16'}
     dev: false
 
   /merge-stream@2.0.0:

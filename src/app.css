@@ -1,5 +1,9 @@
 /* @import 'reactflow/dist/style.css'; */
 
+/* Vidstack */
+@import '@vidstack/react/player/styles/default/theme.css';
+@import '@vidstack/react/player/styles/default/layouts/video.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
