@@ -64,14 +64,17 @@ export const NDKInstance = () => {
       const bunker = !!parseInt(bunkerSetting);
       const outbox = !!parseInt(outboxSetting);
 
+      // #TODO: user can config outbox relays
+      const outboxRelayUrls = normalizeRelayUrlSet(['wss://purplepag.es/']);
+
       const tauriAdapter = new NDKCacheAdapterTauri(db);
       const instance = new NDK({
         explicitRelayUrls,
-        cacheAdapter: tauriAdapter,
-        outboxRelayUrls: ['wss://purplepag.es'],
+        outboxRelayUrls,
         enableOutboxModel: outbox,
         autoConnectUserRelays: true,
         autoFetchUserMutelist: true,
+        cacheAdapter: tauriAdapter,
         // clientName: 'Lume',
         // clientNip89: '',
       });
