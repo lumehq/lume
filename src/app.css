@@ -41,22 +41,6 @@ input::-ms-clear {
   background-clip: padding-box;
 }
 
-.player {
-  --brand-color: #f5f5f5;
-  --focus-color: #4e9cf6;
-  --audio-brand: var(--brand-color);
-  --audio-focus-ring-color: var(--focus-color);
-  --audio-border-radius: 2px;
-  --video-brand: var(--brand-color);
-  --video-focus-ring-color: var(--focus-color);
-  --video-border-radius: 8px;
-  @apply w-full;
-}
-
-.player[data-view-type='video'] {
-  @apply aspect-video;
-}
-
 .ProseMirror p.is-empty::before {
   @apply text-neutral-600 dark:text-neutral-400 float-left h-0 pointer-events-none content-[attr(data-placeholder)];
 }

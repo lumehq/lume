@@ -1,8 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Link } from 'react-router-dom';
 
+import { Logout } from '@shared/accounts/logout';
 import { HorizontalDotsIcon } from '@shared/icons';
-import { Logout } from '@shared/logout';
 
 export function AccountMoreActions() {
   return (
