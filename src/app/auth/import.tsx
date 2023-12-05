@@ -1,5 +1,6 @@
 import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { readText } from '@tauri-apps/plugin-clipboard-manager';
+import { open } from '@tauri-apps/plugin-shell';
 import { motion } from 'framer-motion';
 import { nip19 } from 'nostr-tools';
 import { useState } from 'react';
@@ -48,6 +49,9 @@ export function ImportAccountScreen() {
 
       await db.createSetting('nsecbunker', '1');
       await db.secureSave(`${pubkey}-nsecbunker`, localSigner.privateKey);
+
+      // open nsecbunker web app in default browser
+      await open('https://app.nsecbunker.com/keys');
 
       const bunker = new NDK({
         explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
@@ -168,6 +172,13 @@ export function ImportAccountScreen() {
                     >
                       Continue with nsecBunker
                     </button>
+                    <div>
+                      <p className="mb-0.5 text-sm font-semibold">Note:</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        If you&apos;re using nsecbunker token, keep in mind it only can
+                        redeem one-time, you need to login again in the next launch
+                      </p>
+                    </div>
                   </div>
                 ) : null}
               </div>

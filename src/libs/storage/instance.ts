@@ -416,7 +416,14 @@ export class LumeStorage {
     return await this.db.execute(`DELETE FROM relays WHERE relay = "${relay}";`);
   }
 
-  public async createSetting(key: string, value: string) {
+  public async createSetting(key: string, value: string | undefined) {
+    if (value) {
+      return await this.db.execute(
+        'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
+        [key, value]
+      );
+    }
+
     const currentSetting = await this.checkSettingValue(key);
 
     if (!currentSetting)
@@ -470,9 +477,7 @@ export class LumeStorage {
     await this.db.execute("UPDATE accounts SET is_active = '0' WHERE id = $1;", [
       this.account.id,
     ]);
-
     this.account = null;
-    return true;
   }
 
   public async close() {
