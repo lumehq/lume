@@ -21,7 +21,7 @@ import { useNostr } from '@utils/hooks/useNostr';
 import { Widget } from '@utils/types';
 
 export function ThreadWidget({ widget }: { widget: Widget }) {
-  const { status, data } = useEvent(widget.content);
+  const { isFetching, isError, data } = useEvent(widget.content);
   const { getEventThread } = useNostr();
 
   const renderKind = useCallback(
@@ -59,16 +59,22 @@ export function ThreadWidget({ widget }: { widget: Widget }) {
     <WidgetWrapper>
       <TitleBar id={widget.id} title={widget.title} />
       <WVList className="flex-1 overflow-y-auto px-3 pb-5">
-        {status === 'pending' ? (
+        {isFetching ? (
           <div className="flex h-16 items-center justify-center rounded-xl bg-neutral-50 px-3 py-3 dark:bg-neutral-950">
             <LoaderIcon className="h-5 w-5 animate-spin" />
           </div>
         ) : (
           <>
             <div className="flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950">
-              <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
-              {renderKind(data)}
-              <NoteActions event={data} />
+              {isError ? (
+                <div>Failed to fetch event</div>
+              ) : (
+                <>
+                  <User pubkey={data.pubkey} time={data.created_at} variant="thread" />
+                  {renderKind(data)}
+                  <NoteActions event={data} />
+                </>
+              )}
             </div>
             <NoteReplyForm rootEvent={data} />
             <ReplyList eventId={data.id} />

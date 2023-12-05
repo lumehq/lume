@@ -4,6 +4,7 @@ import { nip19 } from 'nostr-tools';
 import { EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { ArrowLeftIcon, CheckCircleIcon, ShareIcon } from '@shared/icons';
 import { NoteReplyForm } from '@shared/notes';
@@ -40,14 +41,18 @@ export function ArticleNoteScreen() {
   }, [data]);
 
   const share = async () => {
-    await writeText(
-      'https://njump.me/' +
-        nip19.neventEncode({ id: data.id, author: data.pubkey } as EventPointer)
-    );
-    // update state
-    setIsCopy(true);
-    // reset state after 2 sec
-    setTimeout(() => setIsCopy(false), 2000);
+    try {
+      await writeText(
+        'https://njump.me/' +
+          nip19.neventEncode({ id: data?.id, author: data?.pubkey } as EventPointer)
+      );
+      // update state
+      setIsCopy(true);
+      // reset state after 2 sec
+      setTimeout(() => setIsCopy(false), 2000);
+    } catch (e) {
+      toast.error(e);
+    }
   };
 
   return (

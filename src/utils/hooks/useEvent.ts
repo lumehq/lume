@@ -7,7 +7,7 @@ import { useNDK } from '@libs/ndk/provider';
 
 export function useEvent(id: undefined | string, embed?: undefined | string) {
   const { ndk } = useNDK();
-  const { status, data } = useQuery({
+  const { status, isFetching, isError, data } = useQuery({
     queryKey: ['event', id],
     queryFn: async () => {
       const naddr = id.startsWith('naddr')
@@ -24,7 +24,7 @@ export function useEvent(id: undefined | string, embed?: undefined | string) {
 
         const rEvent = [...rEvents].slice(-1)[0];
 
-        if (!rEvent) return Promise.reject(new Error('event not found'));
+        if (!rEvent) throw new Error('event not found');
         return rEvent;
       }
 
@@ -37,14 +37,14 @@ export function useEvent(id: undefined | string, embed?: undefined | string) {
       // get event from relay
       const event = await ndk.fetchEvent(id);
 
-      if (!event) return Promise.reject(new Error('event not found'));
+      if (!event) throw new Error('event not found');
       return event;
     },
+    staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    staleTime: Infinity,
   });
 
-  return { status, data };
+  return { status, isFetching, isError, data };
 }

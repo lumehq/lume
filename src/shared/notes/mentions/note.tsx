@@ -20,7 +20,7 @@ export const MentionNote = memo(function MentionNote({
   id: string;
   editing?: boolean;
 }) {
-  const { status, data } = useEvent(id);
+  const { isFetching, isError, data } = useEvent(id);
   const { addWidget } = useWidget();
 
   const renderKind = (event: NDKEvent) => {
@@ -36,10 +36,18 @@ export const MentionNote = memo(function MentionNote({
     }
   };
 
-  if (status === 'pending') {
+  if (isFetching) {
     return (
       <div className="w-full cursor-default rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
         <NoteSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full cursor-default rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+        Failed to fetch event
       </div>
     );
   }
