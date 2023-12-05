@@ -145,6 +145,7 @@ export function ImportAccountScreen() {
               </label>
               <div className="flex w-full flex-col gap-2">
                 <input
+                  readOnly={!!pubkey}
                   name="npub"
                   type="text"
                   value={npub}
@@ -172,14 +173,13 @@ export function ImportAccountScreen() {
                     >
                       Continue with nsecBunker
                     </button>
-                    <div>
-                      <p className="mb-0.5 text-sm font-semibold">Note:</p>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                        If you&apos;re using nsecbunker token, keep in mind it only can
-                        redeem one-time, you need to login again in the next launch
-                      </p>
-                    </div>
                   </div>
+                ) : null}
+                {npub.indexOf('#') > -1 ? (
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    You&apos;re using nsecbunker token, keep in mind it only can redeem
+                    one-time, you need to login again in the next launch
+                  </p>
                 ) : null}
               </div>
             </div>

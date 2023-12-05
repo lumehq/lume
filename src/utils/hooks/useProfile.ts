@@ -7,7 +7,7 @@ import { useNDK } from '@libs/ndk/provider';
 export function useProfile(pubkey: string, embed?: string) {
   const { ndk } = useNDK();
   const {
-    isFetching,
+    isLoading,
     isError,
     data: user,
   } = useQuery({
@@ -31,12 +31,6 @@ export function useProfile(pubkey: string, embed?: string) {
 
         const user = ndk.getUser({ pubkey: hexstring });
         const profile = await user.fetchProfile();
-
-        if (!profile)
-          throw new Error(
-            `Cannot get metadata for ${pubkey}, will be retry after 10 seconds`
-          );
-
         return profile;
       } catch (e) {
         console.error(e);
@@ -50,5 +44,5 @@ export function useProfile(pubkey: string, embed?: string) {
     retry: 2,
   });
 
-  return { isFetching, isError, user };
+  return { isLoading, isError, user };
 }

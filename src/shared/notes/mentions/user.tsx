@@ -20,12 +20,7 @@ export const MentionUser = memo(function MentionUser({ pubkey }: { pubkey: strin
       }
       className="break-words text-blue-500 hover:text-blue-600"
     >
-      {'@' +
-        (user?.name ||
-          user?.display_name ||
-          user?.displayName ||
-          user?.username ||
-          'unknown')}
+      {'@' + (user?.name || user?.displayName || user?.username || 'unknown')}
     </button>
   );
 });

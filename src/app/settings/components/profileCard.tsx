@@ -11,7 +11,7 @@ import { displayNpub } from '@utils/shortenKey';
 
 export function ProfileCard() {
   const { db } = useStorage();
-  const { status, user } = useProfile(db.account.pubkey);
+  const { isLoading, user } = useProfile(db.account.pubkey);
 
   const svgURI =
     'data:image/svg+xml;utf8,' +
@@ -19,7 +19,7 @@ export function ProfileCard() {
 
   return (
     <div className="mb-4 h-56 w-full rounded-2xl bg-neutral-100 transition-all duration-150 ease-smooth hover:scale-105 dark:bg-neutral-900">
-      {status === 'pending' ? (
+      {isLoading ? (
         <div className="flex h-full w-full items-center justify-center">
           <LoaderIcon className="h-4 w-4 animate-spin" />
         </div>
