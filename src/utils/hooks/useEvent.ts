@@ -1,4 +1,4 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKSubscriptionCacheUsage, NostrEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { AddressPointer } from 'nostr-tools/lib/types/nip19';
@@ -30,20 +30,26 @@ export function useEvent(id: undefined | string, embed?: undefined | string) {
 
       // return embed event (nostr.band api)
       if (embed) {
-        const event: NDKEvent = JSON.parse(embed);
-        return event;
+        const embedEvent: NostrEvent = JSON.parse(embed);
+        const ndkEvent = new NDKEvent(ndk, embedEvent);
+
+        return ndkEvent;
       }
 
       // get event from relay
-      const event = await ndk.fetchEvent(id);
+      const event = await ndk.fetchEvent(id, {
+        cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      });
 
-      if (!event) throw new Error('event not found');
+      if (!event)
+        throw new Error(`Cannot get event with ${id}, will be retry after 10 seconds`);
+
       return event;
     },
-    staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
+    retry: 2,
   });
 
   return { status, isFetching, isError, data };

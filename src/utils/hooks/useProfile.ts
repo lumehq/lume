@@ -1,4 +1,4 @@
-import { NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKSubscriptionCacheUsage, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 
@@ -30,15 +30,21 @@ export function useProfile(pubkey: string, embed?: string) {
         }
 
         const user = ndk.getUser({ pubkey: hexstring });
-        const profile = await user.fetchProfile();
+        const profile = await user.fetchProfile({
+          cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+        });
+
+        if (!profile)
+          throw new Error(
+            `Cannot get metadata for ${pubkey}, will be retry after 10 seconds`
+          );
+
         return profile;
       } catch (e) {
-        console.error(e);
-        throw new Error(
-          `Cannot get metadata for ${pubkey}, will be retry after 10 seconds`
-        );
+        throw new Error(e);
       }
     },
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 2,

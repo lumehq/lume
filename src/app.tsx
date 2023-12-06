@@ -308,7 +308,7 @@ export default function App() {
       router={router}
       fallbackElement={
         <div className="flex h-full w-full items-center justify-center">
-          <LoaderIcon className="h-6 w-6 animate-spin text-white" />
+          <LoaderIcon className="h-6 w-6 animate-spin" />
         </div>
       }
       future={{ v7_startTransition: true }}
