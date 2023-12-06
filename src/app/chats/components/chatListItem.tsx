@@ -12,14 +12,14 @@ import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEvent }) {
-  const { status, user } = useProfile(event.pubkey);
+  const { isLoading, user } = useProfile(event.pubkey);
   const decryptedContent = useDecryptMessage(event);
 
   const createdAt = formatCreatedAt(event.created_at, true);
   const svgURI =
     'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(event.pubkey, 90, 50));
 
-  if (status === 'pending') {
+  if (isLoading) {
     return (
       <div className="flex items-center gap-2.5 rounded-md px-3">
         <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-400 dark:bg-neutral-600" />

@@ -10,6 +10,7 @@ import { ask } from '@tauri-apps/plugin-dialog';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 import NDKCacheAdapterTauri from '@libs/ndk/cache';
 import { useStorage } from '@libs/storage/provider';
@@ -27,51 +28,73 @@ export const NDKInstance = () => {
   async function getSigner(nsecbunker?: boolean) {
     if (!db.account) return;
 
-    // NIP-46 Signer
-    if (nsecbunker) {
-      const localSignerPrivkey = await db.secureLoad(`${db.account.pubkey}-nsecbunker`);
-      if (!localSignerPrivkey) return null;
+    try {
+      // NIP-46 Signer
+      if (nsecbunker) {
+        const localSignerPrivkey = await db.secureLoad(`${db.account.pubkey}-nsecbunker`);
+        if (!localSignerPrivkey) return null;
 
-      const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
-      const bunker = new NDK({
-        explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
-      });
-      bunker.connect();
+        const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
+        const bunker = new NDK({
+          explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
+        });
+        bunker.connect();
 
-      const remoteSigner = new NDKNip46Signer(bunker, db.account.id, localSigner);
-      await remoteSigner.blockUntilReady();
+        const remoteSigner = new NDKNip46Signer(bunker, db.account.id, localSigner);
+        await remoteSigner.blockUntilReady();
 
-      return remoteSigner;
+        return remoteSigner;
+      }
+
+      // Privkey Signer
+      const userPrivkey = await db.secureLoad(db.account.pubkey);
+      if (!userPrivkey) return null;
+      return new NDKPrivateKeySigner(userPrivkey);
+    } catch (e) {
+      console.log(e);
+      if (e === 'Token already redeemed') {
+        toast.info(
+          'nsecbunker token already redeemed. You need to re-login with another token.'
+        );
+
+        await db.secureRemove(`${db.account.pubkey}-nsecbunker`);
+        await db.accountLogout();
+      }
+
+      return null;
     }
-
-    // Privkey Signer
-    const userPrivkey = await db.secureLoad(db.account.pubkey);
-    if (!userPrivkey) return null;
-    return new NDKPrivateKeySigner(userPrivkey);
   }
 
   async function initNDK() {
+    const outboxSetting = await db.getSettingValue('outbox');
+    const bunkerSetting = await db.getSettingValue('nsecbunker');
+
+    const bunker = !!parseInt(bunkerSetting);
+    const outbox = !!parseInt(outboxSetting);
+
+    const explicitRelayUrls = normalizeRelayUrlSet([
+      'wss://relay.damus.io',
+      'wss://relay.nostr.band',
+      'wss://nos.lol',
+      'wss://nostr.mutinywallet.com',
+    ]);
+
+    // #TODO: user should config outbox relays
+    const outboxRelayUrls = normalizeRelayUrlSet(['wss://purplepag.es']);
+
+    // #TODO: user should config blacklist relays
+    const blacklistRelayUrls = normalizeRelayUrlSet(['wss://brb.io']);
+
     try {
-      const outboxSetting = await db.getSettingValue('outbox');
-      const bunkerSetting = await db.getSettingValue('nsecbunker');
-      const explicitRelayUrls = normalizeRelayUrlSet([
-        'wss://relay.damus.io',
-        'wss://relay.nostr.band',
-        'wss://nos.lol',
-        'wss://nostr.mutinywallet.com',
-      ]);
-
-      const bunker = !!parseInt(bunkerSetting);
-      const outbox = !!parseInt(outboxSetting);
-
       const tauriAdapter = new NDKCacheAdapterTauri(db);
       const instance = new NDK({
         explicitRelayUrls,
-        cacheAdapter: tauriAdapter,
-        outboxRelayUrls: ['wss://purplepag.es'],
+        outboxRelayUrls,
+        blacklistRelayUrls,
         enableOutboxModel: outbox,
         autoConnectUserRelays: true,
         autoFetchUserMutelist: true,
+        cacheAdapter: tauriAdapter,
         // clientName: 'Lume',
         // clientNip89: '',
       });
@@ -88,9 +111,9 @@ export const NDKInstance = () => {
       if (db.account) {
         const user = instance.getUser({ pubkey: db.account.pubkey });
         instance.activeUser = user;
-        db.account.contacts = [...(await user.follows(undefined, outbox))].map(
-          (user) => user.pubkey
-        );
+
+        const contacts = await user.follows(undefined /* outbox */);
+        db.account.contacts = [...contacts].map((user) => user.pubkey);
 
         // prefetch newsfeed
         await queryClient.prefetchInfiniteQuery({

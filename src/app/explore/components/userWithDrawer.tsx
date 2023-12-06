@@ -23,7 +23,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
 }) {
   const { db } = useStorage();
   const { ndk } = useNDK();
-  const { status, user } = useProfile(pubkey);
+  const { isLoading, user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
 
@@ -82,7 +82,7 @@ export const UserWithDrawer = memo(function UserWithDrawer({
       <Dialog.Portal>
         <Dialog.Content className="fixed right-0 top-0 z-50 flex h-full w-[400px] animate-slideRightAndFade items-center justify-center px-4 pb-4 pt-16 transition-all">
           <div className="h-full w-full overflow-y-auto rounded-lg border border-neutral-300 bg-neutral-200 py-3 dark:border-neutral-700 dark:bg-neutral-800">
-            {status === 'pending' ? (
+            {isLoading ? (
               <div>
                 <p>Loading...</p>
               </div>

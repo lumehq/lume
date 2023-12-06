@@ -114,7 +114,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
           <div className="flex flex-col items-center gap-1">
             <div className="inline-flex flex-col items-center">
               <h5 className="text-center text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-                {user.name || user.display_name || user.displayName || 'No name'}
+                {user?.name || user?.display_name || user?.displayName || 'No name'}
               </h5>
               {user?.nip05 ? (
                 <NIP05

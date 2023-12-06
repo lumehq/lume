@@ -6,7 +6,7 @@ import { RelayForm } from '@app/relays/components/relayForm';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
-import { CancelIcon } from '@shared/icons';
+import { CancelIcon, RefreshIcon } from '@shared/icons';
 
 import { useRelay } from '@utils/hooks/useRelay';
 
@@ -14,7 +14,7 @@ export function UserRelayList() {
   const { db } = useStorage();
   const { ndk } = useNDK();
   const { removeRelay } = useRelay();
-  const { status, data } = useQuery({
+  const { status, data, refetch } = useQuery({
     queryKey: ['relays', db.account.pubkey],
     queryFn: async () => {
       const event = await ndk.fetchEvent(
@@ -25,7 +25,7 @@ export function UserRelayList() {
         { cacheUsage: NDKSubscriptionCacheUsage.ONLY_RELAY }
       );
 
-      if (!event) throw new Error('relay set not found');
+      if (!event) return [];
       return event.tags;
     },
     refetchOnWindowFocus: false,
@@ -35,15 +35,22 @@ export function UserRelayList() {
 
   return (
     <div className="col-span-1">
-      <div className="inline-flex h-16 w-full items-center border-b border-neutral-100 px-3 dark:border-neutral-900">
+      <div className="inline-flex h-16 w-full items-center justify-between border-b border-neutral-100 px-3 dark:border-neutral-900">
         <h3 className="font-semibold">Connected relays</h3>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900"
+        >
+          <RefreshIcon className="h-4 w-4" />
+        </button>
       </div>
       <div className="mt-3 flex flex-col gap-2 px-3">
         {status === 'pending' ? (
           <p>Loading...</p>
-        ) : !data ? (
-          <div className="flex h-20 w-full items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900">
-            <p className="text-sm font-medium">You not have personal relay set yet</p>
+        ) : !data.length ? (
+          <div className="flex h-20 w-full items-center justify-center rounded-xl bg-neutral-50 dark:bg-neutral-950">
+            <p className="text-sm font-medium">You not have personal relay list yet</p>
           </div>
         ) : (
           data.map((item) => (
@@ -68,8 +75,8 @@ export function UserRelayList() {
                 </p>
               </div>
               <div className="inline-flex items-center gap-2">
-                {item[2] ? (
-                  <div className="inline-flex h-6 w-max items-center justify-center rounded bg-neutral-200 px-2 text-xs font-medium capitalize dark:bg-neutral-900">
+                {item[2]?.length ? (
+                  <div className="inline-flex h-6 w-max items-center justify-center rounded bg-neutral-200 px-2 text-xs font-medium capitalize dark:bg-neutral-800">
                     {item[2]}
                   </div>
                 ) : null}

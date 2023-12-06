@@ -1,14 +1,11 @@
 import { NDKTag } from '@nostr-dev-kit/ndk';
 import { downloadDir } from '@tauri-apps/api/path';
 import { download } from '@tauri-apps/plugin-upload';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import {
-  MediaControlBar,
-  MediaController,
-  MediaFullscreenButton,
-  MediaMuteButton,
-  MediaPlayButton,
-  MediaTimeRange,
-} from 'media-chrome/dist/react';
+  DefaultVideoLayout,
+  defaultLayoutIcons,
+} from '@vidstack/react/player/layouts/default';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -50,18 +47,15 @@ export function FileKind({ tags }: { tags: NDKTag[] }) {
 
   if (type === 'video') {
     return (
-      <MediaController
-        key={url}
-        className="aspect-video w-full overflow-hidden rounded-lg"
+      <MediaPlayer
+        src={url}
+        className="w-full overflow-hidden rounded-lg"
+        aspectRatio="16/9"
+        load="visible"
       >
-        <video slot="media" src={url} preload="metadata" muted />
-        <MediaControlBar>
-          <MediaPlayButton></MediaPlayButton>
-          <MediaTimeRange></MediaTimeRange>
-          <MediaMuteButton></MediaMuteButton>
-          <MediaFullscreenButton></MediaFullscreenButton>
-        </MediaControlBar>
-      </MediaController>
+        <MediaProvider />
+        <DefaultVideoLayout icons={defaultLayoutIcons} />
+      </MediaPlayer>
     );
   }
 

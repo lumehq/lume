@@ -17,6 +17,7 @@ import { CancelIcon, ZapIcon } from '@shared/icons';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
 import { compactNumber } from '@utils/number';
+import { displayNpub } from '@utils/shortenKey';
 
 export function NoteZap({ event }: { event: NDKEvent }) {
   const nwc = useRef(null);
@@ -119,7 +120,8 @@ export function NoteZap({ event }: { event: NDKEvent }) {
             <div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
               <div className="w-6" />
               <Dialog.Title className="text-center font-semibold">
-                Send tip to {user?.name || user?.display_name || user?.displayName}
+                Send tip to{' '}
+                {user?.name || user?.displayName || displayNpub(event.pubkey, 16)}
               </Dialog.Title>
               <Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-900">
                 <CancelIcon className="h-4 w-4" />

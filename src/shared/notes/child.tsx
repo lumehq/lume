@@ -4,10 +4,20 @@ import { User } from '@shared/user';
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function ChildNote({ id, isRoot }: { id: string; isRoot?: boolean }) {
-  const { status, data } = useEvent(id);
+  const { isFetching, isError, data } = useEvent(id);
 
-  if (status === 'pending' || !data) {
+  if (isFetching) {
     return <NoteSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="relative flex gap-3">
+        <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
+          Failed to fetch event
+        </div>
+      </div>
+    );
   }
 
   return (

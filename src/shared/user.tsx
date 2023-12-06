@@ -40,20 +40,33 @@ export const User = memo(function User({
   embedProfile?: string;
   subtext?: string;
 }) {
-  const { status, user } = useProfile(pubkey, embedProfile);
+  const { isLoading, user } = useProfile(pubkey, embedProfile);
 
-  const createdAt = useMemo(() => formatCreatedAt(time, variant === 'chat'), [pubkey]);
-  const svgURI = useMemo(
+  const createdAt = useMemo(() => formatCreatedAt(time, variant === 'chat'), [time]);
+  const fallbackName = useMemo(() => displayNpub(pubkey, 16), [pubkey]);
+  const fallbackAvatar = useMemo(
     () => 'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50)),
     [pubkey]
   );
 
   if (variant === 'mention') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="flex items-center gap-2">
-          <div className="h-6 w-6 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-          <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          <Avatar.Root className="shrink-0">
+            <Avatar.Image
+              src={fallbackAvatar}
+              alt={pubkey}
+              className="h-6 w-6 rounded-md bg-black dark:bg-white"
+            />
+          </Avatar.Root>
+          <div className="flex flex-1 items-baseline gap-2">
+            <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+              {fallbackName}
+            </h5>
+            <span className="text-neutral-600 dark:text-neutral-400">·</span>
+            <span className="text-neutral-600 dark:text-neutral-400">{createdAt}</span>
+          </div>
         </div>
       );
     }
@@ -70,7 +83,7 @@ export const User = memo(function User({
           />
           <Avatar.Fallback delayMs={300}>
             <img
-              src={svgURI}
+              src={fallbackAvatar}
               alt={pubkey}
               className="h-6 w-6 rounded-md bg-black dark:bg-white"
             />
@@ -78,10 +91,7 @@ export const User = memo(function User({
         </Avatar.Root>
         <div className="flex flex-1 items-baseline gap-2">
           <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
-            {user?.name ||
-              user?.display_name ||
-              user?.displayName ||
-              displayNpub(pubkey, 16)}
+            {user?.name || user?.display_name || user?.displayName || fallbackName}
           </h5>
           <span className="text-neutral-600 dark:text-neutral-400">·</span>
           <span className="text-neutral-600 dark:text-neutral-400">{createdAt}</span>
@@ -91,11 +101,19 @@ export const User = memo(function User({
   }
 
   if (variant === 'notify') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-          <div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          <Avatar.Root className="h-8 w-8 shrink-0">
+            <Avatar.Image
+              src={fallbackAvatar}
+              alt={pubkey}
+              className="h-8 w-8 rounded-md bg-black dark:bg-white"
+            />
+          </Avatar.Root>
+          <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+            {fallbackName}
+          </h5>
         </div>
       );
     }
@@ -112,24 +130,21 @@ export const User = memo(function User({
           />
           <Avatar.Fallback delayMs={300}>
             <img
-              src={svgURI}
+              src={fallbackAvatar}
               alt={pubkey}
               className="h-8 w-8 rounded-md bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>
         <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
-          {user?.name ||
-            user?.display_name ||
-            user?.displayName ||
-            displayNpub(pubkey, 16)}
+          {user?.name || user?.display_name || user?.displayName || fallbackName}
         </h5>
       </div>
     );
   }
 
   if (variant === 'large') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="flex items-center gap-2.5">
           <div className="h-14 w-14 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
@@ -153,7 +168,7 @@ export const User = memo(function User({
           />
           <Avatar.Fallback delayMs={300}>
             <img
-              src={svgURI}
+              src={fallbackAvatar}
               alt={pubkey}
               className="h-11 w-11 rounded-lg bg-black dark:bg-white"
             />
@@ -172,7 +187,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'simple') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="flex items-center gap-2.5">
           <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
@@ -196,7 +211,7 @@ export const User = memo(function User({
           />
           <Avatar.Fallback delayMs={300}>
             <img
-              src={svgURI}
+              src={fallbackAvatar}
               alt={pubkey}
               className="h-10 w-10 rounded-lg bg-black dark:bg-white"
             />
@@ -207,7 +222,7 @@ export const User = memo(function User({
             {user?.name || user?.display_name || user?.displayName}
           </h3>
           <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/70">
-            {user?.nip05 || user?.username || displayNpub(pubkey, 16)}
+            {user?.nip05 || user?.username || fallbackName}
           </p>
         </div>
       </div>
@@ -215,7 +230,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'avatar') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="h-12 w-12 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
       );
@@ -232,7 +247,7 @@ export const User = memo(function User({
         />
         <Avatar.Fallback delayMs={300}>
           <img
-            src={svgURI}
+            src={fallbackAvatar}
             alt={pubkey}
             className="h-12 w-12 rounded-lg bg-black dark:bg-white"
           />
@@ -242,7 +257,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'miniavatar') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
       );
@@ -259,7 +274,7 @@ export const User = memo(function User({
         />
         <Avatar.Fallback delayMs={300}>
           <img
-            src={svgURI}
+            src={fallbackAvatar}
             alt={pubkey}
             className="h-10 w-10 rounded-lg bg-black dark:bg-white"
           />
@@ -269,9 +284,23 @@ export const User = memo(function User({
   }
 
   if (variant === 'childnote') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
-        <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+        <>
+          <Avatar.Root className="h-10 w-10 shrink-0">
+            <Avatar.Image
+              src={fallbackAvatar}
+              alt={pubkey}
+              className="h-10 w-10 rounded-lg bg-black object-cover dark:bg-white"
+            />
+          </Avatar.Root>
+          <div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
+            <div className="w-full max-w-[10rem] truncate">{fallbackName} </div>
+            <div className="font-normal text-neutral-700 dark:text-neutral-300">
+              {subtext}:
+            </div>
+          </div>
+        </>
       );
     }
 
@@ -287,7 +316,7 @@ export const User = memo(function User({
           />
           <Avatar.Fallback delayMs={300}>
             <img
-              src={svgURI}
+              src={fallbackAvatar}
               alt={pubkey}
               className="h-10 w-10 rounded-lg bg-black dark:bg-white"
             />
@@ -295,10 +324,7 @@ export const User = memo(function User({
         </Avatar.Root>
         <div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
           <div className="w-full max-w-[10rem] truncate">
-            {user?.display_name ||
-              user?.name ||
-              user?.displayName ||
-              displayNpub(pubkey, 16)}{' '}
+            {user?.display_name || user?.name || user?.displayName || fallbackName}{' '}
           </div>
           <div className="font-normal text-neutral-700 dark:text-neutral-300">
             {subtext}:
@@ -309,7 +335,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'stacked') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="inline-block h-8 w-8 animate-pulse rounded-full bg-neutral-300 ring-1 ring-neutral-200 dark:bg-neutral-700 dark:ring-neutral-800" />
       );
@@ -326,7 +352,7 @@ export const User = memo(function User({
         />
         <Avatar.Fallback delayMs={300}>
           <img
-            src={svgURI}
+            src={fallbackAvatar}
             alt={pubkey}
             className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-neutral-200 dark:bg-white dark:ring-neutral-800"
           />
@@ -336,7 +362,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'ministacked') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="inline-block h-6 w-6 animate-pulse rounded-full bg-neutral-300 ring-1 ring-white dark:ring-black" />
       );
@@ -353,7 +379,7 @@ export const User = memo(function User({
         />
         <Avatar.Fallback delayMs={300}>
           <img
-            src={svgURI}
+            src={fallbackAvatar}
             alt={pubkey}
             className="inline-block h-6 w-6 rounded-full bg-black ring-1 ring-white dark:bg-white dark:ring-black"
           />
@@ -363,7 +389,7 @@ export const User = memo(function User({
   }
 
   if (variant === 'repost') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
         <div className="flex gap-3">
           <div className="inline-flex h-10 w-10 items-center justify-center">
@@ -389,11 +415,11 @@ export const User = memo(function User({
               alt={pubkey}
               loading="lazy"
               decoding="async"
-              className="h-6 w-6 rounded"
+              className="h-6 w-6 rounded object-cover"
             />
             <Avatar.Fallback delayMs={300}>
               <img
-                src={svgURI}
+                src={fallbackAvatar}
                 alt={pubkey}
                 className="h-6 w-6 rounded bg-black dark:bg-white"
               />
@@ -401,10 +427,7 @@ export const User = memo(function User({
           </Avatar.Root>
           <div className="inline-flex items-baseline gap-1">
             <h5 className="max-w-[10rem] truncate font-medium text-neutral-900 dark:text-neutral-100/80">
-              {user?.name ||
-                user?.display_name ||
-                user?.displayName ||
-                displayNpub(pubkey, 16)}
+              {user?.name || user?.display_name || user?.displayName || fallbackName}
             </h5>
             <span className="text-blue-500">reposted</span>
           </div>
@@ -414,13 +437,13 @@ export const User = memo(function User({
   }
 
   if (variant === 'thread') {
-    if (status === 'pending') {
+    if (isLoading) {
       return (
-        <div className="flex items-center gap-3">
+        <div className="flex h-16 items-center gap-3 px-3">
           <div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col gap-1">
             <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-            <div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+            <div className="h-3 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
           </div>
         </div>
       );
@@ -434,11 +457,11 @@ export const User = memo(function User({
             alt={pubkey}
             loading="lazy"
             decoding="async"
-            className="h-10 w-10 rounded-lg ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
+            className="h-10 w-10 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
           />
           <Avatar.Fallback delayMs={300}>
             <img
-              src={svgURI}
+              src={fallbackAvatar}
               alt={pubkey}
               className="h-10 w-10 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
             />
@@ -451,19 +474,27 @@ export const User = memo(function User({
           <div className="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
             <span>{createdAt}</span>
             <span>·</span>
-            <span>{displayNpub(pubkey, 16)}</span>
+            <span>{fallbackName}</span>
           </div>
         </div>
       </div>
     );
   }
 
-  if (status === 'pending') {
+  if (isLoading) {
     return (
       <div className="flex items-center gap-3 px-3">
-        <div className="h-9 w-9 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+        <Avatar.Root className="h-9 w-9 shrink-0">
+          <Avatar.Image
+            src={fallbackAvatar}
+            alt={pubkey}
+            className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
+          />
+        </Avatar.Root>
         <div className="h-6 flex-1">
-          <div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+          <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
+            {fallbackName}
+          </div>
         </div>
       </div>
     );
@@ -483,7 +514,7 @@ export const User = memo(function User({
             />
             <Avatar.Fallback delayMs={300}>
               <img
-                src={svgURI}
+                src={fallbackAvatar}
                 alt={pubkey}
                 className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
               />
@@ -492,10 +523,7 @@ export const User = memo(function User({
         </HoverCard.Trigger>
         <div className="flex h-6 flex-1 items-start gap-2">
           <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
-            {user?.name ||
-              user?.display_name ||
-              user?.displayName ||
-              displayNpub(pubkey, 16)}
+            {user?.name || user?.display_name || user?.displayName || fallbackName}
           </div>
           <div className="ml-auto inline-flex items-center gap-3">
             <div className="text-neutral-500 dark:text-neutral-400">{createdAt}</div>
@@ -515,11 +543,11 @@ export const User = memo(function User({
                 alt={pubkey}
                 loading="lazy"
                 decoding="async"
-                className="h-10 w-10 rounded-lg"
+                className="h-10 w-10 rounded-lg object-cover"
               />
               <Avatar.Fallback delayMs={300}>
                 <img
-                  src={svgURI}
+                  src={fallbackAvatar}
                   alt={pubkey}
                   className="h-10 w-10 rounded-lg bg-black dark:bg-white"
                 />
@@ -541,7 +569,7 @@ export const User = memo(function User({
                   />
                 ) : (
                   <span className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300">
-                    {displayNpub(pubkey, 16)}
+                    {fallbackName}
                   </span>
                 )}
               </div>

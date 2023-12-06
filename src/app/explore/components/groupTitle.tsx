@@ -3,9 +3,9 @@ import { memo } from 'react';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export const GroupTitle = memo(function GroupTitle({ pubkey }: { pubkey: string }) {
-  const { status, user } = useProfile(pubkey);
+  const { isLoading, user } = useProfile(pubkey);
 
-  if (status === 'pending') {
+  if (isLoading) {
     return <div className="h-3 w-24 animate-pulse rounded bg-white/10" />;
   }
 
