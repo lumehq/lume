@@ -31,8 +31,6 @@ export function LiveUpdater({ status }: { status: QueryStatus }) {
     let sub: NDKSubscription = undefined;
 
     if (status === 'success' && db.account && db.account?.contacts?.length > 0) {
-      queryClient.fetchQuery({ queryKey: ['notification'] });
-
       const filter: NDKFilter = {
         kinds: [NDKKind.Text, NDKKind.Repost],
         authors: db.account.contacts,

@@ -48,7 +48,7 @@ export function ImportAccountScreen() {
       const localSigner = NDKPrivateKeySigner.generate();
 
       await db.createSetting('nsecbunker', '1');
-      await db.secureSave(`${pubkey}-nsecbunker`, localSigner.privateKey);
+      await db.secureSave(`${npub}-nsecbunker`, localSigner.privateKey);
 
       // open nsecbunker web app in default browser
       await open('https://app.nsecbunker.com/keys');
@@ -56,7 +56,7 @@ export function ImportAccountScreen() {
       const bunker = new NDK({
         explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
       });
-      bunker.connect();
+      await bunker.connect();
 
       const remoteSigner = new NDKNip46Signer(bunker, npub, localSigner);
       await remoteSigner.blockUntilReady();

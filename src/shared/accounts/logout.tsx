@@ -19,7 +19,7 @@ export function Logout() {
 
       // remove private key
       await db.secureRemove(db.account.pubkey);
-      await db.secureRemove(`${db.account.pubkey}-nsecbunker`);
+      await db.secureRemove(`${db.account.id}-nsecbunker`);
 
       // logout
       await db.accountLogout();
