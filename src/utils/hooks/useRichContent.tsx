@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import {
   Hashtag,
@@ -46,7 +46,7 @@ const VIDEOS = [
 ];
 
 export function useRichContent(content: string, textmode: boolean = false) {
-  const { db } = useStorage();
+  const { ark } = useArk();
 
   let parsedContent: string | ReactNode[] = content.replace(/\n+/g, '\n');
   let linkPreview: string;
@@ -58,7 +58,7 @@ export function useRichContent(content: string, textmode: boolean = false) {
   const words = text.split(/( |\n)/);
 
   if (!textmode) {
-    if (db.settings.media) {
+    if (ark.settings.media) {
       images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
       videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
     }
@@ -90,7 +90,7 @@ export function useRichContent(content: string, textmode: boolean = false) {
     if (hashtags.length) {
       hashtags.forEach((hashtag) => {
         parsedContent = reactStringReplace(parsedContent, hashtag, (match, i) => {
-          if (db.settings.hashtag) return <Hashtag key={match + i} tag={hashtag} />;
+          if (ark.settings.hashtag) return <Hashtag key={match + i} tag={hashtag} />;
           return null;
         });
       });

@@ -1,23 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { EditIcon, LoaderIcon } from '@shared/icons';
 
 import { compactNumber } from '@utils/number';
 
 export function RelayCard() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { status, data } = useQuery({
-    queryKey: ['relays'],
+    queryKey: ['relays', ark.account.pubkey],
     queryFn: async () => {
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const relays = await user.relayList();
-
-      if (!relays) return Promise.reject(new Error("user's relay set not found"));
+      const relays = await ark.getUserRelays({});
       return relays;
     },
     refetchOnWindowFocus: false,

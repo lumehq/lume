@@ -1,21 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function EditContactScreen() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { status, data } = useQuery({
     queryKey: ['contacts'],
     queryFn: async () => {
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-
-      const follows = await user.follows();
-      return [...follows];
+      return await ark.getUserContacts({});
     },
     refetchOnWindowFocus: false,
   });
@@ -29,10 +24,10 @@ export function EditContactScreen() {
       ) : (
         data.map((item) => (
           <div
-            key={item.pubkey}
+            key={item}
             className="flex h-16 w-full items-center justify-between rounded-xl bg-neutral-100 px-2.5 dark:bg-neutral-900"
           >
-            <User pubkey={item.pubkey} variant="simple" />
+            <User pubkey={item} variant="simple" />
           </div>
         ))
       )}

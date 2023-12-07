@@ -8,16 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function ImportAccountScreen() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
   const [npub, setNpub] = useState<string>('');
   const [nsec, setNsec] = useState<string>('');
   const [pubkey, setPubkey] = useState<undefined | string>(undefined);
@@ -25,6 +21,7 @@ export function ImportAccountScreen() {
   const [created, setCreated] = useState({ ok: false, remote: false });
   const [savedPrivkey, setSavedPrivkey] = useState(false);
 
+  const { ark } = useArk();
   const navigate = useNavigate();
 
   const submitNpub = async () => {
@@ -47,8 +44,8 @@ export function ImportAccountScreen() {
       const pubkey = nip19.decode(npub.split('#')[0]).data as string;
       const localSigner = NDKPrivateKeySigner.generate();
 
-      await db.createSetting('nsecbunker', '1');
-      await db.secureSave(`${pubkey}-nsecbunker`, localSigner.privateKey);
+      await ark.createSetting('nsecbunker', '1');
+      await ark.createPrivkey(`${pubkey}-nsecbunker`, localSigner.privateKey);
 
       // open nsecbunker web app in default browser
       await open('https://app.nsecbunker.com/keys');
@@ -60,8 +57,7 @@ export function ImportAccountScreen() {
 
       const remoteSigner = new NDKNip46Signer(bunker, npub, localSigner);
       await remoteSigner.blockUntilReady();
-
-      ndk.signer = remoteSigner;
+      ark.updateNostrSigner({ signer: remoteSigner });
 
       setPubkey(pubkey);
       setCreated({ ok: false, remote: true });
@@ -80,14 +76,10 @@ export function ImportAccountScreen() {
       setLoading(true);
 
       // add account to db
-      await db.createAccount(npub, pubkey);
+      await ark.createAccount(npub, pubkey);
 
-      // get account metadata
-      const user = ndk.getUser({ pubkey });
-      if (user) {
-        db.account.contacts = [...(await user.follows())].map((user) => user.pubkey);
-        db.account.relayList = await user.relayList();
-      }
+      // get account contacts
+      await ark.getUserContacts({ pubkey });
 
       setCreated((prev) => ({ ...prev, ok: true }));
       setLoading(false);
@@ -109,9 +101,8 @@ export function ImportAccountScreen() {
     if (nsec.length > 50 && nsec.startsWith('nsec1')) {
       try {
         const privkey = nip19.decode(nsec).data as string;
-        await db.secureSave(pubkey, privkey);
-
-        ndk.signer = new NDKPrivateKeySigner(privkey);
+        await ark.createPrivkey(pubkey, privkey);
+        ark.updateNostrSigner({ signer: new NDKPrivateKeySigner(privkey) });
 
         setSavedPrivkey(true);
       } catch (e) {
@@ -290,9 +281,9 @@ export function ImportAccountScreen() {
                     <p className="text-sm">
                       Lume will put your private key to{' '}
                       <b>
-                        {db.platform === 'macos'
+                        {ark.platform === 'macos'
                           ? 'Apple Keychain (macOS)'
-                          : db.platform === 'windows'
+                          : ark.platform === 'windows'
                             ? 'Credential Manager (Windows)'
                             : 'Secret Service (Linux)'}
                       </b>

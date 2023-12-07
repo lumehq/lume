@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKKind } from '@nostr-dev-kit/ndk';
 import * as Accordion from '@radix-ui/react-accordion';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import {
   ArrowLeftIcon,
@@ -37,8 +36,7 @@ const POPULAR_USERS = [
 const LUME_USERS = ['npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445'];
 
 export function FollowScreen() {
-  const { ndk } = useNDK();
-  const { db } = useStorage();
+  const { ark } = useArk();
   const { status, data } = useQuery({
     queryKey: ['trending-profiles-widget'],
     queryFn: async () => {
@@ -68,16 +66,16 @@ export function FollowScreen() {
       setLoading(true);
       if (!follows.length) return navigate('/auth/finish');
 
-      const event = new NDKEvent(ndk);
-      event.kind = NDKKind.Contacts;
-      event.tags = follows.map((item) => {
-        if (item.startsWith('npub')) return ['p', nip19.decode(item).data as string];
-        return ['p', item];
+      const publish = await ark.createEvent({
+        kind: NDKKind.Contacts,
+        tags: follows.map((item) => {
+          if (item.startsWith('npub')) return ['p', nip19.decode(item).data as string];
+          return ['p', item];
+        }),
       });
 
-      const publish = await event.publish();
       if (publish) {
-        db.account.contacts = follows.map((item) => {
+        ark.account.contacts = follows.map((item) => {
           if (item.startsWith('npub')) return nip19.decode(item).data as string;
           return item;
         });

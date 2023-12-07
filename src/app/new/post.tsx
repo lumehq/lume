@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 
 import { MediaUploader, MentionPopup } from '@app/new/components';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
@@ -23,7 +23,7 @@ import { useSuggestion } from '@utils/hooks/useSuggestion';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NewPostScreen() {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { addWidget } = useWidget();
   const { suggestion } = useSuggestion();
 
@@ -68,7 +68,7 @@ export function NewPostScreen() {
 
   const submit = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setLoading(true);
 
@@ -81,7 +81,7 @@ export function NewPostScreen() {
         ],
       });
 
-      const event = new NDKEvent(ndk);
+      const event = new NDKEvent();
       event.content = serializedContent;
       event.kind = NDKKind.Text;
 
@@ -100,7 +100,10 @@ export function NewPostScreen() {
       }
 
       // publish event
-      const publishedRelays = await event.publish();
+      const publishedRelays = await ark.createEvent({
+        kind: NDKKind.Text,
+        content: serializedContent,
+      });
 
       if (publishedRelays) {
         toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);

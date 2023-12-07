@@ -4,19 +4,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function NewPrivkeyScreen() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
-  const [nsec, setNsec] = useState('');
+  const { ark } = useArk();
   const navigate = useNavigate();
 
-  const save = async (content: string) => {
-    return await db.secureSave(db.account.pubkey, content);
-  };
+  const [nsec, setNsec] = useState('');
 
   const submit = async (isSave?: boolean) => {
     try {
@@ -30,15 +24,15 @@ export function NewPrivkeyScreen() {
       const privkey = decoded.data;
       const pubkey = getPublicKey(privkey);
 
-      if (pubkey !== db.account.pubkey)
+      if (pubkey !== ark.account.pubkey)
         return toast.info(
           'Your nsec is not match your current public key, please make sure you enter right nsec'
         );
 
       const signer = new NDKPrivateKeySigner(privkey);
-      ndk.signer = signer;
+      ark.updateNostrSigner({ signer });
 
-      if (isSave) await save(privkey);
+      if (isSave) await ark.createPrivkey(ark.account.pubkey, privkey);
 
       navigate(-1);
     } catch (e) {

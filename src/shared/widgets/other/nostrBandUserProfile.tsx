@@ -1,10 +1,8 @@
-import { NDKUser } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { FollowIcon } from '@shared/icons';
 
@@ -16,9 +14,7 @@ export interface Profile {
 }
 
 export function NostrBandUserProfile({ data }: { data: Profile }) {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
+  const { ark } = useArk();
   const [followed, setFollowed] = useState(false);
   const navigate = useNavigate();
 
@@ -26,12 +22,10 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
 
   const follow = async (pubkey: string) => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
       setFollowed(true);
 
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const contacts = await user.follows();
-      const add = await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
+      const add = ark.createContact({ pubkey });
 
       if (!add) {
         toast.success('You already follow this user');
@@ -44,7 +38,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
   };
 
   useEffect(() => {
-    if (db.account.contacts.includes(data.pubkey)) {
+    if (ark.account.contacts.includes(data.pubkey)) {
       setFollowed(true);
     }
   }, []);

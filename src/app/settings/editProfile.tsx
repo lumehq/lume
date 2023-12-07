@@ -1,29 +1,21 @@
-import { NDKEvent, NDKKind, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKKind, NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQueryClient } from '@tanstack/react-query';
 import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { CheckCircleIcon, LoaderIcon, PlusIcon, UnverifiedIcon } from '@shared/icons';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function EditProfileScreen() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState('');
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: true, text: '' });
 
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-  const { upload } = useNostr();
+  const { ark } = useArk();
   const {
     register,
     handleSubmit,
@@ -32,7 +24,7 @@ export function EditProfileScreen() {
     formState: { isValid, errors },
   } = useForm({
     defaultValues: async () => {
-      const res: NDKUserProfile = queryClient.getQueryData(['user', db.account.pubkey]);
+      const res: NDKUserProfile = queryClient.getQueryData(['user', ark.account.pubkey]);
       if (res.image) {
         setPicture(res.image);
       }
@@ -46,13 +38,16 @@ export function EditProfileScreen() {
     },
   });
 
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const uploadAvatar = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setLoading(true);
 
-      const image = await upload();
+      const image = await ark.upload({});
       if (image) {
         setPicture(image);
         setLoading(false);
@@ -67,7 +62,7 @@ export function EditProfileScreen() {
     try {
       setLoading(true);
 
-      const image = await upload();
+      const image = await ark.upload({});
 
       if (image) {
         setBanner(image);
@@ -83,7 +78,7 @@ export function EditProfileScreen() {
     // start loading
     setLoading(true);
 
-    const content = {
+    let content = {
       ...data,
       username: data.name,
       display_name: data.name,
@@ -91,15 +86,10 @@ export function EditProfileScreen() {
       image: data.picture,
     };
 
-    const event = new NDKEvent(ndk);
-    event.kind = NDKKind.Metadata;
-    event.tags = [];
-
     if (data.nip05) {
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const verify = await user.validateNip05(data.nip05);
+      const verify = ark.validateNIP05({ pubkey: ark.account.pubkey, nip05: data.nip05 });
       if (verify) {
-        event.content = JSON.stringify({ ...content, nip05: data.nip05 });
+        content = { ...content, nip05: data.nip05 };
       } else {
         setNIP05((prev) => ({ ...prev, verified: false }));
         setError('nip05', {
@@ -107,16 +97,19 @@ export function EditProfileScreen() {
           message: "Can't verify your Lume ID / NIP-05, please check again",
         });
       }
-    } else {
-      event.content = JSON.stringify(content);
     }
 
-    const publishedRelays = await event.publish();
+    const publish = await ark.createEvent({
+      kind: NDKKind.Metadata,
+      tags: [],
+      content: JSON.stringify(content),
+      publish: true,
+    });
 
-    if (publishedRelays) {
+    if (publish) {
       // invalid cache
       queryClient.invalidateQueries({
-        queryKey: ['user', db.account.pubkey],
+        queryKey: ['user', ark.account.pubkey],
       });
       // reset form
       reset();

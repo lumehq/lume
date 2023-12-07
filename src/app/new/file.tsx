@@ -1,16 +1,15 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { message, open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 
 export function NewFileScreen() {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -86,20 +85,21 @@ export function NewFileScreen() {
 
   const submit = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setIsPublish(true);
 
-      const event = new NDKEvent(ndk);
-      event.content = caption;
-      event.kind = 1063;
-      event.tags = metadata;
+      const publish = await ark.createEvent({
+        kind: 1063,
+        tags: metadata,
+        content: caption,
+        publish: true,
+      });
 
-      const publishedRelays = await event.publish();
-      if (publishedRelays) {
+      if (publish) {
+        toast.success(`Broadcasted to ${publish} relays successfully.`);
         setMetadata(null);
         setIsPublish(false);
-        toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
       }
     } catch (e) {
       setIsPublish(false);
