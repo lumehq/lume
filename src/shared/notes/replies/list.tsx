@@ -1,38 +1,42 @@
+import { NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
+
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import { Reply } from '@shared/notes';
 
-import { useNostr } from '@utils/hooks/useNostr';
 import { NDKEventWithReplies } from '@utils/types';
 
 export function ReplyList({ eventId }: { eventId: string }) {
-  const { fetchAllReplies, sub } = useNostr();
+  const { ark } = useArk();
   const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
 
   useEffect(() => {
+    let sub: NDKSubscription;
     let isCancelled = false;
 
     async function fetchRepliesAndSub() {
-      const events = await fetchAllReplies(eventId);
+      const events = await ark.getThreads({ id: eventId });
       if (!isCancelled) {
         setData(events);
       }
       // subscribe for new replies
-      sub(
-        {
+      sub = ark.subscribe({
+        filter: {
           '#e': [eventId],
           since: Math.floor(Date.now() / 1000),
         },
-        (event: NDKEventWithReplies) => setData((prev) => [event, ...prev]),
-        false
-      );
+        closeOnEose: false,
+        cb: (event: NDKEventWithReplies) => setData((prev) => [event, ...prev]),
+      });
     }
 
     fetchRepliesAndSub();
 
     return () => {
       isCancelled = true;
+      if (sub) sub.stop();
     };
   }, [eventId]);
 
@@ -59,7 +63,7 @@ export function ReplyList({ eventId }: { eventId: string }) {
           </div>
         </div>
       ) : (
-        data.map((event) => <Reply key={event.id} event={event} root={eventId} />)
+        data.map((event) => <Reply key={event.id} event={event} />)
       )}
     </div>
   );

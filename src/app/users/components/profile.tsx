@@ -1,4 +1,3 @@
-import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { useEffect, useState } from 'react';
@@ -7,8 +6,7 @@ import { toast } from 'sonner';
 
 import { UserStats } from '@app/users/components/stats';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { NIP05 } from '@shared/nip05';
 
@@ -16,8 +14,7 @@ import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
@@ -28,12 +25,10 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const follow = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
       setFollowed(true);
 
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const contacts = await user.follows();
-      const add = await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
+      const add = await ark.createContact({ pubkey });
 
       if (!add) {
         toast.success('You already follow this user');
@@ -47,32 +42,17 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const unfollow = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
       setFollowed(false);
 
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const contacts = await user.follows();
-      contacts.delete(new NDKUser({ pubkey: pubkey }));
-
-      const list = [...contacts].map((item) => [
-        'p',
-        item.pubkey,
-        item.relayUrls?.[0] || '',
-        '',
-      ]);
-      const event = new NDKEvent(ndk);
-      event.content = '';
-      event.kind = NDKKind.Contacts;
-      event.tags = list;
-
-      await event.publish();
+      await ark.deleteContact({ pubkey });
     } catch (e) {
       toast.error(e);
     }
   };
 
   useEffect(() => {
-    if (db.account.contacts.includes(pubkey)) {
+    if (ark.account.contacts.includes(pubkey)) {
       setFollowed(true);
     }
   }, []);

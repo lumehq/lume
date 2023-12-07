@@ -7,7 +7,7 @@ import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
 import { ExploreScreen } from '@app/explore';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
@@ -19,12 +19,12 @@ import { SettingsLayout } from '@shared/layouts/settings';
 import './app.css';
 
 export default function App() {
-  const { db } = useStorage();
+  const { ark } = useArk();
 
   const accountLoader = async () => {
     try {
       // redirect to welcome screen if none user exist
-      const totalAccount = await db.checkAccount();
+      const totalAccount = await ark.checkAccount();
       if (totalAccount === 0) return redirect('/auth/welcome');
 
       return null;

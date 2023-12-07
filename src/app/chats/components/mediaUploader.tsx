@@ -1,22 +1,24 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { LoaderIcon, MediaIcon } from '@shared/icons';
+import { useArk } from '@libs/ark';
 
-import { useNostr } from '@utils/hooks/useNostr';
+import { LoaderIcon, MediaIcon } from '@shared/icons';
 
 export function MediaUploader({
   setState,
 }: {
   setState: Dispatch<SetStateAction<string>>;
 }) {
-  const { upload } = useNostr();
+  const { ark } = useArk();
   const [loading, setLoading] = useState(false);
 
   const uploadMedia = async () => {
     setLoading(true);
 
-    const image = await upload(['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov']);
+    const image = await ark.upload({
+      fileExts: ['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov'],
+    });
 
     if (image) {
       setState((prev: string) => `${prev}\n${image}`);

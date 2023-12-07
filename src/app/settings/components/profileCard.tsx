@@ -2,7 +2,7 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { Link } from 'react-router-dom';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { EditIcon, LoaderIcon } from '@shared/icons';
 
@@ -10,12 +10,12 @@ import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export function ProfileCard() {
-  const { db } = useStorage();
-  const { isLoading, user } = useProfile(db.account.pubkey);
+  const { ark } = useArk();
+  const { isLoading, user } = useProfile(ark.account.pubkey);
 
   const svgURI =
     'data:image/svg+xml;utf8,' +
-    encodeURIComponent(minidenticon(db.account.pubkey, 90, 50));
+    encodeURIComponent(minidenticon(ark.account.pubkey, 90, 50));
 
   return (
     <div className="mb-4 h-56 w-full rounded-2xl bg-neutral-100 transition-all duration-150 ease-smooth hover:scale-105 dark:bg-neutral-900">
@@ -38,7 +38,7 @@ export function ProfileCard() {
             <Avatar.Root className="shrink-0">
               <Avatar.Image
                 src={user?.picture || user?.image}
-                alt={db.account.pubkey}
+                alt={ark.account.pubkey}
                 loading="lazy"
                 decoding="async"
                 style={{ contentVisibility: 'auto' }}
@@ -47,7 +47,7 @@ export function ProfileCard() {
               <Avatar.Fallback delayMs={300}>
                 <img
                   src={svgURI}
-                  alt={db.account.pubkey}
+                  alt={ark.account.pubkey}
                   className="h-16 w-16 rounded-xl bg-black dark:bg-white"
                 />
               </Avatar.Fallback>
@@ -57,7 +57,7 @@ export function ProfileCard() {
                 {user?.display_name || user?.name}
               </h3>
               <p className="text-lg text-neutral-700 dark:text-neutral-300">
-                {user?.nip05 || displayNpub(db.account.pubkey, 16)}
+                {user?.nip05 || displayNpub(ark.account.pubkey, 16)}
               </p>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
 
+import { useArk } from '@libs/ark';
 import { useNDK } from '@libs/ndk/provider';
 import { useStorage } from '@libs/storage/provider';
 
@@ -12,15 +13,12 @@ import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
 import { FETCH_LIMIT } from '@utils/constants';
-import { useNostr } from '@utils/hooks/useNostr';
 import { sendNativeNotification } from '@utils/notification';
 
 export function NotificationWidget() {
   const queryClient = useQueryClient();
 
-  const { db } = useStorage();
-  const { sub } = useNostr();
-  const { ndk, relayUrls, fetcher } = useNDK();
+  const { ark } = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['notification'],

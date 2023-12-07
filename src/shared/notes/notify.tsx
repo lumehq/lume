@@ -1,20 +1,21 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
 
+import { useArk } from '@libs/ark';
+
 import { ReplyIcon, RepostIcon } from '@shared/icons';
 import { ChildNote, TextKind } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { WIDGET_KIND } from '@utils/constants';
 import { formatCreatedAt } from '@utils/createdAt';
-import { useNostr } from '@utils/hooks/useNostr';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NotifyNote({ event }: { event: NDKEvent }) {
-  const { getEventThread } = useNostr();
+  const { ark } = useArk();
   const { addWidget } = useWidget();
 
-  const thread = getEventThread(event.tags);
+  const thread = ark.getEventThread({ tags: event.tags });
   const createdAt = formatCreatedAt(event.created_at, false);
 
   if (event.kind === NDKKind.Reaction) {

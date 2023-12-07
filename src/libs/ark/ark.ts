@@ -241,10 +241,26 @@ export class Ark {
 
   /**
    * Save private key to OS secure storage
-   * @deprecated this method will be marked as private in the next update
+   * @deprecated this method will be remove in the next update
    */
   public async createPrivkey(name: string, privkey: string) {
-    await this.#keyring_save(name, privkey);
+    return await this.#keyring_save(name, privkey);
+  }
+
+  /**
+   * Load private key from OS secure storage
+   * @deprecated this method will be remove in the next update
+   */
+  public async loadPrivkey(name: string) {
+    return await this.#keyring_load(name);
+  }
+
+  /**
+   * Remove private key from OS secure storage
+   * @deprecated this method will be remove in the next update
+   */
+  public async removePrivkey(name: string) {
+    return await this.#keyring_remove(name);
   }
 
   public async updateAccount(column: string, value: string) {
@@ -458,7 +474,19 @@ export class Ark {
   public async deleteContact({ pubkey }: { pubkey: string }) {
     const user = this.#ndk.getUser({ pubkey: this.account.pubkey });
     const contacts = await user.follows();
-    return await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
+    contacts.delete(new NDKUser({ pubkey: pubkey }));
+
+    const event = new NDKEvent(this.#ndk);
+    event.content = '';
+    event.kind = NDKKind.Contacts;
+    event.tags = [...contacts].map((item) => [
+      'p',
+      item.pubkey,
+      item.relayUrls?.[0] || '',
+      '',
+    ]);
+
+    return await event.publish();
   }
 
   public async getAllEvents({ filter }: { filter: NDKFilter }) {
@@ -469,6 +497,15 @@ export class Ark {
 
   public async getEventById({ id }: { id: string }) {
     const event = await this.#ndk.fetchEvent(id, {
+      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+    });
+
+    if (!event) return null;
+    return event;
+  }
+
+  public async getEventByFilter({ filter }: { filter: NDKFilter }) {
+    const event = await this.#ndk.fetchEvent(filter, {
       cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
     });
 
@@ -549,6 +586,32 @@ export class Ark {
     }
 
     return events;
+  }
+
+  public async getAllRelaysFromContacts() {
+    const LIMIT = 1;
+    const relayMap = new Map<string, string[]>();
+    const relayEvents = this.#fetcher.fetchLatestEventsPerAuthor(
+      {
+        authors: this.account.contacts,
+        relayUrls: this.relays,
+      },
+      { kinds: [NDKKind.RelayList] },
+      LIMIT
+    );
+
+    for await (const { author, events } of relayEvents) {
+      if (events[0]) {
+        events[0].tags.forEach((tag) => {
+          const users = relayMap.get(tag[1]);
+
+          if (!users) return relayMap.set(tag[1], [author]);
+          return users.push(author);
+        });
+      }
+    }
+
+    return relayMap;
   }
 
   public async getInfiniteEvents({
