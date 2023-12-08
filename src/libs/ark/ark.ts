@@ -50,9 +50,15 @@ export class Ark {
     hashtag: boolean;
   };
 
-  constructor({ storage }: { storage: Database }) {
+  constructor({ storage, platform }: { storage: Database; platform: Platform }) {
     this.#storage = storage;
-    this.#init();
+    this.platform = platform;
+    this.settings = {
+      autoupdate: false,
+      outbox: false,
+      media: true,
+      hashtag: true,
+    };
   }
 
   async #keyring_save(key: string, value: string) {
@@ -74,10 +80,8 @@ export class Ark {
   }
 
   async #initNostrSigner({ nsecbunker }: { nsecbunker?: boolean }) {
-    if (!this.account) {
-      this.readyToSign = false;
-      return null;
-    }
+    const account = await this.getActiveAccount();
+    this.account = account;
 
     try {
       // NIP-46 Signer
@@ -128,7 +132,7 @@ export class Ark {
     }
   }
 
-  async #init() {
+  public async init() {
     const outboxSetting = await this.getSettingValue('outbox');
     const bunkerSetting = await this.getSettingValue('nsecbunker');
 
@@ -178,6 +182,7 @@ export class Ark {
       this.account.contacts = [...contacts].map((user) => user.pubkey);
     }
 
+    this.relays = [...ndk.pool.relays.values()].map((relay) => relay.url);
     this.#ndk = ndk;
     this.#fetcher = fetcher;
   }
@@ -214,10 +219,8 @@ export class Ark {
     );
 
     if (results.length) {
-      this.account = results[0];
-      this.account.contacts = [];
+      return results[0];
     } else {
-      console.log('no active account, please create new account');
       return null;
     }
   }
@@ -764,6 +767,72 @@ export class Ark {
     if (data.names[localPath] === pubkey) return true;
 
     return false;
+  }
+
+  /**
+   * Return all NIP-04 messages
+   * @deprecated NIP-04 will be replace by NIP-44 in the next update
+   */
+  public async getAllChats() {
+    const events = await this.#fetcher.fetchAllEvents(
+      this.relays,
+      {
+        kinds: [NDKKind.EncryptedDirectMessage],
+        '#p': [this.account.pubkey],
+      },
+      { since: 0 }
+    );
+
+    const dedup: NDKEvent[] = Object.values(
+      events.reduce((ev, { id, content, pubkey, created_at, tags }) => {
+        if (ev[pubkey]) {
+          if (ev[pubkey].created_at < created_at) {
+            ev[pubkey] = { id, content, pubkey, created_at, tags };
+          }
+        } else {
+          ev[pubkey] = { id, content, pubkey, created_at, tags };
+        }
+        return ev;
+      }, {})
+    );
+
+    return dedup;
+  }
+
+  /**
+   * Return all NIP-04 messages by pubkey
+   * @deprecated NIP-04 will be replace by NIP-44 in the next update
+   */
+  public async getAllMessagesByPubkey({ pubkey }: { pubkey: string }) {
+    let senderMessages: NostrEventExt<false>[] = [];
+
+    if (pubkey !== this.account.pubkey) {
+      senderMessages = await this.#fetcher.fetchAllEvents(
+        this.relays,
+        {
+          kinds: [NDKKind.EncryptedDirectMessage],
+          authors: [pubkey],
+          '#p': [this.account.pubkey],
+        },
+        { since: 0 }
+      );
+    }
+
+    const userMessages = await this.#fetcher.fetchAllEvents(
+      this.relays,
+      {
+        kinds: [NDKKind.EncryptedDirectMessage],
+        authors: [this.account.pubkey],
+        '#p': [pubkey],
+      },
+      { since: 0 }
+    );
+
+    const all = [...senderMessages, ...userMessages].sort(
+      (a, b) => a.created_at - b.created_at
+    );
+
+    return all as unknown as NDKEvent[];
   }
 
   public async nip04Decrypt({ event }: { event: NDKEvent }) {

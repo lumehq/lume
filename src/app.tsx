@@ -1,11 +1,9 @@
 import { message } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
-import { ReactFlowProvider } from 'reactflow';
 
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
-import { ExploreScreen } from '@app/explore';
 
 import { useArk } from '@libs/ark';
 
@@ -86,15 +84,6 @@ export default function App() {
             const { RelayScreen } = await import('@app/relays/relay');
             return { Component: RelayScreen };
           },
-        },
-        {
-          path: 'explore',
-          element: (
-            <ReactFlowProvider>
-              <ExploreScreen />
-            </ReactFlowProvider>
-          ),
-          errorElement: <ErrorScreen />,
         },
         {
           path: 'chats',

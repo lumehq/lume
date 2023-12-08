@@ -80,7 +80,6 @@
     "react-hotkeys-hook": "^4.4.1",
     "react-router-dom": "^6.20.1",
     "react-string-replace": "^1.1.1",
-    "reactflow": "^11.10.1",
     "sonner": "^1.2.4",
     "tauri-controls": "github:reyamir/tauri-controls",
     "tippy.js": "^6.3.7",

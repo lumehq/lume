@@ -33,7 +33,9 @@ export function NewsfeedWidget() {
         const events = await ark.getInfiniteEvents({
           filter: {
             kinds: [NDKKind.Text, NDKKind.Repost],
-            authors: ark.account.contacts,
+            authors: !ark.account.contacts.length
+              ? [ark.account.pubkey]
+              : ark.account.contacts,
           },
           limit: FETCH_LIMIT,
           pageParam,

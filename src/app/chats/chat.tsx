@@ -12,16 +12,13 @@ import { useArk } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function ChatScreen() {
   const { ark } = useArk();
   const { pubkey } = useParams();
-  const { fetchNIP04Messages } = useNostr();
   const { status, data } = useQuery({
     queryKey: ['nip04-dm', pubkey],
     queryFn: async () => {
-      return await fetchNIP04Messages(pubkey);
+      return await ark.getAllMessagesByPubkey({ pubkey });
     },
     refetchOnWindowFocus: false,
   });

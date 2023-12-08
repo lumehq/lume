@@ -15,24 +15,21 @@ import { User } from '@shared/user';
 
 export function Repost({ event }: { event: NDKEvent }) {
   const { ark } = useArk();
-  const { status, data: repostEvent } = useQuery({
+  const {
+    isLoading,
+    isError,
+    data: repostEvent,
+  } = useQuery({
     queryKey: ['repost', event.id],
     queryFn: async () => {
       try {
-        let event: NDKEvent = undefined;
-
         if (event.content.length > 50) {
           const embed = JSON.parse(event.content) as NostrEvent;
-          event = ark.createNDKEvent({ event: embed });
+          return ark.createNDKEvent({ event: embed });
         }
 
         const id = event.tags.find((el) => el[0] === 'e')[1];
-        if (!id) throw new Error('Failed to get repost event id');
-
-        event = await ark.getEventById({ id });
-
-        if (!event) return Promise.reject(new Error('Failed to get repost event'));
-        return event;
+        return await ark.getEventById({ id });
       } catch {
         throw new Error('Failed to get repost event');
       }
@@ -54,10 +51,25 @@ export function Repost({ event }: { event: NDKEvent }) {
     }
   };
 
-  if (status === 'pending') {
+  if (isLoading) {
     return (
       <div className="w-full px-3 pb-3">
         <NoteSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="mb-3 h-min w-full px-3">
+        <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
+          <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
+          <div className="relative flex flex-col gap-2">
+            <div className="px-3">
+              <p>Failed to load event</p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

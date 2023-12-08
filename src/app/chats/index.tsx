@@ -5,16 +5,16 @@ import { Outlet } from 'react-router-dom';
 
 import { ChatListItem } from '@app/chats/components/chatListItem';
 
+import { useArk } from '@libs/ark';
+
 import { LoaderIcon } from '@shared/icons';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function ChatsScreen() {
-  const { getAllNIP04Chats } = useNostr();
+  const { ark } = useArk();
   const { status, data } = useQuery({
     queryKey: ['nip04-chats'],
     queryFn: async () => {
-      return await getAllNIP04Chats();
+      return await ark.getAllChats();
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,

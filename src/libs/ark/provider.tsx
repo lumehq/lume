@@ -1,4 +1,5 @@
 import { ask } from '@tauri-apps/plugin-dialog';
+import { platform } from '@tauri-apps/plugin-os';
 import { relaunch } from '@tauri-apps/plugin-process';
 import Database from '@tauri-apps/plugin-sql';
 import { check } from '@tauri-apps/plugin-updater';
@@ -26,9 +27,10 @@ const ArkProvider = ({ children }: PropsWithChildren<object>) => {
   async function initArk() {
     try {
       const sqlite = await Database.load('sqlite:lume_v2.db');
-      const _ark = new Ark({ storage: sqlite });
+      const platformName = await platform();
 
-      if (!_ark.account) await _ark.getActiveAccount();
+      const _ark = new Ark({ storage: sqlite, platform: platformName });
+      await _ark.init();
 
       const settings = await _ark.getAllSettings();
       let autoUpdater = false;
