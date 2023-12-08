@@ -40,12 +40,9 @@ export const NIP05 = memo(function NIP05({
 
         const data: NIP05 = await res.json();
         if (data.names) {
-          if (
-            data.names[localPath.toLowerCase()] !== pubkey ||
-            data.names[localPath] !== pubkey
-          )
-            return false;
-          return true;
+          if (data.names[localPath.toLowerCase()] === pubkey) return true;
+          if (data.names[localPath] === pubkey) return true;
+          return false;
         }
         return false;
       } catch (e) {
