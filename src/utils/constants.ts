@@ -297,14 +297,15 @@ export const TOPICS = [
 
 export const QUOTES = [
   'You can learn more about nostr here: https://usenostr.org',
-  'Nostr have a lot of awesome clients, you can spend a bit of time to try https://snort.social',
-  'Nostr have a lot of awesome clients, you can spend a bit of time to try https://iris.to',
-  'Nostr have a lot of awesome clients, you can spend a bit of time to try https://primal.net',
-  'Nostr have a lot of awesome clients, you can spend a bit of time to try https://nostrudel.ninja',
+  'Nostr has a lot of awesome clients, you can spend a bit of time to try https://snort.social',
+  'Nostr has a lot of awesome clients, you can spend a bit of time to try https://iris.to',
+  'Nostr has a lot of awesome clients, you can spend a bit of time to try https://primal.net',
+  'Nostr has a lot of awesome clients, you can spend a bit of time to try https://nostrudel.ninja',
   "If you're using iOS, you can use Nostr with https://damus.io",
   "If you're using Android, you can use Nostr with Amethyst",
-  'If you want to curating and sharing your interests on Nostr, you can use https://pinstr.app',
+  'If you want to curate and share your interests on Nostr, you can use https://pinstr.app',
   'If you want to post anonymously on Nostr, you can use https://www.get-tao.app',
-  'If you want to read in-depth content and high quality insight, you can use https://habla.news',
-  'You can send secure message on Nostr with https://0xchat.com/',
+  'If you want to read in-depth content and high quality insights, you can use https://habla.news',
+  'You can send secure messages on Nostr with https://0xchat.com/',
+  'Are you a fan of following topics, instead of people? Use https://zapddit.com',
 ];
