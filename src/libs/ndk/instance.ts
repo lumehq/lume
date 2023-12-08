@@ -31,16 +31,16 @@ export const NDKInstance = () => {
     try {
       // NIP-46 Signer
       if (nsecbunker) {
-        const localSignerPrivkey = await db.secureLoad(`${db.account.pubkey}-nsecbunker`);
+        const localSignerPrivkey = await db.secureLoad(`${db.account.id}-nsecbunker`);
         if (!localSignerPrivkey) return null;
 
         const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
         const bunker = new NDK({
           explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
         });
-        bunker.connect();
+        await bunker.connect();
 
-        const remoteSigner = new NDKNip46Signer(bunker, db.account.id, localSigner);
+        const remoteSigner = new NDKNip46Signer(bunker, db.account.pubkey, localSigner);
         await remoteSigner.blockUntilReady();
 
         return remoteSigner;

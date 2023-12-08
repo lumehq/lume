@@ -22,7 +22,7 @@ export function NewLayout() {
         <div className="col-span-1">
           <Link
             to="/"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
           >
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>

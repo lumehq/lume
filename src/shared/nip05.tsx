@@ -40,8 +40,9 @@ export const NIP05 = memo(function NIP05({
 
         const data: NIP05 = await res.json();
         if (data.names) {
-          if (data.names[localPath.toLowerCase()] !== pubkey) return false;
-          return true;
+          if (data.names[localPath.toLowerCase()] === pubkey) return true;
+          if (data.names[localPath] === pubkey) return true;
+          return false;
         }
         return false;
       } catch (e) {
@@ -60,17 +61,13 @@ export const NIP05 = memo(function NIP05({
 
   return (
     <div className="inline-flex items-center gap-1">
-      <p className={twMerge('text-sm font-medium', className)}>{nip05}</p>
+      <p className={twMerge('text-sm font-medium', className)}>
+        {nip05.startsWith('_@') ? nip05.replace('_@', '') : nip05}
+      </p>
       {data === true ? (
-        <div className="inline-flex h-5 w-max shrink-0 items-center justify-center gap-1 rounded-full bg-teal-500 pl-0.5 pr-1.5 text-xs font-medium text-white">
-          <VerifiedIcon className="h-4 w-4" />
-          Verified
-        </div>
+        <VerifiedIcon className="h-4 w-4 text-teal-500" />
       ) : (
-        <div className="inline-flex h-5 w-max shrink-0 items-center justify-center gap-1.5 rounded-full bg-red-500 pl-0.5 pr-1.5 text-xs font-medium text-white">
-          <UnverifiedIcon className="h-4 w-4" />
-          Unverified
-        </div>
+        <UnverifiedIcon className="h-4 w-4 text-red-500" />
       )}
     </div>
   );
