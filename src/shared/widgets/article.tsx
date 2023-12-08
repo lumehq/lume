@@ -1,11 +1,10 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { FetchFilter } from 'nostr-fetch';
 import { useMemo } from 'react';
 import { VList } from 'virtua';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedArticleNote } from '@shared/notes';
@@ -16,8 +15,7 @@ import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function ArticleWidget({ widget }: { widget: Widget }) {
-  const { db } = useStorage();
-  const { ndk, relayUrls, fetcher } = useNDK();
+  const { ark } = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['article', widget.id],
@@ -39,20 +37,19 @@ export function ArticleWidget({ widget }: { widget: Widget }) {
         } else {
           filter = {
             kinds: [NDKKind.Article],
-            authors: db.account.contacts,
+            authors: ark.account.contacts,
           };
         }
 
-        const events = await fetcher.fetchLatestEvents(relayUrls, filter, FETCH_LIMIT, {
-          asOf: pageParam === 0 ? undefined : pageParam,
-          abortSignal: signal,
+        const events = await ark.getInfiniteEvents({
+          filter,
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
+          dedup: false,
         });
 
-        const ndkEvents = events.map((event) => {
-          return new NDKEvent(ndk, event);
-        });
-
-        return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+        return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);

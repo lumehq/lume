@@ -3,8 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
@@ -19,8 +18,7 @@ import { LiveUpdater, WidgetWrapper } from '@shared/widgets';
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function NewsfeedWidget() {
-  const { db } = useStorage();
-  const { relayUrls, ndk, fetcher } = useNDK();
+  const { ark } = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed'],
@@ -32,35 +30,17 @@ export function NewsfeedWidget() {
         signal: AbortSignal;
         pageParam: number;
       }) => {
-        const rootIds = new Set();
-        const dedupQueue = new Set();
-
-        const events = await fetcher.fetchLatestEvents(
-          relayUrls,
-          {
+        const events = await ark.getInfiniteEvents({
+          filter: {
             kinds: [NDKKind.Text, NDKKind.Repost],
-            authors: db.account.contacts,
+            authors: ark.account.contacts,
           },
-          FETCH_LIMIT,
-          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
-        );
-
-        const ndkEvents = events.map((event) => {
-          return new NDKEvent(ndk, event);
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
         });
 
-        ndkEvents.forEach((event) => {
-          const tags = event.tags.filter((el) => el[0] === 'e');
-          if (tags && tags.length > 0) {
-            const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
-            if (rootIds.has(rootId)) return dedupQueue.add(event.id);
-            rootIds.add(rootId);
-          }
-        });
-
-        return ndkEvents
-          .filter((event) => !dedupQueue.has(event.id))
-          .sort((a, b) => b.created_at - a.created_at);
+        return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);

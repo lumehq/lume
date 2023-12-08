@@ -9,8 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useNavigate } from 'react-router-dom';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
@@ -20,11 +19,7 @@ import { compactNumber } from '@utils/number';
 import { displayNpub } from '@utils/shortenKey';
 
 export function NoteZap({ event }: { event: NDKEvent }) {
-  const nwc = useRef(null);
-  const navigate = useNavigate();
-
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { user } = useProfile(event.pubkey);
 
   const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
@@ -35,9 +30,12 @@ export function NoteZap({ event }: { event: NDKEvent }) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const nwc = useRef(null);
+  const navigate = useNavigate();
+
   const createZapRequest = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       const zapAmount = parseInt(amount) * 1000;
       const res = await event.zap(zapAmount, zapMessage);
@@ -88,7 +86,7 @@ export function NoteZap({ event }: { event: NDKEvent }) {
   useEffect(() => {
     async function getWalletConnectURL() {
       const uri: string = await invoke('secure_load', {
-        key: `${db.account.pubkey}-nwc`,
+        key: `${ark.account.pubkey}-nwc`,
       });
       if (uri) setWalletConnectURL(uri);
     }

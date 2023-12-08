@@ -1,30 +1,60 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { UserProfile } from '@app/users/components/profile';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
-import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
+import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
+import {
+  MemoizedRepost,
+  MemoizedTextNote,
+  NoteSkeleton,
+  UnknownNote,
+} from '@shared/notes';
+
+import { FETCH_LIMIT } from '@utils/constants';
 
 export function UserScreen() {
   const { pubkey } = useParams();
-  const { ndk } = useNDK();
-  const { status, data } = useQuery({
-    queryKey: ['user-feed', pubkey],
-    queryFn: async () => {
-      const events = await ndk.fetchEvents({
-        kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: [pubkey],
-        limit: 20,
-      });
-      const sorted = [...events].sort((a, b) => b.created_at - a.created_at);
-      return sorted;
-    },
-    refetchOnWindowFocus: false,
-  });
+  const { ark } = useArk();
+  const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ['user-posts', pubkey],
+      initialPageParam: 0,
+      queryFn: async ({
+        signal,
+        pageParam,
+      }: {
+        signal: AbortSignal;
+        pageParam: number;
+      }) => {
+        const events = await ark.getInfiniteEvents({
+          filter: {
+            kinds: [NDKKind.Text, NDKKind.Repost],
+            authors: [pubkey],
+          },
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
+        });
+
+        return events;
+      },
+      getNextPageParam: (lastPage) => {
+        const lastEvent = lastPage.at(-1);
+        if (!lastEvent) return;
+        return lastEvent.created_at - 1;
+      },
+      refetchOnWindowFocus: false,
+    });
+
+  const allEvents = useMemo(
+    () => (data ? data.pages.flatMap((page) => page) : []),
+    [data]
+  );
 
   // render event match event kind
   const renderItem = useCallback(
@@ -50,20 +80,33 @@ export function UserScreen() {
         </h3>
         <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
           {status === 'pending' ? (
-            <div>Loading...</div>
-          ) : data.length === 0 ? (
             <div className="px-3 py-1.5">
-              <div className="rounded-xl bg-neutral-100 px-3 py-6 dark:bg-neutral-900">
-                <div className="flex flex-col items-center gap-4">
-                  <p className="text-center text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                    User doesn&apos;t have any posts in the last 48 hours.
-                  </p>
-                </div>
+              <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+                <NoteSkeleton />
               </div>
             </div>
           ) : (
-            data.map((item) => renderItem(item))
+            allEvents.map((item) => renderItem(item))
           )}
+          <div className="flex h-16 items-center justify-center px-3 pb-3">
+            {hasNextPage ? (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+              >
+                {isFetchingNextPage ? (
+                  <LoaderIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ArrowRightCircleIcon className="h-5 w-5" />
+                    Load more
+                  </>
+                )}
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

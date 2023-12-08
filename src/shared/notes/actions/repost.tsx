@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon, RepostIcon } from '@shared/icons';
 
@@ -15,12 +15,12 @@ export function NoteRepost({ event }: { event: NDKEvent }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isRepost, setIsRepost] = useState(false);
 
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const navigate = useNavigate();
 
   const submit = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setIsLoading(true);
 

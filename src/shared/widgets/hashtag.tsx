@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { VList } from 'virtua';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
@@ -14,7 +14,7 @@ import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function HashtagWidget({ widget }: { widget: Widget }) {
-  const { ndk, relayUrls, fetcher } = useNDK();
+  const { ark } = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['hashtag', widget.id],
@@ -26,21 +26,18 @@ export function HashtagWidget({ widget }: { widget: Widget }) {
         signal: AbortSignal;
         pageParam: number;
       }) => {
-        const events = await fetcher.fetchLatestEvents(
-          relayUrls,
-          {
+        const events = await ark.getInfiniteEvents({
+          filter: {
             kinds: [NDKKind.Text, NDKKind.Repost],
             '#t': [widget.content],
           },
-          FETCH_LIMIT,
-          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
-        );
-
-        const ndkEvents = events.map((event) => {
-          return new NDKEvent(ndk, event);
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
+          dedup: false,
         });
 
-        return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+        return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);

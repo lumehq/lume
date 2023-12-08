@@ -1,15 +1,15 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import { ReplyMediaUploader } from '@shared/notes';
 
 export function NoteReplyForm({ rootEvent }: { rootEvent: NDKEvent }) {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const navigate = useNavigate();
 
   const [value, setValue] = useState('');
@@ -17,22 +17,14 @@ export function NoteReplyForm({ rootEvent }: { rootEvent: NDKEvent }) {
 
   const submit = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
-
+      if (!ark.readyToSign) return navigate('/new/privkey');
       setLoading(true);
 
-      const event = new NDKEvent(ndk);
-      event.content = value;
-      event.kind = NDKKind.Text;
-
-      // tag root event
-      event.tag(rootEvent, 'reply');
-
       // publish event
-      const publishedRelays = await event.publish();
+      const publish = await ark.replyTo({ content: value, event: rootEvent });
 
-      if (publishedRelays) {
-        toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
+      if (publish) {
+        toast.success(`Broadcasted to ${publish.size} relays successfully.`);
 
         // reset state
         setValue('');

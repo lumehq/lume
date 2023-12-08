@@ -13,9 +13,15 @@ import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
 import { invoke } from '@tauri-apps/api/primitives';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
+import { fetch } from '@tauri-apps/plugin-http';
 import { Platform } from '@tauri-apps/plugin-os';
 import Database from '@tauri-apps/plugin-sql';
-import { NostrEventExt, NostrFetcher, normalizeRelayUrlSet } from 'nostr-fetch';
+import {
+  NostrEventExt,
+  NostrFetcher,
+  normalizeRelayUrl,
+  normalizeRelayUrlSet,
+} from 'nostr-fetch';
 import { toast } from 'sonner';
 
 import { NDKCacheAdapterTauri } from '@libs/ark';
@@ -77,7 +83,7 @@ export class Ark {
       // NIP-46 Signer
       if (nsecbunker) {
         const localSignerPrivkey = await this.#keyring_load(
-          `${this.account.pubkey}-nsecbunker`
+          `${this.account.id}-nsecbunker`
         );
 
         if (!localSignerPrivkey) {
@@ -89,9 +95,9 @@ export class Ark {
         const bunker = new NDK({
           explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
         });
-        bunker.connect();
+        await bunker.connect();
 
-        const remoteSigner = new NDKNip46Signer(bunker, this.account.id, localSigner);
+        const remoteSigner = new NDKNip46Signer(bunker, this.account.pubkey, localSigner);
         await remoteSigner.blockUntilReady();
 
         this.readyToSign = true;
@@ -619,11 +625,13 @@ export class Ark {
     limit,
     pageParam = 0,
     signal = undefined,
+    dedup = true,
   }: {
     filter: NDKFilter;
     limit: number;
     pageParam?: number;
     signal?: AbortSignal;
+    dedup?: boolean;
   }) {
     const rootIds = new Set();
     const dedupQueue = new Set();
@@ -637,18 +645,53 @@ export class Ark {
       return new NDKEvent(this.#ndk, event);
     });
 
-    ndkEvents.forEach((event) => {
-      const tags = event.tags.filter((el) => el[0] === 'e');
-      if (tags && tags.length > 0) {
-        const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
-        if (rootIds.has(rootId)) return dedupQueue.add(event.id);
-        rootIds.add(rootId);
+    if (dedup) {
+      ndkEvents.forEach((event) => {
+        const tags = event.tags.filter((el) => el[0] === 'e');
+        if (tags && tags.length > 0) {
+          const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
+          if (rootIds.has(rootId)) return dedupQueue.add(event.id);
+          rootIds.add(rootId);
+        }
+      });
+
+      return ndkEvents
+        .filter((event) => !dedupQueue.has(event.id))
+        .sort((a, b) => b.created_at - a.created_at);
+    }
+
+    return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+  }
+
+  public async getRelayEvents({
+    relayUrl,
+    filter,
+    limit,
+    pageParam = 0,
+    signal = undefined,
+  }: {
+    relayUrl: string;
+    filter: NDKFilter;
+    limit: number;
+    pageParam?: number;
+    signal?: AbortSignal;
+    dedup?: boolean;
+  }) {
+    const events = await this.#fetcher.fetchLatestEvents(
+      [normalizeRelayUrl(relayUrl)],
+      filter,
+      limit,
+      {
+        asOf: pageParam === 0 ? undefined : pageParam,
+        abortSignal: signal,
       }
+    );
+
+    const ndkEvents = events.map((event) => {
+      return new NDKEvent(this.#ndk, event);
     });
 
-    return ndkEvents
-      .filter((event) => !dedupQueue.has(event.id))
-      .sort((a, b) => b.created_at - a.created_at);
+    return ndkEvents.sort((a, b) => b.created_at - a.created_at);
   }
 
   /**
@@ -714,11 +757,60 @@ export class Ark {
     if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
     const data: NIP05 = await res.json();
-    if (data.names) {
-      if (data.names[localPath.toLowerCase()] !== pubkey) return false;
-      if (data.names[localPath] !== pubkey) return false;
-      return true;
-    }
+
+    if (!data.names) return false;
+
+    if (data.names[localPath.toLowerCase()] === pubkey) return true;
+    if (data.names[localPath] === pubkey) return true;
+
     return false;
+  }
+
+  public async nip04Decrypt({ event }: { event: NDKEvent }) {
+    try {
+      const sender = new NDKUser({
+        pubkey:
+          this.account.pubkey === event.pubkey
+            ? event.tags.find((el) => el[0] === 'p')[1]
+            : event.pubkey,
+      });
+      const content = await this.#ndk.signer.decrypt(sender, event.content);
+
+      return content;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  public async nip04Encrypt({ content, pubkey }: { content: string; pubkey: string }) {
+    try {
+      const recipient = new NDKUser({ pubkey });
+      const message = await this.#ndk.signer.encrypt(recipient, content);
+
+      const event = new NDKEvent(this.#ndk);
+      event.content = message;
+      event.kind = NDKKind.EncryptedDirectMessage;
+      event.tag(recipient);
+
+      const publish = await event.publish();
+
+      if (!publish) throw new Error('Failed to send NIP-04 encrypted message');
+      return publish;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  public async replyTo({ content, event }: { content: string; event: NDKEvent }) {
+    try {
+      const replyEvent = new NDKEvent(this.#ndk);
+      event.content = content;
+      event.kind = NDKKind.Text;
+      event.tag(event, 'reply');
+
+      return await replyEvent.publish();
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

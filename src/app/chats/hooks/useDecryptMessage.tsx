@@ -1,26 +1,17 @@
-import { NDKEvent, NDKUser } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
-export function useDecryptMessage(message: NDKEvent) {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
-  const [content, setContent] = useState(message.content);
+export function useDecryptMessage(event: NDKEvent) {
+  const { ark } = useArk();
+  const [content, setContent] = useState(event.content);
 
   useEffect(() => {
     async function decryptContent() {
       try {
-        const sender = new NDKUser({
-          pubkey:
-            db.account.pubkey === message.pubkey
-              ? message.tags.find((el) => el[0] === 'p')[1]
-              : message.pubkey,
-        });
-        const result = await ndk.signer.decrypt(sender, message.content);
-        setContent(result);
+        const message = await ark.nip04Decrypt({ event });
+        setContent(message);
       } catch (e) {
         console.error(e);
       }

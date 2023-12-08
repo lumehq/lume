@@ -4,14 +4,14 @@ import tippy from 'tippy.js';
 
 import { MentionList } from '@app/new/components';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function useSuggestion() {
-  const { db } = useStorage();
+  const { ark } = useArk();
 
   const suggestion: MentionOptions['suggestion'] = {
     items: async ({ query }) => {
-      const users = await db.getAllCacheUsers();
+      const users = await ark.getAllCacheUsers();
       return users
         .filter((item) => {
           if (item.name) return item.name.toLowerCase().startsWith(query.toLowerCase());

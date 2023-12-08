@@ -1,10 +1,8 @@
-import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { NIP05 } from '@shared/nip05';
 
@@ -12,18 +10,14 @@ import { useProfile } from '@utils/hooks/useProfile';
 import { displayNpub } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
-  const navigate = useNavigate();
 
   const follow = async (pubkey: string) => {
     try {
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const contacts = await user.follows();
-      const add = await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
+      const add = await ark.createContact({ pubkey });
 
       if (add) {
         setFollowed(true);
@@ -37,22 +31,9 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const unfollow = async (pubkey: string) => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      const remove = await ark.deleteContact({ pubkey });
 
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const contacts = await user.follows();
-      contacts.delete(new NDKUser({ pubkey: pubkey }));
-
-      let list: string[][];
-      contacts.forEach((el) => list.push(['p', el.pubkey, el.relayUrls?.[0] || '', '']));
-
-      const event = new NDKEvent(ndk);
-      event.content = '';
-      event.kind = NDKKind.Contacts;
-      event.tags = list;
-
-      const publishedRelays = await event.publish();
-      if (publishedRelays) {
+      if (remove) {
         setFollowed(false);
       }
     } catch (error) {
@@ -61,7 +42,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   };
 
   useEffect(() => {
-    if (db.account.contacts.includes(pubkey)) {
+    if (ark.account.contacts.includes(pubkey)) {
       setFollowed(true);
     }
   }, []);
