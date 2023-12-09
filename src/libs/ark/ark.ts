@@ -81,6 +81,9 @@ export class Ark {
 
   async #initNostrSigner({ nsecbunker }: { nsecbunker?: boolean }) {
     const account = await this.getActiveAccount();
+    if (!account) return null;
+
+    // update active account
     this.account = account;
 
     try {
@@ -225,7 +228,15 @@ export class Ark {
     }
   }
 
-  public async createAccount(npub: string, pubkey: string, privkey?: string) {
+  public async createAccount({
+    id,
+    pubkey,
+    privkey,
+  }: {
+    id: string;
+    pubkey: string;
+    privkey?: string;
+  }) {
     const existAccounts: Array<Account> = await this.#storage.select(
       'SELECT * FROM accounts WHERE pubkey = $1 ORDER BY id DESC LIMIT 1;',
       [pubkey]
@@ -239,13 +250,17 @@ export class Ark {
     } else {
       await this.#storage.execute(
         'INSERT OR IGNORE INTO accounts (id, pubkey, is_active) VALUES ($1, $2, $3);',
-        [npub, pubkey, 1]
+        [id, pubkey, 1]
       );
 
       if (privkey) await this.#keyring_save(pubkey, privkey);
     }
 
-    return await this.getActiveAccount();
+    const account = await this.getActiveAccount();
+    this.account = account;
+    this.account.contacts = [];
+
+    return account;
   }
 
   /**
@@ -416,10 +431,10 @@ export class Ark {
       event.kind = kind;
       event.tags = tags;
 
-      if (!publish) {
-        const publish = await event.publish();
-        if (!publish) throw new Error('cannot publish error');
-        return publish.size;
+      if (publish) {
+        const publishedEvent = await event.publish();
+        if (!publishedEvent) throw new Error('Failed to publish event');
+        return publishedEvent.size;
       }
 
       return event;
@@ -430,6 +445,7 @@ export class Ark {
 
   public async getUserProfile({ pubkey }: { pubkey: string }) {
     try {
+      console.log(pubkey);
       const user = this.#ndk.getUser({ pubkey });
       const profile = await user.fetchProfile({
         cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,

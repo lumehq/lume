@@ -70,7 +70,12 @@ export function CreateAccountScreen() {
       });
 
       if (publish) {
-        await ark.createAccount(userNpub, userPubkey, userPrivkey);
+        await ark.createAccount({
+          id: userNpub,
+          pubkey: userPubkey,
+          privkey: userPrivkey,
+        });
+
         await ark.createEvent({
           kind: NDKKind.RelayList,
           tags: [ark.relays],

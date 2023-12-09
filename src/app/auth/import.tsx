@@ -76,7 +76,7 @@ export function ImportAccountScreen() {
       setLoading(true);
 
       // add account to db
-      await ark.createAccount(npub, pubkey);
+      await ark.createAccount({ id: npub, pubkey });
 
       // get account contacts
       await ark.getUserContacts({ pubkey });

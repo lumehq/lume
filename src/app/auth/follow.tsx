@@ -69,14 +69,14 @@ export function FollowScreen() {
       const publish = await ark.createEvent({
         kind: NDKKind.Contacts,
         tags: follows.map((item) => {
-          if (item.startsWith('npub')) return ['p', nip19.decode(item).data as string];
+          if (item.startsWith('npub1')) return ['p', nip19.decode(item).data as string];
           return ['p', item];
         }),
       });
 
       if (publish) {
         ark.account.contacts = follows.map((item) => {
-          if (item.startsWith('npub')) return nip19.decode(item).data as string;
+          if (item.startsWith('npub1')) return nip19.decode(item).data as string;
           return item;
         });
 
