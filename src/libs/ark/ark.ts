@@ -445,7 +445,6 @@ export class Ark {
 
   public async getUserProfile({ pubkey }: { pubkey: string }) {
     try {
-      console.log(pubkey);
       const user = this.#ndk.getUser({ pubkey });
       const profile = await user.fetchProfile({
         cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
@@ -472,7 +471,7 @@ export class Ark {
         (user) => user.pubkey
       );
 
-      this.account.contacts = contacts;
+      if (pubkey === this.account.pubkey) this.account.contacts = contacts;
       return contacts;
     } catch (e) {
       console.error(e);

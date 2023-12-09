@@ -1,3 +1,5 @@
+import { NDKKind } from '@nostr-dev-kit/ndk';
+import { useQueryClient } from '@tanstack/react-query';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { platform } from '@tauri-apps/plugin-os';
 import { relaunch } from '@tauri-apps/plugin-process';
@@ -10,7 +12,7 @@ import { Ark } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { QUOTES } from '@utils/constants';
+import { FETCH_LIMIT, QUOTES } from '@utils/constants';
 
 interface ArkContext {
   ark: Ark;
@@ -23,6 +25,8 @@ const ArkContext = createContext<ArkContext>({
 const ArkProvider = ({ children }: PropsWithChildren<object>) => {
   const [ark, setArk] = useState<Ark>(undefined);
   const [isNewVersion, setIsNewVersion] = useState(false);
+
+  const queryClient = useQueryClient();
 
   async function initArk() {
     try {
@@ -59,6 +63,56 @@ const ArkProvider = ({ children }: PropsWithChildren<object>) => {
           await update.downloadAndInstall();
           await relaunch();
         }
+      }
+
+      if (_ark.account) {
+        // prefetch newsfeed
+        await queryClient.prefetchInfiniteQuery({
+          queryKey: ['newsfeed'],
+          initialPageParam: 0,
+          queryFn: async ({
+            signal,
+            pageParam,
+          }: {
+            signal: AbortSignal;
+            pageParam: number;
+          }) => {
+            return await ark.getInfiniteEvents({
+              filter: {
+                kinds: [NDKKind.Text, NDKKind.Repost],
+                authors: !ark.account.contacts.length
+                  ? [ark.account.pubkey]
+                  : ark.account.contacts,
+              },
+              limit: FETCH_LIMIT,
+              pageParam,
+              signal,
+            });
+          },
+        });
+
+        // prefetch notification
+        await queryClient.prefetchInfiniteQuery({
+          queryKey: ['notification'],
+          initialPageParam: 0,
+          queryFn: async ({
+            signal,
+            pageParam,
+          }: {
+            signal: AbortSignal;
+            pageParam: number;
+          }) => {
+            return await ark.getInfiniteEvents({
+              filter: {
+                kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
+                '#p': [ark.account.pubkey],
+              },
+              limit: FETCH_LIMIT,
+              pageParam,
+              signal,
+            });
+          },
+        });
       }
 
       setArk(_ark);

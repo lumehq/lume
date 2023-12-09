@@ -23,9 +23,19 @@ const NOSTR_MENTIONS = [
   'npub1',
   'nprofile1',
   'naddr1',
+  'Nostr:npub1',
+  'Nostr:nprofile1',
+  'Nostr:naddre1',
 ];
 
-const NOSTR_EVENTS = ['nostr:note1', 'note1', 'nostr:nevent1', 'nevent1'];
+const NOSTR_EVENTS = [
+  'nostr:note1',
+  'note1',
+  'nostr:nevent1',
+  'nevent1',
+  'Nostr:note1',
+  'Nostr:nevent1',
+];
 
 // const BITCOINS = ['lnbc', 'bc1p', 'bc1q'];
 
