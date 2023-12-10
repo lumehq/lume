@@ -8,7 +8,7 @@ import { ChildNote, TextKind } from '@shared/notes';
 import { User } from '@shared/user';
 
 import { WIDGET_KIND } from '@utils/constants';
-import { formatCreatedAt } from '@utils/createdAt';
+import { formatCreatedAt } from '@utils/formater';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NotifyNote({ event }: { event: NDKEvent }) {

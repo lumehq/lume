@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import { nip19 } from 'nostr-tools';
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -18,8 +19,8 @@ dayjs.updateLocale('en', {
   },
 });
 
-export function formatCreatedAt(time, message = false) {
-  let formated;
+export function formatCreatedAt(time: number, message: boolean = false) {
+  let formated: string;
 
   const now = dayjs();
   const inputTime = dayjs.unix(time);
@@ -41,3 +42,20 @@ export function formatCreatedAt(time, message = false) {
 
   return formated;
 }
+
+export function displayNpub(pubkey: string, len: number, separator?: string) {
+  const npub = pubkey.startsWith('npub1') ? pubkey : (nip19.npubEncode(pubkey) as string);
+  if (npub.length <= len) return npub;
+
+  separator = separator || ' ... ';
+
+  const sepLen = separator.length,
+    charsToShow = len - sepLen,
+    frontChars = Math.ceil(charsToShow / 2),
+    backChars = Math.floor(charsToShow / 2);
+
+  return npub.substr(0, frontChars) + separator + npub.substr(npub.length - backChars);
+}
+
+// convert number to K, M, B, T, etc.
+export const compactNumber = Intl.NumberFormat('en', { notation: 'compact' });

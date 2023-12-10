@@ -13,8 +13,7 @@ import {
   UnknownNote,
 } from '@shared/notes';
 import { TitleBar } from '@shared/titleBar';
-import { UserProfile } from '@shared/userProfile';
-import { WidgetWrapper } from '@shared/widgets';
+import { UserProfile, WidgetWrapper } from '@shared/widgets';
 
 import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';

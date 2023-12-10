@@ -6,8 +6,8 @@ import { useArk } from '@libs/ark';
 
 import { EditIcon, LoaderIcon } from '@shared/icons';
 
+import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
-import { displayNpub } from '@utils/shortenKey';
 
 export function ProfileCard() {
   const { ark } = useArk();

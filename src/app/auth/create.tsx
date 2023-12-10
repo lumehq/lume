@@ -11,9 +11,10 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { AvatarUploader } from '@app/auth/components/avatarUploader';
+
 import { useArk } from '@libs/ark';
 
-import { AvatarUploader } from '@shared/avatarUploader';
 import { ArrowLeftIcon, InfoIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 

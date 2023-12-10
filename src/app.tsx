@@ -1,4 +1,3 @@
-import { message } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 
@@ -20,15 +19,8 @@ export default function App() {
   const { ark } = useArk();
 
   const accountLoader = async () => {
-    try {
-      // redirect to welcome screen if none user exist
-      const totalAccount = await ark.checkAccount();
-      if (totalAccount === 0) return redirect('/auth/welcome');
-
-      return null;
-    } catch (e) {
-      await message(e, { title: 'An unexpected error has occurred', type: 'error' });
-    }
+    if (!ark.account) return redirect('/auth/welcome');
+    return null;
   };
 
   const relayLoader = async ({ params }) => {

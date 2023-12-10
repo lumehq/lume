@@ -3,7 +3,7 @@ import { fetch } from '@tauri-apps/plugin-http';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { compactNumber } from '@utils/number';
+import { compactNumber } from '@utils/formater';
 
 export function UserStats({ pubkey }: { pubkey: string }) {
   const { status, data } = useQuery({

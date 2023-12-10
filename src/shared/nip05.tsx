@@ -56,7 +56,7 @@ export const NIP05 = memo(function NIP05({
   });
 
   if (status === 'pending') {
-    <div className="h-3 w-20 animate-pulse rounded bg-white/10" />;
+    <div className="h-4 w-4 animate-pulse rounded-full bg-neutral-100 dark:bg-neutral-900" />;
   }
 
   return (

@@ -6,7 +6,7 @@ import { useArk } from '@libs/ark';
 
 import { FollowIcon } from '@shared/icons';
 
-import { shortenKey } from '@utils/shortenKey';
+import { displayNpub } from '@utils/formater';
 
 export interface Profile {
   pubkey: string;
@@ -66,7 +66,7 @@ export function NostrBandUserProfile({ data }: { data: Profile }) {
                 {profile.display_name || profile.name}
               </h3>
               <p className="max-w-[10rem] truncate text-sm text-neutral-900 dark:text-neutral-100/50">
-                {profile.nip05 || shortenKey(data.pubkey)}
+                {profile.nip05 || displayNpub(data.pubkey, 16)}
               </p>
             </div>
           </div>

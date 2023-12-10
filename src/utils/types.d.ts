@@ -9,28 +9,12 @@ export interface RichContent {
   notes: string[];
 }
 
-export interface DBEvent {
-  id: string;
-  account_id: number;
-  event: string | NDKEvent;
-  author: string;
-  kind: number;
-  root_id: string;
-  reply_id: string;
-  created_at: number;
-  richContent?: RichContent;
-}
-
 export interface Account {
   id: string;
   pubkey: string;
   is_active: number;
   contacts: string[];
   relayList: NDKRelayList;
-  /**
-   * @deprecated Use contacts instead
-   */
-  follows: string[];
 }
 
 export interface WidgetGroup {

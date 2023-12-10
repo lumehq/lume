@@ -8,9 +8,8 @@ import { RepostIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
 import { MoreActions } from '@shared/notes';
 
-import { formatCreatedAt } from '@utils/createdAt';
+import { displayNpub, formatCreatedAt } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
-import { displayNpub } from '@utils/shortenKey';
 
 export const User = memo(function User({
   pubkey,
