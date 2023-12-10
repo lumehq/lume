@@ -192,6 +192,7 @@ export class Ark {
 
   public updateNostrSigner({ signer }: { signer: NDKNip46Signer | NDKPrivateKeySigner }) {
     this.#ndk.signer = signer;
+    this.readyToSign = true;
     return this.#ndk.signer;
   }
 
@@ -418,11 +419,15 @@ export class Ark {
     kind,
     tags,
     content,
+    rootReplyTo = undefined,
+    replyTo = undefined,
     publish,
   }: {
     kind: NDKKind | number;
     tags: NDKTag[];
     content?: string;
+    rootReplyTo?: string;
+    replyTo?: string;
     publish?: boolean;
   }) {
     try {
@@ -430,6 +435,16 @@ export class Ark {
       if (content) event.content = content;
       event.kind = kind;
       event.tags = tags;
+
+      if (rootReplyTo) {
+        const rootEvent = await this.#ndk.fetchEvent(rootReplyTo);
+        if (rootEvent) event.tag(rootEvent, 'root');
+      }
+
+      if (replyTo) {
+        const replyEvent = await this.#ndk.fetchEvent(replyTo);
+        if (replyEvent) event.tag(replyEvent, 'reply');
+      }
 
       if (publish) {
         const publishedEvent = await event.publish();
@@ -888,9 +903,9 @@ export class Ark {
   public async replyTo({ content, event }: { content: string; event: NDKEvent }) {
     try {
       const replyEvent = new NDKEvent(this.#ndk);
-      event.content = content;
-      event.kind = NDKKind.Text;
-      event.tag(event, 'reply');
+      replyEvent.content = content;
+      replyEvent.kind = NDKKind.Text;
+      replyEvent.tag(event, 'reply');
 
       return await replyEvent.publish();
     } catch (e) {

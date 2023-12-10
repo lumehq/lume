@@ -8,7 +8,13 @@ import { User } from '@shared/user';
 
 import { NDKEventWithReplies } from '@utils/types';
 
-export function Reply({ event }: { event: NDKEventWithReplies }) {
+export function Reply({
+  event,
+  rootEvent,
+}: {
+  event: NDKEventWithReplies;
+  rootEvent: string;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,7 +36,7 @@ export function Reply({ event }: { event: NDKEventWithReplies }) {
                 </div>
               </Collapsible.Trigger>
             ) : null}
-            <NoteActions event={event} canOpenEvent={false} />
+            <NoteActions event={event} rootEventId={rootEvent} canOpenEvent={false} />
           </div>
         </div>
         <div className={twMerge('px-3', open ? 'pb-3' : '')}>

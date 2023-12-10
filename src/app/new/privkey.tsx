@@ -62,14 +62,14 @@ export function NewPrivkeyScreen() {
           <button
             type="button"
             onClick={() => submit()}
-            className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+            className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
           >
             Submit
           </button>
           <button
             type="button"
             onClick={() => submit(true)}
-            className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-neutral-100 font-medium text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+            className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-neutral-100 font-medium text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
           >
             Submit and Save
           </button>

@@ -63,7 +63,7 @@ export function ReplyList({ eventId }: { eventId: string }) {
           </div>
         </div>
       ) : (
-        data.map((event) => <Reply key={event.id} event={event} />)
+        data.map((event) => <Reply key={event.id} event={event} rootEvent={eventId} />)
       )}
     </div>
   );
