@@ -1,46 +1,44 @@
-import { NDKEvent, NDKKind, NDKRelayUrl, NDKTag } from '@nostr-dev-kit/ndk';
+import { NDKKind, NDKRelayUrl, NDKTag } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function useRelay() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
+  const { ark } = useArk();
   const queryClient = useQueryClient();
 
   const connectRelay = useMutation({
     mutationFn: async (relay: NDKRelayUrl, purpose?: 'read' | 'write' | undefined) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['relays', db.account.pubkey] });
+      await queryClient.cancelQueries({ queryKey: ['relays', ark.account.pubkey] });
 
       // Snapshot the previous value
       const prevRelays: NDKTag[] = queryClient.getQueryData([
         'relays',
-        db.account.pubkey,
+        ark.account.pubkey,
       ]);
 
       // create new relay list if not exist
       if (!prevRelays) {
-        const newListEvent = new NDKEvent(ndk);
-        newListEvent.kind = NDKKind.RelayList;
-        newListEvent.tags = [['r', relay, purpose ?? '']];
-        await newListEvent.publish();
+        await ark.createEvent({
+          kind: NDKKind.RelayList,
+          tags: [['r', relay, purpose ?? '']],
+          publish: true,
+        });
       }
 
       // add relay to exist list
       const index = prevRelays.findIndex((el) => el[1] === relay);
       if (index > -1) return;
 
-      const event = new NDKEvent(ndk);
-      event.kind = NDKKind.RelayList;
-      event.tags = [...prevRelays, ['r', relay, purpose ?? '']];
-
-      await event.publish();
+      await ark.createEvent({
+        kind: NDKKind.RelayList,
+        tags: [...prevRelays, ['r', relay, purpose ?? '']],
+        publish: true,
+      });
 
       // Optimistically update to the new value
-      queryClient.setQueryData(['relays', db.account.pubkey], (prev: NDKTag[]) => [
+      queryClient.setQueryData(['relays', ark.account.pubkey], (prev: NDKTag[]) => [
         ...prev,
         ['r', relay, purpose ?? ''],
       ]);
@@ -49,19 +47,19 @@ export function useRelay() {
       return { prevRelays };
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['relays', db.account.pubkey] });
+      queryClient.invalidateQueries({ queryKey: ['relays', ark.account.pubkey] });
     },
   });
 
   const removeRelay = useMutation({
     mutationFn: async (relay: NDKRelayUrl) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['relays', db.account.pubkey] });
+      await queryClient.cancelQueries({ queryKey: ['relays', ark.account.pubkey] });
 
       // Snapshot the previous value
       const prevRelays: NDKTag[] = queryClient.getQueryData([
         'relays',
-        db.account.pubkey,
+        ark.account.pubkey,
       ]);
 
       if (!prevRelays) return;
@@ -69,19 +67,20 @@ export function useRelay() {
       const index = prevRelays.findIndex((el) => el[1] === relay);
       if (index > -1) prevRelays.splice(index, 1);
 
-      const event = new NDKEvent(ndk);
-      event.kind = NDKKind.RelayList;
-      event.tags = prevRelays;
-      await event.publish();
+      await ark.createEvent({
+        kind: NDKKind.RelayList,
+        tags: prevRelays,
+        publish: true,
+      });
 
       // Optimistically update to the new value
-      queryClient.setQueryData(['relays', db.account.pubkey], prevRelays);
+      queryClient.setQueryData(['relays', ark.account.pubkey], prevRelays);
 
       // Return a context object with the snapshotted value
       return { prevRelays };
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['relays', db.account.pubkey] });
+      queryClient.invalidateQueries({ queryKey: ['relays', ark.account.pubkey] });
     },
   });
 

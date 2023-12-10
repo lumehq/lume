@@ -4,19 +4,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function NewPrivkeyScreen() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
-  const [nsec, setNsec] = useState('');
+  const { ark } = useArk();
   const navigate = useNavigate();
 
-  const save = async (content: string) => {
-    return await db.secureSave(db.account.pubkey, content);
-  };
+  const [nsec, setNsec] = useState('');
 
   const submit = async (isSave?: boolean) => {
     try {
@@ -30,15 +24,15 @@ export function NewPrivkeyScreen() {
       const privkey = decoded.data;
       const pubkey = getPublicKey(privkey);
 
-      if (pubkey !== db.account.pubkey)
+      if (pubkey !== ark.account.pubkey)
         return toast.info(
           'Your nsec is not match your current public key, please make sure you enter right nsec'
         );
 
       const signer = new NDKPrivateKeySigner(privkey);
-      ndk.signer = signer;
+      ark.updateNostrSigner({ signer });
 
-      if (isSave) await save(privkey);
+      if (isSave) await ark.createPrivkey(ark.account.pubkey, privkey);
 
       navigate(-1);
     } catch (e) {
@@ -68,14 +62,14 @@ export function NewPrivkeyScreen() {
           <button
             type="button"
             onClick={() => submit()}
-            className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+            className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
           >
             Submit
           </button>
           <button
             type="button"
             onClick={() => submit(true)}
-            className="inline-flex h-9 w-full shrink-0 items-center justify-center rounded-lg bg-neutral-100 font-medium text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+            className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-neutral-100 font-medium text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
           >
             Submit and Save
           </button>

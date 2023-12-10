@@ -2,6 +2,8 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useCallback } from 'react';
 import { WVList } from 'virtua';
 
+import { useArk } from '@libs/ark';
+
 import { LoaderIcon } from '@shared/icons';
 import {
   ChildNote,
@@ -17,16 +19,15 @@ import { User } from '@shared/user';
 import { WidgetWrapper } from '@shared/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
-import { useNostr } from '@utils/hooks/useNostr';
 import { Widget } from '@utils/types';
 
 export function ThreadWidget({ widget }: { widget: Widget }) {
   const { isFetching, isError, data } = useEvent(widget.content);
-  const { getEventThread } = useNostr();
+  const { ark } = useArk();
 
   const renderKind = useCallback(
     (event: NDKEvent) => {
-      const thread = getEventThread(event.tags);
+      const thread = ark.getEventThread({ tags: event.tags });
       switch (event.kind) {
         case NDKKind.Text:
           return (

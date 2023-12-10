@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind, NDKTag } from '@nostr-dev-kit/ndk';
+import { NDKKind, NDKTag } from '@nostr-dev-kit/ndk';
 import CharacterCount from '@tiptap/extension-character-count';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -12,7 +12,7 @@ import { Markdown } from 'tiptap-markdown';
 
 import { ArticleCoverUploader, MediaUploader, MentionPopup } from '@app/new/components';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import {
   BoldIcon,
@@ -25,7 +25,7 @@ import {
 } from '@shared/icons';
 
 export function NewArticleScreen() {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
 
   const [height, setHeight] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ export function NewArticleScreen() {
 
   const submit = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setLoading(true);
 
@@ -91,16 +91,16 @@ export function NewArticleScreen() {
         tags.push(['t', tag.replace('#', '')]);
       });
 
-      const event = new NDKEvent(ndk);
-      event.content = content;
-      event.kind = NDKKind.Article;
-      event.tags = tags;
-
       // publish
-      const publishedRelays = await event.publish();
+      const publish = await ark.createEvent({
+        content,
+        tags,
+        kind: NDKKind.Article,
+        publish: true,
+      });
 
-      if (publishedRelays) {
-        toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
+      if (publish) {
+        toast.success(`Broadcasted to ${publish} relays successfully.`);
 
         // update state
         setLoading(false);

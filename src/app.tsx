@@ -1,13 +1,11 @@
 import { message } from '@tauri-apps/plugin-dialog';
 import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
-import { ReactFlowProvider } from 'reactflow';
 
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
-import { ExploreScreen } from '@app/explore';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
@@ -19,12 +17,12 @@ import { SettingsLayout } from '@shared/layouts/settings';
 import './app.css';
 
 export default function App() {
-  const { db } = useStorage();
+  const { ark } = useArk();
 
   const accountLoader = async () => {
     try {
       // redirect to welcome screen if none user exist
-      const totalAccount = await db.checkAccount();
+      const totalAccount = await ark.checkAccount();
       if (totalAccount === 0) return redirect('/auth/welcome');
 
       return null;
@@ -86,15 +84,6 @@ export default function App() {
             const { RelayScreen } = await import('@app/relays/relay');
             return { Component: RelayScreen };
           },
-        },
-        {
-          path: 'explore',
-          element: (
-            <ReactFlowProvider>
-              <ExploreScreen />
-            </ReactFlowProvider>
-          ),
-          errorElement: <ErrorScreen />,
         },
         {
           path: 'chats',

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { ReactionIcon } from '@shared/icons';
 
@@ -35,7 +35,7 @@ export function NoteReaction({ event }: { event: NDKEvent }) {
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
 
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const navigate = useNavigate();
 
   const getReactionImage = (content: string) => {
@@ -45,7 +45,7 @@ export function NoteReaction({ event }: { event: NDKEvent }) {
 
   const react = async (content: string) => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setReaction(content);
 

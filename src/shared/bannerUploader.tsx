@@ -1,16 +1,16 @@
 import { message } from '@tauri-apps/plugin-dialog';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { LoaderIcon, PlusIcon } from '@shared/icons';
+import { useArk } from '@libs/ark';
 
-import { useNostr } from '@utils/hooks/useNostr';
+import { LoaderIcon, PlusIcon } from '@shared/icons';
 
 export function BannerUploader({
   setBanner,
 }: {
   setBanner: Dispatch<SetStateAction<string>>;
 }) {
-  const { upload } = useNostr();
+  const { ark } = useArk();
   const [loading, setLoading] = useState(false);
 
   const uploadBanner = async () => {
@@ -18,7 +18,7 @@ export function BannerUploader({
       // start loading
       setLoading(true);
 
-      const image = await upload();
+      const image = await ark.upload({});
 
       if (image) {
         setBanner(image);

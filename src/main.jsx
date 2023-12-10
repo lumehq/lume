@@ -3,8 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 
-import { NDKProvider } from '@libs/ndk/provider';
-import { StorageProvider } from '@libs/storage/provider';
+import { ArkProvider } from '@libs/ark/provider';
 
 import App from './app';
 
@@ -23,10 +22,8 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <ReactQueryDevtools initialIsOpen={false} />
     <Toaster position="top-center" theme="system" closeButton />
-    <StorageProvider>
-      <NDKProvider>
-        <App />
-      </NDKProvider>
-    </StorageProvider>
+    <ArkProvider>
+      <App />
+    </ArkProvider>
   </QueryClientProvider>
 );

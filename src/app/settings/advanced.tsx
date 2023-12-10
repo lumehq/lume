@@ -1,10 +1,10 @@
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function AdvancedSettingScreen() {
-  const { db } = useStorage();
+  const { ark } = useArk();
 
   const clearCache = async () => {
-    await db.clearCache();
+    await ark.clearCache();
   };
 
   return (

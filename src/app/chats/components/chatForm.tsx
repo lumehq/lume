@@ -1,29 +1,19 @@
-import { NDKEvent, NDKKind, NDKUser } from '@nostr-dev-kit/ndk';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { MediaUploader } from '@app/chats/components/mediaUploader';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { EnterIcon } from '@shared/icons';
 
 export function ChatForm({ receiverPubkey }: { receiverPubkey: string }) {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const [value, setValue] = useState('');
 
   const submit = async () => {
     try {
-      const recipient = new NDKUser({ pubkey: receiverPubkey });
-      const message = await ndk.signer.encrypt(recipient, value);
-
-      const event = new NDKEvent(ndk);
-      event.content = message;
-      event.kind = NDKKind.EncryptedDirectMessage;
-      event.tag(recipient);
-
-      const publish = await event.publish();
-
+      const publish = await ark.nip04Encrypt({ content: value, pubkey: receiverPubkey });
       if (publish) setValue('');
     } catch (e) {
       toast.error(e);

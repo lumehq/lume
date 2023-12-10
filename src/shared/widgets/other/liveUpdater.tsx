@@ -1,16 +1,13 @@
-import { NDKEvent, NDKFilter, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { QueryStatus, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { ChevronUpIcon } from '@shared/icons';
 
 export function LiveUpdater({ status }: { status: QueryStatus }) {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
-
+  const { ark } = useArk();
   const [events, setEvents] = useState<NDKEvent[]>([]);
   const queryClient = useQueryClient();
 
@@ -30,17 +27,16 @@ export function LiveUpdater({ status }: { status: QueryStatus }) {
   useEffect(() => {
     let sub: NDKSubscription = undefined;
 
-    if (status === 'success' && db.account && db.account?.contacts?.length > 0) {
-      const filter: NDKFilter = {
-        kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: db.account.contacts,
-        since: Math.floor(Date.now() / 1000),
-      };
-
-      sub = ndk.subscribe(filter, { closeOnEose: false, groupable: false });
-      sub.addListener('event', (event: NDKEvent) =>
-        setEvents((prev) => [...prev, event])
-      );
+    if (status === 'success' && ark.account && ark.account?.contacts?.length > 0) {
+      sub = ark.subscribe({
+        filter: {
+          kinds: [NDKKind.Text, NDKKind.Repost],
+          authors: ark.account.contacts,
+          since: Math.floor(Date.now() / 1000),
+        },
+        closeOnEose: false,
+        cb: (event: NDKEvent) => setEvents((prev) => [...prev, event]),
+      });
     }
 
     return () => {

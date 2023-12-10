@@ -1,14 +1,14 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom';
 import { WindowTitlebar } from 'tauri-controls';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function NoteLayout() {
-  const { db } = useStorage();
+  const { ark } = useArk();
 
   return (
     <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
-      {db.platform !== 'macos' ? (
+      {ark.platform !== 'macos' ? (
         <WindowTitlebar />
       ) : (
         <div data-tauri-drag-region className="h-9" />

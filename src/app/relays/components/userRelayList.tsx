@@ -1,29 +1,26 @@
-import { NDKKind, NDKSubscriptionCacheUsage } from '@nostr-dev-kit/ndk';
+import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 
 import { RelayForm } from '@app/relays/components/relayForm';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { CancelIcon, RefreshIcon } from '@shared/icons';
 
 import { useRelay } from '@utils/hooks/useRelay';
 
 export function UserRelayList() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { removeRelay } = useRelay();
   const { status, data, refetch } = useQuery({
-    queryKey: ['relays', db.account.pubkey],
+    queryKey: ['relays', ark.account.pubkey],
     queryFn: async () => {
-      const event = await ndk.fetchEvent(
-        {
+      const event = await ark.getEventByFilter({
+        filter: {
           kinds: [NDKKind.RelayList],
-          authors: [db.account.pubkey],
+          authors: [ark.account.pubkey],
         },
-        { cacheUsage: NDKSubscriptionCacheUsage.ONLY_RELAY }
-      );
+      });
 
       if (!event) return [];
       return event.tags;
@@ -31,7 +28,7 @@ export function UserRelayList() {
     refetchOnWindowFocus: false,
   });
 
-  const currentRelays = new Set([...ndk.pool.relays.values()].map((item) => item.url));
+  const currentRelays = new Set([...ark.relays]);
 
   return (
     <div className="col-span-1">

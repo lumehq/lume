@@ -1,4 +1,4 @@
-import { NDKEvent, NDKSubscription } from '@nostr-dev-kit/ndk';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,23 +7,18 @@ import { VList, VListHandle } from 'virtua';
 import { ChatForm } from '@app/chats/components/chatForm';
 import { ChatMessage } from '@app/chats/components/message';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function ChatScreen() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { pubkey } = useParams();
-  const { fetchNIP04Messages } = useNostr();
   const { status, data } = useQuery({
     queryKey: ['nip04-dm', pubkey],
     queryFn: async () => {
-      return await fetchNIP04Messages(pubkey);
+      return await ark.getAllMessagesByPubkey({ pubkey });
     },
     refetchOnWindowFocus: false,
   });
@@ -59,7 +54,7 @@ export function ChatScreen() {
         <ChatMessage
           key={message.id}
           message={message}
-          isSelf={message.pubkey === db.account.pubkey}
+          isSelf={message.pubkey === ark.account.pubkey}
         />
       );
     },
@@ -71,20 +66,15 @@ export function ChatScreen() {
   }, [data]);
 
   useEffect(() => {
-    const sub: NDKSubscription = ndk.subscribe(
-      {
+    const sub = ark.subscribe({
+      filter: {
         kinds: [4],
-        authors: [db.account.pubkey],
+        authors: [ark.account.pubkey],
         '#p': [pubkey],
         since: Math.floor(Date.now() / 1000),
       },
-      {
-        closeOnEose: false,
-      }
-    );
-
-    sub.addListener('event', (event) => {
-      newMessage.mutate(event);
+      closeOnEose: false,
+      cb: (event) => newMessage.mutate(event),
     });
 
     return () => {

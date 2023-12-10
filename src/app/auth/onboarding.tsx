@@ -3,12 +3,12 @@ import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notif
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { InfoIcon } from '@shared/icons';
 
 export function OnboardingScreen() {
-  const { db } = useStorage();
+  const { ark } = useArk();
   const navigate = useNavigate();
 
   const [settings, setSettings] = useState({
@@ -18,19 +18,19 @@ export function OnboardingScreen() {
   });
 
   const next = () => {
-    if (!db.account.contacts.length) return navigate('/auth/follow');
+    if (!ark.account.contacts.length) return navigate('/auth/follow');
     return navigate('/auth/finish');
   };
 
   const toggleOutbox = async () => {
-    await db.createSetting('outbox', String(+!settings.outbox));
+    await ark.createSetting('outbox', String(+!settings.outbox));
     // update state
     setSettings((prev) => ({ ...prev, outbox: !settings.outbox }));
   };
 
   const toggleAutoupdate = async () => {
-    await db.createSetting('autoupdate', String(+!settings.autoupdate));
-    db.settings.autoupdate = !settings.autoupdate;
+    await ark.createSetting('autoupdate', String(+!settings.autoupdate));
+    ark.settings.autoupdate = !settings.autoupdate;
     // update state
     setSettings((prev) => ({ ...prev, autoupdate: !settings.autoupdate }));
   };
@@ -46,7 +46,7 @@ export function OnboardingScreen() {
       const permissionGranted = await isPermissionGranted();
       setSettings((prev) => ({ ...prev, notification: permissionGranted }));
 
-      const data = await db.getAllSettings();
+      const data = await ark.getAllSettings();
       if (!data) return;
 
       data.forEach((item) => {

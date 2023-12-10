@@ -1,11 +1,11 @@
-import { NDKSubscriptionCacheUsage, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 export function useProfile(pubkey: string, embed?: string) {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const {
     isLoading,
     isError,
@@ -29,10 +29,7 @@ export function useProfile(pubkey: string, embed?: string) {
           if (decoded.type === 'npub') hexstring = decoded.data;
         }
 
-        const user = ndk.getUser({ pubkey: hexstring });
-        const profile = await user.fetchProfile({
-          cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
-        });
+        const profile = await ark.getUserProfile({ pubkey: hexstring });
 
         if (!profile)
           throw new Error(

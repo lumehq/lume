@@ -1,22 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { EditIcon, LoaderIcon } from '@shared/icons';
 
 import { compactNumber } from '@utils/number';
 
 export function ContactCard() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { status, data } = useQuery({
     queryKey: ['contacts'],
     queryFn: async () => {
-      const user = ndk.getUser({ pubkey: db.account.pubkey });
-      const follows = await user.follows();
-      return [...follows];
+      const contacts = await ark.getUserContacts({});
+      return contacts;
     },
     refetchOnWindowFocus: false,
   });

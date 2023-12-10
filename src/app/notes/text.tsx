@@ -6,6 +6,8 @@ import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { useArk } from '@libs/ark';
+
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
 import {
   ChildNote,
@@ -18,15 +20,14 @@ import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
 
 import { useEvent } from '@utils/hooks/useEvent';
-import { useNostr } from '@utils/hooks/useNostr';
 
 export function TextNoteScreen() {
   const navigate = useNavigate();
   const replyRef = useRef(null);
 
   const { id } = useParams();
+  const { ark } = useArk();
   const { status, data } = useEvent(id);
-  const { getEventThread } = useNostr();
 
   const [isCopy, setIsCopy] = useState(false);
 
@@ -50,7 +51,7 @@ export function TextNoteScreen() {
   };
 
   const renderKind = (event: NDKEvent) => {
-    const thread = getEventThread(event.tags);
+    const thread = ark.getEventThread({ tags: event.tags });
     switch (event.kind) {
       case NDKKind.Text:
         return (

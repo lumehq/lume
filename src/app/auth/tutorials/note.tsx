@@ -1,21 +1,23 @@
-import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { Link } from 'react-router-dom';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { EditIcon, ReactionIcon, ReplyIcon, RepostIcon, ZapIcon } from '@shared/icons';
 import { TextNote } from '@shared/notes';
 
 export function TutorialNoteScreen() {
-  const { ndk } = useNDK();
-  const exampleEvent = new NDKEvent(ndk, {
-    id: 'a3527670dd9b178bf7c2a9ea673b63bc8bfe774942b196691145343623c45821',
-    pubkey: '04c915daefee38317fa734444acee390a8269fe5810b2241e5e6dd343dfbecc9',
-    created_at: 1701355223,
-    kind: 1,
-    tags: [],
-    content: 'good morning nostr, stay humble and stack sats 🫡',
-    sig: '9e0bd67ec25598744f20bff0fe360fdf190c4240edb9eea260e50f77e07f94ea767ececcc6270819b7f64e5e7ca1fe20b4971f46dc120e6db43114557f3a6dae',
+  const { ark } = useArk();
+
+  const exampleEvent = ark.createNDKEvent({
+    event: {
+      id: 'a3527670dd9b178bf7c2a9ea673b63bc8bfe774942b196691145343623c45821',
+      pubkey: '04c915daefee38317fa734444acee390a8269fe5810b2241e5e6dd343dfbecc9',
+      created_at: 1701355223,
+      kind: 1,
+      tags: [],
+      content: 'good morning nostr, stay humble and stack sats 🫡',
+      sig: '9e0bd67ec25598744f20bff0fe360fdf190c4240edb9eea260e50f77e07f94ea767ececcc6270819b7f64e5e7ca1fe20b4971f46dc120e6db43114557f3a6dae',
+    },
   });
 
   return (

@@ -2,12 +2,12 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
 
+import { useArk } from '@libs/ark';
+
 import { MediaIcon } from '@shared/icons';
 
-import { useNostr } from '@utils/hooks/useNostr';
-
 export function MediaUploader({ editor }: { editor: Editor }) {
-  const { upload } = useNostr();
+  const { ark } = useArk();
   const [loading, setLoading] = useState(false);
 
   const uploadToNostrBuild = async () => {
@@ -15,7 +15,9 @@ export function MediaUploader({ editor }: { editor: Editor }) {
       // start loading
       setLoading(true);
 
-      const image = await upload(['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov']);
+      const image = await ark.upload({
+        fileExts: ['mp4', 'mp3', 'webm', 'mkv', 'avi', 'mov'],
+      });
 
       if (image) {
         editor.commands.setImage({ src: image });

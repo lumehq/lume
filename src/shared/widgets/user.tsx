@@ -1,10 +1,11 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
 import { WVList } from 'virtua';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
+import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
   MemoizedRepost,
   MemoizedTextNote,
@@ -15,43 +16,46 @@ import { TitleBar } from '@shared/titleBar';
 import { UserProfile } from '@shared/userProfile';
 import { WidgetWrapper } from '@shared/widgets';
 
-import { nHoursAgo } from '@utils/date';
+import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function UserWidget({ widget }: { widget: Widget }) {
-  const { ndk } = useNDK();
-  const { status, data } = useQuery({
-    queryKey: ['user-posts', widget.id],
-    queryFn: async () => {
-      const rootIds = new Set();
-      const dedupQueue = new Set();
+  const { ark } = useArk();
+  const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ['user-posts', widget.content],
+      initialPageParam: 0,
+      queryFn: async ({
+        signal,
+        pageParam,
+      }: {
+        signal: AbortSignal;
+        pageParam: number;
+      }) => {
+        const events = await ark.getInfiniteEvents({
+          filter: {
+            kinds: [NDKKind.Text, NDKKind.Repost],
+            authors: [widget.content],
+          },
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
+        });
 
-      const events = await ndk.fetchEvents({
-        kinds: [NDKKind.Text, NDKKind.Repost],
-        authors: [widget.content],
-        since: nHoursAgo(24),
-      });
+        return events;
+      },
+      getNextPageParam: (lastPage) => {
+        const lastEvent = lastPage.at(-1);
+        if (!lastEvent) return;
+        return lastEvent.created_at - 1;
+      },
+      refetchOnWindowFocus: false,
+    });
 
-      const ndkEvents = [...events];
-
-      ndkEvents.forEach((event) => {
-        const tags = event.tags.filter((el) => el[0] === 'e');
-        if (tags && tags.length > 0) {
-          const rootId = tags.filter((el) => el[3] === 'root')[1] ?? tags[0][1];
-          if (rootIds.has(rootId)) return dedupQueue.add(event.id);
-          rootIds.add(rootId);
-        }
-      });
-
-      return ndkEvents
-        .filter((event) => !dedupQueue.has(event.id))
-        .sort((a, b) => b.created_at - a.created_at);
-    },
-    staleTime: Infinity,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
+  const allEvents = useMemo(
+    () => (data ? data.pages.flatMap((page) => page) : []),
+    [data]
+  );
 
   // render event match event kind
   const renderItem = useCallback(
@@ -86,19 +90,28 @@ export function UserWidget({ widget }: { widget: Widget }) {
                   <NoteSkeleton />
                 </div>
               </div>
-            ) : data.length === 0 ? (
-              <div className="px-3 py-1.5">
-                <div className="rounded-xl bg-neutral-100 px-3 py-6 dark:bg-neutral-900">
-                  <div className="flex flex-col items-center gap-4">
-                    <p className="text-center text-sm text-neutral-900 dark:text-neutral-100">
-                      No new post from 24 hours ago
-                    </p>
-                  </div>
-                </div>
-              </div>
             ) : (
-              data.map((item) => renderItem(item))
+              allEvents.map((item) => renderItem(item))
             )}
+            <div className="flex h-16 items-center justify-center px-3 pb-3">
+              {hasNextPage ? (
+                <button
+                  type="button"
+                  onClick={() => fetchNextPage()}
+                  disabled={!hasNextPage || isFetchingNextPage}
+                  className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+                >
+                  {isFetchingNextPage ? (
+                    <LoaderIcon className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      <ArrowRightCircleIcon className="h-5 w-5" />
+                      Load more
+                    </>
+                  )}
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       </WVList>

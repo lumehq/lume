@@ -1,19 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetch } from '@tauri-apps/plugin-http';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 
 import { compactNumber } from '@utils/number';
 
 export function ZapCard() {
-  const { db } = useStorage();
+  const { ark } = useArk();
   const { status, data } = useQuery({
-    queryKey: ['user-stats', db.account.pubkey],
+    queryKey: ['user-stats', ark.account.pubkey],
     queryFn: async ({ signal }: { signal: AbortSignal }) => {
       const res = await fetch(
-        `https://api.nostr.band/v0/stats/profile/${db.account.pubkey}`,
+        `https://api.nostr.band/v0/stats/profile/${ark.account.pubkey}`,
         {
           signal,
         }
@@ -41,7 +41,7 @@ export function ZapCard() {
         <div className="flex h-full w-full flex-col justify-between p-4">
           <h3 className="pt-1 text-5xl font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
             {compactNumber.format(
-              data?.stats[db.account.pubkey]?.zaps_received?.msats / 1000 || 0
+              data?.stats[ark.account.pubkey]?.zaps_received?.msats / 1000 || 0
             )}
           </h3>
           <div className="mt-auto flex h-6 items-center text-xl font-medium leading-none text-neutral-600 dark:text-neutral-400">

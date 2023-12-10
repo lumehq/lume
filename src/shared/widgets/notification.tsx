@@ -1,10 +1,9 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
@@ -12,15 +11,12 @@ import { TitleBar } from '@shared/titleBar';
 import { WidgetWrapper } from '@shared/widgets';
 
 import { FETCH_LIMIT } from '@utils/constants';
-import { useNostr } from '@utils/hooks/useNostr';
 import { sendNativeNotification } from '@utils/notification';
 
 export function NotificationWidget() {
   const queryClient = useQueryClient();
 
-  const { db } = useStorage();
-  const { sub } = useNostr();
-  const { ndk, relayUrls, fetcher } = useNDK();
+  const { ark } = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['notification'],
@@ -32,21 +28,17 @@ export function NotificationWidget() {
         signal: AbortSignal;
         pageParam: number;
       }) => {
-        const events = await fetcher.fetchLatestEvents(
-          relayUrls,
-          {
+        const events = await ark.getInfiniteEvents({
+          filter: {
             kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
-            '#p': [db.account.pubkey],
+            '#p': [ark.account.pubkey],
           },
-          FETCH_LIMIT,
-          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
-        );
-
-        const ndkEvents = events.map((event) => {
-          return new NDKEvent(ndk, event);
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
         });
 
-        return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+        return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);
@@ -65,21 +57,24 @@ export function NotificationWidget() {
   );
 
   const renderEvent = useCallback((event: NDKEvent) => {
-    if (event.pubkey === db.account.pubkey) return null;
+    if (event.pubkey === ark.account.pubkey) return null;
     return <MemoizedNotifyNote key={event.id} event={event} />;
   }, []);
 
   useEffect(() => {
-    if (status === 'success' && db.account) {
+    let sub: NDKSubscription = undefined;
+
+    if (status === 'success' && ark.account) {
       const filter = {
         kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Reaction, NDKKind.Zap],
-        '#p': [db.account.pubkey],
+        '#p': [ark.account.pubkey],
         since: Math.floor(Date.now() / 1000),
       };
 
-      sub(
+      sub = ark.subscribe({
         filter,
-        async (event) => {
+        closeOnEose: false,
+        cb: async (event) => {
           queryClient.setQueryData(
             ['notification'],
             (prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
@@ -88,21 +83,18 @@ export function NotificationWidget() {
             })
           );
 
-          const user = ndk.getUser({ pubkey: event.pubkey });
-          await user.fetchProfile();
+          const profile = await ark.getUserProfile({ pubkey: event.pubkey });
 
           switch (event.kind) {
             case NDKKind.Text:
               return await sendNativeNotification(
-                `${
-                  user.profile.displayName || user.profile.name
-                } has replied to your note`
+                `${profile.displayName || profile.name} has replied to your note`
               );
             case NDKKind.EncryptedDirectMessage: {
               if (location.pathname !== '/chats') {
                 return await sendNativeNotification(
                   `${
-                    user.profile.displayName || user.profile.name
+                    profile.displayName || profile.name
                   } has send you a encrypted message`
                 );
               } else {
@@ -111,28 +103,28 @@ export function NotificationWidget() {
             }
             case NDKKind.Repost:
               return await sendNativeNotification(
-                `${
-                  user.profile.displayName || user.profile.name
-                } has reposted to your note`
+                `${profile.displayName || profile.name} has reposted to your note`
               );
             case NDKKind.Reaction:
               return await sendNativeNotification(
-                `${user.profile.displayName || user.profile.name} has reacted ${
+                `${profile.displayName || profile.name} has reacted ${
                   event.content
                 } to your note`
               );
             case NDKKind.Zap:
               return await sendNativeNotification(
-                `${user.profile.displayName || user.profile.name} has zapped to your note`
+                `${profile.displayName || profile.name} has zapped to your note`
               );
             default:
               break;
           }
         },
-        false,
-        'notification'
-      );
+      });
     }
+
+    return () => {
+      if (sub) sub.stop();
+    };
   }, [status]);
 
   return (

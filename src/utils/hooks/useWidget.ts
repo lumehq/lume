@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { Widget } from '@utils/types';
 
 export function useWidget() {
-  const { db } = useStorage();
+  const { ark } = useArk();
   const queryClient = useQueryClient();
 
   const addWidget = useMutation({
     mutationFn: async (widget: Widget) => {
-      return await db.createWidget(widget.kind, widget.title, widget.content);
+      return await ark.createWidget(widget.kind, widget.title, widget.content);
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['widgets'], (old: Widget[]) => [...old, data]);
@@ -26,8 +26,8 @@ export function useWidget() {
       const prevWidgets = queryClient.getQueryData(['widgets']);
 
       // create new widget
-      await db.removeWidget(currentId);
-      const newWidget = await db.createWidget(widget.kind, widget.title, widget.content);
+      await ark.removeWidget(currentId);
+      const newWidget = await ark.createWidget(widget.kind, widget.title, widget.content);
 
       // Optimistically update to the new value
       queryClient.setQueryData(['widgets'], (prev: Widget[]) => [
@@ -57,7 +57,7 @@ export function useWidget() {
       );
 
       // Update in database
-      await db.removeWidget(id);
+      await ark.removeWidget(id);
 
       // Return a context object with the snapshotted value
       return { prevWidgets };

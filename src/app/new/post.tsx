@@ -7,13 +7,13 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { convert } from 'html-to-text';
 import { nip19 } from 'nostr-tools';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { MediaUploader, MentionPopup } from '@app/new/components';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
@@ -23,7 +23,7 @@ import { useSuggestion } from '@utils/hooks/useSuggestion';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NewPostScreen() {
-  const { ndk } = useNDK();
+  const { ark } = useArk();
   const { addWidget } = useWidget();
   const { suggestion } = useSuggestion();
 
@@ -68,7 +68,7 @@ export function NewPostScreen() {
 
   const submit = async () => {
     try {
-      if (!ndk.signer) return navigate('/new/privkey');
+      if (!ark.readyToSign) return navigate('/new/privkey');
 
       setLoading(true);
 
@@ -81,29 +81,23 @@ export function NewPostScreen() {
         ],
       });
 
-      const event = new NDKEvent(ndk);
-      event.content = serializedContent;
-      event.kind = NDKKind.Text;
-
       // add reply to tags if present
       const replyTo = searchParams.get('replyTo');
       const rootReplyTo = searchParams.get('rootReplyTo');
 
-      if (rootReplyTo) {
-        const rootEvent = await ndk.fetchEvent(rootReplyTo);
-        event.tag(rootEvent, 'root');
-      }
-
-      if (replyTo) {
-        const replyEvent = await ndk.fetchEvent(replyTo);
-        event.tag(replyEvent, 'reply');
-      }
-
       // publish event
-      const publishedRelays = await event.publish();
+      const event = (await ark.createEvent({
+        kind: NDKKind.Text,
+        tags: [],
+        content: serializedContent,
+        replyTo,
+        rootReplyTo,
+      })) as NDKEvent;
 
-      if (publishedRelays) {
-        toast.success(`Broadcasted to ${publishedRelays.size} relays successfully.`);
+      const publish = await event.publish();
+
+      if (publish) {
+        toast.success(`Broadcasted to ${publish.size} relays successfully.`);
 
         // update state
         setLoading(false);
@@ -131,10 +125,6 @@ export function NewPostScreen() {
   useLayoutEffect(() => {
     setHeight(containerRef.current.clientHeight);
   }, []);
-
-  useEffect(() => {
-    if (editor) editor.commands.focus('end');
-  }, [editor]);
 
   return (
     <div className="flex flex-1 flex-col gap-4">

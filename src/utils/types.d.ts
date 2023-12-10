@@ -160,3 +160,9 @@ export interface NIP11 {
   payments_url: string;
   icon: string[];
 }
+
+export interface NIP05 {
+  names: {
+    [key: string]: string;
+  };
+}

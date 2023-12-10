@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { VList } from 'virtua';
 
-import { useNDK } from '@libs/ndk/provider';
+import { useArk } from '@libs/ark';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
@@ -19,7 +19,7 @@ import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function GroupWidget({ widget }: { widget: Widget }) {
-  const { relayUrls, ndk, fetcher } = useNDK();
+  const { ark } = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['groupfeeds', widget.id],
@@ -32,21 +32,18 @@ export function GroupWidget({ widget }: { widget: Widget }) {
         pageParam: number;
       }) => {
         const authors = JSON.parse(widget.content);
-        const events = await fetcher.fetchLatestEvents(
-          relayUrls,
-          {
+        const events = await ark.getInfiniteEvents({
+          filter: {
             kinds: [NDKKind.Text, NDKKind.Repost],
             authors: authors,
           },
-          FETCH_LIMIT,
-          { asOf: pageParam === 0 ? undefined : pageParam, abortSignal: signal }
-        );
-
-        const ndkEvents = events.map((event) => {
-          return new NDKEvent(ndk, event);
+          limit: FETCH_LIMIT,
+          pageParam,
+          signal,
+          dedup: false,
         });
 
-        return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+        return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);

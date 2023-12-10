@@ -3,26 +3,18 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 export function Logout() {
-  const { db } = useStorage();
-  const { ndk } = useNDK();
+  const { ark } = useArk();
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const logout = async () => {
     try {
-      ndk.signer = null;
-
-      // remove private key
-      await db.secureRemove(db.account.pubkey);
-      await db.secureRemove(`${db.account.id}-nsecbunker`);
-
       // logout
-      await db.accountLogout();
+      await ark.logout();
 
       // clear cache
       queryClient.clear();

@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
+import { NDKKind, NDKPrivateKeySigner } from '@nostr-dev-kit/ndk';
 import { downloadDir } from '@tauri-apps/api/path';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { save } from '@tauri-apps/plugin-dialog';
@@ -11,8 +11,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useNDK } from '@libs/ndk/provider';
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { AvatarUploader } from '@shared/avatarUploader';
 import { ArrowLeftIcon, InfoIcon, LoaderIcon } from '@shared/icons';
@@ -29,13 +28,12 @@ export function CreateAccountScreen() {
     privkey: string;
   }>(null);
 
+  const { ark } = useArk();
   const {
     register,
     handleSubmit,
     formState: { isDirty, isValid },
   } = useForm();
-  const { db } = useStorage();
-  const { ndk } = useNDK();
 
   const navigate = useNavigate();
 
@@ -62,28 +60,27 @@ export function CreateAccountScreen() {
       const userNsec = nip19.nsecEncode(userPrivkey);
 
       const signer = new NDKPrivateKeySigner(userPrivkey);
-      ndk.signer = signer;
+      ark.updateNostrSigner({ signer });
 
-      const event = new NDKEvent(ndk);
-      event.content = JSON.stringify(profile);
-      event.kind = NDKKind.Metadata;
-      event.pubkey = userPubkey;
-      event.tags = [];
-
-      const publish = await event.publish();
+      const publish = await ark.createEvent({
+        content: JSON.stringify(profile),
+        kind: NDKKind.Metadata,
+        tags: [],
+        publish: true,
+      });
 
       if (publish) {
-        await db.createAccount(userNpub, userPubkey);
-        await db.secureSave(userPubkey, userPrivkey);
+        await ark.createAccount({
+          id: userNpub,
+          pubkey: userPubkey,
+          privkey: userPrivkey,
+        });
 
-        const relayListEvent = new NDKEvent(ndk);
-        relayListEvent.kind = NDKKind.RelayList;
-        relayListEvent.tags = [...ndk.pool.relays.values()].map((item) => [
-          'r',
-          item.url,
-        ]);
-
-        await relayListEvent.publish();
+        await ark.createEvent({
+          kind: NDKKind.RelayList,
+          tags: [ark.relays],
+          publish: true,
+        });
 
         setKeys({
           npub: userNpub,
@@ -93,7 +90,7 @@ export function CreateAccountScreen() {
         });
         setLoading(false);
       } else {
-        toast('Create account failed');
+        toast('Cannot publish user profile, please try again later.');
         setLoading(false);
       }
     } catch (e) {

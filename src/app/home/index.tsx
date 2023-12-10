@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
 
-import { useStorage } from '@libs/storage/provider';
+import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 import {
@@ -28,11 +28,11 @@ export function HomeScreen() {
   const ref = useRef<VListHandle>(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  const { db } = useStorage();
+  const { ark } = useArk();
   const { status, data } = useQuery({
     queryKey: ['widgets'],
     queryFn: async () => {
-      const dbWidgets = await db.getWidgets();
+      const dbWidgets = await ark.getWidgets();
       const defaultWidgets = [
         {
           id: '9999',
