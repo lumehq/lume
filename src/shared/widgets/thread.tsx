@@ -14,9 +14,8 @@ import {
   NoteReplyForm,
 } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
-import { TitleBar } from '@shared/titleBar';
 import { User } from '@shared/user';
-import { WidgetWrapper } from '@shared/widgets';
+import { TitleBar, WidgetWrapper } from '@shared/widgets';
 
 import { useEvent } from '@utils/hooks/useEvent';
 import { Widget } from '@utils/types';

@@ -1,6 +1,5 @@
 import { ArticleIcon, MediaIcon, PlusIcon } from '@shared/icons';
-import { TitleBar } from '@shared/titleBar';
-import { AddGroupFeeds, AddHashtagFeeds, WidgetWrapper } from '@shared/widgets';
+import { AddGroupFeeds, AddHashtagFeeds, TitleBar, WidgetWrapper } from '@shared/widgets';
 
 import { TOPICS, WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';

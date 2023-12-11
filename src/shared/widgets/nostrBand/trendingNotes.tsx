@@ -4,8 +4,7 @@ import { VList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
 import { MemoizedTextNote } from '@shared/notes';
-import { TitleBar } from '@shared/titleBar';
-import { WidgetWrapper } from '@shared/widgets';
+import { TitleBar, WidgetWrapper } from '@shared/widgets';
 
 import { Widget } from '@utils/types';
 

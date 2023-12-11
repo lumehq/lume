@@ -81,7 +81,6 @@
     "react-router-dom": "^6.20.1",
     "react-string-replace": "^1.1.1",
     "sonner": "^1.2.4",
-    "tauri-controls": "github:reyamir/tauri-controls",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.8",
     "virtua": "^0.17.5",

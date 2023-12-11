@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { VList } from 'virtua';
 
 import { LoaderIcon } from '@shared/icons';
-import { TitleBar } from '@shared/titleBar';
-import { WidgetWrapper } from '@shared/widgets';
 import {
   NostrBandUserProfile,
   type Profile,
-} from '@shared/widgets/other/nostrBandUserProfile';
+  TitleBar,
+  WidgetWrapper,
+} from '@shared/widgets';
 
 import { Widget } from '@utils/types';
 

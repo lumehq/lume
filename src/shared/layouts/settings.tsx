@@ -1,6 +1,5 @@
 import { NavLink, Outlet, ScrollRestoration, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-import { WindowTitlebar } from 'tauri-controls';
 
 import { useArk } from '@libs/ark';
 
@@ -12,6 +11,7 @@ import {
   SettingsIcon,
   UserIcon,
 } from '@shared/icons';
+import { WindowTitleBar } from '@shared/titlebar';
 
 export function SettingsLayout() {
   const { ark } = useArk();
@@ -20,7 +20,7 @@ export function SettingsLayout() {
   return (
     <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
       {ark.platform !== 'macos' ? (
-        <WindowTitlebar />
+        <WindowTitleBar platform={ark.platform} />
       ) : (
         <div data-tauri-drag-region className="h-9" />
       )}
