@@ -1,17 +1,20 @@
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { Link } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
 
 import { useArk } from '@libs/ark';
 
 import { AccountMoreActions } from '@shared/accounts/more';
-import { NetworkStatusIndicator } from '@shared/networkStatusIndicator';
 
+import { useNetworkStatus } from '@utils/hooks/useNetworkStatus';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function ActiveAccount() {
   const { ark } = useArk();
   const { user } = useProfile(ark.account.pubkey);
+
+  const isOnline = useNetworkStatus();
 
   const svgURI =
     'data:image/svg+xml;utf8,' +
@@ -37,7 +40,12 @@ export function ActiveAccount() {
             />
           </Avatar.Fallback>
         </Avatar.Root>
-        <NetworkStatusIndicator />
+        <span
+          className={twMerge(
+            'absolute bottom-0 right-0 block h-2 w-2 rounded-full ring-2 ring-neutral-100 dark:ring-neutral-900',
+            isOnline ? 'bg-teal-500' : 'bg-red-500'
+          )}
+        />
       </Link>
       <AccountMoreActions />
     </div>

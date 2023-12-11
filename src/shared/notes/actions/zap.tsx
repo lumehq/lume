@@ -13,10 +13,9 @@ import { useArk } from '@libs/ark';
 
 import { CancelIcon, ZapIcon } from '@shared/icons';
 
+import { compactNumber, displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
-import { compactNumber } from '@utils/number';
-import { displayNpub } from '@utils/shortenKey';
 
 export function NoteZap({ event }: { event: NDKEvent }) {
   const { ark } = useArk();

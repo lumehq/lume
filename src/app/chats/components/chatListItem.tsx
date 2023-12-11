@@ -7,9 +7,8 @@ import { twMerge } from 'tailwind-merge';
 
 import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
-import { formatCreatedAt } from '@utils/createdAt';
+import { displayNpub, formatCreatedAt } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
-import { displayNpub } from '@utils/shortenKey';
 
 export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEvent }) {
   const { isLoading, user } = useProfile(event.pubkey);

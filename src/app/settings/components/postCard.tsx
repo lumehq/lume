@@ -6,7 +6,7 @@ import { useArk } from '@libs/ark';
 
 import { LoaderIcon } from '@shared/icons';
 
-import { compactNumber } from '@utils/number';
+import { compactNumber } from '@utils/formater';
 
 export function PostCard() {
   const { ark } = useArk();

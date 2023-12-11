@@ -6,8 +6,8 @@ import { useArk } from '@libs/ark';
 
 import { NIP05 } from '@shared/nip05';
 
+import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
-import { displayNpub } from '@utils/shortenKey';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
   const { ark } = useArk();
