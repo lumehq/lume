@@ -1,10 +1,10 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-import { WindowTitlebar } from 'tauri-controls';
 
 import { useArk } from '@libs/ark';
 
 import { Navigation } from '@shared/navigation';
+import { WindowTitleBar } from '@shared/titlebar';
 
 export function AppLayout() {
   const { ark } = useArk();
@@ -17,7 +17,7 @@ export function AppLayout() {
       )}
     >
       {ark.platform !== 'macos' ? (
-        <WindowTitlebar />
+        <WindowTitleBar platform={ark.platform} />
       ) : (
         <div data-tauri-drag-region className="h-9" />
       )}

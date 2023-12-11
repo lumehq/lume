@@ -1,7 +1,8 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom';
-import { WindowTitlebar } from 'tauri-controls';
 
 import { useArk } from '@libs/ark';
+
+import { WindowTitleBar } from '@shared/titlebar';
 
 export function AuthLayout() {
   const { ark } = useArk();
@@ -9,7 +10,7 @@ export function AuthLayout() {
   return (
     <div className="flex h-screen w-screen flex-col">
       {ark.platform !== 'macos' ? (
-        <WindowTitlebar />
+        <WindowTitleBar platform={ark.platform} />
       ) : (
         <div data-tauri-drag-region className="h-9" />
       )}

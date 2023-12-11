@@ -7,8 +7,7 @@ import { useArk } from '@libs/ark';
 
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedFileNote } from '@shared/notes';
-import { TitleBar } from '@shared/titleBar';
-import { WidgetWrapper } from '@shared/widgets';
+import { TitleBar, WidgetWrapper } from '@shared/widgets';
 
 import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';

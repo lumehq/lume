@@ -16,3 +16,5 @@ export * from './other/widgetList';
 export * from './other/addGroupFeeds';
 export * from './other/addHashtagFeeds';
 export * from './other/userProfile';
+export * from './titleBar';
+export * from './other/nostrBandUserProfile';

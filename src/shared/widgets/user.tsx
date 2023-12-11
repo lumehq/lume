@@ -12,8 +12,7 @@ import {
   NoteSkeleton,
   UnknownNote,
 } from '@shared/notes';
-import { TitleBar } from '@shared/titleBar';
-import { UserProfile, WidgetWrapper } from '@shared/widgets';
+import { TitleBar, UserProfile, WidgetWrapper } from '@shared/widgets';
 
 import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
