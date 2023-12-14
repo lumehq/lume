@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 import { ArkProvider } from '@libs/ark/provider';
 import App from './app';
+import './app.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +19,7 @@ const root = createRoot(container);
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <ReactQueryDevtools initialIsOpen={false} />
+    <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
     <Toaster position="top-center" theme="system" closeButton />
     <ArkProvider>
       <App />
