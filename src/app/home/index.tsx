@@ -93,44 +93,46 @@ export function HomeScreen() {
   }
 
   return (
-    <VList
-      ref={ref}
-      className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
-      initialItemSize={420}
-      tabIndex={0}
-      horizontal
-      onKeyDown={(e) => {
-        if (!ref.current) return;
-        switch (e.code) {
-          case 'ArrowUp':
-          case 'ArrowLeft': {
-            e.preventDefault();
-            const prevIndex = Math.max(selectedIndex - 1, 0);
-            setSelectedIndex(prevIndex);
-            ref.current.scrollToIndex(prevIndex, {
-              align: 'center',
-              smooth: true,
-            });
-            break;
+    <div className="h-full w-full">
+      <VList
+        ref={ref}
+        className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
+        initialItemSize={420}
+        tabIndex={0}
+        horizontal
+        onKeyDown={(e) => {
+          if (!ref.current) return;
+          switch (e.code) {
+            case 'ArrowUp':
+            case 'ArrowLeft': {
+              e.preventDefault();
+              const prevIndex = Math.max(selectedIndex - 1, 0);
+              setSelectedIndex(prevIndex);
+              ref.current.scrollToIndex(prevIndex, {
+                align: 'center',
+                smooth: true,
+              });
+              break;
+            }
+            case 'ArrowDown':
+            case 'ArrowRight': {
+              e.preventDefault();
+              const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
+              setSelectedIndex(nextIndex);
+              ref.current.scrollToIndex(nextIndex, {
+                align: 'center',
+                smooth: true,
+              });
+              break;
+            }
+            default:
+              break;
           }
-          case 'ArrowDown':
-          case 'ArrowRight': {
-            e.preventDefault();
-            const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
-            setSelectedIndex(nextIndex);
-            ref.current.scrollToIndex(nextIndex, {
-              align: 'center',
-              smooth: true,
-            });
-            break;
-          }
-          default:
-            break;
-        }
-      }}
-    >
-      {data.map((widget) => renderItem(widget))}
-      <ToggleWidgetList />
-    </VList>
+        }}
+      >
+        {data.map((widget) => renderItem(widget))}
+        <ToggleWidgetList />
+      </VList>
+    </div>
   );
 }

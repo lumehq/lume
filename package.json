@@ -83,8 +83,7 @@
     "sonner": "^1.2.4",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.8",
-    "virtua": "^0.17.5",
-    "zustand": "^4.4.7"
+    "virtua": "^0.17.5"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

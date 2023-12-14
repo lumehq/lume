@@ -43,6 +43,7 @@ export class Ark {
   readonly platform: Platform | null;
   readonly settings: {
     autoupdate: boolean;
+    bunker: boolean;
     outbox: boolean;
     media: boolean;
     hashtag: boolean;
@@ -53,6 +54,7 @@ export class Ark {
     this.platform = platform;
     this.settings = {
       autoupdate: false,
+      bunker: false,
       outbox: false,
       media: true,
       hashtag: true,
@@ -100,7 +102,7 @@ export class Ark {
         const bunker = new NDK({
           explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
         });
-        await bunker.connect();
+        await bunker.connect(3000);
 
         const remoteSigner = new NDKNip46Signer(bunker, this.account.pubkey, localSigner);
         await remoteSigner.blockUntilReady();
@@ -134,11 +136,14 @@ export class Ark {
   }
 
   public async init() {
-    const outboxSetting = await this.getSettingValue('outbox');
-    const bunkerSetting = await this.getSettingValue('nsecbunker');
-
-    const bunker = !!parseInt(bunkerSetting);
-    const enableOutboxModel = !!parseInt(outboxSetting);
+    const settings = await this.getAllSettings();
+    for (const item of settings) {
+      if (item.key === 'nsecbunker') this.settings.bunker = !!parseInt(item.value);
+      if (item.key === 'outbox') this.settings.outbox = !!parseInt(item.value);
+      if (item.key === 'media') this.settings.media = !!parseInt(item.value);
+      if (item.key === 'hashtag') this.settings.hashtag = !!parseInt(item.value);
+      if (item.key === 'autoupdate') this.settings.autoupdate = !!parseInt(item.value);
+    }
 
     const explicitRelayUrls = normalizeRelayUrlSet([
       'wss://relay.damus.io',
@@ -159,7 +164,7 @@ export class Ark {
       explicitRelayUrls,
       outboxRelayUrls,
       blacklistRelayUrls,
-      enableOutboxModel,
+      enableOutboxModel: this.settings.outbox,
       autoConnectUserRelays: true,
       autoFetchUserMutelist: true,
       // clientName: 'Lume',
@@ -167,11 +172,11 @@ export class Ark {
     });
 
     // add signer if exist
-    const signer = await this.#initNostrSigner({ nsecbunker: bunker });
+    const signer = await this.#initNostrSigner({ nsecbunker: this.settings.bunker });
     if (signer) ndk.signer = signer;
 
     // connect
-    await ndk.connect();
+    await ndk.connect(5000);
     const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
 
     // update account's metadata
@@ -356,7 +361,7 @@ export class Ark {
     const results: { key: string; value: string }[] = await this.#storage.select(
       'SELECT * FROM settings ORDER BY id DESC;'
     );
-    if (results.length < 1) return null;
+    if (results.length < 1) return [];
     return results;
   }
 

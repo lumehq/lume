@@ -1,4 +1,5 @@
 import { fetch } from '@tauri-apps/plugin-http';
+import { nip19 } from 'nostr-tools';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ErrorScreen } from '@app/error';
 import { useArk } from '@libs/ark';
@@ -44,6 +45,21 @@ export default function App() {
               },
             },
             {
+              path: ':address',
+              loader: ({ params }) => {
+                const address = params.address;
+                const decode = nip19.decode(address);
+                if (decode.type === 'npub') return redirect(`/users/${decode.data}`);
+                if (decode.type === 'nprofile')
+                  return redirect(`/users/${decode.data.pubkey}`);
+                if (decode.type === 'note') return redirect(`/events/${decode.data}`);
+                if (decode.type === 'nrelay') return redirect(`/relays/${decode.data}`);
+                if (decode.type === 'nevent')
+                  return redirect(`/relays/${decode.data.id}`);
+                return null;
+              },
+            },
+            {
               path: 'nwc',
               async lazy() {
                 const { NWCScreen } = await import('@app/nwc');
@@ -63,20 +79,6 @@ export default function App() {
               async lazy() {
                 const { RelayScreen } = await import('@app/relays/relay');
                 return { Component: RelayScreen };
-              },
-            },
-            {
-              path: 'users/:pubkey',
-              async lazy() {
-                const { UserScreen } = await import('@app/users');
-                return { Component: UserScreen };
-              },
-            },
-            {
-              path: 'events/:id',
-              async lazy() {
-                const { TextNoteScreen } = await import('@app/notes/text');
-                return { Component: TextNoteScreen };
               },
             },
             {
