@@ -3,18 +3,14 @@ import { minidenticon } from 'minidenticons';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { UserStats } from '@app/users/components/stats';
-
 import { useArk } from '@libs/ark';
-
 import { NIP05 } from '@shared/nip05';
-
 import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);

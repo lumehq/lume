@@ -1,6 +1,5 @@
 import { HTMLProps, useContext } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { AppWindowContext, WindowButton, WindowIcons } from '@shared/titlebar';
 
 export function Windows({ className, ...props }: HTMLProps<HTMLDivElement>) {

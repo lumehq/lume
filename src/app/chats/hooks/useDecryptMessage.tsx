@@ -1,10 +1,9 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
-
 import { useArk } from '@libs/ark';
 
 export function useDecryptMessage(event: NDKEvent) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [content, setContent] = useState(event.content);
 
   useEffect(() => {

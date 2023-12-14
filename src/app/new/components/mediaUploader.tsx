@@ -1,13 +1,11 @@
 import { message } from '@tauri-apps/plugin-dialog';
 import { Editor } from '@tiptap/react';
 import { useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import { MediaIcon } from '@shared/icons';
 
 export function MediaUploader({ editor }: { editor: Editor }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [loading, setLoading] = useState(false);
 
   const uploadToNostrBuild = async () => {

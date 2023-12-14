@@ -1,10 +1,9 @@
 import { NDKKind, NDKRelayUrl, NDKTag } from '@nostr-dev-kit/ndk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { useArk } from '@libs/ark';
 
 export function useRelay() {
-  const { ark } = useArk();
+  const ark = useArk();
   const queryClient = useQueryClient();
 
   const connectRelay = useMutation({

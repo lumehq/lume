@@ -1,7 +1,6 @@
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { useMemo } from 'react';
-
 import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 

@@ -1,14 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { EditIcon, LoaderIcon } from '@shared/icons';
-
 import { compactNumber } from '@utils/formater';
 
 export function RelayCard() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useQuery({
     queryKey: ['relays', ark.account.pubkey],
     queryFn: async () => {

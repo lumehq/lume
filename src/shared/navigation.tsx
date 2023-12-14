@@ -1,9 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-
 import { ActiveAccount } from '@shared/accounts/active';
 import { ChatsIcon, ComposeIcon, HomeIcon, NwcIcon, RelayIcon } from '@shared/icons';
-
 import { compactNumber } from '@utils/formater';
 
 export function Navigation() {

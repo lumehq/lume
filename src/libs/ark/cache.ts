@@ -14,7 +14,6 @@ import Database from '@tauri-apps/plugin-sql';
 import { LRUCache } from 'lru-cache';
 import { NostrEvent } from 'nostr-fetch';
 import { matchFilter } from 'nostr-tools';
-
 import { NDKCacheEvent, NDKCacheEventTag, NDKCacheUser } from '@utils/types';
 
 export class NDKCacheAdapterTauri implements NDKCacheAdapter {

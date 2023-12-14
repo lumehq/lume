@@ -1,8 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import {
   ArrowRightCircleIcon,
   CancelIcon,
@@ -11,12 +9,11 @@ import {
   PlusIcon,
 } from '@shared/icons';
 import { User } from '@shared/user';
-
 import { WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function AddGroupFeeds({ currentWidgetId }: { currentWidgetId: string }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { replaceWidget } = useWidget();
 
   const [title, setTitle] = useState<string>('');

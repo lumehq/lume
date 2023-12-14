@@ -5,9 +5,7 @@ import { EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowLeftIcon, CheckCircleIcon, ReplyIcon, ShareIcon } from '@shared/icons';
 import {
   ChildNote,
@@ -18,7 +16,6 @@ import {
 } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
 import { User } from '@shared/user';
-
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function TextNoteScreen() {
@@ -26,7 +23,7 @@ export function TextNoteScreen() {
   const replyRef = useRef(null);
 
   const { id } = useParams();
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useEvent(id);
 
   const [isCopy, setIsCopy] = useState(false);

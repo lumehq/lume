@@ -2,20 +2,17 @@ import { NDKEvent, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
 import { TitleBar, WidgetWrapper } from '@shared/widgets';
-
 import { FETCH_LIMIT } from '@utils/constants';
 import { sendNativeNotification } from '@utils/notification';
 
 export function NotificationWidget() {
   const queryClient = useQueryClient();
 
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['notification'],

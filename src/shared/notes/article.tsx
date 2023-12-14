@@ -1,9 +1,7 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { User } from '@shared/user';
-
 import { NoteActions } from './actions';
 
 export function ArticleNote({ event }: { event: NDKEvent }) {

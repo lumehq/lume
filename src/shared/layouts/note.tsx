@@ -1,11 +1,9 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { WindowTitleBar } from '@shared/titlebar';
 
 export function NoteLayout() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   return (
     <div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">

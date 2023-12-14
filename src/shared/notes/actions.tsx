@@ -1,12 +1,10 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-
 import { FocusIcon, ReplyIcon } from '@shared/icons';
 import { NoteReaction } from '@shared/notes/actions/reaction';
 import { NoteRepost } from '@shared/notes/actions/repost';
 import { NoteZap } from '@shared/notes/actions/zap';
-
 import { WIDGET_KIND } from '@utils/constants';
 import { useWidget } from '@utils/hooks/useWidget';
 

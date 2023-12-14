@@ -5,11 +5,9 @@ import { EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { ArrowLeftIcon, CheckCircleIcon, ShareIcon } from '@shared/icons';
 import { NoteReplyForm } from '@shared/notes';
 import { ReplyList } from '@shared/notes/replies/list';
-
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function ArticleNoteScreen() {

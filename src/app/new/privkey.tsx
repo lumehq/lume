@@ -3,11 +3,10 @@ import { getPublicKey, nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
 
 export function NewPrivkeyScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const [nsec, setNsec] = useState('');

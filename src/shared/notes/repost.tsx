@@ -1,9 +1,7 @@
 import { NDKEvent, NDKKind, NostrEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { memo } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import {
   MemoizedArticleKind,
   MemoizedFileKind,
@@ -14,7 +12,7 @@ import {
 import { User } from '@shared/user';
 
 export function Repost({ event }: { event: NDKEvent }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const {
     isLoading,
     isError,

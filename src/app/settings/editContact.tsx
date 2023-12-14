@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function EditContactScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useQuery({
     queryKey: ['contacts'],
     queryFn: async () => {

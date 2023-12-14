@@ -1,8 +1,6 @@
 import { useArk } from '@libs/ark';
-
 import { CancelIcon } from '@shared/icons';
 import { User } from '@shared/user';
-
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function TitleBar({
@@ -14,7 +12,7 @@ export function TitleBar({
   title?: string;
   isLive?: boolean;
 }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { removeWidget } = useWidget();
 
   return (

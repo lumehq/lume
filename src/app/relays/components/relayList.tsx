@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { VList } from 'virtua';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon, PlusIcon, ShareIcon } from '@shared/icons';
 import { User } from '@shared/user';
-
 import { useRelay } from '@utils/hooks/useRelay';
 
 export function RelayList() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { connectRelay } = useRelay();
   const { status, data } = useQuery({
     queryKey: ['relays'],

@@ -1,8 +1,6 @@
 import { message } from '@tauri-apps/plugin-dialog';
 import { Dispatch, SetStateAction, useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 
 export function AvatarUploader({
@@ -10,7 +8,7 @@ export function AvatarUploader({
 }: {
   setPicture: Dispatch<SetStateAction<string>>;
 }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [loading, setLoading] = useState(false);
 
   const uploadAvatar = async () => {

@@ -1,16 +1,12 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
-
 import { RelayForm } from '@app/relays/components/relayForm';
-
 import { useArk } from '@libs/ark';
-
 import { CancelIcon, RefreshIcon } from '@shared/icons';
-
 import { useRelay } from '@utils/hooks/useRelay';
 
 export function UserRelayList() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { removeRelay } = useRelay();
   const { status, data, refetch } = useQuery({
     queryKey: ['relays', ark.account.pubkey],

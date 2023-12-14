@@ -5,13 +5,11 @@ import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
 import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import { DarkIcon, LightIcon, SystemModeIcon } from '@shared/icons';
 
 export function GeneralSettingScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const [settings, setSettings] = useState({
     autoupdate: false,
     autolaunch: false,

@@ -2,11 +2,10 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
 
 export function Logout() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();

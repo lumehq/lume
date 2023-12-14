@@ -1,16 +1,13 @@
 import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { Link } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { EditIcon, LoaderIcon } from '@shared/icons';
-
 import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function ProfileCard() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { isLoading, user } = useProfile(ark.account.pubkey);
 
   const svgURI =

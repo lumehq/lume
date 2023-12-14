@@ -1,5 +1,4 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
-
 import { NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
 

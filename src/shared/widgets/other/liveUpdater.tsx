@@ -1,13 +1,11 @@
 import { NDKEvent, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { QueryStatus, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import { ChevronUpIcon } from '@shared/icons';
 
 export function LiveUpdater({ status }: { status: QueryStatus }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [events, setEvents] = useState<NDKEvent[]>([]);
   const queryClient = useQueryClient();
 

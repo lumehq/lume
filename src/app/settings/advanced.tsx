@@ -1,7 +1,7 @@
 import { useArk } from '@libs/ark';
 
 export function AdvancedSettingScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const clearCache = async () => {
     await ark.clearCache();

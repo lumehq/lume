@@ -1,13 +1,11 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowLeftIcon } from '@shared/icons';
 import { WindowTitleBar } from '@shared/titlebar';
 
 export function NewLayout() {
-  const { ark } = useArk();
+  const ark = useArk();
   const location = useLocation();
 
   return (

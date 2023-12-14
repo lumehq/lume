@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetch } from '@tauri-apps/plugin-http';
-
 import { LoaderIcon } from '@shared/icons';
-
 import { compactNumber } from '@utils/formater';
 
 export function UserStats({ pubkey }: { pubkey: string }) {

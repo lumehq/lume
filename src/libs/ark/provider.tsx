@@ -7,20 +7,11 @@ import Database from '@tauri-apps/plugin-sql';
 import { check } from '@tauri-apps/plugin-updater';
 import Markdown from 'markdown-to-jsx';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
-
 import { Ark } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
-
 import { FETCH_LIMIT, QUOTES } from '@utils/constants';
 
-interface ArkContext {
-  ark: Ark;
-}
-
-const ArkContext = createContext<ArkContext>({
-  ark: undefined,
-});
+const ArkContext = createContext<Ark>(undefined);
 
 const ArkProvider = ({ children }: PropsWithChildren<object>) => {
   const [ark, setArk] = useState<Ark>(undefined);
@@ -165,7 +156,7 @@ const ArkProvider = ({ children }: PropsWithChildren<object>) => {
     );
   }
 
-  return <ArkContext.Provider value={{ ark }}>{children}</ArkContext.Provider>;
+  return <ArkContext.Provider value={ark}>{children}</ArkContext.Provider>;
 };
 
 const useArk = () => {

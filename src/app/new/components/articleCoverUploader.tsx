@@ -1,7 +1,6 @@
 import { message, open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { useState } from 'react';
-
 import { ImageIcon, LoaderIcon } from '@shared/icons';
 
 export function ArticleCoverUploader({ setCover }) {

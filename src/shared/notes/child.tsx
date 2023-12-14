@@ -1,6 +1,5 @@
 import { NoteSkeleton } from '@shared/notes';
 import { User } from '@shared/user';
-
 import { useEvent } from '@utils/hooks/useEvent';
 
 export function ChildNote({ id, isRoot }: { id: string; isRoot?: boolean }) {

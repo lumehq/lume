@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { VList } from 'virtua';
-
 import { LoaderIcon } from '@shared/icons';
 import {
   NostrBandUserProfile,
@@ -8,7 +7,6 @@ import {
   TitleBar,
   WidgetWrapper,
 } from '@shared/widgets';
-
 import { Widget } from '@utils/types';
 
 interface Response {

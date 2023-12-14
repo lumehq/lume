@@ -3,11 +3,9 @@ import * as HoverCard from '@radix-ui/react-hover-card';
 import { minidenticon } from 'minidenticons';
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { RepostIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
 import { MoreActions } from '@shared/notes';
-
 import { displayNpub, formatCreatedAt } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 

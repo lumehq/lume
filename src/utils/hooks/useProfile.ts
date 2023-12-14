@@ -1,11 +1,10 @@
 import { NDKUserProfile } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
-
 import { useArk } from '@libs/ark';
 
 export function useProfile(pubkey: string, embed?: string) {
-  const { ark } = useArk();
+  const ark = useArk();
   const {
     isLoading,
     isError,

@@ -4,9 +4,7 @@ import { minidenticon } from 'minidenticons';
 import { memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-
 import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
-
 import { displayNpub, formatCreatedAt } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 

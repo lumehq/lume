@@ -2,13 +2,11 @@ import * as Switch from '@radix-ui/react-switch';
 import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { InfoIcon } from '@shared/icons';
 
 export function OnboardingScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const [settings, setSettings] = useState({

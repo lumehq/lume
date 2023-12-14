@@ -1,14 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetch } from '@tauri-apps/plugin-http';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
-
 import { compactNumber } from '@utils/formater';
 
 export function ZapCard() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useQuery({
     queryKey: ['user-stats', ark.account.pubkey],
     queryFn: async ({ signal }: { signal: AbortSignal }) => {

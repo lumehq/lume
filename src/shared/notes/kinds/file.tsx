@@ -8,9 +8,7 @@ import {
 } from '@vidstack/react/player/layouts/default';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { DownloadIcon } from '@shared/icons';
-
 import { fileType } from '@utils/nip94';
 
 export function FileKind({ tags }: { tags: NDKTag[] }) {

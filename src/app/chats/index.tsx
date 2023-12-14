@@ -2,15 +2,12 @@ import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { Outlet } from 'react-router-dom';
-
 import { ChatListItem } from '@app/chats/components/chatListItem';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 
 export function ChatsScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useQuery({
     queryKey: ['nip04-chats'],
     queryFn: async () => {

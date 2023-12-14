@@ -1,13 +1,11 @@
 import { MentionOptions } from '@tiptap/extension-mention';
 import { ReactRenderer } from '@tiptap/react';
 import tippy from 'tippy.js';
-
 import { MentionList } from '@app/new/components';
-
 import { useArk } from '@libs/ark';
 
 export function useSuggestion() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const suggestion: MentionOptions['suggestion'] = {
     items: async ({ query }) => {

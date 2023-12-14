@@ -3,13 +3,11 @@ import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 
 export function NewFileScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);

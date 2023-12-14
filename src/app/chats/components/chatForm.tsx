@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-
 import { MediaUploader } from '@app/chats/components/mediaUploader';
-
 import { useArk } from '@libs/ark';
-
 import { EnterIcon } from '@shared/icons';
 
 export function ChatForm({ receiverPubkey }: { receiverPubkey: string }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [value, setValue] = useState('');
 
   const submit = async () => {

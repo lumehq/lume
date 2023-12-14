@@ -2,9 +2,7 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
   MemoizedRepost,
@@ -13,11 +11,10 @@ import {
   UnknownNote,
 } from '@shared/notes';
 import { LiveUpdater, TitleBar, WidgetWrapper } from '@shared/widgets';
-
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function NewsfeedWidget() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed'],

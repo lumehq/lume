@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { EditIcon, ReactionIcon, ReplyIcon, RepostIcon, ZapIcon } from '@shared/icons';
 import { TextNote } from '@shared/notes';
 
 export function TutorialNoteScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const exampleEvent = ark.createNDKEvent({
     event: {

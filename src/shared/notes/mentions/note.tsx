@@ -1,6 +1,5 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
-
 import {
   MemoizedArticleKind,
   MemoizedFileKind,
@@ -8,7 +7,6 @@ import {
   NoteSkeleton,
 } from '@shared/notes';
 import { User } from '@shared/user';
-
 import { WIDGET_KIND } from '@utils/constants';
 import { useEvent } from '@utils/hooks/useEvent';
 import { useWidget } from '@utils/hooks/useWidget';

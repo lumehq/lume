@@ -1,12 +1,9 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import { ChildNote, NoteActions } from '@shared/notes';
 import { User } from '@shared/user';
-
 import { WIDGET_KIND } from '@utils/constants';
 import { useRichContent } from '@utils/hooks/useRichContent';
 import { useWidget } from '@utils/hooks/useWidget';
@@ -14,7 +11,7 @@ import { useWidget } from '@utils/hooks/useWidget';
 export function TextNote({ event, className }: { event: NDKEvent; className?: string }) {
   const { parsedContent } = useRichContent(event.content);
   const { addWidget } = useWidget();
-  const { ark } = useArk();
+  const ark = useArk();
 
   const thread = ark.getEventThread({ tags: event.tags });
 

@@ -10,20 +10,16 @@ import { nip19 } from 'nostr-tools';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { MediaUploader, MentionPopup } from '@app/new/components';
-
 import { useArk } from '@libs/ark';
-
 import { CancelIcon, LoaderIcon } from '@shared/icons';
 import { MentionNote } from '@shared/notes';
-
 import { WIDGET_KIND } from '@utils/constants';
 import { useSuggestion } from '@utils/hooks/useSuggestion';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function NewPostScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { addWidget } = useWidget();
   const { suggestion } = useSuggestion();
 

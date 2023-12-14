@@ -6,9 +6,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -36,7 +34,7 @@ const POPULAR_USERS = [
 const LUME_USERS = ['npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445'];
 
 export function FollowScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useQuery({
     queryKey: ['trending-profiles-widget'],
     queryFn: async () => {

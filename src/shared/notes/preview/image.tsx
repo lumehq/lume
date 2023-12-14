@@ -2,7 +2,6 @@ import { downloadDir } from '@tauri-apps/api/path';
 import { Window } from '@tauri-apps/api/window';
 import { download } from '@tauri-apps/plugin-upload';
 import { SyntheticEvent, useState } from 'react';
-
 import { CheckCircleIcon, DownloadIcon } from '@shared/icons';
 
 export function ImagePreview({ url }: { url: string }) {

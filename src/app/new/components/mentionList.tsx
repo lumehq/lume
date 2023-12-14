@@ -2,7 +2,6 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { Ref, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { NDKCacheUserProfile } from '@utils/types';
 
 type MentionListRef = {

@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 
 export function NWCForm({ setWalletConnectURL }) {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const [uri, setUri] = useState('');
   const [loading, setLoading] = useState(false);

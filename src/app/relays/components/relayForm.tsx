@@ -2,9 +2,7 @@ import { NDKRelayUrl } from '@nostr-dev-kit/ndk';
 import { normalizeRelayUrl } from 'nostr-fetch';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
 import { PlusIcon } from '@shared/icons';
-
 import { useRelay } from '@utils/hooks/useRelay';
 
 const domainRegex = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/;

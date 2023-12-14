@@ -1,15 +1,12 @@
 import { NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 import { Reply } from '@shared/notes';
-
 import { NDKEventWithReplies } from '@utils/types';
 
 export function ReplyList({ eventId }: { eventId: string }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
 
   useEffect(() => {

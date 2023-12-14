@@ -3,7 +3,6 @@ import { message, save } from '@tauri-apps/plugin-dialog';
 import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { useRouteError } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
 
 interface RouteError {
@@ -12,7 +11,7 @@ interface RouteError {
 }
 
 export function ErrorScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const error = useRouteError() as RouteError;
 
   const restart = async () => {

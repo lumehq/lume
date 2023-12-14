@@ -1,12 +1,10 @@
 import { nip19 } from 'nostr-tools';
 import { useEffect, useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import { EyeOffIcon } from '@shared/icons';
 
 export function BackupSettingScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const [privkey, setPrivkey] = useState(null);
   const [showPassword, setShowPassword] = useState(false);

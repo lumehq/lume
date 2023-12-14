@@ -4,7 +4,6 @@ import { nip19 } from 'nostr-tools';
 import { EventPointer } from 'nostr-tools/lib/types/nip19';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import { HorizontalDotsIcon } from '@shared/icons';
 
 export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {

@@ -1,8 +1,6 @@
 import { NavLink, Outlet, ScrollRestoration, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import {
   AdvancedSettingsIcon,
   ArrowLeftIcon,
@@ -14,7 +12,7 @@ import {
 import { WindowTitleBar } from '@shared/titlebar';
 
 export function SettingsLayout() {
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   return (

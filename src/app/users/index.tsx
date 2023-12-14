@@ -2,11 +2,8 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { UserProfile } from '@app/users/components/profile';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
   MemoizedRepost,
@@ -14,12 +11,11 @@ import {
   NoteSkeleton,
   UnknownNote,
 } from '@shared/notes';
-
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function UserScreen() {
   const { pubkey } = useParams();
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['user-posts', pubkey],

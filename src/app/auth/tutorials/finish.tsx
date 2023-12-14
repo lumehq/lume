@@ -2,15 +2,12 @@ import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
-
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function TutorialFinishScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();

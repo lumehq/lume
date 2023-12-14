@@ -5,9 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon, RepostIcon } from '@shared/icons';
 
 export function NoteRepost({ event }: { event: NDKEvent }) {
@@ -15,7 +13,7 @@ export function NoteRepost({ event }: { event: NDKEvent }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isRepost, setIsRepost] = useState(false);
 
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const submit = async () => {

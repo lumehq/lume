@@ -3,9 +3,7 @@ import { nip19 } from 'nostr-tools';
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
-
 import { useArk } from '@libs/ark';
-
 import {
   Hashtag,
   ImagePreview,
@@ -56,7 +54,7 @@ const VIDEOS = [
 ];
 
 export function useRichContent(content: string, textmode: boolean = false) {
-  const { ark } = useArk();
+  const ark = useArk();
 
   let parsedContent: string | ReactNode[] = content.replace(/\n+/g, '\n');
   let linkPreview: string;

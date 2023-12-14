@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-
 import { NWCForm } from '@app/nwc/components/form';
-
 import { useArk } from '@libs/ark';
-
 import { CheckCircleIcon } from '@shared/icons';
 
 export function NWCScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const [walletConnectURL, setWalletConnectURL] = useState<null | string>(null);
 
   const remove = async () => {

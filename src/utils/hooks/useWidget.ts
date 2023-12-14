@@ -1,11 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { useArk } from '@libs/ark';
-
 import { Widget } from '@utils/types';
 
 export function useWidget() {
-  const { ark } = useArk();
+  const ark = useArk();
   const queryClient = useQueryClient();
 
   const addWidget = useMutation({

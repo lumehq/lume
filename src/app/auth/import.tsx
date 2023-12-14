@@ -7,9 +7,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
@@ -21,7 +19,7 @@ export function ImportAccountScreen() {
   const [created, setCreated] = useState({ ok: false, remote: false });
   const [savedPrivkey, setSavedPrivkey] = useState(false);
 
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const submitNpub = async () => {

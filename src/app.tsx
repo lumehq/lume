@@ -1,22 +1,18 @@
 import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
-
 import { ChatsScreen } from '@app/chats';
 import { ErrorScreen } from '@app/error';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
 import { NewLayout } from '@shared/layouts/new';
 import { NoteLayout } from '@shared/layouts/note';
 import { SettingsLayout } from '@shared/layouts/settings';
-
 import './app.css';
 
 export default function App() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const accountLoader = async () => {
     if (!ark.account) return redirect('/auth/welcome');

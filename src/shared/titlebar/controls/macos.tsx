@@ -1,6 +1,5 @@
 import { HTMLProps, useContext, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { AppWindowContext, WindowButton, WindowIcons } from '@shared/titlebar';
 
 export function MacOS({ className, ...props }: HTMLProps<HTMLDivElement>) {

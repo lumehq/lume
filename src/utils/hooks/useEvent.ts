@@ -2,11 +2,10 @@ import { NDKEvent, NostrEvent } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
 import { AddressPointer } from 'nostr-tools/lib/types/nip19';
-
 import { useArk } from '@libs/ark';
 
 export function useEvent(id: undefined | string, embed?: undefined | string) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, isFetching, isError, data } = useQuery({
     queryKey: ['event', id],
     queryFn: async () => {

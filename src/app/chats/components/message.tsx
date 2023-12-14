@@ -1,6 +1,5 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { twMerge } from 'tailwind-merge';
-
 import { useDecryptMessage } from '@app/chats/hooks/useDecryptMessage';
 
 export function ChatMessage({ message, isSelf }: { message: NDKEvent; isSelf: boolean }) {

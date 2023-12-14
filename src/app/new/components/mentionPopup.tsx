@@ -1,15 +1,12 @@
 import * as Popover from '@radix-ui/react-popover';
 import { Editor } from '@tiptap/react';
 import { nip19 } from 'nostr-tools';
-
 import { MentionPopupItem } from '@app/new/components';
-
 import { useArk } from '@libs/ark';
-
 import { MentionIcon } from '@shared/icons';
 
 export function MentionPopup({ editor }: { editor: Editor }) {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const insertMention = (pubkey: string) => {
     editor.commands.insertContent(`nostr:${nip19.npubEncode(pubkey)}`);

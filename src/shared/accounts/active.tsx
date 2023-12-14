@@ -2,16 +2,13 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { minidenticon } from 'minidenticons';
 import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-
 import { useArk } from '@libs/ark';
-
 import { AccountMoreActions } from '@shared/accounts/more';
-
 import { useNetworkStatus } from '@utils/hooks/useNetworkStatus';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function ActiveAccount() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { user } = useProfile(ark.account.pubkey);
 
   const isOnline = useNetworkStatus();

@@ -1,5 +1,4 @@
 import { memo } from 'react';
-
 import { useRichContent } from '@utils/hooks/useRichContent';
 
 export function TextKind({ content, textmode }: { content: string; textmode?: boolean }) {

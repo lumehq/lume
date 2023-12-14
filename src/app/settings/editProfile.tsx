@@ -4,9 +4,7 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { CheckCircleIcon, LoaderIcon, PlusIcon, UnverifiedIcon } from '@shared/icons';
 
 export function EditProfileScreen() {
@@ -15,7 +13,7 @@ export function EditProfileScreen() {
   const [banner, setBanner] = useState('');
   const [nip05, setNIP05] = useState({ verified: true, text: '' });
 
-  const { ark } = useArk();
+  const ark = useArk();
   const {
     register,
     handleSubmit,

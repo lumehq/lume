@@ -1,8 +1,6 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Dispatch, SetStateAction, useState } from 'react';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon, MediaIcon } from '@shared/icons';
 
 export function MediaUploader({
@@ -10,7 +8,7 @@ export function MediaUploader({
 }: {
   setState: Dispatch<SetStateAction<string>>;
 }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [loading, setLoading] = useState(false);
 
   const uploadMedia = async () => {

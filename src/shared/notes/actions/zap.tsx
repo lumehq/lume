@@ -8,17 +8,14 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useNavigate } from 'react-router-dom';
-
 import { useArk } from '@libs/ark';
-
 import { CancelIcon, ZapIcon } from '@shared/icons';
-
 import { compactNumber, displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 import { sendNativeNotification } from '@utils/notification';
 
 export function NoteZap({ event }: { event: NDKEvent }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { user } = useProfile(event.pubkey);
 
   const [walletConnectURL, setWalletConnectURL] = useState<string>(null);

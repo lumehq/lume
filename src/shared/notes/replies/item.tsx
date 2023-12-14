@@ -1,11 +1,9 @@
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { NavArrowDownIcon } from '@shared/icons';
 import { MemoizedTextKind, NoteActions, SubReply } from '@shared/notes';
 import { User } from '@shared/user';
-
 import { NDKEventWithReplies } from '@utils/types';
 
 export function Reply({

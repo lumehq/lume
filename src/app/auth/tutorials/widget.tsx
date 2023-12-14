@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-
 import { BellIcon, HomeIcon, PlusIcon } from '@shared/icons';
 
 export function TutorialWidgetScreen() {

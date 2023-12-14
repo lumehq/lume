@@ -2,9 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
-
 import { ArkProvider } from '@libs/ark/provider';
-
 import App from './app';
 
 const queryClient = new QueryClient({

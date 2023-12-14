@@ -3,18 +3,15 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { FetchFilter } from 'nostr-fetch';
 import { useMemo } from 'react';
 import { VList } from 'virtua';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedArticleNote } from '@shared/notes';
 import { TitleBar, WidgetWrapper } from '@shared/widgets';
-
 import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function ArticleWidget({ widget }: { widget: Widget }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['article', widget.id],

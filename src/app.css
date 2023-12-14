@@ -13,9 +13,9 @@
     overflow-wrap: break-word;
   }
 
-  .prose :where(iframe):not(:where([class~="not-prose"] *)) {
-		@apply aspect-video w-full h-auto mx-auto;
-	}
+  .prose :where(iframe):not(:where([class~='not-prose'] *)) {
+    @apply mx-auto aspect-video h-auto w-full;
+  }
 }
 
 html {
@@ -44,7 +44,7 @@ input::-ms-clear {
 }
 
 .ProseMirror p.is-empty::before {
-  @apply text-neutral-600 dark:text-neutral-400 float-left h-0 pointer-events-none content-[attr(data-placeholder)];
+  @apply pointer-events-none float-left h-0 text-neutral-600 content-[attr(data-placeholder)] dark:text-neutral-400;
 }
 
 .ProseMirror img.ProseMirror-selectednode {

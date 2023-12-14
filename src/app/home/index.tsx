@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 import {
   ArticleWidget,
@@ -20,7 +18,6 @@ import {
   UserWidget,
   WidgetList,
 } from '@shared/widgets';
-
 import { WIDGET_KIND } from '@utils/constants';
 import { Widget } from '@utils/types';
 
@@ -28,7 +25,7 @@ export function HomeScreen() {
   const ref = useRef<VListHandle>(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data } = useQuery({
     queryKey: ['widgets'],
     queryFn: async () => {

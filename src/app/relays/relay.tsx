@@ -1,11 +1,8 @@
 import { Suspense } from 'react';
 import { Await, useLoaderData, useNavigate, useParams } from 'react-router-dom';
-
 import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
-
 import { NIP11 } from '@utils/types';
-
 import { RelayEventList } from './components/relayEventList';
 
 export function RelayScreen() {

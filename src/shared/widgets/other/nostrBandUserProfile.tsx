@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
-
 import { FollowIcon } from '@shared/icons';
-
 import { displayNpub } from '@utils/formater';
 
 export interface Profile {
@@ -14,7 +11,7 @@ export interface Profile {
 }
 
 export function NostrBandUserProfile({ data }: { data: Profile }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const [followed, setFollowed] = useState(false);
   const navigate = useNavigate();
 

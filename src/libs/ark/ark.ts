@@ -23,9 +23,7 @@ import {
   normalizeRelayUrlSet,
 } from 'nostr-fetch';
 import { toast } from 'sonner';
-
 import { NDKCacheAdapterTauri } from '@libs/ark';
-
 import {
   Account,
   NDKCacheUser,

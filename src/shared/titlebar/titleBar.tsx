@@ -1,5 +1,4 @@
 import { Platform } from '@tauri-apps/plugin-os';
-
 import { AppWindowProvider, Gnome, MacOS, Windows } from '@shared/titlebar';
 
 export function WindowTitleBar({ platform }: { platform: Platform }) {

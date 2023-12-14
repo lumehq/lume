@@ -2,14 +2,12 @@ import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 import { ReplyMediaUploader } from '@shared/notes';
 
 export function NoteReplyForm({ rootEvent }: { rootEvent: NDKEvent }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const [value, setValue] = useState('');

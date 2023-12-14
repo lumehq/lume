@@ -3,17 +3,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { VList, VListHandle } from 'virtua';
-
 import { ChatForm } from '@app/chats/components/chatForm';
 import { ChatMessage } from '@app/chats/components/message';
-
 import { useArk } from '@libs/ark';
-
 import { LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function ChatScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
   const { pubkey } = useParams();
   const { status, data } = useQuery({
     queryKey: ['nip04-dm', pubkey],

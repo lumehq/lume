@@ -2,18 +2,15 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { VList } from 'virtua';
-
 import { useArk } from '@libs/ark';
-
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
 import { TitleBar, WidgetWrapper } from '@shared/widgets';
-
 import { FETCH_LIMIT } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function HashtagWidget({ widget }: { widget: Widget }) {
-  const { ark } = useArk();
+  const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['hashtag', widget.id],

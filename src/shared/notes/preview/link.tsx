@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-
 import { useOpenGraph } from '@utils/hooks/useOpenGraph';
 
 function isImage(url: string) {

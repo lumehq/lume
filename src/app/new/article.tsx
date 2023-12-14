@@ -9,11 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 import { Markdown } from 'tiptap-markdown';
-
 import { ArticleCoverUploader, MediaUploader, MentionPopup } from '@app/new/components';
-
 import { useArk } from '@libs/ark';
-
 import {
   BoldIcon,
   Heading1Icon,
@@ -25,7 +22,7 @@ import {
 } from '@shared/icons';
 
 export function NewArticleScreen() {
-  const { ark } = useArk();
+  const ark = useArk();
 
   const [height, setHeight] = useState(0);
   const [loading, setLoading] = useState(false);

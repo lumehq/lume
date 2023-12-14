@@ -3,9 +3,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 import { useArk } from '@libs/ark';
-
 import { ReactionIcon } from '@shared/icons';
 
 const REACTIONS = [
@@ -35,7 +33,7 @@ export function NoteReaction({ event }: { event: NDKEvent }) {
   const [open, setOpen] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
 
-  const { ark } = useArk();
+  const ark = useArk();
   const navigate = useNavigate();
 
   const getReactionImage = (content: string) => {
