@@ -78,6 +78,27 @@ export function Navigation() {
             </>
           )}
         </NavLink>
+        <NavLink
+          to="/depot"
+          preventScrollReset={true}
+          className="inline-flex flex-col items-center justify-center"
+        >
+          {({ isActive }) => (
+            <>
+              <div
+                className={twMerge(
+                  'inline-flex aspect-square h-auto w-full items-center justify-center rounded-lg',
+                  isActive
+                    ? 'bg-black/10 text-black dark:bg-white/10 dark:text-white'
+                    : 'text-black/50 dark:text-neutral-400'
+                )}
+              >
+                <RelayIcon className="h-6 w-6" />
+              </div>
+              <div className="text-sm font-medium text-black dark:text-white">Depot</div>
+            </>
+          )}
+        </NavLink>
       </div>
       <div className="flex shrink-0 flex-col gap-3 p-1">
         <Link

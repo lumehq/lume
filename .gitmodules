@@ -1,0 +1,3 @@
+[submodule "modules/depot"]
+	path = modules/depot
+	url = https://github.com/luminous-devs/depot.git

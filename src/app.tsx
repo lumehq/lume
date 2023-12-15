@@ -82,6 +82,13 @@ export default function App() {
               },
             },
             {
+              path: 'depot',
+              async lazy() {
+                const { DepotScreen } = await import('@app/depot');
+                return { Component: DepotScreen };
+              },
+            },
+            {
               path: 'new',
               element: <ComposerLayout />,
               children: [
