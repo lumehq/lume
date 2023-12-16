@@ -91,11 +91,10 @@ export function NewFileScreen() {
         kind: 1063,
         tags: metadata,
         content: caption,
-        publish: true,
       });
 
       if (publish) {
-        toast.success(`Broadcasted to ${publish} relays successfully.`);
+        toast.success(`Broadcasted to ${publish.seens.length} relays successfully.`);
         setMetadata(null);
         setIsPublish(false);
       }

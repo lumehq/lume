@@ -3,8 +3,12 @@ export function fileType(url: string) {
     return 'image';
   }
 
-  if (url.match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv|mp3|m3u8)$/)) {
+  if (url.match(/\.(mp4|mov|webm|wmv|flv|mts|avi|ogv|mkv)$/)) {
     return 'video';
+  }
+
+  if (url.match(/\.(mp3|ogg|wav)$/)) {
+    return 'audio';
   }
 
   return 'link';

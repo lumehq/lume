@@ -70,7 +70,6 @@ export function FollowScreen() {
           if (item.startsWith('npub1')) return ['p', nip19.decode(item).data as string];
           return ['p', item];
         }),
-        publish: true,
       });
 
       if (publish) {

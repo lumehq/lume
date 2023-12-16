@@ -22,7 +22,6 @@ export function useRelay() {
         await ark.createEvent({
           kind: NDKKind.RelayList,
           tags: [['r', relay, purpose ?? '']],
-          publish: true,
         });
       }
 
@@ -33,7 +32,6 @@ export function useRelay() {
       await ark.createEvent({
         kind: NDKKind.RelayList,
         tags: [...prevRelays, ['r', relay, purpose ?? '']],
-        publish: true,
       });
 
       // Optimistically update to the new value
@@ -69,7 +67,6 @@ export function useRelay() {
       await ark.createEvent({
         kind: NDKKind.RelayList,
         tags: prevRelays,
-        publish: true,
       });
 
       // Optimistically update to the new value

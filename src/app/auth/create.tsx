@@ -22,8 +22,6 @@ export function CreateAccountScreen() {
   const [keys, setKeys] = useState<null | {
     npub: string;
     nsec: string;
-    pubkey: string;
-    privkey: string;
   }>(null);
 
   const ark = useArk();
@@ -64,7 +62,6 @@ export function CreateAccountScreen() {
         content: JSON.stringify(profile),
         kind: NDKKind.Metadata,
         tags: [],
-        publish: true,
       });
 
       if (publish) {
@@ -77,18 +74,12 @@ export function CreateAccountScreen() {
         await ark.createEvent({
           kind: NDKKind.RelayList,
           tags: [ark.relays],
-          publish: true,
         });
 
-        setKeys({
-          npub: userNpub,
-          nsec: userNsec,
-          pubkey: userPubkey,
-          privkey: userPrivkey,
-        });
+        setKeys({ npub: userNpub, nsec: userNsec });
         setLoading(false);
       } else {
-        toast('Cannot publish user profile, please try again later.');
+        toast.error('Cannot publish user profile, please try again later.');
         setLoading(false);
       }
     } catch (e) {
@@ -222,7 +213,7 @@ export function CreateAccountScreen() {
                 }}
                 className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950"
               >
-                <User pubkey={keys.pubkey} variant="simple" />
+                <User pubkey={keys.npub} variant="simple" />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 80 }}

@@ -101,7 +101,6 @@ export function EditProfileScreen() {
       kind: NDKKind.Metadata,
       tags: [],
       content: JSON.stringify(content),
-      publish: true,
     });
 
     if (publish) {

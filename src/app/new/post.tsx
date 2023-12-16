@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
+import { NDKKind } from '@nostr-dev-kit/ndk';
 import CharacterCount from '@tiptap/extension-character-count';
 import Image from '@tiptap/extension-image';
 import Mention from '@tiptap/extension-mention';
@@ -82,18 +82,16 @@ export function NewPostScreen() {
       const rootReplyTo = searchParams.get('rootReplyTo');
 
       // publish event
-      const event = (await ark.createEvent({
+      const publish = await ark.createEvent({
         kind: NDKKind.Text,
         tags: [],
         content: serializedContent,
         replyTo,
         rootReplyTo,
-      })) as NDKEvent;
-
-      const publish = await event.publish();
+      });
 
       if (publish) {
-        toast.success(`Broadcasted to ${publish.size} relays successfully.`);
+        toast.success(`Broadcasted to ${publish.seens.length} relays successfully.`);
 
         // update state
         setLoading(false);
@@ -103,7 +101,7 @@ export function NewPostScreen() {
         if (!replyTo) {
           addWidget.mutate({
             title: 'Thread',
-            content: event.id,
+            content: publish.id,
             kind: WIDGET_KIND.thread,
           });
         }

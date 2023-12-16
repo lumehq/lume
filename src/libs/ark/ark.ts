@@ -22,8 +22,8 @@ import {
   normalizeRelayUrl,
   normalizeRelayUrlSet,
 } from 'nostr-fetch';
-import { toast } from 'sonner';
-import { NDKCacheAdapterTauri } from '@libs/ark';
+import { nip19 } from 'nostr-tools';
+import { NDKCacheAdapterTauri } from '@libs/cache';
 import {
   Account,
   NDKCacheUser,
@@ -34,9 +34,9 @@ import {
 } from '@utils/types';
 
 export class Ark {
-  #ndk: NDK;
-  #fetcher: NostrFetcher;
   #storage: Database;
+  public ndk: NDK;
+  public fetcher: NostrFetcher;
   public account: Account | null;
   public relays: string[] | null;
   public readyToSign: boolean;
@@ -123,20 +123,13 @@ export class Ark {
       return new NDKPrivateKeySigner(userPrivkey);
     } catch (e) {
       console.log(e);
-      if (e === 'Token already redeemed') {
-        toast.info(
-          'nsecbunker token already redeemed. You need to re-login with another token.'
-        );
-        await this.logout();
-      }
-
-      this.readyToSign = false;
       return null;
     }
   }
 
   public async init() {
     const settings = await this.getAllSettings();
+
     for (const item of settings) {
       if (item.key === 'nsecbunker') this.settings.bunker = !!parseInt(item.value);
       if (item.key === 'outbox') this.settings.outbox = !!parseInt(item.value);
@@ -147,8 +140,7 @@ export class Ark {
 
     const explicitRelayUrls = normalizeRelayUrlSet([
       'wss://relay.damus.io',
-      'wss://relay.nostr.band',
-      'wss://nos.lol',
+      'wss://relay.nostr.band/all',
       'wss://nostr.mutinywallet.com',
     ]);
 
@@ -184,19 +176,19 @@ export class Ark {
       const user = ndk.getUser({ pubkey: this.account.pubkey });
       ndk.activeUser = user;
 
-      const contacts = await user.follows(undefined /* outbox */);
+      const contacts = await user.follows();
       this.account.contacts = [...contacts].map((user) => user.pubkey);
     }
 
     this.relays = [...ndk.pool.relays.values()].map((relay) => relay.url);
-    this.#ndk = ndk;
-    this.#fetcher = fetcher;
+    this.ndk = ndk;
+    this.fetcher = fetcher;
   }
 
   public updateNostrSigner({ signer }: { signer: NDKNip46Signer | NDKPrivateKeySigner }) {
-    this.#ndk.signer = signer;
+    this.ndk.signer = signer;
     this.readyToSign = true;
-    return this.#ndk.signer;
+    return this.ndk.signer;
   }
 
   public async getAllCacheUsers() {
@@ -390,14 +382,14 @@ export class Ark {
   }
 
   public async logout() {
+    await this.#keyring_remove(this.account.pubkey);
+    await this.#keyring_remove(`${this.account.pubkey}-nsecbunker`);
     await this.#storage.execute("UPDATE accounts SET is_active = '0' WHERE id = $1;", [
       this.account.id,
     ]);
-    await this.#keyring_remove(this.account.pubkey);
-    await this.#keyring_remove(`${this.account.pubkey}-nsecbunker`);
 
     this.account = null;
-    this.#ndk.signer = null;
+    this.ndk.signer = null;
   }
 
   public subscribe({
@@ -409,13 +401,9 @@ export class Ark {
     closeOnEose: boolean;
     cb: (event: NDKEvent) => void;
   }) {
-    const sub = this.#ndk.subscribe(filter, { closeOnEose });
+    const sub = this.ndk.subscribe(filter, { closeOnEose });
     sub.addListener('event', (event: NDKEvent) => cb(event));
     return sub;
-  }
-
-  public createNDKEvent({ event }: { event: NostrEvent | NostrEventExt }) {
-    return new NDKEvent(this.#ndk, event);
   }
 
   public async createEvent({
@@ -424,38 +412,33 @@ export class Ark {
     content,
     rootReplyTo = undefined,
     replyTo = undefined,
-    publish,
   }: {
     kind: NDKKind | number;
     tags: NDKTag[];
     content?: string;
     rootReplyTo?: string;
     replyTo?: string;
-    publish?: boolean;
   }) {
     try {
-      const event = new NDKEvent(this.#ndk);
+      const event = new NDKEvent(this.ndk);
       if (content) event.content = content;
       event.kind = kind;
       event.tags = tags;
 
       if (rootReplyTo) {
-        const rootEvent = await this.#ndk.fetchEvent(rootReplyTo);
+        const rootEvent = await this.ndk.fetchEvent(rootReplyTo);
         if (rootEvent) event.tag(rootEvent, 'root');
       }
 
       if (replyTo) {
-        const replyEvent = await this.#ndk.fetchEvent(replyTo);
+        const replyEvent = await this.ndk.fetchEvent(replyTo);
         if (replyEvent) event.tag(replyEvent, 'reply');
       }
 
-      if (publish) {
-        const publishedEvent = await event.publish();
-        if (!publishedEvent) throw new Error('Failed to publish event');
-        return publishedEvent.size;
-      }
+      const publish = await event.publish();
 
-      return event;
+      if (!publish) throw new Error('Failed to publish event');
+      return { id: event.id, seens: [...publish.values()].map((item) => item.url) };
     } catch (e) {
       throw new Error(e);
     }
@@ -463,7 +446,23 @@ export class Ark {
 
   public async getUserProfile({ pubkey }: { pubkey: string }) {
     try {
-      const user = this.#ndk.getUser({ pubkey });
+      // get clean pubkey without any special characters
+      let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, '');
+
+      if (
+        hexstring.startsWith('npub1') ||
+        hexstring.startsWith('nprofile1') ||
+        hexstring.startsWith('naddr1')
+      ) {
+        const decoded = nip19.decode(hexstring);
+
+        if (decoded.type === 'nprofile') hexstring = decoded.data.pubkey;
+        if (decoded.type === 'npub') hexstring = decoded.data;
+        if (decoded.type === 'naddr') hexstring = decoded.data.pubkey;
+      }
+
+      const user = this.ndk.getUser({ pubkey: hexstring });
+
       const profile = await user.fetchProfile({
         cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
       });
@@ -471,8 +470,7 @@ export class Ark {
       if (!profile) return null;
       return profile;
     } catch (e) {
-      console.error(e);
-      return null;
+      throw new Error(e);
     }
   }
 
@@ -484,7 +482,7 @@ export class Ark {
     outbox?: boolean;
   }) {
     try {
-      const user = this.#ndk.getUser({ pubkey: pubkey ? pubkey : this.account.pubkey });
+      const user = this.ndk.getUser({ pubkey: pubkey ? pubkey : this.account.pubkey });
       const contacts = [...(await user.follows(undefined, outbox))].map(
         (user) => user.pubkey
       );
@@ -492,33 +490,33 @@ export class Ark {
       if (pubkey === this.account.pubkey) this.account.contacts = contacts;
       return contacts;
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
       return [];
     }
   }
 
   public async getUserRelays({ pubkey }: { pubkey?: string }) {
     try {
-      const user = this.#ndk.getUser({ pubkey: pubkey ? pubkey : this.account.pubkey });
+      const user = this.ndk.getUser({ pubkey: pubkey ? pubkey : this.account.pubkey });
       return await user.relayList();
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
       return null;
     }
   }
 
   public async createContact({ pubkey }: { pubkey: string }) {
-    const user = this.#ndk.getUser({ pubkey: this.account.pubkey });
+    const user = this.ndk.getUser({ pubkey: this.account.pubkey });
     const contacts = await user.follows();
     return await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
   }
 
   public async deleteContact({ pubkey }: { pubkey: string }) {
-    const user = this.#ndk.getUser({ pubkey: this.account.pubkey });
+    const user = this.ndk.getUser({ pubkey: this.account.pubkey });
     const contacts = await user.follows();
     contacts.delete(new NDKUser({ pubkey: pubkey }));
 
-    const event = new NDKEvent(this.#ndk);
+    const event = new NDKEvent(this.ndk);
     event.content = '';
     event.kind = NDKKind.Contacts;
     event.tags = [...contacts].map((item) => [
@@ -532,22 +530,40 @@ export class Ark {
   }
 
   public async getAllEvents({ filter }: { filter: NDKFilter }) {
-    const events = await this.#ndk.fetchEvents(filter);
+    const events = await this.ndk.fetchEvents(filter);
     if (!events) return [];
     return [...events];
   }
 
   public async getEventById({ id }: { id: string }) {
-    const event = await this.#ndk.fetchEvent(id, {
+    let eventId: string = id;
+
+    if (
+      eventId.startsWith('nevent1') ||
+      eventId.startsWith('note1') ||
+      eventId.startsWith('naddr1')
+    ) {
+      const decode = nip19.decode(eventId);
+
+      if (decode.type === 'nevent') eventId = decode.data.id;
+      if (decode.type === 'note') eventId = decode.data;
+
+      if (decode.type === 'naddr') {
+        return await this.ndk.fetchEvent({
+          kinds: [decode.data.kind],
+          '#d': [decode.data.identifier],
+          authors: [decode.data.pubkey],
+        });
+      }
+    }
+
+    return await this.ndk.fetchEvent(id, {
       cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
     });
-
-    if (!event) return null;
-    return event;
   }
 
   public async getEventByFilter({ filter }: { filter: NDKFilter }) {
-    const event = await this.#ndk.fetchEvent(filter, {
+    const event = await this.ndk.fetchEvent(filter, {
       cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
     });
 
@@ -589,8 +605,8 @@ export class Ark {
     let events = data || null;
 
     if (!data) {
-      const relayUrls = [...this.#ndk.pool.relays.values()].map((item) => item.url);
-      const rawEvents = (await this.#fetcher.fetchAllEvents(
+      const relayUrls = [...this.ndk.pool.relays.values()].map((item) => item.url);
+      const rawEvents = (await this.fetcher.fetchAllEvents(
         relayUrls,
         {
           kinds: [NDKKind.Text],
@@ -600,7 +616,7 @@ export class Ark {
         { sort: true }
       )) as unknown as NostrEvent[];
       events = rawEvents.map(
-        (event) => new NDKEvent(this.#ndk, event)
+        (event) => new NDKEvent(this.ndk, event)
       ) as NDKEvent[] as NDKEventWithReplies[];
     }
 
@@ -633,7 +649,7 @@ export class Ark {
   public async getAllRelaysFromContacts() {
     const LIMIT = 1;
     const relayMap = new Map<string, string[]>();
-    const relayEvents = this.#fetcher.fetchLatestEventsPerAuthor(
+    const relayEvents = this.fetcher.fetchLatestEventsPerAuthor(
       {
         authors: this.account.contacts,
         relayUrls: this.relays,
@@ -672,13 +688,13 @@ export class Ark {
     const rootIds = new Set();
     const dedupQueue = new Set();
 
-    const events = await this.#fetcher.fetchLatestEvents(this.relays, filter, limit, {
+    const events = await this.fetcher.fetchLatestEvents(this.relays, filter, limit, {
       asOf: pageParam === 0 ? undefined : pageParam,
       abortSignal: signal,
     });
 
     const ndkEvents = events.map((event) => {
-      return new NDKEvent(this.#ndk, event);
+      return new NDKEvent(this.ndk, event);
     });
 
     if (dedup) {
@@ -713,7 +729,7 @@ export class Ark {
     signal?: AbortSignal;
     dedup?: boolean;
   }) {
-    const events = await this.#fetcher.fetchLatestEvents(
+    const events = await this.fetcher.fetchLatestEvents(
       [normalizeRelayUrl(relayUrl)],
       filter,
       limit,
@@ -724,7 +740,7 @@ export class Ark {
     );
 
     const ndkEvents = events.map((event) => {
-      return new NDKEvent(this.#ndk, event);
+      return new NDKEvent(this.ndk, event);
     });
 
     return ndkEvents.sort((a, b) => b.created_at - a.created_at);
@@ -807,7 +823,7 @@ export class Ark {
    * @deprecated NIP-04 will be replace by NIP-44 in the next update
    */
   public async getAllChats() {
-    const events = await this.#fetcher.fetchAllEvents(
+    const events = await this.fetcher.fetchAllEvents(
       this.relays,
       {
         kinds: [NDKKind.EncryptedDirectMessage],
@@ -840,7 +856,7 @@ export class Ark {
     let senderMessages: NostrEventExt<false>[] = [];
 
     if (pubkey !== this.account.pubkey) {
-      senderMessages = await this.#fetcher.fetchAllEvents(
+      senderMessages = await this.fetcher.fetchAllEvents(
         this.relays,
         {
           kinds: [NDKKind.EncryptedDirectMessage],
@@ -851,7 +867,7 @@ export class Ark {
       );
     }
 
-    const userMessages = await this.#fetcher.fetchAllEvents(
+    const userMessages = await this.fetcher.fetchAllEvents(
       this.relays,
       {
         kinds: [NDKKind.EncryptedDirectMessage],
@@ -876,20 +892,20 @@ export class Ark {
             ? event.tags.find((el) => el[0] === 'p')[1]
             : event.pubkey,
       });
-      const content = await this.#ndk.signer.decrypt(sender, event.content);
+      const content = await this.ndk.signer.decrypt(sender, event.content);
 
       return content;
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
     }
   }
 
   public async nip04Encrypt({ content, pubkey }: { content: string; pubkey: string }) {
     try {
       const recipient = new NDKUser({ pubkey });
-      const message = await this.#ndk.signer.encrypt(recipient, content);
+      const message = await this.ndk.signer.encrypt(recipient, content);
 
-      const event = new NDKEvent(this.#ndk);
+      const event = new NDKEvent(this.ndk);
       event.content = message;
       event.kind = NDKKind.EncryptedDirectMessage;
       event.tag(recipient);
@@ -897,22 +913,22 @@ export class Ark {
       const publish = await event.publish();
 
       if (!publish) throw new Error('Failed to send NIP-04 encrypted message');
-      return publish;
+      return { id: event.id, seens: [...publish.values()].map((item) => item.url) };
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
     }
   }
 
   public async replyTo({ content, event }: { content: string; event: NDKEvent }) {
     try {
-      const replyEvent = new NDKEvent(this.#ndk);
+      const replyEvent = new NDKEvent(this.ndk);
       replyEvent.content = content;
       replyEvent.kind = NDKKind.Text;
       replyEvent.tag(event, 'reply');
 
       return await replyEvent.publish();
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
     }
   }
 }

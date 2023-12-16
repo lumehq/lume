@@ -23,7 +23,7 @@ export function Repost({ event }: { event: NDKEvent }) {
       try {
         if (event.content.length > 50) {
           const embed = JSON.parse(event.content) as NostrEvent;
-          return ark.createNDKEvent({ event: embed });
+          return new NDKEvent(ark.ndk, embed);
         }
 
         const id = event.tags.find((el) => el[0] === 'e')[1];

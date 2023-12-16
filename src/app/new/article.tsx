@@ -93,11 +93,10 @@ export function NewArticleScreen() {
         content,
         tags,
         kind: NDKKind.Article,
-        publish: true,
       });
 
       if (publish) {
-        toast.success(`Broadcasted to ${publish} relays successfully.`);
+        toast.success(`Broadcasted to ${publish.seens.length} relays successfully.`);
 
         // update state
         setLoading(false);
