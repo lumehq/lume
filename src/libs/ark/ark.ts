@@ -4,17 +4,20 @@ import NDK, {
   NDKKind,
   NDKNip46Signer,
   NDKPrivateKeySigner,
+  NDKRelay,
   NDKSubscriptionCacheUsage,
   NDKTag,
   NDKUser,
   NostrEvent,
 } from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
+import { configDir, resolveResource } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/primitives';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
 import { Platform } from '@tauri-apps/plugin-os';
+import { Child, Command } from '@tauri-apps/plugin-shell';
 import Database from '@tauri-apps/plugin-sql';
 import {
   NostrEventExt,
@@ -35,6 +38,7 @@ import {
 
 export class Ark {
   #storage: Database;
+  #depot: Child;
   public ndk: NDK;
   public fetcher: NostrFetcher;
   public account: Account | null;
@@ -59,6 +63,28 @@ export class Ark {
       media: true,
       hashtag: true,
     };
+  }
+
+  public async launchDepot() {
+    const configPath = await resolveResource('resources/config.toml');
+    const dataPath = await configDir();
+
+    const command = Command.sidecar('bin/depot', ['-c', configPath, '-d', dataPath]);
+    this.#depot = await command.spawn();
+  }
+
+  public async connectDepot() {
+    if (!this.#depot) return;
+    return this.ndk.addExplicitRelay(
+      new NDKRelay('ws://localhost:6090'),
+      undefined,
+      true
+    );
+  }
+
+  public checkDepot() {
+    if (this.#depot) return true;
+    return false;
   }
 
   async #keyring_save(key: string, value: string) {
