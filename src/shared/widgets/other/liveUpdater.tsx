@@ -6,8 +6,9 @@ import { ChevronUpIcon } from '@shared/icons';
 
 export function LiveUpdater({ status }: { status: QueryStatus }) {
   const ark = useArk();
-  const [events, setEvents] = useState<NDKEvent[]>([]);
   const queryClient = useQueryClient();
+
+  const [events, setEvents] = useState<NDKEvent[]>([]);
 
   const update = async () => {
     await queryClient.setQueryData(

@@ -51,6 +51,7 @@ export class Ark {
     outbox: boolean;
     media: boolean;
     hashtag: boolean;
+    depot: boolean;
   };
 
   constructor({ storage, platform }: { storage: Database; platform: Platform }) {
@@ -62,6 +63,7 @@ export class Ark {
       outbox: false,
       media: true,
       hashtag: true,
+      depot: false,
     };
   }
 
@@ -162,6 +164,7 @@ export class Ark {
       if (item.key === 'media') this.settings.media = !!parseInt(item.value);
       if (item.key === 'hashtag') this.settings.hashtag = !!parseInt(item.value);
       if (item.key === 'autoupdate') this.settings.autoupdate = !!parseInt(item.value);
+      if (item.key === 'depot') this.settings.depot = !!parseInt(item.value);
     }
 
     const explicitRelayUrls = normalizeRelayUrlSet([

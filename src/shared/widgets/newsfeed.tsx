@@ -1,6 +1,6 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
 import { useArk } from '@libs/ark';
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
@@ -15,6 +15,8 @@ import { FETCH_LIMIT } from '@utils/constants';
 
 export function NewsfeedWidget() {
   const ark = useArk();
+  const ref = useRef<VListHandle>();
+
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['newsfeed'],
@@ -48,31 +50,27 @@ export function NewsfeedWidget() {
       refetchOnWindowFocus: false,
     });
 
-  const ref = useRef<VListHandle>();
   const allEvents = useMemo(
     () => (data ? data.pages.flatMap((page) => page) : []),
     [data]
   );
 
-  const renderItem = useCallback(
-    (event: NDKEvent) => {
-      switch (event.kind) {
-        case NDKKind.Text:
-          return <MemoizedTextNote key={event.id} event={event} />;
-        case NDKKind.Repost:
-          return <MemoizedRepost key={event.id} event={event} />;
-        default:
-          return <UnknownNote key={event.id} event={event} />;
-      }
-    },
-    [data]
-  );
+  const renderItem = (event: NDKEvent) => {
+    switch (event.kind) {
+      case NDKKind.Text:
+        return <MemoizedTextNote key={event.id} event={event} />;
+      case NDKKind.Repost:
+        return <MemoizedRepost key={event.id} event={event} />;
+      default:
+        return <UnknownNote key={event.id} event={event} />;
+    }
+  };
 
   return (
     <WidgetWrapper>
       <TitleBar id="9999" isLive />
       <LiveUpdater status={status} />
-      <VList className="flex-1" ref={ref} overscan={2}>
+      <VList ref={ref} overscan={2} className="flex-1">
         {status === 'pending' ? (
           <div className="px-3 py-1.5">
             <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
@@ -91,7 +89,7 @@ export function NewsfeedWidget() {
               className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
             >
               {isFetchingNextPage ? (
-                <LoaderIcon className="h-4 w-4 animate-spin" />
+                <LoaderIcon className="h-5 w-5 animate-spin" />
               ) : (
                 <>
                   <ArrowRightCircleIcon className="h-5 w-5" />

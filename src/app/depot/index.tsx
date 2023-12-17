@@ -15,7 +15,8 @@ export function DepotScreen() {
       setLoading(true);
 
       await ark.launchDepot();
-      await delay(5000); // delay 5s to make sure depot is running
+      await ark.createSetting('depot', '1');
+      await delay(2000); // delay 2s to make sure depot is running
 
       // default depot url: ws://localhost:6090
       // #TODO: user can custom depot url
