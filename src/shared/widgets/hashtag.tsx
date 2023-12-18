@@ -1,19 +1,18 @@
 import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { VList } from 'virtua';
-import { useArk } from '@libs/ark';
+import { Widget, useArk } from '@libs/ark';
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedRepost, MemoizedTextNote, UnknownNote } from '@shared/notes';
-import { TitleBar, WidgetWrapper } from '@shared/widgets';
 import { FETCH_LIMIT } from '@utils/constants';
-import { Widget } from '@utils/types';
+import { WidgetProps } from '@utils/types';
 
-export function HashtagWidget({ widget }: { widget: Widget }) {
+export function HashtagWidget({ props }: { props: WidgetProps }) {
   const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['hashtag', widget.id],
+      queryKey: ['hashtag', props.id],
       initialPageParam: 0,
       queryFn: async ({
         signal,
@@ -25,7 +24,7 @@ export function HashtagWidget({ widget }: { widget: Widget }) {
         const events = await ark.getInfiniteEvents({
           filter: {
             kinds: [NDKKind.Text, NDKKind.Repost],
-            '#t': [widget.content],
+            '#t': [props.content],
           },
           limit: FETCH_LIMIT,
           pageParam,
@@ -50,65 +49,64 @@ export function HashtagWidget({ widget }: { widget: Widget }) {
   );
 
   // render event match event kind
-  const renderItem = useCallback(
-    (event: NDKEvent) => {
-      switch (event.kind) {
-        case NDKKind.Text:
-          return <MemoizedTextNote key={event.id} event={event} />;
-        case NDKKind.Repost:
-          return <MemoizedRepost key={event.id} event={event} />;
-        default:
-          return <UnknownNote key={event.id} event={event} />;
-      }
-    },
-    [data]
-  );
+  const renderItem = (event: NDKEvent) => {
+    switch (event.kind) {
+      case NDKKind.Text:
+        return <MemoizedTextNote key={event.id} event={event} />;
+      case NDKKind.Repost:
+        return <MemoizedRepost key={event.id} event={event} />;
+      default:
+        return <UnknownNote key={event.id} event={event} />;
+    }
+  };
 
   return (
-    <WidgetWrapper>
-      <TitleBar id={widget.id} title={widget.title} />
-      <VList className="flex-1">
-        {status === 'pending' ? (
-          <div className="flex h-full w-full items-center justify-center">
-            <LoaderIcon className="h-5 w-5 animate-spin" />
-          </div>
-        ) : allEvents.length === 0 ? (
-          <div className="flex h-full w-full flex-col items-center justify-center px-3">
-            <div className="flex flex-col items-center gap-4">
-              <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
-              <div className="text-center">
-                <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
-                  Oops, it looks like there are no events related to {widget.content}.
-                </h3>
-                <p className="text-neutral-500 dark:text-neutral-400">
-                  You can close this widget
-                </p>
+    <Widget.Root>
+      <Widget.Header id={props.id} title={props.title} />
+      <Widget.Content>
+        <VList className="flex-1">
+          {status === 'pending' ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <LoaderIcon className="h-5 w-5 animate-spin" />
+            </div>
+          ) : allEvents.length === 0 ? (
+            <div className="flex h-full w-full flex-col items-center justify-center px-3">
+              <div className="flex flex-col items-center gap-4">
+                <img src="/ghost.png" alt="empty feeds" className="h-16 w-16" />
+                <div className="text-center">
+                  <h3 className="font-semibold leading-tight text-neutral-900 dark:text-neutral-100">
+                    Oops, it looks like there are no events related to {props.content}.
+                  </h3>
+                  <p className="text-neutral-500 dark:text-neutral-400">
+                    You can close this widget
+                  </p>
+                </div>
               </div>
             </div>
+          ) : (
+            allEvents.map((item) => renderItem(item))
+          )}
+          <div className="flex h-16 items-center justify-center px-3 pb-3">
+            {hasNextPage ? (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+              >
+                {isFetchingNextPage ? (
+                  <LoaderIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ArrowRightCircleIcon className="h-5 w-5" />
+                    Load more
+                  </>
+                )}
+              </button>
+            ) : null}
           </div>
-        ) : (
-          allEvents.map((item) => renderItem(item))
-        )}
-        <div className="flex h-16 items-center justify-center px-3 pb-3">
-          {hasNextPage ? (
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-              className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
-            >
-              {isFetchingNextPage ? (
-                <LoaderIcon className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <ArrowRightCircleIcon className="h-5 w-5" />
-                  Load more
-                </>
-              )}
-            </button>
-          ) : null}
-        </div>
-      </VList>
-    </WidgetWrapper>
+        </VList>
+      </Widget.Content>
+    </Widget.Root>
   );
 }

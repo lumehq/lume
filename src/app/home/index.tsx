@@ -1,5 +1,6 @@
+import { useSignal } from '@preact/signals-react';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
 import { useArk } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
@@ -22,26 +23,26 @@ import { WIDGET_KIND } from '@utils/constants';
 import { Widget } from '@utils/types';
 
 export function HomeScreen() {
-  const ref = useRef<VListHandle>(null);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
   const ark = useArk();
-  const { status, data } = useQuery({
+  const ref = useRef<VListHandle>(null);
+  const index = useSignal(-1);
+
+  const { isLoading, data } = useQuery({
     queryKey: ['widgets'],
     queryFn: async () => {
       const dbWidgets = await ark.getWidgets();
       const defaultWidgets = [
         {
-          id: '9999',
-          title: 'Newsfeed',
-          content: '',
-          kind: WIDGET_KIND.newsfeed,
-        },
-        {
           id: '9998',
           title: 'Notification',
           content: '',
           kind: WIDGET_KIND.notification,
+        },
+        {
+          id: '9999',
+          title: 'Newsfeed',
+          content: '',
+          kind: WIDGET_KIND.newsfeed,
         },
       ];
 
@@ -53,7 +54,7 @@ export function HomeScreen() {
     staleTime: Infinity,
   });
 
-  const renderItem = useCallback((widget: Widget) => {
+  const renderItem = (widget: Widget) => {
     switch (widget.kind) {
       case WIDGET_KIND.notification:
         return <NotificationWidget key={widget.id} />;
@@ -80,13 +81,13 @@ export function HomeScreen() {
       case WIDGET_KIND.list:
         return <WidgetList key={widget.id} widget={widget} />;
       default:
-        return null;
+        return <NewsfeedWidget key={widget.id} />;
     }
-  }, []);
+  };
 
-  if (status === 'pending') {
+  if (isLoading) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-white dark:bg-black">
+      <div className="flex h-full w-full items-center justify-center">
         <LoaderIcon className="h-5 w-5 animate-spin" />
       </div>
     );
@@ -106,8 +107,8 @@ export function HomeScreen() {
             case 'ArrowUp':
             case 'ArrowLeft': {
               e.preventDefault();
-              const prevIndex = Math.max(selectedIndex - 1, 0);
-              setSelectedIndex(prevIndex);
+              const prevIndex = Math.max(index.peek() - 1, 0);
+              index.value = prevIndex;
               ref.current.scrollToIndex(prevIndex, {
                 align: 'center',
                 smooth: true,
@@ -117,8 +118,8 @@ export function HomeScreen() {
             case 'ArrowDown':
             case 'ArrowRight': {
               e.preventDefault();
-              const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
-              setSelectedIndex(nextIndex);
+              const nextIndex = Math.min(index.peek() + 1, data.length - 1);
+              index.value = nextIndex;
               ref.current.scrollToIndex(nextIndex, {
                 align: 'center',
                 smooth: true,

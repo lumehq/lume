@@ -124,144 +124,138 @@ export default function App() {
             },
           ],
         },
+      ],
+    },
+    {
+      path: 'auth',
+      element: <AuthLayout platform={ark.platform} />,
+      errorElement: <ErrorScreen />,
+      children: [
         {
-          path: 'auth',
-          element: <AuthLayout />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              path: 'welcome',
-              async lazy() {
-                const { WelcomeScreen } = await import('@app/auth/welcome');
-                return { Component: WelcomeScreen };
-              },
-            },
-            {
-              path: 'create',
-              async lazy() {
-                const { CreateAccountScreen } = await import('@app/auth/create');
-                return { Component: CreateAccountScreen };
-              },
-            },
-            {
-              path: 'import',
-              async lazy() {
-                const { ImportAccountScreen } = await import('@app/auth/import');
-                return { Component: ImportAccountScreen };
-              },
-            },
-            {
-              path: 'onboarding',
-              async lazy() {
-                const { OnboardingScreen } = await import('@app/auth/onboarding');
-                return { Component: OnboardingScreen };
-              },
-            },
-            {
-              path: 'follow',
-              async lazy() {
-                const { FollowScreen } = await import('@app/auth/follow');
-                return { Component: FollowScreen };
-              },
-            },
-            {
-              path: 'finish',
-              async lazy() {
-                const { FinishScreen } = await import('@app/auth/finish');
-                return { Component: FinishScreen };
-              },
-            },
-            {
-              path: 'tutorials/note',
-              async lazy() {
-                const { TutorialNoteScreen } = await import('@app/auth/tutorials/note');
-                return { Component: TutorialNoteScreen };
-              },
-            },
-            {
-              path: 'tutorials/widget',
-              async lazy() {
-                const { TutorialWidgetScreen } = await import(
-                  '@app/auth/tutorials/widget'
-                );
-                return { Component: TutorialWidgetScreen };
-              },
-            },
-            {
-              path: 'tutorials/posting',
-              async lazy() {
-                const { TutorialPostingScreen } = await import(
-                  '@app/auth/tutorials/posting'
-                );
-                return { Component: TutorialPostingScreen };
-              },
-            },
-            {
-              path: 'tutorials/finish',
-              async lazy() {
-                const { TutorialFinishScreen } = await import(
-                  '@app/auth/tutorials/finish'
-                );
-                return { Component: TutorialFinishScreen };
-              },
-            },
-          ],
+          path: 'welcome',
+          async lazy() {
+            const { WelcomeScreen } = await import('@app/auth/welcome');
+            return { Component: WelcomeScreen };
+          },
         },
         {
-          path: 'settings',
-          element: <SettingsLayout />,
-          errorElement: <ErrorScreen />,
-          children: [
-            {
-              index: true,
-              async lazy() {
-                const { UserSettingScreen } = await import('@app/settings');
-                return { Component: UserSettingScreen };
-              },
-            },
-            {
-              path: 'edit-profile',
-              async lazy() {
-                const { EditProfileScreen } = await import('@app/settings/editProfile');
-                return { Component: EditProfileScreen };
-              },
-            },
-            {
-              path: 'edit-contact',
-              async lazy() {
-                const { EditContactScreen } = await import('@app/settings/editContact');
-                return { Component: EditContactScreen };
-              },
-            },
-            {
-              path: 'general',
-              async lazy() {
-                const { GeneralSettingScreen } = await import('@app/settings/general');
-                return { Component: GeneralSettingScreen };
-              },
-            },
-            {
-              path: 'backup',
-              async lazy() {
-                const { BackupSettingScreen } = await import('@app/settings/backup');
-                return { Component: BackupSettingScreen };
-              },
-            },
-            {
-              path: 'advanced',
-              async lazy() {
-                const { AdvancedSettingScreen } = await import('@app/settings/advanced');
-                return { Component: AdvancedSettingScreen };
-              },
-            },
-            {
-              path: 'about',
-              async lazy() {
-                const { AboutScreen } = await import('@app/settings/about');
-                return { Component: AboutScreen };
-              },
-            },
-          ],
+          path: 'create',
+          async lazy() {
+            const { CreateAccountScreen } = await import('@app/auth/create');
+            return { Component: CreateAccountScreen };
+          },
+        },
+        {
+          path: 'import',
+          async lazy() {
+            const { ImportAccountScreen } = await import('@app/auth/import');
+            return { Component: ImportAccountScreen };
+          },
+        },
+        {
+          path: 'onboarding',
+          async lazy() {
+            const { OnboardingScreen } = await import('@app/auth/onboarding');
+            return { Component: OnboardingScreen };
+          },
+        },
+        {
+          path: 'follow',
+          async lazy() {
+            const { FollowScreen } = await import('@app/auth/follow');
+            return { Component: FollowScreen };
+          },
+        },
+        {
+          path: 'finish',
+          async lazy() {
+            const { FinishScreen } = await import('@app/auth/finish');
+            return { Component: FinishScreen };
+          },
+        },
+        {
+          path: 'tutorials/note',
+          async lazy() {
+            const { TutorialNoteScreen } = await import('@app/auth/tutorials/note');
+            return { Component: TutorialNoteScreen };
+          },
+        },
+        {
+          path: 'tutorials/widget',
+          async lazy() {
+            const { TutorialWidgetScreen } = await import('@app/auth/tutorials/widget');
+            return { Component: TutorialWidgetScreen };
+          },
+        },
+        {
+          path: 'tutorials/posting',
+          async lazy() {
+            const { TutorialPostingScreen } = await import('@app/auth/tutorials/posting');
+            return { Component: TutorialPostingScreen };
+          },
+        },
+        {
+          path: 'tutorials/finish',
+          async lazy() {
+            const { TutorialFinishScreen } = await import('@app/auth/tutorials/finish');
+            return { Component: TutorialFinishScreen };
+          },
+        },
+      ],
+    },
+    {
+      path: 'settings',
+      element: <SettingsLayout platform={ark.platform} />,
+      errorElement: <ErrorScreen />,
+      children: [
+        {
+          index: true,
+          async lazy() {
+            const { UserSettingScreen } = await import('@app/settings');
+            return { Component: UserSettingScreen };
+          },
+        },
+        {
+          path: 'edit-profile',
+          async lazy() {
+            const { EditProfileScreen } = await import('@app/settings/editProfile');
+            return { Component: EditProfileScreen };
+          },
+        },
+        {
+          path: 'edit-contact',
+          async lazy() {
+            const { EditContactScreen } = await import('@app/settings/editContact');
+            return { Component: EditContactScreen };
+          },
+        },
+        {
+          path: 'general',
+          async lazy() {
+            const { GeneralSettingScreen } = await import('@app/settings/general');
+            return { Component: GeneralSettingScreen };
+          },
+        },
+        {
+          path: 'backup',
+          async lazy() {
+            const { BackupSettingScreen } = await import('@app/settings/backup');
+            return { Component: BackupSettingScreen };
+          },
+        },
+        {
+          path: 'advanced',
+          async lazy() {
+            const { AdvancedSettingScreen } = await import('@app/settings/advanced');
+            return { Component: AdvancedSettingScreen };
+          },
+        },
+        {
+          path: 'about',
+          async lazy() {
+            const { AboutScreen } = await import('@app/settings/about');
+            return { Component: AboutScreen };
+          },
         },
       ],
     },

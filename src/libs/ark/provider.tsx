@@ -38,7 +38,7 @@ const ArkProvider = ({ children }: PropsWithChildren<object>) => {
 
       // start depot
       if (_ark.settings.depot) {
-        await ark.launchDepot();
+        await _ark.launchDepot();
         await delay(2000);
       }
 

@@ -30,7 +30,7 @@ export interface WidgetGroupItem {
   icon?: string;
 }
 
-export interface Widget {
+export interface WidgetProps {
   id?: string;
   account_id?: number;
   kind: number;

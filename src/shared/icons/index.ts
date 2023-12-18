@@ -84,3 +84,4 @@ export * from './info';
 export * from './light';
 export * from './dark';
 export * from './system';
+export * from './announcement';

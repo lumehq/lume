@@ -1,18 +1,17 @@
 import { NDKEvent, NDKKind, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { VList } from 'virtua';
-import { useArk } from '@libs/ark';
-import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
+import { Widget, useArk } from '@libs/ark';
+import { AnnouncementIcon, ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import { MemoizedNotifyNote, NoteSkeleton } from '@shared/notes';
-import { TitleBar, WidgetWrapper } from '@shared/widgets';
 import { FETCH_LIMIT } from '@utils/constants';
 import { sendNativeNotification } from '@utils/notification';
 
 export function NotificationWidget() {
+  const ark = useArk();
   const queryClient = useQueryClient();
 
-  const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['notification'],
@@ -52,10 +51,10 @@ export function NotificationWidget() {
     [data]
   );
 
-  const renderEvent = useCallback((event: NDKEvent) => {
+  const renderEvent = (event: NDKEvent) => {
     if (event.pubkey === ark.account.pubkey) return null;
     return <MemoizedNotifyNote key={event.id} event={event} />;
-  }, []);
+  };
 
   useEffect(() => {
     let sub: NDKSubscription = undefined;
@@ -124,45 +123,51 @@ export function NotificationWidget() {
   }, [status]);
 
   return (
-    <WidgetWrapper>
-      <TitleBar id="9998" title="Notification" isLive />
-      <VList className="flex-1" overscan={2}>
-        {status === 'pending' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-              <NoteSkeleton />
+    <Widget.Root>
+      <Widget.Header
+        id="9998"
+        title="Notification"
+        icon={<AnnouncementIcon className="h-5 w-5" />}
+      />
+      <Widget.Content>
+        <VList className="flex-1" overscan={2}>
+          {status === 'pending' ? (
+            <div className="px-3 py-1.5">
+              <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+                <NoteSkeleton />
+              </div>
             </div>
+          ) : allEvents.length < 1 ? (
+            <div className="flex h-[400px] w-full flex-col items-center justify-center">
+              <p className="mb-2 text-4xl">🎉</p>
+              <p className="text-center font-medium text-neutral-900 dark:text-neutral-100">
+                Hmm! Nothing new yet.
+              </p>
+            </div>
+          ) : (
+            allEvents.map((event) => renderEvent(event))
+          )}
+          <div className="flex h-16 items-center justify-center px-3 pb-3">
+            {hasNextPage ? (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+              >
+                {isFetchingNextPage ? (
+                  <LoaderIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ArrowRightCircleIcon className="h-5 w-5" />
+                    Load more
+                  </>
+                )}
+              </button>
+            ) : null}
           </div>
-        ) : allEvents.length < 1 ? (
-          <div className="flex h-[400px] w-full flex-col items-center justify-center">
-            <p className="mb-2 text-4xl">🎉</p>
-            <p className="text-center font-medium text-neutral-900 dark:text-neutral-100">
-              Hmm! Nothing new yet.
-            </p>
-          </div>
-        ) : (
-          allEvents.map((event) => renderEvent(event))
-        )}
-        <div className="flex h-16 items-center justify-center px-3 pb-3">
-          {hasNextPage ? (
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-              className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
-            >
-              {isFetchingNextPage ? (
-                <LoaderIcon className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <ArrowRightCircleIcon className="h-5 w-5" />
-                  Load more
-                </>
-              )}
-            </button>
-          ) : null}
-        </div>
-      </VList>
-    </WidgetWrapper>
+        </VList>
+      </Widget.Content>
+    </Widget.Root>
   );
 }

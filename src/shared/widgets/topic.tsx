@@ -1,8 +1,8 @@
 import { NDKEvent, NDKFilter, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { VList } from 'virtua';
-import { useArk } from '@libs/ark';
+import { Widget, useArk } from '@libs/ark';
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
 import {
   MemoizedRepost,
@@ -10,15 +10,14 @@ import {
   NoteSkeleton,
   UnknownNote,
 } from '@shared/notes';
-import { TitleBar, WidgetWrapper } from '@shared/widgets';
 import { FETCH_LIMIT } from '@utils/constants';
-import { Widget } from '@utils/types';
+import { type WidgetProps } from '@utils/types';
 
-export function TopicWidget({ widget }: { widget: Widget }) {
+export function TopicWidget({ props }: { props: WidgetProps }) {
   const ark = useArk();
   const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['topic', widget.id],
+      queryKey: ['topic', props.id],
       initialPageParam: 0,
       queryFn: async ({
         signal,
@@ -27,7 +26,7 @@ export function TopicWidget({ widget }: { widget: Widget }) {
         signal: AbortSignal;
         pageParam: number;
       }) => {
-        const hashtags: string[] = JSON.parse(widget.content as string);
+        const hashtags: string[] = JSON.parse(props.content as string);
         const filter: NDKFilter = {
           kinds: [NDKKind.Text, NDKKind.Repost],
           '#t': hashtags.map((tag) => tag.replace('#', '')),
@@ -55,53 +54,52 @@ export function TopicWidget({ widget }: { widget: Widget }) {
     [data]
   );
 
-  const renderItem = useCallback(
-    (event: NDKEvent) => {
-      switch (event.kind) {
-        case NDKKind.Text:
-          return <MemoizedTextNote key={event.id} event={event} />;
-        case NDKKind.Repost:
-          return <MemoizedRepost key={event.id} event={event} />;
-        default:
-          return <UnknownNote key={event.id} event={event} />;
-      }
-    },
-    [data]
-  );
+  const renderItem = (event: NDKEvent) => {
+    switch (event.kind) {
+      case NDKKind.Text:
+        return <MemoizedTextNote key={event.id} event={event} />;
+      case NDKKind.Repost:
+        return <MemoizedRepost key={event.id} event={event} />;
+      default:
+        return <UnknownNote key={event.id} event={event} />;
+    }
+  };
 
   return (
-    <WidgetWrapper>
-      <TitleBar id={widget.id} title={widget.title} />
-      <VList className="flex-1" overscan={2}>
-        {status === 'pending' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-              <NoteSkeleton />
+    <Widget.Root>
+      <Widget.Header id={props.id} title={props.title} />
+      <Widget.Content>
+        <VList className="flex-1" overscan={2}>
+          {status === 'pending' ? (
+            <div className="px-3 py-1.5">
+              <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+                <NoteSkeleton />
+              </div>
             </div>
+          ) : (
+            allEvents.map((item) => renderItem(item))
+          )}
+          <div className="flex h-16 items-center justify-center px-3 pb-3">
+            {hasNextPage ? (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+              >
+                {isFetchingNextPage ? (
+                  <LoaderIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ArrowRightCircleIcon className="h-5 w-5" />
+                    Load more
+                  </>
+                )}
+              </button>
+            ) : null}
           </div>
-        ) : (
-          allEvents.map((item) => renderItem(item))
-        )}
-        <div className="flex h-16 items-center justify-center px-3 pb-3">
-          {hasNextPage ? (
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-              className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
-            >
-              {isFetchingNextPage ? (
-                <LoaderIcon className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <ArrowRightCircleIcon className="h-5 w-5" />
-                  Load more
-                </>
-              )}
-            </button>
-          ) : null}
-        </div>
-      </VList>
-    </WidgetWrapper>
+        </VList>
+      </Widget.Content>
+    </Widget.Root>
   );
 }

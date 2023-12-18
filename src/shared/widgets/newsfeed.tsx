@@ -2,15 +2,14 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo, useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
-import { useArk } from '@libs/ark';
-import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
+import { Widget, useArk } from '@libs/ark';
+import { ArrowRightCircleIcon, LoaderIcon, TimelineIcon } from '@shared/icons';
 import {
   MemoizedRepost,
   MemoizedTextNote,
   NoteSkeleton,
   UnknownNote,
 } from '@shared/notes';
-import { LiveUpdater, TitleBar, WidgetWrapper } from '@shared/widgets';
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function NewsfeedWidget() {
@@ -67,39 +66,44 @@ export function NewsfeedWidget() {
   };
 
   return (
-    <WidgetWrapper>
-      <TitleBar id="9999" isLive />
-      <LiveUpdater status={status} />
-      <VList ref={ref} overscan={2} className="flex-1">
-        {status === 'pending' ? (
-          <div className="px-3 py-1.5">
-            <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-              <NoteSkeleton />
+    <Widget.Root>
+      <Widget.Header
+        id="9999"
+        title="Timeline"
+        icon={<TimelineIcon className="h-5 w-5" />}
+      />
+      <Widget.Content>
+        <VList ref={ref} overscan={2} className="flex-1">
+          {status === 'pending' ? (
+            <div className="px-3 py-1.5">
+              <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
+                <NoteSkeleton />
+              </div>
             </div>
+          ) : (
+            allEvents.map((item) => renderItem(item))
+          )}
+          <div className="flex h-16 items-center justify-center px-3 py-3">
+            {hasNextPage ? (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+              >
+                {isFetchingNextPage ? (
+                  <LoaderIcon className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    <ArrowRightCircleIcon className="h-5 w-5" />
+                    Load more
+                  </>
+                )}
+              </button>
+            ) : null}
           </div>
-        ) : (
-          allEvents.map((item) => renderItem(item))
-        )}
-        <div className="flex h-16 items-center justify-center px-3 pb-3">
-          {hasNextPage ? (
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-              className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
-            >
-              {isFetchingNextPage ? (
-                <LoaderIcon className="h-5 w-5 animate-spin" />
-              ) : (
-                <>
-                  <ArrowRightCircleIcon className="h-5 w-5" />
-                  Load more
-                </>
-              )}
-            </button>
-          ) : null}
-        </div>
-      </VList>
-    </WidgetWrapper>
+        </VList>
+      </Widget.Content>
+    </Widget.Root>
   );
 }
