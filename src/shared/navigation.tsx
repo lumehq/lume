@@ -12,7 +12,7 @@ import {
 
 export function Navigation() {
   return (
-    <div className="flex h-full w-full flex-col justify-between p-3">
+    <div className="flex h-full w-20 shrink-0 flex-col justify-between px-4 py-3">
       <div className="flex flex-1 flex-col gap-5">
         <NavLink
           to="/"
@@ -33,8 +33,10 @@ export function Navigation() {
               </div>
               <div
                 className={twMerge(
-                  'text-sm text-black dark:text-white',
-                  isActive ? 'font-semibold' : 'font-medium'
+                  'text-sm',
+                  isActive
+                    ? 'font-semibold text-black dark:text-white'
+                    : 'font-medium text-black/50 dark:text-white/50'
                 )}
               >
                 Home
@@ -61,8 +63,10 @@ export function Navigation() {
               </div>
               <div
                 className={twMerge(
-                  'text-sm text-black dark:text-white',
-                  isActive ? 'font-semibold' : 'font-medium'
+                  'text-sm',
+                  isActive
+                    ? 'font-semibold text-black dark:text-white'
+                    : 'font-medium text-black/50 dark:text-white/50'
                 )}
               >
                 Relays
@@ -89,8 +93,10 @@ export function Navigation() {
               </div>
               <div
                 className={twMerge(
-                  'text-sm text-black dark:text-white',
-                  isActive ? 'font-semibold' : 'font-medium'
+                  'text-sm',
+                  isActive
+                    ? 'font-semibold text-black dark:text-white'
+                    : 'font-medium text-black/50 dark:text-white/50'
                 )}
               >
                 Depot
@@ -117,8 +123,10 @@ export function Navigation() {
               </div>
               <div
                 className={twMerge(
-                  'text-sm text-black dark:text-white',
-                  isActive ? 'font-semibold' : 'font-medium'
+                  'text-sm',
+                  isActive
+                    ? 'font-semibold text-black dark:text-white'
+                    : 'font-medium text-black/50 dark:text-white/50'
                 )}
               >
                 Wallet

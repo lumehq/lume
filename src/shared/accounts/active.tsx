@@ -18,7 +18,7 @@ export function ActiveAccount() {
     encodeURIComponent(minidenticon(ark.account.pubkey, 90, 50));
 
   return (
-    <div className="flex flex-col gap-1 rounded-lg bg-black/10 p-1 ring-1 ring-transparent hover:bg-black/20 hover:ring-blue-500 dark:bg-white/10 dark:hover:bg-white/20">
+    <div className="flex flex-col gap-1 rounded-xl bg-black/10 p-1 ring-1 ring-transparent hover:bg-black/20 hover:ring-blue-500 dark:bg-white/10 dark:hover:bg-white/20">
       <Link to="/settings/" className="relative inline-block">
         <Avatar.Root>
           <Avatar.Image
@@ -27,13 +27,13 @@ export function ActiveAccount() {
             loading="lazy"
             decoding="async"
             style={{ contentVisibility: 'auto' }}
-            className="aspect-square h-auto w-full rounded-md object-cover"
+            className="aspect-square h-auto w-full rounded-lg object-cover"
           />
           <Avatar.Fallback delayMs={150}>
             <img
               src={svgURI}
               alt={ark.account.pubkey}
-              className="aspect-square h-auto w-full rounded-md bg-black dark:bg-white"
+              className="aspect-square h-auto w-full rounded-lg bg-black dark:bg-white"
             />
           </Avatar.Fallback>
         </Avatar.Root>

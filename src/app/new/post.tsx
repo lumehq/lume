@@ -121,7 +121,7 @@ export function NewPostScreen() {
   }, []);
 
   return (
-    <div className="flex flex-1 flex-col gap-4">
+    <div className="flex h-[500px] flex-1 flex-col gap-4">
       <div className="flex-1 overflow-y-auto">
         <div ref={containerRef} style={{ height: `${height}px` }}>
           <EditorContent

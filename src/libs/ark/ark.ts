@@ -11,7 +11,7 @@ import NDK, {
   NostrEvent,
 } from '@nostr-dev-kit/ndk';
 import { ndkAdapter } from '@nostr-fetch/adapter-ndk';
-import { configDir, resolveResource } from '@tauri-apps/api/path';
+import { appConfigDir, resolveResource } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/primitives';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readBinaryFile } from '@tauri-apps/plugin-fs';
@@ -28,12 +28,12 @@ import {
 import { nip19 } from 'nostr-tools';
 import { NDKCacheAdapterTauri } from '@libs/cache';
 import {
-  Account,
-  NDKCacheUser,
-  NDKCacheUserProfile,
-  NDKEventWithReplies,
-  NIP05,
-  Widget,
+  type Account,
+  type NDKCacheUser,
+  type NDKCacheUserProfile,
+  type NDKEventWithReplies,
+  type NIP05,
+  type WidgetProps,
 } from '@utils/types';
 
 export class Ark {
@@ -69,7 +69,7 @@ export class Ark {
 
   public async launchDepot() {
     const configPath = await resolveResource('resources/config.toml');
-    const dataPath = await configDir();
+    const dataPath = await appConfigDir();
 
     const command = Command.sidecar('bin/depot', ['-c', configPath, '-d', dataPath]);
     this.#depot = await command.spawn();
@@ -77,11 +77,29 @@ export class Ark {
 
   public async connectDepot() {
     if (!this.#depot) return;
-    return this.ndk.addExplicitRelay(
-      new NDKRelay('ws://localhost:6090'),
-      undefined,
-      true
-    );
+
+    // connect
+    this.ndk.addExplicitRelay(new NDKRelay('ws://localhost:6090'), undefined, true);
+
+    const relayEvent = await this.ndk.fetchEvent({
+      kinds: [NDKKind.RelayList],
+      authors: [this.account.pubkey],
+    });
+
+    if (!relayEvent) {
+      // create new relay list
+      return await this.createEvent({
+        kind: NDKKind.RelayList,
+        tags: [['r', 'ws://localhost:6090', '']],
+      });
+    }
+
+    // update old relay list
+    relayEvent.tags.push(['r', 'ws://localhost:6090', '']);
+    return await this.createEvent({
+      kind: NDKKind.RelayList,
+      tags: relayEvent.tags,
+    });
   }
 
   public checkDepot() {
@@ -325,7 +343,7 @@ export class Ark {
   }
 
   public async getWidgets() {
-    const widgets: Array<Widget> = await this.#storage.select(
+    const widgets: Array<WidgetProps> = await this.#storage.select(
       'SELECT * FROM widgets WHERE account_id = $1 ORDER BY created_at DESC;',
       [this.account.id]
     );
@@ -339,7 +357,7 @@ export class Ark {
     );
 
     if (insert) {
-      const widgets: Array<Widget> = await this.#storage.select(
+      const widgets: Array<WidgetProps> = await this.#storage.select(
         'SELECT * FROM widgets ORDER BY id DESC LIMIT 1;'
       );
       if (widgets.length < 1) console.error('get created widget failed');

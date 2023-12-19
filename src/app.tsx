@@ -1,5 +1,4 @@
 import { fetch } from '@tauri-apps/plugin-http';
-import { nip19 } from 'nostr-tools';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ErrorScreen } from '@app/error';
 import { useArk } from '@libs/ark';
@@ -12,17 +11,6 @@ import { SettingsLayout } from '@shared/layouts/settings';
 
 export default function App() {
   const ark = useArk();
-
-  const relayLoader = async ({ params }) => {
-    return defer({
-      relay: fetch(`https://${params.url}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/nostr+json',
-        },
-      }).then((res) => res.json()),
-    });
-  };
 
   const router = createBrowserRouter([
     {
@@ -45,21 +33,6 @@ export default function App() {
               },
             },
             {
-              path: ':address',
-              loader: ({ params }) => {
-                const address = params.address;
-                const decode = nip19.decode(address);
-                if (decode.type === 'npub') return redirect(`/users/${decode.data}`);
-                if (decode.type === 'nprofile')
-                  return redirect(`/users/${decode.data.pubkey}`);
-                if (decode.type === 'note') return redirect(`/events/${decode.data}`);
-                if (decode.type === 'nrelay') return redirect(`/relays/${decode.data}`);
-                if (decode.type === 'nevent')
-                  return redirect(`/relays/${decode.data.id}`);
-                return null;
-              },
-            },
-            {
               path: 'nwc',
               async lazy() {
                 const { NWCScreen } = await import('@app/nwc');
@@ -75,7 +48,16 @@ export default function App() {
             },
             {
               path: 'relays/:url',
-              loader: relayLoader,
+              loader: async ({ params }) => {
+                return defer({
+                  relay: fetch(`https://${params.url}`, {
+                    method: 'GET',
+                    headers: {
+                      Accept: 'application/nostr+json',
+                    },
+                  }).then((res) => res.json()),
+                });
+              },
               async lazy() {
                 const { RelayScreen } = await import('@app/relays/relay');
                 return { Component: RelayScreen };
@@ -83,10 +65,29 @@ export default function App() {
             },
             {
               path: 'depot',
-              async lazy() {
-                const { DepotScreen } = await import('@app/depot');
-                return { Component: DepotScreen };
-              },
+              children: [
+                {
+                  index: true,
+                  loader: () => {
+                    const depot = ark.checkDepot();
+                    if (!depot) return redirect('/depot/onboarding/');
+                    return null;
+                  },
+                  async lazy() {
+                    const { DepotScreen } = await import('@app/depot');
+                    return { Component: DepotScreen };
+                  },
+                },
+                {
+                  path: 'onboarding',
+                  async lazy() {
+                    const { DepotOnboardingScreen } = await import(
+                      '@app/depot/onboarding'
+                    );
+                    return { Component: DepotOnboardingScreen };
+                  },
+                },
+              ],
             },
             {
               path: 'new',
