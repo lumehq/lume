@@ -1,4 +1,4 @@
-export function PlusIcon(props: JSX.IntrinsicElements['svg']) {
+export function SearchIcon(props: JSX.IntrinsicElements['svg']) {
   return (
     <svg
       {...props}
@@ -12,7 +12,7 @@ export function PlusIcon(props: JSX.IntrinsicElements['svg']) {
       strokeLinejoin="round"
       strokeWidth="2"
     >
-      <path d="M12 19v-7m0 0V5m0 7H5m7 0h7" />
+      <path d="m21 21-3.49-3.49m0 0A8.5 8.5 0 1 0 5.49 5.49a8.5 8.5 0 0 0 12.02 12.02Z" />
     </svg>
   );
 }

@@ -69,6 +69,7 @@ export function NewsfeedWidget() {
     <Widget.Root>
       <Widget.Header
         id="9999"
+        queryKey={['newsfeed']}
         title="Timeline"
         icon={<TimelineIcon className="h-5 w-5" />}
       />

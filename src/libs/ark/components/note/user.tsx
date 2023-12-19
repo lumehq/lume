@@ -2,6 +2,7 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { useQuery } from '@tanstack/react-query';
 import { minidenticon } from 'minidenticons';
 import { useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
 import { useArk } from '@libs/ark';
 import { RepostIcon } from '@shared/icons';
 import { displayNpub, formatCreatedAt } from '@utils/formater';
@@ -10,10 +11,12 @@ export function NoteUser({
   pubkey,
   time,
   variant = 'text',
+  className,
 }: {
   pubkey: string;
   time: number;
   variant?: 'text' | 'repost';
+  className?: string;
 }) {
   const ark = useArk();
   const createdAt = useMemo(() => formatCreatedAt(time), [time]);
@@ -48,7 +51,7 @@ export function NoteUser({
   if (variant === 'repost') {
     if (isLoading) {
       return (
-        <div className="flex gap-3">
+        <div className={twMerge('flex gap-3', className)}>
           <div className="inline-flex w-10 items-center justify-center">
             <RepostIcon className="h-5 w-5 text-blue-500" />
           </div>
@@ -61,7 +64,7 @@ export function NoteUser({
     }
 
     return (
-      <div className="flex gap-2">
+      <div className={twMerge('flex gap-2', className)}>
         <div className="inline-flex w-10 items-center justify-center">
           <RepostIcon className="h-5 w-5 text-blue-500" />
         </div>
@@ -95,7 +98,7 @@ export function NoteUser({
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-3">
+      <div className={twMerge('flex items-center gap-3', className)}>
         <Avatar.Root className="h-9 w-9 shrink-0">
           <Avatar.Image
             src={fallbackAvatar}
@@ -113,7 +116,7 @@ export function NoteUser({
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className={twMerge('flex items-center gap-3', className)}>
       <Avatar.Root className="h-9 w-9 shrink-0">
         <Avatar.Image
           src={user?.picture || user?.image}
@@ -130,13 +133,11 @@ export function NoteUser({
           />
         </Avatar.Fallback>
       </Avatar.Root>
-      <div className="flex h-6 flex-1 items-start gap-2">
+      <div className="flex h-6 flex-1 items-start justify-between gap-2">
         <div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
           {user?.name || user?.display_name || user?.displayName || fallbackName}
         </div>
-        <div className="ml-auto inline-flex items-center gap-3">
-          <div className="text-neutral-500 dark:text-neutral-400">{createdAt}</div>
-        </div>
+        <div className="text-neutral-500 dark:text-neutral-400">{createdAt}</div>
       </div>
     </div>
   );

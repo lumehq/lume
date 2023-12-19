@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useArk } from '@libs/ark/provider';
+import { useArk } from '@libs/ark';
 import { NoteChildUser } from './childUser';
 
 export function NoteChild({ eventId, isRoot }: { eventId: string; isRoot?: boolean }) {

@@ -18,7 +18,7 @@ export function ActiveAccount() {
     encodeURIComponent(minidenticon(ark.account.pubkey, 90, 50));
 
   return (
-    <div className="flex flex-col gap-1 rounded-lg bg-neutral-100 p-1 ring-1 ring-transparent hover:bg-neutral-200 hover:ring-blue-500 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+    <div className="flex flex-col gap-1 rounded-lg bg-black/10 p-1 ring-1 ring-transparent hover:bg-black/20 hover:ring-blue-500 dark:bg-white/10 dark:hover:bg-white/20">
       <Link to="/settings/" className="relative inline-block">
         <Avatar.Root>
           <Avatar.Image

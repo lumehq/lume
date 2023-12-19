@@ -4,9 +4,9 @@ import { ReactNode } from 'react';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  HomeIcon,
   HorizontalDotsIcon,
   RefreshIcon,
+  ThreadIcon,
   TrashIcon,
 } from '@shared/icons';
 import { useWidget } from '@utils/hooks/useWidget';
@@ -19,14 +19,14 @@ export function WidgetHeader({
 }: {
   id: string;
   title: string;
-  queryKey?: string;
+  queryKey?: string[];
   icon?: ReactNode;
 }) {
   const queryClient = useQueryClient();
   const { removeWidget } = useWidget();
 
   const refresh = async () => {
-    if (queryKey) await queryClient.refetchQueries({ queryKey: [queryKey] });
+    if (queryKey) await queryClient.refetchQueries({ queryKey });
   };
 
   const moveLeft = async () => {
@@ -46,7 +46,7 @@ export function WidgetHeader({
       <div className="inline-flex items-center gap-4">
         <div className="h-5 w-1 rounded-full bg-blue-500" />
         <div className="inline-flex items-center gap-2">
-          {icon ? icon : <HomeIcon className="h-5 w-5" />}
+          {icon ? icon : <ThreadIcon className="h-5 w-5" />}
           <div className="text-sm font-medium">{title}</div>
         </div>
       </div>

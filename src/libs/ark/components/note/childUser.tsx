@@ -2,7 +2,7 @@ import * as Avatar from '@radix-ui/react-avatar';
 import { useQuery } from '@tanstack/react-query';
 import { minidenticon } from 'minidenticons';
 import { useMemo } from 'react';
-import { useArk } from '@libs/ark/provider';
+import { useArk } from '@libs/ark';
 import { displayNpub } from '@utils/formater';
 
 export function NoteChildUser({ pubkey, subtext }: { pubkey: string; subtext: string }) {

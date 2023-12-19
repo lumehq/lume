@@ -85,3 +85,5 @@ export * from './light';
 export * from './dark';
 export * from './system';
 export * from './announcement';
+export * from './depot';
+export * from './search';

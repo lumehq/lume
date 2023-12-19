@@ -126,6 +126,7 @@ export function NotificationWidget() {
     <Widget.Root>
       <Widget.Header
         id="9998"
+        queryKey={['notification']}
         title="Notification"
         icon={<AnnouncementIcon className="h-5 w-5" />}
       />
@@ -138,8 +139,8 @@ export function NotificationWidget() {
               </div>
             </div>
           ) : allEvents.length < 1 ? (
-            <div className="flex h-[400px] w-full flex-col items-center justify-center">
-              <p className="mb-2 text-4xl">🎉</p>
+            <div className="my-3 flex w-full items-center justify-center gap-2">
+              <div>🎉</div>
               <p className="text-center font-medium text-neutral-900 dark:text-neutral-100">
                 Hmm! Nothing new yet.
               </p>

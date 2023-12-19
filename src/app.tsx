@@ -122,6 +122,69 @@ export default function App() {
                 },
               ],
             },
+            {
+              path: 'settings',
+              element: <SettingsLayout />,
+              children: [
+                {
+                  index: true,
+                  async lazy() {
+                    const { UserSettingScreen } = await import('@app/settings');
+                    return { Component: UserSettingScreen };
+                  },
+                },
+                {
+                  path: 'edit-profile',
+                  async lazy() {
+                    const { EditProfileScreen } = await import(
+                      '@app/settings/editProfile'
+                    );
+                    return { Component: EditProfileScreen };
+                  },
+                },
+                {
+                  path: 'edit-contact',
+                  async lazy() {
+                    const { EditContactScreen } = await import(
+                      '@app/settings/editContact'
+                    );
+                    return { Component: EditContactScreen };
+                  },
+                },
+                {
+                  path: 'general',
+                  async lazy() {
+                    const { GeneralSettingScreen } = await import(
+                      '@app/settings/general'
+                    );
+                    return { Component: GeneralSettingScreen };
+                  },
+                },
+                {
+                  path: 'backup',
+                  async lazy() {
+                    const { BackupSettingScreen } = await import('@app/settings/backup');
+                    return { Component: BackupSettingScreen };
+                  },
+                },
+                {
+                  path: 'advanced',
+                  async lazy() {
+                    const { AdvancedSettingScreen } = await import(
+                      '@app/settings/advanced'
+                    );
+                    return { Component: AdvancedSettingScreen };
+                  },
+                },
+                {
+                  path: 'about',
+                  async lazy() {
+                    const { AboutScreen } = await import('@app/settings/about');
+                    return { Component: AboutScreen };
+                  },
+                },
+              ],
+            },
           ],
         },
       ],
@@ -199,62 +262,6 @@ export default function App() {
           async lazy() {
             const { TutorialFinishScreen } = await import('@app/auth/tutorials/finish');
             return { Component: TutorialFinishScreen };
-          },
-        },
-      ],
-    },
-    {
-      path: 'settings',
-      element: <SettingsLayout platform={ark.platform} />,
-      errorElement: <ErrorScreen />,
-      children: [
-        {
-          index: true,
-          async lazy() {
-            const { UserSettingScreen } = await import('@app/settings');
-            return { Component: UserSettingScreen };
-          },
-        },
-        {
-          path: 'edit-profile',
-          async lazy() {
-            const { EditProfileScreen } = await import('@app/settings/editProfile');
-            return { Component: EditProfileScreen };
-          },
-        },
-        {
-          path: 'edit-contact',
-          async lazy() {
-            const { EditContactScreen } = await import('@app/settings/editContact');
-            return { Component: EditContactScreen };
-          },
-        },
-        {
-          path: 'general',
-          async lazy() {
-            const { GeneralSettingScreen } = await import('@app/settings/general');
-            return { Component: GeneralSettingScreen };
-          },
-        },
-        {
-          path: 'backup',
-          async lazy() {
-            const { BackupSettingScreen } = await import('@app/settings/backup');
-            return { Component: BackupSettingScreen };
-          },
-        },
-        {
-          path: 'advanced',
-          async lazy() {
-            const { AdvancedSettingScreen } = await import('@app/settings/advanced');
-            return { Component: AdvancedSettingScreen };
-          },
-        },
-        {
-          path: 'about',
-          async lazy() {
-            const { AboutScreen } = await import('@app/settings/about');
-            return { Component: AboutScreen };
           },
         },
       ],

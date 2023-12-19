@@ -10,7 +10,7 @@ export function NoteRoot({
 }) {
   return (
     <div className={twMerge('h-min w-full p-3', className)}>
-      <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-950">
+      <div className="relative flex flex-col overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-950">
         {children}
       </div>
     </div>

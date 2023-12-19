@@ -1,5 +1,6 @@
 import { NoteChild } from './child';
 import { NoteContent } from './content';
+import { NoteMenu } from './menu';
 import { NoteReaction } from './reaction';
 import { NoteReply } from './reply';
 import { NoteRepost } from './repost';
@@ -10,6 +11,7 @@ import { NoteZap } from './zap';
 export const Note = {
   Root: NoteRoot,
   User: NoteUser,
+  Menu: NoteMenu,
   Content: NoteContent,
   Reply: NoteReply,
   Repost: NoteRepost,

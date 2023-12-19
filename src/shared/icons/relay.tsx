@@ -1,21 +1,18 @@
-import { SVGProps } from 'react';
-
-export function RelayIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+export function RelayIcon(props: JSX.IntrinsicElements['svg']) {
   return (
     <svg
+      {...props}
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
       width="24"
       height="24"
       fill="none"
-      viewBox="0 0 24 24"
-      {...props}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
     >
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M4 5a3 3 0 013-3h10a3 3 0 013 3v11c0 .889-.386 1.687-1 2.236V20a2 2 0 01-2 2H7a2 2 0 01-2-2v-1.75-.014c-.614-.55-1-1.348-1-2.236V5zm3-1a1 1 0 00-1 1v11a1 1 0 001 1h10a1 1 0 001-1V5a1 1 0 00-1-1H7zm0 2a1 1 0 011-1h8a1 1 0 011 1v6a1 1 0 01-1 1H8a1 1 0 01-1-1V6zm6 9a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"
-        clipRule="evenodd"
-      ></path>
+      <path d="M7 12h10M7 12c-.464 0-.697 0-.892.022a3.5 3.5 0 0 0-3.086 3.086C3 15.303 3 15.536 3 16s0 .697.022.892a3.5 3.5 0 0 0 3.086 3.086C6.303 20 6.536 20 7 20h10c.464 0 .697 0 .892-.022a3.5 3.5 0 0 0 3.086-3.086C21 16.697 21 16.464 21 16s0-.697-.022-.892a3.5 3.5 0 0 0-3.086-3.086C17.697 12 17.464 12 17 12M7 12c-.464 0-.697 0-.892-.022a3.5 3.5 0 0 1-3.086-3.086C3 8.697 3 8.464 3 8s0-.697.022-.892a3.5 3.5 0 0 1 3.086-3.086C6.303 4 6.536 4 7 4h10c.464 0 .697 0 .892.022a3.5 3.5 0 0 1 3.086 3.086C21 7.303 21 7.536 21 8s0 .697-.022.892a3.5 3.5 0 0 1-3.086 3.086C17.697 12 17.464 12 17 12m-4-4h.01M17 8h.01M13 16h.01M17 16h.01" />
     </svg>
   );
 }
