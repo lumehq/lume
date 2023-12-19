@@ -20,7 +20,7 @@ import {
   WidgetList,
 } from '@shared/widgets';
 import { WIDGET_KIND } from '@utils/constants';
-import { Widget } from '@utils/types';
+import { WidgetProps } from '@utils/types';
 
 export function HomeScreen() {
   const ark = useArk();
@@ -54,32 +54,32 @@ export function HomeScreen() {
     staleTime: Infinity,
   });
 
-  const renderItem = (widget: Widget) => {
+  const renderItem = (widget: WidgetProps) => {
     switch (widget.kind) {
       case WIDGET_KIND.notification:
         return <NotificationWidget key={widget.id} />;
       case WIDGET_KIND.newsfeed:
         return <NewsfeedWidget key={widget.id} />;
       case WIDGET_KIND.topic:
-        return <TopicWidget key={widget.id} widget={widget} />;
+        return <TopicWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.user:
-        return <UserWidget key={widget.id} widget={widget} />;
+        return <UserWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.thread:
-        return <ThreadWidget key={widget.id} widget={widget} />;
+        return <ThreadWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.article:
-        return <ArticleWidget key={widget.id} widget={widget} />;
+        return <ArticleWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.file:
-        return <FileWidget key={widget.id} widget={widget} />;
+        return <FileWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.hashtag:
-        return <HashtagWidget key={widget.id} widget={widget} />;
+        return <HashtagWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.group:
-        return <GroupWidget key={widget.id} widget={widget} />;
+        return <GroupWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.trendingNotes:
-        return <TrendingNotesWidget key={widget.id} widget={widget} />;
+        return <TrendingNotesWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.trendingAccounts:
-        return <TrendingAccountsWidget key={widget.id} widget={widget} />;
+        return <TrendingAccountsWidget key={widget.id} props={widget} />;
       case WIDGET_KIND.list:
-        return <WidgetList key={widget.id} widget={widget} />;
+        return <WidgetList key={widget.id} props={widget} />;
       default:
         return <NewsfeedWidget key={widget.id} />;
     }

@@ -16,7 +16,7 @@ export function TextNote({ event, className }: { event: NDKEvent; className?: st
   const thread = ark.getEventThread({ tags: event.tags });
 
   return (
-    <div className={twMerge('mb-3 h-min w-full px-3', className)}>
+    <div className={twMerge('my-3 h-min w-full px-3', className)}>
       <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
         <User pubkey={event.pubkey} time={event.created_at} eventId={event.id} />
         {thread ? (

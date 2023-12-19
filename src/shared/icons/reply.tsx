@@ -1,29 +1,18 @@
-import { SVGProps } from 'react';
-
-export function ReplyIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+export function ReplyIcon(props: JSX.IntrinsicElements['svg']) {
   return (
     <svg
+      {...props}
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
       width="24"
       height="24"
       fill="none"
-      viewBox="0 0 24 24"
-      {...props}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
     >
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M12 21a9 9 0 10-9-9c0 1.354.3 2.639.835 3.791.102.219.133.465.076.7l-.778 3.191a1 1 0 001.191 1.213l3.33-.752c.224-.05.458-.02.667.073A8.969 8.969 0 0012 21z"
-      ></path>
-      <path
-        fill="currentColor"
-        stroke="currentColor"
-        strokeLinecap="square"
-        strokeWidth="0.75"
-        d="M6.625 12a.875.875 0 101.75 0 .875.875 0 00-1.75 0zm4.5 0a.875.875 0 101.75 0 .875.875 0 00-1.75 0zm4.5 0a.875.875 0 101.75 0 .875.875 0 00-1.75 0z"
-      ></path>
+      <path d="M8 10h8m-8 4h4m9-2a9 9 0 0 1-10.272 8.91c-1.203-.17-1.805-.255-1.964-.267-.257-.02-.165-.016-.423-.014-.159 0-.34.014-.702.04l-2.153.153c-.857.062-1.286.092-1.607-.06a1.35 1.35 0 0 1-.641-.641c-.152-.32-.122-.75-.06-1.607l.153-2.153c.026-.362.04-.543.04-.702.002-.258.006-.166-.014-.423-.012-.159-.098-.76-.268-1.964A9 9 0 1 1 21 12Z" />
     </svg>
   );
 }

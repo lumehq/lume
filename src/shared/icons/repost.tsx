@@ -1,19 +1,18 @@
-import { SVGProps } from 'react';
-
-export function RepostIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+export function RepostIcon(props: JSX.IntrinsicElements['svg']) {
   return (
     <svg
+      {...props}
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
       width="24"
       height="24"
       fill="none"
-      viewBox="0 0 24 24"
-      {...props}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
     >
-      <path
-        fill="currentColor"
-        d="M17.957 2.293a1 1 0 10-1.414 1.414L17.836 5H6a3 3 0 00-3 3v3a1 1 0 102 0V8a1 1 0 011-1h11.836l-1.293 1.293a1 1 0 001.414 1.414l2.47-2.47a1.75 1.75 0 000-2.474l-2.47-2.47zM20 12a1 1 0 011 1v3a3 3 0 01-3 3H6.164l1.293 1.293a1 1 0 11-1.414 1.414l-2.47-2.47a1.75 1.75 0 010-2.474l2.47-2.47a1 1 0 011.414 1.414L6.164 17H18a1 1 0 001-1v-3a1 1 0 011-1z"
-      ></path>
+      <path d="M12 2a15.267 15.267 0 0 1 2.92 2.777c.054.066.08.145.08.225M12 8a15.266 15.266 0 0 0 2.92-2.777.356.356 0 0 0 .08-.221M12 16a15.264 15.264 0 0 0-2.92 2.777.356.356 0 0 0-.08.221M12 22a15.264 15.264 0 0 1-2.92-2.777.355.355 0 0 1-.08-.225m6-13.996C14.7 5 14.368 5 14 5h-4c-1.861 0-2.792 0-3.545.245a5 5 0 0 0-3.21 3.21C3 9.208 3 10.139 3 12s0 2.792.245 3.545A5 5 0 0 0 5 18m4 .998c.3.002.632.002 1 .002h4c1.861 0 2.792 0 3.545-.245a5 5 0 0 0 3.21-3.21C21 14.792 21 13.861 21 12s0-2.792-.245-3.545A5 5 0 0 0 19 6" />
     </svg>
   );
 }
