@@ -71,11 +71,6 @@ export function CreateAccountScreen() {
           privkey: userPrivkey,
         });
 
-        await ark.createEvent({
-          kind: NDKKind.RelayList,
-          tags: ark.relays.map((item) => ['r', item, '']),
-        });
-
         setKeys({ npub: userNpub, nsec: userNsec });
         setLoading(false);
       } else {

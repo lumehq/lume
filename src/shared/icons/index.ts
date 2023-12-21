@@ -87,3 +87,7 @@ export * from './system';
 export * from './announcement';
 export * from './depot';
 export * from './search';
+export * from './run';
+export * from './gossip';
+export * from './userAdd';
+export * from './userRemove';

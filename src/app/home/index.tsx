@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
 import { useArk } from '@libs/ark';
-import { LoaderIcon } from '@shared/icons';
+import { LoaderIcon, PlusIcon } from '@shared/icons';
 import {
   ArticleWidget,
   FileWidget,
@@ -132,7 +132,7 @@ export function HomeScreen() {
         }}
       >
         {data.map((widget) => renderItem(widget))}
-        <ToggleWidgetList />
+        <div className="h-full w-[200px]" />
       </VList>
     </div>
   );

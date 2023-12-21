@@ -64,32 +64,6 @@ export default function App() {
               },
             },
             {
-              path: 'depot',
-              children: [
-                {
-                  index: true,
-                  loader: () => {
-                    const depot = ark.checkDepot();
-                    if (!depot) return redirect('/depot/onboarding/');
-                    return null;
-                  },
-                  async lazy() {
-                    const { DepotScreen } = await import('@app/depot');
-                    return { Component: DepotScreen };
-                  },
-                },
-                {
-                  path: 'onboarding',
-                  async lazy() {
-                    const { DepotOnboardingScreen } = await import(
-                      '@app/depot/onboarding'
-                    );
-                    return { Component: DepotOnboardingScreen };
-                  },
-                },
-              ],
-            },
-            {
               path: 'new',
               element: <ComposerLayout />,
               children: [
@@ -185,6 +159,30 @@ export default function App() {
                   },
                 },
               ],
+            },
+          ],
+        },
+        {
+          path: 'depot',
+          children: [
+            {
+              index: true,
+              loader: () => {
+                const depot = ark.checkDepot();
+                if (!depot) return redirect('/depot/onboarding/');
+                return null;
+              },
+              async lazy() {
+                const { DepotScreen } = await import('@app/depot');
+                return { Component: DepotScreen };
+              },
+            },
+            {
+              path: 'onboarding',
+              async lazy() {
+                const { DepotOnboardingScreen } = await import('@app/depot/onboarding');
+                return { Component: DepotOnboardingScreen };
+              },
             },
           ],
         },

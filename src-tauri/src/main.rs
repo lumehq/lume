@@ -3,6 +3,8 @@
   windows_subsystem = "windows"
 )]
 
+mod commands;
+
 use keyring::Entry;
 use std::time::Duration;
 use tauri_plugin_autostart::MacosLauncher;
@@ -161,7 +163,8 @@ fn main() {
       opengraph,
       secure_save,
       secure_load,
-      secure_remove
+      secure_remove,
+      commands::show_in_folder,
     ])
     .run(ctx)
     .expect("error while running tauri application");

@@ -27,6 +27,7 @@ import {
 } from 'nostr-fetch';
 import { nip19 } from 'nostr-tools';
 import { NDKCacheAdapterTauri } from '@libs/cache';
+import { delay } from '@utils/delay';
 import {
   type Account,
   type NDKCacheUser,
@@ -52,6 +53,7 @@ export class Ark {
     media: boolean;
     hashtag: boolean;
     depot: boolean;
+    tunnelUrl: string;
   };
 
   constructor({ storage, platform }: { storage: Database; platform: Platform }) {
@@ -64,6 +66,7 @@ export class Ark {
       media: true,
       hashtag: true,
       depot: false,
+      tunnelUrl: '',
     };
   }
 
@@ -77,29 +80,11 @@ export class Ark {
 
   public async connectDepot() {
     if (!this.#depot) return;
-
-    // connect
-    this.ndk.addExplicitRelay(new NDKRelay('ws://localhost:6090'), undefined, true);
-
-    const relayEvent = await this.ndk.fetchEvent({
-      kinds: [NDKKind.RelayList],
-      authors: [this.account.pubkey],
-    });
-
-    if (!relayEvent) {
-      // create new relay list
-      return await this.createEvent({
-        kind: NDKKind.RelayList,
-        tags: [['r', 'ws://localhost:6090', '']],
-      });
-    }
-
-    // update old relay list
-    relayEvent.tags.push(['r', 'ws://localhost:6090', '']);
-    return await this.createEvent({
-      kind: NDKKind.RelayList,
-      tags: relayEvent.tags,
-    });
+    return this.ndk.addExplicitRelay(
+      new NDKRelay(normalizeRelayUrl('ws://localhost:6090')),
+      undefined,
+      true
+    );
   }
 
   public checkDepot() {
@@ -146,7 +131,10 @@ export class Ark {
 
         const localSigner = new NDKPrivateKeySigner(localSignerPrivkey);
         const bunker = new NDK({
-          explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
+          explicitRelayUrls: normalizeRelayUrlSet([
+            'wss://relay.nsecbunker.com/',
+            'wss://nostr.vulpem.com/',
+          ]),
         });
         await bunker.connect(3000);
 
@@ -183,6 +171,7 @@ export class Ark {
       if (item.key === 'hashtag') this.settings.hashtag = !!parseInt(item.value);
       if (item.key === 'autoupdate') this.settings.autoupdate = !!parseInt(item.value);
       if (item.key === 'depot') this.settings.depot = !!parseInt(item.value);
+      if (item.key === 'tunnel_url') this.settings.tunnelUrl = item.value;
     }
 
     const explicitRelayUrls = normalizeRelayUrlSet([
@@ -191,11 +180,23 @@ export class Ark {
       'wss://nostr.mutinywallet.com',
     ]);
 
+    if (this.settings.depot) {
+      await this.launchDepot();
+      await delay(2000);
+
+      explicitRelayUrls.push(normalizeRelayUrl('ws://localhost:6090'));
+    }
+
     // #TODO: user should config outbox relays
     const outboxRelayUrls = normalizeRelayUrlSet(['wss://purplepag.es']);
 
     // #TODO: user should config blacklist relays
-    const blacklistRelayUrls = normalizeRelayUrlSet(['wss://brb.io']);
+    // No need to connect depot tunnel url
+    const blacklistRelayUrls = this.settings.tunnelUrl.length
+      ? [this.settings.tunnelUrl, this.settings.tunnelUrl + '/']
+      : [];
+
+    console.log(blacklistRelayUrls);
 
     const cacheAdapter = new NDKCacheAdapterTauri(this.#storage);
     const ndk = new NDK({
@@ -215,7 +216,7 @@ export class Ark {
     if (signer) ndk.signer = signer;
 
     // connect
-    await ndk.connect(5000);
+    await ndk.connect(3000);
     const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
 
     // update account's metadata
@@ -373,25 +374,17 @@ export class Ark {
   }
 
   public async createSetting(key: string, value: string | undefined) {
-    if (value) {
+    const currentSetting = await this.checkSettingValue(key);
+
+    if (!currentSetting) {
       return await this.#storage.execute(
         'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
         [key, value]
       );
     }
 
-    const currentSetting = await this.checkSettingValue(key);
-
-    if (!currentSetting)
-      return await this.#storage.execute(
-        'INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);',
-        [key, value]
-      );
-
-    const currentValue = !!parseInt(currentSetting);
-
     return await this.#storage.execute('UPDATE settings SET value = $1 WHERE key = $2;', [
-      +!currentValue,
+      value,
       key,
     ]);
   }

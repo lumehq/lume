@@ -1,5 +1,7 @@
 import * as Avatar from '@radix-ui/react-avatar';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { minidenticon } from 'minidenticons';
+import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
 import { useArk } from '@libs/ark';
 import { EditIcon, LoaderIcon } from '@shared/icons';
@@ -8,11 +10,15 @@ import { useProfile } from '@utils/hooks/useProfile';
 
 export function ProfileCard() {
   const ark = useArk();
-  const { isLoading, user } = useProfile(ark.account.pubkey);
-
   const svgURI =
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(minidenticon(ark.account.pubkey, 90, 50));
+
+  const { isLoading, user } = useProfile(ark.account.pubkey);
+
+  const copyNpub = async () => {
+    return await writeText(nip19.npubEncode(ark.account.pubkey));
+  };
 
   return (
     <div className="mb-4 h-56 w-full rounded-2xl bg-neutral-100 transition-all duration-150 ease-smooth hover:scale-105 dark:bg-neutral-900">
@@ -22,7 +28,14 @@ export function ProfileCard() {
         </div>
       ) : (
         <div className="flex h-full w-full flex-col justify-between p-4">
-          <div className="flex h-10 w-full justify-end">
+          <div className="flex h-10 w-full justify-end gap-3">
+            <button
+              type="button"
+              onClick={copyNpub}
+              className="inline-flex h-8 w-28 transform items-center justify-center gap-1.5 rounded-full bg-neutral-200 text-sm font-medium hover:bg-neutral-400 active:translate-y-1 dark:bg-neutral-800 dark:hover:bg-neutral-600"
+            >
+              Copy NPUB
+            </button>
             <Link
               to="/settings/edit-profile"
               className="inline-flex h-8 w-20 items-center justify-center gap-1.5 rounded-full bg-neutral-200 text-sm font-medium hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-600"

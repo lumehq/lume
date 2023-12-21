@@ -8,7 +8,6 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { Ark } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
 import { QUOTES } from '@utils/constants';
-import { delay } from '@utils/delay';
 
 const ArkContext = createContext<Ark>(undefined);
 
@@ -34,12 +33,6 @@ const ArkProvider = ({ children }: PropsWithChildren<object>) => {
           await update.downloadAndInstall();
           await relaunch();
         }
-      }
-
-      // start depot
-      if (_ark.settings.depot) {
-        await _ark.launchDepot();
-        await delay(2000);
       }
 
       setArk(_ark);

@@ -51,7 +51,7 @@ export function DepotOnboardingScreen() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-10">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-10 rounded-xl bg-white shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-[inset_0_0_0.5px_1px_hsla(0,0%,100%,0.075),0_0_0_1px_hsla(0,0%,0%,0.05),0_0.3px_0.4px_hsla(0,0%,0%,0.02),0_0.9px_1.5px_hsla(0,0%,0%,0.045),0_3.5px_6px_hsla(0,0%,0%,0.09)]">
       <div className="flex flex-col items-center gap-8">
         <div className="text-center">
           <h1 className="mb-1 text-3xl font-semibold text-neutral-400 dark:text-neutral-600">

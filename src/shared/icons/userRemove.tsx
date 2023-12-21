@@ -1,4 +1,4 @@
-export function CancelIcon(props: JSX.IntrinsicElements['svg']) {
+export function UserRemoveIcon(props: JSX.IntrinsicElements['svg']) {
   return (
     <svg
       {...props}
@@ -12,7 +12,7 @@ export function CancelIcon(props: JSX.IntrinsicElements['svg']) {
       strokeLinejoin="round"
       strokeWidth="2"
     >
-      <path d="m6 18 6-6m0 0 6-6m-6 6L6 6m6 6 6 6" />
+      <path d="M11 15H7a4 4 0 0 0-4 4 2 2 0 0 0 2 2h10m0-6h6m-6-8a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" />
     </svg>
   );
 }

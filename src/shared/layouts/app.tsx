@@ -1,6 +1,7 @@
 import { type Platform } from '@tauri-apps/plugin-os';
-import { Outlet, ScrollRestoration } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { Navigation } from '@shared/navigation';
 import { WindowTitleBar } from '@shared/titlebar';
 
 export function AppLayout({ platform }: { platform: Platform }) {
@@ -8,7 +9,7 @@ export function AppLayout({ platform }: { platform: Platform }) {
     <div
       className={twMerge(
         'flex h-screen w-screen flex-col',
-        platform !== 'macos' ? 'bg-neutral-50 dark:bg-neutral-950' : ''
+        platform !== 'macos' ? 'bg-blue-50 dark:bg-blue-950' : ''
       )}
     >
       {platform !== 'macos' ? (
@@ -16,9 +17,11 @@ export function AppLayout({ platform }: { platform: Platform }) {
       ) : (
         <div data-tauri-drag-region className="h-9 shrink-0" />
       )}
-      <div className="h-full w-full">
-        <Outlet />
-        <ScrollRestoration />
+      <div className="flex h-full min-h-0 w-full">
+        <Navigation />
+        <div className="h-full flex-1 px-1 pb-1">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
