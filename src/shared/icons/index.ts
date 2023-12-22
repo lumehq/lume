@@ -91,3 +91,4 @@ export * from './run';
 export * from './gossip';
 export * from './userAdd';
 export * from './userRemove';
+export * from './pin';

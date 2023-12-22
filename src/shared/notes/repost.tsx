@@ -59,7 +59,7 @@ export function Repost({ event }: { event: NDKEvent }) {
 
   if (isError) {
     return (
-      <div className="mb-3 h-min w-full px-3">
+      <div className="my-3 h-min w-full px-3">
         <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
           <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
           <div className="relative flex flex-col gap-2">
@@ -73,7 +73,7 @@ export function Repost({ event }: { event: NDKEvent }) {
   }
 
   return (
-    <div className="mb-3 h-min w-full px-3">
+    <div className="my-3 h-min w-full px-3">
       <div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
         <User pubkey={event.pubkey} time={event.created_at} variant="repost" />
         <div className="relative flex flex-col gap-2">

@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { useRichContent } from '@utils/hooks/useRichContent';
 
-export function NoteContent({
+export function NoteKind({
   content,
   className,
 }: {
