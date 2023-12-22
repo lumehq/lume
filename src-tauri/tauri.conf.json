@@ -116,6 +116,9 @@
       "dangerousRemoteDomainIpcAccess": [],
       "freezePrototype": false
     },
+    "trayIcon": {
+      "iconPath": "icons/tray.png"
+    },
     "macOSPrivateApi": true
   }
 }
