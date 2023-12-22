@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "@evilmartians/harmony": "^1.2.0",
-    "@getalby/sdk": "^2.7.0",
-    "@nostr-dev-kit/ndk": "^2.3.0",
+    "@getalby/sdk": "^3.2.1",
+    "@nostr-dev-kit/ndk": "^2.3.1",
     "@nostr-fetch/adapter-ndk": "^0.14.1",
-    "@preact/signals-react": "^1.3.8",
+    "@preact/signals-react": "^2.0.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -85,7 +85,7 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.8",
     "use-react-workers": "^0.3.0",
-    "virtua": "^0.17.6"
+    "virtua": "^0.18.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
