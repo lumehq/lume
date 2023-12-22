@@ -22,7 +22,6 @@
     "@getalby/sdk": "^3.2.1",
     "@nostr-dev-kit/ndk": "^2.3.1",
     "@nostr-fetch/adapter-ndk": "^0.14.1",
-    "@preact/signals-react": "^2.0.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",

@@ -1,43 +1,42 @@
-import { useSignal } from '@preact/signals-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { resolveResource } from '@tauri-apps/api/path';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { nip19 } from 'nostr-tools';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { parse, stringify } from 'smol-toml';
 import { toast } from 'sonner';
 import { CancelIcon, PlusIcon, UserAddIcon, UserRemoveIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function DepotMembers() {
-  const members = useSignal<Set<string>>(null);
-  const tmpMembers = useSignal<Array<string>>([]);
-  const newMember = useSignal('');
+  const [members, setMembers] = useState<Set<string>>(null);
+  const [tmpMembers, setTmpMembers] = useState<Array<string>>([]);
+  const [newMember, setNewMember] = useState('');
 
   const addMember = async () => {
-    if (!newMember.value.startsWith('npub1'))
+    if (!newMember.startsWith('npub1'))
       return toast.error('You need to enter a valid npub');
 
     try {
-      const pubkey = nip19.decode(newMember.value).data as string;
-      tmpMembers.value.push(pubkey);
+      const pubkey = nip19.decode(newMember).data as string;
+      setTmpMembers((prev) => [...prev, pubkey]);
     } catch (e) {
       console.error(e);
     }
   };
 
   const removeMember = (member: string) => {
-    tmpMembers.value = tmpMembers.value.filter((item) => item !== member);
+    setTmpMembers((prev) => prev.filter((item) => item !== member));
   };
 
   const updateMembers = async () => {
-    members.value = new Set(tmpMembers.value);
+    setMembers(new Set(tmpMembers));
 
     const defaultConfig = await resolveResource('resources/config.toml');
     const config = await readTextFile(defaultConfig);
     const configContent = parse(config);
 
-    configContent.authorization['pubkey_whitelist'] = [...members.value];
+    configContent.authorization['pubkey_whitelist'] = [...members];
 
     const newConfig = stringify(configContent);
 
@@ -49,7 +48,7 @@ export function DepotMembers() {
       const defaultConfig = await resolveResource('resources/config.toml');
       const config = await readTextFile(defaultConfig);
       const configContent = parse(config);
-      tmpMembers.value = Array.from(configContent.authorization['pubkey_whitelist']);
+      setTmpMembers(Array.from(configContent.authorization['pubkey_whitelist']));
     }
 
     loadConfig();
@@ -66,12 +65,12 @@ export function DepotMembers() {
         </div>
         <div className="inline-flex items-center gap-2">
           <div className="isolate flex -space-x-2">
-            {tmpMembers.value.slice(0, 5).map((item) => (
+            {tmpMembers.slice(0, 5).map((item) => (
               <User key={item} pubkey={item} variant="stacked" />
             ))}
-            {tmpMembers.value.length > 5 ? (
+            {tmpMembers.length > 5 ? (
               <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-900 ring-1 ring-neutral-300 dark:bg-neutral-800 dark:text-neutral-100 dark:ring-neutral-700">
-                <span className="text-xs font-medium">+{tmpMembers.value.length}</span>
+                <span className="text-xs font-medium">+{tmpMembers.length}</span>
               </div>
             ) : null}
           </div>
@@ -107,8 +106,8 @@ export function DepotMembers() {
                 <input
                   type="text"
                   spellCheck={false}
-                  value={newMember.value}
-                  onChange={(e) => (newMember.value = e.target.value)}
+                  value={newMember}
+                  onChange={(e) => setNewMember(e.target.value)}
                   placeholder="npub1..."
                   className="h-11 w-full rounded-lg border-transparent bg-neutral-100 pl-3 pr-20 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                 />
@@ -121,7 +120,7 @@ export function DepotMembers() {
                   Add
                 </button>
               </div>
-              {tmpMembers.value.map((member) => (
+              {tmpMembers.map((member) => (
                 <div
                   key={member}
                   className="group flex items-center justify-between px-5 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-900"

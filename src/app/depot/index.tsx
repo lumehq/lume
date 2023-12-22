@@ -1,9 +1,8 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
-import { useSignal } from '@preact/signals-react';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { appConfigDir } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/primitives';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { DepotContactCard } from '@app/depot/components/contact';
 import { DepotMembers } from '@app/depot/components/members';
@@ -14,22 +13,23 @@ import { ChevronDownIcon, DepotIcon, GossipIcon } from '@shared/icons';
 
 export function DepotScreen() {
   const ark = useArk();
-  const dataPath = useSignal('');
-  const tunnelUrl = useSignal('');
+
+  const [dataPath, setDataPath] = useState('');
+  const [tunnelUrl, setTunnelUrl] = useState('');
 
   const openFolder = async () => {
     await invoke('show_in_folder', {
-      path: dataPath.value + '/nostr.db',
+      path: dataPath + '/nostr.db',
     });
   };
 
   const updateRelayList = async () => {
     try {
-      if (tunnelUrl.value.length < 1) return toast.info('Please enter a valid relay url');
-      if (!tunnelUrl.value.startsWith('ws'))
+      if (tunnelUrl.length < 1) return toast.info('Please enter a valid relay url');
+      if (!tunnelUrl.startsWith('ws'))
         return toast.info('Please enter a valid relay url');
 
-      const relayUrl = new URL(tunnelUrl.value.replace(/\s/g, ''));
+      const relayUrl = new URL(tunnelUrl.replace(/\s/g, ''));
       if (!/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/.test(relayUrl.host)) return;
 
       const relayEvent = await ark.getEventByFilter({
@@ -41,12 +41,12 @@ export function DepotScreen() {
       if (!relayEvent) {
         publish = await ark.createEvent({
           kind: NDKKind.RelayList,
-          tags: [['r', tunnelUrl.value, '']],
+          tags: [['r', tunnelUrl, '']],
         });
       }
 
       const newTags = relayEvent.tags ?? [];
-      newTags.push(['r', tunnelUrl.value, '']);
+      newTags.push(['r', tunnelUrl, '']);
 
       publish = await ark.createEvent({
         kind: NDKKind.RelayList,
@@ -54,10 +54,10 @@ export function DepotScreen() {
       });
 
       if (publish) {
-        await ark.createSetting('tunnel_url', tunnelUrl.value);
+        await ark.createSetting('tunnel_url', tunnelUrl);
         toast.success('Update relay list successfully.');
 
-        tunnelUrl.value = '';
+        setTunnelUrl('');
       }
     } catch (e) {
       console.error(e);
@@ -68,7 +68,7 @@ export function DepotScreen() {
   useEffect(() => {
     async function loadConfig() {
       const appDir = await appConfigDir();
-      dataPath.value = appDir;
+      setDataPath(appDir);
     }
 
     loadConfig();
@@ -170,8 +170,8 @@ export function DepotScreen() {
                     <div className="mt-2 inline-flex w-full items-center gap-2">
                       <input
                         type="text"
-                        value={tunnelUrl.value}
-                        onChange={(e) => (tunnelUrl.value = e.target.value)}
+                        value={tunnelUrl}
+                        onChange={(e) => setTunnelUrl(e.target.value)}
                         spellCheck={false}
                         placeholder="wss://"
                         className="h-10 flex-1 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"

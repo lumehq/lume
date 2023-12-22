@@ -1,6 +1,5 @@
-import { useSignal } from '@preact/signals-react';
 import { Resizable } from 're-resizable';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export function WidgetRoot({
@@ -10,14 +9,14 @@ export function WidgetRoot({
   children: ReactNode;
   className?: string;
 }) {
-  const width = useSignal(420);
+  const [width, setWidth] = useState(420);
 
   return (
     <Resizable
-      size={{ width: width.value, height: '100%' }}
+      size={{ width, height: '100%' }}
       onResizeStart={(e) => e.preventDefault()}
       onResizeStop={(_e, _direction, _ref, d) => {
-        width.value = width.peek() + d.width;
+        setWidth((prevWidth) => prevWidth + d.width);
       }}
       minWidth={420}
       maxWidth={600}

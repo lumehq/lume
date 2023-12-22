@@ -1,9 +1,8 @@
-import { useSignal } from '@preact/signals-react';
 import { useQuery } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
 import { useArk } from '@libs/ark';
-import { LoaderIcon, PlusIcon } from '@shared/icons';
+import { LoaderIcon } from '@shared/icons';
 import {
   ArticleWidget,
   FileWidget,
@@ -12,7 +11,6 @@ import {
   NewsfeedWidget,
   NotificationWidget,
   ThreadWidget,
-  ToggleWidgetList,
   TopicWidget,
   TrendingAccountsWidget,
   TrendingNotesWidget,
@@ -25,7 +23,6 @@ import { WidgetProps } from '@utils/types';
 export function HomeScreen() {
   const ark = useArk();
   const ref = useRef<VListHandle>(null);
-  const index = useSignal(-1);
 
   const { isLoading, data } = useQuery({
     queryKey: ['widgets'],
@@ -53,6 +50,8 @@ export function HomeScreen() {
     refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
+
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const renderItem = (widget: WidgetProps) => {
     switch (widget.kind) {
@@ -107,8 +106,8 @@ export function HomeScreen() {
             case 'ArrowUp':
             case 'ArrowLeft': {
               e.preventDefault();
-              const prevIndex = Math.max(index.peek() - 1, 0);
-              index.value = prevIndex;
+              const prevIndex = Math.max(selectedIndex - 1, 0);
+              setSelectedIndex(prevIndex);
               ref.current.scrollToIndex(prevIndex, {
                 align: 'center',
                 smooth: true,
@@ -118,8 +117,8 @@ export function HomeScreen() {
             case 'ArrowDown':
             case 'ArrowRight': {
               e.preventDefault();
-              const nextIndex = Math.min(index.peek() + 1, data.length - 1);
-              index.value = nextIndex;
+              const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
+              setSelectedIndex(nextIndex);
               ref.current.scrollToIndex(nextIndex, {
                 align: 'center',
                 smooth: true,

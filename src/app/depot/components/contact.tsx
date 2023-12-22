@@ -1,5 +1,5 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
-import { useSignal } from '@preact/signals-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useArk } from '@libs/ark';
 import { LoaderIcon, RunIcon } from '@shared/icons';
@@ -7,11 +7,11 @@ import { User } from '@shared/user';
 
 export function DepotContactCard() {
   const ark = useArk();
-  const status = useSignal(false);
+  const [status, setStatus] = useState(false);
 
   const backupContact = async () => {
     try {
-      status.value = true;
+      setStatus(true);
 
       const event = await ark.getEventByFilter({
         filter: { authors: [ark.account.pubkey], kinds: [NDKKind.Contacts] },
@@ -21,11 +21,11 @@ export function DepotContactCard() {
       const publish = await event.publish();
 
       if (publish) {
-        status.value = false;
+        setStatus(false);
         toast.success('Backup contact list successfully.');
       }
     } catch (e) {
-      status.value = false;
+      setStatus(false);
       toast.error(e);
     }
   };
@@ -53,7 +53,7 @@ export function DepotContactCard() {
           onClick={backupContact}
           className="inline-flex h-8 w-max items-center justify-center gap-2 rounded-md bg-blue-500 pl-2 pr-3 font-medium text-white shadow shadow-blue-500/50 hover:bg-blue-600"
         >
-          {status.value ? (
+          {status ? (
             <LoaderIcon className="size-4 animate-spin" />
           ) : (
             <RunIcon className="size-4" />
