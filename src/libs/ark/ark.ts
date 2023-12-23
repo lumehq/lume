@@ -196,8 +196,6 @@ export class Ark {
       ? [this.settings.tunnelUrl, this.settings.tunnelUrl + '/']
       : [];
 
-    console.log(blacklistRelayUrls);
-
     const cacheAdapter = new NDKCacheAdapterTauri(this.#storage);
     const ndk = new NDK({
       cacheAdapter,

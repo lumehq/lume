@@ -85,7 +85,8 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.8",
     "use-react-workers": "^0.3.0",
-    "virtua": "^0.18.0"
+    "virtua": "^0.18.0",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
