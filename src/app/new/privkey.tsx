@@ -3,10 +3,11 @@ import { getPublicKey, nip19 } from 'nostr-tools';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 
 export function NewPrivkeyScreen() {
   const ark = useArk();
+  const storage = useStorage();
   const navigate = useNavigate();
 
   const [nsec, setNsec] = useState('');
@@ -23,7 +24,7 @@ export function NewPrivkeyScreen() {
       const privkey = decoded.data;
       const pubkey = getPublicKey(privkey);
 
-      if (pubkey !== ark.account.pubkey)
+      if (pubkey !== storage.account.pubkey)
         return toast.info(
           'Your nsec is not match your current public key, please make sure you enter right nsec'
         );
@@ -31,7 +32,7 @@ export function NewPrivkeyScreen() {
       const signer = new NDKPrivateKeySigner(privkey);
       ark.updateNostrSigner({ signer });
 
-      if (isSave) await ark.createPrivkey(ark.account.pubkey, privkey);
+      if (isSave) await storage.createPrivkey(storage.account.pubkey, privkey);
 
       navigate(-1);
     } catch (e) {

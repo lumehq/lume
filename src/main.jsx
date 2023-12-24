@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
-import { ArkProvider } from '@libs/ark/provider';
+import { LumeProvider } from '@libs/ark';
 import App from './app';
 import './app.css';
 
@@ -19,8 +19,8 @@ const root = createRoot(container);
 root.render(
   <QueryClientProvider client={queryClient}>
     <Toaster position="top-center" theme="system" closeButton />
-    <ArkProvider>
+    <LumeProvider>
       <App />
-    </ArkProvider>
+    </LumeProvider>
   </QueryClientProvider>
 );

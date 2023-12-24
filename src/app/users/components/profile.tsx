@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { UserStats } from '@app/users/components/stats';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { NIP05 } from '@shared/nip05';
 import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function UserProfile({ pubkey }: { pubkey: string }) {
   const ark = useArk();
+  const storage = useStorage();
+
   const { user } = useProfile(pubkey);
 
   const [followed, setFollowed] = useState(false);
@@ -21,7 +23,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const follow = async () => {
     try {
-      if (!ark.readyToSign) return navigate('/new/privkey');
+      if (!ark.ndk.signer) return navigate('/new/privkey');
       setFollowed(true);
 
       const add = await ark.createContact({ pubkey });
@@ -38,7 +40,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 
   const unfollow = async () => {
     try {
-      if (!ark.readyToSign) return navigate('/new/privkey');
+      if (!ark.ndk.signer) return navigate('/new/privkey');
       setFollowed(false);
 
       await ark.deleteContact({ pubkey });
@@ -48,7 +50,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
   };
 
   useEffect(() => {
-    if (ark.account.contacts.includes(pubkey)) {
+    if (storage.account.contacts.includes(pubkey)) {
       setFollowed(true);
     }
   }, []);

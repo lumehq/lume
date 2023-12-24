@@ -2,11 +2,11 @@ import * as Switch from '@radix-ui/react-switch';
 import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { InfoIcon } from '@shared/icons';
 
 export function OnboardingScreen() {
-  const ark = useArk();
+  const storage = useStorage();
   const navigate = useNavigate();
 
   const [settings, setSettings] = useState({
@@ -16,19 +16,18 @@ export function OnboardingScreen() {
   });
 
   const next = () => {
-    if (!ark.account.contacts.length) return navigate('/auth/follow');
+    if (!storage.account.contacts.length) return navigate('/auth/follow');
     return navigate('/auth/finish');
   };
 
   const toggleOutbox = async () => {
-    await ark.createSetting('outbox', String(+!settings.outbox));
+    await storage.createSetting('outbox', String(+!settings.outbox));
     // update state
     setSettings((prev) => ({ ...prev, outbox: !settings.outbox }));
   };
 
   const toggleAutoupdate = async () => {
-    await ark.createSetting('autoupdate', String(+!settings.autoupdate));
-    ark.settings.autoupdate = !settings.autoupdate;
+    await storage.createSetting('autoupdate', String(+!settings.autoupdate));
     // update state
     setSettings((prev) => ({ ...prev, autoupdate: !settings.autoupdate }));
   };
@@ -44,7 +43,7 @@ export function OnboardingScreen() {
       const permissionGranted = await isPermissionGranted();
       setSettings((prev) => ({ ...prev, notification: permissionGranted }));
 
-      const data = await ark.getAllSettings();
+      const data = await storage.getAllSettings();
       if (!data) return;
 
       data.forEach((item) => {

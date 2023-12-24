@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
 
 export function NWCForm({ setWalletConnectURL }) {
-  const ark = useArk();
+  const storage = useStorage();
 
   const [uri, setUri] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export function NWCForm({ setWalletConnectURL }) {
       const params = new URLSearchParams(uriObj.search);
 
       if (params.has('relay') && params.has('secret')) {
-        await ark.createPrivkey(`${ark.account.pubkey}-nwc`, uri);
+        await storage.createPrivkey(`${storage.account.pubkey}-nwc`, uri);
         setWalletConnectURL(uri);
         setLoading(false);
       } else {

@@ -10,20 +10,19 @@ import {
   NDKUserProfile,
   profileFromEvent,
 } from '@nostr-dev-kit/ndk';
-import Database from '@tauri-apps/plugin-sql';
 import { LRUCache } from 'lru-cache';
 import { NostrEvent } from 'nostr-fetch';
 import { matchFilter } from 'nostr-tools';
-import { NDKCacheEvent, NDKCacheEventTag, NDKCacheUser } from '@utils/types';
+import { LumeStorage } from '@libs/storage';
 
 export class NDKCacheAdapterTauri implements NDKCacheAdapter {
-  #db: Database;
+  #storage: LumeStorage;
   private dirtyProfiles: Set<Hexpubkey> = new Set();
   public profiles?: LRUCache<Hexpubkey, NDKUserProfile>;
   readonly locking: boolean;
 
-  constructor(db: Database) {
-    this.#db = db;
+  constructor(storage: LumeStorage) {
+    this.#storage = storage;
     this.locking = true;
 
     this.profiles = new LRUCache({
@@ -33,115 +32,6 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
     setInterval(() => {
       this.dumpProfiles();
     }, 1000 * 10);
-  }
-
-  async #getCacheUser(pubkey: string) {
-    const results: Array<NDKCacheUser> = await this.#db.select(
-      'SELECT * FROM ndk_users WHERE pubkey = $1 ORDER BY pubkey DESC LIMIT 1;',
-      [pubkey]
-    );
-
-    if (!results.length) return null;
-
-    if (typeof results[0].profile === 'string')
-      results[0].profile = JSON.parse(results[0].profile);
-
-    return results[0];
-  }
-
-  async #getCacheEvent(id: string) {
-    const results: Array<NDKCacheEvent> = await this.#db.select(
-      'SELECT * FROM ndk_events WHERE id = $1 ORDER BY id DESC LIMIT 1;',
-      [id]
-    );
-
-    if (!results.length) return null;
-    return results[0];
-  }
-
-  async #getCacheEvents(ids: string[]) {
-    const idsArr = `'${ids.join("','")}'`;
-
-    const results: Array<NDKCacheEvent> = await this.#db.select(
-      `SELECT * FROM ndk_events WHERE id IN (${idsArr}) ORDER BY id;`
-    );
-
-    if (!results.length) return [];
-    return results;
-  }
-
-  async #getCacheEventsByPubkey(pubkey: string) {
-    const results: Array<NDKCacheEvent> = await this.#db.select(
-      'SELECT * FROM ndk_events WHERE pubkey = $1 ORDER BY id;',
-      [pubkey]
-    );
-
-    if (!results.length) return [];
-    return results;
-  }
-
-  async #getCacheEventsByKind(kind: number) {
-    const results: Array<NDKCacheEvent> = await this.#db.select(
-      'SELECT * FROM ndk_events WHERE kind = $1 ORDER BY id;',
-      [kind]
-    );
-
-    if (!results.length) return [];
-    return results;
-  }
-
-  async #getCacheEventsByKindAndAuthor(kind: number, pubkey: string) {
-    const results: Array<NDKCacheEvent> = await this.#db.select(
-      'SELECT * FROM ndk_events WHERE kind = $1 AND pubkey = $2 ORDER BY id;',
-      [kind, pubkey]
-    );
-
-    if (!results.length) return [];
-    return results;
-  }
-
-  async #getCacheEventTagsByTagValue(tagValue: string) {
-    const results: Array<NDKCacheEventTag> = await this.#db.select(
-      'SELECT * FROM ndk_eventtags WHERE tagValue = $1 ORDER BY id;',
-      [tagValue]
-    );
-
-    if (!results.length) return [];
-    return results;
-  }
-
-  async #setCacheEvent({
-    id,
-    pubkey,
-    content,
-    kind,
-    createdAt,
-    relay,
-    event,
-  }: NDKCacheEvent) {
-    return await this.#db.execute(
-      'INSERT OR IGNORE INTO ndk_events (id, pubkey, content, kind, createdAt, relay, event) VALUES ($1, $2, $3, $4, $5, $6, $7);',
-      [id, pubkey, content, kind, createdAt, relay, event]
-    );
-  }
-
-  async #setCacheEventTag({ id, eventId, tag, value, tagValue }: NDKCacheEventTag) {
-    return await this.#db.execute(
-      'INSERT OR IGNORE INTO ndk_eventtags (id, eventId, tag, value, tagValue) VALUES ($1, $2, $3, $4, $5);',
-      [id, eventId, tag, value, tagValue]
-    );
-  }
-
-  async #setCacheProfiles(profiles: Array<NDKCacheUser>) {
-    return await Promise.all(
-      profiles.map(
-        async (profile) =>
-          await this.#db.execute(
-            'INSERT OR IGNORE INTO ndk_users (pubkey, profile, createdAt) VALUES ($1, $2, $3);',
-            [profile.pubkey, profile.profile, profile.createdAt]
-          )
-      )
-    );
   }
 
   public async query(subscription: NDKSubscription): Promise<void> {
@@ -156,7 +46,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
     let profile = this.profiles.get(pubkey);
 
     if (!profile) {
-      const user = await this.#getCacheUser(pubkey);
+      const user = await this.#storage.getCacheUser(pubkey);
       if (user) {
         profile = user.profile as NDKUserProfile;
         this.profiles.set(pubkey, profile);
@@ -211,7 +101,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 
       if (event.isParamReplaceable()) {
         const replaceableId = `${event.kind}:${event.pubkey}:${event.tagId()}`;
-        const existingEvent = await this.#getCacheEvent(replaceableId);
+        const existingEvent = await this.#storage.getCacheEvent(replaceableId);
         if (
           existingEvent &&
           event.created_at &&
@@ -222,7 +112,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
       }
 
       if (addEvent) {
-        this.#setCacheEvent({
+        this.#storage.setCacheEvent({
           id: event.tagId(),
           pubkey: event.pubkey,
           content: event.content,
@@ -238,7 +128,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
           event.tags.forEach((tag) => {
             if (tag[0].length !== 1) return;
 
-            this.#setCacheEventTag({
+            this.#storage.setCacheEventTag({
               id: `${event.id}:${tag[0]}:${tag[1]}`,
               eventId: event.id,
               tag: tag[0],
@@ -267,7 +157,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 
     if (hasAllKeys && filter.authors) {
       for (const pubkey of filter.authors) {
-        const events = await this.#getCacheEventsByPubkey(pubkey);
+        const events = await this.#storage.getCacheEventsByPubkey(pubkey);
         for (const event of events) {
           let rawEvent: NostrEvent;
           try {
@@ -303,7 +193,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 
     if (hasAllKeys && filter.kinds) {
       for (const kind of filter.kinds) {
-        const events = await this.#getCacheEventsByKind(kind);
+        const events = await this.#storage.getCacheEventsByKind(kind);
         for (const event of events) {
           let rawEvent: NostrEvent;
           try {
@@ -337,7 +227,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 
     if (hasAllKeys && filter.ids) {
       for (const id of filter.ids) {
-        const event = await this.#getCacheEvent(id);
+        const event = await this.#storage.getCacheEvent(id);
         if (!event) continue;
 
         let rawEvent: NostrEvent;
@@ -380,7 +270,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
         for (const author of filter.authors) {
           for (const dTag of filter['#d']) {
             const replaceableId = `${kind}:${author}:${dTag}`;
-            const event = await this.#getCacheEvent(replaceableId);
+            const event = await this.#storage.getCacheEvent(replaceableId);
             if (!event) continue;
 
             let rawEvent: NostrEvent;
@@ -420,7 +310,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
     if (filter.kinds && filter.authors) {
       for (const kind of filter.kinds) {
         for (const author of filter.authors) {
-          const events = await this.#getCacheEventsByKindAndAuthor(kind, author);
+          const events = await this.#storage.getCacheEventsByKindAndAuthor(kind, author);
 
           for (const event of events) {
             let rawEvent: NostrEvent;
@@ -485,12 +375,12 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
       }
 
       for (const value of values) {
-        const eventTags = await this.#getCacheEventTagsByTagValue(tag + value);
+        const eventTags = await this.#storage.getCacheEventTagsByTagValue(tag + value);
         if (!eventTags.length) continue;
 
         const eventIds = eventTags.map((t) => t.eventId);
 
-        const events = await this.#getCacheEvents(eventIds);
+        const events = await this.#storage.getCacheEvents(eventIds);
         for (const event of events) {
           let rawEvent;
           try {
@@ -532,7 +422,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
     }
 
     if (profiles.length) {
-      await this.#setCacheProfiles(profiles);
+      await this.#storage.setCacheProfiles(profiles);
     }
 
     this.dirtyProfiles.clear();

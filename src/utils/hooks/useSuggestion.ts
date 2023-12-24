@@ -2,14 +2,14 @@ import { MentionOptions } from '@tiptap/extension-mention';
 import { ReactRenderer } from '@tiptap/react';
 import tippy from 'tippy.js';
 import { MentionList } from '@app/new/components';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 
 export function useSuggestion() {
-  const ark = useArk();
+  const storage = useStorage();
 
   const suggestion: MentionOptions['suggestion'] = {
     items: async ({ query }) => {
-      const users = await ark.getAllCacheUsers();
+      const users = await storage.getAllCacheUsers();
       return users
         .filter((item) => {
           if (item.name) return item.name.toLowerCase().startsWith(query.toLowerCase());

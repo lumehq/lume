@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { NWCForm } from '@app/nwc/components/form';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { CheckCircleIcon } from '@shared/icons';
 
 export function NWCScreen() {
-  const ark = useArk();
+  const storage = useStorage();
   const [walletConnectURL, setWalletConnectURL] = useState<null | string>(null);
 
   const remove = async () => {
-    await ark.removePrivkey(`${ark.account.pubkey}-nwc`);
+    await storage.removePrivkey(`${storage.account.pubkey}-nwc`);
     setWalletConnectURL(null);
   };
 
   useEffect(() => {
     async function getNWC() {
-      const nwc = await ark.loadPrivkey(`${ark.account.pubkey}-nwc`);
+      const nwc = await storage.loadPrivkey(`${storage.account.pubkey}-nwc`);
       if (nwc) setWalletConnectURL(nwc);
     }
     getNWC();

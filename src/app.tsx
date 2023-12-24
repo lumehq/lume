@@ -1,7 +1,7 @@
 import { fetch } from '@tauri-apps/plugin-http';
 import { RouterProvider, createBrowserRouter, defer, redirect } from 'react-router-dom';
 import { ErrorScreen } from '@app/error';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
 import { AppLayout } from '@shared/layouts/app';
 import { AuthLayout } from '@shared/layouts/auth';
@@ -10,18 +10,18 @@ import { HomeLayout } from '@shared/layouts/home';
 import { SettingsLayout } from '@shared/layouts/settings';
 
 export default function App() {
-  const ark = useArk();
+  const storage = useStorage();
 
   const router = createBrowserRouter([
     {
-      element: <AppLayout platform={ark.platform} />,
+      element: <AppLayout platform={storage.platform} />,
       children: [
         {
           path: '/',
           element: <HomeLayout />,
           errorElement: <ErrorScreen />,
           loader: async () => {
-            if (!ark.account) return redirect('auth/welcome');
+            if (!storage.account) return redirect('auth/welcome');
             return null;
           },
           children: [
@@ -168,7 +168,7 @@ export default function App() {
             {
               index: true,
               loader: () => {
-                const depot = ark.checkDepot();
+                const depot = storage.checkDepot();
                 if (!depot) return redirect('/depot/onboarding/');
                 return null;
               },
@@ -190,7 +190,7 @@ export default function App() {
     },
     {
       path: 'auth',
-      element: <AuthLayout platform={ark.platform} />,
+      element: <AuthLayout platform={storage.platform} />,
       errorElement: <ErrorScreen />,
       children: [
         {

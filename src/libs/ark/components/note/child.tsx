@@ -1,27 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { useArk } from '@libs/ark';
+import { useEvent } from '@libs/ark';
 import { NoteChildUser } from './childUser';
 
 export function NoteChild({ eventId, isRoot }: { eventId: string; isRoot?: boolean }) {
-  const ark = useArk();
-  const { isLoading, isError, data } = useQuery({
-    queryKey: ['event', eventId],
-    queryFn: async () => {
-      // get event from relay
-      const event = await ark.getEventById({ id: eventId });
-
-      if (!event)
-        throw new Error(
-          `Cannot get event with ${eventId}, will be retry after 10 seconds`
-        );
-
-      return event;
-    },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: 2,
-  });
+  const { isLoading, isError, data } = useEvent(eventId);
 
   if (isLoading) {
     return (

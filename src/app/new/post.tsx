@@ -11,12 +11,10 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { MediaUploader, MentionPopup } from '@app/new/components';
-import { useArk } from '@libs/ark';
+import { MentionNote, useArk, useWidget } from '@libs/ark';
 import { CancelIcon, LoaderIcon } from '@shared/icons';
-import { MentionNote } from '@shared/notes';
 import { WIDGET_KIND } from '@utils/constants';
 import { useSuggestion } from '@utils/hooks/useSuggestion';
-import { useWidget } from '@utils/hooks/useWidget';
 
 export function NewPostScreen() {
   const ark = useArk();
@@ -64,7 +62,7 @@ export function NewPostScreen() {
 
   const submit = async () => {
     try {
-      if (!ark.readyToSign) return navigate('/new/privkey');
+      if (!ark.ndk.signer) return navigate('/new/privkey');
 
       setLoading(true);
 
@@ -133,7 +131,7 @@ export function NewPostScreen() {
           />
           {searchParams.get('replyTo') && (
             <div className="relative max-w-lg">
-              <MentionNote id={searchParams.get('replyTo')} editing />
+              <MentionNote eventId={searchParams.get('replyTo')} />
               <button
                 type="button"
                 onClick={() => setSearchParams({})}

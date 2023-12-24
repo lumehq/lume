@@ -83,7 +83,7 @@ export function NewFileScreen() {
 
   const submit = async () => {
     try {
-      if (!ark.readyToSign) return navigate('/new/privkey');
+      if (!ark.ndk.signer) return navigate('/new/privkey');
 
       setIsPublish(true);
 

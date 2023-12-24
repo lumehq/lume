@@ -3,14 +3,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { UserProfile } from '@app/users/components/profile';
-import { useArk } from '@libs/ark';
+import { NoteSkeleton, RepostNote, TextNote, useArk } from '@libs/ark';
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import {
-  MemoizedRepost,
-  MemoizedTextNote,
-  NoteSkeleton,
-  UnknownNote,
-} from '@shared/notes';
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function UserScreen() {
@@ -57,11 +51,11 @@ export function UserScreen() {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return <MemoizedTextNote key={event.id} event={event} />;
+          return <TextNote key={event.id} event={event} />;
         case NDKKind.Repost:
-          return <MemoizedRepost key={event.id} event={event} />;
+          return <RepostNote key={event.id} event={event} />;
         default:
-          return <UnknownNote key={event.id} event={event} />;
+          return <TextNote key={event.id} event={event} />;
       }
     },
     [data]
@@ -76,11 +70,7 @@ export function UserScreen() {
         </h3>
         <div className="mx-auto flex h-full max-w-[500px] flex-col justify-between gap-1.5 pb-4 pt-1.5">
           {status === 'pending' ? (
-            <div className="px-3 py-1.5">
-              <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-                <NoteSkeleton />
-              </div>
-            </div>
+            <NoteSkeleton />
           ) : (
             allEvents.map((item) => renderItem(item))
           )}

@@ -2,11 +2,11 @@ import * as Popover from '@radix-ui/react-popover';
 import { Editor } from '@tiptap/react';
 import { nip19 } from 'nostr-tools';
 import { MentionPopupItem } from '@app/new/components';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { MentionIcon } from '@shared/icons';
 
 export function MentionPopup({ editor }: { editor: Editor }) {
-  const ark = useArk();
+  const storage = useStorage();
 
   const insertMention = (pubkey: string) => {
     editor.commands.insertContent(`nostr:${nip19.npubEncode(pubkey)}`);
@@ -29,8 +29,8 @@ export function MentionPopup({ editor }: { editor: Editor }) {
         className="h-full max-h-[200px] w-[250px] overflow-hidden overflow-y-auto rounded-lg border border-neutral-200 bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:bg-neutral-900"
       >
         <div className="flex flex-col gap-1 py-1">
-          {ark.account.contacts.length ? (
-            ark.account.contacts.map((item) => (
+          {storage.account.contacts.length ? (
+            storage.account.contacts.map((item) => (
               <button key={item} type="button" onClick={() => insertMention(item)}>
                 <MentionPopupItem pubkey={item} />
               </button>

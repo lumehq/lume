@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { EditIcon, LoaderIcon } from '@shared/icons';
 import { compactNumber } from '@utils/formater';
 
 export function RelayCard() {
   const ark = useArk();
+  const storage = useStorage();
+
   const { status, data } = useQuery({
-    queryKey: ['relays', ark.account.pubkey],
+    queryKey: ['relays', storage.account.pubkey],
     queryFn: async () => {
       const relays = await ark.getUserRelays({});
       return relays;

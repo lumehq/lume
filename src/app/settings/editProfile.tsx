@@ -4,7 +4,7 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { CheckCircleIcon, LoaderIcon, PlusIcon, UnverifiedIcon } from '@shared/icons';
 
 export function EditProfileScreen() {
@@ -14,6 +14,8 @@ export function EditProfileScreen() {
   const [nip05, setNIP05] = useState({ verified: true, text: '' });
 
   const ark = useArk();
+  const storage = useStorage();
+
   const {
     register,
     handleSubmit,
@@ -22,7 +24,10 @@ export function EditProfileScreen() {
     formState: { isValid, errors },
   } = useForm({
     defaultValues: async () => {
-      const res: NDKUserProfile = queryClient.getQueryData(['user', ark.account.pubkey]);
+      const res: NDKUserProfile = queryClient.getQueryData([
+        'user',
+        storage.account.pubkey,
+      ]);
       if (res.image) {
         setPicture(res.image);
       }
@@ -41,7 +46,7 @@ export function EditProfileScreen() {
 
   const uploadAvatar = async () => {
     try {
-      if (!ark.readyToSign) return navigate('/new/privkey');
+      if (!ark.ndk.signer) return navigate('/new/privkey');
 
       setLoading(true);
 
@@ -85,7 +90,10 @@ export function EditProfileScreen() {
     };
 
     if (data.nip05) {
-      const verify = ark.validateNIP05({ pubkey: ark.account.pubkey, nip05: data.nip05 });
+      const verify = ark.validateNIP05({
+        pubkey: storage.account.pubkey,
+        nip05: data.nip05,
+      });
       if (verify) {
         content = { ...content, nip05: data.nip05 };
       } else {
@@ -106,7 +114,7 @@ export function EditProfileScreen() {
     if (publish) {
       // invalid cache
       queryClient.invalidateQueries({
-        queryKey: ['user', ark.account.pubkey],
+        queryKey: ['user', storage.account.pubkey],
       });
       // reset form
       reset();

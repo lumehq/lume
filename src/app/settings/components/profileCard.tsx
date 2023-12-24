@@ -3,21 +3,21 @@ import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { minidenticon } from 'minidenticons';
 import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { EditIcon, LoaderIcon } from '@shared/icons';
 import { displayNpub } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export function ProfileCard() {
-  const ark = useArk();
+  const storage = useStorage();
   const svgURI =
     'data:image/svg+xml;utf8,' +
-    encodeURIComponent(minidenticon(ark.account.pubkey, 90, 50));
+    encodeURIComponent(minidenticon(storage.account.pubkey, 90, 50));
 
-  const { isLoading, user } = useProfile(ark.account.pubkey);
+  const { isLoading, user } = useProfile(storage.account.pubkey);
 
   const copyNpub = async () => {
-    return await writeText(nip19.npubEncode(ark.account.pubkey));
+    return await writeText(nip19.npubEncode(storage.account.pubkey));
   };
 
   return (
@@ -48,7 +48,7 @@ export function ProfileCard() {
             <Avatar.Root className="shrink-0">
               <Avatar.Image
                 src={user?.picture || user?.image}
-                alt={ark.account.pubkey}
+                alt={storage.account.pubkey}
                 loading="lazy"
                 decoding="async"
                 style={{ contentVisibility: 'auto' }}
@@ -57,7 +57,7 @@ export function ProfileCard() {
               <Avatar.Fallback delayMs={300}>
                 <img
                   src={svgURI}
-                  alt={ark.account.pubkey}
+                  alt={storage.account.pubkey}
                   className="h-16 w-16 rounded-xl bg-black dark:bg-white"
                 />
               </Avatar.Fallback>
@@ -67,7 +67,7 @@ export function ProfileCard() {
                 {user?.display_name || user?.name}
               </h3>
               <p className="text-lg text-neutral-700 dark:text-neutral-300">
-                {user?.nip05 || displayNpub(ark.account.pubkey, 16)}
+                {user?.nip05 || displayNpub(storage.account.pubkey, 16)}
               </p>
             </div>
           </div>

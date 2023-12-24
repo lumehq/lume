@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { ArrowLeftIcon, LoaderIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
@@ -20,6 +20,7 @@ export function ImportAccountScreen() {
   const [savedPrivkey, setSavedPrivkey] = useState(false);
 
   const ark = useArk();
+  const storage = useStorage();
   const navigate = useNavigate();
 
   const submitNpub = async () => {
@@ -42,8 +43,8 @@ export function ImportAccountScreen() {
       const pubkey = nip19.decode(npub.split('#')[0]).data as string;
       const localSigner = NDKPrivateKeySigner.generate();
 
-      await ark.createSetting('nsecbunker', '1');
-      await ark.createPrivkey(`${npub}-nsecbunker`, localSigner.privateKey);
+      await storage.createSetting('nsecbunker', '1');
+      await storage.createPrivkey(`${npub}-nsecbunker`, localSigner.privateKey);
 
       // open nsecbunker web app in default browser
       await open('https://app.nsecbunker.com/keys');
@@ -74,7 +75,7 @@ export function ImportAccountScreen() {
       setLoading(true);
 
       // add account to db
-      await ark.createAccount({ id: npub, pubkey });
+      await storage.createAccount({ id: npub, pubkey });
 
       // get account contacts
       await ark.getUserContacts({ pubkey });
@@ -99,7 +100,7 @@ export function ImportAccountScreen() {
     if (nsec.length > 50 && nsec.startsWith('nsec1')) {
       try {
         const privkey = nip19.decode(nsec).data as string;
-        await ark.createPrivkey(pubkey, privkey);
+        await storage.createPrivkey(pubkey, privkey);
         ark.updateNostrSigner({ signer: new NDKPrivateKeySigner(privkey) });
 
         setSavedPrivkey(true);
@@ -279,9 +280,9 @@ export function ImportAccountScreen() {
                     <p className="text-sm">
                       Lume will put your private key to{' '}
                       <b>
-                        {ark.platform === 'macos'
+                        {storage.platform === 'macos'
                           ? 'Apple Keychain (macOS)'
-                          : ark.platform === 'windows'
+                          : storage.platform === 'windows'
                             ? 'Credential Manager (Windows)'
                             : 'Secret Service (Linux)'}
                       </b>

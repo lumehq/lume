@@ -1,6 +1,6 @@
 import { Link, NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-import { ActiveAccount } from '@shared/accounts/active';
+import { ActiveAccount } from '@shared/account/active';
 import {
   DepotIcon,
   HomeIcon,

@@ -1,4 +1,3 @@
-import { NDKKind } from '@nostr-dev-kit/ndk';
 import * as Accordion from '@radix-ui/react-accordion';
 import { useQuery } from '@tanstack/react-query';
 import { nip19 } from 'nostr-tools';
@@ -35,6 +34,8 @@ const LUME_USERS = ['npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6x
 
 export function FollowScreen() {
   const ark = useArk();
+  const navigate = useNavigate();
+
   const { status, data } = useQuery({
     queryKey: ['trending-profiles-widget'],
     queryFn: async () => {
@@ -49,8 +50,6 @@ export function FollowScreen() {
   const [loading, setLoading] = useState(false);
   const [follows, setFollows] = useState<string[]>([]);
 
-  const navigate = useNavigate();
-
   // toggle follow state
   const toggleFollow = (pubkey: string) => {
     const arr = follows.includes(pubkey)
@@ -64,8 +63,7 @@ export function FollowScreen() {
       setLoading(true);
       if (!follows.length) return navigate('/auth/finish');
 
-      const publish = await ark.createEvent({
-        kind: NDKKind.Contacts,
+      const publish = await ark.newContactList({
         tags: follows.map((item) => {
           if (item.startsWith('npub1')) return ['p', nip19.decode(item).data as string];
           return ['p', item];
@@ -73,11 +71,6 @@ export function FollowScreen() {
       });
 
       if (publish) {
-        ark.account.contacts = follows.map((item) => {
-          if (item.startsWith('npub1')) return nip19.decode(item).data as string;
-          return item;
-        });
-
         setLoading(false);
         return navigate('/auth/finish');
       }

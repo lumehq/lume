@@ -1,39 +1,17 @@
 import * as Avatar from '@radix-ui/react-avatar';
-import { useQuery } from '@tanstack/react-query';
 import { minidenticon } from 'minidenticons';
 import { useMemo } from 'react';
-import { useArk } from '@libs/ark';
+import { useProfile } from '@libs/ark';
 import { displayNpub } from '@utils/formater';
 
 export function NoteChildUser({ pubkey, subtext }: { pubkey: string; subtext: string }) {
-  const ark = useArk();
   const fallbackName = useMemo(() => displayNpub(pubkey, 16), [pubkey]);
   const fallbackAvatar = useMemo(
     () => 'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(pubkey, 90, 50)),
     [pubkey]
   );
 
-  const { isLoading, data: user } = useQuery({
-    queryKey: ['user', pubkey],
-    queryFn: async () => {
-      try {
-        const profile = await ark.getUserProfile({ pubkey });
-
-        if (!profile)
-          throw new Error(
-            `Cannot get metadata for ${pubkey}, will be retry after 10 seconds`
-          );
-
-        return profile;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 2,
-  });
+  const { isLoading, user } = useProfile(pubkey);
 
   if (isLoading) {
     return (

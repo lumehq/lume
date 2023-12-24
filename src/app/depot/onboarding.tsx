@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { parse, stringify } from 'smol-toml';
 import { toast } from 'sonner';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
 import { delay } from '@utils/delay';
 
 export function DepotOnboardingScreen() {
   const ark = useArk();
+  const storage = useStorage();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -24,15 +25,15 @@ export function DepotOnboardingScreen() {
       const parsedConfig = parse(config);
 
       // add current user to whitelist
-      parsedConfig.authorization['pubkey_whitelist'].push(ark.account.pubkey);
+      parsedConfig.authorization['pubkey_whitelist'].push(storage.account.pubkey);
 
       // update new config
       const newConfig = stringify(parsedConfig);
       await writeTextFile(defaultConfig, newConfig);
 
       // launch depot
-      await ark.launchDepot();
-      await ark.createSetting('depot', '1');
+      await storage.launchDepot();
+      await storage.createSetting('depot', '1');
       await delay(2000); // delay 2s to make sure depot is running
 
       // default depot url: ws://localhost:6090

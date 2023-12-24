@@ -1,12 +1,14 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { LoaderIcon, RunIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function DepotProfileCard() {
   const ark = useArk();
+  const storage = useStorage();
+
   const [status, setStatus] = useState(false);
 
   const backupProfile = async () => {
@@ -14,7 +16,7 @@ export function DepotProfileCard() {
       setStatus(true);
 
       const event = await ark.getEventByFilter({
-        filter: { authors: [ark.account.pubkey], kinds: [NDKKind.Metadata] },
+        filter: { authors: [storage.account.pubkey], kinds: [NDKKind.Metadata] },
       });
 
       // broadcast to depot
@@ -33,7 +35,7 @@ export function DepotProfileCard() {
   return (
     <div className="flex h-56 w-full flex-col gap-2 overflow-hidden rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900">
       <div className="flex flex-1 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800">
-        <User pubkey={ark.account.pubkey} variant="simple" />
+        <User pubkey={storage.account.pubkey} variant="simple" />
       </div>
       <div className="inline-flex shrink-0 items-center justify-between">
         <div className="text-sm font-medium">Profile</div>

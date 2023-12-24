@@ -1,21 +1,21 @@
 import { nip19 } from 'nostr-tools';
 import { useEffect, useState } from 'react';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { EyeOffIcon } from '@shared/icons';
 
 export function BackupSettingScreen() {
-  const ark = useArk();
+  const storage = useStorage();
 
   const [privkey, setPrivkey] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const removePrivkey = async () => {
-    await ark.removePrivkey(ark.account.pubkey);
+    await storage.removePrivkey(storage.account.pubkey);
   };
 
   useEffect(() => {
     async function loadPrivkey() {
-      const key = await ark.loadPrivkey(ark.account.pubkey);
+      const key = await storage.loadPrivkey(storage.account.pubkey);
       if (key) setPrivkey(key);
     }
 

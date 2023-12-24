@@ -1,9 +1,8 @@
 import * as Avatar from '@radix-ui/react-avatar';
-import { useQuery } from '@tanstack/react-query';
 import { minidenticon } from 'minidenticons';
 import { useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useArk } from '@libs/ark';
+import { useProfile } from '@libs/ark';
 import { RepostIcon } from '@shared/icons';
 import { displayNpub, formatCreatedAt } from '@utils/formater';
 
@@ -15,10 +14,9 @@ export function NoteUser({
 }: {
   pubkey: string;
   time: number;
-  variant?: 'text' | 'repost';
+  variant?: 'text' | 'repost' | 'mention';
   className?: string;
 }) {
-  const ark = useArk();
   const createdAt = useMemo(() => formatCreatedAt(time), [time]);
   const fallbackName = useMemo(() => displayNpub(pubkey, 16), [pubkey]);
   const fallbackAvatar = useMemo(
@@ -26,27 +24,58 @@ export function NoteUser({
     [pubkey]
   );
 
-  const { isLoading, data: user } = useQuery({
-    queryKey: ['user', pubkey],
-    queryFn: async () => {
-      try {
-        const profile = await ark.getUserProfile({ pubkey });
+  const { isLoading, user } = useProfile(pubkey);
 
-        if (!profile)
-          throw new Error(
-            `Cannot get metadata for ${pubkey}, will be retry after 10 seconds`
-          );
+  if (variant === 'mention') {
+    if (isLoading) {
+      return (
+        <div className="flex items-center gap-2">
+          <Avatar.Root className="shrink-0">
+            <Avatar.Image
+              src={fallbackAvatar}
+              alt={pubkey}
+              className="h-6 w-6 rounded-md bg-black dark:bg-white"
+            />
+          </Avatar.Root>
+          <div className="flex flex-1 items-baseline gap-2">
+            <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+              {fallbackName}
+            </h5>
+            <span className="text-neutral-600 dark:text-neutral-400">·</span>
+            <span className="text-neutral-600 dark:text-neutral-400">{createdAt}</span>
+          </div>
+        </div>
+      );
+    }
 
-        return profile;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 2,
-  });
+    return (
+      <div className="flex h-6 items-center gap-2">
+        <Avatar.Root className="shrink-0">
+          <Avatar.Image
+            src={user?.picture || user?.image}
+            alt={pubkey}
+            loading="lazy"
+            decoding="async"
+            className="h-6 w-6 rounded-md"
+          />
+          <Avatar.Fallback delayMs={300}>
+            <img
+              src={fallbackAvatar}
+              alt={pubkey}
+              className="h-6 w-6 rounded-md bg-black dark:bg-white"
+            />
+          </Avatar.Fallback>
+        </Avatar.Root>
+        <div className="flex flex-1 items-baseline gap-2">
+          <h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+            {user?.name || user?.display_name || user?.displayName || fallbackName}
+          </h5>
+          <span className="text-neutral-600 dark:text-neutral-400">·</span>
+          <span className="text-neutral-600 dark:text-neutral-400">{createdAt}</span>
+        </div>
+      </div>
+    );
+  }
 
   if (variant === 'repost') {
     if (isLoading) {

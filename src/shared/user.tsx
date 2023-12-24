@@ -5,20 +5,17 @@ import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { RepostIcon } from '@shared/icons';
 import { NIP05 } from '@shared/nip05';
-import { MoreActions } from '@shared/notes';
 import { displayNpub, formatCreatedAt } from '@utils/formater';
 import { useProfile } from '@utils/hooks/useProfile';
 
 export const User = memo(function User({
   pubkey,
-  eventId,
   time,
   variant = 'default',
   embedProfile,
   subtext,
 }: {
   pubkey: string;
-  eventId?: string;
   time?: number;
   variant?:
     | 'default'
@@ -524,7 +521,6 @@ export const User = memo(function User({
           </div>
           <div className="ml-auto inline-flex items-center gap-3">
             <div className="text-neutral-500 dark:text-neutral-400">{createdAt}</div>
-            <MoreActions id={eventId} pubkey={pubkey} />
           </div>
         </div>
       </div>

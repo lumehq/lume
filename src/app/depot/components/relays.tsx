@@ -1,11 +1,12 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { LoaderIcon, RunIcon } from '@shared/icons';
 
 export function DepotRelaysCard() {
   const ark = useArk();
+  const storage = useStorage();
 
   const [status, setStatus] = useState(false);
   const [relaySize, setRelaySize] = useState(0);
@@ -15,7 +16,7 @@ export function DepotRelaysCard() {
       setStatus(true);
 
       const event = await ark.getEventByFilter({
-        filter: { authors: [ark.account.pubkey], kinds: [NDKKind.RelayList] },
+        filter: { authors: [storage.account.pubkey], kinds: [NDKKind.RelayList] },
       });
 
       // broadcast to depot
@@ -34,7 +35,7 @@ export function DepotRelaysCard() {
   useEffect(() => {
     async function loadRelays() {
       const event = await ark.getEventByFilter({
-        filter: { authors: [ark.account.pubkey], kinds: [NDKKind.RelayList] },
+        filter: { authors: [storage.account.pubkey], kinds: [NDKKind.RelayList] },
       });
       if (event) setRelaySize(event.tags.length);
     }

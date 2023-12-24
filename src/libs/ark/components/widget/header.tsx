@@ -1,6 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { ReactNode } from 'react';
+import { useWidget } from '@libs/ark';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -9,7 +10,6 @@ import {
   ThreadIcon,
   TrashIcon,
 } from '@shared/icons';
-import { useWidget } from '@utils/hooks/useWidget';
 
 export function WidgetHeader({
   id,

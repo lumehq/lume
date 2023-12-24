@@ -84,6 +84,7 @@
     "sonner": "^1.2.4",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.8",
+    "use-context-selector": "^1.4.1",
     "use-react-workers": "^0.3.0",
     "virtua": "^0.18.0",
     "zustand": "^4.4.7"

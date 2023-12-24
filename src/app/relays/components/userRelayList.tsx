@@ -1,20 +1,22 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useQuery } from '@tanstack/react-query';
 import { RelayForm } from '@app/relays/components/relayForm';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { CancelIcon, RefreshIcon } from '@shared/icons';
 import { useRelay } from '@utils/hooks/useRelay';
 
 export function UserRelayList() {
   const ark = useArk();
+  const storage = useStorage();
+
   const { removeRelay } = useRelay();
   const { status, data, refetch } = useQuery({
-    queryKey: ['relays', ark.account.pubkey],
+    queryKey: ['relays', storage.account.pubkey],
     queryFn: async () => {
       const event = await ark.getEventByFilter({
         filter: {
           kinds: [NDKKind.RelayList],
-          authors: [ark.account.pubkey],
+          authors: [storage.account.pubkey],
         },
       });
 
@@ -24,7 +26,7 @@ export function UserRelayList() {
     refetchOnWindowFocus: false,
   });
 
-  const currentRelays = new Set([...ark.relays]);
+  const currentRelays = new Set(ark.ndk.pool.connectedRelays().map((item) => item.url));
 
   return (
     <div className="col-span-1">

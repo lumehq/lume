@@ -1,12 +1,14 @@
 import { NDKKind } from '@nostr-dev-kit/ndk';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { LoaderIcon, RunIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
 export function DepotContactCard() {
   const ark = useArk();
+  const storage = useStorage();
+
   const [status, setStatus] = useState(false);
 
   const backupContact = async () => {
@@ -14,7 +16,7 @@ export function DepotContactCard() {
       setStatus(true);
 
       const event = await ark.getEventByFilter({
-        filter: { authors: [ark.account.pubkey], kinds: [NDKKind.Contacts] },
+        filter: { authors: [storage.account.pubkey], kinds: [NDKKind.Contacts] },
       });
 
       // broadcast to depot
@@ -34,13 +36,13 @@ export function DepotContactCard() {
     <div className="flex h-56 w-full flex-col gap-2 overflow-hidden rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900">
       <div className="flex flex-1 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800">
         <div className="isolate flex -space-x-2">
-          {ark.account.contacts
+          {storage.account.contacts
             ?.slice(0, 8)
             .map((item) => <User key={item} pubkey={item} variant="ministacked" />)}
-          {ark.account.contacts?.length > 8 ? (
+          {storage.account.contacts?.length > 8 ? (
             <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-300 text-neutral-900 ring-1 ring-white dark:bg-neutral-700 dark:text-neutral-100 dark:ring-black">
               <span className="text-[8px] font-medium">
-                +{ark.account.contacts?.length - 8}
+                +{storage.account.contacts?.length - 8}
               </span>
             </div>
           ) : null}

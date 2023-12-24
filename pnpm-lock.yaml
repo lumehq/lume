@@ -203,6 +203,9 @@ dependencies:
   tiptap-markdown:
     specifier: ^0.8.8
     version: 0.8.8(@tiptap/core@2.1.13)
+  use-context-selector:
+    specifier: ^1.4.1
+    version: 1.4.1(react-dom@18.2.0)(react@18.2.0)(scheduler@0.23.0)
   use-react-workers:
     specifier: ^0.3.0
     version: 0.3.0(react@18.2.0)
@@ -5853,6 +5856,24 @@ packages:
       '@types/react': 18.2.45
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /use-context-selector@1.4.1(react-dom@18.2.0)(react@18.2.0)(scheduler@0.23.0):
+    resolution: {integrity: sha512-Io2ArvcRO+6MWIhkdfMFt+WKQX+Vb++W8DS2l03z/Vw/rz3BclKpM0ynr4LYGyU85Eke+Yx5oIhTY++QR0ZDoA==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '*'
+      react-native: '*'
+      scheduler: '>=0.19.0'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      scheduler: 0.23.0
     dev: false
 
   /use-react-workers@0.3.0(react@18.2.0):

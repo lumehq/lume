@@ -5,11 +5,12 @@ import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
 import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useArk } from '@libs/ark';
+import { useStorage } from '@libs/ark';
 import { DarkIcon, LightIcon, SystemModeIcon } from '@shared/icons';
 
 export function GeneralSettingScreen() {
-  const ark = useArk();
+  const storage = useStorage();
+
   const [settings, setSettings] = useState({
     autoupdate: false,
     autolaunch: false,
@@ -39,28 +40,28 @@ export function GeneralSettingScreen() {
   };
 
   const toggleOutbox = async () => {
-    await ark.createSetting('outbox', String(+!settings.outbox));
+    await storage.createSetting('outbox', String(+!settings.outbox));
     // update state
     setSettings((prev) => ({ ...prev, outbox: !settings.outbox }));
   };
 
   const toggleMedia = async () => {
-    await ark.createSetting('media', String(+!settings.media));
-    ark.settings.media = !settings.media;
+    await storage.createSetting('media', String(+!settings.media));
+    storage.settings.media = !settings.media;
     // update state
     setSettings((prev) => ({ ...prev, media: !settings.media }));
   };
 
   const toggleHashtag = async () => {
-    await ark.createSetting('hashtag', String(+!settings.hashtag));
-    ark.settings.hashtag = !settings.hashtag;
+    await storage.createSetting('hashtag', String(+!settings.hashtag));
+    storage.settings.hashtag = !settings.hashtag;
     // update state
     setSettings((prev) => ({ ...prev, hashtag: !settings.hashtag }));
   };
 
   const toggleAutoupdate = async () => {
-    await ark.createSetting('autoupdate', String(+!settings.autoupdate));
-    ark.settings.autoupdate = !settings.autoupdate;
+    await storage.createSetting('autoupdate', String(+!settings.autoupdate));
+    storage.settings.autoupdate = !settings.autoupdate;
     // update state
     setSettings((prev) => ({ ...prev, autoupdate: !settings.autoupdate }));
   };
@@ -84,7 +85,7 @@ export function GeneralSettingScreen() {
       const permissionGranted = await isPermissionGranted();
       setSettings((prev) => ({ ...prev, notification: permissionGranted }));
 
-      const data = await ark.getAllSettings();
+      const data = await storage.getAllSettings();
       if (!data) return;
 
       data.forEach((item) => {

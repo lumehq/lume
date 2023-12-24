@@ -1,40 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
-import { useArk } from '@libs/ark';
+import { NewsfeedWidget, NotificationWidget } from '@app/home/components';
+import { useStorage } from '@libs/ark';
 import { LoaderIcon } from '@shared/icons';
-import {
-  ArticleWidget,
-  FileWidget,
-  GroupWidget,
-  HashtagWidget,
-  NewsfeedWidget,
-  NotificationWidget,
-  ThreadWidget,
-  TopicWidget,
-  TrendingAccountsWidget,
-  TrendingNotesWidget,
-  UserWidget,
-  WidgetList,
-} from '@shared/widgets';
 import { WIDGET_KIND } from '@utils/constants';
 import { WidgetProps } from '@utils/types';
 
 export function HomeScreen() {
-  const ark = useArk();
+  const storage = useStorage();
   const ref = useRef<VListHandle>(null);
 
   const { isLoading, data } = useQuery({
     queryKey: ['widgets'],
     queryFn: async () => {
-      const dbWidgets = await ark.getWidgets();
+      const dbWidgets = await storage.getWidgets();
       const defaultWidgets = [
-        {
-          id: '9998',
-          title: 'Notification',
-          content: '',
-          kind: WIDGET_KIND.notification,
-        },
         {
           id: '9999',
           title: 'Newsfeed',
@@ -59,26 +40,6 @@ export function HomeScreen() {
         return <NotificationWidget key={widget.id} />;
       case WIDGET_KIND.newsfeed:
         return <NewsfeedWidget key={widget.id} />;
-      case WIDGET_KIND.topic:
-        return <TopicWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.user:
-        return <UserWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.thread:
-        return <ThreadWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.article:
-        return <ArticleWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.file:
-        return <FileWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.hashtag:
-        return <HashtagWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.group:
-        return <GroupWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.trendingNotes:
-        return <TrendingNotesWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.trendingAccounts:
-        return <TrendingAccountsWidget key={widget.id} props={widget} />;
-      case WIDGET_KIND.list:
-        return <WidgetList key={widget.id} props={widget} />;
       default:
         return <NewsfeedWidget key={widget.id} />;
     }

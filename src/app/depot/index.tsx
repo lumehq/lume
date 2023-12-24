@@ -8,11 +8,12 @@ import { DepotContactCard } from '@app/depot/components/contact';
 import { DepotMembers } from '@app/depot/components/members';
 import { DepotProfileCard } from '@app/depot/components/profile';
 import { DepotRelaysCard } from '@app/depot/components/relays';
-import { useArk } from '@libs/ark';
+import { useArk, useStorage } from '@libs/ark';
 import { ChevronDownIcon, DepotIcon, GossipIcon } from '@shared/icons';
 
 export function DepotScreen() {
   const ark = useArk();
+  const storage = useStorage();
 
   const [dataPath, setDataPath] = useState('');
   const [tunnelUrl, setTunnelUrl] = useState('');
@@ -33,7 +34,7 @@ export function DepotScreen() {
       if (!/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/.test(relayUrl.host)) return;
 
       const relayEvent = await ark.getEventByFilter({
-        filter: { authors: [ark.account.pubkey], kinds: [NDKKind.RelayList] },
+        filter: { authors: [storage.account.pubkey], kinds: [NDKKind.RelayList] },
       });
 
       let publish: { id: string; seens: string[] };
@@ -54,7 +55,7 @@ export function DepotScreen() {
       });
 
       if (publish) {
-        await ark.createSetting('tunnel_url', tunnelUrl);
+        await storage.createSetting('tunnel_url', tunnelUrl);
         toast.success('Update relay list successfully.');
 
         setTunnelUrl('');

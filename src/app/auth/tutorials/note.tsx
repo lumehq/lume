@@ -1,7 +1,7 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { Link } from 'react-router-dom';
+import { TextNote } from '@libs/ark';
 import { EditIcon, ReactionIcon, ReplyIcon, RepostIcon, ZapIcon } from '@shared/icons';
-import { TextNote } from '@shared/notes';
 
 export function TutorialNoteScreen() {
   const exampleEvent = new NDKEvent(undefined, {
@@ -32,7 +32,7 @@ export function TutorialNoteScreen() {
             updated in real-time.
           </p>
           <p className="px-3 font-semibold">Here is one example:</p>
-          <TextNote event={exampleEvent} className="pointer-events-none my-2" />
+          <TextNote event={exampleEvent} />
           <p className="px-3 font-semibold">Here are how you can interact with a note:</p>
           <div className="flex flex-col gap-2 px-3">
             <div className="inline-flex gap-3">

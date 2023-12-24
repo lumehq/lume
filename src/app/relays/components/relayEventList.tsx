@@ -2,14 +2,8 @@ import { NDKEvent, NDKKind } from '@nostr-dev-kit/ndk';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { VList } from 'virtua';
-import { useArk } from '@libs/ark';
+import { NoteSkeleton, RepostNote, TextNote, useArk } from '@libs/ark';
 import { ArrowRightCircleIcon, LoaderIcon } from '@shared/icons';
-import {
-  MemoizedRepost,
-  MemoizedTextNote,
-  NoteSkeleton,
-  UnknownNote,
-} from '@shared/notes';
 import { FETCH_LIMIT } from '@utils/constants';
 
 export function RelayEventList({ relayUrl }: { relayUrl: string }) {
@@ -55,11 +49,11 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
     (event: NDKEvent) => {
       switch (event.kind) {
         case NDKKind.Text:
-          return <MemoizedTextNote key={event.id} event={event} />;
+          return <TextNote key={event.id} event={event} />;
         case NDKKind.Repost:
-          return <MemoizedRepost key={event.id} event={event} />;
+          return <RepostNote key={event.id} event={event} />;
         default:
-          return <UnknownNote key={event.id} event={event} />;
+          return <TextNote key={event.id} event={event} />;
       }
     },
     [data]
@@ -68,11 +62,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
   return (
     <VList className="mx-auto h-full w-full max-w-[500px] pt-10 scrollbar-none">
       {status === 'pending' ? (
-        <div className="px-3 py-1.5">
-          <div className="rounded-xl bg-neutral-100 px-3 py-3 dark:bg-neutral-900">
-            <NoteSkeleton />
-          </div>
-        </div>
+        <NoteSkeleton />
       ) : (
         allEvents.map((item) => renderItem(item))
       )}
