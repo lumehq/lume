@@ -1,0 +1,24 @@
+{
+  "name": "@lume/utils",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.14.2",
+    "@tauri-apps/api": "2.0.0-alpha.11",
+    "@tauri-apps/plugin-notification": "2.0.0-alpha.3",
+    "dayjs": "^1.11.10",
+    "nostr-tools": "1.17.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@lume/tsconfig": "workspace:^",
+    "@lume/types": "workspace:^",
+    "@types/react": "^18.2.45",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,0 +1,16 @@
+{
+	"name": "@lume/types",
+	"version": "0.0.0",
+	"types": "./index.d.ts",
+	"private": true,
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"@nostr-dev-kit/ndk": "^2.3.1"
+	}
+}

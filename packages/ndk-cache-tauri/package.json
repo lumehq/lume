@@ -1,0 +1,23 @@
+{
+  "name": "@lume/ndk-cache-tauri",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@lume/storage": "workspace:*",
+    "@nostr-dev-kit/ndk": "^2.3.1",
+    "lru-cache": "^10.1.0",
+    "nostr-fetch": "^0.14.1",
+    "nostr-tools": "1.17.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@lume/tsconfig": "workspace:*",
+    "@types/react": "^18.2.45",
+    "typescript": "^5.3.3"
+  }
+}
