@@ -5,7 +5,7 @@
 			"outputs": ["dist/**"]
 		},
 		"dev": {
-			"cache": false
+			"cache": true
 		},
 		"type-check": {}
 	}
