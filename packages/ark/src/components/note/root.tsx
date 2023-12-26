@@ -1,21 +1,21 @@
-import { ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function NoteRoot({
-  children,
-  className,
+	children,
+	className,
 }: {
-  children: ReactNode;
-  className?: string;
+	children: ReactNode;
+	className?: string;
 }) {
-  return (
-    <div
-      className={twMerge(
-        'mt-3 flex h-min w-full flex-col overflow-hidden rounded-xl bg-neutral-50 px-3 dark:bg-neutral-950',
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
+	return (
+		<div
+			className={twMerge(
+				"flex h-min w-full flex-col overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-950",
+				className,
+			)}
+		>
+			{children}
+		</div>
+	);
 }

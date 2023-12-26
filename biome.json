@@ -11,7 +11,7 @@
 				"noNonNullAssertion": "warn"
 			},
 			"correctness": {
-				"useExhaustiveDependencies": "warn"
+				"useExhaustiveDependencies": "off"
 			},
 			"a11y": {
 				"noSvgWithoutTitle": "off"

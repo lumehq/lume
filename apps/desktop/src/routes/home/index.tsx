@@ -1,5 +1,5 @@
 import { NotificationColumn } from "@columns/notification";
-import { TimelineColumn } from "@columns/timeline";
+import { Timeline } from "@columns/timeline";
 import { useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { WidgetProps } from "@lume/types";
@@ -37,12 +37,10 @@ export function HomeScreen() {
 
 	const renderItem = (widget: WidgetProps) => {
 		switch (widget.kind) {
-			case WIDGET_KIND.notification:
-				return <NotificationColumn key={widget.id} />;
 			case WIDGET_KIND.newsfeed:
-				return <TimelineColumn key={widget.id} />;
+				return <Timeline key={widget.id} />;
 			default:
-				return <TimelineColumn key={widget.id} />;
+				return <Timeline key={widget.id} />;
 		}
 	};
 

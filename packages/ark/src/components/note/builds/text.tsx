@@ -2,12 +2,15 @@ import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { Note } from "..";
 import { useArk } from "../../../provider";
 
-export function TextNote({ event }: { event: NDKEvent }) {
+export function TextNote({
+	event,
+	className,
+}: { event: NDKEvent; className?: string }) {
 	const ark = useArk();
 	const thread = ark.getEventThread({ tags: event.tags });
 
 	return (
-		<Note.Root>
+		<Note.Root className={className}>
 			<Note.User
 				pubkey={event.pubkey}
 				time={event.created_at}

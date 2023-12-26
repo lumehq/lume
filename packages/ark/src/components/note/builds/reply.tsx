@@ -23,10 +23,10 @@ export function Reply({
 					className="h-14 px-3"
 				/>
 				<Note.TextContent content={event.content} className="min-w-0 px-3" />
-				<div className="-ml-1 flex items-center justify-between">
+				<div className="-ml-1 flex items-center justify-between h-14 px-3">
 					{event.replies?.length > 0 ? (
 						<Collapsible.Trigger asChild>
-							<div className="ml-4 inline-flex h-14 items-center gap-1 font-semibold text-blue-500">
+							<div className="ml-1 inline-flex h-14 items-center gap-1 font-semibold text-blue-500">
 								<NavArrowDownIcon
 									className={twMerge(
 										"h-3 w-3",
@@ -54,16 +54,13 @@ export function Reply({
 									<Note.User pubkey={event.pubkey} time={event.created_at} />
 									<Note.TextContent
 										content={event.content}
-										className="min-w-0 px-3"
+										className="min-w-0"
 									/>
-									<div className="-ml-1 flex h-14 items-center justify-between px-3">
-										<Note.Pin eventId={event.id} />
-										<div className="inline-flex items-center gap-10">
-											<Note.Reply eventId={event.id} rootEventId={rootEvent} />
-											<Note.Reaction event={event} />
-											<Note.Repost event={event} />
-											<Note.Zap event={event} />
-										</div>
+									<div className="-ml-1 flex h-14 items-center gap-10">
+										<Note.Reply eventId={event.id} rootEventId={rootEvent} />
+										<Note.Reaction event={event} />
+										<Note.Repost event={event} />
+										<Note.Zap event={event} />
 									</div>
 								</Note.Root>
 							))}

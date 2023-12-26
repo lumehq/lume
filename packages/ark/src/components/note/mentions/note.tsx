@@ -1,15 +1,13 @@
-import { WIDGET_KIND } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { memo } from "react";
+import { Link } from "react-router-dom";
 import { Note } from "..";
 import { useEvent } from "../../../hooks/useEvent";
-import { useWidget } from "../../../hooks/useWidget";
 
 export const MentionNote = memo(function MentionNote({
 	eventId,
 }: { eventId: string }) {
 	const { isLoading, isError, data } = useEvent(eventId);
-	const { addWidget } = useWidget();
 
 	const renderKind = (event: NDKEvent) => {
 		switch (event.kind) {
@@ -51,19 +49,12 @@ export const MentionNote = memo(function MentionNote({
 			</div>
 			<div className="mt-1 px-3 pb-3">
 				{renderKind(data)}
-				<button
-					type="button"
-					onClick={() =>
-						addWidget.mutate({
-							kind: WIDGET_KIND.thread,
-							title: "Thread",
-							content: data.id,
-						})
-					}
+				<Link
+					to={`/events/${data.id}`}
 					className="mt-2 text-blue-500 hover:text-blue-600"
 				>
 					Show more
-				</button>
+				</Link>
 			</div>
 		</Note.Root>
 	);
