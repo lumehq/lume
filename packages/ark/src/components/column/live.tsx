@@ -41,7 +41,7 @@ export function ColumnLiveWidget({
 				className="inline-flex h-9 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-2.5 text-sm font-semibold text-white hover:bg-blue-600"
 			>
 				<ChevronUpIcon className="h-4 w-4" />
-				{events.length} {events.length === 1 ? "event" : "events"}
+				{events.length} {events.length === 1 ? "new event" : "new events"}
 			</button>
 		</div>
 	);

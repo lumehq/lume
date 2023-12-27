@@ -6,5 +6,4 @@ export * from "./hooks/useWidget";
 export * from "./hooks/useRichContent";
 export * from "./hooks/useEvent";
 export * from "./hooks/useProfile";
-export * from "./hooks/useSuggestion";
 export * from "./hooks/useRelay";

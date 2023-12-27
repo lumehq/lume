@@ -7,10 +7,10 @@ export function ChildReply({
 }: { event: NDKEvent; rootEventId?: string }) {
 	return (
 		<Note.Provider event={event}>
-			<Note.Root>
+			<Note.Root className="pl-4 gap-2 mb-5">
 				<Note.User />
 				<Note.TextContent content={event.content} className="min-w-0" />
-				<div className="-ml-1 flex h-14 items-center gap-10">
+				<div className="-ml-1 flex items-center gap-10">
 					<Note.Reply rootEventId={rootEventId} />
 					<Note.Reaction />
 					<Note.Repost />

@@ -87,9 +87,8 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 		<div className="w-full h-full">
 			<VList ref={ref} cache={cache} overscan={2} className="flex-1 px-3">
 				{isLoading ? (
-					<div className="inline-flex h-16 items-center justify-center gap-2 px-3 py-1.5">
-						<LoaderIcon className="size-5" />
-						Loading
+					<div className="w-full flex h-16 items-center justify-center gap-2 px-3 py-1.5">
+						<LoaderIcon className="size-5 animate-spin" />
 					</div>
 				) : (
 					allEvents.map((item) => renderItem(item))

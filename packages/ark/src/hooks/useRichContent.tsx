@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { nip19 } from "nostr-tools";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
@@ -172,7 +173,6 @@ export function useRichContent(content: string, textmode = false) {
 			/(https?:\/\/\S+)/g,
 			(match, i) => {
 				const url = new URL(match);
-				url.search = "";
 
 				if (!linkPreview && !textmode) {
 					linkPreview = match;
@@ -194,7 +194,7 @@ export function useRichContent(content: string, textmode = false) {
 		);
 
 		parsedContent = reactStringReplace(parsedContent, "\n", () => {
-			return null;
+			return <div key={nanoid()} className="h-3" />;
 		});
 
 		if (typeof parsedContent[0] === "string") {

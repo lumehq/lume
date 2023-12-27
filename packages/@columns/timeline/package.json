@@ -6,11 +6,13 @@
 	"dependencies": {
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",
+		"@lume/ui": "workspace:^",
 		"@lume/utils": "workspace:^",
 		"@nostr-dev-kit/ndk": "^2.3.1",
 		"@tanstack/react-query": "^5.14.2",
 		"react": "^18.2.0",
 		"react-router-dom": "^6.21.0",
+		"sonner": "^1.2.4",
 		"virtua": "^0.18.0"
 	},
 	"devDependencies": {

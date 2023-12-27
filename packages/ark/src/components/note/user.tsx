@@ -63,7 +63,7 @@ export function NoteUser({
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={event.pubkey}
-						loading="lazy"
+						loading="eager"
 						decoding="async"
 						className="h-6 w-6 rounded-md"
 					/>
@@ -94,12 +94,12 @@ export function NoteUser({
 	if (variant === "repost") {
 		if (isLoading) {
 			return (
-				<div className={twMerge("flex gap-3", className)}>
-					<div className="inline-flex w-10 items-center justify-center">
+				<div className={twMerge("flex gap-2 px-3", className)}>
+					<div className="inline-flex shrink-0 w-10 items-center justify-center">
 						<RepostIcon className="h-5 w-5 text-blue-500" />
 					</div>
 					<div className="inline-flex items-center gap-2">
-						<div className="h-6 w-6 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+						<div className="h-6 w-6 shrink-0 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
 						<div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
 					</div>
 				</div>
@@ -107,8 +107,8 @@ export function NoteUser({
 		}
 
 		return (
-			<div className={twMerge("flex gap-2", className)}>
-				<div className="inline-flex w-10 items-center justify-center">
+			<div className={twMerge("flex gap-2 px-3", className)}>
+				<div className="inline-flex shrink-0 w-10 items-center justify-center">
 					<RepostIcon className="h-5 w-5 text-blue-500" />
 				</div>
 				<div className="inline-flex items-center gap-2">
@@ -116,7 +116,7 @@ export function NoteUser({
 						<Avatar.Image
 							src={user?.picture || user?.image}
 							alt={event.pubkey}
-							loading="lazy"
+							loading="eager"
 							decoding="async"
 							className="h-6 w-6 rounded object-cover"
 						/>
@@ -161,7 +161,7 @@ export function NoteUser({
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={event.pubkey}
-						loading="lazy"
+						loading="eager"
 						decoding="async"
 						className="h-10 w-10 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
 					/>
@@ -212,7 +212,7 @@ export function NoteUser({
 				<Avatar.Image
 					src={user?.picture || user?.image}
 					alt={event.pubkey}
-					loading="lazy"
+					loading="eager"
 					decoding="async"
 					className="h-9 w-9 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
 				/>

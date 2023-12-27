@@ -371,6 +371,9 @@ importers:
       '@lume/icons':
         specifier: workspace:^
         version: link:../../icons
+      '@lume/ui':
+        specifier: workspace:^
+        version: link:../../ui
       '@lume/utils':
         specifier: workspace:^
         version: link:../../utils
@@ -386,6 +389,9 @@ importers:
       react-router-dom:
         specifier: ^6.21.0
         version: 6.21.0(react-dom@18.2.0)(react@18.2.0)
+      sonner:
+        specifier: ^1.2.4
+        version: 1.2.4(react-dom@18.2.0)(react@18.2.0)
       virtua:
         specifier: ^0.18.0
         version: 0.18.0(react-dom@18.2.0)(react@18.2.0)

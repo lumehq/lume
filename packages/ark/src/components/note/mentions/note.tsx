@@ -39,23 +39,21 @@ export const MentionNote = memo(function MentionNote({
 	}
 
 	return (
-		<Note.Root className="my-2 flex w-full cursor-default flex-col gap-1 rounded-lg bg-neutral-100 dark:bg-neutral-900">
-			<div className="mt-3 px-3">
-				<Note.User
-					pubkey={data.pubkey}
-					time={data.created_at}
-					variant="mention"
-				/>
-			</div>
-			<div className="mt-1 px-3 pb-3">
-				{renderKind(data)}
-				<Link
-					to={`/events/${data.id}`}
-					className="mt-2 text-blue-500 hover:text-blue-600"
-				>
-					Show more
-				</Link>
-			</div>
-		</Note.Root>
+		<Note.Provider event={data}>
+			<Note.Root className="my-2 flex w-full cursor-default flex-col gap-1 rounded-lg bg-neutral-100 dark:bg-neutral-900">
+				<div className="mt-3 px-3">
+					<Note.User variant="mention" />
+				</div>
+				<div className="mt-1 px-3 pb-3">
+					{renderKind(data)}
+					<Link
+						to={`/events/${data.id}`}
+						className="mt-2 text-blue-500 hover:text-blue-600"
+					>
+						Show more
+					</Link>
+				</div>
+			</Note.Root>
+		</Note.Provider>
 	);
 });
