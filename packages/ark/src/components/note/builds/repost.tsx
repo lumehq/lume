@@ -3,8 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Note } from "..";
 import { useArk } from "../../../provider";
 
-export function RepostNote({ event }: { event: NDKEvent }) {
+export function RepostNote({
+	event,
+	className,
+}: { event: NDKEvent; className?: string }) {
 	const ark = useArk();
+
 	const {
 		isLoading,
 		isError,
@@ -57,26 +61,23 @@ export function RepostNote({ event }: { event: NDKEvent }) {
 	}
 
 	return (
-		<Note.Root>
-			<Note.User
-				pubkey={event.pubkey}
-				time={event.created_at}
-				variant="repost"
-				className="h-14"
-			/>
-			<div className="relative flex flex-col gap-2 px-3">
-				<Note.User pubkey={repostEvent.pubkey} time={repostEvent.created_at} />
-				{renderContentByKind()}
-				<div className="flex h-14 items-center justify-between">
-					<Note.Pin eventId={event.id} />
-					<div className="inline-flex items-center gap-10">
-						<Note.Reply eventId={repostEvent.id} />
-						<Note.Reaction event={repostEvent} />
-						<Note.Repost event={repostEvent} />
-						<Note.Zap event={repostEvent} />
+		<Note.Provider event={repostEvent}>
+			<Note.Root className={className}>
+				<Note.User variant="repost" className="h-14" />
+				<div className="relative flex flex-col gap-2 px-3">
+					<Note.User />
+					{renderContentByKind()}
+					<div className="flex h-14 items-center justify-between">
+						<Note.Pin />
+						<div className="inline-flex items-center gap-10">
+							<Note.Reply />
+							<Note.Reaction />
+							<Note.Repost />
+							<Note.Zap />
+						</div>
 					</div>
 				</div>
-			</div>
-		</Note.Root>
+			</Note.Root>
+		</Note.Provider>
 	);
 }

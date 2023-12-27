@@ -1,10 +1,16 @@
+import { cn } from "@lume/utils";
 import { type Platform } from "@tauri-apps/plugin-os";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import { WindowTitleBar } from "../titlebar";
 
 export function AuthLayout({ platform }: { platform: Platform }) {
 	return (
-		<div className="flex h-screen w-screen flex-col bg-neutral-50 dark:bg-neutral-950">
+		<div
+			className={cn(
+				"flex h-screen w-screen flex-col",
+				platform !== "macos" ? "bg-neutral-50 dark:bg-neutral-950" : "",
+			)}
+		>
 			{platform !== "macos" ? (
 				<WindowTitleBar platform={platform} />
 			) : (

@@ -8,10 +8,16 @@ export function ColumnLiveWidget({
 	onClick,
 }: {
 	filter: NDKFilter;
-	onClick: () => void;
+	onClick: (event: NDKEvent[]) => void;
 }) {
 	const ark = useArk();
 	const [events, setEvents] = useState<NDKEvent[]>([]);
+
+	const update = async () => {
+		onClick(events);
+		// reset
+		setEvents([]);
+	};
 
 	useEffect(() => {
 		const sub = ark.subscribe({
@@ -31,7 +37,7 @@ export function ColumnLiveWidget({
 		<div className="absolute left-0 top-11 z-50 flex h-11 w-full items-center justify-center">
 			<button
 				type="button"
-				onClick={onClick}
+				onClick={update}
 				className="inline-flex h-9 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-2.5 text-sm font-semibold text-white hover:bg-blue-600"
 			>
 				<ChevronUpIcon className="h-4 w-4" />

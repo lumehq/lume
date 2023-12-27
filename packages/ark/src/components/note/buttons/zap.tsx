@@ -16,8 +16,9 @@ import CurrencyInput from "react-currency-input-field";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../../hooks/useProfile";
 import { useArk, useStorage } from "../../../provider";
+import { useNoteContext } from "../provider";
 
-export function NoteZap({ event }: { event: NDKEvent }) {
+export function NoteZap() {
 	const [walletConnectURL, setWalletConnectURL] = useState<string>(null);
 	const [amount, setAmount] = useState<string>("21");
 	const [zapMessage, setZapMessage] = useState<string>("");
@@ -26,12 +27,13 @@ export function NoteZap({ event }: { event: NDKEvent }) {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { user } = useProfile(event.pubkey);
-
 	const ark = useArk();
+	const event = useNoteContext();
 	const storage = useStorage();
 	const nwc = useRef(null);
 	const navigate = useNavigate();
+
+	const { user } = useProfile(event.pubkey);
 
 	const createZapRequest = async () => {
 		try {

@@ -1,11 +1,12 @@
 import { RepostIcon } from "@lume/icons";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useState } from "react";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
+import { useNoteContext } from "../provider";
 
-export function NoteRepost({ event }: { event: NDKEvent }) {
+export function NoteRepost() {
+	const event = useNoteContext();
 	const [isRepost, setIsRepost] = useState(false);
 
 	const submit = async () => {
@@ -39,9 +40,9 @@ export function NoteRepost({ event }: { event: NDKEvent }) {
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>
-					<Tooltip.Content className="-left-10 inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-200 px-3.5 text-sm text-neutral-900 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-100">
+					<Tooltip.Content className="inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
 						Repost
-						<Tooltip.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
+						<Tooltip.Arrow className="fill-neutral-950" />
 					</Tooltip.Content>
 				</Tooltip.Portal>
 			</Tooltip.Root>

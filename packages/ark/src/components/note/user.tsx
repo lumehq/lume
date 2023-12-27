@@ -5,29 +5,33 @@ import { minidenticon } from "minidenticons";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { useProfile } from "../../hooks/useProfile";
+import { useNoteContext } from "./provider";
 
 export function NoteUser({
-	pubkey,
-	time,
 	variant = "text",
 	className,
 }: {
-	pubkey: string;
-	time: number;
 	variant?: "text" | "repost" | "mention" | "thread";
 	className?: string;
 }) {
-	const createdAt = useMemo(() => formatCreatedAt(time), [time]);
-	const fallbackName = useMemo(() => displayNpub(pubkey, 16), [pubkey]);
+	const event = useNoteContext();
+	const createdAt = useMemo(
+		() => formatCreatedAt(event.created_at),
+		[event.created_at],
+	);
+	const fallbackName = useMemo(
+		() => displayNpub(event.pubkey, 16),
+		[event.pubkey],
+	);
 	const fallbackAvatar = useMemo(
 		() =>
 			`data:image/svg+xml;utf8,${encodeURIComponent(
-				minidenticon(pubkey, 90, 50),
+				minidenticon(event.pubkey, 90, 50),
 			)}`,
-		[pubkey],
+		[event.pubkey],
 	);
 
-	const { isLoading, user } = useProfile(pubkey);
+	const { isLoading, user } = useProfile(event.pubkey);
 
 	if (variant === "mention") {
 		if (isLoading) {
@@ -36,7 +40,7 @@ export function NoteUser({
 					<Avatar.Root className="shrink-0">
 						<Avatar.Image
 							src={fallbackAvatar}
-							alt={pubkey}
+							alt={event.pubkey}
 							className="h-6 w-6 rounded-md bg-black dark:bg-white"
 						/>
 					</Avatar.Root>
@@ -58,7 +62,7 @@ export function NoteUser({
 				<Avatar.Root className="shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
-						alt={pubkey}
+						alt={event.pubkey}
 						loading="lazy"
 						decoding="async"
 						className="h-6 w-6 rounded-md"
@@ -66,7 +70,7 @@ export function NoteUser({
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
-							alt={pubkey}
+							alt={event.pubkey}
 							className="h-6 w-6 rounded-md bg-black dark:bg-white"
 						/>
 					</Avatar.Fallback>
@@ -111,7 +115,7 @@ export function NoteUser({
 					<Avatar.Root className="shrink-0">
 						<Avatar.Image
 							src={user?.picture || user?.image}
-							alt={pubkey}
+							alt={event.pubkey}
 							loading="lazy"
 							decoding="async"
 							className="h-6 w-6 rounded object-cover"
@@ -119,7 +123,7 @@ export function NoteUser({
 						<Avatar.Fallback delayMs={300}>
 							<img
 								src={fallbackAvatar}
-								alt={pubkey}
+								alt={event.pubkey}
 								className="h-6 w-6 rounded bg-black dark:bg-white"
 							/>
 						</Avatar.Fallback>
@@ -156,7 +160,7 @@ export function NoteUser({
 				<Avatar.Root className="h-10 w-10 shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
-						alt={pubkey}
+						alt={event.pubkey}
 						loading="lazy"
 						decoding="async"
 						className="h-10 w-10 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
@@ -164,7 +168,7 @@ export function NoteUser({
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
-							alt={pubkey}
+							alt={event.pubkey}
 							className="h-10 w-10 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
 						/>
 					</Avatar.Fallback>
@@ -189,7 +193,7 @@ export function NoteUser({
 				<Avatar.Root className="h-9 w-9 shrink-0">
 					<Avatar.Image
 						src={fallbackAvatar}
-						alt={pubkey}
+						alt={event.pubkey}
 						className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
 					/>
 				</Avatar.Root>
@@ -207,7 +211,7 @@ export function NoteUser({
 			<Avatar.Root className="h-9 w-9 shrink-0">
 				<Avatar.Image
 					src={user?.picture || user?.image}
-					alt={pubkey}
+					alt={event.pubkey}
 					loading="lazy"
 					decoding="async"
 					className="h-9 w-9 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
@@ -215,7 +219,7 @@ export function NoteUser({
 				<Avatar.Fallback delayMs={300}>
 					<img
 						src={fallbackAvatar}
-						alt={pubkey}
+						alt={event.pubkey}
 						className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
 					/>
 				</Avatar.Fallback>

@@ -1,14 +1,14 @@
 import { ReplyIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { createSearchParams, useNavigate } from "react-router-dom";
+import { useNoteContext } from "../provider";
 
 export function NoteReply({
-	eventId,
 	rootEventId,
 }: {
-	eventId: string;
 	rootEventId?: string;
 }) {
+	const event = useNoteContext();
 	const navigate = useNavigate();
 
 	return (
@@ -21,7 +21,7 @@ export function NoteReply({
 							navigate({
 								pathname: "/new/",
 								search: createSearchParams({
-									replyTo: eventId,
+									replyTo: event.id,
 									rootReplyTo: rootEventId,
 								}).toString(),
 							})
@@ -32,9 +32,9 @@ export function NoteReply({
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>
-					<Tooltip.Content className="-left-10 inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-200 px-3.5 text-sm text-neutral-900 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-100">
+					<Tooltip.Content className="inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-white will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
 						Quick reply
-						<Tooltip.Arrow className="fill-neutral-200 dark:fill-neutral-800" />
+						<Tooltip.Arrow className="fill-neutral-950" />
 					</Tooltip.Content>
 				</Tooltip.Portal>
 			</Tooltip.Root>

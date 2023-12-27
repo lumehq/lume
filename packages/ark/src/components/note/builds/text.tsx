@@ -10,23 +10,24 @@ export function TextNote({
 	const thread = ark.getEventThread({ tags: event.tags });
 
 	return (
-		<Note.Root className={className}>
-			<Note.User
-				pubkey={event.pubkey}
-				time={event.created_at}
-				className="h-14 px-3"
-			/>
-			<Note.Thread thread={thread} className="mb-2" />
-			<Note.TextContent content={event.content} className="min-w-0 px-3" />
-			<div className="flex h-14 items-center justify-between px-3">
-				<Note.Pin eventId={event.id} />
-				<div className="inline-flex items-center gap-10">
-					<Note.Reply eventId={event.id} rootEventId={thread?.rootEventId} />
-					<Note.Reaction event={event} />
-					<Note.Repost event={event} />
-					<Note.Zap event={event} />
+		<Note.Provider event={event}>
+			<Note.Root className={className}>
+				<div className="h-14 px-3 flex items-center justify-between">
+					<Note.User className="flex-1 pr-1" />
+					<Note.Menu />
 				</div>
-			</div>
-		</Note.Root>
+				<Note.Thread thread={thread} className="mb-2" />
+				<Note.TextContent content={event.content} className="min-w-0 px-3" />
+				<div className="flex h-14 items-center justify-between px-3">
+					<Note.Pin />
+					<div className="inline-flex items-center gap-10">
+						<Note.Reply rootEventId={thread?.rootEventId} />
+						<Note.Reaction />
+						<Note.Repost />
+						<Note.Zap />
+					</div>
+				</div>
+			</Note.Root>
+		</Note.Provider>
 	);
 }

@@ -24,7 +24,7 @@ export function NoteThread({
 					to={`/events/${thread?.rootEventId || thread?.replyEventId}`}
 					className="self-start text-blue-500 hover:text-blue-600"
 				>
-					Show full thread
+					Show thread
 				</Link>
 			</div>
 		</div>

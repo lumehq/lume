@@ -5,5 +5,4 @@ export * from "./src/nip94";
 export * from "./src/notification";
 export * from "./src/hooks/useNetworkStatus";
 export * from "./src/hooks/useOpenGraph";
-export * from "../ark/src/hooks/useRelay";
-export * from "../ark/src/hooks/useSuggestion";
+export * from "./src/cn";

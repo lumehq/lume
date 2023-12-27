@@ -1,9 +1,5 @@
 import { LumeStorage } from "@lume/storage";
-import {
-	type Account,
-	type NDKEventWithReplies,
-	type NIP05,
-} from "@lume/types";
+import { type NDKEventWithReplies, type NIP05 } from "@lume/types";
 import NDK, {
 	NDKEvent,
 	NDKFilter,
@@ -26,7 +22,6 @@ export class Ark {
 	#storage: LumeStorage;
 	#fetcher: NostrFetcher;
 	public ndk: NDK;
-	public account: Account;
 
 	constructor({
 		ndk,
@@ -36,7 +31,6 @@ export class Ark {
 	}: {
 		ndk: NDK;
 		storage: LumeStorage;
-
 		fetcher: NostrFetcher;
 	}) {
 		this.ndk = ndk;

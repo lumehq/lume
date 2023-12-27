@@ -1,5 +1,5 @@
+import { cn } from "@lume/utils";
 import { ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
 
 export function NoteRoot({
 	children,
@@ -10,7 +10,7 @@ export function NoteRoot({
 }) {
 	return (
 		<div
-			className={twMerge(
+			className={cn(
 				"flex h-min w-full flex-col overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-950",
 				className,
 			)}

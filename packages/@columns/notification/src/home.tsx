@@ -10,7 +10,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 	const ark = useArk();
 	const storage = useStorage();
 	const ref = useRef<VListHandle>();
-	const cacheKey = "newsfeed-vlist";
+	const cacheKey = "notification-vlist";
 
 	const [offset, cache] = useMemo(() => {
 		const serialized = sessionStorage.getItem(cacheKey);

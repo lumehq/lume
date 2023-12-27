@@ -8,12 +8,14 @@ import { NoteArticleContent } from "./kinds/article";
 import { NoteMediaContent } from "./kinds/media";
 import { NoteTextContent } from "./kinds/text";
 import { NoteMenu } from "./menu";
+import { NoteProvider } from "./provider";
 import { NoteReplyList } from "./reply";
 import { NoteRoot } from "./root";
 import { NoteThread } from "./thread";
 import { NoteUser } from "./user";
 
 export const Note = {
+	Provider: NoteProvider,
 	Root: NoteRoot,
 	User: NoteUser,
 	Menu: NoteMenu,
@@ -30,6 +32,7 @@ export const Note = {
 	ReplyList: NoteReplyList,
 };
 
+export * from "./provider";
 export * from "./builds/text";
 export * from "./builds/repost";
 export * from "./builds/skeleton";

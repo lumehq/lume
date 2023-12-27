@@ -33,23 +33,20 @@ export function ThreadNote({ eventId }: { eventId: string }) {
 	}
 
 	return (
-		<Note.Root>
-			<Note.User
-				pubkey={data.pubkey}
-				time={data.created_at}
-				variant="thread"
-				className="h-16 px-3"
-			/>
-			{renderEventKind(data)}
-			<div className="flex h-14 items-center justify-between px-3">
-				<Note.Pin eventId={data.id} />
-				<div className="inline-flex items-center gap-10">
-					<Note.Reply eventId={data.id} />
-					<Note.Reaction event={data} />
-					<Note.Repost event={data} />
-					<Note.Zap event={data} />
+		<Note.Provider event={data}>
+			<Note.Root>
+				<Note.User variant="thread" className="h-16 px-3" />
+				{renderEventKind(data)}
+				<div className="flex h-14 items-center justify-between px-3">
+					<Note.Pin />
+					<div className="inline-flex items-center gap-10">
+						<Note.Reply />
+						<Note.Reaction />
+						<Note.Repost />
+						<Note.Zap />
+					</div>
 				</div>
-			</div>
-		</Note.Root>
+			</Note.Root>
+		</Note.Provider>
 	);
 }
