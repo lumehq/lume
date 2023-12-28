@@ -1,3 +1,4 @@
+import getUrls from "get-urls";
 import { nanoid } from "nanoid";
 import { nip19 } from "nostr-tools";
 import { ReactNode } from "react";
@@ -27,6 +28,10 @@ const NOSTR_MENTIONS = [
 ];
 
 const NOSTR_EVENTS = [
+	"@nevent1",
+	"@note1",
+	"@nostr:note1",
+	"@nostr:nevent1",
 	"nostr:note1",
 	"note1",
 	"nostr:nevent1",
@@ -37,43 +42,67 @@ const NOSTR_EVENTS = [
 
 // const BITCOINS = ['lnbc', 'bc1p', 'bc1q'];
 
-const IMAGES = [".jpg", ".jpeg", ".gif", ".png", ".webp", ".avif", ".tiff"];
+const IMAGES = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
 
 const VIDEOS = [
-	".mp4",
-	".mov",
-	".webm",
-	".wmv",
-	".flv",
-	".mts",
-	".avi",
-	".ogv",
-	".mkv",
-	".mp3",
-	".m3u8",
+	"mp4",
+	"mov",
+	"webm",
+	"wmv",
+	"flv",
+	"mts",
+	"avi",
+	"ogv",
+	"mkv",
+	"m3u8",
 ];
 
-export function useRichContent(content: string, textmode = false) {
+const AUDIOS = ["mp3", "ogg", "wav"];
+
+export function useRichContent(content: string) {
 	const storage = useStorage();
 
 	let parsedContent: string | ReactNode[] = content.replace(/\n+/g, "\n");
 	let linkPreview: string;
 	let images: string[] = [];
 	let videos: string[] = [];
+	let audios: string[] = [];
 	let events: string[] = [];
 
 	const text = parsedContent;
 	const words = text.split(/( |\n)/);
+	const urls = [...getUrls(text)];
 
-	if (!textmode) {
-		if (storage.settings.media) {
-			images = words.filter((word) => IMAGES.some((el) => word.endsWith(el)));
-			videos = words.filter((word) => VIDEOS.some((el) => word.endsWith(el)));
-		}
-		events = words.filter((word) =>
-			NOSTR_EVENTS.some((el) => word.startsWith(el)),
+	if (storage.settings.media && !storage.settings.lowPowerMode) {
+		images = urls.filter((word) =>
+			IMAGES.some((el) => {
+				const url = new URL(word);
+				const extension = url.pathname.split(".")[1];
+				if (extension === el) return true;
+				return false;
+			}),
+		);
+		videos = urls.filter((word) =>
+			VIDEOS.some((el) => {
+				const url = new URL(word);
+				const extension = url.pathname.split(".")[1];
+				if (extension === el) return true;
+				return false;
+			}),
+		);
+		audios = urls.filter((word) =>
+			AUDIOS.some((el) => {
+				const url = new URL(word);
+				const extension = url.pathname.split(".")[1];
+				if (extension === el) return true;
+				return false;
+			}),
 		);
 	}
+
+	events = words.filter((word) =>
+		NOSTR_EVENTS.some((el) => word.startsWith(el)),
+	);
 
 	const hashtags = words.filter((word) => word.startsWith("#"));
 	const mentions = words.filter((word) =>
@@ -92,6 +121,14 @@ export function useRichContent(content: string, textmode = false) {
 		if (videos.length) {
 			for (const video of videos) {
 				parsedContent = reactStringReplace(parsedContent, video, (match, i) => (
+					<VideoPreview key={match + i} url={match} />
+				));
+			}
+		}
+
+		if (audios.length) {
+			for (const audio of audios) {
+				parsedContent = reactStringReplace(parsedContent, audio, (match, i) => (
 					<VideoPreview key={match + i} url={match} />
 				));
 			}
@@ -174,7 +211,7 @@ export function useRichContent(content: string, textmode = false) {
 			(match, i) => {
 				const url = new URL(match);
 
-				if (!linkPreview && !textmode) {
+				if (!linkPreview) {
 					linkPreview = match;
 					return <LinkPreview key={match + i} url={url.toString()} />;
 				}

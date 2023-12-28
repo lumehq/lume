@@ -2,7 +2,12 @@ import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { LumeStorage } from "@lume/storage";
 import { QUOTES, delay } from "@lume/utils";
-import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
+import NDK, {
+	NDKNip46Signer,
+	NDKPrivateKeySigner,
+	NDKRelay,
+	NDKRelayAuthPolicies,
+} from "@nostr-dev-kit/ndk";
 import { ndkAdapter } from "@nostr-fetch/adapter-ndk";
 import { platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
@@ -149,6 +154,12 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 		// connect
 		await ndk.connect(3000);
+
+		// auth
+		ndk.relayAuthDefaultPolicy = (relay: NDKRelay, challenge: string) => {
+			const signIn = NDKRelayAuthPolicies.signIn({ ndk, signer });
+			return signIn(relay, challenge);
+		};
 
 		// update account's metadata
 		if (storage.account) {

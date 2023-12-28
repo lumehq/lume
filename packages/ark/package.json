@@ -32,6 +32,7 @@
 		"@tiptap/extension-mention": "^2.1.13",
 		"@tiptap/react": "^2.1.13",
 		"@vidstack/react": "^1.9.8",
+		"get-urls": "^12.1.0",
 		"markdown-to-jsx": "^7.3.2",
 		"minidenticons": "^4.2.0",
 		"nanoid": "^5.0.4",
