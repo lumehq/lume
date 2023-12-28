@@ -9,7 +9,9 @@
 	},
 	"dependencies": {
 		"@columns/notification": "workspace:^",
+		"@columns/thread": "workspace:^",
 		"@columns/timeline": "workspace:^",
+		"@columns/user": "workspace:^",
 		"@getalby/sdk": "^3.2.1",
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",

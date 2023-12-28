@@ -14,7 +14,7 @@ export function NoteProvider({
 
 export function useNoteContext() {
 	const context = useContext(EventContext);
-	if (context === undefined) {
+	if (!context) {
 		throw new Error("Please import Note Provider to use useNoteContext() hook");
 	}
 	return context;

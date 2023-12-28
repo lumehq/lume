@@ -1,5 +1,6 @@
-import { NotificationColumn } from "@columns/notification";
+import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
+import { User } from "@columns/user";
 import { useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { WidgetProps } from "@lume/types";
@@ -39,6 +40,10 @@ export function HomeScreen() {
 		switch (widget.kind) {
 			case WIDGET_KIND.newsfeed:
 				return <Timeline key={widget.id} />;
+			case WIDGET_KIND.thread:
+				return <Thread key={widget.id} thread={widget} />;
+			case WIDGET_KIND.user:
+				return <User key={widget.id} user={widget} />;
 			default:
 				return <Timeline key={widget.id} />;
 		}

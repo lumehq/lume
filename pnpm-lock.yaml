@@ -23,9 +23,15 @@ importers:
       '@columns/notification':
         specifier: workspace:^
         version: link:../../packages/@columns/notification
+      '@columns/thread':
+        specifier: workspace:^
+        version: link:../../packages/@columns/thread
       '@columns/timeline':
         specifier: workspace:^
         version: link:../../packages/@columns/timeline
+      '@columns/user':
+        specifier: workspace:^
+        version: link:../../packages/@columns/user
       '@getalby/sdk':
         specifier: ^3.2.1
         version: 3.2.1(typescript@5.3.3)
@@ -283,7 +289,7 @@ importers:
         specifier: ^4.2.2
         version: 4.2.2(typescript@5.3.3)(vite@4.5.1)
 
-  packages/@columns/newsfeed:
+  packages/@columns/notification:
     dependencies:
       '@lume/ark':
         specifier: workspace:^
@@ -323,7 +329,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  packages/@columns/notification:
+  packages/@columns/thread:
     dependencies:
       '@lume/ark':
         specifier: workspace:^
@@ -331,6 +337,9 @@ importers:
       '@lume/icons':
         specifier: workspace:^
         version: link:../../icons
+      '@lume/ui':
+        specifier: workspace:^
+        version: link:../../ui
       '@lume/utils':
         specifier: workspace:^
         version: link:../../utils
@@ -343,6 +352,12 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-router-dom:
+        specifier: ^6.21.0
+        version: 6.21.0(react-dom@18.2.0)(react@18.2.0)
+      sonner:
+        specifier: ^1.2.4
+        version: 1.2.4(react-dom@18.2.0)(react@18.2.0)
       virtua:
         specifier: ^0.18.0
         version: 0.18.0(react-dom@18.2.0)(react@18.2.0)
@@ -353,6 +368,9 @@ importers:
       '@lume/tsconfig':
         specifier: workspace:^
         version: link:../../tsconfig
+      '@lume/types':
+        specifier: workspace:^
+        version: link:../../types
       '@types/react':
         specifier: ^18.2.45
         version: 18.2.45
@@ -402,6 +420,58 @@ importers:
       '@lume/tsconfig':
         specifier: workspace:^
         version: link:../../tsconfig
+      '@types/react':
+        specifier: ^18.2.45
+        version: 18.2.45
+      tailwind:
+        specifier: ^4.0.0
+        version: 4.0.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/@columns/user:
+    dependencies:
+      '@lume/ark':
+        specifier: workspace:^
+        version: link:../../ark
+      '@lume/icons':
+        specifier: workspace:^
+        version: link:../../icons
+      '@lume/ui':
+        specifier: workspace:^
+        version: link:../../ui
+      '@lume/utils':
+        specifier: workspace:^
+        version: link:../../utils
+      '@nostr-dev-kit/ndk':
+        specifier: ^2.3.1
+        version: 2.3.1(typescript@5.3.3)
+      '@tanstack/react-query':
+        specifier: ^5.14.2
+        version: 5.14.2(react@18.2.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-router-dom:
+        specifier: ^6.21.0
+        version: 6.21.0(react-dom@18.2.0)(react@18.2.0)
+      sonner:
+        specifier: ^1.2.4
+        version: 1.2.4(react-dom@18.2.0)(react@18.2.0)
+      virtua:
+        specifier: ^0.18.0
+        version: 0.18.0(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@lume/tailwindcss':
+        specifier: workspace:^
+        version: link:../../tailwindcss
+      '@lume/tsconfig':
+        specifier: workspace:^
+        version: link:../../tsconfig
+      '@lume/types':
+        specifier: workspace:^
+        version: link:../../types
       '@types/react':
         specifier: ^18.2.45
         version: 18.2.45

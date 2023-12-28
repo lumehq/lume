@@ -11,7 +11,7 @@ export function LinkPreview({ url }: { url: string }) {
 
 	if (status === "pending") {
 		return (
-			<div className="my-2 flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900">
+			<div className="flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900">
 				<div className="h-48 w-full animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 				<div className="flex flex-col gap-2 px-3 py-3">
 					<div className="h-3 w-2/3 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
@@ -42,7 +42,7 @@ export function LinkPreview({ url }: { url: string }) {
 			to={url}
 			target="_blank"
 			rel="noreferrer"
-			className="my-2 flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900"
+			className="flex w-full flex-col rounded-lg bg-neutral-100 dark:bg-neutral-900"
 		>
 			{isImage(data.image) ? (
 				<img
