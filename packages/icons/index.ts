@@ -92,3 +92,7 @@ export * from "./src/gossip";
 export * from "./src/userAdd";
 export * from "./src/userRemove";
 export * from "./src/pin";
+export * from "./src/homeFilled";
+export * from "./src/relayFilled";
+export * from "./src/depotFilled";
+export * from "./src/nwcFilled";

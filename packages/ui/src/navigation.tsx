@@ -1,8 +1,12 @@
 import {
+	DepotFilledIcon,
 	DepotIcon,
+	HomeFilledIcon,
 	HomeIcon,
+	NwcFilledIcon,
 	NwcIcon,
 	PlusIcon,
+	RelayFilledIcon,
 	RelayIcon,
 	SearchIcon,
 } from "@lume/icons";
@@ -29,7 +33,11 @@ export function Navigation() {
 										: "text-black/50 dark:text-neutral-400",
 								)}
 							>
-								<HomeIcon className="h-6 w-6" />
+								{isActive ? (
+									<HomeFilledIcon className="size-6 text-black dark:text-white" />
+								) : (
+									<HomeIcon className="size-6" />
+								)}
 							</div>
 							<div
 								className={twMerge(
@@ -59,7 +67,11 @@ export function Navigation() {
 										: "text-black/50 dark:text-neutral-400",
 								)}
 							>
-								<RelayIcon className="h-6 w-6" />
+								{isActive ? (
+									<RelayFilledIcon className="size-6" />
+								) : (
+									<RelayIcon className="size-6" />
+								)}
 							</div>
 							<div
 								className={twMerge(
@@ -89,7 +101,11 @@ export function Navigation() {
 										: "text-black/50 dark:text-neutral-400",
 								)}
 							>
-								<DepotIcon className="h-6 w-6" />
+								{isActive ? (
+									<DepotFilledIcon className="size-6 text-black dark:text-white" />
+								) : (
+									<DepotIcon className="size-6" />
+								)}
 							</div>
 							<div
 								className={twMerge(
@@ -119,7 +135,11 @@ export function Navigation() {
 										: "text-black/50 dark:text-neutral-400",
 								)}
 							>
-								<NwcIcon className="h-6 w-6" />
+								{isActive ? (
+									<NwcFilledIcon className="size-6 text-black dark:text-white" />
+								) : (
+									<NwcIcon className="size-6" />
+								)}
 							</div>
 							<div
 								className={twMerge(
