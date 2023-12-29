@@ -13,7 +13,7 @@ import NDK, {
 	NostrEvent,
 } from "@nostr-dev-kit/ndk";
 import { open } from "@tauri-apps/plugin-dialog";
-import { readBinaryFile } from "@tauri-apps/plugin-fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { fetch } from "@tauri-apps/plugin-http";
 import { NostrFetcher, normalizeRelayUrl } from "nostr-fetch";
 import { nip19 } from "nostr-tools";
@@ -466,7 +466,7 @@ export class Ark {
 
 		if (!selected) return null;
 
-		const file = await readBinaryFile(selected.path);
+		const file = await readFile(selected.path);
 		const blob = new Blob([file]);
 
 		const data = new FormData();

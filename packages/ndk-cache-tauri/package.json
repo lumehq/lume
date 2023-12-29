@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@lume/storage": "workspace:*",
-    "@nostr-dev-kit/ndk": "^2.3.1",
+    "@nostr-dev-kit/ndk": "^2.3.2",
     "lru-cache": "^10.1.0",
     "nostr-fetch": "^0.14.1",
     "nostr-tools": "1.17.0",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@lume/tsconfig": "workspace:*",
-    "@types/react": "^18.2.45",
+    "@types/react": "^18.2.46",
     "typescript": "^5.3.3"
   }
 }

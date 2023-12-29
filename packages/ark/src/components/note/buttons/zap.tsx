@@ -6,9 +6,8 @@ import {
 	displayNpub,
 	sendNativeNotification,
 } from "@lume/utils";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
 import * as Dialog from "@radix-ui/react-dialog";
-import { invoke } from "@tauri-apps/api/primitives";
+import { invoke } from "@tauri-apps/api/core";
 import { message } from "@tauri-apps/plugin-dialog";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";

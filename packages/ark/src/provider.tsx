@@ -20,6 +20,7 @@ import {
 	normalizeRelayUrlSet,
 } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { createContext, useContextSelector } from "use-context-selector";
 import { Ark } from "./ark";
 
@@ -156,9 +157,13 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		await ndk.connect(3000);
 
 		// auth
-		ndk.relayAuthDefaultPolicy = (relay: NDKRelay, challenge: string) => {
+		ndk.relayAuthDefaultPolicy = async (relay: NDKRelay, challenge: string) => {
 			const signIn = NDKRelayAuthPolicies.signIn({ ndk, signer });
-			return signIn(relay, challenge);
+			const event = await signIn(relay, challenge);
+			if (event) {
+				toast.success(`You've sign in sucessfully to relay: ${relay.url}`);
+				return event;
+			}
 		};
 
 		// update account's metadata

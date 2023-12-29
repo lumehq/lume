@@ -1,6 +1,6 @@
 import { ImageIcon, LoaderIcon } from "@lume/icons";
 import { message, open } from "@tauri-apps/plugin-dialog";
-import { readBinaryFile } from "@tauri-apps/plugin-fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { useState } from "react";
 
 export function ArticleCoverUploader({ setCover }) {
@@ -37,7 +37,7 @@ export function ArticleCoverUploader({ setCover }) {
 				return;
 			}
 
-			const file = await readBinaryFile(selected.path);
+			const file = await readFile(selected.path);
 			const blob = new Blob([file]);
 
 			const data = new FormData();

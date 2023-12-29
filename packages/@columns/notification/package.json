@@ -7,15 +7,15 @@
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",
 		"@lume/utils": "workspace:^",
-		"@nostr-dev-kit/ndk": "^2.3.1",
-		"@tanstack/react-query": "^5.14.2",
+		"@nostr-dev-kit/ndk": "^2.3.2",
+		"@tanstack/react-query": "^5.15.0",
 		"react": "^18.2.0",
 		"virtua": "^0.18.0"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
-		"@types/react": "^18.2.45",
+		"@types/react": "^18.2.46",
 		"tailwind": "^4.0.0",
 		"typescript": "^5.3.3"
 	}

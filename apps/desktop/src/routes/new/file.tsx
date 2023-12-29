@@ -1,7 +1,7 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { message, open } from "@tauri-apps/plugin-dialog";
-import { readBinaryFile } from "@tauri-apps/plugin-fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -45,7 +45,7 @@ export function NewFileScreen() {
 				return;
 			}
 
-			const file = await readBinaryFile(selected.path);
+			const file = await readFile(selected.path);
 			const blob = new Blob([file]);
 
 			const data = new FormData();

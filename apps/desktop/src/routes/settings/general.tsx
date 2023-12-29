@@ -1,7 +1,7 @@
 import { useStorage } from "@lume/ark";
 import { DarkIcon, LightIcon, SystemModeIcon } from "@lume/icons";
 import * as Switch from "@radix-ui/react-switch";
-import { invoke } from "@tauri-apps/api/primitives";
+import { invoke } from "@tauri-apps/api/core";
 import { getCurrent } from "@tauri-apps/api/window";
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 import {

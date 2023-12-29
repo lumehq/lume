@@ -43,27 +43,34 @@ export function RepostNote({
 	};
 
 	if (isLoading) {
-		return <div className="w-full px-3 pb-3" />;
+		return <div className="w-full px-3 pb-3">Loading...</div>;
 	}
 
-	if (isError) {
+	if (isError || !repostEvent) {
 		return (
-			<div className="my-3 h-min w-full px-3">
-				<div className="relative flex flex-col gap-2 overflow-hidden rounded-xl bg-neutral-50 pt-3 dark:bg-neutral-950">
-					<div className="relative flex flex-col gap-2">
-						<div className="px-3">
-							<p>Failed to load event</p>
-						</div>
+			<Note.Root className={className}>
+				<Note.Provider event={event}>
+					<Note.User variant="repost" className="h-14" />
+				</Note.Provider>
+				<div className="select-text px-3 mb-3">
+					<div className="bg-red-100 dark:bg-red-900 flex-col py-3 rounded-lg flex items-start justify-start px-3">
+						<p className="text-red-500">Failed to get event</p>
+						<p className="text-sm">
+							You can consider enable Outbox in Settings for better event
+							discovery.
+						</p>
 					</div>
 				</div>
-			</div>
+			</Note.Root>
 		);
 	}
 
 	return (
-		<Note.Provider event={repostEvent}>
-			<Note.Root className={className}>
+		<Note.Root className={className}>
+			<Note.Provider event={event}>
 				<Note.User variant="repost" className="h-14" />
+			</Note.Provider>
+			<Note.Provider event={repostEvent}>
 				<div className="relative flex flex-col gap-2 px-3">
 					<Note.User />
 					{renderContentByKind()}
@@ -77,7 +84,7 @@ export function RepostNote({
 						</div>
 					</div>
 				</div>
-			</Note.Root>
-		</Note.Provider>
+			</Note.Provider>
+		</Note.Root>
 	);
 }
