@@ -2,11 +2,11 @@ import { PinIcon } from "@lume/icons";
 import { WIDGET_KIND } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useNoteContext } from "..";
-import { useWidget } from "../../../hooks/useWidget";
+import { useColumnContext } from "../../column";
 
 export function NotePin() {
 	const event = useNoteContext();
-	const { addWidget } = useWidget();
+	const { addColumn } = useColumnContext();
 
 	return (
 		<Tooltip.Provider>
@@ -15,7 +15,7 @@ export function NotePin() {
 					<button
 						type="button"
 						onClick={() =>
-							addWidget.mutate({
+							addColumn({
 								kind: WIDGET_KIND.thread,
 								title: "Thread",
 								content: event.id,

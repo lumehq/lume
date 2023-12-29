@@ -3,13 +3,13 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { useProfile } from "../../../hooks/useProfile";
-import { useWidget } from "../../../hooks/useWidget";
+import { useColumnContext } from "../../column";
 
 export const MentionUser = memo(function MentionUser({
 	pubkey,
 }: { pubkey: string }) {
 	const { user } = useProfile(pubkey);
-	const { addWidget } = useWidget();
+	const { addColumn } = useColumnContext();
 
 	return (
 		<DropdownMenu.Root>
@@ -29,7 +29,7 @@ export const MentionUser = memo(function MentionUser({
 					<button
 						type="button"
 						onClick={() =>
-							addWidget.mutate({
+							addColumn({
 								kind: WIDGET_KIND.user,
 								title: user?.name || user?.displayName || "",
 								content: pubkey,

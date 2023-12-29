@@ -1,14 +1,14 @@
 import { WIDGET_KIND } from "@lume/utils";
-import { useWidget } from "../../../hooks/useWidget";
+import { useColumnContext } from "../../column";
 
 export function Hashtag({ tag }: { tag: string }) {
-	const { addWidget } = useWidget();
+	const { addColumn } = useColumnContext();
 
 	return (
 		<button
 			type="button"
 			onClick={() =>
-				addWidget.mutate({
+				addColumn({
 					kind: WIDGET_KIND.hashtag,
 					title: tag,
 					content: tag.replace("#", ""),

@@ -9,7 +9,7 @@ import {
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode } from "react";
-import { useWidget } from "../../hooks/useWidget";
+import { useColumnContext } from "./provider";
 
 export function ColumnHeader({
 	id,
@@ -23,22 +23,22 @@ export function ColumnHeader({
 	icon?: ReactNode;
 }) {
 	const queryClient = useQueryClient();
-	const { removeWidget } = useWidget();
+	const { removeColumn } = useColumnContext();
 
 	const refresh = async () => {
 		if (queryKey) await queryClient.refetchQueries({ queryKey });
 	};
 
 	const moveLeft = async () => {
-		removeWidget.mutate(id);
+		removeColumn(id);
 	};
 
 	const moveRight = async () => {
-		removeWidget.mutate(id);
+		removeColumn(id);
 	};
 
 	const deleteWidget = async () => {
-		removeWidget.mutate(id);
+		removeColumn(id);
 	};
 
 	return (

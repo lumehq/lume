@@ -1,61 +1,29 @@
 import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
 import { User } from "@columns/user";
-import { useStorage } from "@lume/ark";
-import { LoaderIcon } from "@lume/icons";
-import { WidgetProps } from "@lume/types";
+import { useColumnContext } from "@lume/ark";
+import { IColumn } from "@lume/types";
 import { WIDGET_KIND } from "@lume/utils";
-import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
 
 export function HomeScreen() {
-	const storage = useStorage();
 	const ref = useRef<VListHandle>(null);
-
-	const { isLoading, data } = useQuery({
-		queryKey: ["widgets"],
-		queryFn: async () => {
-			const dbWidgets = await storage.getWidgets();
-			const defaultWidgets = [
-				{
-					id: "9999",
-					title: "Newsfeed",
-					content: "",
-					kind: WIDGET_KIND.newsfeed,
-				},
-			];
-
-			return [...defaultWidgets, ...dbWidgets];
-		},
-		refetchOnMount: false,
-		refetchOnReconnect: false,
-		refetchOnWindowFocus: false,
-		staleTime: Infinity,
-	});
-
+	const { columns } = useColumnContext();
 	const [selectedIndex, setSelectedIndex] = useState(-1);
 
-	const renderItem = (widget: WidgetProps) => {
-		switch (widget.kind) {
+	const renderItem = (column: IColumn) => {
+		switch (column.kind) {
 			case WIDGET_KIND.newsfeed:
-				return <Timeline key={widget.id} />;
+				return <Timeline key={column.id} />;
 			case WIDGET_KIND.thread:
-				return <Thread key={widget.id} thread={widget} />;
+				return <Thread key={column.id} thread={column} />;
 			case WIDGET_KIND.user:
-				return <User key={widget.id} user={widget} />;
+				return <User key={column.id} user={column} />;
 			default:
-				return <Timeline key={widget.id} />;
+				return <Timeline key={column.id} />;
 		}
 	};
-
-	if (isLoading) {
-		return (
-			<div className="flex h-full w-full items-center justify-center">
-				<LoaderIcon className="h-5 w-5 animate-spin" />
-			</div>
-		);
-	}
 
 	return (
 		<div className="h-full w-full">
@@ -82,7 +50,7 @@ export function HomeScreen() {
 						case "ArrowDown":
 						case "ArrowRight": {
 							e.preventDefault();
-							const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
+							const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
 							setSelectedIndex(nextIndex);
 							ref.current.scrollToIndex(nextIndex, {
 								align: "center",
@@ -95,7 +63,7 @@ export function HomeScreen() {
 					}
 				}}
 			>
-				{data.map((widget) => renderItem(widget))}
+				{columns.map((column) => renderItem(column))}
 				<div className="h-full w-[200px]" />
 			</VList>
 		</div>

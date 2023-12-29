@@ -33,6 +33,13 @@ export interface WidgetGroupItem {
 	icon?: string;
 }
 
+export interface IColumn {
+	id?: string;
+	kind: number;
+	title: string;
+	content: string;
+}
+
 export interface WidgetProps {
 	id?: string;
 	account_id?: number;
