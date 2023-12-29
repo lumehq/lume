@@ -9,7 +9,6 @@ import { NoteMediaContent } from "./kinds/media";
 import { NoteTextContent } from "./kinds/text";
 import { NoteMenu } from "./menu";
 import { NoteProvider } from "./provider";
-import { NoteReplyList } from "./reply";
 import { NoteRoot } from "./root";
 import { NoteThread } from "./thread";
 import { NoteUser } from "./user";
@@ -29,14 +28,14 @@ export const Note = {
 	TextContent: NoteTextContent,
 	MediaContent: NoteMediaContent,
 	ArticleContent: NoteArticleContent,
-	ReplyList: NoteReplyList,
 };
 
 export * from "./provider";
-export * from "./builds/text";
-export * from "./builds/repost";
-export * from "./builds/skeleton";
-export * from "./builds/thread";
+export * from "./primitives/text";
+export * from "./primitives/repost";
+export * from "./primitives/skeleton";
+export * from "./primitives/thread";
+export * from "./primitives/reply";
 export * from "./preview/image";
 export * from "./preview/link";
 export * from "./preview/video";

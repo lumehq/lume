@@ -1,4 +1,4 @@
-import { twMerge } from "tailwind-merge";
+import { cn } from "@lume/utils";
 import { useRichContent } from "../../../hooks/useRichContent";
 
 export function NoteTextContent({
@@ -12,7 +12,7 @@ export function NoteTextContent({
 
 	return (
 		<div
-			className={twMerge(
+			className={cn(
 				"break-p select-text whitespace-pre-line text-balance leading-normal",
 				className,
 			)}

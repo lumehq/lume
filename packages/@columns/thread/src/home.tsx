@@ -1,4 +1,5 @@
 import { Note, ThreadNote } from "@lume/ark";
+import { ReplyList } from "@lume/ui";
 import { WVList } from "virtua";
 
 export function HomeRoute({ id }: { id: string }) {
@@ -6,7 +7,7 @@ export function HomeRoute({ id }: { id: string }) {
 		<WVList className="pb-5 overflow-y-auto">
 			<div className="px-3">
 				<ThreadNote eventId={id} />
-				<Note.ReplyList eventId={id} title="All replies" className="mt-5" />
+				<ReplyList eventId={id} title="All replies" className="mt-5" />
 			</div>
 		</WVList>
 	);

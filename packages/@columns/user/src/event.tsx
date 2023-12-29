@@ -1,5 +1,6 @@
-import { Note, ThreadNote } from "@lume/ark";
+import { ThreadNote } from "@lume/ark";
 import { ArrowLeftIcon } from "@lume/icons";
+import { ReplyList } from "@lume/ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { WVList } from "virtua";
 
@@ -21,7 +22,7 @@ export function EventRoute() {
 			</div>
 			<div className="px-3">
 				<ThreadNote eventId={id} />
-				<Note.ReplyList eventId={id} title="All replies" className="mt-5" />
+				<ReplyList eventId={id} title="All replies" className="mt-5" />
 			</div>
 		</WVList>
 	);

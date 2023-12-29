@@ -21,6 +21,10 @@ export function NoteMenu() {
 		setOpen(false);
 	};
 
+	const copyRaw = async () => {
+		await writeText(JSON.stringify(await event.toNostrEvent()));
+	};
+
 	const copyLink = async () => {
 		await writeText(
 			`https://njump.me/${nip19.neventEncode({
@@ -42,12 +46,12 @@ export function NoteMenu() {
 				</button>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Portal>
-				<DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-950 focus:outline-none dark:border-neutral-900">
+				<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-950 focus:outline-none dark:border-neutral-900">
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
 							onClick={() => copyLink()}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 focus:outline-none"
+							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
 						>
 							Copy shareable link
 						</button>
@@ -56,15 +60,24 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyID()}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 focus:outline-none"
+							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
 						>
 							Copy note ID
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
+						<button
+							type="button"
+							onClick={() => copyRaw()}
+							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
+						>
+							Copy raw event
+						</button>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item asChild>
 						<Link
 							to={`/users/${event.pubkey}`}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 focus:outline-none"
+							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
 						>
 							View profile
 						</Link>

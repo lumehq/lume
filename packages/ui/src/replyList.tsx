@@ -1,12 +1,10 @@
+import { Reply, useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { NDKEventWithReplies } from "@lume/types";
-import { NDKSubscription } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { useArk } from "../../provider";
-import { Reply } from "./builds/reply";
 
-export function NoteReplyList({
+export function ReplyList({
 	eventId,
 	title,
 	className,
@@ -15,7 +13,7 @@ export function NoteReplyList({
 	const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
 
 	useEffect(() => {
-		let sub: NDKSubscription;
+		let sub;
 		let isCancelled = false;
 
 		async function fetchRepliesAndSub() {
