@@ -10,8 +10,8 @@ import {
 	RelayIcon,
 	SearchIcon,
 } from "@lume/icons";
+import { cn } from "@lume/utils";
 import { Link, NavLink } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
 import { ActiveAccount } from "./account/active";
 
 export function Navigation() {
@@ -26,7 +26,7 @@ export function Navigation() {
 					{({ isActive }) => (
 						<>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
 									isActive
 										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
@@ -40,7 +40,7 @@ export function Navigation() {
 								)}
 							</div>
 							<div
-								className={twMerge(
+								className={cn(
 									"text-sm",
 									isActive
 										? "font-semibold text-black dark:text-white"
@@ -60,7 +60,7 @@ export function Navigation() {
 					{({ isActive }) => (
 						<>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
 									isActive
 										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
@@ -74,7 +74,7 @@ export function Navigation() {
 								)}
 							</div>
 							<div
-								className={twMerge(
+								className={cn(
 									"text-sm",
 									isActive
 										? "font-semibold text-black dark:text-white"
@@ -94,7 +94,7 @@ export function Navigation() {
 					{({ isActive }) => (
 						<>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
 									isActive
 										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
@@ -108,7 +108,7 @@ export function Navigation() {
 								)}
 							</div>
 							<div
-								className={twMerge(
+								className={cn(
 									"text-sm",
 									isActive
 										? "font-semibold text-black dark:text-white"
@@ -128,7 +128,7 @@ export function Navigation() {
 					{({ isActive }) => (
 						<>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
 									isActive
 										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
@@ -142,7 +142,7 @@ export function Navigation() {
 								)}
 							</div>
 							<div
-								className={twMerge(
+								className={cn(
 									"text-sm",
 									isActive
 										? "font-semibold text-black dark:text-white"

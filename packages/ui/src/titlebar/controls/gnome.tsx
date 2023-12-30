@@ -1,5 +1,5 @@
+import { cn } from "@lume/utils";
 import { HTMLProps, useContext } from "react";
-import { twMerge } from "tailwind-merge";
 import { WindowButton } from "../components/button";
 import { WindowIcons } from "../components/icons";
 import { AppWindowContext } from "../context";
@@ -10,10 +10,7 @@ export function Gnome({ className, ...props }: HTMLProps<HTMLDivElement>) {
 
 	return (
 		<div
-			className={twMerge(
-				"mr-[10px] h-auto items-center space-x-[13px]",
-				className,
-			)}
+			className={cn("mr-[10px] h-auto items-center space-x-[13px]", className)}
 			{...props}
 		>
 			<WindowButton

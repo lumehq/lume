@@ -1,5 +1,5 @@
+import { cn } from "@lume/utils";
 import { HTMLProps, useContext, useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { WindowButton } from "../components/button";
 import { WindowIcons } from "../components/icons";
 import { AppWindowContext } from "../context";
@@ -46,7 +46,7 @@ export function MacOS({ className, ...props }: HTMLProps<HTMLDivElement>) {
 
 	return (
 		<div
-			className={twMerge(
+			className={cn(
 				"space-x-2 px-3 text-black active:text-black dark:text-black",
 				className,
 			)}

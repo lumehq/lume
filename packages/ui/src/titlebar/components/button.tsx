@@ -1,5 +1,5 @@
+import { cn } from "@lume/utils";
 import type { ButtonHTMLAttributes } from "react";
-import { twMerge } from "tailwind-merge";
 
 export function WindowButton({
 	className,
@@ -9,7 +9,7 @@ export function WindowButton({
 	return (
 		<button
 			type="button"
-			className={twMerge(
+			className={cn(
 				"inline-flex cursor-default items-center justify-center",
 				className,
 			)}

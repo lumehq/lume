@@ -372,6 +372,8 @@ export class Ark {
 		signal?: AbortSignal;
 		dedup?: boolean;
 	}) {
+		if (!filter?.authors?.length) return [];
+
 		const rootIds = new Set();
 		const dedupQueue = new Set();
 		const connectedRelays = this.ndk.pool

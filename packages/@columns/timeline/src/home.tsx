@@ -32,9 +32,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				const events = await ark.getInfiniteEvents({
 					filter: {
 						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: !storage.account.contacts.length
-							? [storage.account.pubkey]
-							: storage.account.contacts,
+						authors: storage.account.contacts,
 					},
 					limit: FETCH_LIMIT,
 					pageParam,
@@ -99,7 +97,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 							type="button"
 							onClick={() => fetchNextPage()}
 							disabled={!hasNextPage || isFetchingNextPage}
-							className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+							className="inline-flex h-10 w-40 items-center justify-center gap-2 rounded-full bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none"
 						>
 							{isFetchingNextPage ? (
 								<LoaderIcon className="h-5 w-5 animate-spin" />
