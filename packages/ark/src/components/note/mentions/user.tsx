@@ -1,4 +1,4 @@
-import { WIDGET_KIND } from "@lume/utils";
+import { COL_TYPES } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { memo } from "react";
 import { Link } from "react-router-dom";
@@ -30,7 +30,7 @@ export const MentionUser = memo(function MentionUser({
 						type="button"
 						onClick={() =>
 							addColumn({
-								kind: WIDGET_KIND.user,
+								kind: COL_TYPES.user,
 								title: user?.name || user?.displayName || "",
 								content: pubkey,
 							})

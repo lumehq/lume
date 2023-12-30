@@ -1,0 +1,26 @@
+{
+	"name": "@columns/hashtag",
+	"version": "0.0.0",
+	"private": true,
+	"main": "./src/index.tsx",
+	"dependencies": {
+		"@lume/ark": "workspace:^",
+		"@lume/icons": "workspace:^",
+		"@lume/ui": "workspace:^",
+		"@lume/utils": "workspace:^",
+		"@nostr-dev-kit/ndk": "^2.3.2",
+		"@tanstack/react-query": "^5.15.0",
+		"react": "^18.2.0",
+		"react-router-dom": "^6.21.1",
+		"sonner": "^1.3.1",
+		"virtua": "^0.18.0"
+	},
+	"devDependencies": {
+		"@lume/tailwindcss": "workspace:^",
+		"@lume/tsconfig": "workspace:^",
+		"@lume/types": "workspace:^",
+		"@types/react": "^18.2.46",
+		"tailwind": "^4.0.0",
+		"typescript": "^5.3.3"
+	}
+}

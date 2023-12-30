@@ -11,15 +11,16 @@ import { FETCH_LIMIT, displayNpub } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { WVList } from "virtua";
 
-export function HomeRoute({ id }: { id: string }) {
+export function UserRoute() {
 	const ark = useArk();
 	const storage = useStorage();
 	const navigate = useNavigate();
 
+	const { id } = useParams();
 	const { user } = useProfile(id);
 	const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
 		useInfiniteQuery({
@@ -101,7 +102,17 @@ export function HomeRoute({ id }: { id: string }) {
 	}, []);
 
 	return (
-		<WVList className="py-5 overflow-y-auto">
+		<WVList className="pb-5 overflow-y-auto">
+			<div className="h-11 bg-neutral-50 dark:bg-neutral-950 border-b flex items-center px-3 border-neutral-100 dark:border-neutral-900 mb-3">
+				<button
+					type="button"
+					className="inline-flex items-center gap-2.5 text-sm font-medium"
+					onClick={() => navigate(-1)}
+				>
+					<ArrowLeftIcon className="size-4" />
+					Back
+				</button>
+			</div>
 			<div className="px-3">
 				<div className="flex flex-col gap-2">
 					<div className="flex items-center justify-between">

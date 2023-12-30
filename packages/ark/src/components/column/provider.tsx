@@ -1,5 +1,5 @@
 import { IColumn } from "@lume/types";
-import { WIDGET_KIND } from "@lume/utils";
+import { COL_TYPES } from "@lume/utils";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import {
 	ReactNode,
@@ -27,7 +27,7 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 			id: "9999",
 			title: "Newsfeed",
 			content: "",
-			kind: WIDGET_KIND.newsfeed,
+			kind: COL_TYPES.newsfeed,
 		},
 	]);
 

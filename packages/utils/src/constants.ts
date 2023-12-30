@@ -31,7 +31,7 @@ export const HASHTAGS = [
 	{ hashtag: "#primal" },
 ];
 
-export const WIDGET_KIND = {
+export const COL_TYPES = {
 	user: 1,
 	thread: 2,
 	group: 3,

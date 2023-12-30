@@ -1,9 +1,10 @@
+import { Hashtag } from "@columns/hashtag";
 import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
 import { User } from "@columns/user";
 import { useColumnContext } from "@lume/ark";
 import { IColumn } from "@lume/types";
-import { WIDGET_KIND } from "@lume/utils";
+import { COL_TYPES } from "@lume/utils";
 import { useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
 
@@ -14,12 +15,14 @@ export function HomeScreen() {
 
 	const renderItem = (column: IColumn) => {
 		switch (column.kind) {
-			case WIDGET_KIND.newsfeed:
+			case COL_TYPES.newsfeed:
 				return <Timeline key={column.id} />;
-			case WIDGET_KIND.thread:
-				return <Thread key={column.id} thread={column} />;
-			case WIDGET_KIND.user:
-				return <User key={column.id} user={column} />;
+			case COL_TYPES.thread:
+				return <Thread key={column.id} column={column} />;
+			case COL_TYPES.user:
+				return <User key={column.id} column={column} />;
+			case COL_TYPES.hashtag:
+				return <Hashtag key={column.id} column={column} />;
 			default:
 				return <Timeline key={column.id} />;
 		}
@@ -64,7 +67,6 @@ export function HomeScreen() {
 				}}
 			>
 				{columns.map((column) => renderItem(column))}
-				<div className="h-full w-[200px]" />
 			</VList>
 		</div>
 	);

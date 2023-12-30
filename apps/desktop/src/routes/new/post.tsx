@@ -1,6 +1,6 @@
 import { MentionNote, useArk, useSuggestion, useWidget } from "@lume/ark";
 import { CancelIcon, LoaderIcon } from "@lume/icons";
-import { WIDGET_KIND } from "@lume/utils";
+import { COL_TYPES } from "@lume/utils";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import CharacterCount from "@tiptap/extension-character-count";
 import Image from "@tiptap/extension-image";
@@ -101,7 +101,7 @@ export function NewPostScreen() {
 					addWidget.mutate({
 						title: "Thread",
 						content: publish.id,
-						kind: WIDGET_KIND.thread,
+						kind: COL_TYPES.thread,
 					});
 				}
 

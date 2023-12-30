@@ -1,5 +1,5 @@
 import { PinIcon } from "@lume/icons";
-import { WIDGET_KIND } from "@lume/utils";
+import { COL_TYPES } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useNoteContext } from "..";
 import { useColumnContext } from "../../column";
@@ -16,7 +16,7 @@ export function NotePin() {
 						type="button"
 						onClick={() =>
 							addColumn({
-								kind: WIDGET_KIND.thread,
+								kind: COL_TYPES.thread,
 								title: "Thread",
 								content: event.id,
 							})
