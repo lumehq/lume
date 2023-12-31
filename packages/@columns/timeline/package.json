@@ -18,6 +18,7 @@
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
+		"@lume/types": "workspace:^",
 		"@types/react": "^18.2.46",
 		"tailwind": "^4.0.0",
 		"typescript": "^5.3.3"

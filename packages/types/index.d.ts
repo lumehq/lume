@@ -34,7 +34,7 @@ export interface WidgetGroupItem {
 }
 
 export interface IColumn {
-	id?: string;
+	id?: number;
 	kind: number;
 	title: string;
 	content: string;

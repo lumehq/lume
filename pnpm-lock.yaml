@@ -472,6 +472,9 @@ importers:
       '@lume/tsconfig':
         specifier: workspace:^
         version: link:../../tsconfig
+      '@lume/types':
+        specifier: workspace:^
+        version: link:../../types
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.46

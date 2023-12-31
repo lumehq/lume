@@ -39,7 +39,7 @@ export function ImagePreview({ url }: { url: string }) {
 
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-		<div onClick={open} className="group relative">
+		<div onClick={open} className="relative my-1 group">
 			<img
 				src={url}
 				alt={url}
@@ -47,17 +47,17 @@ export function ImagePreview({ url }: { url: string }) {
 				decoding="async"
 				style={{ contentVisibility: "auto" }}
 				onError={fallback}
-				className="h-auto w-full rounded-lg border border-neutral-200/50 object-cover dark:border-neutral-800/50"
+				className="object-cover w-full h-auto border rounded-lg border-neutral-200/50 dark:border-neutral-800/50"
 			/>
 			<button
 				type="button"
 				onClick={(e) => downloadImage(e)}
-				className="absolute right-2 top-2 z-10 hidden h-10 w-10 items-center justify-center rounded-lg bg-blue-500 group-hover:inline-flex hover:bg-blue-600"
+				className="absolute z-10 items-center justify-center hidden w-10 h-10 bg-blue-500 rounded-lg right-2 top-2 group-hover:inline-flex hover:bg-blue-600"
 			>
 				{downloaded ? (
-					<CheckCircleIcon className="h-5 w-5 text-white" />
+					<CheckCircleIcon className="w-5 h-5 text-white" />
 				) : (
-					<DownloadIcon className="h-5 w-5 text-white" />
+					<DownloadIcon className="w-5 h-5 text-white" />
 				)}
 			</button>
 		</div>

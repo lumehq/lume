@@ -24,7 +24,7 @@ export const MentionNote = memo(function MentionNote({
 
 	if (isLoading) {
 		return (
-			<div className="w-full cursor-default rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+			<div className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900">
 				Loading
 			</div>
 		);
@@ -32,7 +32,7 @@ export const MentionNote = memo(function MentionNote({
 
 	if (isError) {
 		return (
-			<div className="w-full cursor-default rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+			<div className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900">
 				Failed to fetch event
 			</div>
 		);
@@ -40,11 +40,11 @@ export const MentionNote = memo(function MentionNote({
 
 	return (
 		<Note.Provider event={data}>
-			<Note.Root className="flex w-full cursor-default flex-col gap-1 rounded-lg bg-neutral-100 dark:bg-neutral-900">
-				<div className="mt-3 px-3">
+			<Note.Root className="flex flex-col w-full gap-1 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900">
+				<div className="px-3 mt-3">
 					<Note.User variant="mention" />
 				</div>
-				<div className="mt-1 px-3 pb-3">
+				<div className="px-3 pb-3 mt-1">
 					{renderKind(data)}
 					<Link
 						to={`/events/${data.id}`}

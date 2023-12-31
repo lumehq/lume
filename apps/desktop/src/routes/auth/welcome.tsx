@@ -1,24 +1,50 @@
+import { SettingsIcon } from "@lume/icons";
 import { Link } from "react-router-dom";
 
 export function WelcomeScreen() {
 	return (
-		<div className="flex h-full w-full flex-col items-center justify-center gap-10">
-			<div className="mx-auto max-w-md flex w-full text-center flex-col items-center">
-				<h1 className="mb-2 text-4xl font-semibold">Welcome to Nostr!</h1>
+		<div className="flex flex-col items-center justify-between w-full h-full">
+			<div />
+			<div className="flex flex-col items-center w-full max-w-4xl gap-10 mx-auto">
+				<div className="flex flex-col items-center text-center">
+					<img
+						src="/heading.png"
+						srcSet="/heading@2x.png 2x"
+						alt="lume"
+						className="w-2/3"
+					/>
+					<p className="mt-5 text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
+						Lume is your safe Nostr client to meet, explore and
+						<br />
+						freely sharing your though to everyone in nostrverse
+					</p>
+				</div>
+				<div className="flex flex-col w-full max-w-xs gap-2 mx-auto">
+					<Link
+						to="/auth/create"
+						className="inline-flex items-center justify-center w-full h-12 font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
+					>
+						Create New Account
+					</Link>
+					<Link
+						to="/auth/import"
+						className="inline-flex items-center justify-center w-full h-12 font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
+					>
+						Login
+					</Link>
+				</div>
 			</div>
-			<div className="flex flex-col gap-2 px-8 mx-auto max-w-sm">
-				<Link
-					to="/auth/create"
-					className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600"
-				>
-					Create new account
-				</Link>
-				<Link
-					to="/auth/import"
-					className="inline-flex h-11 w-full items-center justify-center rounded-lg font-medium text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
-				>
-					Log in
-				</Link>
+			<div className="flex items-center justify-center h-11">
+				<p className="text-neutral-800">
+					Before joining Nostr, you can take time to learn more about Nostr{" "}
+					<Link
+						to="https://nostr.com"
+						target="_blank"
+						className="text-blue-500"
+					>
+						here
+					</Link>
+				</p>
 			</div>
 		</div>
 	);

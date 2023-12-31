@@ -94,7 +94,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		const sqliteAdapter = await Database.load("sqlite:lume_v2.db");
 
 		const storage = new LumeStorage(sqliteAdapter, platformName);
-		storage.init();
+		await storage.init();
 
 		// check for new update
 		if (storage.settings.autoupdate) {
@@ -193,9 +193,9 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		return (
 			<div
 				data-tauri-drag-region
-				className="relative flex h-screen w-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950"
+				className="relative flex items-center justify-center w-screen h-screen bg-neutral-50 dark:bg-neutral-950"
 			>
-				<div className="flex max-w-2xl flex-col items-start gap-1">
+				<div className="flex flex-col items-start max-w-2xl gap-1">
 					<h5 className="font-semibold uppercase">TIP:</h5>
 					<Markdown
 						options={{
@@ -214,7 +214,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 					</Markdown>
 				</div>
 				<div className="absolute bottom-5 right-5 inline-flex items-center gap-2.5">
-					<LoaderIcon className="h-6 w-6 animate-spin text-blue-500" />
+					<LoaderIcon className="w-6 h-6 text-blue-500 animate-spin" />
 					<p className="font-semibold">
 						{isNewVersion ? "Found a new version, updating..." : "Starting..."}
 					</p>

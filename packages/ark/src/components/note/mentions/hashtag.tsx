@@ -7,14 +7,14 @@ export function Hashtag({ tag }: { tag: string }) {
 	return (
 		<button
 			type="button"
-			onClick={() =>
-				addColumn({
+			onClick={async () =>
+				await addColumn({
 					kind: COL_TYPES.hashtag,
 					title: tag,
 					content: tag,
 				})
 			}
-			className="cursor-default break-all text-blue-500 hover:text-blue-600"
+			className="text-blue-500 break-all cursor-default hover:text-blue-600"
 		>
 			{tag}
 		</button>

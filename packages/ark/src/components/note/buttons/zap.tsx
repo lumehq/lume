@@ -107,32 +107,32 @@ export function NoteZap() {
 			<Dialog.Trigger asChild>
 				<button
 					type="button"
-					className="group inline-flex h-7 w-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
+					className="inline-flex items-center justify-center group h-7 w-7 text-neutral-600 dark:text-neutral-400"
 				>
-					<ZapIcon className="h-5 w-5 group-hover:text-blue-500" />
+					<ZapIcon className="size-6 group-hover:text-blue-500" />
 				</button>
 			</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
-				<Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
-					<div className="relative h-min w-full max-w-xl rounded-xl bg-white dark:bg-black">
-						<div className="inline-flex w-full shrink-0 items-center justify-between px-5 py-3">
+				<Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center min-h-full">
+					<div className="relative w-full max-w-xl bg-white h-min rounded-xl dark:bg-black">
+						<div className="inline-flex items-center justify-between w-full px-5 py-3 shrink-0">
 							<div className="w-6" />
-							<Dialog.Title className="text-center font-semibold">
+							<Dialog.Title className="font-semibold text-center">
 								Send tip to{" "}
 								{user?.name ||
 									user?.displayName ||
 									displayNpub(event.pubkey, 16)}
 							</Dialog.Title>
-							<Dialog.Close className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-900">
-								<CancelIcon className="h-4 w-4" />
+							<Dialog.Close className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-neutral-100 dark:bg-neutral-900">
+								<CancelIcon className="w-4 h-4" />
 							</Dialog.Close>
 						</div>
-						<div className="overflow-y-auto overflow-x-hidden px-5 pb-5">
+						<div className="px-5 pb-5 overflow-x-hidden overflow-y-auto">
 							{!invoice ? (
 								<>
-									<div className="relative flex h-40 flex-col">
-										<div className="inline-flex h-full flex-1 items-center justify-center gap-1">
+									<div className="relative flex flex-col h-40">
+										<div className="inline-flex items-center justify-center flex-1 h-full gap-1">
 											<CurrencyInput
 												placeholder="0"
 												defaultValue={"21"}
@@ -142,9 +142,9 @@ export function NoteZap() {
 												max={10000} // 1M sats
 												maxLength={10000} // 1M sats
 												onValueChange={(value) => setAmount(value)}
-												className="w-full flex-1 border-none bg-transparent text-right text-4xl font-semibold placeholder:text-neutral-600 focus:outline-none focus:ring-0 dark:text-neutral-400"
+												className="flex-1 w-full text-4xl font-semibold text-right bg-transparent border-none placeholder:text-neutral-600 focus:outline-none focus:ring-0 dark:text-neutral-400"
 											/>
-											<span className="w-full flex-1 text-left text-4xl font-semibold text-neutral-600 dark:text-neutral-400">
+											<span className="flex-1 w-full text-4xl font-semibold text-left text-neutral-600 dark:text-neutral-400">
 												sats
 											</span>
 										</div>
@@ -186,7 +186,7 @@ export function NoteZap() {
 											</button>
 										</div>
 									</div>
-									<div className="mt-4 flex w-full flex-col gap-2">
+									<div className="flex flex-col w-full gap-2 mt-4">
 										<input
 											name="zapMessage"
 											value={zapMessage}
@@ -203,7 +203,7 @@ export function NoteZap() {
 												<button
 													type="button"
 													onClick={() => createZapRequest()}
-													className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
+													className="inline-flex items-center justify-center w-full px-4 font-medium text-white bg-blue-500 rounded-lg h-11 hover:bg-blue-600"
 												>
 													{isCompleted ? (
 														<p className="leading-tight">Successfully zapped</p>
@@ -229,7 +229,7 @@ export function NoteZap() {
 												<button
 													type="button"
 													onClick={() => createZapRequest()}
-													className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 px-4 font-medium text-white hover:bg-blue-600"
+													className="inline-flex items-center justify-center w-full px-4 font-medium text-white bg-blue-500 rounded-lg h-11 hover:bg-blue-600"
 												>
 													Create Lightning invoice
 												</button>
@@ -238,13 +238,13 @@ export function NoteZap() {
 									</div>
 								</>
 							) : (
-								<div className="mt-3 flex flex-col items-center justify-center gap-4">
-									<div className="rounded-md bg-neutral-100 p-3 dark:bg-neutral-900">
+								<div className="flex flex-col items-center justify-center gap-4 mt-3">
+									<div className="p-3 rounded-md bg-neutral-100 dark:bg-neutral-900">
 										<QRCodeSVG value={invoice} size={256} />
 									</div>
 									<div className="flex flex-col items-center gap-1">
 										<h3 className="text-lg font-medium">Scan to zap</h3>
-										<span className="text-center text-sm text-neutral-600 dark:text-neutral-400">
+										<span className="text-sm text-center text-neutral-600 dark:text-neutral-400">
 											You must use Bitcoin wallet which support Lightning
 											<br />
 											such as: Blue Wallet, Bitkit, Phoenix,...

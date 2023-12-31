@@ -16,7 +16,7 @@ export function HomeScreen() {
 	const renderItem = (column: IColumn) => {
 		switch (column.kind) {
 			case COL_TYPES.newsfeed:
-				return <Timeline key={column.id} />;
+				return <Timeline key={column.id} column={column} />;
 			case COL_TYPES.thread:
 				return <Thread key={column.id} column={column} />;
 			case COL_TYPES.user:
@@ -24,12 +24,12 @@ export function HomeScreen() {
 			case COL_TYPES.hashtag:
 				return <Hashtag key={column.id} column={column} />;
 			default:
-				return <Timeline key={column.id} />;
+				return <Timeline key={column.id} column={column} />;
 		}
 	};
 
 	return (
-		<div className="h-full w-full">
+		<div className="w-full h-full">
 			<VList
 				ref={ref}
 				className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"

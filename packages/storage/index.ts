@@ -1,10 +1,10 @@
 import {
 	Account,
+	IColumn,
 	NDKCacheEvent,
 	NDKCacheEventTag,
 	NDKCacheUser,
 	NDKCacheUserProfile,
-	WidgetProps,
 } from "@lume/types";
 import { appConfigDir, resolveResource } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/primitives";
@@ -323,7 +323,7 @@ export class LumeStorage {
 	}
 
 	public async getWidgets() {
-		const widgets: Array<WidgetProps> = await this.#db.select(
+		const widgets: Array<IColumn> = await this.#db.select(
 			"SELECT * FROM widgets WHERE account_id = $1 ORDER BY created_at DESC;",
 			[this.account.id],
 		);
@@ -341,7 +341,7 @@ export class LumeStorage {
 		);
 
 		if (insert) {
-			const widgets: Array<WidgetProps> = await this.#db.select(
+			const widgets: Array<IColumn> = await this.#db.select(
 				"SELECT * FROM widgets ORDER BY id DESC LIMIT 1;",
 			);
 			if (widgets.length < 1) console.error("get created widget failed");
@@ -351,7 +351,7 @@ export class LumeStorage {
 		console.error("create widget failed");
 	}
 
-	public async removeWidget(id: string) {
+	public async removeWidget(id: number) {
 		const res = await this.#db.execute("DELETE FROM widgets WHERE id = $1;", [
 			id,
 		]);

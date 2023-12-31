@@ -17,35 +17,35 @@ export function ColumnHeader({
 	queryKey,
 	icon,
 }: {
-	id: string;
+	id: number;
 	title: string;
 	queryKey?: string[];
 	icon?: ReactNode;
 }) {
 	const queryClient = useQueryClient();
-	const { removeColumn } = useColumnContext();
+	const { moveColumn, removeColumn } = useColumnContext();
 
 	const refresh = async () => {
 		if (queryKey) await queryClient.refetchQueries({ queryKey });
 	};
 
 	const moveLeft = async () => {
-		removeColumn(id);
+		moveColumn(id, "left");
 	};
 
 	const moveRight = async () => {
-		removeColumn(id);
+		moveColumn(id, "right");
 	};
 
 	const deleteWidget = async () => {
-		removeColumn(id);
+		await removeColumn(id);
 	};
 
 	return (
-		<div className="flex h-11 w-full shrink-0 items-center justify-between border-b border-neutral-100 px-3 dark:border-neutral-900">
+		<div className="flex items-center justify-between w-full px-3 border-b h-11 shrink-0 border-neutral-100 dark:border-neutral-900">
 			<div className="inline-flex items-center gap-4">
-				<div className="h-5 w-1 shrink-0 rounded-full bg-blue-500" />
-				<div className="text-neutral-800 dark:text-neutral-200 inline-flex items-center gap-2 flex-1">
+				<div className="w-1 h-5 bg-blue-500 rounded-full shrink-0" />
+				<div className="inline-flex items-center flex-1 gap-2 text-neutral-800 dark:text-neutral-200">
 					{icon ? icon : <ThreadIcon className="size-4" />}
 					<div className="text-sm font-medium">{title}</div>
 				</div>
@@ -55,7 +55,7 @@ export function ColumnHeader({
 					<DropdownMenu.Trigger asChild>
 						<button
 							type="button"
-							className="inline-flex h-6 w-6 items-center justify-center"
+							className="inline-flex items-center justify-center w-6 h-6"
 						>
 							<HorizontalDotsIcon className="size-4" />
 						</button>
@@ -66,7 +66,7 @@ export function ColumnHeader({
 								<button
 									type="button"
 									onClick={refresh}
-									className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
 								>
 									<RefreshIcon className="size-5" />
 									Refresh
@@ -76,7 +76,7 @@ export function ColumnHeader({
 								<button
 									type="button"
 									onClick={moveLeft}
-									className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
 								>
 									<ArrowLeftIcon className="size-5" />
 									Move left
@@ -86,18 +86,18 @@ export function ColumnHeader({
 								<button
 									type="button"
 									onClick={moveRight}
-									className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
 								>
 									<ArrowRightIcon className="size-5" />
 									Move right
 								</button>
 							</DropdownMenu.Item>
-							<DropdownMenu.Separator className="my-1 h-px bg-neutral-100 dark:bg-neutral-900" />
+							<DropdownMenu.Separator className="h-px my-1 bg-neutral-100 dark:bg-neutral-900" />
 							<DropdownMenu.Item asChild>
 								<button
 									type="button"
 									onClick={deleteWidget}
-									className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-red-500 hover:bg-red-500 hover:text-red-50 focus:outline-none"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
 								>
 									<TrashIcon className="size-5" />
 									Delete

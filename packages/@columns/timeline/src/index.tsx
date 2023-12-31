@@ -3,11 +3,12 @@ import { TimelineIcon } from "@lume/icons";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
+import { IColumn } from "../../../types";
 import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
 import { UserRoute } from "./user";
 
-export function Timeline() {
+export function Timeline({ column }: { column: IColumn }) {
 	const colKey = "newsfeed";
 	const storage = useStorage();
 	const queryClient = useQueryClient();
@@ -26,7 +27,7 @@ export function Timeline() {
 	return (
 		<Column.Root>
 			<Column.Header
-				id="9999"
+				id={column.id}
 				queryKey={[colKey]}
 				title="Timeline"
 				icon={<TimelineIcon className="size-4" />}
