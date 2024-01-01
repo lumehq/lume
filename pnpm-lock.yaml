@@ -90,8 +90,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       '@tauri-apps/api':
         specifier: 2.0.0-alpha.13
         version: 2.0.0-alpha.13
@@ -168,8 +168,8 @@ importers:
         specifier: ^1.9.8
         version: 1.9.8(@types/react@18.2.46)(react@18.2.0)
       clsx:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.1.0
+        version: 2.1.0
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -207,8 +207,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       react-currency-input-field:
-        specifier: ^3.6.13
-        version: 3.6.13(react@18.2.0)
+        specifier: ^3.6.14
+        version: 3.6.14(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -253,8 +253,8 @@ importers:
         specifier: ^9.0.4
         version: 9.0.4
       '@types/node':
-        specifier: ^20.10.5
-        version: 20.10.5
+        specifier: ^20.10.6
+        version: 20.10.6
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.46
@@ -284,7 +284,7 @@ importers:
         version: 5.3.3
       vite:
         specifier: ^4.5.1
-        version: 4.5.1(@types/node@20.10.5)
+        version: 4.5.1(@types/node@20.10.6)
       vite-tsconfig-paths:
         specifier: ^4.2.3
         version: 4.2.3(typescript@5.3.3)(vite@4.5.1)
@@ -307,8 +307,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -356,8 +356,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -399,8 +399,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -451,8 +451,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -503,8 +503,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -582,8 +582,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       '@tauri-apps/api':
         specifier: 2.0.0-alpha.13
         version: 2.0.0-alpha.13
@@ -651,8 +651,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       react-currency-input-field:
-        specifier: ^3.6.13
-        version: 3.6.13(react@18.2.0)
+        specifier: ^3.6.14
+        version: 3.6.14(react@18.2.0)
       react-router-dom:
         specifier: ^6.21.1
         version: 6.21.1(react-dom@18.2.0)(react@18.2.0)
@@ -741,17 +741,17 @@ importers:
   packages/storage:
     dependencies:
       '@tauri-apps/api':
-        specifier: 2.0.0-alpha.11
-        version: 2.0.0-alpha.11
+        specifier: 2.0.0-alpha.13
+        version: 2.0.0-alpha.13
       '@tauri-apps/plugin-os':
-        specifier: 2.0.0-alpha.4
-        version: 2.0.0-alpha.4
+        specifier: 2.0.0-alpha.6
+        version: 2.0.0-alpha.6
       '@tauri-apps/plugin-shell':
-        specifier: 2.0.0-alpha.3
-        version: 2.0.0-alpha.3
+        specifier: 2.0.0-alpha.5
+        version: 2.0.0-alpha.5
       '@tauri-apps/plugin-sql':
-        specifier: 2.0.0-alpha.3
-        version: 2.0.0-alpha.3
+        specifier: 2.0.0-alpha.5
+        version: 2.0.0-alpha.5
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -824,17 +824,17 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       '@tauri-apps/api':
-        specifier: 2.0.0-alpha.11
-        version: 2.0.0-alpha.11
+        specifier: 2.0.0-alpha.13
+        version: 2.0.0-alpha.13
       '@tauri-apps/plugin-http':
-        specifier: 2.0.0-alpha.3
-        version: 2.0.0-alpha.3
+        specifier: 2.0.0-alpha.6
+        version: 2.0.0-alpha.6
       '@tauri-apps/plugin-os':
-        specifier: 2.0.0-alpha.4
-        version: 2.0.0-alpha.4
+        specifier: 2.0.0-alpha.6
+        version: 2.0.0-alpha.6
       minidenticons:
         specifier: ^4.2.0
         version: 4.2.0
@@ -873,17 +873,17 @@ importers:
   packages/utils:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5.15.0
-        version: 5.15.0(react@18.2.0)
+        specifier: ^5.17.0
+        version: 5.17.0(react@18.2.0)
       '@tauri-apps/api':
-        specifier: 2.0.0-alpha.11
-        version: 2.0.0-alpha.11
+        specifier: 2.0.0-alpha.13
+        version: 2.0.0-alpha.13
       '@tauri-apps/plugin-notification':
-        specifier: 2.0.0-alpha.3
-        version: 2.0.0-alpha.3
+        specifier: 2.0.0-alpha.5
+        version: 2.0.0-alpha.5
       clsx:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.1.0
+        version: 2.1.0
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -929,8 +929,8 @@ packages:
       regenerator-runtime: 0.12.1
     dev: true
 
-  /@babel/runtime@7.23.6:
-    resolution: {integrity: sha512-zHd0eUrf5GZoOWVCXp6koAKQTfZV07eit6bGPmJgnZdnSAvvZee6zniW2XMF7Cmc4ISOOnPy3QaSiIJGJkVEDQ==}
+  /@babel/runtime@7.23.7:
+    resolution: {integrity: sha512-w06OXVOFso7LcbzMiDGt+3X7Rh7Ho8MmgPoWU3rarH+8upf+wSU/grlGbWzQyr3DkdN6ZeuMFjpdwW0Q+HxobA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -1408,7 +1408,7 @@ packages:
   /@radix-ui/primitive@1.0.1:
     resolution: {integrity: sha512-yQ8oGX2GVsEYMWGxcovu1uGWPCxV5BFfeeYxqPmuAzUyLT9qmaMXSAhXpb0WrspIeqYzdJpkh2vHModJPgRIaw==}
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
     dev: false
 
   /@radix-ui/react-accordion@1.1.2(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0):
@@ -1424,7 +1424,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collapsible': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-collection': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
@@ -1453,7 +1453,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1479,7 +1479,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.46
       '@types/react-dom': 18.2.18
@@ -1500,7 +1500,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1524,7 +1524,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1552,7 +1552,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
@@ -1572,7 +1572,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -1586,7 +1586,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -1604,7 +1604,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1634,7 +1634,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -1652,7 +1652,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
@@ -1677,7 +1677,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1700,7 +1700,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -1718,7 +1718,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1741,7 +1741,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1766,7 +1766,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
       react: 18.2.0
@@ -1785,7 +1785,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collection': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1823,7 +1823,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1858,7 +1858,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@floating-ui/react-dom': 2.0.4(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-arrow': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1888,7 +1888,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.46
       '@types/react-dom': 18.2.18
@@ -1909,7 +1909,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
@@ -1931,7 +1931,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-slot': 1.0.2(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
       '@types/react-dom': 18.2.18
@@ -1952,7 +1952,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collection': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -1981,7 +1981,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.46
       '@types/react-dom': 18.2.18
@@ -1998,7 +1998,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
       react: 18.2.0
@@ -2017,7 +2017,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -2044,7 +2044,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -2071,7 +2071,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -2094,7 +2094,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -2121,7 +2121,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.46)(react@18.2.0)
@@ -2149,7 +2149,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -2163,7 +2163,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
       react: 18.2.0
@@ -2178,7 +2178,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
       react: 18.2.0
@@ -2193,7 +2193,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -2207,7 +2207,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@types/react': 18.2.46
       react: 18.2.0
     dev: false
@@ -2221,7 +2221,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/rect': 1.0.1
       '@types/react': 18.2.46
       react: 18.2.0
@@ -2236,7 +2236,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.46)(react@18.2.0)
       '@types/react': 18.2.46
       react: 18.2.0
@@ -2255,7 +2255,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.46
       '@types/react-dom': 18.2.18
@@ -2266,7 +2266,7 @@ packages:
   /@radix-ui/rect@1.0.1:
     resolution: {integrity: sha512-fyrgCaedtvMg9NK3en0pnOYJdtfwxUcNolezkNPUsoX57X8oQk+NkqcvzHXD2uKNij6GXmWU9NDru2IWjrO4BQ==}
     dependencies:
-      '@babel/runtime': 7.23.6
+      '@babel/runtime': 7.23.7
     dev: false
 
   /@remirror/core-constants@2.0.2:
@@ -2332,8 +2332,8 @@ packages:
       selderee: 0.11.0
     dev: false
 
-  /@swc/core-darwin-arm64@1.3.101:
-    resolution: {integrity: sha512-mNFK+uHNPRXSnfTOG34zJOeMl2waM4hF4a2NY7dkMXrPqw9CoJn4MwTXJcyMiSz1/BnNjjTCHF3Yhj0jPxmkzQ==}
+  /@swc/core-darwin-arm64@1.3.102:
+    resolution: {integrity: sha512-CJDxA5Wd2cUMULj3bjx4GEoiYyyiyL8oIOu4Nhrs9X+tlg8DnkCm4nI57RJGP8Mf6BaXPIJkHX8yjcefK2RlDA==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
@@ -2341,8 +2341,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-darwin-x64@1.3.101:
-    resolution: {integrity: sha512-B085j8XOx73Fg15KsHvzYWG262bRweGr3JooO1aW5ec5pYbz5Ew9VS5JKYS03w2UBSxf2maWdbPz2UFAxg0whw==}
+  /@swc/core-darwin-x64@1.3.102:
+    resolution: {integrity: sha512-X5akDkHwk6oAer49oER0qZMjNMkLH3IOZaV1m98uXIasAGyjo5WH1MKPeMLY1sY6V6TrufzwiSwD4ds571ytcg==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
@@ -2350,8 +2350,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-linux-arm-gnueabihf@1.3.101:
-    resolution: {integrity: sha512-9xLKRb6zSzRGPqdz52Hy5GuB1lSjmLqa0lST6MTFads3apmx4Vgs8Y5NuGhx/h2I8QM4jXdLbpqQlifpzTlSSw==}
+  /@swc/core-linux-arm-gnueabihf@1.3.102:
+    resolution: {integrity: sha512-kJH3XtZP9YQdjq/wYVBeFuiVQl4HaC4WwRrIxAHwe2OyvrwUI43dpW3LpxSggBnxXcVCXYWf36sTnv8S75o2Gw==}
     engines: {node: '>=10'}
     cpu: [arm]
     os: [linux]
@@ -2359,8 +2359,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-linux-arm64-gnu@1.3.101:
-    resolution: {integrity: sha512-oE+r1lo7g/vs96Weh2R5l971dt+ZLuhaUX+n3BfDdPxNHfObXgKMjO7E+QS5RbGjv/AwiPCxQmbdCp/xN5ICJA==}
+  /@swc/core-linux-arm64-gnu@1.3.102:
+    resolution: {integrity: sha512-flQP2WDyCgO24WmKA1wjjTx+xfCmavUete2Kp6yrM+631IHLGnr17eu7rYJ/d4EnDBId/ytMyrnWbTVkaVrpbQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -2368,8 +2368,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-linux-arm64-musl@1.3.101:
-    resolution: {integrity: sha512-OGjYG3H4BMOTnJWJyBIovCez6KiHF30zMIu4+lGJTCrxRI2fAjGLml3PEXj8tC3FMcud7U2WUn6TdG0/te2k6g==}
+  /@swc/core-linux-arm64-musl@1.3.102:
+    resolution: {integrity: sha512-bQEQSnC44DyoIGLw1+fNXKVGoCHi7eJOHr8BdH0y1ooy9ArskMjwobBFae3GX4T1AfnrTaejyr0FvLYIb0Zkog==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -2377,8 +2377,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-linux-x64-gnu@1.3.101:
-    resolution: {integrity: sha512-/kBMcoF12PRO/lwa8Z7w4YyiKDcXQEiLvM+S3G9EvkoKYGgkkz4Q6PSNhF5rwg/E3+Hq5/9D2R+6nrkF287ihg==}
+  /@swc/core-linux-x64-gnu@1.3.102:
+    resolution: {integrity: sha512-dFvnhpI478svQSxqISMt00MKTDS0e4YtIr+ioZDG/uJ/q+RpcNy3QI2KMm05Fsc8Y0d4krVtvCKWgfUMsJZXAg==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -2386,8 +2386,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-linux-x64-musl@1.3.101:
-    resolution: {integrity: sha512-kDN8lm4Eew0u1p+h1l3JzoeGgZPQ05qDE0czngnjmfpsH2sOZxVj1hdiCwS5lArpy7ktaLu5JdRnx70MkUzhXw==}
+  /@swc/core-linux-x64-musl@1.3.102:
+    resolution: {integrity: sha512-+a0M3CvjeIRNA/jTCzWEDh2V+mhKGvLreHOL7J97oULZy5yg4gf7h8lQX9J8t9QLbf6fsk+0F8bVH1Ie/PbXjA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -2395,8 +2395,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-win32-arm64-msvc@1.3.101:
-    resolution: {integrity: sha512-9Wn8TTLWwJKw63K/S+jjrZb9yoJfJwCE2RV5vPCCWmlMf3U1AXj5XuWOLUX+Rp2sGKau7wZKsvywhheWm+qndQ==}
+  /@swc/core-win32-arm64-msvc@1.3.102:
+    resolution: {integrity: sha512-w76JWLjkZNOfkB25nqdWUNCbt0zJ41CnWrJPZ+LxEai3zAnb2YtgB/cCIrwxDebRuMgE9EJXRj7gDDaTEAMOOQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
@@ -2404,8 +2404,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-win32-ia32-msvc@1.3.101:
-    resolution: {integrity: sha512-onO5KvICRVlu2xmr4//V2je9O2XgS1SGKpbX206KmmjcJhXN5EYLSxW9qgg+kgV5mip+sKTHTAu7IkzkAtElYA==}
+  /@swc/core-win32-ia32-msvc@1.3.102:
+    resolution: {integrity: sha512-vlDb09HiGqKwz+2cxDS9T5/461ipUQBplvuhW+cCbzzGuPq8lll2xeyZU0N1E4Sz3MVdSPx1tJREuRvlQjrwNg==}
     engines: {node: '>=10'}
     cpu: [ia32]
     os: [win32]
@@ -2413,8 +2413,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core-win32-x64-msvc@1.3.101:
-    resolution: {integrity: sha512-T3GeJtNQV00YmiVw/88/nxJ/H43CJvFnpvBHCVn17xbahiVUOPOduh3rc9LgAkKiNt/aV8vU3OJR+6PhfMR7UQ==}
+  /@swc/core-win32-x64-msvc@1.3.102:
+    resolution: {integrity: sha512-E/jfSD7sShllxBwwgDPeXp1UxvIqehj/ShSUqq1pjR/IDRXngcRSXKJK92mJkNFY7suH6BcCWwzrxZgkO7sWmw==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [win32]
@@ -2422,8 +2422,8 @@ packages:
     dev: true
     optional: true
 
-  /@swc/core@1.3.101:
-    resolution: {integrity: sha512-w5aQ9qYsd/IYmXADAnkXPGDMTqkQalIi+kfFf/MHRKTpaOL7DHjMXwPp/n8hJ0qNjRvchzmPtOqtPBiER50d8A==}
+  /@swc/core@1.3.102:
+    resolution: {integrity: sha512-OAjNLY/f6QWKSDzaM3bk31A+OYHu6cPa9P/rFIx8X5d24tHXUpRiiq6/PYI6SQRjUPlB72GjsjoEU8F+ALadHg==}
     engines: {node: '>=10'}
     requiresBuild: true
     peerDependencies:
@@ -2435,16 +2435,16 @@ packages:
       '@swc/counter': 0.1.2
       '@swc/types': 0.1.5
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.3.101
-      '@swc/core-darwin-x64': 1.3.101
-      '@swc/core-linux-arm-gnueabihf': 1.3.101
-      '@swc/core-linux-arm64-gnu': 1.3.101
-      '@swc/core-linux-arm64-musl': 1.3.101
-      '@swc/core-linux-x64-gnu': 1.3.101
-      '@swc/core-linux-x64-musl': 1.3.101
-      '@swc/core-win32-arm64-msvc': 1.3.101
-      '@swc/core-win32-ia32-msvc': 1.3.101
-      '@swc/core-win32-x64-msvc': 1.3.101
+      '@swc/core-darwin-arm64': 1.3.102
+      '@swc/core-darwin-x64': 1.3.102
+      '@swc/core-linux-arm-gnueabihf': 1.3.102
+      '@swc/core-linux-arm64-gnu': 1.3.102
+      '@swc/core-linux-arm64-musl': 1.3.102
+      '@swc/core-linux-x64-gnu': 1.3.102
+      '@swc/core-linux-x64-musl': 1.3.102
+      '@swc/core-win32-arm64-msvc': 1.3.102
+      '@swc/core-win32-ia32-msvc': 1.3.102
+      '@swc/core-win32-x64-msvc': 1.3.102
     dev: true
 
   /@swc/counter@0.1.2:
@@ -2476,22 +2476,17 @@ packages:
       tailwindcss: 3.4.0
     dev: true
 
-  /@tanstack/query-core@5.14.2:
-    resolution: {integrity: sha512-QmoJvC72sSWs3hgGis8JdmlDvqLfYGWUK4UG6OR9Q6t28JMN9m2FDwKPqoSJ9YVocELCSjMt/FGjEiLfk8000Q==}
+  /@tanstack/query-core@5.17.0:
+    resolution: {integrity: sha512-LoBaPtbMY26kRS+ohII4thTsWkJJsXKGitOLikTo2aqPA4yy7cfFJITs8DRnuERT7tLF5xfG9Lnm33Vp/38Vmw==}
     dev: false
 
-  /@tanstack/react-query@5.15.0(react@18.2.0):
-    resolution: {integrity: sha512-hWLuZ2Hg9HzmHJ3VtWzhvK+sTxPz+rIIujYUxzapPoU9PPXe7NCm8k8EaKpm+Sc65FM7Dljfk/Ov9yYMhwg9vw==}
+  /@tanstack/react-query@5.17.0(react@18.2.0):
+    resolution: {integrity: sha512-iNSn6ZA7mHUjrT0a271eKoa1oR1HznlrGbb475awft1kuP3zrhyUCrI8tlGowOr7zRoAxJholjwxO+gfz1IObw==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.14.2
+      '@tanstack/query-core': 5.17.0
       react: 18.2.0
-    dev: false
-
-  /@tauri-apps/api@2.0.0-alpha.11:
-    resolution: {integrity: sha512-aw7jic+MQAe/LH4fYhbd3bwx3YjXhDIwqKJIn5QO4yKmGdVURIhZSFcyeKkSe4P6Itdto0Pcz99vLfkgBwdQKw==}
-    engines: {node: '>= 18', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
   /@tauri-apps/api@2.0.0-alpha.13:
@@ -2630,34 +2625,16 @@ packages:
       '@tauri-apps/api': 2.0.0-alpha.13
     dev: false
 
-  /@tauri-apps/plugin-http@2.0.0-alpha.3:
-    resolution: {integrity: sha512-d2pgHdJKokuBvBYA6wmvYdmV+6F6/yPw4PdGNsqmYhSDvb7e3MPKV5xxK8AlYMQz/kJf9jL1VnDwmgn6x4ZSqA==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.11
-    dev: false
-
   /@tauri-apps/plugin-http@2.0.0-alpha.6:
     resolution: {integrity: sha512-d23Xem40/ox+UWaiCzfi+IeV/yMI57oHmy6bXaDwRqfC4KuHjZx22k9xnNV17tLGFWjcmgpuViWPiCuxFdy+Ow==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.13
     dev: false
 
-  /@tauri-apps/plugin-notification@2.0.0-alpha.3:
-    resolution: {integrity: sha512-rIebUtje3/MTeA+D+6qTGrjS115G/ufc0r8Bp/Kc0C7HBpIM0m18HifrKNdmdxtqF0phmkm5Tv+iiz20Ylt+jA==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.11
-    dev: false
-
   /@tauri-apps/plugin-notification@2.0.0-alpha.5:
     resolution: {integrity: sha512-j0kgaYa1FtoBReN2lsSa7HL7qGalrVbgQogKfTywCuU0wBEPr7IL3ZKYui8LyAFgA3mBnie7WX4iN/8xmRwS1Q==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.13
-    dev: false
-
-  /@tauri-apps/plugin-os@2.0.0-alpha.4:
-    resolution: {integrity: sha512-21YH5ZYQ8deB11UZi/rntkLw8KySBDmaPJNjhJDV8rM/qirv+jF1PAw8RVJEkT3itkMUjy/1DC63VypdRLTx1A==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.11
     dev: false
 
   /@tauri-apps/plugin-os@2.0.0-alpha.6:
@@ -2672,22 +2649,10 @@ packages:
       '@tauri-apps/api': 2.0.0-alpha.13
     dev: false
 
-  /@tauri-apps/plugin-shell@2.0.0-alpha.3:
-    resolution: {integrity: sha512-v4qLTE9DfzpYdcjZq3ASOC7gFtMtzIDWN5Bo2FheB+pHQvDRq8mrP8gTdkL4/9pQaOFlB0B+MKCwANYhD1jLEQ==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.11
-    dev: false
-
   /@tauri-apps/plugin-shell@2.0.0-alpha.5:
     resolution: {integrity: sha512-iAurwn0z16NLOLaiuk3ETLtoG6x/mgFZo75YYKYLiOg70PYMr4LpcjvNPoIPvokdqWWPa7C/6N3eE9jtcbQiLg==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.13
-    dev: false
-
-  /@tauri-apps/plugin-sql@2.0.0-alpha.3:
-    resolution: {integrity: sha512-FYghpxTodXVqN26kxkpjQD2BTZJTpY7Qm3Ox0zJSY9NH0XQKTogdIAsBlGdrJ2u7si29fS90Nz8FtLkY0wEGXg==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.11
     dev: false
 
   /@tauri-apps/plugin-sql@2.0.0-alpha.5:
@@ -3026,8 +2991,8 @@ packages:
     resolution: {integrity: sha512-6L6VymKTzYSrEf4Nev4Xa1LCHKrlTlYCBMTlQKFuddo1CvQcE52I0mwfOJayueUC7MJuXOeHTcIU683lzd0cUA==}
     dev: false
 
-  /@types/node@20.10.5:
-    resolution: {integrity: sha512-nNPsNE65wjMxEKI93yOP+NPGGBJz/PoN3kZsVLee0XMiJolxSekEVD8wRwBUBqkwc7UWop0edW50yrCQW4CyRw==}
+  /@types/node@20.10.6:
+    resolution: {integrity: sha512-Vac8H+NlRNNlAmDfGUP7b5h/KA+AtWIzuXy0E6OyP8f1tCLYAtPvKRRDJjAPqhpCb0t6U2j7/xqAuLEebW2kiw==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -3079,8 +3044,8 @@ packages:
     peerDependencies:
       vite: ^4 || ^5
     dependencies:
-      '@swc/core': 1.3.101
-      vite: 4.5.1(@types/node@20.10.5)
+      '@swc/core': 1.3.102
+      vite: 4.5.1(@types/node@20.10.6)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: true
@@ -3394,8 +3359,8 @@ packages:
       is-regexp: 3.1.0
     dev: false
 
-  /clsx@2.0.0:
-    resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
+  /clsx@2.1.0:
+    resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
     engines: {node: '>=6'}
     dev: false
 
@@ -5048,7 +5013,7 @@ packages:
       postcss: ^8.2.14
     dependencies:
       postcss: 8.4.32
-      postcss-selector-parser: 6.0.14
+      postcss-selector-parser: 6.0.15
     dev: true
 
   /postcss-selector-parser@6.0.10:
@@ -5059,8 +5024,8 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /postcss-selector-parser@6.0.14:
-    resolution: {integrity: sha512-65xXYsT40i9GyWzlHQ5ShZoK7JZdySeOozi/tz2EezDo6c04q6+ckYMeoY7idaie1qp2dT5KoYQ2yky6JuoHnA==}
+  /postcss-selector-parser@6.0.15:
+    resolution: {integrity: sha512-rEYkQOMUCEMhsKbK66tbEU9QVIxbhN18YiniAwA7XQYTVBqrBy+P2p5JcdqsHgKM2zWylp8d7J6eszocfds5Sw==}
     engines: {node: '>=4'}
     dependencies:
       cssesc: 3.0.0
@@ -5289,8 +5254,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /react-currency-input-field@3.6.13(react@18.2.0):
-    resolution: {integrity: sha512-52igMHFGf2HcpCm/rvNlw7U+VjeSFf+ImLF7l2ykv2I+bQ+nokgB8rTpHFdoAmpd8A1ZHmnd6UFIiy4aozoXQg==}
+  /react-currency-input-field@3.6.14(react@18.2.0):
+    resolution: {integrity: sha512-pUM4oK1KkUjjcFH7t6GksbuYwGpNhX3We2l41V9PIyJjm1HVlJGbKNksr0PNXGsQZqXDIKBJxL3TAbTS4cbKgg==}
     peerDependencies:
       react: ^16.9.0 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -5863,7 +5828,7 @@ packages:
       postcss-js: 4.0.1(postcss@8.4.32)
       postcss-load-config: 4.0.2(postcss@8.4.32)
       postcss-nested: 6.0.1(postcss@8.4.32)
-      postcss-selector-parser: 6.0.14
+      postcss-selector-parser: 6.0.15
       resolve: 1.22.8
       sucrase: 3.35.0
     transitivePeerDependencies:
@@ -6294,13 +6259,13 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 2.1.2(typescript@5.3.3)
-      vite: 4.5.1(@types/node@20.10.5)
+      vite: 4.5.1(@types/node@20.10.6)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@4.5.1(@types/node@20.10.5):
+  /vite@4.5.1(@types/node@20.10.6):
     resolution: {integrity: sha512-AXXFaAJ8yebyqzoNB9fu2pHoo/nWX+xZlaRwoeYUxEqBO+Zj4msE5G+BhGBll9lYEKv9Hfks52PAF2X7qDYXQA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -6328,7 +6293,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.10.5
+      '@types/node': 20.10.6
       esbuild: 0.18.20
       postcss: 8.4.32
       rollup: 3.29.4

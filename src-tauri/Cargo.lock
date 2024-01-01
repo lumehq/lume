@@ -42,9 +42,9 @@ dependencies = [
 
 [[package]]
 name = "ahash"
-version = "0.8.6"
+version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91429305e9f0a25f6205c5b8e0d2db09e0708a7a6df0f42212bb56c32c8ac97a"
+checksum = "77c3a9648d43b9cd48db467b3f87fdd6e146bcc88ab0180006cef2179fe11d01"
 dependencies = [
  "cfg-if",
  "getrandom 0.2.11",
@@ -148,9 +148,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.77"
+version = "1.0.78"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9d19de80eff169429ac1e9f48fffb163916b448a44e8e046186232046d9e1f9"
+checksum = "ca87830a3e3fb156dc96cfbd31cb620265dd053be734723f22b760d6cc3c3051"
 
 [[package]]
 name = "arboard"
@@ -333,9 +333,9 @@ checksum = "e1d90cd0b264dfdd8eb5bad0a2c217c1f88fa96a8573f40e7b12de23fb468f46"
 
 [[package]]
 name = "async-trait"
-version = "0.1.75"
+version = "0.1.76"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fdf6721fb0140e4f897002dd086c06f6c27775df19cfe1fccb21181a48fd2c98"
+checksum = "531b97fb4cd3dfdce92c35dedbfdc1f0b9d8091c8ca943d6dae340ef5012d514"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -349,7 +349,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4af014b17dd80e8af9fa689b2d4a211ddba6eb583c1622f35d0cb543f6b17e4"
 dependencies = [
  "atk-sys",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
 ]
 
@@ -590,13 +590,13 @@ dependencies = [
 
 [[package]]
 name = "cairo-rs"
-version = "0.18.3"
+version = "0.18.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f33613627f0dea6a731b0605101fad59ba4f193a52c96c4687728d822605a8a1"
+checksum = "8ca26ef0159422fb77631dc9d17b102f253b876fe1586b03b803e63a309b4ee2"
 dependencies = [
  "bitflags 2.4.1",
  "cairo-sys-rs",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "once_cell",
  "thiserror",
@@ -1124,9 +1124,9 @@ dependencies = [
 
 [[package]]
 name = "deranged"
-version = "0.3.10"
+version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8eb30d70a07a3b04884d2677f06bec33509dc67ca60d92949e5535352d3191dc"
+checksum = "b42b6fa04a440b495c8b04d0e71b707c585f83cb9cb28cf8cd0d976c315e31b4"
 dependencies = [
  "powerfmt",
  "serde",
@@ -1685,20 +1685,20 @@ dependencies = [
  "gdk-pixbuf",
  "gdk-sys",
  "gio",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "pango",
 ]
 
 [[package]]
 name = "gdk-pixbuf"
-version = "0.18.3"
+version = "0.18.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "446f32b74d22c33b7b258d4af4ffde53c2bf96ca2e29abdf1a785fe59bd6c82c"
+checksum = "50e1f5f1b0bfb830d6ccc8066d18db35c487b1b2b1e8589b5dfe9f07e8defaec"
 dependencies = [
  "gdk-pixbuf-sys",
  "gio",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "once_cell",
 ]
@@ -1756,7 +1756,7 @@ dependencies = [
  "gdk",
  "gdkx11-sys",
  "gio",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "x11",
 ]
@@ -1856,7 +1856,7 @@ dependencies = [
  "futures-io",
  "futures-util",
  "gio-sys 0.18.1",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "once_cell",
  "pin-project-lite",
@@ -1914,9 +1914,9 @@ dependencies = [
 
 [[package]]
 name = "glib"
-version = "0.18.4"
+version = "0.18.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "951bbd7fdc5c044ede9f05170f05a3ae9479239c3afdfe2d22d537a3add15c4e"
+checksum = "233daaf6e83ae6a12a52055f568f9d7cf4671dabb78ff9560ab6da230ce00ee5"
 dependencies = [
  "bitflags 2.4.1",
  "futures-channel",
@@ -1925,7 +1925,7 @@ dependencies = [
  "futures-task",
  "futures-util",
  "gio-sys 0.18.1",
- "glib-macros 0.18.3",
+ "glib-macros 0.18.5",
  "glib-sys 0.18.1",
  "gobject-sys 0.18.0",
  "libc",
@@ -1952,9 +1952,9 @@ dependencies = [
 
 [[package]]
 name = "glib-macros"
-version = "0.18.3"
+version = "0.18.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72793962ceece3863c2965d7f10c8786323b17c7adea75a515809fa20ab799a5"
+checksum = "0bb0228f477c0900c880fd78c8759b95c7636dbd7842707f49e132378aa2acdc"
 dependencies = [
  "heck",
  "proc-macro-crate 2.0.1",
@@ -2025,7 +2025,7 @@ dependencies = [
  "gdk",
  "gdk-pixbuf",
  "gio",
- "glib 0.18.4",
+ "glib 0.18.5",
  "gtk-sys",
  "gtk3-macros",
  "libc",
@@ -2249,16 +2249,16 @@ dependencies = [
 
 [[package]]
 name = "iana-time-zone"
-version = "0.1.58"
+version = "0.1.59"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8326b86b6cff230b97d0d312a6c40a60726df3332e721f72a1b035f451663b20"
+checksum = "b6a67363e2aa4443928ce15e57ebae94fd8949958fd1223c4cfc0cd473ad7539"
 dependencies = [
  "android_system_properties",
  "core-foundation-sys",
  "iana-time-zone-haiku",
  "js-sys",
  "wasm-bindgen",
- "windows-core 0.51.1",
+ "windows-core 0.52.0",
 ]
 
 [[package]]
@@ -2424,7 +2424,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca5671e9ffce8ffba57afc24070e906da7fc4b1ba66f2cabebf61bf2ea257fcc"
 dependencies = [
  "bitflags 1.3.2",
- "glib 0.18.4",
+ "glib 0.18.5",
  "javascriptcore-rs-sys",
 ]
 
@@ -2511,9 +2511,9 @@ dependencies = [
 
 [[package]]
 name = "keyring"
-version = "2.2.0"
+version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43454e972324c0259f00c874c40645f736ed8dd9454fe748022d8fc88b1c6ef7"
+checksum = "b52a1d320b55eacc02d4561fed9714af4e98b7989cf4e696bee192b03fc99720"
 dependencies = [
  "byteorder",
  "lazy_static",
@@ -2551,7 +2551,7 @@ version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "03589b9607c868cc7ae54c0b2a22c8dc03dd41692d48f2d7df73615c6a95dc0a"
 dependencies = [
- "glib 0.18.4",
+ "glib 0.18.5",
  "gtk",
  "gtk-sys",
  "libappindicator-sys",
@@ -3295,12 +3295,12 @@ dependencies = [
 
 [[package]]
 name = "os_pipe"
-version = "1.1.4"
+version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ae859aa07428ca9a929b936690f8b12dc5f11dd8c6992a18ca93919f28bc177"
+checksum = "57119c3b893986491ec9aa85056780d3a0f3cf4da7cc09dd3650dbd6c6738fb9"
 dependencies = [
  "libc",
- "windows-sys 0.48.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -3316,7 +3316,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ca27ec1eb0457ab26f3036ea52229edbdb74dee1edd29063f5b9b010e7ebee4"
 dependencies = [
  "gio",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "once_cell",
  "pango-sys",
@@ -3724,9 +3724,9 @@ checksum = "dc375e1527247fe1a97d8b7156678dfe7c1af2fc075c9a4db3690ecd2a148068"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.71"
+version = "1.0.73"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75cb1540fadbd5b8fbccc4dddad2734eba435053f725621c070711a14bb5f4b8"
+checksum = "2dd5e8a1f1029c43224ad5898e50140c2aebb1705f19e67c918ebf5b9e797fe1"
 dependencies = [
  "unicode-ident",
 ]
@@ -3760,9 +3760,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.33"
+version = "1.0.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae"
+checksum = "22a37c9326af5ed140c86a46655b5278de879853be5573c01df185b6f49a580a"
 dependencies = [
  "proc-macro2",
 ]
@@ -4229,9 +4229,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.108"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d1c7e3eac408d115102c4c24ad393e0821bb3a5df4d506a80f85f7a742a526b"
+checksum = "cb0652c533506ad7a2e353cce269330d6afd8bdfb6d75e0ace5b35aacbd7b9e9"
 dependencies = [
  "itoa 1.0.10",
  "ryu",
@@ -4446,7 +4446,7 @@ checksum = "471f924a40f31251afc77450e781cb26d55c0b650842efafc9c6cbd2f7cc4f9f"
 dependencies = [
  "futures-channel",
  "gio",
- "glib 0.18.4",
+ "glib 0.18.5",
  "libc",
  "soup3-sys",
 ]
@@ -5059,7 +5059,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "auto-launch",
  "log",
@@ -5072,7 +5072,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-cli"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "clap",
  "log",
@@ -5085,7 +5085,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "arboard",
  "log",
@@ -5099,7 +5099,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-dialog"
 version = "2.0.0-alpha.7"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "glib 0.16.9",
  "log",
@@ -5116,7 +5116,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-fs"
 version = "2.0.0-alpha.7"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "anyhow",
  "glob",
@@ -5131,7 +5131,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.9"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "data-url",
  "glob",
@@ -5148,7 +5148,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-notification"
 version = "2.0.0-alpha.7"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "log",
  "notify-rust",
@@ -5166,7 +5166,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-os"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "gethostname 0.4.3",
  "log",
@@ -5182,7 +5182,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "tauri",
 ]
@@ -5190,7 +5190,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-shell"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "encoding_rs",
  "log",
@@ -5207,7 +5207,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-sql"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "futures-core",
  "log",
@@ -5223,7 +5223,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-store"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "log",
  "serde",
@@ -5251,7 +5251,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "base64",
  "dirs-next",
@@ -5277,7 +5277,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-upload"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "futures-util",
  "log",
@@ -5294,7 +5294,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window-state"
 version = "2.0.0-alpha.6"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1a347203a54eccc954749d11c4ee81fdd9a0cde7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#b9d29a015414981bec5285ab45f1e40031d56a99"
 dependencies = [
  "bincode",
  "bitflags 2.4.1",
@@ -5425,18 +5425,18 @@ checksum = "8eaa81235c7058867fa8c0e7314f33dcce9c215f535d1913822a2b3f5e289f3c"
 
 [[package]]
 name = "thiserror"
-version = "1.0.52"
+version = "1.0.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83a48fd946b02c0a526b2e9481c8e2a17755e47039164a86c4070446e3a4614d"
+checksum = "b2cd5904763bad08ad5513ddbb12cf2ae273ca53fa9f68e843e236ec6dfccc09"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.52"
+version = "1.0.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7fbe9b594d6568a6a1443250a7e67d80b74e1e96f6d1715e1e21cc1888291d3"
+checksum = "3dcf4a824cce0aeacd6f38ae6f24234c8e80d68632338ebaa1443b5df9e29e19"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -6020,7 +6020,7 @@ dependencies = [
  "gdk-sys",
  "gio",
  "gio-sys 0.18.1",
- "glib 0.18.4",
+ "glib 0.18.5",
  "glib-sys 0.18.1",
  "gobject-sys 0.18.0",
  "gtk",

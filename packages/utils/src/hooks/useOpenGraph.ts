@@ -1,6 +1,6 @@
 import { type Opengraph } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
-import { invoke } from "@tauri-apps/api/primitives";
+import { invoke } from "@tauri-apps/api/core";
 
 export function useOpenGraph(url: string) {
 	const { status, data, error } = useQuery({

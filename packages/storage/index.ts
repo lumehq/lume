@@ -6,8 +6,8 @@ import {
 	NDKCacheUser,
 	NDKCacheUserProfile,
 } from "@lume/types";
+import { invoke } from "@tauri-apps/api/core";
 import { appConfigDir, resolveResource } from "@tauri-apps/api/path";
-import { invoke } from "@tauri-apps/api/primitives";
 import { Platform } from "@tauri-apps/plugin-os";
 import { Child, Command } from "@tauri-apps/plugin-shell";
 import Database from "@tauri-apps/plugin-sql";

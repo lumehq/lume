@@ -1,7 +1,7 @@
 import {
-	ArrowLeftIcon,
-	ArrowRightIcon,
 	HorizontalDotsIcon,
+	MoveLeftIcon,
+	MoveRightIcon,
 	RefreshIcon,
 	ThreadIcon,
 	TrashIcon,
@@ -78,7 +78,7 @@ export function ColumnHeader({
 									onClick={moveLeft}
 									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
 								>
-									<ArrowLeftIcon className="size-5" />
+									<MoveLeftIcon className="size-5" />
 									Move left
 								</button>
 							</DropdownMenu.Item>
@@ -88,7 +88,7 @@ export function ColumnHeader({
 									onClick={moveRight}
 									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
 								>
-									<ArrowRightIcon className="size-5" />
+									<MoveRightIcon className="size-5" />
 									Move right
 								</button>
 							</DropdownMenu.Item>

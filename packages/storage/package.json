@@ -1,23 +1,23 @@
 {
-  "name": "@lume/storage",
-  "version": "0.0.0",
-  "main": "./index.ts",
-  "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@tauri-apps/api": "2.0.0-alpha.11",
-    "@tauri-apps/plugin-os": "2.0.0-alpha.4",
-    "@tauri-apps/plugin-shell": "2.0.0-alpha.3",
-    "@tauri-apps/plugin-sql": "2.0.0-alpha.3",
-    "react": "^18.2.0"
-  },
-  "devDependencies": {
-    "@lume/tsconfig": "workspace:*",
-    "@lume/types": "workspace:*",
-    "@types/react": "^18.2.46",
-    "typescript": "^5.3.3"
-  }
+	"name": "@lume/storage",
+	"version": "0.0.0",
+	"main": "./index.ts",
+	"private": true,
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "2.0.0-alpha.13",
+		"@tauri-apps/plugin-os": "2.0.0-alpha.6",
+		"@tauri-apps/plugin-shell": "2.0.0-alpha.5",
+		"@tauri-apps/plugin-sql": "2.0.0-alpha.5",
+		"react": "^18.2.0"
+	},
+	"devDependencies": {
+		"@lume/tsconfig": "workspace:*",
+		"@lume/types": "workspace:*",
+		"@types/react": "^18.2.46",
+		"typescript": "^5.3.3"
+	}
 }

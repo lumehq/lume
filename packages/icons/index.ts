@@ -96,3 +96,5 @@ export * from "./src/homeFilled";
 export * from "./src/relayFilled";
 export * from "./src/depotFilled";
 export * from "./src/nwcFilled";
+export * from "./src/moveLeft";
+export * from "./src/moveRight";
