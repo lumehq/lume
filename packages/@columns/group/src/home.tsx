@@ -6,9 +6,11 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { CacheSnapshot, VList, VListHandle } from "virtua";
 
-export function HomeRoute({ colKey }: { colKey: string }) {
+export function HomeRoute({
+	colKey,
+	content,
+}: { colKey: string; content: string }) {
 	const ark = useArk();
-	const storage = useStorage();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
 
@@ -29,10 +31,11 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				signal: AbortSignal;
 				pageParam: number;
 			}) => {
+				const authors = JSON.parse(content);
 				const events = await ark.getInfiniteEvents({
 					filter: {
 						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: storage.account.contacts,
+						authors: authors,
 					},
 					limit: FETCH_LIMIT,
 					pageParam,

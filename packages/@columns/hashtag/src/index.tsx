@@ -1,12 +1,12 @@
 import { Column } from "@lume/ark";
-import { HashtagIcon, TimelineIcon } from "@lume/icons";
+import { HashtagIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
 import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
 import { UserRoute } from "./user";
 
 export function Hashtag({ column }: { column: IColumn }) {
-	const colKey = "hashtag";
+	const colKey = `hashtag-${column.id}`;
 	const hashtag = column.content.replace("#", "");
 
 	return (

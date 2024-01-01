@@ -1,3 +1,4 @@
+import { Group } from "@columns/group";
 import { Hashtag } from "@columns/hashtag";
 import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
@@ -23,6 +24,8 @@ export function HomeScreen() {
 				return <User key={column.id} column={column} />;
 			case COL_TYPES.hashtag:
 				return <Hashtag key={column.id} column={column} />;
+			case COL_TYPES.group:
+				return <Group key={column.id} column={column} />;
 			default:
 				return <Timeline key={column.id} column={column} />;
 		}

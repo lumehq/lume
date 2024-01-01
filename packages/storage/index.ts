@@ -322,7 +322,7 @@ export class LumeStorage {
 		}
 	}
 
-	public async getWidgets() {
+	public async getColumns() {
 		const widgets: Array<IColumn> = await this.#db.select(
 			"SELECT * FROM widgets WHERE account_id = $1 ORDER BY created_at DESC;",
 			[this.account.id],
@@ -330,7 +330,7 @@ export class LumeStorage {
 		return widgets;
 	}
 
-	public async createWidget(
+	public async createColumn(
 		kind: number,
 		title: string,
 		content: string | string[],
@@ -351,7 +351,14 @@ export class LumeStorage {
 		console.error("create widget failed");
 	}
 
-	public async removeWidget(id: number) {
+	public async updateColumn(id: number, title: string, content: string) {
+		return await this.#db.execute(
+			"UPDATE widgets SET title = $1, content = $2 WHERE id = $3;",
+			[title, content, id],
+		);
+	}
+
+	public async removeColumn(id: number) {
 		const res = await this.#db.execute("DELETE FROM widgets WHERE id = $1;", [
 			id,
 		]);

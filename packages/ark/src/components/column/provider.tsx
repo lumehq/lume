@@ -15,6 +15,7 @@ type ColumnContext = {
 	addColumn: (column: IColumn) => Promise<void>;
 	removeColumn: (id: number) => Promise<void>;
 	moveColumn: (id: number, position: "left" | "right") => void;
+	updateColumn: (id: number, title: string, content: string) => Promise<void>;
 	loadAllColumns: () => Promise<IColumn[]>;
 };
 
@@ -32,11 +33,11 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 	]);
 
 	const loadAllColumns = useCallback(async () => {
-		return await storage.getWidgets();
+		return await storage.getColumns();
 	}, []);
 
 	const addColumn = useCallback(async (column: IColumn) => {
-		const result = await storage.createWidget(
+		const result = await storage.createColumn(
 			column.kind,
 			column.title,
 			column.content,
@@ -45,9 +46,26 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	const removeColumn = useCallback(async (id: number) => {
-		await storage.removeWidget(id);
+		await storage.removeColumn(id);
 		setColumns((prev) => prev.filter((t) => t.id !== id));
 	}, []);
+
+	const updateColumn = useCallback(
+		async (id: number, title: string, content: string) => {
+			const res = await storage.updateColumn(id, title, content);
+			if (res) {
+				const newCols = columns.map((col) => {
+					if (col.id === id) {
+						return { ...col, title, content };
+					}
+					return col;
+				});
+
+				setColumns(newCols);
+			}
+		},
+		[columns],
+	);
 
 	const moveColumn = useCallback(
 		(id: number, position: "left" | "right") => {
@@ -80,7 +98,14 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 
 	return (
 		<ColumnContext.Provider
-			value={{ columns, addColumn, removeColumn, moveColumn, loadAllColumns }}
+			value={{
+				columns,
+				addColumn,
+				removeColumn,
+				moveColumn,
+				updateColumn,
+				loadAllColumns,
+			}}
 		>
 			{children}
 		</ColumnContext.Provider>

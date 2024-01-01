@@ -12,7 +12,7 @@ export function HomeRoute({
 }: { colKey: string; hashtag: string }) {
 	const ark = useArk();
 	const ref = useRef<VListHandle>();
-	const cacheKey = "hashtag-vlist";
+	const cacheKey = `${colKey}-vlist`;
 
 	const [offset, cache] = useMemo(() => {
 		const serialized = sessionStorage.getItem(cacheKey);
@@ -84,19 +84,19 @@ export function HomeRoute({
 						<TextNote key={item.id} event={item} className="mt-3" />
 					))
 				)}
-				<div className="flex h-16 items-center justify-center">
+				<div className="flex items-center justify-center h-16">
 					{hasNextPage ? (
 						<button
 							type="button"
 							onClick={() => fetchNextPage()}
 							disabled={!hasNextPage || isFetchingNextPage}
-							className="inline-flex h-10 w-40 items-center justify-center gap-2 rounded-full bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none"
+							className="inline-flex items-center justify-center w-40 h-10 gap-2 font-medium text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:outline-none"
 						>
 							{isFetchingNextPage ? (
-								<LoaderIcon className="h-5 w-5 animate-spin" />
+								<LoaderIcon className="w-5 h-5 animate-spin" />
 							) : (
 								<>
-									<ArrowRightCircleIcon className="h-5 w-5" />
+									<ArrowRightCircleIcon className="w-5 h-5" />
 									Load more
 								</>
 							)}

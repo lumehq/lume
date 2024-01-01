@@ -8,6 +8,7 @@
 		"build": "vite build"
 	},
 	"dependencies": {
+		"@columns/group": "workspace:^",
 		"@columns/hashtag": "workspace:^",
 		"@columns/notification": "workspace:^",
 		"@columns/thread": "workspace:^",

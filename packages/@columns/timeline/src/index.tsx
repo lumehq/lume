@@ -1,15 +1,15 @@
 import { Column, useStorage } from "@lume/ark";
 import { TimelineIcon } from "@lume/icons";
+import { IColumn } from "@lume/types";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
-import { IColumn } from "../../../types";
 import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
 import { UserRoute } from "./user";
 
 export function Timeline({ column }: { column: IColumn }) {
-	const colKey = "newsfeed";
+	const colKey = `timeline-${column.id}`;
 	const storage = useStorage();
 	const queryClient = useQueryClient();
 	const since = useRef(Math.floor(Date.now() / 1000));
