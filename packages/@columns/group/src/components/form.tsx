@@ -48,7 +48,7 @@ export function GroupForm({ id }: { id: number }) {
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}
 							placeholder="Nostrichs..."
-							className="px-3 rounded-xl border-neutral-200 dark:border-neutral-900 h-11 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+							className="px-3 rounded-lg border-neutral-200 dark:border-neutral-900 h-11 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -64,7 +64,7 @@ export function GroupForm({ id }: { id: number }) {
 									key={item}
 									type="button"
 									onClick={() => toggleUser(item)}
-									className="inline-flex items-center justify-between px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+									className="inline-flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 hover:bg-neutral-100 dark:hover:bg-neutral-900"
 								>
 									<User pubkey={item} variant="simple" />
 									{users.includes(item) ? (

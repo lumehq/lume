@@ -34,16 +34,13 @@ export const HASHTAGS = [
 export const COL_TYPES = {
 	user: 1,
 	thread: 2,
-	group: 3,
-	article: 4,
-	file: 5,
-	trendingNotes: 6,
-	trendingAccounts: 7,
-	topic: 8,
-	hashtag: 9,
-	notification: 9998,
+	hashtag: 3,
+	group: 4,
+	antenas: 5,
+	topic: 6,
+	trendingNotes: 9000,
+	trendingAccounts: 9001,
 	newsfeed: 9999,
-	list: 10000,
 };
 
 export const TOPICS = [

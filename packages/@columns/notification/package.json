@@ -10,7 +10,7 @@
 		"@nostr-dev-kit/ndk": "^2.3.2",
 		"@tanstack/react-query": "^5.17.0",
 		"react": "^18.2.0",
-		"virtua": "^0.18.0"
+		"virtua": "^0.18.1"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",

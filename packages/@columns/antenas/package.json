@@ -1,5 +1,5 @@
 {
-	"name": "@columns/thread",
+	"name": "@columns/antenas",
 	"version": "0.0.0",
 	"private": true,
 	"main": "./src/index.tsx",

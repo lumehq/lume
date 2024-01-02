@@ -1,13 +1,13 @@
 import { Column } from "@lume/ark";
 import { GroupFeedsIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
-import { GroupForm } from "./components/form";
+import { AntenasForm } from "./components/form";
 import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
 import { UserRoute } from "./user";
 
-export function Group({ column }: { column: IColumn }) {
-	const colKey = `group-${column.id}`;
+export function Antenas({ column }: { column: IColumn }) {
+	const colKey = `antenas-${column.id}`;
 	const created = !!column.content?.length;
 
 	return (
@@ -29,7 +29,7 @@ export function Group({ column }: { column: IColumn }) {
 					</Column.Content>
 				</>
 			) : (
-				<GroupForm id={column.id} />
+				<AntenasForm id={column.id} />
 			)}
 		</Column.Root>
 	);

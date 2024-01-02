@@ -1,7 +1,7 @@
 import { RepostNote, TextNote, useArk, useStorage } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { FETCH_LIMIT } from "@lume/utils";
-import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
+import { NDKEvent, NDKFilter, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { CacheSnapshot, VList, VListHandle } from "virtua";
@@ -11,6 +11,7 @@ export function HomeRoute({
 	content,
 }: { colKey: string; content: string }) {
 	const ark = useArk();
+	const storage = useStorage();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
 
@@ -31,12 +32,25 @@ export function HomeRoute({
 				signal: AbortSignal;
 				pageParam: number;
 			}) => {
-				const authors: string[] = JSON.parse(content);
-				const events = await ark.getInfiniteEvents({
-					filter: {
+				let filter: NDKFilter;
+				const parsed: { hashtags: string[]; source: string } =
+					JSON.parse(content);
+
+				if (parsed.source === "contacts") {
+					filter = {
 						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: authors,
-					},
+						"#t": parsed.hashtags.map((item) => item.replace("#", "")),
+						authors: storage.account.contacts,
+					};
+				} else {
+					filter = {
+						kinds: [NDKKind.Text, NDKKind.Repost],
+						"#t": parsed.hashtags.map((item) => item.replace("#", "")),
+					};
+				}
+
+				const events = await ark.getInfiniteEvents({
+					filter,
 					limit: FETCH_LIMIT,
 					pageParam,
 					signal,
