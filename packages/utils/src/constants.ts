@@ -32,6 +32,7 @@ export const HASHTAGS = [
 ];
 
 export const COL_TYPES = {
+	default: 0,
 	user: 1,
 	thread: 2,
 	hashtag: 3,

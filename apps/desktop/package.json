@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@columns/antenas": "workspace:^",
+		"@columns/default": "workspace:^",
 		"@columns/group": "workspace:^",
 		"@columns/hashtag": "workspace:^",
 		"@columns/notification": "workspace:^",

@@ -98,3 +98,6 @@ export * from "./src/depotFilled";
 export * from "./src/nwcFilled";
 export * from "./src/moveLeft";
 export * from "./src/moveRight";
+export * from "./src/help";
+export * from "./src/plusSquare";
+export * from "./src/column";
