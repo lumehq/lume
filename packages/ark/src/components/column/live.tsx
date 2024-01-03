@@ -34,13 +34,13 @@ export function ColumnLiveWidget({
 	if (!events.length) return null;
 
 	return (
-		<div className="absolute left-0 top-11 z-50 flex h-11 w-full items-center justify-center">
+		<div className="absolute left-0 z-50 flex items-center justify-center w-full top-11 h-11">
 			<button
 				type="button"
 				onClick={update}
-				className="inline-flex h-9 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-2.5 text-sm font-semibold text-white hover:bg-blue-600"
+				className="inline-flex items-center justify-center h-8 gap-1 pl-2 pr-2.5 text-sm font-semibold rounded-full w-max bg-neutral-950 dark:bg-neutral-50 hover:bg-neutral-900 dark:hover:bg-neutral-100 text-neutral-50 dark:text-neutral-950"
 			>
-				<ChevronUpIcon className="h-4 w-4" />
+				<ChevronUpIcon className="w-4 h-4" />
 				{events.length} {events.length === 1 ? "new event" : "new events"}
 			</button>
 		</div>

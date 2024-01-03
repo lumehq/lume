@@ -44,7 +44,6 @@ export function ColumnHeader({
 	return (
 		<div className="flex items-center justify-between w-full px-3 border-b h-11 shrink-0 border-neutral-100 dark:border-neutral-900">
 			<div className="inline-flex items-center gap-4">
-				<div className="w-1 h-5 bg-blue-500 rounded-full shrink-0" />
 				<div className="inline-flex items-center flex-1 gap-2 text-neutral-800 dark:text-neutral-200">
 					{icon ? icon : <ThreadIcon className="size-4" />}
 					<div className="text-sm font-medium">{title}</div>
@@ -61,7 +60,7 @@ export function ColumnHeader({
 						</button>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Portal>
-						<DropdownMenu.Content className="flex w-[220px] flex-col overflow-hidden rounded-xl border border-neutral-100 bg-white p-2 shadow-lg shadow-neutral-200/50 focus:outline-none dark:border-neutral-900 dark:bg-neutral-950 dark:shadow-neutral-900/50">
+						<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 dark:bg-neutral-950 focus:outline-none dark:border-neutral-900">
 							<DropdownMenu.Item asChild>
 								<button
 									type="button"

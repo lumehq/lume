@@ -5,19 +5,17 @@ import {
 	HomeIcon,
 	NwcFilledIcon,
 	NwcIcon,
-	PlusIcon,
 	RelayFilledIcon,
 	RelayIcon,
-	SearchIcon,
 } from "@lume/icons";
 import { cn } from "@lume/utils";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { ActiveAccount } from "./account/active";
 
 export function Navigation() {
 	return (
-		<div className="flex h-full w-20 shrink-0 flex-col justify-between px-4 py-3">
-			<div className="flex flex-1 flex-col gap-5">
+		<div className="flex flex-col justify-between w-20 h-full px-4 py-3 shrink-0">
+			<div className="flex flex-col flex-1 gap-5">
 				<NavLink
 					to="/"
 					preventScrollReset={true}
@@ -34,7 +32,7 @@ export function Navigation() {
 								)}
 							>
 								{isActive ? (
-									<HomeFilledIcon className="size-6 text-black dark:text-white" />
+									<HomeFilledIcon className="text-black size-6 dark:text-white" />
 								) : (
 									<HomeIcon className="size-6" />
 								)}
@@ -102,7 +100,7 @@ export function Navigation() {
 								)}
 							>
 								{isActive ? (
-									<DepotFilledIcon className="size-6 text-black dark:text-white" />
+									<DepotFilledIcon className="text-black size-6 dark:text-white" />
 								) : (
 									<DepotIcon className="size-6" />
 								)}
@@ -136,7 +134,7 @@ export function Navigation() {
 								)}
 							>
 								{isActive ? (
-									<NwcFilledIcon className="size-6 text-black dark:text-white" />
+									<NwcFilledIcon className="text-black size-6 dark:text-white" />
 								) : (
 									<NwcIcon className="size-6" />
 								)}
@@ -155,19 +153,7 @@ export function Navigation() {
 					)}
 				</NavLink>
 			</div>
-			<div className="flex shrink-0 flex-col gap-3 p-1">
-				<Link
-					to="/new/"
-					className="flex aspect-square h-auto w-full items-center justify-center rounded-xl bg-black/10 text-black hover:bg-blue-500 hover:text-white dark:bg-white/10 dark:text-white dark:hover:bg-blue-500"
-				>
-					<PlusIcon className="h-5 w-5" />
-				</Link>
-				<Link
-					to="/nwc"
-					className="flex aspect-square h-auto w-full items-center justify-center rounded-xl bg-black/10 hover:bg-blue-500 hover:text-white dark:bg-white/10 dark:hover:bg-blue-500"
-				>
-					<SearchIcon className="h-5 w-5" />
-				</Link>
+			<div className="flex flex-col gap-3 p-1 shrink-0">
 				<ActiveAccount />
 			</div>
 		</div>

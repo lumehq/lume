@@ -1,12 +1,6 @@
 import { useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
-import {
-	AppLayout,
-	AuthLayout,
-	ComposerLayout,
-	HomeLayout,
-	SettingsLayout,
-} from "@lume/ui";
+import { AppLayout, AuthLayout, HomeLayout, SettingsLayout } from "@lume/ui";
 import { fetch } from "@tauri-apps/plugin-http";
 import {
 	RouterProvider,
@@ -69,44 +63,6 @@ export default function App() {
 								const { RelayScreen } = await import("./routes/relays/relay");
 								return { Component: RelayScreen };
 							},
-						},
-						{
-							path: "new",
-							element: <ComposerLayout />,
-							children: [
-								{
-									index: true,
-									async lazy() {
-										const { NewPostScreen } = await import("./routes/new/post");
-										return { Component: NewPostScreen };
-									},
-								},
-								{
-									path: "article",
-									async lazy() {
-										const { NewArticleScreen } = await import(
-											"./routes/new/article"
-										);
-										return { Component: NewArticleScreen };
-									},
-								},
-								{
-									path: "file",
-									async lazy() {
-										const { NewFileScreen } = await import("./routes/new/file");
-										return { Component: NewFileScreen };
-									},
-								},
-								{
-									path: "privkey",
-									async lazy() {
-										const { NewPrivkeyScreen } = await import(
-											"./routes/new/privkey"
-										);
-										return { Component: NewPrivkeyScreen };
-									},
-								},
-							],
 						},
 						{
 							path: "settings",
@@ -304,8 +260,8 @@ export default function App() {
 		<RouterProvider
 			router={router}
 			fallbackElement={
-				<div className="flex h-full w-full items-center justify-center">
-					<LoaderIcon className="h-6 w-6 animate-spin" />
+				<div className="flex items-center justify-center w-full h-full">
+					<LoaderIcon className="w-6 h-6 animate-spin" />
 				</div>
 			}
 			future={{ v7_startTransition: true }}

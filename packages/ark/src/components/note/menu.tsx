@@ -1,4 +1,4 @@
-import { HorizontalDotsIcon } from "@lume/icons";
+import { HorizontalDotsIcon, ShareIcon } from "@lume/icons";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { nip19 } from "nostr-tools";
@@ -40,9 +40,9 @@ export function NoteMenu() {
 			<DropdownMenu.Trigger asChild>
 				<button
 					type="button"
-					className="inline-flex h-6 w-6 items-center justify-center"
+					className="inline-flex items-center justify-center w-6 h-6"
 				>
-					<HorizontalDotsIcon className="h-4 w-4 text-neutral-800 hover:text-blue-500 dark:text-neutral-200" />
+					<HorizontalDotsIcon className="w-4 h-4 text-neutral-800 hover:text-blue-500 dark:text-neutral-200" />
 				</button>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Portal>
@@ -51,7 +51,7 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyLink()}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
+							className="inline-flex items-center h-10 px-4 text-sm text-white rounded-lg hover:bg-neutral-900 focus:outline-none"
 						>
 							Copy shareable link
 						</button>
@@ -60,7 +60,7 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyID()}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
+							className="inline-flex items-center h-10 px-4 text-sm text-white rounded-lg hover:bg-neutral-900 focus:outline-none"
 						>
 							Copy note ID
 						</button>
@@ -69,7 +69,7 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyRaw()}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
+							className="inline-flex items-center h-10 px-4 text-sm text-white rounded-lg hover:bg-neutral-900 focus:outline-none"
 						>
 							Copy raw event
 						</button>
@@ -77,7 +77,7 @@ export function NoteMenu() {
 					<DropdownMenu.Item asChild>
 						<Link
 							to={`/users/${event.pubkey}`}
-							className="inline-flex h-10 items-center px-4 text-sm text-white hover:bg-neutral-900 rounded-lg focus:outline-none"
+							className="inline-flex items-center h-10 px-4 text-sm text-white rounded-lg hover:bg-neutral-900 focus:outline-none"
 						>
 							View profile
 						</Link>

@@ -14,7 +14,7 @@
   }
 
   .prose :where(iframe):not(:where([class~='not-prose'] *)) {
-    @apply mx-auto aspect-video h-auto w-full;
+    @apply w-full h-auto mx-auto aspect-video;
   }
 }
 
@@ -41,12 +41,4 @@ input::-ms-clear {
 
 .border {
   background-clip: padding-box;
-}
-
-.ProseMirror p.is-empty::before {
-  @apply pointer-events-none float-left h-0 text-neutral-600 content-[attr(data-placeholder)] dark:text-neutral-400;
-}
-
-.ProseMirror img.ProseMirror-selectednode {
-  @apply outline-blue-500;
 }

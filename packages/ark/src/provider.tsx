@@ -1,7 +1,7 @@
 import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { LumeStorage } from "@lume/storage";
-import { QUOTES, delay } from "@lume/utils";
+import { QUOTES, delay, sendNativeNotification } from "@lume/utils";
 import NDK, {
 	NDKNip46Signer,
 	NDKPrivateKeySigner,
@@ -20,7 +20,6 @@ import {
 	normalizeRelayUrlSet,
 } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { createContext, useContextSelector } from "use-context-selector";
 import { Ark } from "./ark";
 
@@ -161,7 +160,9 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			const signIn = NDKRelayAuthPolicies.signIn({ ndk, signer });
 			const event = await signIn(relay, challenge);
 			if (event) {
-				toast.success(`You've sign in sucessfully to relay: ${relay.url}`);
+				sendNativeNotification(
+					`You've sign in sucessfully to relay: ${relay.url}`,
+				);
 				return event;
 			}
 		};
