@@ -1,4 +1,4 @@
-import { NDKEvent, NDKKind, NostrEvent } from "@nostr-dev-kit/ndk";
+import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { Note } from "..";
 import { useArk } from "../../../provider";
@@ -30,18 +30,6 @@ export function RepostNote({
 		refetchOnWindowFocus: false,
 	});
 
-	const renderContentByKind = () => {
-		if (!repostEvent) return null;
-		switch (repostEvent.kind) {
-			case NDKKind.Text:
-				return <Note.TextContent content={repostEvent.content} />;
-			case 1063:
-				return <Note.MediaContent tags={repostEvent.tags} />;
-			default:
-				return null;
-		}
-	};
-
 	if (isLoading) {
 		return <div className="w-full px-3 pb-3">Loading...</div>;
 	}
@@ -52,8 +40,8 @@ export function RepostNote({
 				<Note.Provider event={event}>
 					<Note.User variant="repost" className="h-14" />
 				</Note.Provider>
-				<div className="select-text px-3 mb-3">
-					<div className="bg-red-100 dark:bg-red-900 flex-col py-3 rounded-lg flex items-start justify-start px-3">
+				<div className="px-3 mb-3 select-text">
+					<div className="flex flex-col items-start justify-start px-3 py-3 bg-red-100 rounded-lg dark:bg-red-900">
 						<p className="text-red-500">Failed to get event</p>
 						<p className="text-sm">
 							You can consider enable Outbox in Settings for better event
@@ -72,9 +60,12 @@ export function RepostNote({
 			</Note.Provider>
 			<Note.Provider event={repostEvent}>
 				<div className="relative flex flex-col gap-2 px-3">
-					<Note.User />
-					{renderContentByKind()}
-					<div className="flex h-14 items-center justify-between">
+					<div className="flex items-center justify-between">
+						<Note.User className="flex-1 pr-1" />
+						<Note.Menu />
+					</div>
+					<Note.Content />
+					<div className="flex items-center justify-between h-14">
 						<Note.Pin />
 						<div className="inline-flex items-center gap-10">
 							<Note.Reply />
@@ -82,6 +73,7 @@ export function RepostNote({
 							<Note.Repost />
 							<Note.Zap />
 						</div>
+						N
 					</div>
 				</div>
 			</Note.Provider>

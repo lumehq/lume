@@ -4,9 +4,7 @@ import { NoteReply } from "./buttons/reply";
 import { NoteRepost } from "./buttons/repost";
 import { NoteZap } from "./buttons/zap";
 import { NoteChild } from "./child";
-import { NoteArticleContent } from "./kinds/article";
-import { NoteMediaContent } from "./kinds/media";
-import { NoteTextContent } from "./kinds/text";
+import { NoteContent } from "./content";
 import { NoteMenu } from "./menu";
 import { NoteProvider } from "./provider";
 import { NoteRoot } from "./root";
@@ -21,13 +19,11 @@ export const Note = {
 	Reply: NoteReply,
 	Repost: NoteRepost,
 	Reaction: NoteReaction,
+	Content: NoteContent,
 	Zap: NoteZap,
 	Pin: NotePin,
 	Child: NoteChild,
 	Thread: NoteThread,
-	TextContent: NoteTextContent,
-	MediaContent: NoteMediaContent,
-	ArticleContent: NoteArticleContent,
 };
 
 export * from "./provider";

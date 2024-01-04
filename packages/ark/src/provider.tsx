@@ -3,6 +3,7 @@ import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { LumeStorage } from "@lume/storage";
 import { QUOTES, delay, sendNativeNotification } from "@lume/utils";
 import NDK, {
+	NDKKind,
 	NDKNip46Signer,
 	NDKPrivateKeySigner,
 	NDKRelay,
@@ -154,8 +155,8 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 		// auth
 		ndk.relayAuthDefaultPolicy = async (relay: NDKRelay, challenge: string) => {
-			const signIn = NDKRelayAuthPolicies.signIn({ ndk, signer });
-			const event = await signIn(relay, challenge);
+			const signIn = NDKRelayAuthPolicies.signIn({ ndk });
+			const event = await signIn(relay, challenge).catch((e) => console.log(e));
 			if (event) {
 				sendNativeNotification(
 					`You've sign in sucessfully to relay: ${relay.url}`,

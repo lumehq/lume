@@ -12,16 +12,16 @@ export function TextNote({
 	return (
 		<Note.Provider event={event}>
 			<Note.Root className={className}>
-				<div className="h-14 px-3 flex items-center justify-between">
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User className="flex-1 pr-1" />
 					<Note.Menu />
 				</div>
 				<Note.Thread thread={thread} className="mb-2" />
-				<Note.TextContent content={event.content} className="min-w-0 px-3" />
-				<div className="flex h-14 items-center justify-between px-3">
+				<Note.Content className="min-w-0 px-3" />
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.Pin />
 					<div className="inline-flex items-center gap-10">
-						<Note.Reply rootEventId={thread?.rootEventId} />
+						<Note.Reply />
 						<Note.Reaction />
 						<Note.Repost />
 						<Note.Zap />

@@ -1,4 +1,3 @@
-import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { Note } from "..";
@@ -9,19 +8,6 @@ export const MentionNote = memo(function MentionNote({
 	openable = true,
 }: { eventId: string; openable?: boolean }) {
 	const { isLoading, isError, data } = useEvent(eventId);
-
-	const renderKind = (event: NDKEvent) => {
-		switch (event.kind) {
-			case NDKKind.Text:
-				return <Note.TextContent content={event.content} />;
-			case NDKKind.Article:
-				return <Note.ArticleContent eventId={event.id} tags={event.tags} />;
-			case 1063:
-				return <Note.MediaContent tags={event.tags} />;
-			default:
-				return <Note.TextContent content={event.content} />;
-		}
-	};
 
 	if (isLoading) {
 		return (
@@ -52,7 +38,7 @@ export const MentionNote = memo(function MentionNote({
 					<Note.User variant="mention" />
 				</div>
 				<div className="px-3 pb-3 mt-1">
-					{renderKind(data)}
+					<Note.Content />
 					{openable ? (
 						<Link
 							to={`/events/${data.id}`}

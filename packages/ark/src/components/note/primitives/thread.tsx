@@ -14,16 +14,15 @@ export function ThreadNote({ eventId }: { eventId: string }) {
 				return (
 					<>
 						<Note.Thread thread={thread} className="mb-2" />
-						<Note.TextContent content={data.content} className="min-w-0 px-3" />
+						<Note.Content className="min-w-0 px-3" />
 					</>
 				);
-			case NDKKind.Article:
-				return <Note.ArticleContent eventId={event.id} tags={event.tags} />;
-			case 1063:
-				return <Note.MediaContent tags={event.tags} />;
 			default:
 				return (
-					<Note.TextContent content={data.content} className="min-w-0 px-3" />
+					<>
+						<Note.Thread thread={thread} className="mb-2" />
+						<Note.Content className="min-w-0 px-3" />
+					</>
 				);
 		}
 	};
@@ -35,9 +34,12 @@ export function ThreadNote({ eventId }: { eventId: string }) {
 	return (
 		<Note.Provider event={data}>
 			<Note.Root>
-				<Note.User variant="thread" className="h-16 px-3" />
+				<div className="flex items-center justify-between px-3 h-14">
+					<Note.User className="flex-1 pr-1" />
+					<Note.Menu />
+				</div>
 				{renderEventKind(data)}
-				<div className="flex h-14 items-center justify-between px-3">
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.Pin />
 					<div className="inline-flex items-center gap-10">
 						<Note.Reply />

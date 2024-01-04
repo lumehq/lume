@@ -8,10 +8,8 @@ import { ChildReply } from "./childReply";
 
 export function Reply({
 	event,
-	rootEvent,
 }: {
 	event: NDKEventWithReplies;
-	rootEvent: string;
 }) {
 	const [open, setOpen] = useState(false);
 
@@ -19,12 +17,15 @@ export function Reply({
 		<Collapsible.Root open={open} onOpenChange={setOpen}>
 			<Note.Provider event={event}>
 				<Note.Root>
-					<Note.User className="h-14 px-3" />
-					<Note.TextContent content={event.content} className="min-w-0 px-3" />
-					<div className="-ml-1 flex items-center justify-between h-14 px-3">
+					<div className="flex items-center justify-between px-3 h-14">
+						<Note.User className="flex-1 pr-1" />
+						<Note.Menu />
+					</div>
+					<Note.Content className="min-w-0 px-3" />
+					<div className="flex items-center justify-between px-3 -ml-1 h-14">
 						{event.replies?.length > 0 ? (
 							<Collapsible.Trigger asChild>
-								<div className="ml-1 inline-flex h-14 items-center gap-1 font-semibold text-blue-500">
+								<div className="inline-flex items-center gap-1 ml-1 font-semibold text-blue-500 h-14">
 									<NavArrowDownIcon
 										className={twMerge(
 											"h-3 w-3",
@@ -38,7 +39,7 @@ export function Reply({
 							</Collapsible.Trigger>
 						) : null}
 						<div className="inline-flex items-center gap-10">
-							<Note.Reply rootEventId={rootEvent} />
+							<Note.Reply />
 							<Note.Reaction />
 							<Note.Repost />
 							<Note.Zap />
