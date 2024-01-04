@@ -109,7 +109,7 @@ export function NoteZap() {
 					type="button"
 					className="inline-flex items-center justify-center group h-7 w-7 text-neutral-600 dark:text-neutral-400"
 				>
-					<ZapIcon className="size-6 group-hover:text-blue-500" />
+					<ZapIcon className="size-5 group-hover:text-blue-500" />
 				</button>
 			</Dialog.Trigger>
 			<Dialog.Portal>

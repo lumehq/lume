@@ -14,6 +14,7 @@ export function NoteRoot({
 				"flex h-min w-full flex-col overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-950",
 				className,
 			)}
+			contentEditable={false}
 		>
 			{children}
 		</div>

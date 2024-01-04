@@ -33,7 +33,7 @@ export function NoteRepost() {
 					>
 						<RepostIcon
 							className={twMerge(
-								"size-6 group-hover:text-blue-600",
+								"size-5 group-hover:text-blue-600",
 								isRepost ? "text-blue-500" : "",
 							)}
 						/>

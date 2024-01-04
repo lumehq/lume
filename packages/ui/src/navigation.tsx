@@ -5,14 +5,18 @@ import {
 	HomeIcon,
 	NwcFilledIcon,
 	NwcIcon,
+	PlusIcon,
 	RelayFilledIcon,
 	RelayIcon,
 } from "@lume/icons";
-import { cn } from "@lume/utils";
+import { cn, editorAtom } from "@lume/utils";
+import { useSetAtom } from "jotai";
 import { NavLink } from "react-router-dom";
 import { ActiveAccount } from "./account/active";
 
 export function Navigation() {
+	const setIsEditorOpen = useSetAtom(editorAtom);
+
 	return (
 		<div className="flex flex-col justify-between w-20 h-full px-4 py-3 shrink-0">
 			<div className="flex flex-col flex-1 gap-5">
@@ -154,6 +158,13 @@ export function Navigation() {
 				</NavLink>
 			</div>
 			<div className="flex flex-col gap-3 p-1 shrink-0">
+				<button
+					type="button"
+					onClick={() => setIsEditorOpen((prev) => !prev)}
+					className="flex items-center justify-center w-full h-auto text-black aspect-square rounded-xl bg-black/10 hover:bg-blue-500 hover:text-white dark:bg-white/10 dark:text-white dark:hover:bg-blue-500"
+				>
+					<PlusIcon className="w-5 h-5" />
+				</button>
 				<ActiveAccount />
 			</div>
 		</div>

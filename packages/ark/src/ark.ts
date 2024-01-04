@@ -111,7 +111,7 @@ export class Ark {
 	public async getUserProfile({ pubkey }: { pubkey: string }) {
 		try {
 			// get clean pubkey without any special characters
-			let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, "");
+			let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "");
 
 			if (
 				hexstring.startsWith("npub1") ||

@@ -11,6 +11,7 @@ import { appConfigDir, resolveResource } from "@tauri-apps/api/path";
 import { Platform } from "@tauri-apps/plugin-os";
 import { Child, Command } from "@tauri-apps/plugin-shell";
 import Database from "@tauri-apps/plugin-sql";
+import { nip19 } from "nostr-tools";
 
 export class LumeStorage {
 	#db: Database;
@@ -226,9 +227,10 @@ export class LumeStorage {
 		if (!results.length) return [];
 
 		const users: NDKCacheUserProfile[] = results.map((item) => ({
-			pubkey: item.pubkey,
+			npub: nip19.npubEncode(item.pubkey),
 			...JSON.parse(item.profile as string),
 		}));
+
 		return users;
 	}
 

@@ -66,7 +66,7 @@ export function NoteReaction() {
 							className="size-6"
 						/>
 					) : (
-						<ReactionIcon className="size-6 group-hover:text-blue-500" />
+						<ReactionIcon className="size-5 group-hover:text-blue-500" />
 					)}
 				</button>
 			</HoverCard.Trigger>

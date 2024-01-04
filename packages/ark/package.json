@@ -33,6 +33,7 @@
 		"@tiptap/react": "^2.1.13",
 		"@vidstack/react": "^1.9.8",
 		"get-urls": "^12.1.0",
+		"jotai": "^2.6.1",
 		"markdown-to-jsx": "^7.4.0",
 		"minidenticons": "^4.2.0",
 		"nanoid": "^5.0.4",

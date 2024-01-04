@@ -6,7 +6,8 @@ import { useEvent } from "../../../hooks/useEvent";
 
 export const MentionNote = memo(function MentionNote({
 	eventId,
-}: { eventId: string }) {
+	openable = true,
+}: { eventId: string; openable?: boolean }) {
 	const { isLoading, isError, data } = useEvent(eventId);
 
 	const renderKind = (event: NDKEvent) => {
@@ -24,7 +25,10 @@ export const MentionNote = memo(function MentionNote({
 
 	if (isLoading) {
 		return (
-			<div className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900">
+			<div
+				contentEditable={false}
+				className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
+			>
 				Loading
 			</div>
 		);
@@ -32,7 +36,10 @@ export const MentionNote = memo(function MentionNote({
 
 	if (isError) {
 		return (
-			<div className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900">
+			<div
+				contentEditable={false}
+				className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
+			>
 				Failed to fetch event
 			</div>
 		);
@@ -46,12 +53,14 @@ export const MentionNote = memo(function MentionNote({
 				</div>
 				<div className="px-3 pb-3 mt-1">
 					{renderKind(data)}
-					<Link
-						to={`/events/${data.id}`}
-						className="mt-2 text-blue-500 hover:text-blue-600"
-					>
-						Show more
-					</Link>
+					{openable ? (
+						<Link
+							to={`/events/${data.id}`}
+							className="mt-2 text-blue-500 hover:text-blue-600"
+						>
+							Show more
+						</Link>
+					) : null}
 				</div>
 			</Note.Root>
 		</Note.Provider>

@@ -101,3 +101,4 @@ export * from "./src/moveRight";
 export * from "./src/help";
 export * from "./src/plusSquare";
 export * from "./src/column";
+export * from "./src/addMedia";

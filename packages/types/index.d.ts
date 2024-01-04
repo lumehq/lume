@@ -115,7 +115,7 @@ export interface NDKCacheUser {
 }
 
 export interface NDKCacheUserProfile extends NDKUserProfile {
-	pubkey: string;
+	npub: string;
 }
 
 export interface NDKCacheEvent {
