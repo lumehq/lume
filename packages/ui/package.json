@@ -24,6 +24,7 @@
 		"nostr-tools": "~1.17.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-hotkeys-hook": "^4.4.1",
 		"react-router-dom": "^6.21.1",
 		"slate": "^0.101.5",
 		"slate-react": "^0.101.5",

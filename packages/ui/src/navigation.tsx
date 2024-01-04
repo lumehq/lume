@@ -11,11 +11,13 @@ import {
 } from "@lume/icons";
 import { cn, editorAtom } from "@lume/utils";
 import { useSetAtom } from "jotai";
+import { useHotkeys } from "react-hotkeys-hook";
 import { NavLink } from "react-router-dom";
 import { ActiveAccount } from "./account/active";
 
 export function Navigation() {
 	const setIsEditorOpen = useSetAtom(editorAtom);
+	useHotkeys("meta+n", () => setIsEditorOpen((state) => !state), []);
 
 	return (
 		<div className="flex flex-col justify-between w-20 h-full px-4 py-3 shrink-0">

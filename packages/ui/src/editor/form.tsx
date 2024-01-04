@@ -1,10 +1,18 @@
-import { MentionNote, useStorage } from "@lume/ark";
+import { MentionNote, useArk, useStorage } from "@lume/ark";
 import { TrashIcon } from "@lume/icons";
 import { NDKCacheUserProfile } from "@lume/types";
 import { cn, editorValueAtom } from "@lume/utils";
-import { useAtomValue } from "jotai";
+import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
+import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
-import { Editor, Range, Transforms, createEditor } from "slate";
+import {
+	Descendant,
+	Editor,
+	Node,
+	Range,
+	Transforms,
+	createEditor,
+} from "slate";
 import {
 	Editable,
 	ReactEditor,
@@ -14,6 +22,7 @@ import {
 	useSlateStatic,
 	withReact,
 } from "slate-react";
+import { toast } from "sonner";
 import { User } from "../user";
 import { EditorAddMedia } from "./addMedia";
 import {
@@ -177,10 +186,11 @@ const Element = (props) => {
 };
 
 export function EditorForm() {
+	const ark = useArk();
 	const storage = useStorage();
 	const ref = useRef<HTMLDivElement | null>();
-	const initialValue = useAtomValue(editorValueAtom);
 
+	const [editorValue, setEditorValue] = useAtom(editorValueAtom);
 	const [contacts, setContacts] = useState<NDKCacheUserProfile[]>([]);
 	const [target, setTarget] = useState<Range | undefined>();
 	const [index, setIndex] = useState(0);
@@ -192,6 +202,52 @@ export function EditorForm() {
 	const filters = contacts
 		?.filter((c) => c?.name?.toLowerCase().startsWith(search.toLowerCase()))
 		?.slice(0, 10);
+
+	const reset = () => {
+		// @ts-expect-error, backlog
+		editor.children = [{ type: "paragraph", children: [{ text: "" }] }];
+		setEditorValue([{ type: "paragraph", children: [{ text: "" }] }]);
+	};
+
+	const serialize = (nodes: Descendant[]) => {
+		return nodes
+			.map((n) => {
+				// @ts-expect-error, backlog
+				if (n.type === "image") return n.url;
+				// @ts-expect-error, backlog
+				if (n.type === "event") return n.eventId;
+
+				// @ts-expect-error, backlog
+				if (n.children.length) {
+					// @ts-expect-error, backlog
+					return n.children
+						.map((n) => {
+							if (n.type === "mention") return n.npub;
+							return Node.string(n).trim();
+						})
+						.join(" ");
+				}
+
+				return Node.string(n);
+			})
+			.join("\n");
+	};
+
+	const submit = async () => {
+		const event = new NDKEvent(ark.ndk);
+		event.kind = NDKKind.Text;
+		event.content = serialize(editor.children);
+
+		const publish = await event.publish();
+
+		if (!publish) toast.error("Failed to publish event, try again later.");
+
+		toast.success(
+			`Event has been published successfully to ${publish.size} relays.`,
+		);
+
+		reset();
+	};
 
 	useEffect(() => {
 		async function loadContacts() {
@@ -216,7 +272,7 @@ export function EditorForm() {
 		<div className="w-full h-full flex flex-col justify-between rounded-xl overflow-hidden bg-white shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-[inset_0_0_0.5px_1px_hsla(0,0%,100%,0.075),0_0_0_1px_hsla(0,0%,0%,0.05),0_0.3px_0.4px_hsla(0,0%,0%,0.02),0_0.9px_1.5px_hsla(0,0%,0%,0.045),0_3.5px_6px_hsla(0,0%,0%,0.09)]">
 			<Slate
 				editor={editor}
-				initialValue={initialValue}
+				initialValue={editorValue}
 				onChange={() => {
 					const { selection } = editor;
 
@@ -246,6 +302,7 @@ export function EditorForm() {
 			>
 				<div className="py-6 overflow-y-auto px-7">
 					<Editable
+						key={JSON.stringify(editorValue)}
 						autoFocus={false}
 						autoCapitalize="none"
 						autoCorrect="none"
@@ -278,7 +335,7 @@ export function EditorForm() {
 						</Portal>
 					)}
 				</div>
-				<div className="flex items-center justify-between h-16 px-3 border-t border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
+				<div className="flex items-center justify-between h-16 px-3 border-t shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
 					<div />
 					<div className="flex items-center">
 						<div className="inline-flex items-center gap-2">
@@ -287,6 +344,7 @@ export function EditorForm() {
 						<div className="w-px h-6 mx-3 bg-neutral-200 dark:bg-neutral-800" />
 						<button
 							type="button"
+							onClick={submit}
 							className="inline-flex items-center justify-center w-20 pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
 						>
 							Post

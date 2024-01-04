@@ -28,6 +28,8 @@ export const insertImage = (editor: ReactEditor | BaseEditor, url: string) => {
 			url,
 			children: [text],
 		},
+	];
+	const extraText = [
 		{
 			type: "paragraph",
 			children: [text],
@@ -35,6 +37,7 @@ export const insertImage = (editor: ReactEditor | BaseEditor, url: string) => {
 	];
 
 	Transforms.insertNodes(editor, image);
+	Transforms.insertNodes(editor, extraText);
 };
 
 export const insertMention = (
@@ -63,6 +66,8 @@ export const insertNostrEvent = (
 			eventId: `nostr:${eventId}`,
 			children: [text],
 		},
+	];
+	const extraText = [
 		{
 			type: "paragraph",
 			children: [text],
@@ -70,4 +75,5 @@ export const insertNostrEvent = (
 	];
 
 	Transforms.insertNodes(editor, event);
+	Transforms.insertNodes(editor, extraText);
 };

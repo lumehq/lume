@@ -108,8 +108,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		}
 
 		const explicitRelayUrls = normalizeRelayUrlSet([
-			"wss://relay.damus.io",
-			"wss://relay.nostr.band/all",
+			"wss://bostr.nokotaro.com/",
 			"wss://nostr.mutinywallet.com",
 		]);
 
@@ -135,11 +134,9 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			explicitRelayUrls,
 			outboxRelayUrls,
 			blacklistRelayUrls,
-			enableOutboxModel: storage.settings.lowPowerMode
-				? false
-				: storage.settings.outbox,
-			autoConnectUserRelays: storage.settings.lowPowerMode ? false : true,
-			autoFetchUserMutelist: storage.settings.lowPowerMode ? false : true,
+			enableOutboxModel: !storage.settings.lowPowerMode,
+			autoConnectUserRelays: !storage.settings.lowPowerMode,
+			autoFetchUserMutelist: !storage.settings.lowPowerMode,
 			// clientName: 'Lume',
 			// clientNip89: '',
 		});
