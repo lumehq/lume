@@ -1,6 +1,7 @@
 import { LumeStorage } from "@lume/storage";
 import { type NDKEventWithReplies, type NIP05 } from "@lume/types";
 import NDK, {
+	NDKAppHandlerEvent,
 	NDKEvent,
 	NDKFilter,
 	NDKKind,
@@ -519,19 +520,26 @@ export class Ark {
 		return false;
 	}
 
-	public async replyTo({
-		content,
-		event,
-	}: { content: string; event: NDKEvent }) {
-		try {
-			const replyEvent = new NDKEvent(this.ndk);
-			replyEvent.content = content;
-			replyEvent.kind = NDKKind.Text;
-			replyEvent.tag(event, "reply");
+	public async getAppRecommend({
+		unknownKind,
+		author,
+	}: { unknownKind: string; author?: string }) {
+		const event = await this.ndk.fetchEvent({
+			kinds: [NDKKind.AppRecommendation],
+			"#d": [unknownKind],
+			authors: this.#storage.account.contacts || [author],
+		});
 
-			return await replyEvent.publish();
-		} catch (e) {
-			throw new Error(e);
-		}
+		if (event) return event.tags.filter((item) => item[0] !== "d");
+
+		const altEvent = await this.ndk.fetchEvent({
+			kinds: [NDKKind.AppHandler],
+			"#k": [unknownKind],
+			authors: this.#storage.account.contacts || [author],
+		});
+
+		if (altEvent) return altEvent.tags.filter((item) => item[0] !== "d");
+
+		return null;
 	}
 }

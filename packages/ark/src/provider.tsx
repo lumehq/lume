@@ -3,7 +3,6 @@ import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { LumeStorage } from "@lume/storage";
 import { QUOTES, delay, sendNativeNotification } from "@lume/utils";
 import NDK, {
-	NDKKind,
 	NDKNip46Signer,
 	NDKPrivateKeySigner,
 	NDKRelay,
