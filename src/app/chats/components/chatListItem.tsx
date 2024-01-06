@@ -65,7 +65,7 @@ export const ChatListItem = memo(function ChatListItem({ event }: { event: NDKEv
           {user?.name ||
             user?.display_name ||
             user?.displayName ||
-            displayNpub(event.pubkey, 16)}
+            displayNpub(event.pubkey)}
         </div>
         <div className="flex w-full items-center justify-between">
           <div className="max-w-[10rem] truncate text-sm">{decryptedContent}</div>

@@ -1,13 +1,16 @@
+import { useState } from 'react';
+
 import { useArk } from '@libs/ark';
 
-import { CancelIcon } from '@shared/icons';
+import { CancelIcon, EditIcon, EnterIcon } from '@shared/icons';
 import { User } from '@shared/user';
 
+import { cropText } from '@utils/formater';
 import { useWidget } from '@utils/hooks/useWidget';
 
 export function TitleBar({
   id,
-  title,
+  title: aTitle,
   isLive,
 }: {
   id?: string;
@@ -15,7 +18,15 @@ export function TitleBar({
   isLive?: boolean;
 }) {
   const { ark } = useArk();
-  const { removeWidget } = useWidget();
+
+  const [title, setTitle] = useState(aTitle);
+  const [editing, setEditing] = useState(false);
+  const { removeWidget, renameWidget } = useWidget();
+
+  const submitTitleChange = () => {
+    renameWidget.mutate({ id, title });
+    setEditing(false);
+  };
 
   return (
     <div className="grid h-11 w-full shrink-0 grid-cols-3 items-center px-3">
@@ -44,14 +55,50 @@ export function TitleBar({
               </div>
             ) : null}
           </div>
-        ) : (
-          <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-            {title}
+        ) : !editing ? (
+          <h3
+            title={title}
+            className="text-sm font-semibold text-neutral-900 dark:text-neutral-100"
+          >
+            {cropText(title)}
           </h3>
+        ) : (
+          <input
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyUp={(event) => {
+              if (event.key === 'Enter') {
+                submitTitleChange();
+              }
+              if (event.key === 'Escape') {
+                setTitle(aTitle);
+                setEditing(false);
+              }
+            }}
+            type="text"
+            spellCheck={false}
+            autoFocus={editing}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            placeholder="type here..."
+            value={title}
+            className="dark:transparent max-h-6 border-transparent bg-transparent px-3 text-sm placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+          ></input>
         )}
       </div>
-      <div className="col-span-1 flex justify-end">
-        {id !== '9999' && id !== '9998' ? (
+      {id !== '9999' && id !== '9998' ? (
+        <div className="col-span-1 flex justify-end">
+          <button
+            type="button"
+            onClick={() => (editing ? submitTitleChange() : setEditing(true))}
+            className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-neutral-900 backdrop-blur-xl hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
+          >
+            {editing ? (
+              <EnterIcon className="h-3 w-3" />
+            ) : (
+              <EditIcon className="h-3 w-3" />
+            )}
+          </button>
           <button
             type="button"
             onClick={() => removeWidget.mutate(id)}
@@ -59,8 +106,8 @@ export function TitleBar({
           >
             <CancelIcon className="h-3 w-3" />
           </button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 }
