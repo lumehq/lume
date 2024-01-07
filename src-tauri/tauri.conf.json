@@ -9,7 +9,7 @@
 	},
 	"package": {
 		"productName": "Lume",
-		"version": "2.2.3"
+		"version": "3.0.0"
 	},
 	"plugins": {
 		"fs": {
@@ -60,8 +60,8 @@
 				"icons/icon.ico"
 			],
 			"copyright": "",
-			"identifier": "com.lume.nu",
-			"longDescription": "The communication app build on Nostr Protocol",
+			"identifier": "nu.lume",
+			"longDescription": "nostr client for desktop",
 			"shortDescription": "",
 			"targets": "all",
 			"updater": {
