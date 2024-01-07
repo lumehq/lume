@@ -67,5 +67,29 @@ export function useWidget() {
     },
   });
 
-  return { addWidget, replaceWidget, removeWidget };
+  const renameWidget = useMutation({
+    mutationFn: async ({ id, title }: { id: string; title: string }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['widgets'] });
+
+      // Snapshot the previous value
+      const prevWidgets = queryClient.getQueryData(['widgets']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['widgets'], (prev: Widget[]) =>
+        prev.filter((t) => t.id !== id)
+      );
+
+      // Update in database
+      await ark.renameWidget(id, title);
+
+      // Return a context object with the snapshotted value
+      return { prevWidgets };
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['widgets'] });
+    },
+  });
+
+  return { addWidget, replaceWidget, removeWidget, renameWidget };
 }

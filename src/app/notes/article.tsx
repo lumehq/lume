@@ -115,7 +115,7 @@ export function ArticleNoteScreen() {
           </div>
         )}
       </div>
-      <div className="col-span-4 border-l border-neutral-100 px-3 dark:border-neutral-900 xl:col-span-3">
+      <div className="col-span-4 border-l border-neutral-100 px-3 xl:col-span-3 dark:border-neutral-900">
         <div className="mb-3 border-b border-neutral-100 pb-3 dark:border-neutral-900">
           <NoteReplyForm rootEvent={data} />
         </div>

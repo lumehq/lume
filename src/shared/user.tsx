@@ -474,6 +474,8 @@ export const User = memo(function User({
             <span>{createdAt}</span>
             <span>·</span>
             <span>{fallbackName}</span>
+            <div className="grow"></div>
+            <MoreActions id={eventId} pubkey={pubkey} />
           </div>
         </div>
       </div>

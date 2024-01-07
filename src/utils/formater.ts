@@ -43,9 +43,14 @@ export function formatCreatedAt(time: number, message: boolean = false) {
   return formated;
 }
 
-export function displayNpub(pubkey: string, len: number, separator?: string) {
+export function displayNpub(pubkey: string, len: number = 16, separator?: string) {
   const npub = pubkey.startsWith('npub1') ? pubkey : (nip19.npubEncode(pubkey) as string);
-  if (npub.length <= len) return npub;
+
+  return cropText(npub, len, separator);
+}
+
+export function cropText(text: string, len: number = 16, separator?: string) {
+  if (text.length <= len) return text;
 
   separator = separator || ' ... ';
 
@@ -54,7 +59,7 @@ export function displayNpub(pubkey: string, len: number, separator?: string) {
     frontChars = Math.ceil(charsToShow / 2),
     backChars = Math.floor(charsToShow / 2);
 
-  return npub.substr(0, frontChars) + separator + npub.substr(npub.length - backChars);
+  return text.substr(0, frontChars) + separator + text.substr(text.length - backChars);
 }
 
 // convert number to K, M, B, T, etc.

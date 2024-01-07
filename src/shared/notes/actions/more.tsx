@@ -7,8 +7,13 @@ import { Link } from 'react-router-dom';
 
 import { HorizontalDotsIcon } from '@shared/icons';
 
+import { WIDGET_KIND } from '@utils/constants';
+import { useWidget } from '@utils/hooks/useWidget';
+
 export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
   const [open, setOpen] = useState(false);
+
+  const { addWidget } = useWidget();
 
   const copyID = async () => {
     await writeText(nip19.neventEncode({ id: id, author: pubkey } as EventPointer));
@@ -47,6 +52,21 @@ export function MoreActions({ id, pubkey }: { id: string; pubkey: string }) {
               className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               Copy ID
+            </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <button
+              type="button"
+              className="inline-flex h-10 items-center px-4 text-sm text-neutral-900 hover:bg-neutral-200 focus:outline-none dark:text-neutral-100 dark:hover:bg-neutral-800"
+              onClick={() =>
+                addWidget.mutate({
+                  kind: WIDGET_KIND.user,
+                  title: pubkey,
+                  content: pubkey,
+                })
+              }
+            >
+              Open Notes
             </button>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>

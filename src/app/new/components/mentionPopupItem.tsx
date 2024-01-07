@@ -47,7 +47,7 @@ export function MentionPopupItem({ pubkey, embed }: { pubkey: string; embed?: st
           {user?.display_name || user?.displayName || user?.name}
         </h5>
         <span className="text-sm leading-none text-neutral-600 dark:text-neutral-400">
-          {displayNpub(pubkey, 16)}
+          {displayNpub(pubkey)}
         </span>
       </div>
     </div>

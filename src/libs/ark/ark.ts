@@ -330,6 +330,14 @@ export class Ark {
     if (res) return id;
   }
 
+  public async renameWidget(id: string, title: string) {
+    const res = await this.#storage.execute(
+      'UPDATE widgets SET title = $2 WHERE id = $1;',
+      [id, title]
+    );
+    if (res) return res;
+  }
+
   public async createSetting(key: string, value: string | undefined) {
     if (value) {
       return await this.#storage.execute(

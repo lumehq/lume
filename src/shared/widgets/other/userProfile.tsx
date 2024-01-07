@@ -96,7 +96,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
             />
           ) : (
             <span className="max-w-[15rem] truncate text-sm text-neutral-600 dark:text-neutral-400">
-              {displayNpub(pubkey, 16)}
+              {displayNpub(pubkey)}
             </span>
           )}
         </div>
