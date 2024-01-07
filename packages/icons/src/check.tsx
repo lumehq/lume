@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export function ChevronDownIcon(
+export function CheckIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (
@@ -17,7 +17,7 @@ export function ChevronDownIcon(
 				strokeLinecap="round"
 				strokeLinejoin="round"
 				strokeWidth="2"
-				d="M8 10.14a20.36 20.36 0 003.702 3.893c.175.141.42.141.596 0A20.361 20.361 0 0016 10.14"
+				d="M5 12.713l5.017 5.012.4-.701a28.598 28.598 0 018.7-9.42L20 7"
 			/>
 		</svg>
 	);

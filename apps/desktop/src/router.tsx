@@ -1,7 +1,7 @@
 import { useArk, useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { AppLayout, AuthLayout, HomeLayout, SettingsLayout } from "@lume/ui";
-import { NDKKind } from "@nostr-dev-kit/ndk";
+import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import {
 	RouterProvider,
@@ -179,11 +179,39 @@ export default function Router() {
 				},
 				{
 					path: "create",
+					loader: async () => {
+						const trusted: NDKEvent[] = [];
+
+						const services = await ark.ndk.fetchEvents({
+							kinds: [NDKKind.AppHandler],
+							"#k": ["24133"],
+						});
+
+						for (const service of services) {
+							const nip05 = JSON.parse(service.content).nip05;
+							const validate = await ark.validateNIP05({
+								pubkey: service.pubkey,
+								nip05,
+							});
+							if (validate) trusted.push(service);
+						}
+
+						return trusted;
+					},
 					async lazy() {
 						const { CreateAccountScreen } = await import(
 							"./routes/auth/create"
 						);
 						return { Component: CreateAccountScreen };
+					},
+				},
+				{
+					path: "create-profile",
+					async lazy() {
+						const { CreateProfileScreen } = await import(
+							"./routes/auth/create-profile"
+						);
+						return { Component: CreateProfileScreen };
 					},
 				},
 				{

@@ -9,6 +9,7 @@ import NDK, {
 	NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
 import { ndkAdapter } from "@nostr-fetch/adapter-ndk";
+import { fetch } from "@tauri-apps/plugin-http";
 import { platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
 import Database from "@tauri-apps/plugin-sql";
@@ -140,6 +141,9 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			// clientName: 'Lume',
 			// clientNip89: '',
 		});
+
+		// use tauri fetch
+		ndk.httpFetch = fetch;
 
 		// add signer
 		const signer = await initNostrSigner({
