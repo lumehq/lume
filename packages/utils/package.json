@@ -8,7 +8,7 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.17.1",
+		"@tanstack/react-query": "^5.17.8",
 		"@tauri-apps/api": "2.0.0-alpha.13",
 		"@tauri-apps/plugin-notification": "2.0.0-alpha.5",
 		"clsx": "^2.1.0",
@@ -16,12 +16,12 @@
 		"jotai": "^2.6.1",
 		"nostr-tools": "1.17.0",
 		"react": "^18.2.0",
-		"tailwind-merge": "^1.14.0"
+		"tailwind-merge": "^2.2.0"
 	},
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.46",
+		"@types/react": "^18.2.47",
 		"typescript": "^5.3.3"
 	}
 }
