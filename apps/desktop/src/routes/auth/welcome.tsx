@@ -1,7 +1,16 @@
-import { SettingsIcon } from "@lume/icons";
-import { Link } from "react-router-dom";
+import { LoaderIcon } from "@lume/icons";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export function WelcomeScreen() {
+	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+
+	const gotoCreateAccount = () => {
+		setLoading(true);
+		navigate("/auth/create");
+	};
+
 	return (
 		<div className="flex flex-col items-center justify-between w-full h-full">
 			<div />
@@ -20,15 +29,20 @@ export function WelcomeScreen() {
 					</p>
 				</div>
 				<div className="flex flex-col w-full max-w-xs gap-2 mx-auto">
-					<Link
-						to="/auth/create"
-						className="inline-flex items-center justify-center w-full h-12 font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
+					<button
+						type="button"
+						onClick={gotoCreateAccount}
+						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
 					>
-						Create New Account
-					</Link>
+						{loading ? (
+							<LoaderIcon className="size-5 animate-spin" />
+						) : (
+							"Create New Account"
+						)}
+					</button>
 					<Link
 						to="/auth/import"
-						className="inline-flex items-center justify-center w-full h-12 font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
+						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
 					>
 						Login
 					</Link>

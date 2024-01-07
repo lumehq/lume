@@ -14,19 +14,12 @@ export function OnboardingScreen() {
 
 	const [settings, setSettings] = useState({
 		autoupdate: false,
-		outbox: false,
 		notification: false,
 	});
 
 	const next = () => {
 		if (!storage.account.contacts.length) return navigate("/auth/follow");
 		return navigate("/auth/finish");
-	};
-
-	const toggleOutbox = async () => {
-		await storage.createSetting("outbox", String(+!settings.outbox));
-		// update state
-		setSettings((prev) => ({ ...prev, outbox: !settings.outbox }));
 	};
 
 	const toggleAutoupdate = async () => {
@@ -55,12 +48,6 @@ export function OnboardingScreen() {
 						...prev,
 						autoupdate: !!parseInt(item.value),
 					}));
-
-				if (item.key === "outbox")
-					setSettings((prev) => ({
-						...prev,
-						outbox: !!parseInt(item.value),
-					}));
 			}
 		}
 
@@ -70,65 +57,51 @@ export function OnboardingScreen() {
 	return (
 		<div className="relative flex h-full w-full items-center justify-center">
 			<div className="mx-auto flex w-full max-w-md flex-col gap-10">
-				<div className="text-center">
-					<h1 className="text-2xl font-light text-neutral-900 dark:text-neutral-100">
+				<div className="flex flex-col gap-1 text-center items-center">
+					<h1 className="text-2xl font-semibold">
 						You&apos;re almost ready to use Lume.
 					</h1>
-					<h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
 						Let&apos;s start personalizing your experience.
-					</h2>
+					</p>
 				</div>
 				<div className="flex flex-col gap-3">
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+					<div className="flex w-full items-start justify-between gap-4 rounded-xl px-5 py-4 bg-neutral-950">
 						<Switch.Root
 							checked={settings.autoupdate}
 							onClick={() => toggleAutoupdate()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full outline-none data-[state=checked]:bg-blue-500 bg-neutral-800"
 						>
-							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
 						<div>
-							<h3 className="font-semibold">Auto check for update on Login</h3>
-							<p className="text-sm">
+							<h3 className="text-lg font-semibold">
+								Auto check for update on Login
+							</h3>
+							<p className="text-neutral-500">
 								Keep Lume up to date with latest version, always have new
 								features and bug free.
 							</p>
 						</div>
 					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+					<div className="flex w-full items-start justify-between gap-4 rounded-xl px-5 py-4 bg-neutral-950">
 						<Switch.Root
 							checked={settings.notification}
 							onClick={() => toggleNofitication()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full outline-none data-[state=checked]:bg-blue-500 bg-neutral-800"
 						>
-							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
 						<div>
-							<h3 className="font-semibold">Push notification</h3>
-							<p className="text-sm">
+							<h3 className="font-semibold text-lg">Push notification</h3>
+							<p className="text-neutral-500">
 								Enabling push notifications will allow you to receive
-								notifications from Lume directly on your device.
+								notifications from Lume.
 							</p>
 						</div>
 					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
-						<Switch.Root
-							checked={settings.outbox}
-							onClick={() => toggleOutbox()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div>
-							<h3 className="font-semibold">Use Gossip model (recommended)</h3>
-							<p className="text-sm">
-								Automatically discover relays to connect based on the
-								preferences of each author.
-							</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-2 rounded-lg bg-blue-100 p-3 text-sm text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-						<InfoIcon className="h-8 w-8" />
+					<div className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm bg-blue-950 text-blue-300">
+						<InfoIcon className="size-8" />
 						<p>
 							There are many more settings you can configure from the
 							&quot;Settings&quot; screen. Be sure to visit it later.
@@ -137,7 +110,7 @@ export function OnboardingScreen() {
 					<button
 						type="button"
 						onClick={next}
-						className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600"
+						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 disabled:opacity-50"
 					>
 						Continue
 					</button>

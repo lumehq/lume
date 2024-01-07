@@ -1,7 +1,6 @@
 import { LumeStorage } from "@lume/storage";
 import { type NDKEventWithReplies, type NIP05 } from "@lume/types";
 import NDK, {
-	NDKAppHandlerEvent,
 	NDKEvent,
 	NDKFilter,
 	NDKKind,
@@ -513,7 +512,6 @@ export class Ark {
 		const data: NIP05 = await res.json();
 
 		if (!data.names) return false;
-
 		if (data.names[localPath.toLowerCase()] === pubkey) return true;
 		if (data.names[localPath] === pubkey) return true;
 
@@ -541,5 +539,29 @@ export class Ark {
 		if (altEvent) return altEvent.tags.filter((item) => item[0] !== "d");
 
 		return null;
+	}
+
+	public async getOAuthServices() {
+		const trusted: NDKEvent[] = [];
+
+		const services = await this.ndk.fetchEvents({
+			kinds: [NDKKind.AppHandler],
+			"#k": ["24133"],
+		});
+
+		for (const service of services) {
+			const nip05 = JSON.parse(service.content).nip05 as string;
+			try {
+				const validate = await this.validateNIP05({
+					pubkey: service.pubkey,
+					nip05,
+				});
+				if (validate) trusted.push(service);
+			} catch (e) {
+				console.log(e);
+			}
+		}
+
+		return trusted;
 	}
 }

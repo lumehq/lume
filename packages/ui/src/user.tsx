@@ -182,11 +182,11 @@ export const User = memo(function User({
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
-				<div className="flex flex-col items-start text-start">
-					<p className="max-w-[15rem] truncate text-lg font-semibold">
+				<div className="flex flex-col items-start text-start gap-1">
+					<p className="max-w-[15rem] truncate text-lg font-semibold leadning-tight">
 						{user?.name || user?.display_name || user?.displayName}
 					</p>
-					<p className="break-p prose prose-neutral max-w-none select-text whitespace-pre-line leading-normal dark:prose-invert">
+					<p className="break-p text-neutral-500 max-w-none select-text whitespace-pre-line">
 						{user?.about || user?.bio || "No bio"}
 					</p>
 				</div>

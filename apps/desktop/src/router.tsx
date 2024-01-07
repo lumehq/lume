@@ -1,7 +1,6 @@
 import { useArk, useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { AppLayout, AuthLayout, HomeLayout, SettingsLayout } from "@lume/ui";
-import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import {
 	RouterProvider,
@@ -24,7 +23,7 @@ export default function Router() {
 					element: <HomeLayout />,
 					errorElement: <ErrorScreen />,
 					loader: async () => {
-						if (!storage.account) return redirect("auth/welcome");
+						if (!storage.account) return redirect("auth");
 						return null;
 					},
 					children: [
@@ -171,7 +170,7 @@ export default function Router() {
 			errorElement: <ErrorScreen />,
 			children: [
 				{
-					path: "welcome",
+					index: true,
 					async lazy() {
 						const { WelcomeScreen } = await import("./routes/auth/welcome");
 						return { Component: WelcomeScreen };
@@ -180,38 +179,13 @@ export default function Router() {
 				{
 					path: "create",
 					loader: async () => {
-						const trusted: NDKEvent[] = [];
-
-						const services = await ark.ndk.fetchEvents({
-							kinds: [NDKKind.AppHandler],
-							"#k": ["24133"],
-						});
-
-						for (const service of services) {
-							const nip05 = JSON.parse(service.content).nip05;
-							const validate = await ark.validateNIP05({
-								pubkey: service.pubkey,
-								nip05,
-							});
-							if (validate) trusted.push(service);
-						}
-
-						return trusted;
+						return await ark.getOAuthServices();
 					},
 					async lazy() {
 						const { CreateAccountScreen } = await import(
 							"./routes/auth/create"
 						);
 						return { Component: CreateAccountScreen };
-					},
-				},
-				{
-					path: "create-profile",
-					async lazy() {
-						const { CreateProfileScreen } = await import(
-							"./routes/auth/create-profile"
-						);
-						return { Component: CreateProfileScreen };
 					},
 				},
 				{
@@ -230,20 +204,6 @@ export default function Router() {
 							"./routes/auth/onboarding"
 						);
 						return { Component: OnboardingScreen };
-					},
-				},
-				{
-					path: "follow",
-					async lazy() {
-						const { FollowScreen } = await import("./routes/auth/follow");
-						return { Component: FollowScreen };
-					},
-				},
-				{
-					path: "finish",
-					async lazy() {
-						const { FinishScreen } = await import("./routes/auth/finish");
-						return { Component: FinishScreen };
 					},
 				},
 				{

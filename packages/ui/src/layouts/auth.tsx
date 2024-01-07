@@ -7,7 +7,7 @@ export function AuthLayout({ platform }: { platform: Platform }) {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	const canGoBack = location.key === "default";
+	const canGoBack = location.pathname.length > 6;
 
 	return (
 		<div className="flex flex-col w-screen h-screen bg-black text-neutral-50">
