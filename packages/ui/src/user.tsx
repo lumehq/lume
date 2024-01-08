@@ -165,30 +165,40 @@ export const User = memo(function User({
 		}
 
 		return (
-			<div className="flex h-full w-full flex-col gap-2.5">
-				<Avatar.Root className="shrink-0">
-					<Avatar.Image
-						src={user?.picture || user?.image}
-						alt={pubkey}
-						loading="lazy"
-						decoding="async"
-						className="h-11 w-11 rounded-lg object-cover"
-					/>
-					<Avatar.Fallback delayMs={300}>
+			<div>
+				<div className="h-20 bg-gray-200 dark:bg-gray-800 rounded-t-lg">
+					{user?.banner ? (
 						<img
-							src={fallbackAvatar}
-							alt={pubkey}
-							className="h-11 w-11 rounded-lg bg-black dark:bg-white"
+							src={user.banner}
+							alt="banner"
+							className="w-full h-full object-cover"
 						/>
-					</Avatar.Fallback>
-				</Avatar.Root>
-				<div className="flex flex-col items-start text-start gap-1">
-					<p className="max-w-[15rem] truncate text-lg font-semibold leadning-tight">
-						{user?.name || user?.display_name || user?.displayName}
-					</p>
-					<p className="break-p text-neutral-500 max-w-none select-text whitespace-pre-line">
-						{user?.about || user?.bio || "No bio"}
-					</p>
+					) : null}
+				</div>
+				<div className="flex h-full w-full flex-col gap-2.5 px-3 -mt-6">
+					<Avatar.Root className="shrink-0">
+						<Avatar.Image
+							src={user?.picture || user?.image}
+							alt={pubkey}
+							decoding="async"
+							className="size-11 rounded-lg object-cover"
+						/>
+						<Avatar.Fallback delayMs={300}>
+							<img
+								src={fallbackAvatar}
+								alt={pubkey}
+								className="size-11 rounded-lg bg-black dark:bg-white"
+							/>
+						</Avatar.Fallback>
+					</Avatar.Root>
+					<div className="flex flex-col items-start text-start">
+						<p className="max-w-[15rem] truncate text-lg font-semibold leadning-tight">
+							{user?.name || user?.display_name || user?.displayName}
+						</p>
+						<p className="break-p text-neutral-700 dark:text-neutral-600 max-w-none select-text whitespace-pre-line">
+							{user?.about || user?.bio || "No bio"}
+						</p>
+					</div>
 				</div>
 			</div>
 		);

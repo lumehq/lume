@@ -7,3 +7,5 @@ export const editorValueAtom = atom([
 		children: [{ text: "" }],
 	},
 ]);
+
+export const onboardingAtom = atom(false);

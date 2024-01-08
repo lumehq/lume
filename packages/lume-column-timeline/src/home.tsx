@@ -1,5 +1,6 @@
 import { RepostNote, TextNote, useArk, useStorage } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
+import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -80,6 +81,14 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			);
 		};
 	}, []);
+
+	if (!storage.account.contacts.length) {
+		return (
+			<div className="px-3 mt-3">
+				<EmptyFeed />
+			</div>
+		);
+	}
 
 	return (
 		<div className="w-full h-full">

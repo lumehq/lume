@@ -1,9 +1,9 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
-import { message } from "@tauri-apps/plugin-dialog";
 import { Dispatch, SetStateAction, useState } from "react";
+import { toast } from "sonner";
 
-export function AvatarUploader({
+export function AvatarUploadButton({
 	setPicture,
 }: {
 	setPicture: Dispatch<SetStateAction<string>>;
@@ -25,12 +25,8 @@ export function AvatarUploader({
 
 			return;
 		} catch (e) {
-			// stop loading
 			setLoading(false);
-			await message(`Upload failed, error: ${e}`, {
-				title: "Lume",
-				type: "error",
-			});
+			toast.error(e);
 		}
 	};
 
@@ -41,7 +37,7 @@ export function AvatarUploader({
 			className="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-100 px-2 py-1.5 text-sm font-medium text-blue-500 hover:border-blue-300 hover:bg-blue-200 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-500 dark:hover:border-blue-800 dark:hover:bg-blue-800"
 		>
 			{loading ? (
-				<LoaderIcon className="h-4 w-4 animate-spin" />
+				<LoaderIcon className="size-4 animate-spin" />
 			) : (
 				"Change avatar"
 			)}

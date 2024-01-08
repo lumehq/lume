@@ -1,6 +1,5 @@
 import { useArk } from "@lume/ark";
 import {
-	ArrowLeftIcon,
 	ArrowRightIcon,
 	CancelIcon,
 	ChevronDownIcon,
@@ -40,11 +39,11 @@ export function FollowsScreen() {
 	const navigate = useNavigate();
 
 	const { status, data } = useQuery({
-		queryKey: ["trending-profiles-widget"],
+		queryKey: ["trending-users"],
 		queryFn: async () => {
 			const res = await fetch("https://api.nostr.band/v0/trending/profiles");
 			if (!res.ok) {
-				throw new Error("Error");
+				throw new Error("Failed to fetch trending users from nostr.band API.");
 			}
 			return res.json();
 		},

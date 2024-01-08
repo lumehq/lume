@@ -47,6 +47,7 @@
 		"@tauri-apps/plugin-upload": "2.0.0-alpha.5",
 		"@vidstack/react": "^1.9.8",
 		"framer-motion": "^10.17.9",
+		"jotai": "^2.6.1",
 		"minidenticons": "^4.2.0",
 		"nanoid": "^5.0.4",
 		"nostr-fetch": "^0.15.0",

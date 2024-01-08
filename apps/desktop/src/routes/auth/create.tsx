@@ -1,5 +1,6 @@
 import { useArk, useStorage } from "@lume/ark";
 import { CheckIcon, ChevronDownIcon, LoaderIcon } from "@lume/icons";
+import { onboardingAtom } from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -11,6 +12,7 @@ import { downloadDir } from "@tauri-apps/api/path";
 import { Window } from "@tauri-apps/api/window";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { useSetAtom } from "jotai";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,6 +40,7 @@ export function CreateAccountScreen() {
 	const storage = useStorage();
 	const navigate = useNavigate();
 	const services = useLoaderData() as NDKEvent[];
+	const setOnboarding = useSetAtom(onboardingAtom);
 
 	const [serviceId, setServiceId] = useState(services?.[0]?.id);
 	const [loading, setIsLoading] = useState(false);
@@ -79,6 +82,8 @@ export function CreateAccountScreen() {
 			pubkey: pubkey,
 			privkey: signer.privateKey,
 		});
+
+		setOnboarding(true);
 
 		return navigate("/auth/onboarding");
 	};
@@ -142,8 +147,10 @@ export function CreateAccountScreen() {
 
 		ark.updateNostrSigner({ signer: remoteSigner });
 
-		authWindow.close();
+		setOnboarding(true);
 		setIsLoading(false);
+
+		authWindow.close();
 
 		return navigate("/auth/onboarding");
 	};

@@ -21,7 +21,6 @@ export class LumeStorage {
 	public settings: {
 		autoupdate: boolean;
 		bunker: boolean;
-		outbox: boolean;
 		media: boolean;
 		hashtag: boolean;
 		depot: boolean;
@@ -35,7 +34,6 @@ export class LumeStorage {
 		this.settings = {
 			autoupdate: false,
 			bunker: false,
-			outbox: false,
 			media: true,
 			hashtag: true,
 			depot: false,
@@ -50,12 +48,11 @@ export class LumeStorage {
 		for (const item of settings) {
 			if (item.key === "nsecbunker")
 				this.settings.bunker = !!parseInt(item.value);
-			if (item.key === "outbox") this.settings.outbox = !!parseInt(item.value);
-			if (item.key === "media") this.settings.media = !!parseInt(item.value);
 			if (item.key === "hashtag")
 				this.settings.hashtag = !!parseInt(item.value);
 			if (item.key === "autoupdate")
 				this.settings.autoupdate = !!parseInt(item.value);
+			if (item.key === "media") this.settings.media = !!parseInt(item.value);
 			if (item.key === "depot") this.settings.depot = !!parseInt(item.value);
 			if (item.key === "tunnel_url") this.settings.tunnelUrl = item.value;
 		}
@@ -323,11 +320,11 @@ export class LumeStorage {
 	}
 
 	public async getColumns() {
-		const widgets: Array<IColumn> = await this.#db.select(
-			"SELECT * FROM widgets WHERE account_id = $1 ORDER BY created_at DESC;",
+		const columns: Array<IColumn> = await this.#db.select(
+			"SELECT * FROM columns WHERE account_id = $1 ORDER BY created_at DESC;",
 			[this.account.id],
 		);
-		return widgets;
+		return columns;
 	}
 
 	public async createColumn(
@@ -336,16 +333,16 @@ export class LumeStorage {
 		content: string | string[],
 	) {
 		const insert = await this.#db.execute(
-			"INSERT INTO widgets (account_id, kind, title, content) VALUES ($1, $2, $3, $4);",
+			"INSERT INTO columns (account_id, kind, title, content) VALUES ($1, $2, $3, $4);",
 			[this.account.id, kind, title, content],
 		);
 
 		if (insert) {
-			const widgets: Array<IColumn> = await this.#db.select(
-				"SELECT * FROM widgets ORDER BY id DESC LIMIT 1;",
+			const columns: Array<IColumn> = await this.#db.select(
+				"SELECT * FROM columns ORDER BY id DESC LIMIT 1;",
 			);
-			if (widgets.length < 1) console.error("get created widget failed");
-			return widgets[0];
+			if (columns.length < 1) console.error("get created widget failed");
+			return columns[0];
 		}
 
 		console.error("create widget failed");
@@ -353,13 +350,13 @@ export class LumeStorage {
 
 	public async updateColumn(id: number, title: string, content: string) {
 		return await this.#db.execute(
-			"UPDATE widgets SET title = $1, content = $2 WHERE id = $3;",
+			"UPDATE columns SET title = $1, content = $2 WHERE id = $3;",
 			[title, content, id],
 		);
 	}
 
 	public async removeColumn(id: number) {
-		const res = await this.#db.execute("DELETE FROM widgets WHERE id = $1;", [
+		const res = await this.#db.execute("DELETE FROM columns WHERE id = $1;", [
 			id,
 		]);
 		if (res) return id;

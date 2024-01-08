@@ -51,7 +51,7 @@ export function ErrorScreen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="relative flex h-screen w-screen items-center justify-center bg-blue-600"
+			className="relative flex h-screen w-screen items-center justify-center bg-blue-600 overflow-hidden rounded-t-xl"
 		>
 			<div className="flex w-full max-w-2xl flex-col items-start gap-8">
 				<div className="flex flex-col">
