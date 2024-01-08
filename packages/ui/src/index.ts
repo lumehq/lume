@@ -11,3 +11,5 @@ export * from "./layouts/home";
 export * from "./layouts/settings";
 export * from "./mentions";
 export * from "./replyList";
+export * from "./routes/event";
+export * from "./routes/user";

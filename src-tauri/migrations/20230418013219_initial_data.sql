@@ -1,27 +1,40 @@
 -- create accounts table
 CREATE TABLE
   accounts (
-    id TEXT NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY,
     pubkey TEXT NOT NULL UNIQUE,
-    follows TEXT,
-    circles TEXT,
     is_active INTEGER NOT NULL DEFAULT 0,
-    last_login_at NUMBER NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
--- create notes table
+-- create ndk cache users table
 CREATE TABLE
-  events (
+  ndk_users (
+    pubkey TEXT NOT NULL PRIMARY KEY,
+    profile TEXT,
+    createdAt NUMBER
+  );
+
+-- create ndk cache events table
+CREATE TABLE
+  ndk_events (
     id TEXT NOT NULL PRIMARY KEY,
-    account_id INTEGER NOT NULL,
-    event TEXT NOT NULL,
-    author TEXT NOT NULL,
-    kind NUMBER NOT NULL DEFAULt 1,
-    root_id TEXT,
-    reply_id TEXT,
-    created_at INTEGER NOT NULL,
-    FOREIGN KEY (account_id) REFERENCES accounts (id)
+    pubkey TEXT,
+    content TEXT,
+    kind NUMBER,
+    createdAt NUMBER,
+    relay TEXT,
+    event TEXT
+  );
+
+-- create ndk cache eventtags table
+CREATE TABLE
+  ndk_eventtags (
+    id TEXT NOT NULL PRIMARY KEY,
+    eventId TEXT,
+    tag TEXT,
+    value TEXT,
+    tagValue TEXT
   );
 
 -- create settings table
@@ -33,23 +46,14 @@ CREATE TABLE
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
+-- create columns table
 CREATE TABLE
-  widgets (
+  columns (
     id INTEGER NOT NULL PRIMARY KEY,
     account_id INTEGER NOT NULL,
     kind INTEGER NOT NULL,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (account_id) REFERENCES accounts (id)
-  );
-
-CREATE TABLE
-  relays (
-    id INTEGER NOT NULL PRIMARY KEY,
-    account_id INTEGER NOT NULL,
-    relay TEXT NOT NULL UNIQUE,
-    purpose TEXT NOT NULL DEFAULT '',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts (id)
   );

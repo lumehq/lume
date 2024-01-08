@@ -1,6 +1,6 @@
 [package]
 name = "lume"
-version = "2.2.0"
+version = "3.0.0"
 description = "the communication app"
 authors = ["Ren Amamiya"]
 license = "GPL-3.0"
@@ -23,7 +23,7 @@ tauri-plugin-cli = { git = "https://github.com/tauri-apps/plugins-workspace", br
 tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-dialog = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-fs = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-http = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-http = { git = "https://github.com/tauri-apps/plugins-workspace", rev = "ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3" }
 tauri-plugin-notification = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }

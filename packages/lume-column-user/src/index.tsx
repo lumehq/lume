@@ -1,9 +1,8 @@
 import { Column } from "@lume/ark";
 import { UserIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
-import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
-import { UserRoute } from "./user";
+import { EventRoute, UserRoute } from "@lume/ui";
 
 export function User({ column }: { column: IColumn }) {
 	return (

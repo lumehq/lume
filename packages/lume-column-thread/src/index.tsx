@@ -1,8 +1,7 @@
 import { Column } from "@lume/ark";
 import { IColumn } from "@lume/types";
-import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
-import { UserRoute } from "./user";
+import { EventRoute, UserRoute } from "@lume/ui";
 
 export function Thread({ column }: { column: IColumn }) {
 	return (

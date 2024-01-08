@@ -6,21 +6,14 @@ import {
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export function OnboardingScreen() {
 	const storage = useStorage();
-	const navigate = useNavigate();
-
 	const [settings, setSettings] = useState({
 		autoupdate: false,
 		notification: false,
 	});
-
-	const next = () => {
-		if (!storage.account.contacts.length) return navigate("/auth/follow");
-		return navigate("/auth/finish");
-	};
 
 	const toggleAutoupdate = async () => {
 		await storage.createSetting("autoupdate", String(+!settings.autoupdate));
@@ -107,13 +100,12 @@ export function OnboardingScreen() {
 							&quot;Settings&quot; screen. Be sure to visit it later.
 						</p>
 					</div>
-					<button
-						type="button"
-						onClick={next}
+					<Link
+						to="/"
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 disabled:opacity-50"
 					>
 						Continue
-					</button>
+					</Link>
 				</div>
 			</div>
 		</div>

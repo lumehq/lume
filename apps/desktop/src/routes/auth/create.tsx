@@ -75,6 +75,11 @@ export function CreateAccountScreen() {
 			);
 		} // else { user cancel action }
 
+		await storage.createAccount({
+			pubkey: pubkey,
+			privkey: signer.privateKey,
+		});
+
 		return navigate("/auth/onboarding");
 	};
 
@@ -129,9 +134,9 @@ export function CreateAccountScreen() {
 			return toast.error("Failed to create new account, try again later");
 		}
 
+		await storage.createSetting("nsecbunker", "1");
 		await storage.createAccount({
-			id: localUser.npub,
-			pubkey: localUser.pubkey,
+			pubkey: account,
 			privkey: localSigner.privateKey,
 		});
 

@@ -1,14 +1,16 @@
-import { Note, ThreadNote } from "@lume/ark";
+import { ThreadNote } from "@lume/ark";
 import { ReplyList } from "@lume/ui";
-import { WVList } from "virtua";
+import { WindowVirtualizer } from "virtua";
 
 export function HomeRoute({ id }: { id: string }) {
 	return (
-		<WVList className="pb-5 overflow-y-auto">
-			<div className="px-3">
-				<ThreadNote eventId={id} />
-				<ReplyList eventId={id} title="All replies" className="mt-5" />
-			</div>
-		</WVList>
+		<div className="pb-5 overflow-y-auto">
+			<WindowVirtualizer>
+				<div className="px-3">
+					<ThreadNote eventId={id} />
+					<ReplyList eventId={id} title="All replies" className="mt-5" />
+				</div>
+			</WindowVirtualizer>
+		</div>
 	);
 }

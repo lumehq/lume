@@ -2,9 +2,8 @@ import { Column } from "@lume/ark";
 import { GroupFeedsIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
 import { AntenasForm } from "./components/form";
-import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
-import { UserRoute } from "./user";
+import { EventRoute, UserRoute } from "@lume/ui";
 
 export function Antenas({ column }: { column: IColumn }) {
 	const colKey = `antenas-${column.id}`;

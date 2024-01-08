@@ -2690,7 +2690,7 @@ dependencies = [
 
 [[package]]
 name = "lume"
-version = "2.2.0"
+version = "3.0.0"
 dependencies = [
  "keyring",
  "serde",
@@ -2702,7 +2702,7 @@ dependencies = [
  "tauri-plugin-cli",
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
- "tauri-plugin-fs",
+ "tauri-plugin-fs 2.0.0-alpha.7 (git+https://github.com/tauri-apps/plugins-workspace?branch=v2)",
  "tauri-plugin-http",
  "tauri-plugin-notification",
  "tauri-plugin-os",
@@ -5110,7 +5110,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
- "tauri-plugin-fs",
+ "tauri-plugin-fs 2.0.0-alpha.7 (git+https://github.com/tauri-apps/plugins-workspace?branch=v2)",
  "thiserror",
 ]
 
@@ -5130,9 +5130,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-fs"
+version = "2.0.0-alpha.7"
+source = "git+https://github.com/tauri-apps/plugins-workspace?rev=ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3#ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3"
+dependencies = [
+ "anyhow",
+ "glob",
+ "serde",
+ "serde_repr",
+ "tauri",
+ "thiserror",
+ "url",
+ "uuid",
+]
+
+[[package]]
 name = "tauri-plugin-http"
 version = "2.0.0-alpha.9"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v2#1b1d795b5866e5524a9a9925f0fb7b2f8e3e3675"
+source = "git+https://github.com/tauri-apps/plugins-workspace?rev=ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3#ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3"
 dependencies = [
  "data-url",
  "glob",
@@ -5141,7 +5156,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tauri",
- "tauri-plugin-fs",
+ "tauri-plugin-fs 2.0.0-alpha.7 (git+https://github.com/tauri-apps/plugins-workspace?rev=ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3)",
  "thiserror",
  "url",
 ]

@@ -5,20 +5,22 @@ import {
 	useProfile,
 	useStorage,
 } from "@lume/ark";
-import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
-import { NIP05 } from "@lume/ui";
+import { ArrowLeftIcon, ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { FETCH_LIMIT, displayNpub } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { WindowVirtualizer } from "virtua";
+import { NIP05 } from "../nip05";
 
-export function HomeRoute({ id }: { id: string }) {
+export function UserRoute() {
 	const ark = useArk();
 	const storage = useStorage();
+	const navigate = useNavigate();
 
+	const { id } = useParams();
 	const { user } = useProfile(id);
 	const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
 		useInfiniteQuery({
@@ -100,15 +102,25 @@ export function HomeRoute({ id }: { id: string }) {
 	}, []);
 
 	return (
-		<div className="py-5 overflow-y-auto">
+		<div className="pb-5 overflow-y-auto">
 			<WindowVirtualizer>
+				<div className="h-11 bg-neutral-50 dark:bg-neutral-950 border-b flex items-center px-3 border-neutral-100 dark:border-neutral-900 mb-3">
+					<button
+						type="button"
+						className="inline-flex items-center gap-2.5 text-sm font-medium"
+						onClick={() => navigate(-1)}
+					>
+						<ArrowLeftIcon className="size-4" />
+						Back
+					</button>
+				</div>
 				<div className="px-3">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center justify-between">
 							<img
 								src={user?.picture || user?.image}
 								alt={id}
-								className="object-cover w-12 h-12 rounded-lg shrink-0"
+								className="h-12 w-12 shrink-0 rounded-lg object-cover"
 								loading="lazy"
 								decoding="async"
 							/>
@@ -117,7 +129,7 @@ export function HomeRoute({ id }: { id: string }) {
 									<button
 										type="button"
 										onClick={() => unfollow(id)}
-										className="inline-flex items-center justify-center text-sm font-medium rounded-lg h-9 w-28 bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
+										className="inline-flex h-9 w-28 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
 									>
 										Unfollow
 									</button>
@@ -125,14 +137,14 @@ export function HomeRoute({ id }: { id: string }) {
 									<button
 										type="button"
 										onClick={() => follow(id)}
-										className="inline-flex items-center justify-center text-sm font-medium rounded-lg h-9 w-28 bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
+										className="inline-flex h-9 w-28 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
 									>
 										Follow
 									</button>
 								)}
 								<Link
 									to={`/chats/${id}`}
-									className="inline-flex items-center justify-center text-sm font-medium rounded-lg h-9 w-28 bg-neutral-200 hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
+									className="inline-flex h-9 w-28 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
 								>
 									Message
 								</Link>
@@ -170,24 +182,24 @@ export function HomeRoute({ id }: { id: string }) {
 						<div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
 							{isLoading ? (
 								<div className="flex items-center justify-center">
-									<LoaderIcon className="w-4 h-4 animate-spin" />
+									<LoaderIcon className="h-4 w-4 animate-spin" />
 								</div>
 							) : (
 								allEvents.map((item) => renderItem(item))
 							)}
-							<div className="flex items-center justify-center h-16 px-3 pb-3">
+							<div className="flex h-16 items-center justify-center px-3 pb-3">
 								{hasNextPage ? (
 									<button
 										type="button"
 										onClick={() => fetchNextPage()}
 										disabled={!hasNextPage || isFetchingNextPage}
-										className="inline-flex items-center justify-center h-10 gap-2 px-6 font-medium text-white bg-blue-500 rounded-full w-max hover:bg-blue-600 focus:outline-none"
+										className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
 									>
 										{isFetchingNextPage ? (
-											<LoaderIcon className="w-4 h-4 animate-spin" />
+											<LoaderIcon className="h-4 w-4 animate-spin" />
 										) : (
 											<>
-												<ArrowRightCircleIcon className="w-5 h-5" />
+												<ArrowRightCircleIcon className="h-5 w-5" />
 												Load more
 											</>
 										)}

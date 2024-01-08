@@ -51,7 +51,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			// NIP-46 Signer
 			if (nsecbunker) {
 				const localSignerPrivkey = await storage.loadPrivkey(
-					`${storage.account.id}-nsecbunker`,
+					storage.account.pubkey,
 				);
 
 				if (!localSignerPrivkey) return null;
@@ -63,7 +63,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 						"wss://nostr.vulpem.com/",
 					]),
 				});
-				await bunker.connect(3000);
+				await bunker.connect(2000);
 
 				const remoteSigner = new NDKNip46Signer(
 					bunker,
@@ -91,7 +91,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 	async function init() {
 		const platformName = await platform();
-		const sqliteAdapter = await Database.load("sqlite:lume_v2.db");
+		const sqliteAdapter = await Database.load("sqlite:lume_v3.db");
 
 		const storage = new LumeStorage(sqliteAdapter, platformName);
 		await storage.init();

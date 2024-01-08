@@ -4,9 +4,8 @@ import { IColumn } from "@lume/types";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
-import { EventRoute } from "./event";
 import { HomeRoute } from "./home";
-import { UserRoute } from "./user";
+import { EventRoute, UserRoute } from "@lume/ui";
 
 export function Timeline({ column }: { column: IColumn }) {
 	const colKey = `timeline-${column.id}`;

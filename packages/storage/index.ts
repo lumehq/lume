@@ -254,11 +254,9 @@ export class LumeStorage {
 	}
 
 	public async createAccount({
-		id,
 		pubkey,
 		privkey,
 	}: {
-		id: string;
 		pubkey: string;
 		privkey?: string;
 	}) {
@@ -274,8 +272,8 @@ export class LumeStorage {
 			);
 		} else {
 			await this.#db.execute(
-				"INSERT OR IGNORE INTO accounts (id, pubkey, is_active) VALUES ($1, $2, $3);",
-				[id, pubkey, 1],
+				"INSERT OR IGNORE INTO accounts (pubkey, is_active) VALUES ($1, $2);",
+				[pubkey, 1],
 			);
 
 			if (privkey) await this.#keyring_save(pubkey, privkey);

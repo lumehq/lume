@@ -28,7 +28,8 @@
 		"react-router-dom": "^6.21.1",
 		"slate": "^0.101.5",
 		"slate-react": "^0.101.5",
-		"sonner": "^1.3.1"
+		"sonner": "^1.3.1",
+		"virtua": "^0.20.0"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",

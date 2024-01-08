@@ -1,4 +1,7 @@
 use std::process::Command;
+use keyring::Entry;
+use std::time::Duration;
+use webpage::{Webpage, WebpageOptions};
 
 #[tauri::command]
 pub async fn show_in_folder(path: String) {
@@ -45,4 +48,93 @@ pub async fn show_in_folder(path: String) {
   {
     Command::new("open").args(["-R", &path]).spawn().unwrap();
   }
+}
+
+#[derive(serde::Serialize)]
+pub struct OpenGraphResponse {
+  title: String,
+  description: String,
+  url: String,
+  image: String,
+}
+
+pub async fn fetch_opengraph(url: String) -> OpenGraphResponse {
+  let options = WebpageOptions {
+    allow_insecure: false,
+    max_redirections: 3,
+    timeout: Duration::from_secs(15),
+    useragent: "lume - desktop app".to_string(),
+    ..Default::default()
+  };
+
+  let result = match Webpage::from_url(&url, options) {
+    Ok(webpage) => webpage,
+    Err(_) => {
+      return OpenGraphResponse {
+        title: "".to_string(),
+        description: "".to_string(),
+        url: "".to_string(),
+        image: "".to_string(),
+      }
+    }
+  };
+
+  let html = result.html;
+
+  return OpenGraphResponse {
+    title: html
+      .opengraph
+      .properties
+      .get("title")
+      .cloned()
+      .unwrap_or_default(),
+    description: html
+      .opengraph
+      .properties
+      .get("description")
+      .cloned()
+      .unwrap_or_default(),
+    url: html
+      .opengraph
+      .properties
+      .get("url")
+      .cloned()
+      .unwrap_or_default(),
+    image: html
+      .opengraph
+      .images
+      .get(0)
+      .and_then(|i| Some(i.url.clone()))
+      .unwrap_or_default(),
+  };
+}
+
+#[tauri::command]
+pub async fn opengraph(url: String) -> OpenGraphResponse {
+  let result = fetch_opengraph(url).await;
+  return result;
+}
+
+#[tauri::command]
+pub fn secure_save(key: String, value: String) -> Result<(), ()> {
+  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let _ = entry.set_password(&value);
+  Ok(())
+}
+
+#[tauri::command]
+pub fn secure_load(key: String) -> Result<String, String> {
+  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  if let Ok(password) = entry.get_password() {
+    Ok(password)
+  } else {
+    Err("not found".to_string())
+  }
+}
+
+#[tauri::command]
+pub fn secure_remove(key: String) -> Result<(), ()> {
+  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let _ = entry.delete_password();
+  Ok(())
 }
