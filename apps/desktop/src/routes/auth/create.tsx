@@ -147,6 +147,10 @@ export function CreateAccountScreen() {
 
 		ark.updateNostrSigner({ signer: remoteSigner });
 
+		// remove default nsecbunker profile and contact list
+		await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });
+		await ark.createEvent({ kind: NDKKind.Contacts, content: "", tags: [] });
+
 		setOnboarding(true);
 		setIsLoading(false);
 
@@ -163,8 +167,8 @@ export function CreateAccountScreen() {
 						Let's get you set up on Nostr.
 					</h1>
 					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						With an account on Nostr, you'll be able to use with any client that
-						you want.
+						With an account on Nostr, you'll be able to travel across all nostr
+						clients, all your data are synced.
 					</p>
 				</div>
 				{!services ? (
@@ -260,13 +264,22 @@ export function CreateAccountScreen() {
 									</span>
 								</div>
 							</div>
-							<button
-								type="button"
-								onClick={generateNostrKeys}
-								className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
-							>
-								Generate Nostr keys
-							</button>
+							<div>
+								<button
+									type="button"
+									onClick={generateNostrKeys}
+									className="mb-2 inline-flex items-center justify-center w-full h-12 text-lg font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
+								>
+									Generate Nostr Keys
+								</button>
+								<p className="text-sm text-center text-neutral-500">
+									If you are using this option, please make sure keep your keys
+									in safe place. You{" "}
+									<span className="text-red-600">cannot recover</span> if it
+									lost, all your data will be{" "}
+									<span className="text-red-600">lost forever.</span>
+								</p>
+							</div>
 						</div>
 					</div>
 				)}

@@ -16,7 +16,7 @@ export function AvatarUploadButton({
 			// start loading
 			setLoading(true);
 
-			const image = await ark.upload({});
+			const image = await ark.upload({ fileExts: [] });
 
 			if (image) {
 				setPicture(image);

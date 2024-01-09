@@ -1,6 +1,6 @@
 import { useArk, useStorage } from "@lume/ark";
 import { ArrowLeftIcon, LoaderIcon } from "@lume/icons";
-import { NDKKind } from "@nostr-dev-kit/ndk";
+import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { motion } from "framer-motion";
 import { minidenticon } from "minidenticons";
 import { useState } from "react";
@@ -35,11 +35,11 @@ export function OnboardingProfileSettingsScreen() {
 			const oldProfile = await ark.getUserProfile({
 				pubkey: storage.account.pubkey,
 			});
-			const ensureOldProfile = oldProfile ? oldProfile : {};
 
-			const profile = {
+			const profile: NDKUserProfile = {
 				...data,
-				...ensureOldProfile,
+				lud16: oldProfile?.lud16 || "",
+				nip05: oldProfile?.nip05 || "",
 				display_name: data.name,
 				bio: data.about,
 				picture: picture,
@@ -60,7 +60,9 @@ export function OnboardingProfileSettingsScreen() {
 				setLoading(false);
 			}
 		} catch (e) {
-			return toast.error(e);
+			setLoading(false);
+			console.log(e);
+			toast.error("Cannot publish your profile, please try again later.");
 		}
 	};
 

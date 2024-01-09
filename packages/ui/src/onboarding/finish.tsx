@@ -1,10 +1,23 @@
 import { CheckIcon } from "@lume/icons";
 import { onboardingAtom } from "@lume/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useSetAtom } from "jotai";
 
 export function OnboardingFinishScreen() {
+	const queryClient = useQueryClient();
 	const setOnboarding = useSetAtom(onboardingAtom);
+
+	const finish = async () => {
+		const queryCache = queryClient.getQueryCache();
+		const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+
+		for (const key of queryKeys) {
+			await queryClient.refetchQueries({ queryKey: key });
+		}
+
+		setOnboarding(false);
+	};
 
 	return (
 		<motion.div
@@ -23,7 +36,7 @@ export function OnboardingFinishScreen() {
 			<div className="mt-4 flex flex-col gap-2 items-center">
 				<button
 					type="button"
-					onClick={() => setOnboarding(false)}
+					onClick={finish}
 					className="inline-flex items-center justify-center gap-2 w-44 font-medium h-11 rounded-xl bg-blue-100 text-blue-500 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-500 dark:hover:bg-blue-800"
 				>
 					Close

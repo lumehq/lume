@@ -1,15 +1,19 @@
 import { useStorage } from "@lume/ark";
-import { InfoIcon } from "@lume/icons";
+import { InfoIcon, LoaderIcon } from "@lume/icons";
+import { delay } from "@lume/utils";
 import * as Switch from "@radix-ui/react-switch";
 import {
 	isPermissionGranted,
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function OnboardingScreen() {
 	const storage = useStorage();
+	const navigate = useNavigate();
+
+	const [loading, setLoading] = useState(false);
 	const [settings, setSettings] = useState({
 		autoupdate: false,
 		notification: false,
@@ -25,6 +29,12 @@ export function OnboardingScreen() {
 		await requestPermission();
 		// update state
 		setSettings((prev) => ({ ...prev, notification: !settings.notification }));
+	};
+
+	const completeAuth = async () => {
+		setLoading(true);
+		await delay(1200);
+		navigate("/");
 	};
 
 	useEffect(() => {
@@ -100,12 +110,17 @@ export function OnboardingScreen() {
 							&quot;Settings&quot; screen. Be sure to visit it later.
 						</p>
 					</div>
-					<Link
-						to="/"
+					<button
+						type="button"
+						onClick={completeAuth}
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 disabled:opacity-50"
 					>
-						Continue
-					</Link>
+						{loading ? (
+							<LoaderIcon className="size-5 animate-spin" />
+						) : (
+							"Continue"
+						)}
+					</button>
 				</div>
 			</div>
 		</div>

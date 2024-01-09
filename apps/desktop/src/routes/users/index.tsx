@@ -77,13 +77,13 @@ export function UserScreen() {
 								type="button"
 								onClick={() => fetchNextPage()}
 								disabled={!hasNextPage || isFetchingNextPage}
-								className="inline-flex h-10 w-max items-center justify-center gap-2 rounded-full bg-blue-500 px-6 font-medium text-white hover:bg-blue-600 focus:outline-none"
+								className="inline-flex items-center justify-center w-full h-12 gap-2 font-medium bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 rounded-xl focus:outline-none"
 							>
 								{isFetchingNextPage ? (
-									<LoaderIcon className="h-4 w-4 animate-spin" />
+									<LoaderIcon className="size-5 animate-spin" />
 								) : (
 									<>
-										<ArrowRightCircleIcon className="h-5 w-5" />
+										<ArrowRightCircleIcon className="size-5" />
 										Load more
 									</>
 								)}

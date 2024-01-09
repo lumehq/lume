@@ -106,13 +106,13 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 							type="button"
 							onClick={() => fetchNextPage()}
 							disabled={!hasNextPage || isFetchingNextPage}
-							className="inline-flex items-center justify-center w-40 h-10 gap-2 font-medium text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:outline-none"
+							className="inline-flex items-center justify-center w-full h-12 gap-2 font-medium bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 rounded-xl focus:outline-none"
 						>
 							{isFetchingNextPage ? (
-								<LoaderIcon className="w-5 h-5 animate-spin" />
+								<LoaderIcon className="size-5 animate-spin" />
 							) : (
 								<>
-									<ArrowRightCircleIcon className="w-5 h-5" />
+									<ArrowRightCircleIcon className="size-5" />
 									Load more
 								</>
 							)}
