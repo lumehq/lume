@@ -104,3 +104,5 @@ export * from "./src/column";
 export * from "./src/addMedia";
 export * from "./src/check";
 export * from "./src/popperFilled";
+export * from "./src/composeFilled";
+export * from "./src/settingsFilled";

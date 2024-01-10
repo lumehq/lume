@@ -140,6 +140,8 @@ export function CreateAccountScreen() {
 				return toast.error("Failed to create new account, try again later");
 			}
 
+			authWindow.close();
+
 			// add account to storage
 			await storage.createSetting("nsecbunker", "1");
 			await storage.createAccount({
@@ -161,8 +163,6 @@ export function CreateAccountScreen() {
 
 			setOnboarding(true);
 			setIsLoading(false);
-
-			authWindow.close();
 
 			return navigate("/auth/onboarding");
 		} catch (e) {

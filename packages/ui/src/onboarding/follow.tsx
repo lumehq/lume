@@ -82,7 +82,7 @@ export function OnboardingFollowScreen() {
 			}
 		} catch (e) {
 			setLoading(false);
-			toast.error(e);
+			toast.error(String(e));
 		}
 	};
 

@@ -1,21 +1,33 @@
-import { CheckIcon } from "@lume/icons";
+import { useStorage } from "@lume/ark";
+import { CheckIcon, LoaderIcon } from "@lume/icons";
 import { onboardingAtom } from "@lume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useSetAtom } from "jotai";
+import { useState } from "react";
 
 export function OnboardingFinishScreen() {
+	const storage = useStorage();
 	const queryClient = useQueryClient();
 	const setOnboarding = useSetAtom(onboardingAtom);
 
+	const [loading, setLoading] = useState(false);
+
 	const finish = async () => {
+		setLoading(true);
+
 		const queryCache = queryClient.getQueryCache();
 		const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+
+		await queryClient.refetchQueries({
+			queryKey: ["user", storage.account.pubkey],
+		});
 
 		for (const key of queryKeys) {
 			await queryClient.refetchQueries({ queryKey: key });
 		}
 
+		setLoading(false);
 		setOnboarding(false);
 	};
 
@@ -39,7 +51,7 @@ export function OnboardingFinishScreen() {
 					onClick={finish}
 					className="inline-flex items-center justify-center gap-2 w-44 font-medium h-11 rounded-xl bg-blue-100 text-blue-500 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-500 dark:hover:bg-blue-800"
 				>
-					Close
+					{loading ? <LoaderIcon className="size-4 animate-spin" /> : "Close"}
 				</button>
 				<a
 					href="https://github.com/luminous-devs/lume/issues"

@@ -1,4 +1,4 @@
-import { LumeProvider } from "@lume/ark";
+import { ColumnProvider, LumeProvider } from "@lume/ark";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import Router from "./router";
@@ -16,7 +16,9 @@ export default function App() {
 		<QueryClientProvider client={queryClient}>
 			<Toaster position="top-center" theme="system" closeButton />
 			<LumeProvider>
-				<Router />
+				<ColumnProvider>
+					<Router />
+				</ColumnProvider>
 			</LumeProvider>
 		</QueryClientProvider>
 	);

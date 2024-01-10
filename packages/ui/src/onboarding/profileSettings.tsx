@@ -56,8 +56,7 @@ export function OnboardingProfileSettingsScreen() {
 			}
 		} catch (e) {
 			setLoading(false);
-			console.log(e);
-			toast.error("Cannot publish your profile, please try again later.");
+			toast.error(String(e));
 		}
 	};
 

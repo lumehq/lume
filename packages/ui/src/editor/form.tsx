@@ -1,7 +1,7 @@
-import { MentionNote, useArk, useStorage } from "@lume/ark";
-import { TrashIcon } from "@lume/icons";
+import { MentionNote, useArk, useColumnContext, useStorage } from "@lume/ark";
+import { LoaderIcon, TrashIcon } from "@lume/icons";
 import { NDKCacheUserProfile } from "@lume/types";
-import { cn, editorValueAtom } from "@lume/utils";
+import { COL_TYPES, cn, editorValueAtom } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
@@ -195,9 +195,12 @@ export function EditorForm() {
 	const [target, setTarget] = useState<Range | undefined>();
 	const [index, setIndex] = useState(0);
 	const [search, setSearch] = useState("");
+	const [loading, setLoading] = useState(false);
 	const [editor] = useState(() =>
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
+
+	const { addColumn } = useColumnContext();
 
 	const filters = contacts
 		?.filter((c) => c?.name?.toLowerCase().startsWith(search.toLowerCase()))
@@ -234,19 +237,35 @@ export function EditorForm() {
 	};
 
 	const submit = async () => {
-		const event = new NDKEvent(ark.ndk);
-		event.kind = NDKKind.Text;
-		event.content = serialize(editor.children);
+		try {
+			setLoading(true);
 
-		const publish = await event.publish();
+			const event = new NDKEvent(ark.ndk);
+			event.kind = NDKKind.Text;
+			event.content = serialize(editor.children);
 
-		if (!publish) toast.error("Failed to publish event, try again later.");
+			const publish = await event.publish();
 
-		toast.success(
-			`Event has been published successfully to ${publish.size} relays.`,
-		);
+			if (publish) {
+				toast.success(
+					`Event has been published successfully to ${publish.size} relays.`,
+				);
 
-		reset();
+				// add current post as column thread
+				addColumn({
+					kind: COL_TYPES.thread,
+					content: event.id,
+					title: "Thread",
+				});
+
+				setLoading(false);
+
+				return reset();
+			}
+		} catch (e) {
+			setLoading(false);
+			toast.error(String(e));
+		}
 	};
 
 	useEffect(() => {
@@ -300,7 +319,31 @@ export function EditorForm() {
 					setTarget(null);
 				}}
 			>
-				<div className="py-6 overflow-y-auto px-7">
+				<div className="flex items-center justify-between h-16 px-3 border-b shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
+					<div>
+						<h3 className="font-semibold text-neutral-700 dark:text-neutral-500">
+							New Post
+						</h3>
+					</div>
+					<div className="flex items-center">
+						<div className="inline-flex items-center gap-2">
+							<EditorAddMedia />
+						</div>
+						<div className="w-px h-6 mx-3 bg-neutral-200 dark:bg-neutral-800" />
+						<button
+							type="button"
+							onClick={submit}
+							className="inline-flex items-center justify-center w-20 pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
+						>
+							{loading ? (
+								<LoaderIcon className="size-4 animate-spin" />
+							) : (
+								"Post"
+							)}
+						</button>
+					</div>
+				</div>
+				<div className="py-6 h-full overflow-y-auto px-7">
 					<Editable
 						key={JSON.stringify(editorValue)}
 						autoFocus={false}
@@ -334,22 +377,6 @@ export function EditorForm() {
 							</div>
 						</Portal>
 					)}
-				</div>
-				<div className="flex items-center justify-between h-16 px-3 border-t shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
-					<div />
-					<div className="flex items-center">
-						<div className="inline-flex items-center gap-2">
-							<EditorAddMedia />
-						</div>
-						<div className="w-px h-6 mx-3 bg-neutral-200 dark:bg-neutral-800" />
-						<button
-							type="button"
-							onClick={submit}
-							className="inline-flex items-center justify-center w-20 pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
-						>
-							Post
-						</button>
-					</div>
 				</div>
 			</Slate>
 		</div>

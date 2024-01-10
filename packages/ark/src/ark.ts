@@ -111,8 +111,10 @@ export class Ark {
 	public async getUserProfile(pubkey?: string) {
 		try {
 			// get clean pubkey without any special characters
-			let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "");
 			const currentUserPubkey = this.#storage.account.pubkey;
+			let hexstring = pubkey
+				? pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "")
+				: currentUserPubkey;
 
 			if (
 				hexstring.startsWith("npub1") ||
@@ -127,7 +129,7 @@ export class Ark {
 			}
 
 			const user = this.ndk.getUser({
-				pubkey: pubkey ? hexstring : currentUserPubkey,
+				pubkey: hexstring,
 			});
 
 			const profile = await user.fetchProfile({
@@ -144,8 +146,10 @@ export class Ark {
 	public async getUserContacts(pubkey?: string) {
 		try {
 			// get clean pubkey without any special characters
-			let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "");
 			const currentUserPubkey = this.#storage.account.pubkey;
+			let hexstring = pubkey
+				? pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "")
+				: currentUserPubkey;
 
 			if (
 				hexstring.startsWith("npub1") ||
@@ -160,7 +164,7 @@ export class Ark {
 			}
 
 			const user = this.ndk.getUser({
-				pubkey: pubkey ? hexstring : currentUserPubkey,
+				pubkey: hexstring,
 			});
 
 			const contacts = [...(await user.follows())].map((user) => user.pubkey);
