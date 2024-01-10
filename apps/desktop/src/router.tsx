@@ -189,12 +189,35 @@ export default function Router() {
 					},
 				},
 				{
-					path: "import",
+					path: "login",
 					async lazy() {
-						const { ImportAccountScreen } = await import(
-							"./routes/auth/import"
+						const { LoginScreen } = await import("./routes/auth/login");
+						return { Component: LoginScreen };
+					},
+				},
+				{
+					path: "login-key",
+					async lazy() {
+						const { LoginWithKey } = await import("./routes/auth/login-key");
+						return { Component: LoginWithKey };
+					},
+				},
+				{
+					path: "login-nsecbunker",
+					async lazy() {
+						const { LoginWithNsecbunker } = await import(
+							"./routes/auth/login-nsecbunker"
 						);
-						return { Component: ImportAccountScreen };
+						return { Component: LoginWithNsecbunker };
+					},
+				},
+				{
+					path: "login-oauth",
+					async lazy() {
+						const { LoginWithOAuth } = await import(
+							"./routes/auth/login-oauth"
+						);
+						return { Component: LoginWithOAuth };
 					},
 				},
 				{

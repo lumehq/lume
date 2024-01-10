@@ -41,7 +41,7 @@ export function WelcomeScreen() {
 						)}
 					</button>
 					<Link
-						to="/auth/import"
+						to="/auth/login"
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
 					>
 						Login

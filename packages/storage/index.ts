@@ -366,6 +366,7 @@ export class LumeStorage {
 		const currentSetting = await this.checkSettingValue(key);
 
 		if (!currentSetting) {
+			this.settings[key] === !!parseInt(value);
 			return await this.#db.execute(
 				"INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);",
 				[key, value],

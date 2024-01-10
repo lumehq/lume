@@ -159,4 +159,9 @@ export interface NIP05 {
 	names: {
 		[key: string]: string;
 	};
+	nip46: {
+		[key: string]: {
+			[key: string]: string[];
+		};
+	};
 }

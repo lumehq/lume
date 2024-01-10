@@ -108,10 +108,11 @@ export class Ark {
 		}
 	}
 
-	public async getUserProfile({ pubkey }: { pubkey: string }) {
+	public async getUserProfile(pubkey?: string) {
 		try {
 			// get clean pubkey without any special characters
 			let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "");
+			const currentUserPubkey = this.#storage.account.pubkey;
 
 			if (
 				hexstring.startsWith("npub1") ||
@@ -125,7 +126,9 @@ export class Ark {
 				if (decoded.type === "naddr") hexstring = decoded.data.pubkey;
 			}
 
-			const user = this.ndk.getUser({ pubkey: hexstring });
+			const user = this.ndk.getUser({
+				pubkey: pubkey ? hexstring : currentUserPubkey,
+			});
 
 			const profile = await user.fetchProfile({
 				cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
@@ -138,23 +141,33 @@ export class Ark {
 		}
 	}
 
-	public async getUserContacts({
-		pubkey = undefined,
-		outbox = undefined,
-	}: {
-		pubkey?: string;
-		outbox?: boolean;
-	}) {
+	public async getUserContacts(pubkey?: string) {
 		try {
-			const user = this.ndk.getUser({
-				pubkey: pubkey ? pubkey : this.#storage.account.pubkey,
-			});
-			const contacts = [...(await user.follows(undefined, outbox))].map(
-				(user) => user.pubkey,
-			);
+			// get clean pubkey without any special characters
+			let hexstring = pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "");
+			const currentUserPubkey = this.#storage.account.pubkey;
 
-			if (pubkey === this.#storage.account.pubkey)
+			if (
+				hexstring.startsWith("npub1") ||
+				hexstring.startsWith("nprofile1") ||
+				hexstring.startsWith("naddr1")
+			) {
+				const decoded = nip19.decode(hexstring);
+
+				if (decoded.type === "nprofile") hexstring = decoded.data.pubkey;
+				if (decoded.type === "npub") hexstring = decoded.data;
+				if (decoded.type === "naddr") hexstring = decoded.data.pubkey;
+			}
+
+			const user = this.ndk.getUser({
+				pubkey: pubkey ? hexstring : currentUserPubkey,
+			});
+
+			const contacts = [...(await user.follows())].map((user) => user.pubkey);
+
+			if (!pubkey || pubkey === this.#storage.account.pubkey)
 				this.#storage.account.contacts = contacts;
+
 			return contacts;
 		} catch (e) {
 			throw new Error(e);
@@ -507,7 +520,10 @@ export class Ark {
 			signal,
 		});
 
-		if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
+		if (!res.ok) {
+			console.log(res);
+			throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
+		}
 
 		const data: NIP05 = await res.json();
 

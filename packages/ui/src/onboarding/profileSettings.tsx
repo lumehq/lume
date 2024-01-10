@@ -32,9 +32,7 @@ export function OnboardingProfileSettingsScreen() {
 				navigate("/follow");
 			}
 
-			const oldProfile = await ark.getUserProfile({
-				pubkey: storage.account.pubkey,
-			});
+			const oldProfile = await ark.getUserProfile();
 
 			const profile: NDKUserProfile = {
 				...data,
@@ -55,9 +53,6 @@ export function OnboardingProfileSettingsScreen() {
 			if (publish) {
 				setLoading(false);
 				navigate("/follow");
-			} else {
-				toast.error("Cannot publish your profile, please try again later.");
-				setLoading(false);
 			}
 		} catch (e) {
 			setLoading(false);

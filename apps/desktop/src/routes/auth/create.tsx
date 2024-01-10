@@ -89,74 +89,86 @@ export function CreateAccountScreen() {
 	};
 
 	const onSubmit = async (data: { username: string; email: string }) => {
-		setIsLoading(true);
+		try {
+			setIsLoading(true);
 
-		const domain = getDomainName(serviceId);
-		const service = services.find((ev) => ev.id === serviceId);
+			const domain = getDomainName(serviceId);
+			const service = services.find((ev) => ev.id === serviceId);
 
-		const localSigner = NDKPrivateKeySigner.generate();
-		const localUser = await localSigner.user();
-
-		const bunker = new NDK({
-			explicitRelayUrls: [
-				"wss://relay.nsecbunker.com/",
-				"wss://nostr.vulpem.com/",
-			],
-		});
-
-		await bunker.connect(2000);
-
-		const remoteSigner = new NDKNip46Signer(
-			bunker,
-			service.pubkey,
-			localSigner,
-		);
-
-		let authWindow: Window;
-
-		remoteSigner.addListener("authUrl", (authUrl: string) => {
-			authWindow = new Window(`auth-${serviceId}`, {
-				url: authUrl,
-				title: domain,
-				titleBarStyle: "overlay",
-				width: 415,
-				height: 600,
-				center: true,
-				closable: false,
+			// generate ndk for nsecbunker
+			const localSigner = NDKPrivateKeySigner.generate();
+			const bunker = new NDK({
+				explicitRelayUrls: [
+					"wss://relay.nsecbunker.com/",
+					"wss://nostr.vulpem.com/",
+				],
 			});
-		});
+			await bunker.connect(2000);
 
-		const account = await remoteSigner.createAccount(
-			data.username,
-			domain,
-			data.email,
-		);
+			// generate tmp remote singer for create account
+			const remoteSigner = new NDKNip46Signer(
+				bunker,
+				service.pubkey,
+				localSigner,
+			);
 
-		if (!account) {
-			authWindow.close();
+			// handle auth url request
+			let authWindow: Window;
+			remoteSigner.addListener("authUrl", (authUrl: string) => {
+				authWindow = new Window(`auth-${serviceId}`, {
+					url: authUrl,
+					title: domain,
+					titleBarStyle: "overlay",
+					width: 415,
+					height: 600,
+					center: true,
+					closable: false,
+				});
+			});
+
+			// create new account
+			const account = await remoteSigner.createAccount(
+				data.username,
+				domain,
+				data.email,
+			);
+
+			if (!account) {
+				authWindow.close();
+				setIsLoading(false);
+
+				return toast.error("Failed to create new account, try again later");
+			}
+
+			// add account to storage
+			await storage.createSetting("nsecbunker", "1");
+			await storage.createAccount({
+				pubkey: account,
+				privkey: localSigner.privateKey,
+			});
+
+			// get final signer with newly created account
+			const finalSigner = new NDKNip46Signer(bunker, account, localSigner);
+			await finalSigner.blockUntilReady();
+
+			// update main ndk instance signer
+			ark.updateNostrSigner({ signer: finalSigner });
+			console.log(ark.ndk.signer);
+
+			// remove default nsecbunker profile and contact list
+			await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });
+			await ark.createEvent({ kind: NDKKind.Contacts, content: "", tags: [] });
+
+			setOnboarding(true);
 			setIsLoading(false);
 
-			return toast.error("Failed to create new account, try again later");
+			authWindow.close();
+
+			return navigate("/auth/onboarding");
+		} catch (e) {
+			setIsLoading(false);
+			toast.error(String(e));
 		}
-
-		await storage.createSetting("nsecbunker", "1");
-		await storage.createAccount({
-			pubkey: account,
-			privkey: localSigner.privateKey,
-		});
-
-		ark.updateNostrSigner({ signer: remoteSigner });
-
-		// remove default nsecbunker profile and contact list
-		await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });
-		await ark.createEvent({ kind: NDKKind.Contacts, content: "", tags: [] });
-
-		setOnboarding(true);
-		setIsLoading(false);
-
-		authWindow.close();
-
-		return navigate("/auth/onboarding");
 	};
 
 	return (

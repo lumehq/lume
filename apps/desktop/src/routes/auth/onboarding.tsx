@@ -1,7 +1,9 @@
-import { useStorage } from "@lume/ark";
+import { useArk, useStorage } from "@lume/ark";
 import { InfoIcon, LoaderIcon } from "@lume/icons";
-import { delay } from "@lume/utils";
+import { FETCH_LIMIT } from "@lume/utils";
+import { NDKKind } from "@nostr-dev-kit/ndk";
 import * as Switch from "@radix-ui/react-switch";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	isPermissionGranted,
 	requestPermission,
@@ -10,7 +12,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function OnboardingScreen() {
+	const ark = useArk();
 	const storage = useStorage();
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
 	const [loading, setLoading] = useState(false);
@@ -33,7 +37,35 @@ export function OnboardingScreen() {
 
 	const completeAuth = async () => {
 		setLoading(true);
-		await delay(1200);
+
+		// get account contacts
+		await ark.getUserContacts(storage.account.pubkey);
+
+		// refetch newsfeed
+		await queryClient.prefetchInfiniteQuery({
+			queryKey: ["timeline-9999"],
+			initialPageParam: 0,
+			queryFn: async ({
+				signal,
+				pageParam,
+			}: {
+				signal: AbortSignal;
+				pageParam: number;
+			}) => {
+				const events = await ark.getInfiniteEvents({
+					filter: {
+						kinds: [NDKKind.Text, NDKKind.Repost],
+						authors: storage.account.contacts,
+					},
+					limit: FETCH_LIMIT,
+					pageParam,
+					signal,
+				});
+
+				return events;
+			},
+		});
+
 		navigate("/");
 	};
 

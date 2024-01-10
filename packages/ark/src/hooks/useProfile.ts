@@ -1,27 +1,27 @@
-import { useQuery } from '@tanstack/react-query';
-import { useArk } from '../provider';
+import { useQuery } from "@tanstack/react-query";
+import { useArk } from "../provider";
 
 export function useProfile(pubkey: string) {
-  const ark = useArk();
-  const {
-    isLoading,
-    isError,
-    data: user,
-  } = useQuery({
-    queryKey: ['user', pubkey],
-    queryFn: async () => {
-      const profile = await ark.getUserProfile({ pubkey });
-      if (!profile)
-        throw new Error(
-          `Cannot get metadata for ${pubkey}, will be retry after 10 seconds`
-        );
-      return profile;
-    },
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 2,
-  });
+	const ark = useArk();
+	const {
+		isLoading,
+		isError,
+		data: user,
+	} = useQuery({
+		queryKey: ["user", pubkey],
+		queryFn: async () => {
+			const profile = await ark.getUserProfile(pubkey);
+			if (!profile)
+				throw new Error(
+					`Cannot get metadata for ${pubkey}, will be retry after 10 seconds`,
+				);
+			return profile;
+		},
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
+		retry: 2,
+	});
 
-  return { isLoading, isError, user };
+	return { isLoading, isError, user };
 }

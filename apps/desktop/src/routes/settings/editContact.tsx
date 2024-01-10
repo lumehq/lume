@@ -8,7 +8,7 @@ export function EditContactScreen() {
 	const { status, data } = useQuery({
 		queryKey: ["contacts"],
 		queryFn: async () => {
-			return await ark.getUserContacts({});
+			return await ark.getUserContacts();
 		},
 		refetchOnWindowFocus: false,
 	});

@@ -9,7 +9,7 @@ export function ContactCard() {
 	const { status, data } = useQuery({
 		queryKey: ["contacts"],
 		queryFn: async () => {
-			const contacts = await ark.getUserContacts({});
+			const contacts = await ark.getUserContacts();
 			return contacts;
 		},
 		refetchOnWindowFocus: false,
