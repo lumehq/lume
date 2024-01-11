@@ -107,13 +107,13 @@ export function NoteZap() {
 			<Dialog.Trigger asChild>
 				<button
 					type="button"
-					className="inline-flex items-center justify-center group h-7 w-7 text-neutral-600 dark:text-neutral-400"
+					className="inline-flex items-center justify-center group size-7 text-neutral-600 dark:text-neutral-400"
 				>
 					<ZapIcon className="size-5 group-hover:text-blue-500" />
 				</button>
 			</Dialog.Trigger>
 			<Dialog.Portal>
-				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
+				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-xl dark:bg-white/20" />
 				<Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center min-h-full">
 					<div className="relative w-full max-w-xl bg-white h-min rounded-xl dark:bg-black">
 						<div className="inline-flex items-center justify-between w-full px-5 py-3 shrink-0">

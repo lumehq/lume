@@ -1,11 +1,11 @@
 import { Column, useStorage } from "@lume/ark";
 import { TimelineIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
+import { EventRoute, UserRoute } from "@lume/ui";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { HomeRoute } from "./home";
-import { EventRoute, UserRoute } from "@lume/ui";
 
 export function Timeline({ column }: { column: IColumn }) {
 	const colKey = `timeline-${column.id}`;
@@ -14,11 +14,12 @@ export function Timeline({ column }: { column: IColumn }) {
 	const since = useRef(Math.floor(Date.now() / 1000));
 
 	const refreshTimeline = async (events: NDKEvent[]) => {
+		const uniqEvents = new Set(events);
 		await queryClient.setQueryData(
 			[colKey],
 			(prev: { pageParams: number; pages: Array<NDKEvent[]> }) => ({
 				...prev,
-				pages: [[...events], ...prev.pages],
+				pages: [[...uniqEvents], ...prev.pages],
 			}),
 		);
 	};

@@ -121,7 +121,7 @@ export function Navigation() {
 										: "text-black/50 dark:text-neutral-400",
 								)}
 							>
-								<NwcIcon className="size-6" />
+								<NwcIcon className="size-6 rotate-12" />
 							</div>
 						)}
 					</NavLink>

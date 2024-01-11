@@ -1,4 +1,4 @@
-import { RepostIcon } from "@lume/icons";
+import { LoaderIcon, RepostIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -7,17 +7,25 @@ import { useNoteContext } from "../provider";
 
 export function NoteRepost() {
 	const event = useNoteContext();
+
+	const [loading, setLoading] = useState(false);
 	const [isRepost, setIsRepost] = useState(false);
 
 	const submit = async () => {
 		try {
+			setLoading(true);
+
 			// repost
 			await event.repost(true);
 
 			// update state
+			setLoading(false);
 			setIsRepost(true);
+
+			// notify
 			toast.success("You've reposted this post successfully");
 		} catch (e) {
+			setLoading(false);
 			toast.error("Repost failed, try again later");
 		}
 	};
@@ -31,12 +39,16 @@ export function NoteRepost() {
 						onClick={submit}
 						className="inline-flex items-center justify-center group h-7 w-7 text-neutral-600 dark:text-neutral-400"
 					>
-						<RepostIcon
-							className={twMerge(
-								"size-5 group-hover:text-blue-600",
-								isRepost ? "text-blue-500" : "",
-							)}
-						/>
+						{loading ? (
+							<LoaderIcon className="size-4 animate-spin" />
+						) : (
+							<RepostIcon
+								className={twMerge(
+									"size-5 group-hover:text-blue-600",
+									isRepost ? "text-blue-500" : "",
+								)}
+							/>
+						)}
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

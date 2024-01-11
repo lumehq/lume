@@ -20,6 +20,10 @@ export function NoteReply() {
 						onClick={() => {
 							setEditorValue([
 								{
+									type: "paragraph",
+									children: [{ text: "" }],
+								},
+								{
 									type: "event",
 									// @ts-expect-error, useless
 									eventId: `nostr:${nip19.noteEncode(event.id)}`,

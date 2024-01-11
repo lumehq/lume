@@ -69,7 +69,6 @@ export function RepostNote({
 						<Note.Pin />
 						<div className="inline-flex items-center gap-10">
 							<Note.Reply />
-							<Note.Reaction />
 							<Note.Repost />
 							<Note.Zap />
 						</div>

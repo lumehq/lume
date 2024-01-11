@@ -175,6 +175,15 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 			const contacts = await user.follows();
 			storage.account.contacts = [...contacts].map((user) => user.pubkey);
+
+			const relays = await user.relayList();
+
+			if (!relays) storage.account.relayList = ndk.explicitRelayUrls;
+
+			storage.account.relayList = [
+				...relays.readRelayUrls,
+				...relays.bothRelayUrls,
+			];
 		}
 
 		// init nostr fetcher

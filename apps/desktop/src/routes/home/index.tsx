@@ -48,7 +48,7 @@ export function HomeScreen() {
 			<VList
 				ref={ref}
 				className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
-				initialItemSize={420}
+				itemSize={420}
 				tabIndex={0}
 				horizontal
 				onKeyDown={(e) => {

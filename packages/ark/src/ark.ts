@@ -389,14 +389,11 @@ export class Ark {
 		signal?: AbortSignal;
 		dedup?: boolean;
 	}) {
-		const rootIds = new Set();
-		const dedupQueue = new Set();
-		const connectedRelays = this.ndk.pool
-			.connectedRelays()
-			.map((item) => item.url);
+		const seenIds = new Set<string>();
+		const dedupQueue = new Set<string>();
 
 		const events = await this.#fetcher.fetchLatestEvents(
-			connectedRelays,
+			this.#storage.account.relayList,
 			filter,
 			limit,
 			{
@@ -411,17 +408,19 @@ export class Ark {
 
 		if (dedup) {
 			for (const event of ndkEvents) {
-				const tags = event.tags.filter((el) => el[0] === "e");
+				const tags = event.tags
+					.filter((el) => el[0] === "e")
+					?.map((item) => item[1]);
 
-				if (tags && tags.length > 0) {
-					const rootId = tags.filter((el) => el[3] === "root")[1] ?? tags[0][1];
+				if (tags.length) {
+					for (const tag of tags) {
+						if (seenIds.has(tag)) {
+							dedupQueue.add(event.id);
+							break;
+						}
 
-					if (rootIds.has(rootId)) {
-						dedupQueue.add(event.id);
-						break;
+						seenIds.add(tag);
 					}
-
-					rootIds.add(rootId);
 				}
 			}
 

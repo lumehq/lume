@@ -17,7 +17,7 @@ export interface Account {
 	pubkey: string;
 	is_active: number;
 	contacts: string[];
-	relayList: NDKRelayList;
+	relayList: string[];
 }
 
 export interface WidgetGroup {
