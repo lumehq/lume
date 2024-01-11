@@ -28,6 +28,8 @@ export function RepostNote({
 			}
 		},
 		refetchOnWindowFocus: false,
+		refetchOnMount: false,
+		refetchOnReconnect: false,
 	});
 
 	if (isLoading) {
@@ -72,7 +74,6 @@ export function RepostNote({
 							<Note.Repost />
 							<Note.Zap />
 						</div>
-						N
 					</div>
 				</div>
 			</Note.Provider>

@@ -1,6 +1,7 @@
 import { type Platform } from "@tauri-apps/plugin-os";
 import { Outlet } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import { Activity } from "../activity/column";
 import { Editor } from "../editor/column";
 import { Navigation } from "../navigation";
 import { WindowTitleBar } from "../titlebar";
@@ -21,6 +22,7 @@ export function AppLayout({ platform }: { platform: Platform }) {
 			<div className="flex w-full h-full min-h-0">
 				<Navigation />
 				<Editor />
+				<Activity />
 				<div className="flex-1 h-full px-1 pb-1">
 					<Outlet />
 				</div>

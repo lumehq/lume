@@ -1,18 +1,19 @@
 import {
+	BellFilledIcon,
+	BellIcon,
 	ComposeFilledIcon,
 	ComposeIcon,
 	DepotFilledIcon,
 	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
-	NwcFilledIcon,
 	NwcIcon,
 	RelayFilledIcon,
 	RelayIcon,
 	SettingsFilledIcon,
 	SettingsIcon,
 } from "@lume/icons";
-import { cn, editorAtom } from "@lume/utils";
+import { activityAtom, cn, editorAtom } from "@lume/utils";
 import { useAtom } from "jotai";
 import { useHotkeys } from "react-hotkeys-hook";
 import { NavLink } from "react-router-dom";
@@ -20,6 +21,8 @@ import { ActiveAccount } from "./account/active";
 
 export function Navigation() {
 	const [isEditorOpen, setIsEditorOpen] = useAtom(editorAtom);
+	const [isActvityOpen, setIsActvityOpen] = useAtom(activityAtom);
+
 	useHotkeys("meta+n", () => setIsEditorOpen((state) => !state), []);
 
 	return (
@@ -29,7 +32,10 @@ export function Navigation() {
 					<ActiveAccount />
 					<button
 						type="button"
-						onClick={() => setIsEditorOpen((prev) => !prev)}
+						onClick={() => {
+							setIsEditorOpen((state) => !state);
+							setIsActvityOpen(false);
+						}}
 						className="flex items-center justify-center h-auto w-full text-black aspect-square rounded-xl bg-black/5 hover:bg-blue-500 hover:text-white dark:bg-white/5 dark:text-white dark:hover:bg-blue-500"
 					>
 						{isEditorOpen ? (
@@ -63,50 +69,30 @@ export function Navigation() {
 							</div>
 						)}
 					</NavLink>
-					<NavLink
-						to="/relays"
-						preventScrollReset={true}
+					<button
+						type="button"
+						onClick={() => {
+							setIsActvityOpen((state) => !state);
+							setIsEditorOpen(false);
+						}}
 						className="inline-flex flex-col items-center justify-center"
 					>
-						{({ isActive }) => (
-							<div
-								className={cn(
-									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
-									isActive
-										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
-										: "text-black/50 dark:text-neutral-400",
-								)}
-							>
-								{isActive ? (
-									<RelayFilledIcon className="size-6" />
-								) : (
-									<RelayIcon className="size-6" />
-								)}
-							</div>
-						)}
-					</NavLink>
-					<NavLink
-						to="/depot"
-						preventScrollReset={true}
-						className="inline-flex flex-col items-center justify-center"
-					>
-						{({ isActive }) => (
-							<div
-								className={cn(
-									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
-									isActive
-										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
-										: "text-black/50 dark:text-neutral-400",
-								)}
-							>
-								{isActive ? (
-									<DepotFilledIcon className="text-black size-6 dark:text-white" />
-								) : (
-									<DepotIcon className="size-6" />
-								)}
-							</div>
-						)}
-					</NavLink>
+						<div
+							className={cn(
+								"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
+								isActvityOpen
+									? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
+									: "text-black/50 dark:text-neutral-400",
+							)}
+						>
+							{isActvityOpen ? (
+								<BellFilledIcon className="size-6" />
+							) : (
+								<BellIcon className="size-6" />
+							)}
+						</div>
+					</button>
+
 					<NavLink
 						to="/nwc"
 						preventScrollReset={true}

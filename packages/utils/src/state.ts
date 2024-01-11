@@ -9,3 +9,6 @@ export const editorValueAtom = atom([
 ]);
 
 export const onboardingAtom = atom(false);
+
+export const activityAtom = atom(false);
+export const activityUnreadAtom = atom(0);

@@ -1,14 +1,22 @@
 import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { LumeStorage } from "@lume/storage";
-import { QUOTES, delay, sendNativeNotification } from "@lume/utils";
+import {
+	FETCH_LIMIT,
+	QUOTES,
+	delay,
+	sendNativeNotification,
+} from "@lume/utils";
 import NDK, {
+	NDKEvent,
+	NDKKind,
 	NDKNip46Signer,
 	NDKPrivateKeySigner,
 	NDKRelay,
 	NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
 import { ndkAdapter } from "@nostr-fetch/adapter-ndk";
+import { useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
@@ -35,6 +43,8 @@ const LumeContext = createContext<Context>({
 });
 
 const LumeProvider = ({ children }: PropsWithChildren<object>) => {
+	const queryClient = useQueryClient();
+
 	const [context, setContext] = useState<Context>(undefined);
 	const [isNewVersion, setIsNewVersion] = useState(false);
 
@@ -176,14 +186,41 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			const contacts = await user.follows();
 			storage.account.contacts = [...contacts].map((user) => user.pubkey);
 
-			const relays = await user.relayList();
+			// subscribe for new activity
+			const sub = ndk.subscribe(
+				{
+					kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
+					"#p": [storage.account.pubkey],
+					since: Math.floor(Date.now() / 1000),
+				},
+				{ closeOnEose: false, groupable: false },
+			);
 
-			if (!relays) storage.account.relayList = ndk.explicitRelayUrls;
-
-			storage.account.relayList = [
-				...relays.readRelayUrls,
-				...relays.bothRelayUrls,
-			];
+			sub.addListener("event", async (event: NDKEvent) => {
+				const profile = await ark.getUserProfile(event.pubkey);
+				switch (event.kind) {
+					case NDKKind.Text:
+						return await sendNativeNotification(
+							`${
+								profile.displayName || profile.name || "anon"
+							} has replied to your note`,
+						);
+					case NDKKind.Repost:
+						return await sendNativeNotification(
+							`${
+								profile.displayName || profile.name || "anon"
+							} has reposted to your note`,
+						);
+					case NDKKind.Zap:
+						return await sendNativeNotification(
+							`${
+								profile.displayName || profile.name || "anon"
+							} has zapped to your note`,
+						);
+					default:
+						break;
+				}
+			});
 		}
 
 		// init nostr fetcher

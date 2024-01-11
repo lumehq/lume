@@ -2,11 +2,8 @@ import { useProfile } from "@lume/ark";
 import { RepostIcon } from "@lume/icons";
 import { displayNpub, formatCreatedAt } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
-import * as HoverCard from "@radix-ui/react-hover-card";
 import { minidenticon } from "minidenticons";
 import { memo, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { NIP05 } from "./nip05";
 
 export const User = memo(function User({
 	pubkey,
@@ -21,6 +18,7 @@ export const User = memo(function User({
 		| "simple"
 		| "mention"
 		| "notify"
+		| "notify2"
 		| "repost"
 		| "chat"
 		| "large"
@@ -105,6 +103,55 @@ export const User = memo(function User({
 		);
 	}
 
+	if (variant === "notify2") {
+		if (isLoading) {
+			return (
+				<div className="flex items-center gap-2">
+					<Avatar.Root className="h-8 w-8 shrink-0">
+						<Avatar.Image
+							src={fallbackAvatar}
+							alt={pubkey}
+							className="h-8 w-8 rounded-md bg-black dark:bg-white"
+						/>
+					</Avatar.Root>
+					<h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+						{fallbackName}
+					</h5>
+				</div>
+			);
+		}
+
+		return (
+			<div className="flex items-center gap-2">
+				<Avatar.Root className="h-8 w-8 shrink-0">
+					<Avatar.Image
+						src={user?.picture || user?.image}
+						alt={pubkey}
+						loading="eager"
+						decoding="async"
+						className="h-8 w-8 rounded-md"
+					/>
+					<Avatar.Fallback delayMs={300}>
+						<img
+							src={fallbackAvatar}
+							alt={pubkey}
+							className="h-8 w-8 rounded-md bg-black dark:bg-white"
+						/>
+					</Avatar.Fallback>
+				</Avatar.Root>
+				<div className="inline-flex items-center gap-1">
+					<h5 className="max-w-[8rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
+						{user?.name ||
+							user?.display_name ||
+							user?.displayName ||
+							fallbackName}
+					</h5>
+					<p>{subtext}</p>
+				</div>
+			</div>
+		);
+	}
+
 	if (variant === "notify") {
 		if (isLoading) {
 			return (
@@ -129,7 +176,7 @@ export const User = memo(function User({
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
-						loading="lazy"
+						loading="eager"
 						decoding="async"
 						className="h-8 w-8 rounded-md"
 					/>
@@ -525,105 +572,36 @@ export const User = memo(function User({
 	}
 
 	return (
-		<HoverCard.Root>
-			<div className="flex items-center gap-3 px-3">
-				<HoverCard.Trigger asChild>
-					<Avatar.Root className="h-9 w-9 shrink-0">
-						<Avatar.Image
-							src={user?.picture || user?.image}
-							alt={pubkey}
-							loading="lazy"
-							decoding="async"
-							className="h-9 w-9 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
-						/>
-						<Avatar.Fallback delayMs={300}>
-							<img
-								src={fallbackAvatar}
-								alt={pubkey}
-								className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
-							/>
-						</Avatar.Fallback>
-					</Avatar.Root>
-				</HoverCard.Trigger>
-				<div className="flex h-6 flex-1 items-start gap-2">
-					<div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
-						{user?.name ||
-							user?.display_name ||
-							user?.displayName ||
-							fallbackName}
-					</div>
-					<div className="ml-auto inline-flex items-center gap-3">
-						<div className="text-neutral-500 dark:text-neutral-400">
-							{createdAt}
-						</div>
+		<div className="flex items-center gap-3 px-3">
+			<Avatar.Root className="h-9 w-9 shrink-0">
+				<Avatar.Image
+					src={user?.picture || user?.image}
+					alt={pubkey}
+					loading="lazy"
+					decoding="async"
+					className="h-9 w-9 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
+				/>
+				<Avatar.Fallback delayMs={300}>
+					<img
+						src={fallbackAvatar}
+						alt={pubkey}
+						className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
+					/>
+				</Avatar.Fallback>
+			</Avatar.Root>
+			<div className="flex h-6 flex-1 items-start gap-2">
+				<div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
+					{user?.name ||
+						user?.display_name ||
+						user?.displayName ||
+						fallbackName}
+				</div>
+				<div className="ml-auto inline-flex items-center gap-3">
+					<div className="text-neutral-500 dark:text-neutral-400">
+						{createdAt}
 					</div>
 				</div>
 			</div>
-			<HoverCard.Portal>
-				<HoverCard.Content
-					className="ml-4 w-[300px] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 shadow-lg data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade data-[state=open]:transition-all focus:outline-none dark:border-neutral-800 dark:bg-neutral-900"
-					sideOffset={5}
-				>
-					<div className="flex gap-2.5 border-b border-neutral-200 px-3 py-3 dark:border-neutral-800">
-						<Avatar.Root className="shrink-0">
-							<Avatar.Image
-								src={user?.picture || user?.image}
-								alt={pubkey}
-								loading="lazy"
-								decoding="async"
-								className="h-10 w-10 rounded-lg object-cover"
-							/>
-							<Avatar.Fallback delayMs={300}>
-								<img
-									src={fallbackAvatar}
-									alt={pubkey}
-									className="h-10 w-10 rounded-lg bg-black dark:bg-white"
-								/>
-							</Avatar.Fallback>
-						</Avatar.Root>
-						<div className="flex flex-1 flex-col gap-2">
-							<div className="inline-flex flex-col">
-								<h5 className="text-sm font-semibold">
-									{user?.name ||
-										user?.display_name ||
-										user?.displayName ||
-										user?.username}
-								</h5>
-								{user?.nip05 ? (
-									<NIP05
-										pubkey={pubkey}
-										nip05={user.nip05}
-										className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300"
-									/>
-								) : (
-									<span className="max-w-[15rem] truncate text-sm text-neutral-500 dark:text-neutral-300">
-										{fallbackName}
-									</span>
-								)}
-							</div>
-							<div>
-								<p className="line-clamp-3 break-all text-sm leading-tight text-neutral-900 dark:text-neutral-100">
-									{user?.about}
-								</p>
-							</div>
-						</div>
-					</div>
-					<div className="flex items-center gap-2 px-3 py-3">
-						<Link
-							to={`/users/${pubkey}`}
-							className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-neutral-200 text-sm font-semibold hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
-						>
-							View profile
-						</Link>
-						<Link
-							to={`/chats/${pubkey}`}
-							className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-neutral-200 text-sm font-semibold hover:bg-blue-500 hover:text-white dark:bg-neutral-800"
-						>
-							Message
-						</Link>
-					</div>
-				</HoverCard.Content>
-			</HoverCard.Portal>
-		</HoverCard.Root>
+		</div>
 	);
 });

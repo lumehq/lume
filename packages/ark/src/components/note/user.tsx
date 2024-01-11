@@ -41,7 +41,7 @@ export function NoteUser({
 						<Avatar.Image
 							src={fallbackAvatar}
 							alt={event.pubkey}
-							className="h-6 w-6 rounded-md bg-black dark:bg-white"
+							className="h-6 w-6 shrink-0 object-cover rounded-md bg-black dark:bg-white"
 						/>
 					</Avatar.Root>
 					<div className="flex flex-1 items-baseline gap-2">
@@ -65,7 +65,7 @@ export function NoteUser({
 						alt={event.pubkey}
 						loading="eager"
 						decoding="async"
-						className="h-6 w-6 rounded-md"
+						className="h-6 w-6 shrink-0 object-cover rounded-md"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img

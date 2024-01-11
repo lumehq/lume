@@ -392,8 +392,12 @@ export class Ark {
 		const seenIds = new Set<string>();
 		const dedupQueue = new Set<string>();
 
+		const relayUrls = [...this.ndk.pool.relays.values()].map(
+			(item) => item.url,
+		);
+
 		const events = await this.#fetcher.fetchLatestEvents(
-			this.#storage.account.relayList,
+			relayUrls,
 			filter,
 			limit,
 			{
