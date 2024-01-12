@@ -1,12 +1,7 @@
 import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { LumeStorage } from "@lume/storage";
-import {
-	FETCH_LIMIT,
-	QUOTES,
-	delay,
-	sendNativeNotification,
-} from "@lume/utils";
+import { QUOTES, delay, sendNativeNotification } from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -18,7 +13,7 @@ import NDK, {
 import { ndkAdapter } from "@nostr-fetch/adapter-ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
-import { platform } from "@tauri-apps/plugin-os";
+import { locale, platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
 import Database from "@tauri-apps/plugin-sql";
 import { check } from "@tauri-apps/plugin-updater";
@@ -101,9 +96,10 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 	async function init() {
 		const platformName = await platform();
+		const osLocale = await locale();
 		const sqliteAdapter = await Database.load("sqlite:lume_v3.db");
 
-		const storage = new LumeStorage(sqliteAdapter, platformName);
+		const storage = new LumeStorage(sqliteAdapter, platformName, osLocale);
 		await storage.init();
 
 		// check for new update
@@ -145,9 +141,9 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			explicitRelayUrls,
 			outboxRelayUrls,
 			blacklistRelayUrls,
-			enableOutboxModel: !storage.settings.lowPowerMode,
-			autoConnectUserRelays: !storage.settings.lowPowerMode,
-			autoFetchUserMutelist: !storage.settings.lowPowerMode,
+			enableOutboxModel: !storage.settings.lowPower,
+			autoConnectUserRelays: !storage.settings.lowPower,
+			autoFetchUserMutelist: !storage.settings.lowPower,
 			// clientName: 'Lume',
 			// clientNip89: '',
 		});

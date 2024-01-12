@@ -29,8 +29,6 @@
 		"@tauri-apps/plugin-sql": "2.0.0-alpha.5",
 		"@tauri-apps/plugin-updater": "2.0.0-alpha.5",
 		"@tauri-apps/plugin-upload": "2.0.0-alpha.5",
-		"@tiptap/extension-mention": "^2.1.13",
-		"@tiptap/react": "^2.1.13",
 		"@vidstack/react": "^1.9.8",
 		"get-urls": "^12.1.0",
 		"jotai": "^2.6.1",

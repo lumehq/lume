@@ -9,7 +9,6 @@ export function VideoPreview({ url }: { url: string }) {
 		<MediaPlayer
 			src={url}
 			className="w-full my-1 overflow-hidden rounded-lg"
-			aspectRatio="16/9"
 			load="visible"
 		>
 			<MediaProvider />

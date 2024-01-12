@@ -1,38 +1,129 @@
-import { useEvent } from '../../hooks/useEvent';
-import { NoteChildUser } from './childUser';
+import { NOSTR_MENTIONS } from "@lume/utils";
+import { nip19 } from "nostr-tools";
+import { ReactNode, useMemo } from "react";
+import { Link } from "react-router-dom";
+import reactStringReplace from "react-string-replace";
+import { useEvent } from "../../hooks/useEvent";
+import { NoteChildUser } from "./childUser";
+import { Hashtag } from "./mentions/hashtag";
+import { MentionUser } from "./mentions/user";
 
-export function NoteChild({ eventId, isRoot }: { eventId: string; isRoot?: boolean }) {
-  const { isLoading, isError, data } = useEvent(eventId);
+export function NoteChild({
+	eventId,
+	isRoot,
+}: { eventId: string; isRoot?: boolean }) {
+	const { isLoading, isError, data } = useEvent(eventId);
 
-  if (isLoading) {
-    return (
-      <div className="relative flex gap-3">
-        <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
-          <div className="h-4 w-full animate-pulse bg-neutral-300 dark:bg-neutral-700" />
-        </div>
-      </div>
-    );
-  }
+	const richContent = useMemo(() => {
+		if (!data) return "";
 
-  if (isError) {
-    return (
-      <div className="relative flex gap-3">
-        <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
-          Failed to fetch event
-        </div>
-      </div>
-    );
-  }
+		let parsedContent: string | ReactNode[] = data.content.replace(
+			/\n+/g,
+			"\n",
+		);
 
-  return (
-    <div className="relative flex gap-3">
-      <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
-        <div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-200 dark:bg-neutral-800" />
-        <div className="break-p mt-6 line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
-          {data.content}
-        </div>
-      </div>
-      <NoteChildUser pubkey={data.pubkey} subtext={isRoot ? 'posted' : 'replied'} />
-    </div>
-  );
+		const text = parsedContent;
+		const words = text.split(/( |\n)/);
+
+		const hashtags = words.filter((word) => word.startsWith("#"));
+		const mentions = words.filter((word) =>
+			NOSTR_MENTIONS.some((el) => word.startsWith(el)),
+		);
+
+		if (hashtags.length) {
+			for (const hashtag of hashtags) {
+				parsedContent = reactStringReplace(
+					parsedContent,
+					hashtag,
+					(match, i) => {
+						return <Hashtag key={match + i} tag={hashtag} />;
+					},
+				);
+			}
+		}
+
+		if (mentions.length) {
+			for (const mention of mentions) {
+				const address = mention
+					.replace("nostr:", "")
+					.replace("@", "")
+					.replace(/[^a-zA-Z0-9]/g, "");
+				const decoded = nip19.decode(address);
+
+				if (decoded.type === "npub") {
+					parsedContent = reactStringReplace(
+						parsedContent,
+						mention,
+						(match, i) => <MentionUser key={match + i} pubkey={decoded.data} />,
+					);
+				}
+
+				if (decoded.type === "nprofile" || decoded.type === "naddr") {
+					parsedContent = reactStringReplace(
+						parsedContent,
+						mention,
+						(match, i) => (
+							<MentionUser key={match + i} pubkey={decoded.data.pubkey} />
+						),
+					);
+				}
+			}
+		}
+
+		parsedContent = reactStringReplace(
+			parsedContent,
+			/(https?:\/\/\S+)/g,
+			(match, i) => {
+				const url = new URL(match);
+				return (
+					<Link
+						key={match + i}
+						to={url.toString()}
+						target="_blank"
+						rel="noreferrer"
+						className="break-all font-normal text-blue-500 hover:text-blue-600"
+					>
+						{url.toString()}
+					</Link>
+				);
+			},
+		);
+
+		return parsedContent;
+	}, [data]);
+
+	if (isLoading) {
+		return (
+			<div className="relative flex gap-3">
+				<div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
+					<div className="h-4 w-full animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+				</div>
+			</div>
+		);
+	}
+
+	if (isError) {
+		return (
+			<div className="relative flex gap-3">
+				<div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
+					Failed to fetch event
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="relative flex gap-3">
+			<div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
+				<div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-200 dark:bg-neutral-800" />
+				<div className="break-p mt-6 line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
+					{richContent}
+				</div>
+			</div>
+			<NoteChildUser
+				pubkey={data.pubkey}
+				subtext={isRoot ? "posted" : "replied"}
+			/>
+		</div>
+	);
 }

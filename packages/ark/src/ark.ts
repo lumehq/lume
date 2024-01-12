@@ -267,9 +267,15 @@ export class Ark {
 		return event;
 	}
 
-	public getEventThread({ tags }: { tags: NDKTag[] }) {
+	public getEventThread({
+		content,
+		tags,
+	}: { content: string; tags: NDKTag[] }) {
 		let rootEventId: string = null;
 		let replyEventId: string = null;
+
+		if (content.includes("nostr:note1") || content.includes("nostr:nevent1"))
+			return null;
 
 		const events = tags.filter((el) => el[0] === "e");
 

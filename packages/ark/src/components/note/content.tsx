@@ -1,4 +1,12 @@
-import { cn } from "@lume/utils";
+import {
+	AUDIOS,
+	IMAGES,
+	NOSTR_EVENTS,
+	NOSTR_MENTIONS,
+	VIDEOS,
+	cn,
+	regionNames,
+} from "@lume/utils";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import getUrls from "get-urls";
@@ -19,55 +27,12 @@ import {
 } from "../..";
 import { NIP89 } from "./nip89";
 
-const NOSTR_MENTIONS = [
-	"@npub1",
-	"nostr:npub1",
-	"nostr:nprofile1",
-	"nostr:naddr1",
-	"npub1",
-	"nprofile1",
-	"naddr1",
-	"Nostr:npub1",
-	"Nostr:nprofile1",
-	"Nostr:naddre1",
-];
-
-const NOSTR_EVENTS = [
-	"@nevent1",
-	"@note1",
-	"@nostr:note1",
-	"@nostr:nevent1",
-	"nostr:note1",
-	"note1",
-	"nostr:nevent1",
-	"nevent1",
-	"Nostr:note1",
-	"Nostr:nevent1",
-];
-
-// const BITCOINS = ['lnbc', 'bc1p', 'bc1q'];
-
-const IMAGES = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
-
-const VIDEOS = [
-	"mp4",
-	"mov",
-	"webm",
-	"wmv",
-	"flv",
-	"mts",
-	"avi",
-	"ogv",
-	"mkv",
-	"m3u8",
-];
-
-const AUDIOS = ["mp3", "ogg", "wav"];
-
 export function NoteContent({
 	className,
+	isTranslatable = false,
 }: {
 	className?: string;
+	isTranslatable?: boolean;
 }) {
 	const storage = useStorage();
 	const event = useNoteContext();
@@ -79,7 +44,7 @@ export function NoteContent({
 		if (event.kind !== NDKKind.Text) return content;
 
 		let parsedContent: string | ReactNode[] = content.replace(/\n+/g, "\n");
-		let linkPreview: string;
+		let linkPreview: string = undefined;
 		let images: string[] = [];
 		let videos: string[] = [];
 		let audios: string[] = [];
@@ -299,7 +264,7 @@ export function NoteContent({
 			<div className="break-p select-text whitespace-pre-line text-balance leading-normal">
 				{richContent}
 			</div>
-			{storage.settings.translation ? (
+			{isTranslatable && storage.settings.translation ? (
 				translated ? (
 					<button
 						type="button"
@@ -307,7 +272,7 @@ export function NoteContent({
 							setTranslated(false);
 							setContent(event.content);
 						}}
-						className="mt-2 text-sm text-blue-500 hover:text-blue-600 border-none shadow-none focus:outline-none"
+						className="mt-3 text-sm text-blue-500 hover:text-blue-600 border-none shadow-none focus:outline-none"
 					>
 						Show original content
 					</button>
@@ -315,9 +280,9 @@ export function NoteContent({
 					<button
 						type="button"
 						onClick={translate}
-						className="mt-2 text-sm text-blue-500 hover:text-blue-600 border-none shadow-none focus:outline-none"
+						className="mt-3 text-sm text-blue-500 hover:text-blue-600 border-none shadow-none focus:outline-none"
 					>
-						Translate to Vietnamese
+						Translate to {regionNames.of(storage.locale)}
 					</button>
 				)
 			) : null}

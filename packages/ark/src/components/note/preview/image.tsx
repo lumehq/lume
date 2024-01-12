@@ -1,5 +1,4 @@
 import { CheckCircleIcon, DownloadIcon } from "@lume/icons";
-import { getImageMeta } from "@lume/utils";
 import { downloadDir } from "@tauri-apps/api/path";
 import { Window } from "@tauri-apps/api/window";
 import { download } from "@tauri-apps/plugin-upload";
@@ -24,12 +23,9 @@ export function ImagePreview({ url }: { url: string }) {
 
 	const open = async () => {
 		const name = new URL(url).pathname.split("/").pop();
-		const image = await getImageMeta(url);
 		return new Window("image-viewer", {
 			url,
 			title: name,
-			width: image.width,
-			height: image.height,
 		});
 	};
 

@@ -17,6 +17,7 @@ export class LumeStorage {
 	#db: Database;
 	#depot: Child;
 	readonly platform: Platform;
+	readonly locale: string;
 	public account: Account;
 	public settings: {
 		autoupdate: boolean;
@@ -30,8 +31,9 @@ export class LumeStorage {
 		translateApiKey: string;
 	};
 
-	constructor(db: Database, platform: Platform) {
+	constructor(db: Database, platform: Platform, locale: string) {
 		this.#db = db;
+		this.locale = locale;
 		this.platform = platform;
 		this.settings = {
 			autoupdate: false,

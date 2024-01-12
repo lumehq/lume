@@ -2,16 +2,22 @@ import { PinIcon } from "@lume/icons";
 import { COL_TYPES } from "@lume/utils";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import { Note } from ".";
+import { Note, useNoteContext } from ".";
+import { useArk } from "../..";
 import { useColumnContext } from "../column";
 
 export function NoteThread({
-	thread,
 	className,
 }: {
-	thread: { rootEventId: string; replyEventId: string };
 	className?: string;
 }) {
+	const ark = useArk();
+	const event = useNoteContext();
+	const thread = ark.getEventThread({
+		content: event.content,
+		tags: event.tags,
+	});
+
 	const { addColumn } = useColumnContext();
 
 	if (!thread) return null;

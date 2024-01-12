@@ -1,5 +1,50 @@
 export const FETCH_LIMIT = 20;
 
+export const NOSTR_MENTIONS = [
+	"@npub1",
+	"nostr:npub1",
+	"nostr:nprofile1",
+	"nostr:naddr1",
+	"npub1",
+	"nprofile1",
+	"naddr1",
+	"Nostr:npub1",
+	"Nostr:nprofile1",
+	"Nostr:naddre1",
+];
+
+export const NOSTR_EVENTS = [
+	"@nevent1",
+	"@note1",
+	"@nostr:note1",
+	"@nostr:nevent1",
+	"nostr:note1",
+	"note1",
+	"nostr:nevent1",
+	"nevent1",
+	"Nostr:note1",
+	"Nostr:nevent1",
+];
+
+// const BITCOINS = ['lnbc', 'bc1p', 'bc1q'];
+
+export const IMAGES = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
+
+export const VIDEOS = [
+	"mp4",
+	"mov",
+	"webm",
+	"wmv",
+	"flv",
+	"mts",
+	"avi",
+	"ogv",
+	"mkv",
+	"m3u8",
+];
+
+export const AUDIOS = ["mp3", "ogg", "wav"];
+
 export const HASHTAGS = [
 	{ hashtag: "#food" },
 	{ hashtag: "#gaming" },

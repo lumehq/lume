@@ -65,3 +65,6 @@ export function displayNpub(pubkey: string, len: number) {
 
 // convert number to K, M, B, T, etc.
 export const compactNumber = Intl.NumberFormat("en", { notation: "compact" });
+
+// country name
+export const regionNames = new Intl.DisplayNames(["en"], { type: "language" });

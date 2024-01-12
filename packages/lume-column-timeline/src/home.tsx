@@ -12,6 +12,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 	const storage = useStorage();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
+	const queryClient = useQueryClient();
 
 	const [offset, cache] = useMemo(() => {
 		const serialized = sessionStorage.getItem(cacheKey);
@@ -48,7 +49,6 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				return lastEvent.created_at - 1;
 			},
 			initialData: () => {
-				const queryClient = useQueryClient();
 				const queryCacheData = queryClient.getQueryState([colKey])
 					?.data as NDKEvent[];
 				if (queryCacheData) {
