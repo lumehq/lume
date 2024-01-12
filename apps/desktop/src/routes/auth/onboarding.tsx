@@ -10,6 +10,7 @@ import {
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function OnboardingScreen() {
 	const ark = useArk();
@@ -18,24 +19,41 @@ export function OnboardingScreen() {
 	const navigate = useNavigate();
 
 	const [loading, setLoading] = useState(false);
+	const [apiKey, setAPIKey] = useState("");
 	const [settings, setSettings] = useState({
-		autoupdate: false,
 		notification: false,
+		lowPower: false,
+		translation: false,
 	});
 
-	const toggleAutoupdate = async () => {
-		await storage.createSetting("autoupdate", String(+!settings.autoupdate));
-		// update state
-		setSettings((prev) => ({ ...prev, autoupdate: !settings.autoupdate }));
+	const toggleLowPower = async () => {
+		await storage.createSetting("lowPower", String(+!settings.lowPower));
+		setSettings((state) => ({ ...state, autoupdate: !settings.lowPower }));
+	};
+
+	const toggleTranslation = async () => {
+		await storage.createSetting("translation", String(+!settings.translation));
+		setSettings((state) => ({ ...state, translation: !settings.translation }));
 	};
 
 	const toggleNofitication = async () => {
 		await requestPermission();
-		// update state
-		setSettings((prev) => ({ ...prev, notification: !settings.notification }));
+		setSettings((state) => ({
+			...state,
+			notification: !settings.notification,
+		}));
 	};
 
 	const completeAuth = async () => {
+		if (settings.translation) {
+			if (!apiKey.length)
+				return toast.warning(
+					"You need to provide Translate API if enable translation",
+				);
+
+			await storage.createSetting("translateApiKey", apiKey);
+		}
+
 		setLoading(true);
 
 		// get account contacts
@@ -71,17 +89,23 @@ export function OnboardingScreen() {
 
 	useEffect(() => {
 		async function loadSettings() {
+			// get notification permission
 			const permissionGranted = await isPermissionGranted();
 			setSettings((prev) => ({ ...prev, notification: permissionGranted }));
 
+			// get other settings
 			const data = await storage.getAllSettings();
-			if (!data) return;
-
 			for (const item of data) {
-				if (item.key === "autoupdate")
+				if (item.key === "lowPower")
 					setSettings((prev) => ({
 						...prev,
-						autoupdate: !!parseInt(item.value),
+						lowPower: !!parseInt(item.value),
+					}));
+
+				if (item.key === "translation")
+					setSettings((prev) => ({
+						...prev,
+						translation: !!parseInt(item.value),
 					}));
 			}
 		}
@@ -103,24 +127,6 @@ export function OnboardingScreen() {
 				<div className="flex flex-col gap-3">
 					<div className="flex w-full items-start justify-between gap-4 rounded-xl px-5 py-4 bg-neutral-950">
 						<Switch.Root
-							checked={settings.autoupdate}
-							onClick={() => toggleAutoupdate()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full outline-none data-[state=checked]:bg-blue-500 bg-neutral-800"
-						>
-							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div>
-							<h3 className="text-lg font-semibold">
-								Auto check for update on Login
-							</h3>
-							<p className="text-neutral-500">
-								Keep Lume up to date with latest version, always have new
-								features and bug free.
-							</p>
-						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-xl px-5 py-4 bg-neutral-950">
-						<Switch.Root
 							checked={settings.notification}
 							onClick={() => toggleNofitication()}
 							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full outline-none data-[state=checked]:bg-blue-500 bg-neutral-800"
@@ -135,6 +141,51 @@ export function OnboardingScreen() {
 							</p>
 						</div>
 					</div>
+					<div className="flex w-full items-start justify-between gap-4 rounded-xl px-5 py-4 bg-neutral-950">
+						<Switch.Root
+							checked={settings.lowPower}
+							onClick={() => toggleLowPower()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full outline-none data-[state=checked]:bg-blue-500 bg-neutral-800"
+						>
+							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+						</Switch.Root>
+						<div>
+							<h3 className="font-semibold text-lg">Low Power Mode</h3>
+							<p className="text-neutral-500">
+								Limited relay connection and hide all media, sustainable for low
+								network environment
+							</p>
+						</div>
+					</div>
+					<div className="flex w-full items-start justify-between gap-4 rounded-xl px-5 py-4 bg-neutral-950">
+						<Switch.Root
+							checked={settings.translation}
+							onClick={() => toggleTranslation()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full outline-none data-[state=checked]:bg-blue-500 bg-neutral-800"
+						>
+							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+						</Switch.Root>
+						<div>
+							<h3 className="font-semibold text-lg">
+								Translation (nostr.wine)
+							</h3>
+							<p className="text-neutral-500">
+								Translate text to your preferred language, powered by Nostr Wine
+							</p>
+						</div>
+					</div>
+					{settings.translation ? (
+						<div className="flex flex-col w-full items-start justify-between gap-2 rounded-xl px-5 py-4 bg-neutral-950">
+							<h3 className="font-semibold">Translate API Key</h3>
+							<input
+								type="password"
+								spellCheck={false}
+								value={apiKey}
+								onChange={(e) => setAPIKey(e.target.value)}
+								className="w-full text-xl border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-11 rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-900"
+							/>
+						</div>
+					) : null}
 					<div className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm bg-blue-950 text-blue-300">
 						<InfoIcon className="size-8" />
 						<p>

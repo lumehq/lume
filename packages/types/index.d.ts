@@ -20,50 +20,11 @@ export interface Account {
 	relayList: string[];
 }
 
-export interface WidgetGroup {
-	title: string;
-	data: WidgetGroupItem[];
-}
-
-export interface WidgetGroupItem {
-	title: string;
-	description: string;
-	content: string;
-	kind: number;
-	icon?: string;
-}
-
 export interface IColumn {
 	id?: number;
 	kind: number;
 	title: string;
 	content: string;
-}
-
-export interface WidgetProps {
-	id?: string;
-	account_id?: number;
-	kind: number;
-	title: string;
-	content: string;
-}
-
-export interface Chats {
-	id: string;
-	event_id?: string;
-	receiver_pubkey: string;
-	sender_pubkey: string;
-	content: string;
-	tags: string[][];
-	created_at: number;
-	new_messages?: number;
-}
-
-export interface Relays {
-	id?: string;
-	account_id?: number;
-	relay: string;
-	purpose?: string;
 }
 
 export interface Opengraph {
@@ -95,17 +56,6 @@ export interface NostrBuildResponse {
 			url: string;
 		}>;
 	};
-}
-
-export interface Resource {
-	id: string;
-	title: string;
-	image: string;
-}
-
-export interface Resources {
-	title: string;
-	data: Array<Resource>;
 }
 
 export interface NDKCacheUser {

@@ -73,7 +73,7 @@ export function useRichContent(content: string) {
 	const words = text.split(/( |\n)/);
 	const urls = [...getUrls(text)];
 
-	if (storage.settings.media && !storage.settings.lowPowerMode) {
+	if (storage.settings.media && !storage.settings.lowPower) {
 		images = urls.filter((word) =>
 			IMAGES.some((el) => {
 				const url = new URL(word);
@@ -238,9 +238,9 @@ export function useRichContent(content: string) {
 			parsedContent[0] = parsedContent[0].trimStart();
 		}
 
-		return { parsedContent };
+		return parsedContent;
 	} catch (e) {
 		console.warn("[parser] parse failed: ", e);
-		return { parsedContent };
+		return parsedContent;
 	}
 }

@@ -3,7 +3,7 @@ import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { CacheSnapshot, VList, VListHandle } from "virtua";
 
@@ -47,6 +47,18 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				if (!lastEvent) return;
 				return lastEvent.created_at - 1;
 			},
+			initialData: () => {
+				const queryClient = useQueryClient();
+				const queryCacheData = queryClient.getQueryState([colKey])
+					?.data as NDKEvent[];
+				if (queryCacheData) {
+					return {
+						pageParams: [undefined, 1],
+						pages: [queryCacheData],
+					};
+				}
+			},
+			staleTime: 120 * 1000,
 			refetchOnWindowFocus: false,
 		});
 

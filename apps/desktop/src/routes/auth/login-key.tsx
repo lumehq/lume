@@ -35,7 +35,7 @@ export function LoginWithKey() {
 				privkey: privkey,
 			});
 
-			return navigate("/auth/onboarding");
+			return navigate("/auth/onboarding", { replace: true });
 		} catch (e) {
 			setLoading(false);
 			setError("nsec", {
@@ -98,7 +98,7 @@ export function LoginWithKey() {
 						</div>
 						<button
 							type="submit"
-							disabled={!isValid}
+							disabled={!isValid || loading}
 							className="inline-flex items-center justify-center w-full text-lg h-12 font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 disabled:opacity-50"
 						>
 							{loading ? (

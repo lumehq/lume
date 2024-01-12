@@ -42,24 +42,30 @@ export function LoginWithOAuth() {
 				},
 			});
 
-			if (!req.ok)
+			if (!req.ok) {
+				setLoading(false);
 				return toast.error(
 					"Cannot verify your NIP-05 address, please try again later.",
 				);
+			}
 
 			const res: NIP05 = await req.json();
 
-			if (!res.names[localPath.toLowerCase()] || !res.names[localPath])
+			if (!res.names[localPath.toLowerCase()] || !res.names[localPath]) {
+				setLoading(false);
 				return toast.error(
 					"Cannot verify your NIP-05 address, please try again later.",
 				);
+			}
 
 			const pubkey =
 				(res.names[localPath] as string) ||
 				(res.names[localPath.toLowerCase()] as string);
 
-			if (!res.nip46[pubkey])
+			if (!res.nip46[pubkey]) {
+				setLoading(false);
 				return toast.error("Cannot found NIP-46 with this address");
+			}
 
 			const nip46Relays = res.nip46[pubkey] as unknown as string[];
 
@@ -73,20 +79,39 @@ export function LoginWithOAuth() {
 
 			const localSigner = NDKPrivateKeySigner.generate();
 			const remoteSigner = new NDKNip46Signer(bunker, pubkey, localSigner);
-			await remoteSigner.blockUntilReady();
 
-			ark.updateNostrSigner({ signer: remoteSigner });
-
-			await storage.createSetting("nsecbunker", "1");
-			await storage.createAccount({
-				pubkey,
-				privkey: localSigner.privateKey,
+			// handle auth url request
+			let authWindow: Window;
+			remoteSigner.addListener("authUrl", (authUrl: string) => {
+				authWindow = new Window(`auth-${pubkey}`, {
+					url: authUrl,
+					title: "Login",
+					titleBarStyle: "overlay",
+					width: 415,
+					height: 600,
+					center: true,
+					closable: false,
+				});
 			});
 
-			return navigate("/auth/onboarding");
+			const remoteUser = await remoteSigner.blockUntilReady();
+
+			if (remoteUser) {
+				authWindow.close();
+
+				ark.updateNostrSigner({ signer: remoteSigner });
+
+				await storage.createSetting("nsecbunker", "1");
+				await storage.createAccount({
+					pubkey,
+					privkey: localSigner.privateKey,
+				});
+
+				return navigate("/auth/onboarding", { replace: true });
+			}
 		} catch (e) {
 			setLoading(false);
-			setError("npub", {
+			setError("nip05", {
 				type: "manual",
 				message: String(e),
 			});
@@ -122,7 +147,7 @@ export function LoginWithOAuth() {
 						</div>
 						<button
 							type="submit"
-							disabled={!isValid}
+							disabled={!isValid || loading}
 							className="inline-flex items-center justify-center w-full text-lg h-12 font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 disabled:opacity-50"
 						>
 							{loading ? (

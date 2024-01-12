@@ -85,7 +85,7 @@ export function CreateAccountScreen() {
 
 		setOnboarding(true);
 
-		return navigate("/auth/onboarding");
+		return navigate("/auth/onboarding", { replace: true });
 	};
 
 	const onSubmit = async (data: { username: string; email: string }) => {
@@ -164,7 +164,7 @@ export function CreateAccountScreen() {
 			setOnboarding(true);
 			setIsLoading(false);
 
-			return navigate("/auth/onboarding");
+			return navigate("/auth/onboarding", { replace: true });
 		} catch (e) {
 			setIsLoading(false);
 			toast.error(String(e));

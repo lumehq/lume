@@ -25,7 +25,9 @@ export class LumeStorage {
 		hashtag: boolean;
 		depot: boolean;
 		tunnelUrl: string;
-		lowPowerMode: boolean;
+		lowPower: boolean;
+		translation: boolean;
+		translateApiKey: string;
 	};
 
 	constructor(db: Database, platform: Platform) {
@@ -38,7 +40,9 @@ export class LumeStorage {
 			hashtag: true,
 			depot: false,
 			tunnelUrl: "",
-			lowPowerMode: false,
+			lowPower: false,
+			translation: false,
+			translateApiKey: "",
 		};
 	}
 
@@ -55,6 +59,12 @@ export class LumeStorage {
 			if (item.key === "media") this.settings.media = !!parseInt(item.value);
 			if (item.key === "depot") this.settings.depot = !!parseInt(item.value);
 			if (item.key === "tunnel_url") this.settings.tunnelUrl = item.value;
+			if (item.key === "lowPower")
+				this.settings.lowPower = !!parseInt(item.value);
+			if (item.key === "translation")
+				this.settings.translation = !!parseInt(item.value);
+			if (item.key === "translateApiKey")
+				this.settings.translateApiKey = item.value;
 		}
 
 		const account = await this.getActiveAccount();
@@ -320,10 +330,13 @@ export class LumeStorage {
 	}
 
 	public async getColumns() {
+		if (!this.account) return [];
+
 		const columns: Array<IColumn> = await this.#db.select(
 			"SELECT * FROM columns WHERE account_id = $1 ORDER BY created_at DESC;",
 			[this.account.id],
 		);
+
 		return columns;
 	}
 
@@ -366,7 +379,9 @@ export class LumeStorage {
 		const currentSetting = await this.checkSettingValue(key);
 
 		if (!currentSetting) {
-			this.settings[key] === !!parseInt(value);
+			if (key !== "translateApiKey" && key !== "tunnelUrl")
+				this.settings[key] === !!parseInt(value);
+
 			return await this.#db.execute(
 				"INSERT OR IGNORE INTO settings (key, value) VALUES ($1, $2);",
 				[key, value],
