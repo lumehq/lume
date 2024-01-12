@@ -10,7 +10,6 @@ import NDK, {
 	NDKRelay,
 	NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
-import { ndkAdapter } from "@nostr-fetch/adapter-ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { locale, platform } from "@tauri-apps/plugin-os";
@@ -18,11 +17,7 @@ import { relaunch } from "@tauri-apps/plugin-process";
 import Database from "@tauri-apps/plugin-sql";
 import { check } from "@tauri-apps/plugin-updater";
 import Markdown from "markdown-to-jsx";
-import {
-	NostrFetcher,
-	normalizeRelayUrl,
-	normalizeRelayUrlSet,
-} from "nostr-fetch";
+import { normalizeRelayUrl, normalizeRelayUrlSet } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { createContext, useContextSelector } from "use-context-selector";
 import { Ark } from "./ark";
@@ -38,8 +33,6 @@ const LumeContext = createContext<Context>({
 });
 
 const LumeProvider = ({ children }: PropsWithChildren<object>) => {
-	const queryClient = useQueryClient();
-
 	const [context, setContext] = useState<Context>(undefined);
 	const [isNewVersion, setIsNewVersion] = useState(false);
 
@@ -219,11 +212,8 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			});
 		}
 
-		// init nostr fetcher
-		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(ndk));
-
 		// ark utils
-		const ark = new Ark({ storage, ndk, fetcher });
+		const ark = new Ark({ storage, ndk });
 
 		// update context
 		setContext({ ark, storage });

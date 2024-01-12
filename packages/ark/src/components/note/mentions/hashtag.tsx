@@ -1,5 +1,5 @@
 import { COL_TYPES } from "@lume/utils";
-import { useColumnContext } from "../../column";
+import { useColumnContext } from "../../column/provider";
 
 export function Hashtag({ tag }: { tag: string }) {
 	const { addColumn } = useColumnContext();

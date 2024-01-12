@@ -1,8 +1,8 @@
 import { PinIcon } from "@lume/icons";
 import { COL_TYPES } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useNoteContext } from "..";
-import { useColumnContext } from "../../column";
+import { useColumnContext } from "../../column/provider";
+import { useNoteContext } from "../provider";
 
 export function NotePin() {
 	const event = useNoteContext();

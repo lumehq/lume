@@ -67,7 +67,7 @@ export function NoteUser({
 						decoding="async"
 						className="h-6 w-6 shrink-0 object-cover rounded-md"
 					/>
-					<Avatar.Fallback delayMs={300}>
+					<Avatar.Fallback delayMs={150}>
 						<img
 							src={fallbackAvatar}
 							alt={event.pubkey}
@@ -120,7 +120,7 @@ export function NoteUser({
 							decoding="async"
 							className="h-6 w-6 rounded object-cover"
 						/>
-						<Avatar.Fallback delayMs={300}>
+						<Avatar.Fallback delayMs={150}>
 							<img
 								src={fallbackAvatar}
 								alt={event.pubkey}
@@ -165,7 +165,7 @@ export function NoteUser({
 						decoding="async"
 						className="h-10 w-10 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
 					/>
-					<Avatar.Fallback delayMs={300}>
+					<Avatar.Fallback delayMs={150}>
 						<img
 							src={fallbackAvatar}
 							alt={event.pubkey}
@@ -216,7 +216,7 @@ export function NoteUser({
 					decoding="async"
 					className="h-9 w-9 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
 				/>
-				<Avatar.Fallback delayMs={300}>
+				<Avatar.Fallback delayMs={150}>
 					<img
 						src={fallbackAvatar}
 						alt={event.pubkey}

@@ -15,17 +15,15 @@ import { nip19 } from "nostr-tools";
 import { ReactNode, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
-import {
-	Hashtag,
-	ImagePreview,
-	LinkPreview,
-	MentionNote,
-	MentionUser,
-	VideoPreview,
-	useNoteContext,
-	useStorage,
-} from "../..";
+import { useStorage } from "../../provider";
+import { Hashtag } from "./mentions/hashtag";
+import { MentionNote } from "./mentions/note";
+import { MentionUser } from "./mentions/user";
 import { NIP89 } from "./nip89";
+import { ImagePreview } from "./preview/image";
+import { LinkPreview } from "./preview/link";
+import { VideoPreview } from "./preview/video";
+import { useNoteContext } from "./provider";
 
 export function NoteContent({
 	className,
@@ -229,7 +227,7 @@ export function NoteContent({
 
 			return parsedContent;
 		} catch (e) {
-			console.warn("[parser] parse failed: ", e);
+			console.warn(event.id, `[parser] parse failed: ${e}`);
 			return parsedContent;
 		}
 	}, [content]);
@@ -251,7 +249,7 @@ export function NoteContent({
 			setContent(data.translatedText);
 			setTranslated(true);
 		} catch (e) {
-			console.error(String(e));
+			console.error(event.id, String(e));
 		}
 	};
 
@@ -260,7 +258,7 @@ export function NoteContent({
 	}
 
 	return (
-		<div className={cn("", className)}>
+		<div className={cn(className)}>
 			<div className="break-p select-text whitespace-pre-line text-balance leading-normal">
 				{richContent}
 			</div>

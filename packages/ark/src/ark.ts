@@ -12,6 +12,7 @@ import NDK, {
 	NDKUser,
 	NostrEvent,
 } from "@nostr-dev-kit/ndk";
+import { ndkAdapter } from "@nostr-fetch/adapter-ndk";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { fetch } from "@tauri-apps/plugin-http";
@@ -20,22 +21,17 @@ import { nip19 } from "nostr-tools";
 
 export class Ark {
 	#storage: LumeStorage;
-	#fetcher: NostrFetcher;
 	public ndk: NDK;
 
 	constructor({
 		ndk,
 		storage,
-
-		fetcher,
 	}: {
 		ndk: NDK;
 		storage: LumeStorage;
-		fetcher: NostrFetcher;
 	}) {
 		this.ndk = ndk;
 		this.#storage = storage;
-		this.#fetcher = fetcher;
 	}
 
 	public async connectDepot() {
@@ -303,17 +299,15 @@ export class Ark {
 		};
 	}
 
-	public async getThreads({
-		id,
-		data,
-	}: { id: string; data?: NDKEventWithReplies[] }) {
-		let events = data || null;
+	public async getThreads({ id }: { id: string }) {
+		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
 
-		if (!data) {
+		try {
 			const relayUrls = [...this.ndk.pool.relays.values()].map(
 				(item) => item.url,
 			);
-			const rawEvents = (await this.#fetcher.fetchAllEvents(
+
+			const rawEvents = (await fetcher.fetchAllEvents(
 				relayUrls,
 				{
 					kinds: [NDKKind.Text],
@@ -322,64 +316,76 @@ export class Ark {
 				{ since: 0 },
 				{ sort: true },
 			)) as unknown as NostrEvent[];
-			events = rawEvents.map(
+
+			const events = rawEvents.map(
 				(event) => new NDKEvent(this.ndk, event),
 			) as NDKEvent[] as NDKEventWithReplies[];
-		}
 
-		if (events.length > 0) {
-			const replies = new Set();
-			for (const event of events) {
-				const tags = event.tags.filter((el) => el[0] === "e" && el[1] !== id);
-				if (tags.length > 0) {
-					for (const tag of tags) {
-						const rootIndex = events.findIndex((el) => el.id === tag[1]);
-						if (rootIndex !== -1) {
-							const rootEvent = events[rootIndex];
-							if (rootEvent?.replies) {
-								rootEvent.replies.push(event);
-							} else {
-								rootEvent.replies = [event];
+			if (events.length > 0) {
+				const replies = new Set();
+				for (const event of events) {
+					const tags = event.tags.filter((el) => el[0] === "e" && el[1] !== id);
+					if (tags.length > 0) {
+						for (const tag of tags) {
+							const rootIndex = events.findIndex((el) => el.id === tag[1]);
+							if (rootIndex !== -1) {
+								const rootEvent = events[rootIndex];
+								if (rootEvent?.replies) {
+									rootEvent.replies.push(event);
+								} else {
+									rootEvent.replies = [event];
+								}
+								replies.add(event.id);
 							}
-							replies.add(event.id);
 						}
 					}
 				}
+				const cleanEvents = events.filter((ev) => !replies.has(ev.id));
+				return cleanEvents;
 			}
-			const cleanEvents = events.filter((ev) => !replies.has(ev.id));
-			return cleanEvents;
-		}
 
-		return events;
+			return events;
+		} catch (e) {
+			console.log(e);
+		} finally {
+			fetcher.shutdown();
+		}
 	}
 
 	public async getAllRelaysFromContacts() {
-		const LIMIT = 1;
-		const connectedRelays = this.ndk.pool
-			.connectedRelays()
-			.map((item) => item.url);
-		const relayMap = new Map<string, string[]>();
-		const relayEvents = this.#fetcher.fetchLatestEventsPerAuthor(
-			{
-				authors: this.#storage.account.contacts,
-				relayUrls: connectedRelays,
-			},
-			{ kinds: [NDKKind.RelayList] },
-			LIMIT,
-		);
+		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
+		try {
+			const LIMIT = 1;
+			const connectedRelays = this.ndk.pool
+				.connectedRelays()
+				.map((item) => item.url);
+			const relayMap = new Map<string, string[]>();
+			const relayEvents = fetcher.fetchLatestEventsPerAuthor(
+				{
+					authors: this.#storage.account.contacts,
+					relayUrls: connectedRelays,
+				},
+				{ kinds: [NDKKind.RelayList] },
+				LIMIT,
+			);
 
-		for await (const { author, events } of relayEvents) {
-			if (events[0]) {
-				for (const tag of events[0].tags) {
-					const users = relayMap.get(tag[1]);
+			for await (const { author, events } of relayEvents) {
+				if (events[0]) {
+					for (const tag of events[0].tags) {
+						const users = relayMap.get(tag[1]);
 
-					if (!users) relayMap.set(tag[1], [author]);
-					users.push(author);
+						if (!users) relayMap.set(tag[1], [author]);
+						users.push(author);
+					}
 				}
 			}
-		}
 
-		return relayMap;
+			return relayMap;
+		} catch (e) {
+			console.log(e);
+		} finally {
+			fetcher.shutdown();
+		}
 	}
 
 	public async getInfiniteEvents({
@@ -395,51 +401,52 @@ export class Ark {
 		signal?: AbortSignal;
 		dedup?: boolean;
 	}) {
-		const seenIds = new Set<string>();
-		const dedupQueue = new Set<string>();
-
+		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
 		const relayUrls = [...this.ndk.pool.relays.values()].map(
 			(item) => item.url,
 		);
+		const seenIds = new Set<string>();
+		const dedupQueue = new Set<string>();
 
-		const events = await this.#fetcher.fetchLatestEvents(
-			relayUrls,
-			filter,
-			limit,
-			{
+		try {
+			const events = await fetcher.fetchLatestEvents(relayUrls, filter, limit, {
 				asOf: pageParam === 0 ? undefined : pageParam,
 				abortSignal: signal,
-			},
-		);
+			});
 
-		const ndkEvents = events.map((event) => {
-			return new NDKEvent(this.ndk, event);
-		});
+			const ndkEvents = events.map((event) => {
+				return new NDKEvent(this.ndk, event);
+			});
 
-		if (dedup) {
-			for (const event of ndkEvents) {
-				const tags = event.tags
-					.filter((el) => el[0] === "e")
-					?.map((item) => item[1]);
+			if (dedup) {
+				for (const event of ndkEvents) {
+					const tags = event.tags
+						.filter((el) => el[0] === "e")
+						?.map((item) => item[1]);
 
-				if (tags.length) {
-					for (const tag of tags) {
-						if (seenIds.has(tag)) {
-							dedupQueue.add(event.id);
-							break;
+					if (tags.length) {
+						for (const tag of tags) {
+							if (seenIds.has(tag)) {
+								dedupQueue.add(event.id);
+								break;
+							}
+
+							seenIds.add(tag);
 						}
-
-						seenIds.add(tag);
 					}
 				}
+
+				return ndkEvents
+					.filter((event) => !dedupQueue.has(event.id))
+					.sort((a, b) => b.created_at - a.created_at);
 			}
 
-			return ndkEvents
-				.filter((event) => !dedupQueue.has(event.id))
-				.sort((a, b) => b.created_at - a.created_at);
+			return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			fetcher.shutdown();
 		}
-
-		return ndkEvents.sort((a, b) => b.created_at - a.created_at);
 	}
 
 	public async getRelayEvents({
@@ -456,21 +463,29 @@ export class Ark {
 		signal?: AbortSignal;
 		dedup?: boolean;
 	}) {
-		const events = await this.#fetcher.fetchLatestEvents(
-			[normalizeRelayUrl(relayUrl)],
-			filter,
-			limit,
-			{
-				asOf: pageParam === 0 ? undefined : pageParam,
-				abortSignal: signal,
-			},
-		);
+		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
 
-		const ndkEvents = events.map((event) => {
-			return new NDKEvent(this.ndk, event);
-		});
+		try {
+			const events = await fetcher.fetchLatestEvents(
+				[normalizeRelayUrl(relayUrl)],
+				filter,
+				limit,
+				{
+					asOf: pageParam === 0 ? undefined : pageParam,
+					abortSignal: signal,
+				},
+			);
 
-		return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+			const ndkEvents = events.map((event) => {
+				return new NDKEvent(this.ndk, event);
+			});
+
+			return ndkEvents.sort((a, b) => b.created_at - a.created_at);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			fetcher.shutdown();
+		}
 	}
 
 	/**

@@ -1,8 +1,8 @@
-import { HorizontalDotsIcon, ShareIcon } from "@lume/icons";
+import { HorizontalDotsIcon } from "@lume/icons";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { nip19 } from "nostr-tools";
-import { EventPointer } from "nostr-tools/lib/types/nip19";
+import { type EventPointer } from "nostr-tools/lib/types/nip19";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNoteContext } from "./provider";

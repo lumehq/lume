@@ -3,7 +3,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { useProfile } from "../../../hooks/useProfile";
-import { useColumnContext } from "../../column";
+import { useColumnContext } from "../../column/provider";
 
 export const MentionUser = memo(function MentionUser({
 	pubkey,

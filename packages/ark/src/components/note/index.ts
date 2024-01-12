@@ -25,17 +25,3 @@ export const Note = {
 	Child: NoteChild,
 	Thread: NoteThread,
 };
-
-export * from "./provider";
-export * from "./primitives/text";
-export * from "./primitives/repost";
-export * from "./primitives/skeleton";
-export * from "./primitives/thread";
-export * from "./primitives/reply";
-export * from "./preview/image";
-export * from "./preview/link";
-export * from "./preview/video";
-export * from "./mentions/note";
-export * from "./mentions/user";
-export * from "./mentions/hashtag";
-export * from "./mentions/invoice";

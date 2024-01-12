@@ -2,9 +2,8 @@ import { PinIcon } from "@lume/icons";
 import { COL_TYPES } from "@lume/utils";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import { Note, useNoteContext } from ".";
-import { useArk } from "../..";
-import { useColumnContext } from "../column";
+import { Note } from ".";
+import { useArk, useColumnContext, useNoteContext } from "../..";
 
 export function NoteThread({
 	className,
