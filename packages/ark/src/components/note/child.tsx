@@ -22,7 +22,7 @@ export function NoteChild({
 			"\n",
 		);
 
-		const text = parsedContent;
+		const text = parsedContent as string;
 		const words = text.split(/( |\n)/);
 
 		const hashtags = words.filter((word) => word.startsWith("#"));

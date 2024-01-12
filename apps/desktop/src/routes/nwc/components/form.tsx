@@ -1,5 +1,5 @@
-import { useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ export function NWCForm({ setWalletConnectURL }) {
 			const params = new URLSearchParams(uriObj.search);
 
 			if (params.has("relay") && params.has("secret")) {
-				await storage.createPrivkey(`${storage.account.pubkey}-nwc`, uri);
+				await storage.createPrivkey(`${ark.account.pubkey}-nwc`, uri);
 				setWalletConnectURL(uri);
 				setLoading(false);
 			} else {

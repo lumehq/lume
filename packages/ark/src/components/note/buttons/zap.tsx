@@ -1,6 +1,7 @@
 import { webln } from "@getalby/sdk";
 import { SendPaymentResponse } from "@getalby/sdk/dist/types";
 import { CancelIcon, ZapIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import {
 	compactNumber,
 	displayNpub,
@@ -13,8 +14,8 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useNavigate } from "react-router-dom";
+import { useArk } from "../../../hooks/useArk";
 import { useProfile } from "../../../hooks/useProfile";
-import { useArk, useStorage } from "../../../provider";
 import { useNoteContext } from "../provider";
 
 export function NoteZap() {
@@ -87,7 +88,7 @@ export function NoteZap() {
 	useEffect(() => {
 		async function getWalletConnectURL() {
 			const uri: string = await invoke("secure_load", {
-				key: `${storage.account.pubkey}-nwc`,
+				key: `${ark.account.pubkey}-nwc`,
 			});
 			if (uri) setWalletConnectURL(uri);
 		}

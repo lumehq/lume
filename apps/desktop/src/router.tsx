@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { AppLayout, AuthLayout, HomeLayout, SettingsLayout } from "@lume/ui";
 import { fetch } from "@tauri-apps/plugin-http";
 import {
@@ -23,7 +24,7 @@ export default function Router() {
 					element: <HomeLayout />,
 					errorElement: <ErrorScreen />,
 					loader: async () => {
-						if (!storage.account) return redirect("auth");
+						if (!ark.account) return redirect("auth");
 						return null;
 					},
 					children: [

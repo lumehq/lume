@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useArk } from "../provider";
+import { useArk } from "./useArk";
 
 export function useProfile(pubkey: string) {
 	const ark = useArk();
@@ -20,6 +20,7 @@ export function useProfile(pubkey: string) {
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
+		staleTime: Infinity,
 		retry: 2,
 	});
 

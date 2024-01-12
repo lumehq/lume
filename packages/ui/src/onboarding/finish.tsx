@@ -1,5 +1,5 @@
-import { useStorage } from "@lume/ark";
 import { CheckIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { onboardingAtom } from "@lume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -20,7 +20,7 @@ export function OnboardingFinishScreen() {
 		const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
 
 		await queryClient.refetchQueries({
-			queryKey: ["user", storage.account.pubkey],
+			queryKey: ["user", ark.account.pubkey],
 		});
 
 		for (const key of queryKeys) {

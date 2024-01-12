@@ -1,6 +1,6 @@
 import { NDKAppHandlerEvent } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
-import { useArk } from "../../provider";
+import { useArk } from "../../hooks/useArk";
 
 export function AppHandler({ tag }: { tag: string[] }) {
 	const ark = useArk();

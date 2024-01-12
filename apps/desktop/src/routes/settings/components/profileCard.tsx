@@ -1,5 +1,6 @@
-import { useProfile, useStorage } from "@lume/ark";
+import { useProfile } from "@lume/ark";
 import { EditIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { displayNpub } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -10,13 +11,13 @@ import { Link } from "react-router-dom";
 export function ProfileCard() {
 	const storage = useStorage();
 	const svgURI = `data:image/svg+xml;utf8,${encodeURIComponent(
-		minidenticon(storage.account.pubkey, 90, 50),
+		minidenticon(ark.account.pubkey, 90, 50),
 	)}`;
 
-	const { isLoading, user } = useProfile(storage.account.pubkey);
+	const { isLoading, user } = useProfile(ark.account.pubkey);
 
 	const copyNpub = async () => {
-		return await writeText(nip19.npubEncode(storage.account.pubkey));
+		return await writeText(nip19.npubEncode(ark.account.pubkey));
 	};
 
 	return (
@@ -47,7 +48,7 @@ export function ProfileCard() {
 						<Avatar.Root className="shrink-0">
 							<Avatar.Image
 								src={user?.picture || user?.image}
-								alt={storage.account.pubkey}
+								alt={ark.account.pubkey}
 								loading="lazy"
 								decoding="async"
 								style={{ contentVisibility: "auto" }}
@@ -56,7 +57,7 @@ export function ProfileCard() {
 							<Avatar.Fallback delayMs={300}>
 								<img
 									src={svgURI}
-									alt={storage.account.pubkey}
+									alt={ark.account.pubkey}
 									className="h-16 w-16 rounded-xl bg-black dark:bg-white"
 								/>
 							</Avatar.Fallback>
@@ -66,7 +67,7 @@ export function ProfileCard() {
 								{user?.display_name || user?.name}
 							</h3>
 							<p className="text-lg text-neutral-700 dark:text-neutral-300">
-								{user?.nip05 || displayNpub(storage.account.pubkey, 16)}
+								{user?.nip05 || displayNpub(ark.account.pubkey, 16)}
 							</p>
 						</div>
 					</div>

@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon, RunIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { User } from "@lume/ui";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { useState } from "react";
@@ -17,7 +18,7 @@ export function DepotProfileCard() {
 
 			const event = await ark.getEventByFilter({
 				filter: {
-					authors: [storage.account.pubkey],
+					authors: [ark.account.pubkey],
 					kinds: [NDKKind.Metadata],
 				},
 			});
@@ -38,7 +39,7 @@ export function DepotProfileCard() {
 	return (
 		<div className="flex h-56 w-full flex-col gap-2 overflow-hidden rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900">
 			<div className="flex flex-1 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800">
-				<User pubkey={storage.account.pubkey} variant="simple" />
+				<User pubkey={ark.account.pubkey} variant="simple" />
 			</div>
 			<div className="inline-flex shrink-0 items-center justify-between">
 				<div className="text-sm font-medium">Profile</div>

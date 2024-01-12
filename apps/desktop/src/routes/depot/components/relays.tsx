@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon, RunIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -17,7 +18,7 @@ export function DepotRelaysCard() {
 
 			const event = await ark.getEventByFilter({
 				filter: {
-					authors: [storage.account.pubkey],
+					authors: [ark.account.pubkey],
 					kinds: [NDKKind.RelayList],
 				},
 			});
@@ -39,7 +40,7 @@ export function DepotRelaysCard() {
 		async function loadRelays() {
 			const event = await ark.getEventByFilter({
 				filter: {
-					authors: [storage.account.pubkey],
+					authors: [ark.account.pubkey],
 					kinds: [NDKKind.RelayList],
 				},
 			});

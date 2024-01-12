@@ -1,5 +1,5 @@
-import { useStorage } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { compactNumber } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
@@ -8,10 +8,10 @@ import { Link } from "react-router-dom";
 export function PostCard() {
 	const storage = useStorage();
 	const { status, data } = useQuery({
-		queryKey: ["user-stats", storage.account.pubkey],
+		queryKey: ["user-stats", ark.account.pubkey],
 		queryFn: async ({ signal }: { signal: AbortSignal }) => {
 			const res = await fetch(
-				`https://api.nostr.band/v0/stats/profile/${storage.account.pubkey}`,
+				`https://api.nostr.band/v0/stats/profile/${ark.account.pubkey}`,
 				{
 					signal,
 				},
@@ -39,7 +39,7 @@ export function PostCard() {
 				<div className="flex h-full w-full flex-col justify-between p-4">
 					<h3 className="pt-1 text-5xl font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
 						{compactNumber.format(
-							data.stats[storage.account.pubkey].pub_note_count,
+							data.stats[ark.account.pubkey].pub_note_count,
 						)}
 					</h3>
 					<div className="mt-auto flex h-6 w-full items-center justify-between">
@@ -47,7 +47,7 @@ export function PostCard() {
 							Posts
 						</p>
 						<Link
-							to={`/users/${storage.account.pubkey}`}
+							to={`/users/${ark.account.pubkey}`}
 							className="inline-flex h-6 w-max items-center gap-1 rounded-full bg-neutral-200 px-2.5 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							View

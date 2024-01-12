@@ -1,4 +1,4 @@
-import { RepostNote, TextNote, useArk, useStorage } from "@lume/ark";
+import { RepostNote, TextNote, useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
@@ -9,7 +9,6 @@ import { CacheSnapshot, VList, VListHandle } from "virtua";
 
 export function HomeRoute({ colKey }: { colKey: string }) {
 	const ark = useArk();
-	const storage = useStorage();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
 	const queryClient = useQueryClient();
@@ -34,7 +33,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				const events = await ark.getInfiniteEvents({
 					filter: {
 						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: storage.account.contacts,
+						authors: ark.account.contacts,
 					},
 					limit: FETCH_LIMIT,
 					pageParam,
@@ -94,7 +93,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 		};
 	}, []);
 
-	if (!storage.account.contacts.length) {
+	if (!ark.account.contacts.length) {
 		return (
 			<div className="px-3 mt-3">
 				<EmptyFeed />

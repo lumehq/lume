@@ -1,4 +1,5 @@
-import { useArk, useProfile, useStorage } from "@lume/ark";
+import { useArk, useProfile } from "@lume/ark";
+import { useStorage } from "@lume/storage";
 import { NIP05 } from "@lume/ui";
 import { displayNpub } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
@@ -50,7 +51,7 @@ export function UserProfile({ pubkey }: { pubkey: string }) {
 	};
 
 	useEffect(() => {
-		if (storage.account.contacts.includes(pubkey)) {
+		if (ark.account.contacts.includes(pubkey)) {
 			setFollowed(true);
 		}
 	}, []);

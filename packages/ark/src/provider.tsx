@@ -1,7 +1,7 @@
 import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
-import { LumeStorage } from "@lume/storage";
-import { QUOTES, delay, sendNativeNotification } from "@lume/utils";
+import { useStorage } from "@lume/storage";
+import { QUOTES, sendNativeNotification } from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -11,44 +11,28 @@ import NDK, {
 	NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
-import { locale, platform } from "@tauri-apps/plugin-os";
-import { relaunch } from "@tauri-apps/plugin-process";
-import Database from "@tauri-apps/plugin-sql";
-import { check } from "@tauri-apps/plugin-updater";
 import Linkify from "linkify-react";
-import { normalizeRelayUrl, normalizeRelayUrlSet } from "nostr-fetch";
+import { normalizeRelayUrlSet } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
-import { createContext, useContextSelector } from "use-context-selector";
 import { Ark } from "./ark";
+import { LumeContext } from "./context";
 
-type Context = {
-	storage: LumeStorage;
-	ark: Ark;
-};
-
-const LumeContext = createContext<Context>({
-	storage: undefined,
-	ark: undefined,
-});
-
-const LumeProvider = ({ children }: PropsWithChildren<object>) => {
-	const [context, setContext] = useState<Context>(undefined);
-	const [isNewVersion, setIsNewVersion] = useState(false);
+export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
+	const storage = useStorage();
+	const [context, setContext] = useState<Ark>(undefined);
 
 	async function initNostrSigner({
-		storage,
 		nsecbunker,
 	}: {
-		storage: LumeStorage;
 		nsecbunker?: boolean;
 	}) {
 		try {
-			if (!storage.account) return null;
+			if (!storage.currentUser) return null;
 
 			// NIP-46 Signer
 			if (nsecbunker) {
 				const localSignerPrivkey = await storage.loadPrivkey(
-					storage.account.pubkey,
+					storage.currentUser.pubkey,
 				);
 
 				if (!localSignerPrivkey) return null;
@@ -64,7 +48,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 				const remoteSigner = new NDKNip46Signer(
 					bunker,
-					storage.account.pubkey,
+					storage.currentUser.pubkey,
 					localSigner,
 				);
 				await remoteSigner.blockUntilReady();
@@ -73,11 +57,8 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			}
 
 			// Privkey Signer
-			const userPrivkey = await storage.loadPrivkey(storage.account.pubkey);
-
-			if (!userPrivkey) {
-				return null;
-			}
+			const userPrivkey = await storage.loadPrivkey(storage.currentUser.pubkey);
+			if (!userPrivkey) return null;
 
 			return new NDKPrivateKeySigner(userPrivkey);
 		} catch (e) {
@@ -87,45 +68,23 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 	}
 
 	async function init() {
-		const platformName = await platform();
-		const osLocale = await locale();
-		const sqliteAdapter = await Database.load("sqlite:lume_v3.db");
-
-		const storage = new LumeStorage(sqliteAdapter, platformName, osLocale);
-		await storage.init();
-
-		// check for new update
-		if (storage.settings.autoupdate) {
-			const update = await check();
-			// install new version
-			if (update) {
-				setIsNewVersion(true);
-
-				await update.downloadAndInstall();
-				await relaunch();
-			}
-		}
-
 		const explicitRelayUrls = normalizeRelayUrlSet([
 			"wss://bostr.nokotaro.com/",
-			"wss://nostr.mutinywallet.com",
+			"wss://nostr.mutinywallet.com/",
 		]);
 
-		if (storage.settings.depot) {
-			await storage.launchDepot();
-			await delay(2000);
-
-			explicitRelayUrls.push(normalizeRelayUrl("ws://localhost:6090"));
-		}
-
 		// #TODO: user should config outbox relays
-		const outboxRelayUrls = normalizeRelayUrlSet(["wss://purplepag.es"]);
+		const outboxRelayUrls = normalizeRelayUrlSet(["wss://purplepag.es/"]);
 
 		// #TODO: user should config blacklist relays
 		// No need to connect depot tunnel url
 		const blacklistRelayUrls = storage.settings.tunnelUrl.length
-			? [storage.settings.tunnelUrl, `${storage.settings.tunnelUrl}/`]
-			: [];
+			? [
+					storage.settings.tunnelUrl,
+					`${storage.settings.tunnelUrl}/`,
+					"wss://brb.io/",
+			  ]
+			: ["wss://brb.io/"];
 
 		const cacheAdapter = new NDKCacheAdapterTauri(storage);
 		const ndk = new NDK({
@@ -136,7 +95,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			enableOutboxModel: !storage.settings.lowPower,
 			autoConnectUserRelays: !storage.settings.lowPower,
 			autoFetchUserMutelist: !storage.settings.lowPower,
-			// clientName: 'Lume',
+			// clientName: "Lume",
 			// clientNip89: '',
 		});
 
@@ -145,8 +104,7 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 		// add signer
 		const signer = await initNostrSigner({
-			storage,
-			nsecbunker: storage.settings.bunker,
+			nsecbunker: storage.settings.nsecbunker,
 		});
 
 		if (signer) ndk.signer = signer;
@@ -167,19 +125,19 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		};
 
 		// update account's metadata
-		if (storage.account) {
-			const user = ndk.getUser({ pubkey: storage.account.pubkey });
+		if (signer) {
+			const user = ndk.getUser({ pubkey: storage.currentUser.pubkey });
 			ndk.activeUser = user;
 
 			const contacts = await user.follows();
-			storage.account.contacts = [...contacts].map((user) => user.pubkey);
+			storage.currentUser.contacts = [...contacts].map((user) => user.pubkey);
 
 			// subscribe for new activity
 			const sub = ndk.subscribe(
 				{
 					kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
-					"#p": [storage.account.pubkey],
 					since: Math.floor(Date.now() / 1000),
+					"#p": [storage.currentUser.pubkey],
 				},
 				{ closeOnEose: false, groupable: false },
 			);
@@ -212,14 +170,14 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		}
 
 		// ark utils
-		const ark = new Ark({ storage, ndk });
+		const ark = new Ark({ ndk, account: storage.currentUser });
 
 		// update context
-		setContext({ ark, storage });
+		setContext(ark);
 	}
 
 	useEffect(() => {
-		if (!context && !isNewVersion) init();
+		if (!context) init();
 	}, []);
 
 	if (!context) {
@@ -243,37 +201,13 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 				</div>
 				<div className="absolute bottom-5 right-5 inline-flex items-center gap-2.5">
 					<LoaderIcon className="w-6 h-6 text-blue-500 animate-spin" />
-					<p className="font-semibold">
-						{isNewVersion ? "Found a new version, updating..." : "Starting..."}
-					</p>
+					<p className="font-semibold">Starting</p>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<LumeContext.Provider
-			value={{ ark: context.ark, storage: context.storage }}
-		>
-			{children}
-		</LumeContext.Provider>
+		<LumeContext.Provider value={context}>{children}</LumeContext.Provider>
 	);
 };
-
-const useArk = () => {
-	const context = useContextSelector(LumeContext, (state) => state.ark);
-	if (context === undefined) {
-		throw new Error("Please import Ark Provider to use useArk() hook");
-	}
-	return context;
-};
-
-const useStorage = () => {
-	const context = useContextSelector(LumeContext, (state) => state.storage);
-	if (context === undefined) {
-		throw new Error("Please import Ark Provider to use useStorage() hook");
-	}
-	return context;
-};
-
-export { LumeProvider, useArk, useStorage };

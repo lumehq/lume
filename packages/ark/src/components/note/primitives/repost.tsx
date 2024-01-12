@@ -1,7 +1,7 @@
 import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { Note } from "..";
-import { useArk } from "../../../provider";
+import { useArk } from "../../../hooks/useArk";
 
 export function RepostNote({
 	event,

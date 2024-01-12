@@ -1,10 +1,11 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import {
 	CheckCircleIcon,
 	LoaderIcon,
 	PlusIcon,
 	UnverifiedIcon,
 } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -31,7 +32,7 @@ export function EditProfileScreen() {
 		defaultValues: async () => {
 			const res: NDKUserProfile = queryClient.getQueryData([
 				"user",
-				storage.account.pubkey,
+				ark.account.pubkey,
 			]);
 			if (res.image) {
 				setPicture(res.image);
@@ -102,7 +103,7 @@ export function EditProfileScreen() {
 
 		if (data.nip05) {
 			const verify = ark.validateNIP05({
-				pubkey: storage.account.pubkey,
+				pubkey: ark.account.pubkey,
 				nip05: data.nip05,
 			});
 			if (verify) {
@@ -125,7 +126,7 @@ export function EditProfileScreen() {
 		if (publish) {
 			// invalid cache
 			queryClient.invalidateQueries({
-				queryKey: ["user", storage.account.pubkey],
+				queryKey: ["user", ark.account.pubkey],
 			});
 			// reset form
 			reset();

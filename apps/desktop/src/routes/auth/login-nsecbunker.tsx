@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { nip19 } from "nostr-tools";
 import { useState } from "react";

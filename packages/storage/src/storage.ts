@@ -18,10 +18,10 @@ export class LumeStorage {
 	#depot: Child;
 	readonly platform: Platform;
 	readonly locale: string;
-	public account: Account;
+	public currentUser: Account;
 	public settings: {
 		autoupdate: boolean;
-		bunker: boolean;
+		nsecbunker: boolean;
 		media: boolean;
 		hashtag: boolean;
 		depot: boolean;
@@ -37,7 +37,7 @@ export class LumeStorage {
 		this.platform = platform;
 		this.settings = {
 			autoupdate: false,
-			bunker: false,
+			nsecbunker: false,
 			media: true,
 			hashtag: true,
 			depot: false,
@@ -52,25 +52,15 @@ export class LumeStorage {
 		const settings = await this.getAllSettings();
 
 		for (const item of settings) {
-			if (item.key === "nsecbunker")
-				this.settings.bunker = !!parseInt(item.value);
-			if (item.key === "hashtag")
-				this.settings.hashtag = !!parseInt(item.value);
-			if (item.key === "autoupdate")
-				this.settings.autoupdate = !!parseInt(item.value);
-			if (item.key === "media") this.settings.media = !!parseInt(item.value);
-			if (item.key === "depot") this.settings.depot = !!parseInt(item.value);
-			if (item.key === "tunnel_url") this.settings.tunnelUrl = item.value;
-			if (item.key === "lowPower")
-				this.settings.lowPower = !!parseInt(item.value);
-			if (item.key === "translation")
-				this.settings.translation = !!parseInt(item.value);
-			if (item.key === "translateApiKey")
-				this.settings.translateApiKey = item.value;
+			if (item.value.length > 10) {
+				this.settings[item.key] = item.value;
+			} else {
+				this.settings[item.key] = !!parseInt(item.value);
+			}
 		}
 
 		const account = await this.getActiveAccount();
-		if (account) this.account = account;
+		if (account) this.currentUser = account;
 	}
 
 	async #keyring_save(key: string, value: string) {
@@ -256,7 +246,7 @@ export class LumeStorage {
 		);
 
 		if (results.length) {
-			this.account = results[0];
+			this.currentUser = results[0];
 			return results[0];
 		}
 		return null;
@@ -289,8 +279,8 @@ export class LumeStorage {
 		}
 
 		const account = await this.getActiveAccount();
-		this.account = account;
-		this.account.contacts = [];
+		this.currentUser = account;
+		this.currentUser.contacts = [];
 
 		return account;
 	}
@@ -322,7 +312,7 @@ export class LumeStorage {
 	public async updateAccount(column: string, value: string) {
 		const insert = await this.#db.execute(
 			`UPDATE accounts SET ${column} = $1 WHERE id = $2;`,
-			[value, this.account.id],
+			[value, this.currentUser.id],
 		);
 
 		if (insert) {
@@ -332,11 +322,11 @@ export class LumeStorage {
 	}
 
 	public async getColumns() {
-		if (!this.account) return [];
+		if (!this.currentUser) return [];
 
 		const columns: Array<IColumn> = await this.#db.select(
 			"SELECT * FROM columns WHERE account_id = $1 ORDER BY created_at DESC;",
-			[this.account.id],
+			[this.currentUser.id],
 		);
 
 		return columns;
@@ -349,7 +339,7 @@ export class LumeStorage {
 	) {
 		const insert = await this.#db.execute(
 			"INSERT INTO columns (account_id, kind, title, content) VALUES ($1, $2, $3, $4);",
-			[this.account.id, kind, title, content],
+			[this.currentUser.id, kind, title, content],
 		);
 
 		if (insert) {
@@ -429,10 +419,10 @@ export class LumeStorage {
 	}
 
 	public async logout() {
-		this.account = null;
+		this.currentUser = null;
 		return await this.#db.execute(
 			"UPDATE accounts SET is_active = '0' WHERE id = $1;",
-			[this.account.id],
+			[this.currentUser.id],
 		);
 	}
 }

@@ -1,5 +1,5 @@
-import { useStorage } from "@lume/ark";
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

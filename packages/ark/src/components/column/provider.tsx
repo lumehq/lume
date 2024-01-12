@@ -1,3 +1,4 @@
+import { useStorage } from "@lume/storage";
 import { IColumn } from "@lume/types";
 import { COL_TYPES } from "@lume/utils";
 import {
@@ -8,7 +9,6 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { useStorage } from "../../provider";
 
 type ColumnContext = {
 	columns: IColumn[];

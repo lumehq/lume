@@ -1,4 +1,4 @@
-import { useStorage } from "@lume/ark";
+import { useStorage } from "@lume/storage";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";

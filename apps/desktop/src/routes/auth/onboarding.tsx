@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { InfoIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import * as Switch from "@radix-ui/react-switch";
@@ -57,7 +58,7 @@ export function OnboardingScreen() {
 		setLoading(true);
 
 		// get account contacts
-		await ark.getUserContacts(storage.account.pubkey);
+		await ark.getUserContacts(ark.account.pubkey);
 
 		// refetch newsfeed
 		await queryClient.prefetchInfiniteQuery({
@@ -73,7 +74,7 @@ export function OnboardingScreen() {
 				const events = await ark.getInfiniteEvents({
 					filter: {
 						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: storage.account.contacts,
+						authors: ark.account.contacts,
 					},
 					limit: FETCH_LIMIT,
 					pageParam,

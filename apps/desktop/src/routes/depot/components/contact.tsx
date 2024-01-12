@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon, RunIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { User } from "@lume/ui";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { useState } from "react";
@@ -17,7 +18,7 @@ export function DepotContactCard() {
 
 			const event = await ark.getEventByFilter({
 				filter: {
-					authors: [storage.account.pubkey],
+					authors: [ark.account.pubkey],
 					kinds: [NDKKind.Contacts],
 				},
 			});
@@ -39,13 +40,13 @@ export function DepotContactCard() {
 		<div className="flex h-56 w-full flex-col gap-2 overflow-hidden rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900">
 			<div className="flex flex-1 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-800">
 				<div className="isolate flex -space-x-2">
-					{storage.account.contacts?.slice(0, 8).map((item) => (
+					{ark.account.contacts?.slice(0, 8).map((item) => (
 						<User key={item} pubkey={item} variant="ministacked" />
 					))}
-					{storage.account.contacts?.length > 8 ? (
+					{ark.account.contacts?.length > 8 ? (
 						<div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-300 text-neutral-900 ring-1 ring-white dark:bg-neutral-700 dark:text-neutral-100 dark:ring-black">
 							<span className="text-[8px] font-medium">
-								+{storage.account.contacts?.length - 8}
+								+{ark.account.contacts?.length - 8}
 							</span>
 						</div>
 					) : null}

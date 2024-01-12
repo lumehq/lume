@@ -1,10 +1,9 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
-import { FETCH_LIMIT } from "@lume/utils";
+import { useStorage } from "@lume/storage";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
-import { VList } from "virtua";
 import { ReplyActivity } from "./reply";
 import { RepostActivity } from "./repost";
 import { ZapActivity } from "./zap";
@@ -27,7 +26,7 @@ export function ActivityContent() {
 				const events = await ark.getInfiniteEvents({
 					filter: {
 						kinds: [NDKKind.Zap],
-						"#p": [storage.account.pubkey],
+						"#p": [ark.account.pubkey],
 					},
 					limit: 100,
 					pageParam,
@@ -52,7 +51,7 @@ export function ActivityContent() {
 	);
 
 	const renderEvent = useCallback((event: NDKEvent) => {
-		if (event.pubkey === storage.account.pubkey) return null;
+		if (event.pubkey === ark.account.pubkey) return null;
 
 		switch (event.kind) {
 			case NDKKind.Text:

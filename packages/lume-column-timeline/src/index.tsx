@@ -1,4 +1,4 @@
-import { Column, useStorage } from "@lume/ark";
+import { Column, useArk } from "@lume/ark";
 import { TimelineIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
@@ -9,7 +9,7 @@ import { HomeRoute } from "./home";
 
 export function Timeline({ column }: { column: IColumn }) {
 	const colKey = `timeline-${column.id}`;
-	const storage = useStorage();
+	const ark = useArk();
 	const queryClient = useQueryClient();
 	const since = useRef(Math.floor(Date.now() / 1000));
 
@@ -35,9 +35,9 @@ export function Timeline({ column }: { column: IColumn }) {
 			<Column.Live
 				filter={{
 					kinds: [NDKKind.Text, NDKKind.Repost],
-					authors: !storage.account.contacts.length
-						? [storage.account.pubkey]
-						: storage.account.contacts,
+					authors: !ark.account.contacts.length
+						? [ark.account.pubkey]
+						: ark.account.contacts,
 					since: since.current,
 				}}
 				onClick={refreshTimeline}

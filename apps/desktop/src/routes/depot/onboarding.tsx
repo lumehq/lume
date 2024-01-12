@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { delay } from "@lume/utils";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
@@ -26,9 +27,7 @@ export function DepotOnboardingScreen() {
 
 			// add current user to whitelist
 			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-			parsedConfig.authorization["pubkey_whitelist"].push(
-				storage.account.pubkey,
-			);
+			parsedConfig.authorization["pubkey_whitelist"].push(ark.account.pubkey);
 
 			// update new config
 			const newConfig = stringify(parsedConfig);

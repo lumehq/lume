@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { ArrowLeftIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { motion } from "framer-motion";
 import { minidenticon } from "minidenticons";

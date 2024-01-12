@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { ChevronDownIcon, DepotIcon, GossipIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { invoke } from "@tauri-apps/api/core";
@@ -36,7 +37,7 @@ export function DepotScreen() {
 
 			const relayEvent = await ark.getEventByFilter({
 				filter: {
-					authors: [storage.account.pubkey],
+					authors: [ark.account.pubkey],
 					kinds: [NDKKind.RelayList],
 				},
 			});

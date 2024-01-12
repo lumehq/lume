@@ -1,10 +1,4 @@
-import {
-	RepostNote,
-	TextNote,
-	useArk,
-	useProfile,
-	useStorage,
-} from "@lume/ark";
+import { RepostNote, TextNote, useArk, useProfile } from "@lume/ark";
 import {
 	ArrowLeftIcon,
 	ArrowRightCircleIcon,
@@ -22,7 +16,6 @@ import { NIP05 } from "../nip05";
 
 export function UserRoute() {
 	const ark = useArk();
-	const storage = useStorage();
 	const navigate = useNavigate();
 
 	const { id } = useParams();
@@ -101,7 +94,7 @@ export function UserRoute() {
 	};
 
 	useEffect(() => {
-		if (storage.account.contacts.includes(id)) {
+		if (ark.account.contacts.includes(id)) {
 			setFollowed(true);
 		}
 	}, []);

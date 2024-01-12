@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { CancelIcon, RefreshIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { RelayForm } from "./relayForm";
@@ -9,12 +10,12 @@ export function UserRelayList() {
 	const storage = useStorage();
 
 	const { status, data, refetch } = useQuery({
-		queryKey: ["relays", storage.account.pubkey],
+		queryKey: ["relays", ark.account.pubkey],
 		queryFn: async () => {
 			const event = await ark.getEventByFilter({
 				filter: {
 					kinds: [NDKKind.RelayList],
-					authors: [storage.account.pubkey],
+					authors: [ark.account.pubkey],
 				},
 			});
 

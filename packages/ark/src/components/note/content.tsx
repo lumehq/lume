@@ -1,3 +1,4 @@
+import { useStorage } from "@lume/storage";
 import {
 	AUDIOS,
 	IMAGES,
@@ -15,7 +16,6 @@ import { nip19 } from "nostr-tools";
 import { ReactNode, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
-import { useStorage } from "../../provider";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
 import { MentionUser } from "./mentions/user";

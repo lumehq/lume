@@ -1,4 +1,4 @@
-import { RepostNote, TextNote, useArk, useStorage } from "@lume/ark";
+import { RepostNote, TextNote, useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKFilter, NDKKind } from "@nostr-dev-kit/ndk";
@@ -11,7 +11,6 @@ export function HomeRoute({
 	content,
 }: { colKey: string; content: string }) {
 	const ark = useArk();
-	const storage = useStorage();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
 
@@ -40,7 +39,7 @@ export function HomeRoute({
 					filter = {
 						kinds: [NDKKind.Text, NDKKind.Repost],
 						"#t": parsed.hashtags.map((item) => item.replace("#", "")),
-						authors: storage.account.contacts,
+						authors: ark.account.contacts,
 					};
 				} else {
 					filter = {

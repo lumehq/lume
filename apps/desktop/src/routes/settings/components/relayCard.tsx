@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { EditIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { compactNumber } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -9,7 +10,7 @@ export function RelayCard() {
 	const storage = useStorage();
 
 	const { status, data } = useQuery({
-		queryKey: ["relays", storage.account.pubkey],
+		queryKey: ["relays", ark.account.pubkey],
 		queryFn: async () => {
 			const relays = await ark.getUserRelays({});
 			return relays;

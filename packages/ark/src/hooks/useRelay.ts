@@ -1,6 +1,7 @@
+import { useStorage } from "@lume/storage";
 import { NDKKind, NDKRelayUrl, NDKTag } from "@nostr-dev-kit/ndk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useArk, useStorage } from "../provider";
+import { useArk } from "./useArk";
 
 export function useRelay() {
 	const ark = useArk();
@@ -14,13 +15,13 @@ export function useRelay() {
 		) => {
 			// Cancel any outgoing refetches
 			await queryClient.cancelQueries({
-				queryKey: ["relays", storage.account.pubkey],
+				queryKey: ["relays", ark.account.pubkey],
 			});
 
 			// Snapshot the previous value
 			const prevRelays: NDKTag[] = queryClient.getQueryData([
 				"relays",
-				storage.account.pubkey,
+				ark.account.pubkey,
 			]);
 
 			// create new relay list if not exist
@@ -42,7 +43,7 @@ export function useRelay() {
 
 			// Optimistically update to the new value
 			queryClient.setQueryData(
-				["relays", storage.account.pubkey],
+				["relays", ark.account.pubkey],
 				(prev: NDKTag[]) => [...prev, ["r", relay, purpose ?? ""]],
 			);
 
@@ -51,7 +52,7 @@ export function useRelay() {
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["relays", storage.account.pubkey],
+				queryKey: ["relays", ark.account.pubkey],
 			});
 		},
 	});
@@ -60,13 +61,13 @@ export function useRelay() {
 		mutationFn: async (relay: NDKRelayUrl) => {
 			// Cancel any outgoing refetches
 			await queryClient.cancelQueries({
-				queryKey: ["relays", storage.account.pubkey],
+				queryKey: ["relays", ark.account.pubkey],
 			});
 
 			// Snapshot the previous value
 			const prevRelays: NDKTag[] = queryClient.getQueryData([
 				"relays",
-				storage.account.pubkey,
+				ark.account.pubkey,
 			]);
 
 			if (!prevRelays) return;
@@ -80,14 +81,14 @@ export function useRelay() {
 			});
 
 			// Optimistically update to the new value
-			queryClient.setQueryData(["relays", storage.account.pubkey], prevRelays);
+			queryClient.setQueryData(["relays", ark.account.pubkey], prevRelays);
 
 			// Return a context object with the snapshotted value
 			return { prevRelays };
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["relays", storage.account.pubkey],
+				queryKey: ["relays", ark.account.pubkey],
 			});
 		},
 	});

@@ -1,19 +1,18 @@
-import { useProfile, useStorage } from "@lume/ark";
+import { useArk, useProfile } from "@lume/ark";
 import { useNetworkStatus } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
 import { minidenticon } from "minidenticons";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import { AccountMoreActions } from "./more";
 
 export function ActiveAccount() {
-	const storage = useStorage();
+	const ark = useArk();
 	const isOnline = useNetworkStatus();
 
-	const { user } = useProfile(storage.account.pubkey);
+	const { user } = useProfile(ark.account.pubkey);
 
 	const svgURI = `data:image/svg+xml;utf8,${encodeURIComponent(
-		minidenticon(storage.account.pubkey, 90, 50),
+		minidenticon(ark.account.pubkey, 90, 50),
 	)}`;
 
 	return (
@@ -21,7 +20,7 @@ export function ActiveAccount() {
 			<Avatar.Root>
 				<Avatar.Image
 					src={user?.picture || user?.image}
-					alt={storage.account.pubkey}
+					alt={ark.account.pubkey}
 					loading="lazy"
 					decoding="async"
 					style={{ contentVisibility: "auto" }}
@@ -30,7 +29,7 @@ export function ActiveAccount() {
 				<Avatar.Fallback delayMs={150}>
 					<img
 						src={svgURI}
-						alt={storage.account.pubkey}
+						alt={ark.account.pubkey}
 						className="aspect-square h-auto w-full rounded-xl bg-black dark:bg-white"
 					/>
 				</Avatar.Fallback>

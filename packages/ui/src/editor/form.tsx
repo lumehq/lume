@@ -1,5 +1,6 @@
-import { MentionNote, useArk, useColumnContext, useStorage } from "@lume/ark";
+import { MentionNote, useArk, useColumnContext } from "@lume/ark";
 import { LoaderIcon, TrashIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKCacheUserProfile } from "@lume/types";
 import { COL_TYPES, cn, editorValueAtom } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";

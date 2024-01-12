@@ -1,5 +1,5 @@
-import { useStorage } from "@lume/ark";
 import { EyeOffIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
 
@@ -10,12 +10,12 @@ export function BackupSettingScreen() {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const removePrivkey = async () => {
-		await storage.removePrivkey(storage.account.pubkey);
+		await storage.removePrivkey(ark.account.pubkey);
 	};
 
 	useEffect(() => {
 		async function loadPrivkey() {
-			const key = await storage.loadPrivkey(storage.account.pubkey);
+			const key = await storage.loadPrivkey(ark.account.pubkey);
 			if (key) setPrivkey(key);
 		}
 

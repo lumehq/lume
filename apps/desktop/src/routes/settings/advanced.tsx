@@ -1,4 +1,4 @@
-import { useStorage } from "@lume/ark";
+import { useStorage } from "@lume/storage";
 
 export function AdvancedSettingScreen() {
 	const storage = useStorage();

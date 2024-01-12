@@ -1,4 +1,4 @@
-import { RepostNote, TextNote, useArk, useStorage } from "@lume/ark";
+import { RepostNote, TextNote, useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";

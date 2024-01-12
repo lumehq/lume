@@ -1,10 +1,10 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NIP05 } from "@lume/types";
 import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { Window } from "@tauri-apps/api/window";
 import { fetch } from "@tauri-apps/plugin-http";
-import { nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +29,13 @@ export function LoginWithOAuth() {
 	const onSubmit = async (data: { nip05: string }) => {
 		try {
 			setLoading(true);
+
+			if (!emailRegex.test(data.nip05)) {
+				setLoading(false);
+				return toast.error(
+					"Cannot verify your NIP-05 address, please try again later.",
+				);
+			}
 
 			const localPath = data.nip05.split("@")[0];
 			const service = data.nip05.split("@")[1];

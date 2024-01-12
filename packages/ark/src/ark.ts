@@ -1,5 +1,4 @@
-import { LumeStorage } from "@lume/storage";
-import { type NDKEventWithReplies, type NIP05 } from "@lume/types";
+import { Account, type NDKEventWithReplies, type NIP05 } from "@lume/types";
 import NDK, {
 	NDKEvent,
 	NDKFilter,
@@ -20,18 +19,18 @@ import { NostrFetcher, normalizeRelayUrl } from "nostr-fetch";
 import { nip19 } from "nostr-tools";
 
 export class Ark {
-	#storage: LumeStorage;
 	public ndk: NDK;
+	public account: Account;
 
 	constructor({
 		ndk,
-		storage,
+		account,
 	}: {
 		ndk: NDK;
-		storage: LumeStorage;
+		account: Account;
 	}) {
 		this.ndk = ndk;
-		this.#storage = storage;
+		this.account = account;
 	}
 
 	public async connectDepot() {
@@ -106,8 +105,9 @@ export class Ark {
 
 	public async getUserProfile(pubkey?: string) {
 		try {
+			const currentUserPubkey = this.account.pubkey;
+
 			// get clean pubkey without any special characters
-			const currentUserPubkey = this.#storage.account.pubkey;
 			let hexstring = pubkey
 				? pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "")
 				: currentUserPubkey;
@@ -141,8 +141,9 @@ export class Ark {
 
 	public async getUserContacts(pubkey?: string) {
 		try {
+			const currentUserPubkey = this.account.pubkey;
+
 			// get clean pubkey without any special characters
-			const currentUserPubkey = this.#storage.account.pubkey;
 			let hexstring = pubkey
 				? pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "")
 				: currentUserPubkey;
@@ -165,8 +166,8 @@ export class Ark {
 
 			const contacts = [...(await user.follows())].map((user) => user.pubkey);
 
-			if (!pubkey || pubkey === this.#storage.account.pubkey)
-				this.#storage.account.contacts = contacts;
+			if (!pubkey || pubkey === this.account.pubkey)
+				this.account.contacts = contacts;
 
 			return contacts;
 		} catch (e) {
@@ -177,7 +178,7 @@ export class Ark {
 	public async getUserRelays({ pubkey }: { pubkey?: string }) {
 		try {
 			const user = this.ndk.getUser({
-				pubkey: pubkey ? pubkey : this.#storage.account.pubkey,
+				pubkey: pubkey ? pubkey : this.account.pubkey,
 			});
 			return await user.relayList();
 		} catch (e) {
@@ -192,19 +193,19 @@ export class Ark {
 		});
 
 		if (publish) {
-			this.#storage.account.contacts = tags.map((item) => item[1]);
+			this.account.contacts = tags.map((item) => item[1]);
 			return publish;
 		}
 	}
 
 	public async createContact({ pubkey }: { pubkey: string }) {
-		const user = this.ndk.getUser({ pubkey: this.#storage.account.pubkey });
+		const user = this.ndk.getUser({ pubkey: this.account.pubkey });
 		const contacts = await user.follows();
 		return await user.follow(new NDKUser({ pubkey: pubkey }), contacts);
 	}
 
 	public async deleteContact({ pubkey }: { pubkey: string }) {
-		const user = this.ndk.getUser({ pubkey: this.#storage.account.pubkey });
+		const user = this.ndk.getUser({ pubkey: this.account.pubkey });
 		const contacts = await user.follows();
 		contacts.delete(new NDKUser({ pubkey: pubkey }));
 
@@ -362,7 +363,7 @@ export class Ark {
 			const relayMap = new Map<string, string[]>();
 			const relayEvents = fetcher.fetchLatestEventsPerAuthor(
 				{
-					authors: this.#storage.account.contacts,
+					authors: this.account.contacts,
 					relayUrls: connectedRelays,
 				},
 				{ kinds: [NDKKind.RelayList] },
@@ -569,7 +570,7 @@ export class Ark {
 		const event = await this.ndk.fetchEvent({
 			kinds: [NDKKind.AppRecommendation],
 			"#d": [unknownKind],
-			authors: this.#storage.account.contacts || [author],
+			authors: this.account.contacts || [author],
 		});
 
 		if (event) return event.tags.filter((item) => item[0] !== "d");
@@ -577,7 +578,7 @@ export class Ark {
 		const altEvent = await this.ndk.fetchEvent({
 			kinds: [NDKKind.AppHandler],
 			"#k": [unknownKind],
-			authors: this.#storage.account.contacts || [author],
+			authors: this.account.contacts || [author],
 		});
 
 		if (altEvent) return altEvent.tags.filter((item) => item[0] !== "d");

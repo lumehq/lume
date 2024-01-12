@@ -1,5 +1,5 @@
-import { useStorage } from "@lume/ark";
 import { CheckCircleIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { useEffect, useState } from "react";
 import { NWCForm } from "./components/form";
 
@@ -8,13 +8,13 @@ export function NWCScreen() {
 	const [walletConnectURL, setWalletConnectURL] = useState<null | string>(null);
 
 	const remove = async () => {
-		await storage.removePrivkey(`${storage.account.pubkey}-nwc`);
+		await storage.removePrivkey(`${ark.account.pubkey}-nwc`);
 		setWalletConnectURL(null);
 	};
 
 	useEffect(() => {
 		async function getNWC() {
-			const nwc = await storage.loadPrivkey(`${storage.account.pubkey}-nwc`);
+			const nwc = await storage.loadPrivkey(`${ark.account.pubkey}-nwc`);
 			if (nwc) setWalletConnectURL(nwc);
 		}
 		getNWC();

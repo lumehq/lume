@@ -1,5 +1,6 @@
-import { useArk, useStorage } from "@lume/ark";
+import { useArk } from "@lume/ark";
 import { CheckIcon, ChevronDownIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { onboardingAtom } from "@lume/utils";
 import NDK, {
 	NDKEvent,

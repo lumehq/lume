@@ -1,10 +1,4 @@
-import {
-	RepostNote,
-	TextNote,
-	useArk,
-	useProfile,
-	useStorage,
-} from "@lume/ark";
+import { RepostNote, TextNote, useArk, useProfile } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { NIP05 } from "@lume/ui";
 import { FETCH_LIMIT, displayNpub } from "@lume/utils";
@@ -17,7 +11,6 @@ import { WindowVirtualizer } from "virtua";
 
 export function HomeRoute({ id }: { id: string }) {
 	const ark = useArk();
-	const storage = useStorage();
 
 	const { user } = useProfile(id);
 	const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
@@ -94,7 +87,7 @@ export function HomeRoute({ id }: { id: string }) {
 	};
 
 	useEffect(() => {
-		if (storage.account.contacts.includes(id)) {
+		if (ark.account.contacts.includes(id)) {
 			setFollowed(true);
 		}
 	}, []);

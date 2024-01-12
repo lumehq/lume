@@ -1,10 +1,10 @@
-import { useColumnContext, useStorage } from "@lume/ark";
+import { useArk, useColumnContext } from "@lume/ark";
 import { CancelIcon, CheckCircleIcon } from "@lume/icons";
 import { User } from "@lume/ui";
 import { useState } from "react";
 
 export function GroupForm({ id }: { id: number }) {
-	const storage = useStorage();
+	const ark = useArk();
 	const { updateColumn, removeColumn } = useColumnContext();
 
 	const [title, setTitle] = useState<string>(`Group-${id}`);
@@ -59,7 +59,7 @@ export function GroupForm({ id }: { id: number }) {
 							<span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{`${users.length} / ∞`}</span>
 						</div>
 						<div className="flex flex-col gap-2">
-							{storage.account?.contacts?.map((item: string) => (
+							{ark.account?.contacts?.map((item: string) => (
 								<button
 									key={item}
 									type="button"
