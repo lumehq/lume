@@ -10,13 +10,12 @@ import NDK, {
 	NDKRelay,
 	NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
-import { useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { locale, platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
 import Database from "@tauri-apps/plugin-sql";
 import { check } from "@tauri-apps/plugin-updater";
-import Markdown from "markdown-to-jsx";
+import Linkify from "linkify-react";
 import { normalizeRelayUrl, normalizeRelayUrlSet } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { createContext, useContextSelector } from "use-context-selector";
@@ -231,21 +230,16 @@ const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			>
 				<div className="flex flex-col items-start max-w-2xl gap-1">
 					<h5 className="font-semibold uppercase">TIP:</h5>
-					<Markdown
+					<Linkify
 						options={{
-							overrides: {
-								a: {
-									props: {
-										className: "text-blue-500 hover:text-blue-600",
-										target: "_blank",
-									},
-								},
-							},
+							target: "_blank",
+							className: "text-blue-500 hover:text-blue-600",
 						}}
-						className="text-4xl font-semibold leading-snug text-neutral-300 dark:text-neutral-700"
 					>
-						{QUOTES[Math.floor(Math.random() * QUOTES.length)]}
-					</Markdown>
+						<div className="text-4xl font-semibold leading-snug text-neutral-300 dark:text-neutral-700">
+							{QUOTES[Math.floor(Math.random() * QUOTES.length)]}
+						</div>
+					</Linkify>
 				</div>
 				<div className="absolute bottom-5 right-5 inline-flex items-center gap-2.5">
 					<LoaderIcon className="w-6 h-6 text-blue-500 animate-spin" />

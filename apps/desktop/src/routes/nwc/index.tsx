@@ -44,7 +44,7 @@ export function NWCScreen() {
 								<textarea
 									readOnly
 									value={`${walletConnectURL.substring(0, 120)}****`}
-									className="h-40 w-full resize-none rounded-lg border-transparent bg-neutral-200 px-3 py-3 text-neutral-900 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
+									className="h-40 w-full resize-none rounded-lg border-transparent bg-neutral-200 px-3 py-3 text-neutral-900 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:focus:ring-blue-800 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
 								/>
 								<button
 									type="button"
