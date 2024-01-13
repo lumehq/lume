@@ -4,7 +4,10 @@ import { ActivityRootNote } from "./rootNote";
 
 export function ReplyActivity({ event }: { event: NDKEvent }) {
 	const ark = useArk();
-	const thread = ark.getEventThread({ tags: event.tags });
+	const thread = ark.getEventThread({
+		content: event.content,
+		tags: event.tags,
+	});
 
 	return (
 		<div className="h-full pb-3 flex flex-col justify-between">

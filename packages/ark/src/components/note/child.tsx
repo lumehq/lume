@@ -4,7 +4,7 @@ import { ReactNode, useMemo } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { useEvent } from "../../hooks/useEvent";
-import { NoteChildUser } from "./childUser";
+import { User } from "../user";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionUser } from "./mentions/user";
 
@@ -120,10 +120,17 @@ export function NoteChild({
 					{richContent}
 				</div>
 			</div>
-			<NoteChildUser
-				pubkey={data.pubkey}
-				subtext={isRoot ? "posted" : "replied"}
-			/>
+			<User.Provider pubkey={data.pubkey}>
+				<User.Root>
+					<User.Avatar className="size-10 shrink-0 rounded-lg object-cover" />
+					<div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
+						<User.Name />
+						<div className="font-normal text-neutral-700 dark:text-neutral-300">
+							{isRoot ? "posted:" : "replied:"}
+						</div>
+					</div>
+				</User.Root>
+			</User.Provider>
 		</div>
 	);
 }

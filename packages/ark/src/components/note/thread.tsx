@@ -3,7 +3,9 @@ import { COL_TYPES } from "@lume/utils";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { Note } from ".";
-import { useArk, useColumnContext, useNoteContext } from "../..";
+import { useArk } from "../../hooks/useArk";
+import { useColumnContext } from "../column/provider";
+import { useNoteContext } from "./provider";
 
 export function NoteThread({
 	className,
