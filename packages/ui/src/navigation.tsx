@@ -82,24 +82,6 @@ export function Navigation() {
 							</div>
 						)}
 					</NavLink>
-					<NavLink
-						to="/nwc"
-						preventScrollReset={true}
-						className="inline-flex flex-col items-center justify-center"
-					>
-						{({ isActive }) => (
-							<div
-								className={cn(
-									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
-									isActive
-										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
-										: "text-black/50 dark:text-neutral-400",
-								)}
-							>
-								<NwcIcon className="size-6 rotate-12" />
-							</div>
-						)}
-					</NavLink>
 				</div>
 			</div>
 			<div className="flex flex-col">

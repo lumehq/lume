@@ -1,21 +1,21 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
-export function VerifiedIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="none"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.58 7.975a.75.75 0 00-1.16-.95l-3.976 4.859L9.03 12.47a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.11-.055l4.5-5.5z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
+export function VerifiedIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			viewBox="0 0 24 24"
+			{...props}
+		>
+			<path
+				fill="currentColor"
+				d="M8.522 3.587C9.32 2.491 10.557 1.75 12 1.75c1.44 0 2.684.74 3.486 1.837 1.34-.21 2.746.145 3.764 1.163 1.018 1.019 1.373 2.425 1.163 3.767 1.094.802 1.837 2.039 1.837 3.483s-.743 2.68-1.837 3.483c.21 1.342-.145 2.748-1.163 3.767-1.021 1.02-2.427 1.365-3.762 1.16-.801 1.1-2.046 1.84-3.488 1.84-1.446 0-2.683-.744-3.485-1.84-1.337.206-2.743-.139-3.765-1.16-1.02-1.021-1.366-2.429-1.154-3.767-1.094-.8-1.846-2.036-1.846-3.483s.752-2.682 1.846-3.483c-.212-1.338.133-2.746 1.154-3.767 1.02-1.02 2.426-1.373 3.772-1.163zm7.042 7.094a1 1 0 10-1.128-1.652l-.087.06a13.844 13.844 0 00-3.517 3.468l-1.125-1.124a1 1 0 00-1.414 1.415l2.007 2.004a1 1 0 001.575-.21 11.843 11.843 0 013.602-3.902l.087-.06z"
+			/>
+		</svg>
+	);
 }

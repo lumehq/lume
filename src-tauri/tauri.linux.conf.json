@@ -11,10 +11,7 @@
 				"title": "Lume",
 				"center": true,
 				"fullscreen": false,
-				"hiddenTitle": true,
-				"fileDropEnabled": true,
-				"decorations": false,
-				"transparent": false
+				"fileDropEnabled": true
 			}
 		]
 	}

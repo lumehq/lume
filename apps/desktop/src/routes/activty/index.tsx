@@ -3,7 +3,7 @@ import { ActivityList } from "./components/list";
 
 export function ActivityScreen() {
 	return (
-		<div className="flex h-full w-full rounded-xl shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:shadow-[inset_0_0_0.5px_1px_hsla(0,0%,100%,0.075),0_0_0_1px_hsla(0,0%,0%,0.05),0_0.3px_0.4px_hsla(0,0%,0%,0.02),0_0.9px_1.5px_hsla(0,0%,0%,0.045),0_3.5px_6px_hsla(0,0%,0%,0.09)]">
+		<div className="flex h-full w-full rounded-xl shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:shadow-none dark:ring-1 dark:ring-white/10">
 			<div className="h-full flex flex-col w-96 shrink-0 rounded-l-xl bg-white/50 backdrop-blur-xl dark:bg-black/50">
 				<div className="h-14 shrink-0 flex items-center px-5 text-lg font-semibold border-b border-black/10 dark:border-white/10">
 					Activity

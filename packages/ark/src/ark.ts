@@ -552,9 +552,11 @@ export class Ark {
 		if (!res.ok) throw new Error(`Failed to fetch NIP-05 service: ${nip05}`);
 
 		const data: NIP05 = await res.json();
+
 		if (!data.names) return false;
 		if (data.names[localPath.toLowerCase()] === pubkey) return true;
 		if (data.names[localPath] === pubkey) return true;
+
 		return false;
 	}
 

@@ -13,7 +13,7 @@ export function AppLayout({ platform }: { platform: Platform }) {
 				platform !== "macos" ? "bg-blue-50 dark:bg-blue-950" : "",
 			)}
 		>
-			{platform !== "macos" ? (
+			{platform === "windows" ? (
 				<WindowTitleBar platform={platform} />
 			) : (
 				<div data-tauri-drag-region className="h-9 shrink-0" />

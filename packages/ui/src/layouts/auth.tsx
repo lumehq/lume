@@ -11,7 +11,7 @@ export function AuthLayout({ platform }: { platform: Platform }) {
 
 	return (
 		<div className="flex flex-col w-screen h-screen bg-black text-neutral-50">
-			{platform !== "macos" ? (
+			{platform === "windows" ? (
 				<WindowTitleBar platform={platform} />
 			) : (
 				<div data-tauri-drag-region className="h-9 shrink-0" />

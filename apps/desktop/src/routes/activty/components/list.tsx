@@ -1,5 +1,5 @@
 import { useArk } from "@lume/ark";
-import { LoaderIcon } from "@lume/icons";
+import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
@@ -25,13 +25,10 @@ export function ActivityList() {
 			}) => {
 				const events = await ark.getInfiniteEvents({
 					filter: {
-						kinds: [NDKKind.Zap],
-						"#p": [
-							"126103bfddc8df256b6e0abfd7f3797c80dcc4ea88f7c2f87dd4104220b4d65f",
-							ark.account.pubkey,
-						],
+						kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
+						"#p": [ark.account.pubkey],
 					},
-					limit: 200,
+					limit: FETCH_LIMIT,
 					pageParam,
 					signal,
 				});
@@ -84,12 +81,36 @@ export function ActivityList() {
 	return (
 		<div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
 			{isLoading ? (
-				<div className="h-24 flex items-center justify-center">
+				<div className="w-full h-full flex flex-col items-center justify-center">
 					<LoaderIcon className="size-5 animate-spin" />
+				</div>
+			) : !allEvents.length ? (
+				<div className="w-full h-full flex flex-col items-center justify-center">
+					<p className="mb-2 text-2xl">🎉</p>
+					<p className="text-center font-medium">Yo! Nothing new yet.</p>
 				</div>
 			) : (
 				allEvents.map((event) => renderEvenKind(event))
 			)}
+			<div className="flex items-center justify-center h-16">
+				{hasNextPage ? (
+					<button
+						type="button"
+						onClick={() => fetchNextPage()}
+						disabled={!hasNextPage || isFetchingNextPage}
+						className="inline-flex items-center justify-center w-full h-12 gap-2 font-medium bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 rounded-xl focus:outline-none"
+					>
+						{isFetchingNextPage ? (
+							<LoaderIcon className="size-5 animate-spin" />
+						) : (
+							<>
+								<ArrowRightCircleIcon className="size-5" />
+								Load more
+							</>
+						)}
+					</button>
+				) : null}
+			</div>
 		</div>
 	);
 }

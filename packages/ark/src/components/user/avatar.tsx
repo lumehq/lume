@@ -1,6 +1,7 @@
 import { cn } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
 import { minidenticon } from "minidenticons";
+import { nanoid } from "nanoid";
 import { useMemo } from "react";
 import { useUserContext } from "./provider";
 
@@ -9,7 +10,7 @@ export function UserAvatar({ className }: { className?: string }) {
 	const fallbackAvatar = useMemo(
 		() =>
 			`data:image/svg+xml;utf8,${encodeURIComponent(
-				minidenticon(user?.pubkey, 90, 50),
+				minidenticon(user?.pubkey || nanoid(), 90, 50),
 			)}`,
 		[user],
 	);

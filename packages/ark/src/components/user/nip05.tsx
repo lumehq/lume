@@ -4,19 +4,25 @@ import { useQuery } from "@tanstack/react-query";
 import { useArk } from "../../hooks/useArk";
 import { useUserContext } from "./provider";
 
-export function UserNip05({ className }: { className?: string }) {
+export function UserNip05({
+	pubkey,
+	className,
+}: { pubkey: string; className?: string }) {
 	const ark = useArk();
 	const user = useUserContext();
 
 	const { isLoading, data: verified } = useQuery({
 		queryKey: ["nip05", user?.nip05],
 		queryFn: async ({ signal }: { signal: AbortSignal }) => {
+			if (!user) return false;
+			if (!user.nip05) return false;
 			return ark.validateNIP05({
-				pubkey: user?.pubkey,
-				nip05: user?.nip05,
+				pubkey,
+				nip05: user.nip05,
 				signal,
 			});
 		},
+		enabled: !!user,
 	});
 
 	if (!user) {
@@ -38,10 +44,8 @@ export function UserNip05({ className }: { className?: string }) {
 					: user.nip05}
 			</p>
 			{!isLoading && verified ? (
-				<VerifiedIcon className="size-5 text-teal-500" />
-			) : (
-				<UnverifiedIcon className="size-5 text-red-500" />
-			)}
+				<VerifiedIcon className="size-4 text-teal-500" />
+			) : null}
 		</div>
 	);
 }
