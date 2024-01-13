@@ -59,6 +59,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			},
 			staleTime: 120 * 1000,
 			refetchOnWindowFocus: false,
+			refetchOnMount: false,
 		});
 
 	const allEvents = useMemo(

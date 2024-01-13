@@ -34,7 +34,7 @@ export const MentionNote = memo(function MentionNote({
 
 	return (
 		<Note.Provider event={data}>
-			<Note.Root className="flex flex-col w-full gap-1 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900">
+			<Note.Root className="flex flex-col w-full gap-1 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="px-3 mt-3 flex h-6 items-center gap-2">
 						<User.Avatar className="size-6 shrink-0 rounded-md object-cover" />

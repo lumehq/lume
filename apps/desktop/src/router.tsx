@@ -138,6 +138,24 @@ export default function Router() {
 					],
 				},
 				{
+					path: "activity",
+					async lazy() {
+						const { ActivityScreen } = await import("./routes/activty");
+						return { Component: ActivityScreen };
+					},
+					children: [
+						{
+							path: ":id",
+							async lazy() {
+								const { ActivityIdScreen } = await import(
+									"./routes/activty/id"
+								);
+								return { Component: ActivityIdScreen };
+							},
+						},
+					],
+				},
+				{
 					path: "depot",
 					children: [
 						{

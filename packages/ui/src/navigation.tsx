@@ -3,17 +3,13 @@ import {
 	BellIcon,
 	ComposeFilledIcon,
 	ComposeIcon,
-	DepotFilledIcon,
-	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
 	NwcIcon,
-	RelayFilledIcon,
-	RelayIcon,
 	SettingsFilledIcon,
 	SettingsIcon,
 } from "@lume/icons";
-import { activityAtom, cn, editorAtom } from "@lume/utils";
+import { cn, editorAtom } from "@lume/utils";
 import { useAtom } from "jotai";
 import { useHotkeys } from "react-hotkeys-hook";
 import { NavLink } from "react-router-dom";
@@ -21,8 +17,6 @@ import { ActiveAccount } from "./account/active";
 
 export function Navigation() {
 	const [isEditorOpen, setIsEditorOpen] = useAtom(editorAtom);
-	const [isActvityOpen, setIsActvityOpen] = useAtom(activityAtom);
-
 	useHotkeys("meta+n", () => setIsEditorOpen((state) => !state), []);
 
 	return (
@@ -32,10 +26,7 @@ export function Navigation() {
 					<ActiveAccount />
 					<button
 						type="button"
-						onClick={() => {
-							setIsEditorOpen((state) => !state);
-							setIsActvityOpen(false);
-						}}
+						onClick={() => setIsEditorOpen((state) => !state)}
 						className="flex items-center justify-center h-auto w-full text-black aspect-square rounded-xl bg-black/5 hover:bg-blue-500 hover:text-white dark:bg-white/5 dark:text-white dark:hover:bg-blue-500"
 					>
 						{isEditorOpen ? (
@@ -69,30 +60,28 @@ export function Navigation() {
 							</div>
 						)}
 					</NavLink>
-					<button
-						type="button"
-						onClick={() => {
-							setIsActvityOpen((state) => !state);
-							setIsEditorOpen(false);
-						}}
+					<NavLink
+						to="/activity"
+						preventScrollReset={true}
 						className="inline-flex flex-col items-center justify-center"
 					>
-						<div
-							className={cn(
-								"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
-								isActvityOpen
-									? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
-									: "text-black/50 dark:text-neutral-400",
-							)}
-						>
-							{isActvityOpen ? (
-								<BellFilledIcon className="size-6" />
-							) : (
-								<BellIcon className="size-6" />
-							)}
-						</div>
-					</button>
-
+						{({ isActive }) => (
+							<div
+								className={cn(
+									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
+									isActive
+										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
+										: "text-black/50 dark:text-neutral-400",
+								)}
+							>
+								{isActive ? (
+									<BellFilledIcon className="size-6" />
+								) : (
+									<BellIcon className="size-6" />
+								)}
+							</div>
+						)}
+					</NavLink>
 					<NavLink
 						to="/nwc"
 						preventScrollReset={true}
