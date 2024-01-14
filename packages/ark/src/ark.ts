@@ -355,11 +355,11 @@ export class Ark {
 
 	public async getAllRelaysFromContacts() {
 		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
+		const connectedRelays = this.ndk.pool
+			.connectedRelays()
+			.map((item) => item.url);
+
 		try {
-			const LIMIT = 1;
-			const connectedRelays = this.ndk.pool
-				.connectedRelays()
-				.map((item) => item.url);
 			const relayMap = new Map<string, string[]>();
 			const relayEvents = fetcher.fetchLatestEventsPerAuthor(
 				{
@@ -367,7 +367,7 @@ export class Ark {
 					relayUrls: connectedRelays,
 				},
 				{ kinds: [NDKKind.RelayList] },
-				LIMIT,
+				1,
 			);
 
 			for await (const { author, events } of relayEvents) {

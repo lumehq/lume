@@ -49,18 +49,18 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
 		(event: NDKEvent) => {
 			switch (event.kind) {
 				case NDKKind.Text:
-					return <TextNote key={event.id} event={event} />;
+					return <TextNote key={event.id} event={event} className="mt-3" />;
 				case NDKKind.Repost:
-					return <RepostNote key={event.id} event={event} />;
+					return <RepostNote key={event.id} event={event} className="mt-3" />;
 				default:
-					return <TextNote key={event.id} event={event} />;
+					return <TextNote key={event.id} event={event} className="mt-3" />;
 			}
 		},
 		[data],
 	);
 
 	return (
-		<VList className="mx-auto h-full w-full max-w-[500px] pt-10 scrollbar-none">
+		<VList className="mx-auto h-full w-full max-w-[500px] px-3 scrollbar-none">
 			{status === "pending" ? (
 				<NoteSkeleton />
 			) : (

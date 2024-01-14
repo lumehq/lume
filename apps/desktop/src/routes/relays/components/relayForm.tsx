@@ -1,4 +1,4 @@
-import { useRelay } from "@lume/ark";
+import { useRelaylist } from "@lume/ark";
 import { PlusIcon } from "@lume/icons";
 import { NDKRelayUrl } from "@nostr-dev-kit/ndk";
 import { normalizeRelayUrl } from "nostr-fetch";
@@ -8,7 +8,8 @@ import { toast } from "sonner";
 const domainRegex = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/;
 
 export function RelayForm() {
-	const { connectRelay } = useRelay();
+	const { connectRelay } = useRelaylist();
+
 	const [relay, setRelay] = useState<{
 		url: NDKRelayUrl;
 		purpose: "read" | "write" | undefined;
@@ -35,28 +36,24 @@ export function RelayForm() {
 	};
 
 	return (
-		<div className="flex flex-col gap-1">
-			<div className="flex gap-2">
-				<input
-					className="h-11 flex-1 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
-					placeholder="wss://"
-					spellCheck={false}
-					autoComplete="off"
-					autoCorrect="off"
-					autoCapitalize="off"
-					value={relay.url}
-					onChange={(e) =>
-						setRelay((prev) => ({ ...prev, url: e.target.value }))
-					}
-				/>
-				<button
-					type="button"
-					onClick={() => create()}
-					className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600"
-				>
-					<PlusIcon className="h-5 w-5" />
-				</button>
-			</div>
+		<div className="flex gap-2">
+			<input
+				className="h-11 w-full rounded-lg border-transparent px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 bg-white/50 dark:bg-black/50 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+				placeholder="wss://"
+				spellCheck={false}
+				autoComplete="off"
+				autoCorrect="off"
+				autoCapitalize="off"
+				value={relay.url}
+				onChange={(e) => setRelay((prev) => ({ ...prev, url: e.target.value }))}
+			/>
+			<button
+				type="button"
+				onClick={() => create()}
+				className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600"
+			>
+				<PlusIcon className="size-5" />
+			</button>
 		</div>
 	);
 }

@@ -27,7 +27,7 @@ export function RelayList() {
 	};
 
 	return (
-		<div className="col-span-2 border-r border-neutral-100 dark:border-neutral-900">
+		<div className="col-span-2 bg-white">
 			{status === "pending" ? (
 				<div className="flex h-full w-full items-center justify-center pb-10">
 					<div className="inline-flex flex-col items-center justify-center gap-2">

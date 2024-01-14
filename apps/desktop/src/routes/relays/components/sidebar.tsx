@@ -1,16 +1,15 @@
 import { useArk } from "@lume/ark";
 import { CancelIcon, RefreshIcon } from "@lume/icons";
-import { useStorage } from "@lume/storage";
+import { cn } from "@lume/utils";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { RelayForm } from "./relayForm";
 
-export function UserRelayList() {
+export function RelaySidebar({ className }: { className?: string }) {
 	const ark = useArk();
-	const storage = useStorage();
 
 	const { status, data, refetch } = useQuery({
-		queryKey: ["relays", ark.account.pubkey],
+		queryKey: ["relay-personal"],
 		queryFn: async () => {
 			const event = await ark.getEventByFilter({
 				filter: {
@@ -20,7 +19,7 @@ export function UserRelayList() {
 			});
 
 			if (!event) return [];
-			return event.tags;
+			return event.tags.filter((tag) => tag[0] === "r");
 		},
 		refetchOnWindowFocus: false,
 	});
@@ -30,8 +29,13 @@ export function UserRelayList() {
 	);
 
 	return (
-		<div className="col-span-1">
-			<div className="inline-flex items-center justify-between w-full h-16 px-3 border-b border-neutral-100 dark:border-neutral-900">
+		<div
+			className={cn(
+				"rounded-l-xl bg-white/50 backdrop-blur-xl dark:bg-black/50",
+				className,
+			)}
+		>
+			<div className="inline-flex items-center justify-between w-full h-14 px-3 border-b border-black/10 dark:border-white/10">
 				<h3 className="font-semibold">Connected relays</h3>
 				<button
 					type="button"
@@ -54,7 +58,7 @@ export function UserRelayList() {
 					data.map((item) => (
 						<div
 							key={item[1]}
-							className="flex items-center justify-between px-3 rounded-lg group h-11 bg-neutral-100 dark:bg-neutral-900"
+							className="flex items-center justify-between px-3 rounded-lg group h-11 bg-white/50 dark:bg-black/50"
 						>
 							<div className="inline-flex items-baseline gap-2">
 								{currentRelays.has(item[1]) ? (
@@ -69,7 +73,7 @@ export function UserRelayList() {
 									</span>
 								)}
 								<p className="max-w-[20rem] truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
-									{item[1]}
+									{item[1].replace("wss://", "").replace("ws://", "")}
 								</p>
 							</div>
 							<div className="inline-flex items-center gap-2">

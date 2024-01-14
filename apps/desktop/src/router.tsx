@@ -43,30 +43,6 @@ export default function Router() {
 							},
 						},
 						{
-							path: "relays",
-							async lazy() {
-								const { RelaysScreen } = await import("./routes/relays");
-								return { Component: RelaysScreen };
-							},
-						},
-						{
-							path: "relays/:url",
-							loader: async ({ params }) => {
-								return defer({
-									relay: fetch(`https://${params.url}`, {
-										method: "GET",
-										headers: {
-											Accept: "application/nostr+json",
-										},
-									}).then((res) => res.json()),
-								});
-							},
-							async lazy() {
-								const { RelayScreen } = await import("./routes/relays/relay");
-								return { Component: RelayScreen };
-							},
-						},
-						{
 							path: "settings",
 							element: <SettingsLayout />,
 							children: [
@@ -151,6 +127,51 @@ export default function Router() {
 									"./routes/activty/id"
 								);
 								return { Component: ActivityIdScreen };
+							},
+						},
+					],
+				},
+				{
+					path: "relays",
+					async lazy() {
+						const { RelaysScreen } = await import("./routes/relays");
+						return { Component: RelaysScreen };
+					},
+					children: [
+						{
+							index: true,
+							async lazy() {
+								const { RelayGlobalScreen } = await import(
+									"./routes/relays/global"
+								);
+								return { Component: RelayGlobalScreen };
+							},
+						},
+						{
+							path: "follows",
+							async lazy() {
+								const { RelayFollowsScreen } = await import(
+									"./routes/relays/follows"
+								);
+								return { Component: RelayFollowsScreen };
+							},
+						},
+						{
+							path: ":url",
+							loader: async ({ request, params }) => {
+								return defer({
+									relay: fetch(`https://${params.url}`, {
+										method: "GET",
+										headers: {
+											Accept: "application/nostr+json",
+										},
+										signal: request.signal,
+									}).then((res) => res.json()),
+								});
+							},
+							async lazy() {
+								const { RelayUrlScreen } = await import("./routes/relays/url");
+								return { Component: RelayUrlScreen };
 							},
 						},
 					],

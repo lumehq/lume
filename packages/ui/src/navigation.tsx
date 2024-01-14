@@ -3,9 +3,13 @@ import {
 	BellIcon,
 	ComposeFilledIcon,
 	ComposeIcon,
+	DepotFilledIcon,
+	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
 	NwcIcon,
+	RelayFilledIcon,
+	RelayIcon,
 	SettingsFilledIcon,
 	SettingsIcon,
 } from "@lume/icons";
@@ -27,7 +31,12 @@ export function Navigation() {
 					<button
 						type="button"
 						onClick={() => setIsEditorOpen((state) => !state)}
-						className="flex items-center justify-center h-auto w-full text-black aspect-square rounded-xl bg-black/5 hover:bg-blue-500 hover:text-white dark:bg-white/5 dark:text-white dark:hover:bg-blue-500"
+						className={cn(
+							"flex items-center justify-center h-auto w-full text-black aspect-square rounded-xl hover:text-white dark:text-white",
+							isEditorOpen
+								? "bg-blue-500"
+								: "bg-black/5 hover:bg-blue-500 dark:bg-white/5 dark:hover:bg-blue-500",
+						)}
 					>
 						{isEditorOpen ? (
 							<ComposeFilledIcon className="size-5" />
@@ -61,7 +70,7 @@ export function Navigation() {
 						)}
 					</NavLink>
 					<NavLink
-						to="/activity"
+						to="/activity/"
 						preventScrollReset={true}
 						className="inline-flex flex-col items-center justify-center"
 					>
@@ -78,6 +87,28 @@ export function Navigation() {
 									<BellFilledIcon className="size-6" />
 								) : (
 									<BellIcon className="size-6" />
+								)}
+							</div>
+						)}
+					</NavLink>
+					<NavLink
+						to="/relays/"
+						preventScrollReset={true}
+						className="inline-flex flex-col items-center justify-center"
+					>
+						{({ isActive }) => (
+							<div
+								className={cn(
+									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
+									isActive
+										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
+										: "text-black/50 dark:text-neutral-400",
+								)}
+							>
+								{isActive ? (
+									<DepotFilledIcon className="size-6" />
+								) : (
+									<DepotIcon className="size-6" />
 								)}
 							</div>
 						)}

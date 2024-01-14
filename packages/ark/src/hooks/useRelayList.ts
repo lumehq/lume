@@ -1,11 +1,9 @@
-import { useStorage } from "@lume/storage";
 import { NDKKind, NDKRelayUrl, NDKTag } from "@nostr-dev-kit/ndk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useArk } from "./useArk";
 
-export function useRelay() {
+export function useRelaylist() {
 	const ark = useArk();
-	const storage = useStorage();
 	const queryClient = useQueryClient();
 
 	const connectRelay = useMutation({
@@ -15,7 +13,7 @@ export function useRelay() {
 		) => {
 			// Cancel any outgoing refetches
 			await queryClient.cancelQueries({
-				queryKey: ["relays", ark.account.pubkey],
+				queryKey: ["relay-personal"],
 			});
 
 			// Snapshot the previous value
@@ -42,17 +40,17 @@ export function useRelay() {
 			});
 
 			// Optimistically update to the new value
-			queryClient.setQueryData(
-				["relays", ark.account.pubkey],
-				(prev: NDKTag[]) => [...prev, ["r", relay, purpose ?? ""]],
-			);
+			queryClient.setQueryData(["relay-personal"], (prev: NDKTag[]) => [
+				...prev,
+				["r", relay, purpose ?? ""],
+			]);
 
 			// Return a context object with the snapshotted value
 			return { prevRelays };
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["relays", ark.account.pubkey],
+				queryKey: ["relay-personal"],
 			});
 		},
 	});
@@ -61,7 +59,7 @@ export function useRelay() {
 		mutationFn: async (relay: NDKRelayUrl) => {
 			// Cancel any outgoing refetches
 			await queryClient.cancelQueries({
-				queryKey: ["relays", ark.account.pubkey],
+				queryKey: ["relay-personal"],
 			});
 
 			// Snapshot the previous value
@@ -81,14 +79,14 @@ export function useRelay() {
 			});
 
 			// Optimistically update to the new value
-			queryClient.setQueryData(["relays", ark.account.pubkey], prevRelays);
+			queryClient.setQueryData(["relay-personal"], prevRelays);
 
 			// Return a context object with the snapshotted value
 			return { prevRelays };
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["relays", ark.account.pubkey],
+				queryKey: ["relay-personal"],
 			});
 		},
 	});

@@ -1,7 +1,7 @@
 import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { useStorage } from "@lume/storage";
-import { QUOTES, sendNativeNotification } from "@lume/utils";
+import { FETCH_LIMIT, QUOTES, sendNativeNotification } from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -11,6 +11,7 @@ import NDK, {
 	NDKRelayAuthPolicies,
 	NDKUser,
 } from "@nostr-dev-kit/ndk";
+import { useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import Linkify from "linkify-react";
 import { normalizeRelayUrlSet } from "nostr-fetch";
@@ -20,6 +21,7 @@ import { LumeContext } from "./context";
 
 export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 	const storage = useStorage();
+	const queryClient = useQueryClient();
 
 	const [ark, setArk] = useState<Ark>(undefined);
 	const [ndk, setNDK] = useState<NDK>(undefined);
@@ -150,6 +152,56 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 				},
 				{ closeOnEose: false, groupable: false },
 			);
+
+			// prefetch activty
+			await queryClient.prefetchInfiniteQuery({
+				queryKey: ["activity"],
+				initialPageParam: 0,
+				queryFn: async ({
+					signal,
+					pageParam,
+				}: {
+					signal: AbortSignal;
+					pageParam: number;
+				}) => {
+					const events = await ark.getInfiniteEvents({
+						filter: {
+							kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
+							"#p": [ark.account.pubkey],
+						},
+						limit: FETCH_LIMIT,
+						pageParam,
+						signal,
+					});
+
+					return events;
+				},
+			});
+
+			// prefetch timeline
+			await queryClient.prefetchInfiniteQuery({
+				queryKey: ["timeline-9999"],
+				initialPageParam: 0,
+				queryFn: async ({
+					signal,
+					pageParam,
+				}: {
+					signal: AbortSignal;
+					pageParam: number;
+				}) => {
+					const events = await ark.getInfiniteEvents({
+						filter: {
+							kinds: [NDKKind.Text, NDKKind.Repost],
+							authors: ark.account.contacts,
+						},
+						limit: FETCH_LIMIT,
+						pageParam,
+						signal,
+					});
+
+					return events;
+				},
+			});
 
 			sub.addListener("event", async (event: NDKEvent) => {
 				const profile = await ark.getUserProfile(event.pubkey);

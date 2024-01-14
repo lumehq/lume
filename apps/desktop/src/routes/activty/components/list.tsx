@@ -91,13 +91,13 @@ export function ActivityList() {
 			) : (
 				allEvents.map((event) => renderEvenKind(event))
 			)}
-			<div className="flex items-center justify-center h-16">
+			<div className="flex items-center justify-center h-16 px-5">
 				{hasNextPage ? (
 					<button
 						type="button"
 						onClick={() => fetchNextPage()}
 						disabled={!hasNextPage || isFetchingNextPage}
-						className="inline-flex items-center justify-center w-full h-12 gap-2 font-medium bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 rounded-xl focus:outline-none"
+						className="inline-flex items-center justify-center w-full h-12 gap-2 font-medium bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 rounded-xl focus:outline-none"
 					>
 						{isFetchingNextPage ? (
 							<LoaderIcon className="size-5 animate-spin" />
