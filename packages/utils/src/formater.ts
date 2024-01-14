@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { nip19 } from "nostr-tools";
+import { AUDIOS, IMAGES, VIDEOS } from "./constants";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -68,3 +69,23 @@ export const compactNumber = Intl.NumberFormat("en", { notation: "compact" });
 
 // country name
 export const regionNames = new Intl.DisplayNames(["en"], { type: "language" });
+
+// verify link can be preview
+export function canPreview(text: string) {
+	const url = new URL(text);
+	const ext = url.pathname.split(".").pop();
+	const hostname = url.hostname;
+
+	if (VIDEOS.includes(ext)) return false;
+	if (IMAGES.includes(ext)) return false;
+	if (AUDIOS.includes(ext)) return false;
+
+	if (hostname === "youtube.com") return false;
+	if (hostname === "youtu.be") return false;
+	if (hostname === "x.com") return false;
+	if (hostname === "twitter.com") return false;
+	if (hostname === "facebook.com") return false;
+	if (hostname === "vimeo.com") return false;
+
+	return true;
+}

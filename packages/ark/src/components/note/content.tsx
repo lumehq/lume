@@ -5,6 +5,7 @@ import {
 	NOSTR_EVENTS,
 	NOSTR_MENTIONS,
 	VIDEOS,
+	canPreview,
 	cn,
 	regionNames,
 } from "@lume/utils";
@@ -27,9 +28,11 @@ import { useNoteContext } from "./provider";
 
 export function NoteContent({
 	className,
+	mini = false,
 	isTranslatable = false,
 }: {
 	className?: string;
+	mini?: boolean;
 	isTranslatable?: boolean;
 }) {
 	const storage = useStorage();
@@ -52,7 +55,7 @@ export function NoteContent({
 		const words = text.split(/( |\n)/);
 		const urls = [...getUrls(text)];
 
-		if (storage.settings.media && !storage.settings.lowPower) {
+		if (storage.settings.media && !storage.settings.lowPower && !mini) {
 			images = urls.filter((word) =>
 				IMAGES.some((el) => {
 					const url = new URL(word);
@@ -79,9 +82,11 @@ export function NoteContent({
 			);
 		}
 
-		events = words.filter((word) =>
-			NOSTR_EVENTS.some((el) => word.startsWith(el)),
-		);
+		if (!mini) {
+			events = words.filter((word) =>
+				NOSTR_EVENTS.some((el) => word.startsWith(el)),
+			);
+		}
 
 		const hashtags = words.filter((word) => word.startsWith("#"));
 		const mentions = words.filter((word) =>
@@ -198,7 +203,7 @@ export function NoteContent({
 				(match, i) => {
 					const url = new URL(match);
 
-					if (!linkPreview) {
+					if (!linkPreview && canPreview(match)) {
 						linkPreview = match;
 						return <LinkPreview key={match + i} url={url.toString()} />;
 					}
@@ -217,9 +222,11 @@ export function NoteContent({
 				},
 			);
 
-			parsedContent = reactStringReplace(parsedContent, "\n", () => {
-				return <div key={nanoid()} className="h-3" />;
-			});
+			if (!mini) {
+				parsedContent = reactStringReplace(parsedContent, "\n", () => {
+					return <div key={nanoid()} className="h-3" />;
+				});
+			}
 
 			if (typeof parsedContent[0] === "string") {
 				parsedContent[0] = parsedContent[0].trimStart();
@@ -259,7 +266,12 @@ export function NoteContent({
 
 	return (
 		<div className={cn(className)}>
-			<div className="break-p select-text whitespace-pre-line text-balance leading-normal">
+			<div
+				className={cn(
+					"break-p select-text text-balance leading-normal",
+					!mini ? "whitespace-pre-line" : "",
+				)}
+			>
 				{richContent}
 			</div>
 			{isTranslatable && storage.settings.translation ? (

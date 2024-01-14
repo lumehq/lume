@@ -109,10 +109,11 @@ export function LoginWithOAuth() {
 				ark.updateNostrSigner({ signer: remoteSigner });
 
 				await storage.createSetting("nsecbunker", "1");
-				await storage.createAccount({
+				const account = await storage.createAccount({
 					pubkey,
 					privkey: localSigner.privateKey,
 				});
+				ark.account = account;
 
 				return navigate("/auth/onboarding", { replace: true });
 			}

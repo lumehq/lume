@@ -12,7 +12,7 @@ export function NoteUser({
 	return (
 		<User.Provider pubkey={event.pubkey}>
 			<User.Root className={cn("flex items-center gap-3", className)}>
-				<User.Avatar className="size-9 shrink-0 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+				<User.Avatar className="size-9 shrink-0 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
 				<div className="flex h-6 flex-1 items-start justify-between gap-2">
 					<User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
 					<User.Time

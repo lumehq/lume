@@ -1,6 +1,5 @@
-import { useProfile } from "@lume/ark";
+import { useArk, useProfile } from "@lume/ark";
 import { EditIcon, LoaderIcon } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import { displayNpub } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -9,7 +8,7 @@ import { nip19 } from "nostr-tools";
 import { Link } from "react-router-dom";
 
 export function ProfileCard() {
-	const storage = useStorage();
+	const ark = useArk();
 	const svgURI = `data:image/svg+xml;utf8,${encodeURIComponent(
 		minidenticon(ark.account.pubkey, 90, 50),
 	)}`;

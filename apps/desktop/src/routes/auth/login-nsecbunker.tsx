@@ -48,10 +48,11 @@ export function LoginWithNsecbunker() {
 			ark.updateNostrSigner({ signer: remoteSigner });
 
 			await storage.createSetting("nsecbunker", "1");
-			await storage.createAccount({
-				pubkey,
+			const account = await storage.createAccount({
+				pubkey: pubkey,
 				privkey: localSigner.privateKey,
 			});
+			ark.account = account;
 
 			return navigate("/auth/onboarding", { replace: true });
 		} catch (e) {

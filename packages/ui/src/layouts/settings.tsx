@@ -20,7 +20,7 @@ export function SettingsLayout() {
 							twMerge(
 								"flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
 								isActive
-									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900"
+									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-950 dark:hover:bg-neutral-900"
 									: "",
 							)
 						}
@@ -34,7 +34,7 @@ export function SettingsLayout() {
 							twMerge(
 								"flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
 								isActive
-									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900"
+									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-950 dark:hover:bg-neutral-900"
 									: "",
 							)
 						}
@@ -48,7 +48,7 @@ export function SettingsLayout() {
 							twMerge(
 								"flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
 								isActive
-									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900"
+									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-950 dark:hover:bg-neutral-900"
 									: "",
 							)
 						}
@@ -62,7 +62,7 @@ export function SettingsLayout() {
 							twMerge(
 								"flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
 								isActive
-									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900"
+									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-950 dark:hover:bg-neutral-900"
 									: "",
 							)
 						}
@@ -76,7 +76,7 @@ export function SettingsLayout() {
 							twMerge(
 								"flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
 								isActive
-									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900"
+									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-950 dark:hover:bg-neutral-900"
 									: "",
 							)
 						}

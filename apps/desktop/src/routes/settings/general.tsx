@@ -15,6 +15,7 @@ export function GeneralSettingScreen() {
 	const storage = useStorage();
 
 	const [settings, setSettings] = useState({
+		lowPower: false,
 		autoupdate: false,
 		autolaunch: false,
 		outbox: false,
@@ -30,6 +31,11 @@ export function GeneralSettingScreen() {
 		setSettings((prev) => ({ ...prev, appearance: theme }));
 	};
 
+	const toggleLowPower = async () => {
+		await storage.createSetting("lowPower", String(+!settings.lowPower));
+		setSettings((state) => ({ ...state, lowPower: !settings.lowPower }));
+	};
+
 	const toggleAutolaunch = async () => {
 		if (!settings.autolaunch) {
 			await enable();
@@ -40,12 +46,6 @@ export function GeneralSettingScreen() {
 			// update state
 			setSettings((prev) => ({ ...prev, autolaunch: false }));
 		}
-	};
-
-	const toggleOutbox = async () => {
-		await storage.createSetting("outbox", String(+!settings.outbox));
-		// update state
-		setSettings((prev) => ({ ...prev, outbox: !settings.outbox }));
 	};
 
 	const toggleMedia = async () => {
@@ -98,6 +98,12 @@ export function GeneralSettingScreen() {
 						autoupdate: !!parseInt(item.value),
 					}));
 
+				if (item.key === "lowPower")
+					setSettings((prev) => ({
+						...prev,
+						lowPower: !!parseInt(item.value),
+					}));
+
 				if (item.key === "outbox")
 					setSettings((prev) => ({
 						...prev,
@@ -127,13 +133,30 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-24 shrink-0 text-end text-sm font-semibold">
-							Updater
+							Update
 						</div>
-						<div className="text-sm">Auto download new update at Login</div>
+						<div className="text-sm">Automatically download new update</div>
 					</div>
 					<Switch.Root
 						checked={settings.autoupdate}
 						onClick={() => toggleAutoupdate()}
+						className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+					>
+						<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+					</Switch.Root>
+				</div>
+				<div className="flex w-full items-center justify-between">
+					<div className="flex items-center gap-8">
+						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+							Low Power
+						</div>
+						<div className="text-sm">
+							Sustainable for low network environment.
+						</div>
+					</div>
+					<Switch.Root
+						checked={settings.lowPower}
+						onClick={() => toggleLowPower()}
 						className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
 					>
 						<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -149,21 +172,6 @@ export function GeneralSettingScreen() {
 					<Switch.Root
 						checked={settings.autolaunch}
 						onClick={() => toggleAutolaunch()}
-						className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-					>
-						<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-					</Switch.Root>
-				</div>
-				<div className="flex w-full items-center justify-between">
-					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
-							Gossip
-						</div>
-						<div className="text-sm">Use Outbox model</div>
-					</div>
-					<Switch.Root
-						checked={settings.outbox}
-						onClick={() => toggleOutbox()}
 						className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
 					>
 						<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -189,7 +197,7 @@ export function GeneralSettingScreen() {
 						<div className="w-24 shrink-0 text-end text-sm font-semibold">
 							Hashtag
 						</div>
-						<div className="text-sm">Hide all hashtags in content</div>
+						<div className="text-sm">Show all hashtags in content</div>
 					</div>
 					<Switch.Root
 						checked={settings.hashtag}

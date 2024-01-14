@@ -9,6 +9,7 @@ import NDK, {
 	NDKPrivateKeySigner,
 	NDKRelay,
 	NDKRelayAuthPolicies,
+	NDKUser,
 } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import Linkify from "linkify-react";
@@ -19,7 +20,9 @@ import { LumeContext } from "./context";
 
 export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 	const storage = useStorage();
-	const [context, setContext] = useState<Ark>(undefined);
+
+	const [ark, setArk] = useState<Ark>(undefined);
+	const [ndk, setNDK] = useState<NDK>(undefined);
 
 	async function initNostrSigner({
 		nsecbunker,
@@ -67,7 +70,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		}
 	}
 
-	async function init() {
+	async function initNDK() {
 		const explicitRelayUrls = normalizeRelayUrlSet([
 			"wss://bostr.nokotaro.com/",
 			"wss://nostr.mutinywallet.com/",
@@ -77,14 +80,12 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		const outboxRelayUrls = normalizeRelayUrlSet(["wss://purplepag.es/"]);
 
 		// #TODO: user should config blacklist relays
-		// No need to connect depot tunnel url
-		const blacklistRelayUrls = storage.settings.tunnelUrl.length
-			? [
-					storage.settings.tunnelUrl,
-					`${storage.settings.tunnelUrl}/`,
-					"wss://brb.io/",
-			  ]
-			: ["wss://brb.io/"];
+		// Skip connect depot tunnel url
+		const blacklistRelayUrls = normalizeRelayUrlSet(
+			storage.settings.tunnelUrl.length
+				? [storage.settings.tunnelUrl, "wss://brb.io/"]
+				: ["wss://brb.io/"],
+		);
 
 		const cacheAdapter = new NDKCacheAdapterTauri(storage);
 		const ndk = new NDK({
@@ -115,29 +116,37 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		// auth
 		ndk.relayAuthDefaultPolicy = async (relay: NDKRelay, challenge: string) => {
 			const signIn = NDKRelayAuthPolicies.signIn({ ndk });
-			const event = await signIn(relay, challenge).catch((e) => console.log(e));
+			const event = await signIn(relay, challenge).catch((e) =>
+				console.error(e),
+			);
 			if (event) {
-				sendNativeNotification(
+				await sendNativeNotification(
 					`You've sign in sucessfully to relay: ${relay.url}`,
 				);
 				return event;
 			}
 		};
 
-		// update account's metadata
-		if (signer) {
-			const user = ndk.getUser({ pubkey: storage.currentUser.pubkey });
+		setNDK(ndk);
+	}
+
+	async function initArk() {
+		// ark utils
+		const ark = new Ark({ ndk, account: storage.currentUser });
+
+		if (ndk && storage.currentUser) {
+			const user = new NDKUser({ pubkey: storage.currentUser.pubkey });
 			ndk.activeUser = user;
 
-			const contacts = await user.follows();
-			storage.currentUser.contacts = [...contacts].map((user) => user.pubkey);
+			// update contacts
+			await ark.getUserContacts();
 
 			// subscribe for new activity
 			const sub = ndk.subscribe(
 				{
 					kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
 					since: Math.floor(Date.now() / 1000),
-					"#p": [storage.currentUser.pubkey],
+					"#p": [ark.account.pubkey],
 				},
 				{ closeOnEose: false, groupable: false },
 			);
@@ -169,18 +178,18 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			});
 		}
 
-		// ark utils
-		const ark = new Ark({ ndk, account: storage.currentUser });
-
-		// update context
-		setContext(ark);
+		setArk(ark);
 	}
 
 	useEffect(() => {
-		if (!context) init();
+		if (ndk) initArk();
+	}, [ndk]);
+
+	useEffect(() => {
+		if (!ark && !ndk) initNDK();
 	}, []);
 
-	if (!context) {
+	if (!ark) {
 		return (
 			<div
 				data-tauri-drag-region
@@ -207,7 +216,5 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		);
 	}
 
-	return (
-		<LumeContext.Provider value={context}>{children}</LumeContext.Provider>
-	);
+	return <LumeContext.Provider value={ark}>{children}</LumeContext.Provider>;
 };

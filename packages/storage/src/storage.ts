@@ -279,9 +279,6 @@ export class LumeStorage {
 		}
 
 		const account = await this.getActiveAccount();
-		this.currentUser = account;
-		this.currentUser.contacts = [];
-
 		return account;
 	}
 

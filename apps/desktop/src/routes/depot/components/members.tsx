@@ -87,7 +87,7 @@ export function DepotMembers() {
 				</div>
 			</div>
 			<Dialog.Portal>
-				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-black/20" />
+				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm dark:bg-black/10" />
 				<Dialog.Content className="fixed inset-0 z-50 flex min-h-full items-center justify-center">
 					<div className="relative h-min w-full max-w-xl overflow-hidden rounded-xl bg-white dark:bg-black">
 						<div className="inline-flex h-14 w-full shrink-0 items-center justify-between border-b border-neutral-100 px-5 dark:border-neutral-900">

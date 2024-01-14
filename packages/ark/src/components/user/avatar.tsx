@@ -1,3 +1,4 @@
+import { useStorage } from "@lume/storage";
 import { cn } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
 import { minidenticon } from "minidenticons";
@@ -7,6 +8,8 @@ import { useUserContext } from "./provider";
 
 export function UserAvatar({ className }: { className?: string }) {
 	const user = useUserContext();
+	const storage = useStorage();
+
 	const fallbackAvatar = useMemo(
 		() =>
 			`data:image/svg+xml;utf8,${encodeURIComponent(
@@ -20,7 +23,7 @@ export function UserAvatar({ className }: { className?: string }) {
 			<div className="shrink-0">
 				<div
 					className={cn(
-						"bg-black/20 dark:bg-white/20 animate-pulse",
+						"bg-black/20 dark:bg-white/20 rounded animate-pulse",
 						className,
 					)}
 				/>
@@ -30,13 +33,23 @@ export function UserAvatar({ className }: { className?: string }) {
 
 	return (
 		<Avatar.Root className="shrink-0">
-			<Avatar.Image
-				src={user.image}
-				alt={user.pubkey}
-				loading="eager"
-				decoding="async"
-				className={className}
-			/>
+			{storage.settings.lowPower ? (
+				<Avatar.Image
+					src={fallbackAvatar}
+					alt={user.pubkey}
+					loading="eager"
+					decoding="async"
+					className={cn("bg-black dark:bg-white", className)}
+				/>
+			) : (
+				<Avatar.Image
+					src={user.image}
+					alt={user.pubkey}
+					loading="eager"
+					decoding="async"
+					className={className}
+				/>
+			)}
 			<Avatar.Fallback delayMs={120}>
 				<img
 					src={fallbackAvatar}

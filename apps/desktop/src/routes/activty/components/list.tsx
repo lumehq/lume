@@ -50,7 +50,6 @@ export function ActivityList() {
 					};
 				}
 			},
-
 			staleTime: 360 * 1000,
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,

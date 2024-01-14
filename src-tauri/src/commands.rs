@@ -1,5 +1,5 @@
-use std::process::Command;
 use keyring::Entry;
+use std::process::Command;
 use std::time::Duration;
 use webpage::{Webpage, WebpageOptions};
 
@@ -117,14 +117,14 @@ pub async fn opengraph(url: String) -> OpenGraphResponse {
 
 #[tauri::command]
 pub fn secure_save(key: String, value: String) -> Result<(), ()> {
-  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let entry = Entry::new("Lume", &key).expect("Failed to create entry");
   let _ = entry.set_password(&value);
   Ok(())
 }
 
 #[tauri::command]
 pub fn secure_load(key: String) -> Result<String, String> {
-  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let entry = Entry::new("Lume", &key).expect("Failed to create entry");
   if let Ok(password) = entry.get_password() {
     Ok(password)
   } else {
@@ -134,7 +134,7 @@ pub fn secure_load(key: String) -> Result<String, String> {
 
 #[tauri::command]
 pub fn secure_remove(key: String) -> Result<(), ()> {
-  let entry = Entry::new("lume", &key).expect("Failed to create entry");
+  let entry = Entry::new("Lume", &key).expect("Failed to create entry");
   let _ = entry.delete_password();
   Ok(())
 }

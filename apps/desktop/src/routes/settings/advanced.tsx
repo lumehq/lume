@@ -13,14 +13,14 @@ export function AdvancedSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-24 shrink-0 text-end text-sm font-semibold">
-							Caches
+							Cache
 						</div>
-						<div className="text-sm">Use for boost up NDK</div>
+						<div className="text-sm">Use for boost up nostr connection</div>
 					</div>
 					<button
 						type="button"
 						onClick={() => clearCache()}
-						className="h-8 w-max rounded-lg bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
+						className="h-8 w-max rounded-lg px-3 text-sm font-semibold text-blue-500 bg-blue-100 hover:bg-blue-200"
 					>
 						Clear
 					</button>

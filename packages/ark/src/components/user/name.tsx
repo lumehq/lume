@@ -8,7 +8,7 @@ export function UserName({ className }: { className?: string }) {
 		return (
 			<div
 				className={cn(
-					"h-4 w-20 bg-black/20 dark:bg-white/20 animate-pulse",
+					"h-4 w-20 bg-black/20 dark:bg-white/20 rounded animate-pulse",
 					className,
 				)}
 			/>
@@ -16,7 +16,7 @@ export function UserName({ className }: { className?: string }) {
 	}
 
 	return (
-		<div className={cn("w-full max-w-[15rem] truncate", className)}>
+		<div className={cn("truncate", className)}>
 			{user.displayName || user.name || "Anon"}
 		</div>
 	);

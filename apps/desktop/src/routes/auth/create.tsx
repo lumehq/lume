@@ -145,10 +145,11 @@ export function CreateAccountScreen() {
 
 			// add account to storage
 			await storage.createSetting("nsecbunker", "1");
-			await storage.createAccount({
+			const dbAccount = await storage.createAccount({
 				pubkey: account,
 				privkey: localSigner.privateKey,
 			});
+			ark.account = dbAccount;
 
 			// get final signer with newly created account
 			const finalSigner = new NDKNip46Signer(bunker, account, localSigner);
@@ -156,7 +157,6 @@ export function CreateAccountScreen() {
 
 			// update main ndk instance signer
 			ark.updateNostrSigner({ signer: finalSigner });
-			console.log(ark.ndk.signer);
 
 			// remove default nsecbunker profile and contact list
 			await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });

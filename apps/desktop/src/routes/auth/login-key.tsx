@@ -1,3 +1,4 @@
+import { useArk } from "@lume/ark";
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { getPublicKey, nip19 } from "nostr-tools";
@@ -7,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LoginWithKey() {
+	const ark = useArk();
 	const storage = useStorage();
 	const navigate = useNavigate();
 
@@ -30,10 +32,11 @@ export function LoginWithKey() {
 			const privkey = nip19.decode(data.nsec).data as string;
 			const pubkey = getPublicKey(privkey);
 
-			await storage.createAccount({
+			const account = await storage.createAccount({
 				pubkey: pubkey,
 				privkey: privkey,
 			});
+			ark.account = account;
 
 			return navigate("/auth/onboarding", { replace: true });
 		} catch (e) {

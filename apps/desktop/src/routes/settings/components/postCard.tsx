@@ -1,12 +1,12 @@
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import { compactNumber } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { Link } from "react-router-dom";
 
 export function PostCard() {
-	const storage = useStorage();
+	const ark = useArk();
 	const { status, data } = useQuery({
 		queryKey: ["user-stats", ark.account.pubkey],
 		queryFn: async ({ signal }: { signal: AbortSignal }) => {

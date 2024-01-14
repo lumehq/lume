@@ -114,7 +114,7 @@ export function NoteZap() {
 				</button>
 			</Dialog.Trigger>
 			<Dialog.Portal>
-				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-xl dark:bg-white/20" />
+				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm dark:bg-white/10" />
 				<Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center min-h-full">
 					<div className="relative w-full max-w-xl bg-white h-min rounded-xl dark:bg-black">
 						<div className="inline-flex items-center justify-between w-full px-5 py-3 shrink-0">

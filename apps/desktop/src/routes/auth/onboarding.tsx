@@ -29,7 +29,7 @@ export function OnboardingScreen() {
 
 	const toggleLowPower = async () => {
 		await storage.createSetting("lowPower", String(+!settings.lowPower));
-		setSettings((state) => ({ ...state, autoupdate: !settings.lowPower }));
+		setSettings((state) => ({ ...state, lowPower: !settings.lowPower }));
 	};
 
 	const toggleTranslation = async () => {
@@ -58,7 +58,7 @@ export function OnboardingScreen() {
 		setLoading(true);
 
 		// get account contacts
-		await ark.getUserContacts(ark.account.pubkey);
+		await ark.getUserContacts();
 
 		// refetch newsfeed
 		await queryClient.prefetchInfiniteQuery({
@@ -154,7 +154,7 @@ export function OnboardingScreen() {
 							<h3 className="font-semibold text-lg">Low Power Mode</h3>
 							<p className="text-neutral-500">
 								Limited relay connection and hide all media, sustainable for low
-								network environment
+								network environment.
 							</p>
 						</div>
 					</div>
@@ -171,7 +171,8 @@ export function OnboardingScreen() {
 								Translation (nostr.wine)
 							</h3>
 							<p className="text-neutral-500">
-								Translate text to your preferred language, powered by Nostr Wine
+								Translate text to your preferred language, powered by Nostr
+								Wine.
 							</p>
 						</div>
 					</div>
