@@ -1,4 +1,4 @@
-import { DarkIcon, LightIcon, SystemModeIcon } from "@lume/icons";
+import { CheckIcon, DarkIcon, LightIcon, SystemModeIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import * as Switch from "@radix-ui/react-switch";
 import { invoke } from "@tauri-apps/api/core";
@@ -14,6 +14,7 @@ import { twMerge } from "tailwind-merge";
 export function GeneralSettingScreen() {
 	const storage = useStorage();
 
+	const [apiKey, setAPIKey] = useState("");
 	const [settings, setSettings] = useState({
 		lowPower: false,
 		autoupdate: false,
@@ -22,6 +23,7 @@ export function GeneralSettingScreen() {
 		media: true,
 		hashtag: true,
 		notification: true,
+		translation: false,
 		appearance: "system",
 	});
 
@@ -77,6 +79,17 @@ export function GeneralSettingScreen() {
 		setSettings((prev) => ({ ...prev, notification: !settings.notification }));
 	};
 
+	const toggleTranslation = async () => {
+		await storage.createSetting("translation", String(+!settings.translation));
+		storage.settings.translation = !settings.translation;
+		// update state
+		setSettings((prev) => ({ ...prev, translation: !settings.translation }));
+	};
+
+	const saveApi = async () => {
+		await storage.createSetting("translateApiKey", apiKey);
+	};
+
 	useEffect(() => {
 		async function loadSettings() {
 			const theme = await getCurrent().theme();
@@ -120,6 +133,12 @@ export function GeneralSettingScreen() {
 					setSettings((prev) => ({
 						...prev,
 						hashtag: !!parseInt(item.value),
+					}));
+
+				if (item.key === "translation")
+					setSettings((prev) => ({
+						...prev,
+						translation: !!parseInt(item.value),
 					}));
 			}
 		}
@@ -223,6 +242,46 @@ export function GeneralSettingScreen() {
 						<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 					</Switch.Root>
 				</div>
+				<div className="flex w-full items-center justify-between">
+					<div className="flex items-center gap-8">
+						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+							Translation
+						</div>
+						<div className="text-sm">Translate text to your language</div>
+					</div>
+					<Switch.Root
+						checked={settings.translation}
+						onClick={() => toggleTranslation()}
+						className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+					>
+						<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+					</Switch.Root>
+				</div>
+				{settings.translation ? (
+					<div className="flex w-full items-center gap-8">
+						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+							API Key
+						</div>
+						<div className="relative w-full">
+							<input
+								type="password"
+								spellCheck={false}
+								value={apiKey}
+								onChange={(e) => setAPIKey(e.target.value)}
+								className="w-full border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-9 rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-100 dark:bg-neutral-900"
+							/>
+							<div className="h-9 absolute right-0 top-0 inline-flex items-center justify-center">
+								<button
+									type="button"
+									onClick={saveApi}
+									className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+								>
+									Save
+								</button>
+							</div>
+						</div>
+					</div>
+				) : null}
 				<div className="flex w-full items-start gap-8">
 					<div className="w-24 shrink-0 text-end text-sm font-semibold">
 						Appearance

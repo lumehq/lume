@@ -13,10 +13,10 @@ import { NDKKind } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import getUrls from "get-urls";
 import { nanoid } from "nanoid";
-import { nip19 } from "nostr-tools";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
+import { toast } from "sonner";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
 import { MentionUser } from "./mentions/user";
@@ -29,17 +29,18 @@ import { useNoteContext } from "./provider";
 export function NoteContent({
 	className,
 	mini = false,
-	isTranslatable = false,
 }: {
 	className?: string;
 	mini?: boolean;
-	isTranslatable?: boolean;
 }) {
 	const storage = useStorage();
 	const event = useNoteContext();
 
 	const [content, setContent] = useState(event.content);
-	const [translated, setTranslated] = useState(false);
+	const [translate, setTranslate] = useState({
+		translatable: true,
+		translated: false,
+	});
 
 	const richContent = useMemo(() => {
 		if (event.kind !== NDKKind.Text) return content;
@@ -200,24 +201,31 @@ export function NoteContent({
 		}
 	}, [content]);
 
-	const translate = async () => {
+	const translateContent = async () => {
 		try {
+			if (!translate.translatable) return;
+
 			const res = await fetch("https://translate.nostr.wine/translate", {
 				method: "POST",
 				body: JSON.stringify({
-					q: content,
-					target: "vi",
+					q: event.content,
+					target: storage.locale.slice(0, 2),
 					api_key: storage.settings.translateApiKey,
 				}),
 				headers: { "Content-Type": "application/json" },
 			});
 
+			if (!res.ok)
+				toast.error(
+					"Cannot connect to translate service, please try again later.",
+				);
+
 			const data = await res.json();
 
 			setContent(data.translatedText);
-			setTranslated(true);
+			setTranslate((state) => ({ ...state, translated: true }));
 		} catch (e) {
-			console.error(event.id, String(e));
+			console.error("translate api: ", String(e));
 		}
 	};
 
@@ -235,14 +243,11 @@ export function NoteContent({
 			>
 				{richContent}
 			</div>
-			{isTranslatable && storage.settings.translation ? (
-				translated ? (
+			{storage.settings.translation && translate.translatable ? (
+				translate.translated ? (
 					<button
 						type="button"
-						onClick={() => {
-							setTranslated(false);
-							setContent(event.content);
-						}}
+						onClick={() => setContent(event.content)}
 						className="mt-3 text-sm text-blue-500 hover:text-blue-600 border-none shadow-none focus:outline-none"
 					>
 						Show original content
@@ -250,7 +255,7 @@ export function NoteContent({
 				) : (
 					<button
 						type="button"
-						onClick={translate}
+						onClick={translateContent}
 						className="mt-3 text-sm text-blue-500 hover:text-blue-600 border-none shadow-none focus:outline-none"
 					>
 						Translate to {regionNames.of(storage.locale)}

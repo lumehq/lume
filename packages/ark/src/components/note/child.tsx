@@ -89,7 +89,7 @@ export function NoteChild({
 		);
 	}
 
-	if (isError) {
+	if (isError || !data) {
 		return (
 			<div className="relative flex gap-3">
 				<div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
