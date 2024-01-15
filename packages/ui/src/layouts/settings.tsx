@@ -1,6 +1,8 @@
 import {
 	AdvancedSettingsIcon,
 	InfoIcon,
+	NwcFilledIcon,
+	NwcIcon,
 	SecureIcon,
 	SettingsIcon,
 	UserIcon,
@@ -25,7 +27,7 @@ export function SettingsLayout() {
 							)
 						}
 					>
-						<UserIcon className="h-6 w-6" />
+						<UserIcon className="size-6" />
 						<p className="text-sm font-medium">User</p>
 					</NavLink>
 					<NavLink
@@ -39,8 +41,22 @@ export function SettingsLayout() {
 							)
 						}
 					>
-						<SettingsIcon className="h-6 w-6" />
+						<SettingsIcon className="size-6" />
 						<p className="text-sm font-medium">General</p>
+					</NavLink>
+					<NavLink
+						to="/settings/nwc"
+						className={({ isActive }) =>
+							twMerge(
+								"flex w-20 shrink-0 flex-col items-center justify-center rounded-lg px-2 py-2 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
+								isActive
+									? "bg-neutral-100 text-blue-500 hover:bg-neutral-100 dark:bg-neutral-950 dark:hover:bg-neutral-900"
+									: "",
+							)
+						}
+					>
+						<NwcIcon className="size-6" />
+						<p className="text-sm font-medium">Wallet</p>
 					</NavLink>
 					<NavLink
 						to="/settings/backup"
@@ -53,7 +69,7 @@ export function SettingsLayout() {
 							)
 						}
 					>
-						<SecureIcon className="h-6 w-6" />
+						<SecureIcon className="size-6" />
 						<p className="text-sm font-medium">Backup</p>
 					</NavLink>
 					<NavLink
@@ -67,7 +83,7 @@ export function SettingsLayout() {
 							)
 						}
 					>
-						<AdvancedSettingsIcon className="h-6 w-6" />
+						<AdvancedSettingsIcon className="size-6" />
 						<p className="text-sm font-medium">Advanced</p>
 					</NavLink>
 					<NavLink
@@ -81,7 +97,7 @@ export function SettingsLayout() {
 							)
 						}
 					>
-						<InfoIcon className="h-6 w-6" />
+						<InfoIcon className="size-6" />
 						<p className="text-sm font-medium">About</p>
 					</NavLink>
 				</div>

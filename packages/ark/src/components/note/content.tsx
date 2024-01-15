@@ -140,60 +140,21 @@ export function NoteContent({
 
 			if (events.length) {
 				for (const event of events) {
-					const address = event
-						.replace("nostr:", "")
-						.replace(/[^a-zA-Z0-9]/g, "");
-					const decoded = nip19.decode(address);
-
-					if (decoded.type === "note") {
-						parsedContent = reactStringReplace(
-							parsedContent,
-							event,
-							(match, i) => (
-								<MentionNote key={match + i} eventId={decoded.data} />
-							),
-						);
-					}
-
-					if (decoded.type === "nevent") {
-						parsedContent = reactStringReplace(
-							parsedContent,
-							event,
-							(match, i) => (
-								<MentionNote key={match + i} eventId={decoded.data.id} />
-							),
-						);
-					}
+					parsedContent = reactStringReplace(
+						parsedContent,
+						event,
+						(match, i) => <MentionNote key={match + i} eventId={event} />,
+					);
 				}
 			}
 
 			if (mentions.length) {
 				for (const mention of mentions) {
-					const address = mention
-						.replace("nostr:", "")
-						.replace("@", "")
-						.replace(/[^a-zA-Z0-9]/g, "");
-					const decoded = nip19.decode(address);
-
-					if (decoded.type === "npub") {
-						parsedContent = reactStringReplace(
-							parsedContent,
-							mention,
-							(match, i) => (
-								<MentionUser key={match + i} pubkey={decoded.data} />
-							),
-						);
-					}
-
-					if (decoded.type === "nprofile" || decoded.type === "naddr") {
-						parsedContent = reactStringReplace(
-							parsedContent,
-							mention,
-							(match, i) => (
-								<MentionUser key={match + i} pubkey={decoded.data.pubkey} />
-							),
-						);
-					}
+					parsedContent = reactStringReplace(
+						parsedContent,
+						mention,
+						(match, i) => <MentionUser key={match + i} pubkey={mention} />,
+					);
 				}
 			}
 

@@ -7,9 +7,6 @@ import {
 	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
-	NwcIcon,
-	RelayFilledIcon,
-	RelayIcon,
 	SettingsFilledIcon,
 	SettingsIcon,
 } from "@lume/icons";

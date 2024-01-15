@@ -30,66 +30,53 @@ export function NoteChild({
 			NOSTR_MENTIONS.some((el) => word.startsWith(el)),
 		);
 
-		if (hashtags.length) {
-			for (const hashtag of hashtags) {
-				parsedContent = reactStringReplace(
-					parsedContent,
-					hashtag,
-					(match, i) => {
-						return <Hashtag key={match + i} tag={hashtag} />;
-					},
-				);
-			}
-		}
-
-		if (mentions.length) {
-			for (const mention of mentions) {
-				const address = mention
-					.replace("nostr:", "")
-					.replace("@", "")
-					.replace(/[^a-zA-Z0-9]/g, "");
-				const decoded = nip19.decode(address);
-
-				if (decoded.type === "npub") {
+		try {
+			if (hashtags.length) {
+				for (const hashtag of hashtags) {
 					parsedContent = reactStringReplace(
 						parsedContent,
-						mention,
-						(match, i) => <MentionUser key={match + i} pubkey={decoded.data} />,
-					);
-				}
-
-				if (decoded.type === "nprofile" || decoded.type === "naddr") {
-					parsedContent = reactStringReplace(
-						parsedContent,
-						mention,
-						(match, i) => (
-							<MentionUser key={match + i} pubkey={decoded.data.pubkey} />
-						),
+						hashtag,
+						(match, i) => {
+							return <Hashtag key={match + i} tag={hashtag} />;
+						},
 					);
 				}
 			}
+
+			if (mentions.length) {
+				for (const mention of mentions) {
+					parsedContent = reactStringReplace(
+						parsedContent,
+						mention,
+						(match, i) => <MentionUser key={match + i} pubkey={mention} />,
+					);
+				}
+			}
+
+			parsedContent = reactStringReplace(
+				parsedContent,
+				/(https?:\/\/\S+)/g,
+				(match, i) => {
+					const url = new URL(match);
+					return (
+						<Link
+							key={match + i}
+							to={url.toString()}
+							target="_blank"
+							rel="noreferrer"
+							className="break-all font-normal text-blue-500 hover:text-blue-600"
+						>
+							{url.toString()}
+						</Link>
+					);
+				},
+			);
+
+			return parsedContent;
+		} catch (e) {
+			console.log(e);
+			return parsedContent;
 		}
-
-		parsedContent = reactStringReplace(
-			parsedContent,
-			/(https?:\/\/\S+)/g,
-			(match, i) => {
-				const url = new URL(match);
-				return (
-					<Link
-						key={match + i}
-						to={url.toString()}
-						target="_blank"
-						rel="noreferrer"
-						className="break-all font-normal text-blue-500 hover:text-blue-600"
-					>
-						{url.toString()}
-					</Link>
-				);
-			},
-		);
-
-		return parsedContent;
 	}, [data]);
 
 	if (isLoading) {

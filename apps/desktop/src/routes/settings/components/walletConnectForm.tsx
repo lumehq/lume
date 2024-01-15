@@ -1,9 +1,11 @@
+import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function NWCForm({ setWalletConnectURL }) {
+	const ark = useArk();
 	const storage = useStorage();
 
 	const [uri, setUri] = useState("");

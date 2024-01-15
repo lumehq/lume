@@ -36,13 +36,6 @@ export default function Router() {
 							},
 						},
 						{
-							path: "nwc",
-							async lazy() {
-								const { NWCScreen } = await import("./routes/nwc");
-								return { Component: NWCScreen };
-							},
-						},
-						{
 							path: "settings",
 							element: <SettingsLayout />,
 							children: [
@@ -98,6 +91,13 @@ export default function Router() {
 											"./routes/settings/advanced"
 										);
 										return { Component: AdvancedSettingScreen };
+									},
+								},
+								{
+									path: "nwc",
+									async lazy() {
+										const { NWCScreen } = await import("./routes/settings/nwc");
+										return { Component: NWCScreen };
 									},
 								},
 								{

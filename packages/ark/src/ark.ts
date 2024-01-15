@@ -103,13 +103,35 @@ export class Ark {
 		}
 	}
 
+	public getCleanPubkey(pubkey: string) {
+		try {
+			let hexstring = pubkey.replace("nostr:", "").split("'")[0];
+
+			if (
+				hexstring.startsWith("npub1") ||
+				hexstring.startsWith("nprofile1") ||
+				hexstring.startsWith("naddr1")
+			) {
+				const decoded = nip19.decode(hexstring);
+
+				if (decoded.type === "nprofile") hexstring = decoded.data.pubkey;
+				if (decoded.type === "npub") hexstring = decoded.data;
+				if (decoded.type === "naddr") hexstring = decoded.data.pubkey;
+			}
+
+			return hexstring;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	public async getUserProfile(pubkey?: string) {
 		try {
 			const currentUserPubkey = this.account.pubkey;
 
 			// get clean pubkey without any special characters
 			let hexstring = pubkey
-				? pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "")
+				? pubkey.replace("nostr:", "").split("'")[0]
 				: currentUserPubkey;
 
 			if (
@@ -135,7 +157,7 @@ export class Ark {
 			if (!profile) return null;
 			return profile;
 		} catch (e) {
-			throw new Error(e);
+			console.error(e);
 		}
 	}
 
@@ -145,7 +167,7 @@ export class Ark {
 
 			// get clean pubkey without any special characters
 			let hexstring = pubkey
-				? pubkey.replace(/[^a-zA-Z0-9]/g, "").replace("nostr:", "")
+				? pubkey.replace("nostr:", "").split("'")[0]
 				: currentUserPubkey;
 
 			if (
@@ -164,14 +186,16 @@ export class Ark {
 				pubkey: hexstring,
 			});
 
-			const contacts = [...(await user.follows())].map((user) => user.pubkey);
+			const contacts = [...(await user.follows(undefined, false))].map(
+				(user) => user.pubkey,
+			);
 
 			if (!pubkey || pubkey === this.account.pubkey)
 				this.account.contacts = contacts;
 
 			return contacts;
 		} catch (e) {
-			throw new Error(e);
+			console.error(e);
 		}
 	}
 
@@ -182,7 +206,7 @@ export class Ark {
 			});
 			return await user.relayList();
 		} catch (e) {
-			throw new Error(e);
+			console.error(e);
 		}
 	}
 

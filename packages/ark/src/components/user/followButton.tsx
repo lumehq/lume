@@ -1,3 +1,4 @@
+import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useArk } from "../../hooks/useArk";
@@ -7,6 +8,8 @@ export function UserFollowButton({
 	className,
 }: { target: string; className?: string }) {
 	const ark = useArk();
+
+	const [loading, setLoading] = useState(false);
 	const [followed, setFollowed] = useState(false);
 
 	const toggleFollow = async () => {
@@ -21,15 +24,27 @@ export function UserFollowButton({
 
 	useEffect(() => {
 		async function status() {
+			setLoading(true);
+
 			const contacts = await ark.getUserContacts();
-			if (contacts?.includes(target)) setFollowed(true);
+			if (contacts?.includes(target)) {
+				setFollowed(true);
+			}
+
+			setLoading(false);
 		}
 		status();
 	}, []);
 
 	return (
 		<button type="button" onClick={toggleFollow} className={cn("", className)}>
-			{followed ? "Unfollow" : "Follow"}
+			{loading ? (
+				<LoaderIcon className="size-4 animate-spin" />
+			) : followed ? (
+				"Unfollow"
+			) : (
+				"Follow"
+			)}
 		</button>
 	);
 }

@@ -1,4 +1,4 @@
-import { ReplyIcon } from "@lume/icons";
+import { ChatsIcon, ReplyIcon } from "@lume/icons";
 import { editorAtom, editorValueAtom } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useSetAtom } from "jotai";
@@ -38,7 +38,7 @@ export function NoteReply() {
 						}}
 						className="inline-flex items-center justify-center group h-7 w-7 text-neutral-600 dark:text-neutral-400"
 					>
-						<ReplyIcon className="size-5 group-hover:text-blue-500" />
+						<ChatsIcon className="size-5 group-hover:text-blue-500" />
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

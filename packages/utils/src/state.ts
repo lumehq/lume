@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 // Editor
 export const editorAtom = atom(false);
@@ -17,4 +18,4 @@ export const activityAtom = atom(false);
 export const activityUnreadAtom = atom(0);
 
 // Tutorial
-export const tutorialAtom = atom(true);
+export const tutorialAtom = atomWithStorage("tutorial", true);

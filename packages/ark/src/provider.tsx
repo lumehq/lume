@@ -12,6 +12,7 @@ import NDK, {
 	NDKUser,
 } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
+import { message } from "@tauri-apps/plugin-dialog";
 import { fetch } from "@tauri-apps/plugin-http";
 import Linkify from "linkify-react";
 import { normalizeRelayUrlSet } from "nostr-fetch";
@@ -133,6 +134,8 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 	}
 
 	async function initArk() {
+		if (!ndk) await message("Something wrong!", { type: "error" });
+
 		// ark utils
 		const ark = new Ark({ ndk, account: storage.currentUser });
 

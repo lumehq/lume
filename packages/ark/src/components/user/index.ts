@@ -1,3 +1,4 @@
+import { UserAbout } from "./about";
 import { UserAvatar } from "./avatar";
 import { UserFollowButton } from "./followButton";
 import { UserName } from "./name";
@@ -13,5 +14,6 @@ export const User = {
 	Name: UserName,
 	NIP05: UserNip05,
 	Time: UserTime,
+	About: UserAbout,
 	Button: UserFollowButton,
 };
