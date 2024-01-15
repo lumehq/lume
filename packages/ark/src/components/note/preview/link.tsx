@@ -11,7 +11,7 @@ export function LinkPreview({ url }: { url: string }) {
 
 	if (status === "pending") {
 		return (
-			<div className="flex flex-col w-full my-1 rounded-lg bg-neutral-100 dark:bg-neutral-900">
+			<div className="flex flex-col w-full my-1 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-900">
 				<div className="w-full h-48 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 				<div className="flex flex-col gap-2 px-3 py-3">
 					<div className="w-2/3 h-3 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />

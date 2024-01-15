@@ -42,7 +42,7 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 			column.title,
 			column.content,
 		);
-		if (result) setColumns((prev) => [...prev, column]);
+		if (result) setColumns((prev) => [...prev, result]);
 	}, []);
 
 	const removeColumn = useCallback(async (id: number) => {

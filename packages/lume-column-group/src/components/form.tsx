@@ -7,7 +7,7 @@ export function GroupForm({ id }: { id: number }) {
 	const ark = useArk();
 	const { updateColumn, removeColumn } = useColumnContext();
 
-	const [title, setTitle] = useState<string>(`Group-${id}`);
+	const [title, setTitle] = useState<string>("Just a new group");
 	const [users, setUsers] = useState<Array<string>>([]);
 
 	// toggle follow state
@@ -36,7 +36,7 @@ export function GroupForm({ id }: { id: number }) {
 					</button>
 				</div>
 				<div className="flex flex-col gap-5 px-3 pt-2 overflow-y-auto">
-					<div className="flex flex-col gap-1">
+					<div className="flex flex-col gap-1.5">
 						<label
 							htmlFor="name"
 							className="font-medium text-neutral-700 dark:text-neutral-300"
@@ -48,7 +48,7 @@ export function GroupForm({ id }: { id: number }) {
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}
 							placeholder="Nostrichs..."
-							className="px-3 rounded-lg border-neutral-200 dark:border-neutral-900 h-11 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+							className="px-2 border border-neutral-100 dark:border-neutral-900 bg-neutral-50 rounded-lg h-10 dark:bg-neutral-950 placeholder:text-neutral-600 focus:border-blue-500 focus:shadow-none focus:ring-0"
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -64,7 +64,7 @@ export function GroupForm({ id }: { id: number }) {
 									key={item}
 									type="button"
 									onClick={() => toggleUser(item)}
-									className="inline-flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+									className="inline-flex items-center justify-between px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 hover:bg-neutral-100 dark:hover:bg-neutral-900"
 								>
 									<User pubkey={item} variant="simple" />
 									{users.includes(item) ? (

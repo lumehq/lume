@@ -46,21 +46,17 @@ export function AntenasForm({ id }: { id: number }) {
 				</div>
 				<div className="flex flex-col h-full gap-5 px-3 pt-2 overflow-y-auto">
 					<div className="flex flex-col gap-1">
-						<label
-							htmlFor="name"
-							className="select-none text-neutral-950 data-[disabled]:opacity-50 font-medium mb-1 dark:text-white"
-						>
+						<label htmlFor="name" className="font-medium">
 							Name
 						</label>
-						<span className="relative block w-full before:absolute before:inset-px before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-white before:shadow dark:before:hidden after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-blue-500 has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-neutral-950/5 before:has-[[data-disabled]]:shadow-none before:has-[[data-invalid]]:shadow-red-500/10">
-							<input
-								name="name"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-								placeholder="Nostrichs..."
-								className="relative block w-full appearance-none rounded-lg px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing[3])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] focus:ring-0 text-base/6 text-neutral-950 placeholder:text-neutral-500 sm:text-sm/6 dark:text-white border border-neutral-950/10 data-[hover]:border-neutral-950/20 dark:border-white/10 dark:data-[hover]:border-white/20 bg-transparent dark:bg-white/5 focus:outline-none data-[invalid]:border-red-500 data-[invalid]:data-[hover]:border-red-500 data-[invalid]:dark:border-red-500 data-[invalid]:data-[hover]:dark:border-red-500 data-[disabled]:border-neutral-950/20 dark:data-[hover]:data-[disabled]:border-white/15 data-[disabled]:dark:border-white/15 data-[disabled]:dark:bg-white/[2.5%]"
-							/>
-						</span>
+						<input
+							type="text"
+							name="name"
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
+							placeholder="Nostrichs..."
+							className="px-2 border border-neutral-100 dark:border-neutral-900 bg-neutral-50 rounded-lg h-10 dark:bg-neutral-950 placeholder:text-neutral-600 focus:border-blue-500 focus:shadow-none focus:ring-0"
+						/>
 					</div>
 					<div className="flex flex-col gap-1">
 						<label
@@ -69,17 +65,15 @@ export function AntenasForm({ id }: { id: number }) {
 						>
 							Source
 						</label>
-						<span className="relative block w-full before:absolute before:inset-px before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-white before:shadow dark:before:hidden after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-blue-500 has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-neutral-950/5 before:has-[[data-disabled]]:shadow-none before:has-[[data-invalid]]:shadow-red-500/10">
-							<select
-								name="source"
-								value={source}
-								onChange={(e) => setSource(e.target.value)}
-								className="relative block w-full appearance-none rounded-lg px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing[3])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] focus:ring-0 text-base/6 text-neutral-950 placeholder:text-neutral-500 sm:text-sm/6 dark:text-white border border-neutral-950/10 data-[hover]:border-neutral-950/20 dark:border-white/10 dark:data-[hover]:border-white/20 bg-transparent dark:bg-white/5 focus:outline-none data-[invalid]:border-red-500 data-[invalid]:data-[hover]:border-red-500 data-[invalid]:dark:border-red-500 data-[invalid]:data-[hover]:dark:border-red-500 data-[disabled]:border-neutral-950/20 dark:data-[hover]:data-[disabled]:border-white/15 data-[disabled]:dark:border-white/15 data-[disabled]:dark:bg-white/[2.5%]"
-							>
-								<option value="contacts">Contacts</option>
-								<option value="global">Global</option>
-							</select>
-						</span>
+						<select
+							name="source"
+							value={source}
+							onChange={(e) => setSource(e.target.value)}
+							className="px-2 w-full border border-neutral-100 dark:border-neutral-900 bg-neutral-50 rounded-lg dark:bg-neutral-950 placeholder:text-neutral-600 focus:border-blue-500 focus:shadow-none focus:ring-0"
+						>
+							<option value="contacts">Contacts</option>
+							<option value="global">Global</option>
+						</select>
 					</div>
 					<div className="flex flex-col gap-1">
 						<label
@@ -89,18 +83,16 @@ export function AntenasForm({ id }: { id: number }) {
 							Hashtags to listen to
 						</label>
 						<div className="flex items-center justify-between gap-2 mb-1">
-							<span className="relative block flex-1 before:absolute before:inset-px before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-white before:shadow dark:before:hidden after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-blue-500 has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-neutral-950/5 before:has-[[data-disabled]]:shadow-none before:has-[[data-invalid]]:shadow-red-500/10">
-								<input
-									name="name"
-									value={hashtag}
-									onChange={(e) => setHashtag(e.target.value)}
-									onKeyPress={(event) => {
-										if (event.key === "Enter") addHashtag();
-									}}
-									placeholder="#nostr..."
-									className="relative block w-full appearance-none rounded-lg px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing[3])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] focus:ring-0 text-base/6 text-neutral-950 placeholder:text-neutral-500 sm:text-sm/6 dark:text-white border border-neutral-950/10 data-[hover]:border-neutral-950/20 dark:border-white/10 dark:data-[hover]:border-white/20 bg-transparent dark:bg-white/5 focus:outline-none data-[invalid]:border-red-500 data-[invalid]:data-[hover]:border-red-500 data-[invalid]:dark:border-red-500 data-[invalid]:data-[hover]:dark:border-red-500 data-[disabled]:border-neutral-950/20 dark:data-[hover]:data-[disabled]:border-white/15 data-[disabled]:dark:border-white/15 data-[disabled]:dark:bg-white/[2.5%]"
-								/>
-							</span>
+							<input
+								name="name"
+								value={hashtag}
+								onChange={(e) => setHashtag(e.target.value)}
+								onKeyPress={(event) => {
+									if (event.key === "Enter") addHashtag();
+								}}
+								placeholder="#nostr..."
+								className="px-2 w-full border border-neutral-100 dark:border-neutral-900 bg-neutral-50 rounded-lg h-10 dark:bg-neutral-950 placeholder:text-neutral-600 focus:border-blue-500 focus:shadow-none focus:ring-0"
+							/>
 							<button
 								type="button"
 								onClick={() => addHashtag()}
@@ -127,7 +119,7 @@ export function AntenasForm({ id }: { id: number }) {
 							type="button"
 							onClick={submit}
 							disabled={hashtags.length < 1}
-							className="inline-flex items-center justify-center h-10 px-4 font-semibold text-white transform bg-blue-500 rounded-lg active:translate-y-1 hover:bg-blue-600 focus:outline-none disabled:opacity-50"
+							className="w-full inline-flex items-center justify-center h-10 px-4 font-semibold text-white transform bg-blue-500 rounded-lg active:translate-y-1 hover:bg-blue-600 focus:outline-none disabled:opacity-50"
 						>
 							Create
 						</button>

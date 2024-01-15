@@ -82,6 +82,7 @@ export function HomeScreen() {
 				}}
 			>
 				{columns.map((column) => renderItem(column))}
+				<div className="w-[420px]" />
 			</VList>
 			<div className="absolute bottom-3 right-3">
 				<div className="flex items-center gap-1 p-1 bg-black/50 dark:bg-white/30 backdrop-blur-xl rounded-xl">

@@ -341,13 +341,12 @@ export class LumeStorage {
 
 		if (insert) {
 			const columns: Array<IColumn> = await this.#db.select(
-				"SELECT * FROM columns ORDER BY id DESC LIMIT 1;",
+				"SELECT * FROM columns WHERE id = $1 ORDER BY id DESC LIMIT 1;",
+				[insert.lastInsertId],
 			);
-			if (columns.length < 1) console.error("get created widget failed");
+			if (!columns.length) console.error("get created widget failed");
 			return columns[0];
 		}
-
-		console.error("create widget failed");
 	}
 
 	public async updateColumn(id: number, title: string, content: string) {
