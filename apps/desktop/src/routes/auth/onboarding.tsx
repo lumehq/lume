@@ -1,6 +1,7 @@
 import { useArk } from "@lume/ark";
 import { InfoIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
+import { TranslateRegisterModal } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import * as Switch from "@radix-ui/react-switch";
@@ -186,6 +187,19 @@ export function OnboardingScreen() {
 								onChange={(e) => setAPIKey(e.target.value)}
 								className="w-full text-xl border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-11 rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-900"
 							/>
+							<div className="w-full mt-1">
+								<div className="relative">
+									<div className="absolute inset-0 flex items-center">
+										<div className="w-full border-t border-neutral-900" />
+									</div>
+									<div className="relative flex justify-center">
+										<span className="px-2 text-sm font-medium bg-neutral-950 text-neutral-600">
+											Not have API ?
+										</span>
+									</div>
+								</div>
+								<TranslateRegisterModal setAPIKey={setAPIKey} />
+							</div>
 						</div>
 					) : null}
 					<div className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm bg-blue-950 text-blue-300">

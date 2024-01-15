@@ -14,3 +14,4 @@ export * from "./replyList";
 export * from "./emptyFeed";
 export * from "./routes/event";
 export * from "./routes/user";
+export * from "./translateRegisterModal";

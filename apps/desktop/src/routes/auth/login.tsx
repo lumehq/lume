@@ -15,7 +15,7 @@ export function LoginScreen() {
 							to="/auth/login-oauth"
 							className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
 						>
-							OAuth Login
+							Login with address
 						</Link>
 						<Link
 							to="/auth/login-nsecbunker"
