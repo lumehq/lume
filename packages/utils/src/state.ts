@@ -15,3 +15,6 @@ export const onboardingAtom = atom(false);
 // Activity
 export const activityAtom = atom(false);
 export const activityUnreadAtom = atom(0);
+
+// Tutorial
+export const tutorialAtom = atom(true);

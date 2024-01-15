@@ -6,13 +6,9 @@ import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
 import { User } from "@columns/user";
 import { useColumnContext } from "@lume/ark";
-import {
-	ArrowLeftIcon,
-	ArrowRightIcon,
-	HelpIcon,
-	PlusSquareIcon,
-} from "@lume/icons";
+import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
+import { TutorialModal } from "@lume/ui/src/tutorial/modal";
 import { COL_TYPES } from "@lume/utils";
 import { useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
@@ -46,6 +42,7 @@ export function HomeScreen() {
 	return (
 		<div className="relative w-full h-full">
 			<VList
+				id="timeline"
 				ref={ref}
 				className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
 				itemSize={420}
@@ -85,7 +82,7 @@ export function HomeScreen() {
 				<div className="w-[420px]" />
 			</VList>
 			<div className="absolute bottom-3 right-3">
-				<div className="flex items-center gap-1 p-1 bg-black/50 dark:bg-white/30 backdrop-blur-xl rounded-xl">
+				<div className="flex items-center gap-1 p-1 bg-black/30 dark:bg-white/30 backdrop-blur-xl rounded-xl">
 					<button
 						type="button"
 						onClick={() => {
@@ -96,7 +93,7 @@ export function HomeScreen() {
 								smooth: true,
 							});
 						}}
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/50 size-10"
+						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
 					>
 						<ArrowLeftIcon className="size-5" />
 					</button>
@@ -110,7 +107,7 @@ export function HomeScreen() {
 								smooth: true,
 							});
 						}}
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/50 size-10"
+						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
 					>
 						<ArrowRightIcon className="size-5" />
 					</button>
@@ -123,17 +120,12 @@ export function HomeScreen() {
 								content: "",
 							})
 						}
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/50 size-10"
+						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
 					>
 						<PlusSquareIcon className="size-5" />
 					</button>
 					<div className="w-px h-6 bg-white/10" />
-					<button
-						type="button"
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/50 size-10"
-					>
-						<HelpIcon className="size-5" />
-					</button>
+					<TutorialModal />
 				</div>
 			</div>
 		</div>
