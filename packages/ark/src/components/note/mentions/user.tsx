@@ -22,7 +22,7 @@ export const MentionUser = memo(function MentionUser({
 					? "@anon"
 					: isError
 					  ? pubkey
-					  : `@${user.name || user.displayName || user.username || "anon"}`}
+					  : `@${user?.name || user?.displayName || user?.username || "anon"}`}
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content className="left-[50px] z-50 relative flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-950 focus:outline-none dark:border-neutral-900">
 				<DropdownMenu.Item asChild>

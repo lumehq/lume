@@ -140,11 +140,10 @@ export class Ark {
 				cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
 			});
 
-			if (!profile) return null;
+			if (!profile) throw new Error("user not found");
 			return profile;
-		} catch (e) {
-			console.log(pubkey);
-			console.error(e);
+		} catch {
+			throw new Error("user not found");
 		}
 	}
 
@@ -226,29 +225,34 @@ export class Ark {
 	}
 
 	public async getEventById(id: string) {
-		let eventId: string = id.replace("nostr:", "").split("'")[0].split(".")[0];
+		try {
+			let eventId: string = id
+				.replace("nostr:", "")
+				.split("'")[0]
+				.split(".")[0];
 
-		if (
-			eventId.startsWith("nevent1") ||
-			eventId.startsWith("note1") ||
-			eventId.startsWith("naddr1")
-		) {
-			const decode = nip19.decode(eventId);
+			if (
+				eventId.startsWith("nevent1") ||
+				eventId.startsWith("note1") ||
+				eventId.startsWith("naddr1")
+			) {
+				const decode = nip19.decode(eventId);
 
-			if (decode.type === "nevent") eventId = decode.data.id;
-			if (decode.type === "note") eventId = decode.data;
-			if (decode.type === "naddr") {
-				return await this.ndk.fetchEvent({
-					kinds: [decode.data.kind],
-					"#d": [decode.data.identifier],
-					authors: [decode.data.pubkey],
-				});
+				if (decode.type === "nevent") eventId = decode.data.id;
+				if (decode.type === "note") eventId = decode.data;
+				if (decode.type === "naddr") {
+					return await this.ndk.fetchEvent({
+						kinds: [decode.data.kind],
+						"#d": [decode.data.identifier],
+						authors: [decode.data.pubkey],
+					});
+				}
 			}
-		}
 
-		return await this.ndk.fetchEvent(id, {
-			cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
-		});
+			return await this.ndk.fetchEvent(id);
+		} catch {
+			throw new Error("event not found");
+		}
 	}
 
 	public async getEventByFilter({ filter }: { filter: NDKFilter }) {

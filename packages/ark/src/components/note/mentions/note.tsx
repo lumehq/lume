@@ -26,7 +26,6 @@ export const MentionNote = memo(function MentionNote({
 	}
 
 	if (isError || !data) {
-		console.log(eventId);
 		return (
 			<div
 				contentEditable={false}
