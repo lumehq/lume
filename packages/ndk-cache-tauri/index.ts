@@ -73,7 +73,9 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 	): Promise<void> {
 		const _filter = { ...filter };
 		_filter.limit = undefined;
-		const filterKeys = Object.keys(_filter || {}).sort();
+		const filterKeys = Object.keys(_filter || {})
+			.sort()
+			.filter((e) => e !== "limit" && e !== "since");
 
 		try {
 			await Promise.allSettled([
@@ -119,7 +121,9 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 					id: event.tagId(),
 					pubkey: event.pubkey,
 					content: event.content,
+					// biome-ignore lint/style/noNonNullAssertion: <explanation>
 					kind: event.kind!,
+					// biome-ignore lint/style/noNonNullAssertion: <explanation>
 					createdAt: event.created_at!,
 					relay: relay?.url,
 					event: JSON.stringify(event.rawEvent()),
@@ -357,8 +361,8 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 		const kinds = filter.kinds as number[];
 
 		for (const event of events) {
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
 			if (!kinds?.includes(event.kind!)) continue;
-
 			subscription.eventReceived(event, undefined, true);
 		}
 

@@ -60,12 +60,12 @@ export function ColumnHeader({
 						</button>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Portal>
-						<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 dark:bg-neutral-950 focus:outline-none dark:border-neutral-900">
+						<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-2xl bg-black/70 dark:bg-white/20 backdrop-blur-lg focus:outline-none">
 							<DropdownMenu.Item asChild>
 								<button
 									type="button"
 									onClick={refresh}
-									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
 								>
 									<RefreshIcon className="size-5" />
 									Refresh
@@ -75,7 +75,7 @@ export function ColumnHeader({
 								<button
 									type="button"
 									onClick={moveLeft}
-									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
 								>
 									<MoveLeftIcon className="size-5" />
 									Move left
@@ -85,18 +85,18 @@ export function ColumnHeader({
 								<button
 									type="button"
 									onClick={moveRight}
-									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-neutral-700 hover:bg-blue-100 hover:text-blue-500 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-50"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
 								>
 									<MoveRightIcon className="size-5" />
 									Move right
 								</button>
 							</DropdownMenu.Item>
-							<DropdownMenu.Separator className="h-px my-1 bg-neutral-100 dark:bg-neutral-900" />
+							<DropdownMenu.Separator className="h-px my-1 bg-white/10 dark:bg-black/10" />
 							<DropdownMenu.Item asChild>
 								<button
 									type="button"
 									onClick={deleteWidget}
-									className="inline-flex items-center gap-2 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
+									className="inline-flex items-center gap-2 px-3 text-sm font-medium text-red-300 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
 								>
 									<TrashIcon className="size-5" />
 									Delete

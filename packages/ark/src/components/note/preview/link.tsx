@@ -54,12 +54,12 @@ export function LinkPreview({ url }: { url: string }) {
 			<div className="flex flex-col items-start px-3 py-3">
 				<div className="flex flex-col items-start gap-1 text-left">
 					{data.title ? (
-						<div className="text-base font-semibold break-all text-neutral-900 dark:text-neutral-100">
+						<div className="text-base font-semibold break-p text-neutral-900 dark:text-neutral-100">
 							{data.title}
 						</div>
 					) : null}
 					{data.description ? (
-						<div className="mb-2 text-sm break-all line-clamp-3 text-neutral-700 dark:text-neutral-400">
+						<div className="mb-2 text-sm break-p line-clamp-3 text-neutral-700 dark:text-neutral-400">
 							{data.description}
 						</div>
 					) : null}

@@ -35,81 +35,70 @@ export default function Router() {
 								return { Component: HomeScreen };
 							},
 						},
+					],
+				},
+				{
+					path: "settings",
+					element: <SettingsLayout />,
+					children: [
 						{
-							path: "settings",
-							element: <SettingsLayout />,
-							children: [
-								{
-									index: true,
-									async lazy() {
-										const { UserSettingScreen } = await import(
-											"./routes/settings"
-										);
-										return { Component: UserSettingScreen };
-									},
-								},
-								{
-									path: "edit-profile",
-									async lazy() {
-										const { EditProfileScreen } = await import(
-											"./routes/settings/editProfile"
-										);
-										return { Component: EditProfileScreen };
-									},
-								},
-								{
-									path: "edit-contact",
-									async lazy() {
-										const { EditContactScreen } = await import(
-											"./routes/settings/editContact"
-										);
-										return { Component: EditContactScreen };
-									},
-								},
-								{
-									path: "general",
-									async lazy() {
-										const { GeneralSettingScreen } = await import(
-											"./routes/settings/general"
-										);
-										return { Component: GeneralSettingScreen };
-									},
-								},
-								{
-									path: "backup",
-									async lazy() {
-										const { BackupSettingScreen } = await import(
-											"./routes/settings/backup"
-										);
-										return { Component: BackupSettingScreen };
-									},
-								},
-								{
-									path: "advanced",
-									async lazy() {
-										const { AdvancedSettingScreen } = await import(
-											"./routes/settings/advanced"
-										);
-										return { Component: AdvancedSettingScreen };
-									},
-								},
-								{
-									path: "nwc",
-									async lazy() {
-										const { NWCScreen } = await import("./routes/settings/nwc");
-										return { Component: NWCScreen };
-									},
-								},
-								{
-									path: "about",
-									async lazy() {
-										const { AboutScreen } = await import(
-											"./routes/settings/about"
-										);
-										return { Component: AboutScreen };
-									},
-								},
-							],
+							index: true,
+							async lazy() {
+								const { GeneralSettingScreen } = await import(
+									"./routes/settings/general"
+								);
+								return { Component: GeneralSettingScreen };
+							},
+						},
+						{
+							path: "profile",
+							async lazy() {
+								const { ProfileSettingScreen } = await import(
+									"./routes/settings/profile"
+								);
+								return { Component: ProfileSettingScreen };
+							},
+						},
+						{
+							path: "edit-contact",
+							async lazy() {
+								const { EditContactScreen } = await import(
+									"./routes/settings/editContact"
+								);
+								return { Component: EditContactScreen };
+							},
+						},
+						{
+							path: "backup",
+							async lazy() {
+								const { BackupSettingScreen } = await import(
+									"./routes/settings/backup"
+								);
+								return { Component: BackupSettingScreen };
+							},
+						},
+						{
+							path: "advanced",
+							async lazy() {
+								const { AdvancedSettingScreen } = await import(
+									"./routes/settings/advanced"
+								);
+								return { Component: AdvancedSettingScreen };
+							},
+						},
+						{
+							path: "nwc",
+							async lazy() {
+								const { NWCScreen } = await import("./routes/settings/nwc");
+								return { Component: NWCScreen };
+							},
+						},
+						{
+							path: "about",
+							async lazy() {
+								const { AboutScreen } = await import("./routes/settings/about");
+								return { Component: AboutScreen };
+							},
 						},
 					],
 				},

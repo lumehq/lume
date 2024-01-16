@@ -12,7 +12,7 @@ export const MentionUser = memo(function MentionUser({
 	const ark = useArk();
 	const cleanPubkey = ark.getCleanPubkey(pubkey);
 
-	const { isLoading, user } = useProfile(pubkey);
+	const { isLoading, isError, user } = useProfile(pubkey);
 	const { addColumn } = useColumnContext();
 
 	return (
@@ -20,7 +20,9 @@ export const MentionUser = memo(function MentionUser({
 			<DropdownMenu.Trigger className="text-blue-500 break-words hover:text-blue-600">
 				{isLoading
 					? "@anon"
-					: `@${user.name || user.display_name || user.username || "anon"}`}
+					: isError
+					  ? pubkey
+					  : `@${user.name || user.displayName || user.username || "anon"}`}
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content className="left-[50px] z-50 relative flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-950 focus:outline-none dark:border-neutral-900">
 				<DropdownMenu.Item asChild>

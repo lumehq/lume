@@ -1,15 +1,11 @@
-import { ChatsIcon, ReplyIcon } from "@lume/icons";
-import { editorAtom, editorValueAtom } from "@lume/utils";
+import { ChatsIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useSetAtom } from "jotai";
-import { nip19 } from "nostr-tools";
+import { useNavigate } from "react-router-dom";
 import { useNoteContext } from "../provider";
 
 export function NoteReply() {
 	const event = useNoteContext();
-
-	const setEditorValue = useSetAtom(editorValueAtom);
-	const setIsEditorOpen = useSetAtom(editorAtom);
+	const navigate = useNavigate();
 
 	return (
 		<Tooltip.Provider>
@@ -17,25 +13,7 @@ export function NoteReply() {
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => {
-							setEditorValue([
-								{
-									type: "paragraph",
-									children: [{ text: "" }],
-								},
-								{
-									type: "event",
-									// @ts-expect-error, useless
-									eventId: `nostr:${nip19.noteEncode(event.id)}`,
-									children: [{ text: "" }],
-								},
-								{
-									type: "paragraph",
-									children: [{ text: "" }],
-								},
-							]);
-							setIsEditorOpen(true);
-						}}
+						onClick={() => navigate(`/events/${event.id}`)}
 						className="inline-flex items-center justify-center group h-7 w-7 text-neutral-600 dark:text-neutral-400"
 					>
 						<ChatsIcon className="size-5 group-hover:text-blue-500" />

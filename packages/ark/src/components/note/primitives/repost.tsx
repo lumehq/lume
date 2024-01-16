@@ -24,7 +24,7 @@ export function RepostNote({
 					return new NDKEvent(ark.ndk, embed);
 				}
 				const id = event.tags.find((el) => el[0] === "e")[1];
-				return await ark.getEventById({ id });
+				return await ark.getEventById(id);
 			} catch {
 				throw new Error("Failed to get repost event");
 			}

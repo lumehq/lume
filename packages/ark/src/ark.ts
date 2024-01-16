@@ -105,7 +105,7 @@ export class Ark {
 
 	public getCleanPubkey(pubkey: string) {
 		try {
-			let hexstring = pubkey.replace("nostr:", "").split("'")[0];
+			let hexstring = pubkey.replace("nostr:", "").split("'")[0].split(".")[0];
 
 			if (
 				hexstring.startsWith("npub1") ||
@@ -128,23 +128,9 @@ export class Ark {
 	public async getUserProfile(pubkey?: string) {
 		try {
 			const currentUserPubkey = this.account.pubkey;
-
-			// get clean pubkey without any special characters
-			let hexstring = pubkey
-				? pubkey.replace("nostr:", "").split("'")[0]
+			const hexstring = pubkey
+				? this.getCleanPubkey(pubkey)
 				: currentUserPubkey;
-
-			if (
-				hexstring.startsWith("npub1") ||
-				hexstring.startsWith("nprofile1") ||
-				hexstring.startsWith("naddr1")
-			) {
-				const decoded = nip19.decode(hexstring);
-
-				if (decoded.type === "nprofile") hexstring = decoded.data.pubkey;
-				if (decoded.type === "npub") hexstring = decoded.data;
-				if (decoded.type === "naddr") hexstring = decoded.data.pubkey;
-			}
 
 			const user = this.ndk.getUser({
 				pubkey: hexstring,
@@ -157,6 +143,7 @@ export class Ark {
 			if (!profile) return null;
 			return profile;
 		} catch (e) {
+			console.log(pubkey);
 			console.error(e);
 		}
 	}
@@ -164,23 +151,9 @@ export class Ark {
 	public async getUserContacts(pubkey?: string) {
 		try {
 			const currentUserPubkey = this.account.pubkey;
-
-			// get clean pubkey without any special characters
-			let hexstring = pubkey
-				? pubkey.replace("nostr:", "").split("'")[0]
+			const hexstring = pubkey
+				? this.getCleanPubkey(pubkey)
 				: currentUserPubkey;
-
-			if (
-				hexstring.startsWith("npub1") ||
-				hexstring.startsWith("nprofile1") ||
-				hexstring.startsWith("naddr1")
-			) {
-				const decoded = nip19.decode(hexstring);
-
-				if (decoded.type === "nprofile") hexstring = decoded.data.pubkey;
-				if (decoded.type === "npub") hexstring = decoded.data;
-				if (decoded.type === "naddr") hexstring = decoded.data.pubkey;
-			}
 
 			const user = this.ndk.getUser({
 				pubkey: hexstring,
@@ -252,8 +225,8 @@ export class Ark {
 		return [...events];
 	}
 
-	public async getEventById({ id }: { id: string }) {
-		let eventId: string = id;
+	public async getEventById(id: string) {
+		let eventId: string = id.replace("nostr:", "").split("'")[0].split(".")[0];
 
 		if (
 			eventId.startsWith("nevent1") ||
@@ -264,7 +237,6 @@ export class Ark {
 
 			if (decode.type === "nevent") eventId = decode.data.id;
 			if (decode.type === "note") eventId = decode.data;
-
 			if (decode.type === "naddr") {
 				return await this.ndk.fetchEvent({
 					kinds: [decode.data.kind],

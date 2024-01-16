@@ -90,9 +90,9 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 				: ["wss://brb.io/"],
 		);
 
-		const cacheAdapter = new NDKCacheAdapterTauri(storage);
+		const tauriCache = new NDKCacheAdapterTauri(storage);
 		const ndk = new NDK({
-			cacheAdapter,
+			cacheAdapter: tauriCache,
 			explicitRelayUrls,
 			outboxRelayUrls,
 			blacklistRelayUrls,

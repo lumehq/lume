@@ -5,25 +5,27 @@ import {
 	PlusIcon,
 	UnverifiedIcon,
 } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
-import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { AvatarUpload } from "./components/avatarUpload";
+import { CoverUpload } from "./components/coverUpload";
 
-export function EditProfileScreen() {
+export function ProfileSettingScreen() {
+	const ark = useArk();
+	const storage = useStorage();
+	const queryClient = useQueryClient();
+
 	const [loading, setLoading] = useState(false);
 	const [picture, setPicture] = useState("");
 	const [banner, setBanner] = useState("");
 	const [nip05, setNIP05] = useState({ verified: true, text: "" });
 
-	const ark = useArk();
-
 	const {
 		register,
 		handleSubmit,
-		reset,
 		setError,
 		formState: { isValid, errors },
 	} = useForm({
@@ -45,48 +47,6 @@ export function EditProfileScreen() {
 		},
 	});
 
-	const queryClient = useQueryClient();
-	const navigate = useNavigate();
-
-	const uploadAvatar = async () => {
-		try {
-			if (!ark.ndk.signer) return navigate("/new/privkey");
-
-			setLoading(true);
-
-			const image = await ark.upload({ fileExts: [] });
-			if (image) {
-				setPicture(image);
-				setLoading(false);
-			}
-		} catch (e) {
-			setLoading(false);
-			await message(`Upload failed, error: ${e}`, {
-				title: "Lume",
-				type: "error",
-			});
-		}
-	};
-
-	const uploadBanner = async () => {
-		try {
-			setLoading(true);
-
-			const image = await ark.upload({ fileExts: [] });
-
-			if (image) {
-				setBanner(image);
-				setLoading(false);
-			}
-		} catch (e) {
-			setLoading(false);
-			await message(`Upload failed, error: ${e}`, {
-				title: "Lume",
-				type: "error",
-			});
-		}
-	};
-
 	const onSubmit = async (data: NDKUserProfile) => {
 		// start loading
 		setLoading(true);
@@ -94,9 +54,12 @@ export function EditProfileScreen() {
 		let content = {
 			...data,
 			username: data.name,
-			display_name: data.name,
+			display_name: data.displayName,
 			bio: data.about,
-			image: data.picture,
+			image: picture,
+			cover: banner,
+			picture,
+			banner,
 		};
 
 		if (data.nip05) {
@@ -104,13 +67,14 @@ export function EditProfileScreen() {
 				pubkey: ark.account.pubkey,
 				nip05: data.nip05,
 			});
+
 			if (verify) {
 				content = { ...content, nip05: data.nip05 };
 			} else {
 				setNIP05((prev) => ({ ...prev, verified: false }));
 				setError("nip05", {
 					type: "manual",
-					message: "Can't verify your Lume ID / NIP-05, please check again",
+					message: "Can't verify your NIP-05, please check again",
 				});
 			}
 		}
@@ -123,76 +87,59 @@ export function EditProfileScreen() {
 
 		if (publish) {
 			// invalid cache
-			queryClient.invalidateQueries({
+			await storage.clearProfileCache(ark.account.pubkey);
+			await queryClient.invalidateQueries({
 				queryKey: ["user", ark.account.pubkey],
 			});
-			// reset form
-			reset();
+
 			// reset state
-			setLoading(false);
 			setPicture(null);
 			setBanner(null);
-		} else {
-			setLoading(false);
 		}
+
+		setLoading(false);
 	};
 
 	return (
-		<div className="mx-auto w-full max-w-md">
+		<div className="mx-auto w-full max-w-lg">
 			<form onSubmit={handleSubmit(onSubmit)} className="mb-0">
-				<input type={"hidden"} {...register("picture")} value={picture} />
-				<input type={"hidden"} {...register("banner")} value={banner} />
-				<div className="flex flex-col items-center justify-center">
-					<div className="relative h-36 w-full">
+				<div className="mb-5 flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+					<div className="relative h-44 w-full">
 						{banner ? (
 							<img
 								src={banner}
 								alt="user's banner"
-								className="h-full w-full rounded-xl object-cover"
+								className="h-full w-full rounded-t-xl object-cover"
 							/>
 						) : (
-							<div className="h-full w-full rounded-xl bg-neutral-200 dark:bg-neutral-900" />
+							<div className="h-full w-full rounded-t-xl bg-neutral-200 dark:bg-neutral-900" />
 						)}
-						<div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform overflow-hidden rounded-xl">
-							<button
-								type="button"
-								onClick={() => uploadBanner()}
-								className="inline-flex h-full w-full items-center justify-center bg-black/20 text-white"
-							>
-								<PlusIcon className="h-5 w-5" />
-							</button>
+						<div className="absolute right-4 top-4">
+							<CoverUpload setBanner={setBanner} />
 						</div>
 					</div>
-					<div className="mb-5 px-4">
-						<div className="relative z-10 -mt-7 h-14 w-14 overflow-hidden rounded-xl ring-2 ring-white dark:ring-black">
+					<div className="-mt-7 mb-5 px-4 flex flex-col gap-4 items-center z-10 relative">
+						<div className="size-14 overflow-hidden rounded-xl ring-2 ring-white dark:ring-black">
 							<img
 								src={picture}
 								alt="user's avatar"
-								className="h-14 w-14 rounded-xl object-cover"
+								className="h-14 w-14 rounded-xl object-cover bg-white dark:bg-black"
 							/>
-							<div className="absolute left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 transform">
-								<button
-									type="button"
-									onClick={() => uploadAvatar()}
-									className="inline-flex h-full w-full items-center justify-center rounded-xl bg-black/50 text-white"
-								>
-									<PlusIcon className="h-5 w-5" />
-								</button>
-							</div>
 						</div>
+						<AvatarUpload setPicture={setPicture} />
 					</div>
 				</div>
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-1">
 						<label
-							htmlFor="display_name"
+							htmlFor="displayName"
 							className="text-sm font-semibold uppercase tracking-wider"
 						>
 							Display Name
 						</label>
 						<input
 							type={"text"}
-							{...register("display_name")}
+							{...register("displayName")}
 							spellCheck={false}
 							className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
 						/>
@@ -282,17 +229,17 @@ export function EditProfileScreen() {
 						<textarea
 							{...register("about")}
 							spellCheck={false}
-							className="relative h-20 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
+							className="relative h-36 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
 						/>
 					</div>
-					<div>
+					<div className="absolute right-4 bottom-4">
 						<button
 							type="submit"
-							disabled={!isValid}
-							className="mx-auto inline-flex h-11 w-full transform items-center justify-center gap-1 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+							disabled={!isValid || loading}
+							className="mx-auto inline-flex h-10 w-24 transform items-center justify-center gap-1 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
 						>
 							{loading ? (
-								<LoaderIcon className="h-4 w-4 animate-spin text-black dark:text-white" />
+								<LoaderIcon className="size-4 animate-spin" />
 							) : (
 								"Update"
 							)}

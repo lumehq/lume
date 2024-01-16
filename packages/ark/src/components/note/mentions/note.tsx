@@ -1,4 +1,4 @@
-import { PinIcon } from "@lume/icons";
+import { PinIcon, RefreshIcon } from "@lume/icons";
 import { COL_TYPES } from "@lume/utils";
 import { memo } from "react";
 import { Link } from "react-router-dom";
@@ -18,14 +18,15 @@ export const MentionNote = memo(function MentionNote({
 		return (
 			<div
 				contentEditable={false}
-				className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
+				className="flex items-center justify-between w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
 			>
-				Loading
+				<p>Loading</p>
 			</div>
 		);
 	}
 
-	if (isError) {
+	if (isError || !data) {
+		console.log(eventId);
 		return (
 			<div
 				contentEditable={false}

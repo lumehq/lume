@@ -1,22 +1,24 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
-export function LogoutIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="none"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="M20.25 12H9m11.25 0l-4.5 4.5m4.5-4.5l-4.5-4.5m-4.5 12.75h-6.5a1 1 0 01-1-1V4.75a1 1 0 011-1h6.5"
-      />
-    </svg>
-  );
+export function LogoutIcon(
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			viewBox="0 0 24 24"
+			{...props}
+		>
+			<path
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				d="M18.189 9a15 15 0 012.654 2.556c.105.13.157.287.157.444m-2.811 3a14.998 14.998 0 002.654-2.556A.704.704 0 0021 12m0 0H8m5-7.472A6 6 0 003 9v6a6 6 0 0010 4.472"
+			/>
+		</svg>
+	);
 }

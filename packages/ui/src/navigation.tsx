@@ -31,7 +31,7 @@ export function Navigation() {
 						className={cn(
 							"flex items-center justify-center h-auto w-full text-black aspect-square rounded-xl hover:text-white dark:text-white",
 							isEditorOpen
-								? "bg-blue-500"
+								? "bg-blue-500 text-white"
 								: "bg-black/5 hover:bg-blue-500 dark:bg-white/5 dark:hover:bg-blue-500",
 						)}
 					>
@@ -114,7 +114,7 @@ export function Navigation() {
 			</div>
 			<div className="flex flex-col">
 				<NavLink
-					to="/settings"
+					to="/settings/"
 					preventScrollReset={true}
 					className="inline-flex flex-col items-center justify-center"
 				>

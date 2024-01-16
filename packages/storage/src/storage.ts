@@ -414,6 +414,12 @@ export class LumeStorage {
 		await this.#db.execute("DELETE FROM ndk_users;");
 	}
 
+	public async clearProfileCache(pubkey: string) {
+		await this.#db.execute("DELETE FROM ndk_users WHERE pubkey = $1;", [
+			pubkey,
+		]);
+	}
+
 	public async logout() {
 		this.currentUser = null;
 		return await this.#db.execute(

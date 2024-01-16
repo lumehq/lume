@@ -1,3 +1,4 @@
+import { LogoutIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useQueryClient } from "@tanstack/react-query";
@@ -30,8 +31,9 @@ export function Logout() {
 			<AlertDialog.Trigger asChild>
 				<button
 					type="button"
-					className="inline-flex h-10 items-center rounded-lg px-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
+					className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
 				>
+					<LogoutIcon className="size-5" />
 					Logout
 				</button>
 			</AlertDialog.Trigger>
