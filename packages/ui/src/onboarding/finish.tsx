@@ -1,5 +1,5 @@
+import { useArk } from "@lume/ark";
 import { CheckIcon, LoaderIcon } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import { onboardingAtom } from "@lume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -7,7 +7,7 @@ import { useSetAtom } from "jotai";
 import { useState } from "react";
 
 export function OnboardingFinishScreen() {
-	const storage = useStorage();
+	const ark = useArk();
 	const queryClient = useQueryClient();
 	const setOnboarding = useSetAtom(onboardingAtom);
 

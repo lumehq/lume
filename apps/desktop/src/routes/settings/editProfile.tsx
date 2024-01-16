@@ -5,7 +5,6 @@ import {
 	PlusIcon,
 	UnverifiedIcon,
 } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { message } from "@tauri-apps/plugin-dialog";
@@ -20,7 +19,6 @@ export function EditProfileScreen() {
 	const [nip05, setNIP05] = useState({ verified: true, text: "" });
 
 	const ark = useArk();
-	const storage = useStorage();
 
 	const {
 		register,
@@ -56,7 +54,7 @@ export function EditProfileScreen() {
 
 			setLoading(true);
 
-			const image = await ark.upload({});
+			const image = await ark.upload({ fileExts: [] });
 			if (image) {
 				setPicture(image);
 				setLoading(false);
@@ -74,7 +72,7 @@ export function EditProfileScreen() {
 		try {
 			setLoading(true);
 
-			const image = await ark.upload({});
+			const image = await ark.upload({ fileExts: [] });
 
 			if (image) {
 				setBanner(image);

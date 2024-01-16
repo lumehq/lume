@@ -269,42 +269,6 @@ export default function Router() {
 						return { Component: OnboardingScreen };
 					},
 				},
-				{
-					path: "tutorials/note",
-					async lazy() {
-						const { TutorialNoteScreen } = await import(
-							"./routes/auth/tutorials/note"
-						);
-						return { Component: TutorialNoteScreen };
-					},
-				},
-				{
-					path: "tutorials/widget",
-					async lazy() {
-						const { TutorialWidgetScreen } = await import(
-							"./routes/auth/tutorials/widget"
-						);
-						return { Component: TutorialWidgetScreen };
-					},
-				},
-				{
-					path: "tutorials/posting",
-					async lazy() {
-						const { TutorialPostingScreen } = await import(
-							"./routes/auth/tutorials/posting"
-						);
-						return { Component: TutorialPostingScreen };
-					},
-				},
-				{
-					path: "tutorials/finish",
-					async lazy() {
-						const { TutorialFinishScreen } = await import(
-							"./routes/auth/tutorials/finish"
-						);
-						return { Component: TutorialFinishScreen };
-					},
-				},
 			],
 		},
 	]);

@@ -17,7 +17,7 @@
 		"@radix-ui/react-dropdown-menu": "^2.0.6",
 		"@radix-ui/react-hover-card": "^1.0.7",
 		"@radix-ui/react-popover": "^1.0.7",
-		"@tanstack/react-query": "^5.17.9",
+		"@tanstack/react-query": "^5.17.12",
 		"@tauri-apps/api": "2.0.0-alpha.13",
 		"@tauri-apps/plugin-http": "2.0.0-alpha.6",
 		"@tauri-apps/plugin-os": "2.0.0-alpha.6",
@@ -28,19 +28,19 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-hook-form": "^7.49.3",
-		"react-hotkeys-hook": "^4.4.3",
+		"react-hotkeys-hook": "^4.4.4",
 		"react-router-dom": "^6.21.2",
 		"slate": "^0.101.5",
 		"slate-react": "^0.101.5",
 		"sonner": "^1.3.1",
 		"uqr": "^0.1.2",
-		"virtua": "^0.20.4"
+		"virtua": "^0.20.5"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.47",
+		"@types/react": "^18.2.48",
 		"tailwind-merge": "^2.2.0",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.3.3"

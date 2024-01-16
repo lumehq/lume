@@ -8,7 +8,7 @@
 		"withGlobalTauri": true
 	},
 	"package": {
-		"productName": "Lume",
+		"productName": "Lume 3",
 		"version": "3.0.0"
 	},
 	"plugins": {
