@@ -75,7 +75,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 		_filter.limit = undefined;
 		const filterKeys = Object.keys(_filter || {})
 			.sort()
-			.filter((e) => e !== "limit" && e !== "since");
+			.filter((e) => e !== "limit");
 
 		try {
 			await Promise.allSettled([
