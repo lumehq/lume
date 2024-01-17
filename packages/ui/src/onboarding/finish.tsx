@@ -7,7 +7,6 @@ import { useSetAtom } from "jotai";
 import { useState } from "react";
 
 export function OnboardingFinishScreen() {
-	const ark = useArk();
 	const queryClient = useQueryClient();
 	const setOnboarding = useSetAtom(onboardingAtom);
 
@@ -18,10 +17,6 @@ export function OnboardingFinishScreen() {
 
 		const queryCache = queryClient.getQueryCache();
 		const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-
-		await queryClient.refetchQueries({
-			queryKey: ["user", ark.account.pubkey],
-		});
 
 		for (const key of queryKeys) {
 			await queryClient.refetchQueries({ queryKey: key });

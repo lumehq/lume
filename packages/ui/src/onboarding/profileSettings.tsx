@@ -2,6 +2,7 @@ import { useArk } from "@lume/ark";
 import { ArrowLeftIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { minidenticon } from "minidenticons";
 import { useState } from "react";
@@ -16,6 +17,7 @@ export function OnboardingProfileSettingsScreen() {
 
 	const ark = useArk();
 	const storage = useStorage();
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
 	const { register, handleSubmit } = useForm();
@@ -52,6 +54,12 @@ export function OnboardingProfileSettingsScreen() {
 			});
 
 			if (publish) {
+				// invalid cache
+				await storage.clearProfileCache(ark.account.pubkey);
+				await queryClient.setQueryData(["user", ark.account.pubkey], () => {
+					return profile;
+				});
+
 				setLoading(false);
 				navigate("/follow");
 			}

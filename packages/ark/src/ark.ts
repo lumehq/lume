@@ -105,7 +105,11 @@ export class Ark {
 
 	public getCleanPubkey(pubkey: string) {
 		try {
-			let hexstring = pubkey.replace("nostr:", "").split("'")[0].split(".")[0];
+			let hexstring = pubkey
+				.replace("nostr:", "")
+				.split("'")[0]
+				.split(".")[0]
+				.split("?")[0];
 
 			if (
 				hexstring.startsWith("npub1") ||

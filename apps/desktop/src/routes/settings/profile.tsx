@@ -88,8 +88,8 @@ export function ProfileSettingScreen() {
 		if (publish) {
 			// invalid cache
 			await storage.clearProfileCache(ark.account.pubkey);
-			await queryClient.invalidateQueries({
-				queryKey: ["user", ark.account.pubkey],
+			await queryClient.setQueryData(["user", ark.account.pubkey], () => {
+				return content;
 			});
 
 			// reset state

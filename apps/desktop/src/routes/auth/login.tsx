@@ -15,7 +15,7 @@ export function LoginScreen() {
 							to="/auth/login-oauth"
 							className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
 						>
-							Login with address
+							Login with Address
 						</Link>
 						<Link
 							to="/auth/login-nsecbunker"
@@ -31,7 +31,7 @@ export function LoginScreen() {
 							</div>
 							<div className="relative flex justify-center">
 								<span className="px-2 font-medium bg-black text-neutral-600">
-									Or (Not recommend)
+									Or (Not recommended)
 								</span>
 							</div>
 						</div>
