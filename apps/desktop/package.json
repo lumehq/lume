@@ -20,7 +20,7 @@
 		"@lume/storage": "workspace:^",
 		"@lume/ui": "workspace:^",
 		"@lume/utils": "workspace:^",
-		"@nostr-dev-kit/ndk": "^2.3.2",
+		"@nostr-dev-kit/ndk": "^2.3.3",
 		"@radix-ui/react-accordion": "^1.1.2",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",
@@ -32,7 +32,7 @@
 		"@radix-ui/react-select": "^2.0.0",
 		"@radix-ui/react-switch": "^1.0.3",
 		"@radix-ui/react-tooltip": "^1.0.7",
-		"@tanstack/react-query": "^5.17.12",
+		"@tanstack/react-query": "^5.17.15",
 		"@tauri-apps/api": "2.0.0-alpha.13",
 		"@tauri-apps/plugin-autostart": "2.0.0-alpha.5",
 		"@tauri-apps/plugin-clipboard-manager": "2.0.0-alpha.5",
@@ -46,7 +46,7 @@
 		"@tauri-apps/plugin-sql": "2.0.0-alpha.5",
 		"@tauri-apps/plugin-updater": "2.0.0-alpha.5",
 		"framer-motion": "^10.18.0",
-		"jotai": "^2.6.1",
+		"jotai": "^2.6.2",
 		"minidenticons": "^4.2.0",
 		"nanoid": "^5.0.4",
 		"nostr-fetch": "^0.15.0",
@@ -64,7 +64,7 @@
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/node": "^20.11.3",
+		"@types/node": "^20.11.4",
 		"@types/react": "^18.2.48",
 		"@types/react-dom": "^18.2.18",
 		"@vitejs/plugin-react-swc": "^3.5.0",
@@ -76,6 +76,6 @@
 		"typescript": "^5.3.3",
 		"vite": "^5.0.11",
 		"vite-plugin-top-level-await": "^1.4.1",
-		"vite-tsconfig-paths": "^4.2.3"
+		"vite-tsconfig-paths": "^4.3.1"
 	}
 }

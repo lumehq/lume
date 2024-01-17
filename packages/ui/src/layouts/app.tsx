@@ -1,6 +1,6 @@
+import { cn } from "@lume/utils";
 import { type Platform } from "@tauri-apps/plugin-os";
 import { Outlet } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
 import { Editor } from "../editor/column";
 import { Navigation } from "../navigation";
 import { WindowTitleBar } from "../titlebar";
@@ -8,7 +8,7 @@ import { WindowTitleBar } from "../titlebar";
 export function AppLayout({ platform }: { platform: Platform }) {
 	return (
 		<div
-			className={twMerge(
+			className={cn(
 				"flex h-screen w-screen flex-col",
 				platform !== "macos" ? "bg-blue-50 dark:bg-blue-950" : "",
 			)}

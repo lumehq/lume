@@ -1,7 +1,6 @@
 import { PinIcon } from "@lume/icons";
-import { COL_TYPES } from "@lume/utils";
+import { COL_TYPES, cn } from "@lume/utils";
 import { Link } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
 import { Note } from ".";
 import { useArk } from "../../hooks/useArk";
 import { useColumnContext } from "../column/provider";
@@ -24,7 +23,7 @@ export function NoteThread({
 	if (!thread) return null;
 
 	return (
-		<div className={twMerge("w-full px-3", className)}>
+		<div className={cn("w-full px-3", className)}>
 			<div className="flex flex-col w-full gap-3 p-3 rounded-lg h-min bg-neutral-100 dark:bg-neutral-900">
 				{thread.rootEventId ? (
 					<Note.Child eventId={thread.rootEventId} isRoot />

@@ -7,9 +7,9 @@ import {
 	useImperativeHandle,
 	useState,
 } from "react";
-import { twMerge } from "tailwind-merge";
 
 import { NDKCacheUserProfile } from "@lume/types";
+import { cn } from "@lume/utils";
 
 type MentionListRef = {
 	onKeyDown: (props: { event: Event }) => boolean;
@@ -76,7 +76,7 @@ const List = (
 						type="button"
 						key={item.pubkey}
 						onClick={() => selectItem(index)}
-						className={twMerge(
+						className={cn(
 							"inline-flex h-11 items-center gap-2 rounded-md px-2",
 							index === selectedIndex
 								? "bg-neutral-100 dark:bg-neutral-900"

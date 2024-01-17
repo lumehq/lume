@@ -1,5 +1,6 @@
-import { CheckIcon, DarkIcon, LightIcon, SystemModeIcon } from "@lume/icons";
+import { DarkIcon, LightIcon, SystemModeIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
+import { cn } from "@lume/utils";
 import * as Switch from "@radix-ui/react-switch";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrent } from "@tauri-apps/api/window";
@@ -9,7 +10,6 @@ import {
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
 
 export function GeneralSettingScreen() {
 	const storage = useStorage();
@@ -293,7 +293,7 @@ export function GeneralSettingScreen() {
 							className="flex flex-col items-center justify-center gap-0.5"
 						>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex h-11 w-11 items-center justify-center rounded-lg",
 									settings.appearance === "light"
 										? "bg-blue-500 text-white"
@@ -312,7 +312,7 @@ export function GeneralSettingScreen() {
 							className="flex flex-col items-center justify-center gap-0.5"
 						>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex h-11 w-11 items-center justify-center rounded-lg",
 									settings.appearance === "dark"
 										? "bg-blue-500 text-white"
@@ -331,7 +331,7 @@ export function GeneralSettingScreen() {
 							className="flex flex-col items-center justify-center gap-0.5"
 						>
 							<div
-								className={twMerge(
+								className={cn(
 									"inline-flex h-11 w-11 items-center justify-center rounded-lg",
 									settings.appearance === "auto"
 										? "bg-blue-500 text-white"

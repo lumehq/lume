@@ -8,8 +8,8 @@
 		"tauri": "tauri"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.4.1",
-		"@tauri-apps/cli": "2.0.0-alpha.20",
+		"@biomejs/biome": "^1.4.1",
+		"@tauri-apps/cli": "^2.0.0-alpha.20",
 		"turbo": "^1.11.3"
 	},
 	"packageManager": "pnpm@8.9.0",

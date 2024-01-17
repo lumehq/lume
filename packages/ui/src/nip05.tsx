@@ -1,8 +1,8 @@
 import { UnverifiedIcon, VerifiedIcon } from "@lume/icons";
+import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { memo } from "react";
-import { twMerge } from "tailwind-merge";
 
 interface NIP05 {
 	names: {
@@ -61,7 +61,7 @@ export const NIP05 = memo(function NIP05({
 
 	return (
 		<div className="inline-flex items-center gap-1">
-			<p className={twMerge("text-sm font-medium", className)}>
+			<p className={cn("text-sm font-medium", className)}>
 				{nip05.startsWith("_@") ? nip05.replace("_@", "") : nip05}
 			</p>
 			{data === true ? (

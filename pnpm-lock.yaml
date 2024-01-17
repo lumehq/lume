@@ -64,8 +64,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -100,8 +100,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       '@tauri-apps/api':
         specifier: 2.0.0-alpha.13
         version: 2.0.0-alpha.13
@@ -142,8 +142,8 @@ importers:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
       jotai:
-        specifier: ^2.6.1
-        version: 2.6.1(@types/react@18.2.48)(react@18.2.0)
+        specifier: ^2.6.2
+        version: 2.6.2(@types/react@18.2.48)(react@18.2.0)
       minidenticons:
         specifier: ^4.2.0
         version: 4.2.0
@@ -191,8 +191,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/types
       '@types/node':
-        specifier: ^20.11.3
-        version: 20.11.3
+        specifier: ^20.11.4
+        version: 20.11.4
       '@types/react':
         specifier: ^18.2.48
         version: 18.2.48
@@ -222,13 +222,13 @@ importers:
         version: 5.3.3
       vite:
         specifier: ^5.0.11
-        version: 5.0.11(@types/node@20.11.3)
+        version: 5.0.11(@types/node@20.11.4)
       vite-plugin-top-level-await:
         specifier: ^1.4.1
         version: 1.4.1(vite@5.0.11)
       vite-tsconfig-paths:
-        specifier: ^4.2.3
-        version: 4.2.3(typescript@5.3.3)(vite@5.0.11)
+        specifier: ^4.3.1
+        version: 4.3.1(typescript@5.3.3)(vite@5.0.11)
 
   packages/ark:
     dependencies:
@@ -248,11 +248,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@nostr-fetch/adapter-ndk':
         specifier: ^0.15.0
-        version: 0.15.0(@nostr-dev-kit/ndk@2.3.2)(nostr-fetch@0.15.0)
+        version: 0.15.0(@nostr-dev-kit/ndk@2.3.3)(nostr-fetch@0.15.0)
       '@radix-ui/react-avatar':
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -275,8 +275,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       '@tauri-apps/api':
         specifier: 2.0.0-alpha.13
         version: 2.0.0-alpha.13
@@ -311,8 +311,8 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       jotai:
-        specifier: ^2.6.1
-        version: 2.6.1(@types/react@18.2.48)(react@18.2.0)
+        specifier: ^2.6.2
+        version: 2.6.2(@types/react@18.2.48)(react@18.2.0)
       linkify-react:
         specifier: ^4.1.3
         version: 4.1.3(linkifyjs@4.1.3)(react@18.2.0)
@@ -415,11 +415,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -467,11 +467,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -519,11 +519,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -571,11 +571,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -623,11 +623,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -675,11 +675,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -727,11 +727,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -779,11 +779,11 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -822,8 +822,8 @@ importers:
         specifier: workspace:*
         version: link:../storage
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       lru-cache:
         specifier: ^10.1.0
         version: 10.1.0
@@ -905,8 +905,8 @@ importers:
   packages/types:
     dependencies:
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
     devDependencies:
       typescript:
         specifier: ^5.3.3
@@ -930,8 +930,8 @@ importers:
         specifier: workspace:^
         version: link:../utils
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.2
-        version: 2.3.2(typescript@5.3.3)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.3)
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -954,8 +954,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       '@tauri-apps/api':
         specifier: 2.0.0-alpha.13
         version: 2.0.0-alpha.13
@@ -969,8 +969,8 @@ importers:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
       jotai:
-        specifier: ^2.6.1
-        version: 2.6.1(@types/react@18.2.48)(react@18.2.0)
+        specifier: ^2.6.2
+        version: 2.6.2(@types/react@18.2.48)(react@18.2.0)
       minidenticons:
         specifier: ^4.2.0
         version: 4.2.0
@@ -1033,8 +1033,8 @@ importers:
   packages/utils:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5.17.12
-        version: 5.17.12(react@18.2.0)
+        specifier: ^5.17.15
+        version: 5.17.15(react@18.2.0)
       '@tauri-apps/api':
         specifier: 2.0.0-alpha.13
         version: 2.0.0-alpha.13
@@ -1048,8 +1048,8 @@ importers:
         specifier: ^1.11.10
         version: 1.11.10
       jotai:
-        specifier: ^2.6.1
-        version: 2.6.1(@types/react@18.2.48)(react@18.2.0)
+        specifier: ^2.6.2
+        version: 2.6.2(@types/react@18.2.48)(react@18.2.0)
       nostr-tools:
         specifier: 1.17.0
         version: 1.17.0(typescript@5.3.3)
@@ -1665,8 +1665,8 @@ packages:
       '@floating-ui/utils': 0.2.1
     dev: false
 
-  /@floating-ui/react-dom@2.0.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-UsBK30Bg+s6+nsgblXtZmwHhgS2vmbuQK22qgt2pTQM6M3X6H1+cQcLXqgRY3ihVLcZJE6IvqDQozhsnIVqK/Q==}
+  /@floating-ui/react-dom@2.0.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-IB8aCRFxr8nFkdYZgH+Otd9EVQPJoynxeFRGTB8voPoZMRWo8XjYuCRgpI1btvuKY69XMiLnW+ym7zoBHM90Rw==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -1782,8 +1782,8 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@nostr-dev-kit/ndk@2.3.2(typescript@5.3.3):
-    resolution: {integrity: sha512-k3/C2RtCRl8Pb3McaQkUiTxH7gs7U7agSqK6J7xdZSJZIO46qhz2zu6USco9eGAg67Ytz3VAmSI8sHQEi1f3fA==}
+  /@nostr-dev-kit/ndk@2.3.3(typescript@5.3.3):
+    resolution: {integrity: sha512-R2r6U1Xt4B7yygQFgTEexNqhuQQrbJ0Kxh4GvcCgNgSjMI+cPJQPWg4g4noWGRnaWf4epqLNCblfo5UfMuijTw==}
     dependencies:
       '@noble/hashes': 1.3.3
       '@noble/secp256k1': 2.0.0
@@ -1801,13 +1801,13 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-fetch/adapter-ndk@0.15.0(@nostr-dev-kit/ndk@2.3.2)(nostr-fetch@0.15.0):
+  /@nostr-fetch/adapter-ndk@0.15.0(@nostr-dev-kit/ndk@2.3.3)(nostr-fetch@0.15.0):
     resolution: {integrity: sha512-Mug2yTmX4n4hFWfQV1GWiXZd88PbfbsT29lOtM5/sM59a+eYXeYvNmHddxmk2dK5VAdlT2VwKdHEmebzko6Y7w==}
     peerDependencies:
       '@nostr-dev-kit/ndk': ^1.0.0
       nostr-fetch: ^0.15.0
     dependencies:
-      '@nostr-dev-kit/ndk': 2.3.2(typescript@5.3.3)
+      '@nostr-dev-kit/ndk': 2.3.3(typescript@5.3.3)
       '@nostr-fetch/kernel': 0.15.0
       nostr-fetch: 0.15.0
     dev: false
@@ -2290,7 +2290,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.8
-      '@floating-ui/react-dom': 2.0.5(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react-dom': 2.0.6(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-arrow': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.48)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.48)(react@18.2.0)
@@ -2929,16 +2929,16 @@ packages:
       tailwindcss: 3.4.1
     dev: true
 
-  /@tanstack/query-core@5.17.10:
-    resolution: {integrity: sha512-bJ2oQUDBftvHcEkLS3gyzzShSeZpJyzNNRu8oHK13iNdsofyaDXtNO/c1Zy/PZYVX+PhqOXwoT42gMiEMRSSfQ==}
+  /@tanstack/query-core@5.17.15:
+    resolution: {integrity: sha512-QURxpu77/ICA4d61aPvV7EcJ2MwmksxUejKBaq/xLcO2TUJAlXf4PFKHC/WxnVFI/7F1jeLx85AO3Vpk0+uBXw==}
     dev: false
 
-  /@tanstack/react-query@5.17.12(react@18.2.0):
-    resolution: {integrity: sha512-mJQ+3da1ug4t9b+GycUuNzMs5hd6t+F4tJ1hqyaN/dlETP+bWwYwrv2GXFIbZIfI1K1Hu+XWZ6HUhRPbNtZ4QQ==}
+  /@tanstack/react-query@5.17.15(react@18.2.0):
+    resolution: {integrity: sha512-9qur91mOihaUN7pXm6ioDtS+4qgkBcCiIaZyvi3lZNcQZsrMGCYZ+eP3hiFrV4khoJyJrFUX1W0NcCVlgwNZxQ==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.17.10
+      '@tanstack/query-core': 5.17.15
       react: 18.2.0
     dev: false
 
@@ -3138,8 +3138,8 @@ packages:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
     dev: false
 
-  /@types/node@20.11.3:
-    resolution: {integrity: sha512-nrlmbvGPNGaj84IJZXMPhQuCMEVTT/hXZMJJG/aIqVL9fKxqk814sGGtJA4GI6hpJSLQjpi6cn0Qx9eOf9SDVg==}
+  /@types/node@20.11.4:
+    resolution: {integrity: sha512-6I0fMH8Aoy2lOejL3s4LhyIYX34DPwY8bl5xlNjBvUEk8OHrcuzsFt+Ied4LvJihbtXPM+8zUqdydfIti86v9g==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -3168,7 +3168,7 @@ packages:
       vite: ^4 || ^5
     dependencies:
       '@swc/core': 1.3.103
-      vite: 5.0.11(@types/node@20.11.3)
+      vite: 5.0.11(@types/node@20.11.4)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: true
@@ -3319,7 +3319,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.2
-      caniuse-lite: 1.0.30001576
+      caniuse-lite: 1.0.30001578
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3400,8 +3400,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001576
-      electron-to-chromium: 1.4.631
+      caniuse-lite: 1.0.30001578
+      electron-to-chromium: 1.4.633
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
 
@@ -3439,8 +3439,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite@1.0.30001576:
-    resolution: {integrity: sha512-ff5BdakGe2P3SQsMsiqmt1Lc8221NR1VzHj5jXN5vBny9A6fpze94HiVV/n7XRosOlsShJcvMv5mdnpjOGCEgg==}
+  /caniuse-lite@1.0.30001578:
+    resolution: {integrity: sha512-J/jkFgsQ3NEl4w2lCoM9ZPxrD+FoBNJ7uJUpGVjIg/j0OwJosWM36EPDv+Yyi0V4twBk9pPmlFS+PLykgEvUmg==}
 
   /chalk@2.4.1:
     resolution: {integrity: sha512-ObN6h1v2fTJSmUXoS3nMQ92LbDK9be4TV+6G+omQlGJFdcUX5heKi1LZ1YnRMIgwTLEj3E24bT6tYni50rlCfQ==}
@@ -3737,8 +3737,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /electron-to-chromium@1.4.631:
-    resolution: {integrity: sha512-g73CJB/rMPjdxpiNJYmV1homV7mLVUNe/R0z/HhqMfpjkt58FpYmkTjbtuv3zymdbTTJ+VOEqe1c+lkTjSOhmQ==}
+  /electron-to-chromium@1.4.633:
+    resolution: {integrity: sha512-7BvxzXrHFliyQ1oZc6NRMjyEaKOO1Ma1NY98sFZofogWlm+klLWSgrDw7EhatiMgi4R4NV+iWxDdxuIKXtPbOw==}
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -4484,8 +4484,8 @@ packages:
     hasBin: true
     dev: true
 
-  /jotai@2.6.1(@types/react@18.2.48)(react@18.2.0):
-    resolution: {integrity: sha512-GLQtAnA9iEKRMXnyCjf1azIxfQi5JausX2EI5qSlb59j4i73ZEyV/EXPDEAQj4uQNZYEefi3degv/Pw3+L/Dtg==}
+  /jotai@2.6.2(@types/react@18.2.48)(react@18.2.0):
+    resolution: {integrity: sha512-kl4KguU1Fr+tFiLi3A3h9qPEzhvLTTDA10DO3QZAz6k7BEaQJ+qvSBwolzonnfNI4QzEovyQfUqVgnRxfnnQVQ==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=17.0.0'
@@ -5822,12 +5822,12 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /tsconfck@2.1.2(typescript@5.3.3):
-    resolution: {integrity: sha512-ghqN1b0puy3MhhviwO2kGF8SeMDNhEbnKxjK7h6+fvY9JAxqvXi8y5NAHSQv687OVboS2uZIByzGd45/YxrRHg==}
-    engines: {node: ^14.13.1 || ^16 || >=18}
+  /tsconfck@3.0.1(typescript@5.3.3):
+    resolution: {integrity: sha512-7ppiBlF3UEddCLeI1JRx5m2Ryq+xk4JrZuq4EuYXykipebaq1dV0Fhgr1hb7CkmHt32QSgOZlcqVLEtHBG4/mg==}
+    engines: {node: ^18 || >=20}
     hasBin: true
     peerDependencies:
-      typescript: ^4.3.5 || ^5.0.0
+      typescript: ^5.0.0
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -6184,14 +6184,14 @@ packages:
       '@rollup/plugin-virtual': 3.0.2
       '@swc/core': 1.3.103
       uuid: 9.0.1
-      vite: 5.0.11(@types/node@20.11.3)
+      vite: 5.0.11(@types/node@20.11.4)
     transitivePeerDependencies:
       - '@swc/helpers'
       - rollup
     dev: true
 
-  /vite-tsconfig-paths@4.2.3(typescript@5.3.3)(vite@5.0.11):
-    resolution: {integrity: sha512-xVsA2xe6QSlzBujtWF8q2NYexh7PAUYfzJ4C8Axpe/7d2pcERYxuxGgph9F4f0iQO36g5tyGq6eBUYIssdUrVw==}
+  /vite-tsconfig-paths@4.3.1(typescript@5.3.3)(vite@5.0.11):
+    resolution: {integrity: sha512-cfgJwcGOsIxXOLU/nELPny2/LUD/lcf1IbfyeKTv2bsupVbTH/xpFtdQlBmIP1GEK2CjjLxYhFfB+QODFAx5aw==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -6200,14 +6200,14 @@ packages:
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
-      tsconfck: 2.1.2(typescript@5.3.3)
-      vite: 5.0.11(@types/node@20.11.3)
+      tsconfck: 3.0.1(typescript@5.3.3)
+      vite: 5.0.11(@types/node@20.11.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@5.0.11(@types/node@20.11.3):
+  /vite@5.0.11(@types/node@20.11.4):
     resolution: {integrity: sha512-XBMnDjZcNAw/G1gEiskiM1v6yzM4GE5aMGvhWTlHAYYhxb7S3/V1s3m2LDHa8Vh6yIWYYB0iJwsEaS523c4oYA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -6235,7 +6235,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.11.3
+      '@types/node': 20.11.4
       esbuild: 0.19.11
       postcss: 8.4.33
       rollup: 4.9.5

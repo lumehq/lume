@@ -1,12 +1,11 @@
 import { LoaderIcon, ReplyIcon, RepostIcon } from "@lume/icons";
-import { editorAtom, editorValueAtom } from "@lume/utils";
+import { cn, editorAtom, editorValueAtom } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useSetAtom } from "jotai";
 import { nip19 } from "nostr-tools";
 import { useState } from "react";
 import { toast } from "sonner";
-import { twMerge } from "tailwind-merge";
 import { useNoteContext } from "../provider";
 
 export function NoteRepost() {
@@ -71,7 +70,7 @@ export function NoteRepost() {
 									<LoaderIcon className="size-4 animate-spin" />
 								) : (
 									<RepostIcon
-										className={twMerge(
+										className={cn(
 											"size-5 group-hover:text-blue-600",
 											isRepost ? "text-blue-500" : "",
 										)}

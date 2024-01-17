@@ -1,7 +1,7 @@
+import { cn } from "@lume/utils";
 import { Resizable } from "re-resizable";
 import { ReactNode, useState } from "react";
 import { MemoryRouter, UNSAFE_LocationContext } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
 
 export function ColumnRoot({
 	children,
@@ -22,7 +22,7 @@ export function ColumnRoot({
 				}}
 				minWidth={420}
 				maxWidth={600}
-				className={twMerge(
+				className={cn(
 					"relative flex flex-col border-r-2 border-neutral-50 hover:border-neutral-100 dark:border-neutral-950 dark:hover:border-neutral-900",
 					className,
 				)}

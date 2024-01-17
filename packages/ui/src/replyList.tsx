@@ -4,7 +4,6 @@ import { NDKEventWithReplies } from "@lume/types";
 import { cn } from "@lume/utils";
 import { NDKKind, type NDKSubscription } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { ReplyForm } from "./editor/replyForm";
 
 export function ReplyList({
