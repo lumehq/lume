@@ -176,7 +176,7 @@ export function NoteContent({
 							to={url.toString()}
 							target="_blank"
 							rel="noreferrer"
-							className="break-all font-normal text-blue-500 hover:text-blue-600"
+							className="break-p truncate inline-block w-full font-normal text-blue-500 hover:text-blue-600"
 						>
 							{url.toString()}
 						</Link>

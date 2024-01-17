@@ -3,7 +3,7 @@ import { useArk } from "./useArk";
 
 export function useEvent(id: string) {
 	const ark = useArk();
-	const { status, isLoading, isError, data } = useQuery({
+	const { isLoading, isError, data } = useQuery({
 		queryKey: ["event", id],
 		queryFn: async () => {
 			const event = await ark.getEventById(id);
@@ -20,5 +20,5 @@ export function useEvent(id: string) {
 		retry: 2,
 	});
 
-	return { status, isLoading, isError, data };
+	return { isLoading, isError, data };
 }

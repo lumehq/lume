@@ -253,7 +253,7 @@ export class Ark {
 				}
 			}
 
-			return await this.ndk.fetchEvent(id);
+			return await this.ndk.fetchEvent(eventId);
 		} catch {
 			throw new Error("event not found");
 		}

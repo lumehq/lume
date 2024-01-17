@@ -64,7 +64,7 @@ export function NoteChild({
 							to={url.toString()}
 							target="_blank"
 							rel="noreferrer"
-							className="break-all font-normal text-blue-500 hover:text-blue-600"
+							className="break-p font-normal text-blue-500 hover:text-blue-600"
 						>
 							{url.toString()}
 						</Link>

@@ -54,7 +54,7 @@ export function ActiveAccount() {
 				<DropdownMenu.Content
 					side="right"
 					sideOffset={5}
-					className="flex w-[200px] p-2 flex-col overflow-hidden rounded-2xl bg-black/70 dark:bg-white/20 backdrop-blur-lg focus:outline-none"
+					className="flex w-[200px] p-2 flex-col overflow-hidden rounded-2xl bg-black/70 dark:bg-white/10 backdrop-blur-xl focus:outline-none"
 				>
 					<DropdownMenu.Item asChild>
 						<Link

@@ -20,7 +20,7 @@ export const MentionNote = memo(function MentionNote({
 				contentEditable={false}
 				className="flex items-center justify-between w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
 			>
-				<p>Loading</p>
+				<p>Loading...</p>
 			</div>
 		);
 	}
@@ -54,7 +54,7 @@ export const MentionNote = memo(function MentionNote({
 				</User.Provider>
 				<Note.Content mini className="px-3" />
 				{openable ? (
-					<div className="mt-2 px-3 flex items-center justify-between">
+					<div className="px-3 h-10 flex items-center justify-between">
 						<Link
 							to={`/events/${data.id}`}
 							className="text-sm font-medium text-blue-500 hover:text-blue-600"
@@ -75,7 +75,9 @@ export const MentionNote = memo(function MentionNote({
 							<PinIcon className="size-4" />
 						</button>
 					</div>
-				) : null}
+				) : (
+					<div className="h-10" />
+				)}
 			</Note.Root>
 		</Note.Provider>
 	);

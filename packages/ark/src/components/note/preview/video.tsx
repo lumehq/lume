@@ -1,18 +1,26 @@
-import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import {
-	DefaultVideoLayout,
-	defaultLayoutIcons,
-} from "@vidstack/react/player/layouts/default";
+	MediaControlBar,
+	MediaController,
+	MediaMuteButton,
+	MediaPlayButton,
+	MediaTimeDisplay,
+	MediaTimeRange,
+	MediaVolumeRange,
+} from "media-chrome/dist/react";
 
 export function VideoPreview({ url }: { url: string }) {
 	return (
-		<MediaPlayer
-			src={url}
-			className="w-full my-1 overflow-hidden rounded-lg"
-			load="visible"
-		>
-			<MediaProvider />
-			<DefaultVideoLayout icons={defaultLayoutIcons} />
-		</MediaPlayer>
+		<div className="my-1 w-full rounded-lg overflow-hidden">
+			<MediaController>
+				<video slot="media" src={url} preload="auto" muted />
+				<MediaControlBar>
+					<MediaPlayButton />
+					<MediaTimeRange />
+					<MediaTimeDisplay showDuration />
+					<MediaMuteButton />
+					<MediaVolumeRange />
+				</MediaControlBar>
+			</MediaController>
+		</div>
 	);
 }
