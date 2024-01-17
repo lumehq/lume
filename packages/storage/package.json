@@ -8,10 +8,6 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tauri-apps/api": "2.0.0-alpha.13",
-		"@tauri-apps/plugin-os": "2.0.0-alpha.6",
-		"@tauri-apps/plugin-shell": "2.0.0-alpha.5",
-		"@tauri-apps/plugin-sql": "2.0.0-alpha.5",
 		"nostr-tools": "~1.17.0",
 		"react": "^18.2.0"
 	},
