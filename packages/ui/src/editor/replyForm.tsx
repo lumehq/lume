@@ -1,9 +1,10 @@
-import { MentionNote, User, useArk, useColumnContext } from "@lume/ark";
+import { MentionNote, User, useArk } from "@lume/ark";
 import { LoaderIcon, TrashIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { NDKCacheUserProfile } from "@lume/types";
-import { COL_TYPES, cn, editorValueAtom } from "@lume/utils";
+import { cn, editorValueAtom } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
+import { Portal } from "@radix-ui/react-dropdown-menu";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -26,7 +27,6 @@ import {
 import { toast } from "sonner";
 import { EditorAddMedia } from "./addMedia";
 import {
-	Portal,
 	insertImage,
 	insertMention,
 	insertNostrEvent,
@@ -185,7 +185,10 @@ const Element = (props) => {
 	}
 };
 
-export function EditorForm() {
+export function ReplyForm({
+	eventId,
+	className,
+}: { eventId: string; className?: string }) {
 	const ark = useArk();
 	const storage = useStorage();
 	const ref = useRef<HTMLDivElement | null>();
@@ -199,8 +202,6 @@ export function EditorForm() {
 	const [editor] = useState(() =>
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
-
-	const { addColumn } = useColumnContext();
 
 	const filters = contacts
 		?.filter((c) => c?.name?.toLowerCase().startsWith(search.toLowerCase()))
@@ -244,19 +245,15 @@ export function EditorForm() {
 			event.kind = NDKKind.Text;
 			event.content = serialize(editor.children);
 
+			const rootEvent = await ark.getEventById(eventId);
+			event.tag(rootEvent, "root");
+
 			const publish = await event.publish();
 
 			if (publish) {
 				toast.success(
 					`Event has been published successfully to ${publish.size} relays.`,
 				);
-
-				// add current post as column thread
-				addColumn({
-					kind: COL_TYPES.thread,
-					content: event.id,
-					title: "Thread",
-				});
 
 				setLoading(false);
 
@@ -288,104 +285,107 @@ export function EditorForm() {
 	}, [filters.length, editor, index, search, target]);
 
 	return (
-		<div className="w-full h-full flex flex-col justify-between rounded-xl overflow-hidden bg-white shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/10">
-			<Slate
-				editor={editor}
-				initialValue={editorValue}
-				onChange={() => {
-					const { selection } = editor;
+		<div className={cn("flex gap-3", className)}>
+			<User.Provider pubkey={ark.account.pubkey}>
+				<User.Root>
+					<User.Avatar className="size-9 shrink-0 rounded-lg object-cover" />
+				</User.Root>
+			</User.Provider>
+			<div className="flex-1">
+				<Slate
+					editor={editor}
+					initialValue={editorValue}
+					onChange={() => {
+						const { selection } = editor;
 
-					if (selection && Range.isCollapsed(selection)) {
-						const [start] = Range.edges(selection);
-						const wordBefore = Editor.before(editor, start, { unit: "word" });
-						const before = wordBefore && Editor.before(editor, wordBefore);
-						const beforeRange = before && Editor.range(editor, before, start);
-						const beforeText =
-							beforeRange && Editor.string(editor, beforeRange);
-						const beforeMatch = beforeText?.match(/^@(\w+)$/);
-						const after = Editor.after(editor, start);
-						const afterRange = Editor.range(editor, start, after);
-						const afterText = Editor.string(editor, afterRange);
-						const afterMatch = afterText.match(/^(\s|$)/);
+						if (selection && Range.isCollapsed(selection)) {
+							const [start] = Range.edges(selection);
+							const wordBefore = Editor.before(editor, start, { unit: "word" });
+							const before = wordBefore && Editor.before(editor, wordBefore);
+							const beforeRange = before && Editor.range(editor, before, start);
+							const beforeText =
+								beforeRange && Editor.string(editor, beforeRange);
+							const beforeMatch = beforeText?.match(/^@(\w+)$/);
+							const after = Editor.after(editor, start);
+							const afterRange = Editor.range(editor, start, after);
+							const afterText = Editor.string(editor, afterRange);
+							const afterMatch = afterText.match(/^(\s|$)/);
 
-						if (beforeMatch && afterMatch) {
-							setTarget(beforeRange);
-							setSearch(beforeMatch[1]);
-							setIndex(0);
-							return;
+							if (beforeMatch && afterMatch) {
+								setTarget(beforeRange);
+								setSearch(beforeMatch[1]);
+								setIndex(0);
+								return;
+							}
 						}
-					}
 
-					setTarget(null);
-				}}
-			>
-				<div className="flex items-center justify-between h-16 px-3 border-b shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
-					<div>
-						<h3 className="font-semibold text-neutral-700 dark:text-neutral-500">
-							New Post
-						</h3>
+						setTarget(null);
+					}}
+				>
+					<div className="h-full overflow-y-auto p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+						<Editable
+							key={JSON.stringify(editorValue)}
+							autoFocus={false}
+							autoCapitalize="none"
+							autoCorrect="none"
+							spellCheck={false}
+							renderElement={(props) => <Element {...props} />}
+							placeholder="Post your reply"
+							className="focus:outline-none h-28"
+						/>
+						{target && filters.length > 0 && (
+							<Portal>
+								<div
+									ref={ref}
+									className="top-[-9999px] left-[-9999px] absolute z-10 w-[250px] p-1 bg-white border border-neutral-50 dark:border-neutral-900 dark:bg-neutral-950 rounded-lg shadow-lg"
+								>
+									{filters.map((contact, i) => (
+										// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+										<div
+											key={contact.npub}
+											onClick={() => {
+												Transforms.select(editor, target);
+												insertMention(editor, contact);
+												setTarget(null);
+											}}
+											className="px-2 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900"
+										>
+											<User.Provider pubkey={contact.npub}>
+												<User.Root className="flex items-center gap-2.5">
+													<User.Avatar className="size-10 rounded-lg object-cover shrink-0" />
+													<div className="flex w-full flex-col items-start">
+														<User.Name className="max-w-[15rem] truncate font-semibold" />
+													</div>
+												</User.Root>
+											</User.Provider>
+										</div>
+									))}
+								</div>
+							</Portal>
+						)}
 					</div>
-					<div className="flex items-center">
-						<div className="inline-flex items-center gap-2">
-							<EditorAddMedia />
-						</div>
-						<div className="w-px h-6 mx-3 bg-neutral-200 dark:bg-neutral-800" />
-						<button
-							type="button"
-							onClick={submit}
-							className="inline-flex items-center justify-center w-20 pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
-						>
-							{loading ? (
-								<LoaderIcon className="size-4 animate-spin" />
-							) : (
-								"Post"
-							)}
-						</button>
-					</div>
-				</div>
-				<div className="py-6 h-full overflow-y-auto px-7">
-					<Editable
-						key={JSON.stringify(editorValue)}
-						autoFocus={false}
-						autoCapitalize="none"
-						autoCorrect="none"
-						spellCheck={false}
-						renderElement={(props) => <Element {...props} />}
-						placeholder="What are you up to?"
-						className="focus:outline-none"
-					/>
-					{target && filters.length > 0 && (
-						<Portal>
-							<div
-								ref={ref}
-								className="top-[-9999px] left-[-9999px] absolute z-10 w-[250px] p-1 bg-white border border-neutral-50 dark:border-neutral-900 dark:bg-neutral-950 rounded-lg shadow-lg"
-							>
-								{filters.map((contact, i) => (
-									// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-									<div
-										key={contact.npub}
-										onClick={() => {
-											Transforms.select(editor, target);
-											insertMention(editor, contact);
-											setTarget(null);
-										}}
-										className="px-2 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900"
-									>
-										<User.Provider pubkey={contact.npub}>
-											<User.Root className="flex items-center gap-2.5">
-												<User.Avatar className="size-10 rounded-lg object-cover shrink-0" />
-												<div className="flex w-full flex-col items-start">
-													<User.Name className="max-w-[15rem] truncate font-semibold" />
-												</div>
-											</User.Root>
-										</User.Provider>
-									</div>
-								))}
+					<div className="mt-3 flex items-center justify-between shrink-0">
+						<div />
+						<div className="flex items-center">
+							<div className="inline-flex items-center gap-2">
+								<EditorAddMedia />
 							</div>
-						</Portal>
-					)}
-				</div>
-			</Slate>
+							<div className="w-px h-6 mx-3 bg-neutral-200 dark:bg-neutral-800" />
+							<button
+								type="button"
+								onClick={submit}
+								className="inline-flex items-center justify-center w-20 pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
+							>
+								{loading ? (
+									<LoaderIcon className="size-4 animate-spin" />
+								) : (
+									"Post"
+								)}
+							</button>
+						</div>
+					</div>
+				</Slate>
+			</div>
 		</div>
 	);
 }

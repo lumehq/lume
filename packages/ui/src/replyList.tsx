@@ -1,38 +1,46 @@
 import { Reply, useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { NDKEventWithReplies } from "@lume/types";
-import { type NDKSubscription } from "@nostr-dev-kit/ndk";
+import { cn } from "@lume/utils";
+import { NDKKind, type NDKSubscription } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { ReplyForm } from "./editor/replyForm";
 
 export function ReplyList({
 	eventId,
-	title,
 	className,
-}: { eventId: string; title?: string; className?: string }) {
+}: { eventId: string; className?: string }) {
 	const ark = useArk();
 	const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
 
 	useEffect(() => {
-		let sub: NDKSubscription;
+		let sub: NDKSubscription = undefined;
 		let isCancelled = false;
 
 		async function fetchRepliesAndSub() {
-			const events = await ark.getThreads({ id: eventId });
+			const id = ark.getCleanEventId(eventId);
+			const events = await ark.getThreads(id);
+
 			if (!isCancelled) {
 				setData(events);
 			}
-			// subscribe for new replies
-			sub = ark.subscribe({
-				filter: {
-					"#e": [eventId],
-					since: Math.floor(Date.now() / 1000),
-				},
-				closeOnEose: false,
-				cb: (event: NDKEventWithReplies) => setData((prev) => [event, ...prev]),
-			});
+
+			if (!sub) {
+				sub = ark.subscribe({
+					filter: {
+						"#e": [id],
+						kinds: [NDKKind.Text],
+						since: Math.floor(Date.now() / 1000),
+					},
+					closeOnEose: false,
+					cb: (event: NDKEventWithReplies) =>
+						setData((prev) => [event, ...prev]),
+				});
+			}
 		}
 
+		// subscribe for new replies
 		fetchRepliesAndSub();
 
 		return () => {
@@ -42,14 +50,22 @@ export function ReplyList({
 	}, [eventId]);
 
 	return (
-		<div className={twMerge("flex flex-col gap-5", className)}>
-			<h3 className="font-semibold">{title}</h3>
+		<div
+			className={cn(
+				"flex flex-col divide-y divide-neutral-100 dark:divide-neutral-900",
+				className,
+			)}
+		>
+			<ReplyForm
+				eventId={eventId}
+				className="py-4 border-t border-neutral-100 dark:border-neutral-900"
+			/>
 			{!data ? (
-				<div className="flex h-16 items-center justify-center rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950">
+				<div className="pt-4 flex h-16 items-center justify-center rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950">
 					<LoaderIcon className="h-5 w-5 animate-spin" />
 				</div>
 			) : data.length === 0 ? (
-				<div className="flex w-full items-center justify-center bg-neutral-50 dark:bg-neutral-950 rounded-lg">
+				<div className="pt-4 flex w-full items-center justify-center bg-neutral-50 dark:bg-neutral-950 rounded-lg">
 					<div className="flex flex-col items-center justify-center gap-2 py-6">
 						<h3 className="text-3xl">👋</h3>
 						<p className="leading-none text-neutral-600 dark:text-neutral-400">

@@ -11,7 +11,7 @@ export function ThreadNote({ eventId }: { eventId: string }) {
 
 	return (
 		<Note.Provider event={data}>
-			<Note.Root>
+			<Note.Root className="flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950">
 				<div className="flex items-center justify-between px-3 h-16">
 					<User.Provider pubkey={data.pubkey}>
 						<User.Root className="flex h-16 items-center gap-3 flex-1">
@@ -29,11 +29,10 @@ export function ThreadNote({ eventId }: { eventId: string }) {
 					<Note.Menu />
 				</div>
 				<Note.Thread className="mb-2" />
-				<Note.Content className="min-w-0 px-3" isTranslatable />
+				<Note.Content className="min-w-0 px-3" />
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.Pin />
 					<div className="inline-flex items-center gap-10">
-						<Note.Reply />
 						<Note.Repost />
 						<Note.Zap />
 					</div>

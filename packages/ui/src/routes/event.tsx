@@ -29,7 +29,7 @@ export function EventRoute() {
 				</div>
 				<div className="px-3">
 					<ThreadNote eventId={id} />
-					<ReplyList eventId={id} title="All replies" className="mt-5" />
+					<ReplyList eventId={id} />
 				</div>
 			</WindowVirtualizer>
 		</div>

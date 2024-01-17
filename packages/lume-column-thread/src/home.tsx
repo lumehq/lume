@@ -8,7 +8,7 @@ export function HomeRoute({ id }: { id: string }) {
 			<WindowVirtualizer>
 				<div className="px-3 mt-3">
 					<ThreadNote eventId={id} />
-					<ReplyList eventId={id} title="All replies" className="mt-5" />
+					<ReplyList eventId={id} className="mt-5" />
 				</div>
 			</WindowVirtualizer>
 		</div>

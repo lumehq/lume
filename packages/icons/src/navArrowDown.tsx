@@ -1,15 +1,21 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
 export function NavArrowDownIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <title id="navArrowDown">Nav Arrow Down</title>
-      <path
-        d="M4.29233 7.97419C3.37989 6.14866 4.70668 4 6.74799 4H17.2519C19.2932 4 20.62 6.14866 19.7076 7.97419L14.4556 18.4819C13.4439 20.5061 10.556 20.506 9.54431 18.4819L4.29233 7.97419Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			viewBox="0 0 24 24"
+			{...props}
+		>
+			<path
+				fill="currentColor"
+				d="M12.925 14.673a21.353 21.353 0 003.88-4.08 1 1 0 00-.881-1.59 51.714 51.714 0 01-7.848 0 1 1 0 00-.881 1.59 21.354 21.354 0 003.88 4.08 1.472 1.472 0 001.85 0z"
+			/>
+		</svg>
+	);
 }

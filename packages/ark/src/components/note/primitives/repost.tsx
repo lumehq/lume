@@ -1,4 +1,5 @@
 import { RepostIcon } from "@lume/icons";
+import { cn } from "@lume/utils";
 import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { Note } from "..";
@@ -69,7 +70,12 @@ export function RepostNote({
 	}
 
 	return (
-		<Note.Root className={className}>
+		<Note.Root
+			className={cn(
+				"flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950",
+				className,
+			)}
+		>
 			<User.Provider pubkey={event.pubkey}>
 				<User.Root className="flex gap-2 px-3 h-14">
 					<div className="inline-flex shrink-0 w-10 items-center justify-center">

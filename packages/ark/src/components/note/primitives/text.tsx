@@ -1,3 +1,4 @@
+import { cn } from "@lume/utils";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { Note } from "..";
 
@@ -7,7 +8,12 @@ export function TextNote({
 }: { event: NDKEvent; className?: string }) {
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className={className}>
+			<Note.Root
+				className={cn(
+					"flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950",
+					className,
+				)}
+			>
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User className="flex-1 pr-1" />
 					<Note.Menu />

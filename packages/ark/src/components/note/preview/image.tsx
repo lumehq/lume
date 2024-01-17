@@ -48,12 +48,12 @@ export function ImagePreview({ url }: { url: string }) {
 			<button
 				type="button"
 				onClick={(e) => downloadImage(e)}
-				className="absolute z-10 items-center justify-center hidden w-10 h-10 bg-blue-500 rounded-lg right-2 top-2 group-hover:inline-flex hover:bg-blue-600"
+				className="absolute z-10 items-center justify-center hidden size-8 bg-white/10 text-white backdrop-blur-xl rounded-lg right-2 top-2 group-hover:inline-flex hover:bg-blue-500"
 			>
 				{downloaded ? (
-					<CheckCircleIcon className="w-5 h-5 text-white" />
+					<CheckCircleIcon className="size-4" />
 				) : (
-					<DownloadIcon className="w-5 h-5 text-white" />
+					<DownloadIcon className="size-4" />
 				)}
 			</button>
 		</div>

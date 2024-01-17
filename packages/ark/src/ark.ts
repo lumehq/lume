@@ -228,31 +228,25 @@ export class Ark {
 		return [...events];
 	}
 
+	public getCleanEventId(id: string) {
+		let eventId: string = id.replace("nostr:", "").split("'")[0].split(".")[0];
+
+		if (
+			eventId.startsWith("nevent1") ||
+			eventId.startsWith("note1") ||
+			eventId.startsWith("naddr1")
+		) {
+			const decode = nip19.decode(eventId);
+			if (decode.type === "nevent") eventId = decode.data.id;
+			if (decode.type === "note") eventId = decode.data;
+		}
+
+		return eventId;
+	}
+
 	public async getEventById(id: string) {
 		try {
-			let eventId: string = id
-				.replace("nostr:", "")
-				.split("'")[0]
-				.split(".")[0];
-
-			if (
-				eventId.startsWith("nevent1") ||
-				eventId.startsWith("note1") ||
-				eventId.startsWith("naddr1")
-			) {
-				const decode = nip19.decode(eventId);
-
-				if (decode.type === "nevent") eventId = decode.data.id;
-				if (decode.type === "note") eventId = decode.data;
-				if (decode.type === "naddr") {
-					return await this.ndk.fetchEvent({
-						kinds: [decode.data.kind],
-						"#d": [decode.data.identifier],
-						authors: [decode.data.pubkey],
-					});
-				}
-			}
-
+			const eventId = this.getCleanEventId(id);
 			return await this.ndk.fetchEvent(eventId);
 		} catch {
 			throw new Error("event not found");
@@ -304,19 +298,19 @@ export class Ark {
 		};
 	}
 
-	public async getThreads({ id }: { id: string }) {
+	public async getThreads(id: string) {
+		const eventId = this.getCleanEventId(id);
 		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
+		const relayUrls = [...this.ndk.pool.relays.values()].map(
+			(item) => item.url,
+		);
 
 		try {
-			const relayUrls = [...this.ndk.pool.relays.values()].map(
-				(item) => item.url,
-			);
-
 			const rawEvents = (await fetcher.fetchAllEvents(
 				relayUrls,
 				{
 					kinds: [NDKKind.Text],
-					"#e": [id],
+					"#e": [eventId],
 				},
 				{ since: 0 },
 				{ sort: true },
