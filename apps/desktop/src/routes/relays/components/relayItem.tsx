@@ -1,9 +1,9 @@
-import { useRelaylist } from "@lume/ark";
-import { PlusIcon, ShareIcon } from "@lume/icons";
+import { User, useRelaylist } from "@lume/ark";
+import { PlusIcon, SearchIcon } from "@lume/icons";
 import { normalizeRelayUrl } from "nostr-fetch";
 import { Link } from "react-router-dom";
 
-export function RelayItem({ url }: { url: string }) {
+export function RelayItem({ url, users }: { url: string; users?: string[] }) {
 	const domain = new URL(url).hostname;
 	const { connectRelay } = useRelaylist();
 
@@ -18,19 +18,35 @@ export function RelayItem({ url }: { url: string }) {
 				</span>
 			</div>
 			<div className="inline-flex items-center gap-2">
+				{users ? (
+					<div className="isolate flex -space-x-2 mr-4">
+						{users.slice(0, 4).map((item) => (
+							<User.Provider pubkey={item}>
+								<User.Root>
+									<User.Avatar className="size-8 inline-block rounded-full ring-1 ring-neutral-100 dark:ring-neutral-900" />
+								</User.Root>
+							</User.Provider>
+						))}
+						{users.length > 4 ? (
+							<div className="inline-flex size-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-900 ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-neutral-800">
+								<span className="text-xs font-medium">+{users.length - 4}</span>
+							</div>
+						) : null}
+					</div>
+				) : null}
 				<Link
 					to={`/relays/${domain}/`}
-					className="inline-flex h-6 items-center justify-center gap-1 rounded bg-neutral-100 px-1.5 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+					className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-neutral-100 px-2 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 				>
-					<ShareIcon className="h-3 w-3" />
+					<SearchIcon className="size-4" />
 					Inspect
 				</Link>
 				<button
 					type="button"
 					onClick={() => connectRelay.mutate(normalizeRelayUrl(url))}
-					className="inline-flex h-6 w-6 items-center justify-center rounded bg-blue-100 text-blue-500 hover:bg-blue-200 dark:bg-blue-900 hover:dark:bg-blue-800"
+					className="inline-flex size-8 items-center justify-center rounded-lg bg-blue-100 text-blue-500 hover:bg-blue-200 dark:bg-blue-900 hover:dark:bg-blue-800"
 				>
-					<PlusIcon className="size-4" />
+					<PlusIcon className="size-5" />
 				</button>
 			</div>
 		</div>

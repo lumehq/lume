@@ -1,4 +1,4 @@
-import { useArk, useRelay } from "@lume/ark";
+import { useArk, useRelaylist } from "@lume/ark";
 import { LoaderIcon, PlusIcon, ShareIcon } from "@lume/icons";
 import { User } from "@lume/ui";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import { VList } from "virtua";
 
 export function RelayList() {
 	const ark = useArk();
-	const { connectRelay } = useRelay();
+	const { connectRelay } = useRelaylist();
 	const { status, data } = useQuery({
 		queryKey: ["relays"],
 		queryFn: async () => {

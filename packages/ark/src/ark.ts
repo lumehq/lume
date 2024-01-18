@@ -254,9 +254,12 @@ export class Ark {
 		}
 	}
 
-	public async getEventByFilter({ filter }: { filter: NDKFilter }) {
+	public async getEventByFilter({
+		filter,
+		cache,
+	}: { filter: NDKFilter; cache?: NDKSubscriptionCacheUsage }) {
 		const event = await this.ndk.fetchEvent(filter, {
-			cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+			cacheUsage: cache || NDKSubscriptionCacheUsage.CACHE_FIRST,
 		});
 
 		if (!event) return null;
@@ -352,7 +355,7 @@ export class Ark {
 		}
 	}
 
-	public async getAllRelaysFromContacts() {
+	public async getAllRelaysFromContacts({ signal }: { signal: AbortSignal }) {
 		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
 		const connectedRelays = this.ndk.pool
 			.connectedRelays()
@@ -367,15 +370,21 @@ export class Ark {
 				},
 				{ kinds: [NDKKind.RelayList] },
 				1,
+				{ abortSignal: signal },
 			);
 
-			for await (const { author, events } of relayEvents) {
-				if (events[0]) {
-					for (const tag of events[0].tags) {
-						const users = relayMap.get(tag[1]);
+			console.log(relayEvents);
 
-						if (!users) relayMap.set(tag[1], [author]);
-						users.push(author);
+			for await (const { author, events } of relayEvents) {
+				if (events.length) {
+					const relayTags = events[0].tags.filter((item) => item[0] === "r");
+					for (const tag of relayTags) {
+						const item = relayMap.get(tag[1]);
+						if (item?.length) {
+							item.push(author);
+						} else {
+							relayMap.set(tag[1], [author]);
+						}
 					}
 				}
 			}

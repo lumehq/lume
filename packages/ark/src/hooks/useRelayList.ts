@@ -1,5 +1,6 @@
-import { NDKKind, NDKRelayUrl, NDKTag } from "@nostr-dev-kit/ndk";
+import { NDKKind, NDKTag } from "@nostr-dev-kit/ndk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { normalizeRelayUrl } from "nostr-fetch";
 import { useArk } from "./useArk";
 
 export function useRelaylist() {
@@ -8,7 +9,7 @@ export function useRelaylist() {
 
 	const connectRelay = useMutation({
 		mutationFn: async (
-			relay: NDKRelayUrl,
+			relay: WebSocket["url"],
 			purpose?: "read" | "write" | undefined,
 		) => {
 			// Cancel any outgoing refetches
@@ -16,11 +17,10 @@ export function useRelaylist() {
 				queryKey: ["relay-personal"],
 			});
 
+			const relayUrl = normalizeRelayUrl(relay);
+
 			// Snapshot the previous value
-			const prevRelays: NDKTag[] = queryClient.getQueryData([
-				"relays",
-				ark.account.pubkey,
-			]);
+			const prevRelays: NDKTag[] = queryClient.getQueryData(["relay-personal"]);
 
 			// create new relay list if not exist
 			if (!prevRelays) {
@@ -36,13 +36,13 @@ export function useRelaylist() {
 
 			await ark.createEvent({
 				kind: NDKKind.RelayList,
-				tags: [...prevRelays, ["r", relay, purpose ?? ""]],
+				tags: [...prevRelays, ["r", relayUrl, purpose ?? ""]],
 			});
 
 			// Optimistically update to the new value
 			queryClient.setQueryData(["relay-personal"], (prev: NDKTag[]) => [
 				...prev,
-				["r", relay, purpose ?? ""],
+				["r", relayUrl, purpose ?? ""],
 			]);
 
 			// Return a context object with the snapshotted value
@@ -56,17 +56,14 @@ export function useRelaylist() {
 	});
 
 	const removeRelay = useMutation({
-		mutationFn: async (relay: NDKRelayUrl) => {
+		mutationFn: async (relay: WebSocket["url"]) => {
 			// Cancel any outgoing refetches
 			await queryClient.cancelQueries({
 				queryKey: ["relay-personal"],
 			});
 
 			// Snapshot the previous value
-			const prevRelays: NDKTag[] = queryClient.getQueryData([
-				"relays",
-				ark.account.pubkey,
-			]);
+			const prevRelays: NDKTag[] = queryClient.getQueryData(["relay-personal"]);
 
 			if (!prevRelays) return;
 

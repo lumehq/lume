@@ -14,6 +14,7 @@ export function RelayGlobalScreen() {
 		},
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
 	});
 
 	if (isLoading) {

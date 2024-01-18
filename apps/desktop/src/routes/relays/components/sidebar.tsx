@@ -1,14 +1,15 @@
-import { useArk } from "@lume/ark";
-import { CancelIcon, RefreshIcon } from "@lume/icons";
+import { useArk, useRelaylist } from "@lume/ark";
+import { CancelIcon, LoaderIcon, RefreshIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
-import { NDKKind } from "@nostr-dev-kit/ndk";
+import { NDKKind, NDKSubscriptionCacheUsage } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { RelayForm } from "./relayForm";
 
 export function RelaySidebar({ className }: { className?: string }) {
 	const ark = useArk();
 
-	const { status, data, refetch } = useQuery({
+	const { removeRelay } = useRelaylist();
+	const { status, data, isRefetching, refetch } = useQuery({
 		queryKey: ["relay-personal"],
 		queryFn: async () => {
 			const event = await ark.getEventByFilter({
@@ -16,12 +17,15 @@ export function RelaySidebar({ className }: { className?: string }) {
 					kinds: [NDKKind.RelayList],
 					authors: [ark.account.pubkey],
 				},
+				cache: NDKSubscriptionCacheUsage.ONLY_RELAY,
 			});
-
 			if (!event) return [];
 			return event.tags.filter((tag) => tag[0] === "r");
 		},
 		refetchOnWindowFocus: false,
+		refetchOnMount: false,
+		refetchOnReconnect: false,
+		staleTime: Infinity,
 	});
 
 	const currentRelays = new Set(
@@ -42,17 +46,19 @@ export function RelaySidebar({ className }: { className?: string }) {
 					onClick={() => refetch()}
 					className="inline-flex items-center justify-center w-6 h-6 rounded-md shrink-0 hover:bg-neutral-100 dark:hover:bg-neutral-900"
 				>
-					<RefreshIcon className="w-4 h-4" />
+					<RefreshIcon
+						className={cn("size-4", isRefetching ? "animate-spin" : "")}
+					/>
 				</button>
 			</div>
 			<div className="flex flex-col gap-2 px-3 mt-3">
 				{status === "pending" ? (
-					<p>Loading...</p>
+					<div className="flex items-center justify-center w-full h-20 rounded-lg bg-black/10 dark:bg-white/10">
+						<LoaderIcon className="size-5 animate-spin" />
+					</div>
 				) : !data.length ? (
-					<div className="flex items-center justify-center w-full h-20 rounded-xl bg-neutral-50 dark:bg-neutral-950">
-						<p className="text-sm font-medium">
-							You not have personal relay list yet
-						</p>
+					<div className="flex items-center justify-center w-full h-20 rounded-lg bg-black/10 dark:bg-white/10">
+						<p className="text-sm font-medium">Empty.</p>
 					</div>
 				) : (
 					data.map((item) => (
@@ -73,7 +79,10 @@ export function RelaySidebar({ className }: { className?: string }) {
 									</span>
 								)}
 								<p className="max-w-[20rem] truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
-									{item[1].replace("wss://", "").replace("ws://", "")}
+									{item[1]
+										.replace("wss://", "")
+										.replace("ws://", "")
+										.replace("/", "")}
 								</p>
 							</div>
 							<div className="inline-flex items-center gap-2">
@@ -84,9 +93,10 @@ export function RelaySidebar({ className }: { className?: string }) {
 								) : null}
 								<button
 									type="button"
-									className="items-center justify-center hidden w-6 h-6 rounded group-hover:inline-flex hover:bg-neutral-300 dark:hover:bg-neutral-700"
+									onClick={() => removeRelay.mutate(item[1])}
+									className="items-center justify-center hidden size-6 rounded group-hover:inline-flex hover:bg-neutral-300 dark:hover:bg-neutral-700"
 								>
-									<CancelIcon className="w-4 h-4 text-neutral-900 dark:text-neutral-100" />
+									<CancelIcon className="size-4 text-neutral-900 dark:text-neutral-100" />
 								</button>
 							</div>
 						</div>
