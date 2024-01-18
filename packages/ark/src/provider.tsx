@@ -147,7 +147,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			await ark.getUserContacts();
 
 			// subscribe for new activity
-			const sub = ndk.subscribe(
+			const notifySub = ndk.subscribe(
 				{
 					kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
 					since: Math.floor(Date.now() / 1000),
@@ -155,6 +155,32 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 				},
 				{ closeOnEose: false, groupable: false },
 			);
+
+			notifySub.addListener("event", async (event: NDKEvent) => {
+				const profile = await ark.getUserProfile(event.pubkey);
+				switch (event.kind) {
+					case NDKKind.Text:
+						return await sendNativeNotification(
+							`${
+								profile.displayName || profile.name || "anon"
+							} has replied to your note`,
+						);
+					case NDKKind.Repost:
+						return await sendNativeNotification(
+							`${
+								profile.displayName || profile.name || "anon"
+							} has reposted to your note`,
+						);
+					case NDKKind.Zap:
+						return await sendNativeNotification(
+							`${
+								profile.displayName || profile.name || "anon"
+							} has zapped to your note`,
+						);
+					default:
+						break;
+				}
+			});
 
 			// prefetch activty
 			await queryClient.prefetchInfiniteQuery({
@@ -204,32 +230,6 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 					return events;
 				},
-			});
-
-			sub.addListener("event", async (event: NDKEvent) => {
-				const profile = await ark.getUserProfile(event.pubkey);
-				switch (event.kind) {
-					case NDKKind.Text:
-						return await sendNativeNotification(
-							`${
-								profile.displayName || profile.name || "anon"
-							} has replied to your note`,
-						);
-					case NDKKind.Repost:
-						return await sendNativeNotification(
-							`${
-								profile.displayName || profile.name || "anon"
-							} has reposted to your note`,
-						);
-					case NDKKind.Zap:
-						return await sendNativeNotification(
-							`${
-								profile.displayName || profile.name || "anon"
-							} has zapped to your note`,
-						);
-					default:
-						break;
-				}
 			});
 		}
 

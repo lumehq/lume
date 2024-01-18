@@ -1,19 +1,18 @@
 import { webln } from "@getalby/sdk";
 import { SendPaymentResponse } from "@getalby/sdk/dist/types";
 import { CancelIcon, ZapIcon } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import {
 	compactNumber,
 	displayNpub,
 	sendNativeNotification,
 } from "@lume/utils";
 import * as Dialog from "@radix-ui/react-dialog";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { invoke } from "@tauri-apps/api/core";
-import { message } from "@tauri-apps/plugin-dialog";
 import { QRCodeSVG } from "qrcode.react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
-import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { useArk } from "../../../hooks/useArk";
 import { useProfile } from "../../../hooks/useProfile";
 import { useNoteContext } from "../provider";
@@ -29,59 +28,53 @@ export function NoteZap() {
 
 	const ark = useArk();
 	const event = useNoteContext();
-	const storage = useStorage();
-	const nwc = useRef(null);
-	const navigate = useNavigate();
 
 	const { user } = useProfile(event.pubkey);
 
 	const createZapRequest = async () => {
-		try {
-			if (!ark.ndk.signer) return navigate("/new/privkey");
+		let nwc: webln.NostrWebLNProvider = undefined;
 
+		try {
 			const zapAmount = parseInt(amount) * 1000;
 			const res = await event.zap(zapAmount, zapMessage);
 
-			if (!res)
-				return await message("Cannot create zap request", {
-					title: "Zap",
-					type: "error",
-				});
+			if (!res) return toast.error("Cannot create zap request");
 
 			// user don't connect nwc, create QR Code for invoice
 			if (!walletConnectURL) return setInvoice(res);
 
 			// user connect nwc
-			nwc.current = new webln.NostrWebLNProvider({
+			nwc = new webln.NostrWebLNProvider({
 				nostrWalletConnectUrl: walletConnectURL,
 			});
-			await nwc.current.enable();
+			await nwc.enable();
 
 			// start loading
 			setIsLoading(true);
+
 			// send payment via nwc
-			const send: SendPaymentResponse = await nwc.current.sendPayment(res);
+			const send: SendPaymentResponse = await nwc.sendPayment(res);
 
 			if (send) {
 				await sendNativeNotification(
-					`You've tipped ${compactNumber.format(send.amount)} sats to ${
-						user?.name || user?.display_name || user?.displayName
+					`You've zapped ${compactNumber.format(send.amount)} sats to ${
+						user?.name || user?.displayName || "anon"
 					}`,
 				);
 
 				// eose
-				nwc.current.close();
+				nwc.close();
 				setIsCompleted(true);
 				setIsLoading(false);
 
-				// reset after 3 secs
-				const timeout = setTimeout(() => setIsCompleted(false), 3000);
+				// reset after 1.5 secs
+				const timeout = setTimeout(() => setIsCompleted(false), 1500);
 				clearTimeout(timeout);
 			}
 		} catch (e) {
-			nwc.current.close();
+			nwc.close();
 			setIsLoading(false);
-			await message(JSON.stringify(e), { title: "Zap", type: "error" });
+			toast.error(String(e));
 		}
 	};
 
@@ -105,14 +98,26 @@ export function NoteZap() {
 
 	return (
 		<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-			<Dialog.Trigger asChild>
-				<button
-					type="button"
-					className="inline-flex items-center justify-center group size-7 text-neutral-600 dark:text-neutral-400"
-				>
-					<ZapIcon className="size-5 group-hover:text-blue-500" />
-				</button>
-			</Dialog.Trigger>
+			<Tooltip.Provider>
+				<Tooltip.Root delayDuration={150}>
+					<Dialog.Trigger asChild>
+						<Tooltip.Trigger asChild>
+							<button
+								type="button"
+								className="inline-flex items-center justify-center group size-7 text-neutral-600 dark:text-neutral-400"
+							>
+								<ZapIcon className="size-5 group-hover:text-blue-500" />
+							</button>
+						</Tooltip.Trigger>
+					</Dialog.Trigger>
+					<Tooltip.Portal>
+						<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+							Zap
+							<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
+						</Tooltip.Content>
+					</Tooltip.Portal>
+				</Tooltip.Root>
+			</Tooltip.Provider>
 			<Dialog.Portal>
 				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm dark:bg-white/10" />
 				<Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center min-h-full">
@@ -120,7 +125,7 @@ export function NoteZap() {
 						<div className="inline-flex items-center justify-between w-full px-5 py-3 shrink-0">
 							<div className="w-6" />
 							<Dialog.Title className="font-semibold text-center">
-								Send tip to{" "}
+								Send zap to{" "}
 								{user?.name ||
 									user?.displayName ||
 									displayNpub(event.pubkey, 16)}
@@ -145,7 +150,7 @@ export function NoteZap() {
 												onValueChange={(value) => setAmount(value)}
 												className="flex-1 w-full text-4xl font-semibold text-right bg-transparent border-none placeholder:text-neutral-600 focus:outline-none focus:ring-0 dark:text-neutral-400"
 											/>
-											<span className="flex-1 w-full text-4xl font-semibold text-left text-neutral-600 dark:text-neutral-400">
+											<span className="flex-1 w-full text-4xl font-semibold text-left text-neutral-500 dark:text-neutral-400">
 												sats
 											</span>
 										</div>
@@ -153,35 +158,35 @@ export function NoteZap() {
 											<button
 												type="button"
 												onClick={() => setAmount("69")}
-												className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+												className="w-max rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 											>
 												69 sats
 											</button>
 											<button
 												type="button"
 												onClick={() => setAmount("100")}
-												className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+												className="w-max rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 											>
 												100 sats
 											</button>
 											<button
 												type="button"
 												onClick={() => setAmount("200")}
-												className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+												className="w-max rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 											>
 												200 sats
 											</button>
 											<button
 												type="button"
 												onClick={() => setAmount("500")}
-												className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+												className="w-max rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 											>
 												500 sats
 											</button>
 											<button
 												type="button"
 												onClick={() => setAmount("1000")}
-												className="w-max rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+												className="w-max rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 											>
 												1K sats
 											</button>
