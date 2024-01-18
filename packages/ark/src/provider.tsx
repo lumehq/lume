@@ -1,7 +1,12 @@
 import { LoaderIcon } from "@lume/icons";
 import { NDKCacheAdapterTauri } from "@lume/ndk-cache-tauri";
 import { useStorage } from "@lume/storage";
-import { FETCH_LIMIT, QUOTES, sendNativeNotification } from "@lume/utils";
+import {
+	FETCH_LIMIT,
+	QUOTES,
+	activityUnreadAtom,
+	sendNativeNotification,
+} from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -14,6 +19,7 @@ import NDK, {
 import { useQueryClient } from "@tanstack/react-query";
 import { message } from "@tauri-apps/plugin-dialog";
 import { fetch } from "@tauri-apps/plugin-http";
+import { useSetAtom } from "jotai";
 import Linkify from "linkify-react";
 import { normalizeRelayUrlSet } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
@@ -23,6 +29,7 @@ import { LumeContext } from "./context";
 export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 	const storage = useStorage();
 	const queryClient = useQueryClient();
+	const setUnreadActivity = useSetAtom(activityUnreadAtom);
 
 	const [ark, setArk] = useState<Ark>(undefined);
 	const [ndk, setNDK] = useState<NDK>(undefined);
@@ -66,6 +73,11 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			const userPrivkey = await storage.loadPrivkey(storage.currentUser.pubkey);
 			if (!userPrivkey) return null;
 
+			// load nwc
+			storage.nwc = await storage.loadPrivkey(
+				`${storage.currentUser.pubkey}.nwc`,
+			);
+
 			return new NDKPrivateKeySigner(userPrivkey);
 		} catch (e) {
 			console.error(e);
@@ -99,7 +111,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			enableOutboxModel: !storage.settings.lowPower,
 			autoConnectUserRelays: !storage.settings.lowPower,
 			autoFetchUserMutelist: !storage.settings.lowPower,
-			// clientName: "Lume",
+			clientName: "Lume",
 			// clientNip89: '',
 		});
 
@@ -120,7 +132,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		ndk.relayAuthDefaultPolicy = async (relay: NDKRelay, challenge: string) => {
 			const signIn = NDKRelayAuthPolicies.signIn({ ndk });
 			const event = await signIn(relay, challenge).catch((e) =>
-				console.error(e),
+				console.log("auth failed", e),
 			);
 			if (event) {
 				await sendNativeNotification(
@@ -147,7 +159,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			await ark.getUserContacts();
 
 			// subscribe for new activity
-			const notifySub = ndk.subscribe(
+			const activitySub = ndk.subscribe(
 				{
 					kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
 					since: Math.floor(Date.now() / 1000),
@@ -156,25 +168,26 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 				{ closeOnEose: false, groupable: false },
 			);
 
-			notifySub.addListener("event", async (event: NDKEvent) => {
+			activitySub.addListener("event", async (event: NDKEvent) => {
+				setUnreadActivity((state) => state + 1);
 				const profile = await ark.getUserProfile(event.pubkey);
 				switch (event.kind) {
 					case NDKKind.Text:
 						return await sendNativeNotification(
 							`${
-								profile.displayName || profile.name || "anon"
+								profile.displayName || profile.name || "Anon"
 							} has replied to your note`,
 						);
 					case NDKKind.Repost:
 						return await sendNativeNotification(
 							`${
-								profile.displayName || profile.name || "anon"
+								profile.displayName || profile.name || "Anon"
 							} has reposted to your note`,
 						);
 					case NDKKind.Zap:
 						return await sendNativeNotification(
 							`${
-								profile.displayName || profile.name || "anon"
+								profile.displayName || profile.name || "Anon"
 							} has zapped to your note`,
 						);
 					default:

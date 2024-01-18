@@ -15,6 +15,7 @@ import { useAtom } from "jotai";
 import { useHotkeys } from "react-hotkeys-hook";
 import { NavLink } from "react-router-dom";
 import { ActiveAccount } from "./account/active";
+import { UnreadActivity } from "./unread";
 
 export function Navigation() {
 	const [isEditorOpen, setIsEditorOpen] = useAtom(editorAtom);
@@ -74,7 +75,7 @@ export function Navigation() {
 						{({ isActive }) => (
 							<div
 								className={cn(
-									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
+									"relative inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
 									isActive
 										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
 										: "text-black/50 dark:text-neutral-400",
@@ -85,6 +86,7 @@ export function Navigation() {
 								) : (
 									<BellIcon className="size-6" />
 								)}
+								<UnreadActivity />
 							</div>
 						)}
 					</NavLink>

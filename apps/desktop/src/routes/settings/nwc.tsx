@@ -1,4 +1,3 @@
-import { webln } from "@getalby/sdk";
 import { useArk } from "@lume/ark";
 import { useStorage } from "@lume/storage";
 import * as Switch from "@radix-ui/react-switch";
@@ -28,7 +27,10 @@ export function NWCScreen() {
 			const params = new URLSearchParams(uriObj.search);
 
 			if (params.has("relay") && params.has("secret")) {
-				await storage.createPrivkey("Nostr Wallet Connect", walletConnectURL);
+				await storage.createPrivkey(
+					`${ark.account.pubkey}.nwc`,
+					walletConnectURL,
+				);
 
 				storage.nwc = walletConnectURL;
 
@@ -52,19 +54,11 @@ export function NWCScreen() {
 	};
 
 	const remove = async () => {
-		await storage.removePrivkey(`${ark.account.pubkey}-nwc`);
-		setWalletConnectURL(null);
-	};
+		await storage.removePrivkey(`${ark.account.pubkey}.nwc`);
 
-	const loadBalance = async () => {
-		const nwc = new webln.NostrWebLNProvider({
-			nostrWalletConnectUrl: walletConnectURL,
-		});
-		await nwc.enable();
-
-		const balanceResponse = await nwc.getBalance();
-
-		nwc.close();
+		setWalletConnectURL("");
+		setSettings((state) => ({ ...state, nwc: false }));
+		storage.nwc = null;
 	};
 
 	useEffect(() => {
@@ -78,37 +72,34 @@ export function NWCScreen() {
 		<div className="mx-auto w-full max-w-lg">
 			<div className="flex flex-col gap-6">
 				<div className="flex w-full items-center justify-between">
-					<div className="flex w-full items-center gap-8">
+					<div className="flex w-full items-start gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Connection String
 						</div>
-						<div className="relative w-full">
-							<input
-								type="password"
+						<div className="flex flex-col items-end gap-2 w-full">
+							<textarea
 								spellCheck={false}
 								value={walletConnectURL}
 								onChange={(e) => setWalletConnectURL(e.target.value)}
-								className="w-full border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-9 rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-100 dark:bg-neutral-900"
+								className="w-full h-24 resize-none border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-100 dark:bg-neutral-900"
 							/>
-							<div className="h-9 absolute right-0 top-0 inline-flex items-center justify-center">
-								{!settings.nwc ? (
-									<button
-										type="button"
-										onClick={saveNWC}
-										className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
-									>
-										Save
-									</button>
-								) : (
-									<button
-										type="button"
-										onClick={remove}
-										className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
-									>
-										Remove
-									</button>
-								)}
-							</div>
+							{!settings.nwc ? (
+								<button
+									type="button"
+									onClick={saveNWC}
+									className="h-8 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+								>
+									Save
+								</button>
+							) : (
+								<button
+									type="button"
+									onClick={remove}
+									className="h-8 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+								>
+									Remove
+								</button>
+							)}
 						</div>
 					</div>
 				</div>
