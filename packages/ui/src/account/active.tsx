@@ -24,7 +24,7 @@ export function ActiveAccount() {
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild>
-				<div>
+				<div className="relative">
 					<Avatar.Root>
 						<Avatar.Image
 							src={user?.picture || user?.image}

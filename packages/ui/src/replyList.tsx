@@ -60,11 +60,11 @@ export function ReplyList({
 				className="py-4 border-t border-neutral-100 dark:border-neutral-900"
 			/>
 			{!data ? (
-				<div className="pt-4 flex h-16 items-center justify-center rounded-xl bg-neutral-50 p-3 dark:bg-neutral-950">
+				<div className="mt-4 flex h-16 items-center justify-center p-3">
 					<LoaderIcon className="h-5 w-5 animate-spin" />
 				</div>
 			) : data.length === 0 ? (
-				<div className="pt-4 flex w-full items-center justify-center bg-neutral-50 dark:bg-neutral-950 rounded-lg">
+				<div className="mt-4 flex w-full items-center justify-center">
 					<div className="flex flex-col items-center justify-center gap-2 py-6">
 						<h3 className="text-3xl">👋</h3>
 						<p className="leading-none text-neutral-600 dark:text-neutral-400">

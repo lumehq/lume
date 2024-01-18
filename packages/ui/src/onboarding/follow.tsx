@@ -1,4 +1,4 @@
-import { useArk } from "@lume/ark";
+import { User, useArk } from "@lume/ark";
 import {
 	ArrowLeftIcon,
 	CancelIcon,
@@ -14,7 +14,6 @@ import { nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { User } from "../user";
 
 const POPULAR_USERS = [
 	"npub180cvv07tjdrrgpa0j7j7tmnyl2yr6yr7l8j4s3evf6u64th6gkwsyjh6w6",
@@ -66,6 +65,7 @@ export function OnboardingFollowScreen() {
 	const submit = async () => {
 		try {
 			setLoading(true);
+
 			if (!follows.length) return navigate("/finish");
 
 			const publish = await ark.newContactList({
@@ -118,7 +118,18 @@ export function OnboardingFollowScreen() {
 											key={pubkey}
 											className="flex h-max w-full shrink-0 flex-col my-3 gap-4 overflow-hidden rounded-lg bg-white dark:bg-black"
 										>
-											<User pubkey={pubkey} variant="large" />
+											<User.Provider pubkey={pubkey}>
+												<User.Root>
+													<User.Cover className="h-20 w-full rounded-t-lg" />
+													<div className="flex h-full w-full flex-col gap-2.5 px-3 -mt-6">
+														<User.Avatar className="size-10 shrink-0 rounded-lg" />
+														<div className="flex flex-col items-start text-start">
+															<User.Name className="max-w-[15rem] truncate text-lg font-semibold leadning-tight" />
+															<User.About className="break-p text-neutral-700 dark:text-neutral-600 max-w-none select-text whitespace-pre-line" />
+														</div>
+													</div>
+												</User.Root>
+											</User.Provider>
 											<div className="h-16 shrink-0 px-3 flex items-center border-t border-neutral-100 dark:border-neutral-900">
 												<button
 													type="button"
@@ -172,7 +183,18 @@ export function OnboardingFollowScreen() {
 												key={item.pubkey}
 												className="flex h-max w-full shrink-0 flex-col my-3 gap-4 overflow-hidden rounded-lg bg-white dark:bg-black"
 											>
-												<User pubkey={item.pubkey} variant="large" />
+												<User.Provider pubkey={item.pubkey}>
+													<User.Root>
+														<User.Cover className="h-20 w-full rounded-t-lg" />
+														<div className="flex h-full w-full flex-col gap-2.5 px-3 -mt-6">
+															<User.Avatar className="size-10 shrink-0 rounded-lg" />
+															<div className="flex flex-col items-start text-start">
+																<User.Name className="max-w-[15rem] truncate text-lg font-semibold leadning-tight" />
+																<User.About className="break-p text-neutral-700 dark:text-neutral-600 max-w-none select-text whitespace-pre-line" />
+															</div>
+														</div>
+													</User.Root>
+												</User.Provider>
 												<div className="h-16 shrink-0 px-3 flex items-center border-t border-neutral-100 dark:border-neutral-900">
 													<button
 														type="button"
@@ -196,6 +218,7 @@ export function OnboardingFollowScreen() {
 															</>
 														)}
 													</button>
+													UU
 												</div>
 											</div>
 										))
@@ -218,7 +241,18 @@ export function OnboardingFollowScreen() {
 											key={pubkey}
 											className="flex h-max w-full shrink-0 flex-col my-3 gap-4 overflow-hidden rounded-lg bg-white dark:bg-black"
 										>
-											<User pubkey={pubkey} variant="large" />
+											<User.Provider pubkey={pubkey}>
+												<User.Root>
+													<User.Cover className="h-20 w-full rounded-t-lg" />
+													<div className="flex h-full w-full flex-col gap-2.5 px-3 -mt-6">
+														<User.Avatar className="size-10 shrink-0 rounded-lg" />
+														<div className="flex flex-col items-start text-start">
+															<User.Name className="max-w-[15rem] truncate text-lg font-semibold leadning-tight" />
+															<User.About className="break-p text-neutral-700 dark:text-neutral-600 max-w-none select-text whitespace-pre-line" />
+														</div>
+													</div>
+												</User.Root>
+											</User.Provider>
 											<div className="h-16 shrink-0 px-3 flex items-center border-t border-neutral-100 dark:border-neutral-900">
 												<button
 													type="button"

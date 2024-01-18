@@ -15,12 +15,7 @@ export function OnboardingFinishScreen() {
 	const finish = async () => {
 		setLoading(true);
 
-		const queryCache = queryClient.getQueryCache();
-		const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-
-		for (const key of queryKeys) {
-			await queryClient.refetchQueries({ queryKey: key });
-		}
+		await queryClient.refetchQueries({ queryKey: ["timeline-9999"] });
 
 		setLoading(false);
 		setOnboarding(false);

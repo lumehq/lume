@@ -109,6 +109,7 @@ export class Ark {
 				.replace("nostr:", "")
 				.split("'")[0]
 				.split(".")[0]
+				.split(",")[0]
 				.split("?")[0];
 
 			if (

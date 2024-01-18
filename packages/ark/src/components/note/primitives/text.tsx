@@ -22,7 +22,7 @@ export function TextNote({
 				<Note.Content className="min-w-0 px-3" />
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.Pin />
-					<div className="inline-flex items-center gap-10">
+					<div className="inline-flex items-center gap-4">
 						<Note.Reply />
 						<Note.Repost />
 						<Note.Zap />

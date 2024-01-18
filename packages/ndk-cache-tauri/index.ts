@@ -394,7 +394,7 @@ export class NDKCacheAdapterTauri implements NDKCacheAdapter {
 
 				const events = await this.#storage.getCacheEvents(eventIds);
 				for (const event of events) {
-					let rawEvent;
+					let rawEvent: NostrEvent;
 					try {
 						rawEvent = JSON.parse(event.event);
 

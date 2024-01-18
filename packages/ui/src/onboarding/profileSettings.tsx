@@ -43,8 +43,8 @@ export function OnboardingProfileSettingsScreen() {
 				nip05: oldProfile?.nip05 || "",
 				display_name: data.name,
 				bio: data.about,
+				image: picture,
 				picture: picture,
-				avatar: picture,
 			};
 
 			const publish = await ark.createEvent({

@@ -45,10 +45,10 @@ export function NWCScreen() {
 		<div>
 			<div className="flex w-full flex-col gap-5">
 				<div className="text-center">
-					<h3 className="text-2xl font-semibold leading-tight">
+					<h3 className="text-xl font-semibold leading-tight">
 						Nostr Wallet Connect
 					</h3>
-					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
+					<p className="font-medium leading-snug text-neutral-600 dark:text-neutral-500">
 						Sending zap easily via Bitcoin Lightning.
 					</p>
 				</div>
