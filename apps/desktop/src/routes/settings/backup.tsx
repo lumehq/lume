@@ -1,9 +1,11 @@
+import { useArk } from "@lume/ark";
 import { EyeOffIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
 
 export function BackupSettingScreen() {
+	const ark = useArk();
 	const storage = useStorage();
 
 	const [privkey, setPrivkey] = useState(null);
@@ -24,14 +26,10 @@ export function BackupSettingScreen() {
 
 	return (
 		<div className="mx-auto w-full max-w-lg">
-			<div className="mb-2 text-sm font-semibold">Private key</div>
 			<div>
-				{!privkey ? (
-					<div className="inline-flex h-24 w-full items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
-						You&apos;ve stored private key on Lume
-					</div>
-				) : (
-					<>
+				{privkey ? (
+					<div>
+						<div className="mb-2 text-sm font-semibold">Private key</div>
 						<div className="relative">
 							<input
 								readOnly
@@ -50,12 +48,12 @@ export function BackupSettingScreen() {
 						<button
 							type="button"
 							onClick={() => removePrivkey()}
-							className="mt-2 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-red-200 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:hover:text-white"
+							className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-red-200 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:hover:text-white"
 						>
 							Remove private key
 						</button>
-					</>
-				)}
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

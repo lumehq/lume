@@ -1,16 +1,55 @@
 import { webln } from "@getalby/sdk";
 import { useArk } from "@lume/ark";
-import { CheckCircleIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
+import * as Switch from "@radix-ui/react-switch";
 import { useEffect, useState } from "react";
-import { NWCForm } from "./components/walletConnectForm";
+import { toast } from "sonner";
 
 export function NWCScreen() {
 	const ark = useArk();
 	const storage = useStorage();
 
+	const [settings, setSettings] = useState({
+		nwc: false,
+		instantZap: storage.settings.instantZap,
+	});
 	const [walletConnectURL, setWalletConnectURL] = useState<null | string>(null);
-	const [balance, setBalance] = useState(0);
+	const [amount, setAmount] = useState("21");
+
+	const saveNWC = async () => {
+		try {
+			if (!walletConnectURL.startsWith("nostr+walletconnect:")) {
+				return toast.error(
+					"Connect URI is required and must start with format nostr+walletconnect:, please check again",
+				);
+			}
+
+			const uriObj = new URL(walletConnectURL);
+			const params = new URLSearchParams(uriObj.search);
+
+			if (params.has("relay") && params.has("secret")) {
+				await storage.createPrivkey("Nostr Wallet Connect", walletConnectURL);
+
+				storage.nwc = walletConnectURL;
+
+				setWalletConnectURL(walletConnectURL);
+				setSettings((state) => ({ ...state, nwc: true }));
+			} else {
+				return toast.error("Connect URI is not valid, please check again");
+			}
+		} catch (e) {
+			toast.error(String(e));
+		}
+	};
+
+	const toggleInstantZap = async () => {
+		await storage.createSetting("instantZap", String(+!settings.instantZap));
+		setSettings((state) => ({ ...state, instantZap: !settings.instantZap }));
+	};
+
+	const saveAmount = async () => {
+		await storage.createSetting("zapAmount", amount);
+	};
 
 	const remove = async () => {
 		await storage.removePrivkey(`${ark.account.pubkey}-nwc`);
@@ -24,130 +63,101 @@ export function NWCScreen() {
 		await nwc.enable();
 
 		const balanceResponse = await nwc.getBalance();
-		setBalance(balanceResponse.balance);
 
 		nwc.close();
 	};
 
 	useEffect(() => {
-		if (walletConnectURL) loadBalance();
-	}, [walletConnectURL]);
-
-	useEffect(() => {
-		async function getNWC() {
-			const nwc = await storage.loadPrivkey(`${ark.account.pubkey}-nwc`);
-			if (nwc) setWalletConnectURL(nwc);
+		if (storage.nwc) {
+			setSettings((state) => ({ ...state, nwc: true }));
+			setWalletConnectURL(storage.nwc);
 		}
-		getNWC();
 	}, []);
 
 	return (
-		<div>
-			<div className="flex w-full flex-col gap-5">
-				<div className="text-center">
-					<h3 className="text-xl font-semibold leading-tight">
-						Nostr Wallet Connect
-					</h3>
-					<p className="font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Sending zap easily via Bitcoin Lightning.
-					</p>
+		<div className="mx-auto w-full max-w-lg">
+			<div className="flex flex-col gap-6">
+				<div className="flex w-full items-center justify-between">
+					<div className="flex w-full items-center gap-8">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
+							Connection String
+						</div>
+						<div className="relative w-full">
+							<input
+								type="password"
+								spellCheck={false}
+								value={walletConnectURL}
+								onChange={(e) => setWalletConnectURL(e.target.value)}
+								className="w-full border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-9 rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-100 dark:bg-neutral-900"
+							/>
+							<div className="h-9 absolute right-0 top-0 inline-flex items-center justify-center">
+								{!settings.nwc ? (
+									<button
+										type="button"
+										onClick={saveNWC}
+										className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+									>
+										Save
+									</button>
+								) : (
+									<button
+										type="button"
+										onClick={remove}
+										className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+									>
+										Remove
+									</button>
+								)}
+							</div>
+						</div>
+					</div>
 				</div>
-				<div className="mx-auto w-full max-w-lg">
-					{!walletConnectURL ? (
-						<NWCForm setWalletConnectURL={setWalletConnectURL} />
-					) : (
-						<div className="flex w-full flex-col gap-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
-							<div className="flex items-center justify-center gap-1.5 text-sm text-teal-500">
-								<CheckCircleIcon className="h-4 w-4" />
-								<div>You&apos;re using nostr wallet connect</div>
+				{settings.nwc ? (
+					<>
+						<div className="flex w-full items-center justify-between">
+							<div className="flex items-center gap-8">
+								<div className="w-36 shrink-0 text-end text-sm font-semibold">
+									Instant Zap
+								</div>
+								<div className="text-sm">
+									Zap with default amount, no confirmation
+								</div>
 							</div>
-							<div className="flex flex-col gap-3">
-								<textarea
-									readOnly
-									value={`${walletConnectURL.substring(0, 120)}****`}
-									className="h-40 w-full resize-none rounded-lg border-transparent bg-neutral-200 px-3 py-3 text-neutral-900 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:focus:ring-blue-800 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-400"
-								/>
-								<button
-									type="button"
-									onClick={() => remove()}
-									className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-neutral-200 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:bg-neutral-800 dark:text-neutral-100"
-								>
-									Remove connection
-								</button>
+							<Switch.Root
+								checked={settings.instantZap}
+								onClick={() => toggleInstantZap()}
+								className="relative h-7 w-12 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							>
+								<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+							</Switch.Root>
+						</div>
+						<div className="flex w-full items-center justify-between">
+							<div className="flex w-full items-center gap-8">
+								<div className="w-36 shrink-0 text-end text-sm font-semibold">
+									Default amount
+								</div>
+								<div className="relative w-full">
+									<input
+										type="number"
+										spellCheck={false}
+										value={amount}
+										onChange={(e) => setAmount(e.target.value)}
+										className="w-full border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-9 rounded-lg ring-0 placeholder:text-neutral-600 bg-neutral-100 dark:bg-neutral-900"
+									/>
+									<div className="h-9 absolute right-0 top-0 inline-flex items-center justify-center">
+										<button
+											type="button"
+											onClick={saveAmount}
+											className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+										>
+											Save
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
-					)}
-					{walletConnectURL ? (
-						<div className="mt-5 flex flex-col">
-							<h3 className="font-medium text-neutral-600 dark:text-neutral-400">
-								Current balance
-							</h3>
-							<p className="text-2xl font-semibold">
-								{new Intl.NumberFormat().format(balance)} sats
-							</p>
-						</div>
-					) : (
-						<div className="mt-5 flex flex-col gap-4">
-							<div className="flex flex-col gap-1.5">
-								<h5 className="font-semibold text-neutral-900 dark:text-neutral-100">
-									Introduction
-								</h5>
-								<p className="text-neutral-600 dark:text-neutral-400">
-									Nostr Wallet Connect (NWC) is a way for applications like
-									Nostr clients to access a remote Lightning wallet through a
-									standardized protocol.
-								</p>
-								<p className="text-neutral-600 dark:text-neutral-400">
-									To learn more about the details have a look at{" "}
-									<a
-										href="https://github.com/nostr-protocol/nips/blob/master/47.md"
-										target="_blank"
-										className="text-blue-500"
-										rel="noreferrer"
-									>
-										the specs (NIP47)
-									</a>
-								</p>
-							</div>
-							<div className="flex flex-col gap-1.5">
-								<h5 className="font-semibold text-neutral-900 dark:text-neutral-100">
-									About zapping
-								</h5>
-								<p className="text-neutral-600 dark:text-neutral-400">
-									Lume doesn&apos;t take any commission or platform fees when
-									you zap someone. Lume doesn&apos;t hold your Bitcoin
-								</p>
-							</div>
-							<div className="flex flex-col gap-1.5">
-								<h5 className="font-semibold text-neutral-900 dark:text-neutral-100">
-									Recommend wallet that support NWC
-								</h5>
-								<p className="text-neutral-600 dark:text-neutral-400">
-									- Mutiny Wallet:{" "}
-									<a
-										href="https://www.mutinywallet.com/"
-										target="_blank"
-										rel="noreferrer"
-										className="text-blue-500"
-									>
-										website
-									</a>
-								</p>
-								<p className="text-neutral-600 dark:text-neutral-400">
-									- Self hosted NWC on Umbrel :{" "}
-									<a
-										href="https://apps.umbrel.com/app/alby-nostr-wallet-connect"
-										target="_blank"
-										rel="noreferrer"
-										className="text-blue-500"
-									>
-										website
-									</a>
-								</p>
-							</div>
-						</div>
-					)}
-				</div>
+					</>
+				) : null}
 			</div>
 		</div>
 	);

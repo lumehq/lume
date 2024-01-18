@@ -37,14 +37,20 @@ export function Reply({
 						) : (
 							<div />
 						)}
-						<div className="inline-flex items-center gap-10">
+						<div className="inline-flex items-center gap-4">
 							<Note.Repost />
 							<Note.Zap />
 						</div>
 					</div>
-					<div className={cn("", open ? "pb-3" : "")}>
+					<div
+						className={cn(
+							open
+								? "pb-3 border-t border-neutral-100 dark:border-neutral-900"
+								: "",
+						)}
+					>
 						{event.replies?.length > 0 ? (
-							<Collapsible.Content>
+							<Collapsible.Content className="divide-y divide-neutral-100 dark:divide-neutral-900 pl-6">
 								{event.replies?.map((childEvent) => (
 									<ChildReply key={childEvent.id} event={childEvent} />
 								))}

@@ -38,7 +38,7 @@ export function NoteContent({
 
 	const [content, setContent] = useState(event.content);
 	const [translate, setTranslate] = useState({
-		translatable: true,
+		translatable: false,
 		translated: false,
 	});
 

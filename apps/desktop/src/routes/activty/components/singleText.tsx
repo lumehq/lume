@@ -23,8 +23,12 @@ export function ActivitySingleText({ event }: { event: NDKEvent }) {
 				<div className="max-w-xl mx-auto py-6">
 					{thread ? (
 						<div className="flex flex-col gap-3 mb-1">
-							<ActivityRootNote eventId={thread.rootEventId} />
-							<ActivityRootNote eventId={thread.replyEventId} />
+							{thread.rootEventId ? (
+								<ActivityRootNote eventId={thread.rootEventId} />
+							) : null}
+							{thread.replyEventId ? (
+								<ActivityRootNote eventId={thread.replyEventId} />
+							) : null}
 						</div>
 					) : null}
 					<div className="mt-3 flex flex-col gap-3">

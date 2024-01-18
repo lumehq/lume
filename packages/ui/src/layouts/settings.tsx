@@ -1,10 +1,10 @@
 import {
 	AdvancedSettingsIcon,
 	InfoIcon,
-	NwcIcon,
 	SecureIcon,
 	SettingsIcon,
 	UserIcon,
+	ZapIcon,
 } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { NavLink, Outlet } from "react-router-dom";
@@ -13,7 +13,7 @@ export function SettingsLayout() {
 	return (
 		<div className="flex h-full min-h-0 w-full flex-col rounded-xl overflow-y-auto">
 			<div className="flex h-24 shrink-0 w-full items-center justify-center px-2 bg-white/50 backdrop-blur-xl dark:bg-black/50">
-				<div className="flex items-center gap-0.5">
+				<div className="flex items-center gap-2">
 					<NavLink
 						end
 						to="/settings/"
@@ -55,8 +55,8 @@ export function SettingsLayout() {
 							)
 						}
 					>
-						<NwcIcon className="size-6" />
-						<p className="text-sm font-medium">Wallet</p>
+						<ZapIcon className="size-6" />
+						<p className="text-sm font-medium">Zap</p>
 					</NavLink>
 					<NavLink
 						to="/settings/backup"

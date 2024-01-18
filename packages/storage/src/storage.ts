@@ -19,6 +19,7 @@ export class LumeStorage {
 	readonly platform: Platform;
 	readonly locale: string;
 	public currentUser: Account;
+	public nwc: string;
 	public settings: {
 		autoupdate: boolean;
 		nsecbunker: boolean;
@@ -29,12 +30,14 @@ export class LumeStorage {
 		lowPower: boolean;
 		translation: boolean;
 		translateApiKey: string;
+		instantZap: boolean;
 	};
 
 	constructor(db: Database, platform: Platform, locale: string) {
 		this.#db = db;
 		this.locale = locale;
 		this.platform = platform;
+		this.nwc = null;
 		this.settings = {
 			autoupdate: false,
 			nsecbunker: false,
@@ -45,6 +48,7 @@ export class LumeStorage {
 			lowPower: false,
 			translation: false,
 			translateApiKey: "",
+			instantZap: false,
 		};
 	}
 
@@ -61,6 +65,8 @@ export class LumeStorage {
 
 		const account = await this.getActiveAccount();
 		if (account) this.currentUser = account;
+
+		this.nwc = await this.loadPrivkey("Nostr Wallet Connect");
 	}
 
 	async #keyring_save(key: string, value: string) {

@@ -151,7 +151,7 @@ export function GeneralSettingScreen() {
 			<div className="flex flex-col gap-6">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Update
 						</div>
 						<div className="text-sm">Automatically download new update</div>
@@ -166,7 +166,7 @@ export function GeneralSettingScreen() {
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Low Power
 						</div>
 						<div className="text-sm">
@@ -183,7 +183,7 @@ export function GeneralSettingScreen() {
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Startup
 						</div>
 						<div className="text-sm">Launch Lume at Login</div>
@@ -198,7 +198,7 @@ export function GeneralSettingScreen() {
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Media
 						</div>
 						<div className="text-sm">Automatically load media</div>
@@ -213,7 +213,7 @@ export function GeneralSettingScreen() {
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Hashtag
 						</div>
 						<div className="text-sm">Show all hashtags in content</div>
@@ -228,7 +228,7 @@ export function GeneralSettingScreen() {
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Notification
 						</div>
 						<div className="text-sm">Automatically send notification</div>
@@ -244,7 +244,7 @@ export function GeneralSettingScreen() {
 				</div>
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							Translation
 						</div>
 						<div className="text-sm">Translate text to your language</div>
@@ -259,7 +259,7 @@ export function GeneralSettingScreen() {
 				</div>
 				{settings.translation ? (
 					<div className="flex w-full items-center gap-8">
-						<div className="w-24 shrink-0 text-end text-sm font-semibold">
+						<div className="w-36 shrink-0 text-end text-sm font-semibold">
 							API Key
 						</div>
 						<div className="relative w-full">
@@ -283,7 +283,7 @@ export function GeneralSettingScreen() {
 					</div>
 				) : null}
 				<div className="flex w-full items-start gap-8">
-					<div className="w-24 shrink-0 text-end text-sm font-semibold">
+					<div className="w-36 shrink-0 text-end text-sm font-semibold">
 						Appearance
 					</div>
 					<div className="flex flex-1 gap-6">

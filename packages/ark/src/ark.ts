@@ -305,9 +305,7 @@ export class Ark {
 	public async getThreads(id: string) {
 		const eventId = this.getCleanEventId(id);
 		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
-		const relayUrls = [...this.ndk.pool.relays.values()].map(
-			(item) => item.url,
-		);
+		const relayUrls = Array.from(this.ndk.pool.relays.keys());
 
 		try {
 			const rawEvents = (await fetcher.fetchAllEvents(
@@ -357,9 +355,7 @@ export class Ark {
 
 	public async getAllRelaysFromContacts({ signal }: { signal: AbortSignal }) {
 		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
-		const connectedRelays = this.ndk.pool
-			.connectedRelays()
-			.map((item) => item.url);
+		const connectedRelays = Array.from(this.ndk.pool.relays.keys());
 
 		try {
 			const relayMap = new Map<string, string[]>();
@@ -372,8 +368,6 @@ export class Ark {
 				1,
 				{ abortSignal: signal },
 			);
-
-			console.log(relayEvents);
 
 			for await (const { author, events } of relayEvents) {
 				if (events.length) {
@@ -411,9 +405,7 @@ export class Ark {
 		dedup?: boolean;
 	}) {
 		const fetcher = NostrFetcher.withCustomPool(ndkAdapter(this.ndk));
-		const relayUrls = [...this.ndk.pool.relays.values()].map(
-			(item) => item.url,
-		);
+		const relayUrls = Array.from(this.ndk.pool.relays.keys());
 		const seenIds = new Set<string>();
 		const dedupQueue = new Set<string>();
 
