@@ -2,10 +2,9 @@ import { MentionNote, User, useArk } from "@lume/ark";
 import { LoaderIcon, TrashIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { NDKCacheUserProfile } from "@lume/types";
-import { cn, editorValueAtom } from "@lume/utils";
+import { cn } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { Portal } from "@radix-ui/react-dropdown-menu";
-import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import {
 	Descendant,
@@ -193,7 +192,12 @@ export function ReplyForm({
 	const storage = useStorage();
 	const ref = useRef<HTMLDivElement | null>();
 
-	const [editorValue, setEditorValue] = useAtom(editorValueAtom);
+	const [editorValue, setEditorValue] = useState([
+		{
+			type: "paragraph",
+			children: [{ text: "" }],
+		},
+	]);
 	const [contacts, setContacts] = useState<NDKCacheUserProfile[]>([]);
 	const [target, setTarget] = useState<Range | undefined>();
 	const [index, setIndex] = useState(0);

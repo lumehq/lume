@@ -40,8 +40,8 @@ const Item = ({ event }: { event: NDKEvent }) => {
 export function CreateAccountScreen() {
 	const ark = useArk();
 	const storage = useStorage();
-	const navigate = useNavigate();
 	const services = useLoaderData() as NDKEvent[];
+	const navigate = useNavigate();
 	const setOnboarding = useSetAtom(onboardingAtom);
 
 	const [serviceId, setServiceId] = useState(services?.[0]?.id);
@@ -162,7 +162,7 @@ export function CreateAccountScreen() {
 			ark.updateNostrSigner({ signer: finalSigner });
 
 			// remove default nsecbunker profile and contact list
-			await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });
+			// await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });
 			await ark.createEvent({ kind: NDKKind.Contacts, content: "", tags: [] });
 
 			setOnboarding(true);

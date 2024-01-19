@@ -6,7 +6,7 @@ export function UserAbout({ className }: { className?: string }) {
 
 	if (!user) {
 		return (
-			<>
+			<div className="flex flex-col gap-1">
 				<div
 					className={cn(
 						"h-4 w-20 bg-black/20 dark:bg-white/20 rounded animate-pulse",
@@ -25,7 +25,7 @@ export function UserAbout({ className }: { className?: string }) {
 						className,
 					)}
 				/>
-			</>
+			</div>
 		);
 	}
 

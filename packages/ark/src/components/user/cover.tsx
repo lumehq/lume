@@ -15,9 +15,17 @@ export function UserCover({ className }: { className?: string }) {
 		);
 	}
 
+	if (user && !user.banner) {
+		return (
+			<div
+				className={cn("bg-gradient-to-b from-sky-400 to-sky-200", className)}
+			/>
+		);
+	}
+
 	return (
 		<img
-			src={user.banner || user.cover}
+			src={user.banner}
 			alt="banner"
 			loading="lazy"
 			decoding="async"

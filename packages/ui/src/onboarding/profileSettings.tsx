@@ -23,7 +23,7 @@ export function OnboardingProfileSettingsScreen() {
 	const { register, handleSubmit } = useForm();
 
 	const svgURI = `data:image/svg+xml;utf8,${encodeURIComponent(
-		minidenticon("lume new account", 90, 50),
+		minidenticon(ark.account.pubkey, 90, 50),
 	)}`;
 
 	const onSubmit = async (data: { name: string; about: string }) => {
@@ -39,7 +39,7 @@ export function OnboardingProfileSettingsScreen() {
 
 			const profile: NDKUserProfile = {
 				...data,
-				lud16: oldProfile?.lud16 || "",
+				lud16: "", // temporary remove lud16
 				nip05: oldProfile?.nip05 || "",
 				display_name: data.name,
 				bio: data.about,
@@ -56,9 +56,10 @@ export function OnboardingProfileSettingsScreen() {
 			if (publish) {
 				// invalid cache
 				await storage.clearProfileCache(ark.account.pubkey);
-				await queryClient.setQueryData(["user", ark.account.pubkey], () => {
-					return profile;
-				});
+				await queryClient.setQueryData(
+					["user", ark.account.pubkey],
+					() => profile,
+				);
 
 				setLoading(false);
 				navigate("/follow");

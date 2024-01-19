@@ -276,7 +276,7 @@ export class Ark {
 		if (content.includes("nostr:note1") || content.includes("nostr:nevent1"))
 			return null;
 
-		const events = tags.filter((el) => el[0] === "e");
+		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
 
 		if (!events.length) return null;
 
@@ -325,7 +325,9 @@ export class Ark {
 			if (events.length > 0) {
 				const replies = new Set();
 				for (const event of events) {
-					const tags = event.tags.filter((el) => el[0] === "e" && el[1] !== id);
+					const tags = event.tags.filter(
+						(el) => el[0] === "e" && el[1] !== id && el[3] !== "mention",
+					);
 					if (tags.length > 0) {
 						for (const tag of tags) {
 							const rootIndex = events.findIndex((el) => el.id === tag[1]);

@@ -218,7 +218,6 @@ export function OnboardingFollowScreen() {
 															</>
 														)}
 													</button>
-													UU
 												</div>
 											</div>
 										))

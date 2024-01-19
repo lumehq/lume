@@ -169,8 +169,11 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			);
 
 			activitySub.addListener("event", async (event: NDKEvent) => {
+				if (event.pubkey === storage.currentUser.pubkey) return;
+
 				setUnreadActivity((state) => state + 1);
 				const profile = await ark.getUserProfile(event.pubkey);
+
 				switch (event.kind) {
 					case NDKKind.Text:
 						return await sendNativeNotification(

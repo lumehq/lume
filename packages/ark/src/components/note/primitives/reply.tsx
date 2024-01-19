@@ -38,6 +38,7 @@ export function Reply({
 							<div />
 						)}
 						<div className="inline-flex items-center gap-4">
+							<Note.Reply />
 							<Note.Repost />
 							<Note.Zap />
 						</div>

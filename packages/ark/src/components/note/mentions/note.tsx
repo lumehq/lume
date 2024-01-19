@@ -1,11 +1,13 @@
-import { PinIcon, RefreshIcon } from "@lume/icons";
-import { COL_TYPES } from "@lume/utils";
-import { memo } from "react";
+import { PinIcon } from "@lume/icons";
+import { COL_TYPES, NOSTR_MENTIONS } from "@lume/utils";
+import { ReactNode, memo, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Note } from "../";
+import reactStringReplace from "react-string-replace";
 import { useEvent } from "../../../hooks/useEvent";
 import { useColumnContext } from "../../column/provider";
 import { User } from "../../user";
+import { Hashtag } from "./hashtag";
+import { MentionUser } from "./user";
 
 export const MentionNote = memo(function MentionNote({
 	eventId,
@@ -13,6 +15,71 @@ export const MentionNote = memo(function MentionNote({
 }: { eventId: string; openable?: boolean }) {
 	const { addColumn } = useColumnContext();
 	const { isLoading, isError, data } = useEvent(eventId);
+
+	const richContent = useMemo(() => {
+		if (!data) return "";
+
+		let parsedContent: string | ReactNode[] = data.content.replace(
+			/\n+/g,
+			"\n",
+		);
+
+		const text = parsedContent as string;
+		const words = text.split(/( |\n)/);
+
+		const hashtags = words.filter((word) => word.startsWith("#"));
+		const mentions = words.filter((word) =>
+			NOSTR_MENTIONS.some((el) => word.startsWith(el)),
+		);
+
+		try {
+			if (hashtags.length) {
+				for (const hashtag of hashtags) {
+					parsedContent = reactStringReplace(
+						parsedContent,
+						hashtag,
+						(match, i) => {
+							return <Hashtag key={match + i} tag={hashtag} />;
+						},
+					);
+				}
+			}
+
+			if (mentions.length) {
+				for (const mention of mentions) {
+					parsedContent = reactStringReplace(
+						parsedContent,
+						mention,
+						(match, i) => <MentionUser key={match + i} pubkey={mention} />,
+					);
+				}
+			}
+
+			parsedContent = reactStringReplace(
+				parsedContent,
+				/(https?:\/\/\S+)/g,
+				(match, i) => {
+					const url = new URL(match);
+					return (
+						<Link
+							key={match + i}
+							to={url.toString()}
+							target="_blank"
+							rel="noreferrer"
+							className="break-p font-normal text-blue-500 hover:text-blue-600"
+						>
+							{url.toString()}
+						</Link>
+					);
+				},
+			);
+
+			return parsedContent;
+		} catch (e) {
+			console.log(e);
+			return parsedContent;
+		}
+	}, [data]);
 
 	if (isLoading) {
 		return (
@@ -31,14 +98,14 @@ export const MentionNote = memo(function MentionNote({
 				contentEditable={false}
 				className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
 			>
-				Failed to fetch event
+				Failed to fetch event.
 			</div>
 		);
 	}
 
 	return (
-		<Note.Provider event={data}>
-			<Note.Root className="flex flex-col w-full my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-900">
+		<div>
+			<div className="flex flex-col w-full my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-900">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="flex h-10 px-3 items-center gap-2">
 						<User.Avatar className="size-6 shrink-0 rounded-md object-cover" />
@@ -52,7 +119,9 @@ export const MentionNote = memo(function MentionNote({
 						</div>
 					</User.Root>
 				</User.Provider>
-				<Note.Content mini className="px-3" />
+				<div className="px-3 select-text text-balance leading-normal line-clamp-4 whitespace-pre-line">
+					{richContent}
+				</div>
 				{openable ? (
 					<div className="px-3 h-10 flex items-center justify-between">
 						<Link
@@ -76,9 +145,9 @@ export const MentionNote = memo(function MentionNote({
 						</button>
 					</div>
 				) : (
-					<div className="h-10" />
+					<div className="h-3" />
 				)}
-			</Note.Root>
-		</Note.Provider>
+			</div>
+		</div>
 	);
 });
