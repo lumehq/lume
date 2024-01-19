@@ -65,8 +65,6 @@ export class LumeStorage {
 
 		const account = await this.getActiveAccount();
 		if (account) this.currentUser = account;
-
-		this.nwc = await this.loadPrivkey("Nostr Wallet Connect");
 	}
 
 	async #keyring_save(key: string, value: string) {
@@ -427,10 +425,14 @@ export class LumeStorage {
 	}
 
 	public async logout() {
-		this.currentUser = null;
-		return await this.#db.execute(
+		const res = await this.#db.execute(
 			"UPDATE accounts SET is_active = '0' WHERE id = $1;",
 			[this.currentUser.id],
 		);
+
+		if (res) {
+			this.currentUser = null;
+			this.nwc = null;
+		}
 	}
 }

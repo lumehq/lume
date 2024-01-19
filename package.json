@@ -9,7 +9,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.5.2",
-		"@tauri-apps/cli": "^2.0.0-alpha.21",
+		"@tauri-apps/cli": "2.0.0-alpha.21",
 		"turbo": "^1.11.3"
 	},
 	"packageManager": "pnpm@8.9.0",

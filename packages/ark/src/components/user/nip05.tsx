@@ -1,5 +1,5 @@
 import { UnverifiedIcon, VerifiedIcon } from "@lume/icons";
-import { cn } from "@lume/utils";
+import { cn, displayNpub } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useArk } from "../../hooks/useArk";
 import { useUserContext } from "./provider";
@@ -39,9 +39,9 @@ export function UserNip05({
 	return (
 		<div className="inline-flex items-center gap-1">
 			<p className={cn("text-sm font-medium", className)}>
-				{user.nip05.startsWith("_@")
-					? user.nip05.replace("_@", "")
-					: user.nip05}
+				{user?.nip05?.startsWith("_@")
+					? user?.nip05?.replace("_@", "")
+					: displayNpub(pubkey, 16)}
 			</p>
 			{!isLoading && verified ? (
 				<VerifiedIcon className="size-4 text-teal-500" />

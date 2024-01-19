@@ -23,7 +23,7 @@ export function AvatarUploadButton({
 			}
 		} catch (e) {
 			setLoading(false);
-			toast.error(e);
+			toast.error(String(e));
 		}
 	};
 

@@ -1,3 +1,4 @@
+import { useArk } from "@lume/ark";
 import { useStorage } from "@lume/storage";
 import { downloadDir } from "@tauri-apps/api/path";
 import { message, save } from "@tauri-apps/plugin-dialog";
@@ -11,6 +12,7 @@ interface RouteError {
 }
 
 export function ErrorScreen() {
+	const ark = useArk();
 	const storage = useStorage();
 	const error = useRouteError() as RouteError;
 

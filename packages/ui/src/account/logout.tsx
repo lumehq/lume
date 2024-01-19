@@ -1,3 +1,4 @@
+import { useArk } from "@lume/ark";
 import { LogoutIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
@@ -6,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function Logout() {
+	const ark = useArk();
 	const storage = useStorage();
-
-	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const navigate = useNavigate();
 
 	const logout = async () => {
 		try {
@@ -18,11 +19,14 @@ export function Logout() {
 
 			// clear cache
 			queryClient.clear();
+			ark.account = null;
+			ark.ndk.signer = null;
+			ark.ndk.activeUser = null;
 
 			// redirect to welcome screen
-			navigate("/auth/welcome");
+			navigate("/auth/");
 		} catch (e) {
-			toast.error(e);
+			toast.error(String(e));
 		}
 	};
 

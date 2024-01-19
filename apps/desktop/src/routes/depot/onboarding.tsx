@@ -49,7 +49,7 @@ export function DepotOnboardingScreen() {
 				navigate("/depot/");
 			}
 		} catch (e) {
-			toast.error(e);
+			toast.error(String(e));
 		}
 	};
 

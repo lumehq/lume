@@ -32,7 +32,7 @@ export function DepotContactCard() {
 			}
 		} catch (e) {
 			setStatus(false);
-			toast.error(e);
+			toast.error(String(e));
 		}
 	};
 
