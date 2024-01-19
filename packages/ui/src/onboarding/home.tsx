@@ -27,7 +27,7 @@ export function OnboardingHomeScreen() {
 			<div className="mt-4 flex flex-col gap-2 items-center">
 				<button
 					type="button"
-					onClick={() => navigate("/profile-settings")}
+					onClick={() => navigate("/profile")}
 					className="inline-flex items-center justify-center gap-2 w-44 font-medium h-11 rounded-xl bg-blue-100 text-blue-500 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-500 dark:hover:bg-blue-800"
 				>
 					Profile Settings

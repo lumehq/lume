@@ -11,7 +11,7 @@ export const editorValueAtom = atom([
 ]);
 
 // Onboarding
-export const onboardingAtom = atom(false);
+export const onboardingAtom = atom(true);
 
 // Activity
 export const activityAtom = atom(false);

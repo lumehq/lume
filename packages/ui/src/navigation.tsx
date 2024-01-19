@@ -22,7 +22,10 @@ export function Navigation() {
 	useHotkeys("meta+n", () => setIsEditorOpen((state) => !state), []);
 
 	return (
-		<div className="flex flex-col justify-between w-20 h-full px-4 py-3 shrink-0">
+		<div
+			data-tauri-drag-region
+			className="flex flex-col justify-between w-20 h-full px-4 py-3 shrink-0"
+		>
 			<div className="flex flex-col flex-1">
 				<div className="flex flex-col gap-3">
 					<ActiveAccount />

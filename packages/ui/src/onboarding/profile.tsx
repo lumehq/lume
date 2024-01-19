@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AvatarUploadButton } from "../avatarUploadButton";
 
-export function OnboardingProfileSettingsScreen() {
+export function OnboardingProfileScreen() {
 	const [picture, setPicture] = useState("");
 	const [loading, setLoading] = useState(false);
 
@@ -32,7 +32,7 @@ export function OnboardingProfileSettingsScreen() {
 
 			if (!data.name.length && !data.about.length) {
 				setLoading(false);
-				navigate("/follow");
+				navigate("/interests");
 			}
 
 			const oldProfile = await ark.getUserProfile();
@@ -41,7 +41,6 @@ export function OnboardingProfileSettingsScreen() {
 				...data,
 				lud16: "", // temporary remove lud16
 				nip05: oldProfile?.nip05 || "",
-				display_name: data.name,
 				bio: data.about,
 				image: picture,
 				picture: picture,
@@ -62,7 +61,7 @@ export function OnboardingProfileSettingsScreen() {
 				);
 
 				setLoading(false);
-				navigate("/follow");
+				navigate("/interests");
 			}
 		} catch (e) {
 			setLoading(false);
@@ -72,8 +71,13 @@ export function OnboardingProfileSettingsScreen() {
 
 	return (
 		<div className="w-full h-full flex flex-col gap-4">
-			<div className="h-12 shrink-0 px-8 border-b border-neutral-100 dark:border-neutral-900 flex font-medium text-neutral-700 dark:text-neutral-600 w-full items-center">
-				Profile Settings
+			<div className="h-16 shrink-0 px-8 border-b border-neutral-100 dark:border-neutral-900 flex w-full items-center justify-between">
+				<div className="flex flex-col">
+					<h3 className="font-semibold">About you</h3>
+					<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+						Tell Lume about yourself to start building your home feed.
+					</p>
+				</div>
 			</div>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
@@ -111,9 +115,10 @@ export function OnboardingProfileSettingsScreen() {
 						</label>
 						<input
 							type={"text"}
-							{...register("name")}
+							{...register("name", { required: true, minLength: 1 })}
+							placeholder="e.g. Alice"
 							spellCheck={false}
-							className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+							className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -122,8 +127,21 @@ export function OnboardingProfileSettingsScreen() {
 						</label>
 						<textarea
 							{...register("about")}
+							placeholder="e.g. Artist, anime-lover, and k-pop fan"
 							spellCheck={false}
-							className="relative h-24 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 !outline-none placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+							className="relative h-24 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+						/>
+					</div>
+					<div className="flex flex-col gap-1">
+						<label htmlFor="website" className="font-medium">
+							Website
+						</label>
+						<input
+							type="url"
+							{...register("website")}
+							placeholder="e.g. https://alice.me"
+							spellCheck={false}
+							className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
 						/>
 					</div>
 				</motion.div>

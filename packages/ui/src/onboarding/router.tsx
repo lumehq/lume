@@ -6,9 +6,9 @@ import {
 	UNSAFE_LocationContext,
 } from "react-router-dom";
 import { OnboardingFinishScreen } from "./finish";
-import { OnboardingFollowScreen } from "./follow";
 import { OnboardingHomeScreen } from "./home";
-import { OnboardingProfileSettingsScreen } from "./profileSettings";
+import { OnboardingInterestScreen } from "./interest";
+import { OnboardingProfileScreen } from "./profile";
 
 export function OnboardingRouter() {
 	return (
@@ -17,11 +17,8 @@ export function OnboardingRouter() {
 				<AnimatePresence>
 					<Routes>
 						<Route path="/" element={<OnboardingHomeScreen />} />
-						<Route
-							path="/profile-settings"
-							element={<OnboardingProfileSettingsScreen />}
-						/>
-						<Route path="/follow" element={<OnboardingFollowScreen />} />
+						<Route path="/profile" element={<OnboardingProfileScreen />} />
+						<Route path="/interests" element={<OnboardingInterestScreen />} />
 						<Route path="/finish" element={<OnboardingFinishScreen />} />
 					</Routes>
 				</AnimatePresence>

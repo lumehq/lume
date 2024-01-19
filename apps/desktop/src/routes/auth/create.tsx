@@ -1,7 +1,6 @@
 import { useArk } from "@lume/ark";
 import { CheckIcon, ChevronDownIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
-import { onboardingAtom } from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -9,11 +8,11 @@ import NDK, {
 	NDKPrivateKeySigner,
 } from "@nostr-dev-kit/ndk";
 import * as Select from "@radix-ui/react-select";
+import { UnlistenFn } from "@tauri-apps/api/event";
 import { desktopDir } from "@tauri-apps/api/path";
 import { Window } from "@tauri-apps/api/window";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
-import { useSetAtom } from "jotai";
 import { nanoid } from "nanoid";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { useState } from "react";
@@ -42,7 +41,6 @@ export function CreateAccountScreen() {
 	const storage = useStorage();
 	const services = useLoaderData() as NDKEvent[];
 	const navigate = useNavigate();
-	const setOnboarding = useSetAtom(onboardingAtom);
 
 	const [serviceId, setServiceId] = useState(services?.[0]?.id);
 	const [loading, setIsLoading] = useState(false);
@@ -87,8 +85,6 @@ export function CreateAccountScreen() {
 			privkey: signer.privateKey,
 		});
 
-		setOnboarding(true);
-
 		return navigate("/auth/onboarding", { replace: true });
 	};
 
@@ -117,33 +113,47 @@ export function CreateAccountScreen() {
 			);
 
 			// handle auth url request
+			let unlisten: UnlistenFn;
 			let authWindow: Window;
-			remoteSigner.addListener("authUrl", (authUrl: string) => {
+			let account: string = undefined;
+
+			remoteSigner.addListener("authUrl", async (authUrl: string) => {
 				authWindow = new Window(`auth-${serviceId}`, {
 					url: authUrl,
 					title: domain,
 					titleBarStyle: "overlay",
-					width: 415,
-					height: 600,
+					width: 600,
+					height: 650,
 					center: true,
 					closable: false,
+				});
+				unlisten = await authWindow.onCloseRequested(() => {
+					if (!account) {
+						setIsLoading(false);
+						unlisten();
+
+						return authWindow.close();
+					}
 				});
 			});
 
 			// create new account
-			const account = await remoteSigner.createAccount(
+			account = await remoteSigner.createAccount(
 				data.username,
 				domain,
 				data.email,
 			);
 
 			if (!account) {
-				authWindow.close();
+				unlisten();
 				setIsLoading(false);
+
+				authWindow.close();
 
 				return toast.error("Failed to create new account, try again later");
 			}
 
+			unlisten();
 			authWindow.close();
 
 			// add account to storage
@@ -165,7 +175,6 @@ export function CreateAccountScreen() {
 			// await ark.createEvent({ kind: NDKKind.Metadata, content: "", tags: [] });
 			await ark.createEvent({ kind: NDKKind.Contacts, content: "", tags: [] });
 
-			setOnboarding(true);
 			setIsLoading(false);
 
 			return navigate("/auth/onboarding", { replace: true });
@@ -213,7 +222,10 @@ export function CreateAccountScreen() {
 												minLength: 1,
 											})}
 											spellCheck={false}
-											placeholder="satoshi"
+											autoComplete="off"
+											autoCorrect="off"
+											autoCapitalize="off"
+											placeholder="lume"
 											className="flex-1 min-w-0 text-xl bg-transparent border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-14 ring-0 placeholder:text-neutral-600"
 										/>
 										<Select.Root value={serviceId} onValueChange={setServiceId}>
