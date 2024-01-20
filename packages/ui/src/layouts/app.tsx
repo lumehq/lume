@@ -10,7 +10,7 @@ export function AppLayout({ platform }: { platform: Platform }) {
 		<div
 			className={cn(
 				"flex h-screen w-screen flex-col",
-				platform !== "macos" ? "bg-blue-50 dark:bg-blue-950" : "",
+				platform !== "macos" ? "bg-neutral-50 dark:bg-neutral-950" : "",
 			)}
 		>
 			{platform === "windows" ? (

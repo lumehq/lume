@@ -72,7 +72,7 @@ export function ColumnHeader({
 									Refresh
 								</button>
 							</DropdownMenu.Item>
-							{queryKey[0] === "foryou-9998" ? (
+							{queryKey?.[0] === "foryou-9998" ? (
 								<DropdownMenu.Item asChild>
 									<InterestModal queryKey={queryKey} />
 								</DropdownMenu.Item>

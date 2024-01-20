@@ -326,7 +326,7 @@ export function ReplyForm({
 						setTarget(null);
 					}}
 				>
-					<div className="h-full overflow-y-auto p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
+					<div className="overflow-y-auto p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl">
 						<Editable
 							key={JSON.stringify(editorValue)}
 							autoFocus={false}

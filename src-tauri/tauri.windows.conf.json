@@ -13,11 +13,7 @@
 				"fullscreen": false,
 				"hiddenTitle": true,
 				"fileDropEnabled": true,
-				"decorations": false,
-				"transparent": true,
-				"windowEffects": {
-					"effects": ["micaLight", "micaDark"]
-				}
+				"decorations": false
 			}
 		]
 	}

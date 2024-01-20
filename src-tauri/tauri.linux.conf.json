@@ -11,7 +11,8 @@
 				"title": "Lume",
 				"center": true,
 				"fullscreen": false,
-				"fileDropEnabled": true
+				"fileDropEnabled": true,
+				"decorations": true
 			}
 		]
 	}
