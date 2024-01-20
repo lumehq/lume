@@ -7,7 +7,7 @@ export function OnboardingModal() {
 	const onboarding = useAtomValue(onboardingAtom);
 
 	return (
-		<Dialog.Root open={onboarding}>
+		<Dialog.Root open={onboarding.open}>
 			<Dialog.Portal>
 				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm dark:bg-white/10" />
 				<Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center min-h-full">

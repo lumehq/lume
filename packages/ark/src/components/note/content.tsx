@@ -13,10 +13,11 @@ import { NDKKind } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import getUrls from "get-urls";
 import { nanoid } from "nanoid";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { toast } from "sonner";
+import { stripHtml } from "string-strip-html";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
 import { MentionUser } from "./mentions/user";
@@ -28,10 +29,8 @@ import { useNoteContext } from "./provider";
 
 export function NoteContent({
 	className,
-	mini = false,
 }: {
 	className?: string;
-	mini?: boolean;
 }) {
 	const storage = useStorage();
 	const event = useNoteContext();
@@ -45,7 +44,9 @@ export function NoteContent({
 	const richContent = useMemo(() => {
 		if (event.kind !== NDKKind.Text) return content;
 
-		let parsedContent: string | ReactNode[] = content.replace(/\n+/g, "\n");
+		let parsedContent: string | ReactNode[] = stripHtml(
+			content.replace(/\n{2,}\s*/g, "\n"),
+		).result;
 		let linkPreview: string = undefined;
 		let images: string[] = [];
 		let videos: string[] = [];
@@ -56,7 +57,7 @@ export function NoteContent({
 		const words = text.split(/( |\n)/);
 		const urls = [...getUrls(text)];
 
-		if (storage.settings.media && !storage.settings.lowPower && !mini) {
+		if (storage.settings.media && !storage.settings.lowPower) {
 			images = urls.filter((word) =>
 				IMAGES.some((el) => {
 					const url = new URL(word);
@@ -83,11 +84,9 @@ export function NoteContent({
 			);
 		}
 
-		if (!mini) {
-			events = words.filter((word) =>
-				NOSTR_EVENTS.some((el) => word.startsWith(el)),
-			);
-		}
+		events = words.filter((word) =>
+			NOSTR_EVENTS.some((el) => word.startsWith(el)),
+		);
 
 		const hashtags = words.filter((word) => word.startsWith("#"));
 		const mentions = words.filter((word) =>
@@ -184,11 +183,9 @@ export function NoteContent({
 				},
 			);
 
-			if (!mini) {
-				parsedContent = reactStringReplace(parsedContent, "\n", () => {
-					return <div key={nanoid()} className="h-3" />;
-				});
-			}
+			parsedContent = reactStringReplace(parsedContent, "\n", () => {
+				return <div key={nanoid()} className="h-3" />;
+			});
 
 			if (typeof parsedContent[0] === "string") {
 				parsedContent[0] = parsedContent[0].trimStart();
@@ -235,12 +232,7 @@ export function NoteContent({
 
 	return (
 		<div className={cn(className)}>
-			<div
-				className={cn(
-					"break-p select-text text-balance leading-normal",
-					!mini ? "whitespace-pre-line" : "",
-				)}
-			>
+			<div className="break-p select-text text-balance leading-normal whitespace-pre-line">
 				{richContent}
 			</div>
 			{storage.settings.translation && translate.translatable ? (

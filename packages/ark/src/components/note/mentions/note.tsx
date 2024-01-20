@@ -1,6 +1,6 @@
 import { PinIcon } from "@lume/icons";
 import { COL_TYPES, NOSTR_MENTIONS } from "@lume/utils";
-import { ReactNode, memo, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { useEvent } from "../../../hooks/useEvent";
@@ -9,7 +9,7 @@ import { User } from "../../user";
 import { Hashtag } from "./hashtag";
 import { MentionUser } from "./user";
 
-export const MentionNote = memo(function MentionNote({
+export function MentionNote({
 	eventId,
 	openable = true,
 }: { eventId: string; openable?: boolean }) {
@@ -66,7 +66,7 @@ export const MentionNote = memo(function MentionNote({
 							to={url.toString()}
 							target="_blank"
 							rel="noreferrer"
-							className="break-p font-normal text-blue-500 hover:text-blue-600"
+							className="break-p inline-block truncate w-full font-normal text-blue-500 hover:text-blue-600"
 						>
 							{url.toString()}
 						</Link>
@@ -104,50 +104,48 @@ export const MentionNote = memo(function MentionNote({
 	}
 
 	return (
-		<div>
-			<div className="flex flex-col w-full my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-900">
-				<User.Provider pubkey={data.pubkey}>
-					<User.Root className="flex h-10 px-3 items-center gap-2">
-						<User.Avatar className="size-6 shrink-0 rounded-md object-cover" />
-						<div className="flex-1 inline-flex gap-2">
-							<User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
-							<span className="text-neutral-600 dark:text-neutral-400">·</span>
-							<User.Time
-								time={data.created_at}
-								className="text-neutral-600 dark:text-neutral-400"
-							/>
-						</div>
-					</User.Root>
-				</User.Provider>
-				<div className="px-3 select-text text-balance leading-normal line-clamp-4 whitespace-pre-line">
-					{richContent}
-				</div>
-				{openable ? (
-					<div className="px-3 h-10 flex items-center justify-between">
-						<Link
-							to={`/events/${data.id}`}
-							className="text-sm font-medium text-blue-500 hover:text-blue-600"
-						>
-							Show more
-						</Link>
-						<button
-							type="button"
-							onClick={async () =>
-								await addColumn({
-									kind: COL_TYPES.thread,
-									title: "Thread",
-									content: data.id,
-								})
-							}
-							className="inline-flex items-center justify-center rounded-md text-neutral-600 dark:text-neutral-400 size-6 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
-						>
-							<PinIcon className="size-4" />
-						</button>
+		<div className="flex flex-col w-full my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5">
+			<User.Provider pubkey={data.pubkey}>
+				<User.Root className="flex h-10 px-3 items-center gap-2">
+					<User.Avatar className="size-6 shrink-0 rounded-md object-cover" />
+					<div className="flex-1 inline-flex gap-2">
+						<User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
+						<span className="text-neutral-600 dark:text-neutral-400">·</span>
+						<User.Time
+							time={data.created_at}
+							className="text-neutral-600 dark:text-neutral-400"
+						/>
 					</div>
-				) : (
-					<div className="h-3" />
-				)}
+				</User.Root>
+			</User.Provider>
+			<div className="px-3 select-text text-balance leading-normal line-clamp-4 whitespace-pre-line">
+				{richContent}
 			</div>
+			{openable ? (
+				<div className="px-3 h-10 flex items-center justify-between">
+					<Link
+						to={`/events/${data.id}`}
+						className="text-sm text-blue-500 hover:text-blue-600"
+					>
+						Show more
+					</Link>
+					<button
+						type="button"
+						onClick={async () =>
+							await addColumn({
+								kind: COL_TYPES.thread,
+								title: "Thread",
+								content: data.id,
+							})
+						}
+						className="inline-flex items-center justify-center rounded-md text-neutral-600 dark:text-neutral-400 size-6 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+					>
+						<PinIcon className="size-4" />
+					</button>
+				</div>
+			) : (
+				<div className="h-3" />
+			)}
 		</div>
 	);
-});
+}

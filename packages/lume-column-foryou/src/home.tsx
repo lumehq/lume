@@ -1,6 +1,6 @@
-import { RepostNote, TextNote, useArk } from "@lume/ark";
+import { TextNote, useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
-import { EmptyFeed } from "@lume/ui";
+import { useStorage } from "@lume/storage";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { CacheSnapshot, VList, VListHandle } from "virtua";
 
 export function HomeRoute({ colKey }: { colKey: string }) {
 	const ark = useArk();
+	const storage = useStorage();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
 	const queryClient = useQueryClient();
@@ -32,8 +33,8 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			}) => {
 				const events = await ark.getInfiniteEvents({
 					filter: {
-						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: ark.account.contacts,
+						kinds: [NDKKind.Text],
+						"#t": storage.interests.hashtags,
 					},
 					limit: FETCH_LIMIT,
 					pageParam,
@@ -63,19 +64,9 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			refetchOnMount: false,
 		});
 
-	const renderItem = (event: NDKEvent) => {
-		switch (event.kind) {
-			case NDKKind.Text:
-				return <TextNote key={event.id} event={event} className="mt-3" />;
-			case NDKKind.Repost:
-				return <RepostNote key={event.id} event={event} className="mt-3" />;
-			default:
-				return <TextNote key={event.id} event={event} className="mt-3" />;
-		}
-	};
-
 	useEffect(() => {
 		if (!ref.current) return;
+
 		const handle = ref.current;
 
 		if (offset) {
@@ -90,14 +81,6 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 		};
 	}, []);
 
-	if (!ark.account.contacts.length) {
-		return (
-			<div className="px-3 mt-3">
-				<EmptyFeed />
-			</div>
-		);
-	}
-
 	return (
 		<div className="w-full h-full">
 			<VList ref={ref} cache={cache} overscan={2} className="flex-1 px-3">
@@ -106,7 +89,9 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 						<LoaderIcon className="size-5 animate-spin" />
 					</div>
 				) : (
-					data.map((item) => renderItem(item))
+					data.map((event) => (
+						<TextNote key={event.id} event={event} className="mt-3" />
+					))
 				)}
 				<div className="flex items-center justify-center h-16">
 					{hasNextPage ? (

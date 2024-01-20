@@ -9,6 +9,7 @@
 	"dependencies": {
 		"@columns/antenas": "workspace:^",
 		"@columns/default": "workspace:^",
+		"@columns/foryou": "workspace:^",
 		"@columns/group": "workspace:^",
 		"@columns/hashtag": "workspace:^",
 		"@columns/thread": "workspace:^",

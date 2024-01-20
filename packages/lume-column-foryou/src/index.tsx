@@ -1,5 +1,6 @@
-import { Column, useArk } from "@lume/ark";
-import { TimelineIcon } from "@lume/icons";
+import { Column } from "@lume/ark";
+import { ForyouIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { IColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
@@ -7,9 +8,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { HomeRoute } from "./home";
 
-export function Timeline({ column }: { column: IColumn }) {
-	const colKey = `timeline-${column.id}`;
-	const ark = useArk();
+export function ForYou({ column }: { column: IColumn }) {
+	const colKey = `foryou-${column.id}`;
+	const storage = useStorage();
 	const queryClient = useQueryClient();
 	const since = useRef(Math.floor(Date.now() / 1000));
 
@@ -29,15 +30,13 @@ export function Timeline({ column }: { column: IColumn }) {
 			<Column.Header
 				id={column.id}
 				queryKey={[colKey]}
-				title="Timeline"
-				icon={<TimelineIcon className="size-4" />}
+				title="For You"
+				icon={<ForyouIcon className="size-4" />}
 			/>
 			<Column.Live
 				filter={{
-					kinds: [NDKKind.Text, NDKKind.Repost],
-					authors: !ark.account.contacts.length
-						? [ark.account.pubkey]
-						: ark.account.contacts,
+					kinds: [NDKKind.Text],
+					"#t": storage.interests.hashtags,
 					since: since.current,
 				}}
 				onClick={refresh}

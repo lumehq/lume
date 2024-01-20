@@ -30,6 +30,12 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 			content: "",
 			kind: COL_TYPES.newsfeed,
 		},
+		{
+			id: 9998,
+			title: "For You",
+			content: "",
+			kind: COL_TYPES.foryou,
+		},
 	]);
 
 	const loadAllColumns = useCallback(async () => {

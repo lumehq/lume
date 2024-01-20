@@ -1,14 +1,11 @@
 import { COL_TYPES } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { memo } from "react";
 import { Link } from "react-router-dom";
 import { useArk } from "../../../hooks/useArk";
 import { useProfile } from "../../../hooks/useProfile";
 import { useColumnContext } from "../../column/provider";
 
-export const MentionUser = memo(function MentionUser({
-	pubkey,
-}: { pubkey: string }) {
+export function MentionUser({ pubkey }: { pubkey: string }) {
 	const ark = useArk();
 	const cleanPubkey = ark.getCleanPubkey(pubkey);
 
@@ -51,4 +48,4 @@ export const MentionUser = memo(function MentionUser({
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	);
-});
+}

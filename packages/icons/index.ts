@@ -107,3 +107,4 @@ export * from "./src/popperFilled";
 export * from "./src/composeFilled";
 export * from "./src/settingsFilled";
 export * from "./src/bellFilled";
+export * from "./src/foryou";

@@ -1,6 +1,7 @@
 import {
 	Account,
 	IColumn,
+	Interests,
 	NDKCacheEvent,
 	NDKCacheEventTag,
 	NDKCacheUser,
@@ -19,6 +20,7 @@ export class LumeStorage {
 	readonly platform: Platform;
 	readonly locale: string;
 	public currentUser: Account;
+	public interests: Interests;
 	public nwc: string;
 	public settings: {
 		autoupdate: boolean;
@@ -37,6 +39,7 @@ export class LumeStorage {
 		this.#db = db;
 		this.locale = locale;
 		this.platform = platform;
+		this.interests = null;
 		this.nwc = null;
 		this.settings = {
 			autoupdate: false,
@@ -64,7 +67,18 @@ export class LumeStorage {
 		}
 
 		const account = await this.getActiveAccount();
-		if (account) this.currentUser = account;
+
+		if (account) {
+			this.currentUser = account;
+
+			const interests = await this.getInterests();
+			if (interests) {
+				interests.hashtags = interests.hashtags.map((item: string) =>
+					item.replace("#", "").toLowerCase(),
+				);
+				this.interests = interests;
+			}
+		}
 	}
 
 	async #keyring_save(key: string, value: string) {
@@ -410,6 +424,14 @@ export class LumeStorage {
 		);
 		if (!results.length) return "0";
 		return results[0].value;
+	}
+
+	public async getInterests() {
+		const results: { key: string; value: string }[] = await this.#db.select(
+			"SELECT * FROM settings WHERE key = 'interests' ORDER BY id DESC LIMIT 1;",
+		);
+		if (!results.length) return null;
+		return JSON.parse(results[0].value) as Interests;
 	}
 
 	public async clearCache() {

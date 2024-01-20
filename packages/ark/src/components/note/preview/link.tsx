@@ -11,7 +11,7 @@ export function LinkPreview({ url }: { url: string }) {
 
 	if (status === "pending") {
 		return (
-			<div className="flex flex-col w-full my-1 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+			<div className="flex flex-col w-full my-1 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5">
 				<div className="w-full h-48 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 				<div className="flex flex-col gap-2 px-3 py-3">
 					<div className="w-2/3 h-3 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
@@ -24,7 +24,7 @@ export function LinkPreview({ url }: { url: string }) {
 		);
 	}
 
-	if (!data.title && !data.image) {
+	if (!data.title && !data.image && !data.description) {
 		return (
 			<Link
 				to={url}
@@ -48,6 +48,8 @@ export function LinkPreview({ url }: { url: string }) {
 				<img
 					src={data.image}
 					alt={url}
+					loading="lazy"
+					decoding="async"
 					className="object-cover w-full h-48 bg-white rounded-t-lg"
 				/>
 			) : null}
@@ -59,7 +61,7 @@ export function LinkPreview({ url }: { url: string }) {
 						</div>
 					) : null}
 					{data.description ? (
-						<div className="mb-2 text-sm break-p line-clamp-3 text-neutral-700 dark:text-neutral-400">
+						<div className="mb-2 text-balance text-sm break-p line-clamp-3 text-neutral-700 dark:text-neutral-400">
 							{data.description}
 						</div>
 					) : null}

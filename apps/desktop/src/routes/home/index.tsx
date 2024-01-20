@@ -1,5 +1,6 @@
 import { Antenas } from "@columns/antenas";
 import { Default } from "@columns/default";
+import { ForYou } from "@columns/foryou";
 import { Group } from "@columns/group";
 import { Hashtag } from "@columns/hashtag";
 import { Thread } from "@columns/thread";
@@ -24,6 +25,8 @@ export function HomeScreen() {
 				return <Default key={column.id} column={column} />;
 			case COL_TYPES.newsfeed:
 				return <Timeline key={column.id} column={column} />;
+			case COL_TYPES.foryou:
+				return <ForYou key={column.id} column={column} />;
 			case COL_TYPES.thread:
 				return <Thread key={column.id} column={column} />;
 			case COL_TYPES.user:

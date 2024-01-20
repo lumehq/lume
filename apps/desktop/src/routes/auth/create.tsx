@@ -1,6 +1,7 @@
 import { useArk } from "@lume/ark";
 import { CheckIcon, ChevronDownIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
+import { onboardingAtom } from "@lume/utils";
 import NDK, {
 	NDKEvent,
 	NDKKind,
@@ -13,6 +14,7 @@ import { desktopDir } from "@tauri-apps/api/path";
 import { Window } from "@tauri-apps/api/window";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { useSetAtom } from "jotai";
 import { nanoid } from "nanoid";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { useState } from "react";
@@ -40,6 +42,7 @@ export function CreateAccountScreen() {
 	const ark = useArk();
 	const storage = useStorage();
 	const services = useLoaderData() as NDKEvent[];
+	const setOnboarding = useSetAtom(onboardingAtom);
 	const navigate = useNavigate();
 
 	const [serviceId, setServiceId] = useState(services?.[0]?.id);
@@ -84,6 +87,8 @@ export function CreateAccountScreen() {
 			pubkey: pubkey,
 			privkey: signer.privateKey,
 		});
+
+		setOnboarding({ open: true, newUser: true });
 
 		return navigate("/auth/onboarding", { replace: true });
 	};
@@ -176,6 +181,7 @@ export function CreateAccountScreen() {
 			await ark.createEvent({ kind: NDKKind.Contacts, content: "", tags: [] });
 
 			setIsLoading(false);
+			setOnboarding({ open: true, newUser: true });
 
 			return navigate("/auth/onboarding", { replace: true });
 		} catch (e) {

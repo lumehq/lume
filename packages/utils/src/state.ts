@@ -11,7 +11,10 @@ export const editorValueAtom = atom([
 ]);
 
 // Onboarding
-export const onboardingAtom = atom(true);
+export const onboardingAtom = atomWithStorage("onboarding", {
+	open: true,
+	newUser: false,
+});
 
 // Activity
 export const activityAtom = atom(false);

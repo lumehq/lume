@@ -115,3 +115,9 @@ export interface NIP05 {
 		};
 	};
 }
+
+export interface Interests {
+	hashtags: string[];
+	users: string[];
+	words: string[];
+}
