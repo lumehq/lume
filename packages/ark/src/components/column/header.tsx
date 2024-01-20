@@ -74,7 +74,10 @@ export function ColumnHeader({
 							</DropdownMenu.Item>
 							{queryKey?.[0] === "foryou-9998" ? (
 								<DropdownMenu.Item asChild>
-									<InterestModal queryKey={queryKey} />
+									<InterestModal
+										queryKey={queryKey}
+										className="text-sm font-medium text-white/50 hover:bg-black/10 hover:text-white dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
+									/>
 								</DropdownMenu.Item>
 							) : null}
 							<DropdownMenu.Item asChild>

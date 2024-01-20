@@ -7,17 +7,24 @@ import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
 import { User } from "@columns/user";
 import { useColumnContext } from "@lume/ark";
-import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
+import {
+	ArrowLeftIcon,
+	ArrowRightIcon,
+	NewColumnIcon,
+	PlusIcon,
+	PlusSquareIcon,
+} from "@lume/icons";
 import { IColumn } from "@lume/types";
 import { TutorialModal } from "@lume/ui/src/tutorial/modal";
 import { COL_TYPES } from "@lume/utils";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
 
 export function HomeScreen() {
 	const ref = useRef<VListHandle>(null);
-	const { addColumn, columns } = useColumnContext();
 	const [selectedIndex, setSelectedIndex] = useState(-1);
+	const { columns, addColumn } = useColumnContext();
 
 	const renderItem = (column: IColumn) => {
 		switch (column.kind) {
@@ -45,7 +52,6 @@ export function HomeScreen() {
 	return (
 		<div className="relative w-full h-full">
 			<VList
-				id="timeline"
 				ref={ref}
 				className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
 				itemSize={420}
@@ -82,38 +88,7 @@ export function HomeScreen() {
 				}}
 			>
 				{columns.map((column) => renderItem(column))}
-				<div className="w-[420px]" />
-			</VList>
-			<div className="absolute bottom-3 right-3">
-				<div className="flex items-center gap-1 p-1 bg-black/30 dark:bg-white/30 backdrop-blur-xl rounded-xl">
-					<button
-						type="button"
-						onClick={() => {
-							const prevIndex = Math.max(selectedIndex - 1, 0);
-							setSelectedIndex(prevIndex);
-							ref.current.scrollToIndex(prevIndex, {
-								align: "center",
-								smooth: true,
-							});
-						}}
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
-					>
-						<ArrowLeftIcon className="size-5" />
-					</button>
-					<button
-						type="button"
-						onClick={() => {
-							const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
-							setSelectedIndex(nextIndex);
-							ref.current.scrollToIndex(nextIndex, {
-								align: "center",
-								smooth: true,
-							});
-						}}
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
-					>
-						<ArrowRightIcon className="size-5" />
-					</button>
+				<div className="w-[420px] h-full flex items-center justify-center">
 					<button
 						type="button"
 						onClick={async () =>
@@ -123,14 +98,94 @@ export function HomeScreen() {
 								content: "",
 							})
 						}
-						className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
+						className="size-16 inline-flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 text-white"
 					>
-						<PlusSquareIcon className="size-5" />
+						<NewColumnIcon className="size-7" />
 					</button>
-					<div className="w-px h-6 bg-white/10" />
-					<TutorialModal />
 				</div>
-			</div>
+			</VList>
+			<Tooltip.Provider>
+				<div className="absolute bottom-3 right-3">
+					<div className="flex items-center gap-1 p-1 bg-black/30 dark:bg-white/30 backdrop-blur-xl rounded-xl">
+						<Tooltip.Root delayDuration={150}>
+							<Tooltip.Trigger asChild>
+								<button
+									type="button"
+									onClick={() => {
+										const prevIndex = Math.max(selectedIndex - 1, 0);
+										setSelectedIndex(prevIndex);
+										ref.current.scrollToIndex(prevIndex, {
+											align: "center",
+											smooth: true,
+										});
+									}}
+									className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
+								>
+									<ArrowLeftIcon className="size-5" />
+								</button>
+							</Tooltip.Trigger>
+							<Tooltip.Portal>
+								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+									Move Left
+									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
+								</Tooltip.Content>
+							</Tooltip.Portal>
+						</Tooltip.Root>
+						<Tooltip.Root delayDuration={150}>
+							<Tooltip.Trigger asChild>
+								<button
+									type="button"
+									onClick={() => {
+										const nextIndex = Math.min(
+											selectedIndex + 1,
+											columns.length - 1,
+										);
+										setSelectedIndex(nextIndex);
+										ref.current.scrollToIndex(nextIndex, {
+											align: "center",
+											smooth: true,
+										});
+									}}
+									className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
+								>
+									<ArrowRightIcon className="size-5" />
+								</button>
+							</Tooltip.Trigger>
+							<Tooltip.Portal>
+								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+									Move Right
+									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
+								</Tooltip.Content>
+							</Tooltip.Portal>
+						</Tooltip.Root>
+						<Tooltip.Root delayDuration={150}>
+							<Tooltip.Trigger asChild>
+								<button
+									type="button"
+									onClick={async () =>
+										await addColumn({
+											kind: COL_TYPES.default,
+											title: "",
+											content: "",
+										})
+									}
+									className="inline-flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-black/30 size-10"
+								>
+									<PlusSquareIcon className="size-5" />
+								</button>
+							</Tooltip.Trigger>
+							<Tooltip.Portal>
+								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
+									New Column
+									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
+								</Tooltip.Content>
+							</Tooltip.Portal>
+						</Tooltip.Root>
+						<div className="w-px h-6 bg-white/10" />
+						<TutorialModal />
+					</div>
+				</div>
+			</Tooltip.Provider>
 		</div>
 	);
 }

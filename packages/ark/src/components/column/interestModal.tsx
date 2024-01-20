@@ -56,7 +56,7 @@ export function InterestModal({
 		<Dialog.Root open={open} onOpenChange={setOpen}>
 			<Dialog.Trigger
 				className={cn(
-					"inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white",
+					"inline-flex items-center gap-2 px-3 rounded-lg h-9 focus:outline-none",
 					className,
 				)}
 			>

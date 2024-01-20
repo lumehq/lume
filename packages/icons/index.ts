@@ -109,3 +109,4 @@ export * from "./src/settingsFilled";
 export * from "./src/bellFilled";
 export * from "./src/foryou";
 export * from "./src/editInterest";
+export * from "./src/newColumn";

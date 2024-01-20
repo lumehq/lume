@@ -93,7 +93,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				<EmptyFeed subtext="You can more interests to build up your timeline" />
 				<InterestModal
 					queryKey={[colKey]}
-					className="mt-3 w-full inline-flex items-center justify-center rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
+					className="mt-3 w-full text-sm font-medium inline-flex items-center justify-center rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
 				>
 					<ForyouIcon className="size-5" />
 					Add interest

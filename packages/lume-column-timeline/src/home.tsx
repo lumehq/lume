@@ -99,7 +99,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				<EmptyFeed />
 				<Link
 					to="/suggest"
-					className="mt-3 w-full inline-flex items-center justify-center rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
+					className="mt-3 w-full gap-2 inline-flex items-center justify-center text-sm font-medium rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
 				>
 					<SearchIcon className="size-5" />
 					Find accounts to follow
