@@ -33,14 +33,18 @@ export function ForYou({ column }: { column: IColumn }) {
 				title="For You"
 				icon={<ForyouIcon className="size-4" />}
 			/>
-			<Column.Live
-				filter={{
-					kinds: [NDKKind.Text],
-					"#t": storage.interests.hashtags,
-					since: since.current,
-				}}
-				onClick={refresh}
-			/>
+			{storage.interests?.hashtags ? (
+				<Column.Live
+					filter={{
+						kinds: [NDKKind.Text],
+						"#t": storage.interests.hashtags.map((item: string) =>
+							item.replace("#", "").toLowerCase(),
+						),
+						since: since.current,
+					}}
+					onClick={refresh}
+				/>
+			) : null}
 			<Column.Content>
 				<Column.Route path="/" element={<HomeRoute colKey={colKey} />} />
 				<Column.Route path="/events/:id" element={<EventRoute />} />

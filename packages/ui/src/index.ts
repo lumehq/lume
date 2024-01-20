@@ -11,5 +11,6 @@ export * from "./replyList";
 export * from "./emptyFeed";
 export * from "./routes/event";
 export * from "./routes/user";
+export * from "./routes/suggest";
 export * from "./translateRegisterModal";
 export * from "./user";

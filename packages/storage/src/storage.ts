@@ -57,26 +57,18 @@ export class LumeStorage {
 
 	public async init() {
 		const settings = await this.getAllSettings();
+		const account = await this.getActiveAccount();
+
+		if (account) {
+			this.currentUser = account;
+			this.interests = await this.getInterests();
+		}
 
 		for (const item of settings) {
 			if (item.value.length > 10) {
 				this.settings[item.key] = item.value;
 			} else {
 				this.settings[item.key] = !!parseInt(item.value);
-			}
-		}
-
-		const account = await this.getActiveAccount();
-
-		if (account) {
-			this.currentUser = account;
-
-			const interests = await this.getInterests();
-			if (interests) {
-				interests.hashtags = interests.hashtags.map((item: string) =>
-					item.replace("#", "").toLowerCase(),
-				);
-				this.interests = interests;
 			}
 		}
 	}
@@ -430,7 +422,10 @@ export class LumeStorage {
 		const results: { key: string; value: string }[] = await this.#db.select(
 			"SELECT * FROM settings WHERE key = 'interests' ORDER BY id DESC LIMIT 1;",
 		);
+
 		if (!results.length) return null;
+		if (!results[0].value.length) return null;
+
 		return JSON.parse(results[0].value) as Interests;
 	}
 

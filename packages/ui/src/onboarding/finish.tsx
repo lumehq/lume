@@ -18,7 +18,7 @@ export function OnboardingFinishScreen() {
 		await queryClient.refetchQueries({ queryKey: ["timeline-9999"] });
 
 		setLoading(false);
-		setOnboarding(false);
+		setOnboarding({ open: false, newUser: false });
 	};
 
 	return (

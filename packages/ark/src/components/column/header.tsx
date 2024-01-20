@@ -9,6 +9,7 @@ import {
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode } from "react";
+import { InterestModal } from "./interestModal";
 import { useColumnContext } from "./provider";
 
 export function ColumnHeader({
@@ -71,6 +72,11 @@ export function ColumnHeader({
 									Refresh
 								</button>
 							</DropdownMenu.Item>
+							{queryKey[0] === "foryou-9998" ? (
+								<DropdownMenu.Item asChild>
+									<InterestModal queryKey={queryKey} />
+								</DropdownMenu.Item>
+							) : null}
 							<DropdownMenu.Item asChild>
 								<button
 									type="button"

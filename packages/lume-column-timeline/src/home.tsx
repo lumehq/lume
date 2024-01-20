@@ -1,10 +1,11 @@
 import { RepostNote, TextNote, useArk } from "@lume/ark";
-import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
+import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
+import { Link } from "react-router-dom";
 import { CacheSnapshot, VList, VListHandle } from "virtua";
 
 export function HomeRoute({ colKey }: { colKey: string }) {
@@ -30,6 +31,8 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				signal: AbortSignal;
 				pageParam: number;
 			}) => {
+				if (!ark.account.contacts.length) return [];
+
 				const events = await ark.getInfiniteEvents({
 					filter: {
 						kinds: [NDKKind.Text, NDKKind.Repost],
@@ -94,6 +97,13 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 		return (
 			<div className="px-3 mt-3">
 				<EmptyFeed />
+				<Link
+					to="/suggest"
+					className="mt-3 w-full inline-flex items-center justify-center rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
+				>
+					<SearchIcon className="size-5" />
+					Find accounts to follow
+				</Link>
 			</div>
 		);
 	}
