@@ -1,17 +1,14 @@
 import { useRelaylist } from "@lume/ark";
 import { PlusIcon } from "@lume/icons";
-import { NDKRelayUrl } from "@nostr-dev-kit/ndk";
 import { normalizeRelayUrl } from "nostr-fetch";
 import { useState } from "react";
 import { toast } from "sonner";
-
-const domainRegex = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/;
 
 export function RelayForm() {
 	const { connectRelay } = useRelaylist();
 
 	const [relay, setRelay] = useState<{
-		url: NDKRelayUrl;
+		url: WebSocket["url"];
 		purpose: "read" | "write" | undefined;
 	}>({ url: "", purpose: undefined });
 
@@ -19,10 +16,8 @@ export function RelayForm() {
 		if (relay.url.length < 1) return toast.info("Please enter relay url");
 		try {
 			const relayUrl = new URL(relay.url.replace(/\s/g, ""));
-			if (
-				domainRegex.test(relayUrl.host) &&
-				(relayUrl.protocol === "wss:" || relayUrl.protocol === "ws:")
-			) {
+
+			if (relayUrl.protocol === "wss:" || relayUrl.protocol === "ws:") {
 				connectRelay.mutate(normalizeRelayUrl(relay.url));
 				setRelay({ url: "", purpose: undefined });
 			} else {

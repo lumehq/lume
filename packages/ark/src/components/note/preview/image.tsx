@@ -13,7 +13,7 @@ export function ImagePreview({ url }: { url: string }) {
 
 			const downloadDirPath = await downloadDir();
 			const filename = url.substring(url.lastIndexOf("/") + 1);
-			await download(url, downloadDirPath + `/${filename}`);
+			await download(url, `${downloadDirPath}/${filename}`);
 
 			setDownloaded(true);
 		} catch (e) {
@@ -35,7 +35,7 @@ export function ImagePreview({ url }: { url: string }) {
 
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-		<div onClick={open} className="relative my-1 group">
+		<div onClick={open} className="relative mt-1 mb-2.5 group">
 			<img
 				src={url}
 				alt={url}
@@ -43,7 +43,7 @@ export function ImagePreview({ url }: { url: string }) {
 				decoding="async"
 				style={{ contentVisibility: "auto" }}
 				onError={fallback}
-				className="object-cover w-full h-auto border rounded-lg border-neutral-200/50 dark:border-neutral-800/50"
+				className="object-cover w-full h-auto border rounded-xl border-neutral-200/50 dark:border-neutral-800/50"
 			/>
 			<button
 				type="button"

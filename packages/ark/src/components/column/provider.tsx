@@ -9,6 +9,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
+import { toast } from "sonner";
 
 type ColumnContext = {
 	columns: IColumn[];
@@ -52,6 +53,11 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	const removeColumn = useCallback(async (id: number) => {
+		if (id === 9998 || id === 9999) {
+			toast.info("You cannot remove default column");
+			return;
+		}
+
 		await storage.removeColumn(id);
 		setColumns((prev) => prev.filter((t) => t.id !== id));
 	}, []);

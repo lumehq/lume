@@ -1,4 +1,5 @@
 import { NOSTR_MENTIONS } from "@lume/utils";
+import { nanoid } from "nanoid";
 import { nip19 } from "nostr-tools";
 import { ReactNode, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -33,13 +34,10 @@ export function NoteChild({
 		try {
 			if (hashtags.length) {
 				for (const hashtag of hashtags) {
-					parsedContent = reactStringReplace(
-						parsedContent,
-						hashtag,
-						(match, i) => {
-							return <Hashtag key={match + i} tag={hashtag} />;
-						},
-					);
+					const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
+					parsedContent = reactStringReplace(parsedContent, regex, () => {
+						return <Hashtag key={nanoid()} tag={hashtag} />;
+					});
 				}
 			}
 

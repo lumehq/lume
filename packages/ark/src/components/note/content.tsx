@@ -126,15 +126,12 @@ export function NoteContent({
 
 			if (hashtags.length) {
 				for (const hashtag of hashtags) {
-					parsedContent = reactStringReplace(
-						parsedContent,
-						hashtag,
-						(match, i) => {
-							if (storage.settings.hashtag)
-								return <Hashtag key={match + i} tag={hashtag} />;
-							return null;
-						},
-					);
+					const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
+					parsedContent = reactStringReplace(parsedContent, regex, () => {
+						if (storage.settings.hashtag)
+							return <Hashtag key={nanoid()} tag={hashtag} />;
+						return null;
+					});
 				}
 			}
 

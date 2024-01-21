@@ -23,9 +23,9 @@ export function WelcomeScreen() {
 						className="w-2/3"
 					/>
 					<p className="mt-5 text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Lume is your safe Nostr client to meet, explore and
+						Lume is a magnificent client for Nostr to meet, explore
 						<br />
-						freely sharing your though to everyone in nostrverse
+						and freely share your thoughts with everyone.
 					</p>
 				</div>
 				<div className="flex flex-col w-full max-w-xs gap-2 mx-auto">

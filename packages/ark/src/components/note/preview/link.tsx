@@ -11,7 +11,7 @@ export function LinkPreview({ url }: { url: string }) {
 
 	if (status === "pending") {
 		return (
-			<div className="flex flex-col w-full my-1 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5">
+			<div className="flex flex-col w-full mt-1 mb-2.5 rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5">
 				<div className="w-full h-48 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 				<div className="flex flex-col gap-2 px-3 py-3">
 					<div className="w-2/3 h-3 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
@@ -42,7 +42,7 @@ export function LinkPreview({ url }: { url: string }) {
 			to={url}
 			target="_blank"
 			rel="noreferrer"
-			className="flex flex-col w-full my-1 overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5"
+			className="flex flex-col w-full mt-1 mb-2.5 overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5"
 		>
 			{isImage(data.image) ? (
 				<img
@@ -53,8 +53,8 @@ export function LinkPreview({ url }: { url: string }) {
 					className="object-cover w-full h-48 bg-white rounded-t-lg"
 				/>
 			) : null}
-			<div className="flex flex-col items-start px-3 py-3">
-				<div className="flex flex-col items-start gap-1 text-left">
+			<div className="flex flex-col items-start p-3">
+				<div className="flex flex-col items-start text-left">
 					{data.title ? (
 						<div className="text-base font-semibold break-p text-neutral-900 dark:text-neutral-100">
 							{data.title}
@@ -66,7 +66,7 @@ export function LinkPreview({ url }: { url: string }) {
 						</div>
 					) : null}
 				</div>
-				<div className="text-sm break-all text-neutral-600 dark:text-neutral-400">
+				<div className="text-sm break-all text-blue-500 font-semibold">
 					{domain.hostname}
 				</div>
 			</div>

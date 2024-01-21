@@ -197,10 +197,6 @@ export function CreateAccountScreen() {
 					<h1 className="text-2xl font-semibold">
 						Let's get you set up on Nostr.
 					</h1>
-					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Get started with familiar way, but all data belong to you and you
-						have ability controls everything.
-					</p>
 				</div>
 				{!services ? (
 					<div className="flex items-center justify-center w-full">
@@ -220,59 +216,75 @@ export function CreateAccountScreen() {
 									>
 										Username *
 									</label>
-									<div className="flex items-center justify-between w-full gap-2 bg-neutral-900 rounded-xl">
-										<input
-											type={"text"}
-											{...register("username", {
-												required: true,
-												minLength: 1,
-											})}
-											spellCheck={false}
-											autoComplete="off"
-											autoCorrect="off"
-											autoCapitalize="off"
-											placeholder="lume"
-											className="flex-1 min-w-0 text-xl bg-transparent border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-14 ring-0 placeholder:text-neutral-600"
-										/>
-										<Select.Root value={serviceId} onValueChange={setServiceId}>
-											<Select.Trigger className="inline-flex items-center justify-end gap-2 pr-3 text-xl font-semibold text-blue-500 w-max shrink-0">
-												<Select.Value>@{getDomainName(serviceId)}</Select.Value>
-												<Select.Icon>
-													<ChevronDownIcon className="size-5" />
-												</Select.Icon>
-											</Select.Trigger>
-											<Select.Portal>
-												<Select.Content className="rounded-lg border border-white/20 bg-white/10 backdrop-blur-xl">
-													<Select.Viewport className="p-3">
-														<Select.Group>
-															<Select.Label className="mb-2 text-sm font-medium uppercase px-7 text-neutral-600">
-																Public handles
-															</Select.Label>
-															{services.map((service) => (
-																<Item key={service.id} event={service} />
-															))}
-														</Select.Group>
-													</Select.Viewport>
-												</Select.Content>
-											</Select.Portal>
-										</Select.Root>
+									<div className="flex flex-col gap-1.5">
+										<div className="flex items-center justify-between w-full gap-2 bg-neutral-900 rounded-xl">
+											<input
+												type={"text"}
+												{...register("username", {
+													required: true,
+													minLength: 1,
+												})}
+												spellCheck={false}
+												autoComplete="off"
+												autoCorrect="off"
+												autoCapitalize="off"
+												placeholder="alice"
+												className="flex-1 min-w-0 text-xl bg-transparent border-transparent outline-none focus:outline-none focus:ring-0 focus:border-none h-14 ring-0 placeholder:text-neutral-600"
+											/>
+											<Select.Root
+												value={serviceId}
+												onValueChange={setServiceId}
+											>
+												<Select.Trigger className="inline-flex items-center justify-end gap-2 pr-3 text-xl font-semibold text-blue-500 w-max shrink-0">
+													<Select.Value>
+														@{getDomainName(serviceId)}
+													</Select.Value>
+													<Select.Icon>
+														<ChevronDownIcon className="size-5" />
+													</Select.Icon>
+												</Select.Trigger>
+												<Select.Portal>
+													<Select.Content className="rounded-lg border border-white/20 bg-white/10 backdrop-blur-xl">
+														<Select.Viewport className="p-3">
+															<Select.Group>
+																<Select.Label className="mb-2 text-sm font-medium uppercase px-7 text-neutral-600">
+																	Choose a Provider
+																</Select.Label>
+																{services.map((service) => (
+																	<Item key={service.id} event={service} />
+																))}
+															</Select.Group>
+														</Select.Viewport>
+													</Select.Content>
+												</Select.Portal>
+											</Select.Root>
+										</div>
+										<span className="text-sm text-neutral-600">
+											Use to login to Lume and other Nostr apps. You can choose
+											provider you trust to manage your account
+										</span>
 									</div>
 								</div>
-								<div className="flex flex-col gap-2">
-									<label
-										htmlFor="email"
-										className="text-sm font-semibold uppercase text-neutral-600"
-									>
-										Backup Email (Optional)
-									</label>
-									<input
-										type={"email"}
-										{...register("email", { required: false })}
-										spellCheck={false}
-										autoCapitalize="none"
-										autoCorrect="none"
-										className="px-3 text-xl border-transparent rounded-xl h-14 bg-neutral-900 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-800"
-									/>
+								<div className="flex flex-col gap-1.5">
+									<div className="flex flex-col gap-2">
+										<label
+											htmlFor="email"
+											className="text-sm font-semibold uppercase text-neutral-600"
+										>
+											Backup Email (optional)
+										</label>
+										<input
+											type={"email"}
+											{...register("email", { required: false })}
+											spellCheck={false}
+											autoCapitalize="none"
+											autoCorrect="none"
+											className="px-3 text-xl border-transparent rounded-xl h-14 bg-neutral-900 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-800"
+										/>
+									</div>
+									<span className="text-sm text-neutral-600">
+										Use for recover your account if you lose your password
+									</span>
 								</div>
 							</div>
 							<div>
@@ -297,12 +309,12 @@ export function CreateAccountScreen() {
 									</div>
 									<div className="relative flex justify-center">
 										<span className="px-2 font-medium bg-black text-neutral-500">
-											Or
+											Or manage your own keys
 										</span>
 									</div>
 								</div>
 								<span className="mx-auto text-xs font-medium bg-black text-neutral-600">
-									More compatible with other Nostr clients
+									Mostly compatible with other Nostr clients
 								</span>
 							</div>
 							<div>
