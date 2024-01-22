@@ -1,0 +1,149 @@
+---
+import { Seo } from "astro-seo-meta";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Lume</title>
+		<Seo
+			title="Lume"
+			description="A multiple columns Nostr client for desktop."
+			keywords={[
+				"nostr",
+				"nostr client",
+				"social network",
+				"desktop app",
+				"timeline",
+				"application",
+				"columns",
+			]}
+			themeColor="#fafafa"
+			colorScheme="light"
+			facebook={{
+				image: "/og-image.jpg",
+				url: "https://lume.nu",
+				type: "website",
+			}}
+			twitter={{
+				image: "/og-image.jpg",
+				card: "summary",
+			}}
+		/>
+	</head>
+	<body
+		class="w-full h-full antialiased font-mono bg-neutral-50 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50"
+	>
+		<div class="max-w-2xl mx-auto w-full py-16">
+			<div class="flex flex-col gap-16">
+				<div class="prose dark:prose-invert prose-neutral max-w-none">
+					<h3>About Lume</h3>
+					<p>
+						Lume is a <b>Nostr client</b> for desktop include Linux, Windows and
+						macOS. It is free and open source, you can look at source code <a
+							href="https://github.com/luminous-devs/lume"
+							target="_blank">on Github</a
+						>. Lume is actively improving the app and adding new features, you
+						can expect new update every month.
+					</p>
+					<a href="#download">Download</a>
+					<h3>What is nostr & how does it work?</h3>
+					<p>
+						Nostr stands for Notes and Other Stuff Transmitted by Relays. It is
+						an open, permission-less protocol that aims to provide
+						censorship-resistance and interoperability. It can be used to create
+						social networks or just about any other type of app (other stuff
+						part of the acronym). It is not a single website or app, but the
+						glue that holds together many apps (clients) and <b>Lume</b> is one of
+						it.
+					</p>
+					<p>
+						At its core, nostr consists of relays and events. A person does
+						something (event) and this event is sent to a relay. The relay
+						stores the event, then waits for another person to request it. The
+						most common types of events are notes and reactions - the stuff
+						social media is made of, but there are many other types of events.
+						It works very similar to how any other app would work with a
+						database, except in nostr there is no single database, rather a
+						large number of relays that store the events.
+					</p>
+					<h3>Lume is multiple columns experience</h3>
+					<p>
+						Lume is display your timeline as multiple column, each column is
+						each different content and you can define your experience
+					</p>
+					<p>
+						You can create a column to display newsfeed from specific people,
+						you can create a column to display all contents related to some
+						hashtags. It all up to you.
+					</p>
+					<img
+						src="https://image.nostr.build/fd3e3cdeb4fb9f0f3de5c5e668a11dcae55f50cc9a78fc2b57b063240191a0f9.png"
+						alt="columns"
+						loading="lazy"
+						decoding="async"
+						class="w-full h-auto rounded-lg"
+					/>
+					<h3>"For You"</h3>
+					<p>
+						Unlike some social networks, they feed you by algorithm. In Lume,
+						you totally control what to will see
+					</p>
+					<img
+						src="https://image.nostr.build/5afd79de15929a4ac6f6e933791c942555baa4206fecee54fed61dde9fe167e1.png"
+						alt="for you"
+						loading="lazy"
+						decoding="async"
+						class="w-full h-auto rounded-lg"
+					/>
+					<h3 id="download">Download and Explore</h3>
+					<p>
+						(Universal) macOS: <a
+							href="https://github.com/luminous-devs/lume/releases/download/v3.0.0/Lume.3_3.0.0_universal.dmg"
+							>Lume.3_3.0.0_universal.dmg
+						</a>
+					</p>
+					<p>
+						(x86-64) Windows 11: <a
+							href="https://github.com/luminous-devs/lume/releases/download/v3.0.0/Lume.3_3.0.0_x64-setup.exe"
+							>Lume.3_3.0.0_x64-setup.exe</a
+						>
+					</p>
+					<p>
+						(x86-64) Ubuntu: <a
+							href="https://github.com/luminous-devs/lume/releases/download/v3.0.0/lume-3_3.0.0_amd64.deb"
+							>lume-3_3.0.0_amd64.deb</a
+						>
+					</p>
+					<p>
+						(x86-64) Fedora: <a
+							href="https://github.com/luminous-devs/lume/releases/download/v3.0.0/lume-3-3.0.0-1.x86_64.rpm"
+							>lume-3-3.0.0-1.x86_64.rpm</a
+						>
+					</p>
+					<p>
+						(x86-64) Other Linux: <a
+							href="https://github.com/luminous-devs/lume/releases/download/v3.0.0/lume-3_3.0.0_amd64.AppImage"
+							>lume-3_3.0.0_amd64.AppImage</a
+						>
+					</p>
+					<p>
+						Support for ARM, RISC-V and Loongarch architecture are coming soon.
+					</p>
+				</div>
+				<div class="text-center">
+					<p class="text-sm text-neutral-500 dark:text-neutral-600">
+						Supported by <a
+							href="https://opensats.org"
+							target="_blank"
+							class="text-orange-500">Open Sats</a
+						> and Community
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
