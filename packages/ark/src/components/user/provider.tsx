@@ -8,16 +8,20 @@ const UserContext = createContext<NDKUserProfile>(null);
 export function UserProvider({
 	pubkey,
 	children,
-}: { pubkey: string; children: ReactNode }) {
+	embed,
+}: { pubkey: string; children: ReactNode; embed?: string }) {
 	const ark = useArk();
 	const { data: user } = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
+			if (embed) return JSON.parse(embed) as NDKUserProfile;
+
 			const profile = await ark.getUserProfile(pubkey);
 			if (!profile)
 				throw new Error(
 					`Cannot get metadata for ${pubkey}, will be retry after 10 seconds`,
 				);
+
 			return profile;
 		},
 		refetchOnMount: false,

@@ -11,20 +11,18 @@ import {
 	ArrowLeftIcon,
 	ArrowRightIcon,
 	NewColumnIcon,
-	PlusIcon,
 	PlusSquareIcon,
 } from "@lume/icons";
 import { IColumn } from "@lume/types";
 import { TutorialModal } from "@lume/ui/src/tutorial/modal";
 import { COL_TYPES } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useRef, useState } from "react";
-import { VList, VListHandle } from "virtua";
+import { useState } from "react";
+import { VList } from "virtua";
 
 export function HomeScreen() {
-	const ref = useRef<VListHandle>(null);
+	const { columns, vlistRef, addColumn } = useColumnContext();
 	const [selectedIndex, setSelectedIndex] = useState(-1);
-	const { columns, addColumn } = useColumnContext();
 
 	const renderItem = (column: IColumn) => {
 		switch (column.kind) {
@@ -52,20 +50,20 @@ export function HomeScreen() {
 	return (
 		<div className="relative w-full h-full">
 			<VList
-				ref={ref}
+				ref={vlistRef}
 				className="h-full w-full flex-nowrap overflow-x-auto !overflow-y-hidden scrollbar-none focus:outline-none"
 				itemSize={420}
 				tabIndex={0}
 				horizontal
 				onKeyDown={(e) => {
-					if (!ref.current) return;
+					if (!vlistRef.current) return;
 					switch (e.code) {
 						case "ArrowUp":
 						case "ArrowLeft": {
 							e.preventDefault();
 							const prevIndex = Math.max(selectedIndex - 1, 0);
 							setSelectedIndex(prevIndex);
-							ref.current.scrollToIndex(prevIndex, {
+							vlistRef.current.scrollToIndex(prevIndex, {
 								align: "center",
 								smooth: true,
 							});
@@ -76,7 +74,7 @@ export function HomeScreen() {
 							e.preventDefault();
 							const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
 							setSelectedIndex(nextIndex);
-							ref.current.scrollToIndex(nextIndex, {
+							vlistRef.current.scrollToIndex(nextIndex, {
 								align: "center",
 								smooth: true,
 							});
@@ -114,7 +112,7 @@ export function HomeScreen() {
 									onClick={() => {
 										const prevIndex = Math.max(selectedIndex - 1, 0);
 										setSelectedIndex(prevIndex);
-										ref.current.scrollToIndex(prevIndex, {
+										vlistRef.current.scrollToIndex(prevIndex, {
 											align: "center",
 											smooth: true,
 										});
@@ -141,7 +139,7 @@ export function HomeScreen() {
 											columns.length - 1,
 										);
 										setSelectedIndex(nextIndex);
-										ref.current.scrollToIndex(nextIndex, {
+										vlistRef.current.scrollToIndex(nextIndex, {
 											align: "center",
 											smooth: true,
 										});

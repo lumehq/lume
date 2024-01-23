@@ -442,14 +442,13 @@ export class LumeStorage {
 	}
 
 	public async logout() {
-		const res = await this.#db.execute(
+		await this.createSetting("nsecbunker", "0");
+		await this.#db.execute(
 			"UPDATE accounts SET is_active = '0' WHERE id = $1;",
 			[this.currentUser.id],
 		);
 
-		if (res) {
-			this.currentUser = null;
-			this.nwc = null;
-		}
+		this.currentUser = null;
+		this.nwc = null;
 	}
 }

@@ -109,7 +109,7 @@ export function NoteChild({
 				<User.Root>
 					<User.Avatar className="size-10 shrink-0 rounded-lg object-cover" />
 					<div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
-						<User.Name />
+						<User.Name className="max-w-[10rem] truncate" />
 						<div className="font-normal text-neutral-700 dark:text-neutral-300">
 							{isRoot ? "posted:" : "replied:"}
 						</div>

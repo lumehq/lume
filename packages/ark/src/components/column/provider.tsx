@@ -2,17 +2,21 @@ import { useStorage } from "@lume/storage";
 import { IColumn } from "@lume/types";
 import { COL_TYPES } from "@lume/utils";
 import {
-	ReactNode,
+	type MutableRefObject,
+	type ReactNode,
 	createContext,
 	useCallback,
 	useContext,
 	useEffect,
+	useRef,
 	useState,
 } from "react";
 import { toast } from "sonner";
+import { type VListHandle } from "virtua";
 
 type ColumnContext = {
 	columns: IColumn[];
+	vlistRef: MutableRefObject<VListHandle>;
 	addColumn: (column: IColumn) => Promise<void>;
 	removeColumn: (id: number) => Promise<void>;
 	moveColumn: (id: number, position: "left" | "right") => void;
@@ -24,6 +28,8 @@ const ColumnContext = createContext<ColumnContext>(null);
 
 export function ColumnProvider({ children }: { children: ReactNode }) {
 	const storage = useStorage();
+	const vlistRef = useRef<VListHandle>(null);
+
 	const [columns, setColumns] = useState<IColumn[]>([
 		{
 			id: 9999,
@@ -112,6 +118,7 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 		<ColumnContext.Provider
 			value={{
 				columns,
+				vlistRef,
 				addColumn,
 				removeColumn,
 				moveColumn,

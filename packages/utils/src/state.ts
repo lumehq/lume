@@ -22,3 +22,6 @@ export const activityUnreadAtom = atom(0);
 
 // Tutorial
 export const tutorialAtom = atomWithStorage("tutorial", true);
+
+// Search
+export const searchAtom = atom(false);

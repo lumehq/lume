@@ -266,6 +266,12 @@ export class Ark {
 		return event;
 	}
 
+	public async getEvents(filter: NDKFilter) {
+		const events = await this.ndk.fetchEvents(filter);
+		if (!events) return [];
+		return [...events];
+	}
+
 	public getEventThread({
 		content,
 		tags,
