@@ -1,5 +1,5 @@
 import { Note, User, useArk, useColumnContext } from "@lume/ark";
-import { LoaderIcon } from "@lume/icons";
+import { LoaderIcon, SearchIcon } from "@lume/icons";
 import { COL_TYPES, searchAtom } from "@lume/utils";
 import { type NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useAtom } from "jotai";
@@ -96,11 +96,11 @@ export function SearchDialog() {
 			</div>
 			<Command.List className="mt-4 h-[500px] px-3 overflow-y-auto w-full flex flex-col">
 				{loading ? (
-					<Command.Loading className="flex items-center justify-center h-12">
+					<Command.Loading className="flex items-center justify-center h-full">
 						<LoaderIcon className="size-5 animate-spin" />
 					</Command.Loading>
 				) : !events.length ? (
-					<Command.Empty className="flex items-center justify-center h-12 text-sm">
+					<Command.Empty className="flex items-center justify-center h-full text-sm">
 						No results found.
 					</Command.Empty>
 				) : (
@@ -156,6 +156,14 @@ export function SearchDialog() {
 						</Command.Group>
 					</>
 				)}
+				{!loading ? (
+					<div className="h-full flex items-center justify-center flex-col gap-3">
+						<div className="size-16 bg-blue-100 dark:bg-blue-900 rounded-full inline-flex items-center justify-center text-blue-500">
+							<SearchIcon className="size-6" />
+						</div>
+						Try searching for people, notes, or keywords
+					</div>
+				) : null}
 			</Command.List>
 		</Command.Dialog>
 	);

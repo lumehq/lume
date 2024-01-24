@@ -107,7 +107,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			explicitRelayUrls,
 			outboxRelayUrls,
 			blacklistRelayUrls,
-			enableOutboxModel: false,
+			enableOutboxModel: !storage.settings.lowPower,
 			autoConnectUserRelays: !storage.settings.lowPower,
 			autoFetchUserMutelist: !storage.settings.lowPower,
 			// clientName: "Lume",
