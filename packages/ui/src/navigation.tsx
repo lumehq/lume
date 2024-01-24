@@ -7,10 +7,12 @@ import {
 	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
+	SearchFilledIcon,
+	SearchIcon,
 	SettingsFilledIcon,
 	SettingsIcon,
 } from "@lume/icons";
-import { cn, editorAtom } from "@lume/utils";
+import { cn, editorAtom, searchAtom } from "@lume/utils";
 import { useAtom } from "jotai";
 import { useHotkeys } from "react-hotkeys-hook";
 import { NavLink } from "react-router-dom";
@@ -19,6 +21,9 @@ import { UnreadActivity } from "./unread";
 
 export function Navigation() {
 	const [isEditorOpen, setIsEditorOpen] = useAtom(editorAtom);
+	const [search, setSearch] = useAtom(searchAtom);
+
+	// shortcut for editor
 	useHotkeys("meta+n", () => setIsEditorOpen((state) => !state), []);
 
 	return (
@@ -117,7 +122,27 @@ export function Navigation() {
 					</NavLink>
 				</div>
 			</div>
-			<div className="flex flex-col">
+			<div className="flex flex-col gap-2">
+				<button
+					type="button"
+					onClick={() => setSearch((open) => !open)}
+					className="inline-flex flex-col items-center justify-center"
+				>
+					<div
+						className={cn(
+							"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
+							search
+								? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
+								: "text-black/50 dark:text-neutral-400",
+						)}
+					>
+						{search ? (
+							<SearchFilledIcon className="size-6" />
+						) : (
+							<SearchIcon className="size-6" />
+						)}
+					</div>
+				</button>
 				<NavLink
 					to="/settings/"
 					preventScrollReset={true}

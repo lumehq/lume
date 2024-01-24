@@ -88,7 +88,6 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 	async function initNDK() {
 		const explicitRelayUrls = normalizeRelayUrlSet([
 			"wss://bostr.nokotaro.com/",
-			"wss://nostr.mutinywallet.com/",
 		]);
 
 		// #TODO: user should config outbox relays
@@ -111,7 +110,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			enableOutboxModel: !storage.settings.lowPower,
 			autoConnectUserRelays: !storage.settings.lowPower,
 			autoFetchUserMutelist: !storage.settings.lowPower,
-			clientName: "Lume",
+			// clientName: "Lume",
 			// clientNip89: '',
 		});
 
