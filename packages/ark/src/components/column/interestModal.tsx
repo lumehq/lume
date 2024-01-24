@@ -56,7 +56,7 @@ export function InterestModal({
 		<Dialog.Root open={open} onOpenChange={setOpen}>
 			<Dialog.Trigger
 				className={cn(
-					"inline-flex items-center gap-2 px-3 rounded-lg h-9 focus:outline-none",
+					"inline-flex items-center gap-3 px-3 rounded-lg h-9 focus:outline-none",
 					className,
 				)}
 			>
@@ -64,7 +64,7 @@ export function InterestModal({
 					children
 				) : (
 					<>
-						<EditInterestIcon className="size-5" />
+						<EditInterestIcon className="size-4" />
 						Edit interest
 					</>
 				)}

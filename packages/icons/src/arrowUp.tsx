@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export function ChevronUpIcon(
+export function ArrowUpIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (
@@ -17,7 +17,7 @@ export function ChevronUpIcon(
 				strokeLinecap="round"
 				strokeLinejoin="round"
 				strokeWidth="2"
-				d="M6 15a30.617 30.617 0 015.49-5.817.803.803 0 011.02 0A30.616 30.616 0 0118 15"
+				d="M6 9.83a30.23 30.23 0 015.406-5.62A.949.949 0 0112 4m6 5.83a30.233 30.233 0 00-5.406-5.62A.949.949 0 0012 4m0 0v16"
 			/>
 		</svg>
 	);
