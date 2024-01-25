@@ -13,13 +13,14 @@ finish-args:
   - --share=network
   #- --filesystem=home
   #- --filesystem=xdg-download
-  #- --talk-name=org.freedesktop.secrets
+  - --talk-name=org.freedesktop.secrets
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
   - --filesystem=xdg-run/keyring
   - --device=dri
 
 modules:
+  - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
   - name: lume
     sources:
       - type: dir
@@ -31,8 +32,10 @@ modules:
     buildsystem: simple
     build-commands:
       - install -Dm755 bin/lume /app/bin/lume
+    #   - install -Dm755 bin/depot /app/bin/depot
+    #   - mkdir -p /app/lib/lume/resources
+    #  - cp -r lib/lume/resources /app/lib/lume/resources
       - mkdir -p /app/share/icons/hicolor/
       - cp -r share/icons/hicolor/ /app/share/icons/
       - install -Dm644 nu.lume.Lume.appdata.xml /app/share/metainfo/nu.lume.Lume.appdata.xml
       - install -Dm644 nu.lume.Lume.desktop /app/share/applications/nu.lume.Lume.desktop
-      - ls -lRa /app

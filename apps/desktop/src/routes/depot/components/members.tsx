@@ -1,12 +1,13 @@
 import { CancelIcon, PlusIcon, UserAddIcon, UserRemoveIcon } from "@lume/icons";
 import { User } from "@lume/ui";
 import * as Dialog from "@radix-ui/react-dialog";
-import { resolveResource } from "@tauri-apps/api/path";
+import { resolveResource, resolve } from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
 import { parse, stringify } from "smol-toml";
 import { toast } from "sonner";
+import { VITE_FLATPAK_RESOURCE } from "@lume/utils";
 
 export function DepotMembers() {
 	const [members, setMembers] = useState<Set<string>>(null);
@@ -32,7 +33,7 @@ export function DepotMembers() {
 	const updateMembers = async () => {
 		setMembers(new Set(tmpMembers));
 
-		const defaultConfig = await resolveResource("resources/config.toml");
+		const defaultConfig = VITE_FLATPAK_RESOURCE !== null ? await resolve("/",VITE_FLATPAK_RESOURCE) : await resolveResource("resources/config.toml");
 		const config = await readTextFile(defaultConfig);
 		const configContent = parse(config);
 
@@ -46,7 +47,7 @@ export function DepotMembers() {
 
 	useEffect(() => {
 		async function loadConfig() {
-			const defaultConfig = await resolveResource("resources/config.toml");
+		  const defaultConfig = VITE_FLATPAK_RESOURCE !== null ? await resolve("/",VITE_FLATPAK_RESOURCE) : await resolveResource("resources/config.toml");
 			const config = await readTextFile(defaultConfig);
 			const configContent = parse(config);
 			setTmpMembers(

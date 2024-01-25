@@ -406,3 +406,5 @@ export const QUOTES = [
 	"You can send secure messages on Nostr with https://0xchat.com/",
 	"Are you a fan of following topics, instead of people? Use https://zapddit.com",
 ];
+
+export const VITE_FLATPAK_RESOURCE = import.meta.env.VITE_FLATPAK_RESOURCE;

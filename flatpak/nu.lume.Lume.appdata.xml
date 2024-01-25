@@ -30,7 +30,18 @@
       <value key="Purism::form_factor">workstation</value>
       <value key="Purism::form_factor">mobile</value>
   </custom>
-  
+  <screenshots>
+  <screenshot type="default">
+    <image> https://raw.githubusercontent.com/kogeletey/lume-nostr/feat/package-flatpak/flatpak/screenshoots/login-screen.png </image>
+  </screenshot>
+  <screenshot>
+    <image>https://raw.githubusercontent.com/kogeletey/lume-nostr/feat/package-flatpak/flatpak/screenshoots/collumns.png</image>
+  </screenshot>
+  <screenshot>
+    <image> https://raw.githubusercontent.com/kogeletey/lume-nostr/feat/package-flatpak/flatpak/screenshoots/home-screen.png </image>
+  </screenshot>
+  </screenshots>
+ 
 
   <releases>
       <release version="2.2.3" date="2023-12-07"/>

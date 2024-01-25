@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "3.0.0",
 	"scripts": {
+    "build:depot": "node --max-old-space-size=4096 scripts/compile-depot.mjs",
 		"build": "turbo build",
 		"dev": "turbo dev",
 		"tauri": "tauri"
