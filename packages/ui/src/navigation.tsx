@@ -2,11 +2,11 @@ import {
 	BellFilledIcon,
 	BellIcon,
 	ComposeFilledIcon,
-	ComposeIcon,
 	DepotFilledIcon,
 	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
+	PlusIcon,
 	SearchFilledIcon,
 	SearchIcon,
 	SettingsFilledIcon,
@@ -44,11 +44,7 @@ export function Navigation() {
 								: "bg-black/5 hover:bg-blue-500 dark:bg-white/5 dark:hover:bg-blue-500",
 						)}
 					>
-						{isEditorOpen ? (
-							<ComposeFilledIcon className="size-5" />
-						) : (
-							<ComposeIcon className="size-5" />
-						)}
+						<PlusIcon className="size-5" />
 					</button>
 				</div>
 				<div className="my-5 w-2/3 mx-auto h-px bg-black/10 dark:bg-white/10" />

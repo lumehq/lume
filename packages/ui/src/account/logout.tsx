@@ -35,9 +35,9 @@ export function Logout() {
 			<AlertDialog.Trigger asChild>
 				<button
 					type="button"
-					className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
+					className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 				>
-					<LogoutIcon className="size-5" />
+					<LogoutIcon className="size-4" />
 					Logout
 				</button>
 			</AlertDialog.Trigger>

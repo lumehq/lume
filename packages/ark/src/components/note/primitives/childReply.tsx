@@ -8,7 +8,7 @@ export function ChildReply({
 		<Note.Provider event={event}>
 			<Note.Root className="py-2">
 				<div className="flex items-center justify-between h-14">
-					<Note.User className="flex-1" />
+					<Note.User className="flex-1 pr-2" />
 					<Note.Menu />
 				</div>
 				<Note.Content />

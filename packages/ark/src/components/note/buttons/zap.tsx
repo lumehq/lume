@@ -131,10 +131,18 @@ export function NoteZap() {
 				</Tooltip.Root>
 			</Tooltip.Provider>
 			<Dialog.Portal>
-				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm dark:bg-white/10" />
+				<Dialog.Overlay className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm dark:bg-white/20" />
 				<Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center min-h-full">
+					<Dialog.Close className="absolute top-5 right-5 z-50">
+						<div className="flex flex-col gap-1.5">
+							<div className="inline-flex items-center justify-center size-10 rounded-lg bg-white dark:bg-black">
+								<CancelIcon className="size-5" />
+							</div>
+							<span className="text-sm font-medium">Esc</span>
+						</div>
+					</Dialog.Close>
 					<div className="relative w-full max-w-xl bg-white h-min rounded-xl dark:bg-black">
-						<div className="inline-flex items-center justify-between w-full px-5 py-3 shrink-0">
+						<div className="inline-flex items-center justify-center w-full px-5 py-3 shrink-0">
 							<div className="w-6" />
 							<Dialog.Title className="font-semibold text-center">
 								Send zap to{" "}
@@ -142,13 +150,10 @@ export function NoteZap() {
 									user?.displayName ||
 									displayNpub(event.pubkey, 16)}
 							</Dialog.Title>
-							<Dialog.Close className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-neutral-100 dark:bg-neutral-900">
-								<CancelIcon className="w-4 h-4" />
-							</Dialog.Close>
 						</div>
 						{!invoice ? (
 							<div className="px-5 pb-5 overflow-x-hidden overflow-y-auto">
-								<div className="relative flex flex-col h-40">
+								<div className="relative flex flex-col h-36">
 									<div className="inline-flex items-center justify-center flex-1 h-full gap-1">
 										<CurrencyInput
 											placeholder="0"
@@ -213,13 +218,13 @@ export function NoteZap() {
 										autoCorrect="off"
 										autoCapitalize="off"
 										placeholder="Enter message (optional)"
-										className="w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-3 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-400"
+										className="w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-3 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:text-neutral-400"
 									/>
 									<div className="flex flex-col gap-2">
 										<button
 											type="button"
 											onClick={() => createZapRequest()}
-											className="inline-flex items-center justify-center w-full px-4 font-medium text-white bg-blue-500 rounded-lg h-11 hover:bg-blue-600"
+											className="inline-flex items-center justify-center w-full pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
 										>
 											{isCompleted
 												? "Zapped"

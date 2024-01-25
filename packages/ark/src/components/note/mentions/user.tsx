@@ -14,18 +14,18 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 
 	return (
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger className="text-blue-500 break-words hover:text-blue-600">
+			<DropdownMenu.Trigger className="text-start text-blue-500 break-words hover:text-blue-600">
 				{isLoading
 					? "@anon"
 					: isError
 					  ? pubkey
 					  : `@${user?.name || user?.displayName || user?.username || "anon"}`}
 			</DropdownMenu.Trigger>
-			<DropdownMenu.Content className="left-[50px] z-50 relative flex w-[200px] flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-950 focus:outline-none dark:border-neutral-900">
+			<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-2xl bg-white/50 dark:bg-black/50 ring-1 ring-black/10 dark:ring-white/10 backdrop-blur-2xl focus:outline-none">
 				<DropdownMenu.Item asChild>
 					<Link
 						to={`/users/${cleanPubkey}`}
-						className="inline-flex items-center h-10 px-4 text-sm text-white hover:bg-neutral-900 focus:outline-none"
+						className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 					>
 						View profile
 					</Link>
@@ -40,7 +40,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 								content: cleanPubkey,
 							})
 						}
-						className="inline-flex items-center h-10 px-4 text-sm text-white hover:bg-neutral-900 focus:outline-none"
+						className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 					>
 						Pin
 					</button>

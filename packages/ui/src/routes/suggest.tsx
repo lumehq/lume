@@ -114,11 +114,11 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 					</div>
 					<div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-900">
 						{isLoading ? (
-							<div className="flex h-full w-full items-center justify-center">
+							<div className="flex h-44 w-full items-center justify-center">
 								<LoaderIcon className="size-4 animate-spin" />
 							</div>
 						) : isError ? (
-							<div className="flex h-full w-full items-center justify-center">
+							<div className="flex h-44 w-full items-center justify-center">
 								Error. Cannot get trending users
 							</div>
 						) : (
@@ -171,9 +171,9 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 							type="button"
 							onClick={submit}
 							disabled={loading}
-							className="inline-flex items-center justify-center gap-2 px-6 font-medium text-white transform bg-blue-500 rounded-full active:translate-y-1 w-36 h-11 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
+							className="inline-flex items-center justify-center gap-2 px-6 font-medium shadow-xl shadow-neutral-500/50 text-white transform bg-blue-500 rounded-full active:translate-y-1 w-36 h-11 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
 						>
-							Save
+							Save & Go Back
 						</button>
 					</div>
 				</div>

@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: prepare-dist
-          key: ${{ runner.os }}-container
+          key: ${{ runner.os }}-container-${{ hashFiles('prepare-dist') }}
       - name: Run latest-tag
         id: latest-tag
         uses: oprypin/find-latest-tag@v1
@@ -31,7 +31,7 @@ jobs:
             # repository: ${{ github.repository }}
 
       - name: Build container
-        if: steps.cache-container.outputs.cache-hit != 'true'
+        #        if: steps.cache-container.outputs.cache-hit != 'true'
         run: |
           docker buildx build -t flatpak-prepare-lume --build-arg=${{steps.latest-tag.outputs.tag}} --rm --output=. --target=final -f flatpak/Containerfile .
       - name: Copy flatpak files content

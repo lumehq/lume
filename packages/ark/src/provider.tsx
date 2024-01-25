@@ -87,31 +87,18 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 	async function initNDK() {
 		const explicitRelayUrls = normalizeRelayUrlSet([
+			"wss://nostr.mutinywallet.com/",
 			"wss://bostr.nokotaro.com/",
 		]);
-
-		// #TODO: user should config outbox relays
-		const outboxRelayUrls = normalizeRelayUrlSet(["wss://purplepag.es/"]);
-
-		// #TODO: user should config blacklist relays
-		// Skip connect depot tunnel url
-		const blacklistRelayUrls = normalizeRelayUrlSet(
-			storage.settings.tunnelUrl.length
-				? [storage.settings.tunnelUrl, "wss://brb.io/"]
-				: ["wss://brb.io/"],
-		);
 
 		const tauriCache = new NDKCacheAdapterTauri(storage);
 		const ndk = new NDK({
 			cacheAdapter: tauriCache,
 			explicitRelayUrls,
-			outboxRelayUrls,
-			blacklistRelayUrls,
 			enableOutboxModel: !storage.settings.lowPower,
 			autoConnectUserRelays: !storage.settings.lowPower,
 			autoFetchUserMutelist: !storage.settings.lowPower,
-			// clientName: "Lume",
-			// clientNip89: '',
+			clientName: "Lume",
 		});
 
 		// use tauri fetch

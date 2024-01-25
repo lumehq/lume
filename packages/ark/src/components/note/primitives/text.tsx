@@ -15,7 +15,7 @@ export function TextNote({
 				)}
 			>
 				<div className="flex items-center justify-between px-3 h-14">
-					<Note.User className="flex-1 pr-1" />
+					<Note.User className="flex-1 pr-2" />
 					<Note.Menu />
 				</div>
 				<Note.Thread className="mb-2" />

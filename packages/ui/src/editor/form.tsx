@@ -106,7 +106,7 @@ const Image = ({ attributes, children, element }) => {
 	return (
 		<div {...attributes}>
 			{children}
-			<div contentEditable={false} className="relative">
+			<div contentEditable={false} className="relative my-2">
 				<img
 					src={element.url}
 					alt={element.url}
@@ -155,7 +155,7 @@ const Event = ({ attributes, element, children }) => {
 			<div
 				contentEditable={false}
 				onClick={() => Transforms.removeNodes(editor, { at: path })}
-				className="relative user-select-none"
+				className="relative user-select-none my-2"
 			>
 				<MentionNote
 					eventId={element.eventId.replace("nostr:", "")}
@@ -319,11 +319,9 @@ export function EditorForm() {
 					setTarget(null);
 				}}
 			>
-				<div className="flex items-center justify-between h-16 px-3 border-b shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
+				<div className="flex items-center justify-between h-16 pl-7 pr-3 border-b shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
 					<div>
-						<h3 className="font-semibold text-neutral-700 dark:text-neutral-500">
-							New Post
-						</h3>
+						<h3 className="font-medium">New Post</h3>
 					</div>
 					<div className="flex items-center">
 						<div className="inline-flex items-center gap-2">
@@ -346,7 +344,7 @@ export function EditorForm() {
 				<div className="py-6 h-full overflow-y-auto px-7">
 					<Editable
 						key={JSON.stringify(editorValue)}
-						autoFocus={false}
+						autoFocus={true}
 						autoCapitalize="none"
 						autoCorrect="none"
 						spellCheck={false}
@@ -361,9 +359,9 @@ export function EditorForm() {
 								className="top-[-9999px] left-[-9999px] absolute z-10 w-[250px] p-1 bg-white border border-neutral-50 dark:border-neutral-900 dark:bg-neutral-950 rounded-lg shadow-lg"
 							>
 								{filters.map((contact, i) => (
-									// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-									<div
+									<button
 										key={contact.npub}
+										type="button"
 										onClick={() => {
 											Transforms.select(editor, target);
 											insertMention(editor, contact);
@@ -379,7 +377,7 @@ export function EditorForm() {
 												</div>
 											</User.Root>
 										</User.Provider>
-									</div>
+									</button>
 								))}
 							</div>
 						</Portal>

@@ -10,7 +10,7 @@ import { useColumnContext } from "@lume/ark";
 import {
 	ArrowLeftIcon,
 	ArrowRightIcon,
-	NewColumnIcon,
+	PlusIcon,
 	PlusSquareIcon,
 } from "@lume/icons";
 import { IColumn } from "@lume/types";
@@ -96,15 +96,15 @@ export function HomeScreen() {
 								content: "",
 							})
 						}
-						className="size-16 inline-flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 text-white"
+						className="size-16 inline-flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-2xl"
 					>
-						<NewColumnIcon className="size-7" />
+						<PlusIcon className="size-6" />
 					</button>
 				</div>
 			</VList>
 			<Tooltip.Provider>
 				<div className="absolute bottom-3 right-3">
-					<div className="flex items-center gap-1 p-1 bg-black/30 dark:bg-white/30 backdrop-blur-xl rounded-xl">
+					<div className="flex items-center gap-1 p-1 bg-black/50 dark:bg-white/30 backdrop-blur-xl rounded-xl shadow-toolbar">
 						<Tooltip.Root delayDuration={150}>
 							<Tooltip.Trigger asChild>
 								<button

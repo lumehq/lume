@@ -30,7 +30,7 @@ export function Timeline({ column }: { column: IColumn }) {
 				id={column.id}
 				queryKey={[colKey]}
 				title="Timeline"
-				icon={<TimelineIcon className="size-4" />}
+				icon={<TimelineIcon className="size-5" />}
 			/>
 			{ark.account.contacts.length ? (
 				<Column.Live

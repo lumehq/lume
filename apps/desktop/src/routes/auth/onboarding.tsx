@@ -2,10 +2,7 @@ import { useArk } from "@lume/ark";
 import { InfoIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { TranslateRegisterModal } from "@lume/ui";
-import { FETCH_LIMIT } from "@lume/utils";
-import { NDKKind } from "@nostr-dev-kit/ndk";
 import * as Switch from "@radix-ui/react-switch";
-import { useQueryClient } from "@tanstack/react-query";
 import {
 	isPermissionGranted,
 	requestPermission,
@@ -17,7 +14,6 @@ import { toast } from "sonner";
 export function OnboardingScreen() {
 	const ark = useArk();
 	const storage = useStorage();
-	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
 	const [loading, setLoading] = useState(false);
@@ -61,32 +57,7 @@ export function OnboardingScreen() {
 		// get account contacts
 		await ark.getUserContacts();
 
-		// refetch newsfeed
-		await queryClient.prefetchInfiniteQuery({
-			queryKey: ["timeline-9999"],
-			initialPageParam: 0,
-			queryFn: async ({
-				signal,
-				pageParam,
-			}: {
-				signal: AbortSignal;
-				pageParam: number;
-			}) => {
-				const events = await ark.getInfiniteEvents({
-					filter: {
-						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: ark.account.contacts,
-					},
-					limit: FETCH_LIMIT,
-					pageParam,
-					signal,
-				});
-
-				return events;
-			},
-		});
-
-		navigate("/");
+		navigate("/", { replace: true });
 	};
 
 	useEffect(() => {
@@ -117,7 +88,7 @@ export function OnboardingScreen() {
 
 	return (
 		<div className="relative flex h-full w-full items-center justify-center">
-			<div className="mx-auto flex w-full max-w-md flex-col gap-10">
+			<div className="mx-auto flex w-full max-w-md flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center items-center">
 					<h1 className="text-2xl font-semibold">
 						You&apos;re almost ready to use Lume.
@@ -194,7 +165,7 @@ export function OnboardingScreen() {
 									</div>
 									<div className="relative flex justify-center">
 										<span className="px-2 text-sm font-medium bg-neutral-950 text-neutral-600">
-											Not have API ?
+											Don't have an API key?
 										</span>
 									</div>
 								</div>

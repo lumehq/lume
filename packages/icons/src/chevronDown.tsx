@@ -17,7 +17,7 @@ export function ChevronDownIcon(
 				strokeLinecap="round"
 				strokeLinejoin="round"
 				strokeWidth="2"
-				d="M8 10.14a20.36 20.36 0 003.702 3.893c.175.141.42.141.596 0A20.361 20.361 0 0016 10.14"
+				d="M6 9a30.618 30.618 0 005.49 5.817c.3.244.72.244 1.02 0A30.617 30.617 0 0018 9"
 			/>
 		</svg>
 	);

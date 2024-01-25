@@ -52,7 +52,7 @@ importers:
         version: 2.6.4
     devDependencies:
       '@biomejs/biome':
-        specifier: ^1.5.2
+        specifier: ^1.5.3
         version: 1.5.3
       '@tauri-apps/cli':
         specifier: 2.0.0-alpha.21
@@ -117,6 +117,9 @@ importers:
       '@radix-ui/react-avatar':
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-checkbox':
+        specifier: ^1.0.4
+        version: 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-collapsible':
         specifier: ^1.0.3
         version: 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -142,13 +145,13 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       framer-motion:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
       jotai:
-        specifier: ^2.6.2
+        specifier: ^2.6.3
         version: 2.6.3(@types/react@18.2.48)(react@18.2.0)
       minidenticons:
         specifier: ^4.2.0
@@ -178,14 +181,14 @@ importers:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
       smol-toml:
-        specifier: ^1.1.3
+        specifier: ^1.1.4
         version: 1.1.4
       sonner:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -197,7 +200,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/types
       '@types/node':
-        specifier: ^20.11.5
+        specifier: ^20.11.6
         version: 20.11.6
       '@types/react':
         specifier: ^18.2.48
@@ -227,7 +230,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       vite:
-        specifier: ^5.0.11
+        specifier: ^5.0.12
         version: 5.0.12(@types/node@20.11.6)
       vite-plugin-top-level-await:
         specifier: ^1.4.1
@@ -243,19 +246,19 @@ importers:
         version: 0.4.1(typescript@5.3.3)
       '@astrojs/tailwind':
         specifier: ^5.1.0
-        version: 5.1.0(astro@4.2.1)(tailwindcss@3.4.1)
+        version: 5.1.0(astro@4.2.4)(tailwindcss@3.4.1)
       '@fontsource/geist-mono':
         specifier: ^5.0.1
         version: 5.0.1
       astro:
-        specifier: ^4.2.1
-        version: 4.2.1(typescript@5.3.3)
+        specifier: ^4.2.4
+        version: 4.2.4(typescript@5.3.3)
       astro-seo-meta:
         specifier: ^4.1.0
-        version: 4.1.0(astro@4.2.1)
+        version: 4.1.0(astro@4.2.4)
       astro-seo-schema:
         specifier: ^4.0.0
-        version: 4.0.0(astro@4.2.1)(schema-dts@1.1.2)
+        version: 4.0.0(astro@4.2.4)(schema-dts@1.1.2)
       schema-dts:
         specifier: ^1.1.2
         version: 1.1.2(typescript@5.3.3)
@@ -315,13 +318,13 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       get-urls:
         specifier: ^12.1.0
         version: 12.1.0
       jotai:
-        specifier: ^2.6.2
+        specifier: ^2.6.3
         version: 2.6.3(@types/react@18.2.48)(react@18.2.0)
       linkify-react:
         specifier: ^4.1.3
@@ -375,8 +378,8 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1(react-dom@18.2.0)(react@18.2.0)(scheduler@0.23.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -391,7 +394,7 @@ importers:
         specifier: ^18.2.48
         version: 18.2.48
       tailwind-merge:
-        specifier: ^2.2.0
+        specifier: ^2.2.1
         version: 2.2.1
       tailwindcss:
         specifier: ^3.4.1
@@ -416,58 +419,6 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  packages/lume-column-activity:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@nostr-dev-kit/ndk':
-        specifier: ^2.3.3
-        version: 2.3.3(typescript@5.3.3)
-      '@tanstack/react-query':
-        specifier: ^5.17.15
-        version: 5.17.19(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-router-dom:
-        specifier: ^6.21.3
-        version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
-      sonner:
-        specifier: ^1.3.1
-        version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.48
-        version: 18.2.48
-      tailwind:
-        specifier: ^4.0.0
-        version: 4.0.0
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
-
   packages/lume-column-antenas:
     dependencies:
       '@lume/ark':
@@ -486,7 +437,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -498,8 +449,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -538,7 +489,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -550,8 +501,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -593,7 +544,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -605,8 +556,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -645,7 +596,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -657,8 +608,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -697,7 +648,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -709,8 +660,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -749,7 +700,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -761,8 +712,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -801,7 +752,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -813,8 +764,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -853,7 +804,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.3.3)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       react:
         specifier: ^18.2.0
@@ -865,8 +816,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -1016,13 +967,13 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       framer-motion:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
       jotai:
-        specifier: ^2.6.2
+        specifier: ^2.6.3
         version: 2.6.3(@types/react@18.2.48)(react@18.2.0)
       minidenticons:
         specifier: ^4.2.0
@@ -1049,7 +1000,7 @@ importers:
         specifier: ^0.101.5
         version: 0.101.5
       slate-react:
-        specifier: ^0.101.5
+        specifier: ^0.101.6
         version: 0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5)
       sonner:
         specifier: ^1.3.1
@@ -1061,8 +1012,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(react@18.2.0)
       virtua:
-        specifier: ^0.20.5
-        version: 0.20.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.21.1
+        version: 0.21.1(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -1077,7 +1028,7 @@ importers:
         specifier: ^18.2.48
         version: 18.2.48
       tailwind-merge:
-        specifier: ^2.2.0
+        specifier: ^2.2.1
         version: 2.2.1
       tailwindcss:
         specifier: ^3.4.1
@@ -1089,7 +1040,7 @@ importers:
   packages/utils:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5.17.15
+        specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
       clsx:
         specifier: ^2.1.0
@@ -1098,7 +1049,7 @@ importers:
         specifier: ^1.11.10
         version: 1.11.10
       jotai:
-        specifier: ^2.6.2
+        specifier: ^2.6.3
         version: 2.6.3(@types/react@18.2.48)(react@18.2.0)
       nostr-tools:
         specifier: 1.17.0
@@ -1107,7 +1058,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       tailwind-merge:
-        specifier: ^2.2.0
+        specifier: ^2.2.1
         version: 2.2.1
     devDependencies:
       '@lume/tsconfig':
@@ -1153,8 +1104,8 @@ packages:
       - prettier-plugin-astro
     dev: false
 
-  /@astrojs/compiler@2.5.0:
-    resolution: {integrity: sha512-ZDluNgMIJT+z+HJcZ6QEJ/KqaFkTkrb+Za6c6VZs8G/nb1LBErL14/iU5EVJ9yu25i4QCLweuBJ3m5df34gZJg==}
+  /@astrojs/compiler@2.5.1:
+    resolution: {integrity: sha512-o2hKiFJXZOm1Gov+RGXSWnKlnb/UF7KRTx/Y2uazYe3+MrLY+sqLN+yB4EH2bElc0l1K9cDb4mZSejuq563rGQ==}
     dev: false
 
   /@astrojs/internal-helpers@0.2.1:
@@ -1172,7 +1123,7 @@ packages:
       prettier-plugin-astro:
         optional: true
     dependencies:
-      '@astrojs/compiler': 2.5.0
+      '@astrojs/compiler': 2.5.1
       '@jridgewell/sourcemap-codec': 1.4.15
       '@volar/kit': 1.11.1(typescript@5.3.3)
       '@volar/language-core': 1.11.1
@@ -1188,14 +1139,14 @@ packages:
       volar-service-prettier: 0.0.17(@volar/language-service@1.11.1)
       volar-service-typescript: 0.0.17(@volar/language-service@1.11.1)(@volar/typescript@1.11.1)
       volar-service-typescript-twoslash-queries: 0.0.17(@volar/language-service@1.11.1)
-      vscode-html-languageservice: 5.1.1
+      vscode-html-languageservice: 5.1.2
       vscode-uri: 3.0.8
     transitivePeerDependencies:
       - typescript
     dev: false
 
-  /@astrojs/markdown-remark@4.1.0:
-    resolution: {integrity: sha512-JnIy6zk+6f/SgSVMZecZFxQt0faT1uBckwYCuBxKH1hYYJsal8OOe+tx6JxfnyaV+xViyjUvQ28mmn+p/F5LkQ==}
+  /@astrojs/markdown-remark@4.2.0:
+    resolution: {integrity: sha512-qQB+LoxmIqzkhLXaQAzfzlBxZU1jeQYailsifurz89WeY0Q8ywIj8uQQSyqxb7rPPg3ZfdNdxsN9lF5UaCRn0w==}
     dependencies:
       '@astrojs/prism': 3.0.0
       github-slugger: 2.0.0
@@ -1222,13 +1173,13 @@ packages:
       prismjs: 1.29.0
     dev: false
 
-  /@astrojs/tailwind@5.1.0(astro@4.2.1)(tailwindcss@3.4.1):
+  /@astrojs/tailwind@5.1.0(astro@4.2.4)(tailwindcss@3.4.1):
     resolution: {integrity: sha512-BJoCDKuWhU9FT2qYg+fr6Nfb3qP4ShtyjXGHKA/4mHN94z7BGcmauQK23iy+YH5qWvTnhqkd6mQPQ1yTZTe9Ig==}
     peerDependencies:
       astro: ^3.0.0 || ^4.0.0
       tailwindcss: ^3.0.24
     dependencies:
-      astro: 4.2.1(typescript@5.3.3)
+      astro: 4.2.4(typescript@5.3.3)
       autoprefixer: 10.4.17(postcss@8.4.33)
       postcss: 8.4.33
       postcss-load-config: 4.0.2(postcss@8.4.33)
@@ -2131,6 +2082,34 @@ packages:
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.48)(react@18.2.0)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@types/react': 18.2.48
+      '@types/react-dom': 18.2.18
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@radix-ui/react-checkbox@1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-CBuGQa52aAYnADZVt/KBQzXrwx6TqnlwtcIPGtVt5JkkzQwMOLJjPukimhfKEr4GQNd43C+djUh5Ikopj8pSLg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.8
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-context': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-presence': 1.0.1(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-use-previous': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-use-size': 1.0.1(@types/react@18.2.48)(react@18.2.0)
       '@types/react': 18.2.48
       '@types/react-dom': 18.2.18
       react: 18.2.0
@@ -3502,6 +3481,10 @@ packages:
     resolution: {integrity: sha512-JT5CvrIYYCrmB+dCana8sUqJEcGB1ZDXNLMQ2+42bW995WmNoenijWMUdZfwmuQUTQcEVVIa2OecZzTYWUW9Cg==}
     dev: false
 
+  /@vscode/l10n@0.0.18:
+    resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+    dev: false
+
   /accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
@@ -3649,31 +3632,31 @@ packages:
     resolution: {integrity: sha512-6i37w/+EhlWlGUJff3T/Q8u1RGmP5wgbiwYnOnbOqvtrPxT63/sYFyP9RcpxtxGymtfA075IvmOnL7ycNOWl3w==}
     dev: true
 
-  /astro-seo-meta@4.1.0(astro@4.2.1):
+  /astro-seo-meta@4.1.0(astro@4.2.4):
     resolution: {integrity: sha512-v5qULt/c2hp9u6JtRyZeWTeb6YC82XDMzVcEf7XlRSuvs3C6KUQxeIOp5j+uOIek42CZHcyhbWzQF+FoRbQlfg==}
     peerDependencies:
       astro: ^4.0.0
     dependencies:
-      astro: 4.2.1(typescript@5.3.3)
+      astro: 4.2.4(typescript@5.3.3)
     dev: false
 
-  /astro-seo-schema@4.0.0(astro@4.2.1)(schema-dts@1.1.2):
+  /astro-seo-schema@4.0.0(astro@4.2.4)(schema-dts@1.1.2):
     resolution: {integrity: sha512-ZcpxuQWSlyOVru+sN5LwUHqfrQpOEyv6Ksxq6WBNhycEHE0AEgGdiHkfhAmQbVqT4HXM8bmZOZlYlwwsYkfPAw==}
     peerDependencies:
       astro: ^4.0.0
       schema-dts: ^1.1.0
     dependencies:
-      astro: 4.2.1(typescript@5.3.3)
+      astro: 4.2.4(typescript@5.3.3)
       schema-dts: 1.1.2(typescript@5.3.3)
     dev: false
 
-  /astro@4.2.1(typescript@5.3.3):
-    resolution: {integrity: sha512-TcrveW2/lohmljrbTUgcDxajEdF1yK+zBvb7SXroloGix/d4jkegO6GANFgvyy0zprMyajW7qgJEFyhWUX86Vw==}
+  /astro@4.2.4(typescript@5.3.3):
+    resolution: {integrity: sha512-z1f52lXkHf71M5HSLKrd5G1PH5/Zfq4kMp0iUT7Na5VHcPDma/NYFPFPewDxqV6UPmyxupj3xuooFaN3j8zaow==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     dependencies:
-      '@astrojs/compiler': 2.5.0
+      '@astrojs/compiler': 2.5.1
       '@astrojs/internal-helpers': 0.2.1
-      '@astrojs/markdown-remark': 4.1.0
+      '@astrojs/markdown-remark': 4.2.0
       '@astrojs/telemetry': 3.0.4
       '@babel/core': 7.23.7
       '@babel/generator': 7.23.6
@@ -3724,7 +3707,7 @@ packages:
       semver: 7.5.4
       server-destroy: 1.0.1
       shikiji: 0.9.19
-      string-width: 7.0.0
+      string-width: 7.1.0
       strip-ansi: 7.1.0
       tsconfck: 3.0.1(typescript@5.3.3)
       unist-util-visit: 5.0.0
@@ -3899,7 +3882,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     dependencies:
       caniuse-lite: 1.0.30001579
-      electron-to-chromium: 1.4.644
+      electron-to-chromium: 1.4.645
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
 
@@ -4090,6 +4073,7 @@ packages:
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+    requiresBuild: true
 
   /color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
@@ -4417,8 +4401,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /electron-to-chromium@1.4.644:
-    resolution: {integrity: sha512-zOnPndwz3u1sVFSyBcRWcn0529Kz+jr+tDxN9iP69I3CpC5wlvYmjLrK2O7TEsg2oDDoUqooeXqbiHLvXvl6Lg==}
+  /electron-to-chromium@1.4.645:
+    resolution: {integrity: sha512-EeS1oQDCmnYsRDRy2zTeC336a/4LZ6WKqvSaM1jLocEk5ZuyszkQtCpsqvuvaIXGOUjwtvF6LTcS8WueibXvSw==}
 
   /emmet@2.4.6:
     resolution: {integrity: sha512-dJfbdY/hfeTyf/Ef7Y7ubLYzkBvPQ912wPaeVYpAxvFxkEBf/+hJu4H6vhAvFN6HlxqedlfVn2x1S44FfQ97pg==}
@@ -5206,6 +5190,14 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
+    dev: true
+
+  /iconv-lite@0.4.24:
+    resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: false
 
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -6319,7 +6311,7 @@ packages:
     engines: {node: '>= 4.4.x'}
     dependencies:
       debug: 3.2.7
-      iconv-lite: 0.4.23
+      iconv-lite: 0.4.24
       sax: 1.3.0
     transitivePeerDependencies:
       - supports-color
@@ -7649,8 +7641,8 @@ packages:
       strip-ansi: 7.1.0
     dev: false
 
-  /string-width@7.0.0:
-    resolution: {integrity: sha512-GPQHj7row82Hjo9hKZieKcHIhaAIKOJvFSIZXuCU9OASVZrMNUaZuz++SPVrBjnLsnk4k+z9f2EIypgxf2vNFw==}
+  /string-width@7.1.0:
+    resolution: {integrity: sha512-SEIJCWiX7Kg4c129n48aDRwLbFb2LJmXXFrWBG4NGaRtMQ3myKPKbwrD1BKqQn74oCoNMBVrfDEr5M9YxCsrkw==}
     engines: {node: '>=18'}
     dependencies:
       emoji-regex: 10.3.0
@@ -8455,8 +8447,8 @@ packages:
       vfile-message: 4.0.2
     dev: false
 
-  /virtua@0.20.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-GHL+kSTotf5L1x3/Wcir0KkNKxmQIdWiDrcrBNz+DMiLUdNtskKs+E76Z0SSeeL0+I/PFutBrI8fXw/j7N+6sQ==}
+  /virtua@0.21.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-6CRxablXTLvnFHIIXKRgcxn0oVoXjKQRxchXzx8sWywg+DtQ7wHZBSrJ6WTN3YzXOLP9ZJt4zs5SmsaCTQbUhA==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -8558,7 +8550,7 @@ packages:
         optional: true
     dependencies:
       '@volar/language-service': 1.11.1
-      vscode-css-languageservice: 6.2.11
+      vscode-css-languageservice: 6.2.12
       vscode-uri: 3.0.8
     dev: false
 
@@ -8584,7 +8576,7 @@ packages:
         optional: true
     dependencies:
       '@volar/language-service': 1.11.1
-      vscode-html-languageservice: 5.1.1
+      vscode-html-languageservice: 5.1.2
       vscode-uri: 3.0.8
     dev: false
 
@@ -8632,19 +8624,19 @@ packages:
       vscode-uri: 3.0.8
     dev: false
 
-  /vscode-css-languageservice@6.2.11:
-    resolution: {integrity: sha512-qn49Wa6K94LnizpVxmlYrcPf1Cb36gq1nNueW0COhi4shylXBzET5wuDbH8ZWQlJD0HM5Mmnn7WE9vQVVs+ULA==}
+  /vscode-css-languageservice@6.2.12:
+    resolution: {integrity: sha512-PS9r7HgNjqzRl3v91sXpCyZPc8UDotNo6gntFNtGCKPhGA9Frk7g/VjX1Mbv3F00pn56D+rxrFzR9ep4cawOgA==}
     dependencies:
-      '@vscode/l10n': 0.0.16
+      '@vscode/l10n': 0.0.18
       vscode-languageserver-textdocument: 1.0.11
       vscode-languageserver-types: 3.17.5
       vscode-uri: 3.0.8
     dev: false
 
-  /vscode-html-languageservice@5.1.1:
-    resolution: {integrity: sha512-JenrspIIG/Q+93R6G3L6HdK96itSisMynE0glURqHpQbL3dKAKzdm8L40lAHNkwJeBg+BBPpAshZKv/38onrTQ==}
+  /vscode-html-languageservice@5.1.2:
+    resolution: {integrity: sha512-wkWfEx/IIR3s2P5yD4aTGHiOb8IAzFxgkSt1uSC3itJ4oDAm23yG7o0L29JljUdnXDDgLafPAvhv8A2I/8riHw==}
     dependencies:
-      '@vscode/l10n': 0.0.16
+      '@vscode/l10n': 0.0.18
       vscode-languageserver-textdocument: 1.0.11
       vscode-languageserver-types: 3.17.5
       vscode-uri: 3.0.8

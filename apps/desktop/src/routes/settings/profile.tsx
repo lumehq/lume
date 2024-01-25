@@ -10,6 +10,7 @@ import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { AvatarUpload } from "./components/avatarUpload";
 import { CoverUpload } from "./components/coverUpload";
 
@@ -92,6 +93,9 @@ export function ProfileSettingScreen() {
 				return content;
 			});
 
+			// notify
+			toast.success("You've updated profile successfully.");
+
 			// reset state
 			setPicture(null);
 			setBanner(null);
@@ -112,7 +116,7 @@ export function ProfileSettingScreen() {
 								className="h-full w-full rounded-t-xl object-cover"
 							/>
 						) : (
-							<div className="h-full w-full rounded-t-xl bg-neutral-200 dark:bg-neutral-900" />
+							<div className="h-full w-full rounded-t-xl bg-neutral-200 dark:bg-neutral-800" />
 						)}
 						<div className="absolute right-4 top-4">
 							<CoverUpload setBanner={setBanner} />
@@ -236,7 +240,7 @@ export function ProfileSettingScreen() {
 						<button
 							type="submit"
 							disabled={!isValid || loading}
-							className="mx-auto inline-flex h-10 w-24 transform items-center justify-center gap-1 rounded-lg bg-blue-500 font-medium text-white hover:bg-blue-600 focus:outline-none active:translate-y-1 disabled:pointer-events-none disabled:opacity-50"
+							className="inline-flex items-center justify-center w-24 pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
 						>
 							{loading ? (
 								<LoaderIcon className="size-4 animate-spin" />
