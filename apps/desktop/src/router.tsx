@@ -207,14 +207,32 @@ export default function Router() {
 				},
 				{
 					path: "create",
-					loader: async () => {
-						return await ark.getOAuthServices();
-					},
 					async lazy() {
 						const { CreateAccountScreen } = await import(
 							"./routes/auth/create"
 						);
 						return { Component: CreateAccountScreen };
+					},
+				},
+				{
+					path: "create-keys",
+					async lazy() {
+						const { CreateAccountKeys } = await import(
+							"./routes/auth/create-keys"
+						);
+						return { Component: CreateAccountKeys };
+					},
+				},
+				{
+					path: "create-address",
+					loader: async () => {
+						return await ark.getOAuthServices();
+					},
+					async lazy() {
+						const { CreateAccountAddress } = await import(
+							"./routes/auth/create-address"
+						);
+						return { Component: CreateAccountAddress };
 					},
 				},
 				{

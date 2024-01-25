@@ -128,9 +128,9 @@ export function LoginWithOAuth() {
 
 	return (
 		<div className="relative flex items-center justify-center w-full h-full">
-			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
+			<div className="flex flex-col w-full max-w-md gap-16 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
-					<h1 className="text-2xl font-semibold">Enter your NIP-05 address</h1>
+					<h1 className="text-2xl font-semibold">Enter your Nostr Address</h1>
 				</div>
 				<div className="flex flex-col gap-6">
 					<form
