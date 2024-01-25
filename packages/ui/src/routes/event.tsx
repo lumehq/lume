@@ -11,7 +11,7 @@ export function EventRoute() {
 	return (
 		<div className="pb-5 overflow-y-auto">
 			<WindowVirtualizer>
-				<div className="h-11 bg-neutral-50 dark:bg-neutral-950 border-b flex items-center justify-start gap-2 px-3 border-neutral-100 dark:border-neutral-900 mb-3">
+				<div className="relative z-50 h-11 bg-neutral-50 dark:bg-neutral-950 border-b flex items-center justify-start gap-2 px-3 border-neutral-100 dark:border-neutral-900 mb-3">
 					<button
 						type="button"
 						className="size-9 hover:bg-neutral-100 hover:text-blue-500 dark:hover:bg-neutral-900 rounded-lg inline-flex items-center justify-center"
