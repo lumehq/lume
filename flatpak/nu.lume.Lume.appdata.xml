@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>nu.lume.Lume</id>
+  <launchable type="desktop-id">nu.lume.Lume.desktop</launchable>
+  
+  <name>Lume</name>
+  <summary>A cross-platform desktop nostr client</summary>
+  <developer_name>Ren Amamiya</developer_name>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  
+  <url type="homepage">https://lume.nu</url>
+  <url type="bugtracker">https://github.com/luminous-devs/lume/issues</url>
+  <url type="donation">https://nostree.me/npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445</url>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <description>
+    <p>
+      Lume a cross-platform nostr client, supported nsbunker, chats and notifications
+    </p>
+  </description>
+
+  <custom>
+      <value key="Purism::form_factor">workstation</value>
+      <value key="Purism::form_factor">mobile</value>
+  </custom>
+  
+
+  <releases>
+      <release version="2.2.3" date="2023-12-07"/>
+  </releases>
+  <content_rating type="oars-1.1"/>
+</component>
