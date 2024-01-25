@@ -55,7 +55,10 @@ export function ColumnProvider({ children }: { children: ReactNode }) {
 			column.title,
 			column.content,
 		);
-		if (result) setColumns((prev) => [...prev, result]);
+		if (result) {
+			setColumns((prev) => [...prev, result]);
+			vlistRef?.current.scrollToIndex(columns.length);
+		}
 	}, []);
 
 	const removeColumn = useCallback(async (id: number) => {

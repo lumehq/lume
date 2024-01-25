@@ -40,7 +40,7 @@ export function InterestModal({
 			);
 
 			if (save) {
-				storage.interests.hashtags = hashtags;
+				storage.interests = { hashtags, users: [], words: [] };
 				await queryClient.refetchQueries({ queryKey });
 			}
 
@@ -86,11 +86,8 @@ export function InterestModal({
 							<div className="w-full flex-1 min-h-0 flex flex-col justify-between">
 								<div className="flex-1 min-h-0 overflow-y-auto px-8 py-8">
 									<div className="flex flex-col gap-8">
-										{TOPICS.map((topic, index) => (
-											<div
-												key={topic.title + index}
-												className="flex flex-col gap-4"
-											>
+										{TOPICS.map((topic) => (
+											<div key={topic.title} className="flex flex-col gap-4">
 												<div className="w-full flex items-center justify-between">
 													<div className="inline-flex items-center gap-2.5">
 														<img

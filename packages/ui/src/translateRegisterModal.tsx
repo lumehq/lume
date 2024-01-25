@@ -68,9 +68,9 @@ export function TranslateRegisterModal({ setAPIKey }) {
 						<div className="flex-1 min-h-0 flex flex-col justify-between px-8 py-8">
 							<div className="flex flex-col gap-1.5">
 								<p className="text-sm text-neutral-500">
-									Translate Service is provided by{" "}
-									<span className="text-blue-500">nostr.wine</span>, you need to
-									deposit at least 2,500 sats to use translate 50,000 characters
+									Translation Service is provided by{" "}
+									<span className="text-blue-500">nostr.wine</span>. Prices
+									start at 2,500 sats for 50,000 characters of translated text.
 								</p>
 								<p className="text-sm text-neutral-500">
 									You can learn more about nostr.wine{" "}

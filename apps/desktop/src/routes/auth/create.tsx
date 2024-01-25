@@ -326,11 +326,12 @@ export function CreateAccountScreen() {
 									Generate Nostr Keys
 								</button>
 								<p className="text-sm text-center text-neutral-500">
-									If you are using this option, please make sure keep your keys
-									in safe place. You{" "}
-									<span className="text-red-600">cannot recover</span> if it
-									lost, all your data will be{" "}
-									<span className="text-red-600">lost forever.</span>
+									If you are using this option, please make sure to store your
+									keys safely. You{" "}
+									<span className="text-red-600">cannot recover</span> them if
+									they're lost, and will be{" "}
+									<span className="text-red-600">unable</span> to access your
+									account.
 								</p>
 							</div>
 						</div>

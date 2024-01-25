@@ -10,7 +10,7 @@ import { useColumnContext } from "@lume/ark";
 import {
 	ArrowLeftIcon,
 	ArrowRightIcon,
-	NewColumnIcon,
+	PlusIcon,
 	PlusSquareIcon,
 } from "@lume/icons";
 import { IColumn } from "@lume/types";
@@ -96,9 +96,9 @@ export function HomeScreen() {
 								content: "",
 							})
 						}
-						className="size-16 inline-flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 text-white"
+						className="size-16 inline-flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-2xl"
 					>
-						<NewColumnIcon className="size-7" />
+						<PlusIcon className="size-6" />
 					</button>
 				</div>
 			</VList>

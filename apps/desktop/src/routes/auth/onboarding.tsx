@@ -194,7 +194,7 @@ export function OnboardingScreen() {
 									</div>
 									<div className="relative flex justify-center">
 										<span className="px-2 text-sm font-medium bg-neutral-950 text-neutral-600">
-											Not have API ?
+											Don't have an API key?
 										</span>
 									</div>
 								</div>
