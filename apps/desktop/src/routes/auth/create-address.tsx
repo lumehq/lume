@@ -124,11 +124,11 @@ export function CreateAccountAddress() {
 
 			// add account to storage
 			await storage.createSetting("nsecbunker", "1");
-			const dbAccount = await storage.createAccount({
+			const newAccount = await storage.createAccount({
 				pubkey: account,
 				privkey: localSigner.privateKey,
 			});
-			ark.account = dbAccount;
+			ark.account = newAccount;
 
 			// get final signer with newly created account
 			const finalSigner = new NDKNip46Signer(bunker, account, localSigner);
@@ -153,9 +153,11 @@ export function CreateAccountAddress() {
 
 	return (
 		<div className="relative flex items-center justify-center w-full h-full">
-			<div className="flex flex-col w-full max-w-md gap-16 mx-auto">
+			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
-					<h1 className="text-2xl font-semibold">Create Account</h1>
+					<h1 className="text-2xl font-semibold">
+						Let's set up your account on Nostr
+					</h1>
 				</div>
 				{!services ? (
 					<div className="flex items-center justify-center w-full">

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export function LoginScreen() {
 	return (
 		<div className="relative flex items-center justify-center w-full h-full">
-			<div className="flex flex-col w-full max-w-md gap-16 mx-auto">
+			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
 					<h1 className="text-2xl font-semibold">Welcome back, anon!</h1>
 				</div>
