@@ -5,13 +5,9 @@ export function TutorialManageColumnScreen() {
 		<div className="px-5 h-full flex flex-col justify-between">
 			<div className="h-full min-h-0 flex flex-col gap-2">
 				<p>
-					Lume is also provide simple way to customize column after creation.
+					Once a new column is created, you can click on the title in its header
+					to find options to <span className="font-semibold">customize</span> it
 				</p>
-				<p>
-					<span className="font-semibold">To customize each column,</span> you
-					can go to header of each column
-				</p>
-				<p>Click to "Three Dots" icon</p>
 				<img
 					src="/tutorial-3.gif"
 					alt="tutorial-3"

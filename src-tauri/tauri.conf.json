@@ -8,8 +8,8 @@
 		"withGlobalTauri": true
 	},
 	"package": {
-		"productName": "Lume 3",
-		"version": "3.0.0"
+		"productName": "Lume",
+		"version": "3.0.0-beta.1"
 	},
 	"plugins": {
 		"fs": {
@@ -62,7 +62,7 @@
 			"copyright": "",
 			"identifier": "nu.lume",
 			"longDescription": "nostr client for desktop",
-			"shortDescription": "",
+			"shortDescription": "nostr client",
 			"targets": "all",
 			"updater": {
 				"active": true,

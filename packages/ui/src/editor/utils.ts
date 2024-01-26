@@ -2,7 +2,7 @@ import { NDKCacheUserProfile } from "@lume/types";
 import { ReactNode } from "react";
 import ReactDOM from "react-dom";
 import { BaseEditor, Transforms } from "slate";
-import { type ReactEditor } from "slate-react";
+import { ReactEditor } from "slate-react";
 
 export const Portal = ({ children }: { children?: ReactNode }) => {
 	return typeof document === "object"
@@ -36,6 +36,8 @@ export const insertImage = (editor: ReactEditor | BaseEditor, url: string) => {
 		},
 	];
 
+	// @ts-ignore, idk
+	ReactEditor.focus(editor);
 	Transforms.insertNodes(editor, image);
 	Transforms.insertNodes(editor, extraText);
 };
@@ -44,15 +46,24 @@ export const insertMention = (
 	editor: ReactEditor | BaseEditor,
 	contact: NDKCacheUserProfile,
 ) => {
+	const text = { text: "" };
 	const mention = {
 		type: "mention",
 		npub: `nostr:${contact.npub}`,
 		name: contact.name || contact.displayName || "anon",
-		children: [{ text: "" }],
+		children: [text],
 	};
+	const extraText = [
+		{
+			type: "paragraph",
+			children: [text],
+		},
+	];
 
+	// @ts-ignore, idk
+	ReactEditor.focus(editor);
 	Transforms.insertNodes(editor, mention);
-	Transforms.move(editor);
+	Transforms.insertNodes(editor, extraText);
 };
 
 export const insertNostrEvent = (

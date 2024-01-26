@@ -111,3 +111,4 @@ export * from "./src/foryou";
 export * from "./src/editInterest";
 export * from "./src/newColumn";
 export * from "./src/searchFilled";
+export * from "./src/arrowUp";

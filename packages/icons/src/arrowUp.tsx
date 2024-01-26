@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export function UserIcon(
+export function ArrowUpIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
 	return (
@@ -17,7 +17,7 @@ export function UserIcon(
 				strokeLinecap="round"
 				strokeLinejoin="round"
 				strokeWidth="2"
-				d="M18.995 19.147C18.893 17.393 17.367 16 15.5 16h-7c-1.867 0-3.393 1.393-3.495 3.147m13.99 0A9.97 9.97 0 0022 12c0-5.523-4.477-10-10-10S2 6.477 2 12a9.97 9.97 0 003.005 7.147m13.99 0A9.967 9.967 0 0112 22a9.967 9.967 0 01-6.995-2.853M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+				d="M6 9.83a30.23 30.23 0 015.406-5.62A.949.949 0 0112 4m6 5.83a30.233 30.233 0 00-5.406-5.62A.949.949 0 0012 4m0 0v16"
 			/>
 		</svg>
 	);

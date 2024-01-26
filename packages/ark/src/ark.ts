@@ -145,7 +145,7 @@ export class Ark {
 				cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
 			});
 
-			if (!profile) throw new Error("user not found");
+			if (!profile) return null;
 			return profile;
 		} catch {
 			throw new Error("user not found");

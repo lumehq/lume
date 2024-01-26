@@ -35,19 +35,17 @@ export function OnboardingProfileScreen() {
 				navigate("/interests");
 			}
 
-			const oldProfile = await ark.getUserProfile();
-
-			const profile: NDKUserProfile = {
+			const prevProfile = await ark.getUserProfile();
+			const newProfile: NDKUserProfile = {
 				...data,
-				lud16: "", // temporary remove lud16
-				nip05: oldProfile?.nip05 || "",
+				nip05: prevProfile?.nip05 || "",
 				bio: data.about,
 				image: picture,
 				picture: picture,
 			};
 
 			const publish = await ark.createEvent({
-				content: JSON.stringify(profile),
+				content: JSON.stringify(newProfile),
 				kind: NDKKind.Metadata,
 				tags: [],
 			});
@@ -57,7 +55,7 @@ export function OnboardingProfileScreen() {
 				await storage.clearProfileCache(ark.account.pubkey);
 				await queryClient.setQueryData(
 					["user", ark.account.pubkey],
-					() => profile,
+					() => newProfile,
 				);
 
 				setLoading(false);

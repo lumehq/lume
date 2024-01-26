@@ -4,10 +4,10 @@ export function TutorialNewColumnScreen() {
 	return (
 		<div className="px-5 h-full flex flex-col justify-between">
 			<div className="h-full min-h-0 flex flex-col gap-2">
-				<p>Lume is column based, each column is each experience</p>
+				<p>Lume is column based, each column is its own experience.</p>
 				<p>
-					<span className="font-semibold">To create new column,</span> you can
-					look into bottom right part of screen
+					<span className="font-semibold">To create a new column</span>, you can
+					click on the "Plus" icon at bottom right corner of this window.
 				</p>
 				<p>Click to "Plus" icon</p>
 				<img

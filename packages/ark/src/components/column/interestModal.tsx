@@ -40,7 +40,7 @@ export function InterestModal({
 			);
 
 			if (save) {
-				storage.interests.hashtags = hashtags;
+				storage.interests = { hashtags, users: [], words: [] };
 				await queryClient.refetchQueries({ queryKey });
 			}
 
@@ -56,7 +56,7 @@ export function InterestModal({
 		<Dialog.Root open={open} onOpenChange={setOpen}>
 			<Dialog.Trigger
 				className={cn(
-					"inline-flex items-center gap-2 px-3 rounded-lg h-9 focus:outline-none",
+					"inline-flex items-center gap-3 px-3 rounded-lg h-9 focus:outline-none",
 					className,
 				)}
 			>
@@ -64,7 +64,7 @@ export function InterestModal({
 					children
 				) : (
 					<>
-						<EditInterestIcon className="size-5" />
+						<EditInterestIcon className="size-4" />
 						Edit interest
 					</>
 				)}
@@ -86,11 +86,8 @@ export function InterestModal({
 							<div className="w-full flex-1 min-h-0 flex flex-col justify-between">
 								<div className="flex-1 min-h-0 overflow-y-auto px-8 py-8">
 									<div className="flex flex-col gap-8">
-										{TOPICS.map((topic, index) => (
-											<div
-												key={topic.title + index}
-												className="flex flex-col gap-4"
-											>
+										{TOPICS.map((topic) => (
+											<div key={topic.title} className="flex flex-col gap-4">
 												<div className="w-full flex items-center justify-between">
 													<div className="inline-flex items-center gap-2.5">
 														<img
@@ -113,6 +110,7 @@ export function InterestModal({
 												<div className="flex flex-wrap items-center gap-3">
 													{topic.content.map((hashtag) => (
 														<button
+															key={hashtag}
 															type="button"
 															onClick={() => toggleHashtag(hashtag)}
 															className={cn(

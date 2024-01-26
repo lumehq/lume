@@ -88,12 +88,12 @@ export function NoteRepost() {
 				</Tooltip.Root>
 			</Tooltip.Provider>
 			<DropdownMenu.Portal>
-				<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-2xl bg-black/70 dark:bg-white/10 backdrop-blur-xl focus:outline-none">
+				<DropdownMenu.Content className="flex w-[200px] p-2 flex-col overflow-hidden rounded-2xl bg-white/50 dark:bg-black/50 ring-1 ring-black/10 dark:ring-white/10 backdrop-blur-2xl focus:outline-none">
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
 							onClick={repost}
-							className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
+							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							<RepostIcon className="size-4" />
 							Repost
@@ -103,7 +103,7 @@ export function NoteRepost() {
 						<button
 							type="button"
 							onClick={quote}
-							className="inline-flex items-center gap-2 px-3 text-sm font-medium rounded-lg h-9 text-white/50 hover:bg-black/10 hover:text-white focus:outline-none dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
+							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							<ReplyIcon className="size-4" />
 							Quote

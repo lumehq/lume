@@ -12,6 +12,10 @@
   .prose :where(iframe):not(:where([class~='not-prose'] *)) {
     @apply w-full h-auto mx-auto aspect-video;
   }
+
+  .shadow-toolbar {
+    box-shadow: 0 0 #0000,0 0 #0000,0 8px 24px 0 rgba(0,0,0,.2),0 2px 8px 0 rgba(0,0,0,.08),inset 0 0 0 1px rgba(0,0,0,.2),inset 0 0 0 2px hsla(0,0%,100%,.14)
+  }
 }
 
 html {

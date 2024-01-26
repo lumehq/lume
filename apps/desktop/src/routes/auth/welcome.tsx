@@ -1,16 +1,6 @@
-import { LoaderIcon } from "@lume/icons";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export function WelcomeScreen() {
-	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
-
-	const gotoCreateAccount = () => {
-		setLoading(true);
-		navigate("/auth/create");
-	};
-
 	return (
 		<div className="flex flex-col items-center justify-between w-full h-full">
 			<div />
@@ -29,17 +19,12 @@ export function WelcomeScreen() {
 					</p>
 				</div>
 				<div className="flex flex-col w-full max-w-xs gap-2 mx-auto">
-					<button
-						type="button"
-						onClick={gotoCreateAccount}
+					<Link
+						to="/auth/create"
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
 					>
-						{loading ? (
-							<LoaderIcon className="size-5 animate-spin" />
-						) : (
-							"Create New Account"
-						)}
-					</button>
+						Join Nostr
+					</Link>
 					<Link
 						to="/auth/login"
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
@@ -49,7 +34,7 @@ export function WelcomeScreen() {
 				</div>
 			</div>
 			<div className="flex items-center justify-center h-11">
-				<p className="text-neutral-800">
+				<p className="text-neutral-700">
 					Before joining Nostr, you can take time to learn more about Nostr{" "}
 					<Link
 						to="https://nostr.com"
