@@ -93,7 +93,7 @@ export function RepostNote({
 			<Note.Provider event={repostEvent}>
 				<div className="relative flex flex-col gap-2 px-3">
 					<div className="flex items-center justify-between">
-						<Note.User className="flex-1 pr-1" />
+						<Note.User className="flex-1 pr-2" />
 						<Note.Menu />
 					</div>
 					<Note.Content />

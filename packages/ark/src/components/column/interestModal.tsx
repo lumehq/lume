@@ -110,6 +110,7 @@ export function InterestModal({
 												<div className="flex flex-wrap items-center gap-3">
 													{topic.content.map((hashtag) => (
 														<button
+															key={hashtag}
 															type="button"
 															onClick={() => toggleHashtag(hashtag)}
 															className={cn(

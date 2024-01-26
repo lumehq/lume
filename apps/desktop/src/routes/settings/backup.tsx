@@ -48,7 +48,7 @@ export function BackupSettingScreen() {
 						<button
 							type="button"
 							onClick={() => removePrivkey()}
-							className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-red-200 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:hover:text-white"
+							className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-red-200 dark:bg-red-800 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:hover:text-white"
 						>
 							Remove private key
 						</button>
