@@ -13,25 +13,23 @@ node_modules
 .env.production.local
 
 # Testing
-coverage
+coverage/
 
 # Turbo
-.turbo
+.turbo/
 
 # Vercel
-.vercel
+.vercel/
 
 # Build Outputs
 .next/
 out/
-build
-dist
+build/
+dist/
 
 
 # Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.log*
 
 # Misc
 .DS_Store

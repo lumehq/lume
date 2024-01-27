@@ -1,8 +1,8 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
+import { delay, VITE_FLATPAK_RESOURCE } from "@lume/utils";
+import { resolve, resolveResource } from "@tauri-apps/api/path";
 import { useStorage } from "@lume/storage";
-import { delay } from "@lume/utils";
-import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,10 @@ export function DepotOnboardingScreen() {
 			setLoading(true);
 
 			// get default config
-			const defaultConfig = await resolveResource("resources/config.toml");
+			const defaultConfig =
+				VITE_FLATPAK_RESOURCE !== null
+					? await resolve("/", VITE_FLATPAK_RESOURCE)
+					: await resolveResource("resources/config.toml");
 			const config = await readTextFile(defaultConfig);
 			const parsedConfig = parse(config);
 

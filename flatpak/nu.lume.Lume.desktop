@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=Lume
+Comment=A cross-platform desktop nostr client
+Icon=lume
+Exec=lume
+Terminal=false
+Categories=Network;InstantMessaging;
+Keywords=nostr;client;chat;
+X-Purism-FormFactor=Workstation;

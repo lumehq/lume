@@ -19,22 +19,22 @@ tauri = { version = "2.0.0-alpha", features = [ "tray-icon",
   "native-tls-vendored",
   "protocol-asset",
 ] }
-tauri-plugin-cli = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-dialog = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-fs = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-http = { git = "https://github.com/tauri-apps/plugins-workspace", rev = "ea8eadce85b2e3e8eb7eb1a779fc3aa6c1201fa3" }
-tauri-plugin-notification = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-cli = "2.0.0-alpha"
+tauri-plugin-clipboard-manager = "2.0.0-alpha"
+tauri-plugin-dialog = "2.0.0-alpha"
+tauri-plugin-fs = "2.0.0-alpha"
+tauri-plugin-http = "2.0.0-alpha"
+tauri-plugin-notification = "2.0.0-alpha"
+tauri-plugin-os = "2.0.0-alpha"
+tauri-plugin-process = "2.0.0-alpha"
+tauri-plugin-shell = "2.0.0-alpha"
+tauri-plugin-updater = "2.0.0-alpha"
+tauri-plugin-autostart = "2.0.0-alpha"
+tauri-plugin-store = "2.0.0-alpha"
+tauri-plugin-upload = "2.0.0-alpha"
+tauri-plugin-window-state = "2.0.0-alpha"
 tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
-tauri-plugin-sql = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2", features = [
+tauri-plugin-sql = {version="2.0.0-alpha", features = [
   "sqlite",
 ] }
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
