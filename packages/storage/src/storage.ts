@@ -8,7 +8,8 @@ import {
 	NDKCacheUserProfile,
 } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
-import { appConfigDir, resolveResource } from "@tauri-apps/api/path";
+import { resolve, appConfigDir, resolveResource } from "@tauri-apps/api/path";
+import { VITE_FLATPAK_RESOURCE } from "@lume/utils";
 import { Platform } from "@tauri-apps/plugin-os";
 import { Child, Command } from "@tauri-apps/plugin-shell";
 import Database from "@tauri-apps/plugin-sql";
@@ -92,7 +93,10 @@ export class LumeStorage {
 	}
 
 	public async launchDepot() {
-		const configPath = await resolveResource("resources/config.toml");
+		const configPath =
+			VITE_FLATPAK_RESOURCE !== null
+				? await resolve("/", VITE_FLATPAK_RESOURCE)
+				: await resolveResource("resources/config.toml");
 		const dataPath = await appConfigDir();
 
 		const command = Command.sidecar("bin/depot", [

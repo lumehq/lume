@@ -1,5 +1,5 @@
 {
-	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
 	"build": {
 		"beforeBuildCommand": "pnpm run build",
 		"beforeDevCommand": "pnpm run dev",
@@ -60,7 +60,7 @@
 				"icons/icon.ico"
 			],
 			"copyright": "",
-			"identifier": "nu.lume",
+      "identifier": "nu.lume.Lume",
 			"longDescription": "nostr client for desktop",
 			"shortDescription": "nostr client",
 			"targets": "all",

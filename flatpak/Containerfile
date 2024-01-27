@@ -1,0 +1,61 @@
+FROM node:20-slim as prepare
+
+RUN apt update && apt install -y git
+
+# Taken from tauri docs https://beta.tauri.app/guides/prerequisites/#rust
+RUN apt install libwebkit2gtk-4.1-dev -y \
+  build-essential \
+  curl \
+  wget \
+  file \
+  libssl-dev \
+  libayatana-appindicator3-dev \
+  protobuf-compiler \
+  librsvg2-dev
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+
+FROM prepare as build
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+#RUN corepack prepare pnpm@latest --activate
+
+RUN corepack enable
+
+ADD . /lume/.
+
+WORKDIR /lume
+
+RUN pnpm install --frozen-lockfile
+
+# Path for disable updater
+#ADD flatpak/0001-disable-tauri-updater.patch .
+#RUN patch -p1 -t -i flatpak/0001-disable-tauri-updater.patch
+#ADD flatpak/0002-depot-remove.patch .
+#RUN patch -p1 -t -i 0002-depot-remove.patch
+
+# compile depot
+
+#ADD flatpak/build-depot.sh build-depot.sh
+#RUN mv flatpak/build-depot.sh build-depot.sh
+#RUN sh build-depot.sh
+#RUN pnpm run build:depot
+
+#ENV VITE_FLATPAK_RESOURCE="/app/lib/lume/resources/config.toml"
+
+# debian build
+RUN pnpm tauri build -b deb
+
+ARG VERSION=3.0.0
+ARG ARCH=amd64
+
+RUN cp -r ./src-tauri/target/release/bundle/deb/lume_${VERSION}_${ARCH}/data lume-package
+ 
+FROM scratch as final
+
+COPY --from=build lume/lume-package prepare-dist
+#ADD flatpak/*.xml flatpak/*.desktop flatpak/*.yml prepare-dist
