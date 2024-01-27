@@ -145,7 +145,6 @@ export class Ark {
 				cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
 			});
 
-			if (!profile) return null;
 			return profile;
 		} catch {
 			throw new Error("user not found");
@@ -167,8 +166,9 @@ export class Ark {
 				(user) => user.pubkey,
 			);
 
-			if (!pubkey || pubkey === this.account.pubkey)
+			if (!pubkey || pubkey === this.account.pubkey) {
 				this.account.contacts = contacts;
+			}
 
 			return contacts;
 		} catch (e) {

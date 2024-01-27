@@ -35,9 +35,10 @@ export function OnboardingInterestScreen() {
 				JSON.stringify({ hashtags }),
 			);
 
-			setLoading(false);
-
-			if (save) return navigate("/finish");
+			if (save) {
+				storage.interests = { hashtags, users: [], words: [] };
+				return navigate("/finish");
+			}
 		} catch (e) {
 			setLoading(false);
 			toast.error(String(e));

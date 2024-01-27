@@ -1,5 +1,5 @@
-import { useArk } from "@lume/ark";
 import { CheckIcon, LoaderIcon } from "@lume/icons";
+import { useStorage } from "@lume/storage";
 import { onboardingAtom } from "@lume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -7,6 +7,7 @@ import { useSetAtom } from "jotai";
 import { useState } from "react";
 
 export function OnboardingFinishScreen() {
+	const storage = useStorage();
 	const queryClient = useQueryClient();
 	const setOnboarding = useSetAtom(onboardingAtom);
 
@@ -15,8 +16,9 @@ export function OnboardingFinishScreen() {
 	const finish = async () => {
 		setLoading(true);
 
-		await queryClient.refetchQueries({ queryKey: ["timeline-9999"] });
-		await queryClient.refetchQueries({ queryKey: ["foryou-9998"] });
+		if (storage.interests) {
+			await queryClient.invalidateQueries({ queryKey: ["foryou-9998"] });
+		}
 
 		setLoading(false);
 		setOnboarding({ open: false, newUser: false });

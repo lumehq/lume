@@ -356,7 +356,7 @@ export function EditorForm() {
 						<Portal>
 							<div
 								ref={ref}
-								className="top-[-9999px] left-[-9999px] absolute z-10 w-[250px] p-1 bg-white border border-neutral-50 dark:border-neutral-900 dark:bg-neutral-950 rounded-lg shadow-lg"
+								className="top-[-9999px] left-[-9999px] absolute z-10 w-[250px] p-2 bg-white border border-neutral-50 dark:border-neutral-900 dark:bg-neutral-950 rounded-xl shadow-lg"
 							>
 								{filters.map((contact, i) => (
 									<button
@@ -367,13 +367,13 @@ export function EditorForm() {
 											insertMention(editor, contact);
 											setTarget(null);
 										}}
-										className="px-2 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900"
+										className="p-2 flex flex-col w-full rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-900"
 									>
 										<User.Provider pubkey={contact.npub}>
-											<User.Root className="flex items-center gap-2.5">
-												<User.Avatar className="size-10 rounded-lg object-cover shrink-0" />
+											<User.Root className="w-full flex items-center gap-2.5">
+												<User.Avatar className="size-8 rounded-lg object-cover shrink-0" />
 												<div className="flex w-full flex-col items-start">
-													<User.Name className="max-w-[15rem] truncate font-semibold" />
+													<User.Name className="max-w-[8rem] truncate text-sm font-medium" />
 												</div>
 											</User.Root>
 										</User.Provider>
