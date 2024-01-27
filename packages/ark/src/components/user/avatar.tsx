@@ -39,7 +39,10 @@ export function UserAvatar({ className }: { className?: string }) {
 					alt={user.pubkey}
 					loading="eager"
 					decoding="async"
-					className={cn("bg-black dark:bg-white", className)}
+					className={cn(
+						"bg-black dark:bg-white ring-1 ring-black/5 dark:ring-white/5",
+						className,
+					)}
 				/>
 			) : (
 				<Avatar.Image
@@ -47,7 +50,7 @@ export function UserAvatar({ className }: { className?: string }) {
 					alt={user.pubkey}
 					loading="eager"
 					decoding="async"
-					className={className}
+					className={cn("ring-1 ring-black/5 dark:ring-white/5", className)}
 				/>
 			)}
 			<Avatar.Fallback delayMs={120}>
