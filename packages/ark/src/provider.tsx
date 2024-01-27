@@ -23,6 +23,7 @@ import { useSetAtom } from "jotai";
 import Linkify from "linkify-react";
 import { normalizeRelayUrlSet } from "nostr-fetch";
 import { PropsWithChildren, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Ark } from "./ark";
 import { LumeContext } from "./context";
 
@@ -80,55 +81,65 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 
 			return new NDKPrivateKeySigner(userPrivkey);
 		} catch (e) {
-			console.error(e);
+			toast.error(String(e));
 			return null;
 		}
 	}
 
 	async function initNDK() {
-		const explicitRelayUrls = normalizeRelayUrlSet([
-			"wss://nostr.mutinywallet.com/",
-			"wss://bostr.nokotaro.com/",
-		]);
+		try {
+			const explicitRelayUrls = normalizeRelayUrlSet([
+				"wss://nostr.mutinywallet.com/",
+				"wss://bostr.nokotaro.com/",
+			]);
 
-		const tauriCache = new NDKCacheAdapterTauri(storage);
-		const ndk = new NDK({
-			cacheAdapter: tauriCache,
-			explicitRelayUrls,
-			enableOutboxModel: !storage.settings.lowPower,
-			autoConnectUserRelays: !storage.settings.lowPower,
-			autoFetchUserMutelist: !storage.settings.lowPower,
-			clientName: "Lume",
-		});
+			const outboxRelayUrls = normalizeRelayUrlSet(["wss://purplepag.es/"]);
 
-		// use tauri fetch
-		ndk.httpFetch = fetch;
+			const tauriCache = new NDKCacheAdapterTauri(storage);
+			const ndk = new NDK({
+				cacheAdapter: tauriCache,
+				explicitRelayUrls,
+				outboxRelayUrls,
+				enableOutboxModel: !storage.settings.lowPower,
+				autoConnectUserRelays: !storage.settings.lowPower,
+				autoFetchUserMutelist: false, // #TODO: add support mute list
+				clientName: "Lume",
+			});
 
-		// add signer
-		const signer = await initNostrSigner({
-			nsecbunker: storage.settings.nsecbunker,
-		});
+			// use tauri fetch
+			ndk.httpFetch = fetch;
 
-		if (signer) ndk.signer = signer;
+			// add signer
+			const signer = await initNostrSigner({
+				nsecbunker: storage.settings.nsecbunker,
+			});
 
-		// connect
-		await ndk.connect(3000);
+			if (signer) ndk.signer = signer;
 
-		// auth
-		ndk.relayAuthDefaultPolicy = async (relay: NDKRelay, challenge: string) => {
-			const signIn = NDKRelayAuthPolicies.signIn({ ndk });
-			const event = await signIn(relay, challenge).catch((e) =>
-				console.log("auth failed", e),
-			);
-			if (event) {
-				await sendNativeNotification(
-					`You've sign in sucessfully to relay: ${relay.url}`,
+			// connect
+			await ndk.connect(3000);
+
+			// auth
+			ndk.relayAuthDefaultPolicy = async (
+				relay: NDKRelay,
+				challenge: string,
+			) => {
+				const signIn = NDKRelayAuthPolicies.signIn({ ndk });
+				const event = await signIn(relay, challenge).catch((e) =>
+					console.log("auth failed", e),
 				);
-				return event;
-			}
-		};
+				if (event) {
+					await sendNativeNotification(
+						`You've sign in sucessfully to relay: ${relay.url}`,
+					);
+					return event;
+				}
+			};
 
-		setNDK(ndk);
+			setNDK(ndk);
+		} catch (e) {
+			toast.error(String(e));
+		}
 	}
 
 	async function initArk() {
@@ -137,102 +148,68 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		// ark utils
 		const ark = new Ark({ ndk, account: storage.currentUser });
 
-		if (ndk && storage.currentUser) {
-			const user = new NDKUser({ pubkey: storage.currentUser.pubkey });
-			ndk.activeUser = user;
+		try {
+			if (ndk && storage.currentUser) {
+				const user = new NDKUser({ pubkey: storage.currentUser.pubkey });
+				ndk.activeUser = user;
 
-			// update contacts
-			await ark.getUserContacts();
+				// update contacts
+				const contacts = await ark.getUserContacts();
 
-			// subscribe for new activity
-			const activitySub = ndk.subscribe(
-				{
-					kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
-					since: Math.floor(Date.now() / 1000),
-					"#p": [ark.account.pubkey],
-				},
-				{ closeOnEose: false, groupable: false },
-			);
-
-			activitySub.addListener("event", async (event: NDKEvent) => {
-				if (event.pubkey === storage.currentUser.pubkey) return;
-
-				setUnreadActivity((state) => state + 1);
-				const profile = await ark.getUserProfile(event.pubkey);
-
-				switch (event.kind) {
-					case NDKKind.Text:
-						return await sendNativeNotification(
-							`${
-								profile.displayName || profile.name || "Anon"
-							} has replied to your note`,
-						);
-					case NDKKind.Repost:
-						return await sendNativeNotification(
-							`${
-								profile.displayName || profile.name || "Anon"
-							} has reposted to your note`,
-						);
-					case NDKKind.Zap:
-						return await sendNativeNotification(
-							`${
-								profile.displayName || profile.name || "Anon"
-							} has zapped to your note`,
-						);
-					default:
-						break;
+				if (contacts?.length) {
+					console.log("total contacts: ", contacts.length);
+					for (const pubkey of ark.account.contacts) {
+						await queryClient.prefetchQuery({
+							queryKey: ["user", pubkey],
+							queryFn: async () => {
+								return await ark.getUserProfile(pubkey);
+							},
+						});
+					}
 				}
-			});
 
-			// prefetch activty
-			await queryClient.prefetchInfiniteQuery({
-				queryKey: ["activity"],
-				initialPageParam: 0,
-				queryFn: async ({
-					signal,
-					pageParam,
-				}: {
-					signal: AbortSignal;
-					pageParam: number;
-				}) => {
-					const events = await ark.getInfiniteEvents({
-						filter: {
-							kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
-							"#p": [ark.account.pubkey],
-						},
-						limit: FETCH_LIMIT,
-						pageParam,
-						signal,
-					});
+				// subscribe for new activity
+				const activitySub = ndk.subscribe(
+					{
+						kinds: [NDKKind.Text, NDKKind.Repost, NDKKind.Zap],
+						since: Math.floor(Date.now() / 1000),
+						"#p": [ark.account.pubkey],
+					},
+					{ closeOnEose: false, groupable: false },
+				);
 
-					return events;
-				},
-			});
+				activitySub.addListener("event", async (event: NDKEvent) => {
+					if (event.pubkey === storage.currentUser.pubkey) return;
 
-			// prefetch timeline
-			await queryClient.prefetchInfiniteQuery({
-				queryKey: ["timeline-9999"],
-				initialPageParam: 0,
-				queryFn: async ({
-					signal,
-					pageParam,
-				}: {
-					signal: AbortSignal;
-					pageParam: number;
-				}) => {
-					const events = await ark.getInfiniteEvents({
-						filter: {
-							kinds: [NDKKind.Text, NDKKind.Repost],
-							authors: ark.account.contacts,
-						},
-						limit: FETCH_LIMIT,
-						pageParam,
-						signal,
-					});
+					setUnreadActivity((state) => state + 1);
+					const profile = await ark.getUserProfile(event.pubkey);
 
-					return events;
-				},
-			});
+					switch (event.kind) {
+						case NDKKind.Text:
+							return await sendNativeNotification(
+								`${
+									profile.displayName || profile.name || "Anon"
+								} has replied to your note`,
+							);
+						case NDKKind.Repost:
+							return await sendNativeNotification(
+								`${
+									profile.displayName || profile.name || "Anon"
+								} has reposted to your note`,
+							);
+						case NDKKind.Zap:
+							return await sendNativeNotification(
+								`${
+									profile.displayName || profile.name || "Anon"
+								} has zapped to your note`,
+							);
+						default:
+							break;
+					}
+				});
+			}
+		} catch (e) {
+			toast.error(String(e));
 		}
 
 		setArk(ark);
