@@ -8,7 +8,7 @@ export function UserName({ className }: { className?: string }) {
 		return (
 			<div
 				className={cn(
-					"h-4 w-20 bg-black/20 dark:bg-white/20 rounded animate-pulse",
+					"h-4 w-20 self-center bg-black/20 dark:bg-white/20 rounded animate-pulse",
 					className,
 				)}
 			/>

@@ -91,6 +91,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 			const explicitRelayUrls = normalizeRelayUrlSet([
 				"wss://nostr.mutinywallet.com/",
 				"wss://bostr.nokotaro.com/",
+				"wss://purplepag.es/",
 			]);
 
 			const outboxRelayUrls = normalizeRelayUrlSet(["wss://purplepag.es/"]);
@@ -227,7 +228,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		return (
 			<div
 				data-tauri-drag-region
-				className="relative flex items-center justify-center w-screen h-screen bg-neutral-50 dark:bg-neutral-950"
+				className="relative flex items-center justify-center w-screen h-screen"
 			>
 				<div className="flex flex-col items-start max-w-2xl gap-1">
 					<h5 className="font-semibold uppercase">TIP:</h5>

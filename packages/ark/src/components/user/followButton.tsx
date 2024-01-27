@@ -13,6 +13,7 @@ export function UserFollowButton({
 	const [followed, setFollowed] = useState(false);
 
 	const toggleFollow = async () => {
+		setLoading(true);
 		if (!followed) {
 			const add = await ark.createContact(target);
 			if (add) setFollowed(true);
@@ -20,6 +21,7 @@ export function UserFollowButton({
 			const remove = await ark.deleteContact(target);
 			if (remove) setFollowed(false);
 		}
+		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -37,7 +39,12 @@ export function UserFollowButton({
 	}, []);
 
 	return (
-		<button type="button" onClick={toggleFollow} className={cn("", className)}>
+		<button
+			type="button"
+			disabled={loading}
+			onClick={toggleFollow}
+			className={cn("", className)}
+		>
 			{loading ? (
 				<LoaderIcon className="size-4 animate-spin" />
 			) : followed ? (

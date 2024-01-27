@@ -5,7 +5,6 @@ import {
 	MediaPlayButton,
 	MediaTimeDisplay,
 	MediaTimeRange,
-	MediaVolumeRange,
 } from "media-chrome/dist/react";
 
 export function VideoPreview({ url }: { url: string }) {
@@ -24,7 +23,6 @@ export function VideoPreview({ url }: { url: string }) {
 					<MediaTimeRange />
 					<MediaTimeDisplay showDuration />
 					<MediaMuteButton />
-					<MediaVolumeRange />
 				</MediaControlBar>
 			</MediaController>
 		</div>

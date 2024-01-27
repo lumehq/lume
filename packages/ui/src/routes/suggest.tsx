@@ -1,15 +1,6 @@
-import { User, useArk } from "@lume/ark";
-import {
-	ArrowLeftIcon,
-	ArrowRightIcon,
-	CancelIcon,
-	LoaderIcon,
-	PlusIcon,
-} from "@lume/icons";
-import { cn } from "@lume/utils";
+import { User } from "@lume/ark";
+import { ArrowLeftIcon, ArrowRightIcon, LoaderIcon } from "@lume/icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { nip19 } from "nostr-tools";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { WindowVirtualizer } from "virtua";
@@ -34,7 +25,6 @@ const LUME_USERS = [
 ];
 
 export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
-	const ark = useArk();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
@@ -51,40 +41,11 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 		},
 	});
 
-	const [loading, setLoading] = useState(false);
-	const [follows, setFollows] = useState<string[]>([]);
-
-	// toggle follow state
-	const toggleFollow = (pubkey: string) => {
-		const arr = follows.includes(pubkey)
-			? follows.filter((i) => i !== pubkey)
-			: [...follows, pubkey];
-		setFollows(arr);
-	};
-
 	const submit = async () => {
 		try {
-			setLoading(true);
-
-			if (!follows.length) return navigate("/");
-
-			const publish = await ark.newContactList({
-				tags: follows.map((item) => {
-					if (item.startsWith("npub1"))
-						return ["p", nip19.decode(item).data as string];
-					return ["p", item];
-				}),
-			});
-
-			if (publish) {
-				await queryClient.refetchQueries({ queryKey: ["timeline-9999"] });
-			}
-
-			setLoading(false);
-
-			return navigate("/");
+			await queryClient.refetchQueries({ queryKey });
+			return navigate("/", { replace: true });
 		} catch (e) {
-			setLoading(false);
 			toast.error(String(e));
 		}
 	};
@@ -135,30 +96,12 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 														<User.Avatar className="size-10 shrink-0 rounded-lg" />
 														<User.Name className="max-w-[15rem] truncate font-semibold leadning-tight" />
 													</div>
-													<button
-														type="button"
-														onClick={() => toggleFollow(item.pubkey)}
-														className={cn(
-															"inline-flex h-8 shrink-0 pl-2 pr-2.5 items-center justify-center gap-1 rounded-lg text-sm font-medium",
-															follows.includes(item.pubkey)
-																? "text-red-500 bg-red-100 hover:text-white hover:bg-red-500"
-																: "text-blue-500 bg-blue-100 hover:text-white hover:bg-blue-500",
-														)}
-													>
-														{follows.includes(item.pubkey) ? (
-															<>
-																<CancelIcon className="size-4" />
-																Unfollow
-															</>
-														) : (
-															<>
-																<PlusIcon className="size-4" />
-																Follow
-															</>
-														)}
-													</button>
+													<User.Button
+														target={item.pubkey}
+														className="w-20 h-8 text-sm font-medium bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg inline-flex items-center justify-center"
+													/>
 												</div>
-												<User.About className="break-p text-neutral-800 dark:text-neutral-400 max-w-none select-text whitespace-pre-line" />
+												<User.About className="mt-1 line-clamp-3 text-neutral-800 dark:text-neutral-400 max-w-none select-text" />
 											</div>
 										</User.Root>
 									</User.Provider>
@@ -170,10 +113,9 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 						<button
 							type="button"
 							onClick={submit}
-							disabled={loading}
-							className="inline-flex items-center justify-center gap-2 px-6 font-medium shadow-xl shadow-neutral-500/50 text-white transform bg-blue-500 rounded-full active:translate-y-1 w-36 h-11 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
+							className="inline-flex items-center justify-center gap-2 px-6 font-medium shadow-xl dark:shadow-none shadow-neutral-500/50 text-white transform bg-blue-500 rounded-full active:translate-y-1 w-44 h-11 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
 						>
-							Save & Go Back
+							Save & Go back
 						</button>
 					</div>
 				</div>

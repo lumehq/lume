@@ -50,18 +50,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				if (!lastEvent) return;
 				return lastEvent.created_at - 1;
 			},
-			initialData: () => {
-				const queryCacheData = queryClient.getQueryState([colKey])
-					?.data as NDKEvent[];
-				if (queryCacheData) {
-					return {
-						pageParams: [undefined, 1],
-						pages: [queryCacheData],
-					};
-				}
-			},
 			select: (data) => data?.pages.flatMap((page) => page),
-			staleTime: 120 * 1000,
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
 		});
@@ -114,6 +103,17 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				{isLoading ? (
 					<div className="w-full flex h-16 items-center justify-center gap-2 px-3 py-1.5">
 						<LoaderIcon className="size-5 animate-spin" />
+					</div>
+				) : !data.length ? (
+					<div className="px-3 mt-3">
+						<EmptyFeed />
+						<Link
+							to="/suggest"
+							className="mt-3 w-full gap-2 inline-flex items-center justify-center text-sm font-medium rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
+						>
+							<SearchIcon className="size-5" />
+							Find accounts to follow
+						</Link>
 					</div>
 				) : (
 					data.map((item) => renderItem(item))
