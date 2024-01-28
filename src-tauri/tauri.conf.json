@@ -1,5 +1,5 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
 	"build": {
 		"beforeBuildCommand": "pnpm run build",
 		"beforeDevCommand": "pnpm run dev",
@@ -9,7 +9,7 @@
 	},
 	"package": {
 		"productName": "Lume",
-		"version": "3.0.0-beta.1"
+		"version": "3.0.0"
 	},
 	"plugins": {
 		"fs": {
@@ -60,7 +60,7 @@
 				"icons/icon.ico"
 			],
 			"copyright": "",
-      "identifier": "nu.lume.Lume",
+			"identifier": "nu.lume.Lume",
 			"longDescription": "nostr client for desktop",
 			"shortDescription": "nostr client",
 			"targets": "all",

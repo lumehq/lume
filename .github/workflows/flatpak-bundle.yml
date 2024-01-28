@@ -4,7 +4,7 @@ on:
     #tags:
     #- 'v*.*.*'
 
-name: flatpak build
+name: Flatpak
 jobs:
   prepare-repo:
     runs-on: ubuntu-latest
