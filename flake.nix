@@ -28,7 +28,8 @@
           glib
           dbus
           openssl_3
-          librsvg     
+          librsvg
+          libappindicator-gtk3
         ];
 
         packages = with pkgs; [
