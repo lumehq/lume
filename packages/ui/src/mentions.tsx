@@ -10,6 +10,7 @@ import {
 
 import { NDKCacheUserProfile } from "@lume/types";
 import { cn } from "@lume/utils";
+import { useTranslation } from "react-i18next";
 
 type MentionListRef = {
 	onKeyDown: (props: { event: Event }) => boolean;
@@ -22,6 +23,7 @@ const List = (
 	},
 	ref: Ref<unknown>,
 ) => {
+	const [t] = useTranslation();
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
 	const selectItem = (index) => {
@@ -107,7 +109,9 @@ const List = (
 					</button>
 				))
 			) : (
-				<div className="text-center text-sm font-medium">No result</div>
+				<div className="text-center text-sm font-medium">
+					{t("global.noResult")}
+				</div>
 			)}
 		</div>
 	);

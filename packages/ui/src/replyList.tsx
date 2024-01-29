@@ -4,6 +4,7 @@ import { NDKEventWithReplies } from "@lume/types";
 import { cn } from "@lume/utils";
 import { NDKKind, type NDKSubscription } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ReplyForm } from "./editor/replyForm";
 
 export function ReplyList({
@@ -11,6 +12,8 @@ export function ReplyList({
 	className,
 }: { eventId: string; className?: string }) {
 	const ark = useArk();
+
+	const [t] = useTranslation();
 	const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
 
 	useEffect(() => {
@@ -68,7 +71,7 @@ export function ReplyList({
 					<div className="flex flex-col items-center justify-center gap-2 py-6">
 						<h3 className="text-3xl">👋</h3>
 						<p className="leading-none text-neutral-600 dark:text-neutral-400">
-							Be the first to Reply!
+							{t("note.reply.empty")}
 						</p>
 					</div>
 				</div>

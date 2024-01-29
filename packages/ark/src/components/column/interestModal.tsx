@@ -4,6 +4,7 @@ import { TOPICS, cn } from "@lume/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export function InterestModal({
@@ -14,6 +15,7 @@ export function InterestModal({
 	const storage = useStorage();
 	const queryClient = useQueryClient();
 
+	const [t] = useTranslation();
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [hashtags, setHashtags] = useState(storage.interests?.hashtags || []);
@@ -65,7 +67,7 @@ export function InterestModal({
 				) : (
 					<>
 						<EditInterestIcon className="size-4" />
-						Edit interest
+						{t("interests.edit")}
 					</>
 				)}
 			</Dialog.Trigger>
@@ -80,7 +82,7 @@ export function InterestModal({
 						<div className="w-full h-full flex flex-col">
 							<div className="h-16 shrink-0 px-8 border-b border-neutral-100 dark:border-neutral-900 flex w-full items-center justify-between">
 								<div className="flex flex-col">
-									<h3 className="font-semibold">Edit Interest</h3>
+									<h3 className="font-semibold">{t("interests.edit")}</h3>
 								</div>
 							</div>
 							<div className="w-full flex-1 min-h-0 flex flex-col justify-between">
@@ -104,7 +106,7 @@ export function InterestModal({
 														onClick={() => toggleAll(topic.content)}
 														className="text-sm font-medium text-blue-500"
 													>
-														Follow All
+														{t("interests.followAll")}
 													</button>
 												</div>
 												<div className="flex flex-wrap items-center gap-3">
@@ -131,7 +133,7 @@ export function InterestModal({
 								<div className="h-16 shrink-0 w-full flex items-center px-8 justify-center gap-2 border-t border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
 									<Dialog.Close className="inline-flex h-9 flex-1 gap-2 shrink-0 items-center justify-center rounded-lg bg-neutral-100 font-medium dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-blue-200">
 										<ArrowLeftIcon className="size-4" />
-										Cancel
+										{t("global.cancel")}
 									</Dialog.Close>
 									<button
 										type="button"
@@ -141,7 +143,7 @@ export function InterestModal({
 										{loading ? (
 											<LoaderIcon className="size-4 animate-spin" />
 										) : (
-											"Save"
+											t("global.save")
 										)}
 									</button>
 								</div>

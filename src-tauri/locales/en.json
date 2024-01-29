@@ -7,7 +7,16 @@
 		"moveLeft": "Move Left",
 		"moveRight": "Move Right",
 		"newColumn": "New Column",
-		"inspect": "Inspect"
+		"inspect": "Inspect",
+		"loadMore": "Load more",
+		"delete": "Delete",
+		"refresh": "Refresh",
+		"cancel": "Cancel",
+		"save": "Save",
+		"post": "Post",
+		"noResult": "No results found.",
+		"emptyFeedTitle": "This feed is empty",
+		"emptyFeedSubtitle": "You can follow more users to build up your timeline"
 	},
 	"nip89": {
 		"unsupported": "Lume isn't support this event",
@@ -49,8 +58,31 @@
 		},
 		"reply": {
 			"single": "reply",
-			"plural": "replies"
+			"plural": "replies",
+			"empty": "Be the first to Reply!"
 		}
+	},
+	"user": {
+		"follow": "Follow",
+		"unfollow": "Unfollow",
+		"latestPosts": "Latest posts",
+		"avatarButton": "Change avatar",
+		"coverButton": "Change cover",
+		"editProfile": "Edit profile",
+		"settings": "Settings",
+		"logout": "Log out",
+		"logoutConfirmTitle": "Are you sure!",
+		"logoutConfirmSubtitle": "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account."
+	},
+	"editor": {
+		"title": "New Post",
+		"placeholder": "What are you up to?",
+		"successMessage": "Your note has been published successfully.",
+		"replyPlaceholder": "Post your reply"
+	},
+	"search": {
+		"placeholder": "Type something to search...",
+		"empty": "Try searching for people, notes, or keywords"
 	},
 	"welcome": {
 		"title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
@@ -133,5 +165,17 @@
 			"payment": "Open payment website",
 			"paymentNote": "You need to make a payment to connect this relay"
 		}
+	},
+	"suggestion": {
+		"title": "Suggested Follows",
+		"error": "Error. Cannot get trending users",
+		"button": "Save & Go back"
+	},
+	"interests": {
+		"title": "Interests",
+		"subtitle": "Pick things you'd like to see in your home feed.",
+		"edit": "Edit Interest",
+		"followAll": "Follow All",
+		"unfollowAll": "Unfollow All"
 	}
 }

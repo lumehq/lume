@@ -5,6 +5,7 @@ import * as Avatar from "@radix-ui/react-avatar";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { minidenticon } from "minidenticons";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Logout } from "./logout";
 
@@ -19,6 +20,7 @@ export function ActiveAccount() {
 		[],
 	);
 
+	const { t } = useTranslation();
 	const { user } = useProfile(ark.account.pubkey);
 
 	return (
@@ -62,7 +64,7 @@ export function ActiveAccount() {
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							<UserIcon className="size-4" />
-							Edit profile
+							{t("user.editProfile")}
 						</Link>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -71,7 +73,7 @@ export function ActiveAccount() {
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							<SettingsIcon className="size-4" />
-							Settings
+							{t("user.settings")}
 						</Link>
 					</DropdownMenu.Item>
 					<DropdownMenu.Separator className="h-px my-1 bg-black/10 dark:bg-white/10" />

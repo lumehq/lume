@@ -4,17 +4,20 @@ import { COL_TYPES, searchAtom } from "@lume/utils";
 import { type NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
 import { Command } from "../cmdk";
 
 export function SearchDialog() {
+	const ark = useArk();
+
 	const [open, setOpen] = useAtom(searchAtom);
 	const [loading, setLoading] = useState(false);
 	const [events, setEvents] = useState<NDKEvent[]>([]);
 	const [search, setSearch] = useState("");
 	const [value] = useDebounce(search, 1200);
 
-	const ark = useArk();
+	const { t } = useTranslation();
 	const { vlistRef, columns, addColumn } = useColumnContext();
 
 	const searchEvents = async () => {
@@ -90,7 +93,7 @@ export function SearchDialog() {
 				<Command.Input
 					value={search}
 					onValueChange={setSearch}
-					placeholder="Type something to search..."
+					placeholder={t("search.placeholder")}
 					className="w-full h-12 bg-neutral-100 dark:bg-neutral-900 rounded-xl border-none focus:outline-none focus:ring-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
 				/>
 			</div>
@@ -101,7 +104,7 @@ export function SearchDialog() {
 					</Command.Loading>
 				) : !events.length ? (
 					<Command.Empty className="flex items-center justify-center h-full text-sm">
-						No results found.
+						{t("global.noResult")}
 					</Command.Empty>
 				) : (
 					<>
@@ -161,7 +164,7 @@ export function SearchDialog() {
 						<div className="size-16 bg-blue-100 dark:bg-blue-900 rounded-full inline-flex items-center justify-center text-blue-500">
 							<SearchIcon className="size-6" />
 						</div>
-						Try searching for people, notes, or keywords
+						{t("search.empty")}
 					</div>
 				) : null}
 			</Command.List>

@@ -1,6 +1,7 @@
 import { User } from "@lume/ark";
 import { ArrowLeftIcon, ArrowRightIcon, LoaderIcon } from "@lume/icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { WindowVirtualizer } from "virtua";
@@ -28,6 +29,7 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
+	const { t } = useTranslation();
 	const { isLoading, isError, data } = useQuery({
 		queryKey: ["trending-users"],
 		queryFn: async ({ signal }: { signal: AbortSignal }) => {
@@ -71,7 +73,7 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 				</div>
 				<div className="relative px-3">
 					<div className="flex items-center h-16">
-						<h3 className="font-semibold text-xl">Suggested Follows</h3>
+						<h3 className="font-semibold text-xl">{t("suggestion.title")}</h3>
 					</div>
 					<div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-900">
 						{isLoading ? (
@@ -80,7 +82,7 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 							</div>
 						) : isError ? (
 							<div className="flex h-44 w-full items-center justify-center">
-								Error. Cannot get trending users
+								{t("suggestion.error")}
 							</div>
 						) : (
 							data?.profiles.map((item: { pubkey: string }) => (
@@ -115,7 +117,7 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 							onClick={submit}
 							className="inline-flex items-center justify-center gap-2 px-6 font-medium shadow-xl dark:shadow-none shadow-neutral-500/50 text-white transform bg-blue-500 rounded-full active:translate-y-1 w-44 h-11 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
 						>
-							Save & Go back
+							{t("suggestion.button")}
 						</button>
 					</div>
 				</div>
