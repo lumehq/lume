@@ -1,5 +1,10 @@
 export const FETCH_LIMIT = 20;
 
+export const LANGUAGES = [
+	{ label: "English", code: "en" },
+	{ label: "Japanese", code: "ja" },
+];
+
 export const NOSTR_MENTIONS = [
 	"@npub1",
 	"nostr:npub1",
@@ -26,7 +31,7 @@ export const NOSTR_EVENTS = [
 	"Nostr:nevent1",
 ];
 
-export const BITCOINS = ['lnbc', 'bc1p', 'bc1q'];
+export const BITCOINS = ["lnbc", "bc1p", "bc1q"];
 
 export const IMAGES = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
 
@@ -374,4 +379,5 @@ export const QUOTES = [
 	"Are you a fan of following topics, instead of people? Use https://zapddit.com",
 ];
 
+// @ts-ignore, it works
 export const VITE_FLATPAK_RESOURCE = import.meta.env.VITE_FLATPAK_RESOURCE;

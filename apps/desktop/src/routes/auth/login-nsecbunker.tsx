@@ -5,6 +5,7 @@ import NDK, { NDKNip46Signer, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
 import { nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -15,6 +16,7 @@ export function LoginWithNsecbunker() {
 
 	const [loading, setLoading] = useState(false);
 
+	const { t } = useTranslation();
 	const {
 		register,
 		handleSubmit,
@@ -69,7 +71,7 @@ export function LoginWithNsecbunker() {
 			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
 					<h1 className="text-2xl font-semibold">
-						Enter your nsecbunker token
+						{t("loginWithBunker.title")}
 					</h1>
 				</div>
 				<div className="flex flex-col gap-6">
@@ -101,7 +103,7 @@ export function LoginWithNsecbunker() {
 							{loading ? (
 								<LoaderIcon className="size-5 animate-spin" />
 							) : (
-								"Continue"
+								t("global.continue")
 							)}
 						</button>
 					</form>

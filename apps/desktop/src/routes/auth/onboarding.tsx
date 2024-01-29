@@ -8,6 +8,7 @@ import {
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -16,6 +17,7 @@ export function OnboardingScreen() {
 	const storage = useStorage();
 	const navigate = useNavigate();
 
+	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [apiKey, setAPIKey] = useState("");
 	const [settings, setSettings] = useState({
@@ -91,10 +93,10 @@ export function OnboardingScreen() {
 			<div className="mx-auto flex w-full max-w-md flex-col gap-8">
 				<div className="flex flex-col gap-1 text-center items-center">
 					<h1 className="text-2xl font-semibold">
-						You&apos;re almost ready to use Lume.
+						{t("onboardingSettings.title")}
 					</h1>
 					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Let&apos;s start personalizing your experience.
+						{t("onboardingSettings.subtitle")}
 					</p>
 				</div>
 				<div className="flex flex-col gap-3">
@@ -107,10 +109,11 @@ export function OnboardingScreen() {
 							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
 						<div>
-							<h3 className="font-semibold text-lg">Push notification</h3>
+							<h3 className="font-semibold text-lg">
+								{t("onboardingSettings.notification.title")}
+							</h3>
 							<p className="text-neutral-500">
-								Enabling push notifications will allow you to receive
-								notifications from Lume.
+								{t("onboardingSettings.notification.subtitle")}
 							</p>
 						</div>
 					</div>
@@ -123,10 +126,11 @@ export function OnboardingScreen() {
 							<Switch.Thumb className="block h-6 w-6 translate-x-0.5 rounded-full bg-neutral-50 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
 						<div>
-							<h3 className="font-semibold text-lg">Low Power Mode</h3>
+							<h3 className="font-semibold text-lg">
+								{t("onboardingSettings.lowPower.title")}
+							</h3>
 							<p className="text-neutral-500">
-								Limited relay connection and hide all media, sustainable for low
-								network environment.
+								{t("onboardingSettings.lowPower.subtitle")}
 							</p>
 						</div>
 					</div>
@@ -140,11 +144,10 @@ export function OnboardingScreen() {
 						</Switch.Root>
 						<div>
 							<h3 className="font-semibold text-lg">
-								Translation (nostr.wine)
+								{t("onboardingSettings.translation.title")}
 							</h3>
 							<p className="text-neutral-500">
-								Translate text to your preferred language, powered by Nostr
-								Wine.
+								{t("onboardingSettings.translation.subtitle")}
 							</p>
 						</div>
 					</div>
@@ -175,10 +178,7 @@ export function OnboardingScreen() {
 					) : null}
 					<div className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm bg-blue-950 text-blue-300">
 						<InfoIcon className="size-8" />
-						<p>
-							There are many more settings you can configure from the
-							&quot;Settings&quot; screen. Be sure to visit it later.
-						</p>
+						<p>{t("onboardingSettings.footer")}</p>
 					</div>
 					<button
 						type="button"
@@ -188,7 +188,7 @@ export function OnboardingScreen() {
 						{loading ? (
 							<LoaderIcon className="size-5 animate-spin" />
 						) : (
-							"Continue"
+							t("global.continue")
 						)}
 					</button>
 				</div>

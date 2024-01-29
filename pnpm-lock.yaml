@@ -150,6 +150,9 @@ importers:
       framer-motion:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
+      i18next:
+        specifier: ^23.8.0
+        version: 23.8.0
       jotai:
         specifier: ^2.6.3
         version: 2.6.3(@types/react@18.2.48)(react@18.2.0)
@@ -177,6 +180,9 @@ importers:
       react-hook-form:
         specifier: ^7.49.3
         version: 7.49.3(react@18.2.0)
+      react-i18next:
+        specifier: ^14.0.1
+        version: 14.0.1(i18next@23.8.0)(react-dom@18.2.0)(react@18.2.0)
       react-router-dom:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
@@ -5180,6 +5186,12 @@ packages:
     resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
     dev: false
 
+  /html-parse-stringify@3.0.1:
+    resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
+    dependencies:
+      void-elements: 3.1.0
+    dev: false
+
   /html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
     dev: false
@@ -5201,6 +5213,12 @@ packages:
   /human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
+    dev: false
+
+  /i18next@23.8.0:
+    resolution: {integrity: sha512-1H+39doU9dQZrRprpnZ2aZetbX9I1N3bM/YGHN/ZkMJ//wJqrxDEqgI5mmSsh/rglsFBiNxI6UtFZfUO2A6XbA==}
+    dependencies:
+      '@babel/runtime': 7.23.9
     dev: false
 
   /iconv-lite@0.4.23:
@@ -6970,6 +6988,26 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /react-i18next@14.0.1(i18next@23.8.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-TMV8hFismBmpMdIehoFHin/okfvgjFhp723RYgIqB4XyhDobVMyukyM3Z8wtTRmajyFMZrBl/OaaXF2P6WjUAw==}
+    peerDependencies:
+      i18next: '>= 23.2.3'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.9
+      html-parse-stringify: 3.0.1
+      i18next: 23.8.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-remove-scroll-bar@2.3.4(@types/react@18.2.48)(react@18.2.0):
     resolution: {integrity: sha512-63C4YQBUt0m6ALadE9XV56hV8BgJWDmmTPY758iIJjfQKt2nYwoUrPk0LXRXcB/yIj82T1/Ixfdpdk68LwIB0A==}
     engines: {node: '>=10'}
@@ -8592,6 +8630,11 @@ packages:
         optional: true
     dependencies:
       vite: 5.0.12(@types/node@20.11.8)
+    dev: false
+
+  /void-elements@3.1.0:
+    resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /volar-service-css@0.0.17(@volar/language-service@1.11.1):

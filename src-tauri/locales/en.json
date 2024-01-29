@@ -1,0 +1,70 @@
+{
+	"global": {
+		"continue": "Continue",
+		"loading": "Loading"
+	},
+	"welcome": {
+		"title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
+		"signup": "Join Nostr",
+		"login": "Login",
+		"footer": "Before joining Nostr, you can take time to learn more about Nostr"
+	},
+	"login": {
+		"title": "Welcome back, anon!",
+		"loginWithAddress": "Login with Nostr Address",
+		"loginWithBunker": "Login with nsecBunker",
+		"or": "Or continue with",
+		"loginWithPrivkey": "Login with Private Key"
+	},
+	"loginWithAddress": {
+		"title": "Enter your Nostr Address"
+	},
+	"loginWithBunker": {
+		"title": "Enter your nsecbunker token"
+	},
+	"loginWithPrivkey": {
+		"title": "Enter your Private Key",
+		"subtitle": "Lume will put your private key to <1>{{service}}</1>.\nIt will be secured by your OS."
+	},
+	"signup": {
+		"title": "Let's Get Started",
+		"subtitle": "Choose one of methods below to create your account",
+		"selfManageMethod": "Self-Managed",
+		"selfManageMethodDescription": "You create your keys and keep them safe.",
+		"providerMethod": "Managed by Provider",
+		"providerMethodDescription": "A 3rd party provider will handle your sign in keys for you."
+	},
+	"signupWithSelfManage": {
+		"title": "This is your new Account Key",
+		"subtitle": "Keep your key in safe place. If you lose this key, you will lose access to your account.",
+		"confirm1": "I understand the risk of lost private key.",
+		"confirm2": "I will make sure keep it safe and not sharing with anyone.",
+		"confirm3": "I understand I cannot recover private key.",
+		"button": "Save key & Continue"
+	},
+	"signupWithProvider": {
+		"title": "Let's set up your account on Nostr",
+		"username": "Username *",
+		"chooseProvider": "Choose a Provider",
+		"usernameFooter": "Use to login to Lume and other Nostr apps. You can choose provider you trust to manage your account",
+		"email": "Backup Email (optional)",
+		"emailFooter": "Use for recover your account if you lose your password"
+	},
+	"onboardingSettings": {
+		"title": "You're almost ready to use Lume.",
+		"subtitle": "Let's start personalizing your experience.",
+		"notification": {
+			"title": "Push notification",
+			"subtitle": "Enabling push notifications will allow you to receive notifications from Lume."
+		},
+		"lowPower": {
+			"title": "Low Power Mode",
+			"subtitle": "Limited relay connection and hide all media, sustainable for low network environment."
+		},
+		"translation": {
+			"title": "Translation (nostr.wine)",
+			"subtitle": "Translate text to your preferred language, powered by Nostr Wine."
+		},
+		"footer": "There are many more settings you can configure from the 'Settings' Screen. Be sure to visit it later."
+	}
+}
