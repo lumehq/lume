@@ -1,8 +1,11 @@
 import { cn } from "@lume/utils";
+import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
 import { RelaySidebar } from "./components/sidebar";
 
 export function RelaysScreen() {
+	const { t } = useTranslation();
+
 	return (
 		<div className="grid h-full w-full lg:grid-cols-4 xl:grid-cols-5 rounded-xl shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:shadow-none dark:ring-1 dark:ring-white/10">
 			<RelaySidebar className="col-span-1" />
@@ -20,7 +23,7 @@ export function RelaysScreen() {
 							)
 						}
 					>
-						Global
+						{t("relays.global")}
 					</NavLink>
 					<NavLink
 						to={"/relays/follows/"}
@@ -33,7 +36,7 @@ export function RelaysScreen() {
 							)
 						}
 					>
-						Follows
+						{t("relays.follows")}
 					</NavLink>
 				</div>
 				<div className="flex flex-col flex-1 min-h-0 overflow-y-auto">

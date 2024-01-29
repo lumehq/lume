@@ -1,7 +1,12 @@
 {
 	"global": {
+		"relay": "Relay",
 		"continue": "Continue",
-		"loading": "Loading"
+		"loading": "Loading",
+		"moveLeft": "Move Left",
+		"moveRight": "Move Right",
+		"newColumn": "New Column",
+		"inspect": "Inspect"
 	},
 	"welcome": {
 		"title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
@@ -66,5 +71,23 @@
 			"subtitle": "Translate text to your preferred language, powered by Nostr Wine."
 		},
 		"footer": "There are many more settings you can configure from the 'Settings' Screen. Be sure to visit it later."
+	},
+	"relays": {
+		"global": "Global",
+		"follows": "Follows",
+		"sidebar": {
+			"title": "Connected relays",
+			"empty": "Empty."
+		},
+		"relayView": {
+			"empty": "Could not load relay information 😬",
+			"owner": "Owner",
+			"contact": "Contact",
+			"software": "Software",
+			"nips": "Supported NIPs",
+			"limit": "Limitation",
+			"payment": "Open payment website",
+			"paymentNote": "You need to make a payment to connect this relay"
+		}
 	}
 }

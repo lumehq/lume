@@ -3,11 +3,13 @@ import { CancelIcon, LoaderIcon, RefreshIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { NDKKind, NDKSubscriptionCacheUsage } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { RelayForm } from "./relayForm";
 
 export function RelaySidebar({ className }: { className?: string }) {
 	const ark = useArk();
 
+	const { t } = useTranslation();
 	const { removeRelay } = useRelaylist();
 	const { status, data, isRefetching, refetch } = useQuery({
 		queryKey: ["relay-personal"],
@@ -40,7 +42,7 @@ export function RelaySidebar({ className }: { className?: string }) {
 			)}
 		>
 			<div className="inline-flex items-center justify-between w-full h-14 px-3 border-b border-black/10 dark:border-white/10">
-				<h3 className="font-semibold">Connected relays</h3>
+				<h3 className="font-semibold">{t("relays.sidebar.title")}</h3>
 				<button
 					type="button"
 					onClick={() => refetch()}
@@ -58,7 +60,7 @@ export function RelaySidebar({ className }: { className?: string }) {
 					</div>
 				) : !data.length ? (
 					<div className="flex items-center justify-center w-full h-20 rounded-lg bg-black/10 dark:bg-white/10">
-						<p className="text-sm font-medium">Empty.</p>
+						<p className="text-sm font-medium">{t("relays.sidebar.empty")}</p>
 					</div>
 				) : (
 					data.map((item) => (

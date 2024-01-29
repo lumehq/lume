@@ -1,17 +1,20 @@
 import { User, useRelaylist } from "@lume/ark";
 import { PlusIcon, SearchIcon } from "@lume/icons";
 import { normalizeRelayUrl } from "nostr-fetch";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function RelayItem({ url, users }: { url: string; users?: string[] }) {
 	const domain = new URL(url).hostname;
+
+	const { t } = useTranslation();
 	const { connectRelay } = useRelaylist();
 
 	return (
 		<div className="flex h-14 w-full items-center justify-between border-b border-neutral-100 px-5 dark:border-neutral-950">
 			<div className="inline-flex items-center gap-2">
 				<span className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">
-					Relay:{" "}
+					{t("global.relay")}:{" "}
 				</span>
 				<span className="max-w-[200px] truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
 					{url}
@@ -39,7 +42,7 @@ export function RelayItem({ url, users }: { url: string; users?: string[] }) {
 					className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-neutral-100 px-2 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 				>
 					<SearchIcon className="size-4" />
-					Inspect
+					{t("global.inspect")}
 				</Link>
 				<button
 					type="button"
