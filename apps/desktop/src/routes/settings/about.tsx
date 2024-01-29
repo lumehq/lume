@@ -2,10 +2,12 @@ import { getVersion } from "@tauri-apps/api/app";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { Update, check } from "@tauri-apps/plugin-updater";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 export function AboutScreen() {
+	const [t] = useTranslation();
 	const [version, setVersion] = useState("");
 	const [newUpdate, setNewUpdate] = useState<Update>(null);
 
@@ -34,7 +36,7 @@ export function AboutScreen() {
 			<div className="flex flex-col items-center">
 				<h1 className="leading-tight text-xl font-semibold">Lume</h1>
 				<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-					Version {version}
+					{t("settings.about.version")} {version}
 				</p>
 			</div>
 			<div className="mx-auto mt-4 flex w-full max-w-xs flex-col gap-2">
@@ -44,7 +46,7 @@ export function AboutScreen() {
 						onClick={() => checkUpdate()}
 						className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 text-sm font-medium text-white hover:bg-blue-600"
 					>
-						Check for update
+						{t("settings.about.checkUpdate")}
 					</button>
 				) : (
 					<button
@@ -52,7 +54,7 @@ export function AboutScreen() {
 						onClick={() => installUpdate()}
 						className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-blue-500 text-sm font-medium text-white hover:bg-blue-600"
 					>
-						Install {newUpdate.version}
+						{t("settings.about.installUpdate")} {newUpdate.version}
 					</button>
 				)}
 				<Link

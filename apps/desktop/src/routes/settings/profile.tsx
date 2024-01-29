@@ -1,15 +1,11 @@
 import { useArk } from "@lume/ark";
-import {
-	CheckCircleIcon,
-	LoaderIcon,
-	PlusIcon,
-	UnverifiedIcon,
-} from "@lume/icons";
+import { CheckCircleIcon, LoaderIcon, UnverifiedIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { NDKKind, NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AvatarUpload } from "./components/avatarUpload";
 import { CoverUpload } from "./components/coverUpload";
@@ -24,6 +20,7 @@ export function ProfileSettingScreen() {
 	const [banner, setBanner] = useState("");
 	const [nip05, setNIP05] = useState({ verified: true, text: "" });
 
+	const { t } = useTranslation();
 	const {
 		register,
 		handleSubmit,
@@ -139,7 +136,7 @@ export function ProfileSettingScreen() {
 							htmlFor="displayName"
 							className="text-sm font-semibold uppercase tracking-wider"
 						>
-							Display Name
+							{t("user.displayName")}
 						</label>
 						<input
 							type={"text"}
@@ -153,7 +150,7 @@ export function ProfileSettingScreen() {
 							htmlFor="name"
 							className="text-sm font-semibold uppercase tracking-wider"
 						>
-							Name
+							{t("user.name")}
 						</label>
 						<input
 							type={"text"}
@@ -179,12 +176,12 @@ export function ProfileSettingScreen() {
 								{nip05.verified ? (
 									<span className="inline-flex h-6 items-center gap-1 rounded-full bg-teal-500 px-1 pr-1.5 text-xs font-medium text-white">
 										<CheckCircleIcon className="h-4 w-4" />
-										Verified
+										{t("user.verified")}
 									</span>
 								) : (
 									<span className="inline-flex h-6 items-center gap-1 rounded bg-red-500 pl-1 pr-1.5 text-xs font-medium text-white">
 										<UnverifiedIcon className="h-4 w-4" />
-										Unverified
+										{t("user.unverified")}
 									</span>
 								)}
 							</div>
@@ -200,7 +197,7 @@ export function ProfileSettingScreen() {
 							htmlFor="website"
 							className="text-sm font-semibold uppercase tracking-wider"
 						>
-							Website
+							{t("user.website")}
 						</label>
 						<input
 							type={"text"}
@@ -214,7 +211,7 @@ export function ProfileSettingScreen() {
 							htmlFor="website"
 							className="text-sm font-semibold uppercase tracking-wider"
 						>
-							Lightning address
+							{t("user.lna")}
 						</label>
 						<input
 							type={"text"}
@@ -228,7 +225,7 @@ export function ProfileSettingScreen() {
 							htmlFor="about"
 							className="text-sm font-semibold uppercase tracking-wider"
 						>
-							Bio
+							{t("user.bio")}
 						</label>
 						<textarea
 							{...register("about")}
@@ -245,7 +242,7 @@ export function ProfileSettingScreen() {
 							{loading ? (
 								<LoaderIcon className="size-4 animate-spin" />
 							) : (
-								"Update"
+								t("global.update")
 							)}
 						</button>
 					</div>

@@ -3,11 +3,13 @@ import { EyeOffIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function BackupSettingScreen() {
 	const ark = useArk();
 	const storage = useStorage();
 
+	const [t] = useTranslation();
 	const [privkey, setPrivkey] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -29,7 +31,9 @@ export function BackupSettingScreen() {
 			<div>
 				{privkey ? (
 					<div>
-						<div className="mb-2 text-sm font-semibold">Private key</div>
+						<div className="mb-2 text-sm font-semibold">
+							{t("settings.backup.privkey.title")}
+						</div>
 						<div className="relative">
 							<input
 								readOnly
@@ -50,7 +54,7 @@ export function BackupSettingScreen() {
 							onClick={() => removePrivkey()}
 							className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-red-200 dark:bg-red-800 px-6 font-medium text-red-500 hover:bg-red-500 hover:text-white focus:outline-none dark:hover:text-white"
 						>
-							Remove private key
+							{t("settings.backup.privkey.button")}
 						</button>
 					</div>
 				) : null}

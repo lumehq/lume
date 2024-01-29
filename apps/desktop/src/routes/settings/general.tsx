@@ -10,20 +10,17 @@ import {
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function GeneralSettingScreen() {
 	const storage = useStorage();
 
+	const [t] = useTranslation();
 	const [apiKey, setAPIKey] = useState("");
 	const [settings, setSettings] = useState({
-		lowPower: false,
-		autoupdate: false,
+		...storage.settings,
+		notification: false,
 		autolaunch: false,
-		outbox: false,
-		media: true,
-		hashtag: true,
-		notification: true,
-		translation: false,
 		appearance: "system",
 	});
 
@@ -100,47 +97,6 @@ export function GeneralSettingScreen() {
 
 			const permissionGranted = await isPermissionGranted();
 			setSettings((prev) => ({ ...prev, notification: permissionGranted }));
-
-			const data = await storage.getAllSettings();
-			if (!data) return;
-
-			for (const item of data) {
-				if (item.key === "autoupdate")
-					setSettings((prev) => ({
-						...prev,
-						autoupdate: !!parseInt(item.value),
-					}));
-
-				if (item.key === "lowPower")
-					setSettings((prev) => ({
-						...prev,
-						lowPower: !!parseInt(item.value),
-					}));
-
-				if (item.key === "outbox")
-					setSettings((prev) => ({
-						...prev,
-						outbox: !!parseInt(item.value),
-					}));
-
-				if (item.key === "media")
-					setSettings((prev) => ({
-						...prev,
-						media: !!parseInt(item.value),
-					}));
-
-				if (item.key === "hashtag")
-					setSettings((prev) => ({
-						...prev,
-						hashtag: !!parseInt(item.value),
-					}));
-
-				if (item.key === "translation")
-					setSettings((prev) => ({
-						...prev,
-						translation: !!parseInt(item.value),
-					}));
-			}
 		}
 
 		loadSettings();
@@ -152,9 +108,11 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Update
+							{t("settings.general.update.title")}
 						</div>
-						<div className="text-sm">Automatically download new update</div>
+						<div className="text-sm">
+							{t("settings.general.update.subtitle")}
+						</div>
 					</div>
 					<Switch.Root
 						checked={settings.autoupdate}
@@ -167,10 +125,10 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Low Power
+							{t("settings.general.lowPower.title")}
 						</div>
 						<div className="text-sm">
-							Sustainable for low network environment.
+							{t("settings.general.lowPower.subtitle")}
 						</div>
 					</div>
 					<Switch.Root
@@ -184,9 +142,11 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Startup
+							{t("settings.general.startup.title")}
 						</div>
-						<div className="text-sm">Launch Lume at Login</div>
+						<div className="text-sm">
+							{t("settings.general.startup.subtitle")}
+						</div>
 					</div>
 					<Switch.Root
 						checked={settings.autolaunch}
@@ -199,9 +159,11 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Media
+							{t("settings.general.media.title")}
 						</div>
-						<div className="text-sm">Automatically load media</div>
+						<div className="text-sm">
+							{t("settings.general.media.subtitle")}
+						</div>
 					</div>
 					<Switch.Root
 						checked={settings.media}
@@ -214,9 +176,11 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Hashtag
+							{t("settings.general.hashtag.title")}
 						</div>
-						<div className="text-sm">Show all hashtags in content</div>
+						<div className="text-sm">
+							{t("settings.general.hashtag.subtitle")}
+						</div>
 					</div>
 					<Switch.Root
 						checked={settings.hashtag}
@@ -229,9 +193,11 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Notification
+							{t("settings.general.notification.title")}
 						</div>
-						<div className="text-sm">Automatically send notification</div>
+						<div className="text-sm">
+							{t("settings.general.notification.subtitle")}
+						</div>
 					</div>
 					<Switch.Root
 						checked={settings.notification}
@@ -245,9 +211,11 @@ export function GeneralSettingScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Translation
+							{t("settings.general.translation.title")}
 						</div>
-						<div className="text-sm">Translate text to your language</div>
+						<div className="text-sm">
+							{t("settings.general.translation.subtitle")}
+						</div>
 					</div>
 					<Switch.Root
 						checked={settings.translation}
@@ -260,7 +228,7 @@ export function GeneralSettingScreen() {
 				{settings.translation ? (
 					<div className="flex w-full items-center gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							API Key
+							{t("global.apiKey")}
 						</div>
 						<div className="relative w-full">
 							<input
@@ -276,7 +244,7 @@ export function GeneralSettingScreen() {
 									onClick={saveApi}
 									className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
 								>
-									Save
+									{t("global.save")}
 								</button>
 							</div>
 						</div>
@@ -284,7 +252,7 @@ export function GeneralSettingScreen() {
 				) : null}
 				<div className="flex w-full items-start gap-8">
 					<div className="w-36 shrink-0 text-end text-sm font-semibold">
-						Appearance
+						{t("settings.general.appearance.title")}
 					</div>
 					<div className="flex flex-1 gap-6">
 						<button
@@ -303,7 +271,7 @@ export function GeneralSettingScreen() {
 								<LightIcon className="h-5 w-5" />
 							</div>
 							<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-								Light
+								{t("settings.general.appearance.light")}
 							</p>
 						</button>
 						<button
@@ -322,7 +290,7 @@ export function GeneralSettingScreen() {
 								<DarkIcon className="h-5 w-5" />
 							</div>
 							<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-								Dark
+								{t("settings.general.appearance.dark")}
 							</p>
 						</button>
 						<button
@@ -341,7 +309,7 @@ export function GeneralSettingScreen() {
 								<SystemModeIcon className="h-5 w-5" />
 							</div>
 							<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-								System
+								{t("settings.general.appearance.system")}
 							</p>
 						</button>
 					</div>

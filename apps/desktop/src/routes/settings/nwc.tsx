@@ -2,12 +2,14 @@ import { useArk } from "@lume/ark";
 import { useStorage } from "@lume/storage";
 import * as Switch from "@radix-ui/react-switch";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export function NWCScreen() {
 	const ark = useArk();
 	const storage = useStorage();
 
+	const [t] = useTranslation();
 	const [settings, setSettings] = useState({
 		nwc: false,
 		instantZap: storage.settings.instantZap,
@@ -74,7 +76,7 @@ export function NWCScreen() {
 				<div className="flex w-full items-center justify-between">
 					<div className="flex w-full items-start gap-8">
 						<div className="w-36 shrink-0 text-end text-sm font-semibold">
-							Connection String
+							{t("settings.zap.nwc")}
 						</div>
 						<div className="flex flex-col items-end gap-2 w-full">
 							<textarea
@@ -89,7 +91,7 @@ export function NWCScreen() {
 									onClick={saveNWC}
 									className="h-8 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
 								>
-									Save
+									{t("global.save")}
 								</button>
 							) : (
 								<button
@@ -97,7 +99,7 @@ export function NWCScreen() {
 									onClick={remove}
 									className="h-8 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
 								>
-									Remove
+									{t("global.delete")}
 								</button>
 							)}
 						</div>
@@ -108,10 +110,10 @@ export function NWCScreen() {
 						<div className="flex w-full items-center justify-between">
 							<div className="flex items-center gap-8">
 								<div className="w-36 shrink-0 text-end text-sm font-semibold">
-									Instant Zap
+									{t("settings.zap.instant.title")}
 								</div>
 								<div className="text-sm">
-									Zap with default amount, no confirmation
+									{t("settings.zap.instant.subtitle")}
 								</div>
 							</div>
 							<Switch.Root
@@ -125,7 +127,7 @@ export function NWCScreen() {
 						<div className="flex w-full items-center justify-between">
 							<div className="flex w-full items-center gap-8">
 								<div className="w-36 shrink-0 text-end text-sm font-semibold">
-									Default amount
+									{t("settings.zap.defaultAmount")}
 								</div>
 								<div className="relative w-full">
 									<input
@@ -141,7 +143,7 @@ export function NWCScreen() {
 											onClick={saveAmount}
 											className="mr-1 h-7 w-16 text-sm font-medium shrink-0 inline-flex items-center justify-center rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
 										>
-											Save
+											{t("global.save")}
 										</button>
 									</div>
 								</div>

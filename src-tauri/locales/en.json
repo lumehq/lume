@@ -14,9 +14,11 @@
 		"cancel": "Cancel",
 		"save": "Save",
 		"post": "Post",
+		"update": "Update",
 		"noResult": "No results found.",
 		"emptyFeedTitle": "This feed is empty",
-		"emptyFeedSubtitle": "You can follow more users to build up your timeline"
+		"emptyFeedSubtitle": "You can follow more users to build up your timeline",
+		"apiKey": "API Key"
 	},
 	"nip89": {
 		"unsupported": "Lume isn't support this event",
@@ -63,6 +65,13 @@
 		}
 	},
 	"user": {
+		"displayName": "Display Name",
+		"name": "Name",
+		"bio": "Bio",
+		"lna": "Lightning address",
+		"website": "Website",
+		"verified": "Verified",
+		"unverified": "Unverified",
 		"follow": "Follow",
 		"unfollow": "Unfollow",
 		"latestPosts": "Latest posts",
@@ -177,5 +186,77 @@
 		"edit": "Edit Interest",
 		"followAll": "Follow All",
 		"unfollowAll": "Unfollow All"
+	},
+	"settings": {
+		"general": {
+			"title": "General",
+			"update": {
+				"title": "Update",
+				"subtitle": "Automatically download new update"
+			},
+			"lowPower": {
+				"title": "Low Power",
+				"subtitle": "Sustainable for low network environment"
+			},
+			"startup": {
+				"title": "Startup",
+				"subtitle": "Launch Lume at Login"
+			},
+			"media": {
+				"title": "Media",
+				"subtitle": "Automatically load media"
+			},
+			"hashtag": {
+				"title": "Hashtag",
+				"subtitle": "Show all hashtags in content"
+			},
+			"notification": {
+				"title": "Notification",
+				"subtitle": "Automatically send notification"
+			},
+			"translation": {
+				"title": "Translation",
+				"subtitle": "Translate text to your language"
+			},
+			"appearance": {
+				"title": "Appearance",
+				"light": "Light",
+				"dark": "Dark",
+				"system": "System"
+			}
+		},
+		"user": {
+			"title": "User"
+		},
+		"zap": {
+			"title": "Zap",
+			"nwc": "Connection String"
+		},
+		"backup": {
+			"title": "Backup",
+			"privkey": {
+				"title": "Private key",
+				"button": "Remove private key"
+			}
+		},
+		"advanced": {
+			"title": "Advanced",
+			"cache": {
+				"title": "Cache",
+				"subtitle": "Use for boost up nostr connection",
+				"button": "Clear"
+			},
+			"instant": {
+				"title": "Instant Zap",
+				"subtitle": "Zap with default amount, no confirmation"
+			},
+			"defaultAmount": "Default amount"
+		},
+		"about": {
+			"title": "About",
+			"version": "Version",
+			"checkUpdate": "Check for update",
+			"installUpdate": "Install"
+		}
 	}
 }

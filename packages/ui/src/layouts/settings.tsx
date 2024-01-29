@@ -7,9 +7,12 @@ import {
 	ZapIcon,
 } from "@lume/icons";
 import { cn } from "@lume/utils";
+import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
 
 export function SettingsLayout() {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex h-full min-h-0 w-full flex-col rounded-xl overflow-y-auto">
 			<div className="flex h-24 shrink-0 w-full items-center justify-center px-2 bg-white/50 backdrop-blur-xl dark:bg-black/50">
@@ -27,7 +30,7 @@ export function SettingsLayout() {
 						}
 					>
 						<SettingsIcon className="size-6" />
-						<p className="text-sm font-medium">General</p>
+						<p className="text-sm font-medium">{t("settings.general.title")}</p>
 					</NavLink>
 					<NavLink
 						to="/settings/profile"
@@ -42,7 +45,7 @@ export function SettingsLayout() {
 						}
 					>
 						<UserIcon className="size-6" />
-						<p className="text-sm font-medium">User</p>
+						<p className="text-sm font-medium">{t("settings.general.user")}</p>
 					</NavLink>
 					<NavLink
 						to="/settings/nwc"
@@ -56,7 +59,7 @@ export function SettingsLayout() {
 						}
 					>
 						<ZapIcon className="size-6" />
-						<p className="text-sm font-medium">Zap</p>
+						<p className="text-sm font-medium">{t("settings.zap.title")}</p>
 					</NavLink>
 					<NavLink
 						to="/settings/backup"
@@ -70,7 +73,7 @@ export function SettingsLayout() {
 						}
 					>
 						<SecureIcon className="size-6" />
-						<p className="text-sm font-medium">Backup</p>
+						<p className="text-sm font-medium">{t("settings.backup.title")}</p>
 					</NavLink>
 					<NavLink
 						to="/settings/advanced"
@@ -84,7 +87,9 @@ export function SettingsLayout() {
 						}
 					>
 						<AdvancedSettingsIcon className="size-6" />
-						<p className="text-sm font-medium">Advanced</p>
+						<p className="text-sm font-medium">
+							{t("settings.advanced.title")}
+						</p>
 					</NavLink>
 					<NavLink
 						to="/settings/about"
@@ -98,7 +103,7 @@ export function SettingsLayout() {
 						}
 					>
 						<InfoIcon className="size-6" />
-						<p className="text-sm font-medium">About</p>
+						<p className="text-sm font-medium">{t("settings.about.title")}</p>
 					</NavLink>
 				</div>
 			</div>

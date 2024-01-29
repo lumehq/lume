@@ -60,15 +60,6 @@ export default function Router() {
 							},
 						},
 						{
-							path: "edit-contact",
-							async lazy() {
-								const { EditContactScreen } = await import(
-									"./routes/settings/editContact"
-								);
-								return { Component: EditContactScreen };
-							},
-						},
-						{
 							path: "backup",
 							async lazy() {
 								const { BackupSettingScreen } = await import(
