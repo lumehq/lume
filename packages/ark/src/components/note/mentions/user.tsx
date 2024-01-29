@@ -1,5 +1,6 @@
 import { COL_TYPES } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useArk } from "../../../hooks/useArk";
 import { useProfile } from "../../../hooks/useProfile";
@@ -10,6 +11,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 	const cleanPubkey = ark.getCleanPubkey(pubkey);
 
 	const { isLoading, isError, user } = useProfile(pubkey);
+	const { t } = useTranslation();
 	const { addColumn } = useColumnContext();
 
 	return (
@@ -27,7 +29,7 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 						to={`/users/${cleanPubkey}`}
 						className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 					>
-						View profile
+						{t("note.buttons.viewProfile")}
 					</Link>
 				</DropdownMenu.Item>
 				<DropdownMenu.Item asChild>
@@ -36,13 +38,13 @@ export function MentionUser({ pubkey }: { pubkey: string }) {
 						onClick={async () =>
 							await addColumn({
 								kind: COL_TYPES.user,
-								title: user?.name || user?.displayName || "Profile",
+								title: user?.name || user?.displayName || "User",
 								content: cleanPubkey,
 							})
 						}
 						className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 					>
-						Pin
+						{t("note.buttons.pin")}
 					</button>
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>

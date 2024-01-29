@@ -5,6 +5,7 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { nip19 } from "nostr-tools";
 import { type EventPointer } from "nostr-tools/lib/types/nip19";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useColumnContext } from "../column/provider";
@@ -13,7 +14,10 @@ import { useNoteContext } from "./provider";
 export function NoteMenu() {
 	const event = useNoteContext();
 	const navigate = useNavigate();
+
+	const { t } = useTranslation();
 	const { addColumn } = useColumnContext();
+
 	const [open, setOpen] = useState(false);
 
 	const copyID = async () => {
@@ -67,7 +71,7 @@ export function NoteMenu() {
 							onClick={() => copyLink()}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							View thread
+							{t("note.menu.viewThread")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -76,7 +80,7 @@ export function NoteMenu() {
 							onClick={() => navigate(`/events/${event.id}`)}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							Copy shareable link
+							{t("note.menu.copyLink")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -85,7 +89,7 @@ export function NoteMenu() {
 							onClick={() => copyID()}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							Copy note ID
+							{t("note.menu.copyNoteId")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -94,7 +98,7 @@ export function NoteMenu() {
 							onClick={() => copyNpub()}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							Copy author ID
+							{t("note.menu.copyAuthorId")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -102,7 +106,7 @@ export function NoteMenu() {
 							to={`/users/${event.pubkey}`}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							View author
+							{t("note.menu.viewAuthor")}
 						</Link>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -117,7 +121,7 @@ export function NoteMenu() {
 							}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							Pin author
+							{t("note.menu.pinAuthor")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Separator className="h-px my-1 bg-black/10 dark:bg-white/10" />
@@ -127,7 +131,7 @@ export function NoteMenu() {
 							onClick={() => copyRaw()}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
-							Copy raw event
+							{t("note.menu.copyRaw")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -136,7 +140,7 @@ export function NoteMenu() {
 							onClick={muteUser}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
 						>
-							Mute
+							{t("note.menu.mute")}
 						</button>
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>

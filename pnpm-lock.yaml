@@ -365,6 +365,9 @@ importers:
       react-currency-input-field:
         specifier: ^3.6.14
         version: 3.6.14(react@18.2.0)
+      react-i18next:
+        specifier: ^14.0.1
+        version: 14.0.1(i18next@23.8.0)(react-dom@18.2.0)(react@18.2.0)
       react-router-dom:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)
@@ -999,6 +1002,9 @@ importers:
       react-hotkeys-hook:
         specifier: ^4.4.4
         version: 4.4.4(react-dom@18.2.0)(react@18.2.0)
+      react-i18next:
+        specifier: ^14.0.1
+        version: 14.0.1(i18next@23.8.0)(react-dom@18.2.0)(react@18.2.0)
       react-router-dom:
         specifier: ^6.21.3
         version: 6.21.3(react-dom@18.2.0)(react@18.2.0)

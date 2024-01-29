@@ -8,6 +8,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useProfile } from "../../../hooks/useProfile";
 import { useNoteContext } from "../provider";
@@ -23,6 +24,7 @@ export function NoteZap() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [invoice, setInvoice] = useState<string>(null);
 
+	const { t } = useTranslation();
 	const { user } = useProfile(event.pubkey);
 
 	const createZapRequest = async (instant?: boolean) => {
@@ -99,7 +101,7 @@ export function NoteZap() {
 					</Tooltip.Trigger>
 					<Tooltip.Portal>
 						<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-							Zap
+							{t("note.zap.tooltip")}
 							<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 						</Tooltip.Content>
 					</Tooltip.Portal>
@@ -124,7 +126,7 @@ export function NoteZap() {
 					</Dialog.Trigger>
 					<Tooltip.Portal>
 						<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-							Zap
+							{t("note.zap.tooltip")}
 							<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 						</Tooltip.Content>
 					</Tooltip.Portal>
@@ -145,7 +147,7 @@ export function NoteZap() {
 						<div className="inline-flex items-center justify-center w-full px-5 py-3 shrink-0">
 							<div className="w-6" />
 							<Dialog.Title className="font-semibold text-center">
-								Send zap to{" "}
+								{t("note.zap.modalTitle")}{" "}
 								{user?.name ||
 									user?.displayName ||
 									displayNpub(event.pubkey, 16)}
@@ -217,7 +219,7 @@ export function NoteZap() {
 										autoComplete="off"
 										autoCorrect="off"
 										autoCapitalize="off"
-										placeholder="Enter message (optional)"
+										placeholder={t("note.zap.messagePlaceholder")}
 										className="w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-3 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:text-neutral-400"
 									/>
 									<div className="flex flex-col gap-2">
@@ -227,10 +229,10 @@ export function NoteZap() {
 											className="inline-flex items-center justify-center w-full pb-[2px] font-semibold border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800"
 										>
 											{isCompleted
-												? "Zapped"
+												? t("note.zap.buttonFinish")
 												: isLoading
-												  ? "Processing..."
-												  : "Zap"}
+												  ? t("note.zap.buttonLoading")
+												  : t("note.zap.zap")}
 										</button>
 									</div>
 								</div>
@@ -241,11 +243,11 @@ export function NoteZap() {
 									<QRCodeSVG value={invoice} size={256} />
 								</div>
 								<div className="flex flex-col items-center gap-1">
-									<h3 className="text-lg font-medium">Scan to zap</h3>
+									<h3 className="text-lg font-medium">
+										{t("note.zap.invoiceButton")}
+									</h3>
 									<span className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-										You must use Bitcoin wallet which support Lightning
-										<br />
-										such as: Blue Wallet, Bitkit, Phoenix,...
+										{t("note.zap.invoiceFooter")}
 									</span>
 								</div>
 							</div>

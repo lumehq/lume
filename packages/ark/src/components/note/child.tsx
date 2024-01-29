@@ -1,7 +1,7 @@
 import { NOSTR_MENTIONS } from "@lume/utils";
 import { nanoid } from "nanoid";
-import { nip19 } from "nostr-tools";
 import { ReactNode, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { useEvent } from "../../hooks/useEvent";
@@ -13,6 +13,7 @@ export function NoteChild({
 	eventId,
 	isRoot,
 }: { eventId: string; isRoot?: boolean }) {
+	const { t } = useTranslation();
 	const { isLoading, isError, data } = useEvent(eventId);
 
 	const richContent = useMemo(() => {
@@ -91,7 +92,7 @@ export function NoteChild({
 		return (
 			<div className="relative flex gap-3">
 				<div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
-					Failed to fetch event
+					{t("note.error")}
 				</div>
 			</div>
 		);
@@ -111,7 +112,7 @@ export function NoteChild({
 					<div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
 						<User.Name className="max-w-[10rem] truncate" />
 						<div className="font-normal text-neutral-700 dark:text-neutral-300">
-							{isRoot ? "posted:" : "replied:"}
+							{isRoot ? t("note.posted") : t("note.replied")}:
 						</div>
 					</div>
 				</User.Root>

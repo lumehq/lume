@@ -3,6 +3,7 @@ import { NDKEventWithReplies } from "@lume/types";
 import { cn } from "@lume/utils";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Note } from "..";
 import { ChildReply } from "./childReply";
 
@@ -11,6 +12,7 @@ export function Reply({
 }: {
 	event: NDKEventWithReplies;
 }) {
+	const [t] = useTranslation();
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -30,7 +32,9 @@ export function Reply({
 										className={cn("size-5", open ? "rotate-180 transform" : "")}
 									/>
 									{`${event.replies?.length} ${
-										event.replies?.length === 1 ? "reply" : "replies"
+										event.replies?.length === 1
+											? t("note.reply.single")
+											: t("note.reply.plural")
 									}`}
 								</div>
 							</Collapsible.Trigger>

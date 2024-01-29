@@ -3,10 +3,54 @@
 		"relay": "Relay",
 		"continue": "Continue",
 		"loading": "Loading",
+		"error": "Error",
 		"moveLeft": "Move Left",
 		"moveRight": "Move Right",
 		"newColumn": "New Column",
 		"inspect": "Inspect"
+	},
+	"nip89": {
+		"unsupported": "Lume isn't support this event",
+		"openWith": "Open with"
+	},
+	"note": {
+		"showThread": "Show thread",
+		"showMore": "Show more",
+		"error": "Failed to fetch event.",
+		"posted": "posted",
+		"replied": "replied",
+		"reposted": "reposted",
+		"menu": {
+			"viewThread": "View thread",
+			"copyLink": "Copy shareable link",
+			"copyNoteId": "Copy note ID",
+			"copyAuthorId": "Copy author ID",
+			"viewAuthor": "View author",
+			"pinAuthor": "Pin author",
+			"copyRaw": "Copy raw event",
+			"mute": "Mute"
+		},
+		"buttons": {
+			"pin": "Pin",
+			"pinTooltip": "Pin Note",
+			"repost": "Repost",
+			"quote": "Quote",
+			"viewProfile": "View profile"
+		},
+		"zap": {
+			"zap": "Zap",
+			"tooltip": "Send zap",
+			"modalTitle": "Send zap to",
+			"messagePlaceholder": "Enter message (optional)",
+			"buttonFinish": "Zapped",
+			"buttonLoading": "Processing...",
+			"invoiceButton": "Scan to zap",
+			"invoiceFooter": "You must use Bitcoin wallet which support Lightning\nsuch as: Blue Wallet, Bitkit, Phoenix,..."
+		},
+		"reply": {
+			"single": "reply",
+			"plural": "replies"
+		}
 	},
 	"welcome": {
 		"title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
