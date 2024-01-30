@@ -1,6 +1,7 @@
 {
 	"global": {
 		"relay": "Relay",
+		"back": "Back",
 		"continue": "Continue",
 		"loading": "Loading",
 		"error": "Error",
@@ -18,7 +19,9 @@
 		"noResult": "No results found.",
 		"emptyFeedTitle": "This feed is empty",
 		"emptyFeedSubtitle": "You can follow more users to build up your timeline",
-		"apiKey": "API Key"
+		"apiKey": "API Key",
+		"skip": "Skip",
+		"close": "Close"
 	},
 	"nip89": {
 		"unsupported": "Lume isn't support this event",
@@ -65,6 +68,7 @@
 		}
 	},
 	"user": {
+		"avatar": "Avatar",
 		"displayName": "Display Name",
 		"name": "Name",
 		"bio": "Bio",
@@ -101,6 +105,7 @@
 	},
 	"login": {
 		"title": "Welcome back, anon!",
+		"footer": "Lume will put your Private Key in <1>Secure Storage</1> depended on your OS Platform. It will be secured by Password or Biometric ID",
 		"loginWithAddress": "Login with Nostr Address",
 		"loginWithBunker": "Login with nsecBunker",
 		"or": "Or continue with",
@@ -257,6 +262,22 @@
 			"version": "Version",
 			"checkUpdate": "Check for update",
 			"installUpdate": "Install"
+		}
+	},
+	"onboarding": {
+		"home": {
+			"title": "Your account was successfully created!",
+			"subtitle": "For starters, let's set up your profile.",
+			"profileSettings": "Profile Settings"
+		},
+		"profile": {
+			"title": "About you",
+			"subtitle": "Tell Lume about yourself to start building your home feed."
+		},
+		"finish": {
+			"title": "Profile setup complete!",
+			"subtitle": "You can exit the setup here and start using Lume.",
+			"report": "Report a issue"
 		}
 	}
 }
