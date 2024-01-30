@@ -45,7 +45,7 @@ export function SettingsLayout() {
 						}
 					>
 						<UserIcon className="size-6" />
-						<p className="text-sm font-medium">{t("settings.general.user")}</p>
+						<p className="text-sm font-medium">{t("settings.user.title")}</p>
 					</NavLink>
 					<NavLink
 						to="/settings/nwc"

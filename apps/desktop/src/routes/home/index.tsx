@@ -177,7 +177,7 @@ export function HomeScreen() {
 							</Tooltip.Trigger>
 							<Tooltip.Portal>
 								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-									{t("global.newColum")}
+									{t("global.newColumn")}
 									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 								</Tooltip.Content>
 							</Tooltip.Portal>
