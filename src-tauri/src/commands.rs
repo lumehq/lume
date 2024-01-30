@@ -126,9 +126,9 @@ pub fn secure_save(key: String, value: String) -> Result<(), ()> {
 pub fn secure_load(key: String) -> Result<String, String> {
   let entry = Entry::new("Lume", &key).expect("Failed to create entry");
   if let Ok(password) = entry.get_password() {
-    Ok(password)
+    Ok(password.into())
   } else {
-    Err("not found".to_string())
+    Err("Not found".into())
   }
 }
 
