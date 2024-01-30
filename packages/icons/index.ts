@@ -112,3 +112,4 @@ export * from "./src/editInterest";
 export * from "./src/newColumn";
 export * from "./src/searchFilled";
 export * from "./src/arrowUp";
+export * from "./src/arrowUpSquare";
