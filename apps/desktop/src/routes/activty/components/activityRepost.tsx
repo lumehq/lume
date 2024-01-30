@@ -1,8 +1,11 @@
 import { User } from "@lume/ark";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function ActivityRepost({ event }: { event: NDKEvent }) {
+	const { t } = useTranslation();
+
 	return (
 		<Link
 			to={`/activity/${event.id}`}
@@ -14,7 +17,7 @@ export function ActivityRepost({ event }: { event: NDKEvent }) {
 						<User.Avatar className="size-8 rounded-lg shrink-0" />
 						<div className="inline-flex items-center gap-1.5">
 							<User.Name className="max-w-[8rem] font-semibold text-neutral-950 dark:text-neutral-50" />
-							<p className="shrink-0">reposted</p>
+							<p className="shrink-0">{t("activity.repost")}</p>
 						</div>
 					</div>
 					<User.Time

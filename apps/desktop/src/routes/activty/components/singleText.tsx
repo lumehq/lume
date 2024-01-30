@@ -1,5 +1,6 @@
 import { Note, useArk } from "@lume/ark";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { useTranslation } from "react-i18next";
 import { ActivityRootNote } from "./rootNote";
 
 export function ActivitySingleText({ event }: { event: NDKEvent }) {
@@ -9,14 +10,16 @@ export function ActivitySingleText({ event }: { event: NDKEvent }) {
 		tags: event.tags,
 	});
 
+	const { t } = useTranslation();
+
 	return (
 		<div className="h-full w-full flex flex-col justify-between">
 			<div className="h-14 border-b border-neutral-100 dark:border-neutral-900 flex flex-col items-center justify-center px-3">
 				<h3 className="text-center font-semibold leading-tight">
-					Conversation
+					{t("activity.conversation")}
 				</h3>
 				<p className="text-sm text-blue-500 font-medium leading-tight">
-					@ Someone has replied to your note
+					{t("activity.conversationSubtitle")}
 				</p>
 			</div>
 			<div className="overflow-y-auto">
@@ -33,7 +36,9 @@ export function ActivitySingleText({ event }: { event: NDKEvent }) {
 					) : null}
 					<div className="mt-3 flex flex-col gap-3">
 						<div className="flex items-center gap-3">
-							<p className="text-teal-500 font-medium">New reply</p>
+							<p className="text-teal-500 font-medium">
+								{t("activity.newReply")}
+							</p>
 							<div className="flex-1 h-px bg-teal-300" />
 							<div className="w-4 shrink-0 h-px bg-teal-300" />
 						</div>

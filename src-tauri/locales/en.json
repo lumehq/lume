@@ -279,5 +279,17 @@
 			"subtitle": "You can exit the setup here and start using Lume.",
 			"report": "Report a issue"
 		}
+	},
+	"activity": {
+		"title": "Activity",
+		"empty": "Yo! Nothing new yet.",
+		"mention": "mention you",
+		"repost": "reposted",
+		"zap": "zapped",
+		"newReply": "New reply",
+		"boost": "Boost",
+		"boostSubtitle": "@ Someone has reposted to your note",
+		"conversation": "Conversation",
+		"conversationSubtitle": "@ Someone has replied to your note"
 	}
 }

@@ -4,6 +4,7 @@ import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityRepost } from "./activityRepost";
 import { ActivityText } from "./activityText";
 import { ActivityZap } from "./activityZap";
@@ -12,6 +13,7 @@ export function ActivityList() {
 	const ark = useArk();
 	const queryClient = useQueryClient();
 
+	const { t } = useTranslation();
 	const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
 		useInfiniteQuery({
 			queryKey: ["activity"],
@@ -86,7 +88,7 @@ export function ActivityList() {
 			) : !allEvents.length ? (
 				<div className="w-full h-full flex flex-col items-center justify-center">
 					<p className="mb-2 text-2xl">🎉</p>
-					<p className="text-center font-medium">Yo! Nothing new yet.</p>
+					<p className="text-center font-medium">{t("activity.empty")}</p>
 				</div>
 			) : (
 				allEvents.map((event) => renderEvenKind(event))
@@ -104,7 +106,7 @@ export function ActivityList() {
 						) : (
 							<>
 								<ArrowRightCircleIcon className="size-5" />
-								Load more
+								{t("global.loadMore")}
 							</>
 						)}
 					</button>
