@@ -6,6 +6,7 @@ import { cn } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { Portal } from "@radix-ui/react-dropdown-menu";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	Descendant,
 	Editor,
@@ -207,6 +208,8 @@ export function ReplyForm({
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
 
+	const { t } = useTranslation();
+
 	const filters = contacts
 		?.filter((c) => c?.name?.toLowerCase().startsWith(search.toLowerCase()))
 		?.slice(0, 10);
@@ -334,7 +337,7 @@ export function ReplyForm({
 							autoCorrect="none"
 							spellCheck={false}
 							renderElement={(props) => <Element {...props} />}
-							placeholder="Post your reply"
+							placeholder={t("editor.replyPlaceholder")}
 							className="focus:outline-none h-28"
 						/>
 						{target && filters.length > 0 && (
@@ -383,7 +386,7 @@ export function ReplyForm({
 								{loading ? (
 									<LoaderIcon className="size-4 animate-spin" />
 								) : (
-									"Post"
+									t("global.post")
 								)}
 							</button>
 						</div>

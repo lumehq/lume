@@ -14,6 +14,7 @@ import { Window } from "@tauri-apps/api/window";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -43,6 +44,7 @@ export function CreateAccountAddress() {
 	const [serviceId, setServiceId] = useState(services?.[0]?.id);
 	const [loading, setIsLoading] = useState(false);
 
+	const { t } = useTranslation();
 	const {
 		register,
 		handleSubmit,
@@ -156,7 +158,7 @@ export function CreateAccountAddress() {
 			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
 					<h1 className="text-2xl font-semibold">
-						Let's set up your account on Nostr
+						{t("signupWithProvider.title")}
 					</h1>
 				</div>
 				{!services ? (
@@ -174,7 +176,7 @@ export function CreateAccountAddress() {
 									htmlFor="username"
 									className="text-sm font-semibold uppercase text-neutral-600"
 								>
-									Username *
+									{t("signupWithProvider.username")}
 								</label>
 								<div className="flex flex-col gap-1.5">
 									<div className="flex items-center justify-between w-full gap-2 bg-neutral-900 rounded-xl">
@@ -203,7 +205,7 @@ export function CreateAccountAddress() {
 													<Select.Viewport className="p-3">
 														<Select.Group>
 															<Select.Label className="mb-2 text-sm font-medium uppercase px-7 text-neutral-600">
-																Choose a Provider
+																{t("signupWithProvider.chooseProvider")}
 															</Select.Label>
 															{services.map((service) => (
 																<Item key={service.id} event={service} />
@@ -215,8 +217,7 @@ export function CreateAccountAddress() {
 										</Select.Root>
 									</div>
 									<span className="text-sm text-neutral-600">
-										Use to login to Lume and other Nostr apps. You can choose
-										provider you trust to manage your account
+										{t("signupWithProvider.usernameFooter")}
 									</span>
 								</div>
 							</div>
@@ -226,7 +227,7 @@ export function CreateAccountAddress() {
 										htmlFor="email"
 										className="text-sm font-semibold uppercase text-neutral-600"
 									>
-										Backup Email (optional)
+										{t("signupWithProvider.email")}
 									</label>
 									<input
 										type={"email"}
@@ -238,7 +239,7 @@ export function CreateAccountAddress() {
 									/>
 								</div>
 								<span className="text-sm text-neutral-600">
-									Use for recover your account if you lose your password
+									{t("signupWithProvider.emailFooter")}
 								</span>
 							</div>
 						</div>
@@ -251,7 +252,7 @@ export function CreateAccountAddress() {
 								{loading ? (
 									<LoaderIcon className="size-5 animate-spin" />
 								) : (
-									"Continue"
+									t("global.continue")
 								)}
 							</button>
 						</div>

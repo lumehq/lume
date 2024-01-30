@@ -1,9 +1,11 @@
 import { User } from "@lume/ark";
 import { compactNumber } from "@lume/utils";
 import { NDKEvent, zapInvoiceFromEvent } from "@nostr-dev-kit/ndk";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function ActivityZap({ event }: { event: NDKEvent }) {
+	const { t } = useTranslation();
 	const invoice = zapInvoiceFromEvent(event);
 
 	return (
@@ -18,7 +20,7 @@ export function ActivityZap({ event }: { event: NDKEvent }) {
 						<div className="inline-flex items-center gap-1.5">
 							<User.Name className="max-w-[8rem] font-semibold text-neutral-950 dark:text-neutral-50" />
 							<p className="shrink-0">
-								zapped {compactNumber.format(invoice.amount)} sats
+								{t("activity.zap")} {compactNumber.format(invoice.amount)} sats
 							</p>
 						</div>
 					</div>

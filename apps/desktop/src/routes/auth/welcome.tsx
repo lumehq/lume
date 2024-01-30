@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function WelcomeScreen() {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-col items-center justify-between w-full h-full">
 			<div />
@@ -12,10 +15,8 @@ export function WelcomeScreen() {
 						alt="lume"
 						className="w-2/3"
 					/>
-					<p className="mt-5 text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Lume is a magnificent client for Nostr to meet, explore
-						<br />
-						and freely share your thoughts with everyone.
+					<p className="mt-5 text-lg whitespace-pre-line font-medium leading-snug text-neutral-600 dark:text-neutral-500">
+						{t("welcome.title")}
 					</p>
 				</div>
 				<div className="flex flex-col w-full max-w-xs gap-2 mx-auto">
@@ -23,19 +24,19 @@ export function WelcomeScreen() {
 						to="/auth/create"
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600"
 					>
-						Join Nostr
+						{t("welcome.signup")}
 					</Link>
 					<Link
 						to="/auth/login"
 						className="inline-flex items-center justify-center w-full h-12 text-lg font-medium text-neutral-50 rounded-xl bg-neutral-950 hover:bg-neutral-900"
 					>
-						Login
+						{t("welcome.login")}
 					</Link>
 				</div>
 			</div>
 			<div className="flex items-center justify-center h-11">
 				<p className="text-neutral-700">
-					Before joining Nostr, you can take time to learn more about Nostr{" "}
+					{t("welcome.footer")}{" "}
 					<Link
 						to="https://nostr.com"
 						target="_blank"

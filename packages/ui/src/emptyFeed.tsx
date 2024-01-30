@@ -1,11 +1,14 @@
 import { InfoIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
+import { useTranslation } from "react-i18next";
 
 export function EmptyFeed({
 	text,
 	subtext,
 	className,
 }: { text?: string; subtext?: string; className?: string }) {
+	const { t } = useTranslation();
+
 	return (
 		<div
 			className={cn(
@@ -16,12 +19,10 @@ export function EmptyFeed({
 			<InfoIcon className="size-8 text-blue-500" />
 			<div className="text-center">
 				<p className="font-semibold text-lg">
-					{text ? text : "This feed is empty"}
+					{text ? text : t("global.emptyFeedTitle")}
 				</p>
 				<p className="leading-tight text-sm">
-					{subtext
-						? subtext
-						: "You can follow more users to build up your timeline"}
+					{subtext ? subtext : t("global.emptyFeedSubtitle")}
 				</p>
 			</div>
 		</div>

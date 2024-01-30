@@ -1,6 +1,7 @@
 import { PinIcon } from "@lume/icons";
 import { COL_TYPES, NOSTR_MENTIONS } from "@lume/utils";
 import { ReactNode, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { useEvent } from "../../../hooks/useEvent";
@@ -13,6 +14,7 @@ export function MentionNote({
 	eventId,
 	openable = true,
 }: { eventId: string; openable?: boolean }) {
+	const { t } = useTranslation();
 	const { addColumn } = useColumnContext();
 	const { isLoading, isError, data } = useEvent(eventId);
 
@@ -98,7 +100,7 @@ export function MentionNote({
 				contentEditable={false}
 				className="w-full p-3 my-1 rounded-lg cursor-default bg-neutral-100 dark:bg-neutral-900"
 			>
-				Failed to fetch event.
+				{t("note.error")}
 			</div>
 		);
 	}
@@ -127,7 +129,7 @@ export function MentionNote({
 						to={`/events/${data.id}`}
 						className="text-sm text-blue-500 hover:text-blue-600"
 					>
-						Show more
+						{t("note.showMore")}
 					</Link>
 					<button
 						type="button"

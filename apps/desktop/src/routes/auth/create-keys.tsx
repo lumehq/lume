@@ -11,6 +11,7 @@ import { useSetAtom } from "jotai";
 import { nanoid } from "nanoid";
 import { getPublicKey, nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -20,6 +21,7 @@ export function CreateAccountKeys() {
 	const setOnboarding = useSetAtom(onboardingAtom);
 	const navigate = useNavigate();
 
+	const [t] = useTranslation();
 	const [key, setKey] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [showKey, setShowKey] = useState(false);
@@ -76,11 +78,10 @@ export function CreateAccountKeys() {
 			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
 					<h1 className="text-2xl font-semibold">
-						This is your new Account Key
+						{t("signupWithSelfManage.title")}
 					</h1>
 					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Keep your key in safe place. If you lose this key, you will lose
-						access to your account.
+						{t("signupWithSelfManage.subtitle")}
 					</p>
 				</div>
 				<div className="flex flex-col gap-6 mb-0">
@@ -122,7 +123,7 @@ export function CreateAccountKeys() {
 									className="text-sm leading-none text-neutral-500"
 									htmlFor="confirm1"
 								>
-									I understand the risk of lost private key.
+									{t("signupWithSelfManage.confirm1")}
 								</label>
 							</div>
 							<div className="flex items-center gap-2">
@@ -142,7 +143,7 @@ export function CreateAccountKeys() {
 									className="text-sm leading-none text-neutral-500"
 									htmlFor="confirm2"
 								>
-									I will make sure keep it safe and not sharing with anyone.
+									{t("signupWithSelfManage.confirm2")}
 								</label>
 							</div>
 							<div className="flex items-center gap-2">
@@ -162,7 +163,7 @@ export function CreateAccountKeys() {
 									className="text-sm leading-none text-neutral-500"
 									htmlFor="confirm3"
 								>
-									I understand I cannot recover private key.
+									{t("signupWithSelfManage.confirm3")}
 								</label>
 							</div>
 						</div>
@@ -176,7 +177,7 @@ export function CreateAccountKeys() {
 						{loading ? (
 							<LoaderIcon className="size-5 animate-spin" />
 						) : (
-							"Save key & Continue"
+							t("signupWithSelfManage.button")
 						)}
 					</button>
 				</div>

@@ -5,6 +5,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useSetAtom } from "jotai";
 import { nip19 } from "nostr-tools";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useNoteContext } from "../provider";
 
@@ -13,6 +14,7 @@ export function NoteRepost() {
 	const setEditorValue = useSetAtom(editorValueAtom);
 	const setIsEditorOpen = useSetAtom(editorAtom);
 
+	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [isRepost, setIsRepost] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -81,7 +83,7 @@ export function NoteRepost() {
 					</DropdownMenu.Trigger>
 					<Tooltip.Portal>
 						<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-							Repost
+							{t("note.buttons.repost")}
 							<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 						</Tooltip.Content>
 					</Tooltip.Portal>
@@ -96,7 +98,7 @@ export function NoteRepost() {
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							<RepostIcon className="size-4" />
-							Repost
+							{t("note.buttons.repost")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
@@ -106,7 +108,7 @@ export function NoteRepost() {
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							<ReplyIcon className="size-4" />
-							Quote
+							{t("note.buttons.quote")}
 						</button>
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>

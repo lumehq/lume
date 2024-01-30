@@ -1,11 +1,13 @@
 import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export function CreateAccountScreen() {
 	const navigate = useNavigate();
 
+	const [t] = useTranslation();
 	const [method, setMethod] = useState<"self" | "managed">("self");
 	const [loading, setLoading] = useState(false);
 
@@ -23,9 +25,9 @@ export function CreateAccountScreen() {
 		<div className="relative flex items-center justify-center w-full h-full">
 			<div className="flex flex-col w-full max-w-md gap-8 mx-auto">
 				<div className="flex flex-col gap-1 text-center items-center">
-					<h1 className="text-2xl font-semibold">Let's Get Started</h1>
+					<h1 className="text-2xl font-semibold">{t("signup.title")}</h1>
 					<p className="text-lg font-medium leading-snug text-neutral-600 dark:text-neutral-500">
-						Choose one of methods below to create your account
+						{t("signup.subtitle")}
 					</p>
 				</div>
 				<div className="flex flex-col gap-4">
@@ -37,9 +39,9 @@ export function CreateAccountScreen() {
 							method === "self" ? "ring-1 ring-teal-500" : "",
 						)}
 					>
-						<p className="font-semibold">Self-Managed</p>
+						<p className="font-semibold">{t("signup.selfManageMethod")}</p>
 						<p className="text-sm font-medium text-neutral-500">
-							You create your keys and keep them safe.
+							{t("signup.selfManageMethodDescription")}
 						</p>
 					</button>
 					<button
@@ -50,9 +52,9 @@ export function CreateAccountScreen() {
 							method === "managed" ? "ring-1 ring-teal-500" : "",
 						)}
 					>
-						<p className="font-semibold">Managed by Provider</p>
+						<p className="font-semibold">{t("signup.providerMethod")}</p>
 						<p className="text-sm font-medium text-neutral-500">
-							A 3rd party provider will handle your sign in keys for you.
+							{t("signup.providerMethodDescription")}
 						</p>
 					</button>
 					<button
@@ -63,7 +65,7 @@ export function CreateAccountScreen() {
 						{loading ? (
 							<LoaderIcon className="size-5 animate-spin" />
 						) : (
-							"Continue"
+							t("global.continue")
 						)}
 					</button>
 				</div>

@@ -2,6 +2,7 @@ import { RepostIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Note } from "..";
 import { useArk } from "../../../hooks/useArk";
 import { User } from "../../user";
@@ -12,6 +13,7 @@ export function RepostNote({
 }: { event: NDKEvent; className?: string }) {
 	const ark = useArk();
 
+	const { t } = useTranslation();
 	const {
 		isLoading,
 		isError,
@@ -51,7 +53,7 @@ export function RepostNote({
 							<User.Avatar className="size-6 shrink-0 rounded object-cover" />
 							<div className="inline-flex items-baseline gap-1">
 								<User.Name className="font-medium text-neutral-900 dark:text-neutral-100" />
-								<span className="text-blue-500">reposted</span>
+								<span className="text-blue-500">{t("note.reposted")}</span>
 							</div>
 						</div>
 					</User.Root>
@@ -59,10 +61,6 @@ export function RepostNote({
 				<div className="px-3 mb-3 select-text">
 					<div className="flex flex-col items-start justify-start px-3 py-3 bg-red-100 rounded-lg dark:bg-red-900">
 						<p className="text-red-500">Failed to get event</p>
-						<p className="text-sm">
-							You can consider enable Outbox in Settings for better event
-							discovery.
-						</p>
 					</div>
 				</div>
 			</Note.Root>
@@ -85,7 +83,7 @@ export function RepostNote({
 						<User.Avatar className="size-6 shrink-0 rounded object-cover" />
 						<div className="inline-flex items-baseline gap-1">
 							<User.Name className="font-medium text-neutral-900 dark:text-neutral-100" />
-							<span className="text-blue-500">reposted</span>
+							<span className="text-blue-500">{t("note.reposted")}</span>
 						</div>
 					</div>
 				</User.Root>

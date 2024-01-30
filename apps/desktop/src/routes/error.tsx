@@ -53,7 +53,7 @@ export function ErrorScreen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="relative flex h-screen w-screen items-center justify-center bg-blue-600 overflow-hidden rounded-t-xl"
+			className="relative flex h-screen w-screen items-center justify-center bg-blue-500 overflow-hidden rounded-xl"
 		>
 			<div className="flex w-full max-w-2xl flex-col items-start gap-8">
 				<div className="flex flex-col">
@@ -95,7 +95,7 @@ export function ErrorScreen() {
 						<div className="flex w-full flex-col gap-2">
 							<div className="flex w-full items-center justify-between">
 								<div className="text-xl font-semibold text-white">
-									3. Report this issue to Lume&apos;s Devs
+									3. Report this issue to Lume
 								</div>
 								<a
 									href="https://github.com/luminous-devs/lume/issues/new"
@@ -120,13 +120,13 @@ export function ErrorScreen() {
 							</div>
 							<div className="select-text text-lg font-medium text-blue-300">
 								<p>
-									While waiting for Lume&apos;s Devs to release the bug fixes,
-									you always can use other Nostr clients with your account:
+									While waiting for Lume release the bug fixes, you always can
+									use other Nostr clients with your account:
 								</p>
 								<div className="mt-2 flex flex-col gap-1 text-white">
 									<a
 										className="hover:!underline"
-										href="https://snort.social"
+										href="https://snort.social/"
 										target="_blank"
 										rel="noreferrer"
 									>
@@ -134,15 +134,15 @@ export function ErrorScreen() {
 									</a>
 									<a
 										className="hover:!underline"
-										href="https://primal.net"
+										href="https://nostter.app/"
 										target="_blank"
 										rel="noreferrer"
 									>
-										primal.net
+										nostter
 									</a>
 									<a
 										className="hover:!underline"
-										href="https://nostrudel.ninja"
+										href="https://nostrudel.ninja/"
 										target="_blank"
 										rel="noreferrer"
 									>

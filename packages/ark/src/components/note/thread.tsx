@@ -1,5 +1,6 @@
 import { PinIcon } from "@lume/icons";
 import { COL_TYPES, cn } from "@lume/utils";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Note } from ".";
 import { useArk } from "../../hooks/useArk";
@@ -18,6 +19,7 @@ export function NoteThread({
 		tags: event.tags,
 	});
 
+	const { t } = useTranslation();
 	const { addColumn } = useColumnContext();
 
 	if (!thread) return null;
@@ -36,7 +38,7 @@ export function NoteThread({
 						to={`/events/${thread?.rootEventId || thread?.replyEventId}`}
 						className="self-start text-blue-500 hover:text-blue-600"
 					>
-						Show thread
+						{t("note.showThread")}
 					</Link>
 					<button
 						type="button"

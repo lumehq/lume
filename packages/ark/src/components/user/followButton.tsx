@@ -1,6 +1,7 @@
 import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useArk } from "../../hooks/useArk";
 
 export function UserFollowButton({
@@ -9,6 +10,7 @@ export function UserFollowButton({
 }: { target: string; className?: string }) {
 	const ark = useArk();
 
+	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [followed, setFollowed] = useState(false);
 
@@ -43,14 +45,14 @@ export function UserFollowButton({
 			type="button"
 			disabled={loading}
 			onClick={toggleFollow}
-			className={cn("", className)}
+			className={cn("w-max", className)}
 		>
 			{loading ? (
 				<LoaderIcon className="size-4 animate-spin" />
 			) : followed ? (
-				"Unfollow"
+				t("user.unfollow")
 			) : (
-				"Follow"
+				t("user.follow")
 			)}
 		</button>
 	);

@@ -1,10 +1,13 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export function AvatarUpload({ setPicture }) {
 	const ark = useArk();
+
+	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 
 	const upload = async () => {
@@ -36,7 +39,7 @@ export function AvatarUpload({ setPicture }) {
 			{loading ? (
 				<LoaderIcon className="size-4 animate-spin" />
 			) : (
-				"Change avatar"
+				t("user.avatarButton")
 			)}
 		</button>
 	);

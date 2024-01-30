@@ -1,3 +1,4 @@
+import { NDKUserProfile } from "@nostr-dev-kit/ndk";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useArk } from "./useArk";
 
@@ -20,7 +21,7 @@ export function useProfile(pubkey: string) {
 			return profile;
 		},
 		initialData: () => {
-			return queryClient.getQueryData(["user", pubkey]);
+			return queryClient.getQueryData(["user", pubkey]) as NDKUserProfile;
 		},
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,

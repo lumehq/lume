@@ -6,6 +6,7 @@ import { COL_TYPES, cn, editorValueAtom } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	Descendant,
 	Editor,
@@ -200,6 +201,7 @@ export function EditorForm() {
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
 
+	const { t } = useTranslation();
 	const { addColumn } = useColumnContext();
 
 	const filters = contacts
@@ -247,9 +249,7 @@ export function EditorForm() {
 			const publish = await event.publish();
 
 			if (publish) {
-				toast.success(
-					`Event has been published successfully to ${publish.size} relays.`,
-				);
+				toast.success(t("editor.successMessage"));
 
 				// add current post as column thread
 				addColumn({
@@ -321,7 +321,7 @@ export function EditorForm() {
 			>
 				<div className="flex items-center justify-between h-16 pl-7 pr-3 border-b shrink-0 border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-950">
 					<div>
-						<h3 className="font-medium">New Post</h3>
+						<h3 className="font-medium">{t("editor.title")}</h3>
 					</div>
 					<div className="flex items-center">
 						<div className="inline-flex items-center gap-2">
@@ -336,7 +336,7 @@ export function EditorForm() {
 							{loading ? (
 								<LoaderIcon className="size-4 animate-spin" />
 							) : (
-								"Post"
+								t("global.post")
 							)}
 						</button>
 					</div>
@@ -349,7 +349,7 @@ export function EditorForm() {
 						autoCorrect="none"
 						spellCheck={false}
 						renderElement={(props) => <Element {...props} />}
-						placeholder="What are you up to?"
+						placeholder={t("editor.placeholder")}
 						className="focus:outline-none"
 					/>
 					{target && filters.length > 0 && (

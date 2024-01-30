@@ -9,6 +9,7 @@ import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { WindowVirtualizer } from "virtua";
 
@@ -17,6 +18,7 @@ export function UserRoute() {
 	const navigate = useNavigate();
 
 	const { id } = useParams();
+	const { t } = useTranslation();
 	const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
 		useInfiniteQuery({
 			queryKey: ["user-posts", id],
@@ -107,7 +109,7 @@ export function UserRoute() {
 					</User.Provider>
 					<div className="pt-2 mt-2 border-t border-neutral-100 dark:border-neutral-900">
 						<h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-							Latest posts
+							{t("user.latestPosts")}
 						</h3>
 						<div className="flex h-full w-full flex-col justify-between gap-1.5 pb-10">
 							{isLoading ? (
@@ -130,7 +132,7 @@ export function UserRoute() {
 										) : (
 											<>
 												<ArrowRightCircleIcon className="size-5" />
-												Load more
+												{t("global.loadMore")}
 											</>
 										)}
 									</button>

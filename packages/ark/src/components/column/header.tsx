@@ -3,12 +3,11 @@ import {
 	MoveLeftIcon,
 	MoveRightIcon,
 	RefreshIcon,
-	ThreadIcon,
 	TrashIcon,
 } from "@lume/icons";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useQueryClient } from "@tanstack/react-query";
-import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { InterestModal } from "./interestModal";
 import { useColumnContext } from "./provider";
 
@@ -16,14 +15,14 @@ export function ColumnHeader({
 	id,
 	title,
 	queryKey,
-	icon,
 }: {
 	id: number;
 	title: string;
 	queryKey?: string[];
-	icon?: ReactNode;
 }) {
 	const queryClient = useQueryClient();
+
+	const { t } = useTranslation();
 	const { moveColumn, removeColumn } = useColumnContext();
 
 	const refresh = async () => {
@@ -63,7 +62,7 @@ export function ColumnHeader({
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 							>
 								<RefreshIcon className="size-4" />
-								Refresh
+								{t("global.refresh")}
 							</button>
 						</DropdownMenu.Item>
 						{queryKey?.[0] === "foryou-9998" ? (
@@ -81,7 +80,7 @@ export function ColumnHeader({
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 							>
 								<MoveLeftIcon className="size-4" />
-								Move left
+								{t("global.moveLeft")}
 							</button>
 						</DropdownMenu.Item>
 						<DropdownMenu.Item asChild>
@@ -91,7 +90,7 @@ export function ColumnHeader({
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 							>
 								<MoveRightIcon className="size-4" />
-								Move right
+								{t("global.moveRight")}
 							</button>
 						</DropdownMenu.Item>
 						<DropdownMenu.Separator className="h-px my-1 bg-black/10 dark:bg-white/10" />
@@ -102,7 +101,7 @@ export function ColumnHeader({
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
 							>
 								<TrashIcon className="size-4" />
-								Delete
+								{t("global.Delete")}
 							</button>
 						</DropdownMenu.Item>
 					</DropdownMenu.Content>

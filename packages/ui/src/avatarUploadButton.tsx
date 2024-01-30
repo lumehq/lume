@@ -1,6 +1,7 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export function AvatarUploadButton({
@@ -9,6 +10,8 @@ export function AvatarUploadButton({
 	setPicture: Dispatch<SetStateAction<string>>;
 }) {
 	const ark = useArk();
+
+	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 
 	const uploadAvatar = async () => {
@@ -36,7 +39,7 @@ export function AvatarUploadButton({
 			{loading ? (
 				<LoaderIcon className="size-4 animate-spin" />
 			) : (
-				"Change avatar"
+				t("user.avatarButton")
 			)}
 		</button>
 	);

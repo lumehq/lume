@@ -4,10 +4,13 @@ import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { VList } from "virtua";
 
 export function RelayEventList({ relayUrl }: { relayUrl: string }) {
 	const ark = useArk();
+
+	const { t } = useTranslation();
 	const { status, data, hasNextPage, isFetchingNextPage, fetchNextPage } =
 		useInfiniteQuery({
 			queryKey: ["relay-events", relayUrl],
@@ -37,13 +40,9 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
 				if (!lastEvent) return;
 				return lastEvent.created_at - 1;
 			},
+			select: (data) => data?.pages.flatMap((page) => page),
 			refetchOnWindowFocus: false,
 		});
-
-	const allEvents = useMemo(
-		() => (data ? data.pages.flatMap((page) => page) : []),
-		[data],
-	);
 
 	const renderItem = useCallback(
 		(event: NDKEvent) => {
@@ -64,7 +63,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
 			{status === "pending" ? (
 				<NoteSkeleton />
 			) : (
-				allEvents.map((item) => renderItem(item))
+				data.map((item) => renderItem(item))
 			)}
 			<div className="flex h-16 items-center justify-center px-3 pb-3">
 				{hasNextPage ? (
@@ -79,7 +78,7 @@ export function RelayEventList({ relayUrl }: { relayUrl: string }) {
 						) : (
 							<>
 								<ArrowRightCircleIcon className="h-5 w-5" />
-								Load more
+								{t("global.loading")}
 							</>
 						)}
 					</button>

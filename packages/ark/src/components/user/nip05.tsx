@@ -1,4 +1,4 @@
-import { UnverifiedIcon, VerifiedIcon } from "@lume/icons";
+import { VerifiedIcon } from "@lume/icons";
 import { cn, displayNpub } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useArk } from "../../hooks/useArk";

@@ -18,10 +18,13 @@ import { TutorialModal } from "@lume/ui/src/tutorial/modal";
 import { COL_TYPES } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { VList } from "virtua";
 
 export function HomeScreen() {
+	const { t } = useTranslation();
 	const { columns, vlistRef, addColumn } = useColumnContext();
+
 	const [selectedIndex, setSelectedIndex] = useState(-1);
 
 	const renderItem = (column: IColumn) => {
@@ -124,7 +127,7 @@ export function HomeScreen() {
 							</Tooltip.Trigger>
 							<Tooltip.Portal>
 								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-									Move Left
+									{t("global.moveLeft")}
 									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 								</Tooltip.Content>
 							</Tooltip.Portal>
@@ -151,7 +154,7 @@ export function HomeScreen() {
 							</Tooltip.Trigger>
 							<Tooltip.Portal>
 								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-									Move Right
+									{t("global.moveRight")}
 									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 								</Tooltip.Content>
 							</Tooltip.Portal>
@@ -174,7 +177,7 @@ export function HomeScreen() {
 							</Tooltip.Trigger>
 							<Tooltip.Portal>
 								<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-									New Column
+									{t("global.newColum")}
 									<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 								</Tooltip.Content>
 							</Tooltip.Portal>

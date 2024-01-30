@@ -26,6 +26,7 @@
 		"react-dom": "^18.2.0",
 		"react-hook-form": "^7.49.3",
 		"react-hotkeys-hook": "^4.4.4",
+		"react-i18next": "^14.0.1",
 		"react-router-dom": "^6.21.3",
 		"slate": "^0.101.5",
 		"slate-react": "^0.101.6",

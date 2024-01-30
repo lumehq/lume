@@ -2,6 +2,7 @@ import { ArrowLeftIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { TOPICS, cn } from "@lume/utils";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -9,6 +10,7 @@ export function OnboardingInterestScreen() {
 	const storage = useStorage();
 	const navigate = useNavigate();
 
+	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [hashtags, setHashtags] = useState([]);
 
@@ -49,9 +51,9 @@ export function OnboardingInterestScreen() {
 		<div className="w-full h-full flex flex-col">
 			<div className="h-16 shrink-0 px-8 border-b border-neutral-100 dark:border-neutral-900 flex w-full items-center justify-between">
 				<div className="flex flex-col">
-					<h3 className="font-semibold">Interests</h3>
+					<h3 className="font-semibold">{t("interests.title")}</h3>
 					<p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-						Pick things you'd like to see in your home feed.
+						{t("interests.subtitle")}
 					</p>
 				</div>
 			</div>
@@ -74,7 +76,7 @@ export function OnboardingInterestScreen() {
 										onClick={() => toggleAll(topic.content)}
 										className="text-sm font-medium text-blue-500"
 									>
-										Follow All
+										{t("interests.followAll")}
 									</button>
 								</div>
 								<div className="flex flex-wrap items-center gap-3">
@@ -105,7 +107,7 @@ export function OnboardingInterestScreen() {
 						className="inline-flex h-9 flex-1 gap-2 shrink-0 items-center justify-center rounded-lg bg-neutral-100 font-medium dark:bg-neutral-900 dark:hover:bg-neutral-800 hover:bg-blue-200"
 					>
 						<ArrowLeftIcon className="size-4" />
-						Back
+						{t("global.back")}
 					</button>
 					<button
 						type="button"
@@ -115,7 +117,7 @@ export function OnboardingInterestScreen() {
 						{loading ? (
 							<LoaderIcon className="size-4 animate-spin" />
 						) : (
-							"Continue"
+							t("global.continue")
 						)}
 					</button>
 				</div>

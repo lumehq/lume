@@ -26,7 +26,8 @@
 				"$VIDEO/*",
 				"$RESOURCE",
 				"$RESOURCE/*",
-				"$RESOURCE/**"
+				"$RESOURCE/**",
+				"$RESOURCE/locales/*"
 			]
 		},
 		"http": {
@@ -34,7 +35,7 @@
 		},
 		"shell": {
 			"open": true,
-			"scope": [{ "name": "bin/depot", "sidecar": true, "args": true }]
+			"scope": []
 		},
 		"updater": {
 			"endpoints": [
@@ -51,7 +52,7 @@
 				"depends": []
 			},
 			"externalBin": [],
-			"resources": ["resources/*"],
+			"resources": ["resources/*", "./locales/*"],
 			"icon": [
 				"icons/32x32.png",
 				"icons/128x128.png",
