@@ -26,7 +26,8 @@
 				"$VIDEO/*",
 				"$RESOURCE",
 				"$RESOURCE/*",
-				"$RESOURCE/**"
+				"$RESOURCE/**",
+				"$RESOURCE/locales/*"
 			]
 		},
 		"http": {

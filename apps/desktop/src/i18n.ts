@@ -2,32 +2,25 @@ import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { locale } from "@tauri-apps/plugin-os";
 import i18n from "i18next";
+import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next";
 
-const enFilePath = await resolveResource("locales/en.json");
-const jaFilePath = await resolveResource("locales/ja.json");
+const currentLocale = (await locale()).slice(0, 2);
 
-const enLocale = JSON.parse(await readTextFile(enFilePath));
-const jaLocale = JSON.parse(await readTextFile(jaFilePath));
-
-const osLocale = (await locale()).slice(0, 2);
-
-const resources = {
-	en: {
-		translation: enLocale,
-	},
-	ja: {
-		translation: jaLocale,
-	},
-};
-
-i18n.use(initReactI18next).init({
-	lng: osLocale,
-	fallbackLng: "en",
-	interpolation: {
-		escapeValue: false,
-	},
-	resources,
-});
+i18n
+	.use(
+		resourcesToBackend(async (language: string) => {
+			const file_path = await resolveResource(`locales/${language}.json`);
+			return JSON.parse(await readTextFile(file_path));
+		}),
+	)
+	.use(initReactI18next)
+	.init({
+		lng: currentLocale,
+		fallbackLng: "en",
+		interpolation: {
+			escapeValue: false,
+		},
+	});
 
 export default i18n;

@@ -153,6 +153,9 @@ importers:
       i18next:
         specifier: ^23.8.0
         version: 23.8.0
+      i18next-resources-to-backend:
+        specifier: ^1.2.0
+        version: 1.2.0
       jotai:
         specifier: ^2.6.3
         version: 2.6.3(@types/react@18.2.48)(react@18.2.0)
@@ -5219,6 +5222,12 @@ packages:
   /human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
+    dev: false
+
+  /i18next-resources-to-backend@1.2.0:
+    resolution: {integrity: sha512-8f1l03s+QxDmCfpSXCh9V+AFcxAwIp0UaroWuyOx+hmmv8484GcELHs+lnu54FrNij8cDBEXvEwhzZoXsKcVpg==}
+    dependencies:
+      '@babel/runtime': 7.23.9
     dev: false
 
   /i18next@23.8.0:

@@ -57,20 +57,19 @@ export function LoginWithKey() {
 					<h1 className="text-2xl font-semibold">
 						{t("loginWithPrivkey.title")}
 					</h1>
-					<Trans
-						t={t}
-						className="text-lg font-medium whitespace-pre-line leading-snug text-neutral-600 dark:text-neutral-500"
-					>
-						Lume will put your private key to
-						<span className="text-teal-500">
-							{storage.platform === "macos"
-								? "Apple Keychain"
-								: storage.platform === "windows"
-								  ? "Credential Manager"
-								  : "Secret Service"}
-						</span>
-						. It will be secured by your OS.
-					</Trans>
+					<p className="text-lg font-medium whitespace-pre-line leading-snug text-neutral-600 dark:text-neutral-500">
+						<Trans t={t}>
+							Lume will put your private key to{" "}
+							<span className="text-teal-500">
+								{storage.platform === "macos"
+									? "Apple Keychain"
+									: storage.platform === "windows"
+									  ? "Credential Manager"
+									  : "Secret Service"}
+							</span>
+							. It will be secured by your OS.
+						</Trans>
+					</p>
 				</div>
 				<div className="flex flex-col gap-6">
 					<form

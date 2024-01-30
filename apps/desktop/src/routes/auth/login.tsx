@@ -1,4 +1,4 @@
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function LoginScreen() {
@@ -43,15 +43,9 @@ export function LoginScreen() {
 							>
 								{t("login.loginWithPrivkey")}
 							</Link>
-							<Trans
-								i18nKey="login.footer"
-								className="text-sm text-center text-neutral-500"
-							>
-								Lume will put your Private Key in{" "}
-								<span className="text-teal-600">Secure Storage</span> depended
-								on your OS Platform. It will be secured by Password or Biometric
-								ID
-							</Trans>
+							<p className="text-sm text-center text-neutral-500">
+								{t("login.footer")}
+							</p>
 						</div>
 					</div>
 				</div>
