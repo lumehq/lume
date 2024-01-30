@@ -101,7 +101,7 @@ export function ColumnHeader({
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
 							>
 								<TrashIcon className="size-4" />
-								{t("global.Delete")}
+								{t("global.delete")}
 							</button>
 						</DropdownMenu.Item>
 					</DropdownMenu.Content>

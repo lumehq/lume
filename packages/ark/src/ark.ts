@@ -62,6 +62,10 @@ export class Ark {
 		return sub;
 	}
 
+	public getNDKEvent(event: NostrEvent) {
+		return new NDKEvent(this.ndk, event);
+	}
+
 	public async createEvent({
 		kind,
 		tags,
