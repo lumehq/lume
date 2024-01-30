@@ -1,7 +1,7 @@
 import {
+	ArrowUpSquareIcon,
 	BellFilledIcon,
 	BellIcon,
-	ComposeFilledIcon,
 	DepotFilledIcon,
 	DepotIcon,
 	HomeFilledIcon,
@@ -13,7 +13,11 @@ import {
 	SettingsIcon,
 } from "@lume/icons";
 import { cn, editorAtom, searchAtom } from "@lume/utils";
+import { confirm } from "@tauri-apps/plugin-dialog";
+import { relaunch } from "@tauri-apps/plugin-process";
+import { Update, check } from "@tauri-apps/plugin-updater";
 import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { NavLink } from "react-router-dom";
 import { ActiveAccount } from "./account/active";
@@ -22,9 +26,32 @@ import { UnreadActivity } from "./unread";
 export function Navigation() {
 	const [isEditorOpen, setIsEditorOpen] = useAtom(editorAtom);
 	const [search, setSearch] = useAtom(searchAtom);
+	const [update, setUpdate] = useState<Update>(null);
 
 	// shortcut for editor
 	useHotkeys("meta+n", () => setIsEditorOpen((state) => !state), []);
+
+	const installNewUpdate = async () => {
+		if (!update) return;
+
+		const yes = await confirm(update.body, {
+			title: `v${update.version} is available`,
+			type: "info",
+		});
+
+		if (yes) {
+			await update.downloadAndInstall();
+			await relaunch();
+		}
+	};
+
+	useEffect(() => {
+		async function checkNewUpdate() {
+			const newVersion = await check();
+			setUpdate(newVersion);
+		}
+		checkNewUpdate();
+	}, []);
 
 	return (
 		<div
@@ -119,6 +146,20 @@ export function Navigation() {
 				</div>
 			</div>
 			<div className="flex flex-col gap-2">
+				{update ? (
+					<button
+						type="button"
+						onClick={installNewUpdate}
+						className="relative inline-flex flex-col items-center justify-center"
+					>
+						<span className="inline-flex items-center rounded-full bg-teal-500/60 ring-teal-500/80 text-teal-50 dark:bg-teal-500/10 px-2 py-1 text-xs font-semibold dark:text-teal-400 ring-1 ring-inset dark:ring-teal-500/20">
+							Update
+						</span>
+						<div className="inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl text-black/50 dark:text-neutral-400">
+							<ArrowUpSquareIcon className="size-6" />
+						</div>
+					</button>
+				) : null}
 				<button
 					type="button"
 					onClick={() => setSearch((open) => !open)}
