@@ -17,6 +17,7 @@
 		"@columns/timeline": "workspace:^",
 		"@columns/trending-notes": "workspace:^",
 		"@columns/user": "workspace:^",
+		"@columns/waifu": "workspace:^",
 		"@getalby/sdk": "^3.2.3",
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",

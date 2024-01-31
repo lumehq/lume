@@ -8,8 +8,8 @@ export function Default({ column }: { column: IColumn }) {
 	return (
 		<Column.Root>
 			<Column.Header id={column.id} title="Add columns" />
-			<div className="h-full px-3 mt-3 flex flex-col gap-3 overflow-y-auto scrollbar-none">
-				<div className="h-11 flex items-center gap-5">
+			<div className="h-full flex-1 px-3 mt-3 flex flex-col gap-3 overflow-y-auto scrollbar-none">
+				<div className="shrink-0 h-11 flex items-center gap-5">
 					<button
 						type="button"
 						className="h-9 w-max px-3 text-sm font-semibold inline-flex items-center justify-center bg-neutral-100 dark:bg-neutral-900 rounded-lg"
@@ -24,7 +24,7 @@ export function Default({ column }: { column: IColumn }) {
 						Community (Coming Soon)
 					</button>
 				</div>
-				<div className="flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
+				<div className="shrink-0 flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
 					<div className="h-[100px] w-full px-3 pt-3">
 						<img
 							src="/columns/group.jpg"
@@ -53,7 +53,7 @@ export function Default({ column }: { column: IColumn }) {
 						</button>
 					</div>
 				</div>
-				<div className="flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
+				<div className="shrink-0 flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
 					<div className="h-[100px] w-full px-3 pt-3">
 						<img
 							src="/columns/antenas.jpg"
@@ -82,7 +82,7 @@ export function Default({ column }: { column: IColumn }) {
 						</button>
 					</div>
 				</div>
-				<div className="flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
+				<div className="shrink-0 flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
 					<div className="h-[100px] w-full px-3 pt-3">
 						<img
 							src="/columns/trending-notes.jpg"
@@ -97,7 +97,7 @@ export function Default({ column }: { column: IColumn }) {
 						<div>
 							<h1 className="font-semibold">Trending Notes</h1>
 							<p className="max-w-[18rem] truncate text-sm text-neutral-600 dark:text-neutral-500">
-								What is trending on Nostr?
+								What is trending on Nostr?.
 							</p>
 						</div>
 						<button
@@ -115,7 +115,7 @@ export function Default({ column }: { column: IColumn }) {
 						</button>
 					</div>
 				</div>
-				<div className="flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
+				<div className="shrink-0 flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
 					<div className="h-[100px] w-full px-3 pt-3">
 						<img
 							src="/columns/global.jpg"
@@ -130,7 +130,7 @@ export function Default({ column }: { column: IColumn }) {
 						<div>
 							<h1 className="font-semibold">Global</h1>
 							<p className="max-w-[18rem] truncate text-sm text-neutral-600 dark:text-neutral-500">
-								All things around the world
+								All things around the world.
 							</p>
 						</div>
 						<button
@@ -148,6 +148,40 @@ export function Default({ column }: { column: IColumn }) {
 						</button>
 					</div>
 				</div>
+				<div className="shrink-0 flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
+					<div className="h-[100px] w-full px-3 pt-3">
+						<img
+							src="/columns/waifu.jpg"
+							srcSet="/columns/waifu@2x.jpg 2x"
+							alt="waifu"
+							loading="lazy"
+							decoding="async"
+							className="w-full h-auto object-cover rounded-lg"
+						/>
+					</div>
+					<div className="h-16 shrink-0 px-3 flex items-center justify-between">
+						<div>
+							<h1 className="font-semibold">Waifu</h1>
+							<p className="max-w-[18rem] truncate text-sm text-neutral-600 dark:text-neutral-500">
+								Show a random waifu image to boost your morale.
+							</p>
+						</div>
+						<button
+							type="button"
+							onClick={() => {
+								addColumn({
+									kind: COL_TYPES.waifu,
+									title: "Waifu",
+									content: "",
+								});
+							}}
+							className="shrink-0 w-16 h-8 rounded-lg text-sm font-semibold bg-neutral-100 dark:bg-neutral-900 text-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-800 inline-flex items-center justify-center"
+						>
+							Add
+						</button>
+					</div>
+				</div>
+				<div className="h-3" />
 			</div>
 		</Column.Root>
 	);

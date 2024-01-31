@@ -59,6 +59,7 @@ export const COL_TYPES = {
 	antenas: 5,
 	global: 6,
 	trendingNotes: 9000,
+	waifu: 9001,
 	foryou: 9998,
 	newsfeed: 9999,
 };

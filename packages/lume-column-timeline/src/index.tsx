@@ -1,5 +1,4 @@
 import { Column, useArk } from "@lume/ark";
-import { TimelineIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
 import { EventRoute, SuggestRoute, UserRoute } from "@lume/ui";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
@@ -26,12 +25,7 @@ export function Timeline({ column }: { column: IColumn }) {
 
 	return (
 		<Column.Root>
-			<Column.Header
-				id={column.id}
-				queryKey={[colKey]}
-				title="Timeline"
-				icon={<TimelineIcon className="size-5" />}
-			/>
+			<Column.Header id={column.id} queryKey={[colKey]} title="Timeline" />
 			{ark.account.contacts.length ? (
 				<Column.Live
 					filter={{
