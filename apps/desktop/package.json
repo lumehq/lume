@@ -10,6 +10,7 @@
 		"@columns/antenas": "workspace:^",
 		"@columns/default": "workspace:^",
 		"@columns/foryou": "workspace:^",
+		"@columns/global": "workspace:^",
 		"@columns/group": "workspace:^",
 		"@columns/hashtag": "workspace:^",
 		"@columns/thread": "workspace:^",

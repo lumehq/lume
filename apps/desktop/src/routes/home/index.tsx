@@ -1,6 +1,7 @@
 import { Antenas } from "@columns/antenas";
 import { Default } from "@columns/default";
 import { ForYou } from "@columns/foryou";
+import { Global } from "@columns/global";
 import { Group } from "@columns/group";
 import { Hashtag } from "@columns/hashtag";
 import { Thread } from "@columns/thread";
@@ -46,6 +47,8 @@ export function HomeScreen() {
 				return <Group key={column.id} column={column} />;
 			case COL_TYPES.antenas:
 				return <Antenas key={column.id} column={column} />;
+			case COL_TYPES.global:
+				return <Global key={column.id} column={column} />;
 			case COL_TYPES.trendingNotes:
 				return <TrendingNotes key={column.id} column={column} />;
 			default:

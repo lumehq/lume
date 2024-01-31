@@ -115,6 +115,39 @@ export function Default({ column }: { column: IColumn }) {
 						</button>
 					</div>
 				</div>
+				<div className="flex flex-col rounded-xl overflow-hidden bg-neutral-50 dark:bg-neutral-950 ring-1 ring-neutral-100 dark:ring-neutral-900">
+					<div className="h-[100px] w-full px-3 pt-3">
+						<img
+							src="/columns/global.jpg"
+							srcSet="/columns/global@2x.jpg 2x"
+							alt="global"
+							loading="lazy"
+							decoding="async"
+							className="w-full h-auto object-cover rounded-lg"
+						/>
+					</div>
+					<div className="h-16 shrink-0 px-3 flex items-center justify-between">
+						<div>
+							<h1 className="font-semibold">Global</h1>
+							<p className="max-w-[18rem] truncate text-sm text-neutral-600 dark:text-neutral-500">
+								All things around the world
+							</p>
+						</div>
+						<button
+							type="button"
+							onClick={() => {
+								addColumn({
+									kind: COL_TYPES.global,
+									title: "",
+									content: "",
+								});
+							}}
+							className="shrink-0 w-16 h-8 rounded-lg text-sm font-semibold bg-neutral-100 dark:bg-neutral-900 text-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-800 inline-flex items-center justify-center"
+						>
+							Add
+						</button>
+					</div>
+				</div>
 			</div>
 		</Column.Root>
 	);
