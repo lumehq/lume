@@ -35,15 +35,6 @@ RUN pnpm install --frozen-lockfile
 # Path for disable updater
 #ADD flatpak/0001-disable-tauri-updater.patch .
 #RUN patch -p1 -t -i flatpak/0001-disable-tauri-updater.patch
-#ADD flatpak/0002-depot-remove.patch .
-#RUN patch -p1 -t -i 0002-depot-remove.patch
-
-# compile depot
-
-#ADD flatpak/build-depot.sh build-depot.sh
-#RUN mv flatpak/build-depot.sh build-depot.sh
-#RUN sh build-depot.sh
-#RUN pnpm run build:depot
 
 #ENV VITE_FLATPAK_RESOURCE="/app/lib/lume/resources/config.toml"
 
