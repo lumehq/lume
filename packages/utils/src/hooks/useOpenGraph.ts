@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 
 export function useOpenGraph(url: string) {
-	const { status, data, error } = useQuery({
+	const { isLoading, isError, data } = useQuery({
 		queryKey: ["opg", url],
 		queryFn: async () => {
-			const res: Opengraph = await invoke("opengraph", { url });
+			const res: Opengraph = await invoke("fetch_opg", { url });
 			if (!res) {
 				throw new Error("fetch preview failed");
 			}
@@ -19,8 +19,8 @@ export function useOpenGraph(url: string) {
 	});
 
 	return {
-		status,
+		isLoading,
+		isError,
 		data,
-		error,
 	};
 }

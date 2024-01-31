@@ -3,7 +3,7 @@
   windows_subsystem = "windows"
 )]
 
-mod commands;
+pub mod commands;
 
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -23,14 +23,12 @@ fn main() {
       tauri_plugin_sql::Builder::default()
         .add_migrations(
           "sqlite:lume_v3.db",
-          vec![
-            Migration {
-              version: 20230418013219,
-              description: "initial data",
-              sql: include_str!("../migrations/20230418013219_initial_data.sql"),
-              kind: MigrationKind::Up,
-            },
-          ],
+          vec![Migration {
+            version: 20230418013219,
+            description: "initial data",
+            sql: include_str!("../migrations/20230418013219_initial_data.sql"),
+            kind: MigrationKind::Up,
+          }],
         )
         .build(),
     )
@@ -50,11 +48,11 @@ fn main() {
       Some(vec![]),
     ))
     .invoke_handler(tauri::generate_handler![
-      commands::opengraph,
-      commands::secure_save,
-      commands::secure_load,
-      commands::secure_remove,
-      commands::show_in_folder,
+      commands::secret::secure_save,
+      commands::secret::secure_load,
+      commands::secret::secure_remove,
+      commands::folder::show_in_folder,
+      commands::opg::fetch_opg,
     ])
     .run(ctx)
     .expect("error while running tauri application");

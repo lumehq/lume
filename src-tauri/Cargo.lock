@@ -6064,15 +6064,16 @@ dependencies = [
 
 [[package]]
 name = "webpage"
-version = "1.6.0"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8598785beeb5af95abe95e7bb20c7e747d1188347080d6811d5a56d2b9a5f368"
+checksum = "3fb86b12e58d490a99867f561ce8466ffa7b73e24d015a8e7f5bc111d4424ba2"
 dependencies = [
  "curl",
  "html5ever",
  "markup5ever_rcdom",
  "serde",
  "serde_json",
+ "url",
 ]
 
 [[package]]
