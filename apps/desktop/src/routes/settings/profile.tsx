@@ -51,11 +51,6 @@ export function ProfileSettingScreen() {
 
 		let content = {
 			...data,
-			username: data.name,
-			display_name: data.displayName,
-			bio: data.about,
-			image: picture,
-			cover: banner,
 			picture,
 			banner,
 		};
@@ -140,7 +135,7 @@ export function ProfileSettingScreen() {
 						</label>
 						<input
 							type={"text"}
-							{...register("displayName")}
+							{...register("display_name")}
 							spellCheck={false}
 							className="relative h-11 w-full rounded-lg border-transparent bg-neutral-100 px-3 py-1 text-neutral-900 !outline-none backdrop-blur-xl placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-900 dark:text-neutral-100"
 						/>
