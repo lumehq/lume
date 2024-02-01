@@ -1,10 +1,6 @@
-on:
-  push:
-    # NOTE: Proposal to make this action available only for tags
-    #tags:
-    #- 'v*.*.*'
-
 name: Flatpak
+on: workflow_dispatch
+
 jobs:
   prepare-repo:
     runs-on: ubuntu-latest
@@ -41,7 +37,6 @@ jobs:
         with:
           name: repo-dist
           path: prepare-dist
-
   flatpak:
     name: flatpak-bundle
     needs: prepare-repo

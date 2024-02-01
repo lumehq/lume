@@ -41,7 +41,7 @@ RUN pnpm install --frozen-lockfile
 # debian build
 RUN pnpm tauri build -b deb
 
-ARG VERSION=3.0.0
+ARG VERSION=3.0.1
 ARG ARCH=amd64
 
 RUN cp -r ./src-tauri/target/release/bundle/deb/lume_${VERSION}_${ARCH}/data lume-package
