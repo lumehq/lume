@@ -8,10 +8,10 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.17.19",
+		"@tanstack/react-query": "^5.18.0",
 		"clsx": "^2.1.0",
 		"dayjs": "^1.11.10",
-		"jotai": "^2.6.3",
+		"jotai": "^2.6.4",
 		"nostr-tools": "1.17.0",
 		"react": "^18.2.0",
 		"tailwind-merge": "^2.2.1"
