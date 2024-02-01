@@ -1,9 +1,8 @@
 import { Column } from "@lume/ark";
-import { GroupFeedsIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
+import { EventRoute, UserRoute } from "@lume/ui";
 import { GroupForm } from "./components/form";
 import { HomeRoute } from "./home";
-import { EventRoute, UserRoute } from "@lume/ui";
 
 export function Group({ column }: { column: IColumn }) {
 	const colKey = `group-${column.id}`;
@@ -13,11 +12,7 @@ export function Group({ column }: { column: IColumn }) {
 		<Column.Root>
 			{created ? (
 				<>
-					<Column.Header
-						id={column.id}
-						title={column.title}
-						icon={<GroupFeedsIcon className="size-4" />}
-					/>
+					<Column.Header id={column.id} title={column.title} />
 					<Column.Content>
 						<Column.Route
 							path="/"

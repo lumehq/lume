@@ -6,7 +6,7 @@ authors = ["Ren Amamiya"]
 license = "GPL-3.0"
 repository = "https://github.com/luminous-devs/lume"
 edition = "2021"
-rust-version = "1.66"
+rust-version = "1.70"
 
 [build-dependencies]
 tauri-build = { version = "2.0.0-alpha", features = [] }
@@ -40,8 +40,13 @@ tauri-plugin-sql = {version="2.0.0-alpha", features = [
 sqlx-cli = { version = "0.7.0", default-features = false, features = [
   "sqlite",
 ] }
-webpage = { version = "1.6.0", features = ["serde"] }
+webpage = { version = "2.0", features = ["serde"] }
+
+[target.'cfg(not(target_os = "linux"))'.dependencies]
 keyring = "2"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+keyring = { version = "2", default_features = false, features = ["linux-secret-service"] }
 
 [features]
 # by default Tauri runs in production mode

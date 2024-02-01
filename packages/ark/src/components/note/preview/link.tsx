@@ -7,12 +7,12 @@ function isImage(url: string) {
 
 export function LinkPreview({ url }: { url: string }) {
 	const domain = new URL(url);
-	const { status, data } = useOpenGraph(url);
+	const { isLoading, isError, data } = useOpenGraph(url);
 
-	if (status === "pending") {
+	if (isLoading) {
 		return (
 			<div className="flex flex-col w-full mt-1 mb-2.5 rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-black/5 dark:border-white/5">
-				<div className="w-full h-48 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+				<div className="w-full h-48 shrink-0 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 				<div className="flex flex-col gap-2 px-3 py-3">
 					<div className="w-2/3 h-3 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 					<div className="w-3/4 h-3 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
@@ -25,6 +25,19 @@ export function LinkPreview({ url }: { url: string }) {
 	}
 
 	if (!data.title && !data.image && !data.description) {
+		return (
+			<Link
+				to={url}
+				target="_blank"
+				rel="noreferrer"
+				className="text-blue-500 hover:text-blue-600"
+			>
+				{url}
+			</Link>
+		);
+	}
+
+	if (isError) {
 		return (
 			<Link
 				to={url}
@@ -50,7 +63,7 @@ export function LinkPreview({ url }: { url: string }) {
 					alt={url}
 					loading="lazy"
 					decoding="async"
-					className="object-cover w-full h-48 bg-white rounded-t-lg"
+					className="object-cover w-full h-48 shrink-0 bg-white rounded-t-lg"
 				/>
 			) : null}
 			<div className="flex flex-col items-start p-3">

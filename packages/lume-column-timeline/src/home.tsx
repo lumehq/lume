@@ -3,7 +3,7 @@ import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { CacheSnapshot, VList, VListHandle } from "virtua";
@@ -12,7 +12,6 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 	const ark = useArk();
 	const ref = useRef<VListHandle>();
 	const cacheKey = `${colKey}-vlist`;
-	const queryClient = useQueryClient();
 
 	const [offset, cache] = useMemo(() => {
 		const serialized = sessionStorage.getItem(cacheKey);

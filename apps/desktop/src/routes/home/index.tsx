@@ -1,11 +1,14 @@
 import { Antenas } from "@columns/antenas";
 import { Default } from "@columns/default";
 import { ForYou } from "@columns/foryou";
+import { Global } from "@columns/global";
 import { Group } from "@columns/group";
 import { Hashtag } from "@columns/hashtag";
 import { Thread } from "@columns/thread";
 import { Timeline } from "@columns/timeline";
+import { TrendingNotes } from "@columns/trending-notes";
 import { User } from "@columns/user";
+import { Waifu } from "@columns/waifu";
 import { useColumnContext } from "@lume/ark";
 import {
 	ArrowLeftIcon,
@@ -45,6 +48,12 @@ export function HomeScreen() {
 				return <Group key={column.id} column={column} />;
 			case COL_TYPES.antenas:
 				return <Antenas key={column.id} column={column} />;
+			case COL_TYPES.global:
+				return <Global key={column.id} column={column} />;
+			case COL_TYPES.trendingNotes:
+				return <TrendingNotes key={column.id} column={column} />;
+			case COL_TYPES.waifu:
+				return <Waifu key={column.id} column={column} />;
 			default:
 				return <Default key={column.id} column={column} />;
 		}

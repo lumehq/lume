@@ -57,9 +57,9 @@ export const COL_TYPES = {
 	hashtag: 3,
 	group: 4,
 	antenas: 5,
-	topic: 6,
+	global: 6,
 	trendingNotes: 9000,
-	trendingAccounts: 9001,
+	waifu: 9001,
 	foryou: 9998,
 	newsfeed: 9999,
 };

@@ -228,7 +228,7 @@ export const LumeProvider = ({ children }: PropsWithChildren<object>) => {
 		return (
 			<div
 				data-tauri-drag-region
-				className="relative flex items-center justify-center w-screen h-screen"
+				className="relative flex items-center justify-center w-screen h-screen bg-white dark:bg-black"
 			>
 				<div className="flex flex-col items-start max-w-2xl gap-1">
 					<h5 className="font-semibold uppercase">TIP:</h5>

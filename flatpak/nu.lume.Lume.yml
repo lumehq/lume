@@ -32,9 +32,8 @@ modules:
     buildsystem: simple
     build-commands:
       - install -Dm755 bin/lume /app/bin/lume
-    #   - install -Dm755 bin/depot /app/bin/depot
-    #   - mkdir -p /app/lib/lume/resources
-    #  - cp -r lib/lume/resources /app/lib/lume/resources
+      - mkdir -p /app/lib/lume/resources
+      - cp -r lib/lume/resources /app/lib/lume/resources
       - mkdir -p /app/share/icons/hicolor/
       - cp -r share/icons/hicolor/ /app/share/icons/
       - install -Dm644 nu.lume.Lume.appdata.xml /app/share/metainfo/nu.lume.Lume.appdata.xml

@@ -1,8 +1,7 @@
 import { Column } from "@lume/ark";
-import { HashtagIcon } from "@lume/icons";
 import { IColumn } from "@lume/types";
-import { HomeRoute } from "./home";
 import { EventRoute, UserRoute } from "@lume/ui";
+import { HomeRoute } from "./home";
 
 export function Hashtag({ column }: { column: IColumn }) {
 	const colKey = `hashtag-${column.id}`;
@@ -10,12 +9,7 @@ export function Hashtag({ column }: { column: IColumn }) {
 
 	return (
 		<Column.Root>
-			<Column.Header
-				id={column.id}
-				queryKey={[colKey]}
-				title={hashtag}
-				icon={<HashtagIcon className="size-4" />}
-			/>
+			<Column.Header id={column.id} queryKey={[colKey]} title={hashtag} />
 			<Column.Content>
 				<Column.Route
 					path="/"

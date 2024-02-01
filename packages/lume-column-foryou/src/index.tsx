@@ -1,5 +1,4 @@
 import { Column } from "@lume/ark";
-import { ForyouIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
 import { IColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
@@ -27,12 +26,7 @@ export function ForYou({ column }: { column: IColumn }) {
 
 	return (
 		<Column.Root>
-			<Column.Header
-				id={column.id}
-				queryKey={[colKey]}
-				title="For You"
-				icon={<ForyouIcon className="size-4" />}
-			/>
+			<Column.Header id={column.id} queryKey={[colKey]} title="For You" />
 			{storage.interests?.hashtags ? (
 				<Column.Live
 					filter={{

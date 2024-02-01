@@ -159,7 +159,7 @@ export function SearchDialog() {
 						</Command.Group>
 					</>
 				)}
-				{!loading ? (
+				{!loading && !events.length ? (
 					<div className="h-full flex items-center justify-center flex-col gap-3">
 						<div className="size-16 bg-blue-100 dark:bg-blue-900 rounded-full inline-flex items-center justify-center text-blue-500">
 							<SearchIcon className="size-6" />
