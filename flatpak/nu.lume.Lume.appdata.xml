@@ -25,7 +25,7 @@
 		https://lume.nu
 	</url>
 	<url type="bugtracker">
-		https://github.com/luminous-devs/lume/issues
+		https://github.com/lumehq/lume/issues
 	</url>
 	<url type="donation">
 		https://nostree.me/npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445
@@ -57,17 +57,17 @@
 	<screenshots>
 		<screenshot type="default">
 			<image>
-				https://raw.githubusercontent.com/luminous-devs/lume/flatpak/screenshots/login-screen.png
+				https://raw.githubusercontent.com/lumehq/lume/flatpak/screenshots/login-screen.png
 			</image>
 		</screenshot>
 		<screenshot>
 			<image>
-				https://raw.githubusercontent.com/luminous-devs/lume/flatpak/screenshots/collumns.png
+				https://raw.githubusercontent.com/lumehq/lume/flatpak/screenshots/collumns.png
 			</image>
 		</screenshot>
 		<screenshot>
 			<image>
-				https://raw.githubusercontent.com/luminous-devs/lume/flatpak/screenshots/home-screen.png
+				https://raw.githubusercontent.com/lumehq/lume/flatpak/screenshots/home-screen.png
 			</image>
 		</screenshot>
 	</screenshots>

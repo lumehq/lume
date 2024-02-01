@@ -4,7 +4,7 @@ version = "3.0.0"
 description = "the communication app"
 authors = ["Ren Amamiya"]
 license = "GPL-3.0"
-repository = "https://github.com/luminous-devs/lume"
+repository = "https://github.com/lumehq/lume"
 edition = "2021"
 rust-version = "1.70"
 

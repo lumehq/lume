@@ -53,7 +53,7 @@ export function OnboardingFinishScreen() {
 					)}
 				</button>
 				<a
-					href="https://github.com/luminous-devs/lume/issues"
+					href="https://github.com/lumehq/lume/issues"
 					target="_blank"
 					className="inline-flex items-center justify-center gap-2 w-44 px-5 font-medium h-11 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-700 dark:text-neutral-600"
 					rel="noreferrer"

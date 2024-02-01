@@ -22,8 +22,8 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         with:
           repository:
-            luminous-devs/lume
-            #FIXME: luminous-devs after merged fix, now it just won't find tags
+            lumehq/lume
+            #FIXME: lumehq after merged fix, now it just won't find tags
             # repository: ${{ github.repository }}
 
       - name: Build container

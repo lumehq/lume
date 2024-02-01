@@ -98,7 +98,7 @@ export function ErrorScreen() {
 									3. Report this issue to Lume
 								</div>
 								<a
-									href="https://github.com/luminous-devs/lume/issues/new"
+									href="https://github.com/lumehq/lume/issues/new"
 									target="_blank"
 									rel="noreferrer"
 									className="inline-flex h-9 w-28 items-center justify-center rounded-lg bg-blue-800 px-3 font-medium text-white hover:bg-blue-900"

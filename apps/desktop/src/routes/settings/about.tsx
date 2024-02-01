@@ -64,7 +64,7 @@ export function AboutScreen() {
 					Website
 				</Link>
 				<Link
-					to="https://github.com/luminous-devs/lume/issues"
+					to="https://github.com/lumehq/lume/issues"
 					className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-neutral-100 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
 				>
 					Report a issue
