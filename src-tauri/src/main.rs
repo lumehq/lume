@@ -4,6 +4,7 @@
 )]
 
 pub mod commands;
+pub mod nostr;
 
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -48,6 +49,8 @@ fn main() {
       Some(vec![]),
     ))
     .invoke_handler(tauri::generate_handler![
+      nostr::keys::create_keys,
+      nostr::keys::get_public_key,
       commands::secret::secure_save,
       commands::secret::secure_load,
       commands::secret::secure_remove,
