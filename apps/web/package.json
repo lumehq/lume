@@ -13,7 +13,7 @@
 		"@astrojs/check": "^0.4.1",
 		"@astrojs/tailwind": "^5.1.0",
 		"@fontsource/geist-mono": "^5.0.1",
-		"astro": "^4.2.8",
+		"astro": "^4.2.6",
 		"astro-seo-meta": "^4.1.0",
 		"astro-seo-schema": "^4.0.0",
 		"schema-dts": "^1.1.2",

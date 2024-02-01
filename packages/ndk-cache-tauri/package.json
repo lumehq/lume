@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@lume/storage": "workspace:*",
-    "@nostr-dev-kit/ndk": "^2.4.0",
+    "@nostr-dev-kit/ndk": "^2.3.3",
     "lru-cache": "^10.2.0",
     "nostr-fetch": "^0.15.0",
     "nostr-tools": "1.17.0",
