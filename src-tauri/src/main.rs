@@ -6,33 +6,52 @@
 pub mod commands;
 pub mod nostr;
 
+use nostr_sdk::{Client, ClientBuilder};
+use nostr_sqlite::SQLiteDatabase;
+use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
-use tauri_plugin_sql::{Migration, MigrationKind};
 use tauri_plugin_theme::ThemePlugin;
+use tokio::sync::Mutex;
+
+struct NostrClient(Mutex<Client>);
 
 fn main() {
   let mut ctx = tauri::generate_context!();
   tauri::Builder::default()
     .setup(|app| {
-      #[cfg(desktop)]
-      app
-        .handle()
-        .plugin(tauri_plugin_updater::Builder::new().build())?;
+      let handle = app.handle().clone();
+      let config_dir = app.path().app_config_dir().unwrap();
+
+      tauri::async_runtime::spawn(async move {
+        // Create database connection
+        let database = SQLiteDatabase::open(config_dir.join("nostr.db"))
+          .await
+          .expect("Open database failed.");
+
+        // Create nostr connection
+        let client = ClientBuilder::default().database(database).build();
+
+        // Add bootstrap relay
+        client
+          .add_relay("wss://nostr.mutinywallet.com")
+          .await
+          .expect("Failed to add bootstrap relay.");
+
+        // Add bootstrap relay
+        client
+          .add_relay("wss://bostr.nokotaro.com")
+          .await
+          .expect("Failed to add bootstrap relay.");
+
+        // Connect
+        client.connect().await;
+
+        // Init global state
+        handle.manage(NostrClient(client.into()))
+      });
+
       Ok(())
     })
-    .plugin(
-      tauri_plugin_sql::Builder::default()
-        .add_migrations(
-          "sqlite:lume_v3.db",
-          vec![Migration {
-            version: 20230418013219,
-            description: "initial data",
-            sql: include_str!("../migrations/20230418013219_initial_data.sql"),
-            kind: MigrationKind::Up,
-          }],
-        )
-        .build(),
-    )
     .plugin(ThemePlugin::init(ctx.config_mut()))
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
@@ -43,6 +62,7 @@ fn main() {
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
+    .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_window_state::Builder::default().build())
     .plugin(tauri_plugin_autostart::init(
       MacosLauncher::LaunchAgent,
