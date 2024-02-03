@@ -1,6 +1,9 @@
+use crate::AppState;
 use nostr::nips::nip19::ToBech32;
 use nostr::secp256k1::SecretKey;
-use nostr::{Keys, Result};
+use nostr::{FromBech32, Keys, Result};
+use nostr_sdk::ClientSigner;
+use tauri::State;
 
 #[derive(serde::Serialize)]
 pub struct CreateKeysResponse {
@@ -26,4 +29,16 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 pub fn get_public_key(secret_key: SecretKey) -> Result<String, ()> {
   let keys = Keys::new(secret_key);
   Ok(keys.public_key().to_bech32().expect("secret key failed"))
+}
+
+#[tauri::command]
+pub async fn update_signer(key: String, app_state: State<'_, AppState>) -> Result<(), ()> {
+  let client = &app_state.nostr;
+  let secret_key = SecretKey::from_bech32(key).unwrap();
+  let keys = Keys::new(secret_key);
+  let signer = ClientSigner::Keys(keys);
+
+  client.set_signer(Some(signer)).await;
+
+  Ok(())
 }

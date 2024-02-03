@@ -8,12 +8,14 @@ pub mod nostr;
 
 use nostr_sdk::{Client, ClientBuilder};
 use nostr_sqlite::SQLiteDatabase;
+use std::sync::Arc;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_theme::ThemePlugin;
-use tokio::sync::Mutex;
 
-struct NostrClient(Mutex<Client>);
+pub struct AppState {
+  pub nostr: Arc<Client>,
+}
 
 fn main() {
   let mut ctx = tauri::generate_context!();
@@ -24,12 +26,12 @@ fn main() {
 
       tauri::async_runtime::spawn(async move {
         // Create database connection
-        let database = SQLiteDatabase::open(config_dir.join("nostr.db"))
+        let nostr_db = SQLiteDatabase::open(config_dir.join("nostr.db"))
           .await
           .expect("Open database failed.");
 
         // Create nostr connection
-        let client = ClientBuilder::default().database(database).build();
+        let client = ClientBuilder::default().database(nostr_db).build();
 
         // Add bootstrap relay
         client
@@ -47,7 +49,9 @@ fn main() {
         client.connect().await;
 
         // Init global state
-        handle.manage(NostrClient(client.into()))
+        handle.manage(AppState {
+          nostr: client.into(),
+        })
       });
 
       Ok(())
@@ -71,6 +75,9 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       nostr::keys::create_keys,
       nostr::keys::get_public_key,
+      nostr::keys::update_signer,
+      nostr::metadata::get_metadata,
+      nostr::event::get_event,
       commands::secret::secure_save,
       commands::secret::secure_load,
       commands::secret::secure_remove,
