@@ -39,6 +39,7 @@ tauri-plugin-upload = "2.0.0-alpha"
 tauri-plugin-window-state = "2.0.0-alpha"
 tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
 webpage = { version = "2.0", features = ["serde"] }
+surrealdb = { version = "1.1.1", features = ["kv-rocksdb"] }
 
 [target.'cfg(not(target_os = "linux"))'.dependencies]
 keyring = "2"
