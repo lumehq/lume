@@ -51,13 +51,12 @@ fn main() {
         // Create nostr connection
         let client = ClientBuilder::default().database(nostr_db).build();
 
-        // Add bootstrap relay
+        // Add some bootstrap relays
+        // #TODO: Add option to user config bootstrap relay
         client
           .add_relay("wss://nostr.mutinywallet.com")
           .await
           .expect("Failed to add bootstrap relay.");
-
-        // Add bootstrap relay
         client
           .add_relay("wss://bostr.nokotaro.com")
           .await
@@ -95,6 +94,7 @@ fn main() {
       nostr::keys::create_keys,
       nostr::keys::get_public_key,
       nostr::keys::update_signer,
+      nostr::keys::verify_signer,
       nostr::metadata::get_metadata,
       nostr::event::get_event,
       commands::secret::secure_save,

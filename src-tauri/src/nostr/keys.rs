@@ -42,3 +42,11 @@ pub async fn update_signer(key: String, app_state: State<'_, AppState>) -> Resul
 
   Ok(())
 }
+
+#[tauri::command]
+pub async fn verify_signer(app_state: State<'_, AppState>) -> Result<bool, ()> {
+  let client = &app_state.nostr;
+  let status = client.signer().await.is_ok();
+
+  Ok(status)
+}
