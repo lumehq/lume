@@ -16,7 +16,6 @@ use surrealdb::{
 };
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
-use tauri_plugin_theme::ThemePlugin;
 use tokio::sync::Mutex;
 
 pub struct AppState {
@@ -74,7 +73,7 @@ fn main() {
 
       Ok(())
     })
-    .plugin(ThemePlugin::init(ctx.config_mut()))
+    .plugin(tauri_plugin_theme::init(ctx.config_mut()))
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())

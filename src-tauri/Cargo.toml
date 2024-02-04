@@ -8,7 +8,7 @@ edition = "2021"
 rust-version = "1.70"
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-alpha", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
 nostr = "0.27"
@@ -17,44 +17,34 @@ nostr-sqlite = "0.27"
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-alpha", features = [
+tauri = { version = "2.0.0-beta", features = [
   "tray-icon",
   "macos-private-api",
   "native-tls-vendored",
   "protocol-asset",
 ] }
-tauri-plugin-cli = "2.0.0-alpha"
-tauri-plugin-clipboard-manager = "2.0.0-alpha"
-tauri-plugin-dialog = "2.0.0-alpha"
-tauri-plugin-fs = "2.0.0-alpha"
-tauri-plugin-http = "2.0.0-alpha"
-tauri-plugin-notification = "2.0.0-alpha"
-tauri-plugin-os = "2.0.0-alpha"
-tauri-plugin-process = "2.0.0-alpha"
-tauri-plugin-shell = "2.0.0-alpha"
-tauri-plugin-updater = "2.0.0-alpha"
-tauri-plugin-autostart = "2.0.0-alpha"
-tauri-plugin-store = "2.0.0-alpha"
-tauri-plugin-upload = "2.0.0-alpha"
-tauri-plugin-window-state = "2.0.0-alpha"
+tauri-plugin-cli = "2.0.0-beta"
+tauri-plugin-clipboard-manager = "2.0.0-beta"
+tauri-plugin-dialog = "2.0.0-beta"
+tauri-plugin-fs = "2.0.0-beta"
+tauri-plugin-http = "2.0.0-beta"
+tauri-plugin-notification = "2.0.0-beta"
+tauri-plugin-os = "2.0.0-beta"
+tauri-plugin-process = "2.0.0-beta"
+tauri-plugin-shell = "2.0.0-beta"
+tauri-plugin-updater = "2.0.0-beta"
+tauri-plugin-autostart = "2.0.0-beta"
+tauri-plugin-store = "2.0.0-beta"
+tauri-plugin-upload = "2.0.0-beta"
+tauri-plugin-window-state = "2.0.0-beta"
 tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
 webpage = { version = "2.0", features = ["serde"] }
 surrealdb = { version = "1.1.1", features = ["kv-rocksdb"] }
-
-[target.'cfg(not(target_os = "linux"))'.dependencies]
 keyring = "2"
 
-[target.'cfg(target_os = "linux")'.dependencies]
-keyring = { version = "2", default_features = false, features = [
-  "linux-secret-service",
-] }
-
 [features]
-# by default Tauri runs in production mode
-# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = ["custom-protocol"]
-# this feature is used used for production builds where `devPath` points to the filesystem
-# DO NOT remove this
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
 
 # Optimized for bundle size. If you want faster builds comment out/delete this section.
