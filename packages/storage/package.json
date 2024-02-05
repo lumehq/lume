@@ -15,7 +15,7 @@
 		"@lume/tsconfig": "workspace:*",
 		"@lume/types": "workspace:*",
 		"@lume/utils": "workspace:^",
-		"@types/react": "^18.2.48",
+		"@types/react": "^18.2.52",
 		"typescript": "^5.3.3"
 	}
 }
