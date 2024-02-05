@@ -1,11 +1,11 @@
-use crate::AppState;
+use crate::Nostr;
 use nostr_sdk::prelude::*;
 use std::time::Duration;
 use tauri::State;
 
 #[tauri::command(async)]
-pub async fn get_metadata(npub: String, app_state: State<'_, AppState>) -> Result<Metadata, ()> {
-  let client = &app_state.nostr;
+pub async fn get_metadata(npub: String, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
+  let client = &nostr.client;
 
   let public_key = XOnlyPublicKey::from_bech32(npub).unwrap();
 

@@ -1,11 +1,11 @@
-use crate::AppState;
+use crate::Nostr;
 use nostr_sdk::prelude::*;
 use std::time::Duration;
 use tauri::State;
 
 #[tauri::command(async)]
-pub async fn get_event(id: String, app_state: State<'_, AppState>) -> Result<String, ()> {
-  let client = &app_state.nostr;
+pub async fn get_event(id: String, nostr: State<'_, Nostr>) -> Result<String, ()> {
+  let client = &nostr.client;
 
   let event_id = EventId::from_bech32(id).unwrap();
   let filter = Filter::new().id(event_id);

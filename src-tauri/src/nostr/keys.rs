@@ -1,4 +1,4 @@
-use crate::AppState;
+use crate::Nostr;
 use nostr_sdk::prelude::*;
 use tauri::State;
 
@@ -29,8 +29,8 @@ pub fn get_public_key(secret_key: SecretKey) -> Result<String, ()> {
 }
 
 #[tauri::command]
-pub async fn update_signer(key: String, app_state: State<'_, AppState>) -> Result<(), ()> {
-  let client = &app_state.nostr;
+pub async fn update_signer(key: String, nostr: State<'_, Nostr>) -> Result<(), ()> {
+  let client = &nostr.client;
   let secret_key = SecretKey::from_bech32(key).unwrap();
   let keys = Keys::new(secret_key);
   let signer = ClientSigner::Keys(keys);
@@ -41,8 +41,8 @@ pub async fn update_signer(key: String, app_state: State<'_, AppState>) -> Resul
 }
 
 #[tauri::command]
-pub async fn verify_signer(app_state: State<'_, AppState>) -> Result<bool, ()> {
-  let client = &app_state.nostr;
+pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<bool, ()> {
+  let client = &nostr.client;
   let status = client.signer().await.is_ok();
 
   Ok(status)
