@@ -5,8 +5,8 @@
   "identifier": "nu.lume.Lume",
   "build": {
     "beforeBuildCommand": "pnpm run build",
-    "beforeDevCommand": "pnpm run dev",
-    "devUrl": "http://localhost:3000",
+    "beforeDevCommand": "pnpm desktop:dev",
+    "devUrl": "http://localhost:5173",
     "frontendDist": "../dist"
   },
   "app": {

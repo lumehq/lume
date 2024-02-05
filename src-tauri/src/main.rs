@@ -25,17 +25,7 @@ fn main() {
   tauri::Builder::default()
     .setup(|app| {
       let handle = app.handle().clone();
-      let config_dir = app.path().app_config_dir().unwrap();
-      let db = DATABASE_BUILDER
-        .create(config_dir.join("app.db"))
-        .expect("failed to create app database");
-
-      // run db migrate
-      let rw = db
-        .rw_transaction()
-        .expect("failed to create rw migration transaction");
-      rw.migrate::<Account>().expect("failed to migrate Account");
-      rw.commit().expect("failed to commit migration");
+      let config_dir = handle.path().app_config_dir().unwrap();
 
       tauri::async_runtime::spawn(async move {
         // Create database connection
@@ -45,6 +35,18 @@ fn main() {
 
         // Create nostr connection
         let client = ClientBuilder::default().database(nostr_db).build();
+
+        // create app database connection
+        let db = DATABASE_BUILDER
+          .create(config_dir.join("app.db"))
+          .expect("failed to create app database");
+
+        // run db migrate
+        let rw = db
+          .rw_transaction()
+          .expect("failed to create rw migration transaction");
+        rw.migrate::<Account>().expect("failed to migrate Account");
+        rw.commit().expect("failed to commit migration");
 
         // get stored account
         let r = db.r_transaction().expect("failed to create ro transaction");
