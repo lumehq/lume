@@ -4,23 +4,15 @@
 )]
 
 pub mod commands;
-pub mod model;
 pub mod nostr;
 
-use nostr_sdk::{Client, ClientBuilder};
-use nostr_sqlite::SQLiteDatabase;
+use nostr_sdk::prelude::*;
 use std::sync::Arc;
-use surrealdb::{
-  engine::local::{Db, RocksDb},
-  Surreal,
-};
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_theme::ThemePlugin;
-use tokio::sync::Mutex;
 
 pub struct AppState {
-  pub db: Mutex<Surreal<Db>>,
   pub nostr: Arc<Client>,
 }
 
@@ -32,17 +24,6 @@ fn main() {
       let config_dir = app.path().app_config_dir().unwrap();
 
       tauri::async_runtime::spawn(async move {
-        // Create app db connection
-        let db = Surreal::new::<RocksDb>(config_dir.join("lume.db"))
-          .await
-          .expect("Initialize app db failed");
-
-        // Select namespace and db
-        db.use_ns("lume")
-          .use_db("app")
-          .await
-          .expect("Open app db failed");
-
         // Create database connection
         let nostr_db = SQLiteDatabase::open(config_dir.join("nostr.db"))
           .await
@@ -67,7 +48,6 @@ fn main() {
 
         // Init global state
         handle.manage(AppState {
-          db: Mutex::new(db),
           nostr: client.into(),
         })
       });

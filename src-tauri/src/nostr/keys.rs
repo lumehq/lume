@@ -1,8 +1,5 @@
 use crate::AppState;
-use nostr::nips::nip19::ToBech32;
-use nostr::secp256k1::SecretKey;
-use nostr::{FromBech32, Keys, Result};
-use nostr_sdk::ClientSigner;
+use nostr_sdk::prelude::*;
 use tauri::State;
 
 #[derive(serde::Serialize)]

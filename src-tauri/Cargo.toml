@@ -11,9 +11,7 @@ rust-version = "1.70"
 tauri-build = { version = "2.0.0-alpha", features = [] }
 
 [dependencies]
-nostr = "0.27"
-nostr-sdk = "0.27"
-nostr-sqlite = "0.27"
+nostr-sdk = { version =  "0.27", features = ["sqlite"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -39,7 +37,6 @@ tauri-plugin-upload = "2.0.0-alpha"
 tauri-plugin-window-state = "2.0.0-alpha"
 tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
 webpage = { version = "2.0", features = ["serde"] }
-surrealdb = { version = "1.1.1", features = ["kv-rocksdb"] }
 
 [target.'cfg(not(target_os = "linux"))'.dependencies]
 keyring = "2"
