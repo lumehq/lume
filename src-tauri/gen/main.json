@@ -1,0 +1,81 @@
+{
+  "$schema": "./schemas/desktop-schema.json",
+  "identifier": "desktop-capability",
+  "description": "Capability for the desktop",
+  "platforms": [
+    "linux",
+    "macOS",
+    "windows"
+  ],
+  "windows": [
+    "main",
+    "settings",
+    "event-*",
+    "user-*",
+    "column-*"
+  ],
+  "permissions": [
+    "path:default",
+    "event:default",
+    "window:default",
+    "app:default",
+    "resources:default",
+    "menu:default",
+    "tray:default",
+    "shell:open",
+    "theme:allow-set-theme",
+    "theme:allow-get-theme",
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "http://**/"
+        },
+        {
+          "url": "https://**/"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        {
+          "path": "$APPDATA/*"
+        },
+        {
+          "path": "$LOCALDATA/*"
+        },
+        {
+          "path": "$DESKTOP/*"
+        },
+        {
+          "path": "$DOCUMENT/*"
+        },
+        {
+          "path": "$DOWNLOAD/*"
+        },
+        {
+          "path": "$HOME/*"
+        },
+        {
+          "path": "$PICTURE/*"
+        },
+        {
+          "path": "$PUBLIC/*"
+        },
+        {
+          "path": "$VIDEO/*"
+        },
+        {
+          "path": "$RESOURCE"
+        },
+        {
+          "path": "$RESOURCE/*"
+        },
+        {
+          "path": "$RESOURCE/locales/*"
+        }
+      ]
+    }
+  ]
+}

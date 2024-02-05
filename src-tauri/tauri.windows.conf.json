@@ -1,20 +1,20 @@
 {
-	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
-	"tauri": {
-		"windows": [
-			{
-				"width": 1080,
-				"height": 800,
-				"minWidth": 1080,
-				"minHeight": 800,
-				"resizable": true,
-				"title": "Lume",
-				"center": true,
-				"fullscreen": false,
-				"hiddenTitle": true,
-				"fileDropEnabled": true,
-				"decorations": false
-			}
-		]
-	}
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "app": {
+    "windows": [
+      {
+        "width": 1080,
+        "height": 800,
+        "minWidth": 1080,
+        "minHeight": 800,
+        "resizable": true,
+        "title": "Lume",
+        "center": true,
+        "fullscreen": false,
+        "hiddenTitle": true,
+        "fileDropEnabled": true,
+        "decorations": false
+      }
+    ]
+  }
 }
