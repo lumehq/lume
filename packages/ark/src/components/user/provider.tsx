@@ -1,9 +1,9 @@
-import { NDKUserProfile } from "@nostr-dev-kit/ndk";
+import { Metadata } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
 import { ReactNode, createContext, useContext } from "react";
 import { useArk } from "../../hooks/useArk";
 
-const UserContext = createContext<NDKUserProfile>(null);
+const UserContext = createContext<Metadata>(null);
 
 export function UserProvider({
 	pubkey,
@@ -14,9 +14,10 @@ export function UserProvider({
 	const { data: user } = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
-			if (embed) return JSON.parse(embed) as NDKUserProfile;
+			if (embed) return JSON.parse(embed) as Metadata;
 
-			const profile = await ark.getUserProfile(pubkey);
+			const profile = await ark.get_metadata(pubkey);
+
 			if (!profile)
 				throw new Error(
 					`Cannot get metadata for ${pubkey}, will be retry after 10 seconds`,

@@ -1,4 +1,4 @@
-import { useStorage } from "@lume/storage";
+import { Kind } from "@lume/types";
 import {
 	AUDIOS,
 	IMAGES,
@@ -9,7 +9,6 @@ import {
 	cn,
 	regionNames,
 } from "@lume/utils";
-import { NDKKind } from "@nostr-dev-kit/ndk";
 import { fetch } from "@tauri-apps/plugin-http";
 import getUrls from "get-urls";
 import { nanoid } from "nanoid";
@@ -32,7 +31,6 @@ export function NoteContent({
 }: {
 	className?: string;
 }) {
-	const storage = useStorage();
 	const event = useNoteContext();
 
 	const [content, setContent] = useState(event.content);
@@ -42,7 +40,7 @@ export function NoteContent({
 	});
 
 	const richContent = useMemo(() => {
-		if (event.kind !== NDKKind.Text) return content;
+		if (event.kind !== Kind.Text) return content;
 
 		let parsedContent: string | ReactNode[] = stripHtml(
 			content.replace(/\n{2,}\s*/g, "\n"),

@@ -1,5 +1,6 @@
 use crate::Nostr;
 use nostr_sdk::prelude::*;
+use std::str::FromStr;
 use tauri::State;
 
 #[derive(serde::Serialize)]
@@ -23,15 +24,16 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 }
 
 #[tauri::command]
-pub fn get_public_key(secret_key: SecretKey) -> Result<String, ()> {
+pub fn get_public_key(nsec: String) -> Result<String, ()> {
+  let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
   Ok(keys.public_key().to_bech32().expect("secret key failed"))
 }
 
 #[tauri::command]
-pub async fn update_signer(key: String, nostr: State<'_, Nostr>) -> Result<(), ()> {
+pub async fn update_signer(nsec: String, nostr: State<'_, Nostr>) -> Result<(), ()> {
   let client = &nostr.client;
-  let secret_key = SecretKey::from_bech32(key).unwrap();
+  let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
   let signer = ClientSigner::Keys(keys);
 
@@ -46,4 +48,20 @@ pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<bool, ()> {
   let status = client.signer().await.is_ok();
 
   Ok(status)
+}
+
+#[tauri::command]
+pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
+  let event_id = EventId::from_hex(id).unwrap();
+  let event = Nip19Event::new(event_id, relays);
+
+  Ok(event.to_bech32().unwrap())
+}
+
+#[tauri::command]
+pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
+  let pubkey = XOnlyPublicKey::from_str(key).unwrap();
+  let profile = Nip19Profile::new(pubkey, relays);
+
+  Ok(profile.to_bech32().unwrap())
 }

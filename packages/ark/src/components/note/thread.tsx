@@ -14,7 +14,7 @@ export function NoteThread({
 }) {
 	const ark = useArk();
 	const event = useNoteContext();
-	const thread = ark.getEventThread({
+	const thread = ark.parse_event_thread({
 		content: event.content,
 		tags: event.tags,
 	});

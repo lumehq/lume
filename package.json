@@ -6,7 +6,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "web:dev": "turbo run dev --filter web",
-    "desktop:dev": "turbo run dev --filter desktop2",
+    "desktop:dev": "turbo run dev --filter desktop",
     "tauri": "tauri"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@ export function useEvent(id: string) {
 	const { isLoading, isError, data } = useQuery({
 		queryKey: ["event", id],
 		queryFn: async () => {
-			const event = await ark.getEventById(id);
+			const event = await ark.get_event(id);
 			if (!event)
 				throw new Error(
 					`Cannot get event with ${id}, will be retry after 10 seconds`,

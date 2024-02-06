@@ -2,32 +2,22 @@ import { HorizontalDotsIcon } from "@lume/icons";
 import { COL_TYPES } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-import { nip19 } from "nostr-tools";
-import { type EventPointer } from "nostr-tools/lib/types/nip19";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { useArk } from "../../hooks/useArk";
 import { useColumnContext } from "../column/provider";
 import { useNoteContext } from "./provider";
 
 export function NoteMenu() {
+	const ark = useArk();
 	const event = useNoteContext();
 	const navigate = useNavigate();
 
 	const { t } = useTranslation();
 	const { addColumn } = useColumnContext();
 
-	const [open, setOpen] = useState(false);
-
 	const copyID = async () => {
-		await writeText(
-			nip19.neventEncode({
-				id: event.id,
-				author: event.pubkey,
-			} as EventPointer),
-		);
-		setOpen(false);
+		await writeText(await ark.event_to_bech32(event.id, [""]));
 	};
 
 	const copyRaw = async () => {
@@ -35,26 +25,17 @@ export function NoteMenu() {
 	};
 
 	const copyNpub = async () => {
-		await writeText(nip19.npubEncode(event.pubkey));
+		await writeText(await ark.user_to_bech32(event.pubkey, [""]));
 	};
 
 	const copyLink = async () => {
 		await writeText(
-			`https://njump.me/${nip19.neventEncode({
-				id: event.id,
-				author: event.pubkey,
-			} as EventPointer)}`,
+			`https://njump.me/${await ark.event_to_bech32(event.id, [""])}`,
 		);
-		setOpen(false);
-	};
-
-	const muteUser = async () => {
-		event.muted();
-		toast.info("You've muted this user");
 	};
 
 	return (
-		<DropdownMenu.Root open={open} onOpenChange={setOpen}>
+		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild>
 				<button
 					type="button"
@@ -132,15 +113,6 @@ export function NoteMenu() {
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							{t("note.menu.copyRaw")}
-						</button>
-					</DropdownMenu.Item>
-					<DropdownMenu.Item asChild>
-						<button
-							type="button"
-							onClick={muteUser}
-							className="inline-flex items-center gap-3 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
-						>
-							{t("note.menu.mute")}
 						</button>
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>

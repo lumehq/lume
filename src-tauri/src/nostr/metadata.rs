@@ -1,13 +1,20 @@
 use crate::Nostr;
 use nostr_sdk::prelude::*;
-use std::time::Duration;
+use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command(async)]
-pub async fn get_metadata(npub: String, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
+pub async fn get_metadata(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
   let client = &nostr.client;
+  let public_key;
 
-  let public_key = XOnlyPublicKey::from_bech32(npub).unwrap();
+  if id.starts_with("nprofile1") {
+    public_key = XOnlyPublicKey::from_bech32(id).unwrap();
+  } else if id.starts_with("npub1") {
+    public_key = XOnlyPublicKey::from_bech32(id).unwrap();
+  } else {
+    public_key = XOnlyPublicKey::from_str(id).unwrap();
+  }
 
   let filter = Filter::new()
     .author(public_key)
@@ -19,7 +26,7 @@ pub async fn get_metadata(npub: String, nostr: State<'_, Nostr>) -> Result<Metad
     .await
     .expect("Get metadata failed");
 
-  let event = events.into_iter().nth(0).unwrap();
+  let event = events.first().unwrap();
   let metadata: Metadata = Metadata::from_json(&event.content).unwrap();
 
   Ok(metadata)

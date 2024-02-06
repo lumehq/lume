@@ -1,8 +1,56 @@
-import {
-	type NDKEvent,
-	NDKRelayList,
-	type NDKUserProfile,
-} from "@nostr-dev-kit/ndk";
+import { type NDKEvent, type NDKUserProfile } from "@nostr-dev-kit/ndk";
+
+export interface Keys {
+	npub: string;
+	nsec: string;
+}
+
+export enum Kind {
+	Metadata = 0,
+	Text = 1,
+	RecommendRelay = 2,
+	Contacts = 3,
+	Repost = 6,
+	Reaction = 7,
+	// NIP-89: App Metadata
+	AppRecommendation = 31989,
+	AppHandler = 31990,
+	// #TODO: Add all nostr kinds
+}
+
+export interface Event {
+	id: string;
+	pubkey: string;
+	created_at: number;
+	kind: Kind;
+	tags: string[][];
+	content: string;
+	sig: string;
+}
+
+export interface Metadata {
+	name: Option<string>;
+	display_name: Option<string>;
+	about: Option<string>;
+	website: Option<string>;
+	picture: Option<string>;
+	banner: Option<string>;
+	nip05: Option<string>;
+	lud06: Option<string>;
+	lud16: Option<string>;
+}
+
+export interface CurrentAccount {
+	npub: string;
+	contacts: string[];
+	interests: Interests;
+}
+
+export interface Interests {
+	hashtags: string[];
+	users: string[];
+	words: string[];
+}
 
 export interface RichContent {
 	parsed: string;
@@ -10,14 +58,6 @@ export interface RichContent {
 	videos: string[];
 	links: string[];
 	notes: string[];
-}
-
-export interface Account {
-	id: string;
-	pubkey: string;
-	is_active: number;
-	contacts: string[];
-	relayList: string[];
 }
 
 export interface IColumn {
@@ -114,10 +154,4 @@ export interface NIP05 {
 			[key: string]: string[];
 		};
 	};
-}
-
-export interface Interests {
-	hashtags: string[];
-	users: string[];
-	words: string[];
 }
