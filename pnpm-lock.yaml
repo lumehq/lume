@@ -272,6 +272,9 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@lume/tailwindcss':
+        specifier: workspace:^
+        version: link:../../packages/tailwindcss
       '@remix-run/dev':
         specifier: ^2.6.0
         version: 2.6.0(typescript@5.3.3)(vite@5.0.12)
@@ -281,6 +284,15 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.2.18
+      autoprefixer:
+        specifier: ^10.4.17
+        version: 10.4.17(postcss@8.4.33)
+      postcss:
+        specifier: ^8.4.33
+        version: 8.4.33
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.1
       typescript:
         specifier: ^5.1.6
         version: 5.3.3
@@ -1098,9 +1110,9 @@ importers:
 
   packages/tailwindcss:
     dependencies:
-      '@evilmartians/harmony':
+      tailwindcss-radix-colors:
         specifier: ^1.2.0
-        version: 1.2.0
+        version: 1.2.0(tailwindcss@3.4.1)
     devDependencies:
       '@tailwindcss/forms':
         specifier: ^0.5.7
@@ -2263,10 +2275,6 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@evilmartians/harmony@1.2.0:
-    resolution: {integrity: sha512-Ua8gpC+28Eo9D2/xynTrrZIrSawgtobwtRLLYq4wH8N19qoMspWZ1vqfsDDVPgQFa+iHsVAk/SbdmoPAj6OH1g==}
-    dev: false
-
   /@floating-ui/core@1.6.0:
     resolution: {integrity: sha512-PcF++MykgmTj3CIyOQbKA/hDzOAiqI3mhuoN44WRCopIs1sgoDoU4oty4Jtqaj/y3oDU6fnVSm4QG0a3t5i0+g==}
     dependencies:
@@ -2515,6 +2523,10 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@radix-ui/colors@3.0.0:
+    resolution: {integrity: sha512-FUOsGBkHrYJwCSEtWRCIfQbZG7q1e6DgxCIOe1SUQzDe/7rXXeA47s8yCn6fuTNQAj1Zq4oTFi9Yjp3wzElcxg==}
     dev: false
 
   /@radix-ui/number@1.0.1:
@@ -9354,6 +9366,15 @@ packages:
     dependencies:
       tailwindcss: 3.4.1
     dev: true
+
+  /tailwindcss-radix-colors@1.2.0(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-2rr3l7NV89UEwRTJFN4LlQIm5aasi7OZeJFF7iaDJ2hKwylR8BNMAC6GoiDl0G7wq18keN1YQ3V5sMbvtREO6w==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0'
+    dependencies:
+      '@radix-ui/colors': 3.0.0
+      tailwindcss: 3.4.1
+    dev: false
 
   /tailwindcss@3.4.1:
     resolution: {integrity: sha512-qAYmXRfk3ENzuPBakNK0SRrUDipP8NQnEY6772uDhflcQz5EhRdD7JNZxyrFHVQNCwULPBn6FNPp9brpO7ctcA==}
