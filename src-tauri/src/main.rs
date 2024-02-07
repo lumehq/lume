@@ -4,12 +4,8 @@
 )]
 
 pub mod commands;
-pub mod db;
 pub mod nostr;
 
-use crate::db::api::v1::AccountKey;
-use crate::db::DATABASE_BUILDER;
-use db::api::v1::Account;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::sync::Arc;
@@ -38,18 +34,6 @@ fn main() {
         // Create nostr connection
         let client = ClientBuilder::default().database(nostr_db).build();
 
-        // Create app database connection
-        let db = DATABASE_BUILDER
-          .create(config_dir.join("app.db"))
-          .expect("failed to create app database");
-
-        // Run migration for app database
-        let rw = db
-          .rw_transaction()
-          .expect("failed to create rw migration transaction");
-        rw.migrate::<Account>().expect("failed to migrate Account");
-        rw.commit().expect("failed to commit migration");
-
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
         client
@@ -65,37 +49,26 @@ fn main() {
         client.connect().await;
 
         // Get stored account
-        let r = db.r_transaction().expect("failed to create ro transaction");
-        let accounts: Vec<Account> = r
-          .scan()
-          .secondary(AccountKey::status)
-          .expect("failed to scan accounts")
-          .start_with("active")
-          .collect();
+        let entry = Entry::new("Lume", "Account").unwrap();
         let mut contact_list = None;
 
         // Run somethings if account existed
-        if let Some(account) = accounts.into_iter().nth(0) {
-          // Add signer with stored private key
-          let entry = Entry::new("Lume", &account.pubkey).expect("failed to load secret");
+        if let Ok(key) = entry.get_password() {
+          let secret_key = SecretKey::from_bech32(key).unwrap();
+          let keys = Keys::new(secret_key);
+          let signer = ClientSigner::Keys(keys);
 
-          if let Ok(key) = entry.get_password() {
-            let secret_key = SecretKey::from_bech32(key).unwrap();
-            let keys = Keys::new(secret_key);
-            let signer = ClientSigner::Keys(keys);
+          // Update client's signer
+          client.set_signer(Some(signer)).await;
 
-            // Update client's signer
-            client.set_signer(Some(signer)).await;
-
-            // Get contact list
-            contact_list = Some(
-              client
-                .get_contact_list(Some(Duration::from_secs(10)))
-                .await
-                .unwrap(),
-            );
-          }
-        }
+          // Get contact list
+          contact_list = Some(
+            client
+              .get_contact_list(Some(Duration::from_secs(10)))
+              .await
+              .unwrap(),
+          );
+        };
 
         // Init global state
         handle.manage(Nostr {
