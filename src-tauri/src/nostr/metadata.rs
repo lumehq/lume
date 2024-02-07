@@ -4,7 +4,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command(async)]
-pub async fn get_metadata(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
+pub async fn get_profile(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
   let client = &nostr.client;
   let public_key;
 
