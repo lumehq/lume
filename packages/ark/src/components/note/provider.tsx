@@ -1,12 +1,12 @@
-import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { Event } from "@lume/types";
 import { ReactNode, createContext, useContext } from "react";
 
-const EventContext = createContext<NDKEvent>(null);
+const EventContext = createContext<Event>(null);
 
 export function NoteProvider({
 	event,
 	children,
-}: { event: NDKEvent; children: ReactNode }) {
+}: { event: Event; children: ReactNode }) {
 	return (
 		<EventContext.Provider value={event}>{children}</EventContext.Provider>
 	);

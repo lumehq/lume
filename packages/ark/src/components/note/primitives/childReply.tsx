@@ -1,9 +1,7 @@
-import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { Event } from "@lume/types";
 import { Note } from "..";
 
-export function ChildReply({
-	event,
-}: { event: NDKEvent; rootEventId?: string }) {
+export function ChildReply({ event }: { event: Event; rootEventId?: string }) {
 	return (
 		<Note.Provider event={event}>
 			<Note.Root className="py-2">

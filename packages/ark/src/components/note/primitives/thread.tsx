@@ -21,7 +21,7 @@ export function ThreadNote({ eventId }: { eventId: string }) {
 								<div className="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
 									<User.Time time={data.created_at} />
 									<span>·</span>
-									<User.NIP05 pubkey={data.pubkey} />
+									<User.NIP05 />
 								</div>
 							</div>
 						</User.Root>

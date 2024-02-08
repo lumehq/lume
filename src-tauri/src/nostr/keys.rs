@@ -25,7 +25,7 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 }
 
 #[tauri::command]
-pub fn save_key(nsec: &str, app_handle: tauri::AppHandle) -> Result<(), ()> {
+pub fn save_key(nsec: &str, app_handle: tauri::AppHandle) -> Result<bool, bool> {
   if let Ok(nostr_secret_key) = SecretKey::from_bech32(nsec) {
     let nostr_keys = Keys::new(nostr_secret_key);
     let nostr_npub = nostr_keys.public_key().to_bech32().unwrap();
@@ -50,9 +50,9 @@ pub fn save_key(nsec: &str, app_handle: tauri::AppHandle) -> Result<(), ()> {
       .expect("Write nsec failed");
     writer.finish().expect("Save nsec failed");
 
-    Ok(())
+    Ok(true)
   } else {
-    Err(())
+    Err(false)
   }
 }
 
@@ -76,11 +76,19 @@ pub async fn update_signer(nsec: &str, nostr: State<'_, Nostr>) -> Result<(), ()
 }
 
 #[tauri::command]
-pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<bool, ()> {
+pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<String, ()> {
   let client = &nostr.client;
-  let status = client.signer().await.is_ok();
+  let user = &nostr.client_user;
 
-  Ok(status)
+  if let Ok(_) = client.signer().await {
+    if let Some(public_key) = user {
+      Ok(public_key.to_string())
+    } else {
+      Err(())
+    }
+  } else {
+    Err(())
+  }
 }
 
 #[tauri::command]

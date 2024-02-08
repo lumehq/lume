@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useMemo } from "react";
+import { PropsWithChildren, createContext, useEffect, useMemo } from "react";
 import { Ark } from "./ark";
 
 export const ArkContext = createContext<Ark>(undefined);

@@ -20,7 +20,6 @@ export function NoteThread({
 	});
 
 	const { t } = useTranslation();
-	const { addColumn } = useColumnContext();
 
 	if (!thread) return null;
 
@@ -42,13 +41,6 @@ export function NoteThread({
 					</Link>
 					<button
 						type="button"
-						onClick={async () =>
-							await addColumn({
-								kind: COL_TYPES.thread,
-								title: "Thread",
-								content: thread?.rootEventId || thread?.replyEventId,
-							})
-						}
 						className="inline-flex items-center justify-center rounded-md text-neutral-600 dark:text-neutral-400 size-6 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
 					>
 						<PinIcon className="size-4" />

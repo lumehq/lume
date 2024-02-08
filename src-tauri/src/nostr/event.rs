@@ -8,12 +8,10 @@ pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, ()> 
   let client = &nostr.client;
   let event_id;
 
-  if id.starts_with("note1") {
+  if id.starts_with("note") {
     event_id = EventId::from_bech32(id).unwrap();
-  } else if id.starts_with("nevent1") {
-    event_id = EventId::from_bech32(id).unwrap();
-  } else if id.starts_with("naddr1") {
-    event_id = EventId::from_bech32(id).unwrap();
+  } else if id.starts_with("nevent") {
+    event_id = Nip19Event::from_bech32(id).unwrap().event_id;
   } else {
     event_id = EventId::from_hex(id).unwrap();
   }

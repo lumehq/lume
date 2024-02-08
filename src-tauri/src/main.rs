@@ -23,6 +23,7 @@ use tauri_plugin_autostart::MacosLauncher;
 
 pub struct Nostr {
   pub client: Arc<Client>,
+  pub client_user: Option<XOnlyPublicKey>,
   pub contact_list: Option<Vec<Contact>>,
 }
 
@@ -90,16 +91,21 @@ fn main() {
         client.connect().await;
 
         // Prepare contact list
+        let mut user = None;
         let mut contact_list = None;
 
         // Run somethings if account existed
         if let Some(key) = stored_nsec_key {
           let secret_key = SecretKey::from_bech32(key).expect("Get secret key failed");
           let keys = Keys::new(secret_key);
+          let public_key = keys.public_key();
           let signer = ClientSigner::Keys(keys);
 
           // Update client's signer
           client.set_signer(Some(signer)).await;
+
+          // Update user
+          user = Some(public_key);
 
           // Get contact list
           contact_list = Some(
@@ -113,6 +119,7 @@ fn main() {
         // Init global state
         handle.manage(Nostr {
           client: client.into(),
+          client_user: user.into(),
           contact_list: contact_list.into(),
         })
       });
@@ -152,9 +159,6 @@ fn main() {
       nostr::event::repost,
       nostr::event::upvote,
       nostr::event::downvote,
-      commands::secret::secure_save,
-      commands::secret::secure_load,
-      commands::secret::secure_remove,
       commands::folder::show_in_folder,
       commands::opg::fetch_opg,
     ])

@@ -4,7 +4,7 @@ import { useUserContext } from "./provider";
 export function UserAbout({ className }: { className?: string }) {
 	const user = useUserContext();
 
-	if (!user) {
+	if (!user.profile) {
 		return (
 			<div className="flex flex-col gap-1">
 				<div

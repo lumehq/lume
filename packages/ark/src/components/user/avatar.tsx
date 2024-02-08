@@ -18,7 +18,7 @@ export function UserAvatar({ className }: { className?: string }) {
 		[user],
 	);
 
-	if (!user) {
+	if (!user.profile) {
 		return (
 			<div className="shrink-0">
 				<div

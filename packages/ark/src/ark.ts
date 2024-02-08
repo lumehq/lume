@@ -5,7 +5,18 @@ export class Ark {
 	public account: CurrentAccount;
 
 	constructor() {
-		this.account = null;
+		this.account = { pubkey: "" };
+	}
+
+	public async verify_signer() {
+		try {
+			const cmd: string = await invoke("verify_signer");
+			if (!cmd) return false;
+			this.account.pubkey = cmd;
+			return true;
+		} catch (e) {
+			console.error(String(e));
+		}
 	}
 
 	public async event_to_bech32(id: string, relays: string[]) {
@@ -15,8 +26,8 @@ export class Ark {
 				relays,
 			});
 			return cmd;
-		} catch {
-			console.error("get nevent id failed");
+		} catch (e) {
+			console.error(String(e));
 		}
 	}
 
@@ -26,7 +37,70 @@ export class Ark {
 			const event = JSON.parse(cmd) as Event;
 			return event;
 		} catch (e) {
-			console.error("failed to get event", id);
+			console.error(String(e));
+		}
+	}
+
+	public async get_text_events(limit: number, until?: number) {
+		try {
+			const cmd: Event[] = await invoke("get_text_events", { limit, until });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async publish(content: string) {
+		try {
+			const cmd: string = await invoke("publish", { content });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async reply_to(content: string, tags: string[]) {
+		try {
+			const cmd: string = await invoke("reply_to", { content, tags });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async repost(id: string, pubkey: string) {
+		try {
+			const cmd: string = await invoke("repost", { id, pubkey });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async upvote(id: string, pubkey: string) {
+		try {
+			const cmd: string = await invoke("upvote", { id, pubkey });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async downvote(id: string, pubkey: string) {
+		try {
+			const cmd: string = await invoke("downvote", { id, pubkey });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async get_event_thread(id: string) {
+		try {
+			const cmd: Event[] = await invoke("get_event_thread", { id });
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
 		}
 	}
 
@@ -72,7 +146,7 @@ export class Ark {
 			const cmd: Metadata = await invoke("get_profile", { id });
 			return cmd;
 		} catch (e) {
-			console.error("failed to get profile", id);
+			console.error(String(e));
 		}
 	}
 
@@ -83,8 +157,8 @@ export class Ark {
 				relays,
 			});
 			return cmd;
-		} catch {
-			console.error("get nprofile id failed");
+		} catch (e) {
+			console.error(String(e));
 		}
 	}
 }

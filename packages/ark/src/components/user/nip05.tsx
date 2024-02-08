@@ -16,7 +16,7 @@ export function UserNip05({ className }: { className?: string }) {
 		enabled: !!user,
 	});
 
-	if (!user) {
+	if (!user.profile) {
 		return (
 			<div
 				className={cn(

@@ -36,10 +36,7 @@ export function NoteUser({
 							<div className="flex flex-col gap-2">
 								<div>
 									<User.Name className="font-semibold leading-tight" />
-									<User.NIP05
-										pubkey={event.pubkey}
-										className="text-neutral-600 dark:text-neutral-400"
-									/>
+									<User.NIP05 className="text-neutral-600 dark:text-neutral-400" />
 								</div>
 								<User.About className="line-clamp-3" />
 								<Link

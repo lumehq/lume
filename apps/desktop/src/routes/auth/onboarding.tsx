@@ -69,7 +69,7 @@ export function OnboardingScreen() {
 			setSettings((prev) => ({ ...prev, notification: permissionGranted }));
 
 			// get other settings
-			const data = await storage.getAllSettings();
+			const data = await storage.settings();
 			for (const item of data) {
 				if (item.key === "lowPower")
 					setSettings((prev) => ({

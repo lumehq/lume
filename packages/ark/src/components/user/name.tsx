@@ -4,7 +4,7 @@ import { useUserContext } from "./provider";
 export function UserName({ className }: { className?: string }) {
 	const user = useUserContext();
 
-	if (!user) {
+	if (!user.profile) {
 		return (
 			<div
 				className={cn(

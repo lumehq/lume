@@ -1,15 +1,11 @@
 import { PinIcon } from "@lume/icons";
-import { COL_TYPES } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useTranslation } from "react-i18next";
-import { useColumnContext } from "../../column/provider";
 import { useNoteContext } from "../provider";
 
 export function NotePin() {
 	const event = useNoteContext();
-
 	const { t } = useTranslation();
-	const { addColumn } = useColumnContext();
 
 	return (
 		<Tooltip.Provider>
@@ -17,13 +13,6 @@ export function NotePin() {
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={async () =>
-							await addColumn({
-								kind: COL_TYPES.thread,
-								title: "Thread",
-								content: event.id,
-							})
-						}
 						className="inline-flex items-center justify-center gap-2 pl-2 pr-3 text-sm font-medium rounded-full h-7 w-max bg-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:bg-neutral-900"
 					>
 						<PinIcon className="size-4" />

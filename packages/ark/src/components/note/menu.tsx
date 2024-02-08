@@ -5,7 +5,6 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useArk } from "../../hooks/useArk";
-import { useColumnContext } from "../column/provider";
 import { useNoteContext } from "./provider";
 
 export function NoteMenu() {
@@ -14,7 +13,6 @@ export function NoteMenu() {
 	const navigate = useNavigate();
 
 	const { t } = useTranslation();
-	const { addColumn } = useColumnContext();
 
 	const copyID = async () => {
 		await writeText(await ark.event_to_bech32(event.id, [""]));
@@ -93,13 +91,6 @@ export function NoteMenu() {
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
-							onClick={() =>
-								addColumn({
-									kind: COL_TYPES.user,
-									title: "User",
-									content: event.pubkey,
-								})
-							}
 							className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 						>
 							{t("note.menu.pinAuthor")}

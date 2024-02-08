@@ -1,11 +1,11 @@
+import { Event } from "@lume/types";
 import { cn } from "@lume/utils";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { Note } from "..";
 
 export function TextNote({
 	event,
 	className,
-}: { event: NDKEvent; className?: string }) {
+}: { event: Event; className?: string }) {
 	return (
 		<Note.Provider event={event}>
 			<Note.Root

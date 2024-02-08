@@ -1,5 +1,6 @@
 import { RepostNote, TextNote, useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
+import { Event, Kind } from "@lume/types";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
@@ -30,18 +31,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 				signal: AbortSignal;
 				pageParam: number;
 			}) => {
-				if (!ark.account.contacts.length) return [];
-
-				const events = await ark.getInfiniteEvents({
-					filter: {
-						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: ark.account.contacts,
-					},
-					limit: FETCH_LIMIT,
-					pageParam,
-					signal,
-				});
-
+				const events = await ark.get_text_events(FETCH_LIMIT);
 				return events;
 			},
 			getNextPageParam: (lastPage) => {
@@ -54,11 +44,11 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			refetchOnMount: false,
 		});
 
-	const renderItem = (event: NDKEvent) => {
+	const renderItem = (event: Event) => {
 		switch (event.kind) {
-			case NDKKind.Text:
+			case Kind.Text:
 				return <TextNote key={event.id} event={event} className="mt-3" />;
-			case NDKKind.Repost:
+			case Kind.Repost:
 				return <RepostNote key={event.id} event={event} className="mt-3" />;
 			default:
 				return <TextNote key={event.id} event={event} className="mt-3" />;
@@ -81,6 +71,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 		};
 	}, []);
 
+	/*
 	if (!ark.account.contacts.length) {
 		return (
 			<div className="px-3 mt-3">
@@ -95,6 +86,7 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			</div>
 		);
 	}
+	*/
 
 	return (
 		<div className="w-full h-full">

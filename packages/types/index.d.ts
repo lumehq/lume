@@ -41,9 +41,10 @@ export interface Metadata {
 }
 
 export interface CurrentAccount {
-	npub: string;
-	contacts: string[];
-	interests: Interests;
+	pubkey: string;
+	npub?: string;
+	contacts?: string[];
+	interests?: Interests;
 }
 
 export interface Interests {

@@ -4,6 +4,7 @@ import { useStorage } from "@lume/storage";
 import { NDKCacheUserProfile } from "@lume/types";
 import { COL_TYPES, cn, editorValueAtom } from "@lume/utils";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
+import { invoke } from "@tauri-apps/api/core";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -187,8 +188,6 @@ const Element = (props) => {
 };
 
 export function EditorForm() {
-	const ark = useArk();
-	const storage = useStorage();
 	const ref = useRef<HTMLDivElement | null>();
 
 	const [editorValue, setEditorValue] = useAtom(editorValueAtom);
@@ -202,7 +201,6 @@ export function EditorForm() {
 	);
 
 	const { t } = useTranslation();
-	const { addColumn } = useColumnContext();
 
 	const filters = contacts
 		?.filter((c) => c?.name?.toLowerCase().startsWith(search.toLowerCase()))
@@ -242,32 +240,24 @@ export function EditorForm() {
 		try {
 			setLoading(true);
 
-			const event = new NDKEvent(ark.ndk);
-			event.kind = NDKKind.Text;
-			event.content = serialize(editor.children);
-
-			const publish = await event.publish();
+			const content = serialize(editor.children);
+			const publish = await invoke("publish", { content });
 
 			if (publish) {
+				console.log(publish);
 				toast.success(t("editor.successMessage"));
-
-				// add current post as column thread
-				addColumn({
-					kind: COL_TYPES.thread,
-					content: event.id,
-					title: "Thread",
-				});
-
-				setLoading(false);
 
 				return reset();
 			}
+
+			setLoading(false);
 		} catch (e) {
 			setLoading(false);
 			toast.error(String(e));
 		}
 	};
 
+	/*
 	useEffect(() => {
 		async function loadContacts() {
 			const res = await storage.getAllCacheUsers();
@@ -276,6 +266,7 @@ export function EditorForm() {
 
 		loadContacts();
 	}, []);
+	*/
 
 	useEffect(() => {
 		if (target && filters.length > 0) {

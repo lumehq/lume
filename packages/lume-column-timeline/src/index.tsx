@@ -1,17 +1,15 @@
-import { Column, useArk } from "@lume/ark";
+import { Column } from "@lume/ark";
 import { IColumn } from "@lume/types";
 import { EventRoute, SuggestRoute, UserRoute } from "@lume/ui";
-import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
 import { HomeRoute } from "./home";
 
 export function Timeline({ column }: { column: IColumn }) {
 	const colKey = `timeline-${column.id}`;
-	const ark = useArk();
-	const queryClient = useQueryClient();
-	const since = useRef(Math.floor(Date.now() / 1000));
+	// const ark = useArk();
+	// const queryClient = useQueryClient();
+	// const since = useRef(Math.floor(Date.now() / 1000));
 
+	/*
 	const refresh = async (events: NDKEvent[]) => {
 		const uniqEvents = new Set(events);
 		await queryClient.setQueryData(
@@ -22,11 +20,12 @@ export function Timeline({ column }: { column: IColumn }) {
 			}),
 		);
 	};
+	*/
 
 	return (
 		<Column.Root>
-			<Column.Header id={column.id} queryKey={[colKey]} title="Timeline" />
-			{ark.account.contacts.length ? (
+			{/*<Column.Header id={column.id} queryKey={[colKey]} title="Timeline" />*/}
+			{/*ark.account.contacts.length ? (
 				<Column.Live
 					filter={{
 						kinds: [NDKKind.Text, NDKKind.Repost],
@@ -35,15 +34,17 @@ export function Timeline({ column }: { column: IColumn }) {
 					}}
 					onClick={refresh}
 				/>
-			) : null}
+				) : null*/}
 			<Column.Content>
 				<Column.Route path="/" element={<HomeRoute colKey={colKey} />} />
-				<Column.Route path="/events/:id" element={<EventRoute />} />
-				<Column.Route path="/users/:id" element={<UserRoute />} />
-				<Column.Route
-					path="/suggest"
-					element={<SuggestRoute queryKey={[colKey]} />}
-				/>
+				{/*
+					<Column.Route path="/events/:id" element={<EventRoute />} />
+					<Column.Route path="/users/:id" element={<UserRoute />} />
+					<Column.Route
+						path="/suggest"
+						element={<SuggestRoute queryKey={[colKey]} />}
+					/>
+				*/}
 			</Column.Content>
 		</Column.Root>
 	);

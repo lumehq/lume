@@ -1,3 +1,4 @@
+import { useStorage } from "@lume/storage";
 import { Kind } from "@lume/types";
 import {
 	AUDIOS,
@@ -31,6 +32,7 @@ export function NoteContent({
 }: {
 	className?: string;
 }) {
+	const storage = useStorage();
 	const event = useNoteContext();
 
 	const [content, setContent] = useState(event.content);
@@ -221,7 +223,7 @@ export function NoteContent({
 		}
 	};
 
-	if (event.kind !== NDKKind.Text) {
+	if (event.kind !== Kind.Text) {
 		return <NIP89 className={className} />;
 	}
 

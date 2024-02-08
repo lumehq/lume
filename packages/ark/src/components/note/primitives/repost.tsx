@@ -1,6 +1,6 @@
 import { RepostIcon } from "@lume/icons";
+import { Event } from "@lume/types";
 import { cn } from "@lume/utils";
-import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Note } from "..";
@@ -10,7 +10,7 @@ import { User } from "../../user";
 export function RepostNote({
 	event,
 	className,
-}: { event: NDKEvent; className?: string }) {
+}: { event: Event; className?: string }) {
 	const ark = useArk();
 
 	const { t } = useTranslation();
@@ -23,11 +23,11 @@ export function RepostNote({
 		queryFn: async () => {
 			try {
 				if (event.content.length > 50) {
-					const embed = JSON.parse(event.content) as NostrEvent;
-					return new NDKEvent(ark.ndk, embed);
+					const embed = JSON.parse(event.content) as Event;
+					return embed;
 				}
 				const id = event.tags.find((el) => el[0] === "e")[1];
-				return await ark.getEventById(id);
+				return await ark.get_event(id);
 			} catch {
 				throw new Error("Failed to get repost event");
 			}

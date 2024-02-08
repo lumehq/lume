@@ -1,7 +1,6 @@
-import { useArk } from "@lume/ark";
 import { EyeOffIcon, EyeOnIcon, LoaderIcon } from "@lume/icons";
 import { useStorage } from "@lume/storage";
-import { getPublicKey, nip19 } from "nostr-tools";
+import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Trans, useTranslation } from "react-i18next";
@@ -9,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LoginWithKey() {
-	const ark = useArk();
 	const storage = useStorage();
 	const navigate = useNavigate();
 
@@ -31,15 +29,15 @@ export function LoginWithKey() {
 
 			setLoading(true);
 
-			const privkey = nip19.decode(data.nsec).data as string;
-			const pubkey = getPublicKey(privkey);
+			// trigger save key
+			const save = await invoke("save_key", { nsec: data.nsec });
 
-			const account = await storage.createAccount({
-				pubkey: pubkey,
-				privkey: privkey,
-			});
-			ark.account = account;
+			if (!save) {
+				setLoading(false);
+				toast.error("Save account keys failed, please try again later.");
+			}
 
+			// redirect to next step
 			return navigate("/auth/onboarding", { replace: true });
 		} catch (e) {
 			setLoading(false);

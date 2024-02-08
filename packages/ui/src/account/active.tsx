@@ -29,7 +29,7 @@ export function ActiveAccount() {
 				<div className="relative">
 					<Avatar.Root>
 						<Avatar.Image
-							src={user?.picture || user?.image}
+							src={user?.picture}
 							alt={ark.account.pubkey}
 							loading="lazy"
 							decoding="async"

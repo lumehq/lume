@@ -28,7 +28,12 @@ export function CreateAccountKeys() {
 			setLoading(true);
 
 			// trigger save key
-			await invoke("save_key", { nsec: key });
+			const save = await invoke("save_key", { nsec: key });
+
+			if (!save) {
+				setLoading(false);
+				toast.error("Save account keys failed, please try again later.");
+			}
 
 			// update state
 			setLoading(false);
