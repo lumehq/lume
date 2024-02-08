@@ -4,8 +4,8 @@ import { invoke } from "@tauri-apps/api/core";
 export class Ark {
 	public account: CurrentAccount;
 
-	constructor(account: CurrentAccount) {
-		this.account = account;
+	constructor() {
+		this.account = null;
 	}
 
 	public async event_to_bech32(id: string, relays: string[]) {
@@ -67,12 +67,12 @@ export class Ark {
 		};
 	}
 
-	public async get_metadata(id: string) {
+	public async get_profile(id: string) {
 		try {
-			const cmd: Metadata = await invoke("get_metadata", { id });
+			const cmd: Metadata = await invoke("get_profile", { id });
 			return cmd;
 		} catch (e) {
-			console.error("failed to get metadata", id);
+			console.error("failed to get profile", id);
 		}
 	}
 

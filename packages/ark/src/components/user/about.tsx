@@ -31,7 +31,7 @@ export function UserAbout({ className }: { className?: string }) {
 
 	return (
 		<div className={cn("select-text break-p", className)}>
-			{user.about?.trim() || user.bio?.trim() || "No bio"}
+			{user.profile.about?.trim() || "No bio"}
 		</div>
 	);
 }

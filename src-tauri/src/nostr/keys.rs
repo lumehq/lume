@@ -1,7 +1,8 @@
 use crate::Nostr;
+use keyring::Entry;
 use nostr_sdk::prelude::*;
-use std::str::FromStr;
-use tauri::State;
+use std::{fs::File, io::Write, str::FromStr};
+use tauri::{Manager, State};
 
 #[derive(serde::Serialize)]
 pub struct CreateKeysResponse {
@@ -24,14 +25,46 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 }
 
 #[tauri::command]
-pub fn get_public_key(nsec: String) -> Result<String, ()> {
+pub fn save_key(nsec: &str, app_handle: tauri::AppHandle) -> Result<(), ()> {
+  if let Ok(nostr_secret_key) = SecretKey::from_bech32(nsec) {
+    let nostr_keys = Keys::new(nostr_secret_key);
+    let nostr_npub = nostr_keys.public_key().to_bech32().unwrap();
+
+    let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
+    let secret_key = keyring_entry.get_password().unwrap();
+    let app_key = age::x25519::Identity::from_str(&secret_key).unwrap();
+    let app_pubkey = app_key.to_public();
+
+    let config_dir = app_handle.path().app_config_dir().unwrap();
+    let encryptor =
+      age::Encryptor::with_recipients(vec![Box::new(app_pubkey)]).expect("we provided a recipient");
+
+    let file_ext = ".nsec".to_owned();
+    let file_path = nostr_npub + &file_ext;
+    let mut file = File::create(config_dir.join(file_path)).unwrap();
+    let mut writer = encryptor
+      .wrap_output(&mut file)
+      .expect("Init writer failed");
+    writer
+      .write_all(nsec.as_bytes())
+      .expect("Write nsec failed");
+    writer.finish().expect("Save nsec failed");
+
+    Ok(())
+  } else {
+    Err(())
+  }
+}
+
+#[tauri::command]
+pub fn get_public_key(nsec: &str) -> Result<String, ()> {
   let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
   Ok(keys.public_key().to_bech32().expect("secret key failed"))
 }
 
 #[tauri::command]
-pub async fn update_signer(nsec: String, nostr: State<'_, Nostr>) -> Result<(), ()> {
+pub async fn update_signer(nsec: &str, nostr: State<'_, Nostr>) -> Result<(), ()> {
   let client = &nostr.client;
   let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);

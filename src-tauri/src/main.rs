@@ -6,8 +6,16 @@
 pub mod commands;
 pub mod nostr;
 
+use age::secrecy::ExposeSecret;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
+use std::error::Error;
+use std::fs::File;
+use std::io::{BufReader, Read};
+use std::iter;
+use std::path::Path;
+use std::path::PathBuf;
+use std::str::FromStr;
 use std::sync::Arc;
 use std::time::Duration;
 use tauri::Manager;
@@ -24,6 +32,39 @@ fn main() {
     .setup(|app| {
       let handle = app.handle().clone();
       let config_dir = handle.path().app_config_dir().unwrap();
+
+      let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
+      let mut stored_nsec_key = None;
+
+      if let Ok(key) = keyring_entry.get_password() {
+        let app_key = age::x25519::Identity::from_str(&key.to_string()).unwrap();
+        if let Ok(nsec_paths) = get_nsec_paths(config_dir.as_path()) {
+          let last_nsec_path = nsec_paths.last();
+          if let Some(nsec_path) = last_nsec_path {
+            let file = File::open(nsec_path).expect("Open nsec file failed");
+            let file_buf = BufReader::new(file);
+            let decryptor = match age::Decryptor::new_buffered(file_buf).expect("Decryptor failed")
+            {
+              age::Decryptor::Recipients(d) => d,
+              _ => unreachable!(),
+            };
+
+            let mut decrypted = vec![];
+            let mut reader = decryptor
+              .decrypt(iter::once(&app_key as &dyn age::Identity))
+              .expect("Decrypt nsec file failed");
+            reader
+              .read_to_end(&mut decrypted)
+              .expect("Read secret key failed");
+
+            stored_nsec_key = Some(String::from_utf8(decrypted).expect("Not valid"))
+          }
+        }
+      } else {
+        let app_key = age::x25519::Identity::generate().to_string();
+        let app_secret = app_key.expose_secret();
+        let _ = keyring_entry.set_password(app_secret);
+      }
 
       tauri::async_runtime::spawn(async move {
         // Create nostr database connection
@@ -48,13 +89,12 @@ fn main() {
         // Connect
         client.connect().await;
 
-        // Get stored account
-        let entry = Entry::new("Lume", "Account").unwrap();
+        // Prepare contact list
         let mut contact_list = None;
 
         // Run somethings if account existed
-        if let Ok(key) = entry.get_password() {
-          let secret_key = SecretKey::from_bech32(key).unwrap();
+        if let Some(key) = stored_nsec_key {
+          let secret_key = SecretKey::from_bech32(key).expect("Get secret key failed");
           let keys = Keys::new(secret_key);
           let signer = ClientSigner::Keys(keys);
 
@@ -97,6 +137,7 @@ fn main() {
     ))
     .invoke_handler(tauri::generate_handler![
       nostr::keys::create_keys,
+      nostr::keys::save_key,
       nostr::keys::get_public_key,
       nostr::keys::update_signer,
       nostr::keys::verify_signer,
@@ -119,4 +160,20 @@ fn main() {
     ])
     .run(ctx)
     .expect("error while running tauri application");
+}
+
+fn get_nsec_paths(dir: &Path) -> Result<Vec<PathBuf>, Box<dyn Error>> {
+  let paths = std::fs::read_dir(dir)?
+    .filter_map(|res| res.ok())
+    .map(|dir_entry| dir_entry.path())
+    .filter_map(|path| {
+      if path.extension().map_or(false, |ext| ext == "nsec") {
+        Some(path)
+      } else {
+        None
+      }
+    })
+    .collect::<Vec<_>>();
+
+  Ok(paths)
 }

@@ -1,6 +1,7 @@
 {
 	"name": "@lume/types",
 	"version": "0.0.0",
+	"main": "./index.d.ts",
 	"types": "./index.d.ts",
 	"private": true,
 	"license": "MIT",

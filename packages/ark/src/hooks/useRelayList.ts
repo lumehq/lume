@@ -1,6 +1,4 @@
-import { NDKKind, NDKTag } from "@nostr-dev-kit/ndk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { normalizeRelayUrl } from "nostr-fetch";
 import { useArk } from "./useArk";
 
 export function useRelaylist() {

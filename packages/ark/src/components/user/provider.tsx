@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ReactNode, createContext, useContext } from "react";
 import { useArk } from "../../hooks/useArk";
 
-const UserContext = createContext<Metadata>(null);
+const UserContext = createContext<{ pubkey: string; profile: Metadata }>(null);
 
 export function UserProvider({
 	pubkey,
@@ -11,12 +11,12 @@ export function UserProvider({
 	embed,
 }: { pubkey: string; children: ReactNode; embed?: string }) {
 	const ark = useArk();
-	const { data: user } = useQuery({
+	const { data: profile } = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
 			if (embed) return JSON.parse(embed) as Metadata;
 
-			const profile = await ark.get_metadata(pubkey);
+			const profile = await ark.get_profile(pubkey);
 
 			if (!profile)
 				throw new Error(
@@ -32,7 +32,11 @@ export function UserProvider({
 		retry: 2,
 	});
 
-	return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+	return (
+		<UserContext.Provider value={{ pubkey, profile }}>
+			{children}
+		</UserContext.Provider>
+	);
 }
 
 export function useUserContext() {

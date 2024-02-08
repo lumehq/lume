@@ -46,7 +46,7 @@ export function UserAvatar({ className }: { className?: string }) {
 				/>
 			) : (
 				<Avatar.Image
-					src={user.image}
+					src={user.profile.picture}
 					alt={user.pubkey}
 					loading="eager"
 					decoding="async"

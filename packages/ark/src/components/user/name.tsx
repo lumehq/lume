@@ -17,7 +17,7 @@ export function UserName({ className }: { className?: string }) {
 
 	return (
 		<div className={cn("max-w-[12rem] truncate", className)}>
-			{user.displayName || user.name || "Anon"}
+			{user.profile.display_name || user.profile.name || "Anon"}
 		</div>
 	);
 }

@@ -1,8 +1,5 @@
-import { useArk } from "@lume/ark";
-import { useStorage } from "@lume/storage";
 import { downloadDir } from "@tauri-apps/api/path";
 import { message, save } from "@tauri-apps/plugin-dialog";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { useRouteError } from "react-router-dom";
 
@@ -12,8 +9,6 @@ interface RouteError {
 }
 
 export function ErrorScreen() {
-	const ark = useArk();
-	const storage = useStorage();
 	const error = useRouteError() as RouteError;
 
 	const restart = async () => {
@@ -27,6 +22,7 @@ export function ErrorScreen() {
 			const filePath = await save({
 				defaultPath: `${downloadPath}/${fileName}`,
 			});
+			/*
 			const nsec = await storage.loadPrivkey(ark.account.pubkey);
 
 			if (filePath) {
@@ -42,6 +38,7 @@ export function ErrorScreen() {
 					);
 				}
 			} // else { user cancel action }
+			*/
 		} catch (e) {
 			await message(e, {
 				title: "Cannot download account keys",

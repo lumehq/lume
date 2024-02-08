@@ -1,26 +1,17 @@
 import { VerifiedIcon } from "@lume/icons";
 import { cn, displayNpub } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useArk } from "../../hooks/useArk";
 import { useUserContext } from "./provider";
 
-export function UserNip05({
-	pubkey,
-	className,
-}: { pubkey: string; className?: string }) {
-	const ark = useArk();
+export function UserNip05({ className }: { className?: string }) {
 	const user = useUserContext();
 
 	const { isLoading, data: verified } = useQuery({
-		queryKey: ["nip05", user?.nip05],
+		queryKey: ["nip05", user?.profile.nip05],
 		queryFn: async ({ signal }: { signal: AbortSignal }) => {
 			if (!user) return false;
-			if (!user.nip05) return false;
-			return ark.validateNIP05({
-				pubkey,
-				nip05: user.nip05,
-				signal,
-			});
+			if (!user.profile.nip05) return false;
+			return false;
 		},
 		enabled: !!user,
 	});
@@ -39,11 +30,11 @@ export function UserNip05({
 	return (
 		<div className="inline-flex items-center gap-1">
 			<p className={cn("text-sm", className)}>
-				{!user?.nip05
-					? displayNpub(pubkey, 16)
-					: user?.nip05?.startsWith("_@")
-					  ? user?.nip05?.replace("_@", "")
-					  : user?.nip05}
+				{!user?.profile.nip05
+					? displayNpub(user.pubkey, 16)
+					: user?.profile.nip05?.startsWith("_@")
+					  ? user?.profile.nip05?.replace("_@", "")
+					  : user?.profile.nip05}
 			</p>
 			{!isLoading && verified ? (
 				<VerifiedIcon className="size-4 text-teal-500" />

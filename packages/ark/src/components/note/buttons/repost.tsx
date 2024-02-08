@@ -3,7 +3,6 @@ import { cn, editorAtom, editorValueAtom } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useSetAtom } from "jotai";
-import { nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";

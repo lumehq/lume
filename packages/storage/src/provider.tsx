@@ -1,18 +1,15 @@
 import { locale, platform } from "@tauri-apps/plugin-os";
-import Database from "@tauri-apps/plugin-sql";
+import { Store } from "@tauri-apps/plugin-store";
 import { PropsWithChildren, createContext, useContext } from "react";
 import { LumeStorage } from "./storage";
 
 const StorageContext = createContext<LumeStorage>(null);
 
-const sqliteAdapter = await Database.load("sqlite:lume_v3.db");
+const store = new Store("lume.data");
 const platformName = await platform();
 const osLocale = await locale();
 
-const db = new LumeStorage(sqliteAdapter, platformName, osLocale);
-await db.init();
-
-if (db.settings.depot) await db.launchDepot();
+const db = new LumeStorage(store, platformName, osLocale);
 
 export const StorageProvider = ({ children }: PropsWithChildren<object>) => {
 	return (

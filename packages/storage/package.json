@@ -8,7 +8,7 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"nostr-tools": "~1.17.0",
+		"@tauri-apps/plugin-store": "2.0.0-beta.0",
 		"react": "^18.2.0"
 	},
 	"devDependencies": {

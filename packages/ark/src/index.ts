@@ -1,5 +1,4 @@
 export * from "./ark";
-export * from "./context";
 export * from "./provider";
 export * from "./hooks/useEvent";
 export * from "./hooks/useArk";

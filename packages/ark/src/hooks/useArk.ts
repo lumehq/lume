@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { LumeContext } from "../context";
+import { ArkContext } from "../provider";
 
 export const useArk = () => {
-	const context = useContext(LumeContext);
+	const context = useContext(ArkContext);
 	if (context === undefined) {
 		throw new Error("Please import Ark Provider to use useArk() hook");
 	}

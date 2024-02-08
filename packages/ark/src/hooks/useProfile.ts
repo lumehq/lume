@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useArk } from "./useArk";
 
 export function useProfile(pubkey: string) {
@@ -10,7 +10,7 @@ export function useProfile(pubkey: string) {
 	} = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
-			const profile = await ark.get_metadata(pubkey);
+			const profile = await ark.get_profile(pubkey);
 			if (!profile)
 				throw new Error(
 					`Cannot get metadata for ${pubkey}, will be retry after 10 seconds`,

@@ -38,6 +38,7 @@ tauri-plugin-window-state = "2.0.0-beta"
 tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
 webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
+age = "0.10.0"
 
 [features]
 # by default Tauri runs in production mode
