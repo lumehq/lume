@@ -1,9 +1,9 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { HomeRoute } from "./home";
 import { EventRoute, UserRoute } from "@lume/ui";
 
-export function Thread({ column }: { column: IColumn }) {
+export function Thread({ column }: { column: LumeColumn }) {
 	return (
 		<Column.Root>
 			<Column.Header id={column.id} title={column.title} />

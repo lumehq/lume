@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useArk } from "./useArk";
+import { useArk } from "../provider";
 
 export function useProfile(pubkey: string) {
 	const ark = useArk();

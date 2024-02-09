@@ -1,9 +1,9 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { HomeRoute } from "./home";
 
-export function Hashtag({ column }: { column: IColumn }) {
+export function Hashtag({ column }: { column: LumeColumn }) {
 	const colKey = `hashtag-${column.id}`;
 	const hashtag = column.content.replace("#", "");
 

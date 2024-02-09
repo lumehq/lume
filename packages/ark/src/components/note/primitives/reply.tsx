@@ -1,5 +1,5 @@
 import { NavArrowDownIcon } from "@lume/icons";
-import { NDKEventWithReplies } from "@lume/types";
+import { EventWithReplies } from "@lume/types";
 import { cn } from "@lume/utils";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { ChildReply } from "./childReply";
 export function Reply({
 	event,
 }: {
-	event: NDKEventWithReplies;
+	event: EventWithReplies;
 }) {
 	const [t] = useTranslation();
 	const [open, setOpen] = useState(false);

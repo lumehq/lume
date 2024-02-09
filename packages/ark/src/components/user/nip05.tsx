@@ -8,7 +8,7 @@ export function UserNip05({ className }: { className?: string }) {
 
 	const { isLoading, data: verified } = useQuery({
 		queryKey: ["nip05", user?.profile.nip05],
-		queryFn: async ({ signal }: { signal: AbortSignal }) => {
+		queryFn: async () => {
 			if (!user) return false;
 			if (!user.profile.nip05) return false;
 			return false;

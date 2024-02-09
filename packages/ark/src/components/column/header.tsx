@@ -5,40 +5,25 @@ import {
 	RefreshIcon,
 	TrashIcon,
 } from "@lume/icons";
+import { useColumn } from "@lume/storage";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { InterestModal } from "./interestModal";
 import { useColumnContext } from "./provider";
 
 export function ColumnHeader({
-	id,
-	title,
 	queryKey,
 }: {
-	id: number;
-	title: string;
 	queryKey?: string[];
 }) {
-	const queryClient = useQueryClient();
-
 	const { t } = useTranslation();
-	const { moveColumn, removeColumn } = useColumnContext();
+	const { move, remove } = useColumn();
+
+	const column = useColumnContext();
+	const queryClient = useQueryClient();
 
 	const refresh = async () => {
 		if (queryKey) await queryClient.refetchQueries({ queryKey });
-	};
-
-	const moveLeft = async () => {
-		moveColumn(id, "left");
-	};
-
-	const moveRight = async () => {
-		moveColumn(id, "right");
-	};
-
-	const deleteWidget = async () => {
-		await removeColumn(id);
 	};
 
 	return (
@@ -46,7 +31,7 @@ export function ColumnHeader({
 			<div className="flex items-center justify-center gap-2 px-3 w-full border-b h-11 shrink-0 border-neutral-100 dark:border-neutral-900">
 				<DropdownMenu.Trigger asChild>
 					<div className="inline-flex items-center gap-1.5">
-						<div className="text-[13px] font-medium">{title}</div>
+						<div className="text-[13px] font-medium">{column.title}</div>
 						<ChevronDownIcon className="size-5" />
 					</div>
 				</DropdownMenu.Trigger>
@@ -65,18 +50,10 @@ export function ColumnHeader({
 								{t("global.refresh")}
 							</button>
 						</DropdownMenu.Item>
-						{queryKey?.[0] === "foryou-9998" ? (
-							<DropdownMenu.Item asChild>
-								<InterestModal
-									queryKey={queryKey}
-									className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
-								/>
-							</DropdownMenu.Item>
-						) : null}
 						<DropdownMenu.Item asChild>
 							<button
 								type="button"
-								onClick={moveLeft}
+								onClick={() => move(column.id, "left")}
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 							>
 								<MoveLeftIcon className="size-4" />
@@ -86,7 +63,7 @@ export function ColumnHeader({
 						<DropdownMenu.Item asChild>
 							<button
 								type="button"
-								onClick={moveRight}
+								onClick={() => move(column.id, "right")}
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium rounded-lg h-9 text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
 							>
 								<MoveRightIcon className="size-4" />
@@ -97,7 +74,7 @@ export function ColumnHeader({
 						<DropdownMenu.Item asChild>
 							<button
 								type="button"
-								onClick={deleteWidget}
+								onClick={() => remove(column.id)}
 								className="inline-flex items-center gap-3 px-3 text-sm font-medium text-red-500 rounded-lg h-9 hover:bg-red-500 hover:text-red-50 focus:outline-none"
 							>
 								<TrashIcon className="size-4" />

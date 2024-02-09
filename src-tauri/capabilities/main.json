@@ -19,6 +19,9 @@
 		"notification:default",
 		"os:allow-locale",
 		"os:allow-platform",
+		"updater:allow-check",
+		"updater:default",
+		"window:allow-start-dragging",
 		{
 			"identifier": "http:default",
 			"allow": [

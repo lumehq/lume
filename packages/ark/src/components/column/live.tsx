@@ -1,7 +1,5 @@
 import { ArrowUpIcon } from "@lume/icons";
-import { NDKEvent, NDKFilter } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
-import { useArk } from "../../hooks/useArk";
 
 export function ColumnLiveWidget({
 	filter,

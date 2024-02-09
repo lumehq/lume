@@ -19,11 +19,11 @@ export default function App() {
 		<I18nextProvider i18n={i18n} defaultNS={"translation"}>
 			<QueryClientProvider client={queryClient}>
 				<Toaster position="top-center" theme="system" closeButton />
-				<StorageProvider>
-					<ArkProvider>
+				<ArkProvider>
+					<StorageProvider>
 						<Router />
-					</ArkProvider>
-				</StorageProvider>
+					</StorageProvider>
+				</ArkProvider>
 			</QueryClientProvider>
 		</I18nextProvider>
 	);

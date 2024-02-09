@@ -1,9 +1,9 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { HomeRoute } from "./home";
 
-export function Global({ column }: { column: IColumn }) {
+export function Global({ column }: { column: LumeColumn }) {
 	const colKey = `global-${column.id}`;
 
 	return (

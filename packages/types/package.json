@@ -10,8 +10,5 @@
 	},
 	"devDependencies": {
 		"typescript": "^5.3.3"
-	},
-	"dependencies": {
-		"@nostr-dev-kit/ndk": "^2.4.0"
 	}
 }

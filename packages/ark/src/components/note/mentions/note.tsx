@@ -1,11 +1,10 @@
 import { PinIcon } from "@lume/icons";
-import { COL_TYPES, NOSTR_MENTIONS } from "@lume/utils";
+import { NOSTR_MENTIONS } from "@lume/utils";
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { useEvent } from "../../../hooks/useEvent";
-import { useColumnContext } from "../../column/provider";
 import { User } from "../../user";
 import { Hashtag } from "./hashtag";
 import { MentionUser } from "./user";
@@ -15,7 +14,6 @@ export function MentionNote({
 	openable = true,
 }: { eventId: string; openable?: boolean }) {
 	const { t } = useTranslation();
-	const { addColumn } = useColumnContext();
 	const { isLoading, isError, data } = useEvent(eventId);
 
 	const richContent = useMemo(() => {
@@ -133,13 +131,6 @@ export function MentionNote({
 					</Link>
 					<button
 						type="button"
-						onClick={async () =>
-							await addColumn({
-								kind: COL_TYPES.thread,
-								title: "Thread",
-								content: data.id,
-							})
-						}
 						className="inline-flex items-center justify-center rounded-md text-neutral-600 dark:text-neutral-400 size-6 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
 					>
 						<PinIcon className="size-4" />

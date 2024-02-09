@@ -1,10 +1,9 @@
 import { HorizontalDotsIcon } from "@lume/icons";
-import { COL_TYPES } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { useArk } from "../../hooks/useArk";
+import { useArk } from "../../provider";
 import { useNoteContext } from "./provider";
 
 export function NoteMenu() {
@@ -19,7 +18,7 @@ export function NoteMenu() {
 	};
 
 	const copyRaw = async () => {
-		await writeText(JSON.stringify(await event.toNostrEvent()));
+		await writeText(JSON.stringify(event));
 	};
 
 	const copyNpub = async () => {

@@ -1,7 +1,7 @@
 import { Metadata } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
+import { invoke } from "@tauri-apps/api/core";
 import { ReactNode, createContext, useContext } from "react";
-import { useArk } from "../../hooks/useArk";
 
 const UserContext = createContext<{ pubkey: string; profile: Metadata }>(null);
 
@@ -10,13 +10,12 @@ export function UserProvider({
 	children,
 	embed,
 }: { pubkey: string; children: ReactNode; embed?: string }) {
-	const ark = useArk();
 	const { data: profile } = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
 			if (embed) return JSON.parse(embed) as Metadata;
 
-			const profile = await ark.get_profile(pubkey);
+			const profile: Metadata = await invoke("get_profile", { id: pubkey });
 
 			if (!profile)
 				throw new Error(

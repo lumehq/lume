@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { useArk } from "../../hooks/useArk";
+import { useArk } from "../../provider";
 import { AppHandler } from "./appHandler";
 import { useNoteContext } from "./provider";
 

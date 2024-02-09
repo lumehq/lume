@@ -4,7 +4,7 @@ import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Note } from "..";
-import { useArk } from "../../../hooks/useArk";
+import { useArk } from "../../../provider";
 import { User } from "../../user";
 
 export function RepostNote({

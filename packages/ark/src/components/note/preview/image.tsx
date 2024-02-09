@@ -1,6 +1,6 @@
 import { CheckCircleIcon, DownloadIcon } from "@lume/icons";
 import { downloadDir } from "@tauri-apps/api/path";
-import { Window } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webview";
 import { download } from "@tauri-apps/plugin-upload";
 import { SyntheticEvent, useState } from "react";
 
@@ -23,7 +23,7 @@ export function ImagePreview({ url }: { url: string }) {
 
 	const open = async () => {
 		const name = new URL(url).pathname.split("/").pop();
-		return new Window("image-viewer", {
+		return new WebviewWindow("image-viewer", {
 			url,
 			title: name,
 		});

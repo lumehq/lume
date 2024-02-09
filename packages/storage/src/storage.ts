@@ -1,3 +1,4 @@
+import { Settings } from "@lume/types";
 import { Platform } from "@tauri-apps/plugin-os";
 import { Store } from "@tauri-apps/plugin-store";
 
@@ -5,17 +6,7 @@ export class LumeStorage {
 	#store: Store;
 	readonly platform: Platform;
 	readonly locale: string;
-	public settings: {
-		autoupdate: boolean;
-		nsecbunker: boolean;
-		media: boolean;
-		hashtag: boolean;
-		lowPower: boolean;
-		translation: boolean;
-		translateApiKey: string;
-		instantZap: boolean;
-		defaultZapAmount: number;
-	};
+	public settings: Settings;
 
 	constructor(store: Store, platform: Platform, locale: string) {
 		this.#store = store;
@@ -34,8 +25,24 @@ export class LumeStorage {
 		};
 	}
 
-	public async createSetting(key: string, value: string | boolean) {
+	public async init() {
+		this.loadSettings();
+	}
+
+	public async loadSettings() {
+		const settings: Settings = JSON.parse(await this.#store.get("settings"));
+		for (const [key, value] of Object.entries(settings)) {
+			this.settings[key] = value;
+		}
+	}
+
+	public async createSetting(key: string, value: string | number | boolean) {
 		this.settings[key] = value;
-		await this.#store.set(this.settings[key], { value });
+
+		const settings: Settings = JSON.parse(await this.#store.get("settings"));
+		const newSettings = { ...settings, key: value };
+
+		await this.#store.set("settings", newSettings);
+		await this.#store.save();
 	}
 }

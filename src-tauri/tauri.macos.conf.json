@@ -1,27 +1,19 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
-  "app": {
-    "windows": [
-      {
-        "width": 1080,
-        "height": 800,
-        "minWidth": 1080,
-        "minHeight": 800,
-        "resizable": true,
-        "title": "Lume",
-        "titleBarStyle": "Overlay",
-        "center": true,
-        "fullscreen": false,
-        "hiddenTitle": true,
-        "fileDropEnabled": true,
-        "decorations": true,
-        "transparent": true,
-        "windowEffects": {
-          "effects": [
-            "sidebar"
-          ]
-        }
-      }
-    ]
-  }
+	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
+	"app": {
+		"windows": [
+			{
+				"title": "Lume",
+				"label": "main",
+				"titleBarStyle": "Overlay",
+				"width": 1080,
+				"height": 800,
+				"minWidth": 1080,
+				"minHeight": 800,
+				"center": true,
+				"hiddenTitle": true,
+				"decorations": true
+			}
+		]
+	}
 }

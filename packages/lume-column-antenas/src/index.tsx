@@ -1,10 +1,10 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { AntenasForm } from "./components/form";
 import { HomeRoute } from "./home";
 
-export function Antenas({ column }: { column: IColumn }) {
+export function Antenas({ column }: { column: LumeColumn }) {
 	const colKey = `antenas-${column.id}`;
 	const created = !!column.content?.length;
 

@@ -1,8 +1,8 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { HomeRoute } from "./home";
 
-export function Waifu({ column }: { column: IColumn }) {
+export function Waifu({ column }: { column: LumeColumn }) {
 	const colKey = `waifu-${column.id}`;
 
 	return (

@@ -1,9 +1,9 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { HomeRoute } from "./home";
 
-export function TrendingNotes({ column }: { column: IColumn }) {
+export function TrendingNotes({ column }: { column: LumeColumn }) {
 	const colKey = `trending-notes-${column.id}`;
 
 	return (

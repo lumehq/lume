@@ -1,10 +1,9 @@
 import { PinIcon } from "@lume/icons";
-import { COL_TYPES, cn } from "@lume/utils";
+import { cn } from "@lume/utils";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Note } from ".";
-import { useArk } from "../../hooks/useArk";
-import { useColumnContext } from "../column/provider";
+import { useArk } from "../../provider";
 import { useNoteContext } from "./provider";
 
 export function NoteThread({

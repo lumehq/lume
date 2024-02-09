@@ -25,7 +25,7 @@ const LUME_USERS = [
 	"npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445",
 ];
 
-export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
+export function SuggestRoute({ queryKey }: { queryKey: string }) {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ export function SuggestRoute({ queryKey }: { queryKey: string[] }) {
 
 	const submit = async () => {
 		try {
-			await queryClient.refetchQueries({ queryKey });
+			await queryClient.refetchQueries({ queryKey: [queryKey] });
 			return navigate("/", { replace: true });
 		} catch (e) {
 			toast.error(String(e));

@@ -11,9 +11,11 @@ export class Ark {
 	public async verify_signer() {
 		try {
 			const cmd: string = await invoke("verify_signer");
-			if (!cmd) return false;
-			this.account.pubkey = cmd;
-			return true;
+			if (cmd) {
+				this.account.pubkey = cmd;
+				return true;
+			}
+			return false;
 		} catch (e) {
 			console.error(String(e));
 		}

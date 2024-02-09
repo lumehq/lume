@@ -1,4 +1,14 @@
-import { type NDKEvent, type NDKUserProfile } from "@nostr-dev-kit/ndk";
+export interface Settings {
+	autoupdate: boolean;
+	nsecbunker: boolean;
+	media: boolean;
+	hashtag: boolean;
+	lowPower: boolean;
+	translation: boolean;
+	translateApiKey: string;
+	instantZap: boolean;
+	defaultZapAmount: number;
+}
 
 export interface Keys {
 	npub: string;
@@ -28,16 +38,20 @@ export interface Event {
 	sig: string;
 }
 
+export interface EventWithReplies extends Event {
+	replies: Array<Event>;
+}
+
 export interface Metadata {
-	name: Option<string>;
-	display_name: Option<string>;
-	about: Option<string>;
-	website: Option<string>;
-	picture: Option<string>;
-	banner: Option<string>;
-	nip05: Option<string>;
-	lud06: Option<string>;
-	lud16: Option<string>;
+	name?: string;
+	display_name?: string;
+	about?: string;
+	website?: string;
+	picture?: string;
+	banner?: string;
+	nip05?: string;
+	lud06?: string;
+	lud16?: string;
 }
 
 export interface CurrentAccount {
@@ -61,9 +75,8 @@ export interface RichContent {
 	notes: string[];
 }
 
-export interface IColumn {
-	id?: number;
-	kind: number;
+export interface LumeColumn {
+	id: number;
 	title: string;
 	content: string;
 }
@@ -73,10 +86,6 @@ export interface Opengraph {
 	title?: string;
 	description?: string;
 	image?: string;
-}
-
-export interface NDKEventWithReplies extends NDKEvent {
-	replies: Array<NDKEvent>;
 }
 
 export interface NostrBuildResponse {
@@ -97,34 +106,6 @@ export interface NostrBuildResponse {
 			url: string;
 		}>;
 	};
-}
-
-export interface NDKCacheUser {
-	pubkey: string;
-	profile: string | NDKUserProfile;
-	createdAt: number;
-}
-
-export interface NDKCacheUserProfile extends NDKUserProfile {
-	npub: string;
-}
-
-export interface NDKCacheEvent {
-	id: string;
-	pubkey: string;
-	content: string;
-	kind: number;
-	createdAt: number;
-	relay: string;
-	event: string;
-}
-
-export interface NDKCacheEventTag {
-	id: string;
-	eventId: string;
-	tag: string;
-	value: string;
-	tagValue: string;
 }
 
 export interface NIP11 {
