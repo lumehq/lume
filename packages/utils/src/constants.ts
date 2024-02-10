@@ -3,6 +3,7 @@ export const FETCH_LIMIT = 20;
 export const LANGUAGES = [
 	{ label: "English", code: "en" },
 	{ label: "Japanese", code: "ja" },
+	{ label: "Français", code: "fr" },
 ];
 
 export const NOSTR_MENTIONS = [
