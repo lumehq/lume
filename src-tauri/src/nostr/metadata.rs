@@ -26,8 +26,10 @@ pub async fn get_profile(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, 
     .await
     .expect("Get metadata failed");
 
-  let event = events.first().unwrap();
-  let metadata: Metadata = Metadata::from_json(&event.content).unwrap();
-
-  Ok(metadata)
+  if let Some(event) = events.first() {
+    let metadata: Metadata = Metadata::from_json(&event.content).unwrap();
+    Ok(metadata)
+  } else {
+    Err(())
+  }
 }

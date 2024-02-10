@@ -43,8 +43,11 @@ export class Ark {
 		}
 	}
 
-	public async get_text_events(limit: number, until?: number) {
+	public async get_text_events(limit: number, asOf?: number) {
 		try {
+			let until: string = undefined;
+			if (asOf && asOf > 0) until = asOf.toString();
+
 			const cmd: Event[] = await invoke("get_text_events", { limit, until });
 			return cmd;
 		} catch (e) {

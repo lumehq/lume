@@ -30,9 +30,15 @@ export class LumeStorage {
 	}
 
 	public async loadSettings() {
-		const settings: Settings = JSON.parse(await this.#store.get("settings"));
-		for (const [key, value] of Object.entries(settings)) {
-			this.settings[key] = value;
+		const data = await this.#store.get("settings");
+		if (!data) return;
+
+		const settings = JSON.parse(data as string) as Settings;
+
+		if (Object.keys(settings).length) {
+			for (const [key, value] of Object.entries(settings)) {
+				this.settings[key] = value;
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@
 		"updater:allow-check",
 		"updater:default",
 		"window:allow-start-dragging",
+		"store:allow-get",
 		{
 			"identifier": "http:default",
 			"allow": [

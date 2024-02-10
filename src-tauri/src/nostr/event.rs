@@ -4,7 +4,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command(async)]
-pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, ()> {
+pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, String> {
   let client = &nostr.client;
   let event_id;
 
@@ -21,9 +21,12 @@ pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, ()> 
     .get_events_of(vec![filter], Some(Duration::from_secs(10)))
     .await
     .expect("Get event failed");
-  let event = events.first().unwrap().as_json();
 
-  Ok(event)
+  if let Some(event) = events.first() {
+    Ok(event.as_json())
+  } else {
+    Err("Event not found".into())
+  }
 }
 
 #[tauri::command(async)]
@@ -48,12 +51,14 @@ pub async fn get_text_events(
     .limit(limit)
     .until(final_until);
 
-  let events = client
+  if let Ok(events) = client
     .get_events_of(vec![filter], Some(Duration::from_secs(10)))
     .await
-    .expect("Get event failed");
-
-  Ok(events)
+  {
+    Ok(events)
+  } else {
+    Err(())
+  }
 }
 
 #[tauri::command(async)]
@@ -62,12 +67,14 @@ pub async fn get_event_thread(id: &str, nostr: State<'_, Nostr>) -> Result<Vec<E
   let event_id = EventId::from_hex(id).unwrap();
   let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
-  let events = client
+  if let Ok(events) = client
     .get_events_of(vec![filter], Some(Duration::from_secs(10)))
     .await
-    .expect("Get event failed");
-
-  Ok(events)
+  {
+    Ok(events)
+  } else {
+    Err(())
+  }
 }
 
 #[tauri::command(async)]
