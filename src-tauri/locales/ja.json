@@ -1,295 +1,295 @@
 {
 	"global": {
-		"relay": "Relay",
-		"back": "Back",
-		"continue": "Continue",
-		"loading": "Loading",
-		"error": "Error",
-		"moveLeft": "Move Left",
-		"moveRight": "Move Right",
-		"newColumn": "New Column",
-		"inspect": "Inspect",
-		"loadMore": "Load more",
-		"delete": "Delete",
-		"refresh": "Refresh",
-		"cancel": "Cancel",
-		"save": "Save",
-		"post": "Post",
-		"update": "Update",
-		"noResult": "No results found.",
-		"emptyFeedTitle": "This feed is empty",
-		"emptyFeedSubtitle": "You can follow more users to build up your timeline",
-		"apiKey": "API Key",
-		"skip": "Skip",
-		"close": "Close"
+		"relay": "リレー",
+		"back": "戻る",
+		"continue": "続行",
+		"loading": "ロード中",
+		"error": "エラー",
+		"moveLeft": "左に移動",
+		"moveRight": "右に移動",
+		"newColumn": "新規カラム",
+		"inspect": "のぞき見",
+		"loadMore": "詳細",
+		"delete": "削除",
+		"refresh": "更新",
+		"cancel": "キャンセル",
+		"save": "保存",
+		"post": "投稿",
+		"update": "更新",
+		"noResult": "結果が見つかりません",
+		"emptyFeedTitle": "このフィードは空です",
+		"emptyFeedSubtitle": "ユーザーをフォローしてタイムラインを構築しましょう",
+		"apiKey": "API キー",
+		"skip": "スキップ",
+		"close": "閉じる"
 	},
 	"nip89": {
-		"unsupported": "Lume isn't support this event",
-		"openWith": "Open with"
+		"unsupported": "このイベントは非対応です",
+		"openWith": "で開く"
 	},
 	"note": {
-		"showThread": "Show thread",
-		"showMore": "Show more",
-		"error": "Failed to fetch event.",
-		"posted": "posted",
-		"replied": "replied",
-		"reposted": "reposted",
+		"showThread": "スレッドの表示",
+		"showMore": "さらに表示",
+		"error": "イベントの取得に失敗しました",
+		"posted": "が投稿しました",
+		"replied": "が返信しました",
+		"reposted": "がリポストしました",
 		"menu": {
-			"viewThread": "View thread",
-			"copyLink": "Copy shareable link",
-			"copyNoteId": "Copy note ID",
-			"copyAuthorId": "Copy author ID",
-			"viewAuthor": "View author",
-			"pinAuthor": "Pin author",
-			"copyRaw": "Copy raw event",
-			"mute": "Mute"
+			"viewThread": "スレッドを見る",
+			"copyLink": "シェアリンクをコピー",
+			"copyNoteId": "投稿 ID をコピー",
+			"copyAuthorId": "投稿者 ID をコピー",
+			"viewAuthor": "投稿者を表示",
+			"pinAuthor": "投稿者をピン留め",
+			"copyRaw": "生イベントをコピー",
+			"mute": "ミュート"
 		},
 		"buttons": {
-			"pin": "Pin",
-			"pinTooltip": "Pin Note",
-			"repost": "Repost",
-			"quote": "Quote",
-			"viewProfile": "View profile"
+			"pin": "ピン留め",
+			"pinTooltip": "投稿をピン留めする",
+			"repost": "リポスト",
+			"quote": "引用",
+			"viewProfile": "プロフィールの表示"
 		},
 		"zap": {
 			"zap": "Zap",
-			"tooltip": "Send zap",
-			"modalTitle": "Send zap to",
-			"messagePlaceholder": "Enter message (optional)",
-			"buttonFinish": "Zapped",
-			"buttonLoading": "Processing...",
-			"invoiceButton": "Scan to zap",
-			"invoiceFooter": "You must use Bitcoin wallet which support Lightning\nsuch as: Blue Wallet, Bitkit, Phoenix,..."
+			"tooltip": "zap する",
+			"modalTitle": "に zap する",
+			"messagePlaceholder": "メッセージを入力 (任意)",
+			"buttonFinish": "Zap しました",
+			"buttonLoading": "処理中...",
+			"invoiceButton": "スキャンして zap",
+			"invoiceFooter": "Blue Wallet、Bitkit、Phoenix などの\nBitcoin Lightningに対応したウォレットが必要です。"
 		},
 		"reply": {
-			"single": "reply",
-			"plural": "replies",
-			"empty": "Be the first to Reply!"
+			"single": "リプライ",
+			"plural": "複数リプライ",
+			"empty": "リプライしてみましょう！"
 		}
 	},
 	"user": {
-		"avatar": "Avatar",
-		"displayName": "Display Name",
-		"name": "Name",
-		"bio": "Bio",
-		"lna": "Lightning address",
-		"website": "Website",
-		"verified": "Verified",
-		"unverified": "Unverified",
-		"follow": "Follow",
-		"unfollow": "Unfollow",
-		"latestPosts": "Latest posts",
-		"avatarButton": "Change avatar",
-		"coverButton": "Change cover",
-		"editProfile": "Edit profile",
-		"settings": "Settings",
-		"logout": "Log out",
-		"logoutConfirmTitle": "Are you sure!",
-		"logoutConfirmSubtitle": "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account."
+		"avatar": "アバター",
+		"displayName": "表示名",
+		"name": "名前",
+		"bio": "経歴",
+		"lna": "ライトニングアドレス",
+		"website": "Web サイト",
+		"verified": "認証済",
+		"unverified": "未認証",
+		"follow": "フォロー",
+		"unfollow": "アンフォロー",
+		"latestPosts": "最新投稿",
+		"avatarButton": "アバターの変更",
+		"coverButton": "カバーの変更",
+		"editProfile": "プロフィールの編集",
+		"settings": "設定",
+		"logout": "ログアウト",
+		"logoutConfirmTitle": "本当にログアウトしてもよろしいですか？",
+		"logoutConfirmSubtitle": "いつでも再ログインすることができます。アカウントを切り替えたいだけの場合は、既存のアカウントを追加することで切り替えられます。"
 	},
 	"editor": {
-		"title": "New Post",
-		"placeholder": "What are you up to?",
-		"successMessage": "Your note has been published successfully.",
-		"replyPlaceholder": "Post your reply"
+		"title": "新規投稿",
+		"placeholder": "今何してる？",
+		"successMessage": "投稿が正常に公開されました",
+		"replyPlaceholder": "リプライを投稿する"
 	},
 	"search": {
-		"placeholder": "Type something to search...",
-		"empty": "Try searching for people, notes, or keywords"
+		"placeholder": "入力して検索...",
+		"empty": "人、投稿、キーワードなどを入力して検索しましょう"
 	},
 	"welcome": {
-		"title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
-		"signup": "Join Nostr",
-		"login": "Login",
-		"footer": "Before joining Nostr, you can take time to learn more about Nostr"
+		"title": "Lume は、Nostr を通じて人々と出会い、探索し、\n自由に思いを共有するために作られた全く新しいクライアントです。",
+		"signup": "Nostr を始める",
+		"login": "ログイン",
+		"footer": "Nostr を始める前に、Nostrについて学ぶ"
 	},
 	"login": {
-		"title": "Welcome back, anon!",
-		"footer": "Lume will put your Private Key in Secure Storage depended on your OS Platform. It will be secured by Password or Biometric ID",
-		"loginWithAddress": "Login with Nostr Address",
-		"loginWithBunker": "Login with nsecBunker",
-		"or": "Or continue with",
-		"loginWithPrivkey": "Login with Private Key"
+		"title": "おかえりなさい、名無しさん！",
+		"footer": "Lume は、秘密鍵をそれぞれの OS に対応したセキュア・ストレージ内に保管します。また、入力された秘密鍵は、パスワードや生体認証 ID によって保護されます。",
+		"loginWithAddress": "Nostr アドレスでログイン",
+		"loginWithBunker": "nsecBunker でログイン",
+		"or": "または、",
+		"loginWithPrivkey": "秘密鍵でログイン"
 	},
 	"loginWithAddress": {
-		"title": "Enter your Nostr Address"
+		"title": "Nostr アドレスを入力"
 	},
 	"loginWithBunker": {
-		"title": "Enter your nsecbunker token"
+		"title": "nsecBunker のトークンを入力"
 	},
 	"loginWithPrivkey": {
-		"title": "Enter your Private Key",
-		"subtitle": "Lume will put your private key to <1>{{service}}</1>.\nIt will be secured by your OS."
+		"title": "秘密鍵を入力",
+		"subtitle": "秘密鍵は <1>{{service}}</1> 内に保管されます。\nまた、OSによって秘密鍵は保護されます。"
 	},
 	"signup": {
-		"title": "Let's Get Started",
-		"subtitle": "Choose one of methods below to create your account",
-		"selfManageMethod": "Self-Managed",
-		"selfManageMethodDescription": "You create your keys and keep them safe.",
-		"providerMethod": "Managed by Provider",
-		"providerMethodDescription": "A 3rd party provider will handle your sign in keys for you."
+		"title": "さぁ、はじめましょう",
+		"subtitle": "以下からアカウント作成の方法を 1 つ選択してください",
+		"selfManageMethod": "自己管理",
+		"selfManageMethodDescription": "自分で秘密鍵を作成し安全に保管する",
+		"providerMethod": "プロバイダー管理",
+		"providerMethodDescription": "サードパーティプロバイダーに鍵管理を委任する"
 	},
 	"signupWithSelfManage": {
-		"title": "This is your new Account Key",
-		"subtitle": "Keep your key in safe place. If you lose this key, you will lose access to your account.",
-		"confirm1": "I understand the risk of lost private key.",
-		"confirm2": "I will make sure keep it safe and not sharing with anyone.",
-		"confirm3": "I understand I cannot recover private key.",
-		"button": "Save key & Continue"
+		"title": "これが新しいアカウント用の鍵です",
+		"subtitle": "秘密鍵は安全な場所に保管してください。紛失してしまった場合は、永遠にアカウントにアクセスできなくなります。",
+		"confirm1": "秘密鍵を紛失した場合のリスクを理解しました。",
+		"confirm2": "秘密鍵を安全な場所に保管し、誰にも共有しないことを承諾しました。",
+		"confirm3": "秘密鍵の復元ができないことを理解しました。",
+		"button": "鍵を保存して続行"
 	},
 	"signupWithProvider": {
-		"title": "Let's set up your account on Nostr",
-		"username": "Username *",
-		"chooseProvider": "Choose a Provider",
-		"usernameFooter": "Use to login to Lume and other Nostr apps. You can choose provider you trust to manage your account",
-		"email": "Backup Email (optional)",
-		"emailFooter": "Use for recover your account if you lose your password"
+		"title": "さぁ、Nostr のアカウントを設定しましょう",
+		"username": "ユーザー名 *",
+		"chooseProvider": "プロバイダーを選択",
+		"usernameFooter": "Lume や、他の Nostr アプリにログインする場合に使用されます。アカウントを管理するプロバイダーは慎重に選択してください",
+		"email": "E メールでバックアップ (任意)",
+		"emailFooter": "パスワードを紛失した場合に使用されます"
 	},
 	"onboardingSettings": {
-		"title": "You're almost ready to use Lume.",
-		"subtitle": "Let's start personalizing your experience.",
+		"title": "あともう少しです",
+		"subtitle": "Lume の体験を最適化しましょう",
 		"notification": {
-			"title": "Push notification",
-			"subtitle": "Enabling push notifications will allow you to receive notifications from Lume."
+			"title": "プッシュ通知",
+			"subtitle": "プッシュ通知を有効化すると Lume から通知を受け取ることができるようになります。"
 		},
 		"lowPower": {
-			"title": "Low Power Mode",
-			"subtitle": "Limited relay connection and hide all media, sustainable for low network environment."
+			"title": "低電力モード",
+			"subtitle": "リレーの接続を制限し、すべてのメディアを非表示にします。ネットワーク環境が悪い場合などにも有効です。"
 		},
 		"translation": {
-			"title": "Translation (nostr.wine)",
-			"subtitle": "Translate text to your preferred language, powered by Nostr Wine."
+			"title": "翻訳 (nostr.wine)",
+			"subtitle": "Nostr Wine を使用し、希望の言語に自動翻訳することができます。"
 		},
-		"footer": "There are many more settings you can configure from the 'Settings' Screen. Be sure to visit it later."
+		"footer": "「設定」画面からさらに細かくカスタマイズすることができます。 後で確認するのを忘れずに。"
 	},
 	"relays": {
-		"global": "Global",
-		"follows": "Follows",
+		"global": "グローバル",
+		"follows": "フォロー",
 		"sidebar": {
-			"title": "Connected relays",
-			"empty": "Empty."
+			"title": "接続済リレー",
+			"empty": "空"
 		},
 		"relayView": {
-			"empty": "Could not load relay information 😬",
-			"owner": "Owner",
-			"contact": "Contact",
-			"software": "Software",
-			"nips": "Supported NIPs",
-			"limit": "Limitation",
-			"payment": "Open payment website",
-			"paymentNote": "You need to make a payment to connect this relay"
+			"empty": "リレー情報がロードできませんでした 😬",
+			"owner": "オーナー",
+			"contact": "連絡先",
+			"software": "ソフトウェア",
+			"nips": "対応 NIPs",
+			"limit": "制限",
+			"payment": "決済用 Web サイトを開く",
+			"paymentNote": "このリレーへの接続には支払いが必要です"
 		}
 	},
 	"suggestion": {
-		"title": "Suggested Follows",
-		"error": "Error. Cannot get trending users",
-		"button": "Save & Go back"
+		"title": "フォロー推奨 Nostrich",
+		"error": "エラーが発生しています。人気の Nostrich 情報が取得ができませんでした",
+		"button": "保存して戻る"
 	},
 	"interests": {
-		"title": "Interests",
-		"subtitle": "Pick things you'd like to see in your home feed.",
-		"edit": "Edit Interest",
-		"followAll": "Follow All",
-		"unfollowAll": "Unfollow All"
+		"title": "興味",
+		"subtitle": "ホーム・フィードに表示したい内容を選択",
+		"edit": "興味を編集",
+		"followAll": "全てフォローする",
+		"unfollowAll": "全てアンフォローする"
 	},
 	"settings": {
 		"general": {
-			"title": "General",
+			"title": "一般",
 			"update": {
-				"title": "Update",
-				"subtitle": "Automatically download new update"
+				"title": "アップデート",
+				"subtitle": "自動で新規アップデートをダウンロードする"
 			},
 			"lowPower": {
-				"title": "Low Power",
-				"subtitle": "Sustainable for low network environment"
+				"title": "低電力モード",
+				"subtitle": "ネットワーク環境が悪い場合などにオススメ"
 			},
 			"startup": {
-				"title": "Startup",
-				"subtitle": "Launch Lume at Login"
+				"title": "起動時",
+				"subtitle": "ログイン時に Lume を起動する"
 			},
 			"media": {
-				"title": "Media",
-				"subtitle": "Automatically load media"
+				"title": "メディア",
+				"subtitle": "自動的にメディアをロードする"
 			},
 			"hashtag": {
-				"title": "Hashtag",
-				"subtitle": "Show all hashtags in content"
+				"title": "ハッシュタグ",
+				"subtitle": "コンテンツ内のハッシュタグを全て表示する"
 			},
 			"notification": {
-				"title": "Notification",
-				"subtitle": "Automatically send notification"
+				"title": "通知",
+				"subtitle": "プッシュ通知の自動化"
 			},
 			"translation": {
-				"title": "Translation",
-				"subtitle": "Translate text to your language"
+				"title": "翻訳",
+				"subtitle": "好みの言語に自動翻訳"
 			},
 			"appearance": {
-				"title": "Appearance",
-				"light": "Light",
-				"dark": "Dark",
-				"system": "System"
+				"title": "外観",
+				"light": "ライト",
+				"dark": "ダーク",
+				"system": "システム"
 			}
 		},
 		"user": {
-			"title": "User"
+			"title": "ユーザー"
 		},
 		"zap": {
 			"title": "Zap",
-			"nwc": "Connection String"
+			"nwc": "接続文字列"
 		},
 		"backup": {
-			"title": "Backup",
+			"title": "バックアップ",
 			"privkey": {
-				"title": "Private key",
-				"button": "Remove private key"
+				"title": "秘密鍵",
+				"button": "秘密鍵の削除"
 			}
 		},
 		"advanced": {
-			"title": "Advanced",
+			"title": "高度な設定",
 			"cache": {
-				"title": "Cache",
-				"subtitle": "Use for boost up nostr connection",
-				"button": "Clear"
+				"title": "キャッシュ",
+				"subtitle": "接続を高速化する際に使用",
+				"button": "クリア"
 			},
 			"instant": {
-				"title": "Instant Zap",
-				"subtitle": "Zap with default amount, no confirmation"
+				"title": "即 Zap",
+				"subtitle": "確認なしで設定されたデフォルト枚数を zap する"
 			},
-			"defaultAmount": "Default amount"
+			"defaultAmount": "デフォルト枚数"
 		},
 		"about": {
-			"title": "About",
-			"version": "Version",
-			"checkUpdate": "Check for update",
-			"installUpdate": "Install"
+			"title": "概要",
+			"version": "バージョン",
+			"checkUpdate": "アップデートの確認",
+			"installUpdate": "インストール"
 		}
 	},
 	"onboarding": {
 		"home": {
-			"title": "Your account was successfully created!",
-			"subtitle": "For starters, let's set up your profile.",
-			"profileSettings": "Profile Settings"
+			"title": "アカウントが正常に作成されました！",
+			"subtitle": "初めての方はプロフィールの設定をしましょう。",
+			"profileSettings": "プロフィール設定"
 		},
 		"profile": {
-			"title": "About you",
-			"subtitle": "Tell Lume about yourself to start building your home feed."
+			"title": "あなたについて",
+			"subtitle": "ホーム・フィードを作成するためにあなたについてもう少し教えてください。"
 		},
 		"finish": {
-			"title": "Profile setup complete!",
-			"subtitle": "You can exit the setup here and start using Lume.",
-			"report": "Report a issue"
+			"title": "プロフィールの設定が完了しました！",
+			"subtitle": "お疲れ様でした！設定はここで終了です。 Lume を開始できます",
+			"report": "問題を報告する"
 		}
 	},
 	"activity": {
-		"title": "Activity",
-		"empty": "Yo! Nothing new yet.",
-		"mention": "mention you",
-		"repost": "reposted",
-		"zap": "zapped",
-		"newReply": "New reply",
-		"boost": "Boost",
-		"boostSubtitle": "@ Someone has reposted to your note",
-		"conversation": "Conversation",
-		"conversationSubtitle": "@ Someone has replied to your note"
+		"title": "アクティビティ",
+		"empty": "オッ! まだ何もないようですネ！",
+		"mention": "にメンションされました",
+		"repost": "にリポストされました",
+		"zap": "に Zapされました",
+		"newReply": "新規リプライ",
+		"boost": "ブースト",
+		"boostSubtitle": "@ 誰かがあなたの投稿をリポストしました",
+		"conversation": "会話",
+		"conversationSubtitle": "@ 誰かがあなたの投稿にリプライしました"
 	}
 }
