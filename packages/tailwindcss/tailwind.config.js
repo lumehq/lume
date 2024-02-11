@@ -1,8 +1,6 @@
-import harmonyPalette from "@evilmartians/harmony/tailwind";
 
 const config = {
   theme: {
-    colors: harmonyPalette,
     extend: {
       keyframes: {
         slideDownAndFade: {
@@ -46,6 +44,7 @@ const config = {
   plugins: [
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
+    require("tailwindcss-radix-colors"),
     require("tailwind-scrollbar")({ nocompatible: true }),
   ],
 };
