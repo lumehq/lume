@@ -1,6 +1,11 @@
+import { ArkProvider } from "@lume/ark";
+import { StorageProvider } from "@lume/storage";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { I18nextProvider } from "react-i18next";
+import "./app.css";
+import i18n from "./i18n";
 
 // Import the generated route tree
 import { routeTree } from "./tree.gen";
@@ -21,8 +26,14 @@ const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
-		<StrictMode>
-			<RouterProvider router={router} />
-		</StrictMode>,
+		<I18nextProvider i18n={i18n} defaultNS={"translation"}>
+			<StorageProvider>
+				<ArkProvider>
+					<StrictMode>
+						<RouterProvider router={router} />
+					</StrictMode>
+				</ArkProvider>
+			</StorageProvider>
+		</I18nextProvider>,
 	);
 }

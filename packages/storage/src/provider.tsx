@@ -13,7 +13,7 @@ import { type VListHandle } from "virtua";
 import { LumeStorage } from "./storage";
 
 const platformName = await platform();
-const osLocale = await locale();
+const osLocale = (await locale()).slice(0, 2);
 
 const store = new Store("lume.dat");
 const storage = new LumeStorage(store, platformName, osLocale);

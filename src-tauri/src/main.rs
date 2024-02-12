@@ -149,6 +149,7 @@ fn main() {
       nostr::keys::get_public_key,
       nostr::keys::update_signer,
       nostr::keys::verify_signer,
+      nostr::keys::load_account,
       nostr::keys::event_to_bech32,
       nostr::keys::user_to_bech32,
       nostr::metadata::get_profile,

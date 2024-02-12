@@ -1,20 +1,35 @@
-import { type CurrentAccount, Event, Metadata } from "@lume/types";
+import { type CurrentAccount, Event, Keys, Metadata } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 
 export class Ark {
 	public account: CurrentAccount;
 
 	constructor() {
-		this.account = { pubkey: "" };
+		this.account = { npub: "" };
 	}
 
-	public async verify_signer() {
+	public async load_account() {
 		try {
-			const cmd: string = await invoke("verify_signer");
+			const cmd: string = await invoke("load_account");
 			if (cmd) {
-				this.account.pubkey = cmd;
+				this.account.npub = cmd;
+			}
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
+	public async save_account(keys: Keys) {
+		try {
+			const cmd: boolean = await invoke("save_key", { nsec: keys.nsec });
+
+			if (cmd) {
+				await invoke("update_signer", { nsec: keys.nsec });
+				this.account.npub = keys.npub;
+
 				return true;
 			}
+
 			return false;
 		} catch (e) {
 			console.error(String(e));

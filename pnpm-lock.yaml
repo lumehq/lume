@@ -256,15 +256,30 @@ importers:
 
   apps/desktop2:
     dependencies:
+      '@lume/ark':
+        specifier: workspace:^
+        version: link:../../packages/ark
+      '@lume/storage':
+        specifier: workspace:^
+        version: link:../../packages/storage
       '@tanstack/react-router':
         specifier: ^1.16.0
         version: 1.16.0(react-dom@18.2.0)(react@18.2.0)
+      i18next:
+        specifier: ^23.8.2
+        version: 23.8.2
+      i18next-resources-to-backend:
+        specifier: ^1.2.0
+        version: 1.2.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-i18next:
+        specifier: ^14.0.2
+        version: 14.0.2(i18next@23.8.2)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^

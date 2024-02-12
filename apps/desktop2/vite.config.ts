@@ -12,12 +12,7 @@ export default defineConfig({
 			promiseExportName: "__tla",
 			promiseImportName: (i) => `__tla_${i}`,
 		}),
-		TanStackRouterVite({
-			routesDirectory: "./src/routes",
-			generatedRouteTree: "./src/tree.gen.ts",
-			routeFileIgnorePrefix: "-",
-			quoteStyle: "single",
-		}),
+		TanStackRouterVite(),
 	],
 	build: {
 		outDir: "../../dist",
