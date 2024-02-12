@@ -1,0 +1,295 @@
+{
+	"global": {
+		"relay": "Relais",
+		"back": "Retour",
+		"continue": "Continuer",
+		"loading": "Chargement",
+		"error": "Erreur",
+		"moveLeft": "Déplacer à Gauche",
+		"moveRight": "Déplacer à Droite",
+		"newColumn": "Nouvelle Colonne",
+		"inspect": "Inspecter",
+		"loadMore": "Charger plus",
+		"delete": "Supprimer",
+		"refresh": "Rafraîchir",
+		"cancel": "Annuler",
+		"save": "Enregistrer",
+		"post": "Poster",
+		"update": "Mettre à jour",
+		"noResult": "Aucun résultat correspondant.",
+		"emptyFeedTitle": "Ce flux est vide",
+		"emptyFeedSubtitle": "Vous pouvez suivre plus d'utilisateurs pour construire votre flux de messages",
+		"apiKey": "Clé d'API",
+		"skip": "Passer",
+		"close": "Fermer"
+	},
+	"nip89": {
+		"unsupported": "Lume ne supporte pas encore cet événement",
+		"openWith": "Ouvrir avec"
+	},
+	"note": {
+		"showThread": "Voir le fil",
+		"showMore": "Voir plus",
+		"error": "Echec de la récupération de l'événement.",
+		"posted": "posté",
+		"replied": "répondu",
+		"reposted": "reposté",
+		"menu": {
+			"viewThread": "Voir le fil",
+			"copyLink": "Copier le lien à partager",
+			"copyNoteId": "Copier l'ID de la note",
+			"copyAuthorId": "Copier l'ID de l'auteur",
+			"viewAuthor": "Voir l'auteur",
+			"pinAuthor": "Epingler l'auteur",
+			"copyRaw": "Copier le contenu brut de l'événement",
+			"mute": "Mettre en silencieux"
+		},
+		"buttons": {
+			"pin": "Epingler",
+			"pinTooltip": "Epingler la Note",
+			"repost": "Reposter",
+			"quote": "Citer",
+			"viewProfile": "Voir le profil"
+		},
+		"zap": {
+			"zap": "Zap",
+			"tooltip": "Envoyer zap",
+			"modalTitle": "Envoyer zap à",
+			"messagePlaceholder": "Entrer un message (optionnel)",
+			"buttonFinish": "Zappé",
+			"buttonLoading": "En cours...",
+			"invoiceButton": "Scanner pour zapper",
+			"invoiceFooter": "Vous devez utiliser un portefeuille Bitcoin qui prend en charge Lightning\ncomme par exemple : Blue Wallet, Bitkit, Phoenix, ..."
+		},
+		"reply": {
+			"single": "réponse",
+			"plural": "réponses",
+			"empty": "Soyez le premier à répondre !"
+		}
+	},
+	"user": {
+		"avatar": "Avatar",
+		"displayName": "Nom Affiché",
+		"name": "Nom",
+		"bio": "Bio",
+		"lna": "Adresse Lightning",
+		"website": "Site Internet",
+		"verified": "Vérifié",
+		"unverified": "Non vérifié",
+		"follow": "Suivre",
+		"unfollow": "Ne plus suivre",
+		"latestPosts": "Derniers posts",
+		"avatarButton": "Changer d'avatar",
+		"coverButton": "Changer de bannière",
+		"editProfile": "Modifier profil",
+		"settings": "Paramètres",
+		"logout": "Déconnexion",
+		"logoutConfirmTitle": "Etes-vous sûr ?",
+		"logoutConfirmSubtitle": "Vous pouvez toujours vous reconnecter à tout moment. Si vous souhaitez simplement changer de compte, vous pouvez le faire en ajoutant un compte existant."
+	},
+	"editor": {
+		"title": "Nouveau Post",
+		"placeholder": "Que faites-vous ?",
+		"successMessage": "Votre note a été publiée avec succès.",
+		"replyPlaceholder": "Poster votre réponse"
+	},
+	"search": {
+		"placeholder": "Saisissez quelque chose à rechercher...",
+		"empty": "Essayez de rechercher des personnes, des notes ou des mots-clés"
+	},
+	"welcome": {
+		"title": "Lume est un magnifique client Nostr qui permet de se rencontrer, d'explorer\net de partager librement ses pensées avec tout le monde.",
+		"signup": "Rejoindre Nostr",
+		"login": "Se connecter",
+		"footer": "Avant de rejoindre Nostr, vous pouvez prendre le temps d'en savoir plus sur Nostr"
+	},
+	"login": {
+		"title": "Re-Bienvenue, anon !",
+		"footer": "Lume placera votre clé privée dans un espace de stockage sécurisé en fonction de la plateforme de votre système d'exploitation. Elle sera sécurisée par un mot de passe ou un identifiant biométrique.",
+		"loginWithAddress": "Se connecter avec une Adresse Nostr",
+		"loginWithBunker": "Se connecter avec nsecBunker",
+		"or": "Ou continuer avec",
+		"loginWithPrivkey": "Se connecter avec une Clé Privée"
+	},
+	"loginWithAddress": {
+		"title": "Saisissez votre Adresse Nostr"
+	},
+	"loginWithBunker": {
+		"title": "Saisissez votre jeton nsecbunker"
+	},
+	"loginWithPrivkey": {
+		"title": "Saisissez votre Clé Privée",
+		"subtitle": "Lume placera votre clé privée dans <1>{{service}}</1>.\nElle sera sécurisée par votre système d'exploitation."
+	},
+	"signup": {
+		"title": "Commençons",
+		"subtitle": "Choisissez l'une des méthodes ci-dessous pour créer votre compte",
+		"selfManageMethod": "Autogéré",
+		"selfManageMethodDescription": "Vous créez vos clés et vous les conservez en toute sécurité.",
+		"providerMethod": "Géré par le Prestataire",
+		"providerMethodDescription": "Un fournisseur tiers s'occupera de vos clés de connexion pour vous."
+	},
+	"signupWithSelfManage": {
+		"title": "Il s'agit de votre nouvelle Clé de Compte",
+		"subtitle": "Conservez votre clé en lieu sûr. Si vous perdez cette clé, vous perdrez l'accès à votre compte.",
+		"confirm1": "Je comprends le risque de perte de la clé privée.",
+		"confirm2": "Je veillerai à ce qu'elle soit conservée en toute sécurité et à ce qu'elle ne soit partagée avec personne.",
+		"confirm3": "Je comprends que je ne peux pas récupérer la clé privée.",
+		"button": "Enregistrer la clé et Continuer"
+	},
+	"signupWithProvider": {
+		"title": "Commençons la préparation de votre compte Nostr",
+		"username": "Nom d'utilisateur *",
+		"chooseProvider": "Choisissez un Fournisseur",
+		"usernameFooter": "A utiliser pour vous connecter à Lume et aux autres applications Nostr. Vous pouvez choisir un fournisseur de confiance pour gérer votre compte.",
+		"email": "Email de sauvegarde (optionnel)",
+		"emailFooter": "A utiliser pour récupérer votre compte si vous perdez votre mot de passe"
+	},
+	"onboardingSettings": {
+		"title": "Vous êtes presque prêt à utiliser Lume.",
+		"subtitle": "Commençons par personnaliser votre expérience.",
+		"notification": {
+			"title": "Notifications Push",
+			"subtitle": "L'activation des notifications push vous permettra de recevoir des notifications de Lume."
+		},
+		"lowPower": {
+			"title": "Mode Basse Consommation",
+			"subtitle": "Connexion relais limitée et dissimulation de tous les médias, compatible avec les environnements avec peu de réseau."
+		},
+		"translation": {
+			"title": "Traductions (nostr.wine)",
+			"subtitle": "Traduisez votre texte dans la langue de votre choix, grâce à Nostr Wine."
+		},
+		"footer": "Vous pouvez configurer de nombreux autres paramètres à partir de l'écran 'Paramètres'. Ne manquez pas de les consulter ultérieurement."
+	},
+	"relays": {
+		"global": "Général",
+		"follows": "Suivis",
+		"sidebar": {
+			"title": "Relais connectés",
+			"empty": "Vide."
+		},
+		"relayView": {
+			"empty": "Impossible de charger les informations du relais 😬",
+			"owner": "Propriétaire",
+			"contact": "Contact",
+			"software": "Logiciel",
+			"nips": "NIPs supportés",
+			"limit": "Limitation",
+			"payment": "Ouvrir le site de paiement",
+			"paymentNote": "Vous devez effectuer un paiement pour vous connecter à ce relais."
+		}
+	},
+	"suggestion": {
+		"title": "Suivis Suggérés",
+		"error": "Erreur. Impossible d'obtenir les utilisateurs en tendance",
+		"button": "Enregistrer & Retour"
+	},
+	"interests": {
+		"title": "Intérêts",
+		"subtitle": "Choisissez les éléments que vous aimeriez voir apparaître dans votre flux d'accueil.",
+		"edit": "Modifier vos Intérêts",
+		"followAll": "Suivre tout le monde",
+		"unfollowAll": "Ne plus suivre personne"
+	},
+	"settings": {
+		"general": {
+			"title": "Général",
+			"update": {
+				"title": "Mises à jour",
+				"subtitle": "Téléchargement automatique des nouvelles mises à jour"
+			},
+			"lowPower": {
+				"title": "Faible Consommation",
+				"subtitle": "Recommandé pour un environnement avec peu de réseau"
+			},
+			"startup": {
+				"title": "Démarrage",
+				"subtitle": "Lancer Lume au Démarrage"
+			},
+			"media": {
+				"title": "Média",
+				"subtitle": "Chargement automatique des médias"
+			},
+			"hashtag": {
+				"title": "Hashtag",
+				"subtitle": "Afficher tous les hashtags dans les contenus"
+			},
+			"notification": {
+				"title": "Notification",
+				"subtitle": "Envoi automatique des notifications"
+			},
+			"translation": {
+				"title": "Traduction",
+				"subtitle": "Traduire les textes dans votre langue"
+			},
+			"appearance": {
+				"title": "Apparence",
+				"light": "Clair",
+				"dark": "Sombre",
+				"system": "Système"
+			}
+		},
+		"user": {
+			"title": "Utilisateur"
+		},
+		"zap": {
+			"title": "Zap",
+			"nwc": "Chaîne de connexion NWC"
+		},
+		"backup": {
+			"title": "Sauvegarde",
+			"privkey": {
+				"title": "Clé Privée",
+				"button": "Supprimer la clé privée"
+			}
+		},
+		"advanced": {
+			"title": "Avancé",
+			"cache": {
+				"title": "Cache",
+				"subtitle": "A utiliser pour accélérer la connexion nostr",
+				"button": "Vider"
+			},
+			"instant": {
+				"title": "Zap instantané",
+				"subtitle": "Zap avec montant par défaut, sans confirmation"
+			},
+			"defaultAmount": "Montant par défaut"
+		},
+		"about": {
+			"title": "A propos",
+			"version": "Version",
+			"checkUpdate": "Rechercher des mises à jour",
+			"installUpdate": "Installer"
+		}
+	},
+	"onboarding": {
+		"home": {
+			"title": "Votre compte a été créé avec succès !",
+			"subtitle": "Pour commencer, configurons votre profil.",
+			"profileSettings": "Paramètres du Profil"
+		},
+		"profile": {
+			"title": "A propos de vous",
+			"subtitle": "Parlez de vous à Lume pour commencer à construire votre flux d'accueil."
+		},
+		"finish": {
+			"title": "Configuration du profil terminée !",
+			"subtitle": "Vous pouvez quitter la configuration ici et commencer à utiliser Lume.",
+			"report": "Signaler un problème"
+		}
+	},
+	"activity": {
+		"title": "Activité",
+		"empty": "Hey ! Rien de nouveau pour l'instant.",
+		"mention": "vous a mentionné",
+		"repost": "reposté",
+		"zap": "zappé",
+		"newReply": "Nouvelle réponse",
+		"boost": "Booster",
+		"boostSubtitle": "@ Quelqu'un a reposté votre note",
+		"conversation": "Conversation",
+		"conversationSubtitle": "@ Quelqu'un a répondu à votre note"
+	}
+}
