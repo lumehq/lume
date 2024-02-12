@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AppImport } from './routes/app'
 import { Route as IndexImport } from './routes/index'
 import { Route as LandingIndexImport } from './routes/landing/index'
 
@@ -20,8 +21,14 @@ import { Route as LandingIndexImport } from './routes/landing/index'
 
 const AuthImportLazyImport = createFileRoute('/auth/import')()
 const AuthCreateLazyImport = createFileRoute('/auth/create')()
+const AppSpaceLazyImport = createFileRoute('/app/space')()
 
 // Create/Update Routes
+
+const AppRoute = AppImport.update({
+  path: '/app',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -43,6 +50,11 @@ const AuthCreateLazyRoute = AuthCreateLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/auth/create.lazy').then((d) => d.Route))
 
+const AppSpaceLazyRoute = AppSpaceLazyImport.update({
+  path: '/space',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/app/space.lazy').then((d) => d.Route))
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -50,6 +62,14 @@ declare module '@tanstack/react-router' {
     '/': {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
+    }
+    '/app': {
+      preLoaderRoute: typeof AppImport
+      parentRoute: typeof rootRoute
+    }
+    '/app/space': {
+      preLoaderRoute: typeof AppSpaceLazyImport
+      parentRoute: typeof AppImport
     }
     '/auth/create': {
       preLoaderRoute: typeof AuthCreateLazyImport
@@ -70,6 +90,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
+  AppRoute.addChildren([AppSpaceLazyRoute]),
   AuthCreateLazyRoute,
   AuthImportLazyRoute,
   LandingIndexRoute,

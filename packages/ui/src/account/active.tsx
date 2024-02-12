@@ -15,13 +15,13 @@ export function ActiveAccount() {
 	const svgURI = useMemo(
 		() =>
 			`data:image/svg+xml;utf8,${encodeURIComponent(
-				minidenticon(ark.account.pubkey, 90, 50),
+				minidenticon(ark.account.npub, 90, 50),
 			)}`,
 		[],
 	);
 
 	const { t } = useTranslation();
-	const { user } = useProfile(ark.account.pubkey);
+	const { user } = useProfile(ark.account.npub);
 
 	return (
 		<DropdownMenu.Root>
@@ -30,24 +30,24 @@ export function ActiveAccount() {
 					<Avatar.Root>
 						<Avatar.Image
 							src={user?.picture}
-							alt={ark.account.pubkey}
+							alt={ark.account.npub}
 							loading="lazy"
 							decoding="async"
 							style={{ contentVisibility: "auto" }}
-							className="aspect-square h-auto w-full rounded-xl object-cover"
+							className="object-cover w-full h-auto aspect-square rounded-xl"
 						/>
 						<Avatar.Fallback delayMs={150}>
 							<img
 								src={svgURI}
-								alt={ark.account.pubkey}
-								className="aspect-square h-auto w-full rounded-xl bg-black dark:bg-white"
+								alt={ark.account.npub}
+								className="w-full h-auto bg-black aspect-square rounded-xl dark:bg-white"
 							/>
 						</Avatar.Fallback>
 					</Avatar.Root>
 					<span
 						className={cn(
-							"absolute bottom-0 right-0 block h-2 w-2 rounded-full ring-2 ring-neutral-100 dark:ring-neutral-900",
-							isOnline ? "bg-teal-500" : "bg-red-500",
+							"absolute bottom-0 right-0 block h-2 w-2 rounded-full ring-2 ring-gray-1 dark:ring-graydark-1",
+							isOnline ? "bg-green-9" : "bg-red-9",
 						)}
 					/>
 				</div>

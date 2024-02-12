@@ -2,8 +2,6 @@ import {
 	ArrowUpSquareIcon,
 	BellFilledIcon,
 	BellIcon,
-	DepotFilledIcon,
-	DepotIcon,
 	HomeFilledIcon,
 	HomeIcon,
 	PlusIcon,
@@ -13,13 +11,13 @@ import {
 	SettingsIcon,
 } from "@lume/icons";
 import { cn, editorAtom, searchAtom } from "@lume/utils";
+import { Link } from "@tanstack/react-router";
 import { confirm } from "@tauri-apps/plugin-dialog";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { Update, check } from "@tauri-apps/plugin-updater";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { NavLink } from "react-router-dom";
 import { ActiveAccount } from "./account/active";
 import { UnreadActivity } from "./unread";
 
@@ -65,20 +63,19 @@ export function Navigation() {
 						type="button"
 						onClick={() => setIsEditorOpen((state) => !state)}
 						className={cn(
-							"flex items-center justify-center h-auto w-full text-black aspect-square rounded-xl hover:text-white dark:text-white",
+							"flex items-center justify-center h-auto w-full aspect-square rounded-xl text-gray-normal",
 							isEditorOpen
-								? "bg-blue-500 text-white"
-								: "bg-black/5 hover:bg-blue-500 dark:bg-white/5 dark:hover:bg-blue-500",
+								? "bg-blue-solid text-white"
+								: "bg-gray-4 hover:bg-blue-solid dark:bg-graydark-4",
 						)}
 					>
 						<PlusIcon className="size-5" />
 					</button>
 				</div>
-				<div className="my-5 w-2/3 mx-auto h-px bg-black/10 dark:bg-white/10" />
+				<div className="w-2/3 h-px mx-auto my-5 bg-black/10 dark:bg-white/10" />
 				<div className="flex flex-col gap-2">
-					<NavLink
-						to="/"
-						preventScrollReset={true}
+					<Link
+						to="/app/space"
 						className="inline-flex flex-col items-center justify-center"
 					>
 						{({ isActive }) => (
@@ -97,10 +94,9 @@ export function Navigation() {
 								)}
 							</div>
 						)}
-					</NavLink>
-					<NavLink
-						to="/activity/"
-						preventScrollReset={true}
+					</Link>
+					<Link
+						to="/app/activity"
 						className="inline-flex flex-col items-center justify-center"
 					>
 						{({ isActive }) => (
@@ -120,29 +116,7 @@ export function Navigation() {
 								<UnreadActivity />
 							</div>
 						)}
-					</NavLink>
-					<NavLink
-						to="/relays/"
-						preventScrollReset={true}
-						className="inline-flex flex-col items-center justify-center"
-					>
-						{({ isActive }) => (
-							<div
-								className={cn(
-									"inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl",
-									isActive
-										? "bg-black/10 text-black dark:bg-white/10 dark:text-white"
-										: "text-black/50 dark:text-neutral-400",
-								)}
-							>
-								{isActive ? (
-									<DepotFilledIcon className="size-6" />
-								) : (
-									<DepotIcon className="size-6" />
-								)}
-							</div>
-						)}
-					</NavLink>
+					</Link>
 				</div>
 			</div>
 			<div className="flex flex-col gap-2">
@@ -152,10 +126,10 @@ export function Navigation() {
 						onClick={installNewUpdate}
 						className="relative inline-flex flex-col items-center justify-center"
 					>
-						<span className="inline-flex items-center rounded-full bg-teal-500/60 ring-teal-500/80 text-teal-50 dark:bg-teal-500/10 px-2 py-1 text-xs font-semibold dark:text-teal-400 ring-1 ring-inset dark:ring-teal-500/20">
+						<span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-teal-500/60 ring-teal-500/80 text-teal-50 dark:bg-teal-500/10 dark:text-teal-400 ring-1 ring-inset dark:ring-teal-500/20">
 							Update
 						</span>
-						<div className="inline-flex aspect-square h-auto w-full items-center justify-center rounded-xl text-black/50 dark:text-neutral-400">
+						<div className="inline-flex items-center justify-center w-full h-auto aspect-square rounded-xl text-black/50 dark:text-neutral-400">
 							<ArrowUpSquareIcon className="size-6" />
 						</div>
 					</button>
@@ -180,9 +154,8 @@ export function Navigation() {
 						)}
 					</div>
 				</button>
-				<NavLink
-					to="/settings/"
-					preventScrollReset={true}
+				<Link
+					to="/settings"
 					className="inline-flex flex-col items-center justify-center"
 				>
 					{({ isActive }) => (
@@ -201,7 +174,7 @@ export function Navigation() {
 							)}
 						</div>
 					)}
-				</NavLink>
+				</Link>
 			</div>
 		</div>
 	);

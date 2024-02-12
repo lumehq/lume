@@ -54,7 +54,7 @@ export class Ark {
 			const event = JSON.parse(cmd) as Event;
 			return event;
 		} catch (e) {
-			console.error(String(e));
+			return null;
 		}
 	}
 
@@ -66,7 +66,7 @@ export class Ark {
 			const cmd: Event[] = await invoke("get_text_events", { limit, until });
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			return [];
 		}
 	}
 
@@ -120,7 +120,7 @@ export class Ark {
 			const cmd: Event[] = await invoke("get_event_thread", { id });
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			return [];
 		}
 	}
 
@@ -165,8 +165,8 @@ export class Ark {
 		try {
 			const cmd: Metadata = await invoke("get_profile", { id });
 			return cmd;
-		} catch (e) {
-			console.error(String(e));
+		} catch {
+			return null;
 		}
 	}
 

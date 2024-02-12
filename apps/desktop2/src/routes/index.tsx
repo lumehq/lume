@@ -2,7 +2,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 
 export const Route = createFileRoute("/")({
-	component: Index,
 	beforeLoad: async ({ location }) => {
 		const signer = await invoke("verify_signer");
 		if (!signer) {
@@ -13,13 +12,8 @@ export const Route = createFileRoute("/")({
 				},
 			});
 		}
+		throw redirect({
+			to: "/app/space",
+		});
 	},
 });
-
-function Index() {
-	return (
-		<div className="p-2">
-			<h3>Welcome Home!</h3>
-		</div>
-	);
-}

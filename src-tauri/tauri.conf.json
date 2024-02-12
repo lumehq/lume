@@ -32,6 +32,8 @@
 			}
 		},
 		"trayIcon": {
+			"id": "lume-tray",
+			"tooltip": "Lume",
 			"iconPath": "icons/tray.png"
 		}
 	},

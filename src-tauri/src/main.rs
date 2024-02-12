@@ -164,8 +164,14 @@ fn main() {
       commands::folder::show_in_folder,
       commands::opg::fetch_opg,
     ])
-    .run(ctx)
-    .expect("error while running tauri application");
+    .build(ctx)
+    .expect("error while running tauri application")
+    .run(|_app_handle, event| match event {
+      tauri::RunEvent::ExitRequested { api, .. } => {
+        api.prevent_exit();
+      }
+      _ => {}
+    });
 }
 
 fn get_nsec_paths(dir: &Path) -> Result<Vec<PathBuf>, Box<dyn Error>> {
