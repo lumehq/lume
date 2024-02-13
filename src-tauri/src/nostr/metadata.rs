@@ -33,3 +33,34 @@ pub async fn get_profile(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, 
     Err(())
   }
 }
+
+#[tauri::command(async)]
+pub async fn create_profile(
+  name: &str,
+  display_name: &str,
+  about: &str,
+  picture: &str,
+  banner: &str,
+  nip05: &str,
+  lud16: &str,
+  website: &str,
+  nostr: State<'_, Nostr>,
+) -> Result<EventId, ()> {
+  let client = &nostr.client;
+
+  let metadata = Metadata::new()
+    .name(name)
+    .display_name(display_name)
+    .about(about)
+    .nip05(nip05)
+    .lud16(lud16)
+    .picture(Url::parse(picture).unwrap())
+    .banner(Url::parse(banner).unwrap())
+    .website(Url::parse(website).unwrap());
+
+  if let Ok(event_id) = client.set_metadata(&metadata).await {
+    Ok(event_id)
+  } else {
+    Err(())
+  }
+}
