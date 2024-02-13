@@ -1,7 +1,6 @@
 export * from "./provider";
 export * from "./hooks/useEvent";
 export * from "./hooks/useProfile";
-export * from "./hooks/useRelayList";
 export * from "./components/user";
 export * from "./components/column";
 export * from "./components/note";

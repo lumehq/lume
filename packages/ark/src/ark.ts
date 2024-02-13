@@ -1,4 +1,4 @@
-import { type CurrentAccount, Event, Keys, Metadata } from "@lume/types";
+import type { CurrentAccount, Event, Keys, Metadata } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 
 export class Ark {

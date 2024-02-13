@@ -6,10 +6,10 @@ import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 import "./app.css";
-import i18n from "./i18n";
+import i18n from "./locale";
 
 // Import the generated route tree
-import { routeTree } from "./tree.gen";
+import { routeTree } from "./router.gen";
 
 const queryClient = new QueryClient();
 const router = createRouter({
@@ -17,8 +17,6 @@ const router = createRouter({
 	context: {
 		queryClient,
 	},
-	defaultPreload: "intent",
-	defaultPreloadStaleTime: 0,
 });
 
 declare module "@tanstack/react-router" {

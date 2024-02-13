@@ -1,4 +1,6 @@
-import sharedConfig from "@lume/tailwindcss";
+/** @type {import('tailwindcss').Config} */
+
+import preset from "@lume/tailwindcss";
 
 const config = {
   content: [
@@ -8,7 +10,7 @@ const config = {
     "../../packages/ui/**/*{.js,.ts,.jsx,.tsx}",
     "index.html",
   ],
-  presets: [sharedConfig],
+  presets: [preset],
 };
 
 export default config;
