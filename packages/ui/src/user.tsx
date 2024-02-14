@@ -53,10 +53,10 @@ export const User = memo(function User({
 						<Avatar.Image
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-6 w-6 rounded-md bg-black dark:bg-white"
+							className="w-6 h-6 bg-black rounded-md dark:bg-white"
 						/>
 					</Avatar.Root>
-					<div className="flex flex-1 items-baseline gap-2">
+					<div className="flex items-baseline flex-1 gap-2">
 						<h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
 							{fallbackName}
 						</h5>
@@ -70,24 +70,24 @@ export const User = memo(function User({
 		}
 
 		return (
-			<div className="flex h-6 items-center gap-2">
+			<div className="flex items-center h-6 gap-2">
 				<Avatar.Root className="shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
 						loading="lazy"
 						decoding="async"
-						className="h-6 w-6 rounded-md"
+						className="w-6 h-6 rounded-md"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-6 w-6 rounded-md bg-black dark:bg-white"
+							className="w-6 h-6 bg-black rounded-md dark:bg-white"
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
-				<div className="flex flex-1 items-baseline gap-2">
+				<div className="flex items-baseline flex-1 gap-2">
 					<h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
 						{user?.name ||
 							user?.display_name ||
@@ -107,11 +107,11 @@ export const User = memo(function User({
 		if (isLoading) {
 			return (
 				<div className="flex items-center gap-2">
-					<Avatar.Root className="h-8 w-8 shrink-0">
+					<Avatar.Root className="w-8 h-8 shrink-0">
 						<Avatar.Image
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-8 w-8 rounded-md bg-black dark:bg-white"
+							className="w-8 h-8 bg-black rounded-md dark:bg-white"
 						/>
 					</Avatar.Root>
 					<h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
@@ -123,19 +123,19 @@ export const User = memo(function User({
 
 		return (
 			<div className="flex items-center gap-2">
-				<Avatar.Root className="h-8 w-8 shrink-0">
+				<Avatar.Root className="w-8 h-8 shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
 						loading="eager"
 						decoding="async"
-						className="h-8 w-8 rounded-md"
+						className="w-8 h-8 rounded-md"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-8 w-8 rounded-md bg-black dark:bg-white"
+							className="w-8 h-8 bg-black rounded-md dark:bg-white"
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
@@ -156,11 +156,11 @@ export const User = memo(function User({
 		if (isLoading) {
 			return (
 				<div className="flex items-center gap-2">
-					<Avatar.Root className="h-8 w-8 shrink-0">
+					<Avatar.Root className="w-8 h-8 shrink-0">
 						<Avatar.Image
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-8 w-8 rounded-md bg-black dark:bg-white"
+							className="w-8 h-8 bg-black rounded-md dark:bg-white"
 						/>
 					</Avatar.Root>
 					<h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
@@ -172,27 +172,24 @@ export const User = memo(function User({
 
 		return (
 			<div className="flex items-center gap-2">
-				<Avatar.Root className="h-8 w-8 shrink-0">
+				<Avatar.Root className="w-8 h-8 shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
 						loading="eager"
 						decoding="async"
-						className="h-8 w-8 rounded-md"
+						className="w-8 h-8 rounded-md"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-8 w-8 rounded-md bg-black dark:bg-white"
+							className="w-8 h-8 bg-black rounded-md dark:bg-white"
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
 				<h5 className="max-w-[10rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
-					{user?.name ||
-						user?.display_name ||
-						user?.displayName ||
-						fallbackName}
+					{user?.name || user?.display_name || fallbackName}
 				</h5>
 			</div>
 		);
@@ -202,10 +199,10 @@ export const User = memo(function User({
 		if (isLoading) {
 			return (
 				<div className="flex items-center gap-2.5">
-					<div className="h-14 w-14 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+					<div className="rounded-lg h-14 w-14 shrink-0 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 					<div className="flex flex-col gap-1.5">
 						<div className="h-3.5 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-						<div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+						<div className="w-24 h-4 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 					</div>
 				</div>
 			);
@@ -213,37 +210,37 @@ export const User = memo(function User({
 
 		return (
 			<div>
-				<div className="h-20 bg-gray-200 dark:bg-gray-800 rounded-t-lg">
+				<div className="h-20 bg-gray-200 rounded-t-lg dark:bg-gray-800">
 					{user?.banner ? (
 						<img
 							src={user.banner}
 							alt="banner"
-							className="w-full h-full object-cover"
+							className="object-cover w-full h-full"
 						/>
 					) : null}
 				</div>
 				<div className="flex h-full w-full flex-col gap-2.5 px-3 -mt-6">
 					<Avatar.Root className="shrink-0">
 						<Avatar.Image
-							src={user?.picture || user?.image}
+							src={user?.picture}
 							alt={pubkey}
 							decoding="async"
-							className="size-11 rounded-lg object-cover"
+							className="object-cover rounded-lg size-11"
 						/>
 						<Avatar.Fallback delayMs={300}>
 							<img
 								src={fallbackAvatar}
 								alt={pubkey}
-								className="size-11 rounded-lg bg-black dark:bg-white"
+								className="bg-black rounded-lg size-11 dark:bg-white"
 							/>
 						</Avatar.Fallback>
 					</Avatar.Root>
 					<div className="flex flex-col items-start text-start">
 						<p className="max-w-[15rem] truncate text-lg font-semibold leadning-tight">
-							{user?.name || user?.display_name || user?.displayName}
+							{user?.name || user?.display_name}
 						</p>
-						<p className="break-p text-neutral-700 dark:text-neutral-600 max-w-none select-text whitespace-pre-line">
-							{user?.about || user?.bio || "No bio"}
+						<p className="whitespace-pre-line select-text break-p text-neutral-700 dark:text-neutral-600 max-w-none">
+							{user?.about || "No bio"}
 						</p>
 					</div>
 				</div>
@@ -255,10 +252,10 @@ export const User = memo(function User({
 		if (isLoading) {
 			return (
 				<div className="flex items-center gap-2.5">
-					<div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-					<div className="flex w-full flex-col items-start gap-1">
-						<div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-						<div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+					<div className="w-10 h-10 rounded-lg shrink-0 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+					<div className="flex flex-col items-start w-full gap-1">
+						<div className="h-4 rounded w-36 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+						<div className="w-24 h-4 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 					</div>
 				</div>
 			);
@@ -266,23 +263,23 @@ export const User = memo(function User({
 
 		return (
 			<div className="flex items-center gap-2.5">
-				<Avatar.Root className="h-10 w-10 shrink-0">
+				<Avatar.Root className="w-10 h-10 shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
 						loading="lazy"
 						decoding="async"
-						className="h-10 w-10 rounded-lg object-cover"
+						className="object-cover w-10 h-10 rounded-lg"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+							className="w-10 h-10 bg-black rounded-lg dark:bg-white"
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
-				<div className="flex w-full flex-col items-start">
+				<div className="flex flex-col items-start w-full">
 					<h3 className="max-w-[15rem] truncate text-base font-semibold text-neutral-900 dark:text-neutral-100">
 						{user?.name || user?.display_name || user?.displayName}
 					</h3>
@@ -297,7 +294,7 @@ export const User = memo(function User({
 	if (variant === "avatar") {
 		if (isLoading) {
 			return (
-				<div className="h-12 w-12 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+				<div className="w-12 h-12 rounded-lg animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 			);
 		}
 
@@ -308,13 +305,13 @@ export const User = memo(function User({
 					alt={pubkey}
 					loading="lazy"
 					decoding="async"
-					className="h-12 w-12 rounded-lg"
+					className="w-12 h-12 rounded-lg"
 				/>
 				<Avatar.Fallback delayMs={300}>
 					<img
 						src={fallbackAvatar}
 						alt={pubkey}
-						className="h-12 w-12 rounded-lg bg-black dark:bg-white"
+						className="w-12 h-12 bg-black rounded-lg dark:bg-white"
 					/>
 				</Avatar.Fallback>
 			</Avatar.Root>
@@ -324,24 +321,24 @@ export const User = memo(function User({
 	if (variant === "miniavatar") {
 		if (isLoading) {
 			return (
-				<div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
+				<div className="w-10 h-10 rounded-lg shrink-0 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 			);
 		}
 
 		return (
-			<Avatar.Root className="h-10 w-10 shrink-0">
+			<Avatar.Root className="w-10 h-10 shrink-0">
 				<Avatar.Image
 					src={user?.picture || user?.image}
 					alt={pubkey}
 					loading="lazy"
 					decoding="async"
-					className="h-10 w-10 rounded-lg"
+					className="w-10 h-10 rounded-lg"
 				/>
 				<Avatar.Fallback delayMs={300}>
 					<img
 						src={fallbackAvatar}
 						alt={pubkey}
-						className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+						className="w-10 h-10 bg-black rounded-lg dark:bg-white"
 					/>
 				</Avatar.Fallback>
 			</Avatar.Root>
@@ -352,11 +349,11 @@ export const User = memo(function User({
 		if (isLoading) {
 			return (
 				<>
-					<Avatar.Root className="h-10 w-10 shrink-0">
+					<Avatar.Root className="w-10 h-10 shrink-0">
 						<Avatar.Image
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-10 w-10 rounded-lg bg-black object-cover dark:bg-white"
+							className="object-cover w-10 h-10 bg-black rounded-lg dark:bg-white"
 						/>
 					</Avatar.Root>
 					<div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
@@ -371,19 +368,19 @@ export const User = memo(function User({
 
 		return (
 			<>
-				<Avatar.Root className="h-10 w-10 shrink-0">
+				<Avatar.Root className="w-10 h-10 shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
 						loading="lazy"
 						decoding="async"
-						className="h-10 w-10 rounded-lg object-cover"
+						className="object-cover w-10 h-10 rounded-lg"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-10 w-10 rounded-lg bg-black dark:bg-white"
+							className="w-10 h-10 bg-black rounded-lg dark:bg-white"
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
@@ -405,7 +402,7 @@ export const User = memo(function User({
 	if (variant === "stacked") {
 		if (isLoading) {
 			return (
-				<div className="inline-block h-8 w-8 animate-pulse rounded-full bg-neutral-300 ring-1 ring-neutral-200 dark:bg-neutral-700 dark:ring-neutral-800" />
+				<div className="inline-block w-8 h-8 rounded-full animate-pulse bg-neutral-300 ring-1 ring-neutral-200 dark:bg-neutral-700 dark:ring-neutral-800" />
 			);
 		}
 
@@ -416,13 +413,13 @@ export const User = memo(function User({
 					alt={pubkey}
 					loading="lazy"
 					decoding="async"
-					className="inline-block h-8 w-8 rounded-full ring-1 ring-neutral-200 dark:ring-neutral-800"
+					className="inline-block w-8 h-8 rounded-full ring-1 ring-neutral-200 dark:ring-neutral-800"
 				/>
 				<Avatar.Fallback delayMs={300}>
 					<img
 						src={fallbackAvatar}
 						alt={pubkey}
-						className="inline-block h-8 w-8 rounded-full bg-black ring-1 ring-neutral-200 dark:bg-white dark:ring-neutral-800"
+						className="inline-block w-8 h-8 bg-black rounded-full ring-1 ring-neutral-200 dark:bg-white dark:ring-neutral-800"
 					/>
 				</Avatar.Fallback>
 			</Avatar.Root>
@@ -432,7 +429,7 @@ export const User = memo(function User({
 	if (variant === "ministacked") {
 		if (isLoading) {
 			return (
-				<div className="inline-block h-6 w-6 animate-pulse rounded-full bg-neutral-300 ring-1 ring-white dark:ring-black" />
+				<div className="inline-block w-6 h-6 rounded-full animate-pulse bg-neutral-300 ring-1 ring-white dark:ring-black" />
 			);
 		}
 
@@ -443,13 +440,13 @@ export const User = memo(function User({
 					alt={pubkey}
 					loading="lazy"
 					decoding="async"
-					className="inline-block h-6 w-6 rounded-full ring-1 ring-white dark:ring-black"
+					className="inline-block w-6 h-6 rounded-full ring-1 ring-white dark:ring-black"
 				/>
 				<Avatar.Fallback delayMs={300}>
 					<img
 						src={fallbackAvatar}
 						alt={pubkey}
-						className="inline-block h-6 w-6 rounded-full bg-black ring-1 ring-white dark:bg-white dark:ring-black"
+						className="inline-block w-6 h-6 bg-black rounded-full ring-1 ring-white dark:bg-white dark:ring-black"
 					/>
 				</Avatar.Fallback>
 			</Avatar.Root>
@@ -460,12 +457,12 @@ export const User = memo(function User({
 		if (isLoading) {
 			return (
 				<div className="flex gap-3">
-					<div className="inline-flex h-10 w-10 items-center justify-center">
-						<RepostIcon className="h-5 w-5 text-blue-500" />
+					<div className="inline-flex items-center justify-center w-10 h-10">
+						<RepostIcon className="w-5 h-5 text-blue-500" />
 					</div>
 					<div className="inline-flex items-center gap-2">
-						<div className="h-6 w-6 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-						<div className="h-4 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+						<div className="w-6 h-6 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+						<div className="w-24 h-4 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 					</div>
 				</div>
 			);
@@ -473,8 +470,8 @@ export const User = memo(function User({
 
 		return (
 			<div className="flex gap-2 px-3">
-				<div className="inline-flex w-10 items-center justify-center">
-					<RepostIcon className="h-5 w-5 text-blue-500" />
+				<div className="inline-flex items-center justify-center w-10">
+					<RepostIcon className="w-5 h-5 text-blue-500" />
 				</div>
 				<div className="inline-flex items-center gap-2">
 					<Avatar.Root className="shrink-0">
@@ -483,13 +480,13 @@ export const User = memo(function User({
 							alt={pubkey}
 							loading="lazy"
 							decoding="async"
-							className="h-6 w-6 rounded object-cover"
+							className="object-cover w-6 h-6 rounded"
 						/>
 						<Avatar.Fallback delayMs={300}>
 							<img
 								src={fallbackAvatar}
 								alt={pubkey}
-								className="h-6 w-6 rounded bg-black dark:bg-white"
+								className="w-6 h-6 bg-black rounded dark:bg-white"
 							/>
 						</Avatar.Fallback>
 					</Avatar.Root>
@@ -510,35 +507,35 @@ export const User = memo(function User({
 	if (variant === "thread") {
 		if (isLoading) {
 			return (
-				<div className="flex h-16 items-center gap-3 px-3">
-					<div className="h-10 w-10 shrink-0 animate-pulse rounded-lg bg-neutral-300 dark:bg-neutral-700" />
-					<div className="flex flex-1 flex-col gap-1">
-						<div className="h-4 w-36 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
-						<div className="h-3 w-24 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
+				<div className="flex items-center h-16 gap-3 px-3">
+					<div className="w-10 h-10 rounded-lg shrink-0 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+					<div className="flex flex-col flex-1 gap-1">
+						<div className="h-4 rounded w-36 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+						<div className="w-24 h-3 rounded animate-pulse bg-neutral-300 dark:bg-neutral-700" />
 					</div>
 				</div>
 			);
 		}
 
 		return (
-			<div className="flex h-16 items-center gap-3 px-3">
-				<Avatar.Root className="h-10 w-10 shrink-0">
+			<div className="flex items-center h-16 gap-3 px-3">
+				<Avatar.Root className="w-10 h-10 shrink-0">
 					<Avatar.Image
 						src={user?.picture || user?.image}
 						alt={pubkey}
 						loading="lazy"
 						decoding="async"
-						className="h-10 w-10 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
+						className="object-cover w-10 h-10 rounded-lg ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
 					/>
 					<Avatar.Fallback delayMs={300}>
 						<img
 							src={fallbackAvatar}
 							alt={pubkey}
-							className="h-10 w-10 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
+							className="w-10 h-10 bg-black rounded-lg ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
 						/>
 					</Avatar.Fallback>
 				</Avatar.Root>
-				<div className="flex flex-1 flex-col">
+				<div className="flex flex-col flex-1">
 					<h5 className="max-w-[15rem] truncate font-semibold text-neutral-900 dark:text-neutral-100">
 						{user?.name || user?.display_name || user?.displayName || "Anon"}
 					</h5>
@@ -559,10 +556,10 @@ export const User = memo(function User({
 					<Avatar.Image
 						src={fallbackAvatar}
 						alt={pubkey}
-						className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
+						className="bg-black rounded-lg h-9 w-9 ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
 					/>
 				</Avatar.Root>
-				<div className="h-6 flex-1">
+				<div className="flex-1 h-6">
 					<div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
 						{fallbackName}
 					</div>
@@ -579,24 +576,24 @@ export const User = memo(function User({
 					alt={pubkey}
 					loading="lazy"
 					decoding="async"
-					className="h-9 w-9 rounded-lg bg-white object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
+					className="object-cover bg-white rounded-lg h-9 w-9 ring-1 ring-neutral-200/50 dark:ring-neutral-800/50"
 				/>
 				<Avatar.Fallback delayMs={300}>
 					<img
 						src={fallbackAvatar}
 						alt={pubkey}
-						className="h-9 w-9 rounded-lg bg-black ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
+						className="bg-black rounded-lg h-9 w-9 ring-1 ring-neutral-200/50 dark:bg-white dark:ring-neutral-800/50"
 					/>
 				</Avatar.Fallback>
 			</Avatar.Root>
-			<div className="flex h-6 flex-1 items-start gap-2">
+			<div className="flex items-start flex-1 h-6 gap-2">
 				<div className="max-w-[15rem] truncate font-semibold text-neutral-950 dark:text-neutral-50">
 					{user?.name ||
 						user?.display_name ||
 						user?.displayName ||
 						fallbackName}
 				</div>
-				<div className="ml-auto inline-flex items-center gap-3">
+				<div className="inline-flex items-center gap-3 ml-auto">
 					<div className="text-neutral-500 dark:text-neutral-400">
 						{createdAt}
 					</div>

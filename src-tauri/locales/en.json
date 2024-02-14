@@ -1,295 +1,295 @@
 {
-	"global": {
-		"relay": "Relay",
-		"back": "Back",
-		"continue": "Continue",
-		"loading": "Loading",
-		"error": "Error",
-		"moveLeft": "Move Left",
-		"moveRight": "Move Right",
-		"newColumn": "New Column",
-		"inspect": "Inspect",
-		"loadMore": "Load more",
-		"delete": "Delete",
-		"refresh": "Refresh",
-		"cancel": "Cancel",
-		"save": "Save",
-		"post": "Post",
-		"update": "Update",
-		"noResult": "No results found.",
-		"emptyFeedTitle": "This feed is empty",
-		"emptyFeedSubtitle": "You can follow more users to build up your timeline",
-		"apiKey": "API Key",
-		"skip": "Skip",
-		"close": "Close"
-	},
-	"nip89": {
-		"unsupported": "Lume isn't support this event",
-		"openWith": "Open with"
-	},
-	"note": {
-		"showThread": "Show thread",
-		"showMore": "Show more",
-		"error": "Failed to fetch event.",
-		"posted": "posted",
-		"replied": "replied",
-		"reposted": "reposted",
-		"menu": {
-			"viewThread": "View thread",
-			"copyLink": "Copy shareable link",
-			"copyNoteId": "Copy note ID",
-			"copyAuthorId": "Copy author ID",
-			"viewAuthor": "View author",
-			"pinAuthor": "Pin author",
-			"copyRaw": "Copy raw event",
-			"mute": "Mute"
-		},
-		"buttons": {
-			"pin": "Pin",
-			"pinTooltip": "Pin Note",
-			"repost": "Repost",
-			"quote": "Quote",
-			"viewProfile": "View profile"
-		},
-		"zap": {
-			"zap": "Zap",
-			"tooltip": "Send zap",
-			"modalTitle": "Send zap to",
-			"messagePlaceholder": "Enter message (optional)",
-			"buttonFinish": "Zapped",
-			"buttonLoading": "Processing...",
-			"invoiceButton": "Scan to zap",
-			"invoiceFooter": "You must use Bitcoin wallet which support Lightning\nsuch as: Blue Wallet, Bitkit, Phoenix,..."
-		},
-		"reply": {
-			"single": "reply",
-			"plural": "replies",
-			"empty": "Be the first to Reply!"
-		}
-	},
-	"user": {
-		"avatar": "Avatar",
-		"displayName": "Display Name",
-		"name": "Name",
-		"bio": "Bio",
-		"lna": "Lightning address",
-		"website": "Website",
-		"verified": "Verified",
-		"unverified": "Unverified",
-		"follow": "Follow",
-		"unfollow": "Unfollow",
-		"latestPosts": "Latest posts",
-		"avatarButton": "Change avatar",
-		"coverButton": "Change cover",
-		"editProfile": "Edit profile",
-		"settings": "Settings",
-		"logout": "Log out",
-		"logoutConfirmTitle": "Are you sure!",
-		"logoutConfirmSubtitle": "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account."
-	},
-	"editor": {
-		"title": "New Post",
-		"placeholder": "What are you up to?",
-		"successMessage": "Your note has been published successfully.",
-		"replyPlaceholder": "Post your reply"
-	},
-	"search": {
-		"placeholder": "Type something to search...",
-		"empty": "Try searching for people, notes, or keywords"
-	},
-	"welcome": {
-		"title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
-		"signup": "Join Nostr",
-		"login": "Login",
-		"footer": "Before joining Nostr, you can take time to learn more about Nostr"
-	},
-	"login": {
-		"title": "Welcome back, anon!",
-		"footer": "Lume will put your Private Key in Secure Storage depended on your OS Platform. It will be secured by Password or Biometric ID",
-		"loginWithAddress": "Login with Nostr Address",
-		"loginWithBunker": "Login with nsecBunker",
-		"or": "Or continue with",
-		"loginWithPrivkey": "Login with Private Key"
-	},
-	"loginWithAddress": {
-		"title": "Enter your Nostr Address"
-	},
-	"loginWithBunker": {
-		"title": "Enter your nsecbunker token"
-	},
-	"loginWithPrivkey": {
-		"title": "Enter your Private Key",
-		"subtitle": "Lume will put your private key to <1>{{service}}</1>.\nIt will be secured by your OS."
-	},
-	"signup": {
-		"title": "Let's Get Started",
-		"subtitle": "Choose one of methods below to create your account",
-		"selfManageMethod": "Self-Managed",
-		"selfManageMethodDescription": "You create your keys and keep them safe.",
-		"providerMethod": "Managed by Provider",
-		"providerMethodDescription": "A 3rd party provider will handle your sign in keys for you."
-	},
-	"signupWithSelfManage": {
-		"title": "This is your new Account Key",
-		"subtitle": "Keep your key in safe place. If you lose this key, you will lose access to your account.",
-		"confirm1": "I understand the risk of lost private key.",
-		"confirm2": "I will make sure keep it safe and not sharing with anyone.",
-		"confirm3": "I understand I cannot recover private key.",
-		"button": "Save key & Continue"
-	},
-	"signupWithProvider": {
-		"title": "Let's set up your account on Nostr",
-		"username": "Username *",
-		"chooseProvider": "Choose a Provider",
-		"usernameFooter": "Use to login to Lume and other Nostr apps. You can choose provider you trust to manage your account",
-		"email": "Backup Email (optional)",
-		"emailFooter": "Use for recover your account if you lose your password"
-	},
-	"onboardingSettings": {
-		"title": "You're almost ready to use Lume.",
-		"subtitle": "Let's start personalizing your experience.",
-		"notification": {
-			"title": "Push notification",
-			"subtitle": "Enabling push notifications will allow you to receive notifications from Lume."
-		},
-		"lowPower": {
-			"title": "Low Power Mode",
-			"subtitle": "Limited relay connection and hide all media, sustainable for low network environment."
-		},
-		"translation": {
-			"title": "Translation (nostr.wine)",
-			"subtitle": "Translate text to your preferred language, powered by Nostr Wine."
-		},
-		"footer": "There are many more settings you can configure from the 'Settings' Screen. Be sure to visit it later."
-	},
-	"relays": {
-		"global": "Global",
-		"follows": "Follows",
-		"sidebar": {
-			"title": "Connected relays",
-			"empty": "Empty."
-		},
-		"relayView": {
-			"empty": "Could not load relay information 😬",
-			"owner": "Owner",
-			"contact": "Contact",
-			"software": "Software",
-			"nips": "Supported NIPs",
-			"limit": "Limitation",
-			"payment": "Open payment website",
-			"paymentNote": "You need to make a payment to connect this relay"
-		}
-	},
-	"suggestion": {
-		"title": "Suggested Follows",
-		"error": "Error. Cannot get trending users",
-		"button": "Save & Go back"
-	},
-	"interests": {
-		"title": "Interests",
-		"subtitle": "Pick things you'd like to see in your home feed.",
-		"edit": "Edit Interest",
-		"followAll": "Follow All",
-		"unfollowAll": "Unfollow All"
-	},
-	"settings": {
-		"general": {
-			"title": "General",
-			"update": {
-				"title": "Update",
-				"subtitle": "Automatically download new update"
-			},
-			"lowPower": {
-				"title": "Low Power",
-				"subtitle": "Sustainable for low network environment"
-			},
-			"startup": {
-				"title": "Startup",
-				"subtitle": "Launch Lume at Login"
-			},
-			"media": {
-				"title": "Media",
-				"subtitle": "Automatically load media"
-			},
-			"hashtag": {
-				"title": "Hashtag",
-				"subtitle": "Show all hashtags in content"
-			},
-			"notification": {
-				"title": "Notification",
-				"subtitle": "Automatically send notification"
-			},
-			"translation": {
-				"title": "Translation",
-				"subtitle": "Translate text to your language"
-			},
-			"appearance": {
-				"title": "Appearance",
-				"light": "Light",
-				"dark": "Dark",
-				"system": "System"
-			}
-		},
-		"user": {
-			"title": "User"
-		},
-		"zap": {
-			"title": "Zap",
-			"nwc": "Connection String"
-		},
-		"backup": {
-			"title": "Backup",
-			"privkey": {
-				"title": "Private key",
-				"button": "Remove private key"
-			}
-		},
-		"advanced": {
-			"title": "Advanced",
-			"cache": {
-				"title": "Cache",
-				"subtitle": "Use for boost up nostr connection",
-				"button": "Clear"
-			},
-			"instant": {
-				"title": "Instant Zap",
-				"subtitle": "Zap with default amount, no confirmation"
-			},
-			"defaultAmount": "Default amount"
-		},
-		"about": {
-			"title": "About",
-			"version": "Version",
-			"checkUpdate": "Check for update",
-			"installUpdate": "Install"
-		}
-	},
-	"onboarding": {
-		"home": {
-			"title": "Your account was successfully created!",
-			"subtitle": "For starters, let's set up your profile.",
-			"profileSettings": "Profile Settings"
-		},
-		"profile": {
-			"title": "About you",
-			"subtitle": "Tell Lume about yourself to start building your home feed."
-		},
-		"finish": {
-			"title": "Profile setup complete!",
-			"subtitle": "You can exit the setup here and start using Lume.",
-			"report": "Report a issue"
-		}
-	},
-	"activity": {
-		"title": "Activity",
-		"empty": "Yo! Nothing new yet.",
-		"mention": "mention you",
-		"repost": "reposted",
-		"zap": "zapped",
-		"newReply": "New reply",
-		"boost": "Boost",
-		"boostSubtitle": "@ Someone has reposted to your note",
-		"conversation": "Conversation",
-		"conversationSubtitle": "@ Someone has replied to your note"
-	}
+  "global": {
+    "relay": "Relay",
+    "back": "Back",
+    "continue": "Continue",
+    "loading": "Loading",
+    "error": "Error",
+    "moveLeft": "Move Left",
+    "moveRight": "Move Right",
+    "newColumn": "New Column",
+    "inspect": "Inspect",
+    "loadMore": "Load more",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "save": "Save",
+    "post": "Post",
+    "update": "Update",
+    "noResult": "No results found.",
+    "emptyFeedTitle": "This feed is empty",
+    "emptyFeedSubtitle": "You can follow more users to build up your timeline",
+    "apiKey": "API Key",
+    "skip": "Skip",
+    "close": "Close"
+  },
+  "nip89": {
+    "unsupported": "Lume isn't support this event",
+    "openWith": "Open with"
+  },
+  "note": {
+    "showThread": "Show thread",
+    "showMore": "Show more",
+    "error": "Failed to fetch event.",
+    "posted": "posted",
+    "replied": "replied",
+    "reposted": "reposted",
+    "menu": {
+      "viewThread": "View thread",
+      "copyLink": "Copy shareable link",
+      "copyNoteId": "Copy note ID",
+      "copyAuthorId": "Copy author ID",
+      "viewAuthor": "View author",
+      "pinAuthor": "Pin author",
+      "copyRaw": "Copy raw event",
+      "mute": "Mute"
+    },
+    "buttons": {
+      "pin": "Pin",
+      "pinTooltip": "Pin Note",
+      "repost": "Repost",
+      "quote": "Quote",
+      "viewProfile": "View profile"
+    },
+    "zap": {
+      "zap": "Zap",
+      "tooltip": "Send zap",
+      "modalTitle": "Send zap to",
+      "messagePlaceholder": "Enter message (optional)",
+      "buttonFinish": "Zapped",
+      "buttonLoading": "Processing...",
+      "invoiceButton": "Scan to zap",
+      "invoiceFooter": "You must use Bitcoin wallet which support Lightning\nsuch as: Blue Wallet, Bitkit, Phoenix,..."
+    },
+    "reply": {
+      "single": "reply",
+      "plural": "replies",
+      "empty": "Be the first to Reply!"
+    }
+  },
+  "user": {
+    "avatar": "Avatar",
+    "displayName": "Display Name",
+    "name": "Name",
+    "bio": "Bio",
+    "lna": "Lightning address",
+    "website": "Website",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "latestPosts": "Latest posts",
+    "avatarButton": "Change avatar",
+    "coverButton": "Change cover",
+    "editProfile": "Edit profile",
+    "settings": "Settings",
+    "logout": "Log out",
+    "logoutConfirmTitle": "Are you sure!",
+    "logoutConfirmSubtitle": "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account."
+  },
+  "editor": {
+    "title": "New Post",
+    "placeholder": "What are you up to?",
+    "successMessage": "Your note has been published successfully.",
+    "replyPlaceholder": "Post your reply"
+  },
+  "search": {
+    "placeholder": "Type something to search...",
+    "empty": "Try searching for people, notes, or keywords"
+  },
+  "welcome": {
+    "title": "Lume is a magnificent client for Nostr to meet, explore\nand freely share your thoughts with everyone.",
+    "signup": "Join Nostr",
+    "login": "Login",
+    "footer": "Before joining Nostr, you can take time to learn more about Nostr"
+  },
+  "login": {
+    "title": "Welcome back, anon!",
+    "footer": "Lume will put your Private Key in Secure Storage depended on your OS Platform. It will be secured by Password or Biometric ID",
+    "loginWithAddress": "Login with Nostr Address",
+    "loginWithBunker": "Login with nsecBunker",
+    "or": "Or continue with",
+    "loginWithPrivkey": "Login with Private Key"
+  },
+  "loginWithAddress": {
+    "title": "Enter your Nostr Address"
+  },
+  "loginWithBunker": {
+    "title": "Enter your nsecbunker token"
+  },
+  "loginWithPrivkey": {
+    "title": "Enter your Private Key",
+    "subtitle": "Lume will put your private key to <1>{{service}}</1>.\nIt will be secured by your OS."
+  },
+  "signup": {
+    "title": "Let's Get Started",
+    "subtitle": "Choose one of methods below to create your account",
+    "selfManageMethod": "Self-Managed",
+    "selfManageMethodDescription": "You create your keys and keep them safe.",
+    "providerMethod": "Managed by Provider",
+    "providerMethodDescription": "A 3rd party provider will handle your sign in keys for you."
+  },
+  "signupWithSelfManage": {
+    "title": "This is your new Account Key",
+    "subtitle": "Keep your key in safe place. If you lose this key, you will lose access to your account.",
+    "confirm1": "I understand the risk of lost private key.",
+    "confirm2": "I will make sure keep it safe and not sharing with anyone.",
+    "confirm3": "I understand I cannot recover private key.",
+    "button": "Save & Continue"
+  },
+  "signupWithProvider": {
+    "title": "Let's set up your account on Nostr",
+    "username": "Username *",
+    "chooseProvider": "Choose a Provider",
+    "usernameFooter": "Use to login to Lume and other Nostr apps. You can choose provider you trust to manage your account",
+    "email": "Backup Email (optional)",
+    "emailFooter": "Use for recover your account if you lose your password"
+  },
+  "onboardingSettings": {
+    "title": "You're almost ready to use Lume.",
+    "subtitle": "Let's start personalizing your experience.",
+    "notification": {
+      "title": "Push notification",
+      "subtitle": "Enabling push notifications will allow you to receive notifications from Lume."
+    },
+    "lowPower": {
+      "title": "Low Power Mode",
+      "subtitle": "Limited relay connection and hide all media, sustainable for low network environment."
+    },
+    "translation": {
+      "title": "Translation (nostr.wine)",
+      "subtitle": "Translate text to your preferred language, powered by Nostr Wine."
+    },
+    "footer": "There are many more settings you can configure from the 'Settings' Screen. Be sure to visit it later."
+  },
+  "relays": {
+    "global": "Global",
+    "follows": "Follows",
+    "sidebar": {
+      "title": "Connected relays",
+      "empty": "Empty."
+    },
+    "relayView": {
+      "empty": "Could not load relay information 😬",
+      "owner": "Owner",
+      "contact": "Contact",
+      "software": "Software",
+      "nips": "Supported NIPs",
+      "limit": "Limitation",
+      "payment": "Open payment website",
+      "paymentNote": "You need to make a payment to connect this relay"
+    }
+  },
+  "suggestion": {
+    "title": "Suggested Follows",
+    "error": "Error. Cannot get trending users",
+    "button": "Save & Go back"
+  },
+  "interests": {
+    "title": "Interests",
+    "subtitle": "Pick things you'd like to see in your home feed.",
+    "edit": "Edit Interest",
+    "followAll": "Follow All",
+    "unfollowAll": "Unfollow All"
+  },
+  "settings": {
+    "general": {
+      "title": "General",
+      "update": {
+        "title": "Update",
+        "subtitle": "Automatically download new update"
+      },
+      "lowPower": {
+        "title": "Low Power",
+        "subtitle": "Sustainable for low network environment"
+      },
+      "startup": {
+        "title": "Startup",
+        "subtitle": "Launch Lume at Login"
+      },
+      "media": {
+        "title": "Media",
+        "subtitle": "Automatically load media"
+      },
+      "hashtag": {
+        "title": "Hashtag",
+        "subtitle": "Show all hashtags in content"
+      },
+      "notification": {
+        "title": "Notification",
+        "subtitle": "Automatically send notification"
+      },
+      "translation": {
+        "title": "Translation",
+        "subtitle": "Translate text to your language"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      }
+    },
+    "user": {
+      "title": "User"
+    },
+    "zap": {
+      "title": "Zap",
+      "nwc": "Connection String"
+    },
+    "backup": {
+      "title": "Backup",
+      "privkey": {
+        "title": "Private key",
+        "button": "Remove private key"
+      }
+    },
+    "advanced": {
+      "title": "Advanced",
+      "cache": {
+        "title": "Cache",
+        "subtitle": "Use for boost up nostr connection",
+        "button": "Clear"
+      },
+      "instant": {
+        "title": "Instant Zap",
+        "subtitle": "Zap with default amount, no confirmation"
+      },
+      "defaultAmount": "Default amount"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version",
+      "checkUpdate": "Check for update",
+      "installUpdate": "Install"
+    }
+  },
+  "onboarding": {
+    "home": {
+      "title": "Your account was successfully created!",
+      "subtitle": "For starters, let's set up your profile.",
+      "profileSettings": "Profile Settings"
+    },
+    "profile": {
+      "title": "About you",
+      "subtitle": "Tell Lume about yourself to start building your home feed."
+    },
+    "finish": {
+      "title": "Profile setup complete!",
+      "subtitle": "You can exit the setup here and start using Lume.",
+      "report": "Report a issue"
+    }
+  },
+  "activity": {
+    "title": "Activity",
+    "empty": "Yo! Nothing new yet.",
+    "mention": "mention you",
+    "repost": "reposted",
+    "zap": "zapped",
+    "newReply": "New reply",
+    "boost": "Boost",
+    "boostSubtitle": "@ Someone has reposted to your note",
+    "conversation": "Conversation",
+    "conversationSubtitle": "@ Someone has replied to your note"
+  }
 }

@@ -37,7 +37,7 @@ export function UserNip05({ className }: { className?: string }) {
 					  : user?.profile.nip05}
 			</p>
 			{!isLoading && verified ? (
-				<VerifiedIcon className="size-4 text-green-10" />
+				<VerifiedIcon className="text-teal-500 size-4" />
 			) : null}
 		</div>
 	);

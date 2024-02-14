@@ -19,6 +19,15 @@ export class Ark {
 		}
 	}
 
+	public async create_keys() {
+		try {
+			const cmd: Keys = await invoke("create_keys");
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+		}
+	}
+
 	public async save_account(keys: Keys) {
 		try {
 			const cmd: boolean = await invoke("save_key", { nsec: keys.nsec });

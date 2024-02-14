@@ -21,6 +21,7 @@ export * from "./src/lume";
 export * from "./src/media";
 export * from "./src/mute";
 export * from "./src/space";
+export * from "./src/spaceFilled";
 export * from "./src/navArrowDown";
 export * from "./src/plus";
 export * from "./src/plusCircle";

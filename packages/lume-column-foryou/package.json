@@ -9,10 +9,8 @@
 		"@lume/storage": "workspace:^",
 		"@lume/ui": "workspace:^",
 		"@lume/utils": "workspace:^",
-		"@nostr-dev-kit/ndk": "^2.4.0",
 		"@tanstack/react-query": "^5.18.1",
 		"react": "^18.2.0",
-		"react-router-dom": "^6.22.0",
 		"sonner": "^1.4.0",
 		"virtua": "^0.23.3"
 	},

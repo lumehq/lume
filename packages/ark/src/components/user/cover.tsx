@@ -7,14 +7,19 @@ export function UserCover({ className }: { className?: string }) {
 	if (!user) {
 		return (
 			<div
-				className={cn("animate-pulse bg-gray-3 dark:bg-gray-7", className)}
+				className={cn(
+					"animate-pulse bg-neutral-300 dark:bg-neutral-700",
+					className,
+				)}
 			/>
 		);
 	}
 
 	if (user && !user.profile.banner) {
 		return (
-			<div className={cn("bg-gradient-to-b from-sky-4 to-blue-2", className)} />
+			<div
+				className={cn("bg-gradient-to-b from-blue-400 to-teal-200", className)}
+			/>
 		);
 	}
 

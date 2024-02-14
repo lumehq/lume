@@ -25,10 +25,19 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 }
 
 #[tauri::command]
-pub fn save_key(nsec: &str, app_handle: tauri::AppHandle) -> Result<bool, ()> {
+pub async fn save_key(
+  nsec: &str,
+  app_handle: tauri::AppHandle,
+  nostr: State<'_, Nostr>,
+) -> Result<bool, ()> {
   if let Ok(nostr_secret_key) = SecretKey::from_bech32(nsec) {
     let nostr_keys = Keys::new(nostr_secret_key);
     let nostr_npub = nostr_keys.public_key().to_bech32().unwrap();
+    let signer = ClientSigner::Keys(nostr_keys);
+
+    // Update client's signer
+    let client = &nostr.client;
+    client.set_signer(Some(signer)).await;
 
     let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
     let secret_key = keyring_entry.get_password().unwrap();

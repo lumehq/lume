@@ -1,6 +1,8 @@
-import { SVGProps } from 'react';
+import { SVGProps } from "react";
 
-export function SpaceIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+export function SpaceIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -11,11 +13,12 @@ export function SpaceIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElemen
       {...props}
     >
       <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M14.522 2.261a4 4 0 00-5.044 0l-5 4.062A4 4 0 003 9.428V17a4 4 0 004 4h10a4 4 0 004-4V9.428a4 4 0 00-1.478-3.105l-5-4.062zM8 15a1 1 0 100 2h8a1 1 0 100-2H8z"
-        clipRule="evenodd"
-      />
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M8 7v10m4-10v4m4-4v7m-5 7h2c2.8 0 4.2 0 5.27-.545a5 5 0 002.185-2.185C21 17.2 21 15.8 21 13v-2c0-2.8 0-4.2-.545-5.27a5 5 0 00-2.185-2.185C17.2 3 15.8 3 13 3h-2c-2.8 0-4.2 0-5.27.545A5 5 0 003.545 5.73C3 6.8 3 8.2 3 11v2c0 2.8 0 4.2.545 5.27a5 5 0 002.185 2.185C6.8 21 8.2 21 11 21z"
+      ></path>
     </svg>
   );
 }
