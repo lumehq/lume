@@ -6,7 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export function Logout() {
+export function LogoutDialog() {
   const ark = useArk();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
