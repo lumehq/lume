@@ -126,3 +126,15 @@ pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
 
   Ok(profile.to_bech32().unwrap())
 }
+
+#[tauri::command(async)]
+pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, ()> {
+  let public_key = XOnlyPublicKey::from_str(key).unwrap();
+  let status = nip05::verify(public_key, nip05, None).await;
+
+  if let Ok(_) = status {
+    Ok(true)
+  } else {
+    Ok(false)
+  }
+}

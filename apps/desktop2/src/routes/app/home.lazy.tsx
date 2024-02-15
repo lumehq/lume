@@ -1,12 +1,12 @@
 import { useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
-import { EmptyFeed } from "@lume/ui";
+import { EmptyFeed, TextNote } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef } from "react";
-import { CacheSnapshot, VList, VListHandle } from "virtua";
+import { CacheSnapshot, Virtualizer, VListHandle } from "virtua";
 
 export const Route = createLazyFileRoute("/app/home")({
   component: Home,
@@ -34,21 +34,18 @@ function Home() {
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);
         if (!lastEvent) return;
-        return lastEvent.created_at - 1;
+        return lastEvent.created_at;
       },
       select: (data) => data?.pages.flatMap((page) => page),
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
     });
 
   const renderItem = (event: Event) => {
     switch (event.kind) {
       case Kind.Text:
-        return <p key={event.id}>{event.content}</p>;
-      case Kind.Repost:
-        return <p key={event.id}>{event.content}</p>;
+        return <TextNote key={event.id} event={event} />;
       default:
-        return <p key={event.id}>{event.content}</p>;
+        return <TextNote key={event.id} event={event} />;
     }
   };
 
@@ -70,25 +67,27 @@ function Home() {
 
   return (
     <div className="h-full w-full overflow-hidden rounded-xl bg-white shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
-      <div className="mx-auto h-full w-full max-w-2xl pt-10">
-        <VList ref={ref} cache={cache} overscan={2}>
+      <div className="h-full w-full overflow-y-auto pt-10">
+        <div className="mx-auto w-full max-w-xl">
           {isLoading ? (
-            <div className="flex h-16 w-full items-center justify-center gap-2 px-3 py-1.5">
+            <div className="flex h-20 w-full items-center justify-center">
               <LoaderIcon className="size-5 animate-spin" />
             </div>
           ) : !data.length ? (
-            <div className="mt-3 px-3">
+            <div className="flex flex-col gap-3">
               <EmptyFeed />
               <a
                 href="/suggest"
-                className="mt-3 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-blue-500 text-sm font-medium text-white hover:bg-blue-600"
+                className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-blue-500 text-sm font-medium text-white hover:bg-blue-600"
               >
                 <SearchIcon className="size-5" />
                 Find accounts to follow
               </a>
             </div>
           ) : (
-            data.map((item) => renderItem(item))
+            <Virtualizer ref={ref} cache={cache} overscan={2}>
+              {data.map((item) => renderItem(item))}
+            </Virtualizer>
           )}
           <div className="flex h-16 items-center justify-center">
             {hasNextPage ? (
@@ -109,7 +108,7 @@ function Home() {
               </button>
             ) : null}
           </div>
-        </VList>
+        </div>
       </div>
     </div>
   );

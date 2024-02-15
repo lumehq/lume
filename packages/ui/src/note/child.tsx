@@ -2,7 +2,6 @@ import { NOSTR_MENTIONS } from "@lume/utils";
 import { nanoid } from "nanoid";
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { User } from "../user";
 import { Hashtag } from "./mentions/hashtag";
@@ -61,15 +60,15 @@ export function NoteChild({
         (match, i) => {
           const url = new URL(match);
           return (
-            <Link
+            <a
               key={match + i}
-              to={url.toString()}
+              href={url.toString()}
               target="_blank"
               rel="noreferrer"
               className="break-p font-normal text-blue-500 hover:text-blue-600"
             >
               {url.toString()}
-            </Link>
+            </a>
           );
         },
       );

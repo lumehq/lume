@@ -3,6 +3,10 @@ export * from "./user";
 export * from "./note";
 export * from "./column";
 
+// Note Primities
+export * from "./note/primitives/text";
+export * from "./note/primitives/repost";
+
 // Deprecated
 export * from "./routes/event";
 export * from "./routes/user";

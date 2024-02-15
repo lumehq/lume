@@ -2,7 +2,6 @@ import { PinIcon } from "@lume/icons";
 import { NOSTR_MENTIONS } from "@lume/utils";
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { User } from "../../user";
 import { Hashtag } from "./hashtag";
@@ -64,15 +63,15 @@ export function MentionNote({
         (match, i) => {
           const url = new URL(match);
           return (
-            <Link
+            <a
               key={match + i}
-              to={url.toString()}
+              href={url.toString()}
               target="_blank"
               rel="noreferrer"
               className="break-p inline-block w-full truncate font-normal text-blue-500 hover:text-blue-600"
             >
               {url.toString()}
-            </Link>
+            </a>
           );
         },
       );
@@ -126,12 +125,12 @@ export function MentionNote({
       </div>
       {openable ? (
         <div className="flex h-10 items-center justify-between px-3">
-          <Link
-            to={`/events/${data.id}`}
+          <a
+            href={`/events/${data.id}`}
             className="text-sm text-blue-500 hover:text-blue-600"
           >
             {t("note.showMore")}
-          </Link>
+          </a>
           <button
             type="button"
             className="inline-flex size-6 items-center justify-center rounded-md bg-neutral-200 text-neutral-600 hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"

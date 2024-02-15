@@ -9,17 +9,22 @@ export function NoteUser({ className }: { className?: string }) {
   return (
     <User.Provider pubkey={event.pubkey}>
       <HoverCard.Root>
-        <User.Root className={cn("flex items-center gap-3", className)}>
-          <HoverCard.Trigger>
-            <User.Avatar className="size-9 shrink-0 rounded-lg object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
-          </HoverCard.Trigger>
-          <div className="flex h-6 flex-1 items-start justify-between gap-2">
-            <User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
-            <User.Time
-              time={event.created_at}
-              className="text-neutral-500 dark:text-neutral-400"
-            />
+        <User.Root
+          className={cn("flex items-center justify-between", className)}
+        >
+          <div className="flex gap-3">
+            <HoverCard.Trigger>
+              <User.Avatar className="size-11 shrink-0 rounded-xl object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+            </HoverCard.Trigger>
+            <div>
+              <User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
+              <User.NIP05 className="text-neutral-600 dark:text-neutral-400" />
+            </div>
           </div>
+          <User.Time
+            time={event.created_at}
+            className="text-neutral-500 dark:text-neutral-400"
+          />
         </User.Root>
         <HoverCard.Portal>
           <HoverCard.Content

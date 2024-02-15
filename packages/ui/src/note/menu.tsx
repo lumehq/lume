@@ -2,14 +2,12 @@ import { HorizontalDotsIcon } from "@lume/icons";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
 import { useNoteContext } from "./provider";
 import { useArk } from "@lume/ark";
 
 export function NoteMenu() {
   const ark = useArk();
   const event = useNoteContext();
-  const navigate = useNavigate();
 
   const { t } = useTranslation();
 
@@ -55,7 +53,6 @@ export function NoteMenu() {
           <DropdownMenu.Item asChild>
             <button
               type="button"
-              onClick={() => navigate(`/events/${event.id}`)}
               className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
             >
               {t("note.menu.copyLink")}
@@ -80,12 +77,12 @@ export function NoteMenu() {
             </button>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
-            <Link
-              to={`/users/${event.pubkey}`}
+            <a
+              href={`/users/${event.pubkey}`}
               className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
             >
               {t("note.menu.viewAuthor")}
-            </Link>
+            </a>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
             <button

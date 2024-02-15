@@ -190,4 +190,16 @@ export class Ark {
 			console.error(String(e));
 		}
 	}
+
+	public async verify_nip05(pubkey: string, nip05: string) {
+		try {
+			const cmd: boolean = await invoke("verify_nip05", {
+				key: pubkey,
+				nip05,
+			});
+			return cmd;
+		} catch {
+			return false;
+		}
+	}
 }
