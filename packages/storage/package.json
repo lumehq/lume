@@ -12,14 +12,14 @@
 		"react": "^18.2.0",
 		"scheduler": "^0.23.0",
 		"use-context-selector": "^1.4.1",
-		"virtua": "^0.23.3",
+		"virtua": "^0.27.0",
 		"zustand": "^4.5.0"
 	},
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:*",
 		"@lume/types": "workspace:*",
 		"@lume/utils": "workspace:^",
-		"@types/react": "^18.2.52",
+		"@types/react": "^18.2.55",
 		"typescript": "^5.3.3"
 	}
 }

@@ -4,7 +4,6 @@ import { Keys } from "@lume/types";
 import { onboardingAtom } from "@lume/utils";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -15,7 +14,6 @@ export const Route = createLazyFileRoute("/auth/create/self")({
 
 function Create() {
   const ark = useArk();
-  const setOnboarding = useSetAtom(onboardingAtom);
   const navigate = useNavigate();
 
   const [t] = useTranslation();
@@ -25,8 +23,9 @@ function Create() {
   const [keys, setKeys] = useState<Keys>(null);
 
   const submit = async () => {
-    const save = await ark.save_account(keys);
+    setLoading(true);
 
+    const save = await ark.save_account(keys);
     if (!save) {
       setLoading(false);
       toast.error("Save account keys failed, please try again later.");
@@ -34,7 +33,6 @@ function Create() {
 
     // update state
     setLoading(false);
-    setOnboarding({ open: true, newUser: true });
 
     // next step
     navigate({ to: "/app/space", replace: true });

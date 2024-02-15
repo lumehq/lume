@@ -18,13 +18,13 @@ export function NoteThread({ className }: { className?: string }) {
   if (!thread) return null;
 
   return (
-    <div className={cn("w-full px-3", className)}>
+    <div className={cn("w-full", className)}>
       <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
-        {thread.rootEventId ? (
-          <Note.Child eventId={thread.rootEventId} isRoot />
-        ) : null}
         {thread.replyEventId ? (
           <Note.Child eventId={thread.replyEventId} />
+        ) : null}
+        {thread.rootEventId ? (
+          <Note.Child eventId={thread.rootEventId} isRoot />
         ) : null}
         <div className="inline-flex items-center justify-between">
           <a

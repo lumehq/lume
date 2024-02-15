@@ -11,18 +11,23 @@ export function TextNote({
 }) {
   return (
     <Note.Provider event={event}>
-      <Note.Root className={cn("flex flex-col", className)}>
-        <div className="flex h-14 items-center justify-between px-3">
+      <Note.Root
+        className={cn(
+          "mb-3 flex flex-col gap-2 border-b border-neutral-100 pb-3 dark:border-neutral-900",
+          className,
+        )}
+      >
+        <div className="flex items-start justify-between">
           <Note.User className="flex-1 pr-2" />
           <Note.Menu />
         </div>
         <div className="flex gap-3">
           <div className="size-10 shrink-0" />
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
+            <Note.Content className="mb-2" />
             <Note.Thread className="mb-2" />
-            <Note.Content className="min-w-0 px-3" />
-            <div className="flex h-14 items-center justify-between px-3">
-              <Note.Pin />
+            <div className="mt-5 flex items-center justify-between">
+              <Note.Reaction />
               <div className="inline-flex items-center gap-4">
                 <Note.Reply />
                 <Note.Repost />

@@ -85,7 +85,7 @@ export function NoteZap() {
             <button
               type="button"
               onClick={() => createZapRequest(true)}
-              className="group inline-flex size-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
+              className="group inline-flex h-7 w-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
             >
               {isLoading ? (
                 <LoaderIcon className="size-4 animate-spin" />
@@ -118,7 +118,7 @@ export function NoteZap() {
             <Tooltip.Trigger asChild>
               <button
                 type="button"
-                className="group inline-flex size-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
+                className="group inline-flex h-7 w-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
               >
                 <ZapIcon className="size-5 group-hover:text-blue-500" />
               </button>

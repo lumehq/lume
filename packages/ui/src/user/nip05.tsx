@@ -9,11 +9,11 @@ export function UserNip05({ className }: { className?: string }) {
   const user = useUserContext();
 
   const { isLoading, data: verified } = useQuery({
-    queryKey: ["nip05", user?.profile.nip05],
+    queryKey: ["nip05", user?.pubkey],
     queryFn: async () => {
       if (!user.profile?.nip05) return false;
-
       const verify = await ark.verify_nip05(user.pubkey, user.profile?.nip05);
+      console.log(verify);
       return verify;
     },
     enabled: !!user.profile,

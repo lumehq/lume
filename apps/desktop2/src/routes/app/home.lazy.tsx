@@ -5,8 +5,7 @@ import { EmptyFeed, TextNote } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef } from "react";
-import { CacheSnapshot, Virtualizer, VListHandle } from "virtua";
+import { Virtualizer } from "virtua";
 
 export const Route = createLazyFileRoute("/app/home")({
   component: Home,
@@ -14,15 +13,6 @@ export const Route = createLazyFileRoute("/app/home")({
 
 function Home() {
   const ark = useArk();
-  const ref = useRef<VListHandle>();
-  const cacheKey = "timeline-vlist";
-
-  const [offset, cache] = useMemo(() => {
-    const serialized = sessionStorage.getItem(cacheKey);
-    if (!serialized) return [];
-    return JSON.parse(serialized) as [number, CacheSnapshot];
-  }, []);
-
   const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["timeline"],
@@ -49,22 +39,6 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    if (!ref.current) return;
-    const handle = ref.current;
-
-    if (offset) {
-      handle.scrollTo(offset);
-    }
-
-    return () => {
-      sessionStorage.setItem(
-        cacheKey,
-        JSON.stringify([handle.scrollOffset, handle.cache]),
-      );
-    };
-  }, []);
-
   return (
     <div className="h-full w-full overflow-hidden rounded-xl bg-white shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
       <div className="h-full w-full overflow-y-auto pt-10">
@@ -85,7 +59,7 @@ function Home() {
               </a>
             </div>
           ) : (
-            <Virtualizer ref={ref} cache={cache} overscan={2}>
+            <Virtualizer overscan={2}>
               {data.map((item) => renderItem(item))}
             </Virtualizer>
           )}

@@ -10,15 +10,15 @@ export function NoteUser({ className }: { className?: string }) {
     <User.Provider pubkey={event.pubkey}>
       <HoverCard.Root>
         <User.Root
-          className={cn("flex items-center justify-between", className)}
+          className={cn("flex items-start justify-between", className)}
         >
           <div className="flex gap-3">
             <HoverCard.Trigger>
-              <User.Avatar className="size-11 shrink-0 rounded-xl object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+              <User.Avatar className="size-10 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
             </HoverCard.Trigger>
             <div>
-              <User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
-              <User.NIP05 className="text-neutral-600 dark:text-neutral-400" />
+              <User.Name className="font-semibold leading-tight text-neutral-950 dark:text-neutral-50" />
+              <User.NIP05 className="leading-tight text-neutral-600 dark:text-neutral-400" />
             </div>
           </div>
           <User.Time

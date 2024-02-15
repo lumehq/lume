@@ -68,7 +68,7 @@ export function MentionNote({
               href={url.toString()}
               target="_blank"
               rel="noreferrer"
-              className="break-p inline-block w-full truncate font-normal text-blue-500 hover:text-blue-600"
+              className="content-break inline-block w-full truncate font-normal text-blue-500 hover:text-blue-600"
             >
               {url.toString()}
             </a>

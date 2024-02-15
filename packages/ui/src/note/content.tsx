@@ -167,7 +167,7 @@ export function NoteContent({ className }: { className?: string }) {
               href={url.toString()}
               target="_blank"
               rel="noreferrer"
-              className="break-p inline-block w-full truncate font-normal text-blue-500 hover:text-blue-600"
+              className="content-break inline-block w-full truncate font-normal text-blue-500 hover:text-blue-600"
             >
               {url.toString()}
             </a>
@@ -224,7 +224,7 @@ export function NoteContent({ className }: { className?: string }) {
 
   return (
     <div className={cn(className)}>
-      <div className="break-p select-text whitespace-pre-line text-balance leading-normal">
+      <div className="content-break select-text whitespace-pre-line text-balance leading-normal">
         {richContent}
       </div>
       {storage.settings.translation && translate.translatable ? (
