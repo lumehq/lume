@@ -10,7 +10,7 @@ export function LinkPreview({ url }: { url: string }) {
 
   if (isLoading) {
     return (
-      <div className="mb-2.5 mt-1 flex w-full flex-col overflow-hidden rounded-xl border border-black/5 bg-neutral-100 dark:border-white/5 dark:bg-neutral-900">
+      <div className="my-1.5 flex w-full flex-col overflow-hidden rounded-xl bg-neutral-100 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5">
         <div className="h-48 w-full shrink-0 animate-pulse bg-neutral-300 dark:bg-neutral-700" />
         <div className="flex flex-col gap-2 px-3 py-3">
           <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-300 dark:bg-neutral-700" />
@@ -29,7 +29,7 @@ export function LinkPreview({ url }: { url: string }) {
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="text-blue-500 hover:text-blue-600"
+        className="inline-block text-blue-500 hover:text-blue-600"
       >
         {url}
       </a>
@@ -42,7 +42,7 @@ export function LinkPreview({ url }: { url: string }) {
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="text-blue-500 hover:text-blue-600"
+        className="inline-block text-blue-500 hover:text-blue-600"
       >
         {url}
       </a>
@@ -54,7 +54,7 @@ export function LinkPreview({ url }: { url: string }) {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="mb-2.5 mt-1 flex w-full flex-col overflow-hidden rounded-xl border border-black/5 bg-neutral-100 dark:border-white/5 dark:bg-neutral-900"
+      className="my-1.5 flex w-full flex-col overflow-hidden rounded-xl bg-neutral-100 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5"
     >
       {isImage(data.image) ? (
         <img

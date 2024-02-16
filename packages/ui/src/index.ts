@@ -6,6 +6,7 @@ export * from "./column";
 // Note Primities
 export * from "./note/primitives/text";
 export * from "./note/primitives/repost";
+export * from "./note/primitives/thread";
 
 // Deprecated
 export * from "./routes/event";

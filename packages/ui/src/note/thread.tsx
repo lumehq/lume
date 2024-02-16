@@ -1,4 +1,3 @@
-import { PinIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useTranslation } from "react-i18next";
 import { Note } from ".";
@@ -19,7 +18,7 @@ export function NoteThread({ className }: { className?: string }) {
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex h-min w-full flex-col gap-3 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900">
+      <div className="flex h-min w-full flex-col gap-3 rounded-xl bg-neutral-100 p-3 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5">
         {thread.rootEventId ? (
           <Note.Child eventId={thread.rootEventId} isRoot />
         ) : null}
@@ -27,17 +26,14 @@ export function NoteThread({ className }: { className?: string }) {
           <Note.Child eventId={thread.replyEventId} />
         ) : null}
         <div className="inline-flex items-center justify-between">
-          <a
-            href={`/events/${thread?.rootEventId || thread?.replyEventId}`}
+          <button
+            type="button"
+            onClick={() =>
+              ark.open_thread(thread.rootEventId || thread.rootEventId)
+            }
             className="self-start text-blue-500 hover:text-blue-600"
           >
             {t("note.showThread")}
-          </a>
-          <button
-            type="button"
-            className="inline-flex size-6 items-center justify-center rounded-md bg-neutral-200 text-neutral-600 hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
-          >
-            <PinIcon className="size-4" />
           </button>
         </div>
       </div>

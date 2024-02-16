@@ -32,8 +32,11 @@ export function NoteMenu() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button type="button">
-          <HorizontalDotsIcon className="size-4 hover:text-blue-500 dark:text-neutral-200" />
+        <button
+          type="button"
+          className="text-neutral-500 hover:text-blue-500 dark:text-neutral-400"
+        >
+          <HorizontalDotsIcon className="size-5" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>

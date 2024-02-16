@@ -1,11 +1,11 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
-import { NDKKind, type NDKSubscription } from "@nostr-dev-kit/ndk";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ReplyForm } from "./editor/replyForm";
 import { Reply } from "./note/primitives/reply";
+import { EventWithReplies } from "@lume/types";
 
 export function ReplyList({
   eventId,
@@ -17,41 +17,14 @@ export function ReplyList({
   const ark = useArk();
 
   const [t] = useTranslation();
-  const [data, setData] = useState<null | NDKEventWithReplies[]>(null);
+  const [data, setData] = useState<null | EventWithReplies[]>(null);
 
   useEffect(() => {
-    let sub: NDKSubscription = undefined;
-    let isCancelled = false;
-
-    async function fetchRepliesAndSub() {
-      const id = ark.getCleanEventId(eventId);
-      const events = await ark.getThreads(id);
-
-      if (!isCancelled) {
-        setData(events);
-      }
-
-      if (!sub) {
-        sub = ark.subscribe({
-          filter: {
-            "#e": [id],
-            kinds: [NDKKind.Text],
-            since: Math.floor(Date.now() / 1000),
-          },
-          closeOnEose: false,
-          cb: (event: NDKEventWithReplies) =>
-            setData((prev) => [event, ...prev]),
-        });
-      }
+    async function getReplies() {
+      const events = await ark.get_event_thread(eventId);
+      setData(events);
     }
-
-    // subscribe for new replies
-    fetchRepliesAndSub();
-
-    return () => {
-      isCancelled = true;
-      if (sub) sub.stop();
-    };
+    getReplies();
   }, [eventId]);
 
   return (

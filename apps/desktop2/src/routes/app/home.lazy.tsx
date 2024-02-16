@@ -63,13 +63,13 @@ function Home() {
               {data.map((item) => renderItem(item))}
             </Virtualizer>
           )}
-          <div className="flex h-16 items-center justify-center">
+          <div className="flex h-20 items-center justify-center">
             {hasNextPage ? (
               <button
                 type="button"
                 onClick={() => fetchNextPage()}
                 disabled={!hasNextPage || isFetchingNextPage}
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-neutral-100 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                className="inline-flex h-11 w-max items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
               >
                 {isFetchingNextPage ? (
                   <LoaderIcon className="size-5 animate-spin" />

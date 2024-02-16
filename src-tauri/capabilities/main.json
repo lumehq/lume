@@ -26,6 +26,7 @@
     "clipboard-manager:allow-write",
     "clipboard-manager:allow-read",
     "webview:allow-create-webview-window",
+    "webview:allow-create-webview",
     {
       "identifier": "http:default",
       "allow": [

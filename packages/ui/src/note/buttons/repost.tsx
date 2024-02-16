@@ -7,8 +7,10 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useNoteContext } from "../provider";
+import { useArk } from "@lume/ark";
 
 export function NoteRepost() {
+  const ark = useArk();
   const event = useNoteContext();
   const setEditorValue = useSetAtom(editorValueAtom);
   const setIsEditorOpen = useSetAtom(editorAtom);
@@ -23,7 +25,7 @@ export function NoteRepost() {
       setLoading(true);
 
       // repost
-      await event.repost(true);
+      await ark.repost(event.id, event.pubkey);
 
       // update state
       setLoading(false);

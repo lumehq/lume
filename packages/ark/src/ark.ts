@@ -1,4 +1,10 @@
-import type { CurrentAccount, Event, Keys, Metadata } from "@lume/types";
+import type {
+	CurrentAccount,
+	Event,
+	EventWithReplies,
+	Keys,
+	Metadata,
+} from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { WebviewWindow } from "@tauri-apps/api/webview";
 
@@ -133,27 +139,27 @@ export class Ark {
 		}
 	}
 
-	public async repost(id: string, pubkey: string) {
+	public async repost(id: string, author: string) {
 		try {
-			const cmd: string = await invoke("repost", { id, pubkey });
+			const cmd: string = await invoke("repost", { id, pubkey: author });
 			return cmd;
 		} catch (e) {
 			console.error(String(e));
 		}
 	}
 
-	public async upvote(id: string, pubkey: string) {
+	public async upvote(id: string, author: string) {
 		try {
-			const cmd: string = await invoke("upvote", { id, pubkey });
+			const cmd: string = await invoke("upvote", { id, pubkey: author });
 			return cmd;
 		} catch (e) {
 			console.error(String(e));
 		}
 	}
 
-	public async downvote(id: string, pubkey: string) {
+	public async downvote(id: string, author: string) {
 		try {
-			const cmd: string = await invoke("downvote", { id, pubkey });
+			const cmd: string = await invoke("downvote", { id, pubkey: author });
 			return cmd;
 		} catch (e) {
 			console.error(String(e));
@@ -162,8 +168,36 @@ export class Ark {
 
 	public async get_event_thread(id: string) {
 		try {
-			const cmd: Event[] = await invoke("get_event_thread", { id });
-			return cmd;
+			const events: EventWithReplies[] = await invoke("get_event_thread", {
+				id,
+			});
+
+			if (events.length > 0) {
+				const replies = new Set();
+				for (const event of events) {
+					const tags = event.tags.filter(
+						(el) => el[0] === "e" && el[1] !== id && el[3] !== "mention",
+					);
+					if (tags.length > 0) {
+						for (const tag of tags) {
+							const rootIndex = events.findIndex((el) => el.id === tag[1]);
+							if (rootIndex !== -1) {
+								const rootEvent = events[rootIndex];
+								if (rootEvent?.replies) {
+									rootEvent.replies.push(event);
+								} else {
+									rootEvent.replies = [event];
+								}
+								replies.add(event.id);
+							}
+						}
+					}
+				}
+				const cleanEvents = events.filter((ev) => !replies.has(ev.id));
+				return cleanEvents;
+			}
+
+			return events;
 		} catch (e) {
 			return [];
 		}
@@ -250,7 +284,8 @@ export class Ark {
 		return new WebviewWindow(`event-${id}`, {
 			title: "Thread",
 			url: `/events/${id}`,
-			width: 600,
+			minWidth: 500,
+			width: 500,
 			height: 800,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",
@@ -261,7 +296,8 @@ export class Ark {
 		return new WebviewWindow(`user-${pubkey}`, {
 			title: "Profile",
 			url: `/users/${pubkey}`,
-			width: 600,
+			minWidth: 500,
+			width: 500,
 			height: 800,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",

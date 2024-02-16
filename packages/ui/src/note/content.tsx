@@ -39,9 +39,7 @@ export function NoteContent({ className }: { className?: string }) {
   const richContent = useMemo(() => {
     if (event.kind !== Kind.Text) return content;
 
-    let parsedContent: string | ReactNode[] = stripHtml(
-      content.replace(/\n{2,}\s*/g, "\n"),
-    ).result;
+    let parsedContent: string | ReactNode[] = stripHtml(content).result;
     let linkPreview: string = undefined;
     let images: string[] = [];
     let videos: string[] = [];
@@ -176,7 +174,7 @@ export function NoteContent({ className }: { className?: string }) {
       );
 
       parsedContent = reactStringReplace(parsedContent, "\n", () => {
-        return <div key={nanoid()} className="h-3" />;
+        return <div key={nanoid()} />;
       });
 
       if (typeof parsedContent[0] === "string") {

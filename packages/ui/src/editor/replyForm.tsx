@@ -298,9 +298,9 @@ export function ReplyForm({
 
   return (
     <div className={cn("flex gap-3", className)}>
-      <User.Provider pubkey={ark.account.pubkey}>
+      <User.Provider pubkey={ark.account.npub}>
         <User.Root>
-          <User.Avatar className="size-9 shrink-0 rounded-lg object-cover" />
+          <User.Avatar className="size-10 shrink-0 rounded-full object-cover" />
         </User.Root>
       </User.Provider>
       <div className="flex-1">

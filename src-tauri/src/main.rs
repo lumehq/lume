@@ -87,7 +87,7 @@ fn main() {
           .await
           .expect("Failed to add bootstrap relay.");
         client
-          .add_relay("wss://bostr.nokotaro.com")
+          .add_relay("wss://bostr.yonle.lecturify.net")
           .await
           .expect("Failed to add bootstrap relay.");
 

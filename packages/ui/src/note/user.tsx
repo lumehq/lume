@@ -2,8 +2,10 @@ import { cn } from "@lume/utils";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { User } from "../user";
 import { useNoteContext } from "./provider";
+import { useArk } from "@lume/ark";
 
 export function NoteUser({ className }: { className?: string }) {
+  const ark = useArk();
   const event = useNoteContext();
 
   return (
@@ -23,12 +25,12 @@ export function NoteUser({ className }: { className?: string }) {
           </div>
           <User.Time
             time={event.created_at}
-            className="text-neutral-500 dark:text-neutral-400"
+            className="text-neutral-600 dark:text-neutral-400"
           />
         </User.Root>
         <HoverCard.Portal>
           <HoverCard.Content
-            className="data-[side=bottom]:animate-slideUpAndFade w-[300px] rounded-xl bg-white p-5 shadow-lg shadow-neutral-500/20 data-[state=open]:transition-all dark:border dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-none"
+            className="data-[side=bottom]:animate-slideUpAndFade w-[300px] rounded-xl bg-white p-3 shadow-lg shadow-neutral-500/20 data-[state=open]:transition-all dark:border dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-none"
             sideOffset={5}
           >
             <div className="flex flex-col gap-2">
@@ -39,12 +41,12 @@ export function NoteUser({ className }: { className?: string }) {
                   <User.NIP05 className="text-neutral-600 dark:text-neutral-400" />
                 </div>
                 <User.About className="line-clamp-3" />
-                <a
-                  href={`/users/${event.pubkey}`}
-                  className="mt-3 inline-flex h-8 w-full items-center justify-center rounded-lg bg-neutral-100 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                <button
+                  onClick={() => ark.open_profile(event.pubkey)}
+                  className="mt-2 inline-flex h-9 w-full items-center justify-center rounded-lg bg-neutral-100 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 >
                   View profile
-                </a>
+                </button>
               </div>
             </div>
             <HoverCard.Arrow className="fill-white dark:fill-neutral-800" />
