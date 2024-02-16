@@ -2,9 +2,12 @@ import { ReplyIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useTranslation } from "react-i18next";
 import { useNoteContext } from "../provider";
+import { useArk } from "@lume/ark";
 
 export function NoteReply() {
+  const ark = useArk();
   const event = useNoteContext();
+
   const { t } = useTranslation();
 
   return (
@@ -13,6 +16,7 @@ export function NoteReply() {
         <Tooltip.Trigger asChild>
           <button
             type="button"
+            onClick={() => ark.open_thread(event.id)}
             className="group inline-flex h-7 w-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
           >
             <ReplyIcon className="size-5 group-hover:text-blue-500" />

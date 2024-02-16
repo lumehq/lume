@@ -24,8 +24,8 @@ export function TextNote({
         <div className="flex gap-3">
           <div className="size-10 shrink-0" />
           <div className="min-w-0 flex-1">
-            <Note.Content className="mb-2" />
             <Note.Thread className="mb-2" />
+            <Note.Content />
             <div className="mt-5 flex items-center justify-between">
               <Note.Reaction />
               <div className="inline-flex items-center gap-4">

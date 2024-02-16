@@ -1,7 +1,7 @@
 import { useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
-import { EmptyFeed, TextNote } from "@lume/ui";
+import { EmptyFeed, RepostNote, TextNote } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -18,13 +18,13 @@ function Home() {
       queryKey: ["timeline"],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_text_events(FETCH_LIMIT, pageParam);
+        const events = await ark.get_text_events(FETCH_LIMIT, pageParam, true);
         return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage.at(-1);
         if (!lastEvent) return;
-        return lastEvent.created_at;
+        return lastEvent.created_at - 1;
       },
       select: (data) => data?.pages.flatMap((page) => page),
       refetchOnWindowFocus: false,
@@ -32,8 +32,8 @@ function Home() {
 
   const renderItem = (event: Event) => {
     switch (event.kind) {
-      case Kind.Text:
-        return <TextNote key={event.id} event={event} />;
+      case Kind.Repost:
+        return <RepostNote key={event.id} event={event} />;
       default:
         return <TextNote key={event.id} event={event} />;
     }
@@ -59,7 +59,7 @@ function Home() {
               </a>
             </div>
           ) : (
-            <Virtualizer overscan={2}>
+            <Virtualizer overscan={3}>
               {data.map((item) => renderItem(item))}
             </Virtualizer>
           )}

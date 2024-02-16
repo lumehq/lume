@@ -6,15 +6,14 @@ use tauri::State;
 #[tauri::command(async)]
 pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, String> {
   let client = &nostr.client;
-  let event_id;
-
-  if id.starts_with("note") {
-    event_id = EventId::from_bech32(id).unwrap();
-  } else if id.starts_with("nevent") {
-    event_id = Nip19Event::from_bech32(id).unwrap().event_id;
-  } else {
-    event_id = EventId::from_hex(id).unwrap();
-  }
+  let event_id: EventId = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::EventId(id) => id,
+      Nip19::Event(event) => event.event_id,
+      _ => panic!("not nip19"),
+    },
+    Err(_) => EventId::from_hex(id).unwrap(),
+  };
 
   let filter = Filter::new().id(event_id);
   let events = client

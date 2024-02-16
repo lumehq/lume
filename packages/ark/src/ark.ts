@@ -1,5 +1,6 @@
 import type { CurrentAccount, Event, Keys, Metadata } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
+import { WebviewWindow } from "@tauri-apps/api/webview";
 
 export class Ark {
 	public account: CurrentAccount;
@@ -59,21 +60,56 @@ export class Ark {
 
 	public async get_event(id: string) {
 		try {
-			const cmd: string = await invoke("get_event", { id });
+			const eventId: string = id
+				.replace("nostr:", "")
+				.split("'")[0]
+				.split(".")[0];
+			const cmd: string = await invoke("get_event", { id: eventId });
 			const event = JSON.parse(cmd) as Event;
+
 			return event;
 		} catch (e) {
 			return null;
 		}
 	}
 
-	public async get_text_events(limit: number, asOf?: number) {
+	public async get_text_events(limit: number, asOf?: number, dedup?: boolean) {
 		try {
 			let until: string = undefined;
 			if (asOf && asOf > 0) until = asOf.toString();
 
-			const cmd: Event[] = await invoke("get_text_events", { limit, until });
-			return cmd;
+			const seenIds = new Set<string>();
+			const dedupQueue = new Set<string>();
+
+			const nostrEvents: Event[] = await invoke("get_text_events", {
+				limit,
+				until,
+			});
+
+			if (dedup) {
+				for (const event of nostrEvents) {
+					const tags = event.tags
+						.filter((el) => el[0] === "e")
+						?.map((item) => item[1]);
+
+					if (tags.length) {
+						for (const tag of tags) {
+							if (seenIds.has(tag)) {
+								dedupQueue.add(event.id);
+								break;
+							}
+
+							seenIds.add(tag);
+						}
+					}
+				}
+
+				return nostrEvents
+					.filter((event) => !dedupQueue.has(event.id))
+					.sort((a, b) => b.created_at - a.created_at);
+			}
+
+			return nostrEvents.sort((a, b) => b.created_at - a.created_at);
 		} catch (e) {
 			return [];
 		}
@@ -170,9 +206,16 @@ export class Ark {
 		};
 	}
 
-	public async get_profile(id: string) {
+	public async get_profile(pubkey: string) {
 		try {
+			const id = pubkey
+				.replace("nostr:", "")
+				.split("'")[0]
+				.split(".")[0]
+				.split(",")[0]
+				.split("?")[0];
 			const cmd: Metadata = await invoke("get_profile", { id });
+
 			return cmd;
 		} catch {
 			return null;
@@ -201,5 +244,27 @@ export class Ark {
 		} catch {
 			return false;
 		}
+	}
+
+	public open_thread(id: string) {
+		return new WebviewWindow(`event-${id}`, {
+			title: "Thread",
+			url: `/events/${id}`,
+			width: 600,
+			height: 800,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+		});
+	}
+
+	public open_profile(pubkey: string) {
+		return new WebviewWindow(`user-${pubkey}`, {
+			title: "Profile",
+			url: `/users/${pubkey}`,
+			width: 600,
+			height: 800,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+		});
 	}
 }

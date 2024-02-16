@@ -6,15 +6,14 @@ use tauri::State;
 #[tauri::command(async)]
 pub async fn get_profile(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
   let client = &nostr.client;
-  let public_key;
-
-  if id.starts_with("nprofile1") {
-    public_key = XOnlyPublicKey::from_bech32(id).unwrap();
-  } else if id.starts_with("npub1") {
-    public_key = XOnlyPublicKey::from_bech32(id).unwrap();
-  } else {
-    public_key = XOnlyPublicKey::from_str(id).unwrap();
-  }
+  let public_key: XOnlyPublicKey = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::Pubkey(pubkey) => pubkey,
+      Nip19::Profile(profile) => profile.public_key,
+      _ => panic!("not nip19"),
+    },
+    Err(_) => XOnlyPublicKey::from_str(id).unwrap(),
+  };
 
   let filter = Filter::new()
     .author(public_key)

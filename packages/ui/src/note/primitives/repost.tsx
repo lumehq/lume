@@ -73,17 +73,17 @@ export function RepostNote({
   return (
     <Note.Root
       className={cn(
-        "flex flex-col rounded-xl bg-neutral-50 dark:bg-neutral-950",
+        "mb-3 flex flex-col gap-2 border-b border-neutral-100 pb-3 dark:border-neutral-900",
         className,
       )}
     >
       <User.Provider pubkey={event.pubkey}>
-        <User.Root className="flex h-14 gap-2 px-3">
+        <User.Root className="flex gap-3">
           <div className="inline-flex w-10 shrink-0 items-center justify-center">
             <RepostIcon className="h-5 w-5 text-blue-500" />
           </div>
           <div className="inline-flex items-center gap-2">
-            <User.Avatar className="size-6 shrink-0 rounded object-cover" />
+            <User.Avatar className="size-6 shrink-0 rounded-full object-cover" />
             <div className="inline-flex items-baseline gap-1">
               <User.Name className="font-medium text-neutral-900 dark:text-neutral-100" />
               <span className="text-blue-500">{t("note.reposted")}</span>
@@ -92,18 +92,23 @@ export function RepostNote({
         </User.Root>
       </User.Provider>
       <Note.Provider event={repostEvent}>
-        <div className="relative flex flex-col gap-2 px-3">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start justify-between">
             <Note.User className="flex-1 pr-2" />
             <Note.Menu />
           </div>
-          <Note.Content />
-          <div className="flex h-14 items-center justify-between">
-            <Note.Pin />
-            <div className="inline-flex items-center gap-4">
-              <Note.Reply />
-              <Note.Repost />
-              <Note.Zap />
+          <div className="flex gap-3">
+            <div className="size-10 shrink-0" />
+            <div className="min-w-0 flex-1">
+              <Note.Content />
+              <div className="mt-5 flex items-center justify-between">
+                <Note.Reaction />
+                <div className="inline-flex items-center gap-4">
+                  <Note.Reply />
+                  <Note.Repost />
+                  <Note.Zap />
+                </div>
+              </div>
             </div>
           </div>
         </div>

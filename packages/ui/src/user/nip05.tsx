@@ -13,7 +13,6 @@ export function UserNip05({ className }: { className?: string }) {
     queryFn: async () => {
       if (!user.profile?.nip05) return false;
       const verify = await ark.verify_nip05(user.pubkey, user.profile?.nip05);
-      console.log(verify);
       return verify;
     },
     enabled: !!user.profile,
@@ -23,7 +22,7 @@ export function UserNip05({ className }: { className?: string }) {
     return (
       <div
         className={cn(
-          "h-4 w-20 animate-pulse rounded bg-black/20 dark:bg-white/20",
+          "h-3 w-20 animate-pulse rounded bg-black/20 dark:bg-white/20",
           className,
         )}
       />
