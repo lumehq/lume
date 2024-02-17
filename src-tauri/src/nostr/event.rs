@@ -3,7 +3,7 @@ use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, String> {
   let client = &nostr.client;
   let event_id: EventId = match Nip19::from_bech32(id) {
@@ -28,7 +28,7 @@ pub async fn get_event(id: &str, nostr: State<'_, Nostr>) -> Result<String, Stri
   }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn get_text_events(
   limit: usize,
   until: Option<String>,
@@ -37,7 +37,7 @@ pub async fn get_text_events(
   let client = &nostr.client;
   let contact_list = &nostr.contact_list.clone().unwrap();
 
-  let authors: Vec<XOnlyPublicKey> = contact_list.into_iter().map(|x| x.pk).collect();
+  let authors: Vec<PublicKey> = contact_list.into_iter().map(|x| x.public_key).collect();
   let mut final_until = Timestamp::now();
 
   if let Some(t) = until {
@@ -60,7 +60,7 @@ pub async fn get_text_events(
   }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn get_event_thread(id: &str, nostr: State<'_, Nostr>) -> Result<Vec<Event>, ()> {
   let client = &nostr.client;
   let event_id = EventId::from_hex(id).unwrap();
@@ -76,7 +76,7 @@ pub async fn get_event_thread(id: &str, nostr: State<'_, Nostr>) -> Result<Vec<E
   }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn publish(content: &str, nostr: State<'_, Nostr>) -> Result<EventId, ()> {
   let client = &nostr.client;
 
@@ -88,7 +88,7 @@ pub async fn publish(content: &str, nostr: State<'_, Nostr>) -> Result<EventId, 
   Ok(event)
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn reply_to(
   content: &str,
   tags: Vec<String>,
@@ -108,10 +108,10 @@ pub async fn reply_to(
   }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn repost(id: &str, pubkey: &str, nostr: State<'_, Nostr>) -> Result<EventId, ()> {
   let client = &nostr.client;
-  let public_key = XOnlyPublicKey::from_str(pubkey).unwrap();
+  let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
   let event = client
@@ -122,10 +122,10 @@ pub async fn repost(id: &str, pubkey: &str, nostr: State<'_, Nostr>) -> Result<E
   Ok(event)
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn upvote(id: &str, pubkey: &str, nostr: State<'_, Nostr>) -> Result<EventId, ()> {
   let client = &nostr.client;
-  let public_key = XOnlyPublicKey::from_str(pubkey).unwrap();
+  let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
   let event = client
@@ -136,10 +136,10 @@ pub async fn upvote(id: &str, pubkey: &str, nostr: State<'_, Nostr>) -> Result<E
   Ok(event)
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn downvote(id: &str, pubkey: &str, nostr: State<'_, Nostr>) -> Result<EventId, ()> {
   let client = &nostr.client;
-  let public_key = XOnlyPublicKey::from_str(pubkey).unwrap();
+  let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
   let event = client

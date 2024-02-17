@@ -33,7 +33,7 @@ pub async fn save_key(
   if let Ok(nostr_secret_key) = SecretKey::from_bech32(nsec) {
     let nostr_keys = Keys::new(nostr_secret_key);
     let nostr_npub = nostr_keys.public_key().to_bech32().unwrap();
-    let signer = ClientSigner::Keys(nostr_keys);
+    let signer = NostrSigner::Keys(nostr_keys);
 
     // Update client's signer
     let client = &nostr.client;
@@ -82,7 +82,7 @@ pub async fn update_signer(nsec: &str, nostr: State<'_, Nostr>) -> Result<(), ()
   let client = &nostr.client;
   let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
-  let signer = ClientSigner::Keys(keys);
+  let signer = NostrSigner::Keys(keys);
 
   client.set_signer(Some(signer)).await;
 
@@ -104,8 +104,8 @@ pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<bool, ()> {
 pub fn load_account(nostr: State<'_, Nostr>) -> Result<String, ()> {
   let user = &nostr.client_user;
 
-  if let Some(public_key) = user {
-    Ok(public_key.to_string())
+  if let Some(key) = user {
+    Ok(key.to_hex())
   } else {
     Err(())
   }
@@ -121,7 +121,7 @@ pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
 
 #[tauri::command]
 pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
-  let pubkey = XOnlyPublicKey::from_str(key).unwrap();
+  let pubkey = PublicKey::from_str(key).unwrap();
   let profile = Nip19Profile::new(pubkey, relays);
 
   Ok(profile.to_bech32().unwrap())
@@ -129,7 +129,7 @@ pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
 
 #[tauri::command(async)]
 pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, ()> {
-  let public_key = XOnlyPublicKey::from_str(key).unwrap();
+  let public_key = PublicKey::from_str(key).unwrap();
   let status = nip05::verify(public_key, nip05, None).await;
 
   if let Ok(_) = status {

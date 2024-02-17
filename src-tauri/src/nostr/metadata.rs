@@ -3,16 +3,16 @@ use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn get_profile(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, ()> {
   let client = &nostr.client;
-  let public_key: XOnlyPublicKey = match Nip19::from_bech32(id) {
+  let public_key: PublicKey = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::Pubkey(pubkey) => pubkey,
       Nip19::Profile(profile) => profile.public_key,
       _ => panic!("not nip19"),
     },
-    Err(_) => XOnlyPublicKey::from_str(id).unwrap(),
+    Err(_) => PublicKey::from_str(id).unwrap(),
   };
 
   let filter = Filter::new()
@@ -33,7 +33,7 @@ pub async fn get_profile(id: &str, nostr: State<'_, Nostr>) -> Result<Metadata, 
   }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn create_profile(
   name: &str,
   display_name: &str,

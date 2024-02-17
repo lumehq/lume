@@ -23,7 +23,7 @@ use tauri_plugin_autostart::MacosLauncher;
 
 pub struct Nostr {
   pub client: Arc<Client>,
-  pub client_user: Option<XOnlyPublicKey>,
+  pub client_user: Option<PublicKey>,
   pub contact_list: Option<Vec<Contact>>,
 }
 
@@ -103,7 +103,7 @@ fn main() {
           let secret_key = SecretKey::from_bech32(key).expect("Get secret key failed");
           let keys = Keys::new(secret_key);
           let public_key = keys.public_key();
-          let signer = ClientSigner::Keys(keys);
+          let signer = NostrSigner::Keys(keys);
 
           // Update client's signer
           client.set_signer(Some(signer)).await;

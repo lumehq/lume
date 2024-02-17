@@ -3,7 +3,7 @@
   "identifier": "desktop-capability",
   "description": "Capability for the desktop",
   "platforms": ["linux", "macOS", "windows"],
-  "windows": ["main", "settings", "event-*", "user-*", "column-*"],
+  "windows": ["main", "splash", "settings", "event-*", "user-*", "column-*"],
   "permissions": [
     "path:default",
     "event:default",
