@@ -1,5 +1,6 @@
-import { ArkProvider } from "@lume/ark";
 import { StorageProvider } from "@lume/storage";
+import { useArk } from "@lume/ark";
+import { ArkProvider } from "./ark";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
@@ -12,34 +13,50 @@ import i18n from "./locale";
 import { routeTree } from "./router.gen";
 
 const queryClient = new QueryClient();
+
+// Set up a Router instance
 const router = createRouter({
-	routeTree,
-	context: {
-		queryClient,
-	},
+  routeTree,
+  context: {
+    ark: undefined!,
+    queryClient,
+  },
 });
 
+// Register things for typesafety
 declare module "@tanstack/react-router" {
-	interface Register {
-		router: typeof router;
-	}
+  interface Register {
+    router: typeof router;
+  }
 }
 
-// biome-ignore lint/style/noNonNullAssertion: <explanation>
+function InnerApp() {
+  const ark = useArk();
+  return <RouterProvider router={router} context={{ ark }} />;
+}
+
+function App() {
+  return (
+    <ArkProvider>
+      <InnerApp />
+    </ArkProvider>
+  );
+}
+
+// biome-ignore lint/style/noNonNullAssertion: idk
 const rootElement = document.getElementById("root")!;
+
 if (!rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
-	root.render(
-		<I18nextProvider i18n={i18n} defaultNS={"translation"}>
-			<QueryClientProvider client={queryClient}>
-				<StorageProvider>
-					<ArkProvider>
-						<StrictMode>
-							<RouterProvider router={router} />
-						</StrictMode>
-					</ArkProvider>
-				</StorageProvider>
-			</QueryClientProvider>
-		</I18nextProvider>,
-	);
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <I18nextProvider i18n={i18n} defaultNS={"translation"}>
+      <QueryClientProvider client={queryClient}>
+        <StorageProvider>
+          <StrictMode>
+            <App />
+          </StrictMode>
+        </StorageProvider>
+      </QueryClientProvider>
+    </I18nextProvider>,
+  );
 }

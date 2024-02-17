@@ -15,14 +15,20 @@ export class Ark {
 		this.account = { npub: "" };
 	}
 
-	public async load_account() {
+	public async verify_signer() {
 		try {
-			const cmd: string = await invoke("load_account");
-			if (cmd) {
-				this.account.npub = cmd;
+			const signer: boolean = await invoke("verify_signer");
+			if (signer) {
+				const account: string = await invoke("load_account");
+				this.account.npub = account;
+
+				return true;
+			} else {
+				return false;
 			}
 		} catch (e) {
 			console.error(String(e));
+			return false;
 		}
 	}
 

@@ -1,25 +1,32 @@
 import { LoaderIcon } from "@lume/icons";
 import {
-	Outlet,
-	ScrollRestoration,
-	createRootRoute,
+  Outlet,
+  ScrollRestoration,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
+import { type Ark } from "@lume/ark";
+import { type QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
-	component: () => (
-		<>
-			<ScrollRestoration />
-			<Outlet />
-		</>
-	),
-	pendingComponent: Pending,
-	wrapInSuspense: true,
+interface RouterContext {
+  ark: Ark;
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+  component: () => (
+    <>
+      <ScrollRestoration />
+      <Outlet />
+    </>
+  ),
+  pendingComponent: Pending,
+  wrapInSuspense: true,
 });
 
 function Pending() {
-	return (
-		<div className="flex flex-col items-center justify-center w-screen h-screen">
-			<LoaderIcon className="size-5 animate-spin" />
-		</div>
-	);
+  return (
+    <div className="flex h-screen w-screen flex-col items-center justify-center">
+      <LoaderIcon className="size-5 animate-spin" />
+    </div>
+  );
 }

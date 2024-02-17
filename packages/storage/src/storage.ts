@@ -22,6 +22,7 @@ export class LumeStorage {
 			translateApiKey: "",
 			instantZap: false,
 			defaultZapAmount: 21,
+			nwc: "",
 		};
 	}
 

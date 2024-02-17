@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useArk } from "../provider";
+import { useArk } from "./useArk";
 
 export function useEvent(id: string) {
 	const ark = useArk();
