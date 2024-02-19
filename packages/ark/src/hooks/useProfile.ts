@@ -10,12 +10,12 @@ export function useProfile(pubkey: string) {
 	} = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
-			const profile = await ark.get_profile(pubkey);
-			if (!profile)
-				throw new Error(
-					`Cannot get metadata for ${pubkey}, will be retry after 10 seconds`,
-				);
-			return profile;
+			try {
+				const profile = await ark.get_profile(pubkey);
+				return profile;
+			} catch (e) {
+				throw new Error(e);
+			}
 		},
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,

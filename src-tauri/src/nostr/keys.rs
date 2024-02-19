@@ -1,6 +1,9 @@
-use crate::Nostr;
+use crate::NostrClient;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
+use std::io::{BufReader, Read};
+use std::iter;
+use std::time::Duration;
 use std::{fs::File, io::Write, str::FromStr};
 use tauri::{Manager, State};
 
@@ -28,7 +31,7 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 pub async fn save_key(
   nsec: &str,
   app_handle: tauri::AppHandle,
-  nostr: State<'_, Nostr>,
+  state: State<'_, NostrClient>,
 ) -> Result<bool, ()> {
   if let Ok(nostr_secret_key) = SecretKey::from_bech32(nsec) {
     let nostr_keys = Keys::new(nostr_secret_key);
@@ -36,7 +39,7 @@ pub async fn save_key(
     let signer = NostrSigner::Keys(nostr_keys);
 
     // Update client's signer
-    let client = &nostr.client;
+    let client = state.0.lock().await;
     client.set_signer(Some(signer)).await;
 
     let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
@@ -78,8 +81,8 @@ pub fn get_public_key(nsec: &str) -> Result<String, ()> {
 }
 
 #[tauri::command]
-pub async fn update_signer(nsec: &str, nostr: State<'_, Nostr>) -> Result<(), ()> {
-  let client = &nostr.client;
+pub async fn update_signer(nsec: &str, state: State<'_, NostrClient>) -> Result<(), ()> {
+  let client = state.0.lock().await;
   let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
   let signer = NostrSigner::Keys(keys);
@@ -90,8 +93,8 @@ pub async fn update_signer(nsec: &str, nostr: State<'_, Nostr>) -> Result<(), ()
 }
 
 #[tauri::command]
-pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = &nostr.client;
+pub async fn verify_signer(state: State<'_, NostrClient>) -> Result<bool, ()> {
+  let client = state.0.lock().await;
 
   if let Ok(_) = client.signer().await {
     Ok(true)
@@ -101,13 +104,61 @@ pub async fn verify_signer(nostr: State<'_, Nostr>) -> Result<bool, ()> {
 }
 
 #[tauri::command]
-pub fn load_account(nostr: State<'_, Nostr>) -> Result<String, ()> {
-  let user = &nostr.client_user;
+pub async fn load_selected_account(
+  npub: &str,
+  app_handle: tauri::AppHandle,
+  state: State<'_, NostrClient>,
+) -> Result<bool, String> {
+  let client = state.0.lock().await;
+  let config_dir = app_handle.path().app_config_dir().unwrap();
+  let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
 
-  if let Some(key) = user {
-    Ok(key.to_hex())
+  // Get master password
+  if let Ok(key) = keyring_entry.get_password() {
+    // Build master key
+    let app_key = age::x25519::Identity::from_str(&key.to_string()).unwrap();
+
+    // Open nsec file
+    if let Ok(file) = File::open(config_dir.join(npub)) {
+      let file_buf = BufReader::new(file);
+      let decryptor = match age::Decryptor::new_buffered(file_buf).expect("Decryptor failed") {
+        age::Decryptor::Recipients(d) => d,
+        _ => unreachable!(),
+      };
+
+      let mut decrypted = vec![];
+      let mut reader = decryptor
+        .decrypt(iter::once(&app_key as &dyn age::Identity))
+        .expect("Decrypt nsec file failed");
+      reader
+        .read_to_end(&mut decrypted)
+        .expect("Read secret key failed");
+
+      // Get decrypted nsec key
+      let nsec_key = String::from_utf8(decrypted).unwrap();
+
+      // Build nostr signer
+      let secret_key = SecretKey::from_bech32(nsec_key).expect("Get secret key failed");
+      let keys = Keys::new(secret_key);
+      let signer = NostrSigner::Keys(keys);
+
+      // Update signer
+      client.set_signer(Some(signer)).await;
+
+      // Update contact list
+      let _contact_list = Some(
+        client
+          .get_contact_list(Some(Duration::from_secs(10)))
+          .await
+          .unwrap(),
+      );
+
+      Ok(true)
+    } else {
+      Ok(false)
+    }
   } else {
-    Err(())
+    Err("App Key not found".into())
   }
 }
 

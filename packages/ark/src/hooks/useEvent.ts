@@ -6,12 +6,12 @@ export function useEvent(id: string) {
 	const { isLoading, isError, data } = useQuery({
 		queryKey: ["event", id],
 		queryFn: async () => {
-			const event = await ark.get_event(id);
-			if (!event)
-				throw new Error(
-					`Cannot get event with ${id}, will be retry after 10 seconds`,
-				);
-			return event;
+			try {
+				const event = await ark.get_event(id);
+				return event;
+			} catch (e) {
+				throw new Error(e);
+			}
 		},
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,

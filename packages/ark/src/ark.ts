@@ -1,5 +1,5 @@
 import type {
-	CurrentAccount,
+	Account,
 	Event,
 	EventWithReplies,
 	Keys,
@@ -9,25 +9,46 @@ import { invoke } from "@tauri-apps/api/core";
 import { WebviewWindow } from "@tauri-apps/api/webview";
 
 export class Ark {
-	public account: CurrentAccount;
+	public account: Account;
+	public accounts: Array<Account>;
 
 	constructor() {
 		this.account = { npub: "" };
 	}
 
-	public async verify_signer() {
+	public async get_all_accounts() {
 		try {
-			const signer: boolean = await invoke("verify_signer");
-			if (signer) {
-				const account: string = await invoke("load_account");
-				this.account.npub = account;
+			const accounts: Account[] = [];
+			const cmd: string[] = await invoke("get_all_nsecs");
 
-				return true;
-			} else {
-				return false;
+			for (const item of cmd) {
+				accounts.push({ npub: item.replace(".nsec", "") });
 			}
+
+			this.accounts = accounts;
+			return accounts;
 		} catch (e) {
-			console.error(String(e));
+			console.error(e);
+			return [];
+		}
+	}
+
+	public async load_selected_account(npub: string) {
+		try {
+			const fullNpub = `${npub}.nsec`;
+			const cmd: boolean = await invoke("load_selected_account", {
+				npub: fullNpub,
+			});
+
+			if (cmd) {
+				const contacts: string[] = await invoke("get_contact_list");
+				this.account.npub = npub;
+				this.account.contacts = contacts;
+			}
+
+			return cmd;
+		} catch (e) {
+			console.error(e);
 			return false;
 		}
 	}

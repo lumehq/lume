@@ -1,10 +1,10 @@
-use crate::Nostr;
+use crate::NostrClient;
 use nostr_sdk::prelude::*;
 use tauri::State;
 
 #[tauri::command]
-pub async fn list_connected_relays(nostr: State<'_, Nostr>) -> Result<Vec<Url>, ()> {
-  let client = &nostr.client;
+pub async fn list_connected_relays(state: State<'_, NostrClient>) -> Result<Vec<Url>, ()> {
+  let client = state.0.lock().await;
   let relays = client.relays().await;
   let list: Vec<Url> = relays.into_keys().collect();
 
@@ -12,8 +12,8 @@ pub async fn list_connected_relays(nostr: State<'_, Nostr>) -> Result<Vec<Url>, 
 }
 
 #[tauri::command]
-pub async fn connect_relay(relay: &str, nostr: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = &nostr.client;
+pub async fn connect_relay(relay: &str, state: State<'_, NostrClient>) -> Result<bool, ()> {
+  let client = state.0.lock().await;
   if let Ok(_) = client.add_relay(relay).await {
     Ok(true)
   } else {
@@ -22,8 +22,8 @@ pub async fn connect_relay(relay: &str, nostr: State<'_, Nostr>) -> Result<bool,
 }
 
 #[tauri::command]
-pub async fn remove_relay(relay: &str, nostr: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = &nostr.client;
+pub async fn remove_relay(relay: &str, state: State<'_, NostrClient>) -> Result<bool, ()> {
+  let client = state.0.lock().await;
   if let Ok(_) = client.remove_relay(relay).await {
     Ok(true)
   } else {

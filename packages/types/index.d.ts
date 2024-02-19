@@ -54,7 +54,7 @@ export interface Metadata {
 	lud16?: string;
 }
 
-export interface CurrentAccount {
+export interface Account {
 	npub: string;
 	contacts?: string[];
 	interests?: Interests;
