@@ -69,7 +69,7 @@ function Screen() {
         </div>
         <div className="flex items-center justify-center gap-6">
           {loading ? (
-            <LoaderIcon className="size-5 animate-spin" />
+            <LoaderIcon className="size-6 animate-spin text-white" />
           ) : (
             <>
               {ark.accounts.map((account) => (

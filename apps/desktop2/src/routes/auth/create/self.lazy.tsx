@@ -1,7 +1,6 @@
 import { useArk } from "@lume/ark";
 import { CheckIcon, EyeOffIcon, EyeOnIcon, LoaderIcon } from "@lume/icons";
 import { Keys } from "@lume/types";
-import { onboardingAtom } from "@lume/utils";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -24,18 +23,17 @@ function Create() {
 
   const submit = async () => {
     setLoading(true);
-
-    const save = await ark.save_account(keys);
-    if (!save) {
+    try {
+      await ark.save_account(keys);
+      navigate({
+        to: "/app/home",
+        search: { onboarding: true },
+        replace: true,
+      });
+    } catch (e) {
       setLoading(false);
-      toast.error("Save account keys failed, please try again later.");
+      toast.error(e);
     }
-
-    // update state
-    setLoading(false);
-
-    // next step
-    navigate({ to: "/app/space", replace: true });
   };
 
   useEffect(() => {
@@ -49,7 +47,7 @@ function Create() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto flex w-full max-w-md flex-col gap-8">
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-semibold">
             {t("signupWithSelfManage.title")}
           </h1>
@@ -58,20 +56,20 @@ function Create() {
           </p>
         </div>
         <div className="mb-0 flex flex-col gap-6">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             <div className="relative">
               {keys ? (
                 <input
                   readOnly
                   value={keys.nsec}
                   type={showKey ? "text" : "password"}
-                  className="h-11 w-full resize-none rounded-xl border-transparent bg-neutral-100 pl-3 pr-10 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
+                  className="h-12 w-full resize-none rounded-xl border-transparent bg-neutral-100 pl-3 pr-14 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
                 />
               ) : null}
               <button
                 type="button"
                 onClick={() => setShowKey((state) => !state)}
-                className="absolute right-2 top-2 inline-flex size-7 items-center justify-center rounded-lg bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                className="absolute right-2 top-2 inline-flex size-8 items-center justify-center rounded-lg bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
               >
                 {showKey ? (
                   <EyeOnIcon className="size-4" />
@@ -103,26 +101,6 @@ function Create() {
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox.Root
-                  checked={confirm.c2}
-                  onCheckedChange={() =>
-                    setConfirm((state) => ({ ...state, c2: !state.c2 }))
-                  }
-                  className="flex size-7 appearance-none items-center justify-center rounded-lg bg-neutral-100 outline-none dark:bg-neutral-900"
-                  id="confirm2"
-                >
-                  <Checkbox.Indicator className="text-blue-500">
-                    <CheckIcon className="size-4" />
-                  </Checkbox.Indicator>
-                </Checkbox.Root>
-                <label
-                  className="text-sm text-neutral-700 dark:text-neutral-400"
-                  htmlFor="confirm2"
-                >
-                  {t("signupWithSelfManage.confirm2")}
-                </label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox.Root
                   checked={confirm.c3}
                   onCheckedChange={() =>
                     setConfirm((state) => ({ ...state, c3: !state.c3 }))
@@ -141,13 +119,33 @@ function Create() {
                   {t("signupWithSelfManage.confirm3")}
                 </label>
               </div>
+              <div className="flex items-center gap-2">
+                <Checkbox.Root
+                  checked={confirm.c2}
+                  onCheckedChange={() =>
+                    setConfirm((state) => ({ ...state, c2: !state.c2 }))
+                  }
+                  className="flex size-7 appearance-none items-center justify-center rounded-lg bg-neutral-100 outline-none dark:bg-neutral-900"
+                  id="confirm2"
+                >
+                  <Checkbox.Indicator className="text-blue-500">
+                    <CheckIcon className="size-4" />
+                  </Checkbox.Indicator>
+                </Checkbox.Root>
+                <label
+                  className="text-sm text-neutral-700 dark:text-neutral-400"
+                  htmlFor="confirm2"
+                >
+                  {t("signupWithSelfManage.confirm2")}
+                </label>
+              </div>
             </div>
           </div>
           <button
             type="button"
             onClick={submit}
             disabled={!confirm.c1 || !confirm.c2 || !confirm.c3}
-            className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-500 text-lg font-medium text-white hover:bg-blue-600 disabled:opacity-50"
+            className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-blue-500 text-lg font-medium text-white hover:bg-blue-600 disabled:opacity-50"
           >
             {loading ? (
               <LoaderIcon className="size-5 animate-spin" />

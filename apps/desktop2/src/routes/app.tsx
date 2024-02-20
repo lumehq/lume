@@ -6,7 +6,6 @@ import {
   SpaceFilledIcon,
   SpaceIcon,
 } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
@@ -17,15 +16,15 @@ export const Route = createFileRoute("/app")({
 });
 
 function App() {
-  const storage = useStorage();
+  const context = Route.useRouteContext();
 
   return (
     <div className="flex h-screen w-screen flex-col bg-gradient-to-tr from-neutral-200 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
       <div
         data-tauri-drag-region
         className={cn(
-          "flex h-11 shrink-0 items-center justify-between",
-          storage.platform === "macos" ? "pl-24" : "",
+          "flex h-11 shrink-0 items-center justify-between pr-4",
+          context.platform === "macos" ? "pl-24" : "pl-4",
         )}
       >
         <div
@@ -84,7 +83,7 @@ function App() {
             )}
           </Link>
         </div>
-        <div data-tauri-drag-region className="flex items-center gap-2 pr-4">
+        <div data-tauri-drag-region className="flex items-center gap-2">
           <ActiveAccount />
         </div>
       </div>

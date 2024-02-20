@@ -1,4 +1,3 @@
-import { useStorage } from "@lume/storage";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -7,7 +6,7 @@ export const Route = createFileRoute("/landing/")({
 });
 
 function Screen() {
-  const storage = useStorage();
+  const context = Route.useRouteContext();
   const { t } = useTranslation();
 
   return (
@@ -17,8 +16,8 @@ function Screen() {
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-10">
           <div className="flex flex-col items-center text-center">
             <img
-              src={`/heading-${storage.locale}.png`}
-              srcSet={`/heading-${storage.locale}@2x.png 2x`}
+              src={`/heading-${context.locale}.png`}
+              srcSet={`/heading-${context.locale}@2x.png 2x`}
               alt="lume"
               className="w-2/3"
             />
@@ -29,13 +28,13 @@ function Screen() {
           <div className="mx-auto flex w-full max-w-sm flex-col gap-2">
             <Link
               to="/auth/create"
-              className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-500 text-lg font-medium text-white hover:bg-blue-600"
+              className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-blue-500 text-lg font-medium text-white hover:bg-blue-600"
             >
               {t("welcome.signup")}
             </Link>
             <Link
               to="/auth/import"
-              className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-neutral-950 text-lg font-medium text-white hover:bg-neutral-900"
+              className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-neutral-950 text-lg font-medium text-white hover:bg-neutral-900"
             >
               {t("welcome.login")}
             </Link>

@@ -28,7 +28,7 @@ function Screen() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="mx-auto flex w-full max-w-md flex-col gap-8">
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-semibold">{t("signup.title")}</h1>
           <p className="text-lg leading-snug text-neutral-600 dark:text-neutral-500">
             {t("signup.subtitle")}
@@ -69,7 +69,7 @@ function Screen() {
             <button
               type="button"
               onClick={next}
-              className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-500 text-lg font-medium text-white hover:bg-blue-600"
+              className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-blue-500 text-lg font-medium text-white hover:bg-blue-600"
             >
               {loading ? (
                 <LoaderIcon className="size-5 animate-spin" />

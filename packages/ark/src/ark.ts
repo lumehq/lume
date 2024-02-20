@@ -13,7 +13,7 @@ export class Ark {
 	public accounts: Array<Account>;
 
 	constructor() {
-		this.account = { npub: "" };
+		this.account = { npub: "", contacts: [] };
 	}
 
 	public async get_all_accounts() {
@@ -68,12 +68,12 @@ export class Ark {
 
 			if (cmd) {
 				await invoke("update_signer", { nsec: keys.nsec });
+				const contacts: string[] = await invoke("get_contact_list");
 				this.account.npub = keys.npub;
-
-				return true;
+				this.account.contacts = contacts;
 			}
 
-			return false;
+			return cmd;
 		} catch (e) {
 			console.error(String(e));
 		}
@@ -106,17 +106,24 @@ export class Ark {
 		}
 	}
 
-	public async get_text_events(limit: number, asOf?: number, dedup?: boolean) {
+	public async get_text_events(
+		limit: number,
+		asOf?: number,
+		authors?: string[],
+		dedup?: boolean,
+	) {
 		try {
 			let until: string = undefined;
 			if (asOf && asOf > 0) until = asOf.toString();
 
 			const seenIds = new Set<string>();
 			const dedupQueue = new Set<string>();
+			const contact_list = authors ?? this.account.contacts;
 
 			const nostrEvents: Event[] = await invoke("get_text_events", {
 				limit,
 				until,
+				contact_list,
 			});
 
 			if (dedup) {

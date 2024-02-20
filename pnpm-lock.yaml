@@ -66,9 +66,6 @@ importers:
       '@lume/icons':
         specifier: workspace:^
         version: link:../../packages/icons
-      '@lume/storage':
-        specifier: workspace:^
-        version: link:../../packages/storage
       '@lume/ui':
         specifier: workspace:^
         version: link:../../packages/ui
@@ -90,9 +87,6 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.0
         version: 1.2.0
-      jotai:
-        specifier: ^2.6.4
-        version: 2.6.4(@types/react@18.2.55)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0

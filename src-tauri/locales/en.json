@@ -105,6 +105,7 @@
   },
   "login": {
     "title": "Welcome back, anon!",
+    "subtitle": "We're so excited to see you again!",
     "footer": "Lume will put your Private Key in Secure Storage depended on your OS Platform. It will be secured by Password or Biometric ID",
     "loginWithAddress": "Login with Nostr Address",
     "loginWithBunker": "Login with nsecBunker",
