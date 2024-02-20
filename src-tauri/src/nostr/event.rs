@@ -1,11 +1,11 @@
-use crate::NostrClient;
+use crate::Nostr;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command]
-pub async fn get_event(id: &str, state: State<'_, NostrClient>) -> Result<String, String> {
-  let client = state.0.lock().await;
+pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+  let client = state.client.lock().await;
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::EventId(id) => Some(id),
@@ -39,30 +39,25 @@ pub async fn get_event(id: &str, state: State<'_, NostrClient>) -> Result<String
 }
 
 #[tauri::command]
-pub async fn get_text_events(
+pub async fn get_local_events(
   limit: usize,
   until: Option<&str>,
-  contact_list: Option<Vec<&str>>,
-  state: State<'_, NostrClient>,
-) -> Result<Vec<Event>, ()> {
-  let client = state.0.lock().await;
+  state: State<'_, Nostr>,
+) -> Result<Vec<Event>, String> {
+  let client = state.client.lock().await;
+  let f_until = match until {
+    Some(until) => Timestamp::from_str(until).unwrap(),
+    None => Timestamp::now(),
+  };
 
-  if let Some(list) = contact_list {
-    let authors: Vec<PublicKey> = list
-      .into_iter()
-      .map(|x| PublicKey::from_str(x).unwrap())
-      .collect();
-    let mut final_until = Timestamp::now();
+  let contact_list = state.contact_list.lock().await;
 
-    if let Some(t) = until {
-      final_until = Timestamp::from_str(&t).unwrap();
-    }
-
+  if let Some(authors) = contact_list.clone() {
     let filter = Filter::new()
       .kinds(vec![Kind::TextNote, Kind::Repost])
       .authors(authors)
       .limit(limit)
-      .until(final_until);
+      .until(f_until);
 
     if let Ok(events) = client
       .get_events_of(vec![filter], Some(Duration::from_secs(10)))
@@ -70,16 +65,43 @@ pub async fn get_text_events(
     {
       Ok(events)
     } else {
-      Err(())
+      Err("Get text event failed".into())
     }
   } else {
-    Err(())
+    Err("Contact list not found".into())
   }
 }
 
 #[tauri::command]
-pub async fn get_event_thread(id: &str, state: State<'_, NostrClient>) -> Result<Vec<Event>, ()> {
-  let client = state.0.lock().await;
+pub async fn get_global_events(
+  limit: usize,
+  until: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<Vec<Event>, String> {
+  let client = state.client.lock().await;
+  let f_until = match until {
+    Some(until) => Timestamp::from_str(until).unwrap(),
+    None => Timestamp::now(),
+  };
+
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .limit(limit)
+    .until(f_until);
+
+  if let Ok(events) = client
+    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+    .await
+  {
+    Ok(events)
+  } else {
+    Err("Get text event failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn get_event_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>, ()> {
+  let client = state.client.lock().await;
   let event_id = EventId::from_hex(id).unwrap();
   let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
@@ -94,8 +116,8 @@ pub async fn get_event_thread(id: &str, state: State<'_, NostrClient>) -> Result
 }
 
 #[tauri::command]
-pub async fn publish(content: &str, state: State<'_, NostrClient>) -> Result<EventId, ()> {
-  let client = state.0.lock().await;
+pub async fn publish(content: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+  let client = state.client.lock().await;
   let event = client
     .publish_text_note(content, [])
     .await
@@ -108,9 +130,9 @@ pub async fn publish(content: &str, state: State<'_, NostrClient>) -> Result<Eve
 pub async fn reply_to(
   content: &str,
   tags: Vec<String>,
-  state: State<'_, NostrClient>,
+  state: State<'_, Nostr>,
 ) -> Result<EventId, String> {
-  let client = state.0.lock().await;
+  let client = state.client.lock().await;
   if let Ok(event_tags) = Tag::parse(tags) {
     let event = client
       .publish_text_note(content, vec![event_tags])
@@ -124,8 +146,8 @@ pub async fn reply_to(
 }
 
 #[tauri::command]
-pub async fn repost(id: &str, pubkey: &str, state: State<'_, NostrClient>) -> Result<EventId, ()> {
-  let client = state.0.lock().await;
+pub async fn repost(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+  let client = state.client.lock().await;
   let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
@@ -138,8 +160,8 @@ pub async fn repost(id: &str, pubkey: &str, state: State<'_, NostrClient>) -> Re
 }
 
 #[tauri::command]
-pub async fn upvote(id: &str, pubkey: &str, state: State<'_, NostrClient>) -> Result<EventId, ()> {
-  let client = state.0.lock().await;
+pub async fn upvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+  let client = state.client.lock().await;
   let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
@@ -152,12 +174,8 @@ pub async fn upvote(id: &str, pubkey: &str, state: State<'_, NostrClient>) -> Re
 }
 
 #[tauri::command]
-pub async fn downvote(
-  id: &str,
-  pubkey: &str,
-  state: State<'_, NostrClient>,
-) -> Result<EventId, ()> {
-  let client = state.0.lock().await;
+pub async fn downvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+  let client = state.client.lock().await;
   let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 

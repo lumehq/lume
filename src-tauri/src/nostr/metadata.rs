@@ -1,11 +1,11 @@
-use crate::NostrClient;
+use crate::Nostr;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command]
-pub async fn get_profile(id: &str, state: State<'_, NostrClient>) -> Result<Metadata, String> {
-  let client = state.0.lock().await;
+pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, String> {
+  let client = state.client.lock().await;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::Pubkey(pubkey) => Some(pubkey),
@@ -38,8 +38,8 @@ pub async fn get_profile(id: &str, state: State<'_, NostrClient>) -> Result<Meta
 }
 
 #[tauri::command]
-pub async fn get_contact_list(state: State<'_, NostrClient>) -> Result<Vec<String>, String> {
-  let client = state.0.lock().await;
+pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+  let client = state.client.lock().await;
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
   if let Ok(list) = contact_list {
@@ -60,9 +60,9 @@ pub async fn create_profile(
   nip05: &str,
   lud16: &str,
   website: &str,
-  state: State<'_, NostrClient>,
+  state: State<'_, Nostr>,
 ) -> Result<EventId, ()> {
-  let client = state.0.lock().await;
+  let client = state.client.lock().await;
   let metadata = Metadata::new()
     .name(name)
     .display_name(display_name)
@@ -77,5 +77,55 @@ pub async fn create_profile(
     Ok(event_id)
   } else {
     Err(())
+  }
+}
+
+#[tauri::command]
+pub async fn follow(
+  id: &str,
+  alias: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<EventId, String> {
+  let client = state.client.lock().await;
+  let public_key = PublicKey::from_str(id).unwrap();
+  let contact = Contact::new(public_key, None, alias);
+  let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
+
+  if let Ok(mut old_list) = contact_list {
+    old_list.push(contact);
+    let new_list = old_list.into_iter();
+
+    if let Ok(event_id) = client.set_contact_list(new_list).await {
+      Ok(event_id)
+    } else {
+      Err("Follow failed".into())
+    }
+  } else {
+    Err("Follow failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+  let client = state.client.lock().await;
+  let public_key = PublicKey::from_str(id).unwrap();
+  let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
+
+  if let Ok(mut old_list) = contact_list {
+    let index = old_list
+      .iter()
+      .position(|x| x.public_key == public_key)
+      .unwrap();
+    old_list.remove(index);
+
+    let new_list = old_list.into_iter();
+
+    if let Ok(event_id) = client.set_contact_list(new_list).await {
+      Ok(event_id)
+    } else {
+      Err("Follow failed".into())
+    }
+  } else {
+    Err("Follow failed".into())
   }
 }

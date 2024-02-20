@@ -109,7 +109,6 @@ export class Ark {
 	public async get_text_events(
 		limit: number,
 		asOf?: number,
-		authors?: string[],
 		dedup?: boolean,
 	) {
 		try {
@@ -118,12 +117,10 @@ export class Ark {
 
 			const seenIds = new Set<string>();
 			const dedupQueue = new Set<string>();
-			const contact_list = authors ?? this.account.contacts;
 
-			const nostrEvents: Event[] = await invoke("get_text_events", {
+			const nostrEvents: Event[] = await invoke("get_local_events", {
 				limit,
 				until,
-				contact_list,
 			});
 
 			if (dedup) {

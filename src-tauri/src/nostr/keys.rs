@@ -1,4 +1,4 @@
-use crate::NostrClient;
+use crate::Nostr;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::io::{BufReader, Read};
@@ -31,7 +31,7 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
 pub async fn save_key(
   nsec: &str,
   app_handle: tauri::AppHandle,
-  state: State<'_, NostrClient>,
+  state: State<'_, Nostr>,
 ) -> Result<bool, ()> {
   if let Ok(nostr_secret_key) = SecretKey::from_bech32(nsec) {
     let nostr_keys = Keys::new(nostr_secret_key);
@@ -39,8 +39,18 @@ pub async fn save_key(
     let signer = NostrSigner::Keys(nostr_keys);
 
     // Update client's signer
-    let client = state.0.lock().await;
+    let client = state.client.lock().await;
     client.set_signer(Some(signer)).await;
+
+    // Update contact list
+    let mut contact_list = state.contact_list.lock().await;
+    if let Ok(list) = client
+      .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+      .await
+    {
+      println!("total contacts: {}", list.len());
+      *contact_list = Some(list);
+    }
 
     let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
     let secret_key = keyring_entry.get_password().unwrap();
@@ -81,8 +91,8 @@ pub fn get_public_key(nsec: &str) -> Result<String, ()> {
 }
 
 #[tauri::command]
-pub async fn update_signer(nsec: &str, state: State<'_, NostrClient>) -> Result<(), ()> {
-  let client = state.0.lock().await;
+pub async fn update_signer(nsec: &str, state: State<'_, Nostr>) -> Result<(), ()> {
+  let client = state.client.lock().await;
   let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
   let signer = NostrSigner::Keys(keys);
@@ -93,8 +103,8 @@ pub async fn update_signer(nsec: &str, state: State<'_, NostrClient>) -> Result<
 }
 
 #[tauri::command]
-pub async fn verify_signer(state: State<'_, NostrClient>) -> Result<bool, ()> {
-  let client = state.0.lock().await;
+pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
+  let client = state.client.lock().await;
 
   if let Ok(_) = client.signer().await {
     Ok(true)
@@ -107,9 +117,9 @@ pub async fn verify_signer(state: State<'_, NostrClient>) -> Result<bool, ()> {
 pub async fn load_selected_account(
   npub: &str,
   app_handle: tauri::AppHandle,
-  state: State<'_, NostrClient>,
+  state: State<'_, Nostr>,
 ) -> Result<bool, String> {
-  let client = state.0.lock().await;
+  let client = state.client.lock().await;
   let config_dir = app_handle.path().app_config_dir().unwrap();
   let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
 
@@ -146,12 +156,14 @@ pub async fn load_selected_account(
       client.set_signer(Some(signer)).await;
 
       // Update contact list
-      let _contact_list = Some(
-        client
-          .get_contact_list(Some(Duration::from_secs(10)))
-          .await
-          .unwrap(),
-      );
+      let mut contact_list = state.contact_list.lock().await;
+      if let Ok(list) = client
+        .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+        .await
+      {
+        println!("total contacts: {}", list.len());
+        *contact_list = Some(list);
+      }
 
       Ok(true)
     } else {

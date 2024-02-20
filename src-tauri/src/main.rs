@@ -13,7 +13,10 @@ use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use tokio::sync::Mutex;
 
-pub struct NostrClient(Mutex<Client>);
+pub struct Nostr {
+  client: Mutex<Client>,
+  contact_list: Mutex<Option<Vec<PublicKey>>>,
+}
 
 fn main() {
   let mut ctx = tauri::generate_context!();
@@ -58,7 +61,10 @@ fn main() {
         client.connect().await;
 
         // Update global state
-        handle.manage(NostrClient(Mutex::new(client)))
+        handle.manage(Nostr {
+          client: Mutex::new(client),
+          contact_list: Mutex::new(None),
+        })
       });
 
       Ok(())
@@ -92,8 +98,11 @@ fn main() {
       nostr::metadata::get_profile,
       nostr::metadata::get_contact_list,
       nostr::metadata::create_profile,
+      nostr::metadata::follow,
+      nostr::metadata::unfollow,
       nostr::event::get_event,
-      nostr::event::get_text_events,
+      nostr::event::get_local_events,
+      nostr::event::get_global_events,
       nostr::event::get_event_thread,
       nostr::event::publish,
       nostr::event::reply_to,
