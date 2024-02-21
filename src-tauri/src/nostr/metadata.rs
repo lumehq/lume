@@ -20,17 +20,20 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
 
   if let Some(author) = public_key {
     let filter = Filter::new().author(author).kind(Kind::Metadata).limit(1);
-    let events = client
+    let query = client
       .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await
-      .expect("Get metadata failed");
+      .await;
 
-    if let Some(event) = events.first() {
-      let metadata: Metadata = Metadata::from_json(&event.content).unwrap();
-      Ok(metadata)
+    if let Ok(events) = query {
+      if let Some(event) = events.first() {
+        let metadata: Metadata = Metadata::from_json(&event.content).unwrap();
+        Ok(metadata)
+      } else {
+        let rand_metadata = Metadata::new();
+        Ok(rand_metadata)
+      }
     } else {
-      let rand_metadata = Metadata::new();
-      Ok(rand_metadata)
+      Err("Get metadata failed".into())
     }
   } else {
     Err("Public Key is not valid".into())
@@ -127,5 +130,111 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
     }
   } else {
     Err("Follow failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn set_interest(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+  let client = state.client.lock().await;
+  let tag = Tag::Identifier("lume_user_interest".into());
+  let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
+
+  if let Ok(event_id) = client.send_event_builder(builder).await {
+    Ok(event_id)
+  } else {
+    Err("Set interest failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn get_interest(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+  let client = state.client.lock().await;
+  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::Pubkey(pubkey) => Some(pubkey),
+      Nip19::Profile(profile) => Some(profile.public_key),
+      _ => None,
+    },
+    Err(_) => match PublicKey::from_str(id) {
+      Ok(val) => Some(val),
+      Err(_) => None,
+    },
+  };
+
+  if let Some(author) = public_key {
+    let filter = Filter::new()
+      .author(author)
+      .kind(Kind::ApplicationSpecificData)
+      .identifier("lume_user_interest")
+      .limit(1);
+
+    let query = client
+      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+      .await;
+
+    if let Ok(events) = query {
+      if let Some(event) = events.first() {
+        Ok(event.content.to_string())
+      } else {
+        Err("User interest not found".into())
+      }
+    } else {
+      Err("User interest not found".into())
+    }
+  } else {
+    Err("Get interest failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn set_settings(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+  let client = state.client.lock().await;
+  let tag = Tag::Identifier("lume_user_settings".into());
+  let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
+
+  if let Ok(event_id) = client.send_event_builder(builder).await {
+    Ok(event_id)
+  } else {
+    Err("Set interest failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+  let client = state.client.lock().await;
+  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::Pubkey(pubkey) => Some(pubkey),
+      Nip19::Profile(profile) => Some(profile.public_key),
+      _ => None,
+    },
+    Err(_) => match PublicKey::from_str(id) {
+      Ok(val) => Some(val),
+      Err(_) => None,
+    },
+  };
+
+  if let Some(author) = public_key {
+    let filter = Filter::new()
+      .author(author)
+      .kind(Kind::ApplicationSpecificData)
+      .identifier("lume_user_settings")
+      .limit(1);
+
+    let query = client
+      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+      .await;
+
+    if let Ok(events) = query {
+      if let Some(event) = events.first() {
+        Ok(event.content.to_string())
+      } else {
+        Err("User settings not found".into())
+      }
+    } else {
+      Err("User settings not found".into())
+    }
+  } else {
+    Err("Get settings failed".into())
   }
 }
