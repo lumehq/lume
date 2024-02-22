@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
         const loadAccount = await ark.load_selected_account(accounts[0].npub);
         if (loadAccount) {
           throw redirect({
-            to: "/app/home",
+            to: "/app/home/local",
             search: {
               redirect: location.href,
             },

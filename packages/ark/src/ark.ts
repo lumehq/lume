@@ -98,8 +98,7 @@ export class Ark {
 				.split("'")[0]
 				.split(".")[0];
 			const cmd: string = await invoke("get_event", { id: eventId });
-			const event = JSON.parse(cmd) as Event;
-
+			const event: Event = JSON.parse(cmd);
 			return event;
 		} catch (e) {
 			return null;

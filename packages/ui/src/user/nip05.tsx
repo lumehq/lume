@@ -18,25 +18,12 @@ export function UserNip05({ className }: { className?: string }) {
     enabled: !!user.profile,
   });
 
-  if (!user.profile) {
-    return (
-      <div
-        className={cn(
-          "h-3 w-20 animate-pulse rounded bg-black/20 dark:bg-white/20",
-          className,
-        )}
-      />
-    );
-  }
-
   return (
     <div className="inline-flex items-center gap-1">
       <p className={cn("text-sm", className)}>
-        {!user?.profile?.nip05
+        {!user.profile?.nip05
           ? displayNpub(user.pubkey, 16)
-          : user?.profile?.nip05?.startsWith("_@")
-            ? user?.profile?.nip05?.replace("_@", "")
-            : user?.profile?.nip05}
+          : user.profile?.nip05.replace("_@", "")}
       </p>
       {!isLoading && verified ? (
         <VerifiedIcon className="size-4 text-teal-500" />

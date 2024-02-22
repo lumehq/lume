@@ -10,8 +10,35 @@ import i18n from "./locale";
 import { Toaster } from "sonner";
 import { locale, platform } from "@tauri-apps/plugin-os";
 import { routeTree } from "./router.gen"; // auto generated file
+import { get, set, del } from "idb-keyval";
+import {
+  PersistedClient,
+  Persister,
+} from "@tanstack/react-query-persist-client";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-const queryClient = new QueryClient();
+function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery") {
+  return {
+    persistClient: async (client: PersistedClient) => {
+      await set(idbValidKey, client);
+    },
+    restoreClient: async () => {
+      return await get<PersistedClient>(idbValidKey);
+    },
+    removeClient: async () => {
+      await del(idbValidKey);
+    },
+  } as Persister;
+}
+
+const persister = createIDBPersister();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+});
 const platformName = await platform();
 const osLocale = (await locale()).slice(0, 2);
 
@@ -53,12 +80,15 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <I18nextProvider i18n={i18n} defaultNS={"translation"}>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+      >
         <StrictMode>
           <Toaster position="top-center" richColors />
           <App />
         </StrictMode>
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </I18nextProvider>,
   );
 }

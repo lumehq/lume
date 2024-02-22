@@ -75,9 +75,15 @@ importers:
       '@radix-ui/react-checkbox':
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-collapsible':
+        specifier: ^1.0.3
+        version: 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^5.20.5
         version: 5.20.5(react@18.2.0)
+      '@tanstack/react-query-persist-client':
+        specifier: ^5.22.2
+        version: 5.22.2(@tanstack/react-query@5.20.5)(react@18.2.0)
       '@tanstack/react-router':
         specifier: ^1.16.2
         version: 1.16.2(react-dom@18.2.0)(react@18.2.0)
@@ -87,6 +93,9 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.0
         version: 1.2.0
+      idb-keyval:
+        specifier: ^6.2.1
+        version: 6.2.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -202,7 +211,7 @@ importers:
         version: 1.0.4(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-collapsible':
         specifier: ^1.0.3
-        version: 1.0.3(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+        version: 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-dialog':
         specifier: ^1.0.5
         version: 1.0.5(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
@@ -896,7 +905,7 @@ importers:
         version: 1.0.4(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-collapsible':
         specifier: ^1.0.3
-        version: 1.0.3(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+        version: 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-dialog':
         specifier: ^1.0.5
         version: 1.0.5(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
@@ -1893,7 +1902,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.9
       '@radix-ui/primitive': 1.0.1
-      '@radix-ui/react-collapsible': 1.0.3(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-collapsible': 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-collection': 1.0.3(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.55)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.55)(react@18.2.0)
@@ -2002,7 +2011,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@radix-ui/react-collapsible@1.0.3(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0):
+  /@radix-ui/react-collapsible@1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-UBmVDkmR6IvDsloHVN+3rtx4Mi5TFvylYXpluuv0f37dtaz3H99bp8No0LGXRigVpl3UAT4l9j6bIchh42S/Gg==}
     peerDependencies:
       '@types/react': '*'
@@ -2025,6 +2034,7 @@ packages:
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.55)(react@18.2.0)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.55)(react@18.2.0)
       '@types/react': 18.2.55
+      '@types/react-dom': 18.2.19
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2900,6 +2910,27 @@ packages:
 
   /@tanstack/query-core@5.20.5:
     resolution: {integrity: sha512-T1W28gGgWn0A++tH3lxj3ZuUVZZorsiKcv+R50RwmPYz62YoDEkG4/aXHZELGkRp4DfrW07dyq2K5dvJ4Wl1aA==}
+    dev: false
+
+  /@tanstack/query-core@5.22.2:
+    resolution: {integrity: sha512-z3PwKFUFACMUqe1eyesCIKg3Jv1mysSrYfrEW5ww5DCDUD4zlpTKBvUDaEjsfZzL3ULrFLDM9yVUxI/fega1Qg==}
+    dev: false
+
+  /@tanstack/query-persist-client-core@5.22.2:
+    resolution: {integrity: sha512-sFDgWoN54uclIDIoImPmDzxTq8HhZEt9pO0JbVHjI6LPZqunMMF9yAq9zFKrpH//jD5f+rBCQsdGyhdpUo9e8Q==}
+    dependencies:
+      '@tanstack/query-core': 5.22.2
+    dev: false
+
+  /@tanstack/react-query-persist-client@5.22.2(@tanstack/react-query@5.20.5)(react@18.2.0):
+    resolution: {integrity: sha512-osAaQn2PDTaa2ApTLOAus7g8Y96LHfS2+Pgu/RoDlEJUEkX7xdEn0YuurxbnJaDJDESMfr+CH/eAX2y+lx02Fg==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.22.2
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.22.2
+      '@tanstack/react-query': 5.20.5(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@tanstack/react-query@5.20.5(react@18.2.0):
@@ -4549,6 +4580,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
+    dev: false
+
+  /idb-keyval@6.2.1:
+    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
     dev: false
 
   /ieee754@1.2.1:

@@ -16,7 +16,7 @@ export function NoteUser({ className }: { className?: string }) {
         >
           <div className="flex gap-3">
             <HoverCard.Trigger>
-              <User.Avatar className="size-10 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+              <User.Avatar className="size-11 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
             </HoverCard.Trigger>
             <div>
               <User.Name className="font-semibold leading-tight text-neutral-950 dark:text-neutral-50" />

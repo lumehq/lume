@@ -1,6 +1,6 @@
 import { Event } from "@lume/types";
+import { Note } from "@lume/ui";
 import { cn } from "@lume/utils";
-import { Note } from "..";
 
 export function TextNote({
   event,
@@ -17,10 +17,7 @@ export function TextNote({
           className,
         )}
       >
-        <div className="flex items-start justify-between">
-          <Note.User className="flex-1 pr-2" />
-          <Note.Menu />
-        </div>
+        <Note.User />
         <div className="flex gap-3">
           <div className="size-11 shrink-0" />
           <div className="min-w-0 flex-1">
@@ -32,6 +29,7 @@ export function TextNote({
                 <Note.Reply />
                 <Note.Repost />
                 <Note.Zap />
+                <Note.Menu />
               </div>
             </div>
           </div>

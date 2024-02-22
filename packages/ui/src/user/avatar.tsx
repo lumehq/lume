@@ -11,28 +11,15 @@ export function UserAvatar({ className }: { className?: string }) {
   const fallbackAvatar = useMemo(
     () =>
       `data:image/svg+xml;utf8,${encodeURIComponent(
-        minidenticon(user?.pubkey || nanoid(), 90, 50),
+        minidenticon(user.pubkey || nanoid(), 90, 50),
       )}`,
     [user],
   );
 
-  if (!user.profile) {
-    return (
-      <div className="shrink-0">
-        <div
-          className={cn(
-            "animate-pulse rounded bg-black/20 dark:bg-white/20",
-            className,
-          )}
-        />
-      </div>
-    );
-  }
-
   return (
     <Avatar.Root className="shrink-0">
       <Avatar.Image
-        src={user.profile.picture}
+        src={user.profile?.picture}
         alt={user.pubkey}
         loading="eager"
         decoding="async"

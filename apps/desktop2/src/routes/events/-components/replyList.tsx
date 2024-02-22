@@ -3,8 +3,6 @@ import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ReplyForm } from "./editor/replyForm";
-import { Reply } from "./note/primitives/reply";
 import { EventWithReplies } from "@lume/types";
 
 export function ReplyList({

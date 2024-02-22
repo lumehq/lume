@@ -1,4 +1,3 @@
-import { PinIcon } from "@lume/icons";
 import { NOSTR_MENTIONS } from "@lume/utils";
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +5,7 @@ import reactStringReplace from "react-string-replace";
 import { User } from "../../user";
 import { Hashtag } from "./hashtag";
 import { MentionUser } from "./user";
-import { useEvent } from "@lume/ark";
+import { useArk, useEvent } from "@lume/ark";
 
 export function MentionNote({
   eventId,
@@ -18,6 +17,7 @@ export function MentionNote({
   const { t } = useTranslation();
   const { isLoading, isError, data } = useEvent(eventId);
 
+  const ark = useArk();
   const richContent = useMemo(() => {
     if (!data) return "";
 
@@ -117,17 +117,18 @@ export function MentionNote({
           </div>
         </User.Root>
       </User.Provider>
-      <div className="line-clamp-4 select-text whitespace-pre-line text-balance px-3 leading-normal">
+      <div className="line-clamp-4 select-text whitespace-normal text-balance px-3 leading-normal">
         {richContent}
       </div>
       {openable ? (
         <div className="flex h-10 items-center justify-between px-3">
-          <a
-            href={`/events/${data.id}`}
+          <button
+            type="button"
+            onClick={() => ark.open_thread(data.id)}
             className="text-blue-500 hover:text-blue-600"
           >
             {t("note.showMore")}
-          </a>
+          </button>
         </div>
       ) : (
         <div className="h-3" />

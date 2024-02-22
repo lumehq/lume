@@ -6,7 +6,7 @@ export function useProfile(pubkey: string) {
 	const {
 		isLoading,
 		isError,
-		data: user,
+		data: profile,
 	} = useQuery({
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
@@ -24,5 +24,5 @@ export function useProfile(pubkey: string) {
 		retry: 2,
 	});
 
-	return { isLoading, isError, user };
+	return { isLoading, isError, profile };
 }

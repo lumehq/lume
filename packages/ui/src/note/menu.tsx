@@ -34,7 +34,7 @@ export function NoteMenu() {
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="text-neutral-500 hover:text-blue-500 dark:text-neutral-400"
+          className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
         >
           <HorizontalDotsIcon className="size-5" />
         </button>

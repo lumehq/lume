@@ -20,7 +20,7 @@ export function ActiveAccount() {
   );
 
   const { t } = useTranslation();
-  const { user } = useProfile(ark.account.npub);
+  const { profile } = useProfile(ark.account.npub);
 
   return (
     <DropdownMenu.Root>
@@ -32,7 +32,7 @@ export function ActiveAccount() {
           )}
         >
           <Avatar.Image
-            src={user?.picture}
+            src={profile?.picture}
             alt={ark.account.npub}
             loading="lazy"
             decoding="async"
