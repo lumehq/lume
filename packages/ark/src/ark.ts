@@ -106,7 +106,8 @@ export class Ark {
 		}
 	}
 
-	public async get_text_events(
+	public async get_events(
+		type: "local" | "global",
 		limit: number,
 		asOf?: number,
 		dedup?: boolean,
@@ -118,7 +119,7 @@ export class Ark {
 			const seenIds = new Set<string>();
 			const dedupQueue = new Set<string>();
 
-			const nostrEvents: Event[] = await invoke("get_local_events", {
+			const nostrEvents: Event[] = await invoke(`get_${type}_events`, {
 				limit,
 				until,
 			});
@@ -284,6 +285,36 @@ export class Ark {
 			return cmd;
 		} catch {
 			return null;
+		}
+	}
+
+	public async get_contact_list() {
+		try {
+			const cmd: string[] = await invoke("get_contact_list");
+			return cmd;
+		} catch (e) {
+			console.error(e);
+			return [];
+		}
+	}
+
+	public async follow(id: string, alias?: string) {
+		try {
+			const cmd: string = await invoke("follow", { id, alias });
+			return cmd;
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
+	}
+
+	public async unfollow(id: string) {
+		try {
+			const cmd: string = await invoke("unfollow", { id });
+			return cmd;
+		} catch (e) {
+			console.error(e);
+			return false;
 		}
 	}
 

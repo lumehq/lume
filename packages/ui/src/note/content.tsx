@@ -1,4 +1,3 @@
-import { useStorage } from "@lume/storage";
 import { Kind } from "@lume/types";
 import {
   AUDIOS,
@@ -8,14 +7,11 @@ import {
   VIDEOS,
   canPreview,
   cn,
-  regionNames,
 } from "@lume/utils";
-import { fetch } from "@tauri-apps/plugin-http";
 import getUrls from "get-urls";
 import { nanoid } from "nanoid";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
-import { toast } from "sonner";
 import { stripHtml } from "string-strip-html";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
@@ -27,19 +23,12 @@ import { VideoPreview } from "./preview/video";
 import { useNoteContext } from "./provider";
 
 export function NoteContent({ className }: { className?: string }) {
-  const storage = useStorage();
   const event = useNoteContext();
 
-  const [content, setContent] = useState(event.content);
-  const [translate, setTranslate] = useState({
-    translatable: false,
-    translated: false,
-  });
-
   const richContent = useMemo(() => {
-    if (event.kind !== Kind.Text) return content;
+    if (event.kind !== Kind.Text) return event.content;
 
-    let parsedContent: string | ReactNode[] = stripHtml(content).result;
+    let parsedContent: string | ReactNode[] = stripHtml(event.content).result;
     let linkPreview: string = undefined;
     let images: string[] = [];
     let videos: string[] = [];
@@ -50,32 +39,32 @@ export function NoteContent({ className }: { className?: string }) {
     const words = text.split(/( |\n)/);
     const urls = [...getUrls(text)];
 
-    if (storage.settings.media && !storage.settings.lowPower) {
-      images = urls.filter((word) =>
-        IMAGES.some((el) => {
-          const url = new URL(word);
-          const extension = url.pathname.split(".")[1];
-          if (extension === el) return true;
-          return false;
-        }),
-      );
-      videos = urls.filter((word) =>
-        VIDEOS.some((el) => {
-          const url = new URL(word);
-          const extension = url.pathname.split(".")[1];
-          if (extension === el) return true;
-          return false;
-        }),
-      );
-      audios = urls.filter((word) =>
-        AUDIOS.some((el) => {
-          const url = new URL(word);
-          const extension = url.pathname.split(".")[1];
-          if (extension === el) return true;
-          return false;
-        }),
-      );
-    }
+    images = urls.filter((word) =>
+      IMAGES.some((el) => {
+        const url = new URL(word);
+        const extension = url.pathname.split(".")[1];
+        if (extension === el) return true;
+        return false;
+      }),
+    );
+
+    videos = urls.filter((word) =>
+      VIDEOS.some((el) => {
+        const url = new URL(word);
+        const extension = url.pathname.split(".")[1];
+        if (extension === el) return true;
+        return false;
+      }),
+    );
+
+    audios = urls.filter((word) =>
+      AUDIOS.some((el) => {
+        const url = new URL(word);
+        const extension = url.pathname.split(".")[1];
+        if (extension === el) return true;
+        return false;
+      }),
+    );
 
     events = words.filter((word) =>
       NOSTR_EVENTS.some((el) => word.startsWith(el)),
@@ -121,9 +110,7 @@ export function NoteContent({ className }: { className?: string }) {
         for (const hashtag of hashtags) {
           const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
           parsedContent = reactStringReplace(parsedContent, regex, () => {
-            if (storage.settings.hashtag)
-              return <Hashtag key={nanoid()} tag={hashtag} />;
-            return null;
+            return <Hashtag key={nanoid()} tag={hashtag} />;
           });
         }
       }
@@ -174,7 +161,7 @@ export function NoteContent({ className }: { className?: string }) {
       );
 
       parsedContent = reactStringReplace(parsedContent, "\n", () => {
-        return <div key={nanoid()} />;
+        return <br key={nanoid()} />;
       });
 
       if (typeof parsedContent[0] === "string") {
@@ -186,35 +173,7 @@ export function NoteContent({ className }: { className?: string }) {
       console.warn(event.id, `[parser] parse failed: ${e}`);
       return parsedContent;
     }
-  }, [content]);
-
-  const translateContent = async () => {
-    try {
-      if (!translate.translatable) return;
-
-      const res = await fetch("https://translate.nostr.wine/translate", {
-        method: "POST",
-        body: JSON.stringify({
-          q: event.content,
-          target: storage.locale.slice(0, 2),
-          api_key: storage.settings.translateApiKey,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!res.ok)
-        toast.error(
-          "Cannot connect to translate service, please try again later.",
-        );
-
-      const data = await res.json();
-
-      setContent(data.translatedText);
-      setTranslate((state) => ({ ...state, translated: true }));
-    } catch (e) {
-      console.error("translate api: ", String(e));
-    }
-  };
+  }, []);
 
   if (event.kind !== Kind.Text) {
     return <NIP89 className={className} />;
@@ -225,25 +184,6 @@ export function NoteContent({ className }: { className?: string }) {
       <div className="content-break select-text whitespace-pre-line text-balance leading-normal">
         {richContent}
       </div>
-      {storage.settings.translation && translate.translatable ? (
-        translate.translated ? (
-          <button
-            type="button"
-            onClick={() => setContent(event.content)}
-            className="mt-3 border-none text-sm text-blue-500 shadow-none hover:text-blue-600 focus:outline-none"
-          >
-            Show original content
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={translateContent}
-            className="mt-3 border-none text-sm text-blue-500 shadow-none hover:text-blue-600 focus:outline-none"
-          >
-            Translate to {regionNames.of(storage.locale)}
-          </button>
-        )
-      ) : null}
     </div>
   );
 }

@@ -3,15 +3,11 @@ import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "./provider";
 
-export function UserFollowButton({
-  target,
-  className,
-}: {
-  target: string;
-  className?: string;
-}) {
+export function UserFollowButton({ className }: { className?: string }) {
   const ark = useArk();
+  const user = useUserContext();
 
   const [t] = useTranslation();
   const [loading, setLoading] = useState(false);
@@ -20,10 +16,10 @@ export function UserFollowButton({
   const toggleFollow = async () => {
     setLoading(true);
     if (!followed) {
-      const add = await ark.createContact(target);
+      const add = await ark.follow(user.pubkey);
       if (add) setFollowed(true);
     } else {
-      const remove = await ark.deleteContact(target);
+      const remove = await ark.unfollow(user.pubkey);
       if (remove) setFollowed(false);
     }
     setLoading(false);
@@ -33,8 +29,8 @@ export function UserFollowButton({
     async function status() {
       setLoading(true);
 
-      const contacts = await ark.getUserContacts();
-      if (contacts?.includes(target)) {
+      const contacts = await ark.get_contact_list();
+      if (contacts?.includes(user.pubkey)) {
         setFollowed(true);
       }
 

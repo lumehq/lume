@@ -15,10 +15,15 @@ function Home() {
   const ark = useArk();
   const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["timeline"],
+      queryKey: ["local_timeline"],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_text_events(FETCH_LIMIT, pageParam, true);
+        const events = await ark.get_events(
+          "local",
+          FETCH_LIMIT,
+          pageParam,
+          true,
+        );
         return events;
       },
       getNextPageParam: (lastPage) => {

@@ -9,15 +9,28 @@ export function NoteReaction() {
   const event = useNoteContext();
 
   const [reaction, setReaction] = useState<"+" | "-">(null);
+  const [loading, setLoading] = useState(false);
 
   const up = async () => {
+    // start loading
+    setLoading(false);
+
     const res = await ark.upvote(event.id, event.pubkey);
     if (res) setReaction("+");
+
+    // stop loading
+    setLoading(true);
   };
 
   const down = async () => {
+    // start loading
+    setLoading(false);
+
     const res = await ark.downvote(event.id, event.pubkey);
     if (res) setReaction("-");
+
+    // stop loading
+    setLoading(true);
   };
 
   return (
@@ -25,7 +38,7 @@ export function NoteReaction() {
       <button
         type="button"
         onClick={up}
-        disabled={!!reaction}
+        disabled={!!reaction || loading}
         className={cn(
           "inline-flex size-7 items-center justify-center rounded-full",
           reaction === "+"
@@ -38,7 +51,7 @@ export function NoteReaction() {
       <button
         type="button"
         onClick={down}
-        disabled={!!reaction}
+        disabled={!!reaction || loading}
         className={cn(
           "inline-flex size-7 items-center justify-center rounded-full",
           reaction === "-"

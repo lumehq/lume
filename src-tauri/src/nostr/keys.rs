@@ -48,7 +48,6 @@ pub async fn save_key(
       .get_contact_list_public_keys(Some(Duration::from_secs(10)))
       .await
     {
-      println!("total contacts: {}", list.len());
       *contact_list = Some(list);
     }
 
@@ -161,7 +160,6 @@ pub async fn load_selected_account(
         .get_contact_list_public_keys(Some(Duration::from_secs(10)))
         .await
       {
-        println!("total contacts: {}", list.len());
         *contact_list = Some(list);
       }
 

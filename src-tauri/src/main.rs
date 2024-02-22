@@ -47,15 +47,19 @@ fn main() {
         client
           .add_relay("wss://nostr.mutinywallet.com")
           .await
-          .expect("Failed to add bootstrap relay.");
+          .unwrap_or_default();
         client
-          .add_relay("wss://bostr.yonle.lecturify.net")
+          .add_relay("wss://relay.nostr.band")
           .await
-          .expect("Failed to add bootstrap relay.");
+          .unwrap_or_default();
+        client
+          .add_relay("wss://relay.damus.io")
+          .await
+          .unwrap_or_default();
         client
           .add_relay("wss://purplepag.es")
           .await
-          .expect("Failed to add bootstrap relay.");
+          .unwrap_or_default();
 
         // Connect
         client.connect().await;
