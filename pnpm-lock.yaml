@@ -105,6 +105,12 @@ importers:
       react-i18next:
         specifier: ^14.0.5
         version: 14.0.5(i18next@23.8.2)(react-dom@18.2.0)(react@18.2.0)
+      slate:
+        specifier: ^0.101.5
+        version: 0.101.5
+      slate-react:
+        specifier: ^0.101.6
+        version: 0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5)
       sonner:
         specifier: ^1.4.0
         version: 1.4.0(react-dom@18.2.0)(react@18.2.0)
@@ -200,9 +206,6 @@ importers:
       '@lume/icons':
         specifier: workspace:^
         version: link:../icons
-      '@lume/storage':
-        specifier: workspace:^
-        version: link:../storage
       '@lume/utils':
         specifier: workspace:^
         version: link:../utils
@@ -408,9 +411,6 @@ importers:
       '@lume/icons':
         specifier: workspace:^
         version: link:../icons
-      '@lume/storage':
-        specifier: workspace:^
-        version: link:../storage
       '@lume/ui':
         specifier: workspace:^
         version: link:../ui
@@ -811,43 +811,6 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  packages/storage:
-    dependencies:
-      '@tauri-apps/plugin-store':
-        specifier: 2.0.0-beta.0
-        version: 2.0.0-beta.0
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      scheduler:
-        specifier: ^0.23.0
-        version: 0.23.0
-      use-context-selector:
-        specifier: ^1.4.1
-        version: 1.4.1(react@18.2.0)(scheduler@0.23.0)
-      virtua:
-        specifier: ^0.27.0
-        version: 0.27.0(react-dom@18.2.0)(react@18.2.0)
-      zustand:
-        specifier: ^4.5.0
-        version: 4.5.0(@types/react@18.2.55)(react@18.2.0)
-    devDependencies:
-      '@lume/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:*
-        version: link:../types
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@types/react':
-        specifier: ^18.2.55
-        version: 18.2.55
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
-
   packages/tailwindcss:
     devDependencies:
       '@evilmartians/harmony':
@@ -885,9 +848,6 @@ importers:
       '@lume/icons':
         specifier: workspace:^
         version: link:../icons
-      '@lume/storage':
-        specifier: workspace:^
-        version: link:../storage
       '@lume/utils':
         specifier: workspace:^
         version: link:../utils
@@ -1036,6 +996,15 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      slate:
+        specifier: ^0.101.5
+        version: 0.101.5
+      slate-react:
+        specifier: ^0.101.6
+        version: 0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5)
     devDependencies:
       '@lume/tsconfig':
         specifier: workspace:^
@@ -1046,6 +1015,9 @@ importers:
       '@types/react':
         specifier: ^18.2.55
         version: 18.2.55
+      '@types/react-dom':
+        specifier: ^18.2.19
+        version: 18.2.19
       tailwind-merge:
         specifier: ^2.2.1
         version: 2.2.1
@@ -3166,12 +3138,6 @@ packages:
 
   /@tauri-apps/plugin-sql@2.0.0-beta.0:
     resolution: {integrity: sha512-1SXeFCDe74oqtH7HuMMMNjeFMHC8uFLiIT+1Yuwk9qg6EbWroF5BAGLUGXHJYD2agMkq5tzc9l45nPSa6w3kSQ==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.0
-    dev: false
-
-  /@tauri-apps/plugin-store@2.0.0-beta.0:
-    resolution: {integrity: sha512-DT3pzMyNcgO90hDgmnN7j5fYQIaaD54gbi0oKi7n4Nwa6y5GqHsgpnzot9IBSOTS6kYy6D8yrN43XN/xwG4vUg==}
     dependencies:
       '@tauri-apps/api': 2.0.0-beta.0
     dev: false
@@ -7028,23 +6994,6 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /use-context-selector@1.4.1(react@18.2.0)(scheduler@0.23.0):
-    resolution: {integrity: sha512-Io2ArvcRO+6MWIhkdfMFt+WKQX+Vb++W8DS2l03z/Vw/rz3BclKpM0ynr4LYGyU85Eke+Yx5oIhTY++QR0ZDoA==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '*'
-      react-native: '*'
-      scheduler: '>=0.19.0'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      react: 18.2.0
-      scheduler: 0.23.0
-    dev: false
-
   /use-debounce@10.0.0(react@18.2.0):
     resolution: {integrity: sha512-XRjvlvCB46bah9IBXVnq/ACP2lxqXyZj0D9hj4K5OzNroMDpTEBg8Anuh1/UfRTRs7pLhQ+RiNxxwZu9+MVl1A==}
     engines: {node: '>= 16.0.0'}
@@ -7520,26 +7469,6 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-
-  /zustand@4.5.0(@types/react@18.2.55)(react@18.2.0):
-    resolution: {integrity: sha512-zlVFqS5TQ21nwijjhJlx4f9iGrXSL0o/+Dpy4txAP22miJ8Ti6c1Ol1RLNN98BMib83lmDH/2KmLwaNXpjrO1A==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@types/react': '>=16.8'
-      immer: '>=9.0.6'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
-    dependencies:
-      '@types/react': 18.2.55
-      react: 18.2.0
-      use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

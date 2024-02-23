@@ -5,7 +5,7 @@ use tauri::State;
 
 #[tauri::command]
 pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::Pubkey(pubkey) => Some(pubkey),
@@ -42,7 +42,7 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
 
 #[tauri::command]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
   if let Ok(list) = contact_list {
@@ -65,7 +65,7 @@ pub async fn create_profile(
   website: &str,
   state: State<'_, Nostr>,
 ) -> Result<EventId, ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let metadata = Metadata::new()
     .name(name)
     .display_name(display_name)
@@ -89,7 +89,7 @@ pub async fn follow(
   alias: Option<&str>,
   state: State<'_, Nostr>,
 ) -> Result<EventId, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key = PublicKey::from_str(id).unwrap();
   let contact = Contact::new(public_key, None, alias);
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
@@ -110,7 +110,7 @@ pub async fn follow(
 
 #[tauri::command]
 pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key = PublicKey::from_str(id).unwrap();
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
@@ -135,7 +135,7 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
 
 #[tauri::command]
 pub async fn set_interest(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let tag = Tag::Identifier("lume_user_interest".into());
   let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
 
@@ -148,7 +148,7 @@ pub async fn set_interest(content: &str, state: State<'_, Nostr>) -> Result<Even
 
 #[tauri::command]
 pub async fn get_interest(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::Pubkey(pubkey) => Some(pubkey),
@@ -188,7 +188,7 @@ pub async fn get_interest(id: &str, state: State<'_, Nostr>) -> Result<String, S
 
 #[tauri::command]
 pub async fn set_settings(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let tag = Tag::Identifier("lume_user_settings".into());
   let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
 
@@ -201,7 +201,7 @@ pub async fn set_settings(content: &str, state: State<'_, Nostr>) -> Result<Even
 
 #[tauri::command]
 pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::Pubkey(pubkey) => Some(pubkey),

@@ -5,7 +5,7 @@ use tauri::State;
 
 #[tauri::command]
 pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::EventId(id) => Some(id),
@@ -44,7 +44,7 @@ pub async fn get_local_events(
   until: Option<&str>,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let f_until = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
@@ -78,7 +78,7 @@ pub async fn get_global_events(
   until: Option<&str>,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let f_until = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
@@ -101,7 +101,7 @@ pub async fn get_global_events(
 
 #[tauri::command]
 pub async fn get_event_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>, ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let event_id = EventId::from_hex(id).unwrap();
   let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
@@ -116,14 +116,19 @@ pub async fn get_event_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<E
 }
 
 #[tauri::command]
-pub async fn publish(content: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
-  let client = state.client.lock().await;
-  let event = client
-    .publish_text_note(content, [])
-    .await
-    .expect("Publish new text note failed");
+pub async fn publish(
+  content: &str,
+  tags: Vec<Vec<String>>,
+  state: State<'_, Nostr>,
+) -> Result<String, String> {
+  let client = &state.client;
+  let final_tags = tags.into_iter().map(|val| Tag::parse(val).unwrap());
 
-  Ok(event)
+  if let Ok(event_id) = client.publish_text_note(content, final_tags).await {
+    Ok(event_id.to_bech32().unwrap())
+  } else {
+    Err("Publish text note failed".into())
+  }
 }
 
 #[tauri::command]
@@ -132,7 +137,7 @@ pub async fn reply_to(
   tags: Vec<String>,
   state: State<'_, Nostr>,
 ) -> Result<EventId, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   if let Ok(event_tags) = Tag::parse(tags) {
     let event = client
       .publish_text_note(content, vec![event_tags])
@@ -147,7 +152,7 @@ pub async fn reply_to(
 
 #[tauri::command]
 pub async fn repost(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
@@ -161,7 +166,7 @@ pub async fn repost(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<E
 
 #[tauri::command]
 pub async fn upvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 
@@ -175,7 +180,7 @@ pub async fn upvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<E
 
 #[tauri::command]
 pub async fn downvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let public_key = PublicKey::from_str(pubkey).unwrap();
   let event_id = EventId::from_hex(id).unwrap();
 

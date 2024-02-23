@@ -103,9 +103,9 @@ export function MentionNote({
   }
 
   return (
-    <div className="my-1.5 flex w-full cursor-default flex-col rounded-xl bg-neutral-100 pt-1 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5">
+    <div className="my-1 flex w-full cursor-default flex-col rounded-xl bg-neutral-100 px-3 pt-1 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5">
       <User.Provider pubkey={data.pubkey}>
-        <User.Root className="flex h-10 items-center gap-2 px-3">
+        <User.Root className="flex h-10 items-center gap-2">
           <User.Avatar className="size-6 shrink-0 rounded-full object-cover" />
           <div className="inline-flex flex-1 items-center gap-2">
             <User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
@@ -117,11 +117,11 @@ export function MentionNote({
           </div>
         </User.Root>
       </User.Provider>
-      <div className="line-clamp-4 select-text whitespace-normal text-balance px-3 leading-normal">
+      <div className="line-clamp-4 select-text whitespace-normal text-balance leading-normal">
         {richContent}
       </div>
       {openable ? (
-        <div className="flex h-10 items-center justify-between px-3">
+        <div className="flex h-10 items-center justify-between">
           <button
             type="button"
             onClick={() => ark.open_thread(data.id)}

@@ -7,6 +7,9 @@ import type {
 } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { WebviewWindow } from "@tauri-apps/api/webview";
+import { open } from "@tauri-apps/plugin-dialog";
+import { readFile } from "@tauri-apps/plugin-fs";
+import { generateContentTags } from "@lume/utils";
 
 export class Ark {
 	public account: Account;
@@ -147,17 +150,27 @@ export class Ark {
 			}
 
 			return nostrEvents.sort((a, b) => b.created_at - a.created_at);
-		} catch (e) {
+		} catch {
 			return [];
 		}
 	}
 
 	public async publish(content: string) {
 		try {
-			const cmd: string = await invoke("publish", { content });
+			const g = await generateContentTags(content);
+
+			const eventContent = g.content;
+			const eventTags = g.tags;
+
+			const cmd: string = await invoke("publish", {
+				content: eventContent,
+				tags: eventTags,
+			});
+
 			return cmd;
 		} catch (e) {
 			console.error(String(e));
+			return false;
 		}
 	}
 
@@ -341,6 +354,61 @@ export class Ark {
 		}
 	}
 
+	public async upload(filePath?: string) {
+		try {
+			const allowExts = [
+				"png",
+				"jpeg",
+				"jpg",
+				"gif",
+				"mp4",
+				"mp3",
+				"webm",
+				"mkv",
+				"avi",
+				"mov",
+			];
+
+			let selected =
+				filePath ||
+				(
+					await open({
+						multiple: false,
+						filters: [
+							{
+								name: "Media",
+								extensions: allowExts,
+							},
+						],
+					})
+				).path;
+
+			if (!selected) return null;
+
+			const file = await readFile(selected);
+			const blob = new Blob([file]);
+
+			const data = new FormData();
+			data.append("fileToUpload", blob);
+			data.append("submit", "Upload Image");
+
+			const res = await fetch("https://nostr.build/api/v2/upload/files", {
+				method: "POST",
+				body: data,
+			});
+
+			if (!res.ok) return null;
+
+			const json = await res.json();
+			const content = json.data[0];
+
+			return content.url as string;
+		} catch (e) {
+			console.error(String(e));
+			return null;
+		}
+	}
+
 	public open_thread(id: string) {
 		return new WebviewWindow(`event-${id}`, {
 			title: "Thread",
@@ -362,6 +430,19 @@ export class Ark {
 			height: 800,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",
+		});
+	}
+
+	public open_editor() {
+		return new WebviewWindow("editor", {
+			title: "Editor",
+			url: "/editor",
+			minWidth: 500,
+			width: 600,
+			height: 400,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+			fileDropEnabled: true,
 		});
 	}
 }

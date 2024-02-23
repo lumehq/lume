@@ -1,12 +1,20 @@
-import { ReactNode } from "react";
 import ReactDOM from "react-dom";
+import { ReactNode } from "react";
 import { BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
+import { Contact } from "@lume/types";
 
 export const Portal = ({ children }: { children?: ReactNode }) => {
 	return typeof document === "object"
 		? ReactDOM.createPortal(children, document.body)
 		: null;
+};
+
+export const isImagePath = (path: string) => {
+	for (const suffix of ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"]) {
+		if (path.endsWith(suffix)) return true;
+	}
+	return false;
 };
 
 export const isImageUrl = (url: string) => {
@@ -43,13 +51,13 @@ export const insertImage = (editor: ReactEditor | BaseEditor, url: string) => {
 
 export const insertMention = (
 	editor: ReactEditor | BaseEditor,
-	contact: NDKCacheUserProfile,
+	contact: Contact,
 ) => {
 	const text = { text: "" };
 	const mention = {
 		type: "mention",
-		npub: `nostr:${contact.npub}`,
-		name: contact.name || contact.displayName || "anon",
+		npub: `nostr:${contact.pubkey}`,
+		name: contact.profile.name || contact.profile.display_name || "anon",
 		children: [text],
 	};
 	const extraText = [

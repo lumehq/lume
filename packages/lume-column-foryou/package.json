@@ -6,7 +6,6 @@
 	"dependencies": {
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",
-		"@lume/storage": "workspace:^",
 		"@lume/ui": "workspace:^",
 		"@lume/utils": "workspace:^",
 		"@tanstack/react-query": "^5.20.5",

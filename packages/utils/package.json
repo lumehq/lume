@@ -13,12 +13,16 @@
 		"dayjs": "^1.11.10",
 		"jotai": "^2.6.4",
 		"nostr-tools": "^2.1.9",
-		"react": "^18.2.0"
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"slate": "^0.101.5",
+		"slate-react": "^0.101.6"
 	},
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
 		"@types/react": "^18.2.55",
+		"@types/react-dom": "^18.2.19",
 		"tailwind-merge": "^2.2.1",
 		"typescript": "^5.3.3"
 	}

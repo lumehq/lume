@@ -3,7 +3,15 @@
   "identifier": "desktop-capability",
   "description": "Capability for the desktop",
   "platforms": ["linux", "macOS", "windows"],
-  "windows": ["main", "splash", "settings", "event-*", "user-*", "column-*"],
+  "windows": [
+    "main",
+    "splash",
+    "editor",
+    "settings",
+    "event-*",
+    "user-*",
+    "column-*"
+  ],
   "permissions": [
     "path:default",
     "event:default",
@@ -27,6 +35,8 @@
     "clipboard-manager:allow-read",
     "webview:allow-create-webview-window",
     "webview:allow-create-webview",
+    "dialog:allow-open",
+    "fs:allow-read-file",
     {
       "identifier": "http:default",
       "allow": [

@@ -54,6 +54,11 @@ export interface Metadata {
 	lud16?: string;
 }
 
+export interface Contact {
+	pubkey: string;
+	profile: Metadata;
+}
+
 export interface Account {
 	npub: string;
 	contacts?: string[];

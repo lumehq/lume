@@ -4,6 +4,7 @@ import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EventWithReplies } from "@lume/types";
+import { Reply } from "./reply";
 
 export function ReplyList({
   eventId,

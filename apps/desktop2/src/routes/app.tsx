@@ -1,6 +1,7 @@
 import {
   BellFilledIcon,
   BellIcon,
+  EditIcon,
   HomeFilledIcon,
   HomeIcon,
   SpaceFilledIcon,
@@ -10,12 +11,14 @@ import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
+import { useArk } from "@lume/ark";
 
 export const Route = createFileRoute("/app")({
   component: App,
 });
 
 function App() {
+  const ark = useArk();
   const context = Route.useRouteContext();
 
   return (
@@ -28,7 +31,17 @@ function App() {
         )}
       >
         <Navigation />
-        <Accounts />
+        <div className="flex items-center gap-3">
+          <Accounts />
+          <button
+            type="button"
+            onClick={() => ark.open_editor()}
+            className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white"
+          >
+            <EditIcon className="size-4" />
+            New
+          </button>
+        </div>
       </div>
       <div className="flex h-full min-h-0 w-full">
         <div className="h-full w-full flex-1 px-2 pb-2">
@@ -45,7 +58,7 @@ function Navigation() {
       data-tauri-drag-region
       className="flex h-full flex-1 items-center gap-2"
     >
-      <Link to="/app/home">
+      <Link to="/app/home/local">
         {({ isActive }) => (
           <div
             className={cn(

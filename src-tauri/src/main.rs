@@ -14,7 +14,7 @@ use tauri_plugin_autostart::MacosLauncher;
 use tokio::sync::Mutex;
 
 pub struct Nostr {
-  client: Mutex<Client>,
+  client: Client,
   contact_list: Mutex<Option<Vec<PublicKey>>>,
 }
 
@@ -66,7 +66,7 @@ fn main() {
 
         // Update global state
         handle.manage(Nostr {
-          client: Mutex::new(client),
+          client: client.into(),
           contact_list: Mutex::new(None),
         })
       });

@@ -29,7 +29,7 @@ function LocalTimeline() {
         return events;
       },
       getNextPageParam: (lastPage) => {
-        const lastEvent = lastPage.at(-1);
+        const lastEvent = lastPage?.at(-1);
         if (!lastEvent) return;
         return lastEvent.created_at - 1;
       },
@@ -49,8 +49,9 @@ function LocalTimeline() {
   return (
     <div>
       {isLoading ? (
-        <div className="flex h-20 w-full items-center justify-center">
+        <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
           <LoaderIcon className="size-5 animate-spin" />
+          <p>Loading...</p>
         </div>
       ) : !data.length ? (
         <div className="flex flex-col gap-3">

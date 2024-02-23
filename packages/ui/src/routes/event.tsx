@@ -1,7 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { WindowVirtualizer } from "virtua";
-import { ReplyList } from "../replyList";
 import { ThreadNote } from "../note/primitives/thread";
 
 export function EventRoute() {

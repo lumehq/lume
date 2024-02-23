@@ -37,7 +37,7 @@ export function ImagePreview({ url }: { url: string }) {
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       onClick={open}
-      className="group relative my-1.5 rounded-xl ring-1 ring-black/5 dark:ring-white/5"
+      className="group relative my-1 rounded-xl ring-1 ring-black/5 dark:ring-white/5"
     >
       <img
         src={url}

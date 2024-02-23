@@ -21,12 +21,10 @@ export function NoteChild({
   const richContent = useMemo(() => {
     if (!data) return "";
 
-    let parsedContent: string | ReactNode[] = data.content.replace(
-      /\n+/g,
-      "\n",
-    );
+    let parsedContent: string | ReactNode[] =
+      data.content.substring(0, 160) + "...";
 
-    const text = parsedContent as string;
+    const text = data.content;
     const words = text.split(/( |\n)/);
 
     const hashtags = words.filter((word) => word.startsWith("#"));
@@ -104,7 +102,7 @@ export function NoteChild({
     <div className="relative flex gap-3">
       <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
         <div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-200 dark:bg-neutral-800" />
-        <div className="content-break mt-6 line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
+        <div className="content-break mt-6 select-text leading-normal text-neutral-900 dark:text-neutral-100">
           {richContent}
         </div>
       </div>

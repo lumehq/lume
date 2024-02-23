@@ -1,6 +1,4 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon, TrashIcon } from "@lume/icons";
-import { useStorage } from "@lume/storage";
 import { cn, editorValueAtom } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtom } from "jotai";

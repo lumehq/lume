@@ -54,7 +54,7 @@ export function LinkPreview({ url }: { url: string }) {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="my-1.5 flex w-full flex-col overflow-hidden rounded-xl bg-neutral-100 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5"
+      className="my-1 flex w-full flex-col overflow-hidden rounded-xl bg-neutral-100 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5"
     >
       {isImage(data.image) ? (
         <img

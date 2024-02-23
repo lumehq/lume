@@ -39,7 +39,7 @@ pub async fn save_key(
     let signer = NostrSigner::Keys(nostr_keys);
 
     // Update client's signer
-    let client = state.client.lock().await;
+    let client = &state.client;
     client.set_signer(Some(signer)).await;
 
     // Update contact list
@@ -91,7 +91,7 @@ pub fn get_public_key(nsec: &str) -> Result<String, ()> {
 
 #[tauri::command]
 pub async fn update_signer(nsec: &str, state: State<'_, Nostr>) -> Result<(), ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let secret_key = SecretKey::from_bech32(nsec).unwrap();
   let keys = Keys::new(secret_key);
   let signer = NostrSigner::Keys(keys);
@@ -103,7 +103,7 @@ pub async fn update_signer(nsec: &str, state: State<'_, Nostr>) -> Result<(), ()
 
 #[tauri::command]
 pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = state.client.lock().await;
+  let client = &state.client;
 
   if let Ok(_) = client.signer().await {
     Ok(true)
@@ -118,7 +118,7 @@ pub async fn load_selected_account(
   app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
 ) -> Result<bool, String> {
-  let client = state.client.lock().await;
+  let client = &state.client;
   let config_dir = app_handle.path().app_config_dir().unwrap();
   let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
 
