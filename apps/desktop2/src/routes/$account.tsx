@@ -7,13 +7,13 @@ import {
   SpaceFilledIcon,
   SpaceIcon,
 } from "@lume/icons";
-import { Link } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
 import { useArk } from "@lume/ark";
 
-export const Route = createFileRoute("/app")({
+export const Route = createFileRoute("/$account")({
   component: App,
 });
 
@@ -53,12 +53,15 @@ function App() {
 }
 
 function Navigation() {
+  // @ts-ignore, useless
+  const { account } = useParams({ strict: false });
+
   return (
     <div
       data-tauri-drag-region
       className="flex h-full flex-1 items-center gap-2"
     >
-      <Link to="/app/home/local">
+      <Link to="/$account/home/local" params={{ account }}>
         {({ isActive }) => (
           <div
             className={cn(
@@ -75,7 +78,7 @@ function Navigation() {
           </div>
         )}
       </Link>
-      <Link to="/app/space">
+      <Link to="/$account/space" params={{ account }}>
         {({ isActive }) => (
           <div
             className={cn(
@@ -92,7 +95,7 @@ function Navigation() {
           </div>
         )}
       </Link>
-      <Link to="/app/activity">
+      <Link to="/$account/activity" params={{ account }}>
         {({ isActive }) => (
           <div
             className={cn(

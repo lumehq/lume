@@ -47,3 +47,18 @@ default = ["custom-protocol"]
 # this feature is used used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+incremental = false
+opt-level = 3
+strip = true
+rpath = false
+debug = false
+debug-assertions = false
+overflow-checks = false

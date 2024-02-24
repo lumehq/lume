@@ -9,7 +9,7 @@ import { Virtualizer } from "virtua";
 import { TextNote } from "./-components/text";
 import { RepostNote } from "./-components/repost";
 
-export const Route = createLazyFileRoute("/app/home/global")({
+export const Route = createLazyFileRoute("/$account/home/global")({
   component: GlobalTimeline,
 });
 

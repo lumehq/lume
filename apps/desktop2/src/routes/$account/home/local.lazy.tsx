@@ -9,15 +9,17 @@ import { Virtualizer } from "virtua";
 import { TextNote } from "./-components/text";
 import { RepostNote } from "./-components/repost";
 
-export const Route = createLazyFileRoute("/app/home/local")({
+export const Route = createLazyFileRoute("/$account/home/local")({
   component: LocalTimeline,
 });
 
 function LocalTimeline() {
   const ark = useArk();
+
+  const { account } = Route.useParams();
   const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["events", "local"],
+      queryKey: ["newsfeed", account],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
         const events = await ark.get_events(
@@ -38,6 +40,7 @@ function LocalTimeline() {
     });
 
   const renderItem = (event: Event) => {
+    if (!event) return;
     switch (event.kind) {
       case Kind.Repost:
         return <RepostNote key={event.id} event={event} />;

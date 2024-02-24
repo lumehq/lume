@@ -26,8 +26,11 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
 
     if let Ok(events) = query {
       if let Some(event) = events.first() {
-        let metadata: Metadata = Metadata::from_json(&event.content).unwrap();
-        Ok(metadata)
+        if let Ok(metadata) = Metadata::from_json(&event.content) {
+          Ok(metadata)
+        } else {
+          Err("Parse metadata failed".into())
+        }
       } else {
         let rand_metadata = Metadata::new();
         Ok(rand_metadata)

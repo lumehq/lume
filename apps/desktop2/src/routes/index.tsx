@@ -20,10 +20,12 @@ export const Route = createFileRoute("/")({
         });
       // Only 1 account, skip account selection screen
       case 1:
-        const loadAccount = await ark.load_selected_account(accounts[0].npub);
+        const account = accounts[0].npub;
+        const loadAccount = await ark.load_selected_account(account);
         if (loadAccount) {
           throw redirect({
-            to: "/app/home/local",
+            to: "/$account/home/local",
+            params: { account },
             search: {
               redirect: location.href,
             },
@@ -48,7 +50,8 @@ function Screen() {
     const loadAccount = await ark.load_selected_account(npub);
     if (loadAccount) {
       navigate({
-        to: "/app/home",
+        to: "/$account/home/local",
+        params: { account: npub },
         replace: true,
       });
     }
