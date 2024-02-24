@@ -1,3 +1,4 @@
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type {
 	Account,
 	Event,
@@ -6,7 +7,6 @@ import type {
 	Metadata,
 } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
-import { WebviewWindow } from "@tauri-apps/api/webview";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { generateContentTags } from "@lume/utils";
@@ -369,7 +369,7 @@ export class Ark {
 				"mov",
 			];
 
-			let selected =
+			const selected =
 				filePath ||
 				(
 					await open({

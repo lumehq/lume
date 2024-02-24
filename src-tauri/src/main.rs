@@ -19,7 +19,7 @@ pub struct Nostr {
 }
 
 fn main() {
-  let mut ctx = tauri::generate_context!();
+  let ctx = tauri::generate_context!();
   tauri::Builder::default()
     .setup(|app| {
       let handle = app.handle().clone();
@@ -74,7 +74,6 @@ fn main() {
       Ok(())
     })
     .plugin(tauri_plugin_store::Builder::default().build())
-    .plugin(tauri_plugin_theme::init(ctx.config_mut()))
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
