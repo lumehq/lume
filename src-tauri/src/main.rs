@@ -5,6 +5,7 @@
 
 pub mod commands;
 pub mod nostr;
+pub mod tray;
 
 use age::secrecy::ExposeSecret;
 use keyring::Entry;
@@ -19,9 +20,9 @@ pub struct Nostr {
 }
 
 fn main() {
-  let ctx = tauri::generate_context!();
   tauri::Builder::default()
     .setup(|app| {
+      let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
       let config_dir = handle.path().app_config_dir().unwrap();
       let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
@@ -120,7 +121,7 @@ fn main() {
       commands::folder::get_all_nsecs,
       commands::opg::fetch_opg,
     ])
-    .build(ctx)
+    .build(tauri::generate_context!())
     .expect("error while running tauri application")
     .run(|_app_handle, event| match event {
       tauri::RunEvent::ExitRequested { api, .. } => {

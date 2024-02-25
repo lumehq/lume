@@ -36,7 +36,7 @@ function App() {
           <button
             type="button"
             onClick={() => ark.open_editor()}
-            className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white"
+            className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-2.5 text-sm font-medium text-white hover:bg-blue-600"
           >
             <EditIcon className="size-4" />
             New
