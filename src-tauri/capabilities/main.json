@@ -35,6 +35,7 @@
     "webview:allow-create-webview",
     "dialog:allow-open",
     "fs:allow-read-file",
+    "shell:allow-open",
     {
       "identifier": "http:default",
       "allow": [

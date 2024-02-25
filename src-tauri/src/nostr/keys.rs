@@ -3,7 +3,6 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::io::{BufReader, Read};
 use std::iter;
-use std::time::Duration;
 use std::{fs::File, io::Write, str::FromStr};
 use tauri::{Manager, State};
 
@@ -41,15 +40,6 @@ pub async fn save_key(
     // Update client's signer
     let client = &state.client;
     client.set_signer(Some(signer)).await;
-
-    // Update contact list
-    let mut contact_list = state.contact_list.lock().await;
-    if let Ok(list) = client
-      .get_contact_list_public_keys(Some(Duration::from_secs(10)))
-      .await
-    {
-      *contact_list = Some(list);
-    }
 
     let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
     let secret_key = keyring_entry.get_password().unwrap();
@@ -153,15 +143,6 @@ pub async fn load_selected_account(
 
       // Update signer
       client.set_signer(Some(signer)).await;
-
-      // Update contact list
-      let mut contact_list = state.contact_list.lock().await;
-      if let Ok(list) = client
-        .get_contact_list_public_keys(Some(Duration::from_secs(10)))
-        .await
-      {
-        *contact_list = Some(list);
-      }
 
       Ok(true)
     } else {

@@ -18,7 +18,7 @@ export function NoteThread({ className }: { className?: string }) {
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex h-min w-full flex-col gap-3 rounded-xl bg-neutral-100 p-3 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5">
+      <div className="flex h-min w-full flex-col gap-3 rounded-2xl border border-black/10 p-3 dark:border-white/10">
         {thread.rootEventId ? (
           <Note.Child eventId={thread.rootEventId} isRoot />
         ) : null}

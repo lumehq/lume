@@ -50,9 +50,15 @@ pub async fn get_local_events(
     None => Timestamp::now(),
   };
 
-  let contact_list = state.contact_list.lock().await;
+  let contact_list = client
+    .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+    .await;
 
-  if let Some(authors) = contact_list.clone() {
+  if let Ok(authors) = contact_list {
+    if authors.len() == 0 {
+      return Err("Get text event failed".into());
+    }
+
     let filter = Filter::new()
       .kinds(vec![Kind::TextNote, Kind::Repost])
       .authors(authors)
@@ -68,7 +74,7 @@ pub async fn get_local_events(
       Err("Get text event failed".into())
     }
   } else {
-    Err("Contact list not found".into())
+    Err("Get contact list failed".into())
   }
 }
 

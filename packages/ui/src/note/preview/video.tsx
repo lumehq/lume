@@ -9,14 +9,14 @@ import {
 
 export function VideoPreview({ url }: { url: string }) {
   return (
-    <div className="my-1 w-full overflow-hidden rounded-xl ring-1 ring-black/5 dark:ring-white/5">
+    <div className="my-1 w-full overflow-hidden rounded-2xl border border-black/10 dark:border-white/10">
       <MediaController>
         <video
           slot="media"
           src={url}
           preload="auto"
           muted
-          className="h-auto w-full rounded-xl"
+          className="h-auto w-full"
         />
         <MediaControlBar>
           <MediaPlayButton />

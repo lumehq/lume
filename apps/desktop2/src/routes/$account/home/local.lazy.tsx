@@ -1,5 +1,10 @@
 import { useArk } from "@lume/ark";
-import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
+import {
+  ArrowRightCircleIcon,
+  ArrowRightIcon,
+  LoaderIcon,
+  SearchIcon,
+} from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
@@ -19,7 +24,7 @@ function LocalTimeline() {
   const { account } = Route.useParams();
   const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["newsfeed", account],
+      queryKey: ["local_newsfeed", account],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
         const events = await ark.get_events(
@@ -61,10 +66,10 @@ function LocalTimeline() {
           <EmptyFeed />
           <a
             href="/suggest"
-            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-blue-500 text-sm font-medium text-white hover:bg-blue-600"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-500 font-medium text-white hover:bg-blue-600"
           >
-            <SearchIcon className="size-5" />
             Find accounts to follow
+            <ArrowRightIcon className="size-5" />
           </a>
         </div>
       ) : (

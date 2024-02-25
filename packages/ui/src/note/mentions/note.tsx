@@ -84,7 +84,7 @@ export function MentionNote({
     return (
       <div
         contentEditable={false}
-        className="my-1 flex w-full cursor-default items-center justify-between rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900"
+        className="my-1 flex w-full cursor-default items-center justify-between rounded-2xl border border-black/10 p-3 dark:border-white/10"
       >
         <p>Loading...</p>
       </div>
@@ -95,7 +95,7 @@ export function MentionNote({
     return (
       <div
         contentEditable={false}
-        className="my-1 w-full cursor-default rounded-lg bg-neutral-100 p-3 dark:bg-neutral-900"
+        className="my-1 w-full cursor-default rounded-2xl border border-black/10 p-3 dark:border-white/10"
       >
         {t("note.error")}
       </div>
@@ -103,7 +103,7 @@ export function MentionNote({
   }
 
   return (
-    <div className="my-1 flex w-full cursor-default flex-col rounded-xl bg-neutral-100 px-3 pt-1 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/5">
+    <div className="my-1 flex w-full cursor-default flex-col rounded-2xl border border-black/10 px-3 pt-1 dark:border-white/10">
       <User.Provider pubkey={data.pubkey}>
         <User.Root className="flex h-10 items-center gap-2">
           <User.Avatar className="size-6 shrink-0 rounded-full object-cover" />

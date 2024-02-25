@@ -1,6 +1,7 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon, PlusIcon } from "@lume/icons";
 import { User } from "@lume/ui";
+import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -89,14 +90,14 @@ function Screen() {
                   </User.Provider>
                 </button>
               ))}
-              <button type="button">
+              <Link to="/landing">
                 <div className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-xl p-2 text-white hover:bg-white/10 dark:hover:bg-black/10">
                   <div className="flex size-20 items-center justify-center rounded-full bg-white/20 dark:bg-black/20">
                     <PlusIcon className="size-5" />
                   </div>
                   <p className="text-lg font-medium leading-tight">Add</p>
                 </div>
-              </button>
+              </Link>
             </>
           )}
         </div>

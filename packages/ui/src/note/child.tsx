@@ -81,8 +81,8 @@ export function NoteChild({
   if (isLoading) {
     return (
       <div className="relative flex gap-3">
-        <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
-          <div className="h-4 w-full animate-pulse bg-neutral-300 dark:bg-neutral-700" />
+        <div className="relative flex-1 rounded-xl bg-neutral-100 p-3 text-sm dark:bg-neutral-900">
+          Loading...
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ export function NoteChild({
   if (isError || !data) {
     return (
       <div className="relative flex gap-3">
-        <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
+        <div className="relative flex-1 rounded-xl bg-neutral-100 p-3 text-sm dark:bg-neutral-900">
           {t("note.error")}
         </div>
       </div>
@@ -100,8 +100,8 @@ export function NoteChild({
 
   return (
     <div className="relative flex gap-3">
-      <div className="relative flex-1 rounded-md bg-neutral-200 px-2 py-2 dark:bg-neutral-800">
-        <div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-200 dark:bg-neutral-800" />
+      <div className="relative flex-1 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+        <div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-100 dark:bg-neutral-900" />
         <div className="content-break mt-6 select-text leading-normal text-neutral-900 dark:text-neutral-100">
           {richContent}
         </div>
@@ -109,7 +109,7 @@ export function NoteChild({
       <User.Provider pubkey={data.pubkey}>
         <User.Root>
           <User.Avatar className="size-10 shrink-0 rounded-full object-cover" />
-          <div className="absolute left-2 top-2 inline-flex items-center gap-1.5 font-semibold leading-tight">
+          <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 font-semibold leading-tight">
             <User.Name className="max-w-[10rem] truncate" />
             <div className="font-normal text-neutral-700 dark:text-neutral-300">
               {isRoot ? t("note.posted") : t("note.replied")}:

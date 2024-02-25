@@ -12,11 +12,9 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
-use tokio::sync::Mutex;
 
 pub struct Nostr {
   client: Client,
-  contact_list: Mutex<Option<Vec<PublicKey>>>,
 }
 
 fn main() {
@@ -68,7 +66,6 @@ fn main() {
         // Update global state
         handle.manage(Nostr {
           client: client.into(),
-          contact_list: Mutex::new(None),
         })
       });
 
