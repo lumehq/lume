@@ -1,8 +1,7 @@
 import { LoaderIcon, ReplyIcon, RepostIcon } from "@lume/icons";
-import { cn, editorAtom, editorValueAtom } from "@lume/utils";
+import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -12,13 +11,10 @@ import { useArk } from "@lume/ark";
 export function NoteRepost() {
   const ark = useArk();
   const event = useNoteContext();
-  const setEditorValue = useSetAtom(editorValueAtom);
-  const setIsEditorOpen = useSetAtom(editorAtom);
 
   const [t] = useTranslation();
   const [loading, setLoading] = useState(false);
   const [isRepost, setIsRepost] = useState(false);
-  const [open, setOpen] = useState(false);
 
   const repost = async () => {
     try {
@@ -39,35 +35,15 @@ export function NoteRepost() {
     }
   };
 
-  const quote = () => {
-    setEditorValue([
-      {
-        type: "paragraph",
-        children: [{ text: "" }],
-      },
-      {
-        type: "event",
-        // @ts-expect-error, useless
-        eventId: `nostr:${nip19.noteEncode(event.id)}`,
-        children: [{ text: "" }],
-      },
-      {
-        type: "paragraph",
-        children: [{ text: "" }],
-      },
-    ]);
-    setIsEditorOpen(true);
-  };
-
   return (
-    <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+    <DropdownMenu.Root>
       <Tooltip.Provider>
         <Tooltip.Root delayDuration={150}>
           <DropdownMenu.Trigger asChild>
             <Tooltip.Trigger asChild>
               <button
                 type="button"
-                className="group inline-flex h-7 w-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
+                className="size07 group inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200"
               >
                 {loading ? (
                   <LoaderIcon className="size-4 animate-spin" />
@@ -91,12 +67,12 @@ export function NoteRepost() {
         </Tooltip.Root>
       </Tooltip.Provider>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-2xl bg-white/50 p-2 ring-1 ring-black/10 backdrop-blur-2xl focus:outline-none dark:bg-black/50 dark:ring-white/10">
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl bg-black p-1 shadow-md shadow-neutral-500/20 focus:outline-none dark:bg-white">
           <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={repost}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               <RepostIcon className="size-4" />
               {t("note.buttons.repost")}
@@ -105,13 +81,14 @@ export function NoteRepost() {
           <DropdownMenu.Item asChild>
             <button
               type="button"
-              onClick={quote}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              onClick={() => ark.open_editor(event.id, true)}
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               <ReplyIcon className="size-4" />
               {t("note.buttons.quote")}
             </button>
           </DropdownMenu.Item>
+          <DropdownMenu.Arrow className="fill-black dark:fill-white" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

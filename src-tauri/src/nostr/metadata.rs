@@ -3,6 +3,12 @@ use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
 
+#[derive(serde::Serialize)]
+pub struct CacheContact {
+  pubkey: String,
+  profile: Metadata,
+}
+
 #[tauri::command]
 pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, String> {
   let client = &state.client;
@@ -46,11 +52,36 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
 #[tauri::command]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
-  let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
-  if let Ok(list) = contact_list {
-    let v = list.into_iter().map(|f| f.public_key.to_hex()).collect();
-    Ok(v)
+  if let Ok(contact_list) = client.get_contact_list(Some(Duration::from_secs(10))).await {
+    let list = contact_list
+      .into_iter()
+      .map(|f| f.public_key.to_hex())
+      .collect();
+
+    Ok(list)
+  } else {
+    Err("Contact list not found".into())
+  }
+}
+
+#[tauri::command]
+pub async fn get_contact_metadata(state: State<'_, Nostr>) -> Result<Vec<CacheContact>, String> {
+  let client = &state.client;
+
+  if let Ok(contact_list) = client
+    .get_contact_list_metadata(Some(Duration::from_secs(10)))
+    .await
+  {
+    let list: Vec<CacheContact> = contact_list
+      .into_iter()
+      .map(|(id, metadata)| CacheContact {
+        pubkey: id.to_hex(),
+        profile: metadata,
+      })
+      .collect();
+
+    Ok(list)
   } else {
     Err("Contact list not found".into())
   }

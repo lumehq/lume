@@ -78,6 +78,9 @@ importers:
       '@radix-ui/react-collapsible':
         specifier: ^1.0.3
         version: 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/query-sync-storage-persister':
+        specifier: ^5.24.1
+        version: 5.24.1
       '@tanstack/react-query':
         specifier: ^5.22.2
         version: 5.22.2(react@18.2.0)
@@ -96,6 +99,9 @@ importers:
       idb-keyval:
         specifier: ^6.2.1
         version: 6.2.1
+      nostr-tools:
+        specifier: ^2.3.1
+        version: 2.3.1(typescript@5.3.3)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -2729,15 +2735,15 @@ packages:
     resolution: {integrity: sha512-osvveYtyzdEVbt3OfwwXFr4P2iVBL5u1Q3q4ONBfDY/UpOuXmOlbgwc1xECEboY8wIays8Yt6onaWMUdUbfl0A==}
     dependencies:
       '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
-      '@scure/base': 1.1.1
+      '@noble/hashes': 1.3.3
+      '@scure/base': 1.1.5
     dev: false
 
   /@scure/bip39@1.2.1:
     resolution: {integrity: sha512-Z3/Fsz1yr904dduJD0NpiyRHhRYHdcnyh73FZWiV+/qhWi83wNJ3NWolYqCEN+ZWsUz2TWwajJggcRE9r1zUYg==}
     dependencies:
-      '@noble/hashes': 1.3.1
-      '@scure/base': 1.1.1
+      '@noble/hashes': 1.3.3
+      '@scure/base': 1.1.5
     dev: false
 
   /@swc/core-darwin-arm64@1.4.2:
@@ -2892,10 +2898,27 @@ packages:
     resolution: {integrity: sha512-z3PwKFUFACMUqe1eyesCIKg3Jv1mysSrYfrEW5ww5DCDUD4zlpTKBvUDaEjsfZzL3ULrFLDM9yVUxI/fega1Qg==}
     dev: false
 
+  /@tanstack/query-core@5.24.1:
+    resolution: {integrity: sha512-DZ6Nx9p7BhjkG50ayJ+MKPgff+lMeol7QYXkvuU5jr2ryW/4ok5eanaS9W5eooA4xN0A/GPHdLGOZGzArgf5Cg==}
+    dev: false
+
   /@tanstack/query-persist-client-core@5.22.2:
     resolution: {integrity: sha512-sFDgWoN54uclIDIoImPmDzxTq8HhZEt9pO0JbVHjI6LPZqunMMF9yAq9zFKrpH//jD5f+rBCQsdGyhdpUo9e8Q==}
     dependencies:
       '@tanstack/query-core': 5.22.2
+    dev: false
+
+  /@tanstack/query-persist-client-core@5.24.1:
+    resolution: {integrity: sha512-ayUDCSCXAq3ZYXMrVQ3c4g2Mvj+d/Q7rGkNJTvdw09DZQUUMTfZsvSayitJjOxqJl1Pex4HmZNk8PiDvrqvlRQ==}
+    dependencies:
+      '@tanstack/query-core': 5.24.1
+    dev: false
+
+  /@tanstack/query-sync-storage-persister@5.24.1:
+    resolution: {integrity: sha512-dfqgFgb+6tmdvnE1vMQbBuZOBUi7zFeQB/gQJgiADJ2IO0OXp/Ucj06sVOLm9fAPGiUBDqF+UW/xB9ipBH2+Hw==}
+    dependencies:
+      '@tanstack/query-core': 5.24.1
+      '@tanstack/query-persist-client-core': 5.24.1
     dev: false
 
   /@tanstack/react-query-persist-client@5.22.2(@tanstack/react-query@5.22.2)(react@18.2.0):

@@ -36,6 +36,7 @@ export interface Event {
 	tags: string[][];
 	content: string;
 	sig: string;
+	relay?: string;
 }
 
 export interface EventWithReplies extends Event {

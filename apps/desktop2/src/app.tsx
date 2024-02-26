@@ -1,6 +1,6 @@
 import { useArk } from "@lume/ark";
 import { ArkProvider } from "./ark";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -9,36 +9,23 @@ import "./app.css";
 import i18n from "./locale";
 import { Toaster } from "sonner";
 import { locale, platform } from "@tauri-apps/plugin-os";
-import { routeTree } from "./router.gen"; // auto generated file
-import { get, set, del } from "idb-keyval";
-import {
-  PersistedClient,
-  Persister,
-} from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { routeTree } from "./router.gen"; // auto generated file
 
-function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery") {
-  return {
-    persistClient: async (client: PersistedClient) => {
-      await set(idbValidKey, client);
-    },
-    restoreClient: async () => {
-      return await get<PersistedClient>(idbValidKey);
-    },
-    removeClient: async () => {
-      await del(idbValidKey);
-    },
-  } as Persister;
-}
-
-const persister = createIDBPersister();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
   },
 });
+
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
+
 const platformName = await platform();
 const osLocale = (await locale()).slice(0, 2);
 

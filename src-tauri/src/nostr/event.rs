@@ -138,25 +138,6 @@ pub async fn publish(
 }
 
 #[tauri::command]
-pub async fn reply_to(
-  content: &str,
-  tags: Vec<String>,
-  state: State<'_, Nostr>,
-) -> Result<EventId, String> {
-  let client = &state.client;
-  if let Ok(event_tags) = Tag::parse(tags) {
-    let event = client
-      .publish_text_note(content, vec![event_tags])
-      .await
-      .expect("Publish reply failed");
-
-    Ok(event)
-  } else {
-    Err("Reply failed".into())
-  }
-}
-
-#[tauri::command]
 pub async fn repost(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
   let client = &state.client;
   let public_key = PublicKey::from_str(pubkey).unwrap();

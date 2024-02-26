@@ -6,11 +6,10 @@ import {
   insertImage,
   insertMention,
   insertNostrEvent,
-  isImagePath,
   isImageUrl,
   sendNativeNotification,
 } from "@lume/utils";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MediaButton } from "./-components/media";
@@ -34,23 +33,68 @@ import {
 } from "slate-react";
 import { Contact } from "@lume/types";
 import { User } from "@lume/ui";
+import { nip19 } from "nostr-tools";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { invoke } from "@tauri-apps/api/core";
 
-export const Route = createLazyFileRoute("/editor/")({
+type EditorElement = {
+  type: string;
+  children: Descendant[];
+  eventId?: string;
+};
+
+const contactQueryOptions = queryOptions({
+  queryKey: ["contacts"],
+  queryFn: () => invoke("get_contact_metadata"),
+  refetchOnMount: false,
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+});
+
+export const Route = createFileRoute("/editor/")({
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData(contactQueryOptions),
   component: Screen,
+  pendingComponent: Pending,
 });
 
 function Screen() {
+  // @ts-ignore, useless
+  const { reply_to, quote } = Route.useSearch();
+
+  let initialValue: EditorElement[];
+
+  if (quote) {
+    initialValue = [
+      {
+        type: "paragraph",
+        children: [{ text: "" }],
+      },
+      {
+        type: "event",
+        eventId: `nostr:${nip19.noteEncode(reply_to)}`,
+        children: [{ text: "" }],
+      },
+      {
+        type: "paragraph",
+        children: [{ text: "" }],
+      },
+    ];
+  } else {
+    initialValue = [
+      {
+        type: "paragraph",
+        children: [{ text: "" }],
+      },
+    ];
+  }
+
   const ark = useArk();
   const ref = useRef<HTMLDivElement | null>();
+  const contacts = useSuspenseQuery(contactQueryOptions).data as Contact[];
 
   const [t] = useTranslation();
-  const [editorValue, setEditorValue] = useState([
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ]);
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [editorValue, setEditorValue] = useState(initialValue);
   const [target, setTarget] = useState<Range | undefined>();
   const [index, setIndex] = useState(0);
   const [search, setSearch] = useState("");
@@ -63,7 +107,7 @@ function Screen() {
     ?.filter((c) =>
       c?.profile.name?.toLowerCase().startsWith(search.toLowerCase()),
     )
-    ?.slice(0, 10);
+    ?.slice(0, 5);
 
   const reset = () => {
     // @ts-expect-error, backlog
@@ -101,7 +145,7 @@ function Screen() {
       setLoading(true);
 
       const content = serialize(editor.children);
-      const eventId = await ark.publish(content);
+      const eventId = await ark.publish(content, reply_to, quote);
 
       if (eventId) {
         await sendNativeNotification("You've publish new post successfully.");
@@ -162,7 +206,7 @@ function Screen() {
           data-tauri-drag-region
           className="flex h-16 w-full shrink-0 items-center justify-end gap-3 px-2"
         >
-          <MediaButton className="size-9 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800" />
+          <MediaButton className="size-9 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700" />
           <button
             type="button"
             onClick={publish}
@@ -176,8 +220,14 @@ function Screen() {
           </button>
         </div>
         <div className="flex h-full min-h-0 w-full">
-          <div className="h-full w-full flex-1 px-2 pb-2">
-            <div className="h-full w-full overflow-hidden overflow-y-auto rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
+          <div className="flex h-full w-full flex-1 flex-col gap-2 px-2 pb-2">
+            {reply_to && !quote ? (
+              <div className="flex flex-col gap-2 rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
+                <h3 className="font-medium">Reply to:</h3>
+                <MentionNote eventId={reply_to} />
+              </div>
+            ) : null}
+            <div className="h-full w-full flex-1 overflow-hidden overflow-y-auto rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
               <Editable
                 key={JSON.stringify(editorValue)}
                 autoFocus={true}
@@ -206,8 +256,8 @@ function Screen() {
                         className="flex w-full flex-col rounded-lg p-2 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                       >
                         <User.Provider pubkey={contact.pubkey}>
-                          <User.Root className="flex w-full items-center gap-2.5">
-                            <User.Avatar className="size-8 shrink-0 rounded-lg object-cover" />
+                          <User.Root className="flex w-full items-center gap-2">
+                            <User.Avatar className="size-7 shrink-0 rounded-full object-cover" />
                             <div className="flex w-full flex-col items-start">
                               <User.Name className="max-w-[8rem] truncate text-sm font-medium" />
                             </div>
@@ -222,6 +272,15 @@ function Screen() {
           </div>
         </div>
       </Slate>
+    </div>
+  );
+}
+
+function Pending() {
+  return (
+    <div className="flex h-full w-full items-center justify-center gap-2.5">
+      <LoaderIcon className="size-5 animate-spin" />
+      <p>Loading cache...</p>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type {
 	Account,
+	Contact,
 	Event,
 	EventWithReplies,
 	Keys,
@@ -12,11 +13,10 @@ import { readFile } from "@tauri-apps/plugin-fs";
 import { generateContentTags } from "@lume/utils";
 
 export class Ark {
-	public account: Account;
-	public accounts: Array<Account>;
+	public accounts: Account[];
 
 	constructor() {
-		this.account = { npub: "", contacts: [] };
+		this.accounts = [];
 	}
 
 	public async get_all_accounts() {
@@ -43,12 +43,6 @@ export class Ark {
 				npub: fullNpub,
 			});
 
-			if (cmd) {
-				const contacts: string[] = await invoke("get_contact_list");
-				this.account.npub = npub;
-				this.account.contacts = contacts;
-			}
-
 			return cmd;
 		} catch (e) {
 			console.error(e);
@@ -71,9 +65,6 @@ export class Ark {
 
 			if (cmd) {
 				await invoke("update_signer", { nsec: keys.nsec });
-				const contacts: string[] = await invoke("get_contact_list");
-				this.account.npub = keys.npub;
-				this.account.contacts = contacts;
 			}
 
 			return cmd;
@@ -155,12 +146,34 @@ export class Ark {
 		}
 	}
 
-	public async publish(content: string) {
+	public async publish(content: string, reply_to?: string, quote?: boolean) {
 		try {
 			const g = await generateContentTags(content);
 
 			const eventContent = g.content;
 			const eventTags = g.tags;
+
+			if (reply_to) {
+				const replyEvent = await this.get_event(reply_to);
+
+				if (quote) {
+					eventTags.push([
+						"e",
+						replyEvent.id,
+						replyEvent.relay || "",
+						"mention",
+					]);
+				} else {
+					const rootEvent = replyEvent.tags.find((ev) => ev[3] === "root");
+
+					if (rootEvent) {
+						eventTags.push(["e", rootEvent[1], rootEvent[2] || "", "root"]);
+					}
+
+					eventTags.push(["e", replyEvent.id, replyEvent.relay || "", "reply"]);
+					eventTags.push(["p", replyEvent.pubkey]);
+				}
+			}
 
 			const cmd: string = await invoke("publish", {
 				content: eventContent,
@@ -310,6 +323,16 @@ export class Ark {
 		}
 	}
 
+	public async get_contact_metadata() {
+		try {
+			const cmd: Contact[] = await invoke("get_contact_metadata");
+			return cmd;
+		} catch (e) {
+			console.error(e);
+			return [];
+		}
+	}
+
 	public async follow(id: string, alias?: string) {
 		try {
 			const cmd: string = await invoke("follow", { id, alias });
@@ -433,10 +456,18 @@ export class Ark {
 		});
 	}
 
-	public open_editor() {
+	public open_editor(reply_to?: string, quote: boolean = false) {
+		let url: string;
+
+		if (reply_to) {
+			url = `/editor?reply_to=${reply_to}&quote=${quote}`;
+		} else {
+			url = "/editor";
+		}
+
 		return new WebviewWindow("editor", {
 			title: "Editor",
-			url: "/editor",
+			url,
 			minWidth: 500,
 			width: 600,
 			height: 400,

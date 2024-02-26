@@ -83,7 +83,7 @@ function Screen() {
                   onClick={() => select(account.npub)}
                 >
                   <User.Provider pubkey={account.npub}>
-                    <User.Root className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-xl p-2 hover:bg-white/10 dark:hover:bg-black/10">
+                    <User.Root className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-2xl p-2 hover:bg-white/10 dark:hover:bg-black/10">
                       <User.Avatar className="size-20 rounded-full object-cover" />
                       <User.Name className="max-w-[5rem] truncate text-lg font-medium leading-tight text-white" />
                     </User.Root>
@@ -91,7 +91,7 @@ function Screen() {
                 </button>
               ))}
               <Link to="/landing">
-                <div className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-xl p-2 text-white hover:bg-white/10 dark:hover:bg-black/10">
+                <div className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-2xl p-2 text-white hover:bg-white/10 dark:hover:bg-black/10">
                   <div className="flex size-20 items-center justify-center rounded-full bg-white/20 dark:bg-black/20">
                     <PlusIcon className="size-5" />
                   </div>
