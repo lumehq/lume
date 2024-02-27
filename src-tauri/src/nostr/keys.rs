@@ -3,6 +3,7 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::io::{BufReader, Read};
 use std::iter;
+use std::time::Duration;
 use std::{fs::File, io::Write, str::FromStr};
 use tauri::{Manager, State};
 
@@ -139,10 +140,33 @@ pub async fn load_selected_account(
       // Build nostr signer
       let secret_key = SecretKey::from_bech32(nsec_key).expect("Get secret key failed");
       let keys = Keys::new(secret_key);
+      let public_key = keys.public_key();
       let signer = NostrSigner::Keys(keys);
 
       // Update signer
       client.set_signer(Some(signer)).await;
+
+      // Get user's relay list
+      let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::RelayList)
+        .limit(1);
+      let query = client
+        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .await;
+
+      // Connect user's relay list
+      if let Ok(events) = query {
+        if let Some(event) = events.first() {
+          let list = nip65::extract_relay_list(&event);
+          for item in list.into_iter() {
+            client
+              .connect_relay(item.0.to_string())
+              .await
+              .unwrap_or_default();
+          }
+        }
+      }
 
       Ok(true)
     } else {

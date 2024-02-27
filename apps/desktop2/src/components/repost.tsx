@@ -77,7 +77,7 @@ export function RepostNote({
     >
       <User.Provider pubkey={event.pubkey}>
         <User.Root className="flex gap-3">
-          <div className="inline-flex w-10 shrink-0 items-center justify-center">
+          <div className="inline-flex w-11 shrink-0 items-center justify-center">
             <RepostIcon className="h-5 w-5 text-blue-500" />
           </div>
           <div className="inline-flex items-center gap-2">
@@ -93,7 +93,7 @@ export function RepostNote({
         <div className="flex flex-col gap-2">
           <Note.User />
           <div className="flex gap-3">
-            <div className="size-10 shrink-0" />
+            <div className="size-11 shrink-0" />
             <div className="min-w-0 flex-1">
               <Note.Content />
               <div className="mt-5 flex items-center justify-between">

@@ -272,3 +272,93 @@ pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, S
     Err("Get settings failed".into())
   }
 }
+
+#[tauri::command]
+pub async fn get_nwc_status(state: State<'_, Nostr>) -> Result<bool, ()> {
+  let client = &state.client;
+  let zapper = client.zapper().await.is_ok();
+
+  Ok(zapper)
+}
+
+#[tauri::command]
+pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+  let client = &state.client;
+
+  if let Ok(uri) = NostrWalletConnectURI::from_str(&uri) {
+    if let Ok(nwc) = NWC::new(uri).await {
+      let _ = client.set_zapper(nwc);
+      Ok(true)
+    } else {
+      Ok(false)
+    }
+  } else {
+    Err("Set NWC failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn zap_profile(
+  id: &str,
+  amount: u64,
+  message: &str,
+  state: State<'_, Nostr>,
+) -> Result<bool, String> {
+  let client = &state.client;
+  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::Pubkey(pubkey) => Some(pubkey),
+      Nip19::Profile(profile) => Some(profile.public_key),
+      _ => None,
+    },
+    Err(_) => match PublicKey::from_str(id) {
+      Ok(val) => Some(val),
+      Err(_) => None,
+    },
+  };
+
+  if let Some(recipient) = public_key {
+    let details = ZapDetails::new(ZapType::Public).message(message);
+
+    if let Ok(_) = client.zap(recipient, amount, Some(details)).await {
+      Ok(true)
+    } else {
+      Err("Zap profile failed".into())
+    }
+  } else {
+    Err("Parse public key failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn zap_event(
+  id: &str,
+  amount: u64,
+  message: &str,
+  state: State<'_, Nostr>,
+) -> Result<bool, String> {
+  let client = &state.client;
+  let event_id: Option<EventId> = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::EventId(id) => Some(id),
+      Nip19::Event(event) => Some(event.event_id),
+      _ => None,
+    },
+    Err(_) => match EventId::from_hex(id) {
+      Ok(val) => Some(val),
+      Err(_) => None,
+    },
+  };
+
+  if let Some(recipient) = event_id {
+    let details = ZapDetails::new(ZapType::Public).message(message);
+
+    if let Ok(_) = client.zap(recipient, amount, Some(details)).await {
+      Ok(true)
+    } else {
+      Err("Zap event failed".into())
+    }
+  } else {
+    Err("Parse public key failed".into())
+  }
+}

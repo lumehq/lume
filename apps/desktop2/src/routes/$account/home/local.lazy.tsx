@@ -1,18 +1,13 @@
 import { useArk } from "@lume/ark";
-import {
-  ArrowRightCircleIcon,
-  ArrowRightIcon,
-  LoaderIcon,
-  SearchIcon,
-} from "@lume/icons";
+import { ArrowRightCircleIcon, ArrowRightIcon, LoaderIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
-import { TextNote } from "./-components/text";
-import { RepostNote } from "./-components/repost";
+import { TextNote } from "@/components/text";
+import { RepostNote } from "@/components/repost";
 
 export const Route = createLazyFileRoute("/$account/home/local")({
   component: LocalTimeline,
@@ -64,13 +59,6 @@ function LocalTimeline() {
       ) : !data.length ? (
         <div className="flex flex-col gap-3">
           <EmptyFeed />
-          <a
-            href="/suggest"
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-500 font-medium text-white hover:bg-blue-600"
-          >
-            Find accounts to follow
-            <ArrowRightIcon className="size-5" />
-          </a>
         </div>
       ) : (
         <Virtualizer overscan={3}>

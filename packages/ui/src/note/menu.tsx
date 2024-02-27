@@ -95,6 +95,7 @@ export function NoteMenu() {
               {t("note.menu.copyRaw")}
             </button>
           </DropdownMenu.Item>
+          <DropdownMenu.Arrow className="fill-black dark:fill-white" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

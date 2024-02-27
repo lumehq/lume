@@ -394,6 +394,42 @@ export class Ark {
 		}
 	}
 
+	public async get_nwc_status() {
+		try {
+			const cmd: boolean = await invoke("get_nwc_status");
+			return cmd;
+		} catch {
+			return false;
+		}
+	}
+
+	public async set_nwc(uri: string) {
+		try {
+			const cmd: boolean = await invoke("set_nwc", { uri });
+			return cmd;
+		} catch {
+			return false;
+		}
+	}
+
+	public async zap_profile(id: string, amount: number, message: string) {
+		try {
+			const cmd: boolean = await invoke("zap_profile", { id, amount, message });
+			return cmd;
+		} catch {
+			return false;
+		}
+	}
+
+	public async zap_event(id: string, amount: number, message: string) {
+		try {
+			const cmd: boolean = await invoke("zap_event", { id, amount, message });
+			return cmd;
+		} catch {
+			return false;
+		}
+	}
+
 	public async upload(filePath?: string) {
 		try {
 			const allowExts = [

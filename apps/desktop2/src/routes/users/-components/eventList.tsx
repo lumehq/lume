@@ -1,5 +1,5 @@
-import { RepostNote } from "@/routes/$account/home/-components/repost";
-import { TextNote } from "@/routes/$account/home/-components/text";
+import { TextNote } from "@/components/text";
+import { RepostNote } from "@/components/repost";
 import { useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
