@@ -40,12 +40,12 @@ export function NoteMenu() {
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-2xl bg-white/50 p-2 ring-1 ring-black/10 backdrop-blur-2xl focus:outline-none dark:bg-black/50 dark:ring-white/10">
+        <DropdownMenu.Content className="flex w-[200px] flex-col overflow-hidden rounded-xl bg-black p-1 shadow-md shadow-neutral-500/20 focus:outline-none dark:bg-white">
           <DropdownMenu.Item asChild>
             <button
               type="button"
-              onClick={() => copyLink()}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              onClick={() => ark.open_thread(event.id)}
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               {t("note.menu.viewThread")}
             </button>
@@ -53,7 +53,8 @@ export function NoteMenu() {
           <DropdownMenu.Item asChild>
             <button
               type="button"
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              onClick={() => copyLink()}
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               {t("note.menu.copyLink")}
             </button>
@@ -62,7 +63,7 @@ export function NoteMenu() {
             <button
               type="button"
               onClick={() => copyID()}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               {t("note.menu.copyNoteId")}
             </button>
@@ -71,33 +72,25 @@ export function NoteMenu() {
             <button
               type="button"
               onClick={() => copyNpub()}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               {t("note.menu.copyAuthorId")}
             </button>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
-            <a
-              href={`/users/${event.pubkey}`}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+            <button
+              onClick={() => ark.open_profile(event.pubkey)}
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               {t("note.menu.viewAuthor")}
-            </a>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item asChild>
-            <button
-              type="button"
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
-            >
-              {t("note.menu.pinAuthor")}
             </button>
           </DropdownMenu.Item>
-          <DropdownMenu.Separator className="my-1 h-px bg-black/10 dark:bg-white/10" />
+          <DropdownMenu.Separator className="my-1 h-px bg-neutral-900 dark:bg-neutral-100" />
           <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => copyRaw()}
-              className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-black/70 hover:bg-black/10 hover:text-black focus:outline-none dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
               {t("note.menu.copyRaw")}
             </button>

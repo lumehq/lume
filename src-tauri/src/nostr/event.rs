@@ -39,6 +39,39 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
 }
 
 #[tauri::command]
+pub async fn get_events_from(
+  id: &str,
+  limit: usize,
+  until: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<Vec<Event>, String> {
+  let client = &state.client;
+  let f_until = match until {
+    Some(until) => Timestamp::from_str(until).unwrap(),
+    None => Timestamp::now(),
+  };
+
+  if let Ok(author) = PublicKey::from_str(id) {
+    let filter = Filter::new()
+      .kinds(vec![Kind::TextNote, Kind::Repost])
+      .authors(vec![author])
+      .limit(limit)
+      .until(f_until);
+
+    if let Ok(events) = client
+      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+      .await
+    {
+      Ok(events)
+    } else {
+      Err("Get text event failed".into())
+    }
+  } else {
+    Err("Parse author failed".into())
+  }
+}
+
+#[tauri::command]
 pub async fn get_local_events(
   limit: usize,
   until: Option<&str>,

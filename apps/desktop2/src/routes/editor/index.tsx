@@ -222,7 +222,7 @@ function Screen() {
         <div className="flex h-full min-h-0 w-full">
           <div className="flex h-full w-full flex-1 flex-col gap-2 px-2 pb-2">
             {reply_to && !quote ? (
-              <div className="flex flex-col gap-2 rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
+              <div className="flex flex-col rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <h3 className="font-medium">Reply to:</h3>
                 <MentionNote eventId={reply_to} />
               </div>

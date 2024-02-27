@@ -107,6 +107,7 @@ fn main() {
       nostr::metadata::set_settings,
       nostr::metadata::get_settings,
       nostr::event::get_event,
+      nostr::event::get_events_from,
       nostr::event::get_local_events,
       nostr::event::get_global_events,
       nostr::event::get_event_thread,
