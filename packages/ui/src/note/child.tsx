@@ -109,11 +109,11 @@ export function NoteChild({
       <User.Provider pubkey={data.pubkey}>
         <User.Root>
           <User.Avatar className="size-10 shrink-0 rounded-full object-cover" />
-          <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 font-semibold leading-tight">
-            <User.Name className="max-w-[10rem] truncate" />
-            <div className="font-normal text-neutral-700 dark:text-neutral-300">
+          <div className="absolute left-3 top-3">
+            <User.Name className="inline font-semibold" />{" "}
+            <span className="inline font-normal text-neutral-700 dark:text-neutral-300">
               {isRoot ? t("note.posted") : t("note.replied")}:
-            </div>
+            </span>
           </div>
         </User.Root>
       </User.Provider>

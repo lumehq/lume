@@ -27,12 +27,7 @@ export function ReplyList({
   }, [eventId]);
 
   return (
-    <div
-      className={cn(
-        "flex flex-col divide-y divide-neutral-100 dark:divide-neutral-900",
-        className,
-      )}
-    >
+    <div className={cn("flex flex-col gap-3", className)}>
       {!data ? (
         <div className="mt-4 flex h-16 items-center justify-center p-3">
           <LoaderIcon className="h-5 w-5 animate-spin" />

@@ -1,7 +1,13 @@
 import { cn, displayNpub } from "@lume/utils";
 import { useUserContext } from "./provider";
 
-export function UserName({ className }: { className?: string }) {
+export function UserName({
+  className,
+  suffix,
+}: {
+  className?: string;
+  suffix?: string;
+}) {
   const user = useUserContext();
 
   return (
@@ -9,6 +15,7 @@ export function UserName({ className }: { className?: string }) {
       {user.profile?.display_name ||
         user.profile?.name ||
         displayNpub(user.pubkey, 16)}
+      {suffix}
     </div>
   );
 }

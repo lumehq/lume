@@ -394,15 +394,6 @@ export class Ark {
 		}
 	}
 
-	public async get_nwc_status() {
-		try {
-			const cmd: boolean = await invoke("get_nwc_status");
-			return cmd;
-		} catch {
-			return false;
-		}
-	}
-
 	public async set_nwc(uri: string) {
 		try {
 			const cmd: boolean = await invoke("set_nwc", { uri });
@@ -490,7 +481,7 @@ export class Ark {
 			title: "Thread",
 			url: `/events/${id}`,
 			minWidth: 500,
-			width: 500,
+			width: 600,
 			height: 800,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",

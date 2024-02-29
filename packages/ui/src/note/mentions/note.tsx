@@ -6,6 +6,8 @@ import { User } from "../../user";
 import { Hashtag } from "./hashtag";
 import { MentionUser } from "./user";
 import { useArk, useEvent } from "@lume/ark";
+import { LinkIcon } from "@lume/icons";
+import { stripHtml } from "string-strip-html";
 
 export function MentionNote({
   eventId,
@@ -18,13 +20,14 @@ export function MentionNote({
   const { isLoading, isError, data } = useEvent(eventId);
 
   const ark = useArk();
-  const richContent = useMemo(() => {
+  const content = useMemo(() => {
     if (!data) return "";
 
-    let parsedContent: string | ReactNode[] = data.content;
-
-    const text = parsedContent as string;
+    const text = stripHtml(data.content.trim()).result;
     const words = text.split(/( |\n)/);
+
+    // @ts-ignore, kaboom !!!
+    let parsedContent: ReactNode[] = text;
 
     const hashtags = words.filter((word) => word.startsWith("#"));
     const mentions = words.filter((word) =>
@@ -75,8 +78,7 @@ export function MentionNote({
 
       return parsedContent;
     } catch (e) {
-      console.log(e);
-      return parsedContent;
+      return text;
     }
   }, [data]);
 
@@ -118,16 +120,17 @@ export function MentionNote({
         </User.Root>
       </User.Provider>
       <div className="line-clamp-4 select-text whitespace-normal text-balance leading-normal">
-        {richContent}
+        {content}
       </div>
       {openable ? (
         <div className="flex h-10 items-center justify-between">
           <button
             type="button"
             onClick={() => ark.open_thread(data.id)}
-            className="text-blue-500 hover:text-blue-600"
+            className="inline-flex items-center gap-1 text-sm text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
           >
             {t("note.showMore")}
+            <LinkIcon className="size-4" />
           </button>
         </div>
       ) : (

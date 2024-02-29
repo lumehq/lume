@@ -19,7 +19,7 @@ export function NoteReply() {
             <Tooltip.Trigger asChild>
               <button
                 type="button"
-                className="size07 group inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200"
+                className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
               >
                 <ReplyIcon className="size-5 group-hover:text-blue-500" />
               </button>

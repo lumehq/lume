@@ -9,7 +9,7 @@ import {
 
 export function VideoPreview({ url }: { url: string }) {
   return (
-    <div className="my-1 w-full overflow-hidden rounded-2xl border border-black/10 dark:border-white/10">
+    <div className="my-1">
       <MediaController>
         <video
           slot="media"

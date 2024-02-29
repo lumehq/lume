@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Note } from ".";
 import { useNoteContext } from "./provider";
 import { useArk } from "@lume/ark";
+import { LinkIcon } from "@lume/icons";
 
 export function NoteThread({ className }: { className?: string }) {
   const ark = useArk();
@@ -25,15 +26,16 @@ export function NoteThread({ className }: { className?: string }) {
         {thread.replyEventId ? (
           <Note.Child eventId={thread.replyEventId} />
         ) : null}
-        <div className="inline-flex items-center justify-between">
+        <div className="inline-flex justify-end">
           <button
             type="button"
             onClick={() =>
-              ark.open_thread(thread.rootEventId || thread.rootEventId)
+              ark.open_thread(thread.rootEventId || thread.replyEventId)
             }
-            className="self-start text-blue-500 hover:text-blue-600"
+            className="inline-flex items-center gap-1 text-sm text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
           >
             {t("note.showThread")}
+            <LinkIcon className="size-4" />
           </button>
         </div>
       </div>

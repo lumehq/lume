@@ -35,10 +35,7 @@ export function ImagePreview({ url }: { url: string }) {
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-    <div
-      onClick={open}
-      className="group relative my-1 rounded-2xl border border-black/10 dark:border-white/10"
-    >
+    <div onClick={open} className="group relative my-1 rounded-2xl">
       <img
         src={url}
         alt={url}
@@ -51,12 +48,12 @@ export function ImagePreview({ url }: { url: string }) {
       <button
         type="button"
         onClick={(e) => downloadImage(e)}
-        className="absolute right-2 top-2 z-10 hidden size-10 items-center justify-center rounded-lg bg-white/10 text-black/70 backdrop-blur-2xl hover:bg-blue-500 hover:text-white group-hover:inline-flex"
+        className="absolute right-2 top-2 z-20 hidden size-8 items-center justify-center rounded-md bg-white/10 text-white/70 backdrop-blur-2xl hover:bg-blue-500 hover:text-white group-hover:inline-flex"
       >
         {downloaded ? (
-          <CheckCircleIcon className="size-5" />
+          <CheckCircleIcon className="size-4" />
         ) : (
-          <DownloadIcon className="size-5" />
+          <DownloadIcon className="size-4" />
         )}
       </button>
     </div>

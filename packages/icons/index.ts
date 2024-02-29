@@ -115,3 +115,4 @@ export * from "./src/searchFilled";
 export * from "./src/arrowUp";
 export * from "./src/arrowUpSquare";
 export * from "./src/arrowDown";
+export * from "./src/link";

@@ -8,104 +8,38 @@ import {
   canPreview,
   cn,
 } from "@lume/utils";
-import getUrls from "get-urls";
-import { nanoid } from "nanoid";
+import { NIP89 } from "./nip89";
+import { useNoteContext } from "./provider";
 import { ReactNode, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
-import { stripHtml } from "string-strip-html";
-import { Hashtag } from "./mentions/hashtag";
-import { MentionNote } from "./mentions/note";
+import { nanoid } from "nanoid";
 import { MentionUser } from "./mentions/user";
-import { NIP89 } from "./nip89";
-import { ImagePreview } from "./preview/image";
-import { LinkPreview } from "./preview/link";
+import { MentionNote } from "./mentions/note";
+import { Hashtag } from "./mentions/hashtag";
 import { VideoPreview } from "./preview/video";
-import { useNoteContext } from "./provider";
+import { stripHtml } from "string-strip-html";
+import getUrl from "get-urls";
+import { ImagePreview } from "./preview/image";
 
 export function NoteContent({ className }: { className?: string }) {
   const event = useNoteContext();
-
-  const richContent = useMemo(() => {
-    if (event.kind !== Kind.Text) return event.content;
-
-    let parsedContent: string | ReactNode[] = stripHtml(event.content).result;
-    let linkPreview: string = undefined;
-    let images: string[] = [];
-    let videos: string[] = [];
-    let audios: string[] = [];
-    let events: string[] = [];
-
-    const text = parsedContent;
+  const content = useMemo(() => {
+    const text = stripHtml(event.content.trim()).result;
     const words = text.split(/( |\n)/);
-    const urls = [...getUrls(text)];
+    const urls = [...getUrl(text)];
 
-    images = urls.filter((word) =>
-      IMAGES.some((el) => {
-        const url = new URL(word);
-        const extension = url.pathname.split(".")[1];
-        if (extension === el) return true;
-        return false;
-      }),
-    );
-
-    videos = urls.filter((word) =>
-      VIDEOS.some((el) => {
-        const url = new URL(word);
-        const extension = url.pathname.split(".")[1];
-        if (extension === el) return true;
-        return false;
-      }),
-    );
-
-    audios = urls.filter((word) =>
-      AUDIOS.some((el) => {
-        const url = new URL(word);
-        const extension = url.pathname.split(".")[1];
-        if (extension === el) return true;
-        return false;
-      }),
-    );
-
-    events = words.filter((word) =>
-      NOSTR_EVENTS.some((el) => word.startsWith(el)),
-    );
+    // @ts-ignore, kaboom !!!
+    let parsedContent: ReactNode[] = text;
 
     const hashtags = words.filter((word) => word.startsWith("#"));
+    const events = words.filter((word) =>
+      NOSTR_EVENTS.some((el) => word.startsWith(el)),
+    );
     const mentions = words.filter((word) =>
       NOSTR_MENTIONS.some((el) => word.startsWith(el)),
     );
 
     try {
-      if (images.length) {
-        for (const image of images) {
-          parsedContent = reactStringReplace(
-            parsedContent,
-            image,
-            (match, i) => <ImagePreview key={match + i} url={match} />,
-          );
-        }
-      }
-
-      if (videos.length) {
-        for (const video of videos) {
-          parsedContent = reactStringReplace(
-            parsedContent,
-            video,
-            (match, i) => <VideoPreview key={match + i} url={match} />,
-          );
-        }
-      }
-
-      if (audios.length) {
-        for (const audio of audios) {
-          parsedContent = reactStringReplace(
-            parsedContent,
-            audio,
-            (match, i) => <VideoPreview key={match + i} url={match} />,
-          );
-        }
-      }
-
       if (hashtags.length) {
         for (const hashtag of hashtags) {
           const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
@@ -137,41 +71,54 @@ export function NoteContent({ className }: { className?: string }) {
 
       parsedContent = reactStringReplace(
         parsedContent,
-        /(https?:\/\/\S+)/g,
+        /(https?:\/\/\S+)/gi,
         (match, i) => {
-          const url = new URL(match);
+          try {
+            const url = new URL(match);
+            const ext = url.pathname.split(".")[1];
 
-          if (!linkPreview && canPreview(match)) {
-            linkPreview = match;
-            return <LinkPreview key={match + i} url={url.toString()} />;
+            if (IMAGES.includes(ext)) {
+              return <ImagePreview key={match + i} url={url.toString()} />;
+            }
+
+            if (VIDEOS.includes(ext)) {
+              return <VideoPreview key={match + i} url={url.toString()} />;
+            }
+
+            if (AUDIOS.includes(ext)) {
+              return <VideoPreview key={match + i} url={url.toString()} />;
+            }
+
+            return (
+              <a
+                key={match + i}
+                href={match}
+                target="_blank"
+                rel="noreferrer"
+                className="content-break w-full font-normal text-blue-500 hover:text-blue-600"
+              >
+                {match}
+              </a>
+            );
+          } catch {
+            return (
+              <a
+                key={match + i}
+                href={match}
+                target="_blank"
+                rel="noreferrer"
+                className="content-break w-full font-normal text-blue-500 hover:text-blue-600"
+              >
+                {match}
+              </a>
+            );
           }
-
-          return (
-            <a
-              key={match + i}
-              href={url.toString()}
-              target="_blank"
-              rel="noreferrer"
-              className="content-break inline-block w-full truncate font-normal text-blue-500 hover:text-blue-600"
-            >
-              {url.toString()}
-            </a>
-          );
         },
       );
 
-      parsedContent = reactStringReplace(parsedContent, "\n", () => {
-        return <br key={nanoid()} />;
-      });
-
-      if (typeof parsedContent[0] === "string") {
-        parsedContent[0] = parsedContent[0].trimStart();
-      }
-
       return parsedContent;
     } catch (e) {
-      console.warn(event.id, `[parser] parse failed: ${e}`);
-      return parsedContent;
+      return text;
     }
   }, []);
 
@@ -180,9 +127,9 @@ export function NoteContent({ className }: { className?: string }) {
   }
 
   return (
-    <div className={cn(className)}>
-      <div className="content-break select-text whitespace-pre-line text-balance leading-normal">
-        {richContent}
+    <div className={cn("select-text", className)}>
+      <div className="content-break whitespace-pre-line text-balance leading-normal">
+        {content}
       </div>
     </div>
   );

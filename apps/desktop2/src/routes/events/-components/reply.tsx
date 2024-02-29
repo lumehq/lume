@@ -1,65 +1,47 @@
-import { NavArrowDownIcon } from "@lume/icons";
 import { EventWithReplies } from "@lume/types";
 import { cn } from "@lume/utils";
-import * as Collapsible from "@radix-ui/react-collapsible";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Note } from "@lume/ui";
+import { Note, User } from "@lume/ui";
 import { SubReply } from "./subReply";
 
 export function Reply({ event }: { event: EventWithReplies }) {
-  const [t] = useTranslation();
-  const [open, setOpen] = useState(false);
-
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <Note.Provider event={event}>
-        <Note.Root className="pt-2">
-          <div className="flex h-14 items-center justify-between">
-            <Note.User className="flex-1 pr-2" />
-            <Note.Menu />
-          </div>
-          <Note.Content />
-          <div className="flex h-14 items-center justify-between">
-            {event.replies?.length > 0 ? (
-              <Collapsible.Trigger asChild>
-                <div className="inline-flex h-14 items-center gap-1 text-sm font-semibold text-neutral-600 dark:text-neutral-400">
-                  <NavArrowDownIcon
-                    className={cn("size-5", open ? "rotate-180 transform" : "")}
-                  />
-                  {`${event.replies?.length} ${
-                    event.replies?.length === 1
-                      ? t("note.reply.single")
-                      : t("note.reply.plural")
-                  }`}
-                </div>
-              </Collapsible.Trigger>
-            ) : (
-              <div />
-            )}
-            <div className="inline-flex items-center gap-4">
-              <Note.Reply />
-              <Note.Repost />
-              <Note.Zap />
+    <Note.Provider event={event}>
+      <Note.Root className="border-t border-neutral-100 pt-3 dark:border-neutral-900">
+        <User.Provider pubkey={event.pubkey}>
+          <User.Root className="mb-2 flex items-center justify-between">
+            <div className="inline-flex gap-2">
+              <User.Avatar className="size-6 rounded-full" />
+              <div className="inline-flex items-center gap-2">
+                <User.Name className="font-semibold" />
+                <User.NIP05 className="text-base lowercase text-neutral-600 dark:text-neutral-400" />
+              </div>
             </div>
+            <User.Time time={event.created_at} />
+          </User.Root>
+        </User.Provider>
+        <Note.Content />
+        <div className="mt-4 flex items-center justify-between">
+          <div className="-ml-1 inline-flex items-center gap-4">
+            <Note.Reply />
+            <Note.Repost />
+            <Note.Zap />
           </div>
-          <div
-            className={cn(
-              open
-                ? "border-t border-neutral-100 pb-3 dark:border-neutral-900"
-                : "",
-            )}
-          >
-            {event.replies?.length > 0 ? (
-              <Collapsible.Content className="divide-y divide-neutral-100 pl-6 dark:divide-neutral-900">
-                {event.replies?.map((childEvent) => (
-                  <SubReply key={childEvent.id} event={childEvent} />
-                ))}
-              </Collapsible.Content>
-            ) : null}
-          </div>
-        </Note.Root>
-      </Note.Provider>
-    </Collapsible.Root>
+          <Note.Menu />
+        </div>
+        <div
+          className={cn(
+            event.replies?.length > 0
+              ? "my-3 mt-6 flex flex-col gap-3 divide-y divide-neutral-100 border-l-2 border-neutral-100 pl-6 dark:divide-neutral-900 dark:border-neutral-900"
+              : "",
+          )}
+        >
+          {event.replies?.length > 0
+            ? event.replies?.map((childEvent) => (
+                <SubReply key={childEvent.id} event={childEvent} />
+              ))
+            : null}
+        </div>
+      </Note.Root>
+    </Note.Provider>
   );
 }
