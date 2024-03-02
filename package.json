@@ -1,36 +1,37 @@
 {
-	"name": "lume",
-	"private": true,
-	"version": "3.0.1",
-	"scripts": {
-		"build": "turbo run build",
-		"dev": "turbo run dev",
-		"web:dev": "turbo run dev --filter web",
-		"desktop:dev": "turbo run dev --filter desktop2",
-		"tauri": "tauri"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.5.3",
-		"@tauri-apps/cli": "2.0.0-beta.4",
-		"turbo": "^1.12.4"
-	},
-	"packageManager": "pnpm@8.9.0",
-	"engines": {
-		"node": ">=18"
-	},
-	"dependencies": {
-		"@tauri-apps/api": "2.0.0-beta.3",
-		"@tauri-apps/plugin-autostart": "2.0.0-beta.1",
-		"@tauri-apps/plugin-clipboard-manager": "2.0.0-beta.1",
-		"@tauri-apps/plugin-dialog": "2.0.0-beta.1",
-		"@tauri-apps/plugin-fs": "2.0.0-beta.1",
-		"@tauri-apps/plugin-http": "2.0.0-beta.1",
-		"@tauri-apps/plugin-notification": "2.0.0-beta.1",
-		"@tauri-apps/plugin-os": "2.0.0-beta.1",
-		"@tauri-apps/plugin-process": "2.0.0-beta.1",
-		"@tauri-apps/plugin-shell": "2.0.0-beta.1",
-		"@tauri-apps/plugin-sql": "2.0.0-beta.1",
-		"@tauri-apps/plugin-updater": "2.0.0-beta.1",
-		"@tauri-apps/plugin-upload": "2.0.0-beta.1"
-	}
+  "name": "lume",
+  "private": true,
+  "version": "4.0.0-alpha.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "web:dev": "turbo run dev --filter web",
+    "desktop:dev": "turbo run dev --filter desktop2",
+    "desktop:build": "turbo run build --filter desktop2",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@tauri-apps/cli": "2.0.0-beta.6",
+    "turbo": "^1.12.4"
+  },
+  "packageManager": "pnpm@8.9.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.0.0-beta.3",
+    "@tauri-apps/plugin-autostart": "2.0.0-beta.1",
+    "@tauri-apps/plugin-clipboard-manager": "2.0.0-beta.1",
+    "@tauri-apps/plugin-dialog": "2.0.0-beta.1",
+    "@tauri-apps/plugin-fs": "2.0.0-beta.1",
+    "@tauri-apps/plugin-http": "2.0.0-beta.1",
+    "@tauri-apps/plugin-notification": "2.0.0-beta.1",
+    "@tauri-apps/plugin-os": "2.0.0-beta.1",
+    "@tauri-apps/plugin-process": "2.0.0-beta.1",
+    "@tauri-apps/plugin-shell": "2.0.0-beta.1",
+    "@tauri-apps/plugin-sql": "2.0.0-beta.1",
+    "@tauri-apps/plugin-updater": "2.0.0-beta.1",
+    "@tauri-apps/plugin-upload": "2.0.0-beta.1"
+  }
 }

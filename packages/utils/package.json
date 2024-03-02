@@ -20,7 +20,7 @@
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.60",
+		"@types/react": "^18.2.61",
 		"@types/react-dom": "^18.2.19",
 		"tailwind-merge": "^2.2.1",
 		"typescript": "^5.3.3"

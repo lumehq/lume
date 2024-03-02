@@ -17,7 +17,7 @@
 		"@tanstack/react-query": "^5.24.1",
 		"get-urls": "^12.1.0",
 		"media-chrome": "^2.2.5",
-		"minidenticons": "^4.2.0",
+		"minidenticons": "^4.2.1",
 		"nanoid": "^5.0.6",
 		"qrcode.react": "^3.1.0",
 		"re-resizable": "^6.9.11",
@@ -25,7 +25,7 @@
 		"react-currency-input-field": "^3.8.0",
 		"react-i18next": "^14.0.5",
 		"react-string-replace": "^1.1.1",
-		"sonner": "^1.4.2",
+		"sonner": "^1.4.3",
 		"string-strip-html": "^13.4.6",
 		"virtua": "^0.27.5"
 	},
@@ -33,7 +33,7 @@
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.60",
+		"@types/react": "^18.2.61",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.3.3"
 	}
