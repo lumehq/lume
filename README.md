@@ -1,20 +1,28 @@
-### Introduction
+_Note_: Lume is under rewrite to using Rust Nostr as back-end and more lightweight front-end. If you need stable version, you can download v3 and below.
 
-Lume is a nostr client
+--
 
-### Usage
+## Introduction
 
-Download Lume for your platform here: [https://github.com/lumehq/lume/releases](https://github.com/lumehq/lume/releases)
+Lume is a Nostr client for desktop include Linux, Windows and macOS. It is free and open source, you can look at source code on Github. Lume is actively improving the app and adding new features, you can expect new update every month.
+
+## Usage
+
+Download Lume v3 (v3.0.1-stable) for your platform here: [https://github.com/lumehq/lume/releases](https://github.com/lumehq/lume/releases)
 
 Supported platform: macOS, Windows and Linux
 
-### Prerequisites
+## Prerequisites
 
-- PNPM or Bun (experiment)
+- Node.js >= 18: https://nodejs.org/en
 
-- Tauri: https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-macos
+- Rust: https://rustup.rs/
 
-### Develop
+- PNPM: https://pnpm.io
+
+- Tauri v2: https://beta.tauri.app/guides/prerequisites/
+
+## Develop
 
 Clone project
 
@@ -40,7 +48,7 @@ Generate production build
 pnpm tauri build
 ```
 
-#### Nix 
+## Nix
 
 Requirements:
 
@@ -53,8 +61,8 @@ Requirements:
 
 Copyright (C) 2023-2024 Ren Amamiya & other Lume contributors (see AUTHORS.md)
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License along with this program. If not, see https://www.gnu.org/licenses/.
+You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/.
