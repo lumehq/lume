@@ -1,5 +1,7 @@
 _Note_: Lume is under rewrite to using Rust Nostr as back-end and more lightweight front-end. If you need stable version, you can download v3 and below.
 
+Source code for v3 is stored here: https://github.com/lumehq/lume/tree/old
+
 --
 
 ## Introduction
