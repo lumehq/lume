@@ -1,13 +1,13 @@
 import { Column } from "@lume/ark";
 import { useStorage } from "@lume/storage";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { HomeRoute } from "./home";
 
-export function ForYou({ column }: { column: IColumn }) {
+export function ForYou({ column }: { column: LumeColumn }) {
 	const colKey = `foryou-${column.id}`;
 	const storage = useStorage();
 	const queryClient = useQueryClient();

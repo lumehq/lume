@@ -1,6 +1,7 @@
 {
 	"name": "@lume/types",
 	"version": "0.0.0",
+	"main": "./index.d.ts",
 	"types": "./index.d.ts",
 	"private": true,
 	"license": "MIT",
@@ -9,8 +10,5 @@
 	},
 	"devDependencies": {
 		"typescript": "^5.3.3"
-	},
-	"dependencies": {
-		"@nostr-dev-kit/ndk": "^2.3.3"
 	}
 }

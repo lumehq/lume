@@ -29,8 +29,9 @@ dist/
 
 
 # Debug
-*.log*
+*.log.*
 
 # Misc
 .DS_Store
 *.pem
+.vscode/

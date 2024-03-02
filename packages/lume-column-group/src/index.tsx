@@ -1,10 +1,10 @@
 import { Column } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { EventRoute, UserRoute } from "@lume/ui";
 import { GroupForm } from "./components/form";
 import { HomeRoute } from "./home";
 
-export function Group({ column }: { column: IColumn }) {
+export function Group({ column }: { column: LumeColumn }) {
 	const colKey = `group-${column.id}`;
 	const created = !!column.content?.length;
 

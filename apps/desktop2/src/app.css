@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-size: 14px;
+}
+
+a {
+  @apply cursor-default no-underline !important;
+}
+
+button {
+  @apply cursor-default focus:outline-none;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+::-webkit-input-placeholder {
+  line-height: normal;
+}
+
+media-controller {
+  @apply w-full;
+}
+
+@layer utilities {
+  .content-break {
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .shadow-toolbar {
+    box-shadow:
+      0 0 #0000,
+      0 0 #0000,
+      0 8px 24px 0 rgba(0, 0, 0, 0.2),
+      0 2px 8px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+      inset 0 0 0 2px hsla(0, 0%, 100%, 0.14);
+  }
+}

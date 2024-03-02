@@ -1,17 +1,17 @@
 import { RepostNote, TextNote, useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, LoaderIcon, SearchIcon } from "@lume/icons";
+import { Event, Kind } from "@lume/types";
 import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
-import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { CacheSnapshot, VList, VListHandle } from "virtua";
 
-export function HomeRoute({ colKey }: { colKey: string }) {
+export function HomeRoute({ queryKey }: { queryKey: string }) {
 	const ark = useArk();
 	const ref = useRef<VListHandle>();
-	const cacheKey = `${colKey}-vlist`;
+	const cacheKey = `${queryKey}-vlist`;
 
 	const [offset, cache] = useMemo(() => {
 		const serialized = sessionStorage.getItem(cacheKey);
@@ -21,27 +21,14 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 
 	const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
 		useInfiniteQuery({
-			queryKey: [colKey],
+			queryKey: [queryKey],
 			initialPageParam: 0,
 			queryFn: async ({
-				signal,
 				pageParam,
 			}: {
-				signal: AbortSignal;
 				pageParam: number;
 			}) => {
-				if (!ark.account.contacts.length) return [];
-
-				const events = await ark.getInfiniteEvents({
-					filter: {
-						kinds: [NDKKind.Text, NDKKind.Repost],
-						authors: ark.account.contacts,
-					},
-					limit: FETCH_LIMIT,
-					pageParam,
-					signal,
-				});
-
+				const events = await ark.get_text_events(FETCH_LIMIT, pageParam);
 				return events;
 			},
 			getNextPageParam: (lastPage) => {
@@ -54,11 +41,11 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			refetchOnMount: false,
 		});
 
-	const renderItem = (event: NDKEvent) => {
+	const renderItem = (event: Event) => {
 		switch (event.kind) {
-			case NDKKind.Text:
+			case Kind.Text:
 				return <TextNote key={event.id} event={event} className="mt-3" />;
-			case NDKKind.Repost:
+			case Kind.Repost:
 				return <RepostNote key={event.id} event={event} className="mt-3" />;
 			default:
 				return <TextNote key={event.id} event={event} className="mt-3" />;
@@ -80,21 +67,6 @@ export function HomeRoute({ colKey }: { colKey: string }) {
 			);
 		};
 	}, []);
-
-	if (!ark.account.contacts.length) {
-		return (
-			<div className="px-3 mt-3">
-				<EmptyFeed />
-				<Link
-					to="/suggest"
-					className="mt-3 w-full gap-2 inline-flex items-center justify-center text-sm font-medium rounded-lg h-9 bg-blue-500 hover:bg-blue-600 text-white"
-				>
-					<SearchIcon className="size-5" />
-					Find accounts to follow
-				</Link>
-			</div>
-		);
-	}
 
 	return (
 		<div className="w-full h-full">

@@ -1,52 +1,38 @@
 [package]
-name = "lume"
-version = "3.0.0"
-description = "the communication app"
-authors = ["Ren Amamiya"]
-license = "GPL-3.0"
-repository = "https://github.com/lumehq/lume"
-edition = "2021"
+name         = "lume"
+version      = "3.0.0"
+description  = "nostr client"
+authors      = ["npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445"]
+repository   = "https://github.com/lumehq/lume"
+edition      = "2021"
 rust-version = "1.70"
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-alpha", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-alpha", features = [ "tray-icon",
-  "macos-private-api",
-  "native-tls-vendored",
-  "protocol-asset",
-] }
-tauri-plugin-cli = "2.0.0-alpha"
-tauri-plugin-clipboard-manager = "2.0.0-alpha"
-tauri-plugin-dialog = "2.0.0-alpha"
-tauri-plugin-fs = "2.0.0-alpha"
-tauri-plugin-http = "2.0.0-alpha"
-tauri-plugin-notification = "2.0.0-alpha"
-tauri-plugin-os = "2.0.0-alpha"
-tauri-plugin-process = "2.0.0-alpha"
-tauri-plugin-shell = "2.0.0-alpha"
-tauri-plugin-updater = "2.0.0-alpha"
-tauri-plugin-autostart = "2.0.0-alpha"
-tauri-plugin-store = "2.0.0-alpha"
-tauri-plugin-upload = "2.0.0-alpha"
-tauri-plugin-window-state = "2.0.0-alpha"
-tauri-plugin-theme = { git = "https://github.com/wyhaya/tauri-plugin-theme" }
-tauri-plugin-sql = {version="2.0.0-alpha", features = [
-  "sqlite",
-] }
-sqlx-cli = { version = "0.7.0", default-features = false, features = [
-  "sqlite",
-] }
-webpage = { version = "2.0", features = ["serde"] }
-
-[target.'cfg(not(target_os = "linux"))'.dependencies]
-keyring = "2"
-
-[target.'cfg(target_os = "linux")'.dependencies]
-keyring = { version = "2", default_features = false, features = ["linux-secret-service"] }
+nostr-sdk                      = { version = "0.28", features = ["sqlite"] }
+tokio                          = { version = "1", features = ["full"] }
+serde_json                     = "1.0"
+serde                          = { version = "1.0", features = ["derive"] }
+tauri                          = { version = "2.0.0-beta", features = ["tray-icon", "macos-private-api", "native-tls-vendored", "protocol-asset"] }
+tauri-plugin-cli               = "2.0.0-beta"
+tauri-plugin-clipboard-manager = "2.0.0-beta"
+tauri-plugin-dialog            = "2.0.0-beta"
+tauri-plugin-fs                = "2.0.0-beta"
+tauri-plugin-http              = "2.0.0-beta"
+tauri-plugin-notification      = "2.0.0-beta"
+tauri-plugin-os                = "2.0.0-beta"
+tauri-plugin-process           = "2.0.0-beta"
+tauri-plugin-shell             = "2.0.0-beta"
+tauri-plugin-updater           = "2.0.0-beta"
+tauri-plugin-autostart         = "2.0.0-beta"
+tauri-plugin-store             = "2.0.0-beta"
+tauri-plugin-upload            = "2.0.0-beta"
+tauri-plugin-window-state      = "2.0.0-beta"
+webpage                        = { version = "2.0", features = ["serde"] }
+keyring                        = "2"
+age                            = "0.10.0"
 
 [features]
 # by default Tauri runs in production mode
@@ -56,11 +42,14 @@ default = ["custom-protocol"]
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
 
-# Optimized for bundle size. If you want faster builds comment out/delete this section.
 [profile.release]
-lto = true        # Enable Link Time Optimization
-opt-level = "z"   # Optimize for size.
-codegen-units = 1 # Reduce number of codegen units to increase optimizations.
-panic = "abort"   # Abort on panic
-strip = true      # Automatically strip symbols from the binary.
-debug = false
+codegen-units    = 1
+lto              = true
+panic            = "abort"
+incremental      = false
+opt-level        = "z"
+strip            = true
+rpath            = false
+debug            = false
+debug-assertions = false
+overflow-checks  = false

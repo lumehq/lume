@@ -1,18 +1,13 @@
 export function HomeIcon(props: JSX.IntrinsicElements["svg"]) {
-	return (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			fill="none"
-			viewBox="0 0 24 24"
-			stroke="currentColor"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth="2"
-		>
-			<path d="M12 17v-4M7.606 5.65l-2.6 2.456c-.74.698-1.11 1.047-1.374 1.46a4 4 0 00-.513 1.191C3 11.233 3 11.742 3 12.76V14.6c0 2.24 0 3.36.436 4.216a4 4 0 001.748 1.748C6.04 21 7.16 21 9.4 21h5.2c2.24 0 3.36 0 4.216-.436a4 4 0 001.748-1.748C21 17.96 21 16.84 21 14.6v-1.841c0-1.017 0-1.526-.119-2.002a4 4 0 00-.513-1.19c-.265-.414-.634-.763-1.374-1.461l-2.6-2.456c-1.546-1.46-2.32-2.19-3.201-2.466a4 4 0 00-2.386 0c-.882.275-1.655 1.006-3.201 2.466z" />
-		</svg>
-	);
+  return (
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" {...props}>
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="m5 7.511 6.069-4.344c.335-.24.502-.36.685-.406a1 1 0 0 1 .492 0c.183.046.35.166.685.406L19 7.51m-14 0v9.29c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874C6.52 20 7.08 20 8.2 20h7.6c1.12 0 1.68 0 2.108-.218a2 2 0 0 0 .874-.874C19 18.48 19 17.92 19 16.8V7.511m-14 0-2.5 1.79M19 7.511l2.5 1.79"
+      />
+    </svg>
+  );
 }

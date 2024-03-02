@@ -1,4 +1,4 @@
-import { Note, User, useArk, useColumnContext } from "@lume/ark";
+import { Note, User, useArk } from "@lume/ark";
 import { LoaderIcon, SearchIcon } from "@lume/icons";
 import { COL_TYPES, searchAtom } from "@lume/utils";
 import { type NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
@@ -18,7 +18,6 @@ export function SearchDialog() {
 	const [value] = useDebounce(search, 1200);
 
 	const { t } = useTranslation();
-	const { vlistRef, columns, addColumn } = useColumnContext();
 
 	const searchEvents = async () => {
 		if (!value.length) return;

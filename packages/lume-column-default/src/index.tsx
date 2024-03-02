@@ -1,8 +1,8 @@
 import { Column, useColumnContext } from "@lume/ark";
-import { IColumn } from "@lume/types";
+import { LumeColumn } from "@lume/types";
 import { COL_TYPES } from "@lume/utils";
 
-export function Default({ column }: { column: IColumn }) {
+export function Default({ column }: { column: LumeColumn }) {
 	const { addColumn } = useColumnContext();
 
 	return (

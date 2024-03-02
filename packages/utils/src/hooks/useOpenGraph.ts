@@ -6,11 +6,12 @@ export function useOpenGraph(url: string) {
 	const { isLoading, isError, data } = useQuery({
 		queryKey: ["opg", url],
 		queryFn: async () => {
-			const res: Opengraph = await invoke("fetch_opg", { url });
-			if (!res) {
+			try {
+				const res: Opengraph = await invoke("fetch_opg", { url });
+				return res;
+			} catch {
 				throw new Error("fetch preview failed");
 			}
-			return res;
 		},
 		staleTime: Infinity,
 		refetchOnWindowFocus: false,
