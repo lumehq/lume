@@ -31,7 +31,7 @@ function Event() {
   return (
     <WindowVirtualizer>
       <Container withDrag>
-        <Box>
+        <Box className="px-3 pt-3">
           <MainNote data={data} />
           {data ? <ReplyList eventId={eventId} /> : null}
         </Box>

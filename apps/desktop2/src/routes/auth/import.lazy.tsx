@@ -32,7 +32,7 @@ function Import() {
         nsec: key,
       });
       navigate({
-        to: "/$account/home/local",
+        to: "/$account/home",
         params: { account: npub },
         search: { onboarding: true },
         replace: true,

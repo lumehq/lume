@@ -11,13 +11,14 @@ export const Route = createFileRoute("/")({
     const accounts = await ark.get_all_accounts();
 
     switch (accounts.length) {
-      // Empty account
+      // Guest account
       case 0:
+        const guest = await ark.create_guest_account();
         throw redirect({
-          to: "/landing",
-          search: {
-            redirect: location.href,
-          },
+          to: "/$account/home",
+          params: { account: guest },
+          search: { guest: true },
+          replace: true,
         });
       // Only 1 account, skip account selection screen
       case 1:
@@ -25,11 +26,9 @@ export const Route = createFileRoute("/")({
         const loadAccount = await ark.load_selected_account(account);
         if (loadAccount) {
           throw redirect({
-            to: "/$account/home/local",
+            to: "/$account/home",
             params: { account },
-            search: {
-              redirect: location.href,
-            },
+            replace: true,
           });
         }
       // Account selection
@@ -51,24 +50,24 @@ function Screen() {
     const loadAccount = await ark.load_selected_account(npub);
     if (loadAccount) {
       navigate({
-        to: "/$account/home/local",
+        to: "/$account/home",
         params: { account: npub },
         replace: true,
       });
     }
   };
 
-  const weekday = new Date().toLocaleString("default", { weekday: "long" });
-  const day = new Date().getDate();
-  const month = new Date()
-    .toLocaleString("default", { month: "long" })
-    .toString();
+  const currentDate = new Date().toLocaleString("default", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
       <div className="relative z-20 flex flex-col items-center gap-16">
         <div className="text-center text-white">
-          <h2 className="mb-1 text-2xl">{`${weekday}, ${month} ${day}`}</h2>
+          <h2 className="mb-1 text-2xl">{currentDate}</h2>
           <h2 className="text-2xl font-semibold">Welcome back!</h2>
         </div>
         <div className="flex items-center justify-center gap-6">

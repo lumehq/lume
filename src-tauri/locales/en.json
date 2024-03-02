@@ -49,7 +49,9 @@
       "pinTooltip": "Pin Note",
       "repost": "Repost",
       "quote": "Quote",
-      "viewProfile": "View profile"
+      "viewProfile": "View profile",
+      "reply": "Reply this note",
+      "open": "Open in new window"
     },
     "zap": {
       "zap": "Zap",
@@ -130,8 +132,8 @@
     "providerMethod": "Managed by Provider",
     "providerMethodDescription": "A 3rd party provider will handle your sign in keys for you."
   },
-  "signupWithSelfManage": {
-    "title": "This is your new Account Key",
+  "backup": {
+    "title": "This is your new sign in key",
     "subtitle": "Keep your key in safe place. If you lose this key, you will lose access to your account.",
     "confirm1": "I understand the risk of lost private key.",
     "confirm2": "I will make sure keep it safe and not sharing with anyone.",

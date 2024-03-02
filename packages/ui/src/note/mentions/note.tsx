@@ -105,7 +105,7 @@ export function MentionNote({
   }
 
   return (
-    <div className="my-1 flex w-full cursor-default flex-col rounded-2xl border border-black/10 px-3 pt-1 dark:border-white/10">
+    <div className="my-1 flex w-full cursor-default flex-col rounded-xl border border-black/10 px-3 pt-1 dark:border-white/10">
       <User.Provider pubkey={data.pubkey}>
         <User.Root className="flex h-10 items-center gap-2">
           <User.Avatar className="size-6 shrink-0 rounded-full object-cover" />

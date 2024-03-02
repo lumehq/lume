@@ -1,4 +1,4 @@
-import { ReplyIcon, ShareIcon } from "@lume/icons";
+import { LinkIcon, ReplyIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useTranslation } from "react-i18next";
 import { useNoteContext } from "../provider";
@@ -41,8 +41,8 @@ export function NoteReply() {
               onClick={() => ark.open_thread(event.id)}
               className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
-              <ShareIcon className="size-4" />
-              {t("note.buttons.view")}
+              <LinkIcon className="size-4" />
+              {t("note.buttons.open")}
             </button>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>

@@ -50,6 +50,17 @@ export class Ark {
 		}
 	}
 
+	public async create_guest_account() {
+		try {
+			const keys = await this.create_keys();
+			await this.save_account(keys);
+
+			return keys.npub;
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
 	public async create_keys() {
 		try {
 			const cmd: Keys = await invoke("create_keys");

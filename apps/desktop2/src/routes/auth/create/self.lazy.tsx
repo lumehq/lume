@@ -26,7 +26,7 @@ function Create() {
     try {
       await ark.save_account(keys);
       navigate({
-        to: "/$account/home/local",
+        to: "/$account/home",
         params: { account: keys.npub },
         search: { onboarding: true },
         replace: true,

@@ -35,7 +35,10 @@ export function ImagePreview({ url }: { url: string }) {
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-    <div onClick={open} className="group relative my-1 rounded-2xl">
+    <div
+      onClick={open}
+      className="group relative my-1 overflow-hidden rounded-xl"
+    >
       <img
         src={url}
         alt={url}
@@ -43,7 +46,7 @@ export function ImagePreview({ url }: { url: string }) {
         decoding="async"
         style={{ contentVisibility: "auto" }}
         onError={fallback}
-        className="h-auto w-full rounded-2xl object-cover"
+        className="h-auto w-full object-cover"
       />
       <button
         type="button"

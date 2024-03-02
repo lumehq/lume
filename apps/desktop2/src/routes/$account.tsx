@@ -1,17 +1,19 @@
 import {
   BellFilledIcon,
   BellIcon,
-  EditIcon,
+  ComposeFilledIcon,
   HomeFilledIcon,
   HomeIcon,
+  HorizontalDotsIcon,
   SpaceFilledIcon,
   SpaceIcon,
 } from "@lume/icons";
-import { Link, useParams } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
 import { useArk } from "@lume/ark";
+import { Box } from "@lume/ui";
 
 export const Route = createFileRoute("/$account")({
   component: App,
@@ -36,37 +38,37 @@ function App() {
           <button
             type="button"
             onClick={() => ark.open_editor()}
-            className="inline-flex h-7 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-2.5 text-sm font-medium text-white hover:bg-blue-600"
+            className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
           >
-            <EditIcon className="size-4" />
-            New
+            <ComposeFilledIcon className="size-4" />
+            New post
           </button>
         </div>
       </div>
-      <div className="flex h-full min-h-0 w-full">
-        <div className="h-full w-full flex-1 px-2 pb-2">
-          <Outlet />
-        </div>
-      </div>
+      <Box>
+        <Outlet />
+      </Box>
     </div>
   );
 }
 
 function Navigation() {
   // @ts-ignore, useless
-  const { account } = useParams({ strict: false });
+  const { account } = Route.useParams();
 
   return (
     <div
       data-tauri-drag-region
       className="flex h-full flex-1 items-center gap-2"
     >
-      <Link to="/$account/home/local" params={{ account }}>
+      <Link to="/$account/home" params={{ account }}>
         {({ isActive }) => (
           <div
             className={cn(
-              "inline-flex h-9 w-max items-center justify-center gap-2 rounded-lg px-3 hover:bg-black/10 dark:hover:bg-white/10",
-              isActive ? "bg-white shadow dark:bg-neutral-950" : "",
+              "inline-flex h-8 w-max items-center justify-center gap-2 rounded-full px-3",
+              isActive
+                ? "bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                : "hover:bg-black/10 dark:hover:bg-white/10",
             )}
           >
             {isActive ? (
@@ -82,8 +84,10 @@ function Navigation() {
         {({ isActive }) => (
           <div
             className={cn(
-              "inline-flex h-9 w-max items-center justify-center gap-2 rounded-lg px-3 hover:bg-black/10 dark:hover:bg-white/10",
-              isActive ? "bg-white shadow dark:bg-neutral-950" : "",
+              "inline-flex h-8 w-max items-center justify-center gap-2 rounded-full px-3 hover:bg-black/10 dark:hover:bg-white/10",
+              isActive
+                ? "bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                : "hover:bg-black/10 dark:hover:bg-white/10",
             )}
           >
             {isActive ? (
@@ -99,8 +103,10 @@ function Navigation() {
         {({ isActive }) => (
           <div
             className={cn(
-              "inline-flex h-9 w-max items-center justify-center gap-2 rounded-lg px-3 hover:bg-black/10 dark:hover:bg-white/10",
-              isActive ? "bg-white shadow dark:bg-neutral-950" : "",
+              "inline-flex h-8 w-max items-center justify-center gap-2 rounded-full px-3 hover:bg-black/10 dark:hover:bg-white/10",
+              isActive
+                ? "bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                : "hover:bg-black/10 dark:hover:bg-white/10",
             )}
           >
             {isActive ? (

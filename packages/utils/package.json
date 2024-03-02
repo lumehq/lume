@@ -8,10 +8,9 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.22.2",
+		"@tanstack/react-query": "^5.24.1",
 		"clsx": "^2.1.0",
 		"dayjs": "^1.11.10",
-		"jotai": "^2.6.5",
 		"nostr-tools": "^2.3.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
@@ -21,7 +20,7 @@
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.58",
+		"@types/react": "^18.2.60",
 		"@types/react-dom": "^18.2.19",
 		"tailwind-merge": "^2.2.1",
 		"typescript": "^5.3.3"
