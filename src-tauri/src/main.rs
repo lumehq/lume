@@ -120,16 +120,20 @@ fn main() {
     ])
     .build(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(|app, event| {
-      if let tauri::RunEvent::Opened { urls } = event {
-        if let Some(w) = app.get_webview_window("main") {
-          let urls = urls
-            .iter()
-            .map(|u| u.as_str())
-            .collect::<Vec<_>>()
-            .join(",");
-          let _ = w.eval(&format!("window.onFileOpen(`{urls}`)"));
+    .run(
+      #[allow(unused_variables)]
+      |app, event| {
+        #[cfg(any(target_os = "macos"))]
+        if let tauri::RunEvent::Opened { urls } = event {
+          if let Some(w) = app.get_webview_window("main") {
+            let urls = urls
+              .iter()
+              .map(|u| u.as_str())
+              .collect::<Vec<_>>()
+              .join(",");
+            let _ = w.eval(&format!("window.onFileOpen(`{urls}`)"));
+          }
         }
-      }
-    });
+      },
+    );
 }
