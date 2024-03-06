@@ -25,7 +25,7 @@ export class Ark {
 			const cmd: string[] = await invoke("get_all_nsecs");
 
 			for (const item of cmd) {
-				accounts.push({ npub: item.replace(".nsec", "") });
+				accounts.push({ npub: item.replace(".npub", "") });
 			}
 
 			this.accounts = accounts;
@@ -37,9 +37,8 @@ export class Ark {
 
 	public async load_selected_account(npub: string) {
 		try {
-			const fullNpub = `${npub}.nsec`;
 			const cmd: boolean = await invoke("load_selected_account", {
-				npub: fullNpub,
+				npub,
 			});
 
 			return cmd;
@@ -74,10 +73,6 @@ export class Ark {
 				nsec,
 				password,
 			});
-
-			if (cmd) {
-				await invoke("update_signer", { nsec });
-			}
 
 			return cmd;
 		} catch (e) {

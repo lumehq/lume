@@ -57,7 +57,7 @@ pub fn get_all_nsecs(app_handle: tauri::AppHandle) -> Result<Vec<String>, ()> {
       .filter_map(|res| res.ok())
       .map(|dir_entry| dir_entry.path())
       .filter_map(|path| {
-        if path.extension().map_or(false, |ext| ext == "nsec") {
+        if path.extension().map_or(false, |ext| ext == "npub") {
           Some(path.file_name().unwrap().to_str().unwrap().to_string())
         } else {
           None

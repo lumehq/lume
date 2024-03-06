@@ -1,10 +1,8 @@
 use crate::Nostr;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
-use std::io::{BufReader, Read};
-use std::iter;
 use std::time::Duration;
-use std::{fs::File, io::Write, str::FromStr};
+use std::{fs::File, str::FromStr};
 use tauri::{Manager, State};
 
 #[derive(serde::Serialize)]
@@ -52,48 +50,27 @@ pub async fn save_key(
   match secret_key {
     Ok(val) => {
       let nostr_keys = Keys::new(val);
-      let nostr_npub = nostr_keys.public_key().to_bech32().unwrap();
+      let npub = nostr_keys.public_key().to_bech32().unwrap();
+      let nsec = nostr_keys.secret_key().unwrap().to_bech32().unwrap();
+
+      if let Ok(config_dir) = app_handle.path().app_config_dir() {
+        let file_path = npub.clone() + ".npub";
+        let _ = File::create(config_dir.join(file_path)).unwrap();
+
+        let keyring = Entry::new("Lume Secret Storage", &npub).unwrap();
+        let _ = keyring.set_password(&nsec);
+      }
+
       let signer = NostrSigner::Keys(nostr_keys);
+      let client = &state.client;
 
       // Update client's signer
-      let client = &state.client;
       client.set_signer(Some(signer)).await;
-
-      let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
-      let master_key = keyring_entry.get_password().unwrap();
-      let app_key = age::x25519::Identity::from_str(&master_key).unwrap();
-      let app_pubkey = app_key.to_public();
-
-      let config_dir = app_handle.path().app_config_dir().unwrap();
-      let encryptor = age::Encryptor::with_recipients(vec![Box::new(app_pubkey)])
-        .expect("we provided a recipient");
-
-      let file_path = nostr_npub + ".nsec";
-      let mut file = File::create(config_dir.join(file_path)).unwrap();
-      let mut writer = encryptor
-        .wrap_output(&mut file)
-        .expect("Init writer failed");
-      writer
-        .write_all(nsec.as_bytes())
-        .expect("Write nsec failed");
-      writer.finish().expect("Save nsec failed");
 
       Ok(true)
     }
     Err(msg) => Err(msg.into()),
   }
-}
-
-#[tauri::command]
-pub async fn update_signer(nsec: &str, state: State<'_, Nostr>) -> Result<(), ()> {
-  let client = &state.client;
-  let secret_key = SecretKey::from_bech32(nsec).unwrap();
-  let keys = Keys::new(secret_key);
-  let signer = NostrSigner::Keys(keys);
-
-  client.set_signer(Some(signer)).await;
-
-  Ok(())
 }
 
 #[tauri::command]
@@ -108,76 +85,45 @@ pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
 }
 
 #[tauri::command]
-pub async fn load_selected_account(
-  npub: &str,
-  app_handle: tauri::AppHandle,
-  state: State<'_, Nostr>,
-) -> Result<bool, String> {
+pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
-  let config_dir = app_handle.path().app_config_dir().unwrap();
-  let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
+  let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
 
-  // Get master password
-  if let Ok(key) = keyring_entry.get_password() {
-    // Build master key
-    let app_key = age::x25519::Identity::from_str(&key.to_string()).unwrap();
+  if let Ok(nsec) = keyring.get_password() {
+    // Build nostr signer
+    let secret_key = SecretKey::from_bech32(nsec).expect("Get secret key failed");
+    let keys = Keys::new(secret_key);
+    let public_key = keys.public_key();
+    let signer = NostrSigner::Keys(keys);
 
-    // Open nsec file
-    if let Ok(file) = File::open(config_dir.join(npub)) {
-      let file_buf = BufReader::new(file);
-      let decryptor = match age::Decryptor::new_buffered(file_buf).expect("Decryptor failed") {
-        age::Decryptor::Recipients(d) => d,
-        _ => unreachable!(),
-      };
+    // Update signer
+    client.set_signer(Some(signer)).await;
 
-      let mut decrypted = vec![];
-      let mut reader = decryptor
-        .decrypt(iter::once(&app_key as &dyn age::Identity))
-        .expect("Decrypt nsec file failed");
-      reader
-        .read_to_end(&mut decrypted)
-        .expect("Read secret key failed");
+    // Get user's relay list
+    let filter = Filter::new()
+      .author(public_key)
+      .kind(Kind::RelayList)
+      .limit(1);
+    let query = client
+      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+      .await;
 
-      // Get decrypted nsec key
-      let nsec_key = String::from_utf8(decrypted).unwrap();
-
-      // Build nostr signer
-      let secret_key = SecretKey::from_bech32(nsec_key).expect("Get secret key failed");
-      let keys = Keys::new(secret_key);
-      let public_key = keys.public_key();
-      let signer = NostrSigner::Keys(keys);
-
-      // Update signer
-      client.set_signer(Some(signer)).await;
-
-      // Get user's relay list
-      let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::RelayList)
-        .limit(1);
-      let query = client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-        .await;
-
-      // Connect user's relay list
-      if let Ok(events) = query {
-        if let Some(event) = events.first() {
-          let list = nip65::extract_relay_list(&event);
-          for item in list.into_iter() {
-            client
-              .connect_relay(item.0.to_string())
-              .await
-              .unwrap_or_default();
-          }
+    // Connect user's relay list
+    if let Ok(events) = query {
+      if let Some(event) = events.first() {
+        let list = nip65::extract_relay_list(&event);
+        for item in list.into_iter() {
+          client
+            .connect_relay(item.0.to_string())
+            .await
+            .unwrap_or_default();
         }
       }
-
-      Ok(true)
-    } else {
-      Ok(false)
     }
+
+    Ok(true)
   } else {
-    Err("App Key not found".into())
+    Err("nsec not found".into())
   }
 }
 

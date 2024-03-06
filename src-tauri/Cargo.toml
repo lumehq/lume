@@ -5,7 +5,7 @@ description = "nostr client"
 authors = ["npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445"]
 repository = "https://github.com/lumehq/lume"
 edition = "2021"
-rust-version = "1.71"
+rust-version = "1.68"
 
 [build-dependencies]
 tauri-build = { version = "2.0.0-beta", features = [] }
@@ -37,7 +37,6 @@ tauri-plugin-upload = "2.0.0-beta"
 tauri-plugin-window-state = "2.0.0-beta"
 webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
-age = "0.10.0"
 
 [profile.release]
 codegen-units = 1

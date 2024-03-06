@@ -7,8 +7,6 @@ pub mod commands;
 pub mod nostr;
 pub mod tray;
 
-use age::secrecy::ExposeSecret;
-use keyring::Entry;
 use nostr_sdk::prelude::*;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
@@ -23,14 +21,6 @@ fn main() {
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
       let config_dir = handle.path().app_config_dir().unwrap();
-      let keyring_entry = Entry::new("Lume Secret Storage", "AppKey").unwrap();
-
-      // Create new master key if not exist
-      if let Err(_) = keyring_entry.get_password() {
-        let app_key = age::x25519::Identity::generate().to_string();
-        let app_secret = app_key.expose_secret();
-        let _ = keyring_entry.set_password(app_secret);
-      }
 
       tauri::async_runtime::spawn(async move {
         // Create nostr database connection
@@ -89,7 +79,6 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       nostr::keys::create_keys,
       nostr::keys::save_key,
-      nostr::keys::update_signer,
       nostr::keys::verify_signer,
       nostr::keys::load_selected_account,
       nostr::keys::event_to_bech32,
