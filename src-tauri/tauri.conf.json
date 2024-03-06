@@ -102,7 +102,7 @@
       {
         "name": "bech32",
         "description": "Nostr Bech32",
-        "ext": ["nsec", "nprofile", "nevent", "naddr", "nrelay"],
+        "ext": ["npub", "nsec", "nprofile", "nevent", "naddr", "nrelay"],
         "role": "Viewer"
       }
     ]
