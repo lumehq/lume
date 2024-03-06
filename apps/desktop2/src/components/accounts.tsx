@@ -4,9 +4,9 @@ import { User } from "@lume/ui";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { Link } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { BackupDialog } from "./backup";
+import { LoginDialog } from "./login";
 
 export function Accounts() {
   const ark = useArk();
@@ -63,7 +63,6 @@ function Active({ pubkey }: { pubkey: string }) {
   const [open, setOpen] = useState(true);
   // @ts-ignore, magic !!!
   const { guest } = useSearch({ strict: false });
-  const { t } = useTranslation();
 
   if (guest) {
     return (
@@ -84,25 +83,17 @@ function Active({ pubkey }: { pubkey: string }) {
             side="bottom"
           >
             <div>
-              <h1 className="mb-1 font-semibold">You're using guest account</h1>
+              <h1 className="mb-1 font-semibold">
+                You're using random account
+              </h1>
               <p className="text-sm text-neutral-500 dark:text-neutral-600">
                 You can continue by claim and backup this account, or you can
-                import your own account key.
+                import your own account.
               </p>
             </div>
             <div className="flex flex-col gap-2">
-              <Link
-                to="/backup"
-                className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-white text-sm font-medium leading-tight text-neutral-900 hover:bg-neutral-100"
-              >
-                Claim & Backup
-              </Link>
-              <Link
-                to="/login"
-                className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-neutral-900 text-sm font-medium leading-tight text-neutral-100 hover:bg-neutral-800"
-              >
-                {t("welcome.login")}
-              </Link>
+              <BackupDialog />
+              <LoginDialog />
             </div>
             <Popover.Arrow className="fill-black dark:fill-white" />
           </Popover.Content>

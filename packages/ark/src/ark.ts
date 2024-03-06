@@ -31,7 +31,6 @@ export class Ark {
 			this.accounts = accounts;
 			return accounts;
 		} catch (e) {
-			console.error(e);
 			return [];
 		}
 	}
@@ -45,19 +44,18 @@ export class Ark {
 
 			return cmd;
 		} catch (e) {
-			console.error(e);
-			return false;
+			throw new Error(String(e));
 		}
 	}
 
 	public async create_guest_account() {
 		try {
 			const keys = await this.create_keys();
-			await this.save_account(keys);
+			await this.save_account(keys.nsec, "");
 
 			return keys.npub;
 		} catch (e) {
-			console.error(e);
+			throw new Error(String(e));
 		}
 	}
 
@@ -70,17 +68,20 @@ export class Ark {
 		}
 	}
 
-	public async save_account(keys: Keys) {
+	public async save_account(nsec: string, password: string = "") {
 		try {
-			const cmd: boolean = await invoke("save_key", { nsec: keys.nsec });
+			const cmd: boolean = await invoke("save_key", {
+				nsec,
+				password,
+			});
 
 			if (cmd) {
-				await invoke("update_signer", { nsec: keys.nsec });
+				await invoke("update_signer", { nsec });
 			}
 
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 
@@ -92,7 +93,7 @@ export class Ark {
 			});
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 
@@ -106,7 +107,7 @@ export class Ark {
 			const event: Event = JSON.parse(cmd);
 			return event;
 		} catch (e) {
-			return null;
+			throw new Error(String(e));
 		}
 	}
 
@@ -210,8 +211,7 @@ export class Ark {
 
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
-			return false;
+			throw new Error(String(e));
 		}
 	}
 
@@ -220,7 +220,7 @@ export class Ark {
 			const cmd: string = await invoke("reply_to", { content, tags });
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 
@@ -229,7 +229,7 @@ export class Ark {
 			const cmd: string = await invoke("repost", { id, pubkey: author });
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 
@@ -238,7 +238,7 @@ export class Ark {
 			const cmd: string = await invoke("upvote", { id, pubkey: author });
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 
@@ -247,7 +247,7 @@ export class Ark {
 			const cmd: string = await invoke("downvote", { id, pubkey: author });
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 
@@ -366,8 +366,7 @@ export class Ark {
 			const cmd: string = await invoke("follow", { id, alias });
 			return cmd;
 		} catch (e) {
-			console.error(e);
-			return false;
+			throw new Error(String(e));
 		}
 	}
 
@@ -376,8 +375,7 @@ export class Ark {
 			const cmd: string = await invoke("unfollow", { id });
 			return cmd;
 		} catch (e) {
-			console.error(e);
-			return false;
+			throw new Error(String(e));
 		}
 	}
 
@@ -389,7 +387,7 @@ export class Ark {
 			});
 			return cmd;
 		} catch (e) {
-			console.error(String(e));
+			throw new Error(String(e));
 		}
 	}
 

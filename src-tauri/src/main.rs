@@ -89,7 +89,6 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       nostr::keys::create_keys,
       nostr::keys::save_key,
-      nostr::keys::get_public_key,
       nostr::keys::update_signer,
       nostr::keys::verify_signer,
       nostr::keys::load_selected_account,
