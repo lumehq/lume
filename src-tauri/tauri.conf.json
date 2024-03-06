@@ -12,6 +12,11 @@
   "app": {
     "macOSPrivateApi": true,
     "withGlobalTauri": true,
+    "trayIcon": {
+      "id": "main_tray",
+      "iconPath": "./icons/tray.png",
+      "iconAsTemplate": true
+    },
     "security": {
       "assetProtocol": {
         "enable": true,
@@ -92,7 +97,15 @@
         "type": "downloadBootstrapper"
       },
       "wix": null
-    }
+    },
+    "fileAssociations": [
+      {
+        "name": "bech32",
+        "description": "Nostr Bech32",
+        "ext": ["npub", "nsec", "nprofile", "nevent", "naddr", "nrelay"],
+        "role": "Viewer"
+      }
+    ]
   },
   "plugins": {
     "updater": {

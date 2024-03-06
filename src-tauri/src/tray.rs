@@ -1,22 +1,12 @@
 use tauri::{tray::ClickType, Manager, Runtime};
 
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
+  let tray = app.tray().unwrap();
   let menu = tauri::menu::MenuBuilder::new(app)
     .item(&tauri::menu::MenuItem::with_id(app, "quit", "Quit", true, None::<&str>).unwrap())
     .build()
     .unwrap();
-
-  let tray = tauri::tray::TrayIconBuilder::with_id("main_tray")
-    .tooltip("Lume")
-    .icon(tauri::Icon::Rgba {
-      rgba: include_bytes!("../icons/icon.png").to_vec(),
-      width: 500,
-      height: 500,
-    })
-    .icon_as_template(true)
-    .menu(&menu)
-    .build(app)
-    .unwrap();
+  let _ = tray.set_menu(Some(menu));
 
   tray.on_menu_event(move |app, event| match event.id.0.as_str() {
     "quit" => {

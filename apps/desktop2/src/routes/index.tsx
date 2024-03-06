@@ -6,7 +6,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async ({ location, context }) => {
+  beforeLoad: async ({ context }) => {
     const ark = context.ark;
     const accounts = await ark.get_all_accounts();
 
