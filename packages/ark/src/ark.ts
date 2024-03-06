@@ -22,15 +22,17 @@ export class Ark {
 	public async get_all_accounts() {
 		try {
 			const accounts: Account[] = [];
-			const cmd: string[] = await invoke("get_all_nsecs");
+			const cmd: string[] = await invoke("get_accounts");
 
-			for (const item of cmd) {
-				accounts.push({ npub: item.replace(".npub", "") });
+			if (cmd) {
+				for (const item of cmd) {
+					accounts.push({ npub: item.replace(".npub", "") });
+				}
+
+				this.accounts = accounts;
+				return accounts;
 			}
-
-			this.accounts = accounts;
-			return accounts;
-		} catch (e) {
+		} catch {
 			return [];
 		}
 	}

@@ -7,6 +7,8 @@ pub mod commands;
 pub mod nostr;
 pub mod tray;
 
+use std::fs;
+
 use nostr_sdk::prelude::*;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
@@ -20,11 +22,15 @@ fn main() {
     .setup(|app| {
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
-      let config_dir = handle.path().app_config_dir().unwrap();
+      let resource_dir = handle.path().resource_dir().unwrap();
+      let home_dir = handle.path().home_dir().unwrap();
+
+      // create data folder if not exist
+      fs::create_dir_all(home_dir.join("Lume/")).unwrap();
 
       tauri::async_runtime::spawn(async move {
         // Create nostr database connection
-        let nostr_db = SQLiteDatabase::open(config_dir.join("nostr.db"))
+        let nostr_db = SQLiteDatabase::open(resource_dir.join("lume.db"))
           .await
           .expect("Open database failed.");
 
@@ -79,6 +85,7 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       nostr::keys::create_keys,
       nostr::keys::save_key,
+      nostr::keys::get_encrypted_key,
       nostr::keys::verify_signer,
       nostr::keys::load_selected_account,
       nostr::keys::event_to_bech32,
@@ -108,15 +115,21 @@ fn main() {
       nostr::event::upvote,
       nostr::event::downvote,
       commands::folder::show_in_folder,
-      commands::folder::get_all_nsecs,
+      commands::folder::get_accounts,
       commands::opg::fetch_opg,
     ])
     .build(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(|_app_handle, event| match event {
-      tauri::RunEvent::ExitRequested { api, .. } => {
-        api.prevent_exit();
+    .run(|app, event| {
+      if let tauri::RunEvent::Opened { urls } = event {
+        if let Some(w) = app.get_webview_window("main") {
+          let urls = urls
+            .iter()
+            .map(|u| u.as_str())
+            .collect::<Vec<_>>()
+            .join(",");
+          let _ = w.eval(&format!("window.onFileOpen(`{urls}`)"));
+        }
       }
-      _ => {}
     });
 }

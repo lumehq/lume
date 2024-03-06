@@ -1,13 +1,36 @@
-import { CancelIcon } from "@lume/icons";
+import { ArrowRightIcon, CancelIcon } from "@lume/icons";
 import * as Dialog from "@radix-ui/react-dialog";
+import { Link, useParams } from "@tanstack/react-router";
+import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function BackupDialog() {
-  const [key, setKey] = useState("");
+  // @ts-ignore, magic!!!
+  const { account } = useParams({ strict: false });
+
+  const [key, setKey] = useState(null);
   const [passphase, setPassphase] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const encryptKey = async () => {
-    console.log("****");
+    try {
+      setLoading(true);
+
+      const encrypted: string = await invoke("get_encrypted_key", {
+        npub: account,
+        password: passphase,
+      });
+
+      if (encrypted) {
+        setKey(encrypted);
+      }
+
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      toast.error(String(e));
+    }
   };
 
   return (
@@ -41,20 +64,7 @@ export function BackupDialog() {
             </div>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-2">
-                <label htmlFor="nsec">
-                  Copy this key and keep it in safe place
-                </label>
-                <input
-                  name="nsec"
-                  type="text"
-                  className="h-11 w-full resize-none rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="nsec">
-                  <span className="font-semibold">(Recommend)</span> Set a
-                  passphase to secure your key
-                </label>
+                <label htmlFor="nsec">Set a passphase to secure your key</label>
                 <div className="relative">
                   <input
                     name="passphase"
@@ -63,19 +73,45 @@ export function BackupDialog() {
                     onChange={(e) => setPassphase(e.target.value)}
                     className="h-11 w-full resize-none rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
                   />
-                  {passphase.length ? (
-                    <div className="absolute right-2 top-0 h-11 py-2">
-                      <button
-                        type="button"
-                        onClick={encryptKey}
-                        className="inline-flex h-full items-center justify-center rounded-md bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
-                      >
-                        Update
-                      </button>
-                    </div>
-                  ) : null}
                 </div>
               </div>
+              {key ? (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="nsec">
+                    Copy this key and keep it in safe place
+                  </label>
+                  <input
+                    name="nsec"
+                    type="text"
+                    value={key}
+                    readOnly
+                    className="h-11 w-full resize-none rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
+                  />
+                </div>
+              ) : null}
+            </div>
+            <div className="flex flex-col gap-3">
+              {!key ? (
+                <button
+                  type="button"
+                  onClick={encryptKey}
+                  disabled={loading}
+                  className="inline-flex h-11 w-full items-center justify-between gap-1.5 rounded-lg bg-blue-500 px-5 font-medium text-white hover:bg-blue-600"
+                >
+                  <div className="size-5" />
+                  <div>Submit</div>
+                  <ArrowRightIcon className="size-5" />
+                </button>
+              ) : (
+                <Link
+                  to="/$account/home"
+                  params={{ account }}
+                  search={{ guest: false }}
+                  className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-blue-500 px-5 font-medium text-white hover:bg-blue-600"
+                >
+                  I've safely store my account key
+                </Link>
+              )}
             </div>
           </div>
         </Dialog.Content>

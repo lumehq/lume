@@ -53,13 +53,14 @@ pub async fn save_key(
       let npub = nostr_keys.public_key().to_bech32().unwrap();
       let nsec = nostr_keys.secret_key().unwrap().to_bech32().unwrap();
 
-      if let Ok(config_dir) = app_handle.path().app_config_dir() {
-        let file_path = npub.clone() + ".npub";
-        let _ = File::create(config_dir.join(file_path)).unwrap();
+      let home_dir = app_handle.path().home_dir().unwrap();
+      let app_dir = home_dir.join("Lume/");
 
-        let keyring = Entry::new("Lume Secret Storage", &npub).unwrap();
-        let _ = keyring.set_password(&nsec);
-      }
+      let file_path = npub.clone() + ".npub";
+      let _ = File::create(app_dir.join(file_path)).unwrap();
+
+      let keyring = Entry::new("Lume Secret Storage", &npub).unwrap();
+      let _ = keyring.set_password(&nsec);
 
       let signer = NostrSigner::Keys(nostr_keys);
       let client = &state.client;
@@ -81,6 +82,24 @@ pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
     Ok(true)
   } else {
     Ok(false)
+  }
+}
+
+#[tauri::command]
+pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
+  let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
+
+  if let Ok(nsec) = keyring.get_password() {
+    let secret_key = SecretKey::from_bech32(nsec).expect("Get secret key failed");
+    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium);
+
+    if let Ok(key) = new_key {
+      Ok(key.to_bech32().unwrap())
+    } else {
+      Err("Encrypt key failed".into())
+    }
+  } else {
+    Err("Key not found".into())
   }
 }
 

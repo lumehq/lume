@@ -49,10 +49,10 @@ pub async fn show_in_folder(path: String) {
 }
 
 #[tauri::command]
-pub fn get_all_nsecs(app_handle: tauri::AppHandle) -> Result<Vec<String>, ()> {
-  let dir = app_handle.path().app_config_dir().unwrap();
+pub fn get_accounts(app_handle: tauri::AppHandle) -> Result<Vec<String>, ()> {
+  let dir = app_handle.path().home_dir().unwrap();
 
-  if let Ok(paths) = std::fs::read_dir(dir) {
+  if let Ok(paths) = std::fs::read_dir(dir.join("Lume/")) {
     let files = paths
       .filter_map(|res| res.ok())
       .map(|dir_entry| dir_entry.path())
