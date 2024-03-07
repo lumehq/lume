@@ -116,3 +116,5 @@ export * from "./src/arrowUp";
 export * from "./src/arrowUpSquare";
 export * from "./src/arrowDown";
 export * from "./src/link";
+export * from "./src/local";
+export * from "./src/global";

@@ -50,7 +50,7 @@ function Screen() {
     const loadAccount = await ark.load_selected_account(npub);
     if (loadAccount) {
       navigate({
-        to: "/$account/home",
+        to: "/$account/home/local",
         params: { account: npub },
         replace: true,
       });
