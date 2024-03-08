@@ -22,7 +22,6 @@ fn main() {
     .setup(|app| {
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
-      let resource_dir = handle.path().resource_dir().unwrap();
       let home_dir = handle.path().home_dir().unwrap();
 
       // create data folder if not exist
@@ -30,12 +29,13 @@ fn main() {
 
       tauri::async_runtime::spawn(async move {
         // Create nostr database connection
-        let nostr_db = SQLiteDatabase::open(resource_dir.join("lume.db"))
-          .await
-          .expect("Open database failed.");
+        let sqlite = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
 
         // Create nostr connection
-        let client = ClientBuilder::default().database(nostr_db).build();
+        let client = match sqlite {
+          Ok(db) => ClientBuilder::default().database(db).build(),
+          Err(_) => ClientBuilder::default().build(),
+        };
 
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings

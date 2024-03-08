@@ -68,7 +68,7 @@ function Navigation() {
       data-tauri-drag-region
       className="flex h-full flex-1 items-center gap-2"
     >
-      <Link to="/$account/home" params={{ account }}>
+      <Link to="/$account/home/local" params={{ account }}>
         {({ isActive }) => (
           <div
             className={cn(
