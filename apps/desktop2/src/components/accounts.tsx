@@ -45,7 +45,8 @@ function Inactive({ pubkey }: { pubkey: string }) {
 
   const changeAccount = async (npub: string) => {
     const select = await ark.load_selected_account(npub);
-    if (select) navigate({ to: "/$account/home", params: { account: npub } });
+    if (select)
+      navigate({ to: "/$account/home/local", params: { account: npub } });
   };
 
   return (

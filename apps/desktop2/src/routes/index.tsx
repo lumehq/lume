@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
       case 0:
         const guest = await ark.create_guest_account();
         throw redirect({
-          to: "/$account/home",
+          to: "/$account/home/local",
           params: { account: guest },
           search: { guest: true },
           replace: true,
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
         const loadAccount = await ark.load_selected_account(account);
         if (loadAccount) {
           throw redirect({
-            to: "/$account/home",
+            to: "/$account/home/local",
             params: { account },
             replace: true,
           });
@@ -50,7 +50,7 @@ function Screen() {
     const loadAccount = await ark.load_selected_account(npub);
     if (loadAccount) {
       navigate({
-        to: "/$account/home",
+        to: "/$account/home/local",
         params: { account: npub },
         replace: true,
       });

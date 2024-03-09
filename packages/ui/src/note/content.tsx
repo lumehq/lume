@@ -5,7 +5,6 @@ import {
   NOSTR_EVENTS,
   NOSTR_MENTIONS,
   VIDEOS,
-  canPreview,
   cn,
 } from "@lume/utils";
 import { NIP89 } from "./nip89";
@@ -18,7 +17,6 @@ import { MentionNote } from "./mentions/note";
 import { Hashtag } from "./mentions/hashtag";
 import { VideoPreview } from "./preview/video";
 import { stripHtml } from "string-strip-html";
-import getUrl from "get-urls";
 import { ImagePreview } from "./preview/image";
 
 export function NoteContent({ className }: { className?: string }) {
@@ -26,7 +24,6 @@ export function NoteContent({ className }: { className?: string }) {
   const content = useMemo(() => {
     const text = stripHtml(event.content.trim()).result;
     const words = text.split(/( |\n)/);
-    const urls = [...getUrl(text)];
 
     // @ts-ignore, kaboom !!!
     let parsedContent: ReactNode[] = text;

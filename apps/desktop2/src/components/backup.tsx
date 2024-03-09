@@ -104,7 +104,7 @@ export function BackupDialog() {
                 </button>
               ) : (
                 <Link
-                  to="/$account/home"
+                  to="/$account/home/local"
                   params={{ account }}
                   search={{ guest: false }}
                   className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-blue-500 px-5 font-medium text-white hover:bg-blue-600"
