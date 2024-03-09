@@ -64,10 +64,10 @@ function Screen() {
           </div>
         ) : !data.length ? (
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
-              <InfoIcon className="size-5" />
+            <div className="flex items-center gap-2 rounded-xl bg-neutral-50 p-5 dark:bg-neutral-950">
+              <InfoIcon className="size-6" />
               <p>
-                Empty newsfeed. Or you can go to{" "}
+                Empty newsfeed. Or you view the{" "}
                 <Link
                   to="/$account/home/global"
                   className="text-blue-500 hover:text-blue-600"

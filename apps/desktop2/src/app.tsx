@@ -12,6 +12,7 @@ import { locale, platform } from "@tauri-apps/plugin-os";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { routeTree } from "./router.gen"; // auto generated file
+import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,7 +73,16 @@ if (!rootElement.innerHTML) {
         persistOptions={{ persister }}
       >
         <StrictMode>
-          <Toaster position="top-center" richColors />
+          <Toaster
+            position="bottom-right"
+            icons={{
+              success: <CheckCircleIcon className="size-5" />,
+              info: <InfoCircleIcon className="size-5" />,
+              error: <CancelCircleIcon className="size-5" />,
+            }}
+            closeButton
+            theme="system"
+          />
           <App />
         </StrictMode>
       </PersistQueryClientProvider>

@@ -24,7 +24,7 @@ input::-ms-clear {
 }
 
 media-controller {
-  @apply w-full;
+  @apply w-full overflow-hidden rounded-xl;
 }
 
 @layer utilities {

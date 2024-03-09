@@ -4,6 +4,7 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
 import { useNoteContext } from "./provider";
 import { useArk } from "@lume/ark";
+import { toast } from "sonner";
 
 export function NoteMenu() {
   const ark = useArk();
@@ -13,20 +14,24 @@ export function NoteMenu() {
 
   const copyID = async () => {
     await writeText(await ark.event_to_bech32(event.id, [""]));
+    toast.success("Copied");
   };
 
   const copyRaw = async () => {
     await writeText(JSON.stringify(event));
+    toast.success("Copied");
   };
 
   const copyNpub = async () => {
     await writeText(await ark.user_to_bech32(event.pubkey, [""]));
+    toast.success("Copied");
   };
 
   const copyLink = async () => {
     await writeText(
       `https://njump.me/${await ark.event_to_bech32(event.id, [""])}`,
     );
+    toast.success("Copied");
   };
 
   return (

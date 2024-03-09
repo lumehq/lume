@@ -1,9 +1,8 @@
 import { TextNote } from "@/components/text";
 import { RepostNote } from "@/components/repost";
 import { useArk } from "@lume/ark";
-import { ArrowRightCircleIcon, LoaderIcon } from "@lume/icons";
+import { ArrowRightCircleIcon, InfoIcon, LoaderIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
-import { EmptyFeed } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -43,7 +42,10 @@ export function EventList({ id }: { id: string }) {
           <LoaderIcon className="size-5 animate-spin" />
         </div>
       ) : !data.length ? (
-        <EmptyFeed />
+        <div className="flex items-center gap-2 rounded-xl bg-neutral-50 p-5 dark:bg-neutral-950">
+          <InfoIcon className="size-6" />
+          <p>Empty newsfeed.</p>
+        </div>
       ) : (
         data.map((item) => renderItem(item))
       )}

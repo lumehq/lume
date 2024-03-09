@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/$account/home/local")({
+export const Route = createFileRoute("/$account/home")({
   component: Screen,
 });
 
@@ -18,7 +18,7 @@ function Screen() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col">
       <div className="mx-auto mb-4 flex h-16 w-full max-w-xl shrink-0 items-center justify-between border-b border-neutral-100 dark:border-neutral-900">
         <div className="flex items-center gap-2">
           <Link to="/$account/home/local">

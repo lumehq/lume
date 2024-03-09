@@ -118,3 +118,5 @@ export * from "./src/arrowDown";
 export * from "./src/link";
 export * from "./src/local";
 export * from "./src/global";
+export * from "./src/infoCircle";
+export * from "./src/cancelCircle";

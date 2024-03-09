@@ -21,7 +21,7 @@ export function VideoPreview({ url }: { url: string }) {
         <MediaControlBar>
           <MediaPlayButton />
           <MediaTimeRange />
-          <MediaTimeDisplay showDuration />
+          <MediaTimeDisplay />
           <MediaMuteButton />
         </MediaControlBar>
       </MediaController>
