@@ -8,6 +8,8 @@
     "splash",
     "editor",
     "settings",
+    "nwc",
+    "zap",
     "event-*",
     "user-*",
     "column-*"

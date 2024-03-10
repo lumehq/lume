@@ -103,6 +103,7 @@ fn main() {
       nostr::metadata::get_settings,
       nostr::metadata::get_nwc_status,
       nostr::metadata::set_nwc,
+      nostr::metadata::nwc_status,
       nostr::metadata::zap_profile,
       nostr::metadata::zap_event,
       nostr::event::get_event,

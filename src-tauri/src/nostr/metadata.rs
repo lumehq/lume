@@ -1,4 +1,5 @@
 use crate::Nostr;
+use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
@@ -285,15 +286,27 @@ pub async fn get_nwc_status(state: State<'_, Nostr>) -> Result<bool, ()> {
 pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
-  if let Ok(uri) = NostrWalletConnectURI::from_str(&uri) {
-    if let Ok(nwc) = NWC::new(uri).await {
+  if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(&uri) {
+    if let Ok(nwc) = NWC::new(nwc_uri).await {
+      let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+      let _ = keyring.set_password(uri);
       let _ = client.set_zapper(nwc);
+
       Ok(true)
     } else {
-      Ok(false)
+      Err("URI is not valid".into())
     }
   } else {
     Err("Set NWC failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn nwc_status(state: State<'_, Nostr>) -> Result<bool, bool> {
+  let client = &state.client;
+  match client.zapper().await {
+    Ok(_) => Ok(true),
+    Err(_) => Err(false),
   }
 }
 

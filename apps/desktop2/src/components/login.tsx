@@ -11,19 +11,15 @@ export function LoginDialog() {
 
   const [nsec, setNsec] = useState("");
   const [passphase, setPassphase] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const login = async () => {
     try {
-      setLoading(true);
-
       const save = await ark.save_account(nsec, passphase);
 
       if (save) {
         navigate({ to: "/", search: { guest: false } });
       }
     } catch (e) {
-      setLoading(false);
       toast.error(String(e));
     }
   };

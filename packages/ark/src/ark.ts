@@ -409,6 +409,15 @@ export class Ark {
 		}
 	}
 
+	public async nwc_status() {
+		try {
+			const cmd: boolean = await invoke("nwc_status");
+			return cmd;
+		} catch {
+			return false;
+		}
+	}
+
 	public async zap_profile(id: string, amount: number, message: string) {
 		try {
 			const cmd: boolean = await invoke("zap_profile", { id, amount, message });
@@ -525,5 +534,22 @@ export class Ark {
 			titleBarStyle: "overlay",
 			fileDropEnabled: true,
 		});
+	}
+
+	public open_nwc() {
+		return new WebviewWindow("nwc", {
+			title: "Nostr Wallet Connect",
+			url: "/nwc",
+			minWidth: 400,
+			width: 400,
+			height: 600,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+			fileDropEnabled: true,
+		});
+	}
+
+	public open_zap() {
+		// todo
 	}
 }
