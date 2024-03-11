@@ -9,7 +9,7 @@
     "editor",
     "settings",
     "nwc",
-    "zap",
+    "zap-*",
     "event-*",
     "user-*",
     "column-*"

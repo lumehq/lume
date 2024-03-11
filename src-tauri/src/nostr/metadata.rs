@@ -275,14 +275,6 @@ pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, S
 }
 
 #[tauri::command]
-pub async fn get_nwc_status(state: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = &state.client;
-  let zapper = client.zapper().await.is_ok();
-
-  Ok(zapper)
-}
-
-#[tauri::command]
 pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
@@ -290,7 +282,7 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
     if let Ok(nwc) = NWC::new(nwc_uri).await {
       let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
       let _ = keyring.set_password(uri);
-      let _ = client.set_zapper(nwc);
+      let _ = client.set_zapper(nwc).await;
 
       Ok(true)
     } else {
@@ -302,11 +294,42 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 }
 
 #[tauri::command]
-pub async fn nwc_status(state: State<'_, Nostr>) -> Result<bool, bool> {
+pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, bool> {
   let client = &state.client;
-  match client.zapper().await {
-    Ok(_) => Ok(true),
+  let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+
+  match keyring.get_password() {
+    Ok(val) => {
+      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+      if let Ok(nwc) = NWC::new(uri).await {
+        client.set_zapper(nwc).await;
+        Ok(true)
+      } else {
+        Err(false)
+      }
+    }
     Err(_) => Err(false),
+  }
+}
+
+#[tauri::command]
+pub async fn get_balance() -> Result<u64, String> {
+  let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+
+  match keyring.get_password() {
+    Ok(val) => {
+      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+      if let Ok(nwc) = NWC::new(uri).await {
+        if let Ok(balance) = nwc.get_balance().await {
+          Ok(balance)
+        } else {
+          Err("Get balance failed".into())
+        }
+      } else {
+        Err("Cannot connect to NWC".into())
+      }
+    }
+    Err(_) => Err("Something wrong".into()),
   }
 }
 
