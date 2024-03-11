@@ -4,6 +4,8 @@ import { Box, Container, User } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { toast } from "sonner";
 import CurrencyInput from "react-currency-input-field";
 
 const DEFAULT_VALUES = [69, 100, 200, 500];
@@ -26,8 +28,22 @@ function Screen() {
   const ark = useArk();
 
   const submit = async () => {
-    const val = await ark.zap_event(id, amount, message);
-    console.log(val);
+    try {
+      // start loading
+      setIsLoading(true);
+
+      const val = await ark.zap_event(id, amount, message);
+
+      if (val) {
+        setIsCompleted(true);
+        const window = getCurrent();
+        // close current window
+        window.close();
+      }
+    } catch (e) {
+      setIsLoading(false);
+      toast.error(e);
+    }
   };
 
   return (
