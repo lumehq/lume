@@ -3,6 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { nip19 } from "nostr-tools";
 import { AUDIOS, IMAGES, VIDEOS } from "./constants";
+import { BitcoinUnit } from "bitcoin-units";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -88,4 +89,35 @@ export function canPreview(text: string) {
 	if (hostname === "vimeo.com") return false;
 
 	return true;
+}
+
+// source: https://github.com/synonymdev/bitkit/blob/master/src/utils/displayValues/index.ts
+export function getBitcoinDisplayValues(satoshis: number) {
+	let bitcoinFormatted = new BitcoinUnit(satoshis, "satoshis")
+		.getValue()
+		.toFixed(10)
+		.replace(/\.?0+$/, "");
+
+	const [bitcoinWhole, bitcoinDecimal] = bitcoinFormatted.split(".");
+
+	// format sats to group thousands
+	// 4000000 -> 4 000 000
+	let res = "";
+	bitcoinFormatted
+		.split("")
+		.reverse()
+		.forEach((c, index) => {
+			if (index > 0 && index % 3 === 0) {
+				res = " " + res;
+			}
+			res = c + res;
+		});
+
+	bitcoinFormatted = res;
+
+	return {
+		bitcoinFormatted,
+		bitcoinWhole,
+		bitcoinDecimal,
+	};
 }

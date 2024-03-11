@@ -33,7 +33,6 @@
 		"react-hook-form": "^7.51.0",
 		"react-hotkeys-hook": "^4.5.0",
 		"react-i18next": "^14.0.5",
-		"react-router-dom": "^6.22.2",
 		"react-string-replace": "^1.1.1",
 		"slate": "^0.101.5",
 		"slate-react": "^0.101.6",

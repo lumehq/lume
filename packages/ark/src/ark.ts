@@ -404,8 +404,26 @@ export class Ark {
 		try {
 			const cmd: boolean = await invoke("set_nwc", { uri });
 			return cmd;
-		} catch {
-			return false;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async load_nwc() {
+		try {
+			const cmd: boolean = await invoke("load_nwc");
+			return cmd;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async get_balance() {
+		try {
+			const cmd: number = await invoke("get_balance");
+			return cmd;
+		} catch (e) {
+			throw new Error(String(e));
 		}
 	}
 
@@ -413,8 +431,8 @@ export class Ark {
 		try {
 			const cmd: boolean = await invoke("zap_profile", { id, amount, message });
 			return cmd;
-		} catch {
-			return false;
+		} catch (e) {
+			throw new Error(String(e));
 		}
 	}
 
@@ -422,8 +440,8 @@ export class Ark {
 		try {
 			const cmd: boolean = await invoke("zap_event", { id, amount, message });
 			return cmd;
-		} catch {
-			return false;
+		} catch (e) {
+			throw new Error(String(e));
 		}
 	}
 
@@ -477,8 +495,7 @@ export class Ark {
 
 			return content.url as string;
 		} catch (e) {
-			console.error(String(e));
-			return null;
+			throw new Error(String(e));
 		}
 	}
 
@@ -521,6 +538,32 @@ export class Ark {
 			minWidth: 500,
 			width: 600,
 			height: 400,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+			fileDropEnabled: true,
+		});
+	}
+
+	public open_nwc() {
+		return new WebviewWindow("nwc", {
+			title: "Nostr Wallet Connect",
+			url: "/nwc",
+			minWidth: 400,
+			width: 400,
+			height: 600,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+			fileDropEnabled: true,
+		});
+	}
+
+	public open_zap(id: string, pubkey: string, account: string) {
+		return new WebviewWindow(`zap-${id}`, {
+			title: "Nostr Wallet Connect",
+			url: `/zap/${id}?pubkey=${pubkey}&account=${account}`,
+			minWidth: 400,
+			width: 400,
+			height: 500,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",
 			fileDropEnabled: true,

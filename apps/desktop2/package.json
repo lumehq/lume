@@ -26,6 +26,7 @@
     "i18next-resources-to-backend": "^1.2.0",
     "nostr-tools": "^2.3.1",
     "react": "^18.2.0",
+    "react-currency-input-field": "^3.8.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^14.0.5",
     "slate": "^0.101.5",

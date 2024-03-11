@@ -1,4 +1,5 @@
 use crate::Nostr;
+use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
@@ -274,26 +275,61 @@ pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, S
 }
 
 #[tauri::command]
-pub async fn get_nwc_status(state: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = &state.client;
-  let zapper = client.zapper().await.is_ok();
-
-  Ok(zapper)
-}
-
-#[tauri::command]
 pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
-  if let Ok(uri) = NostrWalletConnectURI::from_str(&uri) {
-    if let Ok(nwc) = NWC::new(uri).await {
-      let _ = client.set_zapper(nwc);
+  if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(&uri) {
+    if let Ok(nwc) = NWC::new(nwc_uri).await {
+      let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+      let _ = keyring.set_password(uri);
+      let _ = client.set_zapper(nwc).await;
+
       Ok(true)
     } else {
-      Ok(false)
+      Err("URI is not valid".into())
     }
   } else {
     Err("Set NWC failed".into())
+  }
+}
+
+#[tauri::command]
+pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, bool> {
+  let client = &state.client;
+  let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+
+  match keyring.get_password() {
+    Ok(val) => {
+      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+      if let Ok(nwc) = NWC::new(uri).await {
+        client.set_zapper(nwc).await;
+        Ok(true)
+      } else {
+        Err(false)
+      }
+    }
+    Err(_) => Err(false),
+  }
+}
+
+#[tauri::command]
+pub async fn get_balance() -> Result<u64, String> {
+  let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+
+  match keyring.get_password() {
+    Ok(val) => {
+      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+      if let Ok(nwc) = NWC::new(uri).await {
+        if let Ok(balance) = nwc.get_balance().await {
+          Ok(balance)
+        } else {
+          Err("Get balance failed".into())
+        }
+      } else {
+        Err("Cannot connect to NWC".into())
+      }
+    }
+    Err(_) => Err("Something wrong".into()),
   }
 }
 

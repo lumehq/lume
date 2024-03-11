@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.24.1",
+		"bitcoin-units": "^1.0.0",
 		"clsx": "^2.1.0",
 		"dayjs": "^1.11.10",
 		"nostr-tools": "^2.3.1",
