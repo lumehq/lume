@@ -7,9 +7,8 @@ pub mod commands;
 pub mod nostr;
 pub mod tray;
 
-use std::fs;
-
 use nostr_sdk::prelude::*;
+use std::fs;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 
