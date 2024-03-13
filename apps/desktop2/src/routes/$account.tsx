@@ -46,6 +46,7 @@ function App() {
           </button>
           <button
             type="button"
+            onClick={() => ark.open_settings()}
             className="inline-flex size-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-600"
           >
             <HorizontalDotsIcon className="size-5" />

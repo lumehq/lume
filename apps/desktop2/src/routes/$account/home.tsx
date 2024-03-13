@@ -1,4 +1,4 @@
-import { GlobalIcon, LocalIcon, RefreshIcon } from "@lume/icons";
+import { GlobalIcon, LoaderIcon, LocalIcon, RefreshIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";

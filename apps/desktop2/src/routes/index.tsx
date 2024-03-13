@@ -6,7 +6,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
     const accounts = await ark.get_all_accounts();
 
@@ -22,9 +22,13 @@ export const Route = createFileRoute("/")({
         });
       // Only 1 account, skip account selection screen
       case 1:
+        // @ts-ignore, totally fine !!!
+        if (search.manually) return;
+
         const account = accounts[0].npub;
-        const loadAccount = await ark.load_selected_account(account);
-        if (loadAccount) {
+        const loadedAccount = await ark.load_selected_account(account);
+
+        if (loadedAccount) {
           throw redirect({
             to: "/$account/home/local",
             params: { account },
@@ -72,7 +76,9 @@ function Screen() {
         </div>
         <div className="flex items-center justify-center gap-6">
           {loading ? (
-            <LoaderIcon className="size-6 animate-spin text-white" />
+            <div className="inline-flex size-6 items-center justify-center">
+              <LoaderIcon className="size-6 animate-spin text-white" />
+            </div>
           ) : (
             <>
               {ark.accounts.map((account) => (

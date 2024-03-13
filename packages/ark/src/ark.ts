@@ -569,4 +569,17 @@ export class Ark {
 			fileDropEnabled: true,
 		});
 	}
+
+	public open_settings() {
+		return new WebviewWindow("settings", {
+			title: "Settings",
+			url: "/settings",
+			minWidth: 600,
+			width: 800,
+			height: 500,
+			hiddenTitle: true,
+			titleBarStyle: "overlay",
+			fileDropEnabled: true,
+		});
+	}
 }
