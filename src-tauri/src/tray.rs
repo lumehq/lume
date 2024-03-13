@@ -1,8 +1,32 @@
-use tauri::{tray::ClickType, Manager, Runtime};
+use tauri::{Manager, Runtime};
 
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
+  let version = app.package_info().version.to_string();
   let tray = app.tray().unwrap();
   let menu = tauri::menu::MenuBuilder::new(app)
+    .item(
+      &tauri::menu::MenuItem::with_id(app, "open_lume", "Open Lume", true, None::<&str>).unwrap(),
+    )
+    .item(&tauri::menu::MenuItem::with_id(app, "editor", "New Post", true, None::<&str>).unwrap())
+    .separator()
+    .item(
+      &tauri::menu::MenuItem::with_id(
+        app,
+        "version",
+        format!("Version {}", version),
+        false,
+        None::<&str>,
+      )
+      .unwrap(),
+    )
+    .item(&tauri::menu::MenuItem::with_id(app, "about", "About Lume", true, None::<&str>).unwrap())
+    .item(
+      &tauri::menu::MenuItem::with_id(app, "update", "Check for Updates", true, None::<&str>)
+        .unwrap(),
+    )
+    .item(
+      &tauri::menu::MenuItem::with_id(app, "settings", "Settings...", true, None::<&str>).unwrap(),
+    )
     .item(&tauri::menu::MenuItem::with_id(app, "quit", "Quit", true, None::<&str>).unwrap())
     .build()
     .unwrap();
@@ -14,16 +38,6 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       handle.exit(0);
     }
     _ => {}
-  });
-
-  tray.on_tray_icon_event(|tray, event| {
-    if event.click_type == ClickType::Left {
-      let app = tray.app_handle();
-      if let Some(window) = app.get_webview_window("main") {
-        let _ = window.show();
-        let _ = window.set_focus();
-      }
-    }
   });
 
   Ok(())
