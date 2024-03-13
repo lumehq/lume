@@ -132,6 +132,7 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
       if let Some(event) = events.first() {
         let list = nip65::extract_relay_list(&event);
         for item in list.into_iter() {
+          println!("connecting to relay: {}", item.0.to_string());
           client
             .connect_relay(item.0.to_string())
             .await
@@ -139,6 +140,9 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
         }
       }
     }
+
+    // #TODO
+    // Subscribe new event for activity and local newsfeed
 
     Ok(true)
   } else {

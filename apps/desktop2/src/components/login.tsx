@@ -14,6 +14,14 @@ export function LoginDialog() {
 
   const login = async () => {
     try {
+      if (!nsec.length) {
+        return toast.info("You must enter a valid nsec or ncrypto");
+      }
+
+      if (nsec.startsWith("ncrypto") && !passphase.length) {
+        return toast.warning("You must provide a passphase for ncrypto key");
+      }
+
       const save = await ark.save_account(nsec, passphase);
 
       if (save) {
@@ -81,6 +89,7 @@ export function LoginDialog() {
                 <input
                   name="nsec"
                   type="text"
+                  placeholder="nsec or ncrypto..."
                   value={nsec}
                   onChange={(e) => setNsec(e.target.value)}
                   className="h-11 w-full resize-none rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"

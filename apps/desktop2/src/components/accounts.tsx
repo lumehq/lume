@@ -61,13 +61,17 @@ function Inactive({ pubkey }: { pubkey: string }) {
 }
 
 function Active({ pubkey }: { pubkey: string }) {
-  const [open, setOpen] = useState(true);
+  const ark = useArk();
+  const navigate = useNavigate();
+
   // @ts-ignore, magic !!!
   const { guest } = useSearch({ strict: false });
+  // @ts-ignore, magic !!!
+  const { account } = useParams({ strict: false });
 
   if (guest) {
     return (
-      <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Root open={true}>
         <Popover.Trigger asChild>
           <button type="button">
             <User.Provider pubkey={pubkey}>
@@ -120,23 +124,20 @@ function Active({ pubkey }: { pubkey: string }) {
         >
           <DropdownMenu.Item className="group relative flex h-9 select-none items-center rounded-md px-3 text-sm font-medium leading-none outline-none hover:bg-neutral-900 dark:hover:bg-neutral-100">
             Add account
-            <div className="ml-auto pl-5 text-xs text-neutral-800 dark:text-neutral-200">
-              ⌘+Shift+N
-            </div>
           </DropdownMenu.Item>
-          <DropdownMenu.Item className="group relative flex h-9 select-none items-center rounded-md px-3 text-sm font-medium leading-none outline-none hover:bg-neutral-900 dark:hover:bg-neutral-100">
+          <DropdownMenu.Item
+            onClick={() => ark.open_profile(account)}
+            className="group relative flex h-9 select-none items-center rounded-md px-3 text-sm font-medium leading-none outline-none hover:bg-neutral-900 dark:hover:bg-neutral-100"
+          >
             Profile
             <div className="ml-auto pl-5 text-xs text-neutral-800 dark:text-neutral-200">
               ⌘+Shift+P
             </div>
           </DropdownMenu.Item>
-          <DropdownMenu.Item className="group relative flex h-9 select-none items-center rounded-md px-3 text-sm font-medium leading-none outline-none hover:bg-neutral-900 dark:hover:bg-neutral-100">
-            Settings
-            <div className="ml-auto pl-5 text-xs text-neutral-800 dark:text-neutral-200">
-              ⌘+Shift+S
-            </div>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item className="group relative flex h-9 select-none items-center rounded-md px-3 text-sm font-medium leading-none outline-none hover:bg-neutral-900 dark:hover:bg-neutral-100">
+          <DropdownMenu.Item
+            onClick={() => navigate({ to: "/", search: { manually: true } })}
+            className="group relative flex h-9 select-none items-center rounded-md px-3 text-sm font-medium leading-none outline-none hover:bg-neutral-900 dark:hover:bg-neutral-100"
+          >
             Logout
             <div className="ml-auto pl-5 text-xs text-neutral-800 dark:text-neutral-200">
               ⌘+Shift+L

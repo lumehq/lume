@@ -10,19 +10,18 @@ import {
 import { NIP89 } from "./nip89";
 import { useNoteContext } from "./provider";
 import { ReactNode, useMemo } from "react";
-import reactStringReplace from "react-string-replace";
 import { nanoid } from "nanoid";
 import { MentionUser } from "./mentions/user";
 import { MentionNote } from "./mentions/note";
 import { Hashtag } from "./mentions/hashtag";
 import { VideoPreview } from "./preview/video";
-import { stripHtml } from "string-strip-html";
 import { ImagePreview } from "./preview/image";
+import reactStringReplace from "react-string-replace";
 
 export function NoteContent({ className }: { className?: string }) {
   const event = useNoteContext();
   const content = useMemo(() => {
-    const text = stripHtml(event.content.trim()).result;
+    const text = event.content.trim();
     const words = text.split(/( |\n)/);
 
     // @ts-ignore, kaboom !!!
