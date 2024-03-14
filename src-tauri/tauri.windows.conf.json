@@ -5,11 +5,10 @@
       {
         "title": "Lume",
         "label": "main",
-        "width": 1080,
+        "width": 500,
         "height": 800,
-        "minWidth": 1080,
-        "minHeight": 800,
-        "center": true
+        "minWidth": 500,
+        "minHeight": 800
       }
     ]
   }

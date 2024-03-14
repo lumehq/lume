@@ -149,11 +149,12 @@ function Screen() {
 
       if (eventId) {
         await sendNativeNotification("You've publish new post successfully.");
-        return reset();
       }
 
       // stop loading
       setLoading(false);
+      // reset form
+      reset();
     } catch (e) {
       setLoading(false);
       await sendNativeNotification(String(e));

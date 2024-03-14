@@ -24,7 +24,7 @@ export function Accounts() {
   }, []);
 
   return (
-    <div data-tauri-drag-region className="flex items-center gap-4">
+    <div data-tauri-drag-region className="flex items-center gap-3">
       {accounts
         ? accounts.map((account) =>
             // @ts-ignore, useless
@@ -45,8 +45,7 @@ function Inactive({ pubkey }: { pubkey: string }) {
 
   const changeAccount = async (npub: string) => {
     const select = await ark.load_selected_account(npub);
-    if (select)
-      navigate({ to: "/$account/home/local", params: { account: npub } });
+    if (select) navigate({ to: "/$account/home", params: { account: npub } });
   };
 
   return (

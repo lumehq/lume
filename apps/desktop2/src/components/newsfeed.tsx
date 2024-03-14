@@ -4,19 +4,16 @@ import { TextNote } from "@/components/text";
 import { useArk } from "@lume/ark";
 import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
+import { Column } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/$account/home/local")({
-  component: Screen,
-});
-
-function Screen() {
+export function Newsfeed() {
   const ark = useArk();
-  const { account } = Route.useParams();
+  // @ts-ignore, just work!!!
+  const { account } = useParams({ strict: false });
   const {
     data,
     hasNextPage,
@@ -56,8 +53,9 @@ function Screen() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col">
-      <div className="flex-1">
+    <Column.Root>
+      <Column.Header title="Newsfeed" />
+      <Column.Content>
         {isLoading || isRefetching ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
             <LoaderIcon className="size-5 animate-spin" />
@@ -69,7 +67,7 @@ function Screen() {
               <p>
                 Empty newsfeed. Or you view the{" "}
                 <Link
-                  to="/$account/home/global"
+                  to="/$account/home"
                   className="text-blue-500 hover:text-blue-600"
                 >
                   Global Newsfeed
@@ -102,7 +100,7 @@ function Screen() {
             </button>
           ) : null}
         </div>
-      </div>
-    </div>
+      </Column.Content>
+    </Column.Root>
   );
 }

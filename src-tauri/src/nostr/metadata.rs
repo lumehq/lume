@@ -294,7 +294,7 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 }
 
 #[tauri::command]
-pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, bool> {
+pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
 
@@ -305,10 +305,10 @@ pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, bool> {
         client.set_zapper(nwc).await;
         Ok(true)
       } else {
-        Err(false)
+        Err("Cannot connect to NWC".into())
       }
     }
-    Err(_) => Err(false),
+    Err(_) => Ok(false),
   }
 }
 

@@ -248,6 +248,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.24.1
         version: 5.24.1(react@18.2.0)
+      '@tanstack/react-router':
+        specifier: ^1.18.1
+        version: 1.18.1(react-dom@18.2.0)(react@18.2.0)
       get-urls:
         specifier: ^12.1.0
         version: 12.1.0

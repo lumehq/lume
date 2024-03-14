@@ -6,13 +6,16 @@
         "title": "Lume",
         "label": "main",
         "titleBarStyle": "Overlay",
-        "width": 1080,
+        "width": 500,
         "height": 800,
-        "minWidth": 1080,
+        "minWidth": 500,
         "minHeight": 800,
-        "center": true,
         "hiddenTitle": true,
-        "decorations": true
+        "decorations": true,
+        "transparent": true,
+        "windowEffects": {
+          "effects": ["windowBackground"]
+        }
       }
     ]
   }

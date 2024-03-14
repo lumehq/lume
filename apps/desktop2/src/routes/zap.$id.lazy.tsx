@@ -48,7 +48,7 @@ function Screen() {
 
   return (
     <Container>
-      <Balance recipient={pubkey} account={account} />
+      <Balance account={account} />
       <Box className="flex flex-col gap-3">
         <div className="flex h-full flex-col justify-between py-5">
           <div className="flex h-11 shrink-0 items-center justify-center gap-2">
