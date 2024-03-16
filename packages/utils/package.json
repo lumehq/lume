@@ -8,7 +8,7 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.24.1",
+		"@tanstack/react-query": "^5.28.4",
 		"bitcoin-units": "^1.0.0",
 		"clsx": "^2.1.0",
 		"dayjs": "^1.11.10",
@@ -21,9 +21,9 @@
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.61",
-		"@types/react-dom": "^18.2.19",
+		"@types/react": "^18.2.66",
+		"@types/react-dom": "^18.2.22",
 		"tailwind-merge": "^2.2.1",
-		"typescript": "^5.3.3"
+		"typescript": "^5.4.2"
 	}
 }

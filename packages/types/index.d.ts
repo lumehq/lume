@@ -1,3 +1,5 @@
+import { type Webview } from "@tauri-apps/api/webview";
+
 export interface Settings {
 	autoupdate: boolean;
 	nsecbunker: boolean;
@@ -81,9 +83,16 @@ export interface RichContent {
 }
 
 export interface LumeColumn {
-	id: number;
-	title: string;
 	content: string;
+	name: string;
+	description?: string;
+	author?: string;
+	logo?: string;
+	x?: number;
+	y?: number;
+	width?: number;
+	height?: number;
+	window?: Webview;
 }
 
 export interface Opengraph {

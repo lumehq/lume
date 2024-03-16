@@ -4,7 +4,7 @@
 	"private": true,
 	"main": "./src/index.ts",
 	"dependencies": {
-		"@getalby/sdk": "^3.3.1",
+		"@getalby/sdk": "^3.4.0",
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",
 		"@lume/utils": "workspace:^",
@@ -18,9 +18,9 @@
 		"@radix-ui/react-hover-card": "^1.0.7",
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-tooltip": "^1.0.7",
-		"@tanstack/react-query": "^5.24.1",
-		"@tanstack/react-router": "^1.18.1",
-		"framer-motion": "^11.0.8",
+		"@tanstack/react-query": "^5.28.4",
+		"@tanstack/react-router": "^1.20.0",
+		"framer-motion": "^11.0.14",
 		"get-urls": "^12.1.0",
 		"media-chrome": "^2.2.5",
 		"minidenticons": "^4.2.1",
@@ -32,7 +32,7 @@
 		"react-dom": "^18.2.0",
 		"react-hook-form": "^7.51.0",
 		"react-hotkeys-hook": "^4.5.0",
-		"react-i18next": "^14.0.5",
+		"react-i18next": "^14.1.0",
 		"react-string-replace": "^1.1.1",
 		"slate": "^0.101.5",
 		"slate-react": "^0.101.6",
@@ -46,8 +46,8 @@
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.61",
+		"@types/react": "^18.2.66",
 		"tailwindcss": "^3.4.1",
-		"typescript": "^5.3.3"
+		"typescript": "^5.4.2"
 	}
 }

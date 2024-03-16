@@ -161,7 +161,7 @@ pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
 #[tauri::command]
 pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
   let pubkey = PublicKey::from_str(key).unwrap();
-  let profile = Nip19Profile::new(pubkey, relays);
+  let profile = Nip19Profile::new(pubkey, relays).unwrap();
 
   Ok(profile.to_bech32().unwrap())
 }
