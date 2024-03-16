@@ -121,17 +121,17 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(i18next@23.10.1)(react-dom@18.2.0)(react@18.2.0)
       slate:
-        specifier: ^0.101.5
-        version: 0.101.5
+        specifier: ^0.102.0
+        version: 0.102.0
       slate-react:
-        specifier: ^0.101.6
-        version: 0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5)
+        specifier: ^0.102.0
+        version: 0.102.0(react-dom@18.2.0)(react@18.2.0)(slate@0.102.0)
       sonner:
         specifier: ^1.4.3
         version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
       virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.29.0
+        version: 0.29.0(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -182,8 +182,8 @@ importers:
   apps/web:
     dependencies:
       '@astrojs/check':
-        specifier: ^0.4.1
-        version: 0.4.1(typescript@5.4.2)
+        specifier: ^0.5.9
+        version: 0.5.9(typescript@5.4.2)
       '@astrojs/tailwind':
         specifier: ^5.1.0
         version: 5.1.0(astro@4.5.5)(tailwindcss@3.4.1)
@@ -255,8 +255,8 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       media-chrome:
-        specifier: ^2.2.5
-        version: 2.2.5
+        specifier: ^3.0.2
+        version: 3.0.2
       minidenticons:
         specifier: ^4.2.1
         version: 4.2.1
@@ -288,8 +288,8 @@ importers:
         specifier: ^13.4.6
         version: 13.4.6
       virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.29.0
+        version: 0.29.0(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -322,506 +322,6 @@ importers:
       '@types/react':
         specifier: ^18.2.66
         version: 18.2.66
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-antenas:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-default:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-foryou:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-global:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-group:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-hashtag:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-thread:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-timeline:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-trending-notes:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-user:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      sonner:
-        specifier: ^1.4.3
-        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
-      virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
-      typescript:
-        specifier: ^5.4.2
-        version: 5.4.2
-
-  packages/lume-column-waifu:
-    dependencies:
-      '@lume/ark':
-        specifier: workspace:^
-        version: link:../ark
-      '@lume/icons':
-        specifier: workspace:^
-        version: link:../icons
-      '@lume/ui':
-        specifier: workspace:^
-        version: link:../ui
-      '@lume/utils':
-        specifier: workspace:^
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: ^5.28.4
-        version: 5.28.4(react@18.2.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-    devDependencies:
-      '@lume/tailwindcss':
-        specifier: workspace:^
-        version: link:../tailwindcss
-      '@lume/tsconfig':
-        specifier: workspace:^
-        version: link:../tsconfig
-      '@lume/types':
-        specifier: workspace:^
-        version: link:../types
-      '@types/react':
-        specifier: ^18.2.66
-        version: 18.2.66
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.1
       typescript:
         specifier: ^5.4.2
         version: 5.4.2
@@ -909,8 +409,8 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       media-chrome:
-        specifier: ^2.2.5
-        version: 2.2.5
+        specifier: ^3.0.2
+        version: 3.0.2
       minidenticons:
         specifier: ^4.2.1
         version: 4.2.1
@@ -945,11 +445,11 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       slate:
-        specifier: ^0.101.5
-        version: 0.101.5
+        specifier: ^0.102.0
+        version: 0.102.0
       slate-react:
-        specifier: ^0.101.6
-        version: 0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5)
+        specifier: ^0.102.0
+        version: 0.102.0(react-dom@18.2.0)(react@18.2.0)(slate@0.102.0)
       sonner:
         specifier: ^1.4.3
         version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
@@ -963,8 +463,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(react@18.2.0)
       virtua:
-        specifier: ^0.27.5
-        version: 0.27.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.29.0
+        version: 0.29.0(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@lume/tailwindcss':
         specifier: workspace:^
@@ -1009,11 +509,11 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       slate:
-        specifier: ^0.101.5
-        version: 0.101.5
+        specifier: ^0.102.0
+        version: 0.102.0
       slate-react:
-        specifier: ^0.101.6
-        version: 0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5)
+        specifier: ^0.102.0
+        version: 0.102.0(react-dom@18.2.0)(react@18.2.0)(slate@0.102.0)
     devDependencies:
       '@lume/tsconfig':
         specifier: workspace:^
@@ -1048,8 +548,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.25
     dev: false
 
-  /@astrojs/check@0.4.1(typescript@5.4.2):
-    resolution: {integrity: sha512-XEsuU4TlWkgcsvdeessq5mXLXV1fejtxIioCPv/FfhTzb1bDYe2BtLiSBK+rFTyD9Hl686YOas9AGNMJcpoRsw==}
+  /@astrojs/check@0.5.9(typescript@5.4.2):
+    resolution: {integrity: sha512-+QsQMtYq4oso+gmilJC9HLmdi0glZ+04V/VyyTTPry7n21jqjX9SfgDpLGxMk5cwPC/vwZMkn6ORGPnkZS/L5w==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -5058,8 +4558,8 @@ packages:
       '@types/mdast': 4.0.3
     dev: false
 
-  /media-chrome@2.2.5:
-    resolution: {integrity: sha512-59peAYFlL9ZlFVkKJmIgIDNMkQr4nauYTwIQhLg3khmGfO6/25VNEI8Yn0aUMLb5IFB2gzjcPmfu1ktfOhQ8Ag==}
+  /media-chrome@3.0.2:
+    resolution: {integrity: sha512-PdTKNmQ3JDTfd6MQl53qKANx5iSgu3PMNVWDHd2yzjlnvdJwUUuVr1z0vdutig2vYP0DGhC/QRzotfb6m0FfCw==}
     dev: false
 
   /merge-stream@2.0.0:
@@ -6331,8 +5831,8 @@ packages:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
     dev: false
 
-  /slate-react@0.101.6(react-dom@18.2.0)(react@18.2.0)(slate@0.101.5):
-    resolution: {integrity: sha512-aMtp9FY127hKWTkCcTBonfKIwKJC2ESPqFdw2o/RuOk3RMQRwsWay8XTOHx8OBGOHanI2fsKaTAPF5zxOLA1Qg==}
+  /slate-react@0.102.0(react-dom@18.2.0)(react@18.2.0)(slate@0.102.0):
+    resolution: {integrity: sha512-SAcFsK5qaOxXjm0hr/t2pvIxfRv6HJGzmWkG58TdH4LdJCsgKS1n6hQOakHPlRVCwPgwvngB6R+t3pPjv8MqwA==}
     peerDependencies:
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
@@ -6348,12 +5848,12 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.1.0
-      slate: 0.101.5
+      slate: 0.102.0
       tiny-invariant: 1.3.1
     dev: false
 
-  /slate@0.101.5:
-    resolution: {integrity: sha512-ZZt1ia8ayRqxtpILRMi2a4MfdvwdTu64CorxTVq9vNSd0GQ/t3YDkze6wKjdeUtENmBlq5wNIDInZbx38Hfu5Q==}
+  /slate@0.102.0:
+    resolution: {integrity: sha512-RT+tHgqOyZVB1oFV9Pv99ajwh4OUCN9p28QWdnDTIzaN/kZxMsHeQN39UNAgtkZTVVVygFqeg7/R2jiptCvfyA==}
     dependencies:
       immer: 10.0.4
       is-plain-object: 5.0.0
@@ -7065,8 +6565,8 @@ packages:
       vfile-message: 4.0.2
     dev: false
 
-  /virtua@0.27.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-VeiK2eMCHDmNJvP1GO+DB8rX5ACAxrzFRMGIcqoZK+eqnS25C6lSnuZO4XXLK+RmFkPAoHApMZZTf5ngrpcSMw==}
+  /virtua@0.29.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-V7gxQDUGgxe32cLyYhZ+hOxtZLuqKV9icqomE8qAN5HILf1TMuisCEZJVbr+k7GI7K+oOkYdKFiBX23cdXSXmg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'

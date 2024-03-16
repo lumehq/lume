@@ -22,7 +22,7 @@
 		"@tanstack/react-router": "^1.20.0",
 		"framer-motion": "^11.0.14",
 		"get-urls": "^12.1.0",
-		"media-chrome": "^2.2.5",
+		"media-chrome": "^3.0.2",
 		"minidenticons": "^4.2.1",
 		"nanoid": "^5.0.6",
 		"qrcode.react": "^3.1.0",
@@ -34,13 +34,13 @@
 		"react-hotkeys-hook": "^4.5.0",
 		"react-i18next": "^14.1.0",
 		"react-string-replace": "^1.1.1",
-		"slate": "^0.101.5",
-		"slate-react": "^0.101.6",
+		"slate": "^0.102.0",
+		"slate-react": "^0.102.0",
 		"sonner": "^1.4.3",
 		"string-strip-html": "^13.4.6",
 		"uqr": "^0.1.2",
 		"use-debounce": "^10.0.0",
-		"virtua": "^0.27.5"
+		"virtua": "^0.29.0"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",

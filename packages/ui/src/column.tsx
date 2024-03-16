@@ -7,6 +7,7 @@ import {
 import { Webview } from "@tauri-apps/api/webview";
 import { LumeColumn } from "@lume/types";
 import { useDebouncedCallback } from "use-debounce";
+import { type UnlistenFn } from "@tauri-apps/api/event";
 
 export function Column({
   column,
@@ -19,6 +20,7 @@ export function Column({
   const childWindow = useRef<Webview>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const initialRect = useRef<DOMRect>(null);
+  const unlisten = useRef<UnlistenFn>(null);
   const handleResize = useDebouncedCallback(() => {
     const newRect = divRef.current.getBoundingClientRect();
     if (initialRect.current.height !== newRect.height) {
@@ -26,16 +28,12 @@ export function Column({
         new LogicalSize(newRect.width, newRect.height),
       );
     }
-  }, 800);
+  }, 500);
 
   const trackResize = useCallback(async () => {
-    const unlisten = await mainWindow.onResized(() => {
+    unlisten.current = await mainWindow.onResized(() => {
       handleResize();
     });
-
-    return () => {
-      if (unlisten) unlisten();
-    };
   }, []);
 
   useEffect(() => {
@@ -52,27 +50,27 @@ export function Column({
     if (!divRef.current) return;
     if (childWindow.current) return;
 
-    // get element dimension
     const rect = divRef.current.getBoundingClientRect();
+    const name = column.name.toLowerCase().replace(/\W/g, "");
 
     // create new webview
     initialRect.current = rect;
-    childWindow.current = new Webview(
-      mainWindow,
-      column.name.toLowerCase().replace(/\W/g, ""),
-      {
-        url: column.content,
-        x: rect.x,
-        y: rect.y,
-        width: rect.width,
-        height: rect.height,
-        transparent: true,
-        userAgent: "Lume/4.0",
-      },
-    );
+    childWindow.current = new Webview(mainWindow, name, {
+      url: column.content,
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+      transparent: true,
+      userAgent: "Lume/4.0",
+    });
 
     // track window resize event
     trackResize();
+
+    return () => {
+      if (unlisten.current) unlisten.current();
+    };
   }, []);
 
   return (
