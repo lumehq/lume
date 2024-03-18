@@ -1,19 +1,22 @@
 import { RepostNote } from "@/components/repost";
 import { Suggest } from "@/components/suggest";
 import { TextNote } from "@/components/text";
-import { useArk } from "@lume/ark";
+import { useEvents } from "@lume/ark";
 import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
-import { FETCH_LIMIT } from "@lume/utils";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { Link, useParams } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
 
-export function Newsfeed() {
-  const ark = useArk();
+export const Route = createLazyFileRoute("/newsfeed")({
+  component: Screen,
+});
+
+export function Screen() {
   // @ts-ignore, just work!!!
-  const { account } = useParams({ strict: false });
+  const { name, account } = Route.useSearch();
+  const { t } = useTranslation();
   const {
     data,
     hasNextPage,
@@ -21,26 +24,7 @@ export function Newsfeed() {
     isRefetching,
     isFetchingNextPage,
     fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["local_newsfeed", account],
-    initialPageParam: 0,
-    queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const events = await ark.get_events(
-        "local",
-        FETCH_LIMIT,
-        pageParam,
-        true,
-      );
-      return events;
-    },
-    getNextPageParam: (lastPage) => {
-      const lastEvent = lastPage?.at(-1);
-      if (!lastEvent) return;
-      return lastEvent.created_at - 1;
-    },
-    select: (data) => data?.pages.flatMap((page) => page),
-    refetchOnWindowFocus: false,
-  });
+  } = useEvents("local", account);
 
   const renderItem = (event: Event) => {
     if (!event) return;
@@ -54,7 +38,7 @@ export function Newsfeed() {
 
   return (
     <Column.Root>
-      <Column.Header title="Newsfeed" />
+      <Column.Header name={name} />
       <Column.Content>
         {isLoading || isRefetching ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
@@ -64,15 +48,10 @@ export function Newsfeed() {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 rounded-xl bg-neutral-50 p-5 dark:bg-neutral-950">
               <InfoIcon className="size-6" />
-              <p>
-                Empty newsfeed. Or you view the{" "}
-                <Link
-                  to="/$account/home"
-                  className="text-blue-500 hover:text-blue-600"
-                >
-                  Global Newsfeed
-                </Link>
-              </p>
+              <div>
+                <p className="leading-tight">{t("emptyFeedTitle")}</p>
+                <p className="leading-tight">{t("emptyFeedSubtitle")}</p>
+              </div>
             </div>
             <Suggest />
           </div>

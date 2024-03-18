@@ -1,17 +1,17 @@
+import { Col } from "@/components/col";
+import { Toolbar } from "@/components/toolbar";
 import { LoaderIcon } from "@lume/icons";
-import { Column } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { VList, VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
   component: Screen,
   pendingComponent: Pending,
   loader: async () => {
     const columns = [
-      { name: "Tauri v2", content: "https://beta.tauri.app" },
-      { name: "Tauri v1", content: "https://tauri.app" },
-      { name: "Lume", content: "https://lume.nu" },
-      { name: "Snort", content: "https://snort.social" },
+      { name: "Newsfeed", content: "/columns/newsfeed" },
+      { name: "Default", content: "/columns/default" },
     ];
     return columns;
   },
@@ -19,22 +19,71 @@ export const Route = createFileRoute("/$account/home")({
 
 function Screen() {
   const data = Route.useLoaderData();
+  const search = Route.useSearch();
+  const vlistRef = useRef<VListHandle>(null);
+
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isScroll, setIsScroll] = useState(false);
 
+  const moveLeft = () => {
+    const prevIndex = Math.max(selectedIndex - 1, 0);
+    setSelectedIndex(prevIndex);
+    vlistRef.current.scrollToIndex(prevIndex, {
+      align: "start",
+    });
+  };
+
+  const moveRight = () => {
+    const nextIndex = Math.min(selectedIndex + 1, data.length - 1);
+    setSelectedIndex(nextIndex);
+    vlistRef.current.scrollToIndex(nextIndex, {
+      align: "end",
+    });
+  };
+
   return (
-    <div className="relative h-full w-full">
-      <div
-        onScroll={() => setIsScroll((state) => !state)}
-        className="flex h-full w-full flex-nowrap gap-3 overflow-x-auto px-3 pb-3 pt-1.5 focus:outline-none"
+    <div className="h-full w-full">
+      <VList
+        ref={vlistRef}
+        horizontal
+        itemSize={440}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (!vlistRef.current) return;
+          switch (e.code) {
+            case "ArrowUp":
+            case "ArrowLeft": {
+              e.preventDefault();
+              moveLeft();
+              break;
+            }
+            case "ArrowDown":
+            case "ArrowRight": {
+              e.preventDefault();
+              moveRight();
+              break;
+            }
+          }
+        }}
+        onScroll={() => {
+          setIsScroll(true);
+        }}
+        onScrollEnd={() => {
+          setIsScroll(false);
+        }}
+        className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
       >
         {data.map((column, index) => (
-          <Column
+          <Col
             key={column.name + index}
             column={column}
+            // @ts-ignore, yolo !!!
+            account={search.acccount}
             isScroll={isScroll}
           />
         ))}
-      </div>
+      </VList>
+      <Toolbar moveLeft={moveLeft} moveRight={moveRight} />
     </div>
   );
 }

@@ -1,4 +1,9 @@
-import { ComposeFilledIcon, PlusIcon } from "@lume/icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ComposeFilledIcon,
+  PlusIcon,
+} from "@lume/icons";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
@@ -10,7 +15,7 @@ export const Route = createFileRoute("/$account")({
 
 function App() {
   const ark = useArk();
-  const context = Route.useRouteContext();
+  const { platform } = Route.useRouteContext();
 
   return (
     <div className="flex h-screen w-screen flex-col">
@@ -18,7 +23,7 @@ function App() {
         data-tauri-drag-region
         className={cn(
           "flex h-11 shrink-0 items-center justify-between pr-2",
-          context.platform === "macos" ? "ml-2 pl-20" : "pl-4",
+          platform === "macos" ? "ml-2 pl-20" : "pl-4",
         )}
       >
         <div className="flex items-center gap-3">
@@ -40,6 +45,7 @@ function App() {
             <ComposeFilledIcon className="size-4" />
             New post
           </button>
+          <div id="toolbar" />
         </div>
       </div>
       <div className="flex-1">
