@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ComposeFilledIcon,
-  PlusIcon,
-} from "@lume/icons";
+import { ComposeFilledIcon, HorizontalDotsIcon } from "@lume/icons";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
@@ -30,10 +25,9 @@ function App() {
           <Accounts />
           <button
             type="button"
-            onClick={() => ark.open_settings()}
             className="inline-flex size-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-600"
           >
-            <PlusIcon className="size-4" />
+            <HorizontalDotsIcon className="size-5" />
           </button>
         </div>
         <div className="flex items-center gap-3">
@@ -43,7 +37,7 @@ function App() {
             className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
           >
             <ComposeFilledIcon className="size-4" />
-            New post
+            New Post
           </button>
           <div id="toolbar" />
         </div>

@@ -10,8 +10,8 @@ export const Route = createFileRoute("/$account/home")({
   pendingComponent: Pending,
   loader: async () => {
     const columns = [
-      { name: "Newsfeed", content: "/columns/newsfeed" },
-      { name: "Default", content: "/columns/default" },
+      { name: "Newsfeed", content: "/newsfeed" },
+      { name: "Lume Store", content: "/store/official" },
     ];
     return columns;
   },

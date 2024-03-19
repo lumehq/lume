@@ -5,8 +5,8 @@ export function ArrowLeftIcon(props: JSX.IntrinsicElements["svg"]) {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2"
-        d="m10 6-6 6 6 6m-5-6h15"
+        strokeWidth="1.5"
+        d="M10 5.75 3.75 12 10 18.25M4.5 12h15.75"
       />
     </svg>
   );

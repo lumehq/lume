@@ -56,7 +56,7 @@ export function Col({
 
     const rect = container.current.getBoundingClientRect();
     const name = `column-${column.name.toLowerCase().replace(/\W/g, "")}`;
-    const url = column.name + `?account=${account}&name=${column.name}`;
+    const url = column.content + `?account=${account}&name=${column.name}`;
 
     // create new webview
     initialRect.current = rect;
