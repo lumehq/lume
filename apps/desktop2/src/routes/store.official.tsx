@@ -5,6 +5,13 @@ export const Route = createFileRoute("/store/official")({
 });
 
 function Screen() {
+  /*
+  const add = async (column: LumeColumn) => {
+    const mainWindow = getCurrent();
+    await mainWindow.emit("columns", { type: "add", column });
+  };
+  */
+
   return (
     <div className="flex flex-col gap-3 px-3 pt-3">
       <div className="relative h-[200px] w-full overflow-hidden rounded-xl bg-gradient-to-tr from-orange-100 to-blue-200 px-3 pt-3">

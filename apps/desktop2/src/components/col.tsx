@@ -1,13 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import {
-  LogicalPosition,
-  LogicalSize,
-  getCurrent,
-} from "@tauri-apps/api/window";
-import { Webview } from "@tauri-apps/api/webview";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { getCurrent } from "@tauri-apps/api/window";
 import { LumeColumn } from "@lume/types";
-import { useDebouncedCallback } from "use-debounce";
-import { type UnlistenFn } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
 
 export function Col({
   column,
@@ -18,66 +12,62 @@ export function Col({
   account: string;
   isScroll: boolean;
 }) {
-  const mainWindow = useMemo(() => getCurrent(), []);
-  const childWindow = useRef<Webview>(null);
+  const window = useMemo(() => getCurrent(), []);
   const container = useRef<HTMLDivElement>(null);
-  const initialRect = useRef<DOMRect>(null);
-  const unlisten = useRef<UnlistenFn>(null);
-  const handleResize = useDebouncedCallback(() => {
-    if (!childWindow.current) return;
-    const newRect = container.current.getBoundingClientRect();
-    if (initialRect.current.height !== newRect.height) {
-      childWindow.current.setSize(
-        new LogicalSize(newRect.width, newRect.height),
-      );
-    }
-  }, 500);
 
-  const trackResize = useCallback(async () => {
-    unlisten.current = await mainWindow.onResized(() => {
-      handleResize();
-    });
-  }, []);
+  const [webview, setWebview] = useState("");
 
-  useEffect(() => {
-    if (!childWindow.current) return;
-    if (isScroll) {
-      const newRect = container.current.getBoundingClientRect();
-      childWindow.current.setPosition(
-        new LogicalPosition(newRect.x, newRect.y),
-      );
-    }
-  }, [isScroll]);
-
-  useEffect(() => {
-    if (!mainWindow) return;
-    if (!container.current) return;
-    if (childWindow.current) return;
-
+  const createWebview = async () => {
     const rect = container.current.getBoundingClientRect();
     const name = `column-${column.name.toLowerCase().replace(/\W/g, "")}`;
     const url = column.content + `?account=${account}&name=${column.name}`;
 
     // create new webview
-    initialRect.current = rect;
-    childWindow.current = new Webview(mainWindow, name, {
-      url,
+    const label: string = await invoke("create_column", {
+      label: name,
       x: rect.x,
       y: rect.y,
       width: rect.width,
       height: rect.height,
-      transparent: true,
-      userAgent: "Lume/4.0",
+      url,
     });
 
-    // track window resize event
-    trackResize();
+    setWebview(label);
+  };
 
+  const closeWebview = async () => {
+    await invoke("close_column", {
+      label: webview,
+    });
+  };
+
+  const repositionWebview = async () => {
+    const newRect = container.current.getBoundingClientRect();
+    await invoke("reposition_column", {
+      label: webview,
+      x: newRect.x,
+      y: newRect.y,
+    });
+  };
+
+  useEffect(() => {
+    if (isScroll) {
+      repositionWebview();
+    }
+  }, [isScroll]);
+
+  useEffect(() => {
+    if (!window) return;
+    if (!container.current) return;
+
+    // create webview for current column
+    createWebview();
+
+    // close webview when unmounted
     return () => {
-      if (unlisten.current) unlisten.current();
-      if (childWindow.current) childWindow.current.close();
+      closeWebview();
     };
-  }, []);
+  }, [window]);
 
   return <div ref={container} className="h-full w-[440px] shrink-0 p-2" />;
 }
