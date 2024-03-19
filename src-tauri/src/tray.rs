@@ -2,7 +2,7 @@ use tauri::{Manager, Runtime};
 
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
   let version = app.package_info().version.to_string();
-  let tray = app.tray().unwrap();
+  let tray = app.tray_by_id("main_tray").unwrap();
   let menu = tauri::menu::MenuBuilder::new(app)
     .item(
       &tauri::menu::MenuItem::with_id(app, "open_lume", "Open Lume", true, None::<&str>).unwrap(),
