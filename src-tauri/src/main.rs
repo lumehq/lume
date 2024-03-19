@@ -117,6 +117,9 @@ fn main() {
       commands::folder::show_in_folder,
       commands::folder::get_accounts,
       commands::opg::fetch_opg,
+      commands::window::create_column,
+      commands::window::close_column,
+      commands::window::reposition_column
     ])
     .build(tauri::generate_context!())
     .expect("error while running tauri application")

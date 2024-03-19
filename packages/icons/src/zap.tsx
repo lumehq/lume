@@ -4,8 +4,8 @@ export function ZapIcon(props: JSX.IntrinsicElements["svg"]) {
       <path
         stroke="currentColor"
         strokeLinejoin="round"
-        strokeWidth="2"
-        d="M19.566 9H13.5a.5.5 0 0 1-.5-.5V2.401a.5.5 0 0 0-.916-.277L4.018 14.223a.5.5 0 0 0 .416.777H10.5a.5.5 0 0 1 .5.5v6.099a.5.5 0 0 0 .916.277l8.066-12.099A.5.5 0 0 0 19.566 9Z"
+        strokeWidth="1.5"
+        d="M19.798 8.75H13.75a.5.5 0 0 1-.5-.5V2.356a.5.5 0 0 0-.912-.284L3.791 14.466a.5.5 0 0 0 .411.784h6.048a.5.5 0 0 1 .5.5v5.894a.5.5 0 0 0 .912.284l8.547-12.394a.5.5 0 0 0-.411-.784Z"
       />
     </svg>
   );

@@ -81,11 +81,18 @@ export interface RichContent {
 }
 
 export interface LumeColumn {
+	id: number;
 	content: string;
 	name: string;
 	description?: string;
 	author?: string;
 	logo?: string;
+}
+
+export interface EventColumns {
+	type: "add" | "remove" | "update" | "left" | "right";
+	id?: number;
+	column?: LumeColumn;
 }
 
 export interface Opengraph {
