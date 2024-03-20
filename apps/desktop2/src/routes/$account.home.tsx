@@ -15,7 +15,7 @@ export const Route = createFileRoute("/$account/home")({
 
 const COLS: LumeColumn[] = [
   { id: 1, name: "Newsfeed", content: "/newsfeed" },
-  { id: 2, name: "Lume Store", content: "/store/official" },
+  { id: 9999, name: "Lume Store", content: "/store/official" },
 ];
 
 function Screen() {
@@ -43,34 +43,36 @@ function Screen() {
     });
   };
 
-  const add = async (column: LumeColumn) => {
-    setColumns((prev) => [...prev, column]);
-    vlistRef?.current.scrollToIndex(columns.length);
+  const add = (column: LumeColumn) => {
+    const col = columns.find((item) => item.id === column.id);
+    if (!col) {
+      setColumns((prev) => [...prev, column]);
+    }
   };
 
-  const remove = async (id: number) => {
+  const remove = (id: number) => {
     setColumns((prev) => prev.filter((t) => t.id !== id));
   };
 
   useEffect(() => {
-    async function listenUpdateColumn() {
+    const listenColumnEvent = async () => {
       const mainWindow = getCurrent();
-      unlisten.current = await mainWindow.listen<EventColumns>(
-        "columns",
-        (data) => {
-          if (data.payload.type === "add") add(data.payload.column);
-          if (data.payload.type === "remove") remove(data.payload.id);
-        },
-      );
-    }
+      if (!unlisten) {
+        unlisten.current = await mainWindow.listen<EventColumns>(
+          "columns",
+          (data) => {
+            if (data.payload.type === "add") add(data.payload.column);
+            if (data.payload.type === "remove") remove(data.payload.id);
+          },
+        );
+      }
+    };
 
     // listen for column changes
-    listenUpdateColumn();
+    listenColumnEvent();
 
     // clean up
-    return () => {
-      if (unlisten.current) unlisten.current();
-    };
+    return () => unlisten.current?.();
   }, []);
 
   return (

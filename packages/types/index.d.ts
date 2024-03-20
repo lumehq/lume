@@ -82,11 +82,12 @@ export interface RichContent {
 
 export interface LumeColumn {
 	id: number;
-	content: string;
 	name: string;
+	content: URL | string;
 	description?: string;
 	author?: string;
-	logo?: string;
+	logo?: URL | string;
+	cover?: URL | string;
 }
 
 export interface EventColumns {

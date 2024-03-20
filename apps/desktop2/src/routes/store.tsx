@@ -1,4 +1,4 @@
-import { GroupFeedsIcon, LaurelIcon } from "@lume/icons";
+import { GlobalIcon, LaurelIcon } from "@lume/icons";
 import { Column } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
@@ -38,7 +38,7 @@ function Screen() {
                     : "opacity-50",
                 )}
               >
-                <GroupFeedsIcon className="size-5" />
+                <GlobalIcon className="size-5" />
                 Community
               </div>
             )}

@@ -4,8 +4,8 @@ export function PlusIcon(props: JSX.IntrinsicElements["svg"]) {
       <path
         stroke="currentColor"
         strokeLinecap="round"
-        strokeWidth="2"
-        d="M12 4v8m0 0v8m0-8H4m8 0h8"
+        strokeWidth="1.5"
+        d="M12 6.75V12m0 0v5.25M12 12H6.75M12 12h5.25"
       />
     </svg>
   );

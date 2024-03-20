@@ -1,4 +1,4 @@
-import { ComposeFilledIcon, HorizontalDotsIcon } from "@lume/icons";
+import { ComposeFilledIcon, HorizontalDotsIcon, PlusIcon } from "@lume/icons";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
@@ -27,7 +27,7 @@ function App() {
             type="button"
             className="inline-flex size-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-600"
           >
-            <HorizontalDotsIcon className="size-5" />
+            <PlusIcon className="size-5" />
           </button>
         </div>
         <div className="flex items-center gap-3">

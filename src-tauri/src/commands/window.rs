@@ -13,7 +13,7 @@ pub fn create_column(
 ) -> Result<String, String> {
   match app_handle.get_window("main") {
     Some(main_window) => match app_handle.get_webview(label) {
-      Some(_) => Err("Webview is exist".into()),
+      Some(_) => Ok(label.into()),
       None => {
         let path = PathBuf::from(url);
         let webview_url = WebviewUrl::App(path);
@@ -27,7 +27,7 @@ pub fn create_column(
           LogicalSize::new(width, height),
         ) {
           Ok(webview) => Ok(webview.label().into()),
-          Err(_) => Err("Something is wrong".into()),
+          Err(_) => Err("Create webview failed".into()),
         }
       }
     },
@@ -36,7 +36,7 @@ pub fn create_column(
 }
 
 #[tauri::command]
-pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, String> {
+pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, ()> {
   match app_handle.get_webview(label) {
     Some(webview) => {
       if let Ok(_) = webview.close() {
@@ -45,7 +45,7 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, S
         Ok(false)
       }
     }
-    None => Err("Webview not found".into()),
+    None => Ok(true),
   }
 }
 

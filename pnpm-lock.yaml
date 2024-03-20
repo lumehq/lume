@@ -105,6 +105,9 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.0
         version: 1.2.0
+      nanoid:
+        specifier: ^5.0.6
+        version: 5.0.6
       nostr-tools:
         specifier: ^2.3.1
         version: 2.3.1(typescript@5.4.2)

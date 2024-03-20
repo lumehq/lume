@@ -24,6 +24,7 @@
     "@tanstack/react-router": "^1.20.0",
     "i18next": "^23.10.1",
     "i18next-resources-to-backend": "^1.2.0",
+    "nanoid": "^5.0.6",
     "nostr-tools": "^2.3.1",
     "react": "^18.2.0",
     "react-currency-input-field": "^3.8.0",

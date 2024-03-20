@@ -6,7 +6,7 @@ export const Route = createFileRoute("/store/community")({
 
 function Screen() {
   return (
-    <div className="flex flex-col gap-3 px-3 pt-3">
+    <div className="flex flex-col gap-3 p-3">
       <p>Coming Soon</p>
     </div>
   );

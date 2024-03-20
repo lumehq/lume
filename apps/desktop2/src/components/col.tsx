@@ -15,7 +15,7 @@ export function Col({
   const window = useMemo(() => getCurrent(), []);
   const container = useRef<HTMLDivElement>(null);
 
-  const [webview, setWebview] = useState("");
+  const [webview, setWebview] = useState<string>(null);
 
   const createWebview = async () => {
     const rect = container.current.getBoundingClientRect();
@@ -36,6 +36,7 @@ export function Col({
   };
 
   const closeWebview = async () => {
+    if (!webview) return;
     await invoke("close_column", {
       label: webview,
     });
@@ -67,7 +68,7 @@ export function Col({
     return () => {
       closeWebview();
     };
-  }, [window]);
+  }, []);
 
   return <div ref={container} className="h-full w-[440px] shrink-0 p-2" />;
 }
