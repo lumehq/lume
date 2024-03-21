@@ -11,7 +11,8 @@ export const Route = createFileRoute("/store/official")({
         name: "For you",
         content: "/foryou",
         logo: "",
-        cover: "",
+        cover: "/foryou.png",
+        coverRetina: "/foryou@2x.png",
         author: "Lume",
         description: "Keep up to date with content based on your interests.",
       },
@@ -20,7 +21,8 @@ export const Route = createFileRoute("/store/official")({
         name: "Group Feeds",
         content: "/group",
         logo: "",
-        cover: "",
+        cover: "/group.png",
+        coverRetina: "/group@2x.png",
         author: "Lume",
         description: "Collective of people you're interested in.",
       },
@@ -29,7 +31,8 @@ export const Route = createFileRoute("/store/official")({
         name: "Antenas",
         content: "/antenas",
         logo: "",
-        cover: "",
+        cover: "/antenas.png",
+        coverRetina: "/antenas@2x.png",
         author: "Lume",
         description: "Keep track to specific content.",
       },
@@ -38,7 +41,8 @@ export const Route = createFileRoute("/store/official")({
         name: "Trending",
         content: "/trending",
         logo: "",
-        cover: "",
+        cover: "/trending.png",
+        coverRetina: "/trending@2x.png",
         author: "Lume",
         description: "What is trending on Nostr?.",
       },
@@ -47,7 +51,8 @@ export const Route = createFileRoute("/store/official")({
         name: "Global",
         content: "/global",
         logo: "",
-        cover: "",
+        cover: "/global.png",
+        coverRetina: "/global@2x.png",
         author: "Lume",
         description: "All events from connected relays.",
       },
@@ -56,7 +61,8 @@ export const Route = createFileRoute("/store/official")({
         name: "Waifu",
         content: "/waifu",
         logo: "",
-        cover: "",
+        cover: "/waifu.png",
+        coverRetina: "/waifu@2x.png",
         author: "Lume",
         description: "Show a random waifu image to boost your morale.",
       },
@@ -80,11 +86,21 @@ function Screen() {
           key={column.id}
           className="relative h-[200px] w-full overflow-hidden rounded-xl bg-gradient-to-tr from-orange-100 to-blue-200 px-3 pt-3"
         >
-          <div className="absolute bottom-0 left-0 h-16 w-full bg-black/40 px-3 backdrop-blur-xl">
+          {column.cover ? (
+            <img
+              src={column.cover}
+              srcSet={column.coverRetina}
+              alt={column.name}
+              loading="lazy"
+              decoding="async"
+              className="absolute left-0 top-0 z-10 h-full w-full object-cover"
+            />
+          ) : null}
+          <div className="absolute bottom-0 left-0 z-20 h-16 w-full bg-black/40 px-3 backdrop-blur-xl">
             <div className="flex h-full items-center justify-between">
               <div>
                 <h1 className="font-semibold text-white">{column.name}</h1>
-                <p className="max-w-[18rem] truncate text-sm text-white/80">
+                <p className="max-w-[24rem] truncate text-sm text-white/80">
                   {column.description}
                 </p>
               </div>

@@ -1,6 +1,6 @@
 import { Col } from "@/components/col";
 import { Toolbar } from "@/components/toolbar";
-import { LoaderIcon } from "@lume/icons";
+import { LoaderIcon, PlusIcon } from "@lume/icons";
 import { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { UnlistenFn } from "@tauri-apps/api/event";
@@ -13,9 +13,8 @@ export const Route = createFileRoute("/$account/home")({
   pendingComponent: Pending,
 });
 
-const COLS: LumeColumn[] = [
+const DEFAULT_COLUMNS: LumeColumn[] = [
   { id: 1, name: "Newsfeed", content: "/newsfeed" },
-  { id: 9999, name: "Lume Store", content: "/store/official" },
 ];
 
 function Screen() {
@@ -23,7 +22,7 @@ function Screen() {
   const vlistRef = useRef<VListHandle>(null);
   const unlisten = useRef<UnlistenFn>(null);
 
-  const [columns, setColumns] = useState(COLS);
+  const [columns, setColumns] = useState(DEFAULT_COLUMNS);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isScroll, setIsScroll] = useState(false);
 

@@ -65,6 +65,14 @@ export function displayNpub(pubkey: string, len: number) {
 	);
 }
 
+export function displayLongHandle(str: string) {
+	const split = str.split("@");
+	const handle = split[0];
+	const service = split[1];
+
+	return handle.substring(0, 16) + "..." + "@" + service;
+}
+
 // convert number to K, M, B, T, etc.
 export const compactNumber = Intl.NumberFormat("en", { notation: "compact" });
 

@@ -86,8 +86,10 @@ export interface LumeColumn {
 	content: URL | string;
 	description?: string;
 	author?: string;
-	logo?: URL | string;
-	cover?: URL | string;
+	logo?: string;
+	cover?: string;
+	coverRetina?: string;
+	featured?: boolean;
 }
 
 export interface EventColumns {
