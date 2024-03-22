@@ -1,6 +1,6 @@
 import { Col } from "@/components/col";
 import { Toolbar } from "@/components/toolbar";
-import { LoaderIcon, PlusIcon } from "@lume/icons";
+import { LoaderIcon } from "@lume/icons";
 import { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { UnlistenFn } from "@tauri-apps/api/event";
@@ -14,13 +14,14 @@ export const Route = createFileRoute("/$account/home")({
 });
 
 const DEFAULT_COLUMNS: LumeColumn[] = [
-  { id: 1, name: "Newsfeed", content: "/newsfeed" },
+  { id: 10001, name: "Newsfeed", content: "/newsfeed" },
+  { id: 10002, name: "For You", content: "/foryou" },
+  { id: 10000, name: "Open Lume Store", content: "/open" },
 ];
 
 function Screen() {
   const search = Route.useSearch();
   const vlistRef = useRef<VListHandle>(null);
-  const unlisten = useRef<UnlistenFn>(null);
 
   const [columns, setColumns] = useState(DEFAULT_COLUMNS);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -43,27 +44,51 @@ function Screen() {
   };
 
   const add = (column: LumeColumn) => {
-    const col = columns.find((item) => item.id === column.id);
-    if (!col) {
-      setColumns((prev) => [...prev, column]);
+    const existed = columns.find((item) => item.id === column.id);
+    if (!existed) {
+      let lastColIndex: number;
+      const openColIndex = columns.findIndex((item) => item.id === 10000);
+      const storeColIndex = columns.findIndex((item) => item.id === 9999);
+
+      if (storeColIndex) {
+        lastColIndex = storeColIndex;
+      } else {
+        lastColIndex = openColIndex;
+      }
+
+      const newColumns = [
+        ...columns.slice(0, lastColIndex),
+        column,
+        ...columns.slice(lastColIndex),
+      ];
+
+      // update state & scroll to new column
+      setColumns(newColumns);
+      setSelectedIndex(newColumns.length - 1);
+      vlistRef.current.scrollToIndex(newColumns.length - 1, {
+        align: "center",
+      });
     }
   };
 
   const remove = (id: number) => {
     setColumns((prev) => prev.filter((t) => t.id !== id));
+    setSelectedIndex(columns.length);
+    vlistRef.current.scrollToIndex(columns.length, {
+      align: "center",
+    });
   };
 
   useEffect(() => {
+    let unlisten: UnlistenFn = undefined;
+
     const listenColumnEvent = async () => {
       const mainWindow = getCurrent();
       if (!unlisten) {
-        unlisten.current = await mainWindow.listen<EventColumns>(
-          "columns",
-          (data) => {
-            if (data.payload.type === "add") add(data.payload.column);
-            if (data.payload.type === "remove") remove(data.payload.id);
-          },
-        );
+        unlisten = await mainWindow.listen<EventColumns>("columns", (data) => {
+          if (data.payload.type === "add") add(data.payload.column);
+          if (data.payload.type === "remove") remove(data.payload.id);
+        });
       }
     };
 
@@ -71,7 +96,12 @@ function Screen() {
     listenColumnEvent();
 
     // clean up
-    return () => unlisten.current?.();
+    return () => {
+      if (unlisten) {
+        unlisten();
+        unlisten = null;
+      }
+    };
   }, []);
 
   return (
@@ -106,9 +136,9 @@ function Screen() {
         }}
         className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
       >
-        {columns.map((column, index) => (
+        {columns.map((column) => (
           <Col
-            key={column.id + index}
+            key={column.id}
             column={column}
             // @ts-ignore, yolo !!!
             account={search.acccount}

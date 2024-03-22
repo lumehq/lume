@@ -23,7 +23,7 @@ export function UserNip05({ className }: { className?: string }) {
       <p className={cn("text-sm", className)}>
         {!user.profile?.nip05
           ? displayNpub(user.pubkey, 16)
-          : user.profile?.nip05.length > 16
+          : user.profile?.nip05.length > 50
             ? displayLongHandle(user.profile?.nip05)
             : user.profile.nip05?.replace("_@", "")}
       </p>

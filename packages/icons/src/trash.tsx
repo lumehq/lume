@@ -1,18 +1,10 @@
-export function TrashIcon(props: JSX.IntrinsicElements['svg']) {
+export function TrashIcon(props: JSX.IntrinsicElements["svg"]) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="24"
-      height="24"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    >
-      <path d="m16 6-1.106-2.211a3.236 3.236 0 0 0-5.788 0L8 6M4 6h16m-10 5v5m4-5v5M6 6h12v9c0 1.864 0 2.796-.305 3.53a4 4 0 0 1-2.164 2.165C14.796 21 13.864 21 12 21s-2.796 0-3.53-.305a4 4 0 0 1-2.166-2.164C6 17.796 6 16.864 6 15V6Z" />
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="m5.63 19.379.748-.049-.749.049Zm12.74 0-.748-.049.749.049ZM2.75 5a.75.75 0 0 0 0 1.5V5Zm18.5 1.5a.75.75 0 0 0 0-1.5v1.5Zm-6.102-.563a.75.75 0 1 0 1.452-.374l-1.452.374ZM4.002 5.798l.879 13.63 1.497-.098-.88-13.628-1.496.096ZM7.625 22h8.75v-1.5h-8.75V22Zm11.494-2.573L20 5.798l-1.497-.096-.88 13.629 1.497.096ZM19.25 5H4.75v1.5h14.5V5ZM2.75 6.5h2V5h-2v1.5Zm16.5 0h2V5h-2v1.5ZM16.375 22a2.75 2.75 0 0 0 2.744-2.573l-1.497-.096a1.25 1.25 0 0 1-1.247 1.169V22ZM4.88 19.427A2.75 2.75 0 0 0 7.625 22v-1.5a1.25 1.25 0 0 1-1.247-1.17l-1.497.097ZM12 3.5a3.252 3.252 0 0 1 3.148 2.437l1.452-.374A4.752 4.752 0 0 0 12 2v1.5ZM8.852 5.937A3.252 3.252 0 0 1 12 3.5V2a4.752 4.752 0 0 0-4.6 3.563l1.452.374Z"
+      />
     </svg>
   );
 }

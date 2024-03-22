@@ -15,7 +15,7 @@ export const Route = createLazyFileRoute("/group")({
 
 export function Screen() {
   // @ts-ignore, just work!!!
-  const { name, account } = Route.useSearch();
+  const { id, name, account } = Route.useSearch();
   const { t } = useTranslation();
   const {
     data,
@@ -38,7 +38,7 @@ export function Screen() {
 
   return (
     <Column.Root>
-      <Column.Header name={name} />
+      <Column.Header id={id} name={name} />
       <Column.Content>
         {isLoading || isRefetching ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">

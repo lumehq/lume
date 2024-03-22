@@ -18,7 +18,6 @@ pub fn create_column(
         let path = PathBuf::from(url);
         let webview_url = WebviewUrl::App(path);
         let builder = tauri::webview::WebviewBuilder::new(label, webview_url)
-          .auto_resize()
           .user_agent("Lume/4.0")
           .transparent(true);
         match main_window.add_child(

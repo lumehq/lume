@@ -7,7 +7,7 @@ export const Route = createFileRoute("/store/official")({
   loader: () => {
     const columns: LumeColumn[] = [
       {
-        id: 10000,
+        id: 10002,
         name: "For you",
         content: "/foryou",
         logo: "",
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/store/official")({
         description: "Keep up to date with content based on your interests.",
       },
       {
-        id: 10001,
+        id: 10003,
         name: "Group Feeds",
         content: "/group",
         logo: "",
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/store/official")({
         description: "Collective of people you're interested in.",
       },
       {
-        id: 10002,
+        id: 10004,
         name: "Antenas",
         content: "/antenas",
         logo: "",
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/store/official")({
         description: "Keep track to specific content.",
       },
       {
-        id: 10003,
+        id: 10005,
         name: "Trending",
         content: "/trending",
         logo: "",
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/store/official")({
         description: "What is trending on Nostr?.",
       },
       {
-        id: 10004,
+        id: 10006,
         name: "Global",
         content: "/global",
         logo: "",
@@ -55,16 +55,6 @@ export const Route = createFileRoute("/store/official")({
         coverRetina: "/global@2x.png",
         author: "Lume",
         description: "All events from connected relays.",
-      },
-      {
-        id: 10005,
-        name: "Waifu",
-        content: "/waifu",
-        logo: "",
-        cover: "/waifu.png",
-        coverRetina: "/waifu@2x.png",
-        author: "Lume",
-        description: "Show a random waifu image to boost your morale.",
       },
     ];
     return columns;

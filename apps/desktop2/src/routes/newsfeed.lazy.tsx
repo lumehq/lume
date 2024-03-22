@@ -15,7 +15,7 @@ export const Route = createLazyFileRoute("/newsfeed")({
 
 export function Screen() {
   // @ts-ignore, just work!!!
-  const { name, account } = Route.useSearch();
+  const { id, name, account } = Route.useSearch();
   const { t } = useTranslation();
   const {
     data,
@@ -38,7 +38,7 @@ export function Screen() {
 
   return (
     <Column.Root>
-      <Column.Header name={name} />
+      <Column.Header id={id} name={name} />
       <Column.Content>
         {isLoading || isRefetching ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
@@ -61,11 +61,13 @@ export function Screen() {
           </Virtualizer>
         )}
         <div className="flex h-20 items-center justify-center">
-          {hasNextPage ? (
+          {!isLoading && hasNextPage ? (
             <button
               type="button"
               onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
+              disabled={
+                !hasNextPage || isFetchingNextPage || isFetchingNextPage
+              }
               className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
             >
               {isFetchingNextPage ? (

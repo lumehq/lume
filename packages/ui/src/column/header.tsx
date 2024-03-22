@@ -1,16 +1,24 @@
-import { ChevronDownIcon, RefreshIcon } from "@lume/icons";
+import { ChevronDownIcon, RefreshIcon, TrashIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { getCurrent } from "@tauri-apps/api/window";
 
 export function ColumnHeader({
+  id,
   name,
   className,
 }: {
+  id: number;
   name: string;
   className?: string;
 }) {
   const reload = () => {
     window.location.reload();
+  };
+
+  const close = async () => {
+    const mainWindow = getCurrent();
+    await mainWindow.emit("columns", { type: "remove", id });
   };
 
   return (
@@ -35,10 +43,17 @@ export function ColumnHeader({
         >
           <DropdownMenu.Item
             onClick={reload}
-            className="inline-flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+            className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
           >
             <RefreshIcon className="size-4" />
             Reload
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
+            onClick={close}
+            className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+          >
+            <TrashIcon className="size-4" />
+            Close
           </DropdownMenu.Item>
           <DropdownMenu.Arrow className="fill-black dark:fill-white" />
         </DropdownMenu.Content>
