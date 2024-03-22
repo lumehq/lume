@@ -7,6 +7,7 @@ import { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export const Route = createFileRoute("/$account/home")({
   component: Screen,
@@ -15,7 +16,6 @@ export const Route = createFileRoute("/$account/home")({
 
 const DEFAULT_COLUMNS: LumeColumn[] = [
   { id: 10001, name: "Newsfeed", content: "/newsfeed" },
-  { id: 10002, name: "For You", content: "/foryou" },
   { id: 10000, name: "Open Lume Store", content: "/open" },
 ];
 
@@ -27,11 +27,14 @@ function Screen() {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isScroll, setIsScroll] = useState(false);
 
+  useHotkeys("left", () => goLeft());
+  useHotkeys("right", () => goRight());
+
   const goLeft = () => {
     const prevIndex = Math.max(selectedIndex - 1, 0);
     setSelectedIndex(prevIndex);
     vlistRef.current.scrollToIndex(prevIndex, {
-      align: "start",
+      align: "center",
     });
   };
 
@@ -39,7 +42,7 @@ function Screen() {
     const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
     setSelectedIndex(nextIndex);
     vlistRef.current.scrollToIndex(nextIndex, {
-      align: "end",
+      align: "center",
     });
   };
 

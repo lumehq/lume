@@ -16,7 +16,22 @@ function Screen() {
 
   return (
     <Column.Root shadow={false} background={false}>
-      <Column.Content className="flex h-full w-full items-center justify-center">
+      <Column.Content className="relative flex h-full w-full items-center justify-center">
+        <div className="group absolute left-0 top-0 z-10 h-full w-12">
+          <button
+            type="button"
+            onClick={() =>
+              install({
+                id: 9999,
+                name: "Lume Store",
+                content: "/store/official",
+              })
+            }
+            className="flex h-full w-full items-center justify-center rounded-xl bg-transparent transition-colors duration-100 ease-in-out group-hover:bg-black/5 dark:group-hover:bg-white/5"
+          >
+            <PlusIcon className="size-6 scale-0 transform transition-transform duration-150 ease-in-out will-change-transform group-hover:scale-100" />
+          </button>
+        </div>
         <button
           type="button"
           onClick={() =>
