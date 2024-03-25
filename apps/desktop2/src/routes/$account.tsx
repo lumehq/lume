@@ -1,4 +1,4 @@
-import { ComposeFilledIcon, HorizontalDotsIcon, PlusIcon } from "@lume/icons";
+import { ComposeFilledIcon, PlusIcon } from "@lume/icons";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";

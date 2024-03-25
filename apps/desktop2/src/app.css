@@ -7,11 +7,11 @@
 }
 
 *::-webkit-scrollbar-track {
-  @apply bg-white dark:bg-black;
+  @apply bg-transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  @apply bg-black dark:bg-white rounded;
+  @apply rounded bg-black dark:bg-white;
 }
 
 @layer utilities {

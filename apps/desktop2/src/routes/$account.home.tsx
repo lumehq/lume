@@ -7,7 +7,6 @@ import { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
-import { useHotkeys } from "react-hotkeys-hook";
 
 export const Route = createFileRoute("/$account/home")({
   component: Screen,
@@ -26,9 +25,6 @@ function Screen() {
   const [columns, setColumns] = useState(DEFAULT_COLUMNS);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isScroll, setIsScroll] = useState(false);
-
-  useHotkeys("left", () => goLeft());
-  useHotkeys("right", () => goRight());
 
   const goLeft = () => {
     const prevIndex = Math.max(selectedIndex - 1, 0);

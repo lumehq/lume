@@ -40,11 +40,13 @@ export function Screen() {
     <Column.Root>
       <Column.Header id={id} name={name} />
       <Column.Content>
-        {isLoading || isRefetching ? (
+        {isLoading ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
-            <LoaderIcon className="size-5 animate-spin" />
+            <button type="button" className="size-5" disabled>
+              <LoaderIcon className="size-5 animate-spin" />
+            </button>
           </div>
-        ) : !data.length ? (
+        ) : !data ? (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 rounded-xl bg-neutral-50 p-5 dark:bg-neutral-950">
               <InfoIcon className="size-6" />
@@ -61,13 +63,11 @@ export function Screen() {
           </Virtualizer>
         )}
         <div className="flex h-20 items-center justify-center">
-          {!isLoading && hasNextPage ? (
+          {data?.length && hasNextPage ? (
             <button
               type="button"
               onClick={() => fetchNextPage()}
-              disabled={
-                !hasNextPage || isFetchingNextPage || isFetchingNextPage
-              }
+              disabled={isFetchingNextPage || isFetchingNextPage}
               className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
             >
               {isFetchingNextPage ? (

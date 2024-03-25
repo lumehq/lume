@@ -31,10 +31,10 @@ pub async fn save_key(
   password: &str,
   app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<String, String> {
   let secret_key: Result<SecretKey, String>;
 
-  if nsec.starts_with("ncrypto") {
+  if nsec.starts_with("ncryptsec") {
     let encrypted_key = EncryptedSecretKey::from_bech32(nsec).unwrap();
     secret_key = match encrypted_key.to_secret_key(password) {
       Ok(val) => Ok(val),
@@ -68,7 +68,7 @@ pub async fn save_key(
       // Update client's signer
       client.set_signer(Some(signer)).await;
 
-      Ok(true)
+      Ok(npub)
     }
     Err(msg) => Err(msg.into()),
   }

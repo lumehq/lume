@@ -71,7 +71,7 @@ export class Ark {
 
 	public async save_account(nsec: string, password: string = "") {
 		try {
-			const cmd: boolean = await invoke("save_key", {
+			const cmd: string = await invoke("save_key", {
 				nsec,
 				password,
 			});

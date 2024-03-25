@@ -13,11 +13,8 @@ export const Route = createFileRoute("/")({
     switch (accounts.length) {
       // Guest account
       case 0:
-        const guest = await ark.create_guest_account();
         throw redirect({
-          to: "/$account/home",
-          params: { account: guest },
-          search: { guest: true },
+          to: "/landing",
           replace: true,
         });
       // Only 1 account, skip account selection screen
