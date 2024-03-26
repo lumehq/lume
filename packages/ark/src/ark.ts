@@ -536,6 +536,7 @@ export class Ark {
 			title: "Editor",
 			url,
 			minWidth: 500,
+			minHeight: 400,
 			width: 600,
 			height: 400,
 			hiddenTitle: true,

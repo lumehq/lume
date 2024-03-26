@@ -19,6 +19,9 @@ pub struct Nostr {
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
+      #[cfg(target_os = "macos")]
+      app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
       let home_dir = handle.path().home_dir().unwrap();
@@ -65,6 +68,13 @@ fn main() {
       });
 
       Ok(())
+    })
+    .on_window_event(|window, event| match event {
+      tauri::WindowEvent::CloseRequested { api, .. } => {
+        window.hide().unwrap();
+        api.prevent_close();
+      }
+      _ => {}
     })
     .plugin(tauri_plugin_store::Builder::default().build())
     .plugin(tauri_plugin_clipboard_manager::init())
@@ -121,22 +131,6 @@ fn main() {
       commands::window::close_column,
       commands::window::reposition_column
     ])
-    .build(tauri::generate_context!())
+    .run(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(
-      #[allow(unused_variables)]
-      |app, event| {
-        #[cfg(any(target_os = "macos"))]
-        if let tauri::RunEvent::Opened { urls } = event {
-          if let Some(w) = app.get_webview_window("main") {
-            let urls = urls
-              .iter()
-              .map(|u| u.as_str())
-              .collect::<Vec<_>>()
-              .join(",");
-            let _ = w.eval(&format!("window.onFileOpen(`{urls}`)"));
-          }
-        }
-      },
-    );
 }
