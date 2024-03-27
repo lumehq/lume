@@ -58,7 +58,7 @@ function MainNote({ data }: { data: Event }) {
           </User.Root>
         </User.Provider>
         <Note.Thread className="mb-2" />
-        <Note.Content className="min-w-0" />
+        <Note.Content className="min-w-0" compact={false} />
         <div className="mt-4 flex items-center justify-between">
           <div className="-ml-1 inline-flex items-center gap-4">
             <Note.Repost />

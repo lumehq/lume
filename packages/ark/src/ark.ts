@@ -504,10 +504,11 @@ export class Ark {
 			title: "Thread",
 			url: `/events/${id}`,
 			minWidth: 500,
-			width: 600,
+			width: 500,
 			height: 800,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",
+			center: false,
 		});
 	}
 

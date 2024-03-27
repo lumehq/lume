@@ -1,5 +1,5 @@
 import { ComposeFilledIcon, PlusIcon } from "@lume/icons";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
 import { useArk } from "@lume/ark";
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/$account")({
 
 function App() {
   const ark = useArk();
+  const navigate = useNavigate();
   const { platform } = Route.useRouteContext();
 
   return (
@@ -25,6 +26,7 @@ function App() {
           <Accounts />
           <button
             type="button"
+            onClick={() => navigate({ to: "/landing" })}
             className="inline-flex size-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-600"
           >
             <PlusIcon className="size-5" />
