@@ -17,14 +17,8 @@ export function Screen() {
   // @ts-ignore, just work!!!
   const { id, name, account } = Route.useSearch();
   const { t } = useTranslation();
-  const {
-    data,
-    hasNextPage,
-    isLoading,
-    isRefetching,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useEvents("local", account);
+  const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
+    useEvents("local", account);
 
   const renderItem = (event: Event) => {
     if (!event) return;
@@ -46,13 +40,17 @@ export function Screen() {
               <LoaderIcon className="size-5 animate-spin" />
             </button>
           </div>
-        ) : !data ? (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 rounded-xl bg-neutral-50 p-5 dark:bg-neutral-950">
+        ) : !data.length ? (
+          <div className="flex flex-col gap-3 p-3">
+            <div className="flex items-center gap-2 rounded-xl bg-neutral-100 p-5 dark:bg-neutral-900">
               <InfoIcon className="size-6" />
               <div>
-                <p className="leading-tight">{t("emptyFeedTitle")}</p>
-                <p className="leading-tight">{t("emptyFeedSubtitle")}</p>
+                <p className="font-medium leading-tight">
+                  {t("global.emptyFeedTitle")}
+                </p>
+                <p className="leading-tight text-neutral-700 dark:text-neutral-300">
+                  {t("global.emptyFeedSubtitle")}
+                </p>
               </div>
             </div>
             <Suggest />
@@ -62,8 +60,9 @@ export function Screen() {
             {data.map((item) => renderItem(item))}
           </Virtualizer>
         )}
-        <div className="flex h-20 items-center justify-center">
-          {data?.length && hasNextPage ? (
+
+        {data?.length && hasNextPage ? (
+          <div className="flex h-20 items-center justify-center">
             <button
               type="button"
               onClick={() => fetchNextPage()}
@@ -79,8 +78,8 @@ export function Screen() {
                 </>
               )}
             </button>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </Column.Content>
     </Column.Root>
   );

@@ -1,7 +1,6 @@
 import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -32,9 +31,8 @@ function Screen() {
     try {
       const npub = await ark.save_account(key, password);
       navigate({
-        to: "/$account/home",
-        params: { account: npub },
-        search: { onboarding: true },
+        to: "/auth/settings",
+        search: { account: npub, new: false },
         replace: true,
       });
     } catch (e) {
@@ -45,57 +43,50 @@ function Screen() {
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-8">
-        <div className="flex flex-col items-center text-center">
-          <h1 className="text-2xl font-semibold">{t("login.title")}</h1>
-          <p className="text-lg leading-snug text-neutral-600 dark:text-neutral-500">
-            {t("login.subtitle")}
-          </p>
-        </div>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="key"
-                className="font-medium text-neutral-900 dark:text-neutral-100"
-              >
-                Private Key
-              </label>
-              <input
-                name="key"
-                type="text"
-                placeholder="nsec or ncryptsec..."
-                value={key}
-                onChange={(e) => setKey(e.target.value)}
-                className="h-11 w-full rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="password"
-                className="font-medium text-neutral-900 dark:text-neutral-100"
-              >
-                Password (Optional)
-              </label>
-              <input
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-11 w-full rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
-              />
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={submit}
-            disabled={loading}
-            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-blue-500 text-lg font-medium text-white hover:bg-blue-600"
+    <div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
+      <div className="text-center">
+        <h3 className="text-xl font-semibold">Continue with Private Key</h3>
+      </div>
+      <div className="flex w-full flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <label
+            htmlFor="key"
+            className="font-medium text-neutral-900 dark:text-neutral-100"
           >
-            {loading ? <LoaderIcon className="size-5 animate-spin" /> : "Login"}
-          </button>
+            Private Key
+          </label>
+          <input
+            name="key"
+            type="text"
+            placeholder="nsec or ncryptsec..."
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+          />
         </div>
+        <div className="flex flex-col gap-1">
+          <label
+            htmlFor="password"
+            className="font-medium text-neutral-900 dark:text-neutral-100"
+          >
+            Password (Optional)
+          </label>
+          <input
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={submit}
+          disabled={loading}
+          className="mt-3 inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+        >
+          {loading ? <LoaderIcon className="size-4 animate-spin" /> : "Login"}
+        </button>
       </div>
     </div>
   );

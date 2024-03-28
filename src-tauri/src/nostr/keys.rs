@@ -141,9 +141,6 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
       }
     }
 
-    // #TODO
-    // Subscribe new event for activity and local newsfeed
-
     Ok(true)
   } else {
     Err("nsec not found".into())

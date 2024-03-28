@@ -32,7 +32,7 @@ function Screen() {
           </div>
           <div className="mx-auto flex w-full max-w-sm flex-col gap-4">
             <Link
-              to="/auth/create"
+              to="/auth/new/profile"
               className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white font-medium text-blue-500 backdrop-blur-lg hover:bg-white/90"
             >
               {t("welcome.signup")}

@@ -3,6 +3,7 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
+use url::Url;
 
 #[derive(serde::Serialize)]
 pub struct CacheContact {
@@ -99,22 +100,31 @@ pub async fn create_profile(
   lud16: &str,
   website: &str,
   state: State<'_, Nostr>,
-) -> Result<EventId, ()> {
+) -> Result<EventId, String> {
   let client = &state.client;
-  let metadata = Metadata::new()
+  let mut metadata = Metadata::new()
     .name(name)
     .display_name(display_name)
     .about(about)
     .nip05(nip05)
-    .lud16(lud16)
-    .picture(Url::parse(picture).unwrap())
-    .banner(Url::parse(banner).unwrap())
-    .website(Url::parse(website).unwrap());
+    .lud16(lud16);
+
+  if let Ok(url) = Url::parse(picture) {
+    metadata = metadata.picture(url)
+  }
+
+  if let Ok(url) = Url::parse(banner) {
+    metadata = metadata.banner(url)
+  }
+
+  if let Ok(url) = Url::parse(website) {
+    metadata = metadata.website(url)
+  }
 
   if let Ok(event_id) = client.set_metadata(&metadata).await {
     Ok(event_id)
   } else {
-    Err(())
+    Err("Create profile failed".into())
   }
 }
 
@@ -230,7 +240,7 @@ pub async fn set_settings(content: &str, state: State<'_, Nostr>) -> Result<Even
   if let Ok(event_id) = client.send_event_builder(builder).await {
     Ok(event_id)
   } else {
-    Err("Set interest failed".into())
+    Err("Set settings failed".into())
   }
 }
 

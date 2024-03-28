@@ -42,10 +42,6 @@ fn main() {
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
         client
-          .add_relay("wss://nostr.mutinywallet.com")
-          .await
-          .unwrap_or_default();
-        client
           .add_relay("wss://relay.nostr.band")
           .await
           .unwrap_or_default();
