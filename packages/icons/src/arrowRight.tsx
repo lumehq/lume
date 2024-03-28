@@ -5,8 +5,8 @@ export function ArrowRightIcon(props: JSX.IntrinsicElements["svg"]) {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2"
-        d="m14 6 6 6-6 6m5-6H4"
+        strokeWidth="1.5"
+        d="M14 5.75 20.25 12 14 18.25M19.5 12H3.75"
       />
     </svg>
   );

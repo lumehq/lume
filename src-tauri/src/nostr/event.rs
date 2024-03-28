@@ -171,43 +171,37 @@ pub async fn publish(
 }
 
 #[tauri::command]
-pub async fn repost(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(pubkey).unwrap();
-  let event_id = EventId::from_hex(id).unwrap();
+  let event = Event::from_json(raw).unwrap();
 
-  let event = client
-    .repost_event(event_id, public_key)
-    .await
-    .expect("Repost failed");
-
-  Ok(event)
+  if let Ok(event_id) = client.repost(&event, None).await {
+    Ok(event_id)
+  } else {
+    Err("Repost failed".into())
+  }
 }
 
 #[tauri::command]
-pub async fn upvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+pub async fn upvote(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(pubkey).unwrap();
-  let event_id = EventId::from_hex(id).unwrap();
+  let event = Event::from_json(raw).unwrap();
 
-  let event = client
-    .like(event_id, public_key)
-    .await
-    .expect("Upvote failed");
-
-  Ok(event)
+  if let Ok(event_id) = client.like(&event).await {
+    Ok(event_id)
+  } else {
+    Err("Upvote failed".into())
+  }
 }
 
 #[tauri::command]
-pub async fn downvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+pub async fn downvote(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(pubkey).unwrap();
-  let event_id = EventId::from_hex(id).unwrap();
+  let event = Event::from_json(raw).unwrap();
 
-  let event = client
-    .dislike(event_id, public_key)
-    .await
-    .expect("Downvote failed");
-
-  Ok(event)
+  if let Ok(event_id) = client.dislike(&event).await {
+    Ok(event_id)
+  } else {
+    Err("Downvote failed".into())
+  }
 }

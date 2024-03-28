@@ -18,14 +18,22 @@ import { VideoPreview } from "./preview/video";
 import { ImagePreview } from "./preview/image";
 import reactStringReplace from "react-string-replace";
 
-export function NoteContent({ className }: { className?: string }) {
+export function NoteContent({
+  compact = true,
+  className,
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
   const event = useNoteContext();
   const content = useMemo(() => {
     const text = event.content.trim();
     const words = text.split(/( |\n)/);
 
     // @ts-ignore, kaboom !!!
-    let parsedContent: ReactNode[] = text;
+    let parsedContent: ReactNode[] = compact
+      ? text.replace(/\n\s*\n/g, "\n")
+      : text;
 
     const hashtags = words.filter((word) => word.startsWith("#"));
     const events = words.filter((word) =>
@@ -111,6 +119,12 @@ export function NoteContent({ className }: { className?: string }) {
           }
         },
       );
+
+      if (compact) {
+        parsedContent = reactStringReplace(parsedContent, /\n|\r/g, () => (
+          <div key={nanoid()} className="h-1.5" />
+        ));
+      }
 
       return parsedContent;
     } catch (e) {

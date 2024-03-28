@@ -6,6 +6,7 @@ import type {
 	EventWithReplies,
 	Keys,
 	Metadata,
+	Settings,
 } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
@@ -71,7 +72,7 @@ export class Ark {
 
 	public async save_account(nsec: string, password: string = "") {
 		try {
-			const cmd: boolean = await invoke("save_key", {
+			const cmd: string = await invoke("save_key", {
 				nsec,
 				password,
 			});
@@ -338,6 +339,25 @@ export class Ark {
 		}
 	}
 
+	public async create_profile(profile: Metadata) {
+		try {
+			const event: string = await invoke("create_profile", {
+				name: profile.name || "",
+				display_name: profile.display_name || "",
+				displayName: profile.display_name || "",
+				about: profile.about || "",
+				picture: profile.picture || "",
+				banner: profile.banner || "",
+				nip05: profile.nip05 || "",
+				lud16: profile.lud16 || "",
+				website: profile.website || "",
+			});
+			return event;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
 	public async get_contact_list() {
 		try {
 			const cmd: string[] = await invoke("get_contact_list");
@@ -499,15 +519,40 @@ export class Ark {
 		}
 	}
 
+	public async get_settings(id: string) {
+		try {
+			const cmd: string = await invoke("get_settings", { id });
+			if (!cmd) return null;
+			if (!cmd.length) return null;
+
+			const settings: Settings = JSON.parse(cmd);
+			return settings;
+		} catch (e) {
+			throw new Error(e);
+		}
+	}
+
+	public async set_settings(settings: Settings) {
+		try {
+			const cmd: string = await invoke("set_settings", {
+				content: JSON.stringify(settings),
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(e);
+		}
+	}
+
 	public open_thread(id: string) {
 		return new WebviewWindow(`event-${id}`, {
 			title: "Thread",
 			url: `/events/${id}`,
 			minWidth: 500,
-			width: 600,
+			width: 500,
 			height: 800,
 			hiddenTitle: true,
 			titleBarStyle: "overlay",
+			center: false,
 		});
 	}
 
@@ -536,6 +581,7 @@ export class Ark {
 			title: "Editor",
 			url,
 			minWidth: 500,
+			minHeight: 400,
 			width: 600,
 			height: 400,
 			hiddenTitle: true,

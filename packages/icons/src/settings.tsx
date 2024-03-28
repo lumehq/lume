@@ -8,16 +8,14 @@ export function SettingsIcon(
       <path
         stroke="currentColor"
         strokeLinecap="square"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M11.02 3.552a2 2 0 0 1 1.96 0l6 3.374A2 2 0 0 1 20 8.67v6.66a2 2 0 0 1-1.02 1.743l-6 3.375a2 2 0 0 1-1.96 0l-6-3.374A2 2 0 0 1 4 15.33V8.67a2 2 0 0 1 1.02-1.744l6-3.374Z"
+        strokeWidth="1.5"
+        d="M11.002 3.325a2 2 0 0 1 1.996 0l6.25 3.598a2 2 0 0 1 1.002 1.733v6.688a2 2 0 0 1-1.002 1.733l-6.25 3.598a2 2 0 0 1-1.996 0l-6.25-3.598a2 2 0 0 1-1.002-1.733V8.656a2 2 0 0 1 1.002-1.733l6.25-3.598Z"
       />
       <path
         stroke="currentColor"
         strokeLinecap="square"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        strokeWidth="1.5"
+        d="M15.25 12a3.25 3.25 0 1 1-6.5 0 3.25 3.25 0 0 1 6.5 0Z"
       />
     </svg>
   );

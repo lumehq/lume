@@ -2,16 +2,8 @@ import { useArk } from "@lume/ark";
 import { User } from "@lume/ui";
 import { getBitcoinDisplayValues } from "@lume/utils";
 import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 
-export function Balance({
-  recipient,
-  account,
-}: {
-  recipient: string;
-  account: string;
-}) {
-  const [t] = useTranslation();
+export function Balance({ account }: { account: string }) {
   const [balance, setBalance] = useState(0);
 
   const ark = useArk();

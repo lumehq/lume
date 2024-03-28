@@ -7,9 +7,8 @@ pub mod commands;
 pub mod nostr;
 pub mod tray;
 
-use std::fs;
-
 use nostr_sdk::prelude::*;
+use std::fs;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 
@@ -20,6 +19,9 @@ pub struct Nostr {
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
+      #[cfg(target_os = "macos")]
+      app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
       let home_dir = handle.path().home_dir().unwrap();
@@ -39,10 +41,6 @@ fn main() {
 
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
-        client
-          .add_relay("wss://nostr.mutinywallet.com")
-          .await
-          .unwrap_or_default();
         client
           .add_relay("wss://relay.nostr.band")
           .await
@@ -66,6 +64,13 @@ fn main() {
       });
 
       Ok(())
+    })
+    .on_window_event(|window, event| match event {
+      tauri::WindowEvent::CloseRequested { api, .. } => {
+        window.hide().unwrap();
+        api.prevent_close();
+      }
+      _ => {}
     })
     .plugin(tauri_plugin_store::Builder::default().build())
     .plugin(tauri_plugin_clipboard_manager::init())
@@ -118,23 +123,10 @@ fn main() {
       commands::folder::show_in_folder,
       commands::folder::get_accounts,
       commands::opg::fetch_opg,
+      commands::window::create_column,
+      commands::window::close_column,
+      commands::window::reposition_column
     ])
-    .build(tauri::generate_context!())
+    .run(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(
-      #[allow(unused_variables)]
-      |app, event| {
-        #[cfg(any(target_os = "macos"))]
-        if let tauri::RunEvent::Opened { urls } = event {
-          if let Some(w) = app.get_webview_window("main") {
-            let urls = urls
-              .iter()
-              .map(|u| u.as_str())
-              .collect::<Vec<_>>()
-              .join(",");
-            let _ = w.eval(&format!("window.onFileOpen(`{urls}`)"));
-          }
-        }
-      },
-    );
 }

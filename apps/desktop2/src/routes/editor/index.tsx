@@ -149,11 +149,12 @@ function Screen() {
 
       if (eventId) {
         await sendNativeNotification("You've publish new post successfully.");
-        return reset();
       }
 
       // stop loading
       setLoading(false);
+      // reset form
+      reset();
     } catch (e) {
       setLoading(false);
       await sendNativeNotification(String(e));
@@ -210,7 +211,7 @@ function Screen() {
           <button
             type="button"
             onClick={publish}
-            className="inline-flex h-9 w-24 items-center justify-center rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
+            className="inline-flex h-9 w-24 items-center justify-center rounded-full bg-blue-500 px-3 font-medium text-white hover:bg-blue-600"
           >
             {loading ? (
               <LoaderIcon className="size-5 animate-spin" />

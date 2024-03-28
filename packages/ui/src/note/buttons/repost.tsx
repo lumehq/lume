@@ -1,4 +1,4 @@
-import { LoaderIcon, ReplyIcon, RepostIcon } from "@lume/icons";
+import { LoaderIcon, QuoteIcon, ReplyIcon, RepostIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -84,7 +84,7 @@ export function NoteRepost() {
               onClick={() => ark.open_editor(event.id, true)}
               className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
             >
-              <ReplyIcon className="size-4" />
+              <QuoteIcon className="size-4" />
               {t("note.buttons.quote")}
             </button>
           </DropdownMenu.Item>

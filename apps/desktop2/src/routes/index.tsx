@@ -13,11 +13,8 @@ export const Route = createFileRoute("/")({
     switch (accounts.length) {
       // Guest account
       case 0:
-        const guest = await ark.create_guest_account();
         throw redirect({
-          to: "/$account/home/local",
-          params: { account: guest },
-          search: { guest: true },
+          to: "/landing",
           replace: true,
         });
       // Only 1 account, skip account selection screen
@@ -30,7 +27,7 @@ export const Route = createFileRoute("/")({
 
         if (loadedAccount) {
           throw redirect({
-            to: "/$account/home/local",
+            to: "/$account/home",
             params: { account },
             replace: true,
           });
@@ -54,7 +51,7 @@ function Screen() {
     const loadAccount = await ark.load_selected_account(npub);
     if (loadAccount) {
       navigate({
-        to: "/$account/home/local",
+        to: "/$account/home",
         params: { account: npub },
         replace: true,
       });
