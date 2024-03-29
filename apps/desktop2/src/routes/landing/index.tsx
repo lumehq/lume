@@ -48,7 +48,7 @@ function Screen() {
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/20 px-3 font-medium text-white backdrop-blur-md hover:bg-white/40"
               >
                 <RemoteIcon className="size-5" />
-                Continue with Remote Signing
+                Continue with Nostr Connect
               </Link>
               <Link
                 to="/auth/privkey"

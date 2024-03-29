@@ -11,9 +11,9 @@
     "tauri": "tauri"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.6.1",
+    "@biomejs/biome": "^1.6.3",
     "@tauri-apps/cli": "2.0.0-beta.9",
-    "turbo": "^1.12.5"
+    "turbo": "^1.13.0"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
@@ -22,7 +22,7 @@
   "dependencies": {
     "@tauri-apps/api": "2.0.0-beta.5",
     "@tauri-apps/plugin-autostart": "2.0.0-beta.2",
-    "@tauri-apps/plugin-clipboard-manager": "2.0.0-beta.2",
+    "@tauri-apps/plugin-clipboard-manager": "2.1.0-beta.0",
     "@tauri-apps/plugin-dialog": "2.0.0-beta.2",
     "@tauri-apps/plugin-fs": "2.0.0-beta.2",
     "@tauri-apps/plugin-http": "2.0.0-beta.2",
