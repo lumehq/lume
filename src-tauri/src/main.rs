@@ -5,12 +5,21 @@
 
 pub mod commands;
 pub mod nostr;
+pub mod traffic_light;
 pub mod tray;
+
+#[cfg(target_os = "macos")]
+extern crate cocoa;
+
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate objc;
 
 use nostr_sdk::prelude::*;
 use std::fs;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
+use traffic_light::setup_traffic_light_positioner;
 
 pub struct Nostr {
   client: Client,
@@ -21,6 +30,9 @@ fn main() {
     .setup(|app| {
       #[cfg(target_os = "macos")]
       app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
+      #[cfg(target_os = "macos")]
+      setup_traffic_light_positioner(app.get_window("main").unwrap());
 
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();

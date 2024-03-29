@@ -2970,8 +2970,11 @@ dependencies = [
 name = "lume"
 version = "4.0.0"
 dependencies = [
+ "cocoa",
  "keyring",
  "nostr-sdk",
+ "objc",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "tauri",
