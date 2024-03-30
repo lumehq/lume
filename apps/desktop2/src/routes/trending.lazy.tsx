@@ -1,13 +1,14 @@
 import { RepostNote } from "@/components/repost";
 import { Suggest } from "@/components/suggest";
 import { TextNote } from "@/components/text";
-import { useEvents } from "@lume/ark";
-import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
+import { LoaderIcon, InfoIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
+import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
+import { fetch } from "@tauri-apps/plugin-http";
 
 export const Route = createLazyFileRoute("/trending")({
   component: Screen,
@@ -17,14 +18,16 @@ export function Screen() {
   // @ts-ignore, just work!!!
   const { id, name, account } = Route.useSearch();
   const { t } = useTranslation();
-  const {
-    data,
-    hasNextPage,
-    isLoading,
-    isRefetching,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useEvents("local", account);
+  const { data, isLoading } = useQuery({
+    queryKey: ["trending", account],
+    queryFn: async () => {
+      const res = await fetch("https://api.nostr.band/v0/trending/notes");
+      const data = await res.json();
+      const events = data.notes.map((item) => item.event) as Event[];
+      return events.sort((a, b) => b.created_at - a.created_at);
+    },
+    refetchOnWindowFocus: false,
+  });
 
   const renderItem = (event: Event) => {
     if (!event) return;
@@ -40,9 +43,11 @@ export function Screen() {
     <Column.Root>
       <Column.Header id={id} name={name} />
       <Column.Content>
-        {isLoading || isRefetching ? (
+        {isLoading ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
-            <LoaderIcon className="size-5 animate-spin" />
+            <button type="button" className="size-5" disabled>
+              <LoaderIcon className="size-5 animate-spin" />
+            </button>
           </div>
         ) : !data.length ? (
           <div className="flex flex-col gap-3">
@@ -60,25 +65,6 @@ export function Screen() {
             {data.map((item) => renderItem(item))}
           </Virtualizer>
         )}
-        <div className="flex h-20 items-center justify-center">
-          {hasNextPage ? (
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-              className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
-            >
-              {isFetchingNextPage ? (
-                <LoaderIcon className="size-5 animate-spin" />
-              ) : (
-                <>
-                  <ArrowRightCircleIcon className="size-5" />
-                  Load more
-                </>
-              )}
-            </button>
-          ) : null}
-        </div>
       </Column.Content>
     </Column.Root>
   );

@@ -21,10 +21,10 @@ function Screen() {
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-10">
           <div className="flex flex-col items-center text-center">
             <img
-              src={`/heading-${context.locale}.png`}
-              srcSet={`/heading-${context.locale}@2x.png 2x`}
+              src={`/heading-en.png`}
+              srcSet={`/heading-en@2x.png 2x`}
               alt="lume"
-              className="w-3/4 xl:w-2/3"
+              className="xl:w-2/3"
             />
             <p className="mt-4 whitespace-pre-line text-lg font-medium leading-snug text-white/70">
               {t("welcome.title")}
@@ -62,7 +62,7 @@ function Screen() {
         </div>
         <div className="flex h-11 items-center justify-center"></div>
       </div>
-      <div className="absolute z-10 h-full w-full bg-white/5 backdrop-blur-sm dark:bg-black/5" />
+      <div className="absolute z-10 h-full w-full bg-black/5 backdrop-blur-sm" />
       <div className="absolute inset-0 h-full w-full">
         <img
           src="/lock-screen.jpg"
