@@ -24,6 +24,10 @@ export const Route = createFileRoute("/")({
 
         const account = accounts[0].npub;
         const loadedAccount = await ark.load_selected_account(account);
+        const settings = await ark.get_settings(account);
+
+        // Update settings
+        context.settings = settings;
 
         if (loadedAccount) {
           throw redirect({
@@ -43,12 +47,15 @@ export const Route = createFileRoute("/")({
 function Screen() {
   const ark = useArk();
   const navigate = useNavigate();
+  const context = Route.useRouteContext();
 
   const [loading, setLoading] = useState(false);
 
   const select = async (npub: string) => {
     setLoading(true);
     const loadAccount = await ark.load_selected_account(npub);
+    context.settings = await ark.get_settings(npub);
+
     if (loadAccount) {
       navigate({
         to: "/$account/home",

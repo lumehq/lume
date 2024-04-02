@@ -104,6 +104,17 @@ pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
+pub fn get_stored_nsec(npub: &str) -> Result<String, String> {
+  let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
+
+  if let Ok(nsec) = keyring.get_password() {
+    Ok(nsec)
+  } else {
+    Err("Key not found".into())
+  }
+}
+
+#[tauri::command]
 pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let keyring = Entry::new("Lume Secret Storage", npub).unwrap();

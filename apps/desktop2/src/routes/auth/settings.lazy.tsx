@@ -1,8 +1,7 @@
 import { CheckIcon } from "@lume/icons";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import * as Switch from "@radix-ui/react-switch";
-import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Settings } from "@lume/types";
 import { useArk } from "@lume/ark";
@@ -18,6 +17,7 @@ export const Route = createLazyFileRoute("/auth/settings")({
 
 function Screen() {
   const ark = useArk();
+  const navigate = useNavigate();
 
   // @ts-ignore, magic!!!
   const { account } = Route.useSearch();
@@ -51,10 +51,12 @@ function Screen() {
     }));
   };
 
-  const saveSettings = async () => {
+  const submit = async () => {
     try {
       const eventId = await ark.set_settings(settings);
-      if (eventId) toast.success("Settings have been updated successfully.");
+      if (eventId) {
+        navigate({ to: "/$account/home", params: { account }, replace: true });
+      }
     } catch (e) {
       toast.error(e);
     }
@@ -142,22 +144,13 @@ function Screen() {
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={saveSettings}
-            className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-neutral-100 font-medium hover:bg-neutral-200 disabled:opacity-50 dark:bg-neutral-900 dark:hover:bg-neutral-800"
-          >
-            Save settings
-          </button>
-          <Link
-            to="/$account/home"
-            params={{ account }}
-            className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
-          >
-            {t("global.continue")}
-          </Link>
-        </div>
+        <button
+          type="button"
+          onClick={submit}
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+        >
+          {t("global.continue")}
+        </button>
       </div>
     </div>
   );

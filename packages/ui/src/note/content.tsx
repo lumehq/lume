@@ -1,4 +1,4 @@
-import { Kind } from "@lume/types";
+import { Kind, Settings } from "@lume/types";
 import {
   AUDIOS,
   IMAGES,
@@ -17,6 +17,7 @@ import { Hashtag } from "./mentions/hashtag";
 import { VideoPreview } from "./preview/video";
 import { ImagePreview } from "./preview/image";
 import reactStringReplace from "react-string-replace";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteContent({
   compact = true,
@@ -25,6 +26,7 @@ export function NoteContent({
   compact?: boolean;
   className?: string;
 }) {
+  const settings: Settings = useRouteContext({ strict: false });
   const event = useNoteContext();
   const content = useMemo(() => {
     const text = event.content.trim();
@@ -81,16 +83,18 @@ export function NoteContent({
             const url = new URL(match);
             const ext = url.pathname.split(".")[1];
 
-            if (IMAGES.includes(ext)) {
-              return <ImagePreview key={match + i} url={url.toString()} />;
-            }
+            if (!settings.enhancedPrivacy) {
+              if (IMAGES.includes(ext)) {
+                return <ImagePreview key={match + i} url={url.toString()} />;
+              }
 
-            if (VIDEOS.includes(ext)) {
-              return <VideoPreview key={match + i} url={url.toString()} />;
-            }
+              if (VIDEOS.includes(ext)) {
+                return <VideoPreview key={match + i} url={url.toString()} />;
+              }
 
-            if (AUDIOS.includes(ext)) {
-              return <VideoPreview key={match + i} url={url.toString()} />;
+              if (AUDIOS.includes(ext)) {
+                return <VideoPreview key={match + i} url={url.toString()} />;
+              }
             }
 
             return (

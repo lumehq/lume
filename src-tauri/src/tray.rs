@@ -60,15 +60,18 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       println!("todo!")
     }
     "settings" => {
-      let _ =
-        WebviewWindowBuilder::new(app, "settings", WebviewUrl::App(PathBuf::from("settings")))
-          .title("Editor")
-          .min_inner_size(600., 500.)
-          .inner_size(800., 500.)
-          .hidden_title(true)
-          .title_bar_style(TitleBarStyle::Overlay)
-          .build()
-          .unwrap();
+      let _ = WebviewWindowBuilder::new(
+        app,
+        "settings",
+        WebviewUrl::App(PathBuf::from("settings/general")),
+      )
+      .title("Editor")
+      .min_inner_size(600., 500.)
+      .inner_size(800., 500.)
+      .hidden_title(true)
+      .title_bar_style(TitleBarStyle::Overlay)
+      .build()
+      .unwrap();
     }
     "quit" => {
       app.exit(0);

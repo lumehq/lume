@@ -527,8 +527,13 @@ export class Ark {
 
 			const settings: Settings = JSON.parse(cmd);
 			return settings;
-		} catch (e) {
-			throw new Error(e);
+		} catch {
+			const defaultSettings: Settings = {
+				autoUpdate: false,
+				enhancedPrivacy: false,
+				notification: false,
+			};
+			return defaultSettings;
 		}
 	}
 

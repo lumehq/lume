@@ -103,6 +103,7 @@ fn main() {
       nostr::keys::create_keys,
       nostr::keys::save_key,
       nostr::keys::get_encrypted_key,
+      nostr::keys::get_stored_nsec,
       nostr::keys::verify_signer,
       nostr::keys::load_selected_account,
       nostr::keys::event_to_bech32,

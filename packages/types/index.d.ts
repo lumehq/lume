@@ -56,6 +56,7 @@ export interface Contact {
 
 export interface Account {
 	npub: string;
+	nsec?: string;
 	contacts?: string[];
 	interests?: Interests;
 }

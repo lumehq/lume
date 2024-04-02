@@ -37,6 +37,7 @@ const router = createRouter({
     ark: undefined!,
     platform: platformName,
     locale: osLocale,
+    settings: null,
     queryClient,
   },
 });

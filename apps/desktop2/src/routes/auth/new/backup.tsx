@@ -68,7 +68,7 @@ function Screen() {
       </div>
       <div className="flex w-full flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <label htmlFor="nsec" className="font-medium">
+          <label htmlFor="passphase" className="font-medium">
             Set a passphase to secure your key
           </label>
           <div className="relative">
