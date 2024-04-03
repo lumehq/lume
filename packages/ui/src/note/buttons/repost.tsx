@@ -1,4 +1,4 @@
-import { LoaderIcon, QuoteIcon, ReplyIcon, RepostIcon } from "@lume/icons";
+import { LoaderIcon, QuoteIcon, RepostIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -6,10 +6,10 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useNoteContext } from "../provider";
-import { useArk } from "@lume/ark";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteRepost() {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const event = useNoteContext();
 
   const [t] = useTranslation();
@@ -59,7 +59,7 @@ export function NoteRepost() {
             </Tooltip.Trigger>
           </DropdownMenu.Trigger>
           <Tooltip.Portal>
-            <Tooltip.Content className="data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-neutral-50 will-change-[transform,opacity] dark:bg-neutral-50 dark:text-neutral-950">
+            <Tooltip.Content className="inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-neutral-50 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-50 dark:text-neutral-950">
               {t("note.buttons.repost")}
               <Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
             </Tooltip.Content>

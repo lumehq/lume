@@ -7,7 +7,6 @@ import {
   VIDEOS,
   cn,
 } from "@lume/utils";
-import { NIP89 } from "./nip89";
 import { useNoteContext } from "./provider";
 import { ReactNode, useMemo } from "react";
 import { nanoid } from "nanoid";
@@ -135,10 +134,6 @@ export function NoteContent({
       return text;
     }
   }, []);
-
-  if (event.kind !== Kind.Text) {
-    return <NIP89 className={className} />;
-  }
 
   return (
     <div className={cn("select-text", className)}>

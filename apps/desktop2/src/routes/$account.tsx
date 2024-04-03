@@ -2,16 +2,14 @@ import { ComposeFilledIcon, PlusIcon } from "@lume/icons";
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
-import { useArk } from "@lume/ark";
 
 export const Route = createFileRoute("/$account")({
   component: App,
 });
 
 function App() {
-  const ark = useArk();
   const navigate = useNavigate();
-  const { platform } = Route.useRouteContext();
+  const { ark, platform } = Route.useRouteContext();
 
   return (
     <div className="flex h-screen w-screen flex-col">

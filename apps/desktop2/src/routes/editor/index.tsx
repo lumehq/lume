@@ -1,4 +1,3 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon, TrashIcon } from "@lume/icons";
 import {
   Portal,
@@ -61,6 +60,7 @@ export const Route = createFileRoute("/editor/")({
 function Screen() {
   // @ts-ignore, useless
   const { reply_to, quote } = Route.useSearch();
+  const { ark } = Route.useRouteContext();
 
   let initialValue: EditorElement[];
 
@@ -89,7 +89,6 @@ function Screen() {
     ];
   }
 
-  const ark = useArk();
   const ref = useRef<HTMLDivElement | null>();
   const contacts = useSuspenseQuery(contactQueryOptions).data as Contact[];
 

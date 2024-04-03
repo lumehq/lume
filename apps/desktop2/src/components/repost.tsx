@@ -3,8 +3,8 @@ import { Event } from "@lume/types";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { useArk } from "@lume/ark";
 import { Note, User } from "@lume/ui";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function RepostNote({
   event,
@@ -13,8 +13,7 @@ export function RepostNote({
   event: Event;
   className?: string;
 }) {
-  const ark = useArk();
-
+  const { ark } = useRouteContext({ strict: false });
   const { t } = useTranslation();
   const {
     isLoading,

@@ -1,4 +1,3 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon, PlusIcon } from "@lume/icons";
 import { User } from "@lume/ui";
 import { Link } from "@tanstack/react-router";
@@ -45,7 +44,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Screen() {
-  const ark = useArk();
   const navigate = useNavigate();
   const context = Route.useRouteContext();
 
@@ -53,8 +51,8 @@ function Screen() {
 
   const select = async (npub: string) => {
     setLoading(true);
-    const loadAccount = await ark.load_selected_account(npub);
-    context.settings = await ark.get_settings(npub);
+    const loadAccount = await context.ark.load_selected_account(npub);
+    context.settings = await context.ark.get_settings(npub);
 
     if (loadAccount) {
       navigate({
@@ -85,7 +83,7 @@ function Screen() {
             </div>
           ) : (
             <>
-              {ark.accounts.map((account) => (
+              {context.ark.accounts.map((account) => (
                 <button
                   type="button"
                   key={account.npub}

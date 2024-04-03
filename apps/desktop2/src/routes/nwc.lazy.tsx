@@ -1,4 +1,3 @@
-import { useArk } from "@lume/ark";
 import { ArrowRightIcon, ZapIcon } from "@lume/icons";
 import { Container } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -9,7 +8,7 @@ export const Route = createLazyFileRoute("/nwc")({
 });
 
 function Screen() {
-  const ark = useArk();
+  const { ark } = Route.useRouteContext();
 
   const [uri, setUri] = useState("");
   const [isDone, setIsDone] = useState(false);

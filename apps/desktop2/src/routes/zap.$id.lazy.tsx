@@ -1,5 +1,4 @@
 import { Balance } from "@/components/balance";
-import { useArk } from "@lume/ark";
 import { Box, Container, User } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -16,6 +15,7 @@ export const Route = createLazyFileRoute("/zap/$id")({
 
 function Screen() {
   const { t } = useTranslation();
+  const { ark } = Route.useRouteContext();
   const { id } = Route.useParams();
   // @ts-ignore, magic !!!
   const { pubkey, account } = Route.useSearch();
@@ -24,8 +24,6 @@ function Screen() {
   const [message, setMessage] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const ark = useArk();
 
   const submit = async () => {
     try {

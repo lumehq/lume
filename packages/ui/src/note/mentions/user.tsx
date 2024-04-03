@@ -1,8 +1,9 @@
-import { useArk, useProfile } from "@lume/ark";
+import { useProfile } from "@lume/ark";
 import { displayNpub } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function MentionUser({ pubkey }: { pubkey: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const { isLoading, isError, profile } = useProfile(pubkey);
 
   return (

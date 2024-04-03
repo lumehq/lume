@@ -1,13 +1,11 @@
-import { useArk } from "@lume/ark";
 import { ZapIcon } from "@lume/icons";
 import { toast } from "sonner";
 import { useNoteContext } from "../provider";
-import { useSearch } from "@tanstack/react-router";
+import { useRouteContext, useSearch } from "@tanstack/react-router";
 
 export function NoteZap() {
-  const ark = useArk();
   const event = useNoteContext();
-
+  const { ark } = useRouteContext({ strict: false });
   const { account } = useSearch({ strict: false });
 
   const zap = async () => {

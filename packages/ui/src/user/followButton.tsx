@@ -1,12 +1,12 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "./provider";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function UserFollowButton({ className }: { className?: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const user = useUserContext();
 
   const [t] = useTranslation();

@@ -1,4 +1,3 @@
-import { useArk } from "@lume/ark";
 import { AddMediaIcon, LoaderIcon } from "@lume/icons";
 import { cn, insertImage, isImagePath } from "@lume/utils";
 import { useEffect, useState } from "react";
@@ -6,9 +5,10 @@ import { useSlateStatic } from "slate-react";
 import { toast } from "sonner";
 import { getCurrent } from "@tauri-apps/api/window";
 import { UnlistenFn } from "@tauri-apps/api/event";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function MediaButton({ className }: { className?: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const editor = useSlateStatic();
 
   const [loading, setLoading] = useState(false);

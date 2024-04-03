@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Note } from "..";
 import { User } from "../../user";
-import { useArk } from "@lume/ark";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function RepostNote({
   event,
@@ -14,8 +14,7 @@ export function RepostNote({
   event: Event;
   className?: string;
 }) {
-  const ark = useArk();
-
+  const { ark } = useRouteContext({ strict: false });
   const { t } = useTranslation();
   const {
     isLoading,

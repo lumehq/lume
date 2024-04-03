@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import * as Switch from "@radix-ui/react-switch";
 import { useEffect, useState } from "react";
 import { Settings } from "@lume/types";
-import { useArk } from "@lume/ark";
 import {
   isPermissionGranted,
   requestPermission,
@@ -16,12 +15,12 @@ export const Route = createLazyFileRoute("/auth/settings")({
 });
 
 function Screen() {
-  const ark = useArk();
   const navigate = useNavigate();
 
   // @ts-ignore, magic!!!
   const { account } = Route.useSearch();
   const { t } = useTranslation();
+  const { ark } = Route.useRouteContext();
 
   const [settings, setSettings] = useState<Settings>({
     notification: false,

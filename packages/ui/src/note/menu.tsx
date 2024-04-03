@@ -3,13 +3,13 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
 import { useNoteContext } from "./provider";
-import { useArk } from "@lume/ark";
 import { toast } from "sonner";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteMenu() {
-  const ark = useArk();
   const event = useNoteContext();
 
+  const { ark } = useRouteContext({ strict: false });
   const { t } = useTranslation();
 
   const copyID = async () => {

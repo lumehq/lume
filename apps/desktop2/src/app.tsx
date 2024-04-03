@@ -1,5 +1,3 @@
-import { useArk } from "@lume/ark";
-import { ArkProvider } from "./ark";
 import { QueryClient } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
@@ -13,6 +11,7 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { routeTree } from "./router.gen"; // auto generated file
 import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
+import { Ark } from "@lume/ark";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +26,7 @@ const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
 
+const ark = new Ark();
 const platformName = await platform();
 const osLocale = (await locale()).slice(0, 2);
 
@@ -34,10 +34,10 @@ const osLocale = (await locale()).slice(0, 2);
 const router = createRouter({
   routeTree,
   context: {
-    ark: undefined!,
     platform: platformName,
     locale: osLocale,
     settings: null,
+    ark,
     queryClient,
   },
 });
@@ -49,17 +49,8 @@ declare module "@tanstack/react-router" {
   }
 }
 
-function InnerApp() {
-  const ark = useArk();
-  return <RouterProvider router={router} context={{ ark }} />;
-}
-
 function App() {
-  return (
-    <ArkProvider>
-      <InnerApp />
-    </ArkProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 // biome-ignore lint/style/noNonNullAssertion: idk

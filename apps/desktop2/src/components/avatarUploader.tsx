@@ -1,6 +1,6 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
@@ -13,7 +13,7 @@ export function AvatarUploader({
   children: ReactNode;
   className?: string;
 }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const [loading, setLoading] = useState(false);
 
   const uploadAvatar = async () => {

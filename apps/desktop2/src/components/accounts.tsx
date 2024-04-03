@@ -1,11 +1,14 @@
-import { useArk } from "@lume/ark";
 import { Account } from "@lume/types";
 import { User } from "@lume/ui";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import {
+  useNavigate,
+  useParams,
+  useRouteContext,
+} from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 export function Accounts() {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const params = useParams({ strict: false });
 
   const [accounts, setAccounts] = useState<Account[]>(null);
@@ -36,7 +39,7 @@ export function Accounts() {
 }
 
 function Inactive({ pubkey }: { pubkey: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const navigate = useNavigate();
 
   const changeAccount = async (npub: string) => {

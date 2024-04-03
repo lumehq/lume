@@ -2,12 +2,12 @@ import { VerifiedIcon } from "@lume/icons";
 import { cn, displayLongHandle, displayNpub } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "./provider";
-import { useArk } from "@lume/ark";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function UserNip05({ className }: { className?: string }) {
-  const ark = useArk();
   const user = useUserContext();
 
+  const { ark } = useRouteContext({ strict: false });
   const { isLoading, data: verified } = useQuery({
     queryKey: ["nip05", user?.pubkey],
     queryFn: async () => {

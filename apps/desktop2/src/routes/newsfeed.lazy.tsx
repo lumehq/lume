@@ -1,10 +1,10 @@
 import { RepostNote } from "@/components/repost";
 import { Suggest } from "@/components/suggest";
 import { TextNote } from "@/components/text";
-import { useEvents } from "@lume/ark";
 import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
@@ -16,9 +16,24 @@ export const Route = createLazyFileRoute("/newsfeed")({
 export function Screen() {
   // @ts-ignore, just work!!!
   const { id, name, account } = Route.useSearch();
+  const { ark } = Route.useRouteContext();
   const { t } = useTranslation();
-  const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
-    useEvents("local", account);
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["local", account],
+      initialPageParam: 0,
+      queryFn: async ({ pageParam }: { pageParam: number }) => {
+        const events = await ark.get_events("local", 20, pageParam, true);
+        return events;
+      },
+      getNextPageParam: (lastPage) => {
+        const lastEvent = lastPage?.at(-1);
+        if (!lastEvent) return;
+        return lastEvent.created_at - 1;
+      },
+      select: (data) => data?.pages.flatMap((page) => page),
+      refetchOnWindowFocus: false,
+    });
 
   const renderItem = (event: Event) => {
     if (!event) return;

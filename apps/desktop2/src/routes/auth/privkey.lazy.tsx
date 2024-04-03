@@ -1,8 +1,6 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export const Route = createLazyFileRoute("/auth/privkey")({
@@ -10,10 +8,9 @@ export const Route = createLazyFileRoute("/auth/privkey")({
 });
 
 function Screen() {
-  const ark = useArk();
+  const { ark } = Route.useRouteContext();
   const navigate = useNavigate();
 
-  const [t] = useTranslation();
   const [key, setKey] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

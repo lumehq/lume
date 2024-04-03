@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useArk } from "./useArk";
+import { Metadata } from "@lume/types";
+import { invoke } from "@tauri-apps/api/core";
 
 export function useProfile(pubkey: string) {
-	const ark = useArk();
 	const {
 		isLoading,
 		isError,
@@ -11,8 +11,14 @@ export function useProfile(pubkey: string) {
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
 			try {
-				const profile = await ark.get_profile(pubkey);
-				return profile;
+				const id = pubkey
+					.replace("nostr:", "")
+					.split("'")[0]
+					.split(".")[0]
+					.split(",")[0]
+					.split("?")[0];
+				const cmd: Metadata = await invoke("get_profile", { id });
+				return cmd;
 			} catch (e) {
 				throw new Error(e);
 			}

@@ -1,13 +1,13 @@
 import { TextNote } from "@/components/text";
 import { RepostNote } from "@/components/repost";
-import { useArk } from "@lume/ark";
 import { ArrowRightCircleIcon, InfoIcon, LoaderIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function EventList({ id }: { id: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const { data, hasNextPage, isLoading, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["events", id],

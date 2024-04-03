@@ -1,10 +1,10 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EventWithReplies } from "@lume/types";
 import { Reply } from "./reply";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function ReplyList({
   eventId,
@@ -13,8 +13,7 @@ export function ReplyList({
   eventId: string;
   className?: string;
 }) {
-  const ark = useArk();
-
+  const { ark } = useRouteContext({ strict: false });
   const [t] = useTranslation();
   const [data, setData] = useState<null | EventWithReplies[]>(null);
 

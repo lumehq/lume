@@ -1,5 +1,4 @@
 import { AvatarUploader } from "@/components/avatarUploader";
-import { useArk } from "@lume/ark";
 import { LoaderIcon, PlusIcon } from "@lume/icons";
 import { Metadata } from "@lume/types";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -16,11 +15,11 @@ export const Route = createFileRoute("/auth/new/profile")({
 });
 
 function Screen() {
-  const ark = useArk();
   const keys = Route.useLoaderData();
   const navigate = useNavigate();
 
   const { t } = useTranslation();
+  const { ark } = Route.useRouteContext();
   const { register, handleSubmit } = useForm();
 
   const [picture, setPicture] = useState<string>("");
