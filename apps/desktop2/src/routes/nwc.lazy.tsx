@@ -1,4 +1,4 @@
-import { ArrowRightIcon, ZapIcon } from "@lume/icons";
+import { ZapIcon } from "@lume/icons";
 import { Container } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -15,14 +15,11 @@ function Screen() {
 
   const save = async () => {
     const nwc = await ark.set_nwc(uri);
-
-    if (nwc) {
-      setIsDone(true);
-    }
+    setIsDone(nwc);
   };
 
   return (
-    <Container withDrag>
+    <Container withDrag withNavigate={false}>
       <div className="h-full w-full flex-1 px-5">
         {!isDone ? (
           <>
@@ -44,17 +41,15 @@ function Screen() {
                   value={uri}
                   onChange={(e) => setUri(e.target.value)}
                   placeholder="nostrconnect://"
-                  className="h-24 w-full resize-none rounded-lg border-transparent bg-white placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-black dark:focus:ring-blue-900"
+                  className="h-24 w-full rounded-lg border-neutral-300 bg-transparent px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:border-neutral-700 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
                 />
               </div>
               <button
                 type="button"
                 onClick={save}
-                className="inline-flex h-11 w-full items-center justify-between gap-1.5 rounded-lg bg-blue-500 px-5 font-medium text-white hover:bg-blue-600"
+                className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-blue-500 px-5 font-medium text-white hover:bg-blue-600"
               >
-                <div className="size-5" />
-                <div>Save & Connect</div>
-                <ArrowRightIcon className="size-5" />
+                Save & Connect
               </button>
             </div>
           </>

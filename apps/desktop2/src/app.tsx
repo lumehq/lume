@@ -28,7 +28,7 @@ const persister = createSyncStoragePersister({
 
 const ark = new Ark();
 const platformName = await platform();
-const osLocale = (await locale()).slice(0, 2);
+const osLocale = await locale();
 
 // Set up a Router instance
 const router = createRouter({
@@ -37,6 +37,8 @@ const router = createRouter({
     platform: platformName,
     locale: osLocale,
     settings: null,
+    accounts: null,
+    interests: null,
     ark,
     queryClient,
   },

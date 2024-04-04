@@ -19,7 +19,7 @@ const DEFAULT_COLUMNS: LumeColumn[] = [
 ];
 
 function Screen() {
-  const search = Route.useSearch();
+  const { account } = Route.useParams();
   const vlistRef = useRef<VListHandle>(null);
 
   const [columns, setColumns] = useState(DEFAULT_COLUMNS);
@@ -139,8 +139,7 @@ function Screen() {
           <Col
             key={column.id}
             column={column}
-            // @ts-ignore, yolo !!!
-            account={search.acccount}
+            account={account}
             isScroll={isScroll}
           />
         ))}

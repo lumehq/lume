@@ -44,14 +44,24 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       }
     }
     "editor" => {
-      let _ = WebviewWindowBuilder::new(app, "editor", WebviewUrl::App(PathBuf::from("editor")))
-        .title("Editor")
-        .min_inner_size(500., 400.)
-        .inner_size(600., 400.)
-        .hidden_title(true)
-        .title_bar_style(TitleBarStyle::Overlay)
-        .build()
-        .unwrap();
+      if let Some(window) = app.get_window("editor-0") {
+        if window.is_visible().unwrap_or_default() {
+          let _ = window.set_focus();
+        } else {
+          let _ = window.show();
+          let _ = window.set_focus();
+        };
+      } else {
+        let _ =
+          WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
+            .title("Editor")
+            .min_inner_size(500., 400.)
+            .inner_size(600., 400.)
+            .hidden_title(true)
+            .title_bar_style(TitleBarStyle::Overlay)
+            .build()
+            .unwrap();
+      }
     }
     "about" => {
       app.shell().open("https://lume.nu", None).unwrap();

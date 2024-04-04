@@ -34,6 +34,7 @@ export function NoteUser({ className }: { className?: string }) {
           <HoverCard.Content
             className="w-[300px] rounded-xl bg-black p-3 data-[side=bottom]:animate-slideUpAndFade data-[state=open]:transition-all dark:bg-white dark:shadow-none"
             sideOffset={5}
+            side="right"
           >
             <div className="flex flex-col gap-2">
               <User.Avatar className="size-11 rounded-lg object-cover" />

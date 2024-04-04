@@ -7,7 +7,7 @@ import {
 import { type Ark } from "@lume/ark";
 import { type QueryClient } from "@tanstack/react-query";
 import { type Platform } from "@tauri-apps/plugin-os";
-import { Settings } from "@lume/types";
+import { Account, Interests, Settings } from "@lume/types";
 
 interface RouterContext {
   ark: Ark;
@@ -15,6 +15,8 @@ interface RouterContext {
   platform: Platform;
   locale: string;
   settings: Settings;
+  interests: Interests;
+  accounts: Account[];
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

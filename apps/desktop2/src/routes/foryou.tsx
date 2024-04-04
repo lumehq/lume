@@ -5,25 +5,47 @@ import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/global")({
+export const Route = createFileRoute("/foryou")({
+  beforeLoad: async ({ search, context }) => {
+    const ark = context.ark;
+    // @ts-ignore, useless !!!
+    const interests = await ark.get_interest(search.account);
+
+    if (!interests) {
+      throw redirect({
+        to: "/interests",
+        replace: false,
+        search,
+      });
+    }
+
+    return {
+      interests,
+    };
+  },
   component: Screen,
 });
 
 export function Screen() {
   // @ts-ignore, just work!!!
   const { id, name, account } = Route.useSearch();
-  const { ark } = Route.useRouteContext();
+  const { ark, interests } = Route.useRouteContext();
   const { t } = useTranslation();
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["global", account],
+      queryKey: ["foryou", account],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_events(20, pageParam, undefined, true);
+        const events = await ark.get_events_from_interests(
+          interests.hashtags,
+          20,
+          pageParam,
+          true,
+        );
         return events;
       },
       getNextPageParam: (lastPage) => {

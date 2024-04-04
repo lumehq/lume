@@ -5,7 +5,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async ({ search, context }) => {
+  beforeLoad: async ({ context }) => {
     const ark = context.ark;
     const accounts = await ark.get_all_accounts();
 
@@ -18,15 +18,8 @@ export const Route = createFileRoute("/")({
         });
       // Only 1 account, skip account selection screen
       case 1:
-        // @ts-ignore, totally fine !!!
-        if (search.manually) return;
-
         const account = accounts[0].npub;
         const loadedAccount = await ark.load_selected_account(account);
-        const settings = await ark.get_settings(account);
-
-        // Update settings
-        context.settings = settings;
 
         if (loadedAccount) {
           throw redirect({
@@ -37,7 +30,7 @@ export const Route = createFileRoute("/")({
         }
       // Account selection
       default:
-        return;
+        return { accounts };
     }
   },
   component: Screen,
@@ -51,11 +44,12 @@ function Screen() {
 
   const select = async (npub: string) => {
     setLoading(true);
-    const loadAccount = await context.ark.load_selected_account(npub);
-    context.settings = await context.ark.get_settings(npub);
+
+    const ark = context.ark;
+    const loadAccount = await ark.load_selected_account(npub);
 
     if (loadAccount) {
-      navigate({
+      return navigate({
         to: "/$account/home",
         params: { account: npub },
         replace: true,
@@ -83,7 +77,7 @@ function Screen() {
             </div>
           ) : (
             <>
-              {context.ark.accounts.map((account) => (
+              {context.accounts.map((account) => (
                 <button
                   type="button"
                   key={account.npub}

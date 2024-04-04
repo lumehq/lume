@@ -9,7 +9,12 @@ export function ColumnContent({
   className?: string;
 }) {
   return (
-    <div className={cn("flex-1 overflow-y-auto overflow-x-hidden", className)}>
+    <div
+      className={cn(
+        "flex-1 overflow-y-auto overflow-x-hidden scrollbar-none",
+        className,
+      )}
+    >
       {children}
     </div>
   );

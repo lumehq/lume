@@ -6,12 +6,12 @@
   "windows": [
     "main",
     "splash",
-    "editor",
     "settings",
     "nwc",
     "zap-*",
     "event-*",
     "user-*",
+    "editor-*",
     "column-*"
   ],
   "permissions": [

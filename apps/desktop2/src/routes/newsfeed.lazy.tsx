@@ -23,13 +23,12 @@ export function Screen() {
       queryKey: ["local", account],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_events("local", 20, pageParam, true);
+        const events = await ark.get_events(20, pageParam);
         return events;
       },
       getNextPageParam: (lastPage) => {
         const lastEvent = lastPage?.at(-1);
-        if (!lastEvent) return;
-        return lastEvent.created_at - 1;
+        return lastEvent ? lastEvent.created_at - 1 : null;
       },
       select: (data) => data?.pages.flatMap((page) => page),
       refetchOnWindowFocus: false,
