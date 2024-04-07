@@ -179,38 +179,34 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
 }
 
 #[tauri::command]
-pub async fn set_interest(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+pub async fn set_nstore(
+  key: &str,
+  content: &str,
+  state: State<'_, Nostr>,
+) -> Result<EventId, String> {
   let client = &state.client;
-  let tag = Tag::Identifier("lume_user_interest".into());
+  let tag = Tag::Identifier(key.into());
   let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
 
   if let Ok(event_id) = client.send_event_builder(builder).await {
+    println!("set nstore: {}", event_id);
     Ok(event_id)
   } else {
-    Err("Set interest failed".into())
+    Err("Event has been published failled".into())
   }
 }
 
 #[tauri::command]
-pub async fn get_interest(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
-    Ok(val) => match val {
-      Nip19::Pubkey(pubkey) => Some(pubkey),
-      Nip19::Profile(profile) => Some(profile.public_key),
-      _ => None,
-    },
-    Err(_) => match PublicKey::from_str(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
-    },
-  };
+  let signer = client.signer().await.unwrap();
+  let public_key = signer.public_key().await;
 
-  if let Some(author) = public_key {
+  if let Ok(author) = public_key {
     let filter = Filter::new()
       .author(author)
       .kind(Kind::ApplicationSpecificData)
-      .identifier("lume_user_interest")
+      .identifier(key)
       .limit(1);
 
     let query = client
@@ -219,68 +215,17 @@ pub async fn get_interest(id: &str, state: State<'_, Nostr>) -> Result<String, S
 
     if let Ok(events) = query {
       if let Some(event) = events.first() {
+        println!("get nstore key: {} - received: {}", key, event.id);
         Ok(event.content.to_string())
       } else {
-        Err("User interest not found".into())
+        println!("get nstore key: {}", key);
+        Err("Value not found".into())
       }
     } else {
-      Err("User interest not found".into())
+      Err("Query nstore event failed".into())
     }
   } else {
-    Err("Get interest failed".into())
-  }
-}
-
-#[tauri::command]
-pub async fn set_settings(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
-  let client = &state.client;
-  let tag = Tag::Identifier("lume_user_settings".into());
-  let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
-
-  if let Ok(event_id) = client.send_event_builder(builder).await {
-    Ok(event_id)
-  } else {
-    Err("Set settings failed".into())
-  }
-}
-
-#[tauri::command]
-pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
-  let client = &state.client;
-  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
-    Ok(val) => match val {
-      Nip19::Pubkey(pubkey) => Some(pubkey),
-      Nip19::Profile(profile) => Some(profile.public_key),
-      _ => None,
-    },
-    Err(_) => match PublicKey::from_str(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
-    },
-  };
-
-  if let Some(author) = public_key {
-    let filter = Filter::new()
-      .author(author)
-      .kind(Kind::ApplicationSpecificData)
-      .identifier("lume_user_settings")
-      .limit(1);
-
-    let query = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await;
-
-    if let Ok(events) = query {
-      if let Some(event) = events.first() {
-        Ok(event.content.to_string())
-      } else {
-        Err("User settings not found".into())
-      }
-    } else {
-      Err("User settings not found".into())
-    }
-  } else {
-    Err("Get settings failed".into())
+    Err("Something is wrong".into())
   }
 }
 

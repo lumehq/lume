@@ -275,8 +275,13 @@ function Screen() {
 
 function Pending() {
   return (
-    <div className="flex h-full w-full items-center justify-center gap-2.5">
-      <LoaderIcon className="size-5 animate-spin" />
+    <div
+      data-tauri-drag-region
+      className="flex h-full w-full items-center justify-center gap-2.5"
+    >
+      <button type="button" disabled>
+        <LoaderIcon className="size-5 animate-spin" />
+      </button>
       <p>Loading cache...</p>
     </div>
   );

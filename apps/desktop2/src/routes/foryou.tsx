@@ -2,7 +2,7 @@ import { RepostNote } from "@/components/repost";
 import { Suggest } from "@/components/suggest";
 import { TextNote } from "@/components/text";
 import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
-import { Event, Kind } from "@lume/types";
+import { ColumnRouteSearch, Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -10,10 +10,16 @@ import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/foryou")({
+  validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
+    return {
+      account: search.account,
+      label: search.label,
+      name: search.name,
+    };
+  },
   beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
-    // @ts-ignore, useless !!!
-    const interests = await ark.get_interest(search.account);
+    const interests = await ark.get_interest();
 
     if (!interests) {
       throw redirect({
@@ -31,13 +37,12 @@ export const Route = createFileRoute("/foryou")({
 });
 
 export function Screen() {
-  // @ts-ignore, just work!!!
-  const { id, name, account } = Route.useSearch();
+  const { label, name, account } = Route.useSearch();
   const { ark, interests } = Route.useRouteContext();
   const { t } = useTranslation();
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["foryou", account],
+      queryKey: [name, account],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
         const events = await ark.get_events_from_interests(
@@ -68,7 +73,7 @@ export function Screen() {
 
   return (
     <Column.Root>
-      <Column.Header id={id} name={name} />
+      <Column.Header label={label} name={name} />
       <Column.Content>
         {isLoading ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">

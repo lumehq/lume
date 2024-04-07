@@ -59,6 +59,9 @@
       "allow": [
         {
           "path": "$RESOURCE/locales/*"
+        },
+        {
+          "path": "$RESOURCE/resources/*"
         }
       ]
     }

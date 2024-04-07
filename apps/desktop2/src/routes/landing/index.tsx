@@ -8,7 +8,6 @@ export const Route = createFileRoute("/landing/")({
 
 function Screen() {
   const { t } = useTranslation();
-  const context = Route.useRouteContext();
 
   return (
     <div className="relative flex h-screen w-screen bg-black">

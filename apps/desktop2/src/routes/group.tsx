@@ -1,30 +1,52 @@
 import { RepostNote } from "@/components/repost";
 import { Suggest } from "@/components/suggest";
 import { TextNote } from "@/components/text";
-import { useEvents } from "@lume/ark";
 import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
-import { Event, Kind } from "@lume/types";
+import { ColumnRouteSearch, Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
 
-export const Route = createLazyFileRoute("/group")({
+export const Route = createFileRoute("/group")({
   component: Screen,
+  validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
+    return {
+      account: search.account,
+      label: search.label,
+      name: search.name,
+    };
+  },
+  beforeLoad: async ({ context }) => {
+    const ark = context.ark;
+    if (!ark) {
+      throw redirect({
+        to: "/group/create",
+      });
+    }
+  },
 });
 
 export function Screen() {
-  // @ts-ignore, just work!!!
-  const { id, name, account } = Route.useSearch();
+  const { label, name, account } = Route.useSearch();
+  const { ark } = Route.useRouteContext();
   const { t } = useTranslation();
-  const {
-    data,
-    hasNextPage,
-    isLoading,
-    isRefetching,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useEvents("local", account);
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: [name, account],
+      initialPageParam: 0,
+      queryFn: async ({ pageParam }: { pageParam: number }) => {
+        const events = await ark.get_events(20, pageParam);
+        return events;
+      },
+      getNextPageParam: (lastPage) => {
+        const lastEvent = lastPage?.at(-1);
+        return lastEvent ? lastEvent.created_at - 1 : null;
+      },
+      select: (data) => data?.pages.flatMap((page) => page),
+      refetchOnWindowFocus: false,
+    });
 
   const renderItem = (event: Event) => {
     if (!event) return;
@@ -38,9 +60,9 @@ export function Screen() {
 
   return (
     <Column.Root>
-      <Column.Header id={id} name={name} />
+      <Column.Header label={label} name={name} />
       <Column.Content>
-        {isLoading || isRefetching ? (
+        {isLoading ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
             <LoaderIcon className="size-5 animate-spin" />
           </div>

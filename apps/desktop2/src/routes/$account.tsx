@@ -5,16 +5,6 @@ import { Accounts } from "@/components/accounts";
 
 export const Route = createFileRoute("/$account")({
   component: App,
-  beforeLoad: async ({ params, context }) => {
-    const ark = context.ark;
-    const settings = await ark.get_settings(params.account);
-    const interests = await ark.get_interest(params.account);
-
-    return {
-      settings,
-      interests,
-    };
-  },
 });
 
 function App() {

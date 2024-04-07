@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { getCurrent } from "@tauri-apps/api/window";
 import { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
+import { LoaderIcon } from "@lume/icons";
 
 export function Col({
   column,
@@ -18,10 +19,10 @@ export function Col({
 
   const createWebview = async () => {
     const rect = container.current.getBoundingClientRect();
-    const label = `column-${column.id}`;
+    const label = `column-${column.label}`;
     const url =
       column.content +
-      `?account=${account}&id=${column.id}&name=${column.name}`;
+      `?account=${account}&label=${column.label}&name=${column.name}`;
 
     // create new webview
     webview.current = await invoke("create_column", {
@@ -71,5 +72,14 @@ export function Col({
     };
   }, []);
 
-  return <div ref={container} className="h-full w-[440px] shrink-0 p-2" />;
+  return (
+    <div
+      ref={container}
+      className="h-full w-[440px] shrink-0 p-2 flex items-center justify-center"
+    >
+      <button type="button" disabled>
+        <LoaderIcon className="size-5 animate-spin" />
+      </button>
+    </div>
+  );
 }

@@ -22,8 +22,8 @@ function Screen() {
             type="button"
             onClick={() =>
               install({
-                id: 9999,
-                name: "Lume Store",
+                label: "store",
+                name: "Store",
                 content: "/store/official",
               })
             }
@@ -36,8 +36,8 @@ function Screen() {
           type="button"
           onClick={() =>
             install({
-              id: 9999,
-              name: "Lume Store",
+              label: "store",
+              name: "Store",
               content: "/store/official",
             })
           }

@@ -4,27 +4,38 @@ import { LoaderIcon } from "@lume/icons";
 import { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { UnlistenFn } from "@tauri-apps/api/event";
+import { resolveResource } from "@tauri-apps/api/path";
 import { getCurrent } from "@tauri-apps/api/window";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 import { useEffect, useRef, useState } from "react";
 import { VList, VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
   component: Screen,
   pendingComponent: Pending,
-});
+  beforeLoad: async ({ context }) => {
+    const ark = context.ark;
+    const resourcePath = await resolveResource("resources/system_columns.json");
+    const systemColumns: LumeColumn[] = JSON.parse(
+      await readTextFile(resourcePath),
+    );
+    const userColumns = await ark.get_columns();
 
-const DEFAULT_COLUMNS: LumeColumn[] = [
-  { id: 10001, name: "Newsfeed", content: "/newsfeed" },
-  { id: 10000, name: "Open Lume Store", content: "/open" },
-];
+    return {
+      storedColumns: !userColumns.length ? systemColumns : userColumns,
+    };
+  },
+});
 
 function Screen() {
   const { account } = Route.useParams();
-  const vlistRef = useRef<VListHandle>(null);
+  const { ark, storedColumns } = Route.useRouteContext();
 
-  const [columns, setColumns] = useState(DEFAULT_COLUMNS);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isScroll, setIsScroll] = useState(false);
+  const [columns, setColumns] = useState(storedColumns);
+
+  const vlistRef = useRef<VListHandle>(null);
 
   const goLeft = () => {
     const prevIndex = Math.max(selectedIndex - 1, 0);
@@ -43,39 +54,41 @@ function Screen() {
   };
 
   const add = (column: LumeColumn) => {
-    const existed = columns.find((item) => item.id === column.id);
+    const existed = columns.find((item) => item.label === column.label);
     if (!existed) {
-      let lastColIndex: number;
-      const openColIndex = columns.findIndex((item) => item.id === 10000);
-      const storeColIndex = columns.findIndex((item) => item.id === 9999);
-
-      if (storeColIndex) {
-        lastColIndex = storeColIndex;
-      } else {
-        lastColIndex = openColIndex;
-      }
-
+      const lastColIndex = columns.findIndex((item) => item.label === "open");
       const newColumns = [
         ...columns.slice(0, lastColIndex),
         column,
         ...columns.slice(lastColIndex),
       ];
 
-      // update state & scroll to new column
+      // update state
       setColumns(newColumns);
       setSelectedIndex(newColumns.length - 1);
-      vlistRef.current.scrollToIndex(newColumns.length - 1, {
-        align: "center",
-      });
-    }
-  };
 
-  const remove = (id: number) => {
-    setColumns((prev) => prev.filter((t) => t.id !== id));
-    setSelectedIndex(columns.length);
-    vlistRef.current.scrollToIndex(columns.length, {
+      // save state
+      ark.set_columns(newColumns);
+    }
+
+    // scroll to new column
+    vlistRef.current.scrollToIndex(columns.length - 1, {
       align: "center",
     });
+  };
+
+  const remove = (label: string) => {
+    const newColumns = columns.filter((t) => t.label !== label);
+
+    // update state
+    setColumns(newColumns);
+    setSelectedIndex(newColumns.length - 1);
+    vlistRef.current.scrollToIndex(newColumns.length - 1, {
+      align: "center",
+    });
+
+    // save state
+    ark.set_columns(newColumns);
   };
 
   useEffect(() => {
@@ -86,7 +99,7 @@ function Screen() {
       if (!unlisten) {
         unlisten = await mainWindow.listen<EventColumns>("columns", (data) => {
           if (data.payload.type === "add") add(data.payload.column);
-          if (data.payload.type === "remove") remove(data.payload.id);
+          if (data.payload.type === "remove") remove(data.payload.label);
         });
       }
     };
@@ -98,7 +111,7 @@ function Screen() {
     return () => {
       if (unlisten) {
         unlisten();
-        unlisten = null;
+        unlisten = undefined;
       }
     };
   }, []);
@@ -137,7 +150,7 @@ function Screen() {
       >
         {columns.map((column) => (
           <Col
-            key={column.id}
+            key={column.label}
             column={column}
             account={account}
             isScroll={isScroll}

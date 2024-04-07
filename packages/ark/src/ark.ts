@@ -6,6 +6,7 @@ import type {
 	EventWithReplies,
 	Interests,
 	Keys,
+	LumeColumn,
 	Metadata,
 	Settings,
 } from "@lume/types";
@@ -13,6 +14,13 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { generateContentTags } from "@lume/utils";
+
+enum NSTORE_KEYS {
+	settings = "lume_user_settings",
+	interests = "lume_user_interests",
+	columns = "lume_user_columns",
+	group = "lume_group_",
+}
 
 export class Ark {
 	public windows: WebviewWindow[];
@@ -565,13 +573,36 @@ export class Ark {
 		}
 	}
 
-	public async get_settings(id: string) {
+	public async get_columns() {
 		try {
-			const cmd: string = await invoke("get_settings", { id });
-			if (!cmd) return null;
-			if (!cmd.length) return null;
+			const cmd: string = await invoke("get_nstore", {
+				key: NSTORE_KEYS.columns,
+			});
+			const columns: LumeColumn[] = cmd ? JSON.parse(cmd) : [];
+			return columns;
+		} catch {
+			return [];
+		}
+	}
 
-			const settings: Settings = JSON.parse(cmd);
+	public async set_columns(columns: LumeColumn[]) {
+		try {
+			const cmd: string = await invoke("set_nstore", {
+				key: NSTORE_KEYS.columns,
+				content: JSON.stringify(columns),
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(e);
+		}
+	}
+
+	public async get_settings() {
+		try {
+			const cmd: string = await invoke("get_nstore", {
+				key: NSTORE_KEYS.settings,
+			});
+			const settings: Settings = cmd ? JSON.parse(cmd) : null;
 			return settings;
 		} catch {
 			const defaultSettings: Settings = {
@@ -585,7 +616,8 @@ export class Ark {
 
 	public async set_settings(settings: Settings) {
 		try {
-			const cmd: string = await invoke("set_settings", {
+			const cmd: string = await invoke("set_nstore", {
+				key: NSTORE_KEYS.settings,
 				content: JSON.stringify(settings),
 			});
 			return cmd;
@@ -594,13 +626,12 @@ export class Ark {
 		}
 	}
 
-	public async get_interest(id: string) {
+	public async get_interest() {
 		try {
-			const cmd: string = await invoke("get_interest", { id });
-			if (!cmd) return null;
-			if (!cmd.length) return null;
-
-			const interests: Interests = JSON.parse(cmd);
+			const cmd: string = await invoke("get_nstore", {
+				key: NSTORE_KEYS.interests,
+			});
+			const interests: Interests = cmd ? JSON.parse(cmd) : null;
 			return interests;
 		} catch {
 			return null;
@@ -618,7 +649,8 @@ export class Ark {
 				users: users ?? [],
 				hashtags: hashtags ?? [],
 			};
-			const cmd: string = await invoke("set_interest", {
+			const cmd: string = await invoke("set_nstore", {
+				key: NSTORE_KEYS.interests,
 				content: JSON.stringify(interests),
 			});
 			return cmd;

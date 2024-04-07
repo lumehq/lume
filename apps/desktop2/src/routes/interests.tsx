@@ -1,22 +1,29 @@
+import { ColumnRouteSearch } from "@lume/types";
 import { Column } from "@lume/ui";
 import { TOPICS, cn } from "@lume/utils";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createLazyFileRoute("/interests")({
+export const Route = createFileRoute("/interests")({
   component: Screen,
+  validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
+    return {
+      account: search.account,
+      label: search.label,
+      name: search.name,
+    };
+  },
 });
 
 function Screen() {
   const { t } = useTranslation();
+  const { label, name } = Route.useSearch();
+  const { ark } = Route.useRouteContext();
 
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [isDone, setIsDone] = useState(false);
-
-  const context = Route.useRouteContext();
-  const search = Route.useSearch();
 
   const toggleHashtag = (item: string) => {
     const arr = hashtags.includes(item)
@@ -36,9 +43,7 @@ function Screen() {
         return history.back();
       }
 
-      const ark = context.ark;
       const eventId = await ark.set_interest(undefined, undefined, hashtags);
-
       if (eventId) {
         setIsDone(true);
         toast.success("Interest has been updated successfully.");
@@ -50,7 +55,7 @@ function Screen() {
 
   return (
     <Column.Root>
-      <Column.Header id={search.id} name={search.name} />
+      <Column.Header label={label} name={name} />
       <Column.Content>
         <div className="sticky left-0 top-0 flex h-16 w-full items-center justify-between border-b border-neutral-100 bg-white px-3 dark:border-neutral-900 dark:bg-black">
           <div className="flex flex-1 flex-col">

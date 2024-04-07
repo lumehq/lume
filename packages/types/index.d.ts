@@ -75,8 +75,14 @@ export interface RichContent {
 	notes: string[];
 }
 
+export interface ColumnRouteSearch {
+	account: string;
+	label: string;
+	name: string;
+}
+
 export interface LumeColumn {
-	id: number;
+	label: string;
 	name: string;
 	content: URL | string;
 	description?: string;
@@ -89,7 +95,7 @@ export interface LumeColumn {
 
 export interface EventColumns {
 	type: "add" | "remove" | "update" | "left" | "right";
-	id?: number;
+	label?: string;
 	column?: LumeColumn;
 }
 

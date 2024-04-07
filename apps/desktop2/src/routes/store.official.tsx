@@ -1,68 +1,27 @@
 import { LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
+import { resolveResource } from "@tauri-apps/api/path";
 import { getCurrent } from "@tauri-apps/api/window";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 
 export const Route = createFileRoute("/store/official")({
   component: Screen,
-  loader: () => {
-    const columns: LumeColumn[] = [
-      {
-        id: 10002,
-        name: "For you",
-        content: "/foryou",
-        logo: "",
-        cover: "/foryou.png",
-        coverRetina: "/foryou@2x.png",
-        author: "Lume",
-        description: "Keep up to date with content based on your interests.",
-      },
-      {
-        id: 10003,
-        name: "Group Feeds",
-        content: "/group",
-        logo: "",
-        cover: "/group.png",
-        coverRetina: "/group@2x.png",
-        author: "Lume",
-        description: "Collective of people you're interested in.",
-      },
-      {
-        id: 10004,
-        name: "Antenas",
-        content: "/antenas",
-        logo: "",
-        cover: "/antenas.png",
-        coverRetina: "/antenas@2x.png",
-        author: "Lume",
-        description: "Keep track to specific content.",
-      },
-      {
-        id: 10005,
-        name: "Trending",
-        content: "/trending",
-        logo: "",
-        cover: "/trending.png",
-        coverRetina: "/trending@2x.png",
-        author: "Lume",
-        description: "What is trending on Nostr?.",
-      },
-      {
-        id: 10006,
-        name: "Global",
-        content: "/global",
-        logo: "",
-        cover: "/global.png",
-        coverRetina: "/global@2x.png",
-        author: "Lume",
-        description: "All events from connected relays.",
-      },
-    ];
-    return columns;
+  beforeLoad: async () => {
+    const resourcePath = await resolveResource(
+      "resources/official_columns.json",
+    );
+    const officialColumns: LumeColumn[] = JSON.parse(
+      await readTextFile(resourcePath),
+    );
+
+    return {
+      officialColumns,
+    };
   },
 });
 
 function Screen() {
-  const data = Route.useLoaderData();
+  const { officialColumns } = Route.useRouteContext();
 
   const install = async (column: LumeColumn) => {
     const mainWindow = getCurrent();
@@ -71,9 +30,9 @@ function Screen() {
 
   return (
     <div className="flex flex-col gap-3 p-3">
-      {data.map((column) => (
+      {officialColumns.map((column) => (
         <div
-          key={column.id}
+          key={column.label}
           className="relative h-[200px] w-full overflow-hidden rounded-xl bg-gradient-to-tr from-orange-100 to-blue-200 px-3 pt-3"
         >
           {column.cover ? (

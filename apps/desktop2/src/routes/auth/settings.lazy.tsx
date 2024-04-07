@@ -17,7 +17,6 @@ export const Route = createLazyFileRoute("/auth/settings")({
 function Screen() {
   const navigate = useNavigate();
 
-  // @ts-ignore, magic!!!
   const { account } = Route.useSearch();
   const { t } = useTranslation();
   const { ark } = Route.useRouteContext();
@@ -64,7 +63,7 @@ function Screen() {
   useEffect(() => {
     async function loadSettings() {
       const permissionGranted = await isPermissionGranted(); // get notification permission
-      const settings = await ark.get_settings(account);
+      const settings = await ark.get_settings();
 
       setSettings({ ...settings, notification: permissionGranted });
     }
@@ -146,7 +145,7 @@ function Screen() {
         <button
           type="button"
           onClick={submit}
-          className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+          className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
         >
           {t("global.continue")}
         </button>
