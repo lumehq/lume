@@ -56,15 +56,11 @@ fn main() {
         client
           .add_relay("wss://relay.nostr.band")
           .await
-          .unwrap_or_default();
-        client
-          .add_relay("wss://relay.damus.io")
-          .await
-          .unwrap_or_default();
+          .expect("Cannot connect to relay.nostr.band, please try again later.");
         client
           .add_relay("wss://purplepag.es")
           .await
-          .unwrap_or_default();
+          .expect("Cannot connect to purplepag.es, please try again later.");
 
         // Connect
         client.connect().await;

@@ -19,7 +19,6 @@ enum NSTORE_KEYS {
 	settings = "lume_user_settings",
 	interests = "lume_user_interests",
 	columns = "lume_user_columns",
-	group = "lume_group_",
 }
 
 export class Ark {
@@ -654,8 +653,33 @@ export class Ark {
 				content: JSON.stringify(interests),
 			});
 			return cmd;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async get_nstore(key: string) {
+		try {
+			const cmd: string = await invoke("get_nstore", {
+				key,
+			});
+			const parse: string | string[] = cmd ? JSON.parse(cmd) : null;
+			if (!parse.length) return null;
+			return parse;
 		} catch {
 			return null;
+		}
+	}
+
+	public async set_nstore(key: string, content: string) {
+		try {
+			const cmd: string = await invoke("set_nstore", {
+				key,
+				content,
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(String(e));
 		}
 	}
 

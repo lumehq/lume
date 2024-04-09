@@ -54,42 +54,16 @@ function Screen() {
   };
 
   const add = (column: LumeColumn) => {
-    const existed = columns.find((item) => item.label === column.label);
-    if (!existed) {
-      const lastColIndex = columns.findIndex((item) => item.label === "open");
-      const newColumns = [
-        ...columns.slice(0, lastColIndex),
-        column,
-        ...columns.slice(lastColIndex),
-      ];
-
-      // update state
-      setColumns(newColumns);
-      setSelectedIndex(newColumns.length - 1);
-
-      // save state
-      ark.set_columns(newColumns);
-    }
-
-    // scroll to new column
-    vlistRef.current.scrollToIndex(columns.length - 1, {
-      align: "center",
-    });
+    setColumns((state) => [...state, column]);
   };
 
   const remove = (label: string) => {
-    const newColumns = columns.filter((t) => t.label !== label);
-
-    // update state
-    setColumns(newColumns);
-    setSelectedIndex(newColumns.length - 1);
-    vlistRef.current.scrollToIndex(newColumns.length - 1, {
-      align: "center",
-    });
-
-    // save state
-    ark.set_columns(newColumns);
+    setColumns((state) => state.filter((t) => t.label !== label));
   };
+
+  useEffect(() => {
+    ark.set_columns(columns);
+  }, [columns]);
 
   useEffect(() => {
     let unlisten: UnlistenFn = undefined;

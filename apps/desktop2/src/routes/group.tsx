@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/group")({
-  component: Screen,
   validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
     return {
       account: search.account,
@@ -18,14 +17,23 @@ export const Route = createFileRoute("/group")({
       name: search.name,
     };
   },
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
-    if (!ark) {
+    const groups = await ark.get_nstore(`lume_group_${search.label}`);
+
+    if (!groups) {
       throw redirect({
-        to: "/group/create",
+        to: "/create-group",
+        replace: false,
+        search,
       });
     }
+
+    return {
+      groups,
+    };
   },
+  component: Screen,
 });
 
 export function Screen() {

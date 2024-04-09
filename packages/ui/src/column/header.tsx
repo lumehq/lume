@@ -1,4 +1,4 @@
-import { CancelIcon, RefreshIcon } from "@lume/icons";
+import { CancelIcon, ExpandIcon, RefreshIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { getCurrent } from "@tauri-apps/api/window";
 import { ReactNode } from "react";
