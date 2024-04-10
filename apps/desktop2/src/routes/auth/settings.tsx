@@ -1,16 +1,21 @@
-import { CheckIcon } from "@lume/icons";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { LaurelIcon } from "@lume/icons";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import * as Switch from "@radix-ui/react-switch";
 import { useEffect, useState } from "react";
-import { Settings } from "@lume/types";
+import { AppRouteSearch, Settings } from "@lume/types";
 import {
   isPermissionGranted,
   requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { toast } from "sonner";
 
-export const Route = createLazyFileRoute("/auth/settings")({
+export const Route = createFileRoute("/auth/settings")({
+  validateSearch: (search: Record<string, string>): AppRouteSearch => {
+    return {
+      account: search.account,
+    };
+  },
   component: Screen,
 });
 
@@ -25,6 +30,7 @@ function Screen() {
     notification: false,
     enhancedPrivacy: false,
     autoUpdate: false,
+    zap: false,
   });
 
   const toggleNofitication = async () => {
@@ -49,6 +55,13 @@ function Screen() {
     }));
   };
 
+  const toggleZap = () => {
+    setSettings((prev) => ({
+      ...prev,
+      zap: !settings.zap,
+    }));
+  };
+
   const submit = async () => {
     try {
       const eventId = await ark.set_settings(settings);
@@ -64,7 +77,6 @@ function Screen() {
     async function loadSettings() {
       const permissionGranted = await isPermissionGranted(); // get notification permission
       const settings = await ark.get_settings();
-
       setSettings({ ...settings, notification: permissionGranted });
     }
 
@@ -75,7 +87,7 @@ function Screen() {
     <div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
       <div className="flex flex-col items-center gap-5 text-center">
         <div className="flex size-20 items-center justify-center rounded-full bg-teal-100 text-teal-500">
-          <CheckIcon className="size-6" />
+          <LaurelIcon className="size-8" />
         </div>
         <div>
           <h1 className="text-xl font-semibold">
@@ -132,6 +144,22 @@ function Screen() {
               <h3 className="font-semibold">Auto Update</h3>
               <p className="text-sm text-neutral-700 dark:text-neutral-300">
                 Automatically download and install new version.
+              </p>
+            </div>
+          </div>
+          <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
+            <Switch.Root
+              checked={settings.zap}
+              onClick={() => toggleZap()}
+              className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+            >
+              <Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+            </Switch.Root>
+            <div className="flex-1">
+              <h3 className="font-semibold">Zap</h3>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                Show the Zap button in each note and user's profile screen, use
+                for send Bitcoin tip to other users.
               </p>
             </div>
           </div>

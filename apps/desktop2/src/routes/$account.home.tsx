@@ -3,11 +3,12 @@ import { Toolbar } from "@/components/toolbar";
 import { LoaderIcon } from "@lume/icons";
 import { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
-import { UnlistenFn } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
 import { resolveResource } from "@tauri-apps/api/path";
-import { getCurrent } from "@tauri-apps/api/window";
 import { readTextFile } from "@tauri-apps/plugin-fs";
+import { nanoid } from "nanoid";
 import { useEffect, useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { VList, VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
@@ -53,40 +54,45 @@ function Screen() {
     });
   };
 
-  const add = (column: LumeColumn) => {
-    setColumns((state) => [...state, column]);
-  };
+  const add = useDebouncedCallback((column: LumeColumn) => {
+    column["label"] = column.label + "-" + nanoid();
 
-  const remove = (label: string) => {
+    setColumns((state) => [...state, column]);
+    setSelectedIndex(columns.length + 1);
+
+    // scroll to the last column
+    vlistRef.current.scrollToIndex(columns.length + 1, {
+      align: "end",
+    });
+  }, 150);
+
+  const remove = useDebouncedCallback((label: string) => {
     setColumns((state) => state.filter((t) => t.label !== label));
-  };
+    setSelectedIndex(columns.length - 1);
+
+    // scroll to the first column
+    vlistRef.current.scrollToIndex(0, {
+      align: "start",
+    });
+  }, 150);
 
   useEffect(() => {
     ark.set_columns(columns);
   }, [columns]);
 
   useEffect(() => {
-    let unlisten: UnlistenFn = undefined;
+    let unlisten: Awaited<ReturnType<typeof listen>> | undefined = undefined;
 
-    const listenColumnEvent = async () => {
-      const mainWindow = getCurrent();
-      if (!unlisten) {
-        unlisten = await mainWindow.listen<EventColumns>("columns", (data) => {
-          if (data.payload.type === "add") add(data.payload.column);
-          if (data.payload.type === "remove") remove(data.payload.label);
-        });
-      }
-    };
+    (async () => {
+      if (unlisten) return;
+      unlisten = await listen<EventColumns>("columns", (data) => {
+        if (data.payload.type === "add") add(data.payload.column);
+        if (data.payload.type === "remove") remove(data.payload.label);
+      });
+    })();
 
-    // listen for column changes
-    listenColumnEvent();
-
-    // clean up
     return () => {
-      if (unlisten) {
-        unlisten();
-        unlisten = undefined;
-      }
+      if (unlisten) unlisten();
     };
   }, []);
 
@@ -122,9 +128,9 @@ function Screen() {
         }}
         className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
       >
-        {columns.map((column) => (
+        {columns.map((column, index) => (
           <Col
-            key={column.label}
+            key={column.label + index}
             column={column}
             account={account}
             isScroll={isScroll}
@@ -139,7 +145,7 @@ function Screen() {
 function Pending() {
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <button type="button" disabled>
+      <button type="button" className="size-5" disabled>
         <LoaderIcon className="size-5 animate-spin" />
       </button>
     </div>

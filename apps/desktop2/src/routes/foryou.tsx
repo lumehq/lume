@@ -24,8 +24,10 @@ export const Route = createFileRoute("/foryou")({
     if (!interests) {
       throw redirect({
         to: "/interests",
-        replace: false,
-        search,
+        search: {
+          ...search,
+          redirect: "/foryou",
+        },
       });
     }
 

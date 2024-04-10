@@ -24,8 +24,10 @@ export const Route = createFileRoute("/group")({
     if (!groups) {
       throw redirect({
         to: "/create-group",
-        replace: false,
-        search,
+        search: {
+          ...search,
+          redirect: "/group",
+        },
       });
     }
 

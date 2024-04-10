@@ -1,7 +1,7 @@
 import { CheckCircleIcon } from "@lume/icons";
 import { ColumnRouteSearch } from "@lume/types";
 import { Column, User } from "@lume/ui";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -23,9 +23,10 @@ export const Route = createFileRoute("/create-group")({
 
 function Screen() {
   const contacts = Route.useLoaderData();
+  const router = useRouter();
 
   const { ark } = Route.useRouteContext();
-  const { label, name } = Route.useSearch();
+  const { label, name, redirect } = Route.useSearch();
 
   const [title, setTitle] = useState<string>("Just a new group");
   const [users, setUsers] = useState<Array<string>>([]);
@@ -40,7 +41,7 @@ function Screen() {
 
   const submit = async () => {
     try {
-      if (isDone) return history.back();
+      if (isDone) return router.history.push(redirect);
 
       const groups = await ark.set_nstore(
         `lume_group_${label}`,

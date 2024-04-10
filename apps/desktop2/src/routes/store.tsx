@@ -6,7 +6,6 @@ import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/store")({
-  component: Screen,
   validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
     return {
       account: search.account,
@@ -14,6 +13,7 @@ export const Route = createFileRoute("/store")({
       name: search.name,
     };
   },
+  component: Screen,
 });
 
 function Screen() {

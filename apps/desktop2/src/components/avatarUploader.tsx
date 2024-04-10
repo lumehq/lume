@@ -34,7 +34,7 @@ export function AvatarUploader({
     <button
       type="button"
       onClick={() => uploadAvatar()}
-      className={cn("", className)}
+      className={cn("size-4", className)}
     >
       {loading ? <LoaderIcon className="size-4 animate-spin" /> : children}
     </button>

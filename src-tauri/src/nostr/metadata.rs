@@ -199,33 +199,37 @@ pub async fn set_nstore(
 #[tauri::command]
 pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let signer = client.signer().await.unwrap();
-  let public_key = signer.public_key().await;
 
-  if let Ok(author) = public_key {
-    let filter = Filter::new()
-      .author(author)
-      .kind(Kind::ApplicationSpecificData)
-      .identifier(key)
-      .limit(1);
+  if let Ok(signer) = client.signer().await {
+    let public_key = signer.public_key().await;
 
-    let query = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await;
+    if let Ok(author) = public_key {
+      let filter = Filter::new()
+        .author(author)
+        .kind(Kind::ApplicationSpecificData)
+        .identifier(key)
+        .limit(1);
 
-    if let Ok(events) = query {
-      if let Some(event) = events.first() {
-        println!("get nstore key: {} - received: {}", key, event.id);
-        Ok(event.content.to_string())
+      let query = client
+        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .await;
+
+      if let Ok(events) = query {
+        if let Some(event) = events.first() {
+          println!("get nstore key: {} - received: {}", key, event.id);
+          Ok(event.content.to_string())
+        } else {
+          println!("get nstore key: {}", key);
+          Err("Value not found".into())
+        }
       } else {
-        println!("get nstore key: {}", key);
-        Err("Value not found".into())
+        Err("Query nstore event failed".into())
       }
     } else {
-      Err("Query nstore event failed".into())
+      Err("Something is wrong".into())
     }
   } else {
-    Err("Something is wrong".into())
+    Err("Signer is required".into())
   }
 }
 

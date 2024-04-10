@@ -38,23 +38,25 @@ function Screen() {
             </Link>
             <div className="flex items-center gap-2">
               <div className="h-px flex-1 bg-white/20" />
-              <span className="text-white">Or</span>
+              <div className="text-white/70">{t("login.or")}</div>
               <div className="h-px flex-1 bg-white/20" />
             </div>
             <div className="flex flex-col gap-2">
               <Link
                 to="/auth/remote"
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/20 px-3 font-medium text-white backdrop-blur-md hover:bg-white/40"
+                className="group inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-white/20 px-3 font-medium text-white backdrop-blur-md hover:bg-white/40"
               >
-                <RemoteIcon className="size-5" />
-                Continue with Nostr Connect
+                <RemoteIcon className="size-5 text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-400 dark:group-hover:text-neutral-600" />
+                Nostr Connect
+                <div className="size-5" />
               </Link>
               <Link
                 to="/auth/privkey"
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white/20 px-3 font-medium text-white backdrop-blur-md hover:bg-white/40"
+                className="group inline-flex h-11 w-full items-center justify-between gap-2 rounded-lg bg-white/20 px-3 font-medium text-white backdrop-blur-md hover:bg-white/40"
               >
-                <KeyIcon className="size-5" />
-                Continue with Private Key
+                <KeyIcon className="size-5 text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-400 dark:group-hover:text-neutral-600" />
+                Private Key
+                <div className="size-5" />
               </Link>
             </div>
           </div>

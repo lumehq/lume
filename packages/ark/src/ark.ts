@@ -608,6 +608,7 @@ export class Ark {
 				autoUpdate: false,
 				enhancedPrivacy: false,
 				notification: false,
+				zap: false,
 			};
 			return defaultSettings;
 		}

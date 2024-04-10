@@ -8,7 +8,7 @@
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",
 		"@lume/utils": "workspace:^",
-		"@nostr-dev-kit/ndk": "^2.6.1",
+		"@nostr-dev-kit/ndk": "^2.7.1",
 		"@radix-ui/react-accordion": "^1.1.2",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",
@@ -18,13 +18,13 @@
 		"@radix-ui/react-hover-card": "^1.0.7",
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-tooltip": "^1.0.7",
-		"@tanstack/react-query": "^5.28.14",
-		"@tanstack/react-router": "^1.26.7",
-		"framer-motion": "^11.0.24",
+		"@tanstack/react-query": "^5.29.0",
+		"@tanstack/react-router": "^1.26.18",
+		"framer-motion": "^11.0.25",
 		"get-urls": "^12.1.0",
 		"media-chrome": "^3.2.0",
 		"minidenticons": "^4.2.1",
-		"nanoid": "^5.0.6",
+		"nanoid": "^5.0.7",
 		"qrcode.react": "^3.1.0",
 		"re-resizable": "^6.9.11",
 		"react": "^18.2.0",
@@ -37,17 +37,17 @@
 		"slate": "^0.102.0",
 		"slate-react": "^0.102.0",
 		"sonner": "^1.4.41",
-		"string-strip-html": "^13.4.7",
+		"string-strip-html": "^13.4.8",
 		"uqr": "^0.1.2",
 		"use-debounce": "^10.0.0",
-		"virtua": "^0.29.1"
+		"virtua": "^0.29.2"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.74",
+		"@types/react": "^18.2.75",
 		"tailwindcss": "^3.4.3",
-		"typescript": "^5.4.3"
+		"typescript": "^5.4.4"
 	}
 }

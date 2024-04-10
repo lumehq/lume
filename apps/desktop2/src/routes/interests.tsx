@@ -1,7 +1,7 @@
 import { ColumnRouteSearch } from "@lume/types";
 import { Column } from "@lume/ui";
 import { TOPICS, cn } from "@lume/utils";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -19,11 +19,13 @@ export const Route = createFileRoute("/interests")({
 
 function Screen() {
   const { t } = useTranslation();
-  const { label, name } = Route.useSearch();
+  const { label, name, redirect } = Route.useSearch();
   const { ark } = Route.useRouteContext();
 
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [isDone, setIsDone] = useState(false);
+
+  const router = useRouter();
 
   const toggleHashtag = (item: string) => {
     const arr = hashtags.includes(item)
@@ -40,7 +42,7 @@ function Screen() {
   const submit = async () => {
     try {
       if (isDone) {
-        return history.back();
+        return router.history.push(redirect);
       }
 
       const eventId = await ark.set_interest(undefined, undefined, hashtags);

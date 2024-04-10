@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef } from "react";
-import { getCurrent } from "@tauri-apps/api/window";
+import { useEffect, useRef } from "react";
 import { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { LoaderIcon } from "@lume/icons";
+import { cn } from "@lume/utils";
 
 export function Col({
   column,
@@ -13,43 +13,18 @@ export function Col({
   account: string;
   isScroll: boolean;
 }) {
-  const window = useMemo(() => getCurrent(), []);
-  const webview = useRef<string>(null);
+  const webview = useRef<string | undefined>(undefined);
   const container = useRef<HTMLDivElement>(null);
 
-  const createWebview = async () => {
-    const rect = container.current.getBoundingClientRect();
-    const label = `column-${column.label}`;
-    const url =
-      column.content +
-      `?account=${account}&label=${column.label}&name=${column.name}`;
-
-    // create new webview
-    webview.current = await invoke("create_column", {
-      label,
-      x: rect.x,
-      y: rect.y,
-      width: rect.width,
-      height: rect.height,
-      url,
-    });
-  };
-
-  const closeWebview = async () => {
-    const close = await invoke("close_column", {
-      label: webview.current,
-    });
-    if (close) webview.current = null;
-  };
-
   const repositionWebview = async () => {
-    if (!webview.current) return;
-    const newRect = container.current.getBoundingClientRect();
-    await invoke("reposition_column", {
-      label: webview.current,
-      x: newRect.x,
-      y: newRect.y,
-    });
+    if (webview.current && webview.current.length > 1) {
+      const newRect = container.current.getBoundingClientRect();
+      await invoke("reposition_column", {
+        label: webview.current,
+        x: newRect.x,
+        y: newRect.y,
+      });
+    }
   };
 
   useEffect(() => {
@@ -59,27 +34,50 @@ export function Col({
   }, [isScroll]);
 
   useEffect(() => {
-    if (!window) return;
-    if (!container.current) return;
-    if (webview.current) return;
+    (async () => {
+      const rect = container.current.getBoundingClientRect();
+      const windowLabel = `column-${column.label}`;
+      const url =
+        column.content +
+        `?account=${account}&label=${column.label}&name=${column.name}`;
 
-    // create webview for current column
-    createWebview();
+      // create new webview
+      webview.current = await invoke("create_column", {
+        label: windowLabel,
+        x: rect.x,
+        y: rect.y,
+        width: rect.width,
+        height: rect.height,
+        url,
+      });
+    })();
 
     // close webview when unmounted
     return () => {
-      if (webview.current) closeWebview();
+      if (webview.current && webview.current.length > 1) {
+        invoke("close_column", {
+          label: webview.current,
+        }).then(() => {
+          webview.current = undefined;
+        });
+      }
     };
   }, []);
 
   return (
-    <div
-      ref={container}
-      className="h-full w-[440px] shrink-0 p-2 flex items-center justify-center"
-    >
-      <button type="button" disabled>
-        <LoaderIcon className="size-5 animate-spin" />
-      </button>
+    <div ref={container} className="h-full w-[440px] shrink-0 p-2">
+      <div
+        className={cn(
+          "w-full h-full flex items-center justify-center",
+          !webview?.current?.length
+            ? "rounded-xl flex-col bg-black/5 dark:bg-white/5 backdrop-blur-lg"
+            : "",
+        )}
+      >
+        <button type="button" className="size-5" disabled>
+          <LoaderIcon className="size-5 animate-spin" />
+        </button>
+      </div>
     </div>
   );
 }

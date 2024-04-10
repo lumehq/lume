@@ -2,9 +2,14 @@ import { ComposeFilledIcon, PlusIcon } from "@lume/icons";
 import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { cn } from "@lume/utils";
 import { Accounts } from "@/components/accounts";
+import { platform } from "@tauri-apps/plugin-os";
 
 export const Route = createFileRoute("/$account")({
   component: App,
+  beforeLoad: async () => {
+    const platformName = await platform();
+    return { platform: platformName };
+  },
 });
 
 function App() {

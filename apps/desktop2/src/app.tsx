@@ -6,7 +6,6 @@ import { I18nextProvider } from "react-i18next";
 import "./app.css";
 import i18n from "./locale";
 import { Toaster } from "sonner";
-import { locale, platform } from "@tauri-apps/plugin-os";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { routeTree } from "./router.gen"; // auto generated file
@@ -27,18 +26,11 @@ const persister = createSyncStoragePersister({
 });
 
 const ark = new Ark();
-const platformName = await platform();
-const osLocale = await locale();
 
 // Set up a Router instance
 const router = createRouter({
   routeTree,
   context: {
-    platform: platformName,
-    locale: osLocale,
-    settings: null,
-    accounts: null,
-    interests: null,
     ark,
     queryClient,
   },

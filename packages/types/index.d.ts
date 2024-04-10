@@ -2,6 +2,7 @@ export interface Settings {
 	notification: boolean;
 	enhancedPrivacy: boolean;
 	autoUpdate: boolean;
+	zap: boolean;
 }
 
 export interface Keys {
@@ -75,10 +76,15 @@ export interface RichContent {
 	notes: string[];
 }
 
+export interface AppRouteSearch {
+	account: string;
+}
+
 export interface ColumnRouteSearch {
 	account: string;
 	label: string;
 	name: string;
+	redirect?: string;
 }
 
 export interface LumeColumn {
