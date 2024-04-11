@@ -1,6 +1,6 @@
 import { Col } from "@/components/col";
 import { Toolbar } from "@/components/toolbar";
-import { LoaderIcon } from "@lume/icons";
+import { ArrowLeftIcon, ArrowRightIcon, LoaderIcon } from "@lume/icons";
 import { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
@@ -77,6 +77,7 @@ function Screen() {
   }, 150);
 
   useEffect(() => {
+    // save state
     ark.set_columns(columns);
   }, [columns]);
 
@@ -101,25 +102,9 @@ function Screen() {
       <VList
         ref={vlistRef}
         horizontal
+        tabIndex={-1}
         itemSize={440}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (!vlistRef.current) return;
-          switch (e.code) {
-            case "ArrowUp":
-            case "ArrowLeft": {
-              e.preventDefault();
-              goLeft();
-              break;
-            }
-            case "ArrowDown":
-            case "ArrowRight": {
-              e.preventDefault();
-              goRight();
-              break;
-            }
-          }
-        }}
+        overscan={3}
         onScroll={() => {
           setIsScroll(true);
         }}
@@ -137,7 +122,24 @@ function Screen() {
           />
         ))}
       </VList>
-      <Toolbar moveLeft={goLeft} moveRight={goRight} />
+      <Toolbar>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => goLeft()}
+            className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+          >
+            <ArrowLeftIcon className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => goRight()}
+            className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+          >
+            <ArrowRightIcon className="size-5" />
+          </button>
+        </div>
+      </Toolbar>
     </div>
   );
 }

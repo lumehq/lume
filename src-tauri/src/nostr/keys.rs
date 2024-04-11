@@ -91,7 +91,7 @@ pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
 
   if let Ok(nsec) = keyring.get_password() {
     let secret_key = SecretKey::from_bech32(nsec).expect("Get secret key failed");
-    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium);
+    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Unknown);
 
     if let Ok(key) = new_key {
       Ok(key.to_bech32().unwrap())

@@ -1,8 +1,8 @@
-import { LaurelIcon } from "@lume/icons";
+import { LaurelIcon, LoaderIcon } from "@lume/icons";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import * as Switch from "@radix-ui/react-switch";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppRouteSearch, Settings } from "@lume/types";
 import {
   isPermissionGranted,
@@ -16,7 +16,17 @@ export const Route = createFileRoute("/auth/settings")({
       account: search.account,
     };
   },
+  beforeLoad: async ({ context }) => {
+    const permissionGranted = await isPermissionGranted(); // get notification permission
+    const ark = context.ark;
+    const settings = await ark.get_settings();
+
+    return {
+      settings: { ...settings, notification: permissionGranted },
+    };
+  },
   component: Screen,
+  pendingComponent: Pending,
 });
 
 function Screen() {
@@ -24,39 +34,34 @@ function Screen() {
 
   const { account } = Route.useSearch();
   const { t } = useTranslation();
-  const { ark } = Route.useRouteContext();
+  const { ark, settings } = Route.useRouteContext();
 
-  const [settings, setSettings] = useState<Settings>({
-    notification: false,
-    enhancedPrivacy: false,
-    autoUpdate: false,
-    zap: false,
-  });
+  const [newSettings, setNewSettings] = useState<Settings>(settings);
 
   const toggleNofitication = async () => {
     await requestPermission();
-    setSettings((prev) => ({
+    setNewSettings((prev) => ({
       ...prev,
       notification: !settings.notification,
     }));
   };
 
   const toggleAutoUpdate = () => {
-    setSettings((prev) => ({
+    setNewSettings((prev) => ({
       ...prev,
       autoUpdate: !settings.autoUpdate,
     }));
   };
 
   const toggleEnhancedPrivacy = () => {
-    setSettings((prev) => ({
+    setNewSettings((prev) => ({
       ...prev,
       enhancedPrivacy: !settings.enhancedPrivacy,
     }));
   };
 
   const toggleZap = () => {
-    setSettings((prev) => ({
+    setNewSettings((prev) => ({
       ...prev,
       zap: !settings.zap,
     }));
@@ -72,16 +77,6 @@ function Screen() {
       toast.error(e);
     }
   };
-
-  useEffect(() => {
-    async function loadSettings() {
-      const permissionGranted = await isPermissionGranted(); // get notification permission
-      const settings = await ark.get_settings();
-      setSettings({ ...settings, notification: permissionGranted });
-    }
-
-    loadSettings();
-  }, []);
 
   return (
     <div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
@@ -102,7 +97,7 @@ function Screen() {
         <div className="flex flex-col gap-3">
           <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
             <Switch.Root
-              checked={settings.notification}
+              checked={newSettings.notification}
               onClick={() => toggleNofitication()}
               className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
             >
@@ -118,7 +113,7 @@ function Screen() {
           </div>
           <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
             <Switch.Root
-              checked={settings.enhancedPrivacy}
+              checked={newSettings.enhancedPrivacy}
               onClick={() => toggleEnhancedPrivacy()}
               className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
             >
@@ -134,7 +129,7 @@ function Screen() {
           </div>
           <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
             <Switch.Root
-              checked={settings.autoUpdate}
+              checked={newSettings.autoUpdate}
               onClick={() => toggleAutoUpdate()}
               className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
             >
@@ -149,7 +144,7 @@ function Screen() {
           </div>
           <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
             <Switch.Root
-              checked={settings.zap}
+              checked={newSettings.zap}
               onClick={() => toggleZap()}
               className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
             >
@@ -178,6 +173,16 @@ function Screen() {
           {t("global.continue")}
         </button>
       </div>
+    </div>
+  );
+}
+
+function Pending() {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <button type="button" className="size-5" disabled>
+        <LoaderIcon className="size-5 animate-spin" />
+      </button>
     </div>
   );
 }
