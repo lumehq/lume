@@ -1,13 +1,8 @@
 export interface Settings {
-	autoupdate: boolean;
-	nsecbunker: boolean;
-	media: boolean;
-	hashtag: boolean;
-	lowPower: boolean;
-	translation: boolean;
-	translateApiKey: string;
-	instantZap: boolean;
-	defaultZapAmount: number;
+	notification: boolean;
+	enhancedPrivacy: boolean;
+	autoUpdate: boolean;
+	zap: boolean;
 }
 
 export interface Keys {
@@ -62,6 +57,7 @@ export interface Contact {
 
 export interface Account {
 	npub: string;
+	nsec?: string;
 	contacts?: string[];
 	interests?: Interests;
 }
@@ -80,10 +76,33 @@ export interface RichContent {
 	notes: string[];
 }
 
+export interface AppRouteSearch {
+	account: string;
+}
+
+export interface ColumnRouteSearch {
+	account: string;
+	label: string;
+	name: string;
+	redirect?: string;
+}
+
 export interface LumeColumn {
-	id: number;
-	title: string;
-	content: string;
+	label: string;
+	name: string;
+	content: URL | string;
+	description?: string;
+	author?: string;
+	logo?: string;
+	cover?: string;
+	coverRetina?: string;
+	featured?: boolean;
+}
+
+export interface EventColumns {
+	type: "add" | "remove" | "update" | "left" | "right";
+	label?: string;
+	column?: LumeColumn;
 }
 
 export interface Opengraph {

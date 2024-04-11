@@ -1,5 +1,3 @@
-import { useArk } from "@lume/ark";
-import { ArkProvider } from "./ark";
 import { QueryClient } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
@@ -8,11 +6,11 @@ import { I18nextProvider } from "react-i18next";
 import "./app.css";
 import i18n from "./locale";
 import { Toaster } from "sonner";
-import { locale, platform } from "@tauri-apps/plugin-os";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { routeTree } from "./router.gen"; // auto generated file
 import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
+import { Ark } from "@lume/ark";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,16 +25,13 @@ const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
 
-const platformName = await platform();
-const osLocale = (await locale()).slice(0, 2);
+const ark = new Ark();
 
 // Set up a Router instance
 const router = createRouter({
   routeTree,
   context: {
-    ark: undefined!,
-    platform: platformName,
-    locale: osLocale,
+    ark,
     queryClient,
   },
 });
@@ -48,17 +43,8 @@ declare module "@tanstack/react-router" {
   }
 }
 
-function InnerApp() {
-  const ark = useArk();
-  return <RouterProvider router={router} context={{ ark }} />;
-}
-
 function App() {
-  return (
-    <ArkProvider>
-      <InnerApp />
-    </ArkProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 // biome-ignore lint/style/noNonNullAssertion: idk

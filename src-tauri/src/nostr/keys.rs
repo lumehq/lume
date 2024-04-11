@@ -31,10 +31,10 @@ pub async fn save_key(
   password: &str,
   app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
-) -> Result<bool, String> {
+) -> Result<String, String> {
   let secret_key: Result<SecretKey, String>;
 
-  if nsec.starts_with("ncrypto") {
+  if nsec.starts_with("ncryptsec") {
     let encrypted_key = EncryptedSecretKey::from_bech32(nsec).unwrap();
     secret_key = match encrypted_key.to_secret_key(password) {
       Ok(val) => Ok(val),
@@ -68,7 +68,7 @@ pub async fn save_key(
       // Update client's signer
       client.set_signer(Some(signer)).await;
 
-      Ok(true)
+      Ok(npub)
     }
     Err(msg) => Err(msg.into()),
   }
@@ -91,13 +91,24 @@ pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
 
   if let Ok(nsec) = keyring.get_password() {
     let secret_key = SecretKey::from_bech32(nsec).expect("Get secret key failed");
-    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium);
+    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Unknown);
 
     if let Ok(key) = new_key {
       Ok(key.to_bech32().unwrap())
     } else {
       Err("Encrypt key failed".into())
     }
+  } else {
+    Err("Key not found".into())
+  }
+}
+
+#[tauri::command]
+pub fn get_stored_nsec(npub: &str) -> Result<String, String> {
+  let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
+
+  if let Ok(nsec) = keyring.get_password() {
+    Ok(nsec)
   } else {
     Err("Key not found".into())
   }
@@ -141,9 +152,6 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
       }
     }
 
-    // #TODO
-    // Subscribe new event for activity and local newsfeed
-
     Ok(true)
   } else {
     Err("nsec not found".into())
@@ -161,7 +169,7 @@ pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
 #[tauri::command]
 pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
   let pubkey = PublicKey::from_str(key).unwrap();
-  let profile = Nip19Profile::new(pubkey, relays);
+  let profile = Nip19Profile::new(pubkey, relays).unwrap();
 
   Ok(profile.to_bech32().unwrap())
 }

@@ -1,4 +1,3 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon, PlusIcon } from "@lume/icons";
 import { User } from "@lume/ui";
 import { Link } from "@tanstack/react-router";
@@ -6,55 +5,52 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async ({ search, context }) => {
+  beforeLoad: async ({ context }) => {
     const ark = context.ark;
     const accounts = await ark.get_all_accounts();
 
     switch (accounts.length) {
       // Guest account
       case 0:
-        const guest = await ark.create_guest_account();
         throw redirect({
-          to: "/$account/home/local",
-          params: { account: guest },
-          search: { guest: true },
+          to: "/landing",
           replace: true,
         });
       // Only 1 account, skip account selection screen
       case 1:
-        // @ts-ignore, totally fine !!!
-        if (search.manually) return;
-
         const account = accounts[0].npub;
         const loadedAccount = await ark.load_selected_account(account);
 
         if (loadedAccount) {
           throw redirect({
-            to: "/$account/home/local",
+            to: "/$account/home",
             params: { account },
             replace: true,
           });
         }
       // Account selection
       default:
-        return;
+        return { accounts };
     }
   },
   component: Screen,
 });
 
 function Screen() {
-  const ark = useArk();
   const navigate = useNavigate();
+  const context = Route.useRouteContext();
 
   const [loading, setLoading] = useState(false);
 
   const select = async (npub: string) => {
     setLoading(true);
+
+    const ark = context.ark;
     const loadAccount = await ark.load_selected_account(npub);
+
     if (loadAccount) {
-      navigate({
-        to: "/$account/home/local",
+      return navigate({
+        to: "/$account/home",
         params: { account: npub },
         replace: true,
       });
@@ -81,7 +77,7 @@ function Screen() {
             </div>
           ) : (
             <>
-              {ark.accounts.map((account) => (
+              {context.accounts.map((account) => (
                 <button
                   type="button"
                   key={account.npub}

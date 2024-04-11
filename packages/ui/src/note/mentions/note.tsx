@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { User } from "../../user";
-import { useArk, useEvent } from "@lume/ark";
+import { useEvent } from "@lume/ark";
 import { LinkIcon } from "@lume/icons";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function MentionNote({
   eventId,
@@ -10,8 +11,7 @@ export function MentionNote({
   eventId: string;
   openable?: boolean;
 }) {
-  const ark = useArk();
-
+  const { ark } = useRouteContext({ strict: false });
   const { t } = useTranslation();
   const { isLoading, isError, data } = useEvent(eventId);
 
@@ -52,7 +52,7 @@ export function MentionNote({
           </div>
         </User.Root>
       </User.Provider>
-      <div className="line-clamp-4 select-text whitespace-normal text-balance leading-normal">
+      <div className="line-clamp-3 select-text whitespace-normal text-balance leading-normal">
         {data.content}
       </div>
       {openable ? (

@@ -1,18 +1,17 @@
-export function RefreshIcon(props: JSX.IntrinsicElements['svg']) {
+export function RefreshIcon(props: JSX.IntrinsicElements["svg"]) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="24"
-      height="24"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    >
-      <path d="M17.5 2.474c.51 1.192.861 2.444 1.049 3.726a.479.479 0 0 1-.298.515l-.181.07M6.5 21.527A15 15 0 0 1 5.451 17.8a.48.48 0 0 1 .298-.515l.181-.07M14.5 7.67a15 15 0 0 0 3.57-.884m0 0a8 8 0 0 0-13.912 6.797m15.75-2.79A8 8 0 0 1 5.93 17.215m3.571-.885a15.002 15.002 0 0 0-3.57.884" />
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="M13 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8-10a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm-1.07 3.268a1 1 0 1 1-1 1.732 1 1 0 0 1 1-1.732Zm-2.562 5.026a1 1 0 1 0-1-1.732 1 1 0 0 0 1 1.732ZM18.927 8a1 1 0 1 1-1-1.732 1 1 0 0 1 1 1.732Z"
+      />
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        d="M9.25 14.75v5.5h-5.5M9 19.688a8.25 8.25 0 1 1 6.25-15.273"
+      />
     </svg>
   );
 }

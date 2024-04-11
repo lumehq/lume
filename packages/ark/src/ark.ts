@@ -4,19 +4,28 @@ import type {
 	Contact,
 	Event,
 	EventWithReplies,
+	Interests,
 	Keys,
+	LumeColumn,
 	Metadata,
+	Settings,
 } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { generateContentTags } from "@lume/utils";
 
+enum NSTORE_KEYS {
+	settings = "lume_user_settings",
+	interests = "lume_user_interests",
+	columns = "lume_user_columns",
+}
+
 export class Ark {
-	public accounts: Account[];
+	public windows: WebviewWindow[];
 
 	constructor() {
-		this.accounts = [];
+		this.windows = [];
 	}
 
 	public async get_all_accounts() {
@@ -28,8 +37,6 @@ export class Ark {
 				for (const item of cmd) {
 					accounts.push({ npub: item.replace(".npub", "") });
 				}
-
-				this.accounts = accounts;
 				return accounts;
 			}
 		} catch {
@@ -71,7 +78,7 @@ export class Ark {
 
 	public async save_account(nsec: string, password: string = "") {
 		try {
-			const cmd: boolean = await invoke("save_key", {
+			const cmd: string = await invoke("save_key", {
 				nsec,
 				password,
 			});
@@ -126,21 +133,24 @@ export class Ark {
 	}
 
 	public async get_events(
-		type: "local" | "global",
 		limit: number,
 		asOf?: number,
-		dedup?: boolean,
+		contacts?: string[],
+		global?: boolean,
 	) {
 		try {
 			let until: string = undefined;
 			if (asOf && asOf > 0) until = asOf.toString();
 
+			const dedup = true;
 			const seenIds = new Set<string>();
 			const dedupQueue = new Set<string>();
 
-			const nostrEvents: Event[] = await invoke(`get_${type}_events`, {
+			const nostrEvents: Event[] = await invoke("get_events", {
 				limit,
 				until,
+				contacts,
+				global,
 			});
 
 			if (dedup) {
@@ -155,7 +165,6 @@ export class Ark {
 								dedupQueue.add(event.id);
 								break;
 							}
-
 							seenIds.add(tag);
 						}
 					}
@@ -170,6 +179,51 @@ export class Ark {
 		} catch {
 			return [];
 		}
+	}
+
+	public async get_events_from_interests(
+		hashtags: string[],
+		limit: number,
+		asOf?: number,
+		global?: boolean,
+	) {
+		let until: string = undefined;
+		if (asOf && asOf > 0) until = asOf.toString();
+
+		const dedup = true;
+		const seenIds = new Set<string>();
+		const dedupQueue = new Set<string>();
+
+		const nostrEvents: Event[] = await invoke("get_events_from_interests", {
+			hashtags,
+			limit,
+			until,
+			global,
+		});
+
+		if (dedup) {
+			for (const event of nostrEvents) {
+				const tags = event.tags
+					.filter((el) => el[0] === "e")
+					?.map((item) => item[1]);
+
+				if (tags.length) {
+					for (const tag of tags) {
+						if (seenIds.has(tag)) {
+							dedupQueue.add(event.id);
+							break;
+						}
+						seenIds.add(tag);
+					}
+				}
+			}
+
+			return nostrEvents
+				.filter((event) => !dedupQueue.has(event.id))
+				.sort((a, b) => b.created_at - a.created_at);
+		}
+
+		return nostrEvents.sort((a, b) => b.created_at - a.created_at);
 	}
 
 	public async publish(content: string, reply_to?: string, quote?: boolean) {
@@ -338,6 +392,25 @@ export class Ark {
 		}
 	}
 
+	public async create_profile(profile: Metadata) {
+		try {
+			const event: string = await invoke("create_profile", {
+				name: profile.name || "",
+				display_name: profile.display_name || "",
+				displayName: profile.display_name || "",
+				about: profile.about || "",
+				picture: profile.picture || "",
+				banner: profile.banner || "",
+				nip05: profile.nip05 || "",
+				lud16: profile.lud16 || "",
+				website: profile.website || "",
+			});
+			return event;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
 	public async get_contact_list() {
 		try {
 			const cmd: string[] = await invoke("get_contact_list");
@@ -499,87 +572,238 @@ export class Ark {
 		}
 	}
 
+	public async get_columns() {
+		try {
+			const cmd: string = await invoke("get_nstore", {
+				key: NSTORE_KEYS.columns,
+			});
+			const columns: LumeColumn[] = cmd ? JSON.parse(cmd) : [];
+			return columns;
+		} catch {
+			return [];
+		}
+	}
+
+	public async set_columns(columns: LumeColumn[]) {
+		try {
+			const cmd: string = await invoke("set_nstore", {
+				key: NSTORE_KEYS.columns,
+				content: JSON.stringify(columns),
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(e);
+		}
+	}
+
+	public async get_settings() {
+		try {
+			const cmd: string = await invoke("get_nstore", {
+				key: NSTORE_KEYS.settings,
+			});
+			const settings: Settings = cmd ? JSON.parse(cmd) : null;
+			return settings;
+		} catch {
+			const defaultSettings: Settings = {
+				autoUpdate: false,
+				enhancedPrivacy: false,
+				notification: false,
+				zap: false,
+			};
+			return defaultSettings;
+		}
+	}
+
+	public async set_settings(settings: Settings) {
+		try {
+			const cmd: string = await invoke("set_nstore", {
+				key: NSTORE_KEYS.settings,
+				content: JSON.stringify(settings),
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(e);
+		}
+	}
+
+	public async get_interest() {
+		try {
+			const cmd: string = await invoke("get_nstore", {
+				key: NSTORE_KEYS.interests,
+			});
+			const interests: Interests = cmd ? JSON.parse(cmd) : null;
+			return interests;
+		} catch {
+			return null;
+		}
+	}
+
+	public async set_interest(
+		words: string[],
+		users: string[],
+		hashtags: string[],
+	) {
+		try {
+			const interests: Interests = {
+				words: words ?? [],
+				users: users ?? [],
+				hashtags: hashtags ?? [],
+			};
+			const cmd: string = await invoke("set_nstore", {
+				key: NSTORE_KEYS.interests,
+				content: JSON.stringify(interests),
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async get_nstore(key: string) {
+		try {
+			const cmd: string = await invoke("get_nstore", {
+				key,
+			});
+			const parse: string | string[] = cmd ? JSON.parse(cmd) : null;
+			if (!parse.length) return null;
+			return parse;
+		} catch {
+			return null;
+		}
+	}
+
+	public async set_nstore(key: string, content: string) {
+		try {
+			const cmd: string = await invoke("set_nstore", {
+				key,
+				content,
+			});
+			return cmd;
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
 	public open_thread(id: string) {
-		return new WebviewWindow(`event-${id}`, {
-			title: "Thread",
-			url: `/events/${id}`,
-			minWidth: 500,
-			width: 600,
-			height: 800,
-			hiddenTitle: true,
-			titleBarStyle: "overlay",
-		});
+		try {
+			const window = new WebviewWindow(`event-${id}`, {
+				title: "Thread",
+				url: `/events/${id}`,
+				minWidth: 500,
+				minHeight: 800,
+				width: 500,
+				height: 800,
+				hiddenTitle: true,
+				titleBarStyle: "overlay",
+				center: false,
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
+		}
 	}
 
 	public open_profile(pubkey: string) {
-		return new WebviewWindow(`user-${pubkey}`, {
-			title: "Profile",
-			url: `/users/${pubkey}`,
-			minWidth: 500,
-			width: 500,
-			height: 800,
-			hiddenTitle: true,
-			titleBarStyle: "overlay",
-		});
+		try {
+			const window = new WebviewWindow(`user-${pubkey}`, {
+				title: "Profile",
+				url: `/users/${pubkey}`,
+				minWidth: 500,
+				minHeight: 800,
+				width: 500,
+				height: 800,
+				hiddenTitle: true,
+				titleBarStyle: "overlay",
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
+		}
 	}
 
 	public open_editor(reply_to?: string, quote: boolean = false) {
-		let url: string;
+		try {
+			let url: string;
 
-		if (reply_to) {
-			url = `/editor?reply_to=${reply_to}&quote=${quote}`;
-		} else {
-			url = "/editor";
+			if (reply_to) {
+				url = `/editor?reply_to=${reply_to}&quote=${quote}`;
+			} else {
+				url = "/editor";
+			}
+
+			const window = new WebviewWindow(`editor-${reply_to ? reply_to : 0}`, {
+				title: "Editor",
+				url,
+				minWidth: 500,
+				minHeight: 400,
+				width: 600,
+				height: 400,
+				hiddenTitle: true,
+				titleBarStyle: "overlay",
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
 		}
-
-		return new WebviewWindow("editor", {
-			title: "Editor",
-			url,
-			minWidth: 500,
-			width: 600,
-			height: 400,
-			hiddenTitle: true,
-			titleBarStyle: "overlay",
-			fileDropEnabled: true,
-		});
 	}
 
 	public open_nwc() {
-		return new WebviewWindow("nwc", {
-			title: "Nostr Wallet Connect",
-			url: "/nwc",
-			minWidth: 400,
-			width: 400,
-			height: 600,
-			hiddenTitle: true,
-			titleBarStyle: "overlay",
-			fileDropEnabled: true,
-		});
+		try {
+			const window = new WebviewWindow("nwc", {
+				title: "Nostr Wallet Connect",
+				url: "/nwc",
+				minWidth: 400,
+				minHeight: 600,
+				width: 400,
+				height: 600,
+				hiddenTitle: true,
+				titleBarStyle: "overlay",
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
+		}
 	}
 
 	public open_zap(id: string, pubkey: string, account: string) {
-		return new WebviewWindow(`zap-${id}`, {
-			title: "Nostr Wallet Connect",
-			url: `/zap/${id}?pubkey=${pubkey}&account=${account}`,
-			minWidth: 400,
-			width: 400,
-			height: 500,
-			hiddenTitle: true,
-			titleBarStyle: "overlay",
-			fileDropEnabled: true,
-		});
+		try {
+			const window = new WebviewWindow(`zap-${id}`, {
+				title: "Zap",
+				url: `/zap/${id}?pubkey=${pubkey}&account=${account}`,
+				minWidth: 400,
+				minHeight: 500,
+				width: 400,
+				height: 500,
+				hiddenTitle: true,
+				titleBarStyle: "overlay",
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
+		}
 	}
 
 	public open_settings() {
-		return new WebviewWindow("settings", {
-			title: "Settings",
-			url: "/settings",
-			minWidth: 600,
-			width: 800,
-			height: 500,
-			hiddenTitle: true,
-			titleBarStyle: "overlay",
-			fileDropEnabled: true,
-		});
+		try {
+			const window = new WebviewWindow("settings", {
+				title: "Settings",
+				url: "/settings",
+				minWidth: 600,
+				minHeight: 500,
+				width: 800,
+				height: 500,
+				hiddenTitle: true,
+				titleBarStyle: "overlay",
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
+		}
 	}
 }

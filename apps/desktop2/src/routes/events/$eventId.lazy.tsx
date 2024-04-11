@@ -2,9 +2,9 @@ import { useEvent } from "@lume/ark";
 import { LoaderIcon } from "@lume/icons";
 import { Box, Container, Note, User } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { WindowVirtualizer } from "virtua";
 import { ReplyList } from "./-components/replyList";
-import { Event } from "@lume/types";
+import { WindowVirtualizer } from "virtua";
+import { type Event } from "@lume/types";
 
 export const Route = createLazyFileRoute("/events/$eventId")({
   component: Event,
@@ -29,14 +29,14 @@ function Event() {
   }
 
   return (
-    <WindowVirtualizer>
-      <Container withDrag>
-        <Box className="px-3 pt-3">
+    <Container withDrag>
+      <Box className="px-3 pt-3 scrollbar-none">
+        <WindowVirtualizer>
           <MainNote data={data} />
           {data ? <ReplyList eventId={eventId} /> : null}
-        </Box>
-      </Container>
-    </WindowVirtualizer>
+        </WindowVirtualizer>
+      </Box>
+    </Container>
   );
 }
 
@@ -58,7 +58,7 @@ function MainNote({ data }: { data: Event }) {
           </User.Root>
         </User.Provider>
         <Note.Thread className="mb-2" />
-        <Note.Content className="min-w-0" />
+        <Note.Content className="min-w-0" compact={false} />
         <div className="mt-4 flex items-center justify-between">
           <div className="-ml-1 inline-flex items-center gap-4">
             <Note.Repost />

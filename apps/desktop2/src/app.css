@@ -7,12 +7,38 @@
 }
 
 *::-webkit-scrollbar-track {
-  @apply bg-white dark:bg-black;
+  @apply bg-transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  @apply bg-black dark:bg-white rounded;
+  @apply rounded bg-black dark:bg-white;
 }
+
+@layer utilities {
+  .content-break {
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .shadow-toolbar {
+    box-shadow:
+      0 0 #0000,
+      0 0 #0000,
+      0 8px 24px 0 rgba(0, 0, 0, 0.2),
+      0 2px 8px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+      inset 0 0 0 2px hsla(0, 0%, 100%, 0.14);
+  }
+
+  .shadow-primary {
+    box-shadow: 0px 0px 4px rgba(66, 65, 73, 0.14);
+  }
+}
+
+/*
+	Overide some default styles
+*/
 
 html {
   font-size: 14px;
@@ -33,26 +59,4 @@ input::-ms-clear {
 
 ::-webkit-input-placeholder {
   line-height: normal;
-}
-
-media-controller {
-  @apply w-full overflow-hidden rounded-xl;
-}
-
-@layer utilities {
-  .content-break {
-    word-break: break-word;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .shadow-toolbar {
-    box-shadow:
-      0 0 #0000,
-      0 0 #0000,
-      0 8px 24px 0 rgba(0, 0, 0, 0.2),
-      0 2px 8px 0 rgba(0, 0, 0, 0.08),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.2),
-      inset 0 0 0 2px hsla(0, 0%, 100%, 0.14);
-  }
 }

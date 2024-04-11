@@ -4,8 +4,8 @@ export function CancelIcon(props: JSX.IntrinsicElements["svg"]) {
       <path
         stroke="currentColor"
         strokeLinecap="round"
-        strokeWidth="2"
-        d="m5 5 14 14m0-14L5 19"
+        strokeWidth="1.5"
+        d="m4.75 4.75 14.5 14.5m0-14.5-14.5 14.5"
       />
     </svg>
   );

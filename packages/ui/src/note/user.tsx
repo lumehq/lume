@@ -2,10 +2,10 @@ import { cn } from "@lume/utils";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { User } from "../user";
 import { useNoteContext } from "./provider";
-import { useArk } from "@lume/ark";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteUser({ className }: { className?: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const event = useNoteContext();
 
   return (
@@ -32,8 +32,9 @@ export function NoteUser({ className }: { className?: string }) {
         </User.Root>
         <HoverCard.Portal>
           <HoverCard.Content
-            className="data-[side=bottom]:animate-slideUpAndFade w-[300px] rounded-xl bg-black p-3 data-[state=open]:transition-all dark:bg-white dark:shadow-none"
+            className="w-[300px] rounded-xl bg-black p-3 data-[side=bottom]:animate-slideUpAndFade data-[state=open]:transition-all dark:bg-white dark:shadow-none"
             sideOffset={5}
+            side="right"
           >
             <div className="flex flex-col gap-2">
               <User.Avatar className="size-11 rounded-lg object-cover" />

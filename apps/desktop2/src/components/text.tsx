@@ -13,7 +13,7 @@ export function TextNote({
     <Note.Provider event={event}>
       <Note.Root
         className={cn(
-          "mb-5 flex flex-col gap-2 border-b border-neutral-100 pb-5 dark:border-neutral-900",
+          "flex flex-col gap-2 border-b border-neutral-100 px-3 py-5 dark:border-neutral-900",
           className,
         )}
       >

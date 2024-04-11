@@ -1,13 +1,13 @@
 import { VerifiedIcon } from "@lume/icons";
-import { cn, displayNpub } from "@lume/utils";
+import { cn, displayLongHandle, displayNpub } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "./provider";
-import { useArk } from "@lume/ark";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function UserNip05({ className }: { className?: string }) {
-  const ark = useArk();
   const user = useUserContext();
 
+  const { ark } = useRouteContext({ strict: false });
   const { isLoading, data: verified } = useQuery({
     queryKey: ["nip05", user?.pubkey],
     queryFn: async () => {
@@ -23,7 +23,9 @@ export function UserNip05({ className }: { className?: string }) {
       <p className={cn("text-sm", className)}>
         {!user.profile?.nip05
           ? displayNpub(user.pubkey, 16)
-          : user.profile?.nip05.replace("_@", "")}
+          : user.profile?.nip05.length > 50
+            ? displayLongHandle(user.profile?.nip05)
+            : user.profile.nip05?.replace("_@", "")}
       </p>
       {!isLoading && verified ? (
         <VerifiedIcon className="size-4 text-teal-500" />

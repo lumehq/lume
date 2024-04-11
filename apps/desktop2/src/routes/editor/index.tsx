@@ -1,4 +1,3 @@
-import { useArk } from "@lume/ark";
 import { LoaderIcon, TrashIcon } from "@lume/icons";
 import {
   Portal,
@@ -61,6 +60,7 @@ export const Route = createFileRoute("/editor/")({
 function Screen() {
   // @ts-ignore, useless
   const { reply_to, quote } = Route.useSearch();
+  const { ark } = Route.useRouteContext();
 
   let initialValue: EditorElement[];
 
@@ -89,7 +89,6 @@ function Screen() {
     ];
   }
 
-  const ark = useArk();
   const ref = useRef<HTMLDivElement | null>();
   const contacts = useSuspenseQuery(contactQueryOptions).data as Contact[];
 
@@ -149,11 +148,12 @@ function Screen() {
 
       if (eventId) {
         await sendNativeNotification("You've publish new post successfully.");
-        return reset();
       }
 
       // stop loading
       setLoading(false);
+      // reset form
+      reset();
     } catch (e) {
       setLoading(false);
       await sendNativeNotification(String(e));
@@ -210,7 +210,7 @@ function Screen() {
           <button
             type="button"
             onClick={publish}
-            className="inline-flex h-9 w-24 items-center justify-center rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
+            className="inline-flex h-9 w-24 items-center justify-center rounded-full bg-blue-500 px-3 font-medium text-white hover:bg-blue-600"
           >
             {loading ? (
               <LoaderIcon className="size-5 animate-spin" />
@@ -221,12 +221,7 @@ function Screen() {
         </div>
         <div className="flex h-full min-h-0 w-full">
           <div className="flex h-full w-full flex-1 flex-col gap-2 px-2 pb-2">
-            {reply_to && !quote ? (
-              <div className="flex flex-col rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
-                <h3 className="font-medium">Reply to:</h3>
-                <MentionNote eventId={reply_to} />
-              </div>
-            ) : null}
+            {reply_to && !quote ? <MentionNote eventId={reply_to} /> : null}
             <div className="h-full w-full flex-1 overflow-hidden overflow-y-auto rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
               <Editable
                 key={JSON.stringify(editorValue)}
@@ -235,7 +230,9 @@ function Screen() {
                 autoCorrect="none"
                 spellCheck={false}
                 renderElement={(props) => <Element {...props} />}
-                placeholder={t("editor.placeholder")}
+                placeholder={
+                  reply_to ? "Type your reply..." : t("editor.placeholder")
+                }
                 className="focus:outline-none"
               />
               {target && filters.length > 0 && (
@@ -278,8 +275,13 @@ function Screen() {
 
 function Pending() {
   return (
-    <div className="flex h-full w-full items-center justify-center gap-2.5">
-      <LoaderIcon className="size-5 animate-spin" />
+    <div
+      data-tauri-drag-region
+      className="flex h-full w-full items-center justify-center gap-2.5"
+    >
+      <button type="button" disabled>
+        <LoaderIcon className="size-5 animate-spin" />
+      </button>
       <p>Loading cache...</p>
     </div>
   );

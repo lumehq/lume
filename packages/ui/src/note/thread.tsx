@@ -2,11 +2,11 @@ import { cn } from "@lume/utils";
 import { useTranslation } from "react-i18next";
 import { Note } from ".";
 import { useNoteContext } from "./provider";
-import { useArk } from "@lume/ark";
 import { LinkIcon } from "@lume/icons";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteThread({ className }: { className?: string }) {
-  const ark = useArk();
+  const { ark } = useRouteContext({ strict: false });
   const event = useNoteContext();
   const thread = ark.parse_event_thread({
     content: event.content,

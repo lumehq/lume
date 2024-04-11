@@ -3,6 +3,7 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
+use url::Url;
 
 #[derive(serde::Serialize)]
 pub struct CacheContact {
@@ -99,22 +100,31 @@ pub async fn create_profile(
   lud16: &str,
   website: &str,
   state: State<'_, Nostr>,
-) -> Result<EventId, ()> {
+) -> Result<EventId, String> {
   let client = &state.client;
-  let metadata = Metadata::new()
+  let mut metadata = Metadata::new()
     .name(name)
     .display_name(display_name)
     .about(about)
     .nip05(nip05)
-    .lud16(lud16)
-    .picture(Url::parse(picture).unwrap())
-    .banner(Url::parse(banner).unwrap())
-    .website(Url::parse(website).unwrap());
+    .lud16(lud16);
+
+  if let Ok(url) = Url::parse(picture) {
+    metadata = metadata.picture(url)
+  }
+
+  if let Ok(url) = Url::parse(banner) {
+    metadata = metadata.banner(url)
+  }
+
+  if let Ok(url) = Url::parse(website) {
+    metadata = metadata.website(url)
+  }
 
   if let Ok(event_id) = client.set_metadata(&metadata).await {
     Ok(event_id)
   } else {
-    Err(())
+    Err("Create profile failed".into())
   }
 }
 
@@ -169,108 +179,57 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
 }
 
 #[tauri::command]
-pub async fn set_interest(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+pub async fn set_nstore(
+  key: &str,
+  content: &str,
+  state: State<'_, Nostr>,
+) -> Result<EventId, String> {
   let client = &state.client;
-  let tag = Tag::Identifier("lume_user_interest".into());
+  let tag = Tag::Identifier(key.into());
   let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
 
   if let Ok(event_id) = client.send_event_builder(builder).await {
+    println!("set nstore: {}", event_id);
     Ok(event_id)
   } else {
-    Err("Set interest failed".into())
+    Err("Event has been published failled".into())
   }
 }
 
 #[tauri::command]
-pub async fn get_interest(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
-    Ok(val) => match val {
-      Nip19::Pubkey(pubkey) => Some(pubkey),
-      Nip19::Profile(profile) => Some(profile.public_key),
-      _ => None,
-    },
-    Err(_) => match PublicKey::from_str(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
-    },
-  };
 
-  if let Some(author) = public_key {
-    let filter = Filter::new()
-      .author(author)
-      .kind(Kind::ApplicationSpecificData)
-      .identifier("lume_user_interest")
-      .limit(1);
+  if let Ok(signer) = client.signer().await {
+    let public_key = signer.public_key().await;
 
-    let query = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await;
+    if let Ok(author) = public_key {
+      let filter = Filter::new()
+        .author(author)
+        .kind(Kind::ApplicationSpecificData)
+        .identifier(key)
+        .limit(1);
 
-    if let Ok(events) = query {
-      if let Some(event) = events.first() {
-        Ok(event.content.to_string())
+      let query = client
+        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .await;
+
+      if let Ok(events) = query {
+        if let Some(event) = events.first() {
+          println!("get nstore key: {} - received: {}", key, event.id);
+          Ok(event.content.to_string())
+        } else {
+          println!("get nstore key: {}", key);
+          Err("Value not found".into())
+        }
       } else {
-        Err("User interest not found".into())
+        Err("Query nstore event failed".into())
       }
     } else {
-      Err("User interest not found".into())
+      Err("Something is wrong".into())
     }
   } else {
-    Err("Get interest failed".into())
-  }
-}
-
-#[tauri::command]
-pub async fn set_settings(content: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
-  let client = &state.client;
-  let tag = Tag::Identifier("lume_user_settings".into());
-  let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
-
-  if let Ok(event_id) = client.send_event_builder(builder).await {
-    Ok(event_id)
-  } else {
-    Err("Set interest failed".into())
-  }
-}
-
-#[tauri::command]
-pub async fn get_settings(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
-  let client = &state.client;
-  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
-    Ok(val) => match val {
-      Nip19::Pubkey(pubkey) => Some(pubkey),
-      Nip19::Profile(profile) => Some(profile.public_key),
-      _ => None,
-    },
-    Err(_) => match PublicKey::from_str(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
-    },
-  };
-
-  if let Some(author) = public_key {
-    let filter = Filter::new()
-      .author(author)
-      .kind(Kind::ApplicationSpecificData)
-      .identifier("lume_user_settings")
-      .limit(1);
-
-    let query = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await;
-
-    if let Ok(events) = query {
-      if let Some(event) = events.first() {
-        Ok(event.content.to_string())
-      } else {
-        Err("User settings not found".into())
-      }
-    } else {
-      Err("User settings not found".into())
-    }
-  } else {
-    Err("Get settings failed".into())
+    Err("Signer is required".into())
   }
 }
 
@@ -294,7 +253,7 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 }
 
 #[tauri::command]
-pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, bool> {
+pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
 
@@ -305,10 +264,10 @@ pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, bool> {
         client.set_zapper(nwc).await;
         Ok(true)
       } else {
-        Err(false)
+        Err("Cannot connect to NWC".into())
       }
     }
-    Err(_) => Err(false),
+    Err(_) => Ok(false),
   }
 }
 

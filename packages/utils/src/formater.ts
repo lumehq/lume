@@ -45,6 +45,21 @@ export function formatCreatedAt(time: number, message = false) {
 	return formated;
 }
 
+export function displayNsec(key: string, len: number) {
+	if (key.length <= len) return key;
+
+	const separator = " ... ";
+
+	const sepLen = separator.length;
+	const charsToShow = len - sepLen;
+	const frontChars = Math.ceil(charsToShow / 2);
+	const backChars = Math.floor(charsToShow / 2);
+
+	return (
+		key.substr(0, frontChars) + separator + key.substr(key.length - backChars)
+	);
+}
+
 export function displayNpub(pubkey: string, len: number) {
 	const npub = pubkey.startsWith("npub1")
 		? pubkey
@@ -63,6 +78,14 @@ export function displayNpub(pubkey: string, len: number) {
 		separator +
 		npub.substr(npub.length - backChars)
 	);
+}
+
+export function displayLongHandle(str: string) {
+	const split = str.split("@");
+	const handle = split[0];
+	const service = split[1];
+
+	return handle.substring(0, 16) + "..." + "@" + service;
 }
 
 // convert number to K, M, B, T, etc.

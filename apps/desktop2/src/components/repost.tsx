@@ -3,8 +3,8 @@ import { Event } from "@lume/types";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { useArk } from "@lume/ark";
 import { Note, User } from "@lume/ui";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function RepostNote({
   event,
@@ -13,8 +13,7 @@ export function RepostNote({
   event: Event;
   className?: string;
 }) {
-  const ark = useArk();
-
+  const { ark } = useRouteContext({ strict: false });
   const { t } = useTranslation();
   const {
     isLoading,
@@ -44,7 +43,12 @@ export function RepostNote({
 
   if (isError || !repostEvent) {
     return (
-      <Note.Root className={className}>
+      <Note.Root
+        className={cn(
+          "flex flex-col gap-2 border-b border-neutral-100 px-3 py-5 dark:border-neutral-900",
+          className,
+        )}
+      >
         <User.Provider pubkey={event.pubkey}>
           <User.Root className="flex h-14 gap-2 px-3">
             <div className="inline-flex w-10 shrink-0 items-center justify-center">
@@ -71,7 +75,7 @@ export function RepostNote({
   return (
     <Note.Root
       className={cn(
-        "mb-5 flex flex-col gap-2 border-b border-neutral-100 pb-5 dark:border-neutral-900",
+        "flex flex-col gap-2 border-b border-neutral-100 px-3 py-5 dark:border-neutral-900",
         className,
       )}
     >

@@ -1,4 +1,4 @@
-import { Kind } from "@lume/types";
+import { Kind, Settings } from "@lume/types";
 import {
   AUDIOS,
   IMAGES,
@@ -7,7 +7,6 @@ import {
   VIDEOS,
   cn,
 } from "@lume/utils";
-import { NIP89 } from "./nip89";
 import { useNoteContext } from "./provider";
 import { ReactNode, useMemo } from "react";
 import { nanoid } from "nanoid";
@@ -17,15 +16,25 @@ import { Hashtag } from "./mentions/hashtag";
 import { VideoPreview } from "./preview/video";
 import { ImagePreview } from "./preview/image";
 import reactStringReplace from "react-string-replace";
+import { useRouteContext } from "@tanstack/react-router";
 
-export function NoteContent({ className }: { className?: string }) {
+export function NoteContent({
+  compact = true,
+  className,
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
+  const settings: Settings = useRouteContext({ strict: false });
   const event = useNoteContext();
   const content = useMemo(() => {
     const text = event.content.trim();
     const words = text.split(/( |\n)/);
 
     // @ts-ignore, kaboom !!!
-    let parsedContent: ReactNode[] = text;
+    let parsedContent: ReactNode[] = compact
+      ? text.replace(/\n\s*\n/g, "\n")
+      : text;
 
     const hashtags = words.filter((word) => word.startsWith("#"));
     const events = words.filter((word) =>
@@ -73,16 +82,18 @@ export function NoteContent({ className }: { className?: string }) {
             const url = new URL(match);
             const ext = url.pathname.split(".")[1];
 
-            if (IMAGES.includes(ext)) {
-              return <ImagePreview key={match + i} url={url.toString()} />;
-            }
+            if (!settings.enhancedPrivacy) {
+              if (IMAGES.includes(ext)) {
+                return <ImagePreview key={match + i} url={url.toString()} />;
+              }
 
-            if (VIDEOS.includes(ext)) {
-              return <VideoPreview key={match + i} url={url.toString()} />;
-            }
+              if (VIDEOS.includes(ext)) {
+                return <VideoPreview key={match + i} url={url.toString()} />;
+              }
 
-            if (AUDIOS.includes(ext)) {
-              return <VideoPreview key={match + i} url={url.toString()} />;
+              if (AUDIOS.includes(ext)) {
+                return <VideoPreview key={match + i} url={url.toString()} />;
+              }
             }
 
             return (
@@ -112,15 +123,17 @@ export function NoteContent({ className }: { className?: string }) {
         },
       );
 
+      if (compact) {
+        parsedContent = reactStringReplace(parsedContent, /\n|\r/g, () => (
+          <div key={nanoid()} className="h-1.5" />
+        ));
+      }
+
       return parsedContent;
     } catch (e) {
       return text;
     }
   }, []);
-
-  if (event.kind !== Kind.Text) {
-    return <NIP89 className={className} />;
-  }
 
   return (
     <div className={cn("select-text", className)}>

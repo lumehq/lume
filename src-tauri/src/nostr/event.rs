@@ -72,66 +72,120 @@ pub async fn get_events_from(
 }
 
 #[tauri::command]
-pub async fn get_local_events(
+pub async fn get_events(
   limit: usize,
   until: Option<&str>,
+  contacts: Option<Vec<&str>>,
+  global: Option<bool>,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
   let client = &state.client;
-  let f_until = match until {
+  let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
   };
-
-  let contact_list = client
-    .get_contact_list_public_keys(Some(Duration::from_secs(10)))
-    .await;
-
-  if let Ok(authors) = contact_list {
-    if authors.len() == 0 {
-      return Err("Get text event failed".into());
+  let authors = match contacts {
+    Some(val) => {
+      let c: Vec<PublicKey> = val
+        .into_iter()
+        .map(|key| PublicKey::from_str(key).unwrap())
+        .collect();
+      Some(c)
     }
-
-    let filter = Filter::new()
+    None => match global {
+      Some(val) => match val {
+        true => None,
+        false => {
+          match client
+            .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+            .await
+          {
+            Ok(val) => Some(val),
+            Err(_) => None,
+          }
+        }
+      },
+      None => {
+        match client
+          .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+          .await
+        {
+          Ok(val) => Some(val),
+          Err(_) => None,
+        }
+      }
+    },
+  };
+  let filter = match authors {
+    Some(val) => Filter::new()
       .kinds(vec![Kind::TextNote, Kind::Repost])
-      .authors(authors)
+      .authors(val)
       .limit(limit)
-      .until(f_until);
+      .until(as_of),
+    None => Filter::new()
+      .kinds(vec![Kind::TextNote, Kind::Repost])
+      .limit(limit)
+      .until(as_of),
+  };
 
-    if let Ok(events) = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await
-    {
-      Ok(events)
-    } else {
-      Err("Get text event failed".into())
-    }
+  if let Ok(events) = client
+    .get_events_of(vec![filter], Some(Duration::from_secs(15)))
+    .await
+  {
+    println!("total events: {}", events.len());
+    Ok(events)
   } else {
-    Err("Get contact list failed".into())
+    Err("Get text event failed".into())
   }
 }
 
 #[tauri::command]
-pub async fn get_global_events(
+pub async fn get_events_from_interests(
+  hashtags: Vec<&str>,
   limit: usize,
   until: Option<&str>,
+  global: Option<bool>,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
   let client = &state.client;
-  let f_until = match until {
+  let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
   };
-
-  let filter = Filter::new()
-    .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(limit)
-    .until(f_until);
+  let authors = match global {
+    Some(val) => match val {
+      true => None,
+      false => {
+        match client
+          .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+          .await
+        {
+          Ok(val) => Some(val),
+          Err(_) => None,
+        }
+      }
+    },
+    None => None,
+  };
+  let filter = match authors {
+    Some(val) => Filter::new()
+      .kinds(vec![Kind::TextNote, Kind::Repost])
+      .authors(val)
+      .limit(limit)
+      .until(as_of)
+      .hashtags(hashtags),
+    None => Filter::new()
+      .kinds(vec![Kind::TextNote, Kind::Repost])
+      .limit(limit)
+      .until(as_of)
+      .hashtags(hashtags),
+  };
 
   if let Ok(events) = client
-    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+    .get_events_of(vec![filter], Some(Duration::from_secs(15)))
     .await
   {
+    println!("total events: {}", events.len());
     Ok(events)
   } else {
     Err("Get text event failed".into())
@@ -171,43 +225,37 @@ pub async fn publish(
 }
 
 #[tauri::command]
-pub async fn repost(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(pubkey).unwrap();
-  let event_id = EventId::from_hex(id).unwrap();
+  let event = Event::from_json(raw).unwrap();
 
-  let event = client
-    .repost_event(event_id, public_key)
-    .await
-    .expect("Repost failed");
-
-  Ok(event)
+  if let Ok(event_id) = client.repost(&event, None).await {
+    Ok(event_id)
+  } else {
+    Err("Repost failed".into())
+  }
 }
 
 #[tauri::command]
-pub async fn upvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+pub async fn upvote(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(pubkey).unwrap();
-  let event_id = EventId::from_hex(id).unwrap();
+  let event = Event::from_json(raw).unwrap();
 
-  let event = client
-    .like(event_id, public_key)
-    .await
-    .expect("Upvote failed");
-
-  Ok(event)
+  if let Ok(event_id) = client.like(&event).await {
+    Ok(event_id)
+  } else {
+    Err("Upvote failed".into())
+  }
 }
 
 #[tauri::command]
-pub async fn downvote(id: &str, pubkey: &str, state: State<'_, Nostr>) -> Result<EventId, ()> {
+pub async fn downvote(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(pubkey).unwrap();
-  let event_id = EventId::from_hex(id).unwrap();
+  let event = Event::from_json(raw).unwrap();
 
-  let event = client
-    .dislike(event_id, public_key)
-    .await
-    .expect("Downvote failed");
-
-  Ok(event)
+  if let Ok(event_id) = client.dislike(&event).await {
+    Ok(event_id)
+  } else {
+    Err("Downvote failed".into())
+  }
 }

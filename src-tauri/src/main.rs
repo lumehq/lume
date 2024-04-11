@@ -5,13 +5,21 @@
 
 pub mod commands;
 pub mod nostr;
+pub mod traffic_light;
 pub mod tray;
 
-use std::fs;
+#[cfg(target_os = "macos")]
+extern crate cocoa;
+
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate objc;
 
 use nostr_sdk::prelude::*;
+use std::fs;
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
+use traffic_light::setup_traffic_light_positioner;
 
 pub struct Nostr {
   client: Client,
@@ -20,6 +28,12 @@ pub struct Nostr {
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
+      #[cfg(target_os = "macos")]
+      app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
+      #[cfg(target_os = "macos")]
+      setup_traffic_light_positioner(app.get_window("main").unwrap());
+
       let _tray = tray::create_tray(app.handle()).unwrap();
       let handle = app.handle().clone();
       let home_dir = handle.path().home_dir().unwrap();
@@ -40,21 +54,13 @@ fn main() {
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
         client
-          .add_relay("wss://nostr.mutinywallet.com")
-          .await
-          .unwrap_or_default();
-        client
           .add_relay("wss://relay.nostr.band")
           .await
-          .unwrap_or_default();
-        client
-          .add_relay("wss://relay.damus.io")
-          .await
-          .unwrap_or_default();
+          .expect("Cannot connect to relay.nostr.band, please try again later.");
         client
           .add_relay("wss://purplepag.es")
           .await
-          .unwrap_or_default();
+          .expect("Cannot connect to purplepag.es, please try again later.");
 
         // Connect
         client.connect().await;
@@ -66,6 +72,13 @@ fn main() {
       });
 
       Ok(())
+    })
+    .on_window_event(|window, event| match event {
+      tauri::WindowEvent::CloseRequested { api, .. } => {
+        window.hide().unwrap();
+        api.prevent_close();
+      }
+      _ => {}
     })
     .plugin(tauri_plugin_store::Builder::default().build())
     .plugin(tauri_plugin_clipboard_manager::init())
@@ -86,6 +99,7 @@ fn main() {
       nostr::keys::create_keys,
       nostr::keys::save_key,
       nostr::keys::get_encrypted_key,
+      nostr::keys::get_stored_nsec,
       nostr::keys::verify_signer,
       nostr::keys::load_selected_account,
       nostr::keys::event_to_bech32,
@@ -97,10 +111,8 @@ fn main() {
       nostr::metadata::create_profile,
       nostr::metadata::follow,
       nostr::metadata::unfollow,
-      nostr::metadata::set_interest,
-      nostr::metadata::get_interest,
-      nostr::metadata::set_settings,
-      nostr::metadata::get_settings,
+      nostr::metadata::get_nstore,
+      nostr::metadata::set_nstore,
       nostr::metadata::set_nwc,
       nostr::metadata::load_nwc,
       nostr::metadata::get_balance,
@@ -108,8 +120,8 @@ fn main() {
       nostr::metadata::zap_event,
       nostr::event::get_event,
       nostr::event::get_events_from,
-      nostr::event::get_local_events,
-      nostr::event::get_global_events,
+      nostr::event::get_events,
+      nostr::event::get_events_from_interests,
       nostr::event::get_event_thread,
       nostr::event::publish,
       nostr::event::repost,
@@ -118,23 +130,10 @@ fn main() {
       commands::folder::show_in_folder,
       commands::folder::get_accounts,
       commands::opg::fetch_opg,
+      commands::window::create_column,
+      commands::window::close_column,
+      commands::window::reposition_column
     ])
-    .build(tauri::generate_context!())
+    .run(tauri::generate_context!())
     .expect("error while running tauri application")
-    .run(
-      #[allow(unused_variables)]
-      |app, event| {
-        #[cfg(any(target_os = "macos"))]
-        if let tauri::RunEvent::Opened { urls } = event {
-          if let Some(w) = app.get_webview_window("main") {
-            let urls = urls
-              .iter()
-              .map(|u| u.as_str())
-              .collect::<Vec<_>>()
-              .join(",");
-            let _ = w.eval(&format!("window.onFileOpen(`{urls}`)"));
-          }
-        }
-      },
-    );
 }
