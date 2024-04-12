@@ -1,5 +1,7 @@
 use std::path::PathBuf;
-use tauri::{Manager, Runtime, TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
+#[cfg(target_os = "macos")]
+use tauri::TitleBarStyle;
+use tauri::{Manager, Runtime, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_shell::ShellExt;
 
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
@@ -52,6 +54,7 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
           let _ = window.set_focus();
         };
       } else {
+        #[cfg(target_os = "macos")]
         let _ =
           WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
             .title("Editor")
@@ -59,6 +62,14 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
             .inner_size(600., 400.)
             .hidden_title(true)
             .title_bar_style(TitleBarStyle::Overlay)
+            .build()
+            .unwrap();
+        #[cfg(not(target_os = "macos"))]
+        let _ =
+          WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
+            .title("Editor")
+            .min_inner_size(500., 400.)
+            .inner_size(600., 400.)
             .build()
             .unwrap();
       }
@@ -70,6 +81,7 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       println!("todo!")
     }
     "settings" => {
+      #[cfg(target_os = "macos")]
       let _ = WebviewWindowBuilder::new(
         app,
         "settings",
@@ -82,6 +94,13 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       .title_bar_style(TitleBarStyle::Overlay)
       .build()
       .unwrap();
+      #[cfg(not(target_os = "macos"))]
+      let _ = WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
+        .title("Editor")
+        .min_inner_size(500., 400.)
+        .inner_size(600., 400.)
+        .build()
+        .unwrap();
     }
     "quit" => {
       app.exit(0);
