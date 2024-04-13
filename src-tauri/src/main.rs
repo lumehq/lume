@@ -44,10 +44,10 @@ fn main() {
 
       tauri::async_runtime::spawn(async move {
         // Create nostr database connection
-        let sqlite = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
+        let ndb = NdbDatabase::open("./ndb");
 
         // Create nostr connection
-        let client = match sqlite {
+        let client = match ndb {
           Ok(db) => ClientBuilder::default().database(db).build(),
           Err(_) => ClientBuilder::default().build(),
         };

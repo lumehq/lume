@@ -4,7 +4,6 @@ import { LoaderIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
-import { fetch } from "@tauri-apps/plugin-http";
 import { defer } from "@tanstack/react-router";
 import { Suspense } from "react";
 
@@ -51,7 +50,7 @@ export function Screen() {
                 className="inline-flex items-center gap-2 text-sm font-medium"
                 disabled
               >
-                <LoaderIcon className="size-5" />
+                <LoaderIcon className="animate-spin size-5" />
                 Loading...
               </button>
             </div>
