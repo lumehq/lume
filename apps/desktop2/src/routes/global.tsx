@@ -1,8 +1,8 @@
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { LoaderIcon, ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
+import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
 import { ColumnRouteSearch, Event, Kind } from "@lume/types";
-import { Column } from "@lume/ui";
+import { Column, Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
@@ -60,7 +60,7 @@ export function Screen() {
         {isLoading ? (
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
             <button type="button" className="size-5" disabled>
-              <LoaderIcon className="size-5 animate-spin" />
+              <Spinner className="size-5" />
             </button>
           </div>
         ) : !data.length ? (
@@ -79,7 +79,7 @@ export function Screen() {
               className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
             >
               {isFetchingNextPage ? (
-                <LoaderIcon className="size-5 animate-spin" />
+                <Spinner className="size-5" />
               ) : (
                 <>
                   <ArrowRightCircleIcon className="size-5" />

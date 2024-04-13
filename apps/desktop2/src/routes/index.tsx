@@ -1,5 +1,5 @@
-import { LoaderIcon, PlusIcon } from "@lume/icons";
-import { User } from "@lume/ui";
+import { PlusIcon } from "@lume/icons";
+import { Spinner, User } from "@lume/ui";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -73,7 +73,7 @@ function Screen() {
         <div className="flex items-center justify-center gap-6">
           {loading ? (
             <div className="inline-flex size-6 items-center justify-center">
-              <LoaderIcon className="size-6 animate-spin text-white" />
+              <Spinner className="size-6" />
             </div>
           ) : (
             <>

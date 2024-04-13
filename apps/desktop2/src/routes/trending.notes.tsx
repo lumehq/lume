@@ -1,11 +1,11 @@
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { LoaderIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 import { defer } from "@tanstack/react-router";
 import { Suspense } from "react";
+import { Spinner } from "@lume/ui";
 
 export const Route = createFileRoute("/trending/notes")({
   loader: async ({ abortController }) => {
@@ -50,7 +50,7 @@ export function Screen() {
                 className="inline-flex items-center gap-2 text-sm font-medium"
                 disabled
               >
-                <LoaderIcon className="animate-spin size-5" />
+                <Spinner className="size-5" />
                 Loading...
               </button>
             </div>

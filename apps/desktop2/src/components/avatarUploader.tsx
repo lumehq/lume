@@ -1,4 +1,4 @@
-import { LoaderIcon } from "@lume/icons";
+import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
@@ -36,7 +36,7 @@ export function AvatarUploader({
       onClick={() => uploadAvatar()}
       className={cn("size-4", className)}
     >
-      {loading ? <LoaderIcon className="size-4 animate-spin" /> : children}
+      {loading ? <Spinner className="size-4" /> : children}
     </button>
   );
 }

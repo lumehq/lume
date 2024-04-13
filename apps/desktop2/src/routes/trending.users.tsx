@@ -1,5 +1,4 @@
-import { LoaderIcon } from "@lume/icons";
-import { User } from "@lume/ui";
+import { Spinner, User } from "@lume/ui";
 import { Await, defer } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
@@ -34,7 +33,7 @@ export function Screen() {
               className="inline-flex items-center gap-2 text-sm font-medium"
               disabled
             >
-              <LoaderIcon className="size-5 animate-spin" />
+              <Spinner className="size-5" />
               Loading...
             </button>
           </div>

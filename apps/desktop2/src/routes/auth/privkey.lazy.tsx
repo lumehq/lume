@@ -1,4 +1,4 @@
-import { LoaderIcon } from "@lume/icons";
+import { Spinner } from "@lume/ui";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -82,7 +82,7 @@ function Screen() {
           disabled={loading}
           className="mt-3 inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
         >
-          {loading ? <LoaderIcon className="size-4 animate-spin" /> : "Login"}
+          {loading ? <Spinner /> : "Login"}
         </button>
       </div>
     </div>

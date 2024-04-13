@@ -1,4 +1,4 @@
-import { AddMediaIcon, LoaderIcon } from "@lume/icons";
+import { AddMediaIcon } from "@lume/icons";
 import { cn, insertImage, isImagePath } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useSlateStatic } from "slate-react";
@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { getCurrent } from "@tauri-apps/api/window";
 import { UnlistenFn } from "@tauri-apps/api/event";
 import { useRouteContext } from "@tanstack/react-router";
+import { Spinner } from "@lume/ui";
 
 export function MediaButton({ className }: { className?: string }) {
   const { ark } = useRouteContext({ strict: false });
@@ -69,7 +70,7 @@ export function MediaButton({ className }: { className?: string }) {
       className={cn("inline-flex items-center justify-center", className)}
     >
       {loading ? (
-        <LoaderIcon className="size-5 animate-spin" />
+        <Spinner className="size-5" />
       ) : (
         <AddMediaIcon className="size-5" />
       )}

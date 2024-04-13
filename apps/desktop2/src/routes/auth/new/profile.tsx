@@ -1,6 +1,7 @@
 import { AvatarUploader } from "@/components/avatarUploader";
-import { LoaderIcon, PlusIcon } from "@lume/icons";
+import { PlusIcon } from "@lume/icons";
 import { Metadata } from "@lume/types";
+import { Spinner } from "@lume/ui";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -134,11 +135,7 @@ function Screen() {
           type="submit"
           className="mt-3 inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
         >
-          {loading ? (
-            <LoaderIcon className="size-4 animate-spin" />
-          ) : (
-            t("global.continue")
-          )}
+          {loading ? <Spinner /> : t("global.continue")}
         </button>
       </form>
     </div>

@@ -1,4 +1,4 @@
-import { LoaderIcon, QuoteIcon, RepostIcon } from "@lume/icons";
+import { QuoteIcon, RepostIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useNoteContext } from "../provider";
 import { useRouteContext } from "@tanstack/react-router";
+import { Spinner } from "../../spinner";
 
 export function NoteRepost() {
   const { ark } = useRouteContext({ strict: false });
@@ -46,7 +47,7 @@ export function NoteRepost() {
                 className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
               >
                 {loading ? (
-                  <LoaderIcon className="size-4 animate-spin" />
+                  <Spinner className="size-4" />
                 ) : (
                   <RepostIcon
                     className={cn(

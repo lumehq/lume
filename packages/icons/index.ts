@@ -33,7 +33,6 @@ export * from "./src/threads";
 export * from "./src/trash";
 export * from "./src/world";
 export * from "./src/zap";
-export * from "./src/loader";
 export * from "./src/trending";
 export * from "./src/empty";
 export * from "./src/cmd";

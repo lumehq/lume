@@ -1,4 +1,4 @@
-import { LaurelIcon, LoaderIcon } from "@lume/icons";
+import { LaurelIcon } from "@lume/icons";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import * as Switch from "@radix-ui/react-switch";
@@ -9,6 +9,7 @@ import {
   requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { toast } from "sonner";
+import { Spinner } from "@lume/ui";
 
 export const Route = createFileRoute("/auth/settings")({
   validateSearch: (search: Record<string, string>): AppRouteSearch => {
@@ -181,7 +182,7 @@ function Pending() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <button type="button" className="size-5" disabled>
-        <LoaderIcon className="size-5 animate-spin" />
+        <Spinner className="size-5" />
       </button>
     </div>
   );

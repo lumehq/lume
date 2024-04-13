@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
-import { LoaderIcon } from "@lume/icons";
+import { Spinner } from "@lume/ui";
 
 export function Col({
   column,
@@ -68,7 +68,7 @@ export function Col({
       {column.label !== "open" ? (
         <div className="w-full h-full flex items-center justify-center rounded-xl flex-col bg-black/5 dark:bg-white/5 backdrop-blur-lg">
           <button type="button" className="size-5" disabled>
-            <LoaderIcon className="size-5 animate-spin" />
+            <Spinner className="size-5" />
           </button>
         </div>
       ) : null}

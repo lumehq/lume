@@ -1,6 +1,5 @@
 import { useEvent } from "@lume/ark";
-import { LoaderIcon } from "@lume/icons";
-import { Box, Container, Note, User } from "@lume/ui";
+import { Box, Container, Note, Spinner, User } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ReplyList } from "./-components/replyList";
 import { WindowVirtualizer } from "virtua";
@@ -17,7 +16,7 @@ function Event() {
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center">
-        <LoaderIcon className="size-5 animate-spin" />
+        <Spinner className="size-5 animate-spin" />
       </div>
     );
   }

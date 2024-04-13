@@ -1,10 +1,11 @@
 import { TextNote } from "@/components/text";
 import { RepostNote } from "@/components/repost";
-import { ArrowRightCircleIcon, InfoIcon, LoaderIcon } from "@lume/icons";
+import { ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
+import { Spinner } from "@lume/ui";
 
 export function EventList({ id }: { id: string }) {
   const { ark } = useRouteContext({ strict: false });
@@ -39,7 +40,7 @@ export function EventList({ id }: { id: string }) {
     <div>
       {isLoading ? (
         <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
-          <LoaderIcon className="size-5 animate-spin" />
+          <Spinner className="size-5" />
         </div>
       ) : !data.length ? (
         <div className="flex items-center gap-2 rounded-xl bg-neutral-50 p-5 dark:bg-neutral-950">
@@ -58,7 +59,7 @@ export function EventList({ id }: { id: string }) {
             className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
           >
             {isFetchingNextPage ? (
-              <LoaderIcon className="size-5 animate-spin" />
+              <Spinner className="size-5" />
             ) : (
               <>
                 <ArrowRightCircleIcon className="size-5" />

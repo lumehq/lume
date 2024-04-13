@@ -1,10 +1,11 @@
-import { ArrowDownIcon, LoaderIcon } from "@lume/icons";
+import { ArrowDownIcon } from "@lume/icons";
 import { useState } from "react";
 import { useNoteContext } from "../provider";
 import { cn } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useTranslation } from "react-i18next";
 import { useRouteContext } from "@tanstack/react-router";
+import { Spinner } from "../../spinner";
 
 export function NoteDownvote() {
   const ark = useRouteContext({ strict: false });
@@ -41,7 +42,7 @@ export function NoteDownvote() {
             )}
           >
             {loading ? (
-              <LoaderIcon className="size-4 animate-spin" />
+              <Spinner className="size-4" />
             ) : (
               <ArrowDownIcon className="size-4" />
             )}

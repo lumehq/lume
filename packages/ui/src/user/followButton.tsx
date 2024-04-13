@@ -1,9 +1,9 @@
-import { LoaderIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserContext } from "./provider";
 import { useRouteContext } from "@tanstack/react-router";
+import { Spinner } from "../spinner";
 
 export function UserFollowButton({ className }: { className?: string }) {
   const { ark } = useRouteContext({ strict: false });
@@ -47,7 +47,7 @@ export function UserFollowButton({ className }: { className?: string }) {
       className={cn("w-max", className)}
     >
       {loading ? (
-        <LoaderIcon className="size-4 animate-spin" />
+        <Spinner className="size-4" />
       ) : followed ? (
         t("user.unfollow")
       ) : (

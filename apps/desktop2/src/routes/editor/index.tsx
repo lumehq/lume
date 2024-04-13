@@ -31,7 +31,7 @@ import {
   Editable,
 } from "slate-react";
 import { Contact } from "@lume/types";
-import { User } from "@lume/ui";
+import { Spinner, User } from "@lume/ui";
 import { nip19 } from "nostr-tools";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
@@ -212,11 +212,7 @@ function Screen() {
             onClick={publish}
             className="inline-flex h-9 w-24 items-center justify-center rounded-full bg-blue-500 px-3 font-medium text-white hover:bg-blue-600"
           >
-            {loading ? (
-              <LoaderIcon className="size-5 animate-spin" />
-            ) : (
-              t("global.post")
-            )}
+            {loading ? <Spinner className="size-5" /> : t("global.post")}
           </button>
         </div>
         <div className="flex h-full min-h-0 w-full">
@@ -280,7 +276,7 @@ function Pending() {
       className="flex h-full w-full items-center justify-center gap-2.5"
     >
       <button type="button" disabled>
-        <LoaderIcon className="size-5 animate-spin" />
+        <Spinner className="size-5" />
       </button>
       <p>Loading cache...</p>
     </div>
