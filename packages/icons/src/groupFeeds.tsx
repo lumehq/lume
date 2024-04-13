@@ -1,24 +1,17 @@
 import { SVGProps } from "react";
 
 export function GroupFeedsIcon(
-	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			fill="none"
-			viewBox="0 0 24 24"
-			{...props}
-		>
-			<path
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="2"
-				d="M7.328 8.191a2.596 2.596 0 110-5.191 2.596 2.596 0 010 5.191zm0 0c1.932 0 3.639.959 4.673 2.426a5.704 5.704 0 014.672-2.426m-9.345 0a5.704 5.704 0 00-4.672 2.426m14.017-2.426a2.596 2.596 0 110-5.191 2.596 2.596 0 010 5.191zm0 0c1.93 0 3.638.959 4.672 2.426M7.328 18.575a2.596 2.596 0 110-5.192 2.596 2.596 0 010 5.192zm0 0c1.932 0 3.639.958 4.673 2.426a5.704 5.704 0 014.672-2.426m-9.345 0A5.704 5.704 0 002.656 21m14.017-2.426a2.596 2.596 0 110-5.192 2.596 2.596 0 010 5.192zm0 0c1.93 0 3.638.958 4.672 2.426"
-			/>
-		</svg>
-	);
+  return (
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" {...props}>
+      <path
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        d="M17.25 6.75v-2a2 2 0 0 0-2-2H4.75a2 2 0 0 0-2 2v10.5a2 2 0 0 0 2 2h2m2.576 4c.461-2.286 2.379-4 4.674-4 2.295 0 4.213 1.714 4.674 4m-9.348 0H8.75a2 2 0 0 1-2-2V8.75a2 2 0 0 1 2-2h10.5a2 2 0 0 1 2 2v10.5a2 2 0 0 1-2 2h-.576m-9.348 0h9.348M16.25 12.5a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+      />
+    </svg>
+  );
 }

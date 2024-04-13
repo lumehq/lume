@@ -76,7 +76,7 @@ pub async fn get_events(
   limit: usize,
   until: Option<&str>,
   contacts: Option<Vec<&str>>,
-  global: Option<bool>,
+  global: bool,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
   let client = &state.client;
@@ -84,18 +84,34 @@ pub async fn get_events(
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
   };
-  let authors = match contacts {
-    Some(val) => {
-      let c: Vec<PublicKey> = val
-        .into_iter()
-        .map(|key| PublicKey::from_str(key).unwrap())
-        .collect();
-      Some(c)
+
+  match global {
+    true => {
+      let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .limit(limit)
+        .until(as_of);
+
+      if let Ok(events) = client
+        .get_events_of(vec![filter], Some(Duration::from_secs(15)))
+        .await
+      {
+        println!("total global events: {}", events.len());
+        Ok(events)
+      } else {
+        Err("Get events failed".into())
+      }
     }
-    None => match global {
-      Some(val) => match val {
-        true => None,
-        false => {
+    false => {
+      let authors = match contacts {
+        Some(val) => {
+          let c: Vec<PublicKey> = val
+            .into_iter()
+            .map(|key| PublicKey::from_str(key).unwrap())
+            .collect();
+          Some(c)
+        }
+        None => {
           match client
             .get_contact_list_public_keys(Some(Duration::from_secs(10)))
             .await
@@ -104,38 +120,33 @@ pub async fn get_events(
             Err(_) => None,
           }
         }
-      },
-      None => {
-        match client
-          .get_contact_list_public_keys(Some(Duration::from_secs(10)))
-          .await
-        {
-          Ok(val) => Some(val),
-          Err(_) => None,
-        }
-      }
-    },
-  };
-  let filter = match authors {
-    Some(val) => Filter::new()
-      .kinds(vec![Kind::TextNote, Kind::Repost])
-      .authors(val)
-      .limit(limit)
-      .until(as_of),
-    None => Filter::new()
-      .kinds(vec![Kind::TextNote, Kind::Repost])
-      .limit(limit)
-      .until(as_of),
-  };
+      };
 
-  if let Ok(events) = client
-    .get_events_of(vec![filter], Some(Duration::from_secs(15)))
-    .await
-  {
-    println!("total events: {}", events.len());
-    Ok(events)
-  } else {
-    Err("Get text event failed".into())
+      match authors {
+        Some(val) => {
+          if val.is_empty() {
+            Err("Get local events but contact list is empty".into())
+          } else {
+            let filter = Filter::new()
+              .kinds(vec![Kind::TextNote, Kind::Repost])
+              .limit(limit)
+              .authors(val)
+              .until(as_of);
+
+            if let Ok(events) = client
+              .get_events_of(vec![filter], Some(Duration::from_secs(15)))
+              .await
+            {
+              println!("total local events: {}", events.len());
+              Ok(events)
+            } else {
+              Err("Get events failed".into())
+            }
+          }
+        }
+        None => Err("Get local events but contact list is empty".into()),
+      }
+    }
   }
 }
 

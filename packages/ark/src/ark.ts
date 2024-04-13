@@ -140,6 +140,8 @@ export class Ark {
 	) {
 		try {
 			let until: string = undefined;
+			let isGlobal = global ?? false;
+
 			if (asOf && asOf > 0) until = asOf.toString();
 
 			const dedup = true;
@@ -150,7 +152,7 @@ export class Ark {
 				limit,
 				until,
 				contacts,
-				global,
+				global: isGlobal,
 			});
 
 			if (dedup) {
@@ -175,8 +177,9 @@ export class Ark {
 					.sort((a, b) => b.created_at - a.created_at);
 			}
 
-			return nostrEvents.sort((a, b) => b.created_at - a.created_at);
-		} catch {
+			return nostrEvents;
+		} catch (e) {
+			console.error(String(e));
 			return [];
 		}
 	}

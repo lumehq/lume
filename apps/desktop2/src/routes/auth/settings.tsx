@@ -42,28 +42,28 @@ function Screen() {
     await requestPermission();
     setNewSettings((prev) => ({
       ...prev,
-      notification: !settings.notification,
+      notification: !newSettings.notification,
     }));
   };
 
   const toggleAutoUpdate = () => {
     setNewSettings((prev) => ({
       ...prev,
-      autoUpdate: !settings.autoUpdate,
+      autoUpdate: !newSettings.autoUpdate,
     }));
   };
 
   const toggleEnhancedPrivacy = () => {
     setNewSettings((prev) => ({
       ...prev,
-      enhancedPrivacy: !settings.enhancedPrivacy,
+      enhancedPrivacy: !newSettings.enhancedPrivacy,
     }));
   };
 
   const toggleZap = () => {
     setNewSettings((prev) => ({
       ...prev,
-      zap: !settings.zap,
+      zap: !newSettings.zap,
     }));
   };
 

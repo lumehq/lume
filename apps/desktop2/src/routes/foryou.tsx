@@ -1,12 +1,10 @@
 import { RepostNote } from "@/components/repost";
-import { Suggest } from "@/components/suggest";
 import { TextNote } from "@/components/text";
-import { LoaderIcon, ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
+import { LoaderIcon, ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
 import { ColumnRouteSearch, Event, Kind } from "@lume/types";
 import { Column } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
+import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/foryou")({
@@ -41,7 +39,6 @@ export const Route = createFileRoute("/foryou")({
 export function Screen() {
   const { label, name, account } = Route.useSearch();
   const { ark, interests } = Route.useRouteContext();
-  const { t } = useTranslation();
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: [name, account],
@@ -84,20 +81,7 @@ export function Screen() {
             </button>
           </div>
         ) : !data.length ? (
-          <div className="flex flex-col gap-3 p-3">
-            <div className="flex items-center gap-2 rounded-xl bg-neutral-100 p-5 dark:bg-neutral-900">
-              <InfoIcon className="size-6" />
-              <div>
-                <p className="font-medium leading-tight">
-                  {t("global.emptyFeedTitle")}
-                </p>
-                <p className="leading-tight text-neutral-700 dark:text-neutral-300">
-                  {t("global.emptyFeedSubtitle")}
-                </p>
-              </div>
-            </div>
-            <Suggest />
-          </div>
+          <Empty />
         ) : (
           <Virtualizer overscan={3}>
             {data.map((item) => renderItem(item))}
@@ -125,5 +109,37 @@ export function Screen() {
         ) : null}
       </Column.Content>
     </Column.Root>
+  );
+}
+
+function Empty() {
+  return (
+    <div className="flex flex-col py-10 gap-10">
+      <div className="text-center flex flex-col items-center justify-center">
+        <div className="size-24 bg-blue-100 flex flex-col items-center justify-end overflow-hidden dark:bg-blue-900 rounded-full mb-8">
+          <div className="w-12 h-16 bg-gradient-to-b from-blue-500 dark:from-blue-200 to-blue-50 dark:to-blue-900 rounded-t-lg" />
+        </div>
+        <p className="text-lg font-medium">Your newsfeed is empty</p>
+        <p className="leading-tight text-neutral-700 dark:text-neutral-300">
+          Here are few suggestions to get started.
+        </p>
+      </div>
+      <div className="flex flex-col px-3 gap-2">
+        <Link
+          to="/trending/notes"
+          className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
+        >
+          <ArrowRightIcon className="size-5" />
+          Show trending notes
+        </Link>
+        <Link
+          to="/trending/users"
+          className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
+        >
+          <ArrowRightIcon className="size-5" />
+          Discover trending users
+        </Link>
+      </div>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export function RepostNote({
   event: Event;
   className?: string;
 }) {
-  const { ark } = useRouteContext({ strict: false });
+  const { ark, settings } = useRouteContext({ strict: false });
   const { t } = useTranslation();
   const {
     isLoading,
@@ -104,7 +104,7 @@ export function RepostNote({
                 <div className="-ml-1 inline-flex items-center gap-4">
                   <Note.Reply />
                   <Note.Repost />
-                  <Note.Zap />
+                  {settings.zap ? <Note.Zap /> : null}
                 </div>
                 <Note.Menu />
               </div>

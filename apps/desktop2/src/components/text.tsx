@@ -1,6 +1,7 @@
 import { Event } from "@lume/types";
 import { Note } from "@lume/ui";
 import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 
 export function TextNote({
   event,
@@ -9,6 +10,8 @@ export function TextNote({
   event: Event;
   className?: string;
 }) {
+  const { settings } = useRouteContext({ strict: false });
+
   return (
     <Note.Provider event={event}>
       <Note.Root
@@ -27,7 +30,7 @@ export function TextNote({
               <div className="-ml-1 inline-flex items-center gap-4">
                 <Note.Reply />
                 <Note.Repost />
-                <Note.Zap />
+                {settings.zap ? <Note.Zap /> : null}
               </div>
               <Note.Menu />
             </div>

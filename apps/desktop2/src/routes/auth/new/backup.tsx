@@ -7,13 +7,18 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@lume/icons";
+import { AppRouteSearch } from "@lume/types";
 
 export const Route = createFileRoute("/auth/new/backup")({
+  validateSearch: (search: Record<string, string>): AppRouteSearch => {
+    return {
+      account: search.account,
+    };
+  },
   component: Screen,
 });
 
 function Screen() {
-  // @ts-ignore, magic!!!
   const { account } = Route.useSearch();
   const { t } = useTranslation();
 
@@ -32,7 +37,7 @@ function Screen() {
         } else {
           return navigate({
             to: "/auth/settings",
-            search: { account, new: true },
+            search: { account },
           });
         }
       }
