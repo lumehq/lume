@@ -188,11 +188,12 @@ pub async fn set_nstore(
   let tag = Tag::Identifier(key.into());
   let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
 
-  if let Ok(event_id) = client.send_event_builder(builder).await {
-    println!("set nstore: {}", event_id);
-    Ok(event_id)
-  } else {
-    Err("Event has been published failled".into())
+  match client.send_event_builder(builder).await {
+    Ok(event_id) => {
+      println!("set nstore: {}", event_id);
+      Ok(event_id)
+    }
+    Err(err) => Err(err.to_string()),
   }
 }
 

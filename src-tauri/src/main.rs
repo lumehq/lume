@@ -44,10 +44,10 @@ fn main() {
 
       tauri::async_runtime::spawn(async move {
         // Create nostr database connection
-        let ndb = NdbDatabase::open("./ndb");
+        let sqlite = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
 
         // Create nostr connection
-        let client = match ndb {
+        let client = match sqlite {
           Ok(db) => ClientBuilder::default().database(db).build(),
           Err(_) => ClientBuilder::default().build(),
         };
@@ -55,13 +55,13 @@ fn main() {
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
         client
-          .add_relay("wss://relay.nostr.band")
+          .add_relay("wss://relayable.org")
           .await
           .expect("Cannot connect to relay.nostr.band, please try again later.");
         client
-          .add_relay("wss://purplepag.es")
+          .add_relay("wss://relay.damus.io")
           .await
-          .expect("Cannot connect to purplepag.es, please try again later.");
+          .expect("Cannot connect to relay.damus.io, please try again later.");
 
         // Connect
         client.connect().await;
