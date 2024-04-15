@@ -6,10 +6,11 @@ import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { resolveResource } from "@tauri-apps/api/path";
+import { getCurrent } from "@tauri-apps/api/webviewWindow";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
 import { useEffect, useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { VList, VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
@@ -30,14 +31,15 @@ export const Route = createFileRoute("/$account/home")({
 });
 
 function Screen() {
+  const vlistRef = useRef<VListHandle>(null);
+
   const { account } = Route.useParams();
   const { ark, storedColumns } = Route.useRouteContext();
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [isScroll, setIsScroll] = useState(false);
   const [columns, setColumns] = useState(storedColumns);
-
-  const vlistRef = useRef<VListHandle>(null);
+  const [isScroll, setIsScroll] = useState(false);
+  const [isResize, setIsResize] = useState(false);
 
   const goLeft = () => {
     const prevIndex = Math.max(selectedIndex - 1, 0);
@@ -56,13 +58,23 @@ function Screen() {
   };
 
   const add = useDebouncedCallback((column: LumeColumn) => {
+    // update col label
     column["label"] = column.label + "-" + nanoid();
 
-    setColumns((state) => [...state, column]);
-    setSelectedIndex(columns.length + 1);
+    // create new cols
+    const cols = [...columns];
+    const openColIndex = cols.findIndex((col) => col.label === "open");
+    const newCols = [
+      ...cols.slice(0, openColIndex),
+      column,
+      ...cols.slice(openColIndex),
+    ];
 
-    // scroll to the last column
-    vlistRef.current.scrollToIndex(columns.length + 1, {
+    setColumns(newCols);
+    setSelectedIndex(cols.length - 1);
+
+    // scroll to the newest column
+    vlistRef.current.scrollToIndex(cols.length - 1, {
       align: "end",
     });
   }, 150);
@@ -77,24 +89,38 @@ function Screen() {
     });
   }, 150);
 
+  const startResize = useDebouncedCallback(
+    () => setIsResize((prev) => !prev),
+    150,
+  );
+
   useEffect(() => {
     // save state
     ark.set_columns(columns);
   }, [columns]);
 
   useEffect(() => {
-    let unlisten: Awaited<ReturnType<typeof listen>> | undefined = undefined;
+    let unlistenColEvent: Awaited<ReturnType<typeof listen>> | undefined =
+      undefined;
+    let unlistenWindowResize: Awaited<ReturnType<typeof listen>> | undefined =
+      undefined;
 
     (async () => {
-      if (unlisten) return;
-      unlisten = await listen<EventColumns>("columns", (data) => {
+      if (unlistenColEvent && unlistenWindowResize) return;
+
+      unlistenColEvent = await listen<EventColumns>("columns", (data) => {
         if (data.payload.type === "add") add(data.payload.column);
         if (data.payload.type === "remove") remove(data.payload.label);
+      });
+
+      unlistenWindowResize = await getCurrent().listen("tauri://resize", () => {
+        startResize();
       });
     })();
 
     return () => {
-      if (unlisten) unlisten();
+      if (unlistenColEvent) unlistenColEvent();
+      if (unlistenWindowResize) unlistenWindowResize();
     };
   }, []);
 
@@ -106,12 +132,8 @@ function Screen() {
         tabIndex={-1}
         itemSize={440}
         overscan={3}
-        onScroll={() => {
-          setIsScroll(true);
-        }}
-        onScrollEnd={() => {
-          setIsScroll(false);
-        }}
+        onScroll={() => setIsScroll(true)}
+        onScrollEnd={() => setIsScroll(false)}
         className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
       >
         {columns.map((column, index) => (
@@ -120,6 +142,7 @@ function Screen() {
             column={column}
             account={account}
             isScroll={isScroll}
+            isResize={isResize}
           />
         ))}
       </VList>

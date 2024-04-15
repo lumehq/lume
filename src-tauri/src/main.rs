@@ -133,7 +133,8 @@ fn main() {
       commands::opg::fetch_opg,
       commands::window::create_column,
       commands::window::close_column,
-      commands::window::reposition_column
+      commands::window::reposition_column,
+      commands::window::resize_column
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")

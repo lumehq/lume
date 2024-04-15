@@ -1,5 +1,4 @@
 import { NotePin } from "./buttons/pin";
-import { NoteReaction } from "./buttons/reaction";
 import { NoteReply } from "./buttons/reply";
 import { NoteRepost } from "./buttons/repost";
 import { NoteZap } from "./buttons/zap";
@@ -18,7 +17,7 @@ export const Note = {
 	Menu: NoteMenu,
 	Reply: NoteReply,
 	Repost: NoteRepost,
-	Reaction: NoteReaction,
+	Pin: NotePin,
 	Content: NoteContent,
 	Zap: NoteZap,
 	Pin: NotePin,

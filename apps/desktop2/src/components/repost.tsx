@@ -104,6 +104,7 @@ export function RepostNote({
                 <div className="-ml-1 inline-flex items-center gap-4">
                   <Note.Reply />
                   <Note.Repost />
+                  <Note.Pin />
                   {settings.zap ? <Note.Zap /> : null}
                 </div>
                 <Note.Menu />

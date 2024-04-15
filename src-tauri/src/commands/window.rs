@@ -66,3 +66,22 @@ pub fn reposition_column(
     None => Err("Webview not found".into()),
   }
 }
+
+#[tauri::command]
+pub fn resize_column(
+  label: &str,
+  width: f32,
+  height: f32,
+  app_handle: tauri::AppHandle,
+) -> Result<(), String> {
+  match app_handle.get_webview(label) {
+    Some(webview) => {
+      if let Ok(_) = webview.set_size(LogicalSize::new(width, height)) {
+        Ok(())
+      } else {
+        Err("Reposition column failed".into())
+      }
+    }
+    None => Err("Webview not found".into()),
+  }
+}

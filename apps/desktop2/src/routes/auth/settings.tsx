@@ -38,6 +38,7 @@ function Screen() {
   const { ark, settings } = Route.useRouteContext();
 
   const [newSettings, setNewSettings] = useState<Settings>(settings);
+  const [loading, setLoading] = useState(false);
 
   const toggleNofitication = async () => {
     await requestPermission();
@@ -70,11 +71,18 @@ function Screen() {
 
   const submit = async () => {
     try {
+      // start loading
+      setLoading(true);
+
+      // publish settings
       const eventId = await ark.set_settings(settings);
+
       if (eventId) {
+        console.log("event_id: ", eventId);
         navigate({ to: "/$account/home", params: { account }, replace: true });
       }
     } catch (e) {
+      setLoading(false);
       toast.error(e);
     }
   };
@@ -169,6 +177,7 @@ function Screen() {
         <button
           type="button"
           onClick={submit}
+          disabled={loading}
           className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
         >
           {t("global.continue")}
