@@ -69,6 +69,13 @@ function Screen() {
     }));
   };
 
+  const toggleNsfw = () => {
+    setNewSettings((prev) => ({
+      ...prev,
+      nsfw: !newSettings.nsfw,
+    }));
+  };
+
   const submit = async () => {
     try {
       // start loading
@@ -167,18 +174,28 @@ function Screen() {
               </p>
             </div>
           </div>
-          <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-50 px-5 py-4 dark:bg-neutral-950">
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              There are many more settings you can configure from the 'Settings'
-              Screen. Be sure to visit it later.
-            </p>
+          <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
+            <Switch.Root
+              checked={newSettings.nsfw}
+              onClick={() => toggleNsfw()}
+              className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+            >
+              <Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+            </Switch.Root>
+            <div className="flex-1">
+              <h3 className="font-semibold">Filter sensitive content</h3>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                By default, Lume will display all content which have Content
+                Warning tag, it's may include NSFW content.
+              </p>
+            </div>
           </div>
         </div>
         <button
           type="button"
           onClick={submit}
           disabled={loading}
-          className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+          className="mb-1 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
         >
           {t("global.continue")}
         </button>

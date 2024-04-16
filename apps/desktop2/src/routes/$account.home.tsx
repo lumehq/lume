@@ -10,7 +10,7 @@ import { getCurrent } from "@tauri-apps/api/webviewWindow";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
 import { useEffect, useRef, useState } from "react";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import { VList, VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({

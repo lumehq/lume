@@ -20,7 +20,6 @@ export const Note = {
 	Pin: NotePin,
 	Content: NoteContent,
 	Zap: NoteZap,
-	Pin: NotePin,
 	Child: NoteChild,
 	Thread: NoteThread,
 };

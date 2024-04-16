@@ -3,6 +3,8 @@ export interface Settings {
 	enhancedPrivacy: boolean;
 	autoUpdate: boolean;
 	zap: boolean;
+	nsfw: boolean;
+	[key: string]: string | number | boolean;
 }
 
 export interface Keys {

@@ -23,9 +23,11 @@ enum NSTORE_KEYS {
 
 export class Ark {
 	public windows: WebviewWindow[];
+	public settings: Settings;
 
 	constructor() {
 		this.windows = [];
+		this.settings = undefined;
 	}
 
 	public async get_all_accounts() {
@@ -144,7 +146,6 @@ export class Ark {
 
 			if (asOf && asOf > 0) until = asOf.toString();
 
-			const dedup = true;
 			const seenIds = new Set<string>();
 			const dedupQueue = new Set<string>();
 
@@ -155,31 +156,37 @@ export class Ark {
 				global: isGlobal,
 			});
 
-			if (dedup) {
-				for (const event of nostrEvents) {
-					const tags = event.tags
-						.filter((el) => el[0] === "e")
-						?.map((item) => item[1]);
+			for (const event of nostrEvents) {
+				const tags = event.tags
+					.filter((el) => el[0] === "e")
+					?.map((item) => item[1]);
 
-					if (tags.length) {
-						for (const tag of tags) {
-							if (seenIds.has(tag)) {
-								dedupQueue.add(event.id);
-								break;
-							}
-							seenIds.add(tag);
+				if (tags.length) {
+					for (const tag of tags) {
+						if (seenIds.has(tag)) {
+							dedupQueue.add(event.id);
+							break;
 						}
+						seenIds.add(tag);
 					}
 				}
-
-				return nostrEvents
-					.filter((event) => !dedupQueue.has(event.id))
-					.sort((a, b) => b.created_at - a.created_at);
 			}
 
-			return nostrEvents;
+			const events = nostrEvents
+				.filter((event) => !dedupQueue.has(event.id))
+				.sort((a, b) => b.created_at - a.created_at);
+
+			if (this.settings?.nsfw) {
+				return events.filter(
+					(event) =>
+						event.tags.filter((event) => event[0] === "content-warning")
+							.length > 0,
+				);
+			}
+
+			return events;
 		} catch (e) {
-			console.error(String(e));
+			console.info(String(e));
 			return [];
 		}
 	}
@@ -229,7 +236,12 @@ export class Ark {
 		return nostrEvents.sort((a, b) => b.created_at - a.created_at);
 	}
 
-	public async publish(content: string, reply_to?: string, quote?: boolean) {
+	public async publish(
+		content: string,
+		reply_to?: string,
+		quote?: boolean,
+		nsfw?: boolean,
+	) {
 		try {
 			const g = await generateContentTags(content);
 
@@ -238,24 +250,32 @@ export class Ark {
 
 			if (reply_to) {
 				const replyEvent = await this.get_event(reply_to);
+				const relayHint =
+					replyEvent.tags.find((ev) => ev[0] === "e")?.[0][2] ?? "";
 
 				if (quote) {
-					eventTags.push([
-						"e",
-						replyEvent.id,
-						replyEvent.relay || "",
-						"mention",
-					]);
+					eventTags.push(["e", replyEvent.id, relayHint, "mention"]);
 				} else {
 					const rootEvent = replyEvent.tags.find((ev) => ev[3] === "root");
 
 					if (rootEvent) {
-						eventTags.push(["e", rootEvent[1], rootEvent[2] || "", "root"]);
+						eventTags.push([
+							"e",
+							rootEvent[1],
+							rootEvent[2] || relayHint,
+							"root",
+						]);
 					}
 
-					eventTags.push(["e", replyEvent.id, replyEvent.relay || "", "reply"]);
+					eventTags.push(["e", replyEvent.id, relayHint, "reply"]);
 					eventTags.push(["p", replyEvent.pubkey]);
 				}
+			}
+
+			if (nsfw) {
+				eventTags.push(["L", "content-warning"]);
+				eventTags.push(["l", "reason", "content-warning"]);
+				eventTags.push(["content-warning", "nsfw"]);
 			}
 
 			const cmd: string = await invoke("publish", {
@@ -605,6 +625,7 @@ export class Ark {
 				key: NSTORE_KEYS.settings,
 			});
 			const settings: Settings = cmd ? JSON.parse(cmd) : null;
+			this.settings = settings;
 			return settings;
 		} catch {
 			const defaultSettings: Settings = {
@@ -612,7 +633,9 @@ export class Ark {
 				enhancedPrivacy: false,
 				notification: false,
 				zap: false,
+				nsfw: false,
 			};
+			this.settings = defaultSettings;
 			return defaultSettings;
 		}
 	}

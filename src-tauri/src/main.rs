@@ -126,8 +126,6 @@ fn main() {
       nostr::event::get_event_thread,
       nostr::event::publish,
       nostr::event::repost,
-      nostr::event::upvote,
-      nostr::event::downvote,
       commands::folder::show_in_folder,
       commands::folder::get_accounts,
       commands::opg::fetch_opg,

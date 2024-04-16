@@ -1,4 +1,4 @@
-import { LoaderIcon, TrashIcon } from "@lume/icons";
+import { ComposeFilledIcon, NsfwIcon, TrashIcon } from "@lume/icons";
 import {
   Portal,
   cn,
@@ -35,11 +35,11 @@ import { Spinner, User } from "@lume/ui";
 import { nip19 } from "nostr-tools";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
+import { NsfwToggle } from "./-components/nsfw";
 
-type EditorElement = {
-  type: string;
-  children: Descendant[];
-  eventId?: string;
+type EditorSearch = {
+  reply_to: string;
+  quote: boolean;
 };
 
 const contactQueryOptions = queryOptions({
@@ -51,46 +51,48 @@ const contactQueryOptions = queryOptions({
 });
 
 export const Route = createFileRoute("/editor/")({
-  loader: ({ context }) =>
-    context.queryClient.ensureQueryData(contactQueryOptions),
+  validateSearch: (search: Record<string, string>): EditorSearch => {
+    return {
+      reply_to: search.reply_to,
+      quote: search.quote === "true" ?? false,
+    };
+  },
+  beforeLoad: async ({ search }) => {
+    return {
+      initialValue: search.quote
+        ? [
+            {
+              type: "paragraph",
+              children: [{ text: "" }],
+            },
+            {
+              type: "event",
+              eventId: `nostr:${nip19.noteEncode(search.reply_to)}`,
+              children: [{ text: "" }],
+            },
+            {
+              type: "paragraph",
+              children: [{ text: "" }],
+            },
+          ]
+        : [
+            {
+              type: "paragraph",
+              children: [{ text: "" }],
+            },
+          ],
+    };
+  },
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(contactQueryOptions);
+  },
   component: Screen,
   pendingComponent: Pending,
 });
 
 function Screen() {
-  // @ts-ignore, useless
   const { reply_to, quote } = Route.useSearch();
-  const { ark } = Route.useRouteContext();
-
-  let initialValue: EditorElement[];
-
-  if (quote) {
-    initialValue = [
-      {
-        type: "paragraph",
-        children: [{ text: "" }],
-      },
-      {
-        type: "event",
-        eventId: `nostr:${nip19.noteEncode(reply_to)}`,
-        children: [{ text: "" }],
-      },
-      {
-        type: "paragraph",
-        children: [{ text: "" }],
-      },
-    ];
-  } else {
-    initialValue = [
-      {
-        type: "paragraph",
-        children: [{ text: "" }],
-      },
-    ];
-  }
-
-  const ref = useRef<HTMLDivElement | null>();
-  const contacts = useSuspenseQuery(contactQueryOptions).data as Contact[];
+  const { ark, initialValue } = Route.useRouteContext();
 
   const [t] = useTranslation();
   const [editorValue, setEditorValue] = useState(initialValue);
@@ -98,9 +100,13 @@ function Screen() {
   const [index, setIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nsfw, setNsfw] = useState(false);
   const [editor] = useState(() =>
     withMentions(withNostrEvent(withImages(withReact(createEditor())))),
   );
+
+  const ref = useRef<HTMLDivElement | null>();
+  const contacts = useSuspenseQuery(contactQueryOptions).data as Contact[];
 
   const filters = contacts
     ?.filter((c) =>
@@ -204,15 +210,25 @@ function Screen() {
       >
         <div
           data-tauri-drag-region
-          className="flex h-16 w-full shrink-0 items-center justify-end gap-3 px-2"
+          className="flex h-14 w-full shrink-0 items-center justify-end gap-2 px-2"
         >
-          <MediaButton className="size-9 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700" />
+          <NsfwToggle
+            nsfw={nsfw}
+            setNsfw={setNsfw}
+            className="size-8 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+          />
+          <MediaButton className="size-8 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700" />
           <button
             type="button"
             onClick={publish}
-            className="inline-flex h-9 w-24 items-center justify-center rounded-full bg-blue-500 px-3 font-medium text-white hover:bg-blue-600"
+            className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
           >
-            {loading ? <Spinner className="size-5" /> : t("global.post")}
+            {loading ? (
+              <Spinner className="size-4" />
+            ) : (
+              <ComposeFilledIcon className="size-4" />
+            )}
+            {t("global.post")}
           </button>
         </div>
         <div className="flex h-full min-h-0 w-full">
