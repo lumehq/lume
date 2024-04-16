@@ -9,10 +9,12 @@ export const Route = createLazyFileRoute("/settings/zap")({
 
 function Screen() {
   return (
-    <div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
-      <div className="flex flex-col gap-6 py-3">
-        <Connection />
-        <DefaultAmount />
+    <div className="mx-auto w-full max-w-xl">
+      <div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
+        <div className="flex flex-col gap-6 py-3">
+          <Connection />
+          <DefaultAmount />
+        </div>
       </div>
     </div>
   );
@@ -31,7 +33,9 @@ function Connection() {
 
   return (
     <div className="flex items-start gap-6">
-      <div className="w-36 shrink-0 text-end font-medium">Connection</div>
+      <div className="w-36 shrink-0 text-end font-medium text-sm">
+        Connection
+      </div>
       <div className="flex-1">
         <div className="flex w-full flex-col gap-1">
           <label
@@ -66,7 +70,9 @@ function Connection() {
 function DefaultAmount() {
   return (
     <div className="flex items-start gap-6">
-      <div className="w-36 shrink-0 text-end font-medium">Default amount</div>
+      <div className="w-36 shrink-0 text-end font-medium text-sm">
+        Default amount
+      </div>
       <div className="flex-1">
         <div className="flex w-full flex-col gap-1">
           <label

@@ -106,6 +106,7 @@ fn main() {
       nostr::keys::event_to_bech32,
       nostr::keys::user_to_bech32,
       nostr::keys::verify_nip05,
+      nostr::metadata::get_current_user_profile,
       nostr::metadata::get_profile,
       nostr::metadata::get_contact_list,
       nostr::metadata::get_contact_metadata,

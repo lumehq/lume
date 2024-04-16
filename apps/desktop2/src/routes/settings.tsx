@@ -97,9 +97,7 @@ function Screen() {
         </div>
       </div>
       <div className="w-full flex-1 overflow-y-auto px-5 py-4">
-        <div className="mx-auto w-full max-w-xl">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </div>
   );

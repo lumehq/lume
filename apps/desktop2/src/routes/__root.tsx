@@ -2,7 +2,7 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { type Ark } from "@lume/ark";
 import { type QueryClient } from "@tanstack/react-query";
 import { type Platform } from "@tauri-apps/plugin-os";
-import type { Account, Interests, Settings } from "@lume/types";
+import type { Account, Interests, Metadata, Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { type Descendant } from "slate";
 
@@ -21,6 +21,7 @@ interface RouterContext {
   interests?: Interests;
   accounts?: Account[];
   initialValue?: EditorElement[];
+  profile?: Metadata;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

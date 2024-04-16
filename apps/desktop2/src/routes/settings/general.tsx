@@ -1,22 +1,14 @@
-import { LaurelIcon } from "@lume/icons";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
-import * as Switch from "@radix-ui/react-switch";
-import { useState } from "react";
-import { AppRouteSearch, Settings } from "@lume/types";
+import { Settings } from "@lume/types";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   isPermissionGranted,
   requestPermission,
 } from "@tauri-apps/plugin-notification";
-import { toast } from "sonner";
-import { Spinner } from "@lume/ui";
+import { useEffect, useState } from "react";
+import * as Switch from "@radix-ui/react-switch";
+import { useDebouncedCallback } from "use-debounce";
 
-export const Route = createFileRoute("/auth/settings")({
-  validateSearch: (search: Record<string, string>): AppRouteSearch => {
-    return {
-      account: search.account,
-    };
-  },
+export const Route = createFileRoute("/settings/general")({
   beforeLoad: async ({ context }) => {
     const permissionGranted = await isPermissionGranted(); // get notification permission
     const ark = context.ark;
@@ -27,18 +19,11 @@ export const Route = createFileRoute("/auth/settings")({
     };
   },
   component: Screen,
-  pendingComponent: Pending,
 });
 
 function Screen() {
-  const navigate = useNavigate();
-
-  const { account } = Route.useSearch();
-  const { t } = useTranslation();
   const { ark, settings } = Route.useRouteContext();
-
   const [newSettings, setNewSettings] = useState<Settings>(settings);
-  const [loading, setLoading] = useState(false);
 
   const toggleNofitication = async () => {
     await requestPermission();
@@ -76,41 +61,18 @@ function Screen() {
     }));
   };
 
-  const submit = async () => {
-    try {
-      // start loading
-      setLoading(true);
+  const updateSettings = useDebouncedCallback(() => {
+    ark.set_settings(newSettings);
+  }, 200);
 
-      // publish settings
-      const eventId = await ark.set_settings(newSettings);
-
-      if (eventId) {
-        console.log("event_id: ", eventId);
-        navigate({ to: "/$account/home", params: { account }, replace: true });
-      }
-    } catch (e) {
-      setLoading(false);
-      toast.error(e);
-    }
-  };
+  useEffect(() => {
+    updateSettings();
+  }, [newSettings]);
 
   return (
-    <div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
-      <div className="flex flex-col items-center gap-5 text-center">
-        <div className="flex size-20 items-center justify-center rounded-full bg-teal-100 text-teal-500">
-          <LaurelIcon className="size-8" />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold">
-            {t("onboardingSettings.title")}
-          </h1>
-          <p className="leading-snug text-neutral-600 dark:text-neutral-400">
-            {t("onboardingSettings.subtitle")}
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-3">
+    <div className="mx-auto w-full max-w-xl">
+      <div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
+        <div className="flex flex-col">
           <div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
             <Switch.Root
               checked={newSettings.notification}
@@ -191,25 +153,7 @@ function Screen() {
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={submit}
-          disabled={loading}
-          className="mb-1 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
-        >
-          {t("global.continue")}
-        </button>
       </div>
-    </div>
-  );
-}
-
-function Pending() {
-  return (
-    <div className="flex h-full w-full items-center justify-center">
-      <button type="button" className="size-5" disabled>
-        <Spinner className="size-5" />
-      </button>
     </div>
   );
 }

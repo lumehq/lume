@@ -81,26 +81,41 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       println!("todo!")
     }
     "settings" => {
-      #[cfg(target_os = "macos")]
-      let _ = WebviewWindowBuilder::new(
-        app,
-        "settings",
-        WebviewUrl::App(PathBuf::from("settings/general")),
-      )
-      .title("Editor")
-      .min_inner_size(600., 500.)
-      .inner_size(800., 500.)
-      .hidden_title(true)
-      .title_bar_style(TitleBarStyle::Overlay)
-      .build()
-      .unwrap();
-      #[cfg(not(target_os = "macos"))]
-      let _ = WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
-        .title("Editor")
-        .min_inner_size(500., 400.)
-        .inner_size(600., 400.)
+      if let Some(window) = app.get_window("settings") {
+        if window.is_visible().unwrap_or_default() {
+          let _ = window.set_focus();
+        } else {
+          let _ = window.show();
+          let _ = window.set_focus();
+        };
+      } else {
+        #[cfg(target_os = "macos")]
+        let _ = WebviewWindowBuilder::new(
+          app,
+          "settings",
+          WebviewUrl::App(PathBuf::from("settings/general")),
+        )
+        .title("Settings")
+        .inner_size(800., 500.)
+        .hidden_title(true)
+        .title_bar_style(TitleBarStyle::Overlay)
+        .resizable(false)
+        .minimizable(false)
         .build()
         .unwrap();
+        #[cfg(not(target_os = "macos"))]
+        let _ = WebviewWindowBuilder::new(
+          app,
+          "settings",
+          WebviewUrl::App(PathBuf::from("settings/general")),
+        )
+        .title("Settings")
+        .inner_size(800., 500.)
+        .resizable(false)
+        .minimizable(false)
+        .build()
+        .unwrap();
+      }
     }
     "quit" => {
       app.exit(0);
