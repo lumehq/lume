@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@lume/tsconfig": "workspace:*",
-    "@types/react": "^18.2.75",
+    "@types/react": "^18.2.79",
     "typescript": "^5.4.5"
   }
 }

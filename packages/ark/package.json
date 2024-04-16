@@ -4,7 +4,7 @@
 	"private": true,
 	"main": "./src/index.ts",
 	"dependencies": {
-		"@getalby/sdk": "^3.4.3",
+		"@getalby/sdk": "^3.5.0",
 		"@lume/icons": "workspace:^",
 		"@lume/utils": "workspace:^",
 		"@radix-ui/react-avatar": "^1.0.4",
@@ -14,10 +14,10 @@
 		"@radix-ui/react-hover-card": "^1.0.7",
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-tooltip": "^1.0.7",
-		"@tanstack/react-query": "^5.29.0",
-		"@tanstack/react-router": "^1.26.19",
+		"@tanstack/react-query": "^5.29.2",
+		"@tanstack/react-router": "^1.28.1",
 		"get-urls": "^12.1.0",
-		"media-chrome": "^3.2.0",
+		"media-chrome": "^3.2.1",
 		"minidenticons": "^4.2.1",
 		"nanoid": "^5.0.7",
 		"qrcode.react": "^3.1.0",
@@ -28,13 +28,13 @@
 		"react-string-replace": "^1.1.1",
 		"sonner": "^1.4.41",
 		"string-strip-html": "^13.4.8",
-		"virtua": "^0.29.2"
+		"virtua": "^0.30.0"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.2.75",
+		"@types/react": "^18.2.79",
 		"tailwindcss": "^3.4.3",
 		"typescript": "^5.4.5"
 	}
