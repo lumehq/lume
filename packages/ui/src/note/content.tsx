@@ -25,7 +25,9 @@ export function NoteContent({
   compact?: boolean;
   className?: string;
 }) {
-  const settings: Settings = useRouteContext({ strict: false });
+  const { settings }: { settings: Settings } = useRouteContext({
+    strict: false,
+  });
   const event = useNoteContext();
   const content = useMemo(() => {
     const text = event.content.trim();
@@ -124,7 +126,7 @@ export function NoteContent({
       );
 
       if (compact) {
-        parsedContent = reactStringReplace(parsedContent, /\n|\r/g, () => (
+        parsedContent = reactStringReplace(parsedContent, /[\r\n]{2,}/g, () => (
           <div key={nanoid()} className="h-1.5" />
         ));
       }
