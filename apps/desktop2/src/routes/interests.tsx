@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/interests")({
-  component: Screen,
   validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
     return {
       account: search.account,
@@ -15,6 +14,7 @@ export const Route = createFileRoute("/interests")({
       name: search.name,
     };
   },
+  component: Screen,
 });
 
 function Screen() {

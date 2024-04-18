@@ -1,6 +1,6 @@
 import { CheckCircleIcon } from "@lume/icons";
 import { ColumnRouteSearch } from "@lume/types";
-import { Column, User } from "@lume/ui";
+import { Column, Spinner, User } from "@lume/ui";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -30,6 +30,7 @@ function Screen() {
 
   const [title, setTitle] = useState<string>("Just a new group");
   const [users, setUsers] = useState<Array<string>>([]);
+  const [loading, setLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
 
   const toggleUser = (pubkey: string) => {
@@ -43,13 +44,22 @@ function Screen() {
     try {
       if (isDone) return router.history.push(redirect);
 
+      // start loading
+      setLoading(true);
+
       const groups = await ark.set_nstore(
         `lume_group_${label}`,
         JSON.stringify(users),
       );
 
-      if (groups) setIsDone(true);
+      if (groups) {
+        toast.success("Group has been created successfully.");
+        // start loading
+        setIsDone(true);
+        setLoading(false);
+      }
     } catch (e) {
+      setLoading(false);
       toast.error(e);
     }
   };
@@ -101,14 +111,14 @@ function Screen() {
             </div>
           </div>
         </div>
-        <div className="fixed z-10 flex items-center justify-center w-full bottom-3">
+        <div className="fixed z-10 flex items-center justify-center w-full bottom-6">
           <button
             type="button"
             onClick={submit}
             disabled={users.length < 1}
-            className="inline-flex items-center justify-center px-4 font-medium text-white transform bg-blue-500 rounded-full active:translate-y-1 w-36 h-11 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center px-4 font-medium text-white transform bg-blue-500 rounded-full active:translate-y-1 w-26 h-9 hover:bg-blue-600 focus:outline-none disabled:cursor-not-allowed"
           >
-            {isDone ? "Back" : "Update"}
+            {isDone ? "Back" : loading ? <Spinner /> : "Update"}
           </button>
         </div>
       </Column.Content>

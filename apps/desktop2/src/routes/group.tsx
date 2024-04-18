@@ -17,7 +17,10 @@ export const Route = createFileRoute("/group")({
   },
   beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
-    const groups = await ark.get_nstore(`lume_group_${search.label}`);
+    const groups = (await ark.get_nstore(
+      `lume_group_${search.label}`,
+    )) as string[];
+    const settings = await ark.get_settings();
 
     if (!groups) {
       throw redirect({
@@ -31,6 +34,7 @@ export const Route = createFileRoute("/group")({
 
     return {
       groups,
+      settings,
     };
   },
   component: Screen,
@@ -38,13 +42,13 @@ export const Route = createFileRoute("/group")({
 
 export function Screen() {
   const { label, name, account } = Route.useSearch();
-  const { ark } = Route.useRouteContext();
+  const { ark, groups } = Route.useRouteContext();
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: [name, account],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_events(20, pageParam);
+        const events = await ark.get_events(20, pageParam, groups);
         return events;
       },
       getNextPageParam: (lastPage) => {

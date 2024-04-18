@@ -155,7 +155,6 @@ pub async fn get_events_from_interests(
   hashtags: Vec<&str>,
   limit: usize,
   until: Option<&str>,
-  global: Option<bool>,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
   let client = &state.client;
@@ -163,34 +162,11 @@ pub async fn get_events_from_interests(
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
   };
-  let authors = match global {
-    Some(val) => match val {
-      true => None,
-      false => {
-        match client
-          .get_contact_list_public_keys(Some(Duration::from_secs(10)))
-          .await
-        {
-          Ok(val) => Some(val),
-          Err(_) => None,
-        }
-      }
-    },
-    None => None,
-  };
-  let filter = match authors {
-    Some(val) => Filter::new()
-      .kinds(vec![Kind::TextNote, Kind::Repost])
-      .authors(val)
-      .limit(limit)
-      .until(as_of)
-      .hashtags(hashtags),
-    None => Filter::new()
-      .kinds(vec![Kind::TextNote, Kind::Repost])
-      .limit(limit)
-      .until(as_of)
-      .hashtags(hashtags),
-  };
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .limit(limit)
+    .until(as_of)
+    .hashtags(hashtags);
 
   if let Ok(events) = client
     .get_events_of(vec![filter], Some(Duration::from_secs(15)))

@@ -18,6 +18,7 @@ export const Route = createFileRoute("/foryou")({
   beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
     const interests = await ark.get_interest();
+    const settings = await ark.get_settings();
 
     if (!interests) {
       throw redirect({
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/foryou")({
 
     return {
       interests,
+      settings,
     };
   },
   component: Screen,
@@ -48,7 +50,6 @@ export function Screen() {
           interests.hashtags,
           20,
           pageParam,
-          true,
         );
         return events;
       },
@@ -87,13 +88,12 @@ export function Screen() {
             {data.map((item) => renderItem(item))}
           </Virtualizer>
         )}
-
         {data?.length && hasNextPage ? (
           <div className="flex h-20 items-center justify-center">
             <button
               type="button"
               onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage || isFetchingNextPage}
+              disabled={isFetchingNextPage}
               className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
             >
               {isFetchingNextPage ? (

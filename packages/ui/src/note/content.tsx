@@ -126,7 +126,7 @@ export function NoteContent({
       );
 
       if (compact) {
-        parsedContent = reactStringReplace(parsedContent, /[\r\n]{2,}/g, () => (
+        parsedContent = reactStringReplace(parsedContent, /\n*\n/g, () => (
           <div key={nanoid()} className="h-1.5" />
         ));
       }

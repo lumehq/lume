@@ -19,7 +19,7 @@ export function MentionNote({
     return (
       <div
         contentEditable={false}
-        className="my-1 flex w-full cursor-default items-center justify-between rounded-2xl border border-black/10 p-3 dark:border-white/10"
+        className="my-1 flex w-full cursor-default items-center justify-between rounded-xl border border-black/10 p-3 dark:border-white/10"
       >
         <p>Loading...</p>
       </div>
@@ -30,7 +30,7 @@ export function MentionNote({
     return (
       <div
         contentEditable={false}
-        className="my-1 w-full cursor-default rounded-2xl border border-black/10 p-3 dark:border-white/10"
+        className="my-1 w-full cursor-default rounded-xl border border-black/10 p-3 dark:border-white/10"
       >
         {t("note.error")}
       </div>

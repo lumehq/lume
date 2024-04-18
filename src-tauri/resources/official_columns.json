@@ -20,16 +20,6 @@
     "description": "Collective of people you're interested in."
   },
   {
-    "label": "sDbO6XxAGnW5XuUZEgZMn",
-    "name": "Antenas",
-    "content": "/antenas",
-    "logo": "",
-    "cover": "/antenas.png",
-    "coverRetina": "/antenas@2x.png",
-    "author": "Lume",
-    "description": "Keep track to specific content."
-  },
-  {
     "label": "gxtcIbgD8YNPbeI5o92I8",
     "name": "Trending",
     "content": "/trending/notes",

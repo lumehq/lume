@@ -195,45 +195,39 @@ export class Ark {
 		hashtags: string[],
 		limit: number,
 		asOf?: number,
-		global?: boolean,
 	) {
 		let until: string = undefined;
 		if (asOf && asOf > 0) until = asOf.toString();
 
-		const dedup = true;
 		const seenIds = new Set<string>();
 		const dedupQueue = new Set<string>();
+		const nostrTags = hashtags.map((tag) => tag.replace("#", "").toLowerCase());
 
 		const nostrEvents: Event[] = await invoke("get_events_from_interests", {
-			hashtags,
+			hashtags: nostrTags,
 			limit,
 			until,
-			global,
 		});
 
-		if (dedup) {
-			for (const event of nostrEvents) {
-				const tags = event.tags
-					.filter((el) => el[0] === "e")
-					?.map((item) => item[1]);
+		for (const event of nostrEvents) {
+			const tags = event.tags
+				.filter((el) => el[0] === "e")
+				?.map((item) => item[1]);
 
-				if (tags.length) {
-					for (const tag of tags) {
-						if (seenIds.has(tag)) {
-							dedupQueue.add(event.id);
-							break;
-						}
-						seenIds.add(tag);
+			if (tags.length) {
+				for (const tag of tags) {
+					if (seenIds.has(tag)) {
+						dedupQueue.add(event.id);
+						break;
 					}
+					seenIds.add(tag);
 				}
 			}
-
-			return nostrEvents
-				.filter((event) => !dedupQueue.has(event.id))
-				.sort((a, b) => b.created_at - a.created_at);
 		}
 
-		return nostrEvents.sort((a, b) => b.created_at - a.created_at);
+		return nostrEvents
+			.filter((event) => !dedupQueue.has(event.id))
+			.sort((a, b) => b.created_at - a.created_at);
 	}
 
 	public async publish(
