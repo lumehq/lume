@@ -1,5 +1,5 @@
 import { Spinner } from "@lume/ui";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -9,7 +9,7 @@ export const Route = createLazyFileRoute("/auth/privkey")({
 
 function Screen() {
   const { ark } = Route.useRouteContext();
-  const navigate = useNavigate();
+  const navigate = Route.useNavigate();
 
   const [key, setKey] = useState("");
   const [password, setPassword] = useState("");
@@ -20,23 +20,23 @@ function Screen() {
       return toast.warning(
         "You need to enter a valid private key starts with nsec or ncryptsec",
       );
-    if (key.length < 30)
-      return toast.warning("You need to enter a valid private key");
-
-    setLoading(true);
 
     try {
+      setLoading(true);
+
       const npub = await ark.save_account(key, password);
-      navigate({
-        to: "/auth/settings",
-        search: { account: npub, new: false },
-        replace: true,
-      });
+
+      if (npub) {
+        navigate({
+          to: "/auth/settings",
+          search: { account: npub },
+          replace: true,
+        });
+      }
     } catch (e) {
+      setLoading(false);
       toast.error(e);
     }
-
-    setLoading(false);
   };
 
   return (

@@ -51,6 +51,7 @@ export class Ark {
 			const cmd: boolean = await invoke("load_selected_account", {
 				npub,
 			});
+			await invoke("connect_user_relays");
 
 			return cmd;
 		} catch (e) {
@@ -58,12 +59,19 @@ export class Ark {
 		}
 	}
 
-	public async create_guest_account() {
+	public async nostr_connect(uri: string) {
 		try {
-			const keys = await this.create_keys();
-			await this.save_account(keys.nsec, "");
+			const remoteKey = uri.replace("bunker://", "").split("?")[0];
+			const npub: string = await invoke("to_npub", { hex: remoteKey });
 
-			return keys.npub;
+			if (npub) {
+				const connect: string = await invoke("nostr_connect", {
+					npub,
+					uri,
+				});
+
+				return connect;
+			}
 		} catch (e) {
 			throw new Error(String(e));
 		}
@@ -105,10 +113,7 @@ export class Ark {
 
 	public async get_event(id: string) {
 		try {
-			const eventId: string = id
-				.replace("nostr:", "")
-				.split("'")[0]
-				.split(".")[0];
+			const eventId: string = id.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 			const cmd: string = await invoke("get_event", { id: eventId });
 			const event: Event = JSON.parse(cmd);
 			return event;
@@ -395,12 +400,7 @@ export class Ark {
 
 	public async get_profile(pubkey: string) {
 		try {
-			const id = pubkey
-				.replace("nostr:", "")
-				.split("'")[0]
-				.split(".")[0]
-				.split(",")[0]
-				.split("?")[0];
+			const id = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 			const cmd: Metadata = await invoke("get_profile", { id });
 
 			return cmd;

@@ -11,12 +11,7 @@ export function useProfile(pubkey: string) {
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
 			try {
-				const id = pubkey
-					.replace("nostr:", "")
-					.split("'")[0]
-					.split(".")[0]
-					.split(",")[0]
-					.split("?")[0];
+				const id = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 				const cmd: Metadata = await invoke("get_profile", { id });
 				return cmd;
 			} catch (e) {

@@ -12,6 +12,38 @@ pub struct CacheContact {
 }
 
 #[tauri::command]
+pub async fn connect_user_relays(state: State<'_, Nostr>) -> Result<(), ()> {
+  let client = &state.client;
+  let signer = client.signer().await.unwrap();
+  let public_key = signer.public_key().await.unwrap();
+
+  // Get user's relay list
+  let filter = Filter::new()
+    .author(public_key)
+    .kind(Kind::RelayList)
+    .limit(1);
+  let query = client
+    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+    .await;
+
+  // Connect user's relay list
+  if let Ok(events) = query {
+    if let Some(event) = events.first() {
+      let list = nip65::extract_relay_list(&event);
+      for item in list.into_iter() {
+        println!("connecting to relay: {}", item.0.to_string());
+        client
+          .connect_relay(item.0.to_string())
+          .await
+          .unwrap_or_default();
+      }
+    }
+  }
+
+  Ok(())
+}
+
+#[tauri::command]
 pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<Metadata, String> {
   let client = &state.client;
   let signer = client.signer().await.unwrap();
