@@ -89,6 +89,18 @@ function Screen() {
     });
   }, 150);
 
+  const updateName = useDebouncedCallback((label: string, title: string) => {
+    const currentColIndex = columns.findIndex((col) => col.label === label);
+
+    const updatedCol = Object.assign({}, columns[currentColIndex]);
+    updatedCol.name = title;
+
+    const newCols = columns.slice();
+    newCols[currentColIndex] = updatedCol;
+
+    setColumns(newCols);
+  }, 150);
+
   const startResize = useDebouncedCallback(
     () => setIsResize((prev) => !prev),
     150,
@@ -111,6 +123,8 @@ function Screen() {
       unlistenColEvent = await listen<EventColumns>("columns", (data) => {
         if (data.payload.type === "add") add(data.payload.column);
         if (data.payload.type === "remove") remove(data.payload.label);
+        if (data.payload.type === "set_title")
+          updateName(data.payload.label, data.payload.title);
       });
 
       unlistenWindowResize = await getCurrent().listen("tauri://resize", () => {
