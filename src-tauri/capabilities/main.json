@@ -32,7 +32,6 @@
     "window:allow-start-dragging",
     "window:allow-create",
     "window:allow-close",
-    "store:allow-get",
     "clipboard-manager:allow-write",
     "clipboard-manager:allow-read",
     "webview:allow-create-webview-window",

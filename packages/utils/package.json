@@ -23,7 +23,7 @@
 		"@lume/types": "workspace:^",
 		"@types/react": "^18.2.79",
 		"@types/react-dom": "^18.2.25",
-		"tailwind-merge": "^2.2.2",
+		"tailwind-merge": "^2.3.0",
 		"typescript": "^5.4.5"
 	}
 }

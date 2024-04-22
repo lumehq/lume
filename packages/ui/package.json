@@ -19,14 +19,14 @@
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-tooltip": "^1.0.7",
 		"@tanstack/react-query": "^5.29.2",
-		"@tanstack/react-router": "^1.28.8",
-		"framer-motion": "^11.1.5",
+		"@tanstack/react-router": "^1.29.2",
+		"framer-motion": "^11.1.7",
 		"get-urls": "^12.1.0",
 		"media-chrome": "^3.2.1",
 		"minidenticons": "^4.2.1",
 		"nanoid": "^5.0.7",
 		"qrcode.react": "^3.1.0",
-		"re-resizable": "^6.9.11",
+		"re-resizable": "^6.9.14",
 		"react": "^18.2.0",
 		"react-currency-input-field": "^3.8.0",
 		"react-dom": "^18.2.0",
@@ -40,7 +40,7 @@
 		"string-strip-html": "^13.4.8",
 		"uqr": "^0.1.2",
 		"use-debounce": "^10.0.0",
-		"virtua": "^0.30.0"
+		"virtua": "^0.30.1"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",

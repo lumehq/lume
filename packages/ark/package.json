@@ -15,20 +15,20 @@
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-tooltip": "^1.0.7",
 		"@tanstack/react-query": "^5.29.2",
-		"@tanstack/react-router": "^1.28.8",
+		"@tanstack/react-router": "^1.29.2",
 		"get-urls": "^12.1.0",
 		"media-chrome": "^3.2.1",
 		"minidenticons": "^4.2.1",
 		"nanoid": "^5.0.7",
 		"qrcode.react": "^3.1.0",
-		"re-resizable": "^6.9.11",
+		"re-resizable": "^6.9.14",
 		"react": "^18.2.0",
 		"react-currency-input-field": "^3.8.0",
 		"react-i18next": "^14.1.0",
 		"react-string-replace": "^1.1.1",
 		"sonner": "^1.4.41",
 		"string-strip-html": "^13.4.8",
-		"virtua": "^0.30.0"
+		"virtua": "^0.30.1"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",
