@@ -1,7 +1,8 @@
-import { CancelIcon, ExpandIcon, RefreshIcon } from "@lume/icons";
+import { CancelIcon, CheckIcon, RefreshIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
+import { useSearch } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/window";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 export function ColumnHeader({
   label,
@@ -14,6 +15,23 @@ export function ColumnHeader({
   className?: string;
   children?: ReactNode;
 }) {
+  const search = useSearch({ strict: false });
+
+  const [title, setTitle] = useState(name);
+  const [isChanged, setIsChanged] = useState(false);
+
+  const saveNewTitle = async () => {
+    const mainWindow = getCurrent();
+    await mainWindow.emit("columns", { type: "set_title", label, title });
+
+    // update search params
+    // @ts-ignore, hahaha
+    search.name = title;
+
+    // reset state
+    setIsChanged(false);
+  };
+
   const reload = () => {
     window.location.reload();
   };
@@ -23,6 +41,10 @@ export function ColumnHeader({
     await mainWindow.emit("columns", { type: "remove", label });
   };
 
+  useEffect(() => {
+    if (title.length !== name.length) setIsChanged(true);
+  }, [title]);
+
   return (
     <div
       className={cn(
@@ -30,11 +52,29 @@ export function ColumnHeader({
         className,
       )}
     >
-      {!children ? (
-        <div className="text-[13px] font-medium">{name}</div>
-      ) : (
-        children
-      )}
+      <div className="relative flex gap-2 items-center">
+        {!children ? (
+          <div
+            contentEditable
+            suppressContentEditableWarning={true}
+            onBlur={(e) => setTitle(e.currentTarget.textContent)}
+            className="text-[13px] font-medium focus:outline-none"
+          >
+            {name}
+          </div>
+        ) : (
+          children
+        )}
+        {isChanged ? (
+          <button
+            type="button"
+            onClick={saveNewTitle}
+            className="text-teal-500 hover:text-teal-600"
+          >
+            <CheckIcon className="size-4" />
+          </button>
+        ) : null}
+      </div>
       <div className="inline-flex items-center gap-1">
         <button
           type="button"
