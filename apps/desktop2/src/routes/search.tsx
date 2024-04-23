@@ -50,7 +50,7 @@ function Screen() {
             if (e.key === "Enter") searchEvents();
           }}
           placeholder="Search anything..."
-          className="w-full h-20 pt-10 px-3 text-lg bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
+          className="w-full h-20 pt-10 px-6 text-lg bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
         />
       </div>
       <div className="flex-1 p-3 overflow-y-auto scrollbar-none">
@@ -64,11 +64,11 @@ function Screen() {
           </div>
         ) : (
           <div className="flex flex-col gap-5">
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1.5">
               <div className="text-sm font-medium text-neutral-700 dark:text-neutral-300 shrink-0">
                 Users
               </div>
-              <div className="flex-1">
+              <div className="flex-1 flex flex-col gap-3">
                 {events
                   .filter((ev) => ev.kind === Kind["Metadata"])
                   .map((event) => (
@@ -76,11 +76,11 @@ function Screen() {
                   ))}
               </div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1.5">
               <div className="text-sm font-medium text-neutral-700 dark:text-neutral-300 shrink-0">
                 Notes
               </div>
-              <div className="flex-1">
+              <div className="flex-1 flex flex-col gap-3">
                 {events
                   .filter((ev) => ev.kind === Kind["Text"])
                   .map((event) => (
@@ -104,31 +104,41 @@ function Screen() {
 }
 
 function SearchUser({ event }: { event: Event }) {
+  const { ark } = Route.useRouteContext();
+
   return (
-    <div key={event.id} className="my-2">
+    <button
+      key={event.id}
+      type="button"
+      onClick={() => ark.open_profile(event.pubkey)}
+      className="p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-lg"
+    >
       <User.Provider pubkey={event.pubkey} embedProfile={event.content}>
-        <User.Root className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <User.Avatar className="size-11 rounded-lg shrink-0 ring-1 ring-neutral-100 dark:ring-neutral-900" />
-            <div>
-              <User.Name className="font-semibold" />
-              <User.NIP05 />
-            </div>
+        <User.Root className="flex items-center gap-2">
+          <User.Avatar className="size-11 rounded-full shrink-0" />
+          <div>
+            <User.Name className="font-semibold" />
+            <User.NIP05 />
           </div>
-          <User.Button className="inline-flex items-center justify-center w-20 font-medium text-sm border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800" />
         </User.Root>
       </User.Provider>
-    </div>
+    </button>
   );
 }
 
 function SearchNote({ event }: { event: Event }) {
+  const { ark } = Route.useRouteContext();
+
   return (
-    <div key={event.id} className="my-2 bg-white rounded-lg dark:bg-black p-3">
+    <div
+      key={event.id}
+      onClick={() => ark.open_thread(event.id)}
+      className="p-3 bg-white rounded-lg dark:bg-black"
+    >
       <Note.Provider event={event}>
         <Note.Root>
           <Note.User />
-          <div className="select-text mt-2 leading-normal line-clamp-3 text-balance">
+          <div className="select-text mt-2.5 leading-normal line-clamp-5 text-balance">
             {event.content}
           </div>
         </Note.Root>

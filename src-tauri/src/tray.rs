@@ -10,6 +10,7 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
   let menu = tauri::menu::MenuBuilder::new(app)
     .item(&tauri::menu::MenuItem::with_id(app, "open", "Open Lume", true, None::<&str>).unwrap())
     .item(&tauri::menu::MenuItem::with_id(app, "editor", "New Post", true, Some("cmd+n")).unwrap())
+    .item(&tauri::menu::MenuItem::with_id(app, "search", "Search", true, Some("cmd+k")).unwrap())
     .separator()
     .item(
       &tauri::menu::MenuItem::with_id(
@@ -29,6 +30,7 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
     .item(
       &tauri::menu::MenuItem::with_id(app, "settings", "Settings...", true, Some("cmd+,")).unwrap(),
     )
+    .separator()
     .item(&tauri::menu::MenuItem::with_id(app, "quit", "Quit", true, None::<&str>).unwrap())
     .build()
     .unwrap();
@@ -72,6 +74,34 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
             .inner_size(600., 400.)
             .build()
             .unwrap();
+      }
+    }
+    "search" => {
+      if let Some(window) = app.get_window("search") {
+        if window.is_visible().unwrap_or_default() {
+          let _ = window.set_focus();
+        } else {
+          let _ = window.show();
+          let _ = window.set_focus();
+        };
+      } else {
+        #[cfg(target_os = "macos")]
+        let _ = WebviewWindowBuilder::new(app, "search", WebviewUrl::App(PathBuf::from("search")))
+          .title("Editor")
+          .inner_size(750., 470.)
+          .minimizable(false)
+          .resizable(false)
+          .title_bar_style(TitleBarStyle::Overlay)
+          .build()
+          .unwrap();
+        #[cfg(not(target_os = "macos"))]
+        let _ = WebviewWindowBuilder::new(app, "Search", WebviewUrl::App(PathBuf::from("search")))
+          .title("Search")
+          .inner_size(750., 470.)
+          .minimizable(false)
+          .resizable(false)
+          .build()
+          .unwrap();
       }
     }
     "about" => {

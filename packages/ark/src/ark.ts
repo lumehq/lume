@@ -144,7 +144,7 @@ export class Ark {
 			if (content.length < 1) return [];
 
 			const events: Event[] = await invoke("search", {
-				content,
+				content: content.trim(),
 				limit,
 			});
 
