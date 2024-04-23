@@ -246,13 +246,22 @@ pub async fn set_nstore(
   state: State<'_, Nostr>,
 ) -> Result<EventId, String> {
   let client = &state.client;
-  let tag = Tag::Identifier(key.into());
-  let builder = EventBuilder::new(Kind::ApplicationSpecificData, content, vec![tag]);
 
-  match client.send_event_builder(builder).await {
-    Ok(event_id) => {
-      println!("set nstore: {}", event_id);
-      Ok(event_id)
+  match client.signer().await {
+    Ok(signer) => {
+      let public_key = signer.public_key().await.unwrap();
+      let encrypted = signer.nip44_encrypt(public_key, content).await.unwrap();
+
+      let tag = Tag::Identifier(key.into());
+      let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
+
+      match client.send_event_builder(builder).await {
+        Ok(event_id) => {
+          println!("set nstore: {}", event_id);
+          Ok(event_id)
+        }
+        Err(err) => Err(err.to_string()),
+      }
     }
     Err(err) => Err(err.to_string()),
   }
@@ -279,7 +288,13 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
       if let Ok(events) = query {
         if let Some(event) = events.first() {
           println!("get nstore key: {} - received: {}", key, event.id);
-          Ok(event.content.to_string())
+
+          let content = event.content();
+
+          match signer.nip44_decrypt(author, content).await {
+            Ok(decrypted) => Ok(decrypted),
+            Err(_) => Err(event.content.to_string()),
+          }
         } else {
           println!("get nstore key: {}", key);
           Err("Value not found".into())
