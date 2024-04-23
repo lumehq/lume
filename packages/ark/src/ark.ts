@@ -139,6 +139,22 @@ export class Ark {
 		}
 	}
 
+	public async search(content: string, limit: number) {
+		try {
+			if (content.length < 1) return [];
+
+			const events: Event[] = await invoke("search", {
+				content,
+				limit,
+			});
+
+			return events;
+		} catch (e) {
+			console.info(String(e));
+			return [];
+		}
+	}
+
 	public async get_events(
 		limit: number,
 		asOf?: number,
@@ -722,7 +738,6 @@ export class Ark {
 				minHeight: 800,
 				width: 500,
 				height: 800,
-				hiddenTitle: true,
 				titleBarStyle: "overlay",
 				center: false,
 			});
@@ -742,7 +757,6 @@ export class Ark {
 				minHeight: 800,
 				width: 500,
 				height: 800,
-				hiddenTitle: true,
 				titleBarStyle: "overlay",
 			});
 
@@ -807,7 +821,6 @@ export class Ark {
 				minHeight: 500,
 				width: 400,
 				height: 500,
-				hiddenTitle: true,
 				titleBarStyle: "overlay",
 			});
 
@@ -826,7 +839,24 @@ export class Ark {
 				minHeight: 500,
 				width: 800,
 				height: 500,
-				hiddenTitle: true,
+				titleBarStyle: "overlay",
+			});
+
+			this.windows.push(window);
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public open_search() {
+		try {
+			const window = new WebviewWindow("search", {
+				title: "Search",
+				url: "/search",
+				width: 750,
+				height: 470,
+				minimizable: false,
+				resizable: false,
 				titleBarStyle: "overlay",
 			});
 

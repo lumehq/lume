@@ -1,0 +1,138 @@
+import { SearchIcon } from "@lume/icons";
+import { Event, Kind } from "@lume/types";
+import { Note, Spinner, User } from "@lume/ui";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { useDebounce } from "use-debounce";
+
+export const Route = createFileRoute("/search")({
+  component: Screen,
+});
+
+function Screen() {
+  const { ark } = Route.useRouteContext();
+
+  const [loading, setLoading] = useState(false);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [search, setSearch] = useState("");
+  const [value] = useDebounce(search, 500);
+
+  const searchEvents = async () => {
+    if (!value.length) return;
+
+    // start loading
+    setLoading(true);
+
+    const data = await ark.search(value, 100);
+
+    // update state
+    setLoading(false);
+    setEvents(data);
+  };
+
+  useEffect(() => {
+    searchEvents();
+  }, [value]);
+
+  return (
+    <div
+      data-tauri-drag-region
+      className="flex flex-col w-full h-full bg-gradient-to-tr from-neutral-200 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900"
+    >
+      <div
+        data-tauri-drag-region
+        className="h-24 shrink-0 flex items-end border-neutral-300 border dark:border-neutral-700"
+      >
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") searchEvents();
+          }}
+          placeholder="Search anything..."
+          className="w-full h-20 pt-10 px-3 text-lg bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
+        />
+      </div>
+      <div className="flex-1 p-3 overflow-y-auto scrollbar-none">
+        {loading ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <Spinner />
+          </div>
+        ) : !events.length ? (
+          <div className="flex items-center justify-center h-full text-sm">
+            Empty
+          </div>
+        ) : (
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col">
+              <div className="text-sm font-medium text-neutral-700 dark:text-neutral-300 shrink-0">
+                Users
+              </div>
+              <div className="flex-1">
+                {events
+                  .filter((ev) => ev.kind === Kind["Metadata"])
+                  .map((event) => (
+                    <SearchUser event={event} />
+                  ))}
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <div className="text-sm font-medium text-neutral-700 dark:text-neutral-300 shrink-0">
+                Notes
+              </div>
+              <div className="flex-1">
+                {events
+                  .filter((ev) => ev.kind === Kind["Text"])
+                  .map((event) => (
+                    <SearchNote event={event} />
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {!loading && !events.length ? (
+          <div className="h-full flex items-center justify-center flex-col gap-3">
+            <div className="size-16 bg-blue-100 dark:bg-blue-900 rounded-full inline-flex items-center justify-center text-blue-500">
+              <SearchIcon className="size-6" />
+            </div>
+            Try searching for people, notes, or keywords
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function SearchUser({ event }: { event: Event }) {
+  return (
+    <div key={event.id} className="my-2">
+      <User.Provider pubkey={event.pubkey} embedProfile={event.content}>
+        <User.Root className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <User.Avatar className="size-11 rounded-lg shrink-0 ring-1 ring-neutral-100 dark:ring-neutral-900" />
+            <div>
+              <User.Name className="font-semibold" />
+              <User.NIP05 />
+            </div>
+          </div>
+          <User.Button className="inline-flex items-center justify-center w-20 font-medium text-sm border-t rounded-lg border-neutral-900 dark:border-neutral-800 h-9 bg-neutral-950 text-neutral-50 dark:bg-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-800" />
+        </User.Root>
+      </User.Provider>
+    </div>
+  );
+}
+
+function SearchNote({ event }: { event: Event }) {
+  return (
+    <div key={event.id} className="my-2 bg-white rounded-lg dark:bg-black p-3">
+      <Note.Provider event={event}>
+        <Note.Root>
+          <Note.User />
+          <div className="select-text mt-2 leading-normal line-clamp-3 text-balance">
+            {event.content}
+          </div>
+        </Note.Root>
+      </Note.Provider>
+    </div>
+  );
+}

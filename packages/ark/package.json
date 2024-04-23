@@ -14,7 +14,7 @@
 		"@radix-ui/react-hover-card": "^1.0.7",
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-tooltip": "^1.0.7",
-		"@tanstack/react-query": "^5.29.2",
+		"@tanstack/react-query": "^5.31.0",
 		"@tanstack/react-router": "^1.29.2",
 		"get-urls": "^12.1.0",
 		"media-chrome": "^3.2.1",
@@ -28,7 +28,7 @@
 		"react-string-replace": "^1.1.1",
 		"sonner": "^1.4.41",
 		"string-strip-html": "^13.4.8",
-		"virtua": "^0.30.1"
+		"virtua": "^0.30.2"
 	},
 	"devDependencies": {
 		"@lume/tailwindcss": "workspace:^",

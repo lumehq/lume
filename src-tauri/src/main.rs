@@ -57,11 +57,11 @@ fn main() {
         client
           .add_relay("wss://relayable.org")
           .await
-          .expect("Cannot connect to relay.nostr.band, please try again later.");
+          .expect("Cannot connect to relayable.org, please try again later.");
         client
-          .add_relay("wss://relay.damus.io")
+          .add_relay("wss://relay.nostr.band")
           .await
-          .expect("Cannot connect to relay.damus.io, please try again later.");
+          .expect("Cannot connect to relay.nostr.band, please try again later.");
 
         // Connect
         client.connect().await;
@@ -129,6 +129,7 @@ fn main() {
       nostr::event::get_event_thread,
       nostr::event::publish,
       nostr::event::repost,
+      nostr::event::search,
       commands::folder::show_in_folder,
       commands::folder::get_accounts,
       commands::opg::fetch_opg,
