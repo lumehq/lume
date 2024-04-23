@@ -12,11 +12,13 @@ const UserContext = createContext<{
 export function UserProvider({
   pubkey,
   children,
+  embedProfile,
 }: {
   pubkey: string;
   children: ReactNode;
+  embedProfile?: string;
 }) {
-  const { isLoading, isError, profile } = useProfile(pubkey);
+  const { isLoading, isError, profile } = useProfile(pubkey, embedProfile);
 
   return (
     <UserContext.Provider value={{ pubkey, isError, isLoading, profile }}>

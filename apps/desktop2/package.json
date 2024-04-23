@@ -20,9 +20,9 @@
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tanstack/query-sync-storage-persister": "^5.29.0",
-    "@tanstack/react-query": "^5.29.2",
-    "@tanstack/react-query-persist-client": "^5.29.2",
+    "@tanstack/query-sync-storage-persister": "^5.31.0",
+    "@tanstack/react-query": "^5.31.0",
+    "@tanstack/react-query-persist-client": "^5.31.0",
     "@tanstack/react-router": "^1.29.2",
     "i18next": "^23.11.2",
     "i18next-resources-to-backend": "^1.2.1",
@@ -39,7 +39,7 @@
     "slate-react": "^0.102.0",
     "sonner": "^1.4.41",
     "use-debounce": "^10.0.0",
-    "virtua": "^0.30.1"
+    "virtua": "^0.30.2"
   },
   "devDependencies": {
     "@lume/tailwindcss": "workspace:^",
