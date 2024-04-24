@@ -1,4 +1,4 @@
-import { ComposeFilledIcon, NsfwIcon, TrashIcon } from "@lume/icons";
+import { ComposeFilledIcon, TrashIcon } from "@lume/icons";
 import {
   Portal,
   cn,
@@ -33,7 +33,6 @@ import {
 import { Contact } from "@lume/types";
 import { Spinner, User } from "@lume/ui";
 import { nip19 } from "nostr-tools";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 import { NsfwToggle } from "./-components/nsfw";
 

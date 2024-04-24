@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
-import { Spinner } from "@lume/ui";
-import { cn } from "@lume/utils";
 
 export function Col({
   column,
@@ -81,15 +79,5 @@ export function Col({
     };
   }, [webview]);
 
-  return (
-    <div ref={container} className="h-full w-[440px] shrink-0 p-2">
-      {column.label !== "open" ? (
-        <div className="w-full h-full flex items-center justify-center rounded-xl flex-col bg-black/5 dark:bg-white/5 backdrop-blur-lg">
-          <button type="button" className="size-5" disabled>
-            <Spinner className="size-5" />
-          </button>
-        </div>
-      ) : null}
-    </div>
-  );
+  return <div ref={container} className="h-full w-[440px] shrink-0 p-2" />;
 }
