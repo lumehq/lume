@@ -1,7 +1,7 @@
 import { Col } from "@/components/col";
 import { Toolbar } from "@/components/toolbar";
 import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
-import { EventColumns, LumeColumn } from "@lume/types";
+import type { EventColumns, LumeColumn } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
@@ -11,7 +11,7 @@ import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { VList, VListHandle } from "virtua";
+import { VList, type VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
   component: Screen,
@@ -59,7 +59,7 @@ function Screen() {
 
   const add = useDebouncedCallback((column: LumeColumn) => {
     // update col label
-    column["label"] = column.label + "-" + nanoid();
+    column.label = `${column.label}-${nanoid()}`;
 
     // create new cols
     const cols = [...columns];
@@ -150,9 +150,9 @@ function Screen() {
         onScrollEnd={() => setIsScroll(false)}
         className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
       >
-        {columns.map((column, index) => (
+        {columns.map((column) => (
           <Col
-            key={column.label + index}
+            key={column.label}
             column={column}
             account={account}
             isScroll={isScroll}

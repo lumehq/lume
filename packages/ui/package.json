@@ -8,7 +8,6 @@
 		"@lume/ark": "workspace:^",
 		"@lume/icons": "workspace:^",
 		"@lume/utils": "workspace:^",
-		"@nostr-dev-kit/ndk": "^2.7.1",
 		"@radix-ui/react-accordion": "^1.1.2",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",

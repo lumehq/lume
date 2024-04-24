@@ -46,6 +46,7 @@ export function Screen() {
       return lastEvent ? lastEvent.created_at - 1 : null;
     },
     select: (data) => data?.pages.flatMap((page) => page),
+    refetchOnWindowFocus: false,
   });
 
   const renderItem = (event: Event) => {

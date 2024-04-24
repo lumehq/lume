@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { LumeColumn } from "@lume/types";
+import type { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 
 export function Col({

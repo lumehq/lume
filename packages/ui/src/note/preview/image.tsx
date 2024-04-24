@@ -2,9 +2,11 @@ import { CheckCircleIcon, DownloadIcon } from "@lume/icons";
 import { downloadDir } from "@tauri-apps/api/path";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { download } from "@tauri-apps/plugin-upload";
-import { SyntheticEvent, useState } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function ImagePreview({ url }: { url: string }) {
+  const imgRef = useRef<HTMLImageElement>(null);
   const [downloaded, setDownloaded] = useState(false);
 
   const downloadImage = async (e: { stopPropagation: () => void }) => {
@@ -17,20 +19,24 @@ export function ImagePreview({ url }: { url: string }) {
 
       setDownloaded(true);
     } catch (e) {
-      console.error(e);
+      toast.error(String(e));
     }
   };
 
   const open = async () => {
-    const name = new URL(url).pathname.split("/").pop();
-    return new WebviewWindow("image-viewer", {
+    const label = new URL(url).pathname
+      .split("/")
+      .pop()
+      .replace(/[^a-zA-Z ]/g, "");
+    const window = new WebviewWindow(`viewer-${label}`, {
       url,
-      title: name,
+      title: "Image Viewer",
+      width: imgRef?.current.width || 600,
+      height: imgRef?.current.height || 600,
+      titleBarStyle: "overlay",
     });
-  };
 
-  const fallback = (event: SyntheticEvent<HTMLImageElement, Event>) => {
-    event.currentTarget.src = "/fallback-image.jpg";
+    return window;
   };
 
   return (
@@ -42,21 +48,21 @@ export function ImagePreview({ url }: { url: string }) {
       <img
         src={url}
         alt={url}
+        ref={imgRef}
         loading="lazy"
         decoding="async"
         style={{ contentVisibility: "auto" }}
-        onError={fallback}
         className="h-auto w-full object-cover"
       />
       <button
         type="button"
         onClick={(e) => downloadImage(e)}
-        className="absolute right-2 top-2 z-20 hidden size-8 items-center justify-center rounded-md bg-white/10 text-white/70 backdrop-blur-2xl hover:bg-blue-500 hover:text-white group-hover:inline-flex"
+        className="absolute right-2 top-2 z-20 hidden size-8 items-center justify-center rounded-md bg-black/10 text-white/70 backdrop-blur-2xl hover:bg-blue-500 hover:text-white group-hover:inline-flex"
       >
         {downloaded ? (
-          <CheckCircleIcon className="size-4" />
+          <CheckCircleIcon className="size-5" />
         ) : (
-          <DownloadIcon className="size-4" />
+          <DownloadIcon className="size-5" />
         )}
       </button>
     </div>

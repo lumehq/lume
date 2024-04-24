@@ -18,13 +18,7 @@ import { ImagePreview } from "./preview/image";
 import reactStringReplace from "react-string-replace";
 import { useRouteContext } from "@tanstack/react-router";
 
-export function NoteContent({
-  compact = true,
-  className,
-}: {
-  compact?: boolean;
-  className?: string;
-}) {
+export function NoteContent({ className }: { className?: string }) {
   const { settings }: { settings: Settings } = useRouteContext({
     strict: false,
   });
@@ -32,12 +26,6 @@ export function NoteContent({
   const content = useMemo(() => {
     const text = event.content.trim();
     const words = text.split(/( |\n)/);
-
-    // @ts-ignore, kaboom !!!
-    let parsedContent: ReactNode[] = compact
-      ? text.replace(/\n\s*\n/g, "\n")
-      : text;
-
     const hashtags = words.filter((word) => word.startsWith("#"));
     const events = words.filter((word) =>
       NOSTR_EVENTS.some((el) => word.startsWith(el)),
@@ -45,6 +33,8 @@ export function NoteContent({
     const mentions = words.filter((word) =>
       NOSTR_MENTIONS.some((el) => word.startsWith(el)),
     );
+
+    let parsedContent: ReactNode[] | string = text;
 
     try {
       if (hashtags.length) {
@@ -124,12 +114,6 @@ export function NoteContent({
           }
         },
       );
-
-      if (compact) {
-        parsedContent = reactStringReplace(parsedContent, /\n*\n/g, () => (
-          <div key={nanoid()} className="h-1.5" />
-        ));
-      }
 
       return parsedContent;
     } catch (e) {
