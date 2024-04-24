@@ -55,6 +55,10 @@ fn main() {
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
         client
+          .add_relay("wss://relay.damus.io")
+          .await
+          .expect("Cannot connect to relay.damus.io, please try again later.");
+        client
           .add_relay("wss://relayable.org")
           .await
           .expect("Cannot connect to relayable.org, please try again later.");

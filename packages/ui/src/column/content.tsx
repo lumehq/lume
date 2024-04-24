@@ -11,7 +11,7 @@ export function ColumnContent({
   return (
     <div
       className={cn(
-        "flex-1 overflow-y-auto overflow-x-hidden scrollbar-none",
+        "relative flex-1 overflow-y-auto overflow-x-hidden scrollbar-none",
         className,
       )}
     >

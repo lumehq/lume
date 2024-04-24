@@ -122,15 +122,15 @@ export class Ark {
 		}
 	}
 
-	public async get_events_from(id: string, limit: number, asOf?: number) {
+	public async get_events_from(pubkey: string, limit: number, asOf?: number) {
 		try {
 			let until: string = undefined;
 			if (asOf && asOf > 0) until = asOf.toString();
 
 			const nostrEvents: Event[] = await invoke("get_events_from", {
-				id,
+				public_key: pubkey,
 				limit,
-				until,
+				as_of: until,
 			});
 
 			return nostrEvents.sort((a, b) => b.created_at - a.created_at);
