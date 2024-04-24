@@ -27,21 +27,26 @@ export const Route = createFileRoute("/newsfeed")({
 export function Screen() {
   const { label, name, account } = Route.useSearch();
   const { ark } = Route.useRouteContext();
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: [label, account],
-      initialPageParam: 0,
-      queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_events(20, pageParam);
-        return events;
-      },
-      getNextPageParam: (lastPage) => {
-        const lastEvent = lastPage?.at(-1);
-        return lastEvent ? lastEvent.created_at - 1 : null;
-      },
-      select: (data) => data?.pages.flatMap((page) => page),
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: [label, account],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
+      const events = await ark.get_events(20, pageParam);
+      return events;
+    },
+    getNextPageParam: (lastPage) => {
+      const lastEvent = lastPage?.at(-1);
+      return lastEvent ? lastEvent.created_at - 1 : null;
+    },
+    select: (data) => data?.pages.flatMap((page) => page),
+  });
 
   const renderItem = (event: Event) => {
     if (!event) return;
@@ -57,9 +62,18 @@ export function Screen() {
     <Column.Root>
       <Column.Header label={label} name={name} />
       <Column.Content>
+        {isFetching && !isLoading && !isFetchingNextPage ? (
+          <div className="w-full h-16 flex items-center justify-center border-b border-neutral-100 dark:border-neutral-900">
+            <div className="flex items-center justify-center gap-2">
+              <Spinner className="size-5" />
+              <span className="text-sm font-medium">Fetching new notes...</span>
+            </div>
+          </div>
+        ) : null}
         {isLoading ? (
-          <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
+          <div className="flex h-16 w-full items-center justify-center gap-2">
             <Spinner className="size-5" />
+            <span className="text-sm font-medium">Loading...</span>
           </div>
         ) : !data.length ? (
           <Empty />

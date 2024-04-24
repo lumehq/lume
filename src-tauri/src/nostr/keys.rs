@@ -152,30 +152,29 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
   let client = &state.client;
   let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
 
-  if let Ok(password) = keyring.get_password() {
-    if password.starts_with("bunker://") {
-      let app_keys = Keys::generate();
-      let bunker_uri = NostrConnectURI::parse(password).unwrap();
-      let signer = Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(60), None)
-        .await
-        .unwrap();
+  match keyring.get_password() {
+    Ok(password) => {
+      if password.starts_with("bunker://") {
+        let app_keys = Keys::generate();
+        let bunker_uri = NostrConnectURI::parse(password).unwrap();
+        let signer = Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(60), None)
+          .await
+          .unwrap();
 
-      // Update signer
-      client.set_signer(Some(signer.into())).await;
-      // Done
-      Ok(true)
-    } else {
-      let secret_key = SecretKey::from_bech32(password).expect("Get secret key failed");
-      let keys = Keys::new(secret_key);
-      let signer = NostrSigner::Keys(keys);
+        // Update signer
+        client.set_signer(Some(signer.into())).await;
+      } else {
+        let secret_key = SecretKey::from_bech32(password).expect("Get secret key failed");
+        let keys = Keys::new(secret_key);
+        let signer = NostrSigner::Keys(keys);
 
-      // Update signer
-      client.set_signer(Some(signer)).await;
-      // Done
+        // Update signer
+        client.set_signer(Some(signer)).await;
+      }
+
       Ok(true)
     }
-  } else {
-    Err("nsec not found".into())
+    Err(err) => Err(err.to_string()),
   }
 }
 

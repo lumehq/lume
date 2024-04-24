@@ -1,4 +1,4 @@
-import { ComposeFilledIcon, NsfwIcon, TrashIcon } from "@lume/icons";
+import { ComposeFilledIcon, TrashIcon } from "@lume/icons";
 import {
   Portal,
   cn,
@@ -33,7 +33,6 @@ import {
 import { Contact } from "@lume/types";
 import { Spinner, User } from "@lume/ui";
 import { nip19 } from "nostr-tools";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 import { NsfwToggle } from "./-components/nsfw";
 
@@ -41,14 +40,6 @@ type EditorSearch = {
   reply_to: string;
   quote: boolean;
 };
-
-const contactQueryOptions = queryOptions({
-  queryKey: ["contacts"],
-  queryFn: () => invoke("get_contact_metadata"),
-  refetchOnMount: false,
-  refetchOnReconnect: false,
-  refetchOnWindowFocus: false,
-});
 
 export const Route = createFileRoute("/editor/")({
   validateSearch: (search: Record<string, string>): EditorSearch => {
@@ -58,7 +49,10 @@ export const Route = createFileRoute("/editor/")({
     };
   },
   beforeLoad: async ({ search }) => {
+    const contacts: Contact[] = await invoke("get_contact_metadata");
+
     return {
+      contacts,
       initialValue: search.quote
         ? [
             {
@@ -83,16 +77,14 @@ export const Route = createFileRoute("/editor/")({
           ],
     };
   },
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(contactQueryOptions);
-  },
   component: Screen,
   pendingComponent: Pending,
 });
 
 function Screen() {
+  const ref = useRef<HTMLDivElement | null>();
   const { reply_to, quote } = Route.useSearch();
-  const { ark, initialValue } = Route.useRouteContext();
+  const { ark, initialValue, contacts } = Route.useRouteContext();
 
   const [t] = useTranslation();
   const [editorValue, setEditorValue] = useState(initialValue);
@@ -104,9 +96,6 @@ function Screen() {
   const [editor] = useState(() =>
     withMentions(withNostrEvent(withImages(withReact(createEditor())))),
   );
-
-  const ref = useRef<HTMLDivElement | null>();
-  const contacts = useSuspenseQuery(contactQueryOptions).data as Contact[];
 
   const filters = contacts
     ?.filter((c) =>

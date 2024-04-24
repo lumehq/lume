@@ -12,20 +12,12 @@ import { routeTree } from "./router.gen"; // auto generated file
 import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
 import { Ark } from "@lume/ark";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    },
-  },
-});
+const ark = new Ark();
+const queryClient = new QueryClient();
 
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
-
-const ark = new Ark();
 
 // Set up a Router instance
 const router = createRouter({
