@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
+import { cn } from "@lume/utils";
 
 export function Col({
   column,
@@ -52,9 +53,7 @@ export function Col({
 
       const rect = container.current.getBoundingClientRect();
       const windowLabel = `column-${column.label}`;
-      const url =
-        column.content +
-        `?account=${account}&label=${column.label}&name=${column.name}`;
+      const url = `${column.content}?account=${account}&label=${column.label}&name=${column.name}`;
 
       // create new webview
       const label: string = await invoke("create_column", {
@@ -79,5 +78,21 @@ export function Col({
     };
   }, [webview]);
 
-  return <div ref={container} className="h-full w-[440px] shrink-0 p-2" />;
+  return (
+    <div className="h-full w-[440px] shrink-0 p-2">
+      <div
+        className={cn(
+          "flex flex-col w-full h-full rounded-xl",
+          column.label !== "open"
+            ? "bg-black/5 dark:bg-white/5 backdrop-blur-sm"
+            : "",
+        )}
+      >
+        <div className="shrink-0 h-9 flex items-center justify-center">
+          <div className="font-semibold text-sm">{column.name}</div>
+        </div>
+        <div ref={container} className="flex-1 w-full h-full" />
+      </div>
+    </div>
+  );
 }

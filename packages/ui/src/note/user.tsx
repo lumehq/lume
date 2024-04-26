@@ -16,17 +16,17 @@ export function NoteUser({ className }: { className?: string }) {
         >
           <div className="flex w-full gap-3">
             <HoverCard.Trigger>
-              <User.Avatar className="size-11 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+              <User.Avatar className="size-8 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
             </HoverCard.Trigger>
-            <div className="flex-1">
-              <div className="flex w-full items-center justify-between">
-                <User.Name className="font-semibold leading-tight text-neutral-950 dark:text-neutral-50" />
-                <User.Time
-                  time={event.created_at}
-                  className="leading-tight text-neutral-600 dark:text-neutral-400"
-                />
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center gap-1">
+                <User.Name className="font-medium text-neutral-950 dark:text-neutral-50" />
+                <User.NIP05 />
               </div>
-              <User.NIP05 className="leading-tight text-neutral-600 dark:text-neutral-400" />
+              <User.Time
+                time={event.created_at}
+                className="text-neutral-600 dark:text-neutral-400"
+              />
             </div>
           </div>
         </User.Root>
@@ -41,7 +41,7 @@ export function NoteUser({ className }: { className?: string }) {
               <div className="flex flex-col gap-2">
                 <div>
                   <User.Name className="font-semibold leading-tight text-white dark:text-neutral-900" />
-                  <User.NIP05 className="leading-tight text-neutral-400 dark:text-neutral-500" />
+                  <User.NIP05 />
                 </div>
                 <User.About className="line-clamp-3 text-sm text-white dark:text-neutral-900" />
                 <button

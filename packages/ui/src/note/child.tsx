@@ -34,8 +34,8 @@ export function NoteChild({
 
   return (
     <div className="relative flex gap-3">
-      <div className="relative flex-1 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
-        <div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-100 dark:bg-neutral-900" />
+      <div className="relative flex-1 rounded-xl bg-neutral-100 p-3 dark:bg-white/10">
+        <div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-100 dark:bg-transparent" />
         <div className="content-break mt-6 line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
           {data.content}
         </div>

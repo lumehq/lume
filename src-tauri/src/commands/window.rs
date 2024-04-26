@@ -19,6 +19,8 @@ pub fn create_column(
         let webview_url = WebviewUrl::App(path);
         let builder = tauri::webview::WebviewBuilder::new(label, webview_url)
           .user_agent("Lume/4.0")
+          .zoom_hotkeys_enabled(true)
+          .enable_clipboard_access()
           .transparent(true);
         match main_window.add_child(
           builder,
