@@ -71,20 +71,24 @@ function Screen() {
     ];
 
     setColumns(newCols);
-    setSelectedIndex(cols.length - 1);
+    setSelectedIndex(newCols.length);
+    setIsScroll(true);
 
     // scroll to the newest column
-    vlistRef.current.scrollToIndex(cols.length - 1, {
+    vlistRef.current.scrollToIndex(newCols.length - 1, {
       align: "end",
     });
   }, 150);
 
   const remove = useDebouncedCallback((label: string) => {
-    setColumns((state) => state.filter((t) => t.label !== label));
-    setSelectedIndex(columns.length - 1);
+    const newCols = columns.filter((t) => t.label !== label);
+
+    setColumns(newCols);
+    setSelectedIndex(newCols.length);
+    setIsScroll(true);
 
     // scroll to the first column
-    vlistRef.current.scrollToIndex(0, {
+    vlistRef.current.scrollToIndex(newCols.length - 1, {
       align: "start",
     });
   }, 150);
