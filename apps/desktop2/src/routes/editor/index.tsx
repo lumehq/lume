@@ -49,10 +49,7 @@ export const Route = createFileRoute("/editor/")({
     };
   },
   beforeLoad: async ({ search }) => {
-    const contacts: Contact[] = await invoke("get_contact_metadata");
-
     return {
-      contacts,
       initialValue: search.quote
         ? [
             {

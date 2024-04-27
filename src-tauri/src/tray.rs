@@ -128,6 +128,7 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
         .title("Settings")
         .inner_size(800., 500.)
         .title_bar_style(TitleBarStyle::Overlay)
+        .hidden_title(true)
         .resizable(false)
         .minimizable(false)
         .build()
