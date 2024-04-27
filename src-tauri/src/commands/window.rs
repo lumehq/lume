@@ -81,7 +81,7 @@ pub fn resize_column(
       if let Ok(_) = webview.set_size(LogicalSize::new(width, height)) {
         Ok(())
       } else {
-        Err("Reposition column failed".into())
+        Err("Resize column failed".into())
       }
     }
     None => Err("Webview not found".into()),

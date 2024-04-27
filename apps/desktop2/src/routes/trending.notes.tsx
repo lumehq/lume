@@ -29,16 +29,6 @@ export const Route = createFileRoute("/trending/notes")({
 export function Screen() {
   const { data } = Route.useLoaderData();
 
-  const renderItem = (event: Event) => {
-    if (!event) return;
-    switch (event.kind) {
-      case Kind.Repost:
-        return <RepostNote key={event.id} event={event} />;
-      default:
-        return <TextNote key={event.id} event={event} />;
-    }
-  };
-
   return (
     <div className="w-full h-full">
       <Virtualizer overscan={3}>
@@ -57,7 +47,9 @@ export function Screen() {
           }
         >
           <Await promise={data}>
-            {(notes) => notes.map((event) => renderItem(event))}
+            {(notes) =>
+              notes.map((event) => <TextNote key={event.id} event={event} />)
+            }
           </Await>
         </Suspense>
       </Virtualizer>

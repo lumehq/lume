@@ -24,7 +24,7 @@ export function Screen() {
   const { data } = Route.useLoaderData();
 
   return (
-    <div className="w-full h-full px-3">
+    <div className="w-full h-full">
       <Suspense
         fallback={
           <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
@@ -44,7 +44,7 @@ export function Screen() {
             users.profiles.map((item) => (
               <div
                 key={item.pubkey}
-                className="h-max w-full overflow-hidden py-5 border-b border-neutral-100 dark:border-neutral-900"
+                className="h-max w-full overflow-hidden mb-3 p-2 bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl"
               >
                 <User.Provider pubkey={item.pubkey}>
                   <User.Root>
@@ -54,7 +54,7 @@ export function Screen() {
                           <User.Avatar className="size-10 shrink-0 rounded-full object-cover" />
                           <User.Name className="leadning-tight max-w-[15rem] truncate font-semibold" />
                         </div>
-                        <User.Button className="inline-flex h-8 w-20 items-center justify-center rounded-lg bg-neutral-100 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800" />
+                        <User.Button className="inline-flex h-8 w-20 items-center justify-center rounded-lg bg-black/10 text-sm font-medium hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20" />
                       </div>
                       <User.About className="mt-1 line-clamp-3 max-w-none select-text text-neutral-800 dark:text-neutral-400" />
                     </div>

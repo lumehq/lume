@@ -2,7 +2,7 @@ import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
 import { ColumnRouteSearch, Event, Kind } from "@lume/types";
-import { Column, Spinner } from "@lume/ui";
+import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
@@ -41,23 +41,30 @@ export const Route = createFileRoute("/group")({
 });
 
 export function Screen() {
-  const { label, name, account } = Route.useSearch();
+  const { name, account } = Route.useSearch();
   const { ark, groups } = Route.useRouteContext();
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: [name, account],
-      initialPageParam: 0,
-      queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_events(20, pageParam, groups);
-        return events;
-      },
-      getNextPageParam: (lastPage) => {
-        const lastEvent = lastPage?.at(-1);
-        return lastEvent ? lastEvent.created_at - 1 : null;
-      },
-      select: (data) => data?.pages.flatMap((page) => page),
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: [name, account],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
+      const events = await ark.get_events(20, pageParam, groups);
+      return events;
+    },
+    getNextPageParam: (lastPage) => {
+      const lastEvent = lastPage?.at(-1);
+      return lastEvent ? lastEvent.created_at - 1 : null;
+    },
+    select: (data) =>
+      data?.pages.flatMap((page) => page.filter((ev) => ev.kind === Kind.Text)),
+    refetchOnWindowFocus: false,
+  });
 
   const renderItem = (event: Event) => {
     if (!event) return;
@@ -70,41 +77,47 @@ export function Screen() {
   };
 
   return (
-    <Column.Root>
-      <Column.Header label={label} name={name} />
-      <Column.Content>
-        {isLoading ? (
-          <div className="flex h-20 w-full flex-col items-center justify-center gap-1">
+    <div className="p-2 w-full h-full overflow-y-auto scrollbar-none">
+      {isFetching && !isLoading && !isFetchingNextPage ? (
+        <div className="w-full h-11 flex items-center justify-center">
+          <div className="flex items-center justify-center gap-2">
             <Spinner className="size-5" />
+            <span className="text-sm font-medium">Fetching new notes...</span>
           </div>
-        ) : !data.length ? (
-          <Empty />
-        ) : (
-          <Virtualizer overscan={3}>
-            {data.map((item) => renderItem(item))}
-          </Virtualizer>
-        )}
-        <div className="flex h-20 items-center justify-center">
-          {hasNextPage ? (
-            <button
-              type="button"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-              className="inline-flex h-12 w-36 items-center justify-center gap-2 rounded-full bg-neutral-100 px-3 font-medium hover:bg-neutral-200 focus:outline-none dark:bg-neutral-900 dark:hover:bg-neutral-800"
-            >
-              {isFetchingNextPage ? (
-                <Spinner className="size-5" />
-              ) : (
-                <>
-                  <ArrowRightCircleIcon className="size-5" />
-                  Load more
-                </>
-              )}
-            </button>
-          ) : null}
         </div>
-      </Column.Content>
-    </Column.Root>
+      ) : null}
+      {isLoading ? (
+        <div className="flex h-16 w-full items-center justify-center gap-2">
+          <Spinner className="size-5" />
+          <span className="text-sm font-medium">Loading...</span>
+        </div>
+      ) : !data.length ? (
+        <Empty />
+      ) : (
+        <Virtualizer overscan={3}>
+          {data.map((item) => renderItem(item))}
+        </Virtualizer>
+      )}
+      {data?.length && hasNextPage ? (
+        <div>
+          <button
+            type="button"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage || isLoading}
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-neutral-100 px-3 font-medium hover:bg-neutral-50 focus:outline-none dark:bg-white/10 dark:hover:bg-white/20"
+          >
+            {isFetchingNextPage ? (
+              <Spinner className="size-5" />
+            ) : (
+              <>
+                <ArrowRightCircleIcon className="size-5" />
+                Load more
+              </>
+            )}
+          </button>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

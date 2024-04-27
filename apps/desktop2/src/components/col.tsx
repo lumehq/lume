@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { LumeColumn } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 import { cn } from "@lume/utils";
+import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { CancelIcon, CheckIcon, RefreshIcon } from "@lume/icons";
+import { Webview } from "@tauri-apps/api/webview";
 
 export function Col({
   column,
@@ -88,11 +91,71 @@ export function Col({
             : "",
         )}
       >
-        <div className="shrink-0 h-9 flex items-center justify-center">
-          <div className="font-semibold text-sm">{column.name}</div>
-        </div>
+        {column.label !== "open" ? (
+          <Header label={column.label} name={column.name} />
+        ) : null}
         <div ref={container} className="flex-1 w-full h-full" />
       </div>
+    </div>
+  );
+}
+
+function Header({ label, name }: { label: string; name: string }) {
+  const [title, setTitle] = useState(name);
+  const [isChanged, setIsChanged] = useState(false);
+
+  const saveNewTitle = async () => {
+    const mainWindow = getCurrent();
+    await mainWindow.emit("columns", { type: "set_title", label, title });
+
+    // update search params
+    // @ts-ignore, hahaha
+    search.name = title;
+
+    // reset state
+    setIsChanged(false);
+  };
+
+  const close = async () => {
+    const mainWindow = getCurrent();
+    await mainWindow.emit("columns", { type: "remove", label });
+  };
+
+  useEffect(() => {
+    if (title.length !== name.length) setIsChanged(true);
+  }, [title]);
+
+  return (
+    <div className="h-9 w-full flex items-center justify-between shrink-0 px-1">
+      <div className="size-7" />
+      <div className="shrink-0 h-9 flex items-center justify-center">
+        <div className="relative flex gap-2 items-center">
+          <div
+            contentEditable
+            suppressContentEditableWarning={true}
+            onBlur={(e) => setTitle(e.currentTarget.textContent)}
+            className="text-sm font-medium focus:outline-none"
+          >
+            {name}
+          </div>
+          {isChanged ? (
+            <button
+              type="button"
+              onClick={saveNewTitle}
+              className="text-teal-500 hover:text-teal-600"
+            >
+              <CheckIcon className="size-4" />
+            </button>
+          ) : null}
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={close}
+        className="size-7 inline-flex hover:bg-black/10 rounded-lg dark:hover:bg-white/10 items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+      >
+        <CancelIcon className="size-4" />
+      </button>
     </div>
   );
 }
