@@ -3,8 +3,9 @@ import * as HoverCard from "@radix-ui/react-hover-card";
 import { User } from "../user";
 import { useNoteContext } from "./provider";
 import { useRouteContext } from "@tanstack/react-router";
+import { type ReactNode } from "react";
 
-export function NoteUser({ className }: { className?: string }) {
+export function NoteUser({ suffix, className }: { suffix?: ReactNode, className?: string }) {
   const { ark } = useRouteContext({ strict: false });
   const event = useNoteContext();
 
@@ -22,6 +23,7 @@ export function NoteUser({ className }: { className?: string }) {
               <div className="flex items-center gap-1">
                 <User.Name className="font-medium text-neutral-950 dark:text-neutral-50" />
                 <User.NIP05 />
+                {suffix}
               </div>
               <User.Time
                 time={event.created_at}

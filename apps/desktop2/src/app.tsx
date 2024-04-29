@@ -16,54 +16,54 @@ const ark = new Ark();
 const queryClient = new QueryClient();
 
 const persister = createSyncStoragePersister({
-  storage: window.localStorage,
+	storage: window.localStorage,
 });
 
 // Set up a Router instance
 const router = createRouter({
-  routeTree,
-  context: {
-    ark,
-    queryClient,
-  },
+	routeTree,
+	context: {
+		ark,
+		queryClient,
+	},
 });
 
 // Register things for typesafety
 declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
+	interface Register {
+		router: typeof router;
+	}
 }
 
 function App() {
-  return <RouterProvider router={router} />;
+	return <RouterProvider router={router} />;
 }
 
 // biome-ignore lint/style/noNonNullAssertion: idk
 const rootElement = document.getElementById("root")!;
 
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <I18nextProvider i18n={i18n} defaultNS={"translation"}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister }}
-      >
-        <StrictMode>
-          <Toaster
-            position="bottom-right"
-            icons={{
-              success: <CheckCircleIcon className="size-5" />,
-              info: <InfoCircleIcon className="size-5" />,
-              error: <CancelCircleIcon className="size-5" />,
-            }}
-            closeButton
-            theme="system"
-          />
-          <App />
-        </StrictMode>
-      </PersistQueryClientProvider>
-    </I18nextProvider>,
-  );
+	const root = ReactDOM.createRoot(rootElement);
+	root.render(
+		<I18nextProvider i18n={i18n} defaultNS={"translation"}>
+			<PersistQueryClientProvider
+				client={queryClient}
+				persistOptions={{ persister }}
+			>
+				<StrictMode>
+					<Toaster
+						position="bottom-right"
+						icons={{
+							success: <CheckCircleIcon className="size-5" />,
+							info: <InfoCircleIcon className="size-5" />,
+							error: <CancelCircleIcon className="size-5" />,
+						}}
+						closeButton
+						theme="system"
+					/>
+					<App />
+				</StrictMode>
+			</PersistQueryClientProvider>
+		</I18nextProvider>,
+	);
 }

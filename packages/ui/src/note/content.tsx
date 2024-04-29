@@ -18,7 +18,7 @@ import { ImagePreview } from "./preview/image";
 import reactStringReplace from "react-string-replace";
 import { useRouteContext } from "@tanstack/react-router";
 
-export function NoteContent({ className }: { className?: string }) {
+export function NoteContent({ quote = false, className }: { quote?: boolean; className?: string }) {
   const { settings }: { settings: Settings } = useRouteContext({
     strict: false,
   });
@@ -48,11 +48,19 @@ export function NoteContent({ className }: { className?: string }) {
 
       if (events.length) {
         for (const event of events) {
-          parsedContent = reactStringReplace(
-            parsedContent,
-            event,
-            (match, i) => <MentionNote key={match + i} eventId={event} />,
-          );
+          if (!quote) {
+            parsedContent = reactStringReplace(
+              parsedContent,
+              event,
+              (match, i) => <MentionNote key={match + i} eventId={event} />,
+            );
+          } else {
+            parsedContent = reactStringReplace(
+              parsedContent,
+              event,
+              () => null,
+            );
+          }
         }
       }
 
