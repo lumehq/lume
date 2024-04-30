@@ -45,7 +45,7 @@ export function RepostNote({
 			)}
 		>
 			<User.Provider pubkey={event.pubkey}>
-				<User.Root className="flex items-center gap-2 px-3 py-3 border-b border-neutral-100 dark:border-neutral-900 rounded-t-xl">
+				<User.Root className="flex items-center gap-2 px-3 py-3 border-b border-neutral-100 dark:border-neutral-800/50 rounded-t-xl">
 					<div className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
 						Reposted by
 					</div>

@@ -1,4 +1,4 @@
-import { LinkIcon } from "@lume/icons";
+import { ArrowRightIcon } from "@lume/icons";
 import type { Event } from "@lume/types";
 import { Note, User } from "@lume/ui";
 import { cn } from "@lume/utils";
@@ -67,10 +67,10 @@ export function Conversation({
 								thread?.rootEventId || thread?.replyEventId || event.id,
 							)
 						}
-						className="w-full text-sm font-medium gap-1.5 h-9 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-b-xl flex items-center justify-center border-t border-neutral-100 dark:border-neutral-900"
+						className="px-3 w-full text-sm font-medium gap-1.5 h-9 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-b-xl flex items-center justify-end border-t border-neutral-100 dark:border-neutral-900"
 					>
-						<LinkIcon className="size-4" />
 						View thread
+						<ArrowRightIcon className="size-4" />
 					</button>
 				</div>
 			</Note.Root>

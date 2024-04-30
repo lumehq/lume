@@ -103,7 +103,7 @@ export function Screen() {
 						type="button"
 						onClick={() => fetchNextPage()}
 						disabled={isFetchingNextPage || isLoading}
-						className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-neutral-100 px-3 font-medium hover:bg-neutral-50 focus:outline-none dark:bg-white/10 dark:hover:bg-white/20"
+						className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black/5 px-3 font-medium hover:bg-black/10 focus:outline-none dark:bg-white/10 dark:hover:bg-white/20"
 					>
 						{isFetchingNextPage ? (
 							<Spinner className="size-5" />

@@ -23,7 +23,6 @@ export function TextNote({
 				<Note.User className="px-3 h-14 flex items-center" />
 				<div className="flex flex-col gap-2">
 					<Note.Content className="px-3" />
-					<Note.Thread className="px-3" />
 					<div className="h-11 px-3 flex items-center justify-between">
 						<div className="inline-flex items-center gap-4">
 							<Note.Reply />

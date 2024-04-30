@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
-import { nip19 } from "nostr-tools";
 import { AUDIOS, IMAGES, VIDEOS } from "./constants";
 import { BitcoinUnit } from "bitcoin-units";
 
@@ -61,10 +60,7 @@ export function displayNsec(key: string, len: number) {
 }
 
 export function displayNpub(pubkey: string, len: number) {
-	const npub = pubkey.startsWith("npub1")
-		? pubkey
-		: (nip19.npubEncode(pubkey) as string);
-	if (npub.length <= len) return npub;
+	if (pubkey.length <= len) return pubkey;
 
 	const separator = " ... ";
 
@@ -74,9 +70,9 @@ export function displayNpub(pubkey: string, len: number) {
 	const backChars = Math.floor(charsToShow / 2);
 
 	return (
-		npub.substr(0, frontChars) +
+		pubkey.substr(0, frontChars) +
 		separator +
-		npub.substr(npub.length - backChars)
+		pubkey.substr(pubkey.length - backChars)
 	);
 }
 
