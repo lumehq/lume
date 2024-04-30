@@ -44,7 +44,7 @@ export function Screen() {
 						users.profiles.map((item) => (
 							<div
 								key={item.pubkey}
-								className="h-max w-full overflow-hidden mb-3 p-2 bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl"
+								className="h-max w-full overflow-hidden mb-3 p-2 bg-black/5 dark:bg-white/5 backdrop-blur-lg rounded-xl"
 							>
 								<User.Provider pubkey={item.pubkey}>
 									<User.Root>

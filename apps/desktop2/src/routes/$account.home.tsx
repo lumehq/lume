@@ -2,7 +2,6 @@ import { Col } from "@/components/col";
 import { Toolbar } from "@/components/toolbar";
 import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import type { EventColumns, LumeColumn } from "@lume/types";
-import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { resolveResource } from "@tauri-apps/api/path";
@@ -14,8 +13,6 @@ import { useDebouncedCallback } from "use-debounce";
 import { VList, type VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
-	component: Screen,
-	pendingComponent: Pending,
 	beforeLoad: async ({ context }) => {
 		const ark = context.ark;
 		const resourcePath = await resolveResource("resources/system_columns.json");
@@ -28,6 +25,7 @@ export const Route = createFileRoute("/$account/home")({
 			storedColumns: !userColumns.length ? systemColumns : userColumns,
 		};
 	},
+	component: Screen,
 });
 
 function Screen() {
@@ -182,16 +180,6 @@ function Screen() {
 					</button>
 				</div>
 			</Toolbar>
-		</div>
-	);
-}
-
-function Pending() {
-	return (
-		<div className="flex h-full w-full items-center justify-center">
-			<button type="button" className="size-5" disabled>
-				<Spinner className="size-5" />
-			</button>
 		</div>
 	);
 }

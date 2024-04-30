@@ -646,11 +646,15 @@ export class Ark {
 
 	public async get_settings() {
 		try {
+			if (this.settings) return this.settings;
+
 			const cmd: string = await invoke("get_nstore", {
 				key: NSTORE_KEYS.settings,
 			});
 			const settings: Settings = cmd ? JSON.parse(cmd) : null;
+
 			this.settings = settings;
+
 			return settings;
 		} catch {
 			const defaultSettings: Settings = {

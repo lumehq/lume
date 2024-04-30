@@ -1,7 +1,7 @@
 import { PlusIcon } from "@lume/icons";
 import { Spinner, User } from "@lume/ui";
 import { Link } from "@tanstack/react-router";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Screen() {
-	const navigate = useNavigate();
+	const navigate = Route.useNavigate();
 	const context = Route.useRouteContext();
 
 	const [loading, setLoading] = useState(false);

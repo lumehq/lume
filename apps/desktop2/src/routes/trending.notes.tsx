@@ -48,7 +48,9 @@ export function Screen() {
 				>
 					<Await promise={data}>
 						{(notes) =>
-							notes.map((event) => <TextNote key={event.id} event={event} />)
+							notes.map((event) => (
+								<TextNote key={event.id} event={event} className="mb-3" />
+							))
 						}
 					</Await>
 				</Suspense>

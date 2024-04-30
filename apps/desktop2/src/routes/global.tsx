@@ -1,3 +1,5 @@
+import { Conversation } from "@/components/conversation";
+import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
@@ -45,8 +47,7 @@ export function Screen() {
 			const lastEvent = lastPage?.at(-1);
 			return lastEvent ? lastEvent.created_at - 1 : null;
 		},
-		select: (data) =>
-			data?.pages.flatMap((page) => page.filter((ev) => ev.kind === Kind.Text)),
+		select: (data) => data?.pages.flatMap((page) => page),
 		refetchOnWindowFocus: false,
 	});
 
@@ -55,8 +56,22 @@ export function Screen() {
 		switch (event.kind) {
 			case Kind.Repost:
 				return <RepostNote key={event.id} event={event} />;
-			default:
+			default: {
+				const isConversation =
+					event.tags.filter((tag) => tag[0] === "e" && tag[3] !== "mention")
+						.length > 0;
+				const isQuote = event.tags.filter((tag) => tag[0] === "q").length > 0;
+
+				if (isConversation) {
+					return <Conversation key={event.id} event={event} />;
+				}
+
+				if (isQuote) {
+					return <Quote key={event.id} event={event} />;
+				}
+
 				return <TextNote key={event.id} event={event} />;
+			}
 		}
 	};
 
@@ -88,7 +103,7 @@ export function Screen() {
 						type="button"
 						onClick={() => fetchNextPage()}
 						disabled={isFetchingNextPage || isLoading}
-						className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-neutral-100 px-3 font-medium hover:bg-neutral-50 focus:outline-none dark:bg-white/10 dark:hover:bg-white/20"
+						className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black/5 px-3 font-medium hover:bg-black/10 focus:outline-none dark:bg-white/10 dark:hover:bg-white/20"
 					>
 						{isFetchingNextPage ? (
 							<Spinner className="size-5" />

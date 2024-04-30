@@ -18,16 +18,16 @@ export function NoteUser({
 				<User.Root
 					className={cn("flex items-start justify-between", className)}
 				>
-					<div className="flex w-full gap-3">
-						<HoverCard.Trigger>
-							<User.Avatar className="size-8 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+					<div className="flex w-full gap-2">
+						<HoverCard.Trigger className="shrink-0">
+							<User.Avatar className="size-9 rounded-full object-cover outline outline-1 -outline-offset-1 outline-black/15" />
 						</HoverCard.Trigger>
-						<div className="flex w-full items-center justify-between">
+						<div className="flex w-full items-center gap-3">
 							<div className="flex items-center gap-1">
 								<User.Name className="font-medium text-neutral-950 dark:text-neutral-50" />
 								<User.NIP05 />
-								{suffix}
 							</div>
+							<div className="text-neutral-600 dark:text-neutral-400">·</div>
 							<User.Time
 								time={event.created_at}
 								className="text-neutral-600 dark:text-neutral-400"
@@ -44,14 +44,14 @@ export function NoteUser({
 						<div className="flex flex-col gap-2">
 							<User.Avatar className="size-11 rounded-lg object-cover" />
 							<div className="flex flex-col gap-2">
-								<div>
+								<div className="inline-flex items-center gap-1">
 									<User.Name className="font-semibold leading-tight text-white dark:text-neutral-900" />
 									<User.NIP05 />
 								</div>
 								<User.About className="line-clamp-3 text-sm text-white dark:text-neutral-900" />
 								<button
 									onClick={() => ark.open_profile(event.pubkey)}
-									className="mt-2 inline-flex h-9 w-full items-center justify-center rounded-lg bg-white text-sm font-medium hover:bg-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+									className="mt-2 inline-flex h-9 w-full items-center justify-center rounded-lg bg-white text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
 								>
 									View profile
 								</button>

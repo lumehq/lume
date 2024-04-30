@@ -100,8 +100,8 @@ importers:
         specifier: ^5.32.0
         version: 5.32.0(@tanstack/react-query@5.32.0)(react@18.3.1)
       '@tanstack/react-router':
-        specifier: ^1.31.3
-        version: 1.31.3(react-dom@18.3.1)(react@18.3.1)
+        specifier: 1.29.2
+        version: 1.29.2(react-dom@18.3.1)(react@18.3.1)
       i18next:
         specifier: ^23.11.3
         version: 23.11.3
@@ -2656,6 +2656,21 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.32.0
       react: 18.3.1
+    dev: false
+
+  /@tanstack/react-router@1.29.2(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-rSSLyI+AaVg79qeeH5fH6KA8ZQkckinH9mFdLrGUhA4wX2B7Az7eloepha2TqvsFJon0HgeV7heMqPkq9nyAeg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      '@tanstack/history': 1.28.9
+      '@tanstack/react-store': 0.2.1(react-dom@18.3.1)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      tiny-invariant: 1.3.3
+      tiny-warning: 1.0.3
     dev: false
 
   /@tanstack/react-router@1.31.3(react-dom@18.3.1)(react@18.3.1):

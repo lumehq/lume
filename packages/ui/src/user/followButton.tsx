@@ -5,7 +5,10 @@ import { useUserContext } from "./provider";
 import { useRouteContext } from "@tanstack/react-router";
 import { Spinner } from "../spinner";
 
-export function UserFollowButton({ className }: { className?: string }) {
+export function UserFollowButton({
+	simple = false,
+	className,
+}: { simple?: boolean; className?: string }) {
 	const { ark } = useRouteContext({ strict: false });
 	const user = useUserContext();
 
@@ -49,7 +52,9 @@ export function UserFollowButton({ className }: { className?: string }) {
 			{loading ? (
 				<Spinner className="size-4" />
 			) : followed ? (
-				t("user.unfollow")
+				!simple ? (
+					t("user.unfollow")
+				) : null
 			) : (
 				t("user.follow")
 			)}

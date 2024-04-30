@@ -11,9 +11,11 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import { routeTree } from "./router.gen"; // auto generated file
 import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
 import { Ark } from "@lume/ark";
+import { platform } from "@tauri-apps/plugin-os";
 
 const ark = new Ark();
 const queryClient = new QueryClient();
+const platformName = await platform();
 
 const persister = createSyncStoragePersister({
 	storage: window.localStorage,
@@ -25,6 +27,7 @@ const router = createRouter({
 	context: {
 		ark,
 		queryClient,
+		platform: platformName,
 	},
 });
 

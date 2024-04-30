@@ -41,8 +41,12 @@ function Screen() {
 		>
 			<div
 				data-tauri-drag-region
-				className="h-24 shrink-0 flex items-end border-neutral-300 border dark:border-neutral-700"
+				className="relative h-24 shrink-0 flex items-end border-neutral-300 border-b dark:border-neutral-700"
 			>
+				<div
+					data-tauri-drag-region
+					className="absolute top-0 left-0 w-full h-4"
+				/>
 				<input
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
@@ -50,7 +54,7 @@ function Screen() {
 						if (e.key === "Enter") searchEvents();
 					}}
 					placeholder="Search anything..."
-					className="w-full h-20 pt-10 px-6 text-lg bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
+					className="z-10 w-full h-20 pt-10 px-6 text-lg bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-neutral-500 dark:placeholder:text-neutral-600"
 				/>
 			</div>
 			<div className="flex-1 p-3 overflow-y-auto scrollbar-none">

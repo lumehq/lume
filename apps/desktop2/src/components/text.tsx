@@ -16,11 +16,11 @@ export function TextNote({
 		<Note.Provider event={event}>
 			<Note.Root
 				className={cn(
-					"bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl mb-3 shadow-primary dark:ring-1 ring-neutral-800/50",
+					"bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50",
 					className,
 				)}
 			>
-				<Note.User className="px-3 h-14 flex items-center" />
+				<Note.User className="px-3 h-16 flex items-center" />
 				<div className="flex flex-col gap-2">
 					<Note.Content className="px-3" />
 					<div className="h-11 px-3 flex items-center justify-between">

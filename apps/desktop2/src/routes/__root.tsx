@@ -2,13 +2,7 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Ark } from "@lume/ark";
 import type { QueryClient } from "@tanstack/react-query";
 import type { Platform } from "@tauri-apps/plugin-os";
-import type {
-	Account,
-	Contact,
-	Interests,
-	Metadata,
-	Settings,
-} from "@lume/types";
+import type { Account, Interests, Metadata, Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import type { Descendant } from "slate";
 
@@ -19,16 +13,20 @@ type EditorElement = {
 };
 
 interface RouterContext {
+	// System
 	ark: Ark;
 	queryClient: QueryClient;
+	// App info
 	platform?: Platform;
 	locale?: string;
+	// Settings
 	settings?: Settings;
 	interests?: Interests;
+	// Profile
 	accounts?: Account[];
-	initialValue?: EditorElement[];
 	profile?: Metadata;
-	contacts?: Contact[];
+	// Editor
+	initialValue?: EditorElement[];
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -40,9 +38,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function Pending() {
 	return (
 		<div className="flex h-screen w-screen flex-col items-center justify-center">
-			<button type="button" className="size-5" disabled>
-				<Spinner className="size-5" />
-			</button>
+			<Spinner className="size-5" />
 		</div>
 	);
 }

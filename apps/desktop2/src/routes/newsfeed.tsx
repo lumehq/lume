@@ -63,14 +63,14 @@ export function Screen() {
 				const isQuote = event.tags.filter((tag) => tag[0] === "q").length > 0;
 
 				if (isConversation) {
-					return <Conversation key={event.id} event={event} />;
+					return <Conversation key={event.id} event={event} className="mb-3" />;
 				}
 
 				if (isQuote) {
-					return <Quote key={event.id} event={event} />;
+					return <Quote key={event.id} event={event} className="mb-3" />;
 				}
 
-				return <TextNote key={event.id} event={event} />;
+				return <TextNote key={event.id} event={event} className="mb-3" />;
 			}
 		}
 	};
@@ -138,26 +138,26 @@ function Empty() {
 				<Link
 					to="/global"
 					search={search}
-					className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
+					className="h-11 w-full flex items-center justify-between bg-black/10 hover:bg-black/20 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 gap-2 rounded-lg px-3"
 				>
-					<ArrowRightIcon className="size-5" />
 					Show global newsfeed
+					<ArrowRightIcon className="size-5" />
 				</Link>
 				<Link
 					to="/trending/notes"
 					search={search}
-					className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
+					className="h-11 w-full flex items-center justify-between bg-black/10 hover:bg-black/20 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 gap-2 rounded-lg px-3"
 				>
-					<ArrowRightIcon className="size-5" />
 					Show trending notes
+					<ArrowRightIcon className="size-5" />
 				</Link>
 				<Link
 					to="/trending/users"
 					search={search}
-					className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
+					className="h-11 w-full flex items-center justify-between bg-black/10 hover:bg-black/20 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 gap-2 rounded-lg px-3"
 				>
-					<ArrowRightIcon className="size-5" />
 					Discover trending users
+					<ArrowRightIcon className="size-5" />
 				</Link>
 			</div>
 		</div>
