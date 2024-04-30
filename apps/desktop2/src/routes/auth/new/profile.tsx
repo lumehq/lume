@@ -74,7 +74,7 @@ function Screen() {
 					) : null}
 					<AvatarUploader
 						setPicture={setPicture}
-						className="absolute inset-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-black/10 text-white hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+						className="absolute inset-0 z-20 flex h-full w-full items-center justify-center rounded-full dark:text-black bg-black/10 text-white hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
 					>
 						<PlusIcon className="size-8" />
 					</AvatarUploader>
@@ -93,7 +93,7 @@ function Screen() {
 						{...register("display_name", { required: true, minLength: 1 })}
 						placeholder="e.g. Alice in Nostrland"
 						spellCheck={false}
-						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
@@ -105,7 +105,7 @@ function Screen() {
 						{...register("name")}
 						placeholder="e.g. alice"
 						spellCheck={false}
-						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
@@ -116,7 +116,7 @@ function Screen() {
 						{...register("about")}
 						placeholder="e.g. Artist, anime-lover, and k-pop fan"
 						spellCheck={false}
-						className="relative h-24 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+						className="relative h-24 w-full resize-none rounded-lg border-transparent bg-neutral-100 px-3 py-2 !outline-none placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
@@ -128,12 +128,12 @@ function Screen() {
 						{...register("website")}
 						placeholder="e.g. https://alice.me"
 						spellCheck={false}
-						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
+						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<button
 					type="submit"
-					className="mt-3 inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+					className="mt-3 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
 				>
 					{loading ? <Spinner /> : t("global.continue")}
 				</button>

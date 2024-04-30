@@ -14,12 +14,7 @@ export function Container({
 	className?: string;
 }) {
 	return (
-		<div
-			className={cn(
-				"flex h-screen w-screen flex-col bg-gradient-to-tr from-neutral-200 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900",
-				className,
-			)}
-		>
+		<div className={cn("flex h-screen w-screen flex-col", className)}>
 			{withDrag ? (
 				<div
 					data-tauri-drag-region
@@ -30,14 +25,14 @@ export function Container({
 							<button
 								type="button"
 								onClick={() => window.history.back()}
-								className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+								className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 							>
 								<ArrowLeftIcon className="size-5" />
 							</button>
 							<button
 								type="button"
 								onClick={() => window.history.forward()}
-								className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+								className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 							>
 								<ArrowRightIcon className="size-5" />
 							</button>

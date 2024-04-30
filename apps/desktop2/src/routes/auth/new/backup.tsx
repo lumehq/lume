@@ -82,7 +82,7 @@ function Screen() {
 							type="password"
 							value={passphase}
 							onChange={(e) => setPassphase(e.target.value)}
-							className="h-11 w-full resize-none rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
+							className="w-full h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 						/>
 					</div>
 				</div>
@@ -98,12 +98,12 @@ function Screen() {
 									type="text"
 									value={displayNsec(key, 36)}
 									readOnly
-									className="h-11 w-full resize-none rounded-lg border-transparent bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring focus:ring-blue-100 dark:bg-neutral-900 dark:focus:ring-blue-900"
+									className="w-full h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 								/>
 								<button
 									type="button"
 									onClick={copyKey}
-									className="inline-flex h-11 w-24 items-center justify-center rounded-lg bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-700"
+									className="inline-flex h-11 w-24 items-center justify-center rounded-lg bg-neutral-200 hover:bg-neutral-300 dark:bg-white/20 dark:hover:bg-white/30"
 								>
 									{copied ? "Copied" : "Copy"}
 								</button>
@@ -118,7 +118,7 @@ function Screen() {
 										onCheckedChange={() =>
 											setConfirm((state) => ({ ...state, c1: !state.c1 }))
 										}
-										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-neutral-900"
+										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-white/10 dark:hover:bg-white/20"
 										id="confirm1"
 									>
 										<Checkbox.Indicator className="text-blue-500">
@@ -138,7 +138,7 @@ function Screen() {
 										onCheckedChange={() =>
 											setConfirm((state) => ({ ...state, c2: !state.c2 }))
 										}
-										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-neutral-900"
+										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-white/10 dark:hover:bg-white/20"
 										id="confirm2"
 									>
 										<Checkbox.Indicator className="text-blue-500">
@@ -158,7 +158,7 @@ function Screen() {
 										onCheckedChange={() =>
 											setConfirm((state) => ({ ...state, c3: !state.c3 }))
 										}
-										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-neutral-900"
+										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-white/10 dark:hover:bg-white/20"
 										id="confirm3"
 									>
 										<Checkbox.Indicator className="text-blue-500">

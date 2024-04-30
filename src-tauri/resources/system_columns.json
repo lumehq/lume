@@ -1,4 +1,4 @@
 [
-  { "label": "newsfeed", "name": "Newsfeed", "content": "/newsfeed" },
-  { "label": "open", "name": "Open", "content": "/open" }
+	{ "label": "home", "name": "Home", "content": "/newsfeed" },
+	{ "label": "open", "name": "Open", "content": "/open" }
 ]

@@ -97,7 +97,7 @@ function Screen() {
 	return (
 		<div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
 			<div className="flex flex-col items-center gap-5 text-center">
-				<div className="flex size-20 items-center justify-center rounded-full bg-teal-100 text-teal-500">
+				<div className="flex size-20 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950 text-teal-500">
 					<LaurelIcon className="size-8" />
 				</div>
 				<div>
@@ -111,14 +111,7 @@ function Screen() {
 			</div>
 			<div className="flex flex-col gap-5">
 				<div className="flex flex-col gap-3">
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
-						<Switch.Root
-							checked={newSettings.notification}
-							onClick={() => toggleNofitication()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
+					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Push Notification</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -126,15 +119,15 @@ function Screen() {
 								notifications from Lume.
 							</p>
 						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
 						<Switch.Root
-							checked={newSettings.enhancedPrivacy}
-							onClick={() => toggleEnhancedPrivacy()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							checked={newSettings.notification}
+							onClick={() => toggleNofitication()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
 						>
 							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
+					</div>
+					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Enhanced Privacy</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -142,30 +135,30 @@ function Screen() {
 								preview as plain text.
 							</p>
 						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
 						<Switch.Root
-							checked={newSettings.autoUpdate}
-							onClick={() => toggleAutoUpdate()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							checked={newSettings.enhancedPrivacy}
+							onClick={() => toggleEnhancedPrivacy()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
 						>
 							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
+					</div>
+					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Auto Update</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
 								Automatically download and install new version.
 							</p>
 						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
 						<Switch.Root
-							checked={newSettings.zap}
-							onClick={() => toggleZap()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							checked={newSettings.autoUpdate}
+							onClick={() => toggleAutoUpdate()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
 						>
 							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
+					</div>
+					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Zap</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -173,15 +166,15 @@ function Screen() {
 								for send Bitcoin tip to other users.
 							</p>
 						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
 						<Switch.Root
-							checked={newSettings.nsfw}
-							onClick={() => toggleNsfw()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
+							checked={newSettings.zap}
+							onClick={() => toggleZap()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
 						>
 							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
+					</div>
+					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Filter sensitive content</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -189,6 +182,13 @@ function Screen() {
 								Warning tag, it's may include NSFW content.
 							</p>
 						</div>
+						<Switch.Root
+							checked={newSettings.nsfw}
+							onClick={() => toggleNsfw()}
+							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
+						>
+							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+						</Switch.Root>
 					</div>
 				</div>
 				<button
