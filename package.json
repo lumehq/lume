@@ -13,7 +13,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.7.1",
     "@tauri-apps/cli": "2.0.0-beta.12",
-    "turbo": "^1.13.2"
+    "turbo": "^1.13.3"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {

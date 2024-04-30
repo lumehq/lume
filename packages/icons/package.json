@@ -1,14 +1,14 @@
 {
-  "name": "@lume/icons",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./index.ts",
-  "dependencies": {
-    "react": "^18.2.0"
-  },
-  "devDependencies": {
-    "@lume/tsconfig": "workspace:*",
-    "@types/react": "^18.2.79",
-    "typescript": "^5.4.5"
-  }
+	"name": "@lume/icons",
+	"version": "0.0.0",
+	"private": true,
+	"main": "./index.ts",
+	"dependencies": {
+		"react": "^18.3.1"
+	},
+	"devDependencies": {
+		"@lume/tsconfig": "workspace:*",
+		"@types/react": "^18.3.1",
+		"typescript": "^5.4.5"
+	}
 }

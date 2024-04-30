@@ -4,30 +4,30 @@ import { useNoteContext } from "../provider";
 import { useRouteContext, useSearch } from "@tanstack/react-router";
 
 export function NoteZap() {
-  const event = useNoteContext();
-  const { ark } = useRouteContext({ strict: false });
-  const { account } = useSearch({ strict: false });
+	const event = useNoteContext();
+	const { ark } = useRouteContext({ strict: false });
+	const { account } = useSearch({ strict: false });
 
-  const zap = async () => {
-    try {
-      const nwc = await ark.load_nwc();
-      if (!nwc) {
-        ark.open_nwc();
-      } else {
-        ark.open_zap(event.id, event.pubkey, account);
-      }
-    } catch (e) {
-      toast.error(String(e));
-    }
-  };
+	const zap = async () => {
+		try {
+			const nwc = await ark.load_nwc();
+			if (!nwc) {
+				ark.open_nwc();
+			} else {
+				ark.open_zap(event.id, event.pubkey, account);
+			}
+		} catch (e) {
+			toast.error(String(e));
+		}
+	};
 
-  return (
-    <button
-      type="button"
-      onClick={zap}
-      className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
-    >
-      <ZapIcon className="size-5 group-hover:text-blue-500" />
-    </button>
-  );
+	return (
+		<button
+			type="button"
+			onClick={zap}
+			className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
+		>
+			<ZapIcon className="size-5 group-hover:text-blue-500" />
+		</button>
+	);
 }

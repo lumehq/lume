@@ -2,11 +2,11 @@ import { cn } from "@lume/utils";
 import { useUserContext } from "./provider";
 
 export function UserAbout({ className }: { className?: string }) {
-  const user = useUserContext();
+	const user = useUserContext();
 
-  return (
-    <div className={cn("content-break select-text", className)}>
-      {user.profile?.about?.trim() || "No bio"}
-    </div>
-  );
+	return (
+		<div className={cn("content-break select-text", className)}>
+			{user.profile?.about?.trim() || "No bio"}
+		</div>
+	);
 }

@@ -30,10 +30,8 @@ import {
 	Slate,
 	Editable,
 } from "slate-react";
-import { Contact } from "@lume/types";
 import { Spinner, User } from "@lume/ui";
 import { nip19 } from "nostr-tools";
-import { invoke } from "@tauri-apps/api/core";
 import { NsfwToggle } from "./-components/nsfw";
 
 type EditorSearch = {
@@ -94,11 +92,12 @@ function Screen() {
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
 
-	const filters = contacts
-		?.filter((c) =>
-			c?.profile.name?.toLowerCase().startsWith(search.toLowerCase()),
-		)
-		?.slice(0, 5);
+	const filters =
+		contacts
+			?.filter((c) =>
+				c?.profile.name?.toLowerCase().startsWith(search.toLowerCase()),
+			)
+			?.slice(0, 5) ?? [];
 
 	const reset = () => {
 		// @ts-expect-error, backlog

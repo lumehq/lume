@@ -566,36 +566,37 @@ export class Ark {
 	}
 
 	public async upload(filePath?: string) {
+		const allowExts = [
+			"png",
+			"jpeg",
+			"jpg",
+			"gif",
+			"mp4",
+			"mp3",
+			"webm",
+			"mkv",
+			"avi",
+			"mov",
+		];
+
+		const selected =
+			filePath ||
+			(
+				await open({
+					multiple: false,
+					filters: [
+						{
+							name: "Media",
+							extensions: allowExts,
+						},
+					],
+				})
+			).path;
+
+		// User cancelled action
+		if (!selected) return null;
+
 		try {
-			const allowExts = [
-				"png",
-				"jpeg",
-				"jpg",
-				"gif",
-				"mp4",
-				"mp3",
-				"webm",
-				"mkv",
-				"avi",
-				"mov",
-			];
-
-			const selected =
-				filePath ||
-				(
-					await open({
-						multiple: false,
-						filters: [
-							{
-								name: "Media",
-								extensions: allowExts,
-							},
-						],
-					})
-				).path;
-
-			if (!selected) return null;
-
 			const file = await readFile(selected);
 			const blob = new Blob([file]);
 
@@ -809,11 +810,16 @@ export class Ark {
 					height: 400,
 					hiddenTitle: true,
 					titleBarStyle: "overlay",
+					visible: true,
+					alwaysOnTop: true,
+					closable: true,
+					maximizable: false,
+					minimizable: false,
 				});
 
 				this.windows.push(newWindow);
 			} else {
-				window.setFocus();
+				window.isVisible;
 			}
 		} catch (e) {
 			throw new Error(String(e));

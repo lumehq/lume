@@ -25,7 +25,7 @@ export function parser(content: string) {
 		}
 	}
 
-	const trimContent = text.trim().replace(/[\r\n]{2,}/g, "\n");
+	const trimContent = text.trim();
 
 	return {
 		content: trimContent,

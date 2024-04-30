@@ -91,7 +91,7 @@ export function NoteContent({
 						href={match}
 						target="_blank"
 						rel="noreferrer"
-						className="text-blue-500 hover:text-blue-600"
+						className="line-clamp-1 text-blue-500 hover:text-blue-600"
 					>
 						{match}
 					</a>
