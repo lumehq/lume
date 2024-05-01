@@ -101,7 +101,7 @@ export function NoteContent({
 
 			richContent = reactStringReplace(
 				richContent,
-				/[\r]?\n[\r]?\n/g,
+				/(\r\n|\r|\n)+/g,
 				(_, index) => <div key={event.id + "_div_" + index} className="h-3" />,
 			);
 

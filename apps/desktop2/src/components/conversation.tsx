@@ -1,6 +1,6 @@
-import { ArrowRightIcon, ThreadIcon } from "@lume/icons";
+import { ThreadIcon } from "@lume/icons";
 import type { Event } from "@lume/types";
-import { Note, User } from "@lume/ui";
+import { Note } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 

@@ -388,10 +388,6 @@ export class Ark {
 		let rootEventId: string = null;
 		let replyEventId: string = null;
 
-		// Ignore quote repost
-		if (content.includes("nostr:note1") || content.includes("nostr:nevent1"))
-			return null;
-
 		// Get all event references from tags, ignore mention
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
 

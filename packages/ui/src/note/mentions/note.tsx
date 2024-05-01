@@ -19,7 +19,7 @@ export function MentionNote({
 		return (
 			<div
 				contentEditable={false}
-				className="my-1 flex w-full cursor-default items-center justify-between rounded-xl border border-black/10 p-3 dark:border-white/10"
+				className="flex w-full cursor-default items-center justify-between rounded-xl border border-black/10 p-3 dark:border-white/10"
 			>
 				<p>Loading...</p>
 			</div>
@@ -30,7 +30,7 @@ export function MentionNote({
 		return (
 			<div
 				contentEditable={false}
-				className="my-1 w-full cursor-default rounded-xl border border-black/10 p-3 dark:border-white/10"
+				className="w-full cursor-default rounded-xl border border-black/10 p-3 dark:border-white/10"
 			>
 				{t("note.error")}
 			</div>
@@ -38,9 +38,9 @@ export function MentionNote({
 	}
 
 	return (
-		<div className="my-1 flex w-full cursor-default flex-col rounded-xl border border-black/10 px-3 pt-1 dark:border-white/10">
+		<div className="mt-2 flex w-full cursor-default flex-col rounded-xl border border-black/10 dark:border-white/10">
 			<User.Provider pubkey={data.pubkey}>
-				<User.Root className="flex h-10 items-center gap-2">
+				<User.Root className="flex h-12 items-center gap-2 px-3">
 					<User.Avatar className="size-6 shrink-0 rounded-full object-cover" />
 					<div className="inline-flex flex-1 items-center gap-2">
 						<User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
@@ -52,17 +52,17 @@ export function MentionNote({
 					</div>
 				</User.Root>
 			</User.Provider>
-			<div className="line-clamp-3 select-text whitespace-normal text-balance leading-normal">
+			<div className="px-3 line-clamp-3 select-text whitespace-normal text-balance leading-normal">
 				{data.content}
 			</div>
 			{openable ? (
-				<div className="flex h-10 items-center justify-between">
+				<div className="flex h-14 items-center justify-end px-3">
 					<button
 						type="button"
 						onClick={() => ark.open_thread(data.id)}
-						className="inline-flex items-center gap-1 text-sm text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
+						className="h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-neutral-100 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
 					>
-						{t("note.showMore")}
+						View post
 						<LinkIcon className="size-4" />
 					</button>
 				</div>
