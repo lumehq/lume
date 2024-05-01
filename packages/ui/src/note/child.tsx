@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { User } from "../user";
 import { useEvent } from "@lume/ark";
+import { Note } from ".";
+import { cn } from "@lume/utils";
 
 export function NoteChild({
 	eventId,
@@ -9,7 +11,6 @@ export function NoteChild({
 	eventId: string;
 	isRoot?: boolean;
 }) {
-	const { t } = useTranslation();
 	const { isLoading, isError, data } = useEvent(eventId);
 
 	if (isLoading) {
@@ -21,24 +22,13 @@ export function NoteChild({
 	}
 
 	return (
-		<div className="relative flex gap-3">
-			<div className="relative flex-1 rounded-xl bg-neutral-100 p-3 dark:bg-white/10">
-				<div className="absolute right-0 top-[18px] h-3 w-3 -translate-y-1/2 translate-x-1/2 rotate-45 transform bg-neutral-100 dark:bg-transparent" />
-				<div className="content-break mt-5 line-clamp-3 select-text leading-normal text-neutral-900 dark:text-neutral-100">
-					{data.content}
+		<Note.Provider event={data}>
+			<Note.Root className={cn(isRoot ? "mb-3" : "")}>
+				<div className="h-14 px-3 flex items-center justify-between">
+					<Note.User />
 				</div>
-			</div>
-			<User.Provider pubkey={data.pubkey}>
-				<User.Root>
-					<User.Avatar className="size-10 shrink-0 rounded-full object-cover" />
-					<div className="absolute left-3 top-2">
-						<User.Name className="inline font-semibold" />{" "}
-						<span className="inline font-normal text-neutral-700 dark:text-neutral-300">
-							{isRoot ? t("note.posted") : t("note.replied")}:
-						</span>
-					</div>
-				</User.Root>
-			</User.Provider>
-		</div>
+				<Note.Content className="px-3" />
+			</Note.Root>
+		</Note.Provider>
 	);
 }

@@ -1,4 +1,5 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { Carousel, CarouselItem } from "../../carousel";
 
 export function Images({ urls }: { urls: string[] }) {
 	const open = async (url: string) => {
@@ -26,7 +27,7 @@ export function Images({ urls }: { urls: string[] }) {
 
 	if (urls.length === 1) {
 		return (
-			<div className="group">
+			<div className="group px-3">
 				<img
 					src={urls[0]}
 					alt={urls[0]}
@@ -41,23 +42,21 @@ export function Images({ urls }: { urls: string[] }) {
 	}
 
 	return (
-		<div className="w-full group flex flex-row flex-nowrap items-center gap-2 overflow-y-auto scrollbar-none">
-			{urls.map((url) => (
-				<div
-					key={url}
-					className="w-[240px] h-[320px] shrink-0 bg-neutral-100 rounded-lg flex flex-col items-center justify-center"
-				>
+		<Carousel
+			items={urls}
+			renderItem={({ item, isSnapPoint }) => (
+				<CarouselItem key={item} isSnapPoint={isSnapPoint}>
 					<img
-						src={url}
-						alt={url}
+						src={item}
+						alt={item}
 						loading="lazy"
 						decoding="async"
 						style={{ contentVisibility: "auto" }}
 						className="w-full h-full object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
-						onClick={() => open(url)}
+						onClick={() => open(item)}
 					/>
-				</div>
-			))}
-		</div>
+				</CarouselItem>
+			)}
+		/>
 	);
 }

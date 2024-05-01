@@ -167,14 +167,14 @@ function Screen() {
 					<button
 						type="button"
 						onClick={() => goLeft()}
-						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<ArrowLeftIcon className="size-5" />
 					</button>
 					<button
 						type="button"
 						onClick={() => goRight()}
-						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<ArrowRightIcon className="size-5" />
 					</button>

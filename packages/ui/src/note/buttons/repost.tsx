@@ -51,7 +51,7 @@ export function NoteRepost() {
 								) : (
 									<RepostIcon
 										className={cn(
-											"size-5 group-hover:text-blue-600",
+											"size-4 group-hover:text-blue-600",
 											isRepost ? "text-blue-500" : "",
 										)}
 									/>

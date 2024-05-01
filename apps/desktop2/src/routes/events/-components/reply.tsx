@@ -13,7 +13,7 @@ export function Reply({ event }: { event: EventWithReplies }) {
 							<User.Avatar className="size-6 rounded-full" />
 							<div className="inline-flex items-center gap-2">
 								<User.Name className="font-semibold" />
-								<User.NIP05 className="text-base lowercase text-neutral-600 dark:text-neutral-400" />
+								<User.NIP05 />
 							</div>
 						</div>
 						<User.Time time={event.created_at} />

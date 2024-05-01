@@ -5,7 +5,7 @@ import { useRouteContext, useSearch } from "@tanstack/react-router";
 
 export function NoteZap() {
 	const event = useNoteContext();
-	const { ark } = useRouteContext({ strict: false });
+	const { ark, settings } = useRouteContext({ strict: false });
 	const { account } = useSearch({ strict: false });
 
 	const zap = async () => {
@@ -21,13 +21,15 @@ export function NoteZap() {
 		}
 	};
 
+	if (!settings.zap) return null;
+
 	return (
 		<button
 			type="button"
 			onClick={zap}
 			className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
 		>
-			<ZapIcon className="size-5 group-hover:text-blue-500" />
+			<ZapIcon className="size-4 group-hover:text-blue-500" />
 		</button>
 	);
 }

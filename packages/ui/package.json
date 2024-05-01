@@ -32,6 +32,7 @@
 		"react-hook-form": "^7.51.3",
 		"react-hotkeys-hook": "^4.5.0",
 		"react-i18next": "^14.1.1",
+		"react-snap-carousel": "^0.4.0",
 		"react-string-replace": "^1.1.1",
 		"slate": "^0.102.0",
 		"slate-react": "^0.102.0",

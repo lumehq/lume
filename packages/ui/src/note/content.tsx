@@ -4,8 +4,9 @@ import { ReactNode, useMemo } from "react";
 import { MentionUser } from "./mentions/user";
 import { MentionNote } from "./mentions/note";
 import { Hashtag } from "./mentions/hashtag";
-import reactStringReplace from "react-string-replace";
 import { Images } from "./preview/images";
+import { Videos } from "./preview/videos";
+import reactStringReplace from "react-string-replace";
 
 export function NoteContent({
 	quote = true,
@@ -98,6 +99,12 @@ export function NoteContent({
 				),
 			);
 
+			richContent = reactStringReplace(
+				richContent,
+				/[\r]?\n[\r]?\n/g,
+				(_, index) => <div key={event.id + "_div_" + index} className="h-3" />,
+			);
+
 			return { content: richContent, images, videos };
 		} catch (e) {
 			return { content, images, videos };
@@ -105,11 +112,12 @@ export function NoteContent({
 	}, []);
 
 	return (
-		<div className={cn("select-text flex flex-col gap-2", className)}>
-			<div className="content-break whitespace-pre-line text-balance leading-normal">
+		<div className="flex flex-col gap-2">
+			<div className={cn("select-text text-[15px] text-balance", className)}>
 				{data.content}
 			</div>
 			{data.images.length ? <Images urls={data.images} /> : null}
+			{data.videos.length ? <Videos urls={data.videos} /> : null}
 		</div>
 	);
 }

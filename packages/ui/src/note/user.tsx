@@ -3,12 +3,8 @@ import * as HoverCard from "@radix-ui/react-hover-card";
 import { User } from "../user";
 import { useNoteContext } from "./provider";
 import { useRouteContext } from "@tanstack/react-router";
-import { type ReactNode } from "react";
 
-export function NoteUser({
-	suffix,
-	className,
-}: { suffix?: ReactNode; className?: string }) {
+export function NoteUser({ className }: { className?: string }) {
 	const { ark } = useRouteContext({ strict: false });
 	const event = useNoteContext();
 
@@ -20,11 +16,11 @@ export function NoteUser({
 				>
 					<div className="flex w-full gap-2">
 						<HoverCard.Trigger className="shrink-0">
-							<User.Avatar className="size-9 rounded-full object-cover outline outline-1 -outline-offset-1 outline-black/15" />
+							<User.Avatar className="size-8 rounded-full object-cover outline outline-1 -outline-offset-1 outline-black/15" />
 						</HoverCard.Trigger>
 						<div className="flex w-full items-center gap-3">
 							<div className="flex items-center gap-1">
-								<User.Name className="font-medium text-neutral-950 dark:text-neutral-50" />
+								<User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
 								<User.NIP05 />
 							</div>
 							<div className="text-neutral-600 dark:text-neutral-400">·</div>

@@ -57,11 +57,8 @@ pub async fn get_events_from(
       .authors(vec![author])
       .limit(limit)
       .until(until);
-    let _ = client
-      .reconcile(filter.clone(), NegentropyOptions::default())
-      .await;
 
-    match client.database().query(vec![filter], Order::Asc).await {
+    match client.get_events_of(vec![filter], None).await {
       Ok(events) => Ok(events),
       Err(err) => Err(err.to_string()),
     }
@@ -127,13 +124,10 @@ pub async fn get_events(
             let filter = Filter::new()
               .kinds(vec![Kind::TextNote, Kind::Repost])
               .limit(limit)
-              .authors(val)
+              .authors(val.clone())
               .until(as_of);
-            let _ = client
-              .reconcile(filter.clone(), NegentropyOptions::default())
-              .await;
 
-            match client.database().query(vec![filter], Order::Asc).await {
+            match client.get_events_of(vec![filter], None).await {
               Ok(events) => Ok(events),
               Err(err) => Err(err.to_string()),
             }
@@ -162,11 +156,8 @@ pub async fn get_events_from_interests(
     .limit(limit)
     .until(as_of)
     .hashtags(hashtags);
-  let _ = client
-    .reconcile(filter.clone(), NegentropyOptions::default())
-    .await;
 
-  match client.database().query(vec![filter], Order::Asc).await {
+  match client.get_events_of(vec![filter], None).await {
     Ok(events) => Ok(events),
     Err(err) => Err(err.to_string()),
   }
@@ -179,14 +170,8 @@ pub async fn get_event_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<E
   match EventId::from_hex(id) {
     Ok(event_id) => {
       let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
-      let _ = client
-        .reconcile(filter.clone(), NegentropyOptions::default())
-        .await;
 
-      match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-        .await
-      {
+      match client.get_events_of(vec![filter], None).await {
         Ok(events) => Ok(events),
         Err(err) => Err(err.to_string()),
       }

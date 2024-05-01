@@ -63,14 +63,14 @@ export function Screen() {
 				const isQuote = event.tags.filter((tag) => tag[0] === "q").length > 0;
 
 				if (isConversation) {
-					return <Conversation key={event.id} event={event} />;
+					return <Conversation key={event.id} event={event} className="mb-3" />;
 				}
 
 				if (isQuote) {
-					return <Quote key={event.id} event={event} />;
+					return <Quote key={event.id} event={event} className="mb-3" />;
 				}
 
-				return <TextNote key={event.id} event={event} />;
+				return <TextNote key={event.id} event={event} className="mb-3" />;
 			}
 		}
 	};

@@ -11,7 +11,7 @@ export function RepostNote({
 	event: Event;
 	className?: string;
 }) {
-	const { ark, settings } = useRouteContext({ strict: false });
+	const { ark } = useRouteContext({ strict: false });
 	const {
 		isLoading,
 		isError,
@@ -64,18 +64,15 @@ export function RepostNote({
 			) : (
 				<Note.Provider event={repostEvent}>
 					<Note.Root>
-						<Note.User className="px-3 h-14 flex items-center" />
-						<div className="flex flex-col gap-2">
-							<Note.Content className="px-3" />
-							<Note.Thread className="px-3" />
-							<div className="h-11 px-3 flex items-center justify-between">
-								<div className="inline-flex items-center gap-4">
-									<Note.Reply />
-									<Note.Repost />
-									{settings.zap ? <Note.Zap /> : null}
-								</div>
-								<Note.Menu />
-							</div>
+						<div className="px-3 h-14 flex items-center justify-between">
+							<Note.User />
+							<Note.Menu />
+						</div>
+						<Note.Content className="px-3" />
+						<div className="mt-3 flex items-center gap-4 h-14 px-3">
+							<Note.Reply />
+							<Note.Repost />
+							<Note.Zap />
 						</div>
 					</Note.Root>
 				</Note.Provider>
