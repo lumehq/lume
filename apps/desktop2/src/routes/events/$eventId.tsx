@@ -1,6 +1,6 @@
 import { useEvent } from "@lume/ark";
 import type { Event } from "@lume/types";
-import { Box, Container, Note, Spinner, User } from "@lume/ui";
+import { Box, Container, Note, Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { WindowVirtualizer } from "virtua";
 import { ReplyList } from "./-components/replyList";
@@ -35,7 +35,7 @@ function Screen() {
 
 	return (
 		<Container withDrag>
-			<Box className="px-3 pt-3 scrollbar-none">
+			<Box className="scrollbar-none">
 				<WindowVirtualizer>
 					<MainNote data={data} />
 					{data ? (
@@ -59,13 +59,9 @@ function MainNote({ data }: { data: Event }) {
 					<Note.User />
 					<Note.Menu />
 				</div>
-				<Note.Content className="min-w-0" />
-				<div className="mt-4 flex items-center justify-between">
-					<div className="-ml-1 inline-flex items-center gap-4">
-						<Note.Repost />
-						<Note.Zap />
-					</div>
-					<Note.Menu />
+				<Note.ContentLarge className="px-3" />
+				<div className="mt-4 flex items-center justify-end px-3">
+					<Note.Zap />
 				</div>
 			</Note.Root>
 		</Note.Provider>

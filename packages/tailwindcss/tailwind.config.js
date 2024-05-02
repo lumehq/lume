@@ -48,6 +48,7 @@ const config = {
 	plugins: [
 		require("@tailwindcss/forms"),
 		require("@tailwindcss/typography"),
+		require("tailwind-gradient-mask-image"),
 		require("tailwind-scrollbar")({ nocompatible: true }),
 	],
 };

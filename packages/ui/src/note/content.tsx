@@ -9,115 +9,120 @@ import { Videos } from "./preview/videos";
 import { useNoteContext } from "./provider";
 
 export function NoteContent({
-	quote = true,
-	mention = true,
-	clean,
-	className,
+  quote = true,
+  mention = true,
+  clean,
+  className,
 }: {
-	quote?: boolean;
-	mention?: boolean;
-	clean?: boolean;
-	className?: string;
+  quote?: boolean;
+  mention?: boolean;
+  clean?: boolean;
+  className?: string;
 }) {
-	const event = useNoteContext();
-	const data = useMemo(() => {
-		const { content, images, videos } = parser(event.content);
-		const words = content.split(/( |\n)/);
-		const hashtags = words.filter((word) => word.startsWith("#"));
-		const events = words.filter((word) =>
-			NOSTR_EVENTS.some((el) => word.startsWith(el)),
-		);
-		const mentions = words.filter((word) =>
-			NOSTR_MENTIONS.some((el) => word.startsWith(el)),
-		);
+  const event = useNoteContext();
+  const data = useMemo(() => {
+    const { content, images, videos } = parser(event.content);
+    const words = content.split(/( |\n)/);
+    const hashtags = words.filter((word) => word.startsWith("#"));
+    const events = words.filter((word) =>
+      NOSTR_EVENTS.some((el) => word.startsWith(el)),
+    );
+    const mentions = words.filter((word) =>
+      NOSTR_MENTIONS.some((el) => word.startsWith(el)),
+    );
 
-		let richContent: ReactNode[] | string = content;
+    let richContent: ReactNode[] | string = content;
 
-		try {
-			if (hashtags.length) {
-				for (const hashtag of hashtags) {
-					const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
-					richContent = reactStringReplace(
-						richContent,
-						regex,
-						(match, index) => {
-							return <Hashtag key={match + index} tag={hashtag} />;
-						},
-					);
-				}
-			}
+    try {
+      if (hashtags.length) {
+        for (const hashtag of hashtags) {
+          const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
+          richContent = reactStringReplace(
+            richContent,
+            regex,
+            (_, index) => {
+              return <Hashtag key={hashtag + index} tag={hashtag} />;
+            },
+          );
+        }
+      }
 
-			if (events.length) {
-				for (const event of events) {
-					if (quote) {
-						richContent = reactStringReplace(
-							richContent,
-							event,
-							(match, index) => (
-								<MentionNote key={match + index} eventId={event} />
-							),
-						);
-					}
+      if (events.length) {
+        for (const event of events) {
+          if (quote) {
+            richContent = reactStringReplace(
+              richContent,
+              event,
+              (_, index) => (
+                <MentionNote key={event + index} eventId={event} />
+              ),
+            );
+          }
 
-					if (!quote && clean) {
-						richContent = reactStringReplace(richContent, event, () => null);
-					}
-				}
-			}
+          if (!quote && clean) {
+            richContent = reactStringReplace(richContent, event, () => null);
+          }
+        }
+      }
 
-			if (mentions.length) {
-				for (const user of mentions) {
-					if (mention) {
-						richContent = reactStringReplace(
-							richContent,
-							user,
-							(match, index) => (
-								<MentionUser key={match + index} pubkey={user} />
-							),
-						);
-					}
+      if (mentions.length) {
+        for (const user of mentions) {
+          if (mention) {
+            richContent = reactStringReplace(
+              richContent,
+              user,
+              (_, index) => (
+                <MentionUser key={user + index} pubkey={user} />
+              ),
+            );
+          }
 
-					if (!mention && clean) {
-						richContent = reactStringReplace(richContent, user, () => null);
-					}
-				}
-			}
+          if (!mention && clean) {
+            richContent = reactStringReplace(richContent, user, () => null);
+          }
+        }
+      }
 
-			richContent = reactStringReplace(
-				richContent,
-				/(https?:\/\/\S+)/gi,
-				(match, index) => (
-					<a
-						key={match + index}
-						href={match}
-						target="_blank"
-						rel="noreferrer"
-						className="line-clamp-1 text-blue-500 hover:text-blue-600"
-					>
-						{match}
-					</a>
-				),
-			);
+      richContent = reactStringReplace(
+        richContent,
+        /(https?:\/\/\S+)/gi,
+        (match, index) => (
+          <a
+            key={match + index}
+            href={match}
+            target="_blank"
+            rel="noreferrer"
+            className="line-clamp-1 text-blue-500 hover:text-blue-600"
+          >
+            {match}
+          </a>
+        ),
+      );
 
-			richContent = reactStringReplace(
-				richContent,
-				/(\r\n|\r|\n)+/g,
-				(_, index) => <div key={event.id + "_div_" + index} className="h-3" />,
-			);
+      richContent = reactStringReplace(
+        richContent,
+        /(\r\n|\r|\n)+/g,
+        (_, index) => <div key={`${event.id}_div_${index}`} className="h-3" />,
+      );
 
-			return { content: richContent, images, videos };
-		} catch (e) {
-			return { content, images, videos };
-		}
-	}, []);
+      return { content: richContent, images, videos };
+    } catch (e) {
+      return { content, images, videos };
+    }
+  }, []);
 
-	return (
-		<div className="flex flex-col gap-2">
-			<div className={cn("select-text text-[15px] text-balance", className)}>
-				{data.content}
-			</div>
-			{data.images.length ? <Images urls={data.images} /> : null}
-			{data.videos.length ? <Videos urls={data.videos} /> : null}
-		</div>
-	);
+  return (
+    <div className="flex flex-col gap-2">
+      <div
+        className={cn(
+          "select-text text-[15px] text-balance break-words overflow-hidden",
+          event.content.length > 500 ? "max-h-[300px] gradient-mask-b-0" : "",
+          className
+        )}>
+        {data.content}
+      </div>
+      {data.images.length ? <Images urls={data.images} /> : null}
+      {data.videos.length ? <Videos urls={data.videos} /> : null}
+    </div>
+  );
 }

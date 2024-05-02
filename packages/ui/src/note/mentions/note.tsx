@@ -52,7 +52,7 @@ export function MentionNote({
 					</div>
 				</User.Root>
 			</User.Provider>
-			<div className="px-3 line-clamp-3 select-text whitespace-normal text-balance leading-normal">
+			<div className="px-3 line-clamp-3 select-text content-break whitespace-normal text-balance leading-normal">
 				{data.content}
 			</div>
 			{openable ? (
