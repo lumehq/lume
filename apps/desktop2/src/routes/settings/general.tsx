@@ -1,11 +1,11 @@
 import type { Settings } from "@lume/types";
+import * as Switch from "@radix-ui/react-switch";
 import { createFileRoute } from "@tanstack/react-router";
 import {
 	isPermissionGranted,
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
-import * as Switch from "@radix-ui/react-switch";
 import { useDebouncedCallback } from "use-debounce";
 
 export const Route = createFileRoute("/settings/general")({

@@ -2,7 +2,7 @@ import { SearchIcon } from "@lume/icons";
 import { type Event, Kind } from "@lume/types";
 import { Note, Spinner, User } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 export const Route = createFileRoute("/search")({
@@ -76,7 +76,7 @@ function Screen() {
 								{events
 									.filter((ev) => ev.kind === Kind.Metadata)
 									.map((event) => (
-										<SearchUser event={event} />
+										<SearchUser key={event.id} event={event} />
 									))}
 							</div>
 						</div>
@@ -88,7 +88,7 @@ function Screen() {
 								{events
 									.filter((ev) => ev.kind === Kind.Text)
 									.map((event) => (
-										<SearchNote event={event} />
+										<SearchNote key={event.id} event={event} />
 									))}
 							</div>
 						</div>
@@ -137,6 +137,7 @@ function SearchNote({ event }: { event: Event }) {
 		<div
 			key={event.id}
 			onClick={() => ark.open_thread(event.id)}
+			onKeyDown={() => ark.open_thread(event.id)}
 			className="p-3 bg-white rounded-lg dark:bg-black"
 		>
 			<Note.Provider event={event}>

@@ -1,13 +1,13 @@
 import { AddMediaIcon } from "@lume/icons";
+import { Spinner } from "@lume/ui";
 import { cn, insertImage, isImagePath } from "@lume/utils";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { useRouteContext } from "@tanstack/react-router";
+import type { UnlistenFn } from "@tauri-apps/api/event";
+import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 import { useSlateStatic } from "slate-react";
 import { toast } from "sonner";
-import { getCurrent } from "@tauri-apps/api/window";
-import type { UnlistenFn } from "@tauri-apps/api/event";
-import { useRouteContext } from "@tanstack/react-router";
-import { Spinner } from "@lume/ui";
-import * as Tooltip from "@radix-ui/react-tooltip";
 
 export function MediaButton({ className }: { className?: string }) {
 	const { ark } = useRouteContext({ strict: false });

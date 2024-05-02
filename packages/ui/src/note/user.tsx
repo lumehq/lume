@@ -1,8 +1,8 @@
 import { cn } from "@lume/utils";
 import * as HoverCard from "@radix-ui/react-hover-card";
+import { useRouteContext } from "@tanstack/react-router";
 import { User } from "../user";
 import { useNoteContext } from "./provider";
-import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteUser({ className }: { className?: string }) {
 	const { ark } = useRouteContext({ strict: false });

@@ -1,4 +1,4 @@
-import { Event } from "@lume/types";
+import type { Event } from "@lume/types";
 import { cn } from "@lume/utils";
 import { Note } from "..";
 

@@ -1,5 +1,5 @@
-import { Event } from "@lume/types";
-import { ReactNode, createContext, useContext } from "react";
+import type { Event } from "@lume/types";
+import { type ReactNode, createContext, useContext } from "react";
 
 const EventContext = createContext<Event>(null);
 

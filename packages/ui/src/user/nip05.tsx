@@ -1,9 +1,9 @@
 import { VerifiedIcon } from "@lume/icons";
 import { displayLongHandle, displayNpub } from "@lume/utils";
-import { useQuery } from "@tanstack/react-query";
-import { useUserContext } from "./provider";
-import { useRouteContext } from "@tanstack/react-router";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { useQuery } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
+import { useUserContext } from "./provider";
 
 export function UserNip05() {
 	const user = useUserContext();

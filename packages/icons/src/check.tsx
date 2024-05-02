@@ -1,4 +1,4 @@
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 
 export function CheckIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,

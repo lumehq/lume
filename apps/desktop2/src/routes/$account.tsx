@@ -1,9 +1,9 @@
 import { ComposeFilledIcon, PlusIcon, SearchIcon } from "@lume/icons";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
-import { cn } from "@lume/utils";
-import { Account } from "@lume/types";
+import type { Account } from "@lume/types";
 import { User } from "@lume/ui";
-import { useState, useEffect } from "react";
+import { cn } from "@lume/utils";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/$account")({
 	component: Screen,

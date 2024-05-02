@@ -1,17 +1,17 @@
+import { Ark } from "@lume/ark";
+import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { platform } from "@tauri-apps/plugin-os";
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
+import { Toaster } from "sonner";
 import "./app.css";
 import i18n from "./locale";
-import { Toaster } from "sonner";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { routeTree } from "./router.gen"; // auto generated file
-import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
-import { Ark } from "@lume/ark";
-import { platform } from "@tauri-apps/plugin-os";
 
 const ark = new Ark();
 const queryClient = new QueryClient();

@@ -1,13 +1,13 @@
+import { CheckIcon } from "@lume/icons";
+import type { AppRouteSearch } from "@lume/types";
 import { displayNsec } from "@lume/utils";
+import * as Checkbox from "@radix-ui/react-checkbox";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import { CheckIcon } from "@lume/icons";
-import type { AppRouteSearch } from "@lume/types";
 
 export const Route = createFileRoute("/auth/new/backup")({
 	validateSearch: (search: Record<string, string>): AppRouteSearch => {
@@ -34,12 +34,12 @@ function Screen() {
 			if (key) {
 				if (!confirm.c1 || !confirm.c2 || !confirm.c3) {
 					return toast.warning("You need to confirm before continue");
-				} else {
-					return navigate({
-						to: "/auth/settings",
-						search: { account },
-					});
 				}
+
+				return navigate({
+					to: "/auth/settings",
+					search: { account },
+				});
 			}
 
 			const encrypted: string = await invoke("get_encrypted_key", {

@@ -1,9 +1,9 @@
 import { useEvent } from "@lume/ark";
+import type { Event } from "@lume/types";
 import { Box, Container, Note, Spinner, User } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { ReplyList } from "./-components/replyList";
 import { WindowVirtualizer } from "virtua";
-import type { Event } from "@lume/types";
+import { ReplyList } from "./-components/replyList";
 
 export const Route = createFileRoute("/events/$eventId")({
 	beforeLoad: async ({ context }) => {
@@ -12,10 +12,10 @@ export const Route = createFileRoute("/events/$eventId")({
 
 		return { settings };
 	},
-	component: Event,
+	component: Screen,
 });
 
-function Event() {
+function Screen() {
 	const { eventId } = Route.useParams();
 	const { isLoading, isError, data } = useEvent(eventId);
 

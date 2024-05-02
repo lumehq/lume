@@ -1,11 +1,11 @@
 import { RepostIcon } from "@lume/icons";
-import { Event } from "@lume/types";
+import type { Event } from "@lume/types";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Note } from "..";
 import { User } from "../../user";
-import { useRouteContext } from "@tanstack/react-router";
 
 export function RepostNote({
 	event,

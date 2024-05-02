@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
-import { User } from "../user";
 import { useEvent } from "@lume/ark";
-import { Note } from ".";
 import { cn } from "@lume/utils";
+import { useTranslation } from "react-i18next";
+import { Note } from ".";
+import { User } from "../user";
 
 export function NoteChild({
 	eventId,

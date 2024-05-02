@@ -1,9 +1,9 @@
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Ark } from "@lume/ark";
-import type { QueryClient } from "@tanstack/react-query";
-import type { Platform } from "@tauri-apps/plugin-os";
 import type { Account, Interests, Metadata, Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
+import type { QueryClient } from "@tanstack/react-query";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import type { Platform } from "@tauri-apps/plugin-os";
 import type { Descendant } from "slate";
 
 type EditorElement = {

@@ -1,10 +1,10 @@
+import type { EventWithReplies } from "@lume/types";
+import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { EventWithReplies } from "@lume/types";
 import { Reply } from "./reply";
-import { useRouteContext } from "@tanstack/react-router";
-import { Spinner } from "@lume/ui";
 
 export function ReplyList({
 	eventId,

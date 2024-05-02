@@ -1,4 +1,6 @@
 import { ComposeFilledIcon, TrashIcon } from "@lume/icons";
+import { Spinner, User } from "@lume/ui";
+import { MentionNote } from "@lume/ui/src/note/mentions/note";
 import {
 	Portal,
 	cn,
@@ -9,10 +11,9 @@ import {
 	sendNativeNotification,
 } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { nip19 } from "nostr-tools";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MediaButton } from "./-components/media";
-import { MentionNote } from "@lume/ui/src/note/mentions/note";
 import {
 	type Descendant,
 	Editor,
@@ -22,16 +23,15 @@ import {
 	createEditor,
 } from "slate";
 import {
-	ReactEditor,
-	useSlateStatic,
-	useSelected,
-	useFocused,
-	withReact,
-	Slate,
 	Editable,
+	ReactEditor,
+	Slate,
+	useFocused,
+	useSelected,
+	useSlateStatic,
+	withReact,
 } from "slate-react";
-import { Spinner, User } from "@lume/ui";
-import { nip19 } from "nostr-tools";
+import { MediaButton } from "./-components/media";
 import { NsfwToggle } from "./-components/nsfw";
 
 type EditorSearch = {

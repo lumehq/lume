@@ -1,9 +1,9 @@
 import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useUserContext } from "./provider";
-import { useRouteContext } from "@tanstack/react-router";
 import { Spinner } from "../spinner";
+import { useUserContext } from "./provider";
 
 export function UserFollowButton({
 	simple = false,

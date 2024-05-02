@@ -1,11 +1,11 @@
 import { nip19 } from "nostr-tools";
-import { EventPointer, ProfilePointer } from "nostr-tools/lib/types/nip19";
+import type { EventPointer, ProfilePointer } from "nostr-tools/lib/types/nip19";
 
 // Borrow from NDK
 // https://github.com/nostr-dev-kit/ndk/blob/master/ndk/src/events/content-tagger.ts
 export async function generateContentTags(content: string) {
-	let promises: Promise<void>[] = [];
-	let tags: string[][] = [];
+	const promises: Promise<void>[] = [];
+	const tags: string[][] = [];
 
 	const tagRegex = /(@|nostr:)(npub|nprofile|note|nevent|naddr)[a-zA-Z0-9]+/g;
 	const hashtagRegex = /#(\w+)/g;

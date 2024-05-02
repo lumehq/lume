@@ -1,4 +1,4 @@
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 
 export function AdvancedSettingsIcon(
 	props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,

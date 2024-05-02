@@ -1,8 +1,8 @@
+import { BitcoinUnit } from "bitcoin-units";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { AUDIOS, IMAGES, VIDEOS } from "./constants";
-import { BitcoinUnit } from "bitcoin-units";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);

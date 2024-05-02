@@ -1,15 +1,15 @@
 import { LaurelIcon } from "@lume/icons";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
-import * as Switch from "@radix-ui/react-switch";
-import { useState } from "react";
 import type { AppRouteSearch, Settings } from "@lume/types";
+import { Spinner } from "@lume/ui";
+import * as Switch from "@radix-ui/react-switch";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
 	isPermissionGranted,
 	requestPermission,
 } from "@tauri-apps/plugin-notification";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Spinner } from "@lume/ui";
 
 export const Route = createFileRoute("/auth/settings")({
 	validateSearch: (search: Record<string, string>): AppRouteSearch => {

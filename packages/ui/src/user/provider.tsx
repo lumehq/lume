@@ -1,6 +1,6 @@
 import { useProfile } from "@lume/ark";
-import { Metadata } from "@lume/types";
-import { ReactNode, createContext, useContext } from "react";
+import type { Metadata } from "@lume/types";
+import { type ReactNode, createContext, useContext } from "react";
 
 const UserContext = createContext<{
 	pubkey: string;

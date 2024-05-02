@@ -5,8 +5,8 @@ export function parser(content: string) {
 	const urls = content.match(/(https?:\/\/\S+)/gi);
 
 	// Extract images and videos from content
-	let images: string[] = [];
-	let videos: string[] = [];
+	const images: string[] = [];
+	const videos: string[] = [];
 	let text: string = content;
 
 	if (urls) {

@@ -1,11 +1,11 @@
 import { Balance } from "@/components/balance";
 import { Box, Container, User } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
-import { toast } from "sonner";
+import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 const DEFAULT_VALUES = [69, 100, 200, 500];
 

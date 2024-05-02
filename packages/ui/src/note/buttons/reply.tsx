@@ -1,7 +1,7 @@
 import { ReplyIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useNoteContext } from "../provider";
 import { useRouteContext } from "@tanstack/react-router";
+import { useNoteContext } from "../provider";
 
 export function NoteReply() {
 	const event = useNoteContext();

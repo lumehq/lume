@@ -1,7 +1,7 @@
 import { ZapIcon } from "@lume/icons";
+import { useRouteContext, useSearch } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useNoteContext } from "../provider";
-import { useRouteContext, useSearch } from "@tanstack/react-router";
 
 export function NoteZap() {
 	const event = useNoteContext();

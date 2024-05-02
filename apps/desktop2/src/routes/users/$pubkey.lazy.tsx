@@ -1,6 +1,6 @@
+import { Box, Container, User } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { WindowVirtualizer } from "virtua";
-import { Box, Container, User } from "@lume/ui";
 import { EventList } from "./-components/eventList";
 
 export const Route = createLazyFileRoute("/users/$pubkey")({

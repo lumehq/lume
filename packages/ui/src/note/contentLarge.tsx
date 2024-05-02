@@ -1,4 +1,4 @@
-import { Settings } from "@lume/types";
+import type { Settings } from "@lume/types";
 import {
 	AUDIOS,
 	IMAGES,
@@ -7,16 +7,16 @@ import {
 	VIDEOS,
 	cn,
 } from "@lume/utils";
-import { useNoteContext } from "./provider";
-import { ReactNode, useMemo } from "react";
-import { nanoid } from "nanoid";
-import { MentionUser } from "./mentions/user";
-import { MentionNote } from "./mentions/note";
-import { Hashtag } from "./mentions/hashtag";
-import { VideoPreview } from "./preview/video";
-import { ImagePreview } from "./preview/image";
-import reactStringReplace from "react-string-replace";
 import { useRouteContext } from "@tanstack/react-router";
+import { nanoid } from "nanoid";
+import { type ReactNode, useMemo } from "react";
+import reactStringReplace from "react-string-replace";
+import { Hashtag } from "./mentions/hashtag";
+import { MentionNote } from "./mentions/note";
+import { MentionUser } from "./mentions/user";
+import { ImagePreview } from "./preview/image";
+import { VideoPreview } from "./preview/video";
+import { useNoteContext } from "./provider";
 
 export function NoteContentLarge({
 	compact = true,

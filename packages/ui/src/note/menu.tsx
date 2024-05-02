@@ -1,10 +1,10 @@
 import { HorizontalDotsIcon } from "@lume/icons";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useRouteContext } from "@tanstack/react-router";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
-import { useNoteContext } from "./provider";
 import { toast } from "sonner";
-import { useRouteContext } from "@tanstack/react-router";
+import { useNoteContext } from "./provider";
 
 export function NoteMenu() {
 	const event = useNoteContext();

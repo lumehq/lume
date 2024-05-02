@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
-import { User } from "../../user";
 import { useEvent } from "@lume/ark";
 import { LinkIcon } from "@lume/icons";
 import { useRouteContext } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { User } from "../../user";
 
 export function MentionNote({
 	eventId,

@@ -1,12 +1,12 @@
 import { NOSTR_EVENTS, NOSTR_MENTIONS, cn, parser } from "@lume/utils";
-import { useNoteContext } from "./provider";
-import { ReactNode, useMemo } from "react";
-import { MentionUser } from "./mentions/user";
-import { MentionNote } from "./mentions/note";
+import { type ReactNode, useMemo } from "react";
+import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./mentions/hashtag";
+import { MentionNote } from "./mentions/note";
+import { MentionUser } from "./mentions/user";
 import { Images } from "./preview/images";
 import { Videos } from "./preview/videos";
-import reactStringReplace from "react-string-replace";
+import { useNoteContext } from "./provider";
 
 export function NoteContent({
 	quote = true,

@@ -1,11 +1,11 @@
-import { TextNote } from "@/components/text";
 import { RepostNote } from "@/components/repost";
+import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { type Event, Kind } from "@lume/types";
+import { Spinner } from "@lume/ui";
 import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
-import { Spinner } from "@lume/ui";
 
 export function EventList({ id }: { id: string }) {
 	const { ark } = useRouteContext({ strict: false });

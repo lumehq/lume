@@ -2,7 +2,7 @@ import { CheckCircleIcon, DownloadIcon } from "@lume/icons";
 import { downloadDir } from "@tauri-apps/api/path";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { download } from "@tauri-apps/plugin-upload";
-import { SyntheticEvent, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 
 export function ImagePreview({ url }: { url: string }) {
 	const [downloaded, setDownloaded] = useState(false);

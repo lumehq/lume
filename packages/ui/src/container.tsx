@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export function Container({
 	children,

@@ -33,14 +33,14 @@ function Screen() {
 		<div className="mx-auto w-full max-w-xl">
 			<div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
 				{accounts.map((account) => (
-					<Account account={account} />
+					<NostrAccount key={account.npub} account={account} />
 				))}
 			</div>
 		</div>
 	);
 }
 
-function Account({ account }: { account: Account }) {
+function NostrAccount({ account }: { account: Account }) {
 	const [key, setKey] = useState(account.nsec);
 	const [copied, setCopied] = useState(false);
 	const [passphase, setPassphase] = useState("");
@@ -69,7 +69,7 @@ function Account({ account }: { account: Account }) {
 					<User.Avatar className="size-8 rounded-full object-cover" />
 					<div className="flex flex-col">
 						<User.Name className="text-sm leading-tight" />
-						<User.NIP05 className="text-sm leading-tight text-neutral-700 dark:text-neutral-300" />
+						<User.NIP05 />
 					</div>
 				</User.Root>
 			</User.Provider>

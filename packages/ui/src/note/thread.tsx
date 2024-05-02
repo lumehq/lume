@@ -1,9 +1,9 @@
+import { LinkIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Note } from ".";
 import { useNoteContext } from "./provider";
-import { LinkIcon } from "@lume/icons";
-import { useRouteContext } from "@tanstack/react-router";
 
 export function NoteThread({ className }: { className?: string }) {
 	const { ark } = useRouteContext({ strict: false });

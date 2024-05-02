@@ -14,10 +14,7 @@ interface CarouselRenderItemProps<T> {
 	readonly isSnapPoint: boolean;
 }
 
-export const Carousel = <T extends any>({
-	items,
-	renderItem,
-}: CarouselProps<T>) => {
+export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
 	const {
 		scrollRef,
 		pages,

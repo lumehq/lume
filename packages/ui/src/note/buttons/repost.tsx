@@ -2,12 +2,12 @@ import { QuoteIcon, RepostIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { useRouteContext } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useNoteContext } from "../provider";
-import { useRouteContext } from "@tanstack/react-router";
 import { Spinner } from "../../spinner";
+import { useNoteContext } from "../provider";
 
 export function NoteRepost() {
 	const { ark } = useRouteContext({ strict: false });

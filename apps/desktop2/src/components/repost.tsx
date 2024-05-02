@@ -1,7 +1,7 @@
 import type { Event } from "@lume/types";
+import { Note, Spinner, User } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Note, Spinner, User } from "@lume/ui";
 import { useRouteContext } from "@tanstack/react-router";
 
 export function RepostNote({
