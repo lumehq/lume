@@ -140,7 +140,7 @@ function Header({ label, name }: { label: string; name: string }) {
 					{isChanged ? (
 						<button
 							type="button"
-							onClick={saveNewTitle}
+							onClick={() => saveNewTitle()}
 							className="text-teal-500 hover:text-teal-600"
 						>
 							<CheckIcon className="size-4" />
@@ -150,7 +150,7 @@ function Header({ label, name }: { label: string; name: string }) {
 			</div>
 			<button
 				type="button"
-				onClick={close}
+				onClick={() => close()}
 				className="size-7 inline-flex hover:bg-black/10 rounded-lg dark:hover:bg-white/10 items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
 			>
 				<CancelIcon className="size-4" />

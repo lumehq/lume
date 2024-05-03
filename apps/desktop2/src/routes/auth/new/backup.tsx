@@ -102,7 +102,7 @@ function Screen() {
 								/>
 								<button
 									type="button"
-									onClick={copyKey}
+									onClick={() => copyKey()}
 									className="inline-flex h-11 w-24 items-center justify-center rounded-lg bg-neutral-200 hover:bg-neutral-300 dark:bg-white/20 dark:hover:bg-white/30"
 								>
 									{copied ? "Copied" : "Copy"}
@@ -179,7 +179,7 @@ function Screen() {
 				<div>
 					<button
 						type="button"
-						onClick={submit}
+						onClick={() => submit()}
 						className="inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
 					>
 						{t("global.continue")}

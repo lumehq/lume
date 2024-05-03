@@ -49,7 +49,7 @@ export function NoteMenu() {
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
-							onClick={() => ark.open_thread(event.id)}
+							onClick={() => ark.open_event(event)}
 							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.viewThread")}

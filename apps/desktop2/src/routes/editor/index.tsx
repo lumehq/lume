@@ -205,7 +205,7 @@ function Screen() {
 					<MediaButton className="size-8 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700" />
 					<button
 						type="button"
-						onClick={publish}
+						onClick={() => publish()}
 						className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
 					>
 						{loading ? (

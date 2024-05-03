@@ -113,7 +113,7 @@ function Screen() {
 				{users.length >= 1 ? (
 					<button
 						type="button"
-						onClick={submit}
+						onClick={() => submit()}
 						disabled={users.length < 1}
 						className="inline-flex items-center justify-center px-4 font-medium text-white transform bg-blue-500 rounded-full active:translate-y-1 w-32 h-10 hover:bg-blue-600 focus:outline-none"
 					>

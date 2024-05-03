@@ -16,12 +16,13 @@ export function NoteReply({ large = false }: { large?: boolean }) {
 						type="button"
 						onClick={() => ark.open_editor(event.id)}
 						className={cn(
-							"inline-flex h-7 bg-neutral-100 dark:bg-white/10 rounded-full items-center justify-center text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20",
-							large ? "gap-1.5 w-24" : "w-14",
+							"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
+							large
+								? "bg-neutral-100 dark:bg-white/10 h-7 gap-1.5 w-24 text-sm font-medium hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
+								: "size-7",
 						)}
 					>
 						<ReplyIcon className="shrink-0 size-4" />
-						{large ? "Reply" : null}
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

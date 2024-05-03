@@ -23,6 +23,7 @@ export function TextNote({
 				</div>
 				<Note.Content className="px-3" />
 				<div className="mt-3 flex items-center gap-4 h-14 px-3">
+					<Note.Open />
 					<Note.Reply />
 					<Note.Repost />
 					<Note.Zap />

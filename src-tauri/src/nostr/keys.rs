@@ -177,7 +177,7 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
 
       // Get public key
       let public_key = signer.public_key().await.unwrap();
-      let filter = Filter::new().pubkey(public_key).kinds(vec![
+      let filter = Filter::new().pubkey(public_key).limit(200).kinds(vec![
         Kind::TextNote,
         Kind::Repost,
         Kind::ZapReceipt,

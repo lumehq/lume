@@ -27,7 +27,7 @@ export function NoteZap({ large = false }: { large?: boolean }) {
 	return (
 		<button
 			type="button"
-			onClick={zap}
+			onClick={() => zap()}
 			className={cn(
 				"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
 				large

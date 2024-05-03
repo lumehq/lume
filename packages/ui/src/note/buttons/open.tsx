@@ -1,4 +1,4 @@
-import { LinkIcon } from "@lume/icons";
+import { VisitIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useRouteContext } from "@tanstack/react-router";
 import { useNoteContext } from "../provider";
@@ -7,31 +7,16 @@ export function NoteOpenThread() {
 	const event = useNoteContext();
 	const { ark } = useRouteContext({ strict: false });
 
-	const open = () => {
-		let root: string = undefined;
-		let reply: string = undefined;
-
-		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
-
-		root = eTags.find((el) => el[3] === "root")?.[1];
-		reply = eTags.find((el) => el[3] === "reply")?.[1];
-
-		if (!root) root = eTags[0]?.[1];
-		if (!reply) reply = eTags[1]?.[1];
-
-		ark.open_thread(root ?? reply ?? event.id);
-	};
-
 	return (
 		<Tooltip.Provider>
 			<Tooltip.Root delayDuration={150}>
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={open}
+						onClick={() => ark.open_event(event)}
 						className="group inline-flex h-7 w-14 bg-neutral-100 dark:bg-white/10 rounded-full items-center justify-center text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
 					>
-						<LinkIcon className="shrink-0 size-4" />
+						<VisitIcon className="shrink-0 size-4" />
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

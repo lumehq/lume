@@ -179,17 +179,17 @@ export class Ark {
 			});
 
 			for (const event of nostrEvents) {
-				const tags = event.tags
-					.filter((el) => el[0] === "e")
+				const eventIds = event.tags
+					.filter((el) => el[3] === "root" || el[3] === "reply")
 					?.map((item) => item[1]);
 
-				if (tags.length) {
-					for (const tag of tags) {
-						if (seenIds.has(tag)) {
+				if (eventIds.length) {
+					for (const id of eventIds) {
+						if (seenIds.has(id)) {
 							dedupQueue.add(event.id);
 							break;
 						}
-						seenIds.add(tag);
+						seenIds.add(id);
 					}
 				}
 			}
@@ -735,13 +735,45 @@ export class Ark {
 		}
 	}
 
-	public async open_thread(id: string) {
+	public async open_event_id(id: string) {
 		try {
 			const label = `event-${id}`;
+			const url = `/events/${id}`;
+
 			await invoke("open_window", {
 				label,
 				title: "Thread",
-				url: `/events/${id}`,
+				url,
+				width: 500,
+				height: 800,
+			});
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async open_event(event: Event) {
+		try {
+			let root: string = undefined;
+			let reply: string = undefined;
+
+			const eTags = event.tags.filter(
+				(tag) => tag[0] === "e" || tag[0] === "q",
+			);
+
+			root = eTags.find((el) => el[3] === "root")?.[1];
+			reply = eTags.find((el) => el[3] === "reply")?.[1];
+
+			if (!root) root = eTags[0]?.[1];
+			if (!reply) reply = eTags[1]?.[1];
+
+			const label = `event-${event.id}`;
+			const url = `/events/${root ?? reply ?? event.id}`;
+
+			await invoke("open_window", {
+				label,
+				title: "Thread",
+				url,
 				width: 500,
 				height: 800,
 			});

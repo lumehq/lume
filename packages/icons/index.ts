@@ -124,3 +124,4 @@ export * from "./src/quote";
 export * from "./src/key";
 export * from "./src/remote";
 export * from "./src/nsfw";
+export * from "./src/visit";

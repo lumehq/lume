@@ -18,10 +18,7 @@ export function MentionNote({
 
 	if (isLoading) {
 		return (
-			<div
-				contentEditable={false}
-				className="flex w-full cursor-default items-center justify-between rounded-xl border border-black/10 p-3 dark:border-white/10"
-			>
+			<div className="flex w-full cursor-default items-center justify-between rounded-xl border border-black/10 p-3 dark:border-white/10">
 				<p>Loading...</p>
 			</div>
 		);
@@ -29,10 +26,7 @@ export function MentionNote({
 
 	if (isError || !data) {
 		return (
-			<div
-				contentEditable={false}
-				className="w-full cursor-default rounded-xl border border-black/10 p-3 dark:border-white/10"
-			>
+			<div className="w-full cursor-default rounded-xl border border-black/10 p-3 dark:border-white/10">
 				{t("note.error")}
 			</div>
 		);
@@ -65,7 +59,10 @@ export function MentionNote({
 				<div className="flex h-14 items-center justify-end px-3">
 					<button
 						type="button"
-						onClick={() => ark.open_thread(data.id)}
+						onClick={(e) => {
+							e.stopPropagation();
+							ark.open_event_id(data.id);
+						}}
 						className="z-10 h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-neutral-100 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
 					>
 						View post

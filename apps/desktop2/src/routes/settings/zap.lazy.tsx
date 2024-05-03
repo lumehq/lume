@@ -55,7 +55,7 @@ function Connection() {
 						/>
 						<button
 							type="button"
-							onClick={connect}
+							onClick={() => connect()}
 							className="inline-flex h-9 w-24 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-700"
 						>
 							Connect

@@ -193,7 +193,7 @@ function Screen() {
 				</div>
 				<button
 					type="button"
-					onClick={submit}
+					onClick={() => submit()}
 					disabled={loading}
 					className="mb-1 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
 				>

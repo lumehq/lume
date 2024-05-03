@@ -91,7 +91,7 @@ function NostrAccount({ account }: { account: Account }) {
 						/>
 						<button
 							type="button"
-							onClick={copyKey}
+							onClick={() => copyKey()}
 							className="inline-flex h-9 w-24 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-700"
 						>
 							{copied ? "Copied" : "Copy"}
@@ -115,7 +115,7 @@ function NostrAccount({ account }: { account: Account }) {
 						/>
 						<button
 							type="button"
-							onClick={encrypt}
+							onClick={() => encrypt()}
 							className="inline-flex h-9 w-24 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-700"
 						>
 							Update

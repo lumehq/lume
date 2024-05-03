@@ -46,7 +46,7 @@ export function UserFollowButton({
 		<button
 			type="button"
 			disabled={loading}
-			onClick={toggleFollow}
+			onClick={() => toggleFollow()}
 			className={cn("w-max", className)}
 		>
 			{loading ? (

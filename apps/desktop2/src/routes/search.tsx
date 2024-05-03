@@ -136,8 +136,8 @@ function SearchNote({ event }: { event: Event }) {
 	return (
 		<div
 			key={event.id}
-			onClick={() => ark.open_thread(event.id)}
-			onKeyDown={() => ark.open_thread(event.id)}
+			onClick={() => ark.open_event(event)}
+			onKeyDown={() => ark.open_event(event)}
 			className="p-3 bg-white rounded-lg dark:bg-black"
 		>
 			<Note.Provider event={event}>
