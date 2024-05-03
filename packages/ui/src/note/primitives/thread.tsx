@@ -3,41 +3,41 @@ import { Note } from "..";
 import { User } from "../../user";
 
 export function ThreadNote({ eventId }: { eventId: string }) {
-  const { isLoading, data } = useEvent(eventId);
+	const { isLoading, data } = useEvent(eventId);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
 
-  return (
-    <Note.Provider event={data}>
-      <Note.Root className="flex flex-col">
-        <div className="flex h-16 items-center justify-between">
-          <User.Provider pubkey={data.pubkey}>
-            <User.Root className="flex h-16 flex-1 items-center gap-3">
-              <User.Avatar className="size-11 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
-              <div className="flex flex-1 flex-col">
-                <User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
-                <div className="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
-                  <User.Time time={data.created_at} />
-                  <span>·</span>
-                  <User.NIP05 />
-                </div>
-              </div>
-            </User.Root>
-          </User.Provider>
-          <Note.Menu />
-        </div>
-        <Note.Thread className="mb-2" />
-        <Note.Content className="min-w-0" />
-        <div className="flex h-14 items-center justify-between">
-          <Note.Reaction />
-          <div className="inline-flex items-center gap-4">
-            <Note.Repost />
-            <Note.Zap />
-          </div>
-        </div>
-      </Note.Root>
-    </Note.Provider>
-  );
+	return (
+		<Note.Provider event={data}>
+			<Note.Root className="flex flex-col">
+				<div className="flex h-16 items-center justify-between">
+					<User.Provider pubkey={data.pubkey}>
+						<User.Root className="flex h-16 flex-1 items-center gap-3">
+							<User.Avatar className="size-11 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+							<div className="flex flex-1 flex-col">
+								<User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
+								<div className="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+									<User.Time time={data.created_at} />
+									<span>·</span>
+									<User.NIP05 />
+								</div>
+							</div>
+						</User.Root>
+					</User.Provider>
+					<Note.Menu />
+				</div>
+				<Note.Thread className="mb-2" />
+				<Note.Content className="min-w-0" />
+				<div className="flex h-14 items-center justify-between">
+					<Note.Reaction />
+					<div className="inline-flex items-center gap-4">
+						<Note.Repost />
+						<Note.Zap />
+					</div>
+				</div>
+			</Note.Root>
+		</Note.Provider>
+	);
 }

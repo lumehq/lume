@@ -1,4 +1,4 @@
-import { Event } from "@lume/types";
+import type { Event } from "@lume/types";
 import { Note } from "..";
 
 export function ChildReply({ event }: { event: Event; rootEventId?: string }) {

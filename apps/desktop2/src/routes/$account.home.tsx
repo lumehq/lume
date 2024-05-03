@@ -2,7 +2,6 @@ import { Col } from "@/components/col";
 import { Toolbar } from "@/components/toolbar";
 import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import type { EventColumns, LumeColumn } from "@lume/types";
-import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { resolveResource } from "@tauri-apps/api/path";
@@ -14,180 +13,173 @@ import { useDebouncedCallback } from "use-debounce";
 import { VList, type VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
-  component: Screen,
-  pendingComponent: Pending,
-  beforeLoad: async ({ context }) => {
-    const ark = context.ark;
-    const resourcePath = await resolveResource("resources/system_columns.json");
-    const systemColumns: LumeColumn[] = JSON.parse(
-      await readTextFile(resourcePath),
-    );
-    const userColumns = await ark.get_columns();
+	beforeLoad: async ({ context }) => {
+		const ark = context.ark;
+		const resourcePath = await resolveResource("resources/system_columns.json");
+		const systemColumns: LumeColumn[] = JSON.parse(
+			await readTextFile(resourcePath),
+		);
+		const userColumns = await ark.get_columns();
 
-    return {
-      storedColumns: !userColumns.length ? systemColumns : userColumns,
-    };
-  },
+		return {
+			storedColumns: !userColumns.length ? systemColumns : userColumns,
+		};
+	},
+	component: Screen,
 });
 
 function Screen() {
-  const vlistRef = useRef<VListHandle>(null);
+	const vlistRef = useRef<VListHandle>(null);
 
-  const { account } = Route.useParams();
-  const { ark, storedColumns } = Route.useRouteContext();
+	const { account } = Route.useParams();
+	const { ark, storedColumns } = Route.useRouteContext();
 
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [columns, setColumns] = useState(storedColumns);
-  const [isScroll, setIsScroll] = useState(false);
-  const [isResize, setIsResize] = useState(false);
+	const [selectedIndex, setSelectedIndex] = useState(-1);
+	const [columns, setColumns] = useState(storedColumns);
+	const [isScroll, setIsScroll] = useState(false);
+	const [isResize, setIsResize] = useState(false);
 
-  const goLeft = () => {
-    const prevIndex = Math.max(selectedIndex - 1, 0);
-    setSelectedIndex(prevIndex);
-    vlistRef.current.scrollToIndex(prevIndex, {
-      align: "center",
-    });
-  };
+	const goLeft = () => {
+		const prevIndex = Math.max(selectedIndex - 1, 0);
+		setSelectedIndex(prevIndex);
+		vlistRef.current.scrollToIndex(prevIndex, {
+			align: "center",
+		});
+	};
 
-  const goRight = () => {
-    const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
-    setSelectedIndex(nextIndex);
-    vlistRef.current.scrollToIndex(nextIndex, {
-      align: "center",
-    });
-  };
+	const goRight = () => {
+		const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
+		setSelectedIndex(nextIndex);
+		vlistRef.current.scrollToIndex(nextIndex, {
+			align: "center",
+		});
+	};
 
-  const add = useDebouncedCallback((column: LumeColumn) => {
-    // update col label
-    column.label = `${column.label}-${nanoid()}`;
+	const add = useDebouncedCallback((column: LumeColumn) => {
+		// update col label
+		column.label = `${column.label}-${nanoid()}`;
 
-    // create new cols
-    const cols = [...columns];
-    const openColIndex = cols.findIndex((col) => col.label === "open");
-    const newCols = [
-      ...cols.slice(0, openColIndex),
-      column,
-      ...cols.slice(openColIndex),
-    ];
+		// create new cols
+		const cols = [...columns];
+		const openColIndex = cols.findIndex((col) => col.label === "open");
+		const newCols = [
+			...cols.slice(0, openColIndex),
+			column,
+			...cols.slice(openColIndex),
+		];
 
-    setColumns(newCols);
-    setSelectedIndex(cols.length - 1);
+		setColumns(newCols);
+		setSelectedIndex(newCols.length);
+		setIsScroll(true);
 
-    // scroll to the newest column
-    vlistRef.current.scrollToIndex(cols.length - 1, {
-      align: "end",
-    });
-  }, 150);
+		// scroll to the newest column
+		vlistRef.current.scrollToIndex(newCols.length - 1, {
+			align: "end",
+		});
+	}, 150);
 
-  const remove = useDebouncedCallback((label: string) => {
-    setColumns((state) => state.filter((t) => t.label !== label));
-    setSelectedIndex(columns.length - 1);
+	const remove = useDebouncedCallback((label: string) => {
+		const newCols = columns.filter((t) => t.label !== label);
 
-    // scroll to the first column
-    vlistRef.current.scrollToIndex(0, {
-      align: "start",
-    });
-  }, 150);
+		setColumns(newCols);
+		setSelectedIndex(newCols.length);
+		setIsScroll(true);
 
-  const updateName = useDebouncedCallback((label: string, title: string) => {
-    const currentColIndex = columns.findIndex((col) => col.label === label);
+		// scroll to the first column
+		vlistRef.current.scrollToIndex(newCols.length - 1, {
+			align: "start",
+		});
+	}, 150);
 
-    const updatedCol = Object.assign({}, columns[currentColIndex]);
-    updatedCol.name = title;
+	const updateName = useDebouncedCallback((label: string, title: string) => {
+		const currentColIndex = columns.findIndex((col) => col.label === label);
 
-    const newCols = columns.slice();
-    newCols[currentColIndex] = updatedCol;
+		const updatedCol = Object.assign({}, columns[currentColIndex]);
+		updatedCol.name = title;
 
-    setColumns(newCols);
-  }, 150);
+		const newCols = columns.slice();
+		newCols[currentColIndex] = updatedCol;
 
-  const startResize = useDebouncedCallback(
-    () => setIsResize((prev) => !prev),
-    150,
-  );
+		setColumns(newCols);
+	}, 150);
 
-  useEffect(() => {
-    // save state
-    ark.set_columns(columns);
-  }, [columns]);
+	const startResize = useDebouncedCallback(
+		() => setIsResize((prev) => !prev),
+		150,
+	);
 
-  useEffect(() => {
-    let unlistenColEvent: Awaited<ReturnType<typeof listen>> | undefined =
-      undefined;
-    let unlistenWindowResize: Awaited<ReturnType<typeof listen>> | undefined =
-      undefined;
+	useEffect(() => {
+		// save state
+		ark.set_columns(columns);
+	}, [columns]);
 
-    (async () => {
-      if (unlistenColEvent && unlistenWindowResize) return;
+	useEffect(() => {
+		let unlistenColEvent: Awaited<ReturnType<typeof listen>> | undefined =
+			undefined;
+		let unlistenWindowResize: Awaited<ReturnType<typeof listen>> | undefined =
+			undefined;
 
-      unlistenColEvent = await listen<EventColumns>("columns", (data) => {
-        if (data.payload.type === "add") add(data.payload.column);
-        if (data.payload.type === "remove") remove(data.payload.label);
-        if (data.payload.type === "set_title")
-          updateName(data.payload.label, data.payload.title);
-      });
+		(async () => {
+			if (unlistenColEvent && unlistenWindowResize) return;
 
-      unlistenWindowResize = await getCurrent().listen("tauri://resize", () => {
-        startResize();
-      });
-    })();
+			unlistenColEvent = await listen<EventColumns>("columns", (data) => {
+				if (data.payload.type === "add") add(data.payload.column);
+				if (data.payload.type === "remove") remove(data.payload.label);
+				if (data.payload.type === "set_title")
+					updateName(data.payload.label, data.payload.title);
+			});
 
-    return () => {
-      if (unlistenColEvent) unlistenColEvent();
-      if (unlistenWindowResize) unlistenWindowResize();
-    };
-  }, []);
+			unlistenWindowResize = await getCurrent().listen("tauri://resize", () => {
+				startResize();
+			});
+		})();
 
-  return (
-    <div className="h-full w-full">
-      <VList
-        ref={vlistRef}
-        horizontal
-        tabIndex={-1}
-        itemSize={440}
-        overscan={3}
-        onScroll={() => setIsScroll(true)}
-        onScrollEnd={() => setIsScroll(false)}
-        className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
-      >
-        {columns.map((column) => (
-          <Col
-            key={column.label}
-            column={column}
-            account={account}
-            isScroll={isScroll}
-            isResize={isResize}
-          />
-        ))}
-      </VList>
-      <Toolbar>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => goLeft()}
-            className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
-          >
-            <ArrowLeftIcon className="size-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goRight()}
-            className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
-          >
-            <ArrowRightIcon className="size-5" />
-          </button>
-        </div>
-      </Toolbar>
-    </div>
-  );
-}
+		return () => {
+			if (unlistenColEvent) unlistenColEvent();
+			if (unlistenWindowResize) unlistenWindowResize();
+		};
+	}, []);
 
-function Pending() {
-  return (
-    <div className="flex h-full w-full items-center justify-center">
-      <button type="button" className="size-5" disabled>
-        <Spinner className="size-5" />
-      </button>
-    </div>
-  );
+	return (
+		<div className="h-full w-full">
+			<VList
+				ref={vlistRef}
+				horizontal
+				tabIndex={-1}
+				itemSize={440}
+				overscan={3}
+				onScroll={() => setIsScroll(true)}
+				onScrollEnd={() => setIsScroll(false)}
+				className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
+			>
+				{columns.map((column) => (
+					<Col
+						key={column.label}
+						column={column}
+						account={account}
+						isScroll={isScroll}
+						isResize={isResize}
+					/>
+				))}
+			</VList>
+			<Toolbar>
+				<div className="flex items-center gap-1">
+					<button
+						type="button"
+						onClick={() => goLeft()}
+						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+					>
+						<ArrowLeftIcon className="size-5" />
+					</button>
+					<button
+						type="button"
+						onClick={() => goRight()}
+						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+					>
+						<ArrowRightIcon className="size-5" />
+					</button>
+				</div>
+			</Toolbar>
+		</div>
+	);
 }

@@ -1,4 +1,3 @@
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type {
 	Account,
 	Contact,
@@ -10,10 +9,11 @@ import type {
 	Metadata,
 	Settings,
 } from "@lume/types";
+import { generateContentTags } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
+import type { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
-import { generateContentTags } from "@lume/utils";
 
 enum NSTORE_KEYS {
 	settings = "lume_user_settings",
@@ -86,7 +86,7 @@ export class Ark {
 		}
 	}
 
-	public async save_account(nsec: string, password: string = "") {
+	public async save_account(nsec: string, password = "") {
 		try {
 			const cmd: string = await invoke("save_key", {
 				nsec,
@@ -118,6 +118,7 @@ export class Ark {
 			const event: Event = JSON.parse(cmd);
 			return event;
 		} catch (e) {
+			console.error(id, String(e));
 			throw new Error(String(e));
 		}
 	}
@@ -163,7 +164,7 @@ export class Ark {
 	) {
 		try {
 			let until: string = undefined;
-			let isGlobal = global ?? false;
+			const isGlobal = global ?? false;
 
 			if (asOf && asOf > 0) until = asOf.toString();
 
@@ -178,17 +179,17 @@ export class Ark {
 			});
 
 			for (const event of nostrEvents) {
-				const tags = event.tags
-					.filter((el) => el[0] === "e")
+				const eventIds = event.tags
+					.filter((el) => el[3] === "root" || el[3] === "reply")
 					?.map((item) => item[1]);
 
-				if (tags.length) {
-					for (const tag of tags) {
-						if (seenIds.has(tag)) {
+				if (eventIds.length) {
+					for (const id of eventIds) {
+						if (seenIds.has(id)) {
 							dedupQueue.add(event.id);
 							break;
 						}
-						seenIds.add(tag);
+						seenIds.add(id);
 					}
 				}
 			}
@@ -380,13 +381,12 @@ export class Ark {
 	public parse_event_thread({
 		content,
 		tags,
-	}: { content: string; tags: string[][] }) {
+	}: {
+		content: string;
+		tags: string[][];
+	}) {
 		let rootEventId: string = null;
 		let replyEventId: string = null;
-
-		// Ignore quote repost
-		if (content.includes("nostr:note1") || content.includes("nostr:nevent1"))
-			return null;
 
 		// Get all event references from tags, ignore mention
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
@@ -420,7 +420,8 @@ export class Ark {
 			const cmd: Metadata = await invoke("get_profile", { id });
 
 			return cmd;
-		} catch {
+		} catch (e) {
+			console.error(pubkey, String(e));
 			return null;
 		}
 	}
@@ -561,36 +562,37 @@ export class Ark {
 	}
 
 	public async upload(filePath?: string) {
+		const allowExts = [
+			"png",
+			"jpeg",
+			"jpg",
+			"gif",
+			"mp4",
+			"mp3",
+			"webm",
+			"mkv",
+			"avi",
+			"mov",
+		];
+
+		const selected =
+			filePath ||
+			(
+				await open({
+					multiple: false,
+					filters: [
+						{
+							name: "Media",
+							extensions: allowExts,
+						},
+					],
+				})
+			).path;
+
+		// User cancelled action
+		if (!selected) return null;
+
 		try {
-			const allowExts = [
-				"png",
-				"jpeg",
-				"jpg",
-				"gif",
-				"mp4",
-				"mp3",
-				"webm",
-				"mkv",
-				"avi",
-				"mov",
-			];
-
-			const selected =
-				filePath ||
-				(
-					await open({
-						multiple: false,
-						filters: [
-							{
-								name: "Media",
-								extensions: allowExts,
-							},
-						],
-					})
-				).path;
-
-			if (!selected) return null;
-
 			const file = await readFile(selected);
 			const blob = new Blob([file]);
 
@@ -640,11 +642,15 @@ export class Ark {
 
 	public async get_settings() {
 		try {
+			if (this.settings) return this.settings;
+
 			const cmd: string = await invoke("get_nstore", {
 				key: NSTORE_KEYS.settings,
 			});
 			const settings: Settings = cmd ? JSON.parse(cmd) : null;
+
 			this.settings = settings;
+
 			return settings;
 		} catch {
 			const defaultSettings: Settings = {
@@ -729,44 +735,69 @@ export class Ark {
 		}
 	}
 
-	public open_thread(id: string) {
+	public async open_event_id(id: string) {
 		try {
-			const window = new WebviewWindow(`event-${id}`, {
+			const label = `event-${id}`;
+			const url = `/events/${id}`;
+
+			await invoke("open_window", {
+				label,
 				title: "Thread",
-				url: `/events/${id}`,
-				minWidth: 500,
-				minHeight: 800,
+				url,
 				width: 500,
 				height: 800,
-				titleBarStyle: "overlay",
-				center: false,
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}
 	}
 
-	public open_profile(pubkey: string) {
+	public async open_event(event: Event) {
 		try {
-			const window = new WebviewWindow(`user-${pubkey}`, {
+			let root: string = undefined;
+			let reply: string = undefined;
+
+			const eTags = event.tags.filter(
+				(tag) => tag[0] === "e" || tag[0] === "q",
+			);
+
+			root = eTags.find((el) => el[3] === "root")?.[1];
+			reply = eTags.find((el) => el[3] === "reply")?.[1];
+
+			if (!root) root = eTags[0]?.[1];
+			if (!reply) reply = eTags[1]?.[1];
+
+			const label = `event-${event.id}`;
+			const url = `/events/${root ?? reply ?? event.id}`;
+
+			await invoke("open_window", {
+				label,
+				title: "Thread",
+				url,
+				width: 500,
+				height: 800,
+			});
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async open_profile(pubkey: string) {
+		try {
+			const label = `user-${pubkey}`;
+			await invoke("open_window", {
+				label,
 				title: "Profile",
 				url: `/users/${pubkey}`,
-				minWidth: 500,
-				minHeight: 800,
 				width: 500,
 				height: 800,
-				titleBarStyle: "overlay",
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}
 	}
 
-	public open_editor(reply_to?: string, quote: boolean = false) {
+	public async open_editor(reply_to?: string, quote = false) {
 		try {
 			let url: string;
 
@@ -776,91 +807,75 @@ export class Ark {
 				url = "/editor";
 			}
 
-			const window = new WebviewWindow(`editor-${reply_to ? reply_to : 0}`, {
+			const label = `editor-${reply_to ? reply_to : 0}`;
+
+			await invoke("open_window", {
+				label,
 				title: "Editor",
 				url,
-				minWidth: 500,
-				minHeight: 400,
-				width: 600,
-				height: 400,
-				hiddenTitle: true,
-				titleBarStyle: "overlay",
+				width: 500,
+				height: 360,
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}
 	}
 
-	public open_nwc() {
+	public async open_nwc() {
 		try {
-			const window = new WebviewWindow("nwc", {
+			const label = "nwc";
+			await invoke("open_window", {
+				label,
 				title: "Nostr Wallet Connect",
 				url: "/nwc",
-				minWidth: 400,
-				minHeight: 600,
 				width: 400,
 				height: 600,
-				hiddenTitle: true,
-				titleBarStyle: "overlay",
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}
 	}
 
-	public open_zap(id: string, pubkey: string, account: string) {
+	public async open_zap(id: string, pubkey: string, account: string) {
 		try {
-			const window = new WebviewWindow(`zap-${id}`, {
+			const label = `zap-${id}`;
+			await invoke("open_window", {
+				label,
 				title: "Zap",
 				url: `/zap/${id}?pubkey=${pubkey}&account=${account}`,
-				minWidth: 400,
-				minHeight: 500,
 				width: 400,
 				height: 500,
-				titleBarStyle: "overlay",
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}
 	}
 
-	public open_settings() {
+	public async open_settings() {
 		try {
-			const window = new WebviewWindow("settings", {
+			const label = "settings";
+			await invoke("open_window", {
+				label,
 				title: "Settings",
 				url: "/settings",
-				minWidth: 600,
-				minHeight: 500,
 				width: 800,
 				height: 500,
-				titleBarStyle: "overlay",
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}
 	}
 
-	public open_search() {
+	public async open_search() {
 		try {
-			const window = new WebviewWindow("search", {
+			const label = "search";
+			await invoke("open_window", {
+				label,
 				title: "Search",
 				url: "/search",
 				width: 750,
 				height: 470,
-				minimizable: false,
-				resizable: false,
-				titleBarStyle: "overlay",
 			});
-
-			this.windows.push(window);
 		} catch (e) {
 			throw new Error(String(e));
 		}

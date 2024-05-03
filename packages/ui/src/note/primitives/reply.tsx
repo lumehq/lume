@@ -1,5 +1,5 @@
 import { NavArrowDownIcon } from "@lume/icons";
-import { EventWithReplies } from "@lume/types";
+import type { EventWithReplies } from "@lume/types";
 import { cn } from "@lume/utils";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useState } from "react";

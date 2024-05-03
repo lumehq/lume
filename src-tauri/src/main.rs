@@ -55,17 +55,17 @@ fn main() {
         // Add some bootstrap relays
         // #TODO: Pull bootstrap relays from user's settings
         client
-          .add_relay("wss://relay.damus.io")
+          .add_relay("wss://relay.nostr.net")
           .await
-          .expect("Cannot connect to relay.damus.io, please try again later.");
-        client
-          .add_relay("wss://relayable.org")
-          .await
-          .expect("Cannot connect to relayable.org, please try again later.");
+          .expect("Cannot connect to relay.nostr.net, please try again later.");
         client
           .add_relay("wss://relay.nostr.band")
           .await
           .expect("Cannot connect to relay.nostr.band, please try again later.");
+        client
+          .add_relay("wss://welcome.nostr.wine")
+          .await
+          .expect("Cannot connect to welcome.nostr.wine, please try again later.");
 
         // Connect
         client.connect().await;
@@ -140,7 +140,8 @@ fn main() {
       commands::window::create_column,
       commands::window::close_column,
       commands::window::reposition_column,
-      commands::window::resize_column
+      commands::window::resize_column,
+      commands::window::open_window
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")

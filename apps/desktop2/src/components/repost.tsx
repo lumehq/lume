@@ -1,91 +1,83 @@
-import { RepostIcon } from "@lume/icons";
-import { Event } from "@lume/types";
+import type { Event } from "@lume/types";
+import { Note, Spinner, User } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import { Note, Spinner, User } from "@lume/ui";
 import { useRouteContext } from "@tanstack/react-router";
 
 export function RepostNote({
-  event,
-  className,
+	event,
+	className,
 }: {
-  event: Event;
-  className?: string;
+	event: Event;
+	className?: string;
 }) {
-  const { ark, settings } = useRouteContext({ strict: false });
-  const { t } = useTranslation();
-  const {
-    isLoading,
-    isError,
-    data: repostEvent,
-  } = useQuery({
-    queryKey: ["repost", event.id],
-    queryFn: async () => {
-      try {
-        if (event.content.length > 50) {
-          const embed: Event = JSON.parse(event.content);
-          return embed;
-        }
-        const id = event.tags.find((el) => el[0] === "e")?.[1];
-        if (id) return await ark.get_event(id);
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+	const { ark } = useRouteContext({ strict: false });
+	const {
+		isLoading,
+		isError,
+		data: repostEvent,
+	} = useQuery({
+		queryKey: ["repost", event.id],
+		queryFn: async () => {
+			try {
+				if (event.content.length > 50) {
+					const embed: Event = JSON.parse(event.content);
+					return embed;
+				}
 
-  return (
-    <Note.Root
-      className={cn(
-        "flex flex-col gap-2 border-b border-neutral-100 px-3 py-5 dark:border-neutral-900",
-        className,
-      )}
-    >
-      <User.Provider pubkey={event.pubkey}>
-        <User.Root className="flex gap-3">
-          <div className="inline-flex w-11 shrink-0 items-center justify-center">
-            <RepostIcon className="h-5 w-5 text-blue-500" />
-          </div>
-          <div className="inline-flex items-center gap-2">
-            <User.Avatar className="size-6 shrink-0 rounded-full object-cover" />
-            <div className="inline-flex items-baseline gap-1">
-              <User.Name className="font-medium text-neutral-900 dark:text-neutral-100" />
-              <span className="text-blue-500">{t("note.reposted")}</span>
-            </div>
-          </div>
-        </User.Root>
-      </User.Provider>
-      {isLoading ? (
-        <Spinner />
-      ) : isError ? (
-        <div className="w-full h-16 flex items-center px-3 border border-neutral-100 dark:border-neutral-900">
-          <p>Event not found</p>
-        </div>
-      ) : (
-        <Note.Provider event={repostEvent}>
-          <div className="flex flex-col gap-2">
-            <Note.User />
-            <div className="flex gap-3">
-              <div className="size-11 shrink-0" />
-              <div className="min-w-0 flex-1">
-                <Note.Content />
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="-ml-1 inline-flex items-center gap-4">
-                    <Note.Reply />
-                    <Note.Repost />
-                    <Note.Pin />
-                    {settings.zap ? <Note.Zap /> : null}
-                  </div>
-                  <Note.Menu />
-                </div>
-              </div>
-            </div>
-          </div>
-        </Note.Provider>
-      )}
-    </Note.Root>
-  );
+				const id = event.tags.find((el) => el[0] === "e")?.[1];
+				const repostEvent = await ark.get_event(id);
+
+				return repostEvent;
+			} catch (e) {
+				throw new Error(e);
+			}
+		},
+		refetchOnWindowFocus: false,
+		refetchOnMount: false,
+	});
+
+	return (
+		<Note.Root
+			className={cn(
+				"bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl mb-3 shadow-primary dark:ring-1 ring-neutral-800/50",
+				className,
+			)}
+		>
+			<User.Provider pubkey={event.pubkey}>
+				<User.Root className="flex items-center gap-2 px-3 py-3 border-b border-neutral-100 dark:border-neutral-800/50 rounded-t-xl">
+					<div className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+						Reposted by
+					</div>
+					<User.Avatar className="size-6 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+				</User.Root>
+			</User.Provider>
+			{isLoading ? (
+				<div className="flex h-20 items-center justify-center gap-2">
+					<Spinner />
+					Loading event...
+				</div>
+			) : isError || !repostEvent ? (
+				<div className="flex h-20 items-center justify-center">
+					Event not found within your current relay set
+				</div>
+			) : (
+				<Note.Provider event={repostEvent}>
+					<Note.Root>
+						<div className="px-3 h-14 flex items-center justify-between">
+							<Note.User />
+							<Note.Menu />
+						</div>
+						<Note.Content className="px-3" />
+						<div className="mt-3 flex items-center gap-4 h-14 px-3">
+							<Note.Open />
+							<Note.Reply />
+							<Note.Repost />
+							<Note.Zap />
+						</div>
+					</Note.Root>
+				</Note.Provider>
+			)}
+		</Note.Root>
+	);
 }

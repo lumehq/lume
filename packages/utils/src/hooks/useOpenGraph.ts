@@ -1,4 +1,4 @@
-import { type Opengraph } from "@lume/types";
+import type { Opengraph } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -13,7 +13,7 @@ export function useOpenGraph(url: string) {
 				throw new Error("fetch preview failed");
 			}
 		},
-		staleTime: Infinity,
+		staleTime: Number.POSITIVE_INFINITY,
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,
 		refetchOnReconnect: false,

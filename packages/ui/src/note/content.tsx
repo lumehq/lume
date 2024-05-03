@@ -1,131 +1,120 @@
-import { Kind, Settings } from "@lume/types";
-import {
-  AUDIOS,
-  IMAGES,
-  NOSTR_EVENTS,
-  NOSTR_MENTIONS,
-  VIDEOS,
-  cn,
-} from "@lume/utils";
-import { useNoteContext } from "./provider";
-import { ReactNode, useMemo } from "react";
-import { nanoid } from "nanoid";
-import { MentionUser } from "./mentions/user";
-import { MentionNote } from "./mentions/note";
-import { Hashtag } from "./mentions/hashtag";
-import { VideoPreview } from "./preview/video";
-import { ImagePreview } from "./preview/image";
+import { NOSTR_EVENTS, NOSTR_MENTIONS, cn, parser } from "@lume/utils";
+import { type ReactNode, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
+import { Hashtag } from "./mentions/hashtag";
+import { MentionNote } from "./mentions/note";
+import { MentionUser } from "./mentions/user";
+import { Images } from "./preview/images";
+import { Videos } from "./preview/videos";
+import { useNoteContext } from "./provider";
 import { useRouteContext } from "@tanstack/react-router";
 
-export function NoteContent({ className }: { className?: string }) {
-  const { settings }: { settings: Settings } = useRouteContext({
-    strict: false,
-  });
-  const event = useNoteContext();
-  const content = useMemo(() => {
-    const text = event.content.trim();
-    const words = text.split(/( |\n)/);
-    const hashtags = words.filter((word) => word.startsWith("#"));
-    const events = words.filter((word) =>
-      NOSTR_EVENTS.some((el) => word.startsWith(el)),
-    );
-    const mentions = words.filter((word) =>
-      NOSTR_MENTIONS.some((el) => word.startsWith(el)),
-    );
+export function NoteContent({
+	quote = true,
+	mention = true,
+	clean,
+	className,
+}: {
+	quote?: boolean;
+	mention?: boolean;
+	clean?: boolean;
+	className?: string;
+}) {
+	const { ark } = useRouteContext({ strict: false });
+	const event = useNoteContext();
+	const data = useMemo(() => {
+		const { content, images, videos } = parser(event.content);
+		const words = content.split(/( |\n)/);
+		const hashtags = words.filter((word) => word.startsWith("#"));
+		const events = words.filter((word) =>
+			NOSTR_EVENTS.some((el) => word.startsWith(el)),
+		);
+		const mentions = words.filter((word) =>
+			NOSTR_MENTIONS.some((el) => word.startsWith(el)),
+		);
 
-    let parsedContent: ReactNode[] | string = text;
+		let richContent: ReactNode[] | string = content;
 
-    try {
-      if (hashtags.length) {
-        for (const hashtag of hashtags) {
-          const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
-          parsedContent = reactStringReplace(parsedContent, regex, () => {
-            return <Hashtag key={nanoid()} tag={hashtag} />;
-          });
-        }
-      }
+		try {
+			if (hashtags.length) {
+				for (const hashtag of hashtags) {
+					const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
+					richContent = reactStringReplace(richContent, regex, (_, index) => {
+						return <Hashtag key={hashtag + index} tag={hashtag} />;
+					});
+				}
+			}
 
-      if (events.length) {
-        for (const event of events) {
-          parsedContent = reactStringReplace(
-            parsedContent,
-            event,
-            (match, i) => <MentionNote key={match + i} eventId={event} />,
-          );
-        }
-      }
+			if (events.length) {
+				for (const event of events) {
+					if (quote) {
+						richContent = reactStringReplace(richContent, event, (_, index) => (
+							<MentionNote key={event + index} eventId={event} />
+						));
+					}
 
-      if (mentions.length) {
-        for (const mention of mentions) {
-          parsedContent = reactStringReplace(
-            parsedContent,
-            mention,
-            (match, i) => <MentionUser key={match + i} pubkey={mention} />,
-          );
-        }
-      }
+					if (!quote && clean) {
+						richContent = reactStringReplace(richContent, event, () => null);
+					}
+				}
+			}
 
-      parsedContent = reactStringReplace(
-        parsedContent,
-        /(https?:\/\/\S+)/gi,
-        (match, i) => {
-          try {
-            const url = new URL(match);
-            const ext = url.pathname.split(".")[1];
+			if (mentions.length) {
+				for (const user of mentions) {
+					if (mention) {
+						richContent = reactStringReplace(richContent, user, (_, index) => (
+							<MentionUser key={user + index} pubkey={user} />
+						));
+					}
 
-            if (!settings.enhancedPrivacy) {
-              if (IMAGES.includes(ext)) {
-                return <ImagePreview key={match + i} url={url.toString()} />;
-              }
+					if (!mention && clean) {
+						richContent = reactStringReplace(richContent, user, () => null);
+					}
+				}
+			}
 
-              if (VIDEOS.includes(ext)) {
-                return <VideoPreview key={match + i} url={url.toString()} />;
-              }
+			richContent = reactStringReplace(
+				richContent,
+				/(https?:\/\/\S+)/gi,
+				(match, index) => (
+					<a
+						key={match + index}
+						href={match}
+						target="_blank"
+						rel="noreferrer"
+						className="line-clamp-1 text-blue-500 hover:text-blue-600"
+						onClick={(e) => e.stopPropagation()}
+					>
+						{match}
+					</a>
+				),
+			);
 
-              if (AUDIOS.includes(ext)) {
-                return <VideoPreview key={match + i} url={url.toString()} />;
-              }
-            }
+			richContent = reactStringReplace(
+				richContent,
+				/(\r\n|\r|\n)+/g,
+				(_, index) => <div key={`${event.id}_div_${index}`} className="h-3" />,
+			);
 
-            return (
-              <a
-                key={match + i}
-                href={match}
-                target="_blank"
-                rel="noreferrer"
-                className="content-break w-full font-normal text-blue-500 hover:text-blue-600"
-              >
-                {match}
-              </a>
-            );
-          } catch {
-            return (
-              <a
-                key={match + i}
-                href={match}
-                target="_blank"
-                rel="noreferrer"
-                className="content-break w-full font-normal text-blue-500 hover:text-blue-600"
-              >
-                {match}
-              </a>
-            );
-          }
-        },
-      );
+			return { content: richContent, images, videos };
+		} catch (e) {
+			return { content, images, videos };
+		}
+	}, []);
 
-      return parsedContent;
-    } catch (e) {
-      return text;
-    }
-  }, []);
-
-  return (
-    <div className={cn("select-text", className)}>
-      <div className="content-break whitespace-pre-line text-balance leading-normal">
-        {content}
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex flex-col gap-2">
+			<div
+				className={cn(
+					"select-text text-[15px] text-balance break-words overflow-hidden",
+					event.content.length > 500 ? "max-h-[300px] gradient-mask-b-0" : "",
+					className,
+				)}
+			>
+				{data.content}
+			</div>
+			{data.images.length ? <Images urls={data.images} /> : null}
+			{data.videos.length ? <Videos urls={data.videos} /> : null}
+		</div>
+	);
 }

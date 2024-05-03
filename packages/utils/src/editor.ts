@@ -1,8 +1,8 @@
+import type { Contact } from "@lume/types";
+import type { ReactNode } from "react";
 import ReactDOM from "react-dom";
-import { ReactNode } from "react";
-import { BaseEditor, Transforms } from "slate";
+import { type BaseEditor, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
-import { Contact } from "@lume/types";
 
 export const Portal = ({ children }: { children?: ReactNode }) => {
 	return typeof document === "object"

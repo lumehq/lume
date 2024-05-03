@@ -1,4 +1,8 @@
 use std::path::PathBuf;
+use tauri::utils::config::WindowEffectsConfig;
+use tauri::window::Effect;
+use tauri::TitleBarStyle;
+use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
 
 #[tauri::command]
@@ -19,6 +23,8 @@ pub fn create_column(
         let webview_url = WebviewUrl::App(path);
         let builder = tauri::webview::WebviewBuilder::new(label, webview_url)
           .user_agent("Lume/4.0")
+          .zoom_hotkeys_enabled(true)
+          .enable_clipboard_access()
           .transparent(true);
         match main_window.add_child(
           builder,
@@ -79,9 +85,54 @@ pub fn resize_column(
       if let Ok(_) = webview.set_size(LogicalSize::new(width, height)) {
         Ok(())
       } else {
-        Err("Reposition column failed".into())
+        Err("Resize column failed".into())
       }
     }
     None => Err("Webview not found".into()),
   }
+}
+
+#[tauri::command]
+pub fn open_window(
+  label: &str,
+  title: &str,
+  url: &str,
+  width: f64,
+  height: f64,
+  app_handle: tauri::AppHandle,
+) -> Result<(), String> {
+  if let Some(window) = app_handle.get_window(label) {
+    if window.is_visible().unwrap_or_default() {
+      let _ = window.set_focus();
+    } else {
+      let _ = window.show();
+      let _ = window.set_focus();
+    };
+  } else {
+    #[cfg(target_os = "macos")]
+    let _ = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
+      .title(title)
+      .min_inner_size(width, height)
+      .inner_size(width, height)
+      .hidden_title(true)
+      .title_bar_style(TitleBarStyle::Overlay)
+      .transparent(true)
+      .effects(WindowEffectsConfig {
+        state: None,
+        effects: vec![Effect::WindowBackground],
+        radius: None,
+        color: None,
+      })
+      .build()
+      .unwrap();
+    #[cfg(not(target_os = "macos"))]
+    let _ = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
+      .title(title)
+      .min_inner_size(width, height)
+      .inner_size(width, height)
+      .build()
+      .unwrap();
+  }
+
+  Ok(())
 }

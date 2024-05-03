@@ -1,5 +1,5 @@
+import type { Metadata } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
-import { Metadata } from "@lume/types";
 import { invoke } from "@tauri-apps/api/core";
 
 export function useProfile(pubkey: string, embed?: string) {
@@ -27,7 +27,7 @@ export function useProfile(pubkey: string, embed?: string) {
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
-		staleTime: Infinity,
+		staleTime: Number.POSITIVE_INFINITY,
 		retry: 2,
 	});
 

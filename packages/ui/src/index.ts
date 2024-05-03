@@ -1,6 +1,6 @@
 export * from "./user";
 export * from "./note";
-export * from "./column";
+export * from "./note/mentions/note";
 
 // UI
 export * from "./container";

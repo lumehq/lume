@@ -1,4 +1,4 @@
-import { Event } from "@lume/types";
+import type { Event } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -21,7 +21,7 @@ export function useEvent(id: string) {
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,
 		refetchOnReconnect: false,
-		staleTime: Infinity,
+		staleTime: Number.POSITIVE_INFINITY,
 		retry: 2,
 	});
 

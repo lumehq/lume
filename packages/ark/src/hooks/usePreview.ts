@@ -16,7 +16,7 @@ export function usePreview(url: string) {
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,
 		refetchOnReconnect: false,
-		staleTime: Infinity,
+		staleTime: Number.POSITIVE_INFINITY,
 		retry: 2,
 	});
 

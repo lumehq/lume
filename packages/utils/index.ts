@@ -7,6 +7,7 @@ export * from "./src/nip94";
 export * from "./src/notification";
 export * from "./src/cn";
 export * from "./src/image";
+export * from "./src/parser";
 
 // Hooks
 export * from "./src/hooks/useNetworkStatus";

@@ -3,6 +3,9 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"files": {
+    "ignore": ["apps/desktop2/src/router.gen.ts"]
+  },
 	"linter": {
 		"enabled": true,
 		"rules": {
