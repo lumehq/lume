@@ -12,7 +12,7 @@ export function Reply({ event }: { event: EventWithReplies }) {
 					<Note.Menu />
 				</div>
 				<Note.ContentLarge className="px-3" />
-				<div className="mt-3 flex items-center gap-4 px-3">
+				<div className="mt-3 flex items-center gap-4 px-3 h-14">
 					<Note.Reply />
 					<Note.Repost />
 					<Note.Zap />
@@ -20,7 +20,7 @@ export function Reply({ event }: { event: EventWithReplies }) {
 				<div
 					className={cn(
 						event.replies?.length > 0
-							? "mt-3 py-2 pl-3 flex flex-col gap-3 divide-y divide-neutral-100 bg-neutral-50 dark:bg-white/5 border-l-2 border-blue-500 dark:divide-neutral-900"
+							? "py-2 pl-3 flex flex-col gap-3 divide-y divide-neutral-100 bg-neutral-50 dark:bg-white/5 border-l-2 border-blue-500 dark:divide-neutral-900"
 							: "",
 					)}
 				>

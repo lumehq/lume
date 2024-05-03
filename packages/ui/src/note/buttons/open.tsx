@@ -11,13 +11,13 @@ export function NoteOpenThread() {
 		let root: string = undefined;
 		let reply: string = undefined;
 
-		const eTags = event.tags.filter((tag) => tag[0] === "e");
+		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
 
 		root = eTags.find((el) => el[3] === "root")?.[1];
 		reply = eTags.find((el) => el[3] === "reply")?.[1];
 
-		if (!root) root = eTags[0][1];
-		if (!reply) reply = eTags[1][1];
+		if (!root) root = eTags[0]?.[1];
+		if (!reply) reply = eTags[1]?.[1];
 
 		ark.open_thread(root ?? reply ?? event.id);
 	};
@@ -36,7 +36,7 @@ export function NoteOpenThread() {
 				</Tooltip.Trigger>
 				<Tooltip.Portal>
 					<Tooltip.Content className="inline-flex h-7 select-none text-neutral-50 dark:text-neutral-950 items-center justify-center rounded-md bg-neutral-950 dark:bg-neutral-50 px-3.5 text-sm will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
-						Open thread in new window
+						Open
 						<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 					</Tooltip.Content>
 				</Tooltip.Portal>

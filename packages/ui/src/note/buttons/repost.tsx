@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Spinner } from "../../spinner";
 import { useNoteContext } from "../provider";
 
-export function NoteRepost() {
+export function NoteRepost({ large = false }: { large?: boolean }) {
 	const { ark } = useRouteContext({ strict: false });
 	const event = useNoteContext();
 
@@ -19,6 +19,7 @@ export function NoteRepost() {
 
 	const repost = async () => {
 		try {
+			if (isRepost) return;
 			setLoading(true);
 
 			// repost
@@ -44,18 +45,21 @@ export function NoteRepost() {
 						<Tooltip.Trigger asChild>
 							<button
 								type="button"
-								className="group inline-flex size-7 items-center justify-center text-neutral-800 dark:text-neutral-200"
+								className={cn(
+									"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200 rounded-full",
+									large
+										? "bg-neutral-100 dark:bg-white/10 h-7 gap-1.5 w-24 text-sm font-medium hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
+										: "size-7",
+								)}
 							>
 								{loading ? (
 									<Spinner className="size-4" />
 								) : (
 									<RepostIcon
-										className={cn(
-											"size-4 group-hover:text-blue-600",
-											isRepost ? "text-blue-500" : "",
-										)}
+										className={cn("size-4", isRepost ? "text-blue-500" : "")}
 									/>
 								)}
+								{large ? "Repost" : null}
 							</button>
 						</Tooltip.Trigger>
 					</DropdownMenu.Trigger>

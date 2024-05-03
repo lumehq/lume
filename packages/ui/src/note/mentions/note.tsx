@@ -3,6 +3,7 @@ import { LinkIcon } from "@lume/icons";
 import { useRouteContext } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { User } from "../../user";
+import { cn } from "@lume/utils";
 
 export function MentionNote({
 	eventId,
@@ -52,7 +53,12 @@ export function MentionNote({
 					</div>
 				</User.Root>
 			</User.Provider>
-			<div className="px-3 line-clamp-3 select-text content-break whitespace-normal text-balance leading-normal">
+			<div
+				className={cn(
+					"px-3 select-text content-break whitespace-normal text-balance leading-normal",
+					data.content.length > 100 ? "max-h-[150px] gradient-mask-b-0" : "",
+				)}
+			>
 				{data.content}
 			</div>
 			{openable ? (
@@ -60,7 +66,7 @@ export function MentionNote({
 					<button
 						type="button"
 						onClick={() => ark.open_thread(data.id)}
-						className="h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-neutral-100 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
+						className="z-10 h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-neutral-100 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
 					>
 						View post
 						<LinkIcon className="size-4" />

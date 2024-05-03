@@ -60,8 +60,10 @@ function MainNote({ data }: { data: Event }) {
 					<Note.Menu />
 				</div>
 				<Note.ContentLarge className="px-3" />
-				<div className="mt-4 flex items-center justify-end px-3">
-					<Note.Zap />
+				<div className="mt-4 h-11 gap-2 flex items-center justify-end px-3">
+					<Note.Reply large />
+					<Note.Repost large />
+					<Note.Zap large />
 				</div>
 			</Note.Root>
 		</Note.Provider>
