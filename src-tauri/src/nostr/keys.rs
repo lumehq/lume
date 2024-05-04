@@ -172,22 +172,6 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
         client.set_signer(Some(signer)).await;
       }
 
-      // Verify signer
-      let signer = client.signer().await.unwrap();
-
-      // Get public key
-      let public_key = signer.public_key().await.unwrap();
-      let filter = Filter::new().pubkey(public_key).limit(200).kinds(vec![
-        Kind::TextNote,
-        Kind::Repost,
-        Kind::ZapReceipt,
-        Kind::EncryptedDirectMessage,
-        Kind::SealedDirect,
-      ]);
-
-      // Setup negentropy for user's activity
-      let _ = client.reconcile(filter, NegentropyOptions::default()).await;
-
       Ok(true)
     }
     Err(err) => Err(err.to_string()),

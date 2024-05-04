@@ -1,13 +1,14 @@
-import type {
-	Account,
-	Contact,
-	Event,
-	EventWithReplies,
-	Interests,
-	Keys,
-	LumeColumn,
-	Metadata,
-	Settings,
+import {
+	Kind,
+	type Account,
+	type Contact,
+	type Event,
+	type EventWithReplies,
+	type Interests,
+	type Keys,
+	type LumeColumn,
+	type Metadata,
+	type Settings,
 } from "@lume/types";
 import { generateContentTags } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
@@ -169,8 +170,6 @@ export class Ark {
 			if (asOf && asOf > 0) until = asOf.toString();
 
 			const seenIds = new Set<string>();
-			const dedupQueue = new Set<string>();
-
 			const nostrEvents: Event[] = await invoke("get_events", {
 				limit,
 				until,
@@ -178,24 +177,24 @@ export class Ark {
 				global: isGlobal,
 			});
 
+			// remove duplicate event
 			for (const event of nostrEvents) {
+				if (event.kind === Kind.Repost) {
+					const repostId = event.tags.find((tag) => tag[0] === "e")?.[1];
+					seenIds.add(repostId);
+				}
+
 				const eventIds = event.tags
-					.filter((el) => el[3] === "root" || el[3] === "reply")
+					.filter((el) => el[0] === "e")
 					?.map((item) => item[1]);
 
-				if (eventIds.length) {
-					for (const id of eventIds) {
-						if (seenIds.has(id)) {
-							dedupQueue.add(event.id);
-							break;
-						}
-						seenIds.add(id);
-					}
+				if (eventIds && eventIds.length) {
+					eventIds.forEach((id) => seenIds.add(id));
 				}
 			}
 
 			const events = nostrEvents
-				.filter((event) => !dedupQueue.has(event.id))
+				.filter((event) => !seenIds.has(event.id))
 				.sort((a, b) => b.created_at - a.created_at);
 
 			if (this.settings?.nsfw) {

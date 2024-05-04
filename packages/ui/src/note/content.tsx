@@ -7,7 +7,7 @@ import { MentionUser } from "./mentions/user";
 import { Images } from "./preview/images";
 import { Videos } from "./preview/videos";
 import { useNoteContext } from "./provider";
-import { useRouteContext } from "@tanstack/react-router";
+import { nanoid } from "nanoid";
 
 export function NoteContent({
 	quote = true,
@@ -20,7 +20,6 @@ export function NoteContent({
 	clean?: boolean;
 	className?: string;
 }) {
-	const { ark } = useRouteContext({ strict: false });
 	const event = useNoteContext();
 	const data = useMemo(() => {
 		const { content, images, videos } = parser(event.content);
@@ -90,11 +89,9 @@ export function NoteContent({
 				),
 			);
 
-			richContent = reactStringReplace(
-				richContent,
-				/(\r\n|\r|\n)+/g,
-				(_, index) => <div key={`${event.id}_div_${index}`} className="h-3" />,
-			);
+			richContent = reactStringReplace(richContent, /(\r\n|\r|\n)+/g, () => (
+				<div key={nanoid()} className="h-3" />
+			));
 
 			return { content: richContent, images, videos };
 		} catch (e) {
