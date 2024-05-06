@@ -1,3 +1,4 @@
+import { NoteActivity } from "./activity";
 import { NoteOpenThread } from "./buttons/open";
 import { NoteReply } from "./buttons/reply";
 import { NoteRepost } from "./buttons/repost";
@@ -24,4 +25,5 @@ export const Note = {
 	Open: NoteOpenThread,
 	Child: NoteChild,
 	Thread: NoteThread,
+	Activity: NoteActivity,
 };

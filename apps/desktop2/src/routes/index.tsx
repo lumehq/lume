@@ -2,12 +2,18 @@ import { PlusIcon } from "@lume/icons";
 import { Spinner, User } from "@lume/ui";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: async ({ context }) => {
 		const ark = context.ark;
 		const accounts = await ark.get_all_accounts();
+
+		// Run notification service
+		if (accounts.length > 0) {
+			await invoke("run_notification", { accounts });
+		}
 
 		switch (accounts.length) {
 			// Guest account
@@ -18,7 +24,7 @@ export const Route = createFileRoute("/")({
 				});
 			// Only 1 account, skip account selection screen
 			case 1: {
-				const account = accounts[0].npub;
+				const account = accounts[0];
 				const loadedAccount = await ark.load_selected_account(account);
 
 				if (loadedAccount) {
@@ -83,10 +89,10 @@ function Screen() {
 							{context.accounts.map((account) => (
 								<button
 									type="button"
-									key={account.npub}
-									onClick={() => select(account.npub)}
+									key={account}
+									onClick={() => select(account)}
 								>
-									<User.Provider pubkey={account.npub}>
+									<User.Provider pubkey={account}>
 										<User.Root className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-2xl p-2 hover:bg-white/10 dark:hover:bg-black/10">
 											<User.Avatar className="size-20 rounded-full object-cover" />
 											<User.Name className="max-w-[5rem] truncate text-lg font-medium leading-tight text-white" />

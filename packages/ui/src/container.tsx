@@ -14,11 +14,16 @@ export function Container({
 	className?: string;
 }) {
 	return (
-		<div className={cn("flex h-screen w-screen flex-col", className)}>
+		<div
+			className={cn(
+				"bg-transparent flex h-screen w-screen flex-col",
+				className,
+			)}
+		>
 			{withDrag ? (
 				<div
 					data-tauri-drag-region
-					className="flex h-11 w-full shrink-0 items-center justify-end pr-2"
+					className="bg-transparent flex h-11 w-full shrink-0 items-center justify-end pr-2"
 				>
 					{withNavigate ? (
 						<div className="flex items-center gap-1">

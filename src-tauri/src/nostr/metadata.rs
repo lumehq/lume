@@ -2,7 +2,7 @@ use crate::Nostr;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
-use tauri::State;
+use tauri::{Manager, State};
 use url::Url;
 
 #[derive(serde::Serialize)]
@@ -12,35 +12,78 @@ pub struct CacheContact {
 }
 
 #[tauri::command]
-pub async fn connect_user_relays(state: State<'_, Nostr>) -> Result<(), ()> {
-  let client = &state.client;
-  let signer = client.signer().await.unwrap();
-  let public_key = signer.public_key().await.unwrap();
+pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<(), ()> {
+  tauri::async_runtime::spawn(async move {
+    let window = app.get_window("main").unwrap();
+    let state = window.state::<Nostr>();
+    let client = &state.client;
+    let pubkeys: Vec<PublicKey> = accounts
+      .into_iter()
+      .map(|f| PublicKey::from_bech32(f).unwrap())
+      .collect();
+    let subscription = Filter::new()
+      .pubkeys(pubkeys)
+      .kinds(vec![
+        Kind::TextNote,
+        Kind::Repost,
+        Kind::ZapReceipt,
+        Kind::EncryptedDirectMessage,
+      ])
+      .since(Timestamp::now());
+    let activity_id = SubscriptionId::new("activity");
 
-  // Get user's relay list
-  let filter = Filter::new()
-    .author(public_key)
-    .kind(Kind::RelayList)
-    .limit(1);
-  let query = client
-    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-    .await;
+    // Create a subscription for activity
+    client
+      .subscribe_with_id(activity_id.clone(), vec![subscription], None)
+      .await;
 
-  // Connect user's relay list
-  if let Ok(events) = query {
-    if let Some(event) = events.first() {
-      let list = nip65::extract_relay_list(&event);
-      for item in list.into_iter() {
-        println!("connecting to relay: {}", item.0.to_string());
-        client
-          .connect_relay(item.0.to_string())
-          .await
-          .unwrap_or_default();
-      }
-    }
-  }
+    // Handle notifications
+    let _ = client
+      .handle_notifications(|notification| async {
+        if let RelayPoolNotification::Event {
+          subscription_id,
+          event,
+          ..
+        } = notification
+        {
+          if subscription_id == activity_id {
+            let _ = app.emit_to("main", "activity", event.as_json());
+          }
+        }
+        Ok(false)
+      })
+      .await;
+  });
 
   Ok(())
+}
+
+#[tauri::command]
+pub async fn get_activities(
+  account: &str,
+  kind: &str,
+  state: State<'_, Nostr>,
+) -> Result<Vec<Event>, String> {
+  let client = &state.client;
+
+  if let Ok(pubkey) = PublicKey::from_str(account) {
+    if let Ok(kind) = Kind::from_str(kind) {
+      let filter = Filter::new()
+        .pubkey(pubkey)
+        .kind(kind)
+        .limit(100)
+        .until(Timestamp::now());
+
+      match client.get_events_of(vec![filter], None).await {
+        Ok(events) => Ok(events),
+        Err(err) => Err(err.to_string()),
+      }
+    } else {
+      Err("Kind is not valid, please check again.".into())
+    }
+  } else {
+    Err("Public Key is not valid, please check again.".into())
+  }
 }
 
 #[tauri::command]

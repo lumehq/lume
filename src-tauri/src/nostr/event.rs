@@ -54,7 +54,7 @@ pub async fn get_events_from(
     };
     let filter = Filter::new()
       .kinds(vec![Kind::TextNote, Kind::Repost])
-      .authors(vec![author])
+      .author(author)
       .limit(limit)
       .until(until);
 

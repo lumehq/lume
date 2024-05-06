@@ -21,7 +21,7 @@ export const Route = createFileRoute("/trending")({
 	component: Screen,
 });
 
-export function Screen() {
+function Screen() {
 	return (
 		<div className="flex flex-col h-full">
 			<div className="h-11 shrink-0 inline-flex w-full items-center gap-1 px-3">

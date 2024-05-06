@@ -30,19 +30,17 @@ fn main() {
   tauri::Builder::default()
     .setup(|app| {
       #[cfg(target_os = "macos")]
-      app.set_activation_policy(tauri::ActivationPolicy::Regular);
-
-      #[cfg(target_os = "macos")]
       setup_traffic_light_positioner(app.get_window("main").unwrap());
 
-      let _tray = tray::create_tray(app.handle()).unwrap();
+      // Setup app tray
       let handle = app.handle().clone();
-      let home_dir = handle.path().home_dir().unwrap();
+      let _ = tray::create_tray(app.handle()).unwrap();
 
-      // create data folder if not exist
+      // Create data folder if not exist
+      let home_dir = app.path().home_dir().unwrap();
       fs::create_dir_all(home_dir.join("Lume/")).unwrap();
 
-      tauri::async_runtime::spawn(async move {
+      tauri::async_runtime::block_on(async move {
         // Create nostr database connection
         let sqlite = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
 
@@ -59,13 +57,9 @@ fn main() {
           .await
           .expect("Cannot connect to relay.nostr.net, please try again later.");
         client
-          .add_relay("wss://relay.nostr.band")
+          .add_relay("wss://bostr.nokotaro.work/")
           .await
-          .expect("Cannot connect to relay.nostr.band, please try again later.");
-        client
-          .add_relay("wss://welcome.nostr.wine")
-          .await
-          .expect("Cannot connect to welcome.nostr.wine, please try again later.");
+          .expect("Cannot connect to bostr.nokotaro.work, please try again later.");
 
         // Connect
         client.connect().await;
@@ -111,7 +105,8 @@ fn main() {
       nostr::keys::user_to_bech32,
       nostr::keys::to_npub,
       nostr::keys::verify_nip05,
-      nostr::metadata::connect_user_relays,
+      nostr::metadata::run_notification,
+      nostr::metadata::get_activities,
       nostr::metadata::get_current_user_profile,
       nostr::metadata::get_profile,
       nostr::metadata::get_contact_list,
@@ -141,7 +136,9 @@ fn main() {
       commands::window::close_column,
       commands::window::reposition_column,
       commands::window::resize_column,
-      commands::window::open_window
+      commands::window::open_window,
+      commands::window::get_path,
+      commands::window::navigate
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")

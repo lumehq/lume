@@ -1,5 +1,4 @@
-import { ComposeFilledIcon, PlusIcon, SearchIcon } from "@lume/icons";
-import type { Account } from "@lume/types";
+import { BellIcon, ComposeFilledIcon, PlusIcon, SearchIcon } from "@lume/icons";
 import { User } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
@@ -10,8 +9,10 @@ export const Route = createFileRoute("/$account")({
 });
 
 function Screen() {
-	const navigate = Route.useNavigate();
+	const { account } = Route.useParams();
 	const { ark, platform } = Route.useRouteContext();
+
+	const navigate = Route.useNavigate();
 
 	return (
 		<div className="flex h-screen w-screen flex-col">
@@ -31,15 +32,8 @@ function Screen() {
 					>
 						<PlusIcon className="size-5" />
 					</button>
-					<button
-						type="button"
-						onClick={() => ark.open_search()}
-						className="inline-flex size-8 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
-					>
-						<SearchIcon className="size-4" />
-					</button>
 				</div>
-				<div className="flex items-center gap-3">
+				<div className="flex items-center gap-2">
 					<button
 						type="button"
 						onClick={() => ark.open_editor()}
@@ -47,6 +41,21 @@ function Screen() {
 					>
 						<ComposeFilledIcon className="size-4" />
 						New Post
+					</button>
+					<button
+						type="button"
+						onClick={() => ark.open_activity(account)}
+						className="relative inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+					>
+						<BellIcon className="size-5" />
+						{/* <span className="absolute right-0 top-0 block size-2 rounded-full bg-teal-500 ring-1 ring-black/5"></span> */}
+					</button>
+					<button
+						type="button"
+						onClick={() => ark.open_search()}
+						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+					>
+						<SearchIcon className="size-5" />
 					</button>
 					<div id="toolbar" />
 				</div>
@@ -63,7 +72,7 @@ export function Accounts() {
 	const { ark } = Route.useRouteContext();
 	const { account } = Route.useParams();
 
-	const [accounts, setAccounts] = useState<Account[]>([]);
+	const [accounts, setAccounts] = useState<string[]>([]);
 
 	const changeAccount = async (npub: string) => {
 		if (npub === account) return;
@@ -84,16 +93,12 @@ export function Accounts() {
 	return (
 		<div data-tauri-drag-region className="flex items-center gap-3">
 			{accounts.map((user) => (
-				<button
-					key={user.npub}
-					type="button"
-					onClick={() => changeAccount(user.npub)}
-				>
-					<User.Provider pubkey={user.npub}>
+				<button key={user} type="button" onClick={() => changeAccount(user)}>
+					<User.Provider pubkey={user}>
 						<User.Root
 							className={cn(
 								"rounded-full",
-								user.npub === account
+								user === account
 									? "ring-1 ring-teal-500 ring-offset-2 ring-offset-neutral-200 dark:ring-offset-neutral-950"
 									: "",
 							)}
@@ -101,7 +106,7 @@ export function Accounts() {
 							<User.Avatar
 								className={cn(
 									"aspect-square h-auto rounded-full object-cover",
-									user.npub === account ? "w-7" : "w-8",
+									user === account ? "w-7" : "w-8",
 								)}
 							/>
 						</User.Root>

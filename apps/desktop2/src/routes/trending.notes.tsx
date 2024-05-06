@@ -1,6 +1,5 @@
-import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { type Event, Kind } from "@lume/types";
+import { type Event } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { defer } from "@tanstack/react-router";

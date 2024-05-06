@@ -1,6 +1,5 @@
 import {
 	Kind,
-	type Account,
 	type Contact,
 	type Event,
 	type EventWithReplies,
@@ -33,17 +32,12 @@ export class Ark {
 
 	public async get_all_accounts() {
 		try {
-			const accounts: Account[] = [];
 			const cmd: string[] = await invoke("get_accounts");
+			const accounts: string[] = cmd.map((item) => item.replace(".npub", ""));
 
-			if (cmd) {
-				for (const item of cmd) {
-					accounts.push({ npub: item.replace(".npub", "") });
-				}
-				return accounts;
-			}
-		} catch {
-			return [];
+			return accounts;
+		} catch (e) {
+			throw new Error(String(e));
 		}
 	}
 
@@ -52,11 +46,19 @@ export class Ark {
 			const cmd: boolean = await invoke("load_selected_account", {
 				npub,
 			});
-			await invoke("connect_user_relays");
-
 			return cmd;
 		} catch (e) {
 			throw new Error(String(e));
+		}
+	}
+
+	public async get_activities(account: string, kind: "1" | "6" | "9735" = "1") {
+		try {
+			const events: Event[] = await invoke("get_activities", { account, kind });
+			return events;
+		} catch (e) {
+			console.error(String(e));
+			return null;
 		}
 	}
 
@@ -130,13 +132,14 @@ export class Ark {
 			if (asOf && asOf > 0) until = asOf.toString();
 
 			const nostrEvents: Event[] = await invoke("get_events_from", {
-				public_key: pubkey,
+				publicKey: pubkey,
 				limit,
 				as_of: until,
 			});
 
 			return nostrEvents.sort((a, b) => b.created_at - a.created_at);
-		} catch {
+		} catch (e) {
+			console.error(String(e));
 			return [];
 		}
 	}
@@ -377,39 +380,30 @@ export class Ark {
 		}
 	}
 
-	public parse_event_thread({
-		content,
-		tags,
-	}: {
-		content: string;
-		tags: string[][];
-	}) {
-		let rootEventId: string = null;
-		let replyEventId: string = null;
+	public parse_event_thread(tags: string[][]) {
+		let root: string = null;
+		let reply: string = null;
 
 		// Get all event references from tags, ignore mention
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
 
-		if (!events.length) return null;
 		if (events.length === 1) {
-			return {
-				rootEventId: events[0][1],
-				replyEventId: null,
-			};
+			root = events[0][1];
 		}
-		if (events.length > 1) {
-			rootEventId = events.find((el) => el[3] === "root")?.[1];
-			replyEventId = events.find((el) => el[3] === "reply")?.[1];
 
-			if (!rootEventId && !replyEventId) {
-				rootEventId = events[0][1];
-				replyEventId = events[1][1];
-			}
+		if (events.length > 1) {
+			root = events.find((el) => el[3] === "root")?.[1] ?? events[0][1];
+			reply = events.find((el) => el[3] === "reply")?.[1] ?? events[1][1];
+		}
+
+		// Fix some rare case when root === reply
+		if (root && reply && root === reply) {
+			reply = null;
 		}
 
 		return {
-			rootEventId,
-			replyEventId,
+			root,
+			reply,
 		};
 	}
 
@@ -874,6 +868,21 @@ export class Ark {
 				url: "/search",
 				width: 750,
 				height: 470,
+			});
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async open_activity(account: string) {
+		try {
+			const label = "activity";
+			await invoke("open_window", {
+				label,
+				title: "Activity",
+				url: `/activity/${account}/texts`,
+				width: 400,
+				height: 600,
 			});
 		} catch (e) {
 			throw new Error(String(e));

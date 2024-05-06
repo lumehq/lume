@@ -82,7 +82,6 @@ export function NoteContent({
 						target="_blank"
 						rel="noreferrer"
 						className="line-clamp-1 text-blue-500 hover:text-blue-600"
-						onClick={(e) => e.stopPropagation()}
 					>
 						{match}
 					</a>

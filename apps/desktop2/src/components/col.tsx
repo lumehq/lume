@@ -78,7 +78,7 @@ export function Col({
 				});
 			}
 		};
-	}, [webview]);
+	}, []);
 
 	return (
 		<div className="h-full w-[440px] shrink-0 p-2">

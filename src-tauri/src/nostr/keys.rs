@@ -172,6 +172,41 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
         client.set_signer(Some(signer)).await;
       }
 
+      // Verify signer
+      let signer = client.signer().await.unwrap();
+      let public_key = signer.public_key().await.unwrap();
+
+      // Connect to user's relay
+      let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::RelayList)
+        .limit(1);
+
+      match client
+        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .await
+      {
+        Ok(events) => {
+          if let Some(event) = events.first() {
+            let relay_list = nip65::extract_relay_list(&event);
+            for item in relay_list.into_iter() {
+              println!("connecting to relay: {}", item.0.to_string());
+              // Add relay to pool
+              let _ = client
+                .add_relay(item.0.to_string())
+                .await
+                .unwrap_or_default();
+              // Connect relay
+              let _ = client
+                .connect_relay(item.0.to_string())
+                .await
+                .unwrap_or_default();
+            }
+          }
+        }
+        Err(_) => todo!(),
+      };
+
       Ok(true)
     }
     Err(err) => Err(err.to_string()),

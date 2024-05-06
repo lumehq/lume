@@ -19,10 +19,8 @@ export function EventList({ id }: { id: string }) {
 			},
 			getNextPageParam: (lastPage) => {
 				const lastEvent = lastPage?.at(-1);
-				if (!lastEvent) return;
-				return lastEvent.created_at - 1;
+				return lastEvent ? lastEvent.created_at - 1 : null;
 			},
-			select: (data) => data?.pages.flatMap((page) => page),
 			refetchOnWindowFocus: false,
 		});
 
