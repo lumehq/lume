@@ -23,12 +23,7 @@ pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<
       .collect();
     let subscription = Filter::new()
       .pubkeys(pubkeys)
-      .kinds(vec![
-        Kind::TextNote,
-        Kind::Repost,
-        Kind::ZapReceipt,
-        Kind::EncryptedDirectMessage,
-      ])
+      .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
       .since(Timestamp::now());
     let activity_id = SubscriptionId::new("activity");
 
@@ -47,7 +42,8 @@ pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<
         } = notification
         {
           if subscription_id == activity_id {
-            let _ = app.emit_to("main", "activity", event.as_json());
+            println!("new notification: {}", event.as_json());
+            let _ = app.emit("activity", event.as_json());
           }
         }
         Ok(false)
