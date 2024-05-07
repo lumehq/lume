@@ -7,38 +7,38 @@ import type { Platform } from "@tauri-apps/plugin-os";
 import type { Descendant } from "slate";
 
 type EditorElement = {
-  type: string;
-  children: Descendant[];
-  eventId?: string;
+	type: string;
+	children: Descendant[];
+	eventId?: string;
 };
 
 interface RouterContext {
-  // System
-  ark: Ark;
-  queryClient: QueryClient;
-  // App info
-  platform?: Platform;
-  locale?: string;
-  // Settings
-  settings?: Settings;
-  interests?: Interests;
-  // Profile
-  accounts?: string[];
-  profile?: Metadata;
-  // Editor
-  initialValue?: EditorElement[];
+	// System
+	ark: Ark;
+	queryClient: QueryClient;
+	// App info
+	platform?: Platform;
+	locale?: string;
+	// Settings
+	settings?: Settings;
+	interests?: Interests;
+	// Profile
+	accounts?: string[];
+	profile?: Metadata;
+	// Editor
+	initialValue?: EditorElement[];
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-  component: () => <Outlet />,
-  pendingComponent: Pending,
-  wrapInSuspense: true,
+	component: () => <Outlet />,
+	pendingComponent: Pending,
+	wrapInSuspense: true,
 });
 
 function Pending() {
-  return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center">
-      <Spinner className="size-5" />
-    </div>
-  );
+	return (
+		<div className="flex h-screen w-screen flex-col items-center justify-center">
+			<Spinner className="size-5" />
+		</div>
+	);
 }

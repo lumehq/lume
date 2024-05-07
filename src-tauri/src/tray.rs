@@ -1,7 +1,10 @@
 use std::path::PathBuf;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
-use tauri::{Manager, Runtime, WebviewUrl, WebviewWindowBuilder};
+use tauri::{
+  utils::config::WindowEffectsConfig, window::Effect, Manager, Runtime, WebviewUrl,
+  WebviewWindowBuilder,
+};
 use tauri_plugin_shell::ShellExt;
 
 pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
@@ -60,18 +63,25 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
         let _ =
           WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
             .title("Editor")
-            .min_inner_size(500., 400.)
-            .inner_size(600., 400.)
+            .min_inner_size(560., 340.)
+            .inner_size(560., 340.)
             .hidden_title(true)
             .title_bar_style(TitleBarStyle::Overlay)
+            .transparent(true)
+            .effects(WindowEffectsConfig {
+              state: None,
+              effects: vec![Effect::WindowBackground],
+              radius: None,
+              color: None,
+            })
             .build()
             .unwrap();
         #[cfg(not(target_os = "macos"))]
         let _ =
           WebviewWindowBuilder::new(app, "editor-0", WebviewUrl::App(PathBuf::from("editor")))
             .title("Editor")
-            .min_inner_size(500., 400.)
-            .inner_size(600., 400.)
+            .min_inner_size(560., 340.)
+            .inner_size(560., 340.)
             .build()
             .unwrap();
       }
@@ -92,6 +102,13 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
           .minimizable(false)
           .resizable(false)
           .title_bar_style(TitleBarStyle::Overlay)
+          .transparent(true)
+          .effects(WindowEffectsConfig {
+            state: None,
+            effects: vec![Effect::WindowBackground],
+            radius: None,
+            color: None,
+          })
           .build()
           .unwrap();
         #[cfg(not(target_os = "macos"))]
@@ -131,6 +148,13 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
         .hidden_title(true)
         .resizable(false)
         .minimizable(false)
+        .transparent(true)
+        .effects(WindowEffectsConfig {
+          state: None,
+          effects: vec![Effect::WindowBackground],
+          radius: None,
+          color: None,
+        })
         .build()
         .unwrap();
         #[cfg(not(target_os = "macos"))]

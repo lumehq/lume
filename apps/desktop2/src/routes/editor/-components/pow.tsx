@@ -1,34 +1,36 @@
-import { ReplyIcon } from "@lume/icons";
-import * as Tooltip from "@radix-ui/react-tooltip";
-import { useRouteContext } from "@tanstack/react-router";
-import { useNoteContext } from "../provider";
+import { NsfwIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import type { Dispatch, SetStateAction } from "react";
 
-export function NoteReply({ large = false }: { large?: boolean }) {
-	const event = useNoteContext();
-	const { ark } = useRouteContext({ strict: false });
-
+export function PowToggle({
+	pow,
+	setPow,
+	className,
+}: {
+	pow: boolean;
+	setPow: Dispatch<SetStateAction<boolean>>;
+	className?: string;
+}) {
 	return (
 		<Tooltip.Provider>
 			<Tooltip.Root delayDuration={150}>
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => ark.open_editor(event.id)}
+						onClick={() => setPow((prev) => !prev)}
 						className={cn(
-							"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
-							large
-								? "rounded-full bg-neutral-100 dark:bg-white/10 h-7 gap-1.5 w-24 text-sm font-medium hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
-								: "size-7",
+							"inline-flex items-center justify-center",
+							className,
+							pow ? "bg-blue-500 text-white" : "",
 						)}
 					>
-						<ReplyIcon className="shrink-0 size-4" />
-						{large ? "Reply" : null}
+						<NsfwIcon className="size-4" />
 					</button>
 				</Tooltip.Trigger>
 				<Tooltip.Portal>
 					<Tooltip.Content className="inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-neutral-50 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-50 dark:text-neutral-950">
-						Reply
+						Proof of Work
 						<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
 					</Tooltip.Content>
 				</Tooltip.Portal>

@@ -1,27 +1,18 @@
 import { ComposeFilledIcon, TrashIcon } from "@lume/icons";
-import { Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
 import { MentionNote } from "@lume/ui/src/note/mentions/note";
 import {
-	Portal,
 	cn,
 	insertImage,
-	insertMention,
 	insertNostrEvent,
 	isImageUrl,
 	sendNativeNotification,
 } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { nip19 } from "nostr-tools";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-	type Descendant,
-	Editor,
-	Node,
-	Range,
-	Transforms,
-	createEditor,
-} from "slate";
+import { type Descendant, Node, Transforms, createEditor } from "slate";
 import {
 	Editable,
 	ReactEditor,
@@ -33,6 +24,7 @@ import {
 } from "slate-react";
 import { MediaButton } from "./-components/media";
 import { NsfwToggle } from "./-components/nsfw";
+import { MentionButton } from "./-components/mention";
 
 type EditorSearch = {
 	reply_to: string;
@@ -73,31 +65,19 @@ export const Route = createFileRoute("/editor/")({
 		};
 	},
 	component: Screen,
-	pendingComponent: Pending,
 });
 
 function Screen() {
-	const ref = useRef<HTMLDivElement | null>();
 	const { reply_to, quote } = Route.useSearch();
-	const { ark, initialValue, contacts } = Route.useRouteContext();
+	const { ark, initialValue } = Route.useRouteContext();
 
 	const [t] = useTranslation();
 	const [editorValue, setEditorValue] = useState(initialValue);
-	const [target, setTarget] = useState<Range | undefined>();
-	const [index, setIndex] = useState(0);
-	const [search, setSearch] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [nsfw, setNsfw] = useState(false);
 	const [editor] = useState(() =>
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
-
-	const filters =
-		contacts
-			?.filter((c) =>
-				c?.profile.name?.toLowerCase().startsWith(search.toLowerCase()),
-			)
-			?.slice(0, 5) ?? [];
 
 	const reset = () => {
 		// @ts-expect-error, backlog
@@ -138,11 +118,15 @@ function Screen() {
 			const eventId = await ark.publish(content, reply_to, quote);
 
 			if (eventId) {
-				await sendNativeNotification("You've publish new post successfully.");
+				await sendNativeNotification(
+					"Your note has been published successfully.",
+					"Lume",
+				);
 			}
 
 			// stop loading
 			setLoading(false);
+
 			// reset form
 			reset();
 		} catch (e) {
@@ -151,58 +135,20 @@ function Screen() {
 		}
 	};
 
-	useEffect(() => {
-		if (target && filters.length > 0) {
-			const el = ref.current;
-			const domRange = ReactEditor.toDOMRange(editor, target);
-			const rect = domRange.getBoundingClientRect();
-			el.style.top = `${rect.top + window.scrollY + 24}px`;
-			el.style.left = `${rect.left + window.scrollX}px`;
-		}
-	}, [filters.length, editor, index, search, target]);
-
 	return (
-		<div className="flex h-screen w-screen flex-col bg-gradient-to-tr from-neutral-200 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
-			<Slate
-				editor={editor}
-				initialValue={editorValue}
-				onChange={() => {
-					const { selection } = editor;
-
-					if (selection && Range.isCollapsed(selection)) {
-						const [start] = Range.edges(selection);
-						const wordBefore = Editor.before(editor, start, { unit: "word" });
-						const before = wordBefore && Editor.before(editor, wordBefore);
-						const beforeRange = before && Editor.range(editor, before, start);
-						const beforeText =
-							beforeRange && Editor.string(editor, beforeRange);
-						const beforeMatch = beforeText?.match(/^@(\w+)$/);
-						const after = Editor.after(editor, start);
-						const afterRange = Editor.range(editor, start, after);
-						const afterText = Editor.string(editor, afterRange);
-						const afterMatch = afterText.match(/^(\s|$)/);
-
-						if (beforeMatch && afterMatch) {
-							setTarget(beforeRange);
-							setSearch(beforeMatch[1]);
-							setIndex(0);
-							return;
-						}
-					}
-
-					setTarget(null);
-				}}
-			>
+		<div className="w-full h-full">
+			<Slate editor={editor} initialValue={editorValue}>
 				<div
 					data-tauri-drag-region
-					className="flex h-14 w-full shrink-0 items-center justify-end gap-2 px-2"
+					className="flex h-14 w-full shrink-0 items-center justify-end gap-2 px-2 border-b border-black/10 dark:border-white/10"
 				>
 					<NsfwToggle
 						nsfw={nsfw}
 						setNsfw={setNsfw}
-						className="size-8 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+						className="size-8 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
 					/>
-					<MediaButton className="size-8 rounded-full bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700" />
+					<MentionButton className="size-8 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20" />
+					<MediaButton className="size-8 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20" />
 					<button
 						type="button"
 						onClick={() => publish()}
@@ -216,70 +162,28 @@ function Screen() {
 						{t("global.post")}
 					</button>
 				</div>
-				<div className="flex h-full min-h-0 w-full">
-					<div className="flex h-full w-full flex-1 flex-col gap-2 px-2 pb-2">
-						{reply_to && !quote ? <MentionNote eventId={reply_to} /> : null}
-						<div className="h-full w-full flex-1 overflow-hidden overflow-y-auto rounded-xl bg-white p-5 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] dark:bg-black dark:shadow-none dark:ring-1 dark:ring-white/5">
-							<Editable
-								key={JSON.stringify(editorValue)}
-								autoFocus={true}
-								autoCapitalize="none"
-								autoCorrect="none"
-								spellCheck={false}
-								renderElement={(props) => <Element {...props} />}
-								placeholder={
-									reply_to ? "Type your reply..." : t("editor.placeholder")
-								}
-								className="focus:outline-none"
-							/>
-							{target && filters.length > 0 && (
-								<Portal>
-									<div
-										ref={ref}
-										className="absolute left-[-9999px] top-[-9999px] z-10 w-[250px] rounded-xl border border-neutral-50 bg-white p-2 shadow-lg dark:border-neutral-900 dark:bg-neutral-950"
-									>
-										{filters.map((contact) => (
-											<button
-												key={contact.pubkey}
-												type="button"
-												onClick={() => {
-													Transforms.select(editor, target);
-													insertMention(editor, contact);
-													setTarget(null);
-												}}
-												className="flex w-full flex-col rounded-lg p-2 hover:bg-neutral-100 dark:hover:bg-neutral-900"
-											>
-												<User.Provider pubkey={contact.pubkey}>
-													<User.Root className="flex w-full items-center gap-2">
-														<User.Avatar className="size-7 shrink-0 rounded-full object-cover" />
-														<div className="flex w-full flex-col items-start">
-															<User.Name className="max-w-[8rem] truncate text-sm font-medium" />
-														</div>
-													</User.Root>
-												</User.Provider>
-											</button>
-										))}
-									</div>
-								</Portal>
-							)}
+				<div className="flex h-full w-full flex-1 flex-col">
+					{reply_to && !quote ? (
+						<div className="px-4 py-2">
+							<MentionNote eventId={reply_to} />
 						</div>
+					) : null}
+					<div className="overflow-y-auto p-4">
+						<Editable
+							key={JSON.stringify(editorValue)}
+							autoFocus={true}
+							autoCapitalize="none"
+							autoCorrect="none"
+							spellCheck={false}
+							renderElement={(props) => <Element {...props} />}
+							placeholder={
+								reply_to ? "Type your reply..." : t("editor.placeholder")
+							}
+							className="focus:outline-none"
+						/>
 					</div>
 				</div>
 			</Slate>
-		</div>
-	);
-}
-
-function Pending() {
-	return (
-		<div
-			data-tauri-drag-region
-			className="flex h-full w-full items-center justify-center gap-2.5"
-		>
-			<button type="button" disabled>
-				<Spinner className="size-5" />
-			</button>
-			<p>Loading cache...</p>
 		</div>
 	);
 }
@@ -429,7 +333,7 @@ const Element = (props) => {
 			return <Event {...props} />;
 		default:
 			return (
-				<p {...attributes} className="text-lg">
+				<p {...attributes} className="text-[15px]">
 					{children}
 				</p>
 			);

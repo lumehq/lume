@@ -10,9 +10,8 @@ import { useSlateStatic } from "slate-react";
 import { toast } from "sonner";
 
 export function MediaButton({ className }: { className?: string }) {
-	const { ark } = useRouteContext({ strict: false });
 	const editor = useSlateStatic();
-
+	const { ark } = useRouteContext({ strict: false });
 	const [loading, setLoading] = useState(false);
 
 	const uploadToNostrBuild = async () => {

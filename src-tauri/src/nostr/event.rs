@@ -187,9 +187,9 @@ pub async fn publish(
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let client = &state.client;
-  let final_tags = tags.into_iter().map(|val| Tag::parse(&val).unwrap());
+  let event_tags = tags.into_iter().map(|val| Tag::parse(&val).unwrap());
 
-  match client.publish_text_note(content, final_tags).await {
+  match client.publish_text_note(content, event_tags).await {
     Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
     Err(err) => Err(err.to_string()),
   }
