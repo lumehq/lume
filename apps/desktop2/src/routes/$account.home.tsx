@@ -120,29 +120,20 @@ function Screen() {
 	}, [columns]);
 
 	useEffect(() => {
-		let unlistenColEvent: Awaited<ReturnType<typeof listen>> | undefined =
-			undefined;
-		let unlistenWindowResize: Awaited<ReturnType<typeof listen>> | undefined =
-			undefined;
+		const unlistenColEvent = listen<EventColumns>("columns", (data) => {
+			if (data.payload.type === "add") add(data.payload.column);
+			if (data.payload.type === "remove") remove(data.payload.label);
+			if (data.payload.type === "set_title")
+				updateName(data.payload.label, data.payload.title);
+		});
 
-		(async () => {
-			if (unlistenColEvent && unlistenWindowResize) return;
-
-			unlistenColEvent = await listen<EventColumns>("columns", (data) => {
-				if (data.payload.type === "add") add(data.payload.column);
-				if (data.payload.type === "remove") remove(data.payload.label);
-				if (data.payload.type === "set_title")
-					updateName(data.payload.label, data.payload.title);
-			});
-
-			unlistenWindowResize = await getCurrent().listen("tauri://resize", () => {
-				startResize();
-			});
-		})();
+		const unlistenWindowResize = getCurrent().listen("tauri://resize", () => {
+			startResize();
+		});
 
 		return () => {
-			if (unlistenColEvent) unlistenColEvent();
-			if (unlistenWindowResize) unlistenWindowResize();
+			unlistenColEvent.then((f) => f());
+			unlistenWindowResize.then((f) => f());
 		};
 	}, []);
 

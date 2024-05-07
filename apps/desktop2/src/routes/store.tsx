@@ -18,13 +18,13 @@ export const Route = createFileRoute("/store")({
 function Screen() {
 	return (
 		<div className="flex flex-col h-full">
-			<div className="px-3 my-2">
-				<div className="p-1 shrink-0 inline-flex w-full rounded-lg items-center gap-1 bg-black/10 dark:bg-white/10">
+			<div className="px-3 mt-2 mb-1">
+				<div className="p-1 shrink-0 inline-flex w-full rounded-lg items-center gap-1 bg-black/5 dark:bg-white/5">
 					<Link to="/store/official" className="flex-1">
 						{({ isActive }) => (
 							<div
 								className={cn(
-									"inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md text-sm font-medium leading-tight",
+									"inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-md text-sm font-medium leading-tight",
 									isActive ? "bg-neutral-50 dark:bg-white/10" : "opacity-50",
 								)}
 							>
@@ -37,7 +37,7 @@ function Screen() {
 						{({ isActive }) => (
 							<div
 								className={cn(
-									"inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md text-sm font-medium leading-tight",
+									"inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-md text-sm font-medium leading-tight",
 									isActive ? "bg-neutral-50 dark:bg-white/10" : "opacity-50",
 								)}
 							>

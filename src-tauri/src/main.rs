@@ -138,7 +138,8 @@ fn main() {
       commands::window::resize_column,
       commands::window::open_window,
       commands::window::get_path,
-      commands::window::navigate
+      commands::window::navigate,
+      commands::window::set_badge
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")

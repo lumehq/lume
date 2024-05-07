@@ -8,7 +8,7 @@ import {
 	sendNativeNotification,
 } from "@lume/utils";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
-import { UnlistenFn } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 
@@ -118,50 +118,45 @@ function Bell() {
 	const { ark } = Route.useRouteContext();
 	const { account } = Route.useParams();
 
-	const [isRing, setIsRing] = useState(false);
+	const [count, setCount] = useState(0);
 
 	useEffect(() => {
-		let unlisten: UnlistenFn = undefined;
+		const unlisten = getCurrent().listen<string>(
+			"activity",
+			async (payload) => {
+				setCount((prevCount) => prevCount + 1);
+				await invoke("set_badge", { count });
 
-		async function listenNotify() {
-			unlisten = await getCurrent().listen<string>(
-				"activity",
-				async (payload) => {
-					setIsRing(true);
+				const event: Event = JSON.parse(payload.payload);
+				const user = await ark.get_profile(event.pubkey);
+				const userName =
+					user.display_name || user.name || displayNpub(event.pubkey, 16);
 
-					const event: Event = JSON.parse(payload.payload);
-					const user = await ark.get_profile(event.pubkey);
-					const userName =
-						user.display_name || user.name || displayNpub(event.pubkey, 16);
-
-					switch (event.kind) {
-						case Kind.Text: {
-							sendNativeNotification("Mentioned you in a note", userName);
-							break;
-						}
-						case Kind.Repost: {
-							sendNativeNotification("Reposted your note", userName);
-							break;
-						}
-						case Kind.ZapReceipt: {
-							const amount = decodeZapInvoice(event.tags);
-							sendNativeNotification(
-								`Zapped ₿ ${amount.bitcoinFormatted}`,
-								userName,
-							);
-							break;
-						}
-						default:
-							break;
+				switch (event.kind) {
+					case Kind.Text: {
+						sendNativeNotification("Mentioned you in a note", userName);
+						break;
 					}
-				},
-			);
-		}
-
-		if (!unlisten) listenNotify();
+					case Kind.Repost: {
+						sendNativeNotification("Reposted your note", userName);
+						break;
+					}
+					case Kind.ZapReceipt: {
+						const amount = decodeZapInvoice(event.tags);
+						sendNativeNotification(
+							`Zapped ₿ ${amount.bitcoinFormatted}`,
+							userName,
+						);
+						break;
+					}
+					default:
+						break;
+				}
+			},
+		);
 
 		return () => {
-			if (unlisten) unlisten();
+			unlisten.then((f) => f());
 		};
 	}, []);
 
@@ -169,13 +164,13 @@ function Bell() {
 		<button
 			type="button"
 			onClick={() => {
-				setIsRing(false);
+				setCount(0);
 				ark.open_activity(account);
 			}}
 			className="relative inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 		>
 			<BellIcon className="size-5" />
-			{isRing ? (
+			{count > 0 ? (
 				<span className="absolute right-0 top-0 block size-2 rounded-full bg-teal-500 ring-1 ring-black/5" />
 			) : null}
 		</button>
