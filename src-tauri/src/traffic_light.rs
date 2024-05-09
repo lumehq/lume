@@ -19,7 +19,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
     .on_window_ready(|window| {
       #[cfg(target_os = "macos")]
       setup_traffic_light_positioner(window);
-      return;
     })
     .build()
 }
@@ -107,7 +106,7 @@ pub fn setup_traffic_light_positioner<R: Runtime>(window: Window<R>) {
     }
     extern "C" fn on_window_did_resize<R: Runtime>(this: &Object, _cmd: Sel, notification: id) {
       unsafe {
-        with_window_state(&*this, |state: &mut WindowState<R>| {
+        with_window_state(this, |state: &mut WindowState<R>| {
           let id = state
             .window
             .ns_window()
@@ -204,7 +203,7 @@ pub fn setup_traffic_light_positioner<R: Runtime>(window: Window<R>) {
       notification: id,
     ) {
       unsafe {
-        with_window_state(&*this, |state: &mut WindowState<R>| {
+        with_window_state(this, |state: &mut WindowState<R>| {
           state
             .window
             .emit("did-enter-fullscreen", ())
@@ -221,7 +220,7 @@ pub fn setup_traffic_light_positioner<R: Runtime>(window: Window<R>) {
       notification: id,
     ) {
       unsafe {
-        with_window_state(&*this, |state: &mut WindowState<R>| {
+        with_window_state(this, |state: &mut WindowState<R>| {
           state
             .window
             .emit("will-enter-fullscreen", ())
@@ -238,7 +237,7 @@ pub fn setup_traffic_light_positioner<R: Runtime>(window: Window<R>) {
       notification: id,
     ) {
       unsafe {
-        with_window_state(&*this, |state: &mut WindowState<R>| {
+        with_window_state(this, |state: &mut WindowState<R>| {
           state
             .window
             .emit("did-exit-fullscreen", ())
@@ -262,7 +261,7 @@ pub fn setup_traffic_light_positioner<R: Runtime>(window: Window<R>) {
       notification: id,
     ) {
       unsafe {
-        with_window_state(&*this, |state: &mut WindowState<R>| {
+        with_window_state(this, |state: &mut WindowState<R>| {
           state
             .window
             .emit("will-exit-fullscreen", ())

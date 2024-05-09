@@ -47,7 +47,7 @@ pub fn create_column(
 pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, ()> {
   match app_handle.get_webview(label) {
     Some(webview) => {
-      if let Ok(_) = webview.close() {
+      if webview.close().is_ok() {
         Ok(true)
       } else {
         Ok(false)
@@ -90,7 +90,7 @@ pub fn reposition_column(
 ) -> Result<(), String> {
   match app_handle.get_webview(label) {
     Some(webview) => {
-      if let Ok(_) = webview.set_position(LogicalPosition::new(x, y)) {
+      if webview.set_position(LogicalPosition::new(x, y)).is_ok() {
         Ok(())
       } else {
         Err("Reposition column failed".into())
@@ -109,7 +109,7 @@ pub fn resize_column(
 ) -> Result<(), String> {
   match app_handle.get_webview(label) {
     Some(webview) => {
-      if let Ok(_) = webview.set_size(LogicalSize::new(width, height)) {
+      if webview.set_size(LogicalSize::new(width, height)).is_ok() {
         Ok(())
       } else {
         Err("Resize column failed".into())

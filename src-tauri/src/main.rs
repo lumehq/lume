@@ -34,7 +34,7 @@ fn main() {
 
       // Setup app tray
       let handle = app.handle().clone();
-      let _ = tray::create_tray(app.handle()).unwrap();
+      tray::create_tray(app.handle()).unwrap();
 
       // Create data folder if not exist
       let home_dir = app.path().home_dir().unwrap();
@@ -65,9 +65,7 @@ fn main() {
         client.connect().await;
 
         // Update global state
-        handle.manage(Nostr {
-          client: client.into(),
-        })
+        handle.manage(Nostr { client })
       });
 
       Ok(())

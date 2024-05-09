@@ -9,7 +9,7 @@ pub fn fetch_opg(url: String) -> Result<Opengraph, String> {
   options.timeout = Duration::from_secs(10);
 
   if let Ok(data) = Webpage::from_url(&url, options) {
-    Ok(data.html.opengraph.into())
+    Ok(data.html.opengraph)
   } else {
     Err("Get open graph failed".into())
   }
