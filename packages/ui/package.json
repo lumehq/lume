@@ -38,7 +38,6 @@
 		"slate-react": "^0.102.0",
 		"sonner": "^1.4.41",
 		"string-strip-html": "^13.4.8",
-		"tailwind-gradient-mask-image": "^1.2.0",
 		"uqr": "^0.1.2",
 		"use-debounce": "^10.0.0",
 		"virtua": "^0.30.2"

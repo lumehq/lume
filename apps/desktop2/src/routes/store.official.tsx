@@ -5,7 +5,6 @@ import { getCurrent } from "@tauri-apps/api/window";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
 export const Route = createFileRoute("/store/official")({
-	component: Screen,
 	beforeLoad: async () => {
 		const resourcePath = await resolveResource(
 			"resources/official_columns.json",
@@ -18,6 +17,7 @@ export const Route = createFileRoute("/store/official")({
 			officialColumns,
 		};
 	},
+	component: Screen,
 });
 
 function Screen() {

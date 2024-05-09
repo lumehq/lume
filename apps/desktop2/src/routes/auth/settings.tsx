@@ -85,8 +85,11 @@ function Screen() {
 			const eventId = await ark.set_settings(newSettings);
 
 			if (eventId) {
-				console.log("event_id: ", eventId);
-				navigate({ to: "/$account/home", params: { account }, replace: true });
+				return navigate({
+					to: "/$account/home",
+					params: { account },
+					replace: true,
+				});
 			}
 		} catch (e) {
 			setLoading(false);

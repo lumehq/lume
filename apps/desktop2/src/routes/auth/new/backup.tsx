@@ -1,5 +1,6 @@
 import { CheckIcon } from "@lume/icons";
 import type { AppRouteSearch } from "@lume/types";
+import { Spinner } from "@lume/ui";
 import { displayNsec } from "@lume/utils";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -25,6 +26,7 @@ function Screen() {
 	const [key, setKey] = useState(null);
 	const [passphase, setPassphase] = useState("");
 	const [copied, setCopied] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [confirm, setConfirm] = useState({ c1: false, c2: false, c3: false });
 
 	const navigate = useNavigate();
@@ -42,13 +44,19 @@ function Screen() {
 				});
 			}
 
-			const encrypted: string = await invoke("get_encrypted_key", {
+			// start loading
+			setLoading(true);
+
+			invoke("get_encrypted_key", {
 				npub: account,
 				password: passphase,
+			}).then((encrypted: string) => {
+				// update state
+				setKey(encrypted);
+				setLoading(false);
 			});
-
-			setKey(encrypted);
 		} catch (e) {
+			setLoading(false);
 			toast.error(String(e));
 		}
 	};
@@ -180,9 +188,10 @@ function Screen() {
 					<button
 						type="button"
 						onClick={() => submit()}
+						disabled={loading}
 						className="inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
 					>
-						{t("global.continue")}
+						{loading ? <Spinner /> : t("global.continue")}
 					</button>
 				</div>
 			</div>

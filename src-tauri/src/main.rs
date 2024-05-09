@@ -121,6 +121,7 @@ fn main() {
       nostr::metadata::get_balance,
       nostr::metadata::zap_profile,
       nostr::metadata::zap_event,
+      nostr::metadata::friend_to_friend,
       nostr::event::get_event,
       nostr::event::get_events_from,
       nostr::event::get_events,

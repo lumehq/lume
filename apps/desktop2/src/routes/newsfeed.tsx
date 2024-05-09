@@ -6,7 +6,8 @@ import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
 import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/newsfeed")({
@@ -121,8 +122,6 @@ export function Screen() {
 }
 
 function Empty() {
-	const search = Route.useSearch();
-
 	return (
 		<div className="flex flex-col py-10 gap-10">
 			<div className="text-center flex flex-col items-center justify-center">
@@ -136,28 +135,18 @@ function Empty() {
 			</div>
 			<div className="flex flex-col px-3 gap-2">
 				<Link
-					to="/global"
-					search={search}
-					className="h-11 w-full flex items-center justify-between bg-black/10 hover:bg-black/20 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 gap-2 rounded-lg px-3"
-				>
-					Show global newsfeed
-					<ArrowRightIcon className="size-5" />
-				</Link>
-				<Link
 					to="/trending/notes"
-					search={search}
-					className="h-11 w-full flex items-center justify-between bg-black/10 hover:bg-black/20 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 gap-2 rounded-lg px-3"
+					className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
 				>
-					Show trending notes
 					<ArrowRightIcon className="size-5" />
+					Show trending notes
 				</Link>
 				<Link
 					to="/trending/users"
-					search={search}
-					className="h-11 w-full flex items-center justify-between bg-black/10 hover:bg-black/20 text-sm font-medium dark:bg-white/10 dark:hover:bg-white/20 gap-2 rounded-lg px-3"
+					className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
 				>
-					Discover trending users
 					<ArrowRightIcon className="size-5" />
+					Discover trending users
 				</Link>
 			</div>
 		</div>

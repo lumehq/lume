@@ -1,5 +1,15 @@
 [
   {
+    "label": "lZfXLFgPPR4NNrgjlWDxn",
+    "name": "Newsfeed",
+    "content": "/newsfeed",
+    "logo": "",
+    "cover": "/newsfeed.png",
+    "coverRetina": "/newsfeed@2x.png",
+    "author": "Lume",
+    "description": "Keep up to date with people you're following."
+  },
+  {
     "label": "rRtguZwIpd5G8Wt54OTb7",
     "name": "For you",
     "content": "/foryou",

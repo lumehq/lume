@@ -25,6 +25,7 @@ interface RouterContext {
 	// Profile
 	accounts?: string[];
 	profile?: Metadata;
+	isNewUser?: boolean;
 	// Editor
 	initialValue?: EditorElement[];
 }

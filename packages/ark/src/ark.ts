@@ -1,10 +1,10 @@
 import {
-	Kind,
 	type Contact,
 	type Event,
 	type EventWithReplies,
 	type Interests,
 	type Keys,
+	Kind,
 	type LumeColumn,
 	type Metadata,
 	type Settings,
@@ -194,8 +194,10 @@ export class Ark {
 					.filter((el) => el[0] === "e")
 					?.map((item) => item[1]);
 
-				if (eventIds && eventIds.length) {
-					eventIds.forEach((id) => seenIds.add(id));
+				if (eventIds?.length) {
+					for (const id of eventIds) {
+						seenIds.add(id);
+					}
 				}
 			}
 
