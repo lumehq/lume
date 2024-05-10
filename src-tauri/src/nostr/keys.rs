@@ -22,7 +22,7 @@ pub fn create_keys() -> Result<CreateKeysResponse, ()> {
     nsec: secret_key.to_bech32().expect("nsec failed"),
   };
 
-  Ok(result.into())
+  Ok(result)
 }
 
 #[tauri::command]
@@ -70,7 +70,7 @@ pub async fn save_key(
 
       Ok(npub)
     }
-    Err(msg) => Err(msg.into()),
+    Err(msg) => Err(msg),
   }
 }
 
@@ -111,7 +111,7 @@ pub async fn nostr_connect(
 pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
 
-  if let Ok(_) = client.signer().await {
+  if (client.signer().await).is_ok() {
     Ok(true)
   } else {
     Ok(false)
@@ -188,16 +188,16 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
       {
         Ok(events) => {
           if let Some(event) = events.first() {
-            let relay_list = nip65::extract_relay_list(&event);
+            let relay_list = nip65::extract_relay_list(event);
             for item in relay_list.into_iter() {
-              println!("connecting to relay: {}", item.0.to_string());
+              println!("connecting to relay: {}", item.0);
               // Add relay to pool
               let _ = client
                 .add_relay(item.0.to_string())
                 .await
                 .unwrap_or_default();
               // Connect relay
-              let _ = client
+              client
                 .connect_relay(item.0.to_string())
                 .await
                 .unwrap_or_default();
@@ -242,7 +242,7 @@ pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, ()> {
   let public_key = PublicKey::from_str(key).unwrap();
   let status = nip05::verify(public_key, nip05, None).await;
 
-  if let Ok(_) = status {
+  if status.is_ok() {
     Ok(true)
   } else {
     Ok(false)

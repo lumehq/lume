@@ -392,7 +392,7 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
 pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
-  if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(&uri) {
+  if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
     if let Ok(nwc) = NWC::new(nwc_uri).await {
       let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
       let _ = keyring.set_password(uri);
@@ -470,7 +470,7 @@ pub async fn zap_profile(
   if let Some(recipient) = public_key {
     let details = ZapDetails::new(ZapType::Public).message(message);
 
-    if let Ok(_) = client.zap(recipient, amount, Some(details)).await {
+    if (client.zap(recipient, amount, Some(details)).await).is_ok() {
       Ok(true)
     } else {
       Err("Zap profile failed".into())
@@ -503,7 +503,7 @@ pub async fn zap_event(
   if let Some(recipient) = event_id {
     let details = ZapDetails::new(ZapType::Public).message(message);
 
-    if let Ok(_) = client.zap(recipient, amount, Some(details)).await {
+    if (client.zap(recipient, amount, Some(details)).await).is_ok() {
       Ok(true)
     } else {
       Err("Zap event failed".into())
