@@ -8,6 +8,7 @@ import {
 	type LumeColumn,
 	type Metadata,
 	type Settings,
+	Relays,
 } from "@lume/types";
 import { generateContentTags } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
@@ -52,16 +53,6 @@ export class Ark {
 			return cmd;
 		} catch (e) {
 			throw new Error(String(e));
-		}
-	}
-
-	public async get_activities(account: string, kind: "1" | "6" | "9735" = "1") {
-		try {
-			const events: Event[] = await invoke("get_activities", { account, kind });
-			return events;
-		} catch (e) {
-			console.error(String(e));
-			return null;
 		}
 	}
 
@@ -114,6 +105,52 @@ export class Ark {
 			return cmd;
 		} catch (e) {
 			throw new Error(String(e));
+		}
+	}
+
+	public async get_relays() {
+		try {
+			const cmd: Relays = await invoke("get_relays");
+			return cmd;
+		} catch (e) {
+			console.error(String(e));
+			return null;
+		}
+	}
+
+	public async add_relay(url: string) {
+		try {
+			const relayUrl = new URL(url);
+
+			if (relayUrl.protocol === "wss:" || relayUrl.protocol === "ws:") {
+				const cmd: boolean = await invoke("connect_relay", { relay: relayUrl });
+				return cmd;
+			}
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async remove_relay(url: string) {
+		try {
+			const relayUrl = new URL(url);
+
+			if (relayUrl.protocol === "wss:" || relayUrl.protocol === "ws:") {
+				const cmd: boolean = await invoke("remove_relay", { relay: relayUrl });
+				return cmd;
+			}
+		} catch (e) {
+			throw new Error(String(e));
+		}
+	}
+
+	public async get_activities(account: string, kind: "1" | "6" | "9735" = "1") {
+		try {
+			const events: Event[] = await invoke("get_activities", { account, kind });
+			return events;
+		} catch (e) {
+			console.error(String(e));
+			return null;
 		}
 	}
 
@@ -456,16 +493,6 @@ export class Ark {
 	public async get_contact_list() {
 		try {
 			const cmd: string[] = await invoke("get_contact_list");
-			return cmd;
-		} catch (e) {
-			console.error(e);
-			return [];
-		}
-	}
-
-	public async get_contact_metadata() {
-		try {
-			const cmd: Contact[] = await invoke("get_contact_metadata");
 			return cmd;
 		} catch (e) {
 			console.error(e);

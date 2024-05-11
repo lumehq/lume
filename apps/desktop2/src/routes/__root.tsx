@@ -1,5 +1,5 @@
 import type { Ark } from "@lume/ark";
-import type { Account, Interests, Metadata, Settings } from "@lume/types";
+import type { Interests, Metadata, Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";

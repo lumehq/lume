@@ -118,7 +118,7 @@ pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
   }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
   let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
 
@@ -190,12 +190,26 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
           if let Some(event) = events.first() {
             let relay_list = nip65::extract_relay_list(event);
             for item in relay_list.into_iter() {
-              println!("connecting to relay: {}", item.0);
-              // Add relay to pool
+              println!("connecting to relay: {} - {:?}", item.0, item.1);
+
+              let relay_url = item.0.to_string();
+              let opts = match item.1 {
+                Some(val) => {
+                  if val == RelayMetadata::Read {
+                    RelayOptions::new().read(true).write(false)
+                  } else {
+                    RelayOptions::new().write(true).read(false)
+                  }
+                }
+                None => RelayOptions::new(),
+              };
+
+              // Add relay to relay pool
               let _ = client
-                .add_relay(item.0.to_string())
+                .add_relay_with_opts(relay_url, opts)
                 .await
                 .unwrap_or_default();
+
               // Connect relay
               client
                 .connect_relay(item.0.to_string())

@@ -165,3 +165,10 @@ export interface NIP05 {
 		};
 	};
 }
+
+export interface Relays {
+	connected: string[];
+	read: string[];
+	write: string[];
+	both: string[];
+}

@@ -60,6 +60,10 @@ fn main() {
           .add_relay("wss://bostr.nokotaro.work/")
           .await
           .expect("Cannot connect to bostr.nokotaro.work, please try again later.");
+        client
+          .add_relay("wss://purplepag.es/")
+          .await
+          .expect("Cannot connect to purplepag.es, please try again later.");
 
         // Connect
         client.connect().await;
@@ -92,6 +96,10 @@ fn main() {
       Some(vec![]),
     ))
     .invoke_handler(tauri::generate_handler![
+      nostr::relay::get_relays,
+      nostr::relay::list_connected_relays,
+      nostr::relay::connect_relay,
+      nostr::relay::remove_relay,
       nostr::keys::create_keys,
       nostr::keys::save_key,
       nostr::keys::get_encrypted_key,
@@ -108,7 +116,6 @@ fn main() {
       nostr::metadata::get_current_user_profile,
       nostr::metadata::get_profile,
       nostr::metadata::get_contact_list,
-      nostr::metadata::get_contact_metadata,
       nostr::metadata::create_profile,
       nostr::metadata::follow,
       nostr::metadata::unfollow,

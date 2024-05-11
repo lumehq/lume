@@ -5,12 +5,6 @@ use std::{str::FromStr, time::Duration};
 use tauri::{Manager, State};
 use url::Url;
 
-#[derive(serde::Serialize)]
-pub struct CacheContact {
-  pubkey: String,
-  profile: Metadata,
-}
-
 #[tauri::command]
 pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<(), ()> {
   tauri::async_runtime::spawn(async move {
@@ -198,28 +192,6 @@ pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, St
     let list = contact_list
       .into_iter()
       .map(|f| f.public_key.to_hex())
-      .collect();
-
-    Ok(list)
-  } else {
-    Err("Contact list not found".into())
-  }
-}
-
-#[tauri::command]
-pub async fn get_contact_metadata(state: State<'_, Nostr>) -> Result<Vec<CacheContact>, String> {
-  let client = &state.client;
-
-  if let Ok(contact_list) = client
-    .get_contact_list_metadata(Some(Duration::from_secs(10)))
-    .await
-  {
-    let list: Vec<CacheContact> = contact_list
-      .into_iter()
-      .map(|(id, metadata)| CacheContact {
-        pubkey: id.to_hex(),
-        profile: metadata,
-      })
       .collect();
 
     Ok(list)

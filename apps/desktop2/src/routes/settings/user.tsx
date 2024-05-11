@@ -28,7 +28,7 @@ function Screen() {
 		try {
 			setLoading(true);
 
-			const profile = { ...data };
+			const profile = { ...data, picture };
 			await ark.create_profile(profile);
 
 			setLoading(false);
@@ -44,7 +44,7 @@ function Screen() {
 				<div className="relative size-24 rounded-full bg-gradient-to-tr from-orange-100 via-red-50 to-blue-200">
 					{profile.picture ? (
 						<img
-							src={profile.picture}
+							src={picture || profile.picture}
 							alt="avatar"
 							loading="lazy"
 							decoding="async"

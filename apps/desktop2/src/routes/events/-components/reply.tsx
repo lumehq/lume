@@ -1,5 +1,5 @@
 import type { EventWithReplies } from "@lume/types";
-import { Note, User } from "@lume/ui";
+import { Note } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { SubReply } from "./subReply";
 

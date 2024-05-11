@@ -15,7 +15,7 @@ export function NoteActivity({ className }: { className?: string }) {
 				{mentions.splice(0, 4).map((mention) => (
 					<User.Provider key={mention} pubkey={mention}>
 						<User.Root>
-							<User.Name className="text-sm font-medium" />
+							<User.Name className="text-sm font-medium" prefix="@" />
 						</User.Root>
 					</User.Provider>
 				))}

@@ -71,85 +71,109 @@ function Screen() {
 
 	return (
 		<div className="mx-auto w-full max-w-xl">
-			<div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
-				<div className="flex flex-col">
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
-						<Switch.Root
-							checked={newSettings.notification}
-							onClick={() => toggleNofitication()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div className="flex-1">
-							<h3 className="font-semibold">Push Notification</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Enabling push notifications will allow you to receive
-								notifications from Lume.
-							</p>
+			<div className="flex flex-col gap-6">
+				<div className="flex flex-col gap-2">
+					<h2 className="font-semibold text-sm text-neutral-700 dark:text-neutral-300">
+						General
+					</h2>
+					<div className="flex flex-col divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl px-3">
+						<div className="flex w-full items-start justify-between gap-4 py-3">
+							<div className="flex-1">
+								<h3 className="font-medium">Notification</h3>
+								<p className="text-sm text-neutral-700 dark:text-neutral-300">
+									By turning on push notifications, you'll start getting
+									notifications from Lume directly.
+								</p>
+							</div>
+							<div className="w-36 flex justify-end shrink-0">
+								<Switch.Root
+									checked={newSettings.notification}
+									onClick={() => toggleNofitication()}
+									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+								>
+									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+								</Switch.Root>
+							</div>
+						</div>
+						<div className="flex w-full items-start justify-between gap-4 py-3">
+							<div className="flex-1">
+								<h3 className="font-medium">Enhanced Privacy</h3>
+								<p className="text-sm text-neutral-700 dark:text-neutral-300">
+									Lume presents external resources like images, videos, or link
+									previews in plain text.
+								</p>
+							</div>
+							<div className="w-36 flex justify-end shrink-0">
+								<Switch.Root
+									checked={newSettings.enhancedPrivacy}
+									onClick={() => toggleEnhancedPrivacy()}
+									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+								>
+									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+								</Switch.Root>
+							</div>
+						</div>
+						<div className="flex w-full items-start justify-between gap-4 py-3">
+							<div className="flex-1">
+								<h3 className="font-medium">Auto Update</h3>
+								<p className="text-sm text-neutral-700 dark:text-neutral-300">
+									Automatically download and install new version.
+								</p>
+							</div>
+							<div className="w-36 flex justify-end shrink-0">
+								<Switch.Root
+									checked={newSettings.autoUpdate}
+									onClick={() => toggleAutoUpdate()}
+									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+								>
+									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+								</Switch.Root>
+							</div>
+						</div>
+						<div className="flex w-full items-start justify-between gap-4 py-3">
+							<div className="flex-1">
+								<h3 className="font-semibold">Filter sensitive content</h3>
+								<p className="text-sm text-neutral-700 dark:text-neutral-300">
+									By default, Lume will display all content which have Content
+									Warning tag, it's may include NSFW content.
+								</p>
+							</div>
+							<div className="w-36 flex justify-end shrink-0">
+								<Switch.Root
+									checked={newSettings.nsfw}
+									onClick={() => toggleNsfw()}
+									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+								>
+									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+								</Switch.Root>
+							</div>
 						</div>
 					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
-						<Switch.Root
-							checked={newSettings.enhancedPrivacy}
-							onClick={() => toggleEnhancedPrivacy()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div className="flex-1">
-							<h3 className="font-semibold">Enhanced Privacy</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Lume will display external resources like image, video or link
-								preview as plain text.
-							</p>
-						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
-						<Switch.Root
-							checked={newSettings.autoUpdate}
-							onClick={() => toggleAutoUpdate()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div className="flex-1">
-							<h3 className="font-semibold">Auto Update</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Automatically download and install new version.
-							</p>
-						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
-						<Switch.Root
-							checked={newSettings.zap}
-							onClick={() => toggleZap()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div className="flex-1">
-							<h3 className="font-semibold">Zap</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Show the Zap button in each note and user's profile screen, use
-								for send Bitcoin tip to other users.
-							</p>
-						</div>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-neutral-900">
-						<Switch.Root
-							checked={newSettings.nsfw}
-							onClick={() => toggleNsfw()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-neutral-800"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-						<div className="flex-1">
-							<h3 className="font-semibold">Filter sensitive content</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								By default, Lume will display all content which have Content
-								Warning tag, it's may include NSFW content.
-							</p>
+				</div>
+				<div className="flex flex-col gap-2">
+					<h2 className="font-semibold text-sm text-neutral-700 dark:text-neutral-300">
+						Interface
+					</h2>
+					<div className="flex flex-col divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl px-3">
+						<div className="flex flex-col gap-4">
+							<div className="flex w-full items-start justify-between gap-4 py-3">
+								<div className="flex-1">
+									<h3 className="font-semibold">Zap</h3>
+									<p className="text-sm text-neutral-700 dark:text-neutral-300">
+										Show the Zap button in each note and user's profile screen,
+										use for send bitcoin tip to other users.
+									</p>
+								</div>
+								<div className="w-36 flex justify-end shrink-0">
+									<Switch.Root
+										checked={newSettings.zap}
+										onClick={() => toggleZap()}
+										className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+									>
+										<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+									</Switch.Root>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
