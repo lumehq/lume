@@ -50,20 +50,22 @@ fn main() {
           Err(_) => ClientBuilder::default().build(),
         };
 
-        // Add some bootstrap relays
-        // #TODO: Pull bootstrap relays from user's settings
+        // Add bootstrap relays
         client
           .add_relay("wss://relay.nostr.net")
           .await
           .expect("Cannot connect to relay.nostr.net, please try again later.");
         client
-          .add_relay("wss://bostr.nokotaro.work/")
+          .add_relay("wss://relay.damus.io")
           .await
-          .expect("Cannot connect to bostr.nokotaro.work, please try again later.");
+          .expect("Cannot connect to relay.damus.io, please try again later.");
         client
-          .add_relay("wss://purplepag.es/")
+          .add_relay_with_opts(
+            "wss://directory.yabu.me/",
+            RelayOptions::new().read(true).write(false),
+          )
           .await
-          .expect("Cannot connect to purplepag.es, please try again later.");
+          .expect("Cannot connect to directory.yabu.me, please try again later.");
 
         // Connect
         client.connect().await;

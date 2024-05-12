@@ -97,10 +97,9 @@ pub fn create_tray<R: Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<()> {
       } else {
         #[cfg(target_os = "macos")]
         let _ = WebviewWindowBuilder::new(app, "search", WebviewUrl::App(PathBuf::from("search")))
-          .title("Editor")
-          .inner_size(750., 470.)
+          .title("Search")
+          .inner_size(400., 600.)
           .minimizable(false)
-          .resizable(false)
           .title_bar_style(TitleBarStyle::Overlay)
           .transparent(true)
           .effects(WindowEffectsConfig {
