@@ -1,5 +1,6 @@
 import { PlusIcon } from "@lume/icons";
 import { Spinner, User } from "@lume/ui";
+import { checkForAppUpdates } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
@@ -8,6 +9,9 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: async ({ context }) => {
+		// check for app updates
+		await checkForAppUpdates(true);
+
 		const ark = context.ark;
 		const accounts = await ark.get_all_accounts();
 

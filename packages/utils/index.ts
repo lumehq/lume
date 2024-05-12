@@ -10,6 +10,7 @@ export * from "./src/image";
 export * from "./src/parser";
 export * from "./src/groupBy";
 export * from "./src/invoice";
+export * from "./src/update";
 
 // Hooks
 export * from "./src/hooks/useNetworkStatus";

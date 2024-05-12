@@ -2,11 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "desktop-capability",
   "description": "Capability for the desktop",
-  "platforms": [
-    "linux",
-    "macOS",
-    "windows"
-  ],
+  "platforms": ["linux", "macOS", "windows"],
   "windows": [
     "main",
     "splash",
@@ -33,8 +29,9 @@
     "notification:default",
     "os:allow-locale",
     "os:allow-platform",
-    "updater:allow-check",
     "updater:default",
+    "updater:allow-check",
+    "updater:allow-download-and-install",
     "window:allow-start-dragging",
     "window:allow-create",
     "window:allow-close",
@@ -46,7 +43,9 @@
     "webview:allow-set-webview-size",
     "webview:allow-set-webview-position",
     "webview:allow-webview-close",
-    "dialog:allow-open",
+    "dialog:default",
+    "dialog:allow-ask",
+    "dialog:allow-message",
     "fs:allow-read-file",
     "shell:allow-open",
     {
