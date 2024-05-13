@@ -46,6 +46,7 @@
     "dialog:default",
     "dialog:allow-ask",
     "dialog:allow-message",
+    "process:allow-restart",
     "fs:allow-read-file",
     "shell:allow-open",
     {
