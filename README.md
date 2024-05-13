@@ -1,18 +1,14 @@
-_Note_: Lume is under rewrite to using Rust Nostr as back-end and more lightweight front-end. If you need stable version, you can download v3 and below.
-
-Source code for v3 is stored here: https://github.com/lumehq/lume/tree/old
-
---
-
 ## Introduction
 
 Lume is a Nostr client for desktop include Linux, Windows and macOS. It is free and open source, you can look at source code on Github. Lume is actively improving the app and adding new features, you can expect new update every month.
 
 ## Usage
 
-Download Lume v3 (v3.0.1-stable) for your platform here: [https://github.com/lumehq/lume/releases](https://github.com/lumehq/lume/releases)
+Download Lume v4 for your platform here: [https://github.com/lumehq/lume/releases](https://github.com/lumehq/lume/releases)
 
-Supported platform: macOS, Windows and Linux
+Supported platform: macOS. Windows and Linux are coming soon.
+
+Windows and Linux are availabel on v3 and below.
 
 ## Prerequisites
 
