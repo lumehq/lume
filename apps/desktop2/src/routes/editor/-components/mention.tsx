@@ -4,10 +4,10 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useEffect, useState } from "react";
 import { useRouteContext } from "@tanstack/react-router";
-import { User } from "@lume/ui";
 import { useSlateStatic } from "slate-react";
 import type { Contact } from "@lume/types";
 import { toast } from "sonner";
+import { User } from "@/components/user";
 
 export function MentionButton({ className }: { className?: string }) {
 	const editor = useSlateStatic();

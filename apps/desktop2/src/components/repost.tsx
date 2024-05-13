@@ -1,5 +1,7 @@
 import type { Event } from "@lume/types";
-import { Note, Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { Note } from "./note";
+import { User } from "./user";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";

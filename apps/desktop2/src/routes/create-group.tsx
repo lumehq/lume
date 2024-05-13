@@ -1,6 +1,7 @@
 import { CheckCircleIcon } from "@lume/icons";
 import type { ColumnRouteSearch } from "@lume/types";
-import { Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { User } from "@/components/user";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";

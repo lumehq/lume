@@ -1,7 +1,7 @@
 import type { EventWithReplies } from "@lume/types";
-import { Note } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { SubReply } from "./subReply";
+import { Note } from "@/components/note";
 
 export function Reply({ event }: { event: EventWithReplies }) {
 	return (

@@ -1,6 +1,6 @@
 import type { Event } from "@lume/types";
-import { Note } from "@lume/ui";
 import { cn } from "@lume/utils";
+import { Note } from "./note";
 
 export function TextNote({
 	event,

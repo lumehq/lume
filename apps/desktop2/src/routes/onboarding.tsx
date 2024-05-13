@@ -1,6 +1,7 @@
 import { ArrowRightIcon, CancelIcon } from "@lume/icons";
 import type { ColumnRouteSearch, LumeColumn } from "@lume/types";
-import { Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { User } from "@/components/user";
 import { cn } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";

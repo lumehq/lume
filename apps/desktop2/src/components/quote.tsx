@@ -1,6 +1,6 @@
 import { QuoteIcon } from "@lume/icons";
 import type { Event } from "@lume/types";
-import { Note } from "@lume/ui";
+import { Note } from "./note";
 import { cn } from "@lume/utils";
 
 export function Quote({

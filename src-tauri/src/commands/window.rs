@@ -58,14 +58,6 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, (
 }
 
 #[tauri::command]
-pub fn get_path(label: &str, app_handle: tauri::AppHandle) -> Result<String, String> {
-  match app_handle.get_webview(label) {
-    Some(webview) => Ok(webview.url().to_string()),
-    None => Err("Webview not found".into()),
-  }
-}
-
-#[tauri::command]
 pub fn navigate(label: &str, url: &str, app_handle: tauri::AppHandle) -> Result<(), String> {
   match app_handle.get_webview(label) {
     Some(mut webview) => {

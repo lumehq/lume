@@ -1,10 +1,12 @@
 import type { Ark } from "@lume/ark";
+import { CheckCircleIcon, InfoCircleIcon, CancelCircleIcon } from "@lume/icons";
 import type { Interests, Metadata, Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Platform } from "@tauri-apps/plugin-os";
 import type { Descendant } from "slate";
+import { Toaster } from "sonner";
 
 type EditorElement = {
 	type: string;
@@ -31,7 +33,21 @@ interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	component: () => <Outlet />,
+	component: () => (
+		<>
+			<Toaster
+				position="bottom-right"
+				icons={{
+					success: <CheckCircleIcon className="size-5" />,
+					info: <InfoCircleIcon className="size-5" />,
+					error: <CancelCircleIcon className="size-5" />,
+				}}
+				closeButton
+				theme="system"
+			/>
+			<Outlet />
+		</>
+	),
 	pendingComponent: Pending,
 	wrapInSuspense: true,
 });

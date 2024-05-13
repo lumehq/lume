@@ -1,5 +1,5 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { Carousel, CarouselItem } from "../../carousel";
+import { Carousel, CarouselItem } from "@lume/ui";
 
 export function Images({ urls }: { urls: string[] }) {
 	const open = async (url: string) => {

@@ -1,5 +1,5 @@
+import { User } from "@/components/user";
 import type { Account } from "@lume/types";
-import { User } from "@lume/ui";
 import { displayNsec } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";

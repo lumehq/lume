@@ -6,7 +6,7 @@ import { useRouteContext } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Spinner } from "../../spinner";
+import { Spinner } from "@lume/ui";
 import { useNoteContext } from "../provider";
 
 export function NoteRepost({ large = false }: { large?: boolean }) {

@@ -1,4 +1,5 @@
-import { Note, Spinner } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { Note } from "@/components/note";
 import { Await, createFileRoute, defer } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { Virtualizer } from "virtua";

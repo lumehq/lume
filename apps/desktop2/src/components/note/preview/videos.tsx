@@ -1,4 +1,4 @@
-import { Carousel, CarouselItem } from "../../carousel";
+import { Carousel, CarouselItem } from "@lume/ui";
 
 export function Videos({ urls }: { urls: string[] }) {
 	if (urls.length === 1) {

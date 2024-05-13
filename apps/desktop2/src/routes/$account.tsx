@@ -1,6 +1,6 @@
 import { BellIcon, ComposeFilledIcon, PlusIcon, SearchIcon } from "@lume/icons";
 import { Event, Kind } from "@lume/types";
-import { User } from "@lume/ui";
+import { User } from "@/components/user";
 import {
 	cn,
 	decodeZapInvoice,

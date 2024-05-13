@@ -1,6 +1,7 @@
 import { useEvent } from "@lume/ark";
 import type { Event } from "@lume/types";
-import { Box, Container, Note, Spinner } from "@lume/ui";
+import { Box, Container, Spinner } from "@lume/ui";
+import { Note } from "@/components/note";
 import { createFileRoute } from "@tanstack/react-router";
 import { WindowVirtualizer } from "virtua";
 import { ReplyList } from "./-components/replyList";

@@ -1,6 +1,8 @@
 import { SearchIcon } from "@lume/icons";
 import { type Event, Kind } from "@lume/types";
-import { Note, Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { Note } from "@/components/note";
+import { User } from "@/components/user";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
