@@ -2,13 +2,16 @@ import { cn } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Spinner } from "../spinner";
+import { Spinner } from "@lume/ui";
 import { useUserContext } from "./provider";
 
 export function UserFollowButton({
 	simple = false,
 	className,
-}: { simple?: boolean; className?: string }) {
+}: {
+	simple?: boolean;
+	className?: string;
+}) {
 	const { ark } = useRouteContext({ strict: false });
 	const user = useUserContext();
 

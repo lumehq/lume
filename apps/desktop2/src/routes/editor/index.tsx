@@ -1,6 +1,5 @@
 import { ComposeFilledIcon, TrashIcon } from "@lume/icons";
 import { Spinner } from "@lume/ui";
-import { MentionNote } from "@lume/ui/src/note/mentions/note";
 import {
 	cn,
 	insertImage,
@@ -25,6 +24,7 @@ import {
 import { MediaButton } from "./-components/media";
 import { NsfwToggle } from "./-components/nsfw";
 import { MentionButton } from "./-components/mention";
+import { MentionNote } from "@/components/note/mentions/note";
 
 type EditorSearch = {
 	reply_to: string;
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/editor/")({
 	validateSearch: (search: Record<string, string>): EditorSearch => {
 		return {
 			reply_to: search.reply_to,
-			quote: search.quote === "true" ?? false,
+			quote: search.quote === "true" || false,
 		};
 	},
 	beforeLoad: async ({ search }) => {

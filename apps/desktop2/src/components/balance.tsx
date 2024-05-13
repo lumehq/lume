@@ -1,4 +1,4 @@
-import { User } from "@lume/ui";
+import { User } from "./user";
 import { getBitcoinDisplayValues } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";

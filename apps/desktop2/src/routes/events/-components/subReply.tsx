@@ -1,5 +1,5 @@
 import type { Event } from "@lume/types";
-import { Note } from "@lume/ui";
+import { Note } from "@/components/note";
 
 export function SubReply({ event }: { event: Event; rootEventId?: string }) {
 	return (

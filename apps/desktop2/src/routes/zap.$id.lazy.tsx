@@ -1,5 +1,6 @@
 import { Balance } from "@/components/balance";
-import { Box, Container, User } from "@lume/ui";
+import { Box, Container } from "@lume/ui";
+import { User } from "@/components/user";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
 import { useState } from "react";

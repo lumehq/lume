@@ -1,4 +1,5 @@
-import { Box, Container, Spinner, User } from "@lume/ui";
+import { Box, Container, Spinner } from "@lume/ui";
+import { User } from "@/components/user";
 import { createFileRoute, defer } from "@tanstack/react-router";
 import { WindowVirtualizer } from "virtua";
 import { Conversation } from "@/components/conversation";

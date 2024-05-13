@@ -9,7 +9,6 @@ import { NoteContentLarge } from "./contentLarge";
 import { NoteMenu } from "./menu";
 import { NoteProvider } from "./provider";
 import { NoteRoot } from "./root";
-import { NoteThread } from "./thread";
 import { NoteUser } from "./user";
 
 export const Note = {
@@ -24,6 +23,5 @@ export const Note = {
 	Zap: NoteZap,
 	Open: NoteOpenThread,
 	Child: NoteChild,
-	Thread: NoteThread,
 	Activity: NoteActivity,
 };

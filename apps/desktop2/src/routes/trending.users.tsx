@@ -1,4 +1,5 @@
-import { Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { User } from "@/components/user";
 import { Await, defer } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";

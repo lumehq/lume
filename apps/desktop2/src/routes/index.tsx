@@ -1,5 +1,6 @@
 import { PlusIcon } from "@lume/icons";
-import { Spinner, User } from "@lume/ui";
+import { Spinner } from "@lume/ui";
+import { User } from "@/components/user";
 import { checkForAppUpdates } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";

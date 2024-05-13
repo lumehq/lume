@@ -145,7 +145,6 @@ fn main() {
       commands::window::reposition_column,
       commands::window::resize_column,
       commands::window::open_window,
-      commands::window::get_path,
       commands::window::navigate,
       commands::window::set_badge
     ])
