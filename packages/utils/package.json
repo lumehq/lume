@@ -8,21 +8,21 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.32.0",
+		"@tanstack/react-query": "^5.36.0",
 		"bitcoin-units": "^1.0.0",
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.11",
 		"light-bolt11-decoder": "^3.1.1",
-		"nostr-tools": "^2.5.1",
+		"nostr-tools": "^2.5.2",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-		"slate": "^0.102.0",
+		"slate": "^0.103.0",
 		"slate-react": "^0.102.0"
 	},
 	"devDependencies": {
 		"@lume/tsconfig": "workspace:^",
 		"@lume/types": "workspace:^",
-		"@types/react": "^18.3.1",
+		"@types/react": "^18.3.2",
 		"@types/react-dom": "^18.3.0",
 		"tailwind-merge": "^2.3.0",
 		"typescript": "^5.4.5"
