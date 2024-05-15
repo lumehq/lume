@@ -207,12 +207,10 @@ export class Ark {
 		global?: boolean,
 	) {
 		try {
-			let until: string = undefined;
+			const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 			const isGlobal = global ?? false;
+			const seens = new Set<string>();
 
-			if (asOf && asOf > 0) until = asOf.toString();
-
-			const seenIds = new Set<string>();
 			const nostrEvents: Event[] = await invoke("get_events", {
 				limit,
 				until,
@@ -220,39 +218,31 @@ export class Ark {
 				global: isGlobal,
 			});
 
-			// remove duplicate event
-			for (const event of nostrEvents) {
-				if (event.kind === Kind.Repost) {
-					const repostId = event.tags.find((tag) => tag[0] === "e")?.[1];
-					seenIds.add(repostId);
+			const events = nostrEvents.filter((event) => {
+				const eTags = event.tags.filter((el) => el[0] === "e");
+				const ids = eTags.map((item) => item[1]);
+				const isDup = ids.some((id) => seens.has(id));
+
+				// Add found ids to seen list
+				for (const id of ids) {
+					seens.add(id);
 				}
 
-				const eventIds = event.tags
-					.filter((el) => el[0] === "e")
-					?.map((item) => item[1]);
+				// Filter NSFW event
+				if (this.settings?.nsfw) {
+					const wTags = event.tags.filter((t) => t[0] === "content-warning");
+					const isLewd = wTags.length > 0;
 
-				if (eventIds?.length) {
-					for (const id of eventIds) {
-						seenIds.add(id);
-					}
+					return !isDup && !isLewd;
 				}
-			}
 
-			const events = nostrEvents
-				.filter((event) => !seenIds.has(event.id))
-				.sort((a, b) => b.created_at - a.created_at);
-
-			if (this.settings?.nsfw) {
-				return events.filter(
-					(event) =>
-						event.tags.filter((event) => event[0] === "content-warning")
-							.length > 0,
-				);
-			}
+				// Filter duplicate event
+				return !isDup;
+			});
 
 			return events;
 		} catch (e) {
-			console.info(String(e));
+			console.error("[get_events] failed", String(e));
 			return [];
 		}
 	}

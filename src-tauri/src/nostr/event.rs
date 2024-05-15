@@ -9,7 +9,15 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::EventId(id) => Some(id),
-      Nip19::Event(event) => Some(event.event_id),
+      Nip19::Event(event) => {
+        let relays = event.relays;
+        for relay in relays.into_iter() {
+          let url = Url::from_str(&relay).unwrap();
+          let _ = client.add_relay(url.clone()).await.unwrap_or_default();
+          client.connect_relay(url).await.unwrap_or_default();
+        }
+        Some(event.event_id)
+      }
       _ => None,
     },
     Err(_) => match EventId::from_hex(id) {
@@ -18,23 +26,25 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
     },
   };
 
-  if let Some(id) = event_id {
-    let filter = Filter::new().id(id);
+  match event_id {
+    Some(id) => {
+      let filter = Filter::new().id(id);
 
-    if let Ok(events) = &client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-      .await
-    {
-      if let Some(event) = events.first() {
-        Ok(event.as_json())
-      } else {
-        Err("Event not found with current relay list".into())
+      match &client
+        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .await
+      {
+        Ok(events) => {
+          if let Some(event) = events.first() {
+            Ok(event.as_json())
+          } else {
+            Err("Cannot found this event with current relay list".into())
+          }
+        }
+        Err(err) => Err(err.to_string()),
       }
-    } else {
-      Err("Event not found with current relay list".into())
     }
-  } else {
-    Err("EventId is not valid".into())
+    None => Err("Event ID is not valid.".into()),
   }
 }
 
@@ -213,8 +223,6 @@ pub async fn search(
   limit: usize,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
-  println!("search: {}", content);
-
   let client = &state.client;
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Metadata])

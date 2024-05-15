@@ -206,15 +206,12 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
 
               // Add relay to relay pool
               let _ = client
-                .add_relay_with_opts(relay_url, opts)
+                .add_relay_with_opts(relay_url.clone(), opts)
                 .await
                 .unwrap_or_default();
 
               // Connect relay
-              client
-                .connect_relay(item.0.to_string())
-                .await
-                .unwrap_or_default();
+              client.connect_relay(relay_url).await.unwrap_or_default();
             }
           }
         }
@@ -251,14 +248,10 @@ pub fn to_npub(hex: &str) -> Result<String, ()> {
   Ok(npub.to_bech32().unwrap())
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, ()> {
   let public_key = PublicKey::from_str(key).unwrap();
   let status = nip05::verify(public_key, nip05, None).await;
 
-  if status.is_ok() {
-    Ok(true)
-  } else {
-    Ok(false)
-  }
+  Ok(status.is_ok())
 }

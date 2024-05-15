@@ -25,6 +25,7 @@ import { MediaButton } from "./-components/media";
 import { NsfwToggle } from "./-components/nsfw";
 import { MentionButton } from "./-components/mention";
 import { MentionNote } from "@/components/note/mentions/note";
+import { toast } from "sonner";
 
 type EditorSearch = {
 	reply_to: string;

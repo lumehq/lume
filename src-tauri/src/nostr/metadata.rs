@@ -104,8 +104,6 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
         }
       }
 
-      println!("contact list: {}", contact_list.len());
-
       match client.set_contact_list(contact_list).await {
         Ok(_) => Ok(true),
         Err(err) => Err(err.to_string()),
@@ -289,7 +287,7 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
   }
 }
 
-#[tauri::command(async)]
+#[tauri::command]
 pub async fn set_nstore(
   key: &str,
   content: &str,
