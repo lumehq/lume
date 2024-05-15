@@ -289,7 +289,7 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
   }
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub async fn set_nstore(
   key: &str,
   content: &str,
@@ -306,10 +306,7 @@ pub async fn set_nstore(
       let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
       match client.send_event_builder(builder).await {
-        Ok(event_id) => {
-          println!("set nstore: {}", event_id);
-          Ok(event_id)
-        }
+        Ok(event_id) => Ok(event_id),
         Err(err) => Err(err.to_string()),
       }
     }
@@ -322,38 +319,29 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
   let client = &state.client;
 
   if let Ok(signer) = client.signer().await {
-    let public_key = signer.public_key().await;
+    let public_key = signer.public_key().await.unwrap();
+    let filter = Filter::new()
+      .author(public_key)
+      .kind(Kind::ApplicationSpecificData)
+      .identifier(key)
+      .limit(1);
 
-    if let Ok(author) = public_key {
-      let filter = Filter::new()
-        .author(author)
-        .kind(Kind::ApplicationSpecificData)
-        .identifier(key)
-        .limit(1);
-
-      let query = client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-        .await;
-
-      if let Ok(events) = query {
+    match client
+      .get_events_of(vec![filter], Some(Duration::from_secs(5)))
+      .await
+    {
+      Ok(events) => {
         if let Some(event) = events.first() {
-          println!("get nstore key: {} - received: {}", key, event.id);
-
           let content = event.content();
-
-          match signer.nip44_decrypt(author, content).await {
+          match signer.nip44_decrypt(public_key, content).await {
             Ok(decrypted) => Ok(decrypted),
             Err(_) => Err(event.content.to_string()),
           }
         } else {
-          println!("get nstore key: {}", key);
           Err("Value not found".into())
         }
-      } else {
-        Err("Query nstore event failed".into())
       }
-    } else {
-      Err("Something is wrong".into())
+      Err(err) => Err(err.to_string()),
     }
   } else {
     Err("Signer is required".into())

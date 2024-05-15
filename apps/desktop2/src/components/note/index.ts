@@ -12,16 +12,16 @@ import { NoteRoot } from "./root";
 import { NoteUser } from "./user";
 
 export const Note = {
-	Provider: NoteProvider,
-	Root: NoteRoot,
-	User: NoteUser,
-	Menu: NoteMenu,
-	Reply: NoteReply,
-	Repost: NoteRepost,
-	Content: NoteContent,
-	ContentLarge: NoteContentLarge,
-	Zap: NoteZap,
-	Open: NoteOpenThread,
-	Child: NoteChild,
-	Activity: NoteActivity,
+  Provider: NoteProvider,
+  Root: NoteRoot,
+  User: NoteUser,
+  Menu: NoteMenu,
+  Reply: NoteReply,
+  Repost: NoteRepost,
+  Content: NoteContent,
+  ContentLarge: NoteContentLarge,
+  Zap: NoteZap,
+  Open: NoteOpenThread,
+  Child: NoteChild,
+  Activity: NoteActivity,
 };
