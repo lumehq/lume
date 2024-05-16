@@ -2621,31 +2621,87 @@
           ]
         },
         {
-          "description": "clipboard-manager:allow-read -> Enables the read command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-clear -> Enables the clear command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:allow-read"
+            "clipboard-manager:allow-clear"
           ]
         },
         {
-          "description": "clipboard-manager:allow-write -> Enables the write command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-read-image -> Enables the read_image command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:allow-write"
+            "clipboard-manager:allow-read-image"
           ]
         },
         {
-          "description": "clipboard-manager:deny-read -> Denies the read command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-read-text -> Enables the read_text command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:deny-read"
+            "clipboard-manager:allow-read-text"
           ]
         },
         {
-          "description": "clipboard-manager:deny-write -> Denies the write command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-write-html -> Enables the write_html command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:deny-write"
+            "clipboard-manager:allow-write-html"
+          ]
+        },
+        {
+          "description": "clipboard-manager:allow-write-image -> Enables the write_image command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:allow-write-image"
+          ]
+        },
+        {
+          "description": "clipboard-manager:allow-write-text -> Enables the write_text command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:allow-write-text"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-clear -> Denies the clear command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-clear"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-read-image -> Denies the read_image command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-read-image"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-read-text -> Denies the read_text command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-read-text"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-write-html -> Denies the write_html command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-write-html"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-write-image -> Denies the write_image command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-write-image"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-write-text -> Denies the write_text command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-write-text"
           ]
         },
         {

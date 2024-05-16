@@ -23,7 +23,7 @@ tauri = { version = "2.0.0-beta", features = [
   "protocol-asset",
 ] }
 tauri-plugin-cli = "2.0.0-beta"
-tauri-plugin-clipboard-manager = "2.0.0-beta"
+tauri-plugin-clipboard-manager = "2.1.0-beta"
 tauri-plugin-dialog = "2.0.0-beta"
 tauri-plugin-fs = "2.0.0-beta"
 tauri-plugin-http = "2.0.0-beta"
