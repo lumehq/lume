@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 
 		if (!accounts.length) {
 			throw redirect({
-				to: "/landing",
+				to: "/landing/",
 				replace: true,
 			});
 		}
@@ -68,7 +68,7 @@ function Screen() {
 					<h2 className="mb-1 text-2xl">{currentDate}</h2>
 					<h2 className="text-2xl font-semibold">Welcome back!</h2>
 				</div>
-				<div className="flex items-center justify-center gap-6">
+				<div className="flex flex-wrap px-3 items-center justify-center gap-6">
 					{loading ? (
 						<div className="inline-flex size-6 items-center justify-center">
 							<Spinner className="size-6 text-white" />
@@ -89,10 +89,10 @@ function Screen() {
 									</User.Provider>
 								</button>
 							))}
-							<Link to="/landing">
+							<Link to="/landing/">
 								<div className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-2xl p-2 text-white hover:bg-white/10 dark:hover:bg-black/10">
 									<div className="flex size-20 items-center justify-center rounded-full bg-white/20 dark:bg-black/20">
-										<PlusIcon className="size-5" />
+										<PlusIcon className="size-8" />
 									</div>
 									<p className="text-lg font-medium leading-tight">Add</p>
 								</div>
