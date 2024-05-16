@@ -1,4 +1,10 @@
-import { BellIcon, ComposeFilledIcon, PlusIcon, SearchIcon } from "@lume/icons";
+import {
+	BellIcon,
+	ComposeFilledIcon,
+	HorizontalDotsIcon,
+	PlusIcon,
+	SearchIcon,
+} from "@lume/icons";
 import { Event, Kind } from "@lume/types";
 import { User } from "@/components/user";
 import {
@@ -10,8 +16,9 @@ import {
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrent } from "@tauri-apps/api/window";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import * as Popover from "@radix-ui/react-popover";
 
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async ({ context }) => {
@@ -40,8 +47,8 @@ function Screen() {
 					<Accounts />
 					<button
 						type="button"
-						onClick={() => navigate({ to: "/landing" })}
-						className="inline-flex size-8 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
+						onClick={() => navigate({ to: "/landing/" })}
+						className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
 					>
 						<PlusIcon className="size-5" />
 					</button>
@@ -74,9 +81,24 @@ function Screen() {
 }
 
 function Accounts() {
-	const navigate = Route.useNavigate();
 	const { ark, accounts } = Route.useRouteContext();
 	const { account } = Route.useParams();
+
+	const [windowWidth, setWindowWidth] = useState<number>(null);
+
+	const navigate = Route.useNavigate();
+	const sortedList = useMemo(() => {
+		const list = accounts;
+
+		for (const [i, item] of list.entries()) {
+			if (item === account) {
+				list.splice(i, 1);
+				list.unshift(item);
+			}
+		}
+
+		return list;
+	}, [accounts]);
 
 	const changeAccount = async (npub: string) => {
 		if (npub === account) {
@@ -93,29 +115,76 @@ function Accounts() {
 		}
 	};
 
+	const getWindowDimensions = () => {
+		const { innerWidth: width, innerHeight: height } = window;
+		return {
+			width,
+			height,
+		};
+	};
+
+	useEffect(() => {
+		function handleResize() {
+			setWindowWidth(getWindowDimensions().width);
+		}
+
+		if (!windowWidth) setWindowWidth(getWindowDimensions().width);
+		window.addEventListener("resize", handleResize);
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<div data-tauri-drag-region className="flex items-center gap-3">
-			{accounts.map((user) => (
-				<button key={user} type="button" onClick={() => changeAccount(user)}>
-					<User.Provider pubkey={user}>
-						<User.Root
-							className={cn(
-								"rounded-full transition-all ease-in-out duration-150 will-change-auto",
-								user === account
-									? "ring-1 ring-teal-500 ring-offset-2 ring-offset-neutral-200 dark:ring-offset-neutral-950"
-									: "",
-							)}
-						>
-							<User.Avatar
+			{sortedList
+				.slice(0, windowWidth > 500 ? account.length : 2)
+				.map((user) => (
+					<button key={user} type="button" onClick={() => changeAccount(user)}>
+						<User.Provider pubkey={user}>
+							<User.Root
 								className={cn(
-									"aspect-square h-auto rounded-full object-cover transition-all ease-in-out duration-150 will-change-auto",
-									user === account ? "w-7" : "w-8",
+									"shrink-0 rounded-full transition-all ease-in-out duration-150 will-change-auto",
+									user === account
+										? "ring-1 ring-teal-500 ring-offset-2 ring-offset-neutral-200 dark:ring-offset-neutral-950"
+										: "",
 								)}
-							/>
-						</User.Root>
-					</User.Provider>
-				</button>
-			))}
+							>
+								<User.Avatar
+									className={cn(
+										"aspect-square h-auto rounded-full object-cover transition-all ease-in-out duration-150 will-change-auto",
+										user === account ? "w-7" : "w-8",
+									)}
+								/>
+							</User.Root>
+						</User.Provider>
+					</button>
+				))}
+			{accounts.length >= 3 && windowWidth <= 700 ? (
+				<Popover.Root>
+					<Popover.Trigger className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20">
+						<HorizontalDotsIcon className="size-5" />
+					</Popover.Trigger>
+					<Popover.Portal>
+						<Popover.Content className="flex h-11 select-none items-center justify-center rounded-md bg-neutral-950 p-1 text-sm text-neutral-50 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-50 dark:text-neutral-950">
+							{sortedList.slice(2).map((user) => (
+								<button
+									key={user}
+									type="button"
+									onClick={() => changeAccount(user)}
+									className="size-9 inline-flex items-center justify-center hover:bg-white/10 rounded-md"
+								>
+									<User.Provider pubkey={user}>
+										<User.Root className="rounded-full ring-1 ring-white/10">
+											<User.Avatar className="size-7 aspect-square h-auto rounded-full object-cover" />
+										</User.Root>
+									</User.Provider>
+								</button>
+							))}
+							<Popover.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
+						</Popover.Content>
+					</Popover.Portal>
+				</Popover.Root>
+			) : null}
 		</div>
 	);
 }
