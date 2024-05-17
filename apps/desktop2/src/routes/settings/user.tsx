@@ -19,7 +19,7 @@ export const Route = createFileRoute("/settings/user")({
 
 function Screen() {
 	const { ark, profile } = Route.useRouteContext();
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit } = useForm({ defaultValues: profile });
 
 	const [loading, setLoading] = useState(false);
 	const [picture, setPicture] = useState<string>("");
@@ -28,8 +28,8 @@ function Screen() {
 		try {
 			setLoading(true);
 
-			const profile = { ...data, picture };
-			await ark.create_profile(profile);
+			const newProfile: Metadata = { ...profile, ...data, picture };
+			await ark.create_profile(newProfile);
 
 			setLoading(false);
 		} catch (e) {
@@ -87,7 +87,7 @@ function Screen() {
 						</label>
 						<input
 							name="display_name"
-							{...register("display_name", { required: true, minLength: 1 })}
+							{...register("display_name")}
 							spellCheck={false}
 							className="h-9 w-full rounded-lg border-neutral-300 bg-transparent px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:border-neutral-700 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
 						/>
