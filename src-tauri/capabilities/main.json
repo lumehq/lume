@@ -43,7 +43,7 @@
     "webview:allow-set-webview-size",
     "webview:allow-set-webview-position",
     "webview:allow-webview-close",
-    "dialog:default",
+    "dialog:allow-open",
     "dialog:allow-ask",
     "dialog:allow-message",
     "process:allow-restart",
