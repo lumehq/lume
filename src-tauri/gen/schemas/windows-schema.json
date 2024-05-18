@@ -149,14 +149,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-app-meta -> This allows read access to metadata of the `$APP` folder, including file listing and statistics.",
+                      "description": "fs:allow-app-meta -> This allows non-recursive read access to metadata of the `$APP` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-app-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-app-meta-recursive -> This allows read access to metadata of the `$APP` folder, including file listing and statistics.",
+                      "description": "fs:allow-app-meta-recursive -> This allows full recursive read access to metadata of the `$APP` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-app-meta-recursive"
@@ -191,14 +191,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-appcache-meta -> This allows read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
+                      "description": "fs:allow-appcache-meta -> This allows non-recursive read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-appcache-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-appcache-meta-recursive -> This allows read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
+                      "description": "fs:allow-appcache-meta-recursive -> This allows full recursive read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-appcache-meta-recursive"
@@ -233,14 +233,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-appconfig-meta -> This allows read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
+                      "description": "fs:allow-appconfig-meta -> This allows non-recursive read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-appconfig-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-appconfig-meta-recursive -> This allows read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
+                      "description": "fs:allow-appconfig-meta-recursive -> This allows full recursive read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-appconfig-meta-recursive"
@@ -275,14 +275,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-appdata-meta -> This allows read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-appdata-meta -> This allows non-recursive read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-appdata-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-appdata-meta-recursive -> This allows read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-appdata-meta-recursive -> This allows full recursive read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-appdata-meta-recursive"
@@ -317,14 +317,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-applocaldata-meta -> This allows read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-applocaldata-meta -> This allows non-recursive read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-applocaldata-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-applocaldata-meta-recursive -> This allows read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-applocaldata-meta-recursive -> This allows full recursive read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-applocaldata-meta-recursive"
@@ -359,14 +359,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-applog-meta -> This allows read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
+                      "description": "fs:allow-applog-meta -> This allows non-recursive read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-applog-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-applog-meta-recursive -> This allows read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
+                      "description": "fs:allow-applog-meta-recursive -> This allows full recursive read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-applog-meta-recursive"
@@ -401,14 +401,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-audio-meta -> This allows read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
+                      "description": "fs:allow-audio-meta -> This allows non-recursive read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-audio-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-audio-meta-recursive -> This allows read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
+                      "description": "fs:allow-audio-meta-recursive -> This allows full recursive read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-audio-meta-recursive"
@@ -443,14 +443,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-cache-meta -> This allows read access to metadata of the `$CACHE` folder, including file listing and statistics.",
+                      "description": "fs:allow-cache-meta -> This allows non-recursive read access to metadata of the `$CACHE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-cache-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-cache-meta-recursive -> This allows read access to metadata of the `$CACHE` folder, including file listing and statistics.",
+                      "description": "fs:allow-cache-meta-recursive -> This allows full recursive read access to metadata of the `$CACHE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-cache-meta-recursive"
@@ -485,14 +485,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-config-meta -> This allows read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
+                      "description": "fs:allow-config-meta -> This allows non-recursive read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-config-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-config-meta-recursive -> This allows read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
+                      "description": "fs:allow-config-meta-recursive -> This allows full recursive read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-config-meta-recursive"
@@ -527,14 +527,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-data-meta -> This allows read access to metadata of the `$DATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-data-meta -> This allows non-recursive read access to metadata of the `$DATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-data-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-data-meta-recursive -> This allows read access to metadata of the `$DATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-data-meta-recursive -> This allows full recursive read access to metadata of the `$DATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-data-meta-recursive"
@@ -569,14 +569,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-desktop-meta -> This allows read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
+                      "description": "fs:allow-desktop-meta -> This allows non-recursive read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-desktop-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-desktop-meta-recursive -> This allows read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
+                      "description": "fs:allow-desktop-meta-recursive -> This allows full recursive read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-desktop-meta-recursive"
@@ -611,14 +611,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-document-meta -> This allows read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
+                      "description": "fs:allow-document-meta -> This allows non-recursive read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-document-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-document-meta-recursive -> This allows read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
+                      "description": "fs:allow-document-meta-recursive -> This allows full recursive read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-document-meta-recursive"
@@ -653,14 +653,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-download-meta -> This allows read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
+                      "description": "fs:allow-download-meta -> This allows non-recursive read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-download-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-download-meta-recursive -> This allows read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
+                      "description": "fs:allow-download-meta-recursive -> This allows full recursive read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-download-meta-recursive"
@@ -695,14 +695,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-exe-meta -> This allows read access to metadata of the `$EXE` folder, including file listing and statistics.",
+                      "description": "fs:allow-exe-meta -> This allows non-recursive read access to metadata of the `$EXE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-exe-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-exe-meta-recursive -> This allows read access to metadata of the `$EXE` folder, including file listing and statistics.",
+                      "description": "fs:allow-exe-meta-recursive -> This allows full recursive read access to metadata of the `$EXE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-exe-meta-recursive"
@@ -737,14 +737,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-font-meta -> This allows read access to metadata of the `$FONT` folder, including file listing and statistics.",
+                      "description": "fs:allow-font-meta -> This allows non-recursive read access to metadata of the `$FONT` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-font-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-font-meta-recursive -> This allows read access to metadata of the `$FONT` folder, including file listing and statistics.",
+                      "description": "fs:allow-font-meta-recursive -> This allows full recursive read access to metadata of the `$FONT` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-font-meta-recursive"
@@ -779,14 +779,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-home-meta -> This allows read access to metadata of the `$HOME` folder, including file listing and statistics.",
+                      "description": "fs:allow-home-meta -> This allows non-recursive read access to metadata of the `$HOME` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-home-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-home-meta-recursive -> This allows read access to metadata of the `$HOME` folder, including file listing and statistics.",
+                      "description": "fs:allow-home-meta-recursive -> This allows full recursive read access to metadata of the `$HOME` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-home-meta-recursive"
@@ -821,14 +821,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-localdata-meta -> This allows read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-localdata-meta -> This allows non-recursive read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-localdata-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-localdata-meta-recursive -> This allows read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
+                      "description": "fs:allow-localdata-meta-recursive -> This allows full recursive read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-localdata-meta-recursive"
@@ -863,14 +863,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-log-meta -> This allows read access to metadata of the `$LOG` folder, including file listing and statistics.",
+                      "description": "fs:allow-log-meta -> This allows non-recursive read access to metadata of the `$LOG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-log-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-log-meta-recursive -> This allows read access to metadata of the `$LOG` folder, including file listing and statistics.",
+                      "description": "fs:allow-log-meta-recursive -> This allows full recursive read access to metadata of the `$LOG` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-log-meta-recursive"
@@ -905,14 +905,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-picture-meta -> This allows read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
+                      "description": "fs:allow-picture-meta -> This allows non-recursive read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-picture-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-picture-meta-recursive -> This allows read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
+                      "description": "fs:allow-picture-meta-recursive -> This allows full recursive read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-picture-meta-recursive"
@@ -947,14 +947,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-public-meta -> This allows read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
+                      "description": "fs:allow-public-meta -> This allows non-recursive read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-public-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-public-meta-recursive -> This allows read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
+                      "description": "fs:allow-public-meta-recursive -> This allows full recursive read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-public-meta-recursive"
@@ -989,14 +989,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-resource-meta -> This allows read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
+                      "description": "fs:allow-resource-meta -> This allows non-recursive read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-resource-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-resource-meta-recursive -> This allows read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
+                      "description": "fs:allow-resource-meta-recursive -> This allows full recursive read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-resource-meta-recursive"
@@ -1031,14 +1031,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-runtime-meta -> This allows read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
+                      "description": "fs:allow-runtime-meta -> This allows non-recursive read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-runtime-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-runtime-meta-recursive -> This allows read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
+                      "description": "fs:allow-runtime-meta-recursive -> This allows full recursive read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-runtime-meta-recursive"
@@ -1073,14 +1073,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-temp-meta -> This allows read access to metadata of the `$TEMP` folder, including file listing and statistics.",
+                      "description": "fs:allow-temp-meta -> This allows non-recursive read access to metadata of the `$TEMP` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-temp-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-temp-meta-recursive -> This allows read access to metadata of the `$TEMP` folder, including file listing and statistics.",
+                      "description": "fs:allow-temp-meta-recursive -> This allows full recursive read access to metadata of the `$TEMP` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-temp-meta-recursive"
@@ -1115,14 +1115,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-template-meta -> This allows read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
+                      "description": "fs:allow-template-meta -> This allows non-recursive read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-template-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-template-meta-recursive -> This allows read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
+                      "description": "fs:allow-template-meta-recursive -> This allows full recursive read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-template-meta-recursive"
@@ -1157,14 +1157,14 @@
                       ]
                     },
                     {
-                      "description": "fs:allow-video-meta -> This allows read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
+                      "description": "fs:allow-video-meta -> This allows non-recursive read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-video-meta"
                       ]
                     },
                     {
-                      "description": "fs:allow-video-meta-recursive -> This allows read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
+                      "description": "fs:allow-video-meta-recursive -> This allows full recursive read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
                       "type": "string",
                       "enum": [
                         "fs:allow-video-meta-recursive"
@@ -2340,6 +2340,13 @@
                       ]
                     },
                     {
+                      "description": "shell:allow-spawn -> Enables the spawn command without any pre-configured scope.",
+                      "type": "string",
+                      "enum": [
+                        "shell:allow-spawn"
+                      ]
+                    },
+                    {
                       "description": "shell:allow-stdin-write -> Enables the stdin_write command without any pre-configured scope.",
                       "type": "string",
                       "enum": [
@@ -2365,6 +2372,13 @@
                       "type": "string",
                       "enum": [
                         "shell:deny-open"
+                      ]
+                    },
+                    {
+                      "description": "shell:deny-spawn -> Denies the spawn command without any pre-configured scope.",
+                      "type": "string",
+                      "enum": [
+                        "shell:deny-spawn"
                       ]
                     },
                     {
@@ -2534,104 +2548,111 @@
         {
           "type": "string",
           "enum": [
-            "autostart:default"
-          ]
-        },
-        {
-          "description": "autostart:allow-disable -> Enables the disable command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "autostart:allow-disable"
-          ]
-        },
-        {
-          "description": "autostart:allow-enable -> Enables the enable command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "autostart:allow-enable"
-          ]
-        },
-        {
-          "description": "autostart:allow-is-enabled -> Enables the is_enabled command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "autostart:allow-is-enabled"
-          ]
-        },
-        {
-          "description": "autostart:deny-disable -> Denies the disable command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "autostart:deny-disable"
-          ]
-        },
-        {
-          "description": "autostart:deny-enable -> Denies the enable command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "autostart:deny-enable"
-          ]
-        },
-        {
-          "description": "autostart:deny-is-enabled -> Denies the is_enabled command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "autostart:deny-is-enabled"
-          ]
-        },
-        {
-          "description": "cli:default -> Allows reading the CLI matches",
-          "type": "string",
-          "enum": [
-            "cli:default"
-          ]
-        },
-        {
-          "description": "cli:allow-cli-matches -> Enables the cli_matches command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "cli:allow-cli-matches"
-          ]
-        },
-        {
-          "description": "cli:deny-cli-matches -> Denies the cli_matches command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "cli:deny-cli-matches"
-          ]
-        },
-        {
-          "type": "string",
-          "enum": [
             "clipboard-manager:default"
           ]
         },
         {
-          "description": "clipboard-manager:allow-read -> Enables the read command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-clear -> Enables the clear command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:allow-read"
+            "clipboard-manager:allow-clear"
           ]
         },
         {
-          "description": "clipboard-manager:allow-write -> Enables the write command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-read-image -> Enables the read_image command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:allow-write"
+            "clipboard-manager:allow-read-image"
           ]
         },
         {
-          "description": "clipboard-manager:deny-read -> Denies the read command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-read-text -> Enables the read_text command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:deny-read"
+            "clipboard-manager:allow-read-text"
           ]
         },
         {
-          "description": "clipboard-manager:deny-write -> Denies the write command without any pre-configured scope.",
+          "description": "clipboard-manager:allow-write-html -> Enables the write_html command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "clipboard-manager:deny-write"
+            "clipboard-manager:allow-write-html"
+          ]
+        },
+        {
+          "description": "clipboard-manager:allow-write-image -> Enables the write_image command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:allow-write-image"
+          ]
+        },
+        {
+          "description": "clipboard-manager:allow-write-text -> Enables the write_text command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:allow-write-text"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-clear -> Denies the clear command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-clear"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-read-image -> Denies the read_image command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-read-image"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-read-text -> Denies the read_text command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-read-text"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-write-html -> Denies the write_html command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-write-html"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-write-image -> Denies the write_image command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-write-image"
+          ]
+        },
+        {
+          "description": "clipboard-manager:deny-write-text -> Denies the write_text command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "clipboard-manager:deny-write-text"
+          ]
+        },
+        {
+          "type": "string",
+          "enum": [
+            "decorum:default"
+          ]
+        },
+        {
+          "description": "decorum:allow-show-snap-overlay -> Enables the show_snap_overlay command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "decorum:allow-show-snap-overlay"
+          ]
+        },
+        {
+          "description": "decorum:deny-show-snap-overlay -> Denies the show_snap_overlay command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "decorum:deny-show-snap-overlay"
           ]
         },
         {
@@ -2774,14 +2795,14 @@
           ]
         },
         {
-          "description": "fs:allow-app-meta -> This allows read access to metadata of the `$APP` folder, including file listing and statistics.",
+          "description": "fs:allow-app-meta -> This allows non-recursive read access to metadata of the `$APP` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-app-meta"
           ]
         },
         {
-          "description": "fs:allow-app-meta-recursive -> This allows read access to metadata of the `$APP` folder, including file listing and statistics.",
+          "description": "fs:allow-app-meta-recursive -> This allows full recursive read access to metadata of the `$APP` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-app-meta-recursive"
@@ -2816,14 +2837,14 @@
           ]
         },
         {
-          "description": "fs:allow-appcache-meta -> This allows read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
+          "description": "fs:allow-appcache-meta -> This allows non-recursive read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-appcache-meta"
           ]
         },
         {
-          "description": "fs:allow-appcache-meta-recursive -> This allows read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
+          "description": "fs:allow-appcache-meta-recursive -> This allows full recursive read access to metadata of the `$APPCACHE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-appcache-meta-recursive"
@@ -2858,14 +2879,14 @@
           ]
         },
         {
-          "description": "fs:allow-appconfig-meta -> This allows read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
+          "description": "fs:allow-appconfig-meta -> This allows non-recursive read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-appconfig-meta"
           ]
         },
         {
-          "description": "fs:allow-appconfig-meta-recursive -> This allows read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
+          "description": "fs:allow-appconfig-meta-recursive -> This allows full recursive read access to metadata of the `$APPCONFIG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-appconfig-meta-recursive"
@@ -2900,14 +2921,14 @@
           ]
         },
         {
-          "description": "fs:allow-appdata-meta -> This allows read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
+          "description": "fs:allow-appdata-meta -> This allows non-recursive read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-appdata-meta"
           ]
         },
         {
-          "description": "fs:allow-appdata-meta-recursive -> This allows read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
+          "description": "fs:allow-appdata-meta-recursive -> This allows full recursive read access to metadata of the `$APPDATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-appdata-meta-recursive"
@@ -2942,14 +2963,14 @@
           ]
         },
         {
-          "description": "fs:allow-applocaldata-meta -> This allows read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
+          "description": "fs:allow-applocaldata-meta -> This allows non-recursive read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-applocaldata-meta"
           ]
         },
         {
-          "description": "fs:allow-applocaldata-meta-recursive -> This allows read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
+          "description": "fs:allow-applocaldata-meta-recursive -> This allows full recursive read access to metadata of the `$APPLOCALDATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-applocaldata-meta-recursive"
@@ -2984,14 +3005,14 @@
           ]
         },
         {
-          "description": "fs:allow-applog-meta -> This allows read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
+          "description": "fs:allow-applog-meta -> This allows non-recursive read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-applog-meta"
           ]
         },
         {
-          "description": "fs:allow-applog-meta-recursive -> This allows read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
+          "description": "fs:allow-applog-meta-recursive -> This allows full recursive read access to metadata of the `$APPLOG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-applog-meta-recursive"
@@ -3026,14 +3047,14 @@
           ]
         },
         {
-          "description": "fs:allow-audio-meta -> This allows read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
+          "description": "fs:allow-audio-meta -> This allows non-recursive read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-audio-meta"
           ]
         },
         {
-          "description": "fs:allow-audio-meta-recursive -> This allows read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
+          "description": "fs:allow-audio-meta-recursive -> This allows full recursive read access to metadata of the `$AUDIO` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-audio-meta-recursive"
@@ -3068,14 +3089,14 @@
           ]
         },
         {
-          "description": "fs:allow-cache-meta -> This allows read access to metadata of the `$CACHE` folder, including file listing and statistics.",
+          "description": "fs:allow-cache-meta -> This allows non-recursive read access to metadata of the `$CACHE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-cache-meta"
           ]
         },
         {
-          "description": "fs:allow-cache-meta-recursive -> This allows read access to metadata of the `$CACHE` folder, including file listing and statistics.",
+          "description": "fs:allow-cache-meta-recursive -> This allows full recursive read access to metadata of the `$CACHE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-cache-meta-recursive"
@@ -3110,14 +3131,14 @@
           ]
         },
         {
-          "description": "fs:allow-config-meta -> This allows read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
+          "description": "fs:allow-config-meta -> This allows non-recursive read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-config-meta"
           ]
         },
         {
-          "description": "fs:allow-config-meta-recursive -> This allows read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
+          "description": "fs:allow-config-meta-recursive -> This allows full recursive read access to metadata of the `$CONFIG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-config-meta-recursive"
@@ -3152,14 +3173,14 @@
           ]
         },
         {
-          "description": "fs:allow-data-meta -> This allows read access to metadata of the `$DATA` folder, including file listing and statistics.",
+          "description": "fs:allow-data-meta -> This allows non-recursive read access to metadata of the `$DATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-data-meta"
           ]
         },
         {
-          "description": "fs:allow-data-meta-recursive -> This allows read access to metadata of the `$DATA` folder, including file listing and statistics.",
+          "description": "fs:allow-data-meta-recursive -> This allows full recursive read access to metadata of the `$DATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-data-meta-recursive"
@@ -3194,14 +3215,14 @@
           ]
         },
         {
-          "description": "fs:allow-desktop-meta -> This allows read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
+          "description": "fs:allow-desktop-meta -> This allows non-recursive read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-desktop-meta"
           ]
         },
         {
-          "description": "fs:allow-desktop-meta-recursive -> This allows read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
+          "description": "fs:allow-desktop-meta-recursive -> This allows full recursive read access to metadata of the `$DESKTOP` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-desktop-meta-recursive"
@@ -3236,14 +3257,14 @@
           ]
         },
         {
-          "description": "fs:allow-document-meta -> This allows read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
+          "description": "fs:allow-document-meta -> This allows non-recursive read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-document-meta"
           ]
         },
         {
-          "description": "fs:allow-document-meta-recursive -> This allows read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
+          "description": "fs:allow-document-meta-recursive -> This allows full recursive read access to metadata of the `$DOCUMENT` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-document-meta-recursive"
@@ -3278,14 +3299,14 @@
           ]
         },
         {
-          "description": "fs:allow-download-meta -> This allows read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
+          "description": "fs:allow-download-meta -> This allows non-recursive read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-download-meta"
           ]
         },
         {
-          "description": "fs:allow-download-meta-recursive -> This allows read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
+          "description": "fs:allow-download-meta-recursive -> This allows full recursive read access to metadata of the `$DOWNLOAD` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-download-meta-recursive"
@@ -3320,14 +3341,14 @@
           ]
         },
         {
-          "description": "fs:allow-exe-meta -> This allows read access to metadata of the `$EXE` folder, including file listing and statistics.",
+          "description": "fs:allow-exe-meta -> This allows non-recursive read access to metadata of the `$EXE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-exe-meta"
           ]
         },
         {
-          "description": "fs:allow-exe-meta-recursive -> This allows read access to metadata of the `$EXE` folder, including file listing and statistics.",
+          "description": "fs:allow-exe-meta-recursive -> This allows full recursive read access to metadata of the `$EXE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-exe-meta-recursive"
@@ -3362,14 +3383,14 @@
           ]
         },
         {
-          "description": "fs:allow-font-meta -> This allows read access to metadata of the `$FONT` folder, including file listing and statistics.",
+          "description": "fs:allow-font-meta -> This allows non-recursive read access to metadata of the `$FONT` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-font-meta"
           ]
         },
         {
-          "description": "fs:allow-font-meta-recursive -> This allows read access to metadata of the `$FONT` folder, including file listing and statistics.",
+          "description": "fs:allow-font-meta-recursive -> This allows full recursive read access to metadata of the `$FONT` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-font-meta-recursive"
@@ -3404,14 +3425,14 @@
           ]
         },
         {
-          "description": "fs:allow-home-meta -> This allows read access to metadata of the `$HOME` folder, including file listing and statistics.",
+          "description": "fs:allow-home-meta -> This allows non-recursive read access to metadata of the `$HOME` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-home-meta"
           ]
         },
         {
-          "description": "fs:allow-home-meta-recursive -> This allows read access to metadata of the `$HOME` folder, including file listing and statistics.",
+          "description": "fs:allow-home-meta-recursive -> This allows full recursive read access to metadata of the `$HOME` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-home-meta-recursive"
@@ -3446,14 +3467,14 @@
           ]
         },
         {
-          "description": "fs:allow-localdata-meta -> This allows read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
+          "description": "fs:allow-localdata-meta -> This allows non-recursive read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-localdata-meta"
           ]
         },
         {
-          "description": "fs:allow-localdata-meta-recursive -> This allows read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
+          "description": "fs:allow-localdata-meta-recursive -> This allows full recursive read access to metadata of the `$LOCALDATA` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-localdata-meta-recursive"
@@ -3488,14 +3509,14 @@
           ]
         },
         {
-          "description": "fs:allow-log-meta -> This allows read access to metadata of the `$LOG` folder, including file listing and statistics.",
+          "description": "fs:allow-log-meta -> This allows non-recursive read access to metadata of the `$LOG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-log-meta"
           ]
         },
         {
-          "description": "fs:allow-log-meta-recursive -> This allows read access to metadata of the `$LOG` folder, including file listing and statistics.",
+          "description": "fs:allow-log-meta-recursive -> This allows full recursive read access to metadata of the `$LOG` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-log-meta-recursive"
@@ -3530,14 +3551,14 @@
           ]
         },
         {
-          "description": "fs:allow-picture-meta -> This allows read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
+          "description": "fs:allow-picture-meta -> This allows non-recursive read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-picture-meta"
           ]
         },
         {
-          "description": "fs:allow-picture-meta-recursive -> This allows read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
+          "description": "fs:allow-picture-meta-recursive -> This allows full recursive read access to metadata of the `$PICTURE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-picture-meta-recursive"
@@ -3572,14 +3593,14 @@
           ]
         },
         {
-          "description": "fs:allow-public-meta -> This allows read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
+          "description": "fs:allow-public-meta -> This allows non-recursive read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-public-meta"
           ]
         },
         {
-          "description": "fs:allow-public-meta-recursive -> This allows read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
+          "description": "fs:allow-public-meta-recursive -> This allows full recursive read access to metadata of the `$PUBLIC` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-public-meta-recursive"
@@ -3614,14 +3635,14 @@
           ]
         },
         {
-          "description": "fs:allow-resource-meta -> This allows read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
+          "description": "fs:allow-resource-meta -> This allows non-recursive read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-resource-meta"
           ]
         },
         {
-          "description": "fs:allow-resource-meta-recursive -> This allows read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
+          "description": "fs:allow-resource-meta-recursive -> This allows full recursive read access to metadata of the `$RESOURCE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-resource-meta-recursive"
@@ -3656,14 +3677,14 @@
           ]
         },
         {
-          "description": "fs:allow-runtime-meta -> This allows read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
+          "description": "fs:allow-runtime-meta -> This allows non-recursive read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-runtime-meta"
           ]
         },
         {
-          "description": "fs:allow-runtime-meta-recursive -> This allows read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
+          "description": "fs:allow-runtime-meta-recursive -> This allows full recursive read access to metadata of the `$RUNTIME` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-runtime-meta-recursive"
@@ -3698,14 +3719,14 @@
           ]
         },
         {
-          "description": "fs:allow-temp-meta -> This allows read access to metadata of the `$TEMP` folder, including file listing and statistics.",
+          "description": "fs:allow-temp-meta -> This allows non-recursive read access to metadata of the `$TEMP` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-temp-meta"
           ]
         },
         {
-          "description": "fs:allow-temp-meta-recursive -> This allows read access to metadata of the `$TEMP` folder, including file listing and statistics.",
+          "description": "fs:allow-temp-meta-recursive -> This allows full recursive read access to metadata of the `$TEMP` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-temp-meta-recursive"
@@ -3740,14 +3761,14 @@
           ]
         },
         {
-          "description": "fs:allow-template-meta -> This allows read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
+          "description": "fs:allow-template-meta -> This allows non-recursive read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-template-meta"
           ]
         },
         {
-          "description": "fs:allow-template-meta-recursive -> This allows read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
+          "description": "fs:allow-template-meta-recursive -> This allows full recursive read access to metadata of the `$TEMPLATE` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-template-meta-recursive"
@@ -3782,14 +3803,14 @@
           ]
         },
         {
-          "description": "fs:allow-video-meta -> This allows read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
+          "description": "fs:allow-video-meta -> This allows non-recursive read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-video-meta"
           ]
         },
         {
-          "description": "fs:allow-video-meta-recursive -> This allows read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
+          "description": "fs:allow-video-meta-recursive -> This allows full recursive read access to metadata of the `$VIDEO` folder, including file listing and statistics.",
           "type": "string",
           "enum": [
             "fs:allow-video-meta-recursive"
@@ -5585,6 +5606,13 @@
           ]
         },
         {
+          "description": "shell:allow-spawn -> Enables the spawn command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "shell:allow-spawn"
+          ]
+        },
+        {
           "description": "shell:allow-stdin-write -> Enables the stdin_write command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -5613,184 +5641,17 @@
           ]
         },
         {
+          "description": "shell:deny-spawn -> Denies the spawn command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "shell:deny-spawn"
+          ]
+        },
+        {
           "description": "shell:deny-stdin-write -> Denies the stdin_write command without any pre-configured scope.",
           "type": "string",
           "enum": [
             "shell:deny-stdin-write"
-          ]
-        },
-        {
-          "type": "string",
-          "enum": [
-            "store:default"
-          ]
-        },
-        {
-          "description": "store:allow-clear -> Enables the clear command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-clear"
-          ]
-        },
-        {
-          "description": "store:allow-delete -> Enables the delete command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-delete"
-          ]
-        },
-        {
-          "description": "store:allow-entries -> Enables the entries command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-entries"
-          ]
-        },
-        {
-          "description": "store:allow-get -> Enables the get command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-get"
-          ]
-        },
-        {
-          "description": "store:allow-has -> Enables the has command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-has"
-          ]
-        },
-        {
-          "description": "store:allow-keys -> Enables the keys command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-keys"
-          ]
-        },
-        {
-          "description": "store:allow-length -> Enables the length command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-length"
-          ]
-        },
-        {
-          "description": "store:allow-load -> Enables the load command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-load"
-          ]
-        },
-        {
-          "description": "store:allow-reset -> Enables the reset command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-reset"
-          ]
-        },
-        {
-          "description": "store:allow-save -> Enables the save command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-save"
-          ]
-        },
-        {
-          "description": "store:allow-set -> Enables the set command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-set"
-          ]
-        },
-        {
-          "description": "store:allow-values -> Enables the values command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:allow-values"
-          ]
-        },
-        {
-          "description": "store:deny-clear -> Denies the clear command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-clear"
-          ]
-        },
-        {
-          "description": "store:deny-delete -> Denies the delete command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-delete"
-          ]
-        },
-        {
-          "description": "store:deny-entries -> Denies the entries command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-entries"
-          ]
-        },
-        {
-          "description": "store:deny-get -> Denies the get command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-get"
-          ]
-        },
-        {
-          "description": "store:deny-has -> Denies the has command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-has"
-          ]
-        },
-        {
-          "description": "store:deny-keys -> Denies the keys command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-keys"
-          ]
-        },
-        {
-          "description": "store:deny-length -> Denies the length command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-length"
-          ]
-        },
-        {
-          "description": "store:deny-load -> Denies the load command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-load"
-          ]
-        },
-        {
-          "description": "store:deny-reset -> Denies the reset command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-reset"
-          ]
-        },
-        {
-          "description": "store:deny-save -> Denies the save command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-save"
-          ]
-        },
-        {
-          "description": "store:deny-set -> Denies the set command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-set"
-          ]
-        },
-        {
-          "description": "store:deny-values -> Denies the values command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "store:deny-values"
           ]
         },
         {
@@ -6087,6 +5948,13 @@
           ]
         },
         {
+          "description": "webview:allow-set-webview-zoom -> Enables the set_webview_zoom command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "webview:allow-set-webview-zoom"
+          ]
+        },
+        {
           "description": "webview:allow-webview-close -> Enables the webview_close command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -6164,6 +6032,13 @@
           ]
         },
         {
+          "description": "webview:deny-set-webview-zoom -> Denies the set_webview_zoom command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "webview:deny-set-webview-zoom"
+          ]
+        },
+        {
           "description": "webview:deny-webview-close -> Denies the webview_close command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -6224,6 +6099,13 @@
           "type": "string",
           "enum": [
             "window:allow-current-monitor"
+          ]
+        },
+        {
+          "description": "window:allow-cursor-position -> Enables the cursor_position command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window:allow-cursor-position"
           ]
         },
         {
@@ -6577,6 +6459,13 @@
           ]
         },
         {
+          "description": "window:allow-start-resize-dragging -> Enables the start_resize_dragging command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window:allow-start-resize-dragging"
+          ]
+        },
+        {
           "description": "window:allow-theme -> Enables the theme command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -6644,6 +6533,13 @@
           "type": "string",
           "enum": [
             "window:deny-current-monitor"
+          ]
+        },
+        {
+          "description": "window:deny-cursor-position -> Denies the cursor_position command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window:deny-cursor-position"
           ]
         },
         {
@@ -6997,6 +6893,13 @@
           ]
         },
         {
+          "description": "window:deny-start-resize-dragging -> Denies the start_resize_dragging command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window:deny-start-resize-dragging"
+          ]
+        },
+        {
           "description": "window:deny-theme -> Denies the theme command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -7038,10 +6941,17 @@
           ]
         },
         {
-          "description": "window-state:allow-restore-window-state -> Enables the restore_window_state command without any pre-configured scope.",
+          "description": "window-state:allow-filename -> Enables the filename command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "window-state:allow-restore-window-state"
+            "window-state:allow-filename"
+          ]
+        },
+        {
+          "description": "window-state:allow-restore-state -> Enables the restore_state command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window-state:allow-restore-state"
           ]
         },
         {
@@ -7052,10 +6962,17 @@
           ]
         },
         {
-          "description": "window-state:deny-restore-window-state -> Denies the restore_window_state command without any pre-configured scope.",
+          "description": "window-state:deny-filename -> Denies the filename command without any pre-configured scope.",
           "type": "string",
           "enum": [
-            "window-state:deny-restore-window-state"
+            "window-state:deny-filename"
+          ]
+        },
+        {
+          "description": "window-state:deny-restore-state -> Denies the restore_state command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window-state:deny-restore-state"
           ]
         },
         {

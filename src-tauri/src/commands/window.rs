@@ -3,6 +3,7 @@ use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
 use std::path::PathBuf;
 use tauri::utils::config::WindowEffectsConfig;
 use tauri::window::Effect;
+#[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
@@ -129,7 +130,22 @@ pub fn open_window(
       .build()
       .unwrap();
 
-    #[cfg(not(target_os = "macos"))]
+    #[cfg(target_os = "windows")]
+    let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
+      .title(title)
+      .min_inner_size(width, height)
+      .inner_size(width, height)
+      .transparent(true)
+      .effects(WindowEffectsConfig {
+        state: None,
+        effects: vec![Effect::Mica],
+        radius: None,
+        color: None,
+      })
+      .build()
+      .unwrap();
+
+    #[cfg(target_os = "linux")]
     let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
       .title(title)
       .min_inner_size(width, height)

@@ -1,15 +1,19 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
-  "app": {
-    "windows": [
-      {
-        "title": "Lume",
-        "label": "main",
-        "width": 500,
-        "height": 800,
-        "minWidth": 500,
-        "minHeight": 800
-      }
-    ]
-  }
+	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
+	"app": {
+		"windows": [
+			{
+				"title": "Lume",
+				"label": "main",
+				"width": 500,
+				"height": 800,
+				"minWidth": 500,
+				"minHeight": 800,
+				"transparent": true,
+				"windowEffects": {
+					"effects": ["mica"]
+				}
+			}
+		]
+	}
 }
