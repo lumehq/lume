@@ -195,7 +195,7 @@ pub async fn load_selected_account(npub: &str, state: State<'_, Nostr>) -> Resul
               let relay_url = item.0.to_string();
               let opts = match item.1 {
                 Some(val) => {
-                  if val == RelayMetadata::Read {
+                  if val == &RelayMetadata::Read {
                     RelayOptions::new().read(true).write(false)
                   } else {
                     RelayOptions::new().write(true).read(false)
@@ -251,7 +251,7 @@ pub fn to_npub(hex: &str) -> Result<String, ()> {
 #[tauri::command]
 pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, ()> {
   let public_key = PublicKey::from_str(key).unwrap();
-  let status = nip05::verify(public_key, nip05, None).await;
+  let status = nip05::verify(&public_key, nip05, None).await;
 
   Ok(status.is_ok())
 }

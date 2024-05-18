@@ -91,12 +91,12 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
       if let Ok(contact_list_events) = client.get_events_of(vec![contact_list_filter], None).await {
         for event in contact_list_events.into_iter() {
           for tag in event.into_iter_tags() {
-            if let Tag::PublicKey {
+            if let Some(TagStandard::PublicKey {
               public_key,
               relay_url,
               alias,
               uppercase: false,
-            } = tag
+            }) = tag.to_standardized()
             {
               contact_list.push(Contact::new(public_key, relay_url, alias))
             }
@@ -300,7 +300,7 @@ pub async fn set_nstore(
       let public_key = signer.public_key().await.unwrap();
       let encrypted = signer.nip44_encrypt(public_key, content).await.unwrap();
 
-      let tag = Tag::Identifier(key.into());
+      let tag = Tag::identifier(key);
       let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
       match client.send_event_builder(builder).await {
