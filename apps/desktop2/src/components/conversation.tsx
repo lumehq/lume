@@ -12,7 +12,7 @@ export function Conversation({
 	className?: string;
 }) {
 	const { ark } = useRouteContext({ strict: false });
-	const thread = ark.parse_event_thread(event.tags);
+	const thread = ark.get_thread(event.tags);
 
 	return (
 		<Note.Provider event={event}>

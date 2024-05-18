@@ -84,9 +84,14 @@ pub async fn list_connected_relays(state: State<'_, Nostr>) -> Result<Vec<Url>, 
 #[tauri::command]
 pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
-  if let Ok(_) = client.add_relay(relay).await {
-    let _ = client.connect_relay(relay);
-    Ok(true)
+  if let Ok(status) = client.add_relay(relay).await {
+    if status == true {
+      println!("connecting to relay: {}", relay);
+      let _ = client.connect_relay(relay);
+      Ok(true)
+    } else {
+      Ok(false)
+    }
   } else {
     Ok(false)
   }

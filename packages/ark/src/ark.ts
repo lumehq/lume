@@ -1,10 +1,8 @@
 import {
-	type Contact,
 	type Event,
 	type EventWithReplies,
 	type Interests,
 	type Keys,
-	Kind,
 	type LumeColumn,
 	type Metadata,
 	type Settings,
@@ -413,12 +411,19 @@ export class Ark {
 		}
 	}
 
-	public parse_event_thread(tags: string[][]) {
+	public get_thread(tags: string[][]) {
 		let root: string = null;
 		let reply: string = null;
 
 		// Get all event references from tags, ignore mention
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
+		const relays = tags.filter((el) => el[0] === "e" && el[2].length);
+
+		if (relays.length >= 1) {
+			for (const relay of relays) {
+				if (relay[2]?.length) this.add_relay(relay[2]);
+			}
+		}
 
 		if (events.length === 1) {
 			root = events[0][1];
