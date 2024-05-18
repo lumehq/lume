@@ -2869,6 +2869,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-clipboard-manager",
+ "tauri-plugin-decorum",
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
  "tauri-plugin-http",
@@ -5303,6 +5304,23 @@ dependencies = [
  "tauri",
  "tauri-plugin",
  "thiserror",
+]
+
+[[package]]
+name = "tauri-plugin-decorum"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d44342c777f49441733f657ec22da85c0660056c97f4b5db507088a7cbf399e"
+dependencies = [
+ "anyhow",
+ "cocoa",
+ "objc",
+ "rand 0.8.5",
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "thiserror",
+ "windows 0.56.0",
 ]
 
 [[package]]

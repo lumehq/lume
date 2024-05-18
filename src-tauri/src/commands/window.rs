@@ -6,6 +6,7 @@ use tauri::window::Effect;
 use tauri::TitleBarStyle;
 use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
+use tauri_plugin_decorum::WebviewWindowExt;
 
 #[tauri::command]
 pub fn create_column(
@@ -112,7 +113,7 @@ pub fn open_window(
     };
   } else {
     #[cfg(target_os = "macos")]
-    let _ = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
+    let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
       .title(title)
       .min_inner_size(width, height)
       .inner_size(width, height)
@@ -128,17 +129,20 @@ pub fn open_window(
       .build()
       .unwrap();
 
-    // [macOS] Custom traffic light possition
-    // #[cfg(target_os = "macos")]
-    // setup_traffic_light_positioner(app_handle.get_window(label).unwrap());
-
     #[cfg(not(target_os = "macos"))]
-    let _ = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
+    let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
       .title(title)
       .min_inner_size(width, height)
       .inner_size(width, height)
       .build()
       .unwrap();
+
+    // Create a custom titlebar
+    window.create_overlay_titlebar().unwrap();
+
+    // Set a custom inset to the traffic lights
+    #[cfg(target_os = "macos")]
+    window.set_traffic_lights_inset(8.0, 16.0).unwrap();
   }
 
   Ok(())

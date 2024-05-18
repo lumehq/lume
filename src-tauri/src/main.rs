@@ -5,7 +5,6 @@
 
 pub mod commands;
 pub mod nostr;
-pub mod traffic_light;
 pub mod tray;
 
 #[cfg(target_os = "macos")]
@@ -18,8 +17,7 @@ extern crate objc;
 use nostr_sdk::prelude::*;
 use std::fs;
 use tauri::Manager;
-#[cfg(target_os = "macos")]
-use traffic_light::setup_traffic_light_positioner;
+use tauri_plugin_decorum::WebviewWindowExt;
 
 pub struct Nostr {
   client: Client,
@@ -28,8 +26,13 @@ pub struct Nostr {
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
+      // Create a custom titlebar for main window
+      let main_window = app.get_webview_window("main").unwrap();
+      main_window.create_overlay_titlebar().unwrap();
+
+      // Set a custom inset to the traffic lights
       #[cfg(target_os = "macos")]
-      setup_traffic_light_positioner(app.get_window("main").unwrap());
+      main_window.set_traffic_lights_inset(8.0, 16.0).unwrap();
 
       // Setup app tray
       let handle = app.handle().clone();
@@ -82,6 +85,7 @@ fn main() {
       }
       _ => {}
     })
+    .plugin(tauri_plugin_decorum::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_fs::init())
