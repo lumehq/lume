@@ -107,17 +107,6 @@ pub async fn nostr_connect(
   }
 }
 
-#[tauri::command]
-pub async fn verify_signer(state: State<'_, Nostr>) -> Result<bool, ()> {
-  let client = &state.client;
-
-  if (client.signer().await).is_ok() {
-    Ok(true)
-  } else {
-    Ok(false)
-  }
-}
-
 #[tauri::command(async)]
 pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
   let keyring = Entry::new("Lume Secret Storage", npub).unwrap();
@@ -249,9 +238,12 @@ pub fn to_npub(hex: &str) -> Result<String, ()> {
 }
 
 #[tauri::command]
-pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, ()> {
-  let public_key = PublicKey::from_str(key).unwrap();
-  let status = nip05::verify(&public_key, nip05, None).await;
-
-  Ok(status.is_ok())
+pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
+  match PublicKey::from_str(key) {
+    Ok(public_key) => {
+      let status = nip05::verify(&public_key, nip05, None).await;
+      Ok(status.is_ok())
+    }
+    Err(err) => Err(err.to_string()),
+  }
 }

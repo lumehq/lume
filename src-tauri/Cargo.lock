@@ -108,55 +108,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anstream"
-version = "0.6.14"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "418c75fa768af9c03be99d17643f93f79bbba589895012a80e3452a19ddda15b"
-dependencies = [
- "anstyle",
- "anstyle-parse",
- "anstyle-query",
- "anstyle-wincon",
- "colorchoice",
- "is_terminal_polyfill",
- "utf8parse",
-]
-
-[[package]]
-name = "anstyle"
-version = "1.0.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "038dfcf04a5feb68e9c60b21c9625a54c2c0616e79b72b0fd87075a056ae1d1b"
-
-[[package]]
-name = "anstyle-parse"
-version = "0.2.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c03a11a9034d92058ceb6ee011ce58af4a9bf61491aa7e1e59ecd24bd40d22d4"
-dependencies = [
- "utf8parse",
-]
-
-[[package]]
-name = "anstyle-query"
-version = "1.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a64c907d4e79225ac72e2a354c9ce84d50ebb4586dee56c82b3ee73004f537f5"
-dependencies = [
- "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "anstyle-wincon"
-version = "3.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61a38449feb7068f52bb06c12759005cf459ee52bb4adc1d5a7c4322d716fb19"
-dependencies = [
- "anstyle",
- "windows-sys 0.52.0",
-]
-
-[[package]]
 name = "anyhow"
 version = "1.0.85"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -487,17 +438,6 @@ name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
-
-[[package]]
-name = "auto-launch"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f012b8cc0c850f34117ec8252a44418f2e34a2cf501de89e29b241ae5f79471"
-dependencies = [
- "dirs",
- "thiserror",
- "winreg 0.10.1",
-]
 
 [[package]]
 name = "autocfg"
@@ -933,33 +873,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "clap"
-version = "4.5.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90bc066a67923782aa8515dbaea16946c5bcc5addbd668bb80af688e53e548a0"
-dependencies = [
- "clap_builder",
-]
-
-[[package]]
-name = "clap_builder"
-version = "4.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae129e2e766ae0ec03484e609954119f123cc1fe650337e155d03b022f24f7b4"
-dependencies = [
- "anstream",
- "anstyle",
- "clap_lex",
- "strsim",
-]
-
-[[package]]
-name = "clap_lex"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98cc8fbded0c607b7ba9dd60cd98df59af97e84d24e49c8557331cfc26d301ce"
-
-[[package]]
 name = "clipboard-win"
 version = "5.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1003,12 +916,6 @@ name = "color_quant"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d7b894f5411737b7867f4827955924d7c254fc9f4d91a6aad6b097804b1018b"
-
-[[package]]
-name = "colorchoice"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b6a852b24ab71dffc585bcb46eaf7959d175cb865a7152e35b348d1b2960422"
 
 [[package]]
 name = "combine"
@@ -1351,15 +1258,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dirs"
-version = "4.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca3aa72a6f96ea37bbc5aa912f6788242832f75369bdfdadcb0e38423f100059"
-dependencies = [
- "dirs-sys",
-]
-
-[[package]]
 name = "dirs-next"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1367,17 +1265,6 @@ checksum = "b98cf8ebf19c3d1b223e151f99a4f9f0690dca41414773390fc824184ac833e1"
 dependencies = [
  "cfg-if",
  "dirs-sys-next",
-]
-
-[[package]]
-name = "dirs-sys"
-version = "0.3.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b1d1d91c932ef41c0f2663aa8b0ca0342d444d842c06914aa0a7e352d0bada6"
-dependencies = [
- "libc",
- "redox_users",
- "winapi",
 ]
 
 [[package]]
@@ -1482,7 +1369,7 @@ dependencies = [
  "rustc_version",
  "toml 0.8.2",
  "vswhom",
- "winreg 0.52.0",
+ "winreg",
 ]
 
 [[package]]
@@ -2661,12 +2548,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "is_terminal_polyfill"
-version = "1.70.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8478577c03552c21db0e2724ffb8986a5ce7af88107e6be5d2ee6e158c12800"
-
-[[package]]
 name = "itoa"
 version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2987,8 +2868,6 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-cli",
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
@@ -4455,7 +4334,7 @@ dependencies = [
  "wasm-streams",
  "web-sys",
  "webpki-roots",
- "winreg 0.52.0",
+ "winreg",
 ]
 
 [[package]]
@@ -5411,36 +5290,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-autostart"
-version = "2.0.0-beta.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8c96bf3c316939431e021b48622f15e0e1126376e43f1c35a29e7d24c5760209"
-dependencies = [
- "auto-launch",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "tauri-plugin",
- "thiserror",
-]
-
-[[package]]
-name = "tauri-plugin-cli"
-version = "2.0.0-beta.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "379e72dd4771d4d4f42c2ea8682f1ad4657fa5a042c3739a5e35300acc694c0c"
-dependencies = [
- "clap",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "tauri-plugin",
- "thiserror",
-]
-
-[[package]]
 name = "tauri-plugin-clipboard-manager"
 version = "2.1.0-beta.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6284,12 +6133,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "09cc8ee72d2a9becf2f2febe0205bbed8fc6615b7cb429ad062dc7b7ddd036a9"
 
 [[package]]
-name = "utf8parse"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
-
-[[package]]
 name = "uuid"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6941,15 +6784,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f593a95398737aeed53e489c785df13f3618e41dbcd6718c6addbf1395aa6876"
 dependencies = [
  "memchr",
-]
-
-[[package]]
-name = "winreg"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80d0f4e272c85def139476380b12f9ac60926689dd2e01d4923222f40580869d"
-dependencies = [
- "winapi",
 ]
 
 [[package]]

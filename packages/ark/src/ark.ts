@@ -411,17 +411,20 @@ export class Ark {
 		}
 	}
 
-	public get_thread(tags: string[][]) {
+	public get_thread(tags: string[][], gossip: boolean = false) {
 		let root: string = null;
 		let reply: string = null;
 
 		// Get all event references from tags, ignore mention
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
-		const relays = tags.filter((el) => el[0] === "e" && el[2].length);
 
-		if (relays.length >= 1) {
-			for (const relay of relays) {
-				if (relay[2]?.length) this.add_relay(relay[2]);
+		if (gossip) {
+			const relays = tags.filter((el) => el[0] === "e" && el[2]?.length);
+
+			if (relays.length >= 1) {
+				for (const relay of relays) {
+					if (relay[2]?.length) this.add_relay(relay[2]);
+				}
 			}
 		}
 

@@ -18,7 +18,6 @@ extern crate objc;
 use nostr_sdk::prelude::*;
 use std::fs;
 use tauri::Manager;
-use tauri_plugin_autostart::MacosLauncher;
 #[cfg(target_os = "macos")]
 use traffic_light::setup_traffic_light_positioner;
 
@@ -93,13 +92,8 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_autostart::init(
-      MacosLauncher::LaunchAgent,
-      Some(vec![]),
-    ))
     .invoke_handler(tauri::generate_handler![
       nostr::relay::get_relays,
-      nostr::relay::list_connected_relays,
       nostr::relay::connect_relay,
       nostr::relay::remove_relay,
       nostr::keys::create_keys,
@@ -107,7 +101,6 @@ fn main() {
       nostr::keys::get_encrypted_key,
       nostr::keys::get_stored_nsec,
       nostr::keys::nostr_connect,
-      nostr::keys::verify_signer,
       nostr::keys::load_selected_account,
       nostr::keys::event_to_bech32,
       nostr::keys::user_to_bech32,
@@ -136,17 +129,15 @@ fn main() {
       nostr::event::get_event_thread,
       nostr::event::publish,
       nostr::event::repost,
-      nostr::event::search,
       commands::folder::show_in_folder,
       commands::folder::get_accounts,
-      commands::opg::fetch_opg,
       commands::window::create_column,
       commands::window::close_column,
       commands::window::reposition_column,
       commands::window::resize_column,
       commands::window::open_window,
-      commands::window::navigate,
-      commands::window::set_badge
+      commands::window::set_badge,
+      commands::opg::fetch_opg,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")

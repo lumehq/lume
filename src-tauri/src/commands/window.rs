@@ -4,7 +4,6 @@ use std::path::PathBuf;
 use tauri::utils::config::WindowEffectsConfig;
 use tauri::window::Effect;
 use tauri::TitleBarStyle;
-use tauri::Url;
 use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
 
@@ -54,22 +53,6 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, (
       }
     }
     None => Ok(true),
-  }
-}
-
-#[tauri::command]
-pub fn navigate(label: &str, url: &str, app_handle: tauri::AppHandle) -> Result<(), String> {
-  match app_handle.get_webview(label) {
-    Some(mut webview) => {
-      if let Ok(new_url) = Url::parse(url) {
-        println!("navigate to: {}", new_url);
-        webview.navigate(new_url);
-        Ok(())
-      } else {
-        Err("URL is not valid".into())
-      }
-    }
-    None => Err("Webview not found".into()),
   }
 }
 

@@ -73,15 +73,6 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, ()> {
 }
 
 #[tauri::command]
-pub async fn list_connected_relays(state: State<'_, Nostr>) -> Result<Vec<Url>, ()> {
-  let client = &state.client;
-  let connected_relays = client.relays().await;
-  let list = connected_relays.into_keys().collect();
-
-  Ok(list)
-}
-
-#[tauri::command]
 pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
   if let Ok(status) = client.add_relay(relay).await {
