@@ -4,6 +4,7 @@ import { useRouteContext } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "@lume/utils";
 import { User } from "@/components/user";
+import { Spinner } from "@lume/ui";
 
 export function MentionNote({
 	eventId,
@@ -18,15 +19,15 @@ export function MentionNote({
 
 	if (isLoading) {
 		return (
-			<div className="flex w-full cursor-default items-center justify-between rounded-xl border border-black/10 p-3 dark:border-white/10">
-				<p>Loading...</p>
+			<div className="mt-2 w-full flex h-20 items-center justify-center rounded-xl border border-black/10 dark:border-white/10">
+				<Spinner className="size-5" />
 			</div>
 		);
 	}
 
 	if (isError || !data) {
 		return (
-			<div className="w-full cursor-default rounded-xl border border-black/10 p-3 dark:border-white/10">
+			<div className="mt-2 w-full rounded-xl border border-black/10 p-3 dark:border-white/10">
 				{t("note.error")}
 			</div>
 		);
