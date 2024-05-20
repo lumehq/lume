@@ -30,7 +30,7 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
     Some(id) => {
       let filter = Filter::new().id(id);
 
-      match &client
+      match client
         .get_events_of(vec![filter], Some(Duration::from_secs(10)))
         .await
       {
@@ -49,7 +49,24 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
 }
 
 #[tauri::command]
-pub async fn get_events_from(
+pub async fn get_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>, String> {
+  let client = &state.client;
+
+  match EventId::from_hex(id) {
+    Ok(event_id) => {
+      let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
+
+      match client.get_events_of(vec![filter], None).await {
+        Ok(events) => Ok(events),
+        Err(err) => Err(err.to_string()),
+      }
+    }
+    Err(_) => Err("Event ID is not valid".into()),
+  }
+}
+
+#[tauri::command]
+pub async fn get_events_by(
   public_key: &str,
   limit: usize,
   as_of: Option<&str>,
@@ -57,32 +74,31 @@ pub async fn get_events_from(
 ) -> Result<Vec<Event>, String> {
   let client = &state.client;
 
-  if let Ok(author) = PublicKey::from_str(public_key) {
-    let until = match as_of {
-      Some(until) => Timestamp::from_str(until).unwrap(),
-      None => Timestamp::now(),
-    };
-    let filter = Filter::new()
-      .kinds(vec![Kind::TextNote, Kind::Repost])
-      .author(author)
-      .limit(limit)
-      .until(until);
+  match PublicKey::from_str(public_key) {
+    Ok(author) => {
+      let until = match as_of {
+        Some(until) => Timestamp::from_str(until).unwrap(),
+        None => Timestamp::now(),
+      };
+      let filter = Filter::new()
+        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .author(author)
+        .limit(limit)
+        .until(until);
 
-    match client.get_events_of(vec![filter], None).await {
-      Ok(events) => Ok(events),
-      Err(err) => Err(err.to_string()),
+      match client.get_events_of(vec![filter], None).await {
+        Ok(events) => Ok(events),
+        Err(err) => Err(err.to_string()),
+      }
     }
-  } else {
-    Err("Public Key is not valid, please check again.".into())
+    Err(err) => Err(err.to_string()),
   }
 }
 
 #[tauri::command]
-pub async fn get_events(
+pub async fn get_local_events(
   limit: usize,
   until: Option<&str>,
-  contacts: Option<Vec<&str>>,
-  global: bool,
   state: State<'_, Nostr>,
 ) -> Result<Vec<Event>, String> {
   let client = &state.client;
@@ -91,66 +107,57 @@ pub async fn get_events(
     None => Timestamp::now(),
   };
 
-  match global {
-    true => {
+  match client
+    .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+    .await
+  {
+    Ok(contacts) => {
       let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
         .limit(limit)
+        .authors(contacts)
         .until(as_of);
 
       match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(15)))
+        .get_events_of(vec![filter], Some(Duration::from_secs(8)))
         .await
       {
         Ok(events) => Ok(events),
         Err(err) => Err(err.to_string()),
       }
     }
-    false => {
-      let authors = match contacts {
-        Some(val) => {
-          let c: Vec<PublicKey> = val
-            .into_iter()
-            .map(|key| PublicKey::from_str(key).unwrap())
-            .collect();
-          Some(c)
-        }
-        None => {
-          match client
-            .get_contact_list_public_keys(Some(Duration::from_secs(10)))
-            .await
-          {
-            Ok(val) => Some(val),
-            Err(_) => None,
-          }
-        }
-      };
-
-      match authors {
-        Some(val) => {
-          if val.is_empty() {
-            Err("Get local events but contact list is empty".into())
-          } else {
-            let filter = Filter::new()
-              .kinds(vec![Kind::TextNote, Kind::Repost])
-              .limit(limit)
-              .authors(val.clone())
-              .until(as_of);
-
-            match client.get_events_of(vec![filter], None).await {
-              Ok(events) => Ok(events),
-              Err(err) => Err(err.to_string()),
-            }
-          }
-        }
-        None => Err("Get local events but contact list is empty".into()),
-      }
-    }
+    Err(err) => Err(err.to_string()),
   }
 }
 
 #[tauri::command]
-pub async fn get_events_from_interests(
+pub async fn get_global_events(
+  limit: usize,
+  until: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<Vec<Event>, String> {
+  let client = &state.client;
+  let as_of = match until {
+    Some(until) => Timestamp::from_str(until).unwrap(),
+    None => Timestamp::now(),
+  };
+
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .limit(limit)
+    .until(as_of);
+
+  match client
+    .get_events_of(vec![filter], Some(Duration::from_secs(8)))
+    .await
+  {
+    Ok(events) => Ok(events),
+    Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
+pub async fn get_hashtag_events(
   hashtags: Vec<&str>,
   limit: usize,
   until: Option<&str>,
@@ -174,19 +181,30 @@ pub async fn get_events_from_interests(
 }
 
 #[tauri::command]
-pub async fn get_event_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>, String> {
+pub async fn get_group_events(
+  list: Vec<&str>,
+  limit: usize,
+  until: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<Vec<Event>, String> {
   let client = &state.client;
+  let as_of = match until {
+    Some(until) => Timestamp::from_str(until).unwrap(),
+    None => Timestamp::now(),
+  };
+  let authors: Vec<PublicKey> = list
+    .into_iter()
+    .map(|hex| PublicKey::from_hex(hex).unwrap())
+    .collect();
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .limit(limit)
+    .until(as_of)
+    .authors(authors);
 
-  match EventId::from_hex(id) {
-    Ok(event_id) => {
-      let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
-
-      match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events),
-        Err(err) => Err(err.to_string()),
-      }
-    }
-    Err(_) => Err("Event ID is not valid".into()),
+  match client.get_events_of(vec![filter], None).await {
+    Ok(events) => Ok(events),
+    Err(err) => Err(err.to_string()),
   }
 }
 
@@ -210,9 +228,8 @@ pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<EventId, Strin
   let client = &state.client;
   let event = Event::from_json(raw).unwrap();
 
-  if let Ok(event_id) = client.repost(&event, None).await {
-    Ok(event_id)
-  } else {
-    Err("Repost failed".into())
+  match client.repost(&event, None).await {
+    Ok(event_id) => Ok(event_id),
+    Err(err) => Err(err.to_string()),
   }
 }
