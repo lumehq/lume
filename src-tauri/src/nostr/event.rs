@@ -112,18 +112,22 @@ pub async fn get_local_events(
     .await
   {
     Ok(contacts) => {
-      let filter = Filter::new()
-        .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(limit)
-        .authors(contacts)
-        .until(as_of);
+      if !contacts.is_empty() {
+        let filter = Filter::new()
+          .kinds(vec![Kind::TextNote, Kind::Repost])
+          .limit(limit)
+          .authors(contacts)
+          .until(as_of);
 
-      match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(8)))
-        .await
-      {
-        Ok(events) => Ok(events),
-        Err(err) => Err(err.to_string()),
+        match client
+          .get_events_of(vec![filter], Some(Duration::from_secs(8)))
+          .await
+        {
+          Ok(events) => Ok(events),
+          Err(err) => Err(err.to_string()),
+        }
+      } else {
+        Err("Empty contact list".into())
       }
     }
     Err(err) => Err(err.to_string()),

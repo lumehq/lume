@@ -93,7 +93,7 @@ export function Screen() {
   return (
     <div className="p-2 w-full h-full overflow-y-auto scrollbar-none">
       {isFetching && !isLoading && !isFetchingNextPage ? (
-        <div className="w-full h-11 flex items-center justify-center">
+        <div className="mb-3 w-full h-11 flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
           <div className="flex items-center justify-center gap-2">
             <Spinner className="size-5" />
             <span className="text-sm font-medium">Fetching new notes...</span>

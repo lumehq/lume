@@ -26,8 +26,10 @@ pub struct Nostr {
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
-      // Create a custom titlebar for main window
       let main_window = app.get_webview_window("main").unwrap();
+
+      // Create a custom titlebar for Windows
+      #[cfg(target_os = "windows")]
       main_window.create_overlay_titlebar().unwrap();
 
       // Set a custom inset to the traffic lights
