@@ -117,6 +117,7 @@ fn main() {
       nostr::metadata::get_current_user_profile,
       nostr::metadata::get_profile,
       nostr::metadata::get_contact_list,
+      nostr::metadata::set_contact_list,
       nostr::metadata::create_profile,
       nostr::metadata::follow,
       nostr::metadata::unfollow,

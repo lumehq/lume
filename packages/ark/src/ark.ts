@@ -207,10 +207,15 @@ export class Ark {
     return events;
   }
 
-  public async get_local_events(limit: number, asOf?: number) {
+  public async get_local_events(
+    pubkeys: string[],
+    limit: number,
+    asOf?: number,
+  ) {
     try {
       const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
       const nostrEvents: Event[] = await invoke("get_local_events", {
+        pubkeys,
         limit,
         until,
       });
@@ -479,6 +484,15 @@ export class Ark {
         website: profile.website || "",
       });
       return event;
+    } catch (e) {
+      throw new Error(String(e));
+    }
+  }
+
+  public async set_contact_list(pubkeys: string[]) {
+    try {
+      const cmd: boolean = await invoke("set_contact_list", { pubkeys });
+      return cmd;
     } catch (e) {
       throw new Error(String(e));
     }

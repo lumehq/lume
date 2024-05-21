@@ -6,7 +6,7 @@ import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
 import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, redirect } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
@@ -18,18 +18,29 @@ export const Route = createFileRoute("/newsfeed")({
       name: search.name,
     };
   },
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
     const settings = await ark.get_settings();
+    const contacts = await ark.get_contact_list();
 
-    return { settings };
+    if (!contacts.length) {
+      throw redirect({
+        to: "/create-newsfeed/users",
+        search: {
+          ...search,
+          redirect: "/newsfeed",
+        },
+      });
+    }
+
+    return { settings, contacts };
   },
   component: Screen,
 });
 
 export function Screen() {
   const { label, account } = Route.useSearch();
-  const { ark } = Route.useRouteContext();
+  const { ark, contacts } = Route.useRouteContext();
   const {
     data,
     isLoading,
@@ -41,7 +52,7 @@ export function Screen() {
     queryKey: [label, account],
     initialPageParam: 0,
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const events = await ark.get_local_events(20, pageParam);
+      const events = await ark.get_local_events(contacts, 20, pageParam);
       return events;
     },
     getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
@@ -89,7 +100,9 @@ export function Screen() {
           <span className="text-sm font-medium">Loading...</span>
         </div>
       ) : !data.length ? (
-        <Empty />
+        <div className="flex items-center justify-center">
+          Yo. You're catching up on all the things happening around you.
+        </div>
       ) : (
         <Virtualizer overscan={3}>
           {data.map((item) => renderItem(item))}
@@ -114,38 +127,6 @@ export function Screen() {
           </button>
         </div>
       ) : null}
-    </div>
-  );
-}
-
-function Empty() {
-  return (
-    <div className="flex flex-col py-10 gap-10">
-      <div className="text-center flex flex-col items-center justify-center">
-        <div className="size-24 bg-blue-100 flex flex-col items-center justify-end overflow-hidden dark:bg-blue-900 rounded-full mb-8">
-          <div className="w-12 h-16 bg-gradient-to-b from-blue-500 dark:from-blue-200 to-blue-50 dark:to-blue-900 rounded-t-lg" />
-        </div>
-        <p className="text-lg font-medium">Your newsfeed is empty</p>
-        <p className="leading-tight text-neutral-700 dark:text-neutral-300">
-          Here are few suggestions to get started.
-        </p>
-      </div>
-      <div className="flex flex-col px-3 gap-2">
-        <Link
-          to="/trending/notes"
-          className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
-        >
-          <ArrowRightIcon className="size-5" />
-          Show trending notes
-        </Link>
-        <Link
-          to="/trending/users"
-          className="h-11 w-full flex items-center hover:bg-neutral-200 text-sm font-medium dark:hover:bg-neutral-800 gap-2 bg-neutral-100 rounded-lg dark:bg-neutral-900 px-3"
-        >
-          <ArrowRightIcon className="size-5" />
-          Discover trending users
-        </Link>
-      </div>
     </div>
   );
 }

@@ -97,6 +97,7 @@ pub async fn get_events_by(
 
 #[tauri::command]
 pub async fn get_local_events(
+  pubkeys: Vec<String>,
   limit: usize,
   until: Option<&str>,
   state: State<'_, Nostr>,
@@ -106,30 +107,21 @@ pub async fn get_local_events(
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
   };
+  let authors: Vec<PublicKey> = pubkeys
+    .into_iter()
+    .map(|p| PublicKey::from_hex(p).unwrap())
+    .collect();
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .limit(limit)
+    .authors(authors)
+    .until(as_of);
 
   match client
-    .get_contact_list_public_keys(Some(Duration::from_secs(10)))
+    .get_events_of(vec![filter], Some(Duration::from_secs(8)))
     .await
   {
-    Ok(contacts) => {
-      if !contacts.is_empty() {
-        let filter = Filter::new()
-          .kinds(vec![Kind::TextNote, Kind::Repost])
-          .limit(limit)
-          .authors(contacts)
-          .until(as_of);
-
-        match client
-          .get_events_of(vec![filter], Some(Duration::from_secs(8)))
-          .await
-        {
-          Ok(events) => Ok(events),
-          Err(err) => Err(err.to_string()),
-        }
-      } else {
-        Err("Empty contact list".into())
-      }
-    }
+    Ok(events) => Ok(events),
     Err(err) => Err(err.to_string()),
   }
 }

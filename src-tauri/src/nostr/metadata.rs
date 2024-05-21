@@ -183,18 +183,37 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
 }
 
 #[tauri::command]
+pub async fn set_contact_list(pubkeys: Vec<&str>, state: State<'_, Nostr>) -> Result<bool, String> {
+  let client = &state.client;
+  let contact_list: Vec<Contact> = pubkeys
+    .into_iter()
+    .map(|p| Contact::new(PublicKey::from_hex(p).unwrap(), None, Some("")))
+    .collect();
+
+  match client.set_contact_list(contact_list).await {
+    Ok(_) => Ok(true),
+    Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
 
-  if let Ok(contact_list) = client.get_contact_list(Some(Duration::from_secs(10))).await {
-    let list = contact_list
-      .into_iter()
-      .map(|f| f.public_key.to_hex())
-      .collect();
+  match client.get_contact_list(Some(Duration::from_secs(10))).await {
+    Ok(contact_list) => {
+      if !contact_list.is_empty() {
+        let list = contact_list
+          .into_iter()
+          .map(|f| f.public_key.to_hex())
+          .collect();
 
-    Ok(list)
-  } else {
-    Err("Contact list not found".into())
+        Ok(list)
+      } else {
+        Err("Empty.".into())
+      }
+    }
+    Err(err) => Err(err.to_string()),
   }
 }
 

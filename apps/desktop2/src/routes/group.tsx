@@ -19,9 +19,8 @@ export const Route = createFileRoute("/group")({
   },
   beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
-    const groups = (await ark.get_nstore(
-      `lume_group_${search.label}`,
-    )) as string[];
+    const key = `lume_group_${search.label}`;
+    const groups = await ark.get_nstore(key);
     const settings = await ark.get_settings();
 
     if (!groups) {
