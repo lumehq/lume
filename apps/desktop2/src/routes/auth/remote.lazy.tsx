@@ -60,14 +60,21 @@ function Screen() {
 						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
-				<button
-					type="button"
-					onClick={() => submit()}
-					disabled={loading}
-					className="mt-3 inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
-				>
-					{loading ? <Spinner /> : "Login"}
-				</button>
+				<div className="flex flex-col gap-1 items-center">
+					<button
+						type="button"
+						onClick={() => submit()}
+						disabled={loading}
+						className="mt-3 inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+					>
+						{loading ? <Spinner /> : "Login"}
+					</button>
+					{loading ? (
+						<p className="text-neutral-600 dark:text-neutral-400 text-sm text-center">
+							Waiting confirmation...
+						</p>
+					) : null}
+				</div>
 			</div>
 		</div>
 	);

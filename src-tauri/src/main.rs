@@ -106,7 +106,6 @@ fn main() {
       nostr::keys::create_account,
       nostr::keys::save_account,
       nostr::keys::get_encrypted_key,
-      nostr::keys::get_stored_nsec,
       nostr::keys::nostr_connect,
       nostr::keys::load_account,
       nostr::keys::event_to_bech32,

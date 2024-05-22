@@ -2,9 +2,9 @@ use crate::Nostr;
 use keyring::Entry;
 use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
+use std::str::FromStr;
 use std::time::Duration;
-use std::{fs::File, str::FromStr};
-use tauri::{Manager, State};
+use tauri::State;
 
 #[derive(serde::Serialize)]
 pub struct Account {
@@ -13,13 +13,13 @@ pub struct Account {
 }
 
 #[tauri::command]
-pub fn get_accounts() -> Result<String, ()> {
+pub fn get_accounts() -> Result<String, String> {
   let search = Search::new().unwrap();
   let results = search.by("Account", "nostr_secret");
 
   match List::list_credentials(results, Limit::All) {
     Ok(list) => Ok(list),
-    Err(_) => Err(()),
+    Err(_) => Err("Empty.".into()),
   }
 }
 
@@ -41,7 +41,6 @@ pub fn create_account() -> Result<Account, ()> {
 pub async fn save_account(
   nsec: &str,
   password: &str,
-  app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let secret_key: Result<SecretKey, String>;
@@ -64,12 +63,6 @@ pub async fn save_account(
       let nostr_keys = Keys::new(val);
       let npub = nostr_keys.public_key().to_bech32().unwrap();
       let nsec = nostr_keys.secret_key().unwrap().to_bech32().unwrap();
-
-      let home_dir = app_handle.path().home_dir().unwrap();
-      let app_dir = home_dir.join("Lume/");
-
-      let file_path = npub.clone() + ".npub";
-      let _ = File::create(app_dir.join(file_path)).unwrap();
 
       let keyring = Entry::new(&npub, "nostr_secret").unwrap();
       let _ = keyring.set_password(&nsec);
@@ -94,14 +87,22 @@ pub async fn load_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, S
   match keyring.get_password() {
     Ok(password) => {
       if password.starts_with("bunker://") {
-        let app_keys = Keys::generate();
-        let bunker_uri = NostrConnectURI::parse(password).unwrap();
-        let signer = Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(60), None)
-          .await
-          .unwrap();
+        let local_keyring = Entry::new(&npub, "bunker_local_account").unwrap();
 
-        // Update signer
-        client.set_signer(Some(signer.into())).await;
+        match local_keyring.get_password() {
+          Ok(local_password) => {
+            let secret_key = SecretKey::from_bech32(local_password).unwrap();
+            let app_keys = Keys::new(secret_key);
+            let bunker_uri = NostrConnectURI::parse(password).unwrap();
+            let signer = Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(60), None)
+              .await
+              .unwrap();
+
+            // Update signer
+            client.set_signer(Some(signer.into())).await;
+          }
+          Err(_) => todo!(),
+        }
       } else {
         let secret_key = SecretKey::from_bech32(password).expect("Get secret key failed");
         let keys = Keys::new(secret_key);
@@ -167,24 +168,29 @@ pub async fn load_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, S
 pub async fn nostr_connect(
   npub: &str,
   uri: &str,
-  app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let client = &state.client;
-  let app_keys = Keys::generate();
+  let local_key = Keys::generate();
 
   match NostrConnectURI::parse(uri) {
     Ok(bunker_uri) => {
-      println!("connecting... {}", uri);
-
-      match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None).await {
+      match Nip46Signer::new(
+        bunker_uri,
+        local_key.clone(),
+        Duration::from_secs(120),
+        None,
+      )
+      .await
+      {
         Ok(signer) => {
-          let home_dir = app_handle.path().home_dir().unwrap();
-          let app_dir = home_dir.join("Lume/");
-          let file_path = npub.to_owned() + ".npub";
-          let keyring = Entry::new(&npub, "nostr_secret").unwrap();
-          let _ = File::create(app_dir.join(file_path)).unwrap();
-          let _ = keyring.set_password(uri);
+          let local_secret = local_key.secret_key().unwrap().to_bech32().unwrap();
+          let secret_keyring = Entry::new(&npub, "nostr_secret").unwrap();
+          let account_keyring = Entry::new(&npub, "bunker_local_account").unwrap();
+          let _ = secret_keyring.set_password(uri);
+          let _ = account_keyring.set_password(&local_secret);
+
+          // Update signer
           let _ = client.set_signer(Some(signer.into())).await;
 
           Ok(npub.into())
@@ -201,25 +207,14 @@ pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
   if let Ok(nsec) = keyring.get_password() {
-    let secret_key = SecretKey::from_bech32(nsec).expect("Get secret key failed");
-    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Unknown);
+    let secret_key = SecretKey::from_bech32(nsec).unwrap();
+    let new_key = EncryptedSecretKey::new(&secret_key, password, 16, KeySecurity::Medium);
 
     if let Ok(key) = new_key {
       Ok(key.to_bech32().unwrap())
     } else {
       Err("Encrypt key failed".into())
     }
-  } else {
-    Err("Key not found".into())
-  }
-}
-
-#[tauri::command]
-pub fn get_stored_nsec(npub: &str) -> Result<String, String> {
-  let keyring = Entry::new(&npub, "nostr_secret").unwrap();
-
-  if let Ok(nsec) = keyring.get_password() {
-    Ok(nsec)
   } else {
     Err("Key not found".into())
   }
