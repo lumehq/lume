@@ -13,8 +13,8 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
         let relays = event.relays;
         for relay in relays.into_iter() {
           let url = Url::from_str(&relay).unwrap();
-          let _ = client.add_relay(url.clone()).await.unwrap_or_default();
-          client.connect_relay(url).await.unwrap_or_default();
+          let _ = client.add_relay(&url).await.unwrap_or_default();
+          client.connect_relay(&url).await.unwrap_or_default();
         }
         Some(event.event_id)
       }
