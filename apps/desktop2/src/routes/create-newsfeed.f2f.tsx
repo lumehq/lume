@@ -24,11 +24,17 @@ function Screen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const submit = async () => {
+    if (!npub.startsWith("npub1"))
+      return toast.warning("You must enter a valid npub.");
+
     try {
       setIsLoading(true);
 
       const sync: boolean = await invoke("friend_to_friend", { npub });
-      if (sync) navigate({ to: redirect });
+
+      if (sync) {
+        navigate({ to: redirect });
+      }
     } catch (e) {
       setIsLoading(false);
       toast.error(String(e));
@@ -38,14 +44,14 @@ function Screen() {
   return (
     <div className="overflow-y-auto scrollbar-none p-2 shrink-0 h-[450px] bg-white dark:bg-white/20 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
       <div className="h-full flex flex-col justify-between">
-        <div className="flex-1 flex flex-col gap-1.5 justify-center text-lg">
+        <div className="flex-1 flex flex-col gap-1.5 justify-center px-5">
           <p className="font-semibold text-neutral-500">
             You already have a friend on Nostr?
           </p>
           <p>Instead of building the timeline by yourself.</p>
           <p className="font-semibold text-neutral-500">
-            Just enter your friend's <span className="text-blue-500">npub</span>
-            .
+            Just enter your friend's{" "}
+            <span className="text-blue-500">npub.</span>
           </p>
           <p>
             You will have the same experience as your friend. Of course, you
@@ -54,7 +60,7 @@ function Screen() {
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
-            <label htmlFor="npub" className="font-medium">
+            <label htmlFor="npub" className="font-medium text-sm">
               NPUB
             </label>
             <input

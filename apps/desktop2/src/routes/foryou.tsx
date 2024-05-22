@@ -19,12 +19,13 @@ export const Route = createFileRoute("/foryou")({
   },
   beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
-    const interests = await ark.get_interest();
+    const key = `lume_topic_${search.label}`;
+    const topics = await ark.get_nstore(key);
     const settings = await ark.get_settings();
 
-    if (!interests) {
+    if (!topics) {
       throw redirect({
-        to: "/interests",
+        to: "/create-topic",
         search: {
           ...search,
           redirect: "/foryou",
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/foryou")({
     }
 
     return {
-      interests,
+      topics,
       settings,
     };
   },
@@ -54,12 +55,7 @@ export function Screen() {
     queryKey: [label, account],
     initialPageParam: 0,
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const events = await ark.get_hashtag_events(
-        interests.hashtags,
-        20,
-        pageParam,
-      );
-      return events;
+      return [];
     },
     getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
     select: (data) => data?.pages.flatMap((page) => page),

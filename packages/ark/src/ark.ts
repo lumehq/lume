@@ -16,7 +16,6 @@ import { readFile } from "@tauri-apps/plugin-fs";
 
 enum NSTORE_KEYS {
   settings = "lume_user_settings",
-  interests = "lume_user_interests",
   columns = "lume_user_columns",
 }
 
@@ -708,39 +707,6 @@ export class Ark {
       return cmd;
     } catch (e) {
       throw new Error(e);
-    }
-  }
-
-  public async get_interest() {
-    try {
-      const cmd: string = await invoke("get_nstore", {
-        key: NSTORE_KEYS.interests,
-      });
-      const interests: Interests = cmd ? JSON.parse(cmd) : null;
-      return interests;
-    } catch {
-      return null;
-    }
-  }
-
-  public async set_interest(
-    words: string[],
-    users: string[],
-    hashtags: string[],
-  ) {
-    try {
-      const interests: Interests = {
-        words: words ?? [],
-        users: users ?? [],
-        hashtags: hashtags ?? [],
-      };
-      const cmd: string = await invoke("set_nstore", {
-        key: NSTORE_KEYS.interests,
-        content: JSON.stringify(interests),
-      });
-      return cmd;
-    } catch (e) {
-      throw new Error(String(e));
     }
   }
 

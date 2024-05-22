@@ -3,7 +3,6 @@ import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, InfoIcon } from "@lume/icons";
 import { type Event, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
-import { FETCH_LIMIT } from "@lume/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
 
@@ -14,7 +13,7 @@ export function EventList({ id }: { id: string }) {
       queryKey: ["events", id],
       initialPageParam: 0,
       queryFn: async ({ pageParam }: { pageParam: number }) => {
-        const events = await ark.get_events_by(id, FETCH_LIMIT, pageParam);
+        const events = await ark.get_events_by(id, 20, pageParam);
         return events;
       },
       getNextPageParam: (lastPage) => {

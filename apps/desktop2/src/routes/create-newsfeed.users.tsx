@@ -31,13 +31,14 @@ export const Route = createFileRoute("/create-newsfeed/users")({
 });
 
 function Screen() {
-  const navigate = Route.useNavigate();
   const { ark } = Route.useRouteContext();
   const { data } = Route.useLoaderData();
   const { redirect } = Route.useSearch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [follows, setFollows] = useState<string[]>([]);
+
+  const navigate = Route.useNavigate();
 
   const toggleFollow = (pubkey: string) => {
     setFollows((prev) =>
@@ -52,7 +53,10 @@ function Screen() {
       setIsLoading(true);
 
       const newContactList = await ark.set_contact_list(follows);
-      if (newContactList) navigate({ to: redirect });
+
+      if (newContactList) {
+        navigate({ to: redirect });
+      }
     } catch (e) {
       setIsLoading(false);
       toast.error(String(e));
