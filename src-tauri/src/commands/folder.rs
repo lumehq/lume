@@ -1,5 +1,4 @@
 use std::process::Command;
-use tauri::Manager;
 
 #[tauri::command]
 pub async fn show_in_folder(path: String) {
@@ -45,28 +44,5 @@ pub async fn show_in_folder(path: String) {
   #[cfg(target_os = "macos")]
   {
     Command::new("open").args(["-R", &path]).spawn().unwrap();
-  }
-}
-
-#[tauri::command]
-pub fn get_accounts(app_handle: tauri::AppHandle) -> Result<Vec<String>, ()> {
-  let dir = app_handle.path().home_dir().unwrap();
-
-  if let Ok(paths) = std::fs::read_dir(dir.join("Lume/")) {
-    let files = paths
-      .filter_map(|res| res.ok())
-      .map(|dir_entry| dir_entry.path())
-      .filter_map(|path| {
-        if path.extension().map_or(false, |ext| ext == "npub") {
-          Some(path.file_name().unwrap().to_str().unwrap().to_string())
-        } else {
-          None
-        }
-      })
-      .collect::<Vec<_>>();
-
-    Ok(files)
-  } else {
-    Err(())
   }
 }

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/settings/backup")({
 	component: Screen,
 	loader: async ({ context }) => {
 		const ark = context.ark;
-		const npubs = await ark.get_all_accounts();
+		const npubs = await ark.get_accounts();
 
 		const accounts: Account[] = [];
 
