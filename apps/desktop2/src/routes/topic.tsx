@@ -36,7 +36,7 @@ export const Route = createFileRoute("/topic")({
 		let hashtags: string[] = [];
 
 		for (const topic of topics) {
-			hashtags.concat(topic.content);
+			hashtags.push(...topic.content);
 		}
 
 		return {
