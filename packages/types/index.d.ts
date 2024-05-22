@@ -65,6 +65,12 @@ export interface Account {
 	interests?: Interests;
 }
 
+export interface Topic {
+	icon: string;
+	title: string;
+	content: string[];
+}
+
 export interface Interests {
 	hashtags: string[];
 	users: string[];

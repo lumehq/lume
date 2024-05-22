@@ -3,13 +3,13 @@ import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
-import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
+import { type ColumnRouteSearch, type Event, Kind, Topic } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
-export const Route = createFileRoute("/group")({
+export const Route = createFileRoute("/topic")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,
@@ -19,22 +19,28 @@ export const Route = createFileRoute("/group")({
 	},
 	beforeLoad: async ({ search, context }) => {
 		const ark = context.ark;
-		const key = `lume_group_${search.label}`;
-		const groups = (await ark.get_nstore(key)) as string[];
+		const key = `lume_topic_${search.label}`;
+		const topics = (await ark.get_nstore(key)) as unknown as Topic[];
 		const settings = await ark.get_settings();
 
-		if (!groups?.length) {
+		if (!topics?.length) {
 			throw redirect({
-				to: "/create-group",
+				to: "/create-topic",
 				search: {
 					...search,
-					redirect: "/group",
+					redirect: "/topic",
 				},
 			});
 		}
 
+		let hashtags: string[] = [];
+
+		for (const topic of topics) {
+			hashtags.push(...topic.content);
+		}
+
 		return {
-			groups,
+			hashtags,
 			settings,
 		};
 	},
@@ -43,7 +49,7 @@ export const Route = createFileRoute("/group")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { ark, groups } = Route.useRouteContext();
+	const { ark, hashtags } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -55,12 +61,11 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await ark.get_local_events(groups, 20, pageParam);
+			const events = ark.get_hashtag_events(hashtags, 20, pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
-		select: (data) =>
-			data?.pages.flatMap((page) => page.filter((ev) => ev.kind === Kind.Text)),
+		select: (data) => data?.pages.flatMap((page) => page),
 		refetchOnWindowFocus: false,
 	});
 

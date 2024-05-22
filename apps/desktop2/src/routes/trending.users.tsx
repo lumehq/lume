@@ -42,7 +42,7 @@ export function Screen() {
 			>
 				<Await promise={data}>
 					{(users) =>
-						users.profiles.map((item) => (
+						users.profiles.map((item: { pubkey: string }) => (
 							<div
 								key={item.pubkey}
 								className="h-max w-full overflow-hidden mb-3 p-2 bg-black/5 dark:bg-white/5 backdrop-blur-lg rounded-xl"

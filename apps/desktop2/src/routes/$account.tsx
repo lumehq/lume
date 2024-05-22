@@ -5,7 +5,7 @@ import {
 	PlusIcon,
 	SearchIcon,
 } from "@lume/icons";
-import { Event, Kind } from "@lume/types";
+import { type Event, Kind } from "@lume/types";
 import { User } from "@/components/user";
 import {
 	cn,

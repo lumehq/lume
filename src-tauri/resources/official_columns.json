@@ -7,12 +7,12 @@
     "cover": "/newsfeed.png",
     "coverRetina": "/newsfeed@2x.png",
     "author": "Lume",
-    "description": "Keep up to date with people you're following."
+    "description": "Keep up to date with the people you're following."
   },
   {
     "label": "rRtguZwIpd5G8Wt54OTb7",
-    "name": "For you",
-    "content": "/foryou",
+    "name": "Topic",
+    "content": "/topic",
     "logo": "",
     "cover": "/foryou.png",
     "coverRetina": "/foryou@2x.png",
@@ -21,13 +21,13 @@
   },
   {
     "label": "fve9fk2fVyFWORPBkjd79",
-    "name": "Group Feeds",
+    "name": "Group",
     "content": "/group",
     "logo": "",
     "cover": "/group.png",
     "coverRetina": "/group@2x.png",
     "author": "Lume",
-    "description": "Collective of people you're interested in."
+    "description": "Focus feeds for people you like."
   },
   {
     "label": "gxtcIbgD8YNPbeI5o92I8",

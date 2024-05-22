@@ -1,4 +1,7 @@
 [
   { "label": "onboarding", "name": "Onboarding", "content": "/onboarding" },
+  { "label": "lume_newsfeed", "name": "Newsfeed", "content": "/newsfeed" },
+  { "label": "lume_topic", "name": "Topic", "content": "/topic" },
+  { "label": "lume_group", "name": "Group", "content": "/group" },
   { "label": "open", "name": "Open", "content": "/open" }
 ]

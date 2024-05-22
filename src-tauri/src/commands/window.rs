@@ -153,7 +153,8 @@ pub fn open_window(
       .build()
       .unwrap();
 
-    // Create a custom titlebar
+    #[cfg(target_os = "windows")]
+    // Create a custom titlebar for Windows
     window.create_overlay_titlebar().unwrap();
 
     // Set a custom inset to the traffic lights
