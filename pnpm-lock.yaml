@@ -214,9 +214,9 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.1.0
         version: 5.1.0(astro@4.8.3)(tailwindcss@3.4.3)
-      '@fontsource/geist-mono':
-        specifier: ^5.0.3
-        version: 5.0.3
+      '@fontsource/alice':
+        specifier: ^5.0.13
+        version: 5.0.13
       astro:
         specifier: ^4.8.3
         version: 4.8.3(typescript@5.4.5)
@@ -1465,8 +1465,8 @@ packages:
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
     dev: false
 
-  /@fontsource/geist-mono@5.0.3:
-    resolution: {integrity: sha512-ekY5FNiK7aMxan/c6lgVQa/rIwQ/AMEJZJWY7768jBrLVdkrCxfEfCe1ePpe7C3JnySy7c9R6HC4Xh4ksfjTaw==}
+  /@fontsource/alice@5.0.13:
+    resolution: {integrity: sha512-7ncjjSpRSRKvjJEoru092iFiEoC89lz4oG4+SGg9hh7DI/5SXf+kE+dg+6Fv/bwiK/WJCo4Q2gvPZGRlCE5mcA==}
     dev: false
 
   /@getalby/sdk@3.5.1(typescript@5.4.5):
@@ -6251,6 +6251,7 @@ packages:
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
+    requiresBuild: true
     dev: false
 
   /turbo-darwin-64@1.13.3:

@@ -3,153 +3,96 @@ import { Seo } from "astro-seo-meta";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Lume</title>
-		<Seo
-			title="Lume"
-			description="A multiple columns Nostr client for desktop."
-			keywords={[
-				"nostr",
-				"nostr client",
-				"social network",
-				"desktop app",
-				"timeline",
-				"application",
-				"columns",
-			]}
-			themeColor="#fafafa"
-			colorScheme="light"
-			facebook={{
-				image: "/og-image.jpg",
-				url: "https://lume.nu",
-				type: "website",
-			}}
-			twitter={{
-				image: "/og-image.jpg",
-				card: "summary",
-			}}
-		/>
-	</head>
-	<body
-		class="w-full h-full antialiased font-mono bg-neutral-50 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50"
-	>
-		<div class="max-w-2xl mx-auto w-full py-16 md:px-0 px-2">
-			<div class="flex flex-col gap-16">
-				<div class="prose dark:prose-invert prose-neutral max-w-none">
-					<h3>About Lume</h3>
-					<p>
-						Lume is a <b>Nostr client</b> for desktop include Linux, Windows and
-						macOS. It is free and open source, you can look at source code <a
-							href="https://github.com/lumehq/lume"
-							target="_blank">on Github</a
-						>. Lume is actively improving the app and adding new features, you
-						can expect new update every month.
-					</p>
-					<a href="#download">Download</a>
-					<h3>What is nostr & how does it work?</h3>
-					<p>
-						Nostr stands for Notes and Other Stuff Transmitted by Relays. It is
-						an open, permission-less protocol that aims to provide
-						censorship-resistance and interoperability. It can be used to create
-						social networks or just about any other type of app (other stuff
-						part of the acronym). It is not a single website or app, but the
-						glue that holds together many apps (clients) and <b>Lume</b> is one of
-						it.
-					</p>
-					<p>
-						At its core, nostr consists of relays and events. A person does
-						something (event) and this event is sent to a relay. The relay
-						stores the event, then waits for another person to request it. The
-						most common types of events are notes and reactions - the stuff
-						social media is made of, but there are many other types of events.
-						It works very similar to how any other app would work with a
-						database, except in nostr there is no single database, rather a
-						large number of relays that store the events.
-					</p>
-					<h3>Lume is multiple columns experience</h3>
-					<p>
-						Lume is display your timeline as multiple column, each column is
-						each different content and you can define your experience
-					</p>
-					<p>
-						You can create a column to display newsfeed from specific people,
-						you can create a column to display all contents related to some
-						hashtags. It all up to you.
-					</p>
-					<img
-						src="https://image.nostr.build/fd3e3cdeb4fb9f0f3de5c5e668a11dcae55f50cc9a78fc2b57b063240191a0f9.png"
-						alt="columns"
-						loading="lazy"
-						decoding="async"
-						class="w-full h-auto rounded-lg"
-					/>
-					<h3>"For You"</h3>
-					<p>
-						Unlike some social networks, they feed you by algorithm. In Lume,
-						you totally control what to will see
-					</p>
-					<img
-						src="https://image.nostr.build/5afd79de15929a4ac6f6e933791c942555baa4206fecee54fed61dde9fe167e1.png"
-						alt="for you"
-						loading="lazy"
-						decoding="async"
-						class="w-full h-auto rounded-lg"
-					/>
-					<h3 id="download">Download and Explore</h3>
-					<p>
-						(Universal) macOS: <a
-							href="https://github.com/lumehq/lume/releases/download/v3.0.0/Lume_3.0.0_universal.dmg"
-							>Lume_3.0.0_universal.dmg
-						</a>
-					</p>
-					<p>
-						(x86-64) Windows 11: <a
-							href="https://github.com/lumehq/lume/releases/download/v3.0.0/Lume_3.0.0_x64-setup.exe"
-							>Lume_3.0.0_x64-setup.exe
-						</a>
-					</p>
-					<p>
-						(x86-64) Ubuntu: <a
-							href="https://github.com/lumehq/lume/releases/download/v3.0.0/lume_3.0.0_amd64.deb"
-							>lume_3.0.0_amd64.deb
-						</a>
-					</p>
-					<p>
-						(x86-64) Fedora: <a
-							href="https://github.com/lumehq/lume/releases/download/v3.0.0/lume-3.0.0-1.x86_64.rpm"
-							>lume-3.0.0-1.x86_64.rpm
-						</a>
-					</p>
-					<p>
-						(x86-64) Linux Flatpak: <a
-							href="https://github.com/lumehq/lume/releases/download/v3.0.0/lume_3.0.0_amd64.flatpak"
-							>lume_3.0.0_amd64.flatpak
-						</a>
-					</p>
-					<p>
-						(x86-64) Linux AppImage: <a
-							href="https://github.com/lumehq/lume/releases/download/v3.0.0/lume_3.0.0_amd64.AppImage"
-							>lume_3.0.0_amd64.AppImage
-						</a>
-					</p>
-					<p>
-						Support for ARM, RISC-V and Loongarch architecture are coming soon.
-					</p>
-				</div>
-				<div class="text-center">
-					<p class="text-sm text-neutral-500 dark:text-neutral-600">
-						Supported by <a
-							href="https://opensats.org"
-							target="_blank"
-							class="text-orange-500">Open Sats</a
-						> and Community
-					</p>
-				</div>
-			</div>
-		</div>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Lume: The nostr client for desktop</title>
+    <Seo
+      title="Lume"
+      description="A friendly and scalable Nostr desktop client."
+      keywords={[
+        "nostr",
+        "nostr client",
+        "social network",
+        "desktop app",
+        "timeline",
+        "application",
+        "columns",
+        "tweetdeck",
+      ]}
+      themeColor="#fafafa"
+      colorScheme="light"
+      facebook={{
+        image: "/og-image.jpg",
+        url: "https://lume.nu",
+        type: "website",
+      }}
+      twitter={{
+        image: "/og-image.jpg",
+        card: "summary",
+      }}
+    />
+  </head>
+  <body
+    class="w-full h-full antialiased bg-neutral-50 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-50"
+  >
+    <div class="py-10 flex flex-col gap-10">
+      <div class="mx-auto max-w-xl w-full flex flex-col gap-2">
+        <div class="mb-5">
+          <img
+            src="/icon.png"
+            alt="App Icon"
+            class="size-14 shadow-md shadow-neutral-500/50 rounded-xl object-cover transform-gpu -rotate-6 hover:animate-spin"
+          />
+        </div>
+        <h1 class="text-xl font-serif font-semibold">
+          A friendly and scalable Nostr desktop client.
+        </h1>
+        <p class="text-sm font-medium text-neutral-700">
+          Lume is a <b>Nostr client</b> for desktop, including Linux, Windows, and
+          macOS. It is free and open-source; you can look at the source code on <a
+            href="https://github.com/lumehq/lume">GitHub</a
+          >. Lume is actively improving the app and adding new features; you can
+          expect a new update every month.
+        </p>
+        <p class="text-sm font-medium text-neutral-700">
+          <b>Latest version</b>: 4.0.4
+        </p>
+        <div
+          class="w-full h-[120px] sm:h-[80px] flex flex-col sm:flex-row sm:items-center sm:justify-start justify-center gap-2"
+        >
+          <a
+            href="https://github.com/lumehq/lume/releases/latest"
+            class="inline-flex items-center justify-center w-44 h-11 rounded-full bg-black hover:ring-2 ring-blue-500 ring-offset-2 text-white font-medium text-sm"
+            >Download for macOS</a
+          >
+          <span class="italic text-xs text-neutral-700"
+            >(Windows & Linux are coming later)</span
+          >
+        </div>
+        <div class="text-sm italic text-neutral-600">
+          * If you still need to use Lume on Windows and Linux, you can try v3 <a
+            href="https://github.com/lumehq/lume/releases/tag/v3.0.2"
+            class="text-blue-500">here</a
+          >
+        </div>
+      </div>
+      <div class="sm:max-w-3xl w-full mx-auto px-3 sm:px-0">
+        <video
+          class="aspect-video w-full h-auto rounded-xl"
+          autoplay
+          mute
+          controls
+        >
+          <source
+            src="https://video.nostr.build/4cc4df88caeb861b62e3f73bddbb5e0b5cf63617472a97d22f427e273ee0e127.mp4"
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </body>
 </html>
