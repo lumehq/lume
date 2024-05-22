@@ -3,13 +3,13 @@ import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
-import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
+import { type ColumnRouteSearch, type Event, Kind, Topic } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
-export const Route = createFileRoute("/foryou")({
+export const Route = createFileRoute("/topic")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
 		return {
 			account: search.account,
@@ -20,21 +20,27 @@ export const Route = createFileRoute("/foryou")({
 	beforeLoad: async ({ search, context }) => {
 		const ark = context.ark;
 		const key = `lume_topic_${search.label}`;
-		const topics = await ark.get_nstore(key);
+		const topics = (await ark.get_nstore(key)) as unknown as Topic[];
 		const settings = await ark.get_settings();
 
-		if (!topics) {
+		if (!topics?.length) {
 			throw redirect({
 				to: "/create-topic",
 				search: {
 					...search,
-					redirect: "/foryou",
+					redirect: "/topic",
 				},
 			});
 		}
 
+		let hashtags: string[] = [];
+
+		for (const topic of topics) {
+			hashtags.concat(topic.content);
+		}
+
 		return {
-			topics,
+			hashtags,
 			settings,
 		};
 	},
@@ -43,7 +49,7 @@ export const Route = createFileRoute("/foryou")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { ark, interests } = Route.useRouteContext();
+	const { ark, hashtags } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -55,7 +61,8 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			return [];
+			const events = ark.get_hashtag_events(hashtags, 20, pageParam);
+			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
 		select: (data) => data?.pages.flatMap((page) => page),

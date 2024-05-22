@@ -35,7 +35,6 @@ function Screen() {
 		"npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445", // reya
 	]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [isDone, setIsDone] = useState(false);
 
 	const toggleUser = (pubkey: string) => {
 		setUsers((prev) =>

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/group")({
 		const groups = (await ark.get_nstore(key)) as string[];
 		const settings = await ark.get_settings();
 
-		if (!groups) {
+		if (!groups?.length) {
 			throw redirect({
 				to: "/create-group",
 				search: {
