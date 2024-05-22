@@ -33,7 +33,7 @@ function Screen() {
       const sync: boolean = await invoke("friend_to_friend", { npub });
 
       if (sync) {
-        navigate({ to: redirect });
+        return navigate({ to: redirect });
       }
     } catch (e) {
       setIsLoading(false);

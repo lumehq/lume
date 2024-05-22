@@ -55,7 +55,7 @@ function Screen() {
       const newContactList = await ark.set_contact_list(follows);
 
       if (newContactList) {
-        navigate({ to: redirect });
+        return navigate({ to: redirect });
       }
     } catch (e) {
       setIsLoading(false);

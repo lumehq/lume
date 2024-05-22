@@ -20,7 +20,7 @@ export const Route = createFileRoute("/group")({
   beforeLoad: async ({ search, context }) => {
     const ark = context.ark;
     const key = `lume_group_${search.label}`;
-    const groups = await ark.get_nstore(key);
+    const groups = (await ark.get_nstore(key)) as string[];
     const settings = await ark.get_settings();
 
     if (!groups) {
@@ -55,7 +55,7 @@ export function Screen() {
     queryKey: [label, account],
     initialPageParam: 0,
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const events = await ark.get_group_events(groups, 20, pageParam);
+      const events = await ark.get_local_events(groups, 20, pageParam);
       return events;
     },
     getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,

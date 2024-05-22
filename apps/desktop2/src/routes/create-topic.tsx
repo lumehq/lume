@@ -42,7 +42,7 @@ function Screen() {
       const createTopic = await ark.set_nstore(key, JSON.stringify(topics));
 
       if (createTopic) {
-        navigate({ to: redirect });
+        return navigate({ to: redirect });
       }
     } catch (e) {
       setIsLoading(false);

@@ -1,127 +1,195 @@
-import { CheckCircleIcon } from "@lume/icons";
+import { CancelIcon, CheckCircleIcon, PlusIcon } from "@lume/icons";
 import type { ColumnRouteSearch } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { User } from "@/components/user";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/create-group")({
-	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
-		return {
-			account: search.account,
-			label: search.label,
-			name: search.name,
-		};
-	},
-	loader: async ({ context }) => {
-		const ark = context.ark;
-		const contacts = await ark.get_contact_list();
-		return contacts;
-	},
-	component: Screen,
+  validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
+    return {
+      account: search.account,
+      label: search.label,
+      name: search.name,
+    };
+  },
+  loader: async ({ context }) => {
+    const ark = context.ark;
+    const contacts = await ark.get_contact_list();
+    return contacts;
+  },
+  component: Screen,
 });
 
 function Screen() {
-	const contacts = Route.useLoaderData();
-	const router = useRouter();
+  const contacts = Route.useLoaderData();
+  const navigate = Route.useNavigate();
 
-	const { ark } = Route.useRouteContext();
-	const { label, redirect } = Route.useSearch();
+  const { ark } = Route.useRouteContext();
+  const { label, redirect } = Route.useSearch();
 
-	const [title, setTitle] = useState<string>("Just a new group");
-	const [users, setUsers] = useState<Array<string>>([]);
-	const [loading, setLoading] = useState(false);
-	const [isDone, setIsDone] = useState(false);
+  const [title, setTitle] = useState("");
+  const [npub, setNpub] = useState("");
+  const [users, setUsers] = useState<string[]>([
+    "npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445", // reya
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
-	const toggleUser = (pubkey: string) => {
-		const arr = users.includes(pubkey)
-			? users.filter((i) => i !== pubkey)
-			: [...users, pubkey];
-		setUsers(arr);
-	};
+  const toggleUser = (pubkey: string) => {
+    setUsers((prev) =>
+      prev.includes(pubkey)
+        ? prev.filter((i) => i !== pubkey)
+        : [...prev, pubkey],
+    );
+  };
 
-	const submit = async () => {
-		try {
-			if (isDone) return router.history.push(redirect);
+  const addUser = () => {
+    if (!npub.startsWith("npub1")) return;
+    if (users.includes(npub)) return;
 
-			// start loading
-			setLoading(true);
+    setUsers((prev) => [...prev, npub]);
+    setNpub("");
+  };
 
-			const groups = await ark.set_nstore(
-				`lume_group_${label}`,
-				JSON.stringify(users),
-			);
+  const submit = async () => {
+    try {
+      setIsLoading(true);
 
-			if (groups) {
-				toast.success("Group has been created successfully.");
-				// start loading
-				setIsDone(true);
-				setLoading(false);
-			}
-		} catch (e) {
-			setLoading(false);
-			toast.error(e);
-		}
-	};
+      const key = `lume_group_${label}`;
+      const createGroup = await ark.set_nstore(key, JSON.stringify(users));
 
-	return (
-		<div className="h-full overflow-y-auto scrollbar-none">
-			<div className="flex flex-col gap-5 p-3">
-				<div className="flex flex-col gap-1">
-					<label htmlFor="name" className="font-medium">
-						Name
-					</label>
-					<input
-						name="name"
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-						placeholder="Nostrichs..."
-						className="h-10 rounded-lg bg-transparent border border-neutral-300 dark:border-neutral-700 px-3 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
-					/>
-				</div>
-				<div className="flex flex-col gap-1">
-					<div className="inline-flex items-center justify-between">
-						<span className="font-medium">Pick user</span>
-						<span className="text-neutral-600 dark:text-neutral-400">{`${users.length} / ∞`}</span>
-					</div>
-					<div className="flex flex-col gap-2">
-						{contacts.map((item: string) => (
-							<button
-								key={item}
-								type="button"
-								onClick={() => toggleUser(item)}
-								className="inline-flex items-center justify-between px-3 py-2 rounded-lg bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20"
-							>
-								<User.Provider pubkey={item}>
-									<User.Root className="flex items-center gap-2.5">
-										<User.Avatar className="size-10 rounded-full object-cover" />
-										<div className="flex items-center gap-1">
-											<User.Name className="font-medium" />
-											<User.NIP05 />
-										</div>
-									</User.Root>
-								</User.Provider>
-								{users.includes(item) ? (
-									<CheckCircleIcon className="size-5 text-teal-500" />
-								) : null}
-							</button>
-						))}
-					</div>
-				</div>
-			</div>
-			<div className="fixed z-10 flex items-center justify-center w-full bottom-6">
-				{users.length >= 1 ? (
-					<button
-						type="button"
-						onClick={() => submit()}
-						disabled={users.length < 1}
-						className="inline-flex items-center justify-center px-4 font-medium text-white transform bg-blue-500 rounded-full active:translate-y-1 w-32 h-10 hover:bg-blue-600 focus:outline-none"
-					>
-						{isDone ? "Back" : loading ? <Spinner /> : "Update"}
-					</button>
-				) : null}
-			</div>
-		</div>
-	);
+      if (createGroup) {
+        return navigate({ to: redirect });
+      }
+    } catch (e) {
+      setIsLoading(false);
+      toast.error(e);
+    }
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+      <div className="text-center flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-serif font-medium">
+          What are your interests?
+        </h1>
+        <p className="leading-tight text-neutral-700 dark:text-neutral-300">
+          Add some topics you want to focus on.
+        </p>
+      </div>
+      <div className="w-4/5 max-w-full flex flex-col gap-3">
+        <div className="w-full h-9 shrink-0 flex items-center bg-black/5 dark:bg-white/5 rounded-lg">
+          <label
+            htmlFor="name"
+            className="w-16 border-r border-black/10 dark:border-white/10 shrink-0 text-center text-sm font-semibold"
+          >
+            Name
+          </label>
+          <input
+            name="name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter a name for this group"
+            className="h-full bg-transparent border-none text-sm px-3 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
+          />
+        </div>
+        <div className="overflow-y-auto scrollbar-none p-2 shrink-0 w-full h-[450px] flex flex-col gap-3 bg-black/5 dark:bg-white/5 backdrop-blur-lg rounded-xl">
+          <div className="flex gap-2">
+            <input
+              name="npub"
+              value={npub}
+              onChange={(e) => setNpub(e.target.value)}
+              placeholder="npub1..."
+              className="h-9 w-full rounded-lg bg-black/10 dark:bg-white/10 border-none text-sm px-3 placeholder:text-neutral-600 focus:border-neutral-500 focus:ring-0 dark:placeholder:text-neutral-400"
+            />
+            <button
+              type="button"
+              onClick={() => addUser()}
+              className="inline-flex size-9 rounded-lg items-center justify-center bg-black/20 dark:bg-white/20 shrink-0 text-white hover:bg-blue-500"
+            >
+              <PlusIcon className="size-6" />
+            </button>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Added</span>
+            <div className="flex flex-col gap-2">
+              {users.length ? (
+                users.map((item: string) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => toggleUser(item)}
+                    className="inline-flex items-center justify-between px-3 py-2 rounded-lg bg-white dark:bg-black/20 backdrop-blur-lg shadow-primary dark:ring-1 ring-neutral-800/50"
+                  >
+                    <User.Provider pubkey={item}>
+                      <User.Root className="flex items-center gap-2.5">
+                        <User.Avatar className="size-8 rounded-full object-cover" />
+                        <div className="flex items-center gap-1">
+                          <User.Name className="text-sm font-medium" />
+                        </div>
+                      </User.Root>
+                    </User.Provider>
+                    <div>
+                      <CancelIcon className="size-4" />
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="bg-black/5 dark:bg-white/5 text-sm flex items-center justify-center h-14 rounded-lg">
+                  Empty.
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-semibold">Contacts</span>
+            <div className="flex flex-col gap-2">
+              {contacts.length ? (
+                contacts.map((item: string) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => toggleUser(item)}
+                    className="inline-flex items-center justify-between px-3 py-2 rounded-lg bg-white dark:bg-black/20 backdrop-blur-lg shadow-primary dark:ring-1 ring-neutral-800/50"
+                  >
+                    <User.Provider pubkey={item}>
+                      <User.Root className="flex items-center gap-2.5">
+                        <User.Avatar className="size-8 rounded-full object-cover" />
+                        <div className="flex items-center gap-1">
+                          <User.Name className="text-sm font-medium" />
+                        </div>
+                      </User.Root>
+                    </User.Provider>
+                  </button>
+                ))
+              ) : (
+                <div className="bg-black/5 dark:bg-white/5 text-sm flex items-center justify-center h-14 rounded-lg">
+                  <p>
+                    Find more user at{" "}
+                    <a
+                      href="https://www.nostr.directory/"
+                      target="_blank"
+                      className="text-blue-600 after:content-['_↗']"
+                    >
+                      Nostr Directory
+                    </a>
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={() => submit()}
+        disabled={isLoading || users.length < 1}
+        className="inline-flex items-center justify-center w-36 rounded-full h-9 bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 disabled:opacity-50"
+      >
+        {isLoading ? <Spinner /> : "Confirm"}
+      </button>
+    </div>
+  );
 }
