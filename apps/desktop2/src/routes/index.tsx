@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
 		await checkForAppUpdates(true);
 
 		const ark = context.ark;
-		const accounts = await ark.get_all_accounts();
+		const accounts = await ark.get_accounts();
 
 		if (!accounts.length) {
 			throw redirect({
@@ -41,7 +41,7 @@ function Screen() {
 		try {
 			setLoading(true);
 
-			const loadAccount = await ark.load_selected_account(npub);
+			const loadAccount = await ark.load_account(npub);
 			if (loadAccount) {
 				return navigate({
 					to: "/$account/home",

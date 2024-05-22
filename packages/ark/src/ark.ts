@@ -29,22 +29,26 @@ export class Ark {
 		this.settings = undefined;
 	}
 
-	public async get_all_accounts() {
+	public async get_accounts() {
 		try {
-			const cmd: string[] = await invoke("get_accounts");
-			const accounts: string[] = cmd.map((item) => item.replace(".npub", ""));
+			const cmd: string = await invoke("get_accounts");
+			const parse = cmd.split(/\s+/).filter((v) => v.startsWith("npub1"));
+			const accounts = [...new Set(parse)];
 
-			if (!this.accounts) this.accounts = accounts;
+			if (!this.accounts) {
+				this.accounts = accounts;
+			}
 
 			return accounts;
 		} catch (e) {
-			throw new Error(String(e));
+			console.info(String(e));
+			return [];
 		}
 	}
 
-	public async load_selected_account(npub: string) {
+	public async load_account(npub: string) {
 		try {
-			const cmd: boolean = await invoke("load_selected_account", {
+			const cmd: boolean = await invoke("load_account", {
 				npub,
 			});
 			return cmd;
@@ -73,7 +77,7 @@ export class Ark {
 
 	public async create_keys() {
 		try {
-			const cmd: Keys = await invoke("create_keys");
+			const cmd: Keys = await invoke("create_account");
 			return cmd;
 		} catch (e) {
 			console.error(String(e));
@@ -82,7 +86,7 @@ export class Ark {
 
 	public async save_account(nsec: string, password = "") {
 		try {
-			const cmd: string = await invoke("save_key", {
+			const cmd: string = await invoke("save_account", {
 				nsec,
 				password,
 			});

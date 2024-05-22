@@ -2669,6 +2669,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "keyring-search"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "95edd18bc5d51d3544a788d86b6d96c20b3fea5518349559df1feaa4775fc632"
+dependencies = [
+ "byteorder",
+ "lazy_static",
+ "linux-keyutils",
+ "regex",
+ "secret-service",
+ "security-framework",
+ "windows-sys 0.52.0",
+]
+
+[[package]]
 name = "kuchikiki"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2862,6 +2877,7 @@ version = "4.0.0"
 dependencies = [
  "cocoa",
  "keyring",
+ "keyring-search",
  "nostr-sdk",
  "objc",
  "rand 0.8.5",

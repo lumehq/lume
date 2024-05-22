@@ -23,7 +23,7 @@ import * as Popover from "@radix-ui/react-popover";
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async ({ context }) => {
 		const ark = context.ark;
-		const accounts = await ark.get_all_accounts();
+		const accounts = await ark.get_accounts();
 
 		return { accounts };
 	},
@@ -106,7 +106,7 @@ function Accounts() {
 		}
 
 		// change current account and update signer
-		const select = await ark.load_selected_account(npub);
+		const select = await ark.load_account(npub);
 
 		if (select) {
 			return navigate({ to: "/$account/home", params: { account: npub } });
