@@ -1,123 +1,123 @@
 {
-	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
-	"productName": "Lume",
-	"version": "4.0.4",
-	"identifier": "nu.lume.Lume",
-	"build": {
-		"beforeBuildCommand": "pnpm desktop:build",
-		"beforeDevCommand": "pnpm desktop:dev",
-		"devUrl": "http://localhost:3000",
-		"frontendDist": "../dist"
-	},
-	"app": {
-		"macOSPrivateApi": true,
-		"withGlobalTauri": true,
-		"trayIcon": {
-			"id": "main_tray",
-			"iconPath": "./icons/tray.png",
-			"iconAsTemplate": true
-		},
-		"security": {
-			"assetProtocol": {
-				"enable": true,
-				"scope": [
-					"$APPDATA/*",
-					"$DATA/*",
-					"$LOCALDATA/*",
-					"$DESKTOP/*",
-					"$DOCUMENT/*",
-					"$DOWNLOAD/*",
-					"$HOME/*",
-					"$PICTURE/*",
-					"$PUBLIC/*",
-					"$VIDEO/*",
-					"$APPCONFIG/*",
-					"$RESOURCE/*"
-				]
-			}
-		}
-	},
-	"bundle": {
-		"licenseFile": "../LICENSE",
-		"longDescription": "nostr client for desktop",
-		"shortDescription": "nostr client",
-		"targets": "all",
-		"active": true,
-		"category": "SocialNetworking",
-		"resources": ["resources/*", "locales/*"],
-		"icon": [
-			"icons/32x32.png",
-			"icons/128x128.png",
-			"icons/128x128@2x.png",
-			"icons/icon.icns",
-			"icons/icon.ico"
-		],
-		"linux": {
-			"appimage": {
-				"bundleMediaFramework": true,
-				"files": {}
-			},
-			"deb": {
-				"files": {}
-			},
-			"rpm": {
-				"epoch": 0,
-				"files": {},
-				"release": "1"
-			}
-		},
-		"macOS": {
-			"dmg": {
-				"appPosition": {
-					"x": 180,
-					"y": 170
-				},
-				"applicationFolderPosition": {
-					"x": 480,
-					"y": 170
-				},
-				"windowSize": {
-					"height": 400,
-					"width": 660
-				}
-			},
-			"files": {},
-			"minimumSystemVersion": "10.15"
-		},
-		"windows": {
-			"allowDowngrades": true,
-			"certificateThumbprint": null,
-			"digestAlgorithm": "sha256",
-			"nsis": null,
-			"timestampUrl": null,
-			"tsp": false,
-			"webviewFixedRuntimePath": null,
-			"webviewInstallMode": {
-				"silent": true,
-				"type": "downloadBootstrapper"
-			},
-			"wix": null
-		},
-		"fileAssociations": [
-			{
-				"name": "bech32",
-				"description": "Nostr Bech32",
-				"ext": ["npub", "nsec", "nprofile", "nevent", "naddr", "nrelay"],
-				"role": "Viewer"
-			}
-		]
-	},
-	"plugins": {
-		"updater": {
-			"active": true,
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU3OTdCMkM3RjU5QzE2NzkKUldSNUZwejF4N0tYNTVHYjMrU0JkL090SlEyNUVLYU5TM2hTU3RXSWtEWngrZWJ4a0pydUhXZHEK",
-			"windows": {
-				"installMode": "quiet"
-			},
-			"endpoints": [
-				"https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
-				"https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
-			]
-		}
-	}
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "Lume",
+  "version": "4.0.5",
+  "identifier": "nu.lume.Lume",
+  "build": {
+    "beforeBuildCommand": "pnpm desktop:build",
+    "beforeDevCommand": "pnpm desktop:dev",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "withGlobalTauri": true,
+    "trayIcon": {
+      "id": "main_tray",
+      "iconPath": "./icons/tray.png",
+      "iconAsTemplate": true
+    },
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/*",
+          "$DATA/*",
+          "$LOCALDATA/*",
+          "$DESKTOP/*",
+          "$DOCUMENT/*",
+          "$DOWNLOAD/*",
+          "$HOME/*",
+          "$PICTURE/*",
+          "$PUBLIC/*",
+          "$VIDEO/*",
+          "$APPCONFIG/*",
+          "$RESOURCE/*"
+        ]
+      }
+    }
+  },
+  "bundle": {
+    "licenseFile": "../LICENSE",
+    "longDescription": "nostr client for desktop",
+    "shortDescription": "nostr client",
+    "targets": "all",
+    "active": true,
+    "category": "SocialNetworking",
+    "resources": ["resources/*", "locales/*"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true,
+        "files": {}
+      },
+      "deb": {
+        "files": {}
+      },
+      "rpm": {
+        "epoch": 0,
+        "files": {},
+        "release": "1"
+      }
+    },
+    "macOS": {
+      "dmg": {
+        "appPosition": {
+          "x": 180,
+          "y": 170
+        },
+        "applicationFolderPosition": {
+          "x": 480,
+          "y": 170
+        },
+        "windowSize": {
+          "height": 400,
+          "width": 660
+        }
+      },
+      "files": {},
+      "minimumSystemVersion": "10.15"
+    },
+    "windows": {
+      "allowDowngrades": true,
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "nsis": null,
+      "timestampUrl": null,
+      "tsp": false,
+      "webviewFixedRuntimePath": null,
+      "webviewInstallMode": {
+        "silent": true,
+        "type": "downloadBootstrapper"
+      },
+      "wix": null
+    },
+    "fileAssociations": [
+      {
+        "name": "bech32",
+        "description": "Nostr Bech32",
+        "ext": ["npub", "nsec", "nprofile", "nevent", "naddr", "nrelay"],
+        "role": "Viewer"
+      }
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU3OTdCMkM3RjU5QzE2NzkKUldSNUZwejF4N0tYNTVHYjMrU0JkL090SlEyNUVLYU5TM2hTU3RXSWtEWngrZWJ4a0pydUhXZHEK",
+      "windows": {
+        "installMode": "quiet"
+      },
+      "endpoints": [
+        "https://lus.reya3772.workers.dev/v1/{{target}}/{{arch}}/{{current_version}}",
+        "https://lus.reya3772.workers.dev/{{target}}/{{current_version}}"
+      ]
+    }
+  }
 }
