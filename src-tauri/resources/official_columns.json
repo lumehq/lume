@@ -1,52 +1,52 @@
 [
-  {
-    "label": "lZfXLFgPPR4NNrgjlWDxn",
-    "name": "Newsfeed",
-    "content": "/newsfeed",
-    "logo": "",
-    "cover": "/newsfeed.png",
-    "coverRetina": "/newsfeed@2x.png",
-    "author": "Lume",
-    "description": "Keep up to date with the people you're following."
-  },
-  {
-    "label": "rRtguZwIpd5G8Wt54OTb7",
-    "name": "Topic",
-    "content": "/topic",
-    "logo": "",
-    "cover": "/foryou.png",
-    "coverRetina": "/foryou@2x.png",
-    "author": "Lume",
-    "description": "Keep up to date with content based on your interests."
-  },
-  {
-    "label": "fve9fk2fVyFWORPBkjd79",
-    "name": "Group",
-    "content": "/group",
-    "logo": "",
-    "cover": "/group.png",
-    "coverRetina": "/group@2x.png",
-    "author": "Lume",
-    "description": "Focus feeds for people you like."
-  },
-  {
-    "label": "gxtcIbgD8YNPbeI5o92I8",
-    "name": "Trending",
-    "content": "/trending/notes",
-    "logo": "",
-    "cover": "/trending.png",
-    "coverRetina": "/trending@2x.png",
-    "author": "Lume",
-    "description": "What is trending on Nostr?."
-  },
-  {
-    "label": "GLFm44za8rhJDP04LMr3M",
-    "name": "Global",
-    "content": "/global",
-    "logo": "",
-    "cover": "/global.png",
-    "coverRetina": "/global@2x.png",
-    "author": "Lume",
-    "description": "All events from connected relays."
-  }
+	{
+		"label": "lZfXLFgPPR4NNrgjlWDxn",
+		"name": "Newsfeed",
+		"content": "/newsfeed",
+		"logo": "",
+		"cover": "/newsfeed.png",
+		"coverRetina": "/newsfeed@2x.png",
+		"author": "Lume",
+		"description": "Keep up to date with the people you're following."
+	},
+	{
+		"label": "rRtguZwIpd5G8Wt54OTb7",
+		"name": "Topic",
+		"content": "/topic",
+		"logo": "",
+		"cover": "/foryou.png",
+		"coverRetina": "/foryou@2x.png",
+		"author": "Lume",
+		"description": "Keep up to date with content based on your interests."
+	},
+	{
+		"label": "fve9fk2fVyFWORPBkjd79",
+		"name": "Group",
+		"content": "/group",
+		"logo": "",
+		"cover": "/group.png",
+		"coverRetina": "/group@2x.png",
+		"author": "Lume",
+		"description": "Focus feeds for people you like."
+	},
+	{
+		"label": "gxtcIbgD8YNPbeI5o92I8",
+		"name": "Trending",
+		"content": "/trending/notes",
+		"logo": "",
+		"cover": "/trending.png",
+		"coverRetina": "/trending@2x.png",
+		"author": "Lume",
+		"description": "What is trending on Nostr?."
+	},
+	{
+		"label": "GLFm44za8rhJDP04LMr3M",
+		"name": "Global",
+		"content": "/global",
+		"logo": "",
+		"cover": "/global.png",
+		"coverRetina": "/global@2x.png",
+		"author": "Lume",
+		"description": "All events from connected relays."
+	}
 ]

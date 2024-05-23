@@ -18,12 +18,12 @@ export const Route = createFileRoute("/create-topic")({
 });
 
 function Screen() {
-	const { label, redirect } = Route.useSearch();
 	const { ark } = Route.useRouteContext();
 
 	const [topics, setTopics] = useState<Topic[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
+	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
 	const toggleTopic = (topic: Topic) => {
@@ -38,11 +38,11 @@ function Screen() {
 		try {
 			setIsLoading(true);
 
-			const key = `lume_topic_${label}`;
+			const key = `lume_topic_${search.label}`;
 			const createTopic = await ark.set_nstore(key, JSON.stringify(topics));
 
 			if (createTopic) {
-				return navigate({ to: redirect });
+				return navigate({ to: search.redirect, search: { ...search } });
 			}
 		} catch (e) {
 			setIsLoading(false);

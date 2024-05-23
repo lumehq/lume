@@ -23,11 +23,7 @@ export const Route = createFileRoute("/create-group")({
 });
 
 function Screen() {
-	const contacts = Route.useLoaderData();
-	const navigate = Route.useNavigate();
-
 	const { ark } = Route.useRouteContext();
-	const { label, redirect } = Route.useSearch();
 
 	const [title, setTitle] = useState("");
 	const [npub, setNpub] = useState("");
@@ -35,6 +31,10 @@ function Screen() {
 		"npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445", // reya
 	]);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const contacts = Route.useLoaderData();
+	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
 
 	const toggleUser = (pubkey: string) => {
 		setUsers((prev) =>
@@ -56,11 +56,11 @@ function Screen() {
 		try {
 			setIsLoading(true);
 
-			const key = `lume_group_${label}`;
+			const key = `lume_group_${search.label}`;
 			const createGroup = await ark.set_nstore(key, JSON.stringify(users));
 
 			if (createGroup) {
-				return navigate({ to: redirect });
+				return navigate({ to: search.redirect, search: { ...search } });
 			}
 		} catch (e) {
 			setIsLoading(false);

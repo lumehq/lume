@@ -109,7 +109,13 @@ pub async fn get_local_events(
   };
   let authors: Vec<PublicKey> = pubkeys
     .into_iter()
-    .map(|p| PublicKey::from_hex(p).unwrap())
+    .map(|p| {
+      if p.starts_with("npub1") {
+        PublicKey::from_bech32(p).unwrap()
+      } else {
+        PublicKey::from_hex(p).unwrap()
+      }
+    })
     .collect();
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
