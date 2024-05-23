@@ -4,6 +4,7 @@ use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
@@ -49,7 +50,8 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
 }
 
 #[tauri::command]
-pub async fn get_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>, String> {
+#[specta::specta]
+pub async fn get_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
 
   match EventId::from_hex(id) {
@@ -57,7 +59,7 @@ pub async fn get_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>,
       let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
       match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events),
+        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
       }
     }
@@ -66,12 +68,12 @@ pub async fn get_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<Event>,
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_events_by(
   public_key: &str,
-  limit: usize,
   as_of: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<Event>, String> {
+) -> Result<Vec<String>, String> {
   let client = &state.client;
 
   match PublicKey::from_str(public_key) {
@@ -83,11 +85,11 @@ pub async fn get_events_by(
       let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
         .author(author)
-        .limit(limit)
+        .limit(20)
         .until(until);
 
       match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events),
+        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
       }
     }
@@ -96,12 +98,12 @@ pub async fn get_events_by(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_local_events(
   pubkeys: Vec<String>,
-  limit: usize,
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<Event>, String> {
+) -> Result<Vec<String>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -119,7 +121,7 @@ pub async fn get_local_events(
     .collect();
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(limit)
+    .limit(20)
     .authors(authors)
     .until(as_of);
 
@@ -127,17 +129,17 @@ pub async fn get_local_events(
     .get_events_of(vec![filter], Some(Duration::from_secs(8)))
     .await
   {
-    Ok(events) => Ok(events),
+    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
     Err(err) => Err(err.to_string()),
   }
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_global_events(
-  limit: usize,
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<Event>, String> {
+) -> Result<Vec<String>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -146,25 +148,25 @@ pub async fn get_global_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(limit)
+    .limit(20)
     .until(as_of);
 
   match client
     .get_events_of(vec![filter], Some(Duration::from_secs(8)))
     .await
   {
-    Ok(events) => Ok(events),
+    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
     Err(err) => Err(err.to_string()),
   }
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_hashtag_events(
   hashtags: Vec<&str>,
-  limit: usize,
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<Event>, String> {
+) -> Result<Vec<String>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -172,23 +174,23 @@ pub async fn get_hashtag_events(
   };
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(limit)
+    .limit(20)
     .until(as_of)
     .hashtags(hashtags);
 
   match client.get_events_of(vec![filter], None).await {
-    Ok(events) => Ok(events),
+    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
     Err(err) => Err(err.to_string()),
   }
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_group_events(
   list: Vec<&str>,
-  limit: usize,
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<Event>, String> {
+) -> Result<Vec<String>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -200,17 +202,18 @@ pub async fn get_group_events(
     .collect();
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(limit)
+    .limit(20)
     .until(as_of)
     .authors(authors);
 
   match client.get_events_of(vec![filter], None).await {
-    Ok(events) => Ok(events),
+    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
     Err(err) => Err(err.to_string()),
   }
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn publish(
   content: &str,
   tags: Vec<Vec<&str>>,
@@ -226,12 +229,13 @@ pub async fn publish(
 }
 
 #[tauri::command]
-pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+#[specta::specta]
+pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let event = Event::from_json(raw).unwrap();
 
   match client.repost(&event, None).await {
-    Ok(event_id) => Ok(event_id),
+    Ok(event_id) => Ok(event_id.to_string()),
     Err(err) => Err(err.to_string()),
   }
 }

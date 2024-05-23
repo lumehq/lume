@@ -24,6 +24,62 @@ pub struct Nostr {
 }
 
 fn main() {
+  let invoke_handler = {
+    let builder = tauri_specta::ts::builder().commands(tauri_specta::collect_commands![
+      nostr::relay::get_relays,
+      nostr::relay::connect_relay,
+      nostr::relay::remove_relay,
+      nostr::keys::get_accounts,
+      nostr::keys::create_account,
+      nostr::keys::save_account,
+      nostr::keys::get_encrypted_key,
+      nostr::keys::nostr_connect,
+      nostr::keys::load_account,
+      nostr::keys::event_to_bech32,
+      nostr::keys::user_to_bech32,
+      nostr::keys::to_npub,
+      nostr::keys::verify_nip05,
+      nostr::metadata::run_notification,
+      nostr::metadata::get_activities,
+      nostr::metadata::get_current_user_profile,
+      nostr::metadata::get_profile,
+      nostr::metadata::get_contact_list,
+      nostr::metadata::set_contact_list,
+      nostr::metadata::create_profile,
+      nostr::metadata::follow,
+      nostr::metadata::unfollow,
+      nostr::metadata::get_nstore,
+      nostr::metadata::set_nstore,
+      nostr::metadata::set_nwc,
+      nostr::metadata::load_nwc,
+      nostr::metadata::get_balance,
+      nostr::metadata::zap_profile,
+      nostr::metadata::zap_event,
+      nostr::metadata::friend_to_friend,
+      nostr::event::get_event,
+      nostr::event::get_thread,
+      nostr::event::get_events_by,
+      nostr::event::get_local_events,
+      nostr::event::get_global_events,
+      nostr::event::get_hashtag_events,
+      nostr::event::get_group_events,
+      nostr::event::publish,
+      nostr::event::repost,
+      commands::folder::show_in_folder,
+      commands::window::create_column,
+      commands::window::close_column,
+      commands::window::reposition_column,
+      commands::window::resize_column,
+      commands::window::open_window,
+      commands::window::set_badge
+    ]);
+
+    #[cfg(debug_assertions)]
+    let builder = builder.path("../packages/ark/src/commands.ts");
+
+    builder.build().unwrap()
+  };
+
   tauri::Builder::default()
     .setup(|app| {
       let main_window = app.get_webview_window("main").unwrap();
@@ -98,55 +154,7 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .invoke_handler(tauri::generate_handler![
-      nostr::relay::get_relays,
-      nostr::relay::connect_relay,
-      nostr::relay::remove_relay,
-      nostr::keys::get_accounts,
-      nostr::keys::create_account,
-      nostr::keys::save_account,
-      nostr::keys::get_encrypted_key,
-      nostr::keys::nostr_connect,
-      nostr::keys::load_account,
-      nostr::keys::event_to_bech32,
-      nostr::keys::user_to_bech32,
-      nostr::keys::to_npub,
-      nostr::keys::verify_nip05,
-      nostr::metadata::run_notification,
-      nostr::metadata::get_activities,
-      nostr::metadata::get_current_user_profile,
-      nostr::metadata::get_profile,
-      nostr::metadata::get_contact_list,
-      nostr::metadata::set_contact_list,
-      nostr::metadata::create_profile,
-      nostr::metadata::follow,
-      nostr::metadata::unfollow,
-      nostr::metadata::get_nstore,
-      nostr::metadata::set_nstore,
-      nostr::metadata::set_nwc,
-      nostr::metadata::load_nwc,
-      nostr::metadata::get_balance,
-      nostr::metadata::zap_profile,
-      nostr::metadata::zap_event,
-      nostr::metadata::friend_to_friend,
-      nostr::event::get_event,
-      nostr::event::get_thread,
-      nostr::event::get_events_by,
-      nostr::event::get_local_events,
-      nostr::event::get_global_events,
-      nostr::event::get_hashtag_events,
-      nostr::event::get_group_events,
-      nostr::event::publish,
-      nostr::event::repost,
-      commands::folder::show_in_folder,
-      commands::window::create_column,
-      commands::window::close_column,
-      commands::window::reposition_column,
-      commands::window::resize_column,
-      commands::window::open_window,
-      commands::window::set_badge,
-      commands::opg::fetch_opg,
-    ])
+    .invoke_handler(invoke_handler)
     .run(tauri::generate_context!())
     .expect("error while running tauri application")
 }

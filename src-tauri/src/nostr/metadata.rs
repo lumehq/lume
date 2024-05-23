@@ -6,6 +6,7 @@ use tauri::{Manager, State};
 use url::Url;
 
 #[tauri::command]
+#[specta::specta]
 pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<(), ()> {
   tauri::async_runtime::spawn(async move {
     let window = app.get_window("main").unwrap();
@@ -49,11 +50,12 @@ pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_activities(
   account: &str,
   kind: &str,
   state: State<'_, Nostr>,
-) -> Result<Vec<Event>, String> {
+) -> Result<Vec<String>, String> {
   let client = &state.client;
 
   if let Ok(pubkey) = PublicKey::from_str(account) {
@@ -65,7 +67,7 @@ pub async fn get_activities(
         .until(Timestamp::now());
 
       match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events),
+        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
       }
     } else {
@@ -77,6 +79,7 @@ pub async fn get_activities(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
@@ -114,7 +117,8 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
 }
 
 #[tauri::command]
-pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<Metadata, String> {
+#[specta::specta]
+pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let signer = client.signer().await.unwrap();
   let public_key = signer.public_key().await.unwrap();
@@ -130,7 +134,7 @@ pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<Metadat
     Ok(events) => {
       if let Some(event) = events.first() {
         if let Ok(metadata) = Metadata::from_json(&event.content) {
-          Ok(metadata)
+          Ok(metadata.as_json())
         } else {
           Err("Parse metadata failed".into())
         }
@@ -143,7 +147,8 @@ pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<Metadat
 }
 
 #[tauri::command]
-pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, String> {
+#[specta::specta]
+pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
@@ -166,13 +171,13 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
     if let Ok(events) = query {
       if let Some(event) = events.first() {
         if let Ok(metadata) = Metadata::from_json(&event.content) {
-          Ok(metadata)
+          Ok(metadata.as_json())
         } else {
           Err("Parse metadata failed".into())
         }
       } else {
         let rand_metadata = Metadata::new();
-        Ok(rand_metadata)
+        Ok(rand_metadata.as_json())
       }
     } else {
       Err("Get metadata failed".into())
@@ -183,6 +188,7 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<Metadata, 
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_contact_list(pubkeys: Vec<&str>, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let contact_list: Vec<Contact> = pubkeys
@@ -197,6 +203,7 @@ pub async fn set_contact_list(pubkeys: Vec<&str>, state: State<'_, Nostr>) -> Re
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
 
@@ -218,6 +225,7 @@ pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, St
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn create_profile(
   name: &str,
   display_name: &str,
@@ -228,7 +236,7 @@ pub async fn create_profile(
   lud16: &str,
   website: &str,
   state: State<'_, Nostr>,
-) -> Result<EventId, String> {
+) -> Result<String, String> {
   let client = &state.client;
   let mut metadata = Metadata::new()
     .name(name)
@@ -250,18 +258,19 @@ pub async fn create_profile(
   }
 
   if let Ok(event_id) = client.set_metadata(&metadata).await {
-    Ok(event_id)
+    Ok(event_id.to_string())
   } else {
     Err("Create profile failed".into())
   }
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn follow(
   id: &str,
   alias: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<EventId, String> {
+) -> Result<String, String> {
   let client = &state.client;
   let public_key = PublicKey::from_str(id).unwrap();
   let contact = Contact::new(public_key, None, alias);
@@ -272,7 +281,7 @@ pub async fn follow(
     let new_list = old_list.into_iter();
 
     if let Ok(event_id) = client.set_contact_list(new_list).await {
-      Ok(event_id)
+      Ok(event_id.to_string())
     } else {
       Err("Follow failed".into())
     }
@@ -282,7 +291,8 @@ pub async fn follow(
 }
 
 #[tauri::command]
-pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, String> {
+#[specta::specta]
+pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let public_key = PublicKey::from_str(id).unwrap();
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
@@ -297,7 +307,7 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
     let new_list = old_list.into_iter();
 
     if let Ok(event_id) = client.set_contact_list(new_list).await {
-      Ok(event_id)
+      Ok(event_id.to_string())
     } else {
       Err("Follow failed".into())
     }
@@ -307,11 +317,12 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<EventId, Stri
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_nstore(
   key: &str,
   content: &str,
   state: State<'_, Nostr>,
-) -> Result<EventId, String> {
+) -> Result<String, String> {
   let client = &state.client;
 
   match client.signer().await {
@@ -323,7 +334,7 @@ pub async fn set_nstore(
       let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
 
       match client.send_event_builder(builder).await {
-        Ok(event_id) => Ok(event_id),
+        Ok(event_id) => Ok(event_id.to_string()),
         Err(err) => Err(err.to_string()),
       }
     }
@@ -332,6 +343,7 @@ pub async fn set_nstore(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
 
@@ -366,6 +378,7 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
@@ -385,6 +398,7 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
@@ -404,7 +418,8 @@ pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
 }
 
 #[tauri::command]
-pub async fn get_balance() -> Result<u64, String> {
+#[specta::specta]
+pub async fn get_balance() -> Result<String, String> {
   let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
 
   match keyring.get_password() {
@@ -412,7 +427,7 @@ pub async fn get_balance() -> Result<u64, String> {
       let uri = NostrWalletConnectURI::from_str(&val).unwrap();
       if let Ok(nwc) = NWC::new(uri).await {
         if let Ok(balance) = nwc.get_balance().await {
-          Ok(balance)
+          Ok(balance.to_string())
         } else {
           Err("Get balance failed".into())
         }
@@ -425,9 +440,10 @@ pub async fn get_balance() -> Result<u64, String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn zap_profile(
   id: &str,
-  amount: u64,
+  amount: &str,
   message: &str,
   state: State<'_, Nostr>,
 ) -> Result<bool, String> {
@@ -446,8 +462,9 @@ pub async fn zap_profile(
 
   if let Some(recipient) = public_key {
     let details = ZapDetails::new(ZapType::Public).message(message);
+    let num = amount.parse::<u64>().unwrap();
 
-    if (client.zap(recipient, amount, Some(details)).await).is_ok() {
+    if (client.zap(recipient, num, Some(details)).await).is_ok() {
       Ok(true)
     } else {
       Err("Zap profile failed".into())
@@ -458,9 +475,10 @@ pub async fn zap_profile(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn zap_event(
   id: &str,
-  amount: u64,
+  amount: &str,
   message: &str,
   state: State<'_, Nostr>,
 ) -> Result<bool, String> {
@@ -479,8 +497,9 @@ pub async fn zap_event(
 
   if let Some(recipient) = event_id {
     let details = ZapDetails::new(ZapType::Public).message(message);
+    let num = amount.parse::<u64>().unwrap();
 
-    if (client.zap(recipient, amount, Some(details)).await).is_ok() {
+    if (client.zap(recipient, num, Some(details)).await).is_ok() {
       Ok(true)
     } else {
       Err("Zap event failed".into())

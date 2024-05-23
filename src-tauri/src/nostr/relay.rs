@@ -1,8 +1,10 @@
 use crate::Nostr;
 use nostr_sdk::prelude::*;
+use serde::Serialize;
+use specta::Type;
 use tauri::State;
 
-#[derive(serde::Serialize)]
+#[derive(Serialize, Type)]
 pub struct Relays {
   connected: Vec<String>,
   read: Option<Vec<String>>,
@@ -11,6 +13,7 @@ pub struct Relays {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, ()> {
   let client = &state.client;
 
@@ -73,6 +76,7 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, ()> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
   if let Ok(status) = client.add_relay(relay).await {
@@ -89,6 +93,7 @@ pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool,
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn remove_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
   if let Ok(_) = client.remove_relay(relay).await {
