@@ -51,7 +51,7 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_thread(id: &str, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
 
   match EventId::from_hex(id) {

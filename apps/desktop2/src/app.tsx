@@ -13,49 +13,49 @@ import { type } from "@tauri-apps/plugin-os";
 const os = await type();
 const queryClient = new QueryClient();
 const persister = createSyncStoragePersister({
-  storage: window.localStorage,
+	storage: window.localStorage,
 });
 
 // Set up a Router instance
 const router = createRouter({
-  routeTree,
-  context: {
-    queryClient,
-    platform: os,
-  },
-  Wrap: ({ children }) => {
-    return (
-      <I18nextProvider i18n={i18n} defaultNS={"translation"}>
-        <PersistQueryClientProvider
-          client={queryClient}
-          persistOptions={{ persister }}
-        >
-          {children}
-        </PersistQueryClientProvider>
-      </I18nextProvider>
-    );
-  },
+	routeTree,
+	context: {
+		queryClient,
+		platform: os,
+	},
+	Wrap: ({ children }) => {
+		return (
+			<I18nextProvider i18n={i18n} defaultNS={"translation"}>
+				<PersistQueryClientProvider
+					client={queryClient}
+					persistOptions={{ persister }}
+				>
+					{children}
+				</PersistQueryClientProvider>
+			</I18nextProvider>
+		);
+	},
 });
 
 // Register things for typesafety
 declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
+	interface Register {
+		router: typeof router;
+	}
 }
 
 function App() {
-  return <RouterProvider router={router} />;
+	return <RouterProvider router={router} />;
 }
 
 // biome-ignore lint/style/noNonNullAssertion: idk
 const rootElement = document.getElementById("root")!;
 
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
+	const root = ReactDOM.createRoot(rootElement);
+	root.render(
+		<StrictMode>
+			<App />
+		</StrictMode>,
+	);
 }

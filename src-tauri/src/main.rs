@@ -57,7 +57,7 @@ fn main() {
       nostr::metadata::zap_event,
       nostr::metadata::friend_to_friend,
       nostr::event::get_event,
-      nostr::event::get_thread,
+      nostr::event::get_replies,
       nostr::event::get_events_by,
       nostr::event::get_local_events,
       nostr::event::get_global_events,
@@ -74,7 +74,7 @@ fn main() {
     ]);
 
     #[cfg(debug_assertions)]
-    let builder = builder.path("../packages/ark/src/commands.ts");
+    let builder = builder.path("../packages/system/src/commands.ts");
 
     builder.build().unwrap()
   };
