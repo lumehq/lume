@@ -1,14 +1,13 @@
 import { CancelIcon, PlusIcon } from "@lume/icons";
+import { NostrQuery } from "@lume/system";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings/relay")({
-	loader: async ({ context }) => {
-		const ark = context.ark;
-		const relays = await ark.get_relays();
-
+	loader: async () => {
+		const relays = await NostrQuery.getRelays();
 		return relays;
 	},
 	component: Screen,
@@ -18,12 +17,11 @@ function Screen() {
 	const relayList = Route.useLoaderData();
 	const [relays, setRelays] = useState(relayList.connected);
 
-	const { ark } = Route.useRouteContext();
 	const { register, reset, handleSubmit } = useForm();
 
 	const onSubmit = async (data: { url: string }) => {
 		try {
-			const add = await ark.add_relay(data.url);
+			const add = await NostrQuery.connectRelay(data.url);
 			if (add) {
 				setRelays((prev) => [...prev, data.url]);
 				reset();
@@ -56,6 +54,7 @@ function Screen() {
 								<div>
 									<button
 										type="button"
+										onClick={() => NostrQuery.removeRelay(relay)}
 										className="inline-flex items-center justify-center size-7 rounded-md hover:bg-black/10 dark:hover:bg-white/10"
 									>
 										<CancelIcon className="size-4" />

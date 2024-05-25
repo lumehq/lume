@@ -1,5 +1,5 @@
 import { TextNote } from "@/components/text";
-import type { Event } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { Await, createFileRoute } from "@tanstack/react-router";
 import { defer } from "@tanstack/react-router";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/trending/notes")({
 						signal: abortController.signal,
 					})
 						.then((res) => res.json())
-						.then((res) => res.notes.map((item) => item.event) as Event[]),
+						.then((res) => res.notes.map((item) => item.event) as NostrEvent[]),
 				),
 			};
 		} catch (e) {

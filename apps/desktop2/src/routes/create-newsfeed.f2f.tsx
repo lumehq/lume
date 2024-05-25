@@ -1,7 +1,7 @@
+import { NostrAccount } from "@lume/system";
 import type { ColumnRouteSearch } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -30,7 +30,7 @@ function Screen() {
 		try {
 			setIsLoading(true);
 
-			const sync: boolean = await invoke("friend_to_friend", { npub });
+			const sync = await NostrAccount.f2f(npub);
 
 			if (sync) {
 				return navigate({ to: redirect });

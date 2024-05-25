@@ -1,4 +1,5 @@
 import { User } from "@/components/user";
+import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { decodeZapInvoice } from "@lume/utils";
 import { Await, createFileRoute, defer } from "@tanstack/react-router";
@@ -6,9 +7,10 @@ import { Suspense } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/activity/$account/zaps")({
-	loader: async ({ context, params }) => {
-		const ark = context.ark;
-		return { data: defer(ark.get_activities(params.account, "9735")) };
+	loader: async ({ params }) => {
+		return {
+			data: defer(NostrQuery.getUserActivities(params.account, "9735")),
+		};
 	},
 	component: Screen,
 });

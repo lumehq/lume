@@ -1,4 +1,3 @@
-import type { Ark } from "@lume/ark";
 import { CheckCircleIcon, InfoCircleIcon, CancelCircleIcon } from "@lume/icons";
 import type { Interests, Metadata, Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
@@ -16,7 +15,6 @@ type EditorElement = {
 
 interface RouterContext {
 	// System
-	ark: Ark;
 	queryClient: QueryClient;
 	// App info
 	platform?: Platform;

@@ -1,12 +1,11 @@
 import { ReplyIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useRouteContext } from "@tanstack/react-router";
 import { useNoteContext } from "../provider";
 import { cn } from "@lume/utils";
+import { LumeWindow } from "@lume/system";
 
 export function NoteReply({ large = false }: { large?: boolean }) {
 	const event = useNoteContext();
-	const { ark } = useRouteContext({ strict: false });
 
 	return (
 		<Tooltip.Provider>
@@ -14,7 +13,7 @@ export function NoteReply({ large = false }: { large?: boolean }) {
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => ark.open_editor(event.id)}
+						onClick={() => LumeWindow.openEditor(event.id)}
 						className={cn(
 							"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
 							large

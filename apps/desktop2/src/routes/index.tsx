@@ -7,24 +7,21 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 import { toast } from "sonner";
+import { NostrAccount } from "@lume/system";
 
 export const Route = createFileRoute("/")({
-	beforeLoad: async ({ context }) => {
-		// check for app updates
-		await checkForAppUpdates(true);
+	beforeLoad: async () => {
+		const accounts = await NostrAccount.getAccounts();
 
-		const ark = context.ark;
-		const accounts = await ark.get_accounts();
-
-		if (!accounts.length) {
+		if (accounts.length < 1) {
 			throw redirect({
 				to: "/landing/",
 				replace: true,
 			});
 		}
 
-		// Run notification service
-		await invoke("run_notification", { accounts });
+		await checkForAppUpdates(true); // check for app updates
+		await invoke("run_notification", { accounts }); // Run notification service
 
 		return { accounts };
 	},
@@ -33,7 +30,7 @@ export const Route = createFileRoute("/")({
 
 function Screen() {
 	const navigate = Route.useNavigate();
-	const { ark, accounts } = Route.useRouteContext();
+	const context = Route.useRouteContext();
 
 	const [loading, setLoading] = useState(false);
 
@@ -41,11 +38,15 @@ function Screen() {
 		try {
 			setLoading(true);
 
-			const loadAccount = await ark.load_account(npub);
-			if (loadAccount) {
+			const status = await NostrAccount.loadAccount(npub);
+
+			if (status) {
 				return navigate({
 					to: "/$account/home",
 					params: { account: npub },
+					search: {
+						accounts: context.accounts,
+					},
 					replace: true,
 				});
 			}
@@ -75,10 +76,10 @@ function Screen() {
 						</div>
 					) : (
 						<>
-							{accounts.map((account) => (
+							{context.accounts.map((account) => (
 								<button
-									type="button"
 									key={account}
+									type="button"
 									onClick={() => select(account)}
 								>
 									<User.Provider pubkey={account}>

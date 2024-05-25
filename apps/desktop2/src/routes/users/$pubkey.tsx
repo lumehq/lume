@@ -6,20 +6,18 @@ import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { type Event, Kind } from "@lume/types";
+import { type NostrEvent, Kind } from "@lume/types";
 import { Suspense } from "react";
 import { Await } from "@tanstack/react-router";
+import { NostrQuery } from "@lume/system";
 
 export const Route = createFileRoute("/users/$pubkey")({
-	beforeLoad: async ({ context }) => {
-		const ark = context.ark;
-		const settings = await ark.get_settings();
-
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getSettings();
 		return { settings };
 	},
-	loader: async ({ params, context }) => {
-		const ark = context.ark;
-		return { data: defer(ark.get_events_by(params.pubkey, 50)) };
+	loader: async ({ params }) => {
+		return { data: defer(NostrQuery.getUserEvents(params.pubkey)) };
 	},
 	component: Screen,
 });
@@ -28,7 +26,7 @@ function Screen() {
 	const { pubkey } = Route.useParams();
 	const { data } = Route.useLoaderData();
 
-	const renderItem = (event: Event) => {
+	const renderItem = (event: NostrEvent) => {
 		if (!event) return;
 		switch (event.kind) {
 			case Kind.Repost:

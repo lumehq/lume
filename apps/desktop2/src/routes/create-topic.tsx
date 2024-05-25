@@ -1,4 +1,5 @@
 import { CheckCircleIcon } from "@lume/icons";
+import { NostrQuery } from "@lume/system";
 import type { ColumnRouteSearch, Topic } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { TOPICS } from "@lume/utils";
@@ -18,8 +19,6 @@ export const Route = createFileRoute("/create-topic")({
 });
 
 function Screen() {
-	const { ark } = Route.useRouteContext();
-
 	const [topics, setTopics] = useState<Topic[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +38,10 @@ function Screen() {
 			setIsLoading(true);
 
 			const key = `lume_topic_${search.label}`;
-			const createTopic = await ark.set_nstore(key, JSON.stringify(topics));
+			const createTopic = await NostrQuery.setNstore(
+				key,
+				JSON.stringify(topics),
+			);
 
 			if (createTopic) {
 				return navigate({ to: search.redirect, search: { ...search } });

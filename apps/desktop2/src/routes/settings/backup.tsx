@@ -1,5 +1,5 @@
 import { User } from "@/components/user";
-import type { Account } from "@lume/types";
+import { NostrAccount } from "@lume/system";
 import { displayNsec } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
@@ -7,19 +7,20 @@ import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface Account {
+	npub: string;
+	nsec: string;
+}
+
 export const Route = createFileRoute("/settings/backup")({
 	component: Screen,
-	loader: async ({ context }) => {
-		const ark = context.ark;
-		const npubs = await ark.get_accounts();
-
+	loader: async () => {
+		const npubs = await NostrAccount.getAccounts();
 		const accounts: Account[] = [];
 
-		for (const account of npubs) {
-			const nsec: string = await invoke("get_stored_nsec", {
-				npub: account.npub,
-			});
-			accounts.push({ ...account, nsec });
+		for (const npub of npubs) {
+			const nsec: string = await invoke("get_stored_nsec", { npub });
+			accounts.push({ npub, nsec });
 		}
 
 		return accounts;
@@ -33,14 +34,14 @@ function Screen() {
 		<div className="mx-auto w-full max-w-xl">
 			<div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
 				{accounts.map((account) => (
-					<NostrAccount key={account.npub} account={account} />
+					<List key={account.npub} account={account} />
 				))}
 			</div>
 		</div>
 	);
 }
 
-function NostrAccount({ account }: { account: Account }) {
+function List({ account }: { account: Account }) {
 	const [key, setKey] = useState(account.nsec);
 	const [copied, setCopied] = useState(false);
 	const [passphase, setPassphase] = useState("");

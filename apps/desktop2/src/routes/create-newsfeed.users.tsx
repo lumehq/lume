@@ -5,6 +5,7 @@ import { User } from "@/components/user";
 import { Spinner } from "@lume/ui";
 import { toast } from "sonner";
 import type { ColumnRouteSearch } from "@lume/types";
+import { NostrAccount } from "@lume/system";
 
 export const Route = createFileRoute("/create-newsfeed/users")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
@@ -31,7 +32,6 @@ export const Route = createFileRoute("/create-newsfeed/users")({
 });
 
 function Screen() {
-	const { ark } = Route.useRouteContext();
 	const { data } = Route.useLoaderData();
 	const { redirect } = Route.useSearch();
 
@@ -52,7 +52,7 @@ function Screen() {
 		try {
 			setIsLoading(true);
 
-			const newContactList = await ark.set_contact_list(follows);
+			const newContactList = await NostrAccount.setContactList(follows);
 
 			if (newContactList) {
 				return navigate({ to: redirect });

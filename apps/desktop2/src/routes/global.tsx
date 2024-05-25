@@ -3,7 +3,8 @@ import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
-import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
+import { NostrQuery } from "@lume/system";
+import { type ColumnRouteSearch, type NostrEvent, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
@@ -17,10 +18,8 @@ export const Route = createFileRoute("/global")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async ({ context }) => {
-		const ark = context.ark;
-		const settings = await ark.get_settings();
-
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getSettings();
 		return { settings };
 	},
 	component: Screen,
@@ -28,7 +27,6 @@ export const Route = createFileRoute("/global")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { ark } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -40,7 +38,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await ark.get_global_events(20, pageParam);
+			const events = await NostrQuery.getGlobalEvents(pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
@@ -48,7 +46,7 @@ export function Screen() {
 		refetchOnWindowFocus: false,
 	});
 
-	const renderItem = (event: Event) => {
+	const renderItem = (event: NostrEvent) => {
 		if (!event) return;
 		switch (event.kind) {
 			case Kind.Repost:

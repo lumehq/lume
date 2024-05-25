@@ -11,7 +11,7 @@ function Screen() {
 	const { account } = Route.useParams();
 
 	return (
-		<Container withDrag withNavigate={false}>
+		<Container withDrag>
 			<Box className="scrollbar-none shadow-none bg-black/5 dark:bg-white/5 backdrop-blur-sm flex flex-col overflow-y-auto">
 				<div className="h-14 shrink-0 flex w-full items-center gap-1 px-3">
 					<div className="inline-flex h-full w-full items-center gap-1">

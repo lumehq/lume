@@ -1,4 +1,5 @@
 import { ArticleIcon, GroupFeedsIcon } from "@lume/icons";
+import { NostrQuery } from "@lume/system";
 import type { ColumnRouteSearch } from "@lume/types";
 import { cn } from "@lume/utils";
 import { Link, Outlet } from "@tanstack/react-router";
@@ -12,10 +13,8 @@ export const Route = createFileRoute("/trending")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async ({ context }) => {
-		const ark = context.ark;
-		const settings = await ark.get_settings();
-
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getSettings();
 		return { settings };
 	},
 	component: Screen,

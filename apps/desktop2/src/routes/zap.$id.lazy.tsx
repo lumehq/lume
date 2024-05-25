@@ -7,6 +7,7 @@ import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { LumeEvent } from "@lume/system";
 
 const DEFAULT_VALUES = [69, 100, 200, 500];
 
@@ -16,7 +17,6 @@ export const Route = createLazyFileRoute("/zap/$id")({
 
 function Screen() {
 	const { t } = useTranslation();
-	const { ark } = Route.useRouteContext();
 	const { id } = Route.useParams();
 	// @ts-ignore, magic !!!
 	const { pubkey, account } = Route.useSearch();
@@ -31,7 +31,7 @@ function Screen() {
 			// start loading
 			setIsLoading(true);
 
-			const val = await ark.zap_event(id, amount, message);
+			const val = await LumeEvent.zap(id, amount, message);
 
 			if (val) {
 				setIsCompleted(true);

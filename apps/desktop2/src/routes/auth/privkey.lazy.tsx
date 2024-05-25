@@ -1,3 +1,4 @@
+import { NostrAccount } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -8,7 +9,6 @@ export const Route = createLazyFileRoute("/auth/privkey")({
 });
 
 function Screen() {
-	const { ark } = Route.useRouteContext();
 	const navigate = Route.useNavigate();
 
 	const [key, setKey] = useState("");
@@ -24,12 +24,12 @@ function Screen() {
 		try {
 			setLoading(true);
 
-			const npub = await ark.save_account(key, password);
+			const npub = await NostrAccount.saveAccount(key, password);
 
 			if (npub) {
 				navigate({
-					to: "/auth/settings",
-					search: { account: npub },
+					to: "/auth/$account/settings",
+					params: { account: npub },
 					replace: true,
 				});
 			}

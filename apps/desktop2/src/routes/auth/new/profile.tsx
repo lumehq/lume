@@ -1,5 +1,6 @@
 import { AvatarUploader } from "@/components/avatarUploader";
 import { PlusIcon } from "@lume/icons";
+import { NostrAccount } from "@lume/system";
 import type { Metadata } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -10,17 +11,17 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/new/profile")({
 	component: Screen,
-	loader: ({ context }) => {
-		return context.ark.create_keys();
+	loader: async () => {
+		const account = await NostrAccount.createAccount();
+		return account;
 	},
 });
 
 function Screen() {
-	const keys = Route.useLoaderData();
+	const account = Route.useLoaderData();
 	const navigate = useNavigate();
 
 	const { t } = useTranslation();
-	const { ark } = Route.useRouteContext();
 	const { register, handleSubmit } = useForm();
 
 	const [picture, setPicture] = useState<string>("");
@@ -35,17 +36,17 @@ function Screen() {
 
 		try {
 			// Save account keys
-			const save = await ark.save_account(keys.nsec);
+			const save = await NostrAccount.saveAccount(account.nsec);
 
 			// Then create profile
 			if (save) {
 				const profile: Metadata = { ...data, picture };
-				const eventId = await ark.create_profile(profile);
+				const eventId = await NostrAccount.createProfile(profile);
 
 				if (eventId) {
 					navigate({
-						to: "/auth/new/backup",
-						search: { account: keys.npub },
+						to: "/auth/new/$account/backup",
+						params: { account: account.npub },
 						replace: true,
 					});
 				}

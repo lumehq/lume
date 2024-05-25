@@ -1,6 +1,5 @@
-import { useEvent } from "@lume/ark";
+import { LumeWindow, useEvent } from "@lume/system";
 import { LinkIcon } from "@lume/icons";
-import { useRouteContext } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "@lume/utils";
 import { User } from "@/components/user";
@@ -13,7 +12,6 @@ export function MentionNote({
 	eventId: string;
 	openable?: boolean;
 }) {
-	const { ark } = useRouteContext({ strict: false });
 	const { t } = useTranslation();
 	const { isLoading, isError, data } = useEvent(eventId);
 
@@ -62,9 +60,9 @@ export function MentionNote({
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
-							ark.open_event_id(data.id);
+							LumeWindow.openEvent(data);
 						}}
-						className="z-10 h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-neutral-100 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
+						className="z-10 h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-black/10 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
 					>
 						View post
 						<LinkIcon className="size-4" />

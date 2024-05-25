@@ -1,6 +1,6 @@
 import type { Metadata } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
-import { invoke } from "@tauri-apps/api/core";
+import { commands } from "../commands";
 
 export function useProfile(pubkey: string, embed?: string) {
 	const {
@@ -11,15 +11,16 @@ export function useProfile(pubkey: string, embed?: string) {
 		queryKey: ["user", pubkey],
 		queryFn: async () => {
 			try {
-				if (embed) {
-					const profile: Metadata = JSON.parse(embed);
-					return profile;
+				if (embed) return JSON.parse(embed) as Metadata;
+
+				const normalize = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
+				const query = await commands.getProfile(normalize);
+
+				if (query.status === "ok") {
+					return JSON.parse(query.data) as Metadata;
+				} else {
+					throw new Error(query.error);
 				}
-
-				const id = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
-				const cmd: Metadata = await invoke("get_profile", { id });
-
-				return cmd;
 			} catch (e) {
 				throw new Error(e);
 			}

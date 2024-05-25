@@ -2,11 +2,12 @@ import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
-import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
+import { ArrowRightCircleIcon } from "@lume/icons";
+import { NostrAccount, NostrQuery } from "@lume/system";
+import { type ColumnRouteSearch, type NostrEvent, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Link, redirect } from "@tanstack/react-router";
+import { redirect } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
 
@@ -18,10 +19,9 @@ export const Route = createFileRoute("/newsfeed")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async ({ search, context }) => {
-		const ark = context.ark;
-		const settings = await ark.get_settings();
-		const contacts = await ark.get_contact_list();
+	beforeLoad: async ({ search }) => {
+		const settings = await NostrQuery.getSettings();
+		const contacts = await NostrAccount.getContactList();
 
 		if (!contacts.length) {
 			throw redirect({
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/newsfeed")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { ark, contacts } = Route.useRouteContext();
+	const { contacts } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -52,7 +52,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await ark.get_local_events(contacts, 20, pageParam);
+			const events = await NostrQuery.getLocalEvents(contacts, pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
@@ -60,7 +60,7 @@ export function Screen() {
 		refetchOnWindowFocus: false,
 	});
 
-	const renderItem = (event: Event) => {
+	const renderItem = (event: NostrEvent) => {
 		if (!event) return;
 		switch (event.kind) {
 			case Kind.Repost:

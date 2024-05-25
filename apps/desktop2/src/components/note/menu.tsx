@@ -1,37 +1,28 @@
 import { HorizontalDotsIcon } from "@lume/icons";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useRouteContext } from "@tanstack/react-router";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import { useNoteContext } from "./provider";
+import { LumeWindow } from "@lume/system";
 
 export function NoteMenu() {
+	const { t } = useTranslation();
 	const event = useNoteContext();
 
-	const { ark } = useRouteContext({ strict: false });
-	const { t } = useTranslation();
-
 	const copyID = async () => {
-		await writeText(await ark.event_to_bech32(event.id, [""]));
-		toast.success("Copied");
+		await writeText(await event.idAsBech32());
 	};
 
 	const copyRaw = async () => {
 		await writeText(JSON.stringify(event));
-		toast.success("Copied");
 	};
 
 	const copyNpub = async () => {
-		await writeText(await ark.user_to_bech32(event.pubkey, [""]));
-		toast.success("Copied");
+		await writeText(await event.pubkeyAsBech32());
 	};
 
 	const copyLink = async () => {
-		await writeText(
-			`https://njump.me/${await ark.event_to_bech32(event.id, [""])}`,
-		);
-		toast.success("Copied");
+		await writeText(`https://njump.me/${await event.idAsBech32()}`);
 	};
 
 	return (
@@ -49,7 +40,7 @@ export function NoteMenu() {
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
-							onClick={() => ark.open_event(event)}
+							onClick={() => LumeWindow.openEvent(event)}
 							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.viewThread")}
@@ -84,7 +75,7 @@ export function NoteMenu() {
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
 						<button
-							onClick={() => ark.open_profile(event.pubkey)}
+							onClick={() => LumeWindow.openProfile(event.pubkey)}
 							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.viewAuthor")}

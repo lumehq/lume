@@ -3,7 +3,13 @@ import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
-import { type ColumnRouteSearch, type Event, Kind, Topic } from "@lume/types";
+import { NostrQuery } from "@lume/system";
+import {
+	type ColumnRouteSearch,
+	type NostrEvent,
+	Kind,
+	Topic,
+} from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
@@ -17,11 +23,10 @@ export const Route = createFileRoute("/topic")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async ({ search, context }) => {
-		const ark = context.ark;
+	beforeLoad: async ({ search }) => {
 		const key = `lume_topic_${search.label}`;
-		const topics = (await ark.get_nstore(key)) as unknown as Topic[];
-		const settings = await ark.get_settings();
+		const topics = (await NostrQuery.getNstore(key)) as unknown as Topic[];
+		const settings = await NostrQuery.getSettings();
 
 		if (!topics?.length) {
 			throw redirect({
@@ -49,7 +54,7 @@ export const Route = createFileRoute("/topic")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { ark, hashtags } = Route.useRouteContext();
+	const { hashtags } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -61,7 +66,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = ark.get_hashtag_events(hashtags, 20, pageParam);
+			const events = NostrQuery.getHashtagEvents(hashtags, pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
@@ -69,7 +74,7 @@ export function Screen() {
 		refetchOnWindowFocus: false,
 	});
 
-	const renderItem = (event: Event) => {
+	const renderItem = (event: NostrEvent) => {
 		if (!event) return;
 		switch (event.kind) {
 			case Kind.Repost:

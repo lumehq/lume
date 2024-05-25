@@ -1,4 +1,4 @@
-import type { Event } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
 
@@ -6,7 +6,7 @@ export function Notification({
 	event,
 	className,
 }: {
-	event: Event;
+	event: NostrEvent;
 	className?: string;
 }) {
 	return (

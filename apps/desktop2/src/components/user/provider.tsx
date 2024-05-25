@@ -1,12 +1,12 @@
-import { useProfile } from "@lume/ark";
+import { useProfile } from "@lume/system";
 import type { Metadata } from "@lume/types";
 import { type ReactNode, createContext, useContext } from "react";
 
 const UserContext = createContext<{
 	pubkey: string;
+	profile: Metadata;
 	isError: boolean;
 	isLoading: boolean;
-	profile: Metadata;
 }>(null);
 
 export function UserProvider({
@@ -21,7 +21,7 @@ export function UserProvider({
 	const { isLoading, isError, profile } = useProfile(pubkey, embedProfile);
 
 	return (
-		<UserContext.Provider value={{ pubkey, isError, isLoading, profile }}>
+		<UserContext.Provider value={{ pubkey, profile, isError, isLoading }}>
 			{children}
 		</UserContext.Provider>
 	);

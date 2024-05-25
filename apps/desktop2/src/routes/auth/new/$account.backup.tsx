@@ -1,5 +1,4 @@
 import { CheckIcon } from "@lume/icons";
-import type { AppRouteSearch } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { displayNsec } from "@lume/utils";
 import * as Checkbox from "@radix-ui/react-checkbox";
@@ -10,17 +9,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth/new/backup")({
-	validateSearch: (search: Record<string, string>): AppRouteSearch => {
-		return {
-			account: search.account,
-		};
-	},
+export const Route = createFileRoute("/auth/new/$account/backup")({
 	component: Screen,
 });
 
 function Screen() {
-	const { account } = Route.useSearch();
+	const { account } = Route.useParams();
 	const { t } = useTranslation();
 
 	const [key, setKey] = useState(null);
@@ -39,8 +33,8 @@ function Screen() {
 				}
 
 				return navigate({
-					to: "/auth/settings",
-					search: { account },
+					to: "/auth/$account/settings",
+					params: { account },
 				});
 			}
 

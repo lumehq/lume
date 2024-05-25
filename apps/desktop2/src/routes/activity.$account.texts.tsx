@@ -3,11 +3,11 @@ import { Note } from "@/components/note";
 import { Await, createFileRoute, defer } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { Virtualizer } from "virtua";
+import { NostrQuery } from "@lume/system";
 
 export const Route = createFileRoute("/activity/$account/texts")({
-	loader: async ({ context, params }) => {
-		const ark = context.ark;
-		return { data: defer(ark.get_activities(params.account, "1")) };
+	loader: async ({ params }) => {
+		return { data: defer(NostrQuery.getUserActivities(params.account, "1")) };
 	},
 	component: Screen,
 });

@@ -3,20 +3,19 @@ import { cn, insertMention } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useEffect, useState } from "react";
-import { useRouteContext } from "@tanstack/react-router";
 import { useSlateStatic } from "slate-react";
 import type { Contact } from "@lume/types";
 import { toast } from "sonner";
 import { User } from "@/components/user";
+import { NostrAccount, NostrQuery } from "@lume/system";
 
 export function MentionButton({ className }: { className?: string }) {
 	const editor = useSlateStatic();
-	const { ark } = useRouteContext({ strict: false });
 	const [contacts, setContacts] = useState<string[]>([]);
 
 	const select = async (user: string) => {
 		try {
-			const metadata = await ark.get_profile(user);
+			const metadata = await NostrQuery.getProfile(user);
 			const contact: Contact = { pubkey: user, profile: metadata };
 
 			insertMention(editor, contact);
@@ -27,7 +26,7 @@ export function MentionButton({ className }: { className?: string }) {
 
 	useEffect(() => {
 		async function getContacts() {
-			const data = await ark.get_contact_list();
+			const data = await NostrAccount.getContactList();
 			setContacts(data);
 		}
 

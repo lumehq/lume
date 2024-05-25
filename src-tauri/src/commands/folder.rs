@@ -1,6 +1,7 @@
 use std::process::Command;
 
 #[tauri::command]
+#[specta::specta]
 pub async fn show_in_folder(path: String) {
   #[cfg(target_os = "windows")]
   {

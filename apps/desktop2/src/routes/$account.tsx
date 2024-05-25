@@ -5,7 +5,7 @@ import {
 	PlusIcon,
 	SearchIcon,
 } from "@lume/icons";
-import { type Event, Kind } from "@lume/types";
+import { type NostrEvent, Kind } from "@lume/types";
 import { User } from "@/components/user";
 import {
 	cn,
@@ -19,20 +19,24 @@ import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import * as Popover from "@radix-ui/react-popover";
+import { LumeWindow, NostrAccount, NostrQuery } from "@lume/system";
+import { Link } from "@tanstack/react-router";
+
+type AccountSearch = {
+	accounts?: string[];
+};
 
 export const Route = createFileRoute("/$account")({
-	beforeLoad: async ({ context }) => {
-		const ark = context.ark;
-		const accounts = await ark.get_accounts();
-
-		return { accounts };
+	validateSearch: (search: Record<string, unknown>): AccountSearch => {
+		return {
+			accounts: (search?.accounts as string[]) || [],
+		};
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { ark, platform } = Route.useRouteContext();
-	const navigate = Route.useNavigate();
+	const { platform } = Route.useRouteContext();
 
 	return (
 		<div className="flex h-screen w-screen flex-col">
@@ -45,18 +49,17 @@ function Screen() {
 			>
 				<div className="flex items-center gap-3">
 					<Accounts />
-					<button
-						type="button"
-						onClick={() => navigate({ to: "/landing/" })}
+					<Link
+						to="/landing/"
 						className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
 					>
 						<PlusIcon className="size-5" />
-					</button>
+					</Link>
 				</div>
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
-						onClick={() => ark.open_editor()}
+						onClick={() => LumeWindow.openEditor()}
 						className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
 					>
 						<ComposeFilledIcon className="size-4" />
@@ -65,7 +68,7 @@ function Screen() {
 					<Bell />
 					<button
 						type="button"
-						onClick={() => ark.open_search()}
+						onClick={() => LumeWindow.openSearch()}
 						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<SearchIcon className="size-5" />
@@ -81,7 +84,7 @@ function Screen() {
 }
 
 function Accounts() {
-	const { ark, accounts } = Route.useRouteContext();
+	const { accounts } = Route.useSearch();
 	const { account } = Route.useParams();
 
 	const [windowWidth, setWindowWidth] = useState<number>(null);
@@ -102,11 +105,11 @@ function Accounts() {
 
 	const changeAccount = async (npub: string) => {
 		if (npub === account) {
-			return await ark.open_profile(account);
+			return await LumeWindow.openProfile(account);
 		}
 
 		// change current account and update signer
-		const select = await ark.load_account(npub);
+		const select = await NostrAccount.loadAccount(npub);
 
 		if (select) {
 			return navigate({ to: "/$account/home", params: { account: npub } });
@@ -190,9 +193,7 @@ function Accounts() {
 }
 
 function Bell() {
-	const { ark } = Route.useRouteContext();
 	const { account } = Route.useParams();
-
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
@@ -202,8 +203,8 @@ function Bell() {
 				setCount((prevCount) => prevCount + 1);
 				await invoke("set_badge", { count });
 
-				const event: Event = JSON.parse(payload.payload);
-				const user = await ark.get_profile(event.pubkey);
+				const event: NostrEvent = JSON.parse(payload.payload);
+				const user = await NostrQuery.getProfile(event.pubkey);
 				const userName =
 					user.display_name || user.name || displayNpub(event.pubkey, 16);
 
@@ -240,7 +241,7 @@ function Bell() {
 			type="button"
 			onClick={() => {
 				setCount(0);
-				ark.open_activity(account);
+				LumeWindow.openActivity(account);
 			}}
 			className="relative inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 		>

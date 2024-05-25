@@ -26,7 +26,7 @@ export enum Kind {
 	// #TODO: Add all nostr kinds
 }
 
-export interface Event {
+export interface NostrEvent {
 	id: string;
 	pubkey: string;
 	created_at: number;
@@ -34,11 +34,10 @@ export interface Event {
 	tags: string[][];
 	content: string;
 	sig: string;
-	relay?: string;
 }
 
-export interface EventWithReplies extends Event {
-	replies: Array<Event>;
+export interface EventWithReplies extends NostrEvent {
+	replies: Array<NostrEvent>;
 }
 
 export interface Metadata {

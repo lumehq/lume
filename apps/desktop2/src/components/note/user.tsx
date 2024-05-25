@@ -1,11 +1,10 @@
 import { cn } from "@lume/utils";
 import * as HoverCard from "@radix-ui/react-hover-card";
-import { useRouteContext } from "@tanstack/react-router";
 import { User } from "../user";
 import { useNoteContext } from "./provider";
+import { LumeWindow } from "@lume/system";
 
 export function NoteUser({ className }: { className?: string }) {
-	const { ark } = useRouteContext({ strict: false });
 	const event = useNoteContext();
 
 	return (
@@ -46,7 +45,7 @@ export function NoteUser({ className }: { className?: string }) {
 								</div>
 								<User.About className="line-clamp-3 text-sm text-white dark:text-neutral-900" />
 								<button
-									onClick={() => ark.open_profile(event.pubkey)}
+									onClick={() => LumeWindow.openProfile(event.pubkey)}
 									className="mt-2 inline-flex h-9 w-full items-center justify-center rounded-lg bg-white text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
 								>
 									View profile

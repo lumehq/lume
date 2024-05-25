@@ -1,4 +1,4 @@
-import { useEvent } from "@lume/ark";
+import { useEvent } from "@lume/system";
 import { cn } from "@lume/utils";
 import { Note } from ".";
 import { InfoIcon } from "@lume/icons";

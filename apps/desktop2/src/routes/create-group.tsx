@@ -1,10 +1,11 @@
-import { CancelIcon, CheckCircleIcon, PlusIcon } from "@lume/icons";
+import { CancelIcon, PlusIcon } from "@lume/icons";
 import type { ColumnRouteSearch } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { User } from "@/components/user";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { NostrAccount, NostrQuery } from "@lume/system";
 
 export const Route = createFileRoute("/create-group")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
@@ -14,17 +15,14 @@ export const Route = createFileRoute("/create-group")({
 			name: search.name,
 		};
 	},
-	loader: async ({ context }) => {
-		const ark = context.ark;
-		const contacts = await ark.get_contact_list();
+	loader: async () => {
+		const contacts = await NostrAccount.getContactList();
 		return contacts;
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { ark } = Route.useRouteContext();
-
 	const [title, setTitle] = useState("");
 	const [npub, setNpub] = useState("");
 	const [users, setUsers] = useState<string[]>([
@@ -57,7 +55,10 @@ function Screen() {
 			setIsLoading(true);
 
 			const key = `lume_group_${search.label}`;
-			const createGroup = await ark.set_nstore(key, JSON.stringify(users));
+			const createGroup = await NostrQuery.setNstore(
+				key,
+				JSON.stringify(users),
+			);
 
 			if (createGroup) {
 				return navigate({ to: search.redirect, search: { ...search } });

@@ -1,6 +1,6 @@
+import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
-import { useRouteContext } from "@tanstack/react-router";
 import {
 	type Dispatch,
 	type ReactNode,
@@ -18,21 +18,17 @@ export function AvatarUploader({
 	children: ReactNode;
 	className?: string;
 }) {
-	const { ark } = useRouteContext({ strict: false });
 	const [loading, setLoading] = useState(false);
 
 	const uploadAvatar = async () => {
-		// start loading
-		setLoading(true);
 		try {
-			const image = await ark.upload();
+			setLoading(true);
+			const image = await NostrQuery.upload();
 			setPicture(image);
 		} catch (e) {
+			setLoading(false);
 			toast.error(String(e));
 		}
-
-		// stop loading
-		setLoading(false);
 	};
 
 	return (

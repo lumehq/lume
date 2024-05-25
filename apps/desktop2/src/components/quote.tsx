@@ -1,5 +1,5 @@
 import { QuoteIcon } from "@lume/icons";
-import type { Event } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
 
@@ -7,7 +7,7 @@ export function Quote({
 	event,
 	className,
 }: {
-	event: Event;
+	event: NostrEvent;
 	className?: string;
 }) {
 	const quoteEventId = event.tags.find(

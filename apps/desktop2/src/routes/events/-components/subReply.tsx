@@ -1,7 +1,12 @@
-import type { Event } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 
-export function SubReply({ event }: { event: Event; rootEventId?: string }) {
+export function SubReply({
+	event,
+}: {
+	event: NostrEvent;
+	rootEventId?: string;
+}) {
 	return (
 		<Note.Provider event={event}>
 			<Note.Root>

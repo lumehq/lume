@@ -1,4 +1,5 @@
 import { ZapIcon } from "@lume/icons";
+import { NostrAccount } from "@lume/system";
 import { Container } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -8,18 +9,16 @@ export const Route = createLazyFileRoute("/nwc")({
 });
 
 function Screen() {
-	const { ark } = Route.useRouteContext();
-
 	const [uri, setUri] = useState("");
 	const [isDone, setIsDone] = useState(false);
 
 	const save = async () => {
-		const nwc = await ark.set_nwc(uri);
+		const nwc = await NostrAccount.setWallet(uri);
 		setIsDone(nwc);
 	};
 
 	return (
-		<Container withDrag withNavigate={false}>
+		<Container withDrag>
 			<div className="h-full w-full flex-1 px-5">
 				{!isDone ? (
 					<>

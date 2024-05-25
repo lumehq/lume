@@ -1,16 +1,15 @@
 import { User } from "@/components/user";
+import { NostrAccount } from "@lume/system";
 import { getBitcoinDisplayValues } from "@lume/utils";
-import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 
 export function Balance({ account }: { account: string }) {
-	const { ark } = useRouteContext({ strict: false });
 	const [balance, setBalance] = useState(0);
 	const value = useMemo(() => getBitcoinDisplayValues(balance), [balance]);
 
 	useEffect(() => {
 		async function getBalance() {
-			const val = await ark.get_balance();
+			const val = await NostrAccount.getBalance();
 			setBalance(val);
 		}
 

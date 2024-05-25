@@ -1,33 +1,19 @@
 import { ZapIcon } from "@lume/icons";
-import { useRouteContext, useSearch } from "@tanstack/react-router";
-import { toast } from "sonner";
+import { useRouteContext } from "@tanstack/react-router";
 import { useNoteContext } from "../provider";
 import { cn } from "@lume/utils";
+import { LumeWindow } from "@lume/system";
 
 export function NoteZap({ large = false }: { large?: boolean }) {
 	const event = useNoteContext();
-	const { ark, settings } = useRouteContext({ strict: false });
-	const { account } = useSearch({ strict: false });
-
-	const zap = async () => {
-		try {
-			const nwc = await ark.load_nwc();
-			if (!nwc) {
-				ark.open_nwc();
-			} else {
-				ark.open_zap(event.id, event.pubkey, account);
-			}
-		} catch (e) {
-			toast.error(String(e));
-		}
-	};
+	const { settings } = useRouteContext({ strict: false });
 
 	if (!settings.zap) return null;
 
 	return (
 		<button
 			type="button"
-			onClick={() => zap()}
+			onClick={() => LumeWindow.openZap(event.id, event.pubkey)}
 			className={cn(
 				"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
 				large

@@ -1,43 +1,29 @@
 import { LaurelIcon } from "@lume/icons";
-import type { AppRouteSearch, Settings } from "@lume/types";
+import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import * as Switch from "@radix-ui/react-switch";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-	isPermissionGranted,
-	requestPermission,
-} from "@tauri-apps/plugin-notification";
+import { createFileRoute } from "@tanstack/react-router";
+import { requestPermission } from "@tauri-apps/plugin-notification";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth/settings")({
-	validateSearch: (search: Record<string, string>): AppRouteSearch => {
-		return {
-			account: search.account,
-		};
-	},
-	beforeLoad: async ({ context }) => {
-		const permissionGranted = await isPermissionGranted(); // get notification permission
-		const ark = context.ark;
-		const settings = await ark.get_settings();
-
-		return {
-			settings: { ...settings, notification: permissionGranted },
-		};
+export const Route = createFileRoute("/auth/$account/settings")({
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getSettings();
+		return { settings };
 	},
 	component: Screen,
 	pendingComponent: Pending,
 });
 
 function Screen() {
-	const navigate = useNavigate();
-
-	const { account } = Route.useSearch();
+	const navigate = Route.useNavigate();
+	const { account } = Route.useParams();
+	const { settings } = Route.useRouteContext();
 	const { t } = useTranslation();
-	const { ark, settings } = Route.useRouteContext();
 
-	const [newSettings, setNewSettings] = useState<Settings>(settings);
+	const [newSettings, setNewSettings] = useState(settings);
 	const [loading, setLoading] = useState(false);
 
 	const toggleNofitication = async () => {
@@ -82,7 +68,7 @@ function Screen() {
 			setLoading(true);
 
 			// publish settings
-			const eventId = await ark.set_settings(newSettings);
+			const eventId = await NostrQuery.setSettings(newSettings);
 
 			if (eventId) {
 				return navigate({

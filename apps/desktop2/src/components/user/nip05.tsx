@@ -2,21 +2,21 @@ import { VerifiedIcon } from "@lume/icons";
 import { displayLongHandle, displayNpub } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useQuery } from "@tanstack/react-query";
-import { useRouteContext } from "@tanstack/react-router";
 import { useUserContext } from "./provider";
+import { NostrQuery } from "@lume/system";
 
 export function UserNip05() {
 	const user = useUserContext();
-
-	const { ark } = useRouteContext({ strict: false });
 	const { isLoading, data: verified } = useQuery({
 		queryKey: ["nip05", user?.pubkey],
 		queryFn: async () => {
-			if (!user.profile?.nip05) return false;
-			const verify = await ark.verify_nip05(user.pubkey, user.profile?.nip05);
+			const verify = await NostrQuery.verifyNip05(
+				user.pubkey,
+				user.profile?.nip05,
+			);
 			return verify;
 		},
-		enabled: !!user.profile,
+		enabled: !!user.profile?.nip05,
 	});
 
 	if (!user.profile?.nip05?.length) return;

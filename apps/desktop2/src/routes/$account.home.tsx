@@ -1,44 +1,28 @@
 import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
 import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
+import { NostrQuery } from "@lume/system";
 import type { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
-import { resolveResource } from "@tauri-apps/api/path";
 import { getCurrent } from "@tauri-apps/api/window";
-import { readTextFile } from "@tauri-apps/plugin-fs";
 import { nanoid } from "nanoid";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { VList, type VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
-	loader: async ({ context }) => {
-		try {
-			const userColumns = await context.ark.get_columns();
-			if (userColumns.length > 0) {
-				return userColumns;
-			} else {
-				const systemPath = "resources/system_columns.json";
-				const resourcePath = await resolveResource(systemPath);
-				const resourceFile = await readTextFile(resourcePath);
-				const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
-
-				return systemColumns;
-			}
-		} catch (e) {
-			console.error(String(e));
-		}
+	loader: async () => {
+		const columns = NostrQuery.getColumns();
+		return columns;
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const userSavedColumns = Route.useLoaderData();
-	const vlistRef = useRef<VListHandle>(null);
-
 	const { account } = Route.useParams();
-	const { ark } = Route.useRouteContext();
+	const initialColumnList = Route.useLoaderData();
+	const vlistRef = useRef<VListHandle>(null);
 
 	const [selectedIndex, setSelectedIndex] = useState(-1);
 	const [columns, setColumns] = useState([]);
@@ -115,12 +99,12 @@ function Screen() {
 	);
 
 	useEffect(() => {
-		setColumns(userSavedColumns);
-	}, [userSavedColumns]);
+		setColumns(initialColumnList);
+	}, [initialColumnList]);
 
 	useEffect(() => {
 		// save state
-		ark.set_columns(columns);
+		NostrQuery.setColumns(columns);
 	}, [columns]);
 
 	useEffect(() => {

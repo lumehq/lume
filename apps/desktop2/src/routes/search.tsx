@@ -1,5 +1,5 @@
 import { SearchIcon } from "@lume/icons";
-import { type Event, Kind } from "@lume/types";
+import { type NostrEvent, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
@@ -7,6 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
+import { LumeWindow } from "@lume/system";
 
 export const Route = createFileRoute("/search")({
 	component: Screen,
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/search")({
 
 function Screen() {
 	const [loading, setLoading] = useState(false);
-	const [events, setEvents] = useState<Event[]>([]);
+	const [events, setEvents] = useState<NostrEvent[]>([]);
 	const [search, setSearch] = useState("");
 	const [searchValue] = useDebounce(search, 500);
 
@@ -25,7 +26,7 @@ function Screen() {
 			const query = `https://api.nostr.wine/search?query=${searchValue}&kind=0,1`;
 			const res = await fetch(query);
 			const content = await res.json();
-			const events = content.data as Event[];
+			const events = content.data as NostrEvent[];
 			const sorted = events.sort((a, b) => b.created_at - a.created_at);
 
 			setLoading(false);
@@ -102,14 +103,12 @@ function Screen() {
 	);
 }
 
-function SearchUser({ event }: { event: Event }) {
-	const { ark } = Route.useRouteContext();
-
+function SearchUser({ event }: { event: NostrEvent }) {
 	return (
 		<button
 			key={event.id}
 			type="button"
-			onClick={() => ark.open_profile(event.pubkey)}
+			onClick={() => LumeWindow.openProfile(event.pubkey)}
 			className="col-span-1 p-2 hover:bg-black/10 dark:hover:bg-white/10 rounded-lg"
 		>
 			<User.Provider pubkey={event.pubkey} embedProfile={event.content}>
@@ -125,7 +124,7 @@ function SearchUser({ event }: { event: Event }) {
 	);
 }
 
-function SearchNote({ event }: { event: Event }) {
+function SearchNote({ event }: { event: NostrEvent }) {
 	return (
 		<div className="bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
 			<Note.Provider event={event}>

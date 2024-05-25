@@ -1,4 +1,4 @@
-import type { Event } from "@lume/types";
+import type { Event, NostrEvent } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -12,7 +12,7 @@ export function useEvent(id: string) {
 					.split("'")[0]
 					.split(".")[0];
 				const cmd: string = await invoke("get_event", { id: eventId });
-				const event: Event = JSON.parse(cmd);
+				const event: NostrEvent = JSON.parse(cmd);
 				return event;
 			} catch (e) {
 				throw new Error(e);

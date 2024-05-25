@@ -3,7 +3,8 @@ import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon, ArrowRightIcon } from "@lume/icons";
-import { type ColumnRouteSearch, type Event, Kind } from "@lume/types";
+import { NostrAccount, NostrQuery } from "@lume/system";
+import { type ColumnRouteSearch, type NostrEvent, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
@@ -17,11 +18,10 @@ export const Route = createFileRoute("/group")({
 			name: search.name,
 		};
 	},
-	beforeLoad: async ({ search, context }) => {
-		const ark = context.ark;
+	beforeLoad: async ({ search }) => {
 		const key = `lume_group_${search.label}`;
-		const groups = (await ark.get_nstore(key)) as string[];
-		const settings = await ark.get_settings();
+		const groups = (await NostrQuery.getNstore(key)) as string[];
+		const settings = await NostrAccount.getAccounts();
 
 		if (!groups?.length) {
 			throw redirect({
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/group")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { ark, groups } = Route.useRouteContext();
+	const { groups } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -55,7 +55,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await ark.get_local_events(groups, 20, pageParam);
+			const events = await NostrQuery.getLocalEvents(groups, pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
@@ -64,7 +64,7 @@ export function Screen() {
 		refetchOnWindowFocus: false,
 	});
 
-	const renderItem = (event: Event) => {
+	const renderItem = (event: NostrEvent) => {
 		if (!event) return;
 		switch (event.kind) {
 			case Kind.Repost:

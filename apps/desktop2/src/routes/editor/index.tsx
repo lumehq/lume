@@ -25,7 +25,7 @@ import { MediaButton } from "./-components/media";
 import { NsfwToggle } from "./-components/nsfw";
 import { MentionButton } from "./-components/mention";
 import { MentionNote } from "@/components/note/mentions/note";
-import { toast } from "sonner";
+import { LumeEvent } from "@lume/system";
 
 type EditorSearch = {
 	reply_to: string;
@@ -70,7 +70,7 @@ export const Route = createFileRoute("/editor/")({
 
 function Screen() {
 	const { reply_to, quote } = Route.useSearch();
-	const { ark, initialValue } = Route.useRouteContext();
+	const { initialValue } = Route.useRouteContext();
 
 	const [t] = useTranslation();
 	const [editorValue, setEditorValue] = useState(initialValue);
@@ -116,7 +116,7 @@ function Screen() {
 			setLoading(true);
 
 			const content = serialize(editor.children);
-			const eventId = await ark.publish(content, reply_to, quote);
+			const eventId = await LumeEvent.publish(content, reply_to, quote);
 
 			if (eventId) {
 				await sendNativeNotification(

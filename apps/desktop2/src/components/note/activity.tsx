@@ -4,9 +4,7 @@ import { User } from "../user";
 
 export function NoteActivity({ className }: { className?: string }) {
 	const event = useNoteContext();
-	const mentions = event.tags
-		.filter((tag) => tag[0] === "p")
-		.map((tag) => tag[1]);
+	const mentions = event.mentions;
 
 	return (
 		<div className={cn("-mt-3 mb-2", className)}>

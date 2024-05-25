@@ -1,18 +1,17 @@
 import { ThreadIcon } from "@lume/icons";
-import type { Event } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
-import { useRouteContext } from "@tanstack/react-router";
+import { LumeEvent } from "@lume/system";
 
 export function Conversation({
 	event,
 	className,
 }: {
-	event: Event;
+	event: NostrEvent;
 	className?: string;
 }) {
-	const { ark } = useRouteContext({ strict: false });
-	const thread = ark.get_thread(event.tags);
+	const thread = LumeEvent.getEventThread(event.tags);
 
 	return (
 		<Note.Provider event={event}>

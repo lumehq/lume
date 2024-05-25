@@ -1,19 +1,18 @@
-import type { Event } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useRouteContext } from "@tanstack/react-router";
+import { NostrEvent } from "@lume/types";
+import { NostrQuery } from "@lume/system";
 
 export function RepostNote({
 	event,
 	className,
 }: {
-	event: Event;
+	event: NostrEvent;
 	className?: string;
 }) {
-	const { ark } = useRouteContext({ strict: false });
 	const {
 		isLoading,
 		isError,
@@ -23,12 +22,12 @@ export function RepostNote({
 		queryFn: async () => {
 			try {
 				if (event.content.length > 50) {
-					const embed: Event = JSON.parse(event.content);
+					const embed: NostrEvent = JSON.parse(event.content);
 					return embed;
 				}
 
 				const id = event.tags.find((el) => el[0] === "e")?.[1];
-				const repostEvent = await ark.get_event(id);
+				const repostEvent = await NostrQuery.getEvent(id);
 
 				return repostEvent;
 			} catch (e) {

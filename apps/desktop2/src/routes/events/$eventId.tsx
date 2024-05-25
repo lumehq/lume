@@ -1,5 +1,5 @@
-import { useEvent } from "@lume/ark";
-import type { Event } from "@lume/types";
+import { NostrQuery, useEvent } from "@lume/system";
+import type { NostrEvent } from "@lume/types";
 import { Box, Container, Spinner } from "@lume/ui";
 import { Note } from "@/components/note";
 import { createFileRoute } from "@tanstack/react-router";
@@ -7,10 +7,8 @@ import { WindowVirtualizer } from "virtua";
 import { ReplyList } from "./-components/replyList";
 
 export const Route = createFileRoute("/events/$eventId")({
-	beforeLoad: async ({ context }) => {
-		const ark = context.ark;
-		const settings = await ark.get_settings();
-
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getSettings();
 		return { settings };
 	},
 	component: Screen,
@@ -52,7 +50,7 @@ function Screen() {
 	);
 }
 
-function MainNote({ data }: { data: Event }) {
+function MainNote({ data }: { data: NostrEvent }) {
 	return (
 		<Note.Provider event={data}>
 			<Note.Root>

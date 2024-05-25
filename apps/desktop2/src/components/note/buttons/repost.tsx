@@ -2,15 +2,14 @@ import { QuoteIcon, RepostIcon } from "@lume/icons";
 import { cn } from "@lume/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useRouteContext } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Spinner } from "@lume/ui";
 import { useNoteContext } from "../provider";
+import { LumeWindow } from "@lume/system";
 
 export function NoteRepost({ large = false }: { large?: boolean }) {
-	const { ark } = useRouteContext({ strict: false });
 	const event = useNoteContext();
 
 	const [t] = useTranslation();
@@ -23,7 +22,7 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 			setLoading(true);
 
 			// repost
-			await ark.repost(event.id, event.pubkey);
+			await event.repost();
 
 			// update state
 			setLoading(false);
@@ -86,7 +85,7 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
-							onClick={() => ark.open_editor(event.id, true)}
+							onClick={() => LumeWindow.openEditor(event.id, true)}
 							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							<QuoteIcon className="size-4" />

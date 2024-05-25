@@ -1,5 +1,6 @@
 import { AvatarUploader } from "@/components/avatarUploader";
 import { PlusIcon } from "@lume/icons";
+import { NostrAccount } from "@lume/system";
 import type { Metadata } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { Link } from "@tanstack/react-router";
@@ -9,16 +10,15 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings/user")({
-	beforeLoad: async ({ context }) => {
-		const ark = context.ark;
-		const profile = await ark.get_current_user_profile();
+	beforeLoad: async () => {
+		const profile = await NostrAccount.getProfile();
 		return { profile };
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { ark, profile } = Route.useRouteContext();
+	const { profile } = Route.useRouteContext();
 	const { register, handleSubmit } = useForm({ defaultValues: profile });
 
 	const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ function Screen() {
 			setLoading(true);
 
 			const newProfile: Metadata = { ...profile, ...data, picture };
-			await ark.create_profile(newProfile);
+			await NostrAccount.createProfile(newProfile);
 
 			setLoading(false);
 		} catch (e) {

@@ -1,28 +1,24 @@
+import { NostrQuery } from "@lume/system";
 import type { Settings } from "@lume/types";
 import * as Switch from "@radix-ui/react-switch";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-	isPermissionGranted,
-	requestPermission,
-} from "@tauri-apps/plugin-notification";
+import { requestPermission } from "@tauri-apps/plugin-notification";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export const Route = createFileRoute("/settings/general")({
-	beforeLoad: async ({ context }) => {
-		const permissionGranted = await isPermissionGranted(); // get notification permission
-		const ark = context.ark;
-		const settings = await ark.get_settings();
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getSettings();
 
 		return {
-			settings: { ...settings, notification: permissionGranted },
+			settings,
 		};
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { ark, settings } = Route.useRouteContext();
+	const { settings } = Route.useRouteContext();
 	const [newSettings, setNewSettings] = useState<Settings>(settings);
 
 	const toggleNofitication = async () => {
@@ -62,7 +58,7 @@ function Screen() {
 	};
 
 	const updateSettings = useDebouncedCallback(() => {
-		ark.set_settings(newSettings);
+		NostrQuery.setSettings(newSettings);
 	}, 200);
 
 	useEffect(() => {

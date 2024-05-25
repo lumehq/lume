@@ -1,8 +1,8 @@
 import { AddMediaIcon } from "@lume/icons";
+import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { cn, insertImage, isImagePath } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useRouteContext } from "@tanstack/react-router";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
@@ -11,7 +11,6 @@ import { toast } from "sonner";
 
 export function MediaButton({ className }: { className?: string }) {
 	const editor = useSlateStatic();
-	const { ark } = useRouteContext({ strict: false });
 	const [loading, setLoading] = useState(false);
 
 	const uploadToNostrBuild = async () => {
@@ -19,7 +18,7 @@ export function MediaButton({ className }: { className?: string }) {
 			// start loading
 			setLoading(true);
 
-			const image = await ark.upload();
+			const image = await NostrQuery.upload();
 			insertImage(editor, image);
 
 			// reset loading
@@ -44,7 +43,7 @@ export function MediaButton({ className }: { className?: string }) {
 					// upload all images
 					for (const item of items) {
 						if (isImagePath(item)) {
-							const image = await ark.upload(item);
+							const image = await NostrQuery.upload(item);
 							insertImage(editor, image);
 						}
 					}

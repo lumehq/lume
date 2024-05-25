@@ -1,11 +1,10 @@
 import { VisitIcon } from "@lume/icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useRouteContext } from "@tanstack/react-router";
 import { useNoteContext } from "../provider";
+import { LumeWindow } from "@lume/system";
 
 export function NoteOpenThread() {
 	const event = useNoteContext();
-	const { ark } = useRouteContext({ strict: false });
 
 	return (
 		<Tooltip.Provider>
@@ -13,7 +12,7 @@ export function NoteOpenThread() {
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => ark.open_event(event)}
+						onClick={() => LumeWindow.openEvent(event)}
 						className="group inline-flex h-7 w-14 bg-neutral-100 dark:bg-white/10 rounded-full items-center justify-center text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
 					>
 						<VisitIcon className="shrink-0 size-4" />

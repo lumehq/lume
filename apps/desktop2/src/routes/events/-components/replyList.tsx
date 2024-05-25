@@ -1,10 +1,10 @@
 import type { EventWithReplies } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
-import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Reply } from "./reply";
+import { LumeEvent } from "@lume/system";
 
 export function ReplyList({
 	eventId,
@@ -13,13 +13,12 @@ export function ReplyList({
 	eventId: string;
 	className?: string;
 }) {
-	const { ark } = useRouteContext({ strict: false });
 	const [t] = useTranslation();
 	const [data, setData] = useState<null | EventWithReplies[]>(null);
 
 	useEffect(() => {
 		async function getReplies() {
-			const events = await ark.get_event_thread(eventId);
+			const events = await LumeEvent.getReplies(eventId);
 			setData(events);
 		}
 		getReplies();

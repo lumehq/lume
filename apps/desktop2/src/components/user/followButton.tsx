@@ -1,9 +1,9 @@
 import { cn } from "@lume/utils";
-import { useRouteContext } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "@lume/ui";
 import { useUserContext } from "./provider";
+import { NostrAccount } from "@lume/system";
 
 export function UserFollowButton({
 	simple = false,
@@ -12,7 +12,6 @@ export function UserFollowButton({
 	simple?: boolean;
 	className?: string;
 }) {
-	const { ark } = useRouteContext({ strict: false });
 	const user = useUserContext();
 
 	const [t] = useTranslation();
@@ -22,10 +21,10 @@ export function UserFollowButton({
 	const toggleFollow = async () => {
 		setLoading(true);
 		if (!followed) {
-			const add = await ark.follow(user.pubkey);
+			const add = await NostrAccount.follow(user.pubkey, user.profile?.name);
 			if (add) setFollowed(true);
 		} else {
-			const remove = await ark.unfollow(user.pubkey);
+			const remove = await NostrAccount.unfollow(user.pubkey);
 			if (remove) setFollowed(false);
 		}
 		setLoading(false);
@@ -35,7 +34,7 @@ export function UserFollowButton({
 		async function status() {
 			setLoading(true);
 
-			const contacts = await ark.get_contact_list();
+			const contacts = await NostrAccount.getContactList();
 			if (contacts?.includes(user.pubkey)) {
 				setFollowed(true);
 			}

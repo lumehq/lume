@@ -9,7 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@lume/ark": "workspace:^",
+		"@lume/system": "workspace:^",
 		"@lume/icons": "workspace:^",
 		"@lume/ui": "workspace:^",
 		"@lume/utils": "workspace:^",
