@@ -273,20 +273,20 @@ pub async fn follow(
 ) -> Result<String, String> {
   let client = &state.client;
   let public_key = PublicKey::from_str(id).unwrap();
-  let contact = Contact::new(public_key, None, alias);
+  let contact = Contact::new(public_key, None, alias); // #TODO: Add relay_url
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
-  if let Ok(mut old_list) = contact_list {
-    old_list.push(contact);
-    let new_list = old_list.into_iter();
+  match contact_list {
+    Ok(mut old_list) => {
+      old_list.push(contact);
+      let new_list = old_list.into_iter();
 
-    if let Ok(event_id) = client.set_contact_list(new_list).await {
-      Ok(event_id.to_string())
-    } else {
-      Err("Follow failed".into())
+      match client.set_contact_list(new_list).await {
+        Ok(event_id) => Ok(event_id.to_string()),
+        Err(err) => Err(err.to_string()),
+      }
     }
-  } else {
-    Err("Follow failed".into())
+    Err(err) => Err(err.to_string()),
   }
 }
 
@@ -297,22 +297,22 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<String, Strin
   let public_key = PublicKey::from_str(id).unwrap();
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
-  if let Ok(mut old_list) = contact_list {
-    let index = old_list
-      .iter()
-      .position(|x| x.public_key == public_key)
-      .unwrap();
-    old_list.remove(index);
+  match contact_list {
+    Ok(mut old_list) => {
+      let index = old_list
+        .iter()
+        .position(|x| x.public_key == public_key)
+        .unwrap();
+      old_list.remove(index);
 
-    let new_list = old_list.into_iter();
+      let new_list = old_list.into_iter();
 
-    if let Ok(event_id) = client.set_contact_list(new_list).await {
-      Ok(event_id.to_string())
-    } else {
-      Err("Follow failed".into())
+      match client.set_contact_list(new_list).await {
+        Ok(event_id) => Ok(event_id.to_string()),
+        Err(err) => Err(err.to_string()),
+      }
     }
-  } else {
-    Err("Follow failed".into())
+    Err(err) => Err(err.to_string()),
   }
 }
 

@@ -289,14 +289,6 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getGroupEvents(list: string[], until: string | null) : Promise<Result<string[], string>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("get_group_events", { list, until }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async publish(content: string, tags: string[][]) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("publish", { content, tags }) };

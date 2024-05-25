@@ -186,34 +186,6 @@ pub async fn get_hashtag_events(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_group_events(
-  list: Vec<&str>,
-  until: Option<&str>,
-  state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
-  let client = &state.client;
-  let as_of = match until {
-    Some(until) => Timestamp::from_str(until).unwrap(),
-    None => Timestamp::now(),
-  };
-  let authors: Vec<PublicKey> = list
-    .into_iter()
-    .map(|hex| PublicKey::from_hex(hex).unwrap())
-    .collect();
-  let filter = Filter::new()
-    .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
-    .until(as_of)
-    .authors(authors);
-
-  match client.get_events_of(vec![filter], None).await {
-    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
-    Err(err) => Err(err.to_string()),
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn publish(
   content: &str,
   tags: Vec<Vec<&str>>,

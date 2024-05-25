@@ -1,21 +1,27 @@
-import type { Event } from "@lume/types";
+import { LumeEvent } from "@lume/system";
+import type { NostrEvent } from "@lume/types";
 import { type ReactNode, createContext, useContext } from "react";
 
-const EventContext = createContext<Event>(null);
+const NoteContext = createContext<LumeEvent>(null);
 
 export function NoteProvider({
-	event,
-	children,
-}: { event: Event; children: ReactNode }) {
-	return (
-		<EventContext.Provider value={event}>{children}</EventContext.Provider>
-	);
+  event,
+  children,
+}: {
+  event: NostrEvent;
+  children: ReactNode;
+}) {
+  const lumeEvent = new LumeEvent(event);
+
+  return (
+    <NoteContext.Provider value={lumeEvent}>{children}</NoteContext.Provider>
+  );
 }
 
 export function useNoteContext() {
-	const context = useContext(EventContext);
-	if (!context) {
-		throw new Error("Please import Note Provider to use useNoteContext() hook");
-	}
-	return context;
+  const context = useContext(NoteContext);
+  if (!context) {
+    throw new Error("Please import Note Provider to use useNoteContext() hook");
+  }
+  return context;
 }
