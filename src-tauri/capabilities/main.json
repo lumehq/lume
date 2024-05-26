@@ -56,6 +56,8 @@
     "dialog:allow-message",
     "process:allow-restart",
     "fs:allow-read-file",
+    "theme:allow-set-theme",
+    "theme:allow-get-theme",
     "shell:allow-open",
     {
       "identifier": "http:default",

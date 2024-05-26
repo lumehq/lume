@@ -5,6 +5,7 @@ import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { open } from "@tauri-apps/plugin-dialog";
 import { dedupEvents } from "./dedup";
+import { invoke } from "@tauri-apps/api/core";
 
 enum NSTORE_KEYS {
 	settings = "lume_user_settings",
@@ -201,8 +202,11 @@ export class NostrQuery {
 		if (query.status === "ok") {
 			const settings: Settings = query.data ? JSON.parse(query.data) : null;
 			const isGranted = await isPermissionGranted();
+			const theme: "auto" | "light" | "dark" = await invoke(
+				"plugin:theme|get_theme",
+			);
 
-			return { ...settings, notification: isGranted };
+			return { ...settings, theme, notification: isGranted };
 		} else {
 			const initial: Settings = {
 				autoUpdate: false,
@@ -210,6 +214,8 @@ export class NostrQuery {
 				notification: false,
 				zap: false,
 				nsfw: false,
+				gossip: false,
+				theme: "auto",
 			};
 
 			return initial;

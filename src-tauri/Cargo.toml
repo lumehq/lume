@@ -39,6 +39,7 @@ keyring = "2"
 keyring-search = "0.2.0"
 specta = "=2.0.0-rc.12"
 tauri-specta = { version = "=2.0.0-rc.10", features = ["typescript"] }
+tauri-plugin-theme = "0.4.1"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"

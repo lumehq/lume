@@ -2907,6 +2907,7 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-process",
  "tauri-plugin-shell",
+ "tauri-plugin-theme",
  "tauri-plugin-updater",
  "tauri-plugin-upload",
  "tauri-plugin-window-state",
@@ -5515,6 +5516,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-theme"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c23856e93f56cd8d1868e7dd8a4b529b836fd5da315cefd7702b252a850cdf5a"
+dependencies = [
+ "cocoa",
+ "dirs-next",
+ "futures-lite 2.3.0",
+ "gtk",
+ "once_cell",
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "tintanum",
+ "tokio",
+]
+
+[[package]]
 name = "tauri-plugin-updater"
 version = "2.0.0-beta.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5803,6 +5822,16 @@ checksum = "3f252a68540fde3a3877aeea552b832b40ab9a69e318efd078774a01ddee1ccf"
 dependencies = [
  "num-conv",
  "time-core",
+]
+
+[[package]]
+name = "tintanum"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7abbcf9173afc80733c20b7e27a30bc9284d6535bdbde2a70904032de63e16e8"
+dependencies = [
+ "futures-lite 1.13.0",
+ "zbus 3.15.1",
 ]
 
 [[package]]

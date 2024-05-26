@@ -24,6 +24,7 @@ pub struct Nostr {
 }
 
 fn main() {
+  let mut ctx = tauri::generate_context!();
   let invoke_handler = {
     let builder = tauri_specta::ts::builder().commands(tauri_specta::collect_commands![
       nostr::relay::get_relays,
@@ -135,13 +136,7 @@ fn main() {
 
       Ok(())
     })
-    .on_window_event(|window, event| match event {
-      tauri::WindowEvent::CloseRequested { api, .. } => {
-        window.hide().unwrap();
-        api.prevent_close();
-      }
-      _ => {}
-    })
+    .plugin(tauri_plugin_theme::init(ctx.config_mut()))
     .plugin(tauri_plugin_decorum::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
@@ -154,6 +149,6 @@ fn main() {
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
     .invoke_handler(invoke_handler)
-    .run(tauri::generate_context!())
+    .run(ctx)
     .expect("error while running tauri application")
 }

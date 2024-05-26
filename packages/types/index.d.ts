@@ -5,6 +5,7 @@ export interface Settings {
 	zap: boolean;
 	nsfw: boolean;
 	gossip: boolean;
+	theme: "auto" | "light" | "dark";
 	[key: string]: string | number | boolean;
 }
 
