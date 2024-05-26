@@ -88,12 +88,12 @@ pub async fn save_account(
 #[specta::specta]
 pub async fn load_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
-  let keyring = Entry::new(&npub, "nostr_secret").unwrap();
+  let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
   match keyring.get_password() {
     Ok(password) => {
       if password.starts_with("bunker://") {
-        let local_keyring = Entry::new(&npub, "bunker_local_account").unwrap();
+        let local_keyring = Entry::new(npub, "bunker_local_account").unwrap();
 
         match local_keyring.get_password() {
           Ok(local_password) => {

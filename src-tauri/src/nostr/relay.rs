@@ -19,7 +19,7 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, ()> {
 
   // Get connected relays
   let list = client.relays().await;
-  let connected_relays: Vec<String> = list.into_iter().map(|(url, _)| url.to_string()).collect();
+  let connected_relays: Vec<String> = list.into_keys().map(|url| url.to_string()).collect();
 
   // Get NIP-65 relay list
   let signer = client.signer().await.unwrap();
@@ -80,9 +80,9 @@ pub async fn get_relays(state: State<'_, Nostr>) -> Result<Relays, ()> {
 pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
   if let Ok(status) = client.add_relay(relay).await {
-    if status == true {
+    if status {
       println!("connecting to relay: {}", relay);
-      let _ = client.connect_relay(relay);
+      let _ = client.connect_relay(relay).await;
       Ok(true)
     } else {
       Ok(false)
@@ -96,8 +96,8 @@ pub async fn connect_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool,
 #[specta::specta]
 pub async fn remove_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let client = &state.client;
-  if let Ok(_) = client.remove_relay(relay).await {
-    let _ = client.disconnect_relay(relay);
+  if (client.remove_relay(relay).await).is_ok() {
+    let _ = client.disconnect_relay(relay).await;
     Ok(true)
   } else {
     Ok(false)
