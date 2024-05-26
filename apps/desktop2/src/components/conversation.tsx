@@ -3,15 +3,21 @@ import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
 import { LumeEvent } from "@lume/system";
+import { useMemo } from "react";
 
 export function Conversation({
 	event,
+	gossip,
 	className,
 }: {
 	event: NostrEvent;
+	gossip?: boolean;
 	className?: string;
 }) {
-	const thread = LumeEvent.getEventThread(event.tags);
+	const thread = useMemo(
+		() => LumeEvent.getEventThread(event.tags, gossip),
+		[event],
+	);
 
 	return (
 		<Note.Provider event={event}>

@@ -132,11 +132,10 @@ function Screen() {
 				horizontal
 				tabIndex={-1}
 				itemSize={440}
-				overscan={3}
+				overscan={5}
 				onScroll={() => setIsScroll(true)}
 				onScrollEnd={() => setIsScroll(false)}
 				className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
-				cache={null}
 			>
 				{columns.map((column) => (
 					<Column

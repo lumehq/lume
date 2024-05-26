@@ -4,6 +4,7 @@ export interface Settings {
 	autoUpdate: boolean;
 	zap: boolean;
 	nsfw: boolean;
+	gossip: boolean;
 	[key: string]: string | number | boolean;
 }
 

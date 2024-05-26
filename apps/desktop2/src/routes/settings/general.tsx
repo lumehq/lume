@@ -9,10 +9,7 @@ import { useDebouncedCallback } from "use-debounce";
 export const Route = createFileRoute("/settings/general")({
 	beforeLoad: async () => {
 		const settings = await NostrQuery.getSettings();
-
-		return {
-			settings,
-		};
+		return { settings };
 	},
 	component: Screen,
 });
@@ -26,6 +23,13 @@ function Screen() {
 		setNewSettings((prev) => ({
 			...prev,
 			notification: !newSettings.notification,
+		}));
+	};
+
+	const toggleGossip = async () => {
+		setNewSettings((prev) => ({
+			...prev,
+			gossip: !newSettings.gossip,
 		}));
 	};
 
@@ -85,6 +89,24 @@ function Screen() {
 								<Switch.Root
 									checked={newSettings.notification}
 									onClick={() => toggleNofitication()}
+									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
+								>
+									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+								</Switch.Root>
+							</div>
+						</div>
+						<div className="flex w-full items-start justify-between gap-4 py-3">
+							<div className="flex-1">
+								<h3 className="font-medium">Relay Hint</h3>
+								<p className="text-sm text-neutral-700 dark:text-neutral-300">
+									Automatically connect to the necessary relay suggested by
+									Relay Hint when fetching a new event.
+								</p>
+							</div>
+							<div className="w-36 flex justify-end shrink-0">
+								<Switch.Root
+									checked={newSettings.gossip}
+									onClick={() => toggleGossip()}
 									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
 								>
 									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />

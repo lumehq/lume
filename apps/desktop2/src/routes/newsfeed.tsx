@@ -40,7 +40,7 @@ export const Route = createFileRoute("/newsfeed")({
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { contacts } = Route.useRouteContext();
+	const { contacts, settings } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -72,7 +72,14 @@ export function Screen() {
 				const isQuote = event.tags.filter((tag) => tag[0] === "q").length > 0;
 
 				if (isConversation) {
-					return <Conversation key={event.id} event={event} className="mb-3" />;
+					return (
+						<Conversation
+							key={event.id}
+							className="mb-3"
+							event={event}
+							gossip={settings?.gossip}
+						/>
+					);
 				}
 
 				if (isQuote) {

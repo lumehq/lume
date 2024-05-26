@@ -22,24 +22,25 @@ export class LumeEvent {
 		return this.tags.filter((tag) => tag[0] === "p").map((tag) => tag[1]);
 	}
 
-	static getEventThread(tags: string[][]) {
+	static getEventThread(tags: string[][], gossip?: boolean) {
 		let root: string = null;
 		let reply: string = null;
 
 		// Get all event references from tags, ignore mention
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
 
-		/*
-    if (gossip) {
-      const relays = tags.filter((el) => el[0] === "e" && el[2]?.length);
+		if (gossip) {
+			const relays = tags.filter((el) => el[0] === "e" && el[2]?.length);
 
-      if (relays.length >= 1) {
-        for (const relay of relays) {
-          if (relay[2]?.length) this.add_relay(relay[2]);
-        }
-      }
-    }
-    */
+			if (relays.length >= 1) {
+				for (const relay of relays) {
+					if (relay[2]?.length)
+						commands
+							.connectRelay(relay[2])
+							.then(() => console.log("[gossip]: ", relay[2]));
+				}
+			}
+		}
 
 		if (events.length === 1) {
 			root = events[0][1];
