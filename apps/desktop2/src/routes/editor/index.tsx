@@ -1,4 +1,4 @@
-import { ComposeFilledIcon, TrashIcon } from "@lume/icons";
+import { ComposeFilledIcon } from "@lume/icons";
 import { Spinner } from "@lume/ui";
 import {
 	cn,
@@ -8,7 +8,6 @@ import {
 	sendNativeNotification,
 } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { nip19 } from "nostr-tools";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { type Descendant, Node, Transforms, createEditor } from "slate";
@@ -22,14 +21,20 @@ import {
 	withReact,
 } from "slate-react";
 import { MediaButton } from "./-components/media";
-import { NsfwToggle } from "./-components/nsfw";
 import { MentionButton } from "./-components/mention";
-import { MentionNote } from "@/components/note/mentions/note";
 import { LumeEvent } from "@lume/system";
+import { WarningToggle } from "./-components/warning";
+import { MentionNote } from "@/components/note/mentions/note";
 
 type EditorSearch = {
 	reply_to: string;
 	quote: boolean;
+};
+
+type EditorElement = {
+	type: string;
+	children: Descendant[];
+	eventId?: string;
 };
 
 export const Route = createFileRoute("/editor/")({
@@ -39,43 +44,23 @@ export const Route = createFileRoute("/editor/")({
 			quote: search.quote === "true" || false,
 		};
 	},
-	beforeLoad: async ({ search }) => {
-		return {
-			initialValue: search.quote
-				? [
-						{
-							type: "paragraph",
-							children: [{ text: "" }],
-						},
-						{
-							type: "event",
-							eventId: `nostr:${nip19.noteEncode(search.reply_to)}`,
-							children: [{ text: "" }],
-						},
-						{
-							type: "paragraph",
-							children: [{ text: "" }],
-						},
-					]
-				: [
-						{
-							type: "paragraph",
-							children: [{ text: "" }],
-						},
-					],
-		};
-	},
 	component: Screen,
 });
 
+const initialValue: EditorElement[] = [
+	{
+		type: "paragraph",
+		children: [{ text: "" }],
+	},
+];
+
 function Screen() {
-	const { reply_to, quote } = Route.useSearch();
-	const { initialValue } = Route.useRouteContext();
+	const search = Route.useSearch();
 
 	const [t] = useTranslation();
 	const [editorValue, setEditorValue] = useState(initialValue);
 	const [loading, setLoading] = useState(false);
-	const [nsfw, setNsfw] = useState(false);
+	const [warning, setWarning] = useState(false);
 	const [editor] = useState(() =>
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
@@ -116,7 +101,12 @@ function Screen() {
 			setLoading(true);
 
 			const content = serialize(editor.children);
-			const eventId = await LumeEvent.publish(content, reply_to, quote);
+			const eventId = await LumeEvent.publish(
+				content,
+				search.reply_to,
+				search.quote,
+				warning,
+			);
 
 			if (eventId) {
 				await sendNativeNotification(
@@ -137,15 +127,15 @@ function Screen() {
 	};
 
 	return (
-		<div className="w-full h-full">
+		<div className="w-full h-full flex flex-col">
 			<Slate editor={editor} initialValue={editorValue}>
 				<div
 					data-tauri-drag-region
-					className="flex h-14 w-full shrink-0 items-center justify-end gap-2 px-2 border-b border-black/10 dark:border-white/10"
+					className="shrink-0 flex h-14 w-full items-center justify-end gap-2 px-2 border-b border-black/10 dark:border-white/10"
 				>
-					<NsfwToggle
-						nsfw={nsfw}
-						setNsfw={setNsfw}
+					<WarningToggle
+						warning={warning}
+						setWarning={setWarning}
 						className="size-8 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
 					/>
 					<MentionButton className="size-8 rounded-full bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20" />
@@ -163,13 +153,13 @@ function Screen() {
 						{t("global.post")}
 					</button>
 				</div>
-				<div className="flex h-full w-full flex-1 flex-col">
-					{reply_to && !quote ? (
+				<div className="flex-1 overflow-y-auto flex flex-col">
+					{search.reply_to ? (
 						<div className="px-4 py-2">
-							<MentionNote eventId={reply_to} />
+							<MentionNote eventId={search.reply_to} />
 						</div>
 					) : null}
-					<div className="overflow-y-auto p-4">
+					<div className="overflow-y-auto scrollbar-none p-4">
 						<Editable
 							key={JSON.stringify(editorValue)}
 							autoFocus={true}
@@ -178,7 +168,7 @@ function Screen() {
 							spellCheck={false}
 							renderElement={(props) => <Element {...props} />}
 							placeholder={
-								reply_to ? "Type your reply..." : t("editor.placeholder")
+								search.reply_to ? "Type your reply..." : t("editor.placeholder")
 							}
 							className="focus:outline-none"
 						/>
@@ -252,35 +242,24 @@ const withImages = (editor: ReactEditor) => {
 	return editor;
 };
 
-const Image = ({ attributes, children, element }) => {
+const Image = ({ attributes, element, children }) => {
 	const editor = useSlateStatic();
-	const path = ReactEditor.findPath(editor as ReactEditor, element);
-
 	const selected = useSelected();
 	const focused = useFocused();
+	const path = ReactEditor.findPath(editor as ReactEditor, element);
 
 	return (
 		<div {...attributes}>
 			{children}
-			<div contentEditable={false} className="relative my-2">
-				<img
-					src={element.url}
-					alt={element.url}
-					className={cn(
-						"h-auto w-full rounded-lg border border-neutral-100 object-cover ring-2 dark:border-neutral-900",
-						selected && focused ? "ring-blue-500" : "ring-transparent",
-					)}
-					contentEditable={false}
-				/>
-				<button
-					type="button"
-					contentEditable={false}
-					onClick={() => Transforms.removeNodes(editor, { at: path })}
-					className="absolute right-2 top-2 inline-flex size-8 items-center justify-center rounded-lg bg-red-500 text-white hover:bg-red-600"
-				>
-					<TrashIcon className="size-4" />
-				</button>
-			</div>
+			<img
+				src={element.url}
+				alt={element.url}
+				className={cn(
+					"my-2 h-auto w-1/2 rounded-lg object-cover ring-2 outline outline-1 -outline-offset-1 outline-black/15",
+					selected && focused ? "ring-blue-500" : "ring-transparent",
+				)}
+				onClick={() => Transforms.removeNodes(editor, { at: path })}
+			/>
 		</div>
 	);
 };

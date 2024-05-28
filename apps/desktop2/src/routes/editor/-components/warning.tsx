@@ -3,13 +3,13 @@ import { cn } from "@lume/utils";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import type { Dispatch, SetStateAction } from "react";
 
-export function NsfwToggle({
-	nsfw,
-	setNsfw,
+export function WarningToggle({
+	warning,
+	setWarning,
 	className,
 }: {
-	nsfw: boolean;
-	setNsfw: Dispatch<SetStateAction<boolean>>;
+	warning: boolean;
+	setWarning: Dispatch<SetStateAction<boolean>>;
 	className?: string;
 }) {
 	return (
@@ -18,11 +18,11 @@ export function NsfwToggle({
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => setNsfw((prev) => !prev)}
+						onClick={() => setWarning((prev) => !prev)}
 						className={cn(
 							"inline-flex items-center justify-center",
 							className,
-							nsfw ? "bg-blue-500 text-white" : "",
+							warning ? "bg-blue-500 text-white" : "",
 						)}
 					>
 						<NsfwIcon className="size-4" />

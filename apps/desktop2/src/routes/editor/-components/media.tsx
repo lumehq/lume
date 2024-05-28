@@ -13,7 +13,7 @@ export function MediaButton({ className }: { className?: string }) {
 	const editor = useSlateStatic();
 	const [loading, setLoading] = useState(false);
 
-	const uploadToNostrBuild = async () => {
+	const upload = async () => {
 		try {
 			// start loading
 			setLoading(true);
@@ -66,7 +66,7 @@ export function MediaButton({ className }: { className?: string }) {
 				<Tooltip.Trigger asChild>
 					<button
 						type="button"
-						onClick={() => uploadToNostrBuild()}
+						onClick={() => upload()}
 						disabled={loading}
 						className={cn("inline-flex items-center justify-center", className)}
 					>

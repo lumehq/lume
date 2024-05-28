@@ -60,17 +60,10 @@ export const insertMention = (
 		name: contact.profile.name || contact.profile.display_name || "anon",
 		children: [text],
 	};
-	const extraText = [
-		{
-			type: "paragraph",
-			children: [text],
-		},
-	];
 
 	// @ts-ignore, idk
 	ReactEditor.focus(editor);
 	Transforms.insertNodes(editor, mention);
-	Transforms.insertNodes(editor, extraText);
 };
 
 export const insertNostrEvent = (

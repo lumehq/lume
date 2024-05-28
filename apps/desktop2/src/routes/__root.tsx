@@ -1,17 +1,10 @@
 import { CheckCircleIcon, InfoCircleIcon, CancelCircleIcon } from "@lume/icons";
-import type { Interests, Metadata, Settings } from "@lume/types";
+import type { Settings } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Platform } from "@tauri-apps/plugin-os";
-import type { Descendant } from "slate";
 import { Toaster } from "sonner";
-
-type EditorElement = {
-	type: string;
-	children: Descendant[];
-	eventId?: string;
-};
 
 interface RouterContext {
 	// System
@@ -21,13 +14,8 @@ interface RouterContext {
 	locale?: string;
 	// Settings
 	settings?: Settings;
-	interests?: Interests;
-	// Profile
+	// Accounts
 	accounts?: string[];
-	profile?: Metadata;
-	isNewUser?: boolean;
-	// Editor
-	initialValue?: EditorElement[];
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
