@@ -236,31 +236,28 @@ export class NostrQuery {
 	}
 
 	static async getColumns() {
+		const systemPath = "resources/system_columns.json";
+		const resourcePath = await resolveResource(systemPath);
+		const resourceFile = await readTextFile(resourcePath);
+		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
 		const query = await commands.getNstore(NSTORE_KEYS.columns);
 
 		if (query.status === "ok") {
 			const columns: LumeColumn[] = query.data ? JSON.parse(query.data) : [];
 
 			if (columns.length < 1) {
-				const systemPath = "resources/system_columns.json";
-				const resourcePath = await resolveResource(systemPath);
-				const resourceFile = await readTextFile(resourcePath);
-				const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
-
 				return systemColumns;
 			}
 
 			return columns;
 		} else {
-			return [];
+			return systemColumns;
 		}
 	}
 
 	static async setColumns(columns: LumeColumn[]) {
-		const query = await commands.setNstore(
-			NSTORE_KEYS.columns,
-			JSON.stringify(columns),
-		);
+		const content = JSON.stringify(columns);
+		const query = await commands.setNstore(NSTORE_KEYS.columns, content);
 
 		if (query.status === "ok") {
 			return query.data;

@@ -45,7 +45,7 @@ function Screen() {
 
 				if (eventId) {
 					navigate({
-						to: "/auth/new/$account/backup",
+						to: "/auth/$account/backup",
 						params: { account: account.npub },
 						replace: true,
 					});

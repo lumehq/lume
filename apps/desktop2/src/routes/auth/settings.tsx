@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth/$account/settings")({
+export const Route = createFileRoute("/auth/settings")({
 	beforeLoad: async () => {
 		const settings = await NostrQuery.getSettings();
 		return { settings };
@@ -18,13 +18,13 @@ export const Route = createFileRoute("/auth/$account/settings")({
 });
 
 function Screen() {
-	const navigate = Route.useNavigate();
-	const { account } = Route.useParams();
 	const { settings } = Route.useRouteContext();
 	const { t } = useTranslation();
 
 	const [newSettings, setNewSettings] = useState(settings);
 	const [loading, setLoading] = useState(false);
+
+	const navigate = Route.useNavigate();
 
 	const toggleNofitication = async () => {
 		await requestPermission();
@@ -72,8 +72,7 @@ function Screen() {
 
 			if (eventId) {
 				return navigate({
-					to: "/$account/home",
-					params: { account },
+					to: "/",
 					replace: true,
 				});
 			}

@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth/new/$account/backup")({
+export const Route = createFileRoute("/auth/$account/backup")({
 	component: Screen,
 });
 
@@ -33,8 +33,7 @@ function Screen() {
 				}
 
 				return navigate({
-					to: "/auth/$account/settings",
-					params: { account },
+					to: "/auth/settings",
 				});
 			}
 
