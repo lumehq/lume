@@ -34,6 +34,8 @@ function Screen() {
 							className="h-auto w-full aspect-square rounded-lg shadow-md transform"
 							controls
 							muted
+							preload="none"
+							poster="/poster_1.jpeg"
 						>
 							<source
 								src="https://video.nostr.build/692f71e2be47ecfc29edcbdaa198cc5979bfb9c900f05d78682895dd546d8d4f.mp4"
@@ -55,6 +57,8 @@ function Screen() {
 							className="h-auto w-full aspect-square rounded-lg shadow-md transform"
 							controls
 							muted
+							preload="none"
+							poster="/poster_2.jpeg"
 						>
 							<source
 								src="https://video.nostr.build/d33962520506d86acfb4b55a7b265821e10ae637f5ec830a173b7e6092b16ec8.mp4"
@@ -76,6 +80,8 @@ function Screen() {
 							className="h-auto w-full aspect-square rounded-lg shadow-md transform"
 							controls
 							muted
+							preload="none"
+							poster="/poster_3.jpeg"
 						>
 							<source
 								src="https://video.nostr.build/927abbfde2097e470ac751181b1db456b7e4b9149550408efff1a966a7ffb9a8.mp4"
@@ -97,6 +103,8 @@ function Screen() {
 							className="h-auto w-full rounded-lg shadow-md transform"
 							controls
 							muted
+							preload="none"
+							poster="/poster_4.jpeg"
 						>
 							<source
 								src="https://video.nostr.build/513de4824b6abaf7e9698c1dad2f68096574356848c0c200bc8cb8074df29410.mp4"
