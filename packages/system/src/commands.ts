@@ -31,7 +31,7 @@ export const commands = {
 			else return { status: "error", error: e as any };
 		}
 	},
-	async getAccounts(): Promise<Result<string, string>> {
+	async getAccounts(): Promise<Result<string[], string>> {
 		try {
 			return { status: "ok", data: await TAURI_INVOKE("get_accounts") };
 		} catch (e) {
@@ -144,17 +144,6 @@ export const commands = {
 			return {
 				status: "ok",
 				data: await TAURI_INVOKE("verify_nip05", { key, nip05 }),
-			};
-		} catch (e) {
-			if (e instanceof Error) throw e;
-			else return { status: "error", error: e as any };
-		}
-	},
-	async runNotification(accounts: string[]): Promise<Result<null, null>> {
-		try {
-			return {
-				status: "ok",
-				data: await TAURI_INVOKE("run_notification", { accounts }),
 			};
 		} catch (e) {
 			if (e instanceof Error) throw e;

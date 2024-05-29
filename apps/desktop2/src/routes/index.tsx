@@ -4,24 +4,21 @@ import { User } from "@/components/user";
 import { checkForAppUpdates } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { invoke } from "@tauri-apps/api/core";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NostrAccount } from "@lume/system";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: async () => {
+		await checkForAppUpdates(true); // check for app updates
 		const accounts = await NostrAccount.getAccounts();
 
 		if (accounts.length < 1) {
 			throw redirect({
-				to: "/landing/",
+				to: "/landing",
 				replace: true,
 			});
 		}
-
-		await checkForAppUpdates(true); // check for app updates
-		await invoke("run_notification", { accounts }); // Run notification service
 
 		return { accounts };
 	},
@@ -65,14 +62,16 @@ function Screen() {
 	return (
 		<div className="relative flex h-full w-full items-center justify-center">
 			<div className="relative z-20 flex flex-col items-center gap-16">
-				<div className="text-center text-white">
-					<h2 className="mb-1 text-2xl">{currentDate}</h2>
+				<div className="text-center">
+					<h2 className="text-xl text-neutral-700 dark:text-neutral-300">
+						{currentDate}
+					</h2>
 					<h2 className="text-2xl font-semibold">Welcome back!</h2>
 				</div>
 				<div className="flex flex-wrap px-3 items-center justify-center gap-6">
 					{loading ? (
 						<div className="inline-flex size-6 items-center justify-center">
-							<Spinner className="size-6 text-white" />
+							<Spinner className="size-6" />
 						</div>
 					) : (
 						<>
@@ -83,41 +82,24 @@ function Screen() {
 									onClick={() => select(account)}
 								>
 									<User.Provider pubkey={account}>
-										<User.Root className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-2xl p-2 hover:bg-white/10 dark:hover:bg-black/10">
+										<User.Root className="flex h-36 w-32 flex-col items-center justify-center gap-3 rounded-2xl p-2 hover:bg-black/10 dark:hover:bg-white/10">
 											<User.Avatar className="size-20 rounded-full object-cover" />
-											<User.Name className="max-w-[5rem] truncate text-lg font-medium leading-tight text-white" />
+											<User.Name className="max-w-[6rem] truncate font-medium leading-tight" />
 										</User.Root>
 									</User.Provider>
 								</button>
 							))}
-							<Link to="/landing/">
-								<div className="flex h-36 w-32 flex-col items-center justify-center gap-4 rounded-2xl p-2 text-white hover:bg-white/10 dark:hover:bg-black/10">
-									<div className="flex size-20 items-center justify-center rounded-full bg-white/20 dark:bg-black/20">
+							<Link to="/landing">
+								<div className="flex h-36 w-32 flex-col items-center justify-center gap-3 rounded-2xl p-2 hover:bg-black/10 dark:hover:bg-white/10">
+									<div className="flex size-20 items-center justify-center rounded-full bg-black/5 dark:bg-white/5">
 										<PlusIcon className="size-8" />
 									</div>
-									<p className="text-lg font-medium leading-tight">Add</p>
+									<p className="font-medium leading-tight">Add</p>
 								</div>
 							</Link>
 						</>
 					)}
 				</div>
-			</div>
-			<div className="absolute z-10 h-full w-full bg-white/10 backdrop-blur-lg dark:bg-black/10" />
-			<div className="absolute inset-0 h-full w-full">
-				<img
-					src="/lock-screen.jpg"
-					srcSet="/lock-screen@2x.jpg 2x"
-					alt="Lock Screen Background"
-					className="h-full w-full object-cover"
-				/>
-				<a
-					href="https://njump.me/nprofile1qqs9tuz9jpn57djg7nxunhyvuvk69g5zqaxdpvpqt9hwqv7395u9rpg6zq5uw"
-					target="_blank"
-					className="absolute bottom-3 right-3 z-50 rounded-md bg-white/20 px-2 py-1 text-xs font-medium text-white dark:bg-black/20"
-					rel="noreferrer"
-				>
-					Design by NoGood
-				</a>
 			</div>
 		</div>
 	);

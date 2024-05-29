@@ -6,7 +6,7 @@ use serde::Serialize;
 use specta::Type;
 use std::str::FromStr;
 use std::time::Duration;
-use tauri::State;
+use tauri::{Manager, State};
 
 #[derive(Serialize, Type)]
 pub struct Account {
@@ -16,12 +16,26 @@ pub struct Account {
 
 #[tauri::command]
 #[specta::specta]
-pub fn get_accounts() -> Result<String, String> {
+pub fn get_accounts() -> Result<Vec<String>, String> {
   let search = Search::new().unwrap();
   let results = search.by("Account", "nostr_secret");
 
   match List::list_credentials(results, Limit::All) {
-    Ok(list) => Ok(list),
+    Ok(list) => {
+      let search: Vec<String> = list
+        .split_whitespace()
+        .map(|v| v.to_string())
+        .filter(|v| v.starts_with("npub1"))
+        .collect();
+
+      let accounts: Vec<String> = search
+        .into_iter()
+        .collect::<std::collections::HashSet<_>>()
+        .into_iter()
+        .collect();
+
+      Ok(accounts)
+    }
     Err(_) => Err("Empty.".into()),
   }
 }
@@ -86,7 +100,11 @@ pub async fn save_account(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn load_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn load_account(
+  npub: &str,
+  state: State<'_, Nostr>,
+  app: tauri::AppHandle,
+) -> Result<bool, String> {
   let client = &state.client;
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
@@ -122,12 +140,13 @@ pub async fn load_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, S
       let signer = client.signer().await.unwrap();
       let public_key = signer.public_key().await.unwrap();
 
-      // Connect to user's relay
       let filter = Filter::new()
         .author(public_key)
         .kind(Kind::RelayList)
         .limit(1);
 
+      // Connect to user's relay (NIP-65)
+      // #TODO: Let rust-nostr handle it
       match client
         .get_events_of(vec![filter], Some(Duration::from_secs(10)))
         .await
@@ -163,6 +182,40 @@ pub async fn load_account(npub: &str, state: State<'_, Nostr>) -> Result<bool, S
         }
         Err(_) => todo!(),
       };
+
+      // Run notification service
+      tauri::async_runtime::spawn(async move {
+        let window = app.get_window("main").unwrap();
+        let state = window.state::<Nostr>();
+        let client = &state.client;
+        let subscription = Filter::new()
+          .pubkey(public_key)
+          .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
+          .since(Timestamp::now());
+        let activity_id = SubscriptionId::new("activity");
+
+        // Create a subscription for activity
+        client
+          .subscribe_with_id(activity_id.clone(), vec![subscription], None)
+          .await;
+
+        // Handle notifications
+        let _ = client
+          .handle_notifications(|notification| async {
+            if let RelayPoolNotification::Event {
+              subscription_id,
+              event,
+              ..
+            } = notification
+            {
+              if subscription_id == activity_id {
+                let _ = app.emit("activity", event.as_json());
+              }
+            }
+            Ok(false)
+          })
+          .await;
+      });
 
       Ok(true)
     }

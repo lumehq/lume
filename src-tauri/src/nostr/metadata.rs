@@ -2,52 +2,8 @@ use crate::Nostr;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
-use tauri::{Manager, State};
+use tauri::State;
 use url::Url;
-
-#[tauri::command]
-#[specta::specta]
-pub fn run_notification(accounts: Vec<String>, app: tauri::AppHandle) -> Result<(), ()> {
-  tauri::async_runtime::spawn(async move {
-    let window = app.get_window("main").unwrap();
-    let state = window.state::<Nostr>();
-    let client = &state.client;
-    let pubkeys: Vec<PublicKey> = accounts
-      .into_iter()
-      .map(|f| PublicKey::from_bech32(f).unwrap())
-      .collect();
-    let subscription = Filter::new()
-      .pubkeys(pubkeys)
-      .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
-      .since(Timestamp::now());
-    let activity_id = SubscriptionId::new("activity");
-
-    // Create a subscription for activity
-    client
-      .subscribe_with_id(activity_id.clone(), vec![subscription], None)
-      .await;
-
-    // Handle notifications
-    let _ = client
-      .handle_notifications(|notification| async {
-        if let RelayPoolNotification::Event {
-          subscription_id,
-          event,
-          ..
-        } = notification
-        {
-          if subscription_id == activity_id {
-            println!("new notification: {}", event.as_json());
-            let _ = app.emit("activity", event.as_json());
-          }
-        }
-        Ok(false)
-      })
-      .await;
-  });
-
-  Ok(())
-}
 
 #[tauri::command]
 #[specta::specta]

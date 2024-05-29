@@ -6,11 +6,7 @@ export class NostrAccount {
 		const query = await commands.getAccounts();
 
 		if (query.status === "ok") {
-			const accounts = query.data
-				.split(/\s+/)
-				.filter((v) => v.startsWith("npub1"));
-
-			return [...new Set(accounts)];
+			return query.data;
 		} else {
 			return [];
 		}

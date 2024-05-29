@@ -21,7 +21,7 @@ export const Route = createFileRoute("/group")({
 	beforeLoad: async ({ search }) => {
 		const key = `lume_group_${search.label}`;
 		const groups = (await NostrQuery.getNstore(key)) as string[];
-		const settings = await NostrAccount.getAccounts();
+		const settings = await NostrQuery.getSettings();
 
 		if (!groups?.length) {
 			throw redirect({
