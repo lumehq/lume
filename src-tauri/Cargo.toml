@@ -16,7 +16,7 @@ nostr-sdk = { version = "0.31", features = ["sqlite"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-beta", features = [
+tauri = { version = "2.0.0-beta.22", features = [
     "unstable",
     "tray-icon",
     "macos-private-api",
@@ -24,10 +24,10 @@ tauri = { version = "2.0.0-beta", features = [
     "protocol-asset",
 ] }
 tauri-plugin-clipboard-manager = "2.1.0-beta"
-tauri-plugin-dialog = "2.0.0-beta"
+tauri-plugin-dialog = "2.0.0-beta.8"
 tauri-plugin-fs = "2.0.0-beta"
 tauri-plugin-http = "2.0.0-beta"
-tauri-plugin-notification = "2.0.0-beta"
+tauri-plugin-notification = "2.0.0-beta.6"
 tauri-plugin-os = "2.0.0-beta"
 tauri-plugin-process = "2.0.0-beta"
 tauri-plugin-shell = "2.0.0-beta"
@@ -38,8 +38,6 @@ tauri-plugin-decorum = "0.1.0"
 webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
 keyring-search = "0.2.0"
-specta = "=2.0.0-rc.12"
-tauri-specta = { version = "=2.0.0-rc.10", features = ["typescript"] }
 tauri-plugin-theme = "0.4.1"
 
 [target.'cfg(target_os = "macos")'.dependencies]

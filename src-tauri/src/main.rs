@@ -25,8 +25,9 @@ pub struct Nostr {
 
 fn main() {
   let mut ctx = tauri::generate_context!();
-  let invoke_handler = {
-    let builder = tauri_specta::ts::builder().commands(tauri_specta::collect_commands![
+
+  tauri::Builder::default()
+    .invoke_handler(tauri::generate_handler![
       nostr::relay::get_relays,
       nostr::relay::connect_relay,
       nostr::relay::remove_relay,
@@ -70,16 +71,8 @@ fn main() {
       commands::window::reposition_column,
       commands::window::resize_column,
       commands::window::open_window,
-      commands::window::set_badge
-    ]);
-
-    #[cfg(debug_assertions)]
-    let builder = builder.path("../packages/system/src/commands.ts");
-
-    builder.build().unwrap()
-  };
-
-  tauri::Builder::default()
+      commands::window::set_badge,
+    ])
     .setup(|app| {
       let main_window = app.get_webview_window("main").unwrap();
 
@@ -147,7 +140,6 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .invoke_handler(invoke_handler)
     .run(ctx)
     .expect("error while running tauri application")
 }

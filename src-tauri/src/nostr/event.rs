@@ -4,7 +4,6 @@ use std::{str::FromStr, time::Duration};
 use tauri::State;
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
@@ -50,7 +49,6 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
 
@@ -68,7 +66,6 @@ pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<String
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_events_by(
   public_key: &str,
   as_of: Option<&str>,
@@ -98,7 +95,6 @@ pub async fn get_events_by(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_local_events(
   pubkeys: Vec<String>,
   until: Option<&str>,
@@ -135,7 +131,6 @@ pub async fn get_local_events(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_global_events(
   until: Option<&str>,
   state: State<'_, Nostr>,
@@ -161,7 +156,6 @@ pub async fn get_global_events(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_hashtag_events(
   hashtags: Vec<&str>,
   until: Option<&str>,
@@ -185,7 +179,6 @@ pub async fn get_hashtag_events(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn publish(
   content: &str,
   tags: Vec<Vec<&str>>,
@@ -201,7 +194,6 @@ pub async fn publish(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let event = Event::from_json(raw).unwrap();

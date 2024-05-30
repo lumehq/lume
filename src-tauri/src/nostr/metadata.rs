@@ -7,13 +7,19 @@ use thiserror::Error;
 use url::Url;
 
 #[derive(Debug, Error)]
-enum Error {
+pub enum Error {
   #[error(transparent)]
   Client(#[from] nostr_sdk::client::Error),
   #[error(transparent)]
   Key(#[from] nostr_sdk::key::Error),
   #[error(transparent)]
   Num(#[from] std::num::ParseIntError),
+  #[error(transparent)]
+  Signer(#[from] nostr_sdk::signer::Error),
+  #[error(transparent)]
+  Metadata(#[from] nostr_sdk::types::metadata::Error),
+  #[error("Item not found")]
+  NotFound,
 }
 
 impl serde::Serialize for Error {
@@ -26,7 +32,6 @@ impl serde::Serialize for Error {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_activities(
   account: &str,
   kind: &str,
@@ -45,7 +50,6 @@ pub async fn get_activities(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
@@ -83,37 +87,29 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
 }
 
 #[tauri::command]
-#[specta::specta]
-pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String, Error> {
   let client = &state.client;
-  let signer = client.signer().await.unwrap();
-  let public_key = signer.public_key().await.unwrap();
+  let signer = client.signer().await?;
+  let public_key = signer.public_key().await?;
   let filter = Filter::new()
     .author(public_key)
     .kind(Kind::Metadata)
     .limit(1);
 
-  match client
+  let events = client
     .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-    .await
-  {
-    Ok(events) => {
-      if let Some(event) = events.first() {
-        if let Ok(metadata) = Metadata::from_json(&event.content) {
-          Ok(metadata.as_json())
-        } else {
-          Err("Parse metadata failed".into())
-        }
-      } else {
-        Err("Not found".into())
-      }
-    }
-    Err(_) => Err("Not found".into()),
+    .await?;
+
+  let first_event = events.first();
+  if let Some(event) = first_event {
+    let metadata = Metadata::from_json(&event.content)?;
+    Ok(metadata.as_json())
+  } else {
+    Err(Error::NotFound)
   }
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
@@ -154,7 +150,6 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, St
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn set_contact_list(pubkeys: Vec<&str>, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let contact_list: Vec<Contact> = pubkeys
@@ -169,7 +164,6 @@ pub async fn set_contact_list(pubkeys: Vec<&str>, state: State<'_, Nostr>) -> Re
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
   let client = &state.client;
 
@@ -191,7 +185,6 @@ pub async fn get_contact_list(state: State<'_, Nostr>) -> Result<Vec<String>, St
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn create_profile(
   name: &str,
   display_name: &str,
@@ -231,7 +224,6 @@ pub async fn create_profile(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn follow(
   id: &str,
   alias: Option<&str>,
@@ -257,7 +249,6 @@ pub async fn follow(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let public_key = PublicKey::from_str(id).unwrap();
@@ -283,7 +274,6 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<String, Strin
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn set_nstore(
   key: &str,
   content: &str,
@@ -309,7 +299,6 @@ pub async fn set_nstore(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
 
@@ -344,7 +333,6 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
@@ -364,7 +352,6 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
   let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
@@ -384,7 +371,6 @@ pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_balance() -> Result<String, String> {
   let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
 
@@ -406,7 +392,6 @@ pub async fn get_balance() -> Result<String, String> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn zap_profile(
   id: &str,
   amount: &str,
@@ -441,7 +426,7 @@ pub async fn zap_profile(
 }
 
 #[tauri::command]
-#[specta::specta]
+
 pub async fn zap_event(
   id: &str,
   amount: &str,

@@ -3,19 +3,17 @@ use keyring::Entry;
 use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
 use serde::Serialize;
-use specta::Type;
 use std::str::FromStr;
 use std::time::Duration;
 use tauri::{Manager, State};
 
-#[derive(Serialize, Type)]
+#[derive(Serialize)]
 pub struct Account {
   npub: String,
   nsec: String,
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn get_accounts() -> Result<Vec<String>, String> {
   let search = Search::new().unwrap();
   let results = search.by("Account", "nostr_secret");
@@ -41,7 +39,6 @@ pub fn get_accounts() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn create_account() -> Result<Account, ()> {
   let keys = Keys::generate();
   let public_key = keys.public_key();
@@ -56,7 +53,6 @@ pub fn create_account() -> Result<Account, ()> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn save_account(
   nsec: &str,
   password: &str,
@@ -99,7 +95,6 @@ pub async fn save_account(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn load_account(
   npub: &str,
   state: State<'_, Nostr>,
@@ -224,7 +219,6 @@ pub async fn load_account(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn nostr_connect(
   npub: &str,
   uri: &str,
@@ -263,7 +257,6 @@ pub async fn nostr_connect(
 }
 
 #[tauri::command(async)]
-#[specta::specta]
 pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
@@ -282,7 +275,6 @@ pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
   let event_id = EventId::from_hex(id).unwrap();
   let event = Nip19Event::new(event_id, relays);
@@ -291,7 +283,6 @@ pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
   let pubkey = PublicKey::from_str(key).unwrap();
   let profile = Nip19Profile::new(pubkey, relays).unwrap();
@@ -300,7 +291,6 @@ pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn to_npub(hex: &str) -> Result<String, ()> {
   let public_key = PublicKey::from_str(hex).unwrap();
   let npub = Nip19::Pubkey(public_key);
@@ -309,7 +299,6 @@ pub fn to_npub(hex: &str) -> Result<String, ()> {
 }
 
 #[tauri::command]
-#[specta::specta]
 pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
   match PublicKey::from_str(key) {
     Ok(public_key) => {

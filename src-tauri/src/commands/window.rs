@@ -10,7 +10,6 @@ use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
 use tauri_plugin_decorum::WebviewWindowExt;
 
 #[tauri::command]
-#[specta::specta]
 pub fn create_column(
   label: &str,
   x: f32,
@@ -46,7 +45,6 @@ pub fn create_column(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, ()> {
   match app_handle.get_webview(label) {
     Some(webview) => {
@@ -61,7 +59,6 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, (
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn reposition_column(
   label: &str,
   x: f32,
@@ -81,7 +78,6 @@ pub fn reposition_column(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn resize_column(
   label: &str,
   width: f32,
@@ -101,7 +97,6 @@ pub fn resize_column(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn open_window(
   label: &str,
   title: &str,
@@ -171,7 +166,6 @@ pub fn open_window(
 }
 
 #[tauri::command]
-#[specta::specta]
 pub fn set_badge(count: i32) {
   #[cfg(target_os = "macos")]
   unsafe {
