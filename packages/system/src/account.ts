@@ -62,19 +62,12 @@ export class NostrAccount {
 	}
 
 	static async connectRemoteAccount(uri: string) {
-		const remoteKey = uri.replace("bunker://", "").split("?")[0];
-		const npub = await commands.toNpub(remoteKey);
+		const connect = await commands.connectRemoteAccount(uri);
 
-		if (npub.status === "ok") {
-			const connect = await commands.nostrConnect(npub.data, uri);
-
-			if (connect.status === "ok") {
-				return connect.data;
-			} else {
-				throw new Error(connect.error);
-			}
+		if (connect.status === "ok") {
+			return connect.data;
 		} else {
-			throw new Error(npub.error);
+			throw new Error(connect.error);
 		}
 	}
 

@@ -57,9 +57,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async nostrConnect(npub: string, uri: string) : Promise<Result<string, string>> {
+async connectRemoteAccount(uri: string) : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("nostr_connect", { npub, uri }) };
+    return { status: "ok", data: await TAURI_INVOKE("connect_remote_account", { uri }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -84,14 +84,6 @@ try {
 async userToBech32(key: string, relays: string[]) : Promise<Result<string, null>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("user_to_bech32", { key, relays }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async toNpub(hex: string) : Promise<Result<string, null>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("to_npub", { hex }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

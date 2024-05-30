@@ -23,11 +23,12 @@ function Screen() {
 		try {
 			setLoading(true);
 
-			const npub = await NostrAccount.connectRemoteAccount(uri);
+			const remoteAccount = await NostrAccount.connectRemoteAccount(uri);
 
-			if (npub) {
-				navigate({
-					to: "/auth/settings",
+			if (remoteAccount?.length) {
+				return navigate({
+					to: "/auth/$account/settings",
+					params: { account: remoteAccount },
 					replace: true,
 				});
 			}

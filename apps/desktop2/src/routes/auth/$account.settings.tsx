@@ -1,14 +1,13 @@
 import { LaurelIcon } from "@lume/icons";
-import { NostrQuery } from "@lume/system";
+import { NostrAccount, NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import * as Switch from "@radix-ui/react-switch";
 import { createFileRoute } from "@tanstack/react-router";
-import { requestPermission } from "@tauri-apps/plugin-notification";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth/settings")({
+export const Route = createFileRoute("/auth/$account/settings")({
 	beforeLoad: async () => {
 		const settings = await NostrQuery.getSettings();
 		return { settings };
@@ -19,27 +18,13 @@ export const Route = createFileRoute("/auth/settings")({
 
 function Screen() {
 	const { settings } = Route.useRouteContext();
+	const { account } = Route.useParams();
 	const { t } = useTranslation();
 
 	const [newSettings, setNewSettings] = useState(settings);
 	const [loading, setLoading] = useState(false);
 
 	const navigate = Route.useNavigate();
-
-	const toggleNofitication = async () => {
-		await requestPermission();
-		setNewSettings((prev) => ({
-			...prev,
-			notification: !newSettings.notification,
-		}));
-	};
-
-	const toggleAutoUpdate = () => {
-		setNewSettings((prev) => ({
-			...prev,
-			autoUpdate: !newSettings.autoUpdate,
-		}));
-	};
 
 	const toggleEnhancedPrivacy = () => {
 		setNewSettings((prev) => ({
@@ -69,10 +54,13 @@ function Screen() {
 
 			// publish settings
 			const eventId = await NostrQuery.setSettings(newSettings);
+			const allAccounts = await NostrAccount.getAccounts();
 
 			if (eventId) {
 				return navigate({
-					to: "/",
+					to: "/$account/home",
+					params: { account },
+					search: { accounts: [...new Set([account, ...allAccounts])] },
 					replace: true,
 				});
 			}
@@ -101,22 +89,6 @@ function Screen() {
 				<div className="flex flex-col gap-3">
 					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
 						<div className="flex-1">
-							<h3 className="font-semibold">Push Notification</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Enabling push notifications will allow you to receive
-								notifications from Lume.
-							</p>
-						</div>
-						<Switch.Root
-							checked={newSettings.notification}
-							onClick={() => toggleNofitication()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
-						<div className="flex-1">
 							<h3 className="font-semibold">Enhanced Privacy</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
 								Lume will display external resources like image, video or link
@@ -126,21 +98,6 @@ function Screen() {
 						<Switch.Root
 							checked={newSettings.enhancedPrivacy}
 							onClick={() => toggleEnhancedPrivacy()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
-						<div className="flex-1">
-							<h3 className="font-semibold">Auto Update</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Automatically download and install new version.
-							</p>
-						</div>
-						<Switch.Root
-							checked={newSettings.autoUpdate}
-							onClick={() => toggleAutoUpdate()}
 							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
 						>
 							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -185,7 +142,7 @@ function Screen() {
 					disabled={loading}
 					className="mb-1 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
 				>
-					{t("global.continue")}
+					{loading ? <Spinner /> : t("global.continue")}
 				</button>
 			</div>
 		</div>

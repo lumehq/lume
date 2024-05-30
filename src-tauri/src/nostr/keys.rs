@@ -108,152 +108,114 @@ pub async fn load_account(
   let client = &state.client;
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
-  match keyring.get_password() {
-    Ok(password) => {
-      if password.starts_with("bunker://") {
-        let local_keyring = Entry::new(npub, "bunker_local_account").unwrap();
+  if let Ok(password) = keyring.get_password() {
+    let keys = Keys::parse(password).expect("Secret Key is modified, please check again.");
+    let signer = NostrSigner::Keys(keys);
 
-        match local_keyring.get_password() {
-          Ok(local_password) => {
-            let secret_key = SecretKey::from_bech32(local_password).unwrap();
-            let app_keys = Keys::new(secret_key);
-            let bunker_uri = NostrConnectURI::parse(password).unwrap();
-            let signer = Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(60), None)
-              .await
-              .unwrap();
+    // Update signer
+    client.set_signer(Some(signer)).await;
 
-            // Update signer
-            client.set_signer(Some(signer.into())).await;
-          }
-          Err(_) => todo!(),
-        }
-      } else {
-        let secret_key = SecretKey::from_bech32(password).expect("Get secret key failed");
-        let keys = Keys::new(secret_key);
-        let signer = NostrSigner::Keys(keys);
+    // Verify signer
+    let signer = client.signer().await.unwrap();
+    let public_key = signer.public_key().await.unwrap();
 
-        // Update signer
-        client.set_signer(Some(signer)).await;
-      }
+    let filter = Filter::new()
+      .author(public_key)
+      .kind(Kind::RelayList)
+      .limit(1);
 
-      // Verify signer
-      let signer = client.signer().await.unwrap();
-      let public_key = signer.public_key().await.unwrap();
+    // Connect to user's relay (NIP-65)
+    // #TODO: Let rust-nostr handle it
+    if let Ok(events) = client
+      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+      .await
+    {
+      if let Some(event) = events.first() {
+        let relay_list = nip65::extract_relay_list(event);
+        for item in relay_list.into_iter() {
+          println!("connecting to relay: {} - {:?}", item.0, item.1);
 
-      let filter = Filter::new()
-        .author(public_key)
-        .kind(Kind::RelayList)
-        .limit(1);
-
-      // Connect to user's relay (NIP-65)
-      // #TODO: Let rust-nostr handle it
-      match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-        .await
-      {
-        Ok(events) => {
-          if let Some(event) = events.first() {
-            let relay_list = nip65::extract_relay_list(event);
-            for item in relay_list.into_iter() {
-              println!("connecting to relay: {} - {:?}", item.0, item.1);
-
-              let relay_url = item.0.to_string();
-              let opts = match item.1 {
-                Some(val) => {
-                  if val == &RelayMetadata::Read {
-                    RelayOptions::new().read(true).write(false)
-                  } else {
-                    RelayOptions::new().write(true).read(false)
-                  }
-                }
-                None => RelayOptions::new(),
-              };
-
-              // Add relay to relay pool
-              let _ = client
-                .add_relay_with_opts(relay_url.clone(), opts)
-                .await
-                .unwrap_or_default();
-
-              // Connect relay
-              client.connect_relay(relay_url).await.unwrap_or_default();
-            }
-          }
-        }
-        Err(_) => todo!(),
-      };
-
-      // Run notification service
-      tauri::async_runtime::spawn(async move {
-        let window = app.get_window("main").unwrap();
-        let state = window.state::<Nostr>();
-        let client = &state.client;
-        let subscription = Filter::new()
-          .pubkey(public_key)
-          .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
-          .since(Timestamp::now());
-        let activity_id = SubscriptionId::new("activity");
-
-        // Create a subscription for activity
-        client
-          .subscribe_with_id(activity_id.clone(), vec![subscription], None)
-          .await;
-
-        // Handle notifications
-        let _ = client
-          .handle_notifications(|notification| async {
-            if let RelayPoolNotification::Event {
-              subscription_id,
-              event,
-              ..
-            } = notification
-            {
-              if subscription_id == activity_id {
-                let _ = app.emit("activity", event.as_json());
+          let relay_url = item.0.to_string();
+          let opts = match item.1 {
+            Some(val) => {
+              if val == &RelayMetadata::Read {
+                RelayOptions::new().read(true).write(false)
+              } else {
+                RelayOptions::new().write(true).read(false)
               }
             }
-            Ok(false)
-          })
-          .await;
-      });
+            None => RelayOptions::new(),
+          };
 
-      Ok(true)
-    }
-    Err(err) => Err(err.to_string()),
+          // Add relay to relay pool
+          let _ = client
+            .add_relay_with_opts(relay_url.clone(), opts)
+            .await
+            .unwrap_or_default();
+
+          // Connect relay
+          client.connect_relay(relay_url).await.unwrap_or_default();
+        }
+      }
+    };
+
+    // Run notification service
+    tauri::async_runtime::spawn(async move {
+      let window = app.get_window("main").unwrap();
+      let state = window.state::<Nostr>();
+      let client = &state.client;
+      let subscription = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
+        .since(Timestamp::now());
+      let activity_id = SubscriptionId::new("activity");
+
+      // Create a subscription for activity
+      client
+        .subscribe_with_id(activity_id.clone(), vec![subscription], None)
+        .await;
+
+      // Handle notifications
+      let _ = client
+        .handle_notifications(|notification| async {
+          if let RelayPoolNotification::Event {
+            subscription_id,
+            event,
+            ..
+          } = notification
+          {
+            if subscription_id == activity_id {
+              let _ = app.emit("activity", event.as_json());
+            }
+          }
+          Ok(false)
+        })
+        .await;
+    });
+
+    Ok(true)
+  } else {
+    Err("Key not found.".into())
   }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn nostr_connect(
-  npub: &str,
-  uri: &str,
-  state: State<'_, Nostr>,
-) -> Result<String, String> {
+pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let local_key = Keys::generate();
 
   match NostrConnectURI::parse(uri) {
     Ok(bunker_uri) => {
-      match Nip46Signer::new(
-        bunker_uri,
-        local_key.clone(),
-        Duration::from_secs(120),
-        None,
-      )
-      .await
-      {
+      let app_keys = Keys::generate();
+
+      // Get remote user
+      let remote_user = bunker_uri.signer_public_key().unwrap();
+      let remote_npub = remote_user.to_bech32().unwrap();
+
+      match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None).await {
         Ok(signer) => {
-          let local_secret = local_key.secret_key().unwrap().to_bech32().unwrap();
-          let secret_keyring = Entry::new(&npub, "nostr_secret").unwrap();
-          let account_keyring = Entry::new(&npub, "bunker_local_account").unwrap();
-          let _ = secret_keyring.set_password(uri);
-          let _ = account_keyring.set_password(&local_secret);
-
-          // Update signer
           let _ = client.set_signer(Some(signer.into())).await;
-
-          Ok(npub.into())
+          Ok(remote_npub.into())
         }
         Err(err) => Err(err.to_string()),
       }
@@ -297,15 +259,6 @@ pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
   let profile = Nip19Profile::new(pubkey, relays).unwrap();
 
   Ok(profile.to_bech32().unwrap())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn to_npub(hex: &str) -> Result<String, ()> {
-  let public_key = PublicKey::from_str(hex).unwrap();
-  let npub = Nip19::Pubkey(public_key);
-
-  Ok(npub.to_bech32().unwrap())
 }
 
 #[tauri::command]

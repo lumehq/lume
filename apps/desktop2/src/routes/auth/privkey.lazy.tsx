@@ -28,7 +28,8 @@ function Screen() {
 
 			if (npub) {
 				navigate({
-					to: "/auth/settings",
+					to: "/auth/$account/settings",
+					params: { account: npub },
 					replace: true,
 				});
 			}

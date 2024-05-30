@@ -33,7 +33,8 @@ function Screen() {
 				}
 
 				return navigate({
-					to: "/auth/settings",
+					to: "/auth/$account/settings",
+					params: { account },
 				});
 			}
 
