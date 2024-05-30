@@ -11,17 +11,16 @@ rust-version = "1.68"
 tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-thiserror = "1.0"
 nostr-sdk = { version = "0.31", features = ["sqlite"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.0.0-beta", features = [
-    "unstable",
-    "tray-icon",
-    "macos-private-api",
-    "native-tls-vendored",
-    "protocol-asset",
+  "unstable",
+  "tray-icon",
+  "macos-private-api",
+  "native-tls-vendored",
+  "protocol-asset",
 ] }
 tauri-plugin-clipboard-manager = "2.1.0-beta"
 tauri-plugin-dialog = "2.0.0-beta"
