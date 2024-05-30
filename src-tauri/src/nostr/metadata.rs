@@ -3,7 +3,27 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
+use thiserror::Error;
 use url::Url;
+
+#[derive(Debug, Error)]
+enum Error {
+  #[error(transparent)]
+  Client(#[from] nostr_sdk::client::Error),
+  #[error(transparent)]
+  Key(#[from] nostr_sdk::key::Error),
+  #[error(transparent)]
+  Num(#[from] std::num::ParseIntError),
+}
+
+impl serde::Serialize for Error {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: serde::ser::Serializer,
+  {
+    serializer.serialize_str(self.to_string().as_ref())
+  }
+}
 
 #[tauri::command]
 #[specta::specta]
@@ -11,27 +31,17 @@ pub async fn get_activities(
   account: &str,
   kind: &str,
   state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
+) -> Result<Vec<String>, Error> {
   let client = &state.client;
-
-  if let Ok(pubkey) = PublicKey::from_str(account) {
-    if let Ok(kind) = Kind::from_str(kind) {
-      let filter = Filter::new()
-        .pubkey(pubkey)
-        .kind(kind)
-        .limit(100)
-        .until(Timestamp::now());
-
-      match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
-        Err(err) => Err(err.to_string()),
-      }
-    } else {
-      Err("Kind is not valid, please check again.".into())
-    }
-  } else {
-    Err("Public Key is not valid, please check again.".into())
-  }
+  let public_key = PublicKey::from_str(account)?;
+  let kind = Kind::from_str(kind)?;
+  let filter = Filter::new()
+    .pubkey(public_key)
+    .kind(kind)
+    .limit(100)
+    .until(Timestamp::now());
+  let events = client.get_events_of(vec![filter], None).await?;
+  Ok(events.into_iter().map(|ev| ev.as_json()).collect())
 }
 
 #[tauri::command]
