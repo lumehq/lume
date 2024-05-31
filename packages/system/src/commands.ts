@@ -65,9 +65,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async loadAccount(npub: string) : Promise<Result<boolean, string>> {
+async loadAccount(npub: string, bunker: string | null) : Promise<Result<boolean, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("load_account", { npub }) };
+    return { status: "ok", data: await TAURI_INVOKE("load_account", { npub, bunker }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

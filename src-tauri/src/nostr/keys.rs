@@ -102,6 +102,7 @@ pub async fn save_account(
 #[specta::specta]
 pub async fn load_account(
   npub: &str,
+  bunker: Option<&str>,
   state: State<'_, Nostr>,
   app: tauri::AppHandle,
 ) -> Result<bool, String> {
@@ -109,11 +110,28 @@ pub async fn load_account(
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
   if let Ok(password) = keyring.get_password() {
-    let keys = Keys::parse(password).expect("Secret Key is modified, please check again.");
-    let signer = NostrSigner::Keys(keys);
+    match bunker {
+      Some(uri) => {
+        let app_keys = Keys::parse(password).expect("Secret Key is modified, please check again.");
 
-    // Update signer
-    client.set_signer(Some(signer)).await;
+        match NostrConnectURI::parse(uri) {
+          Ok(bunker_uri) => {
+            match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(30), None).await {
+              Ok(signer) => client.set_signer(Some(signer.into())).await,
+              Err(err) => return Err(err.to_string()),
+            }
+          }
+          Err(err) => return Err(err.to_string()),
+        }
+      }
+      None => {
+        let keys = Keys::parse(password).expect("Secret Key is modified, please check again.");
+        let signer = NostrSigner::Keys(keys);
+
+        // Update signer
+        client.set_signer(Some(signer)).await;
+      }
+    }
 
     // Verify signer
     let signer = client.signer().await.unwrap();
@@ -207,6 +225,7 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
   match NostrConnectURI::parse(uri) {
     Ok(bunker_uri) => {
       let app_keys = Keys::generate();
+      let app_secret = app_keys.secret_key().unwrap().to_string();
 
       // Get remote user
       let remote_user = bunker_uri.signer_public_key().unwrap();
@@ -214,7 +233,12 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
 
       match Nip46Signer::new(bunker_uri, app_keys, Duration::from_secs(120), None).await {
         Ok(signer) => {
+          let keyring = Entry::new(&remote_npub, "nostr_secret").unwrap();
+          let _ = keyring.set_password(&app_secret);
+
+          // Update signer
           let _ = client.set_signer(Some(signer.into())).await;
+
           Ok(remote_npub.into())
         }
         Err(err) => Err(err.to_string()),

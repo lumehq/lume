@@ -1,5 +1,5 @@
 import { Metadata } from "@lume/types";
-import { commands } from "./commands";
+import { Result, commands } from "./commands";
 
 export class NostrAccount {
 	static async getAccounts() {
@@ -13,7 +13,14 @@ export class NostrAccount {
 	}
 
 	static async loadAccount(npub: string) {
-		const query = await commands.loadAccount(npub);
+		const bunker: string = localStorage.getItem(`${npub}_bunker`);
+		let query: Result<boolean, string>;
+
+		if (bunker?.length && bunker?.startsWith("bunker://")) {
+			query = await commands.loadAccount(npub, bunker);
+		} else {
+			query = await commands.loadAccount(npub, null);
+		}
 
 		if (query.status === "ok") {
 			return query.data;
@@ -65,7 +72,14 @@ export class NostrAccount {
 		const connect = await commands.connectRemoteAccount(uri);
 
 		if (connect.status === "ok") {
-			return connect.data;
+			const npub = connect.data;
+			const parsed = new URL(uri);
+			parsed.searchParams.delete("secret");
+
+			// save connection string
+			localStorage.setItem(`${npub}_bunker`, parsed.toString());
+
+			return npub;
 		} else {
 			throw new Error(connect.error);
 		}
