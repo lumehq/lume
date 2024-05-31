@@ -1,5 +1,5 @@
 import { LaurelIcon } from "@lume/icons";
-import { NostrAccount, NostrQuery } from "@lume/system";
+import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import * as Switch from "@radix-ui/react-switch";
 import { createFileRoute } from "@tanstack/react-router";
@@ -54,13 +54,11 @@ function Screen() {
 
 			// publish settings
 			const eventId = await NostrQuery.setSettings(newSettings);
-			const allAccounts = await NostrAccount.getAccounts();
 
 			if (eventId) {
 				return navigate({
 					to: "/$account/home",
 					params: { account },
-					search: { accounts: [...new Set([account, ...allAccounts])] },
 					replace: true,
 				});
 			}

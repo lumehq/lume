@@ -242,15 +242,19 @@ export class NostrQuery {
 		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
 		const query = await commands.getNstore(NSTORE_KEYS.columns);
 
-		if (query.status === "ok") {
-			const columns: LumeColumn[] = query.data ? JSON.parse(query.data) : [];
+		try {
+			if (query.status === "ok") {
+				const columns: LumeColumn[] = JSON.parse(query.data);
 
-			if (columns.length < 1) {
+				if (!columns?.length) {
+					return systemColumns;
+				}
+
+				return columns;
+			} else {
 				return systemColumns;
 			}
-
-			return columns;
-		} else {
+		} catch {
 			return systemColumns;
 		}
 	}

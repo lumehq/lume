@@ -13,9 +13,11 @@ import { VList, type VListHandle } from "virtua";
 
 export const Route = createFileRoute("/$account/home")({
 	loader: async () => {
-		const columns = NostrQuery.getColumns();
+		const columns = await NostrQuery.getColumns();
 		return columns;
 	},
+	gcTime: 0,
+	shouldReload: false,
 	component: Screen,
 });
 
@@ -24,10 +26,15 @@ function Screen() {
 	const initialColumnList = Route.useLoaderData();
 	const vlistRef = useRef<VListHandle>(null);
 
+	const [columns, setColumns] = useState<LumeColumn[]>(null);
 	const [selectedIndex, setSelectedIndex] = useState(-1);
-	const [columns, setColumns] = useState([]);
 	const [isScroll, setIsScroll] = useState(false);
 	const [isResize, setIsResize] = useState(false);
+
+	const reset = () => {
+		setColumns(null);
+		setSelectedIndex(-1);
+	};
 
 	const goLeft = () => {
 		const prevIndex = Math.max(selectedIndex - 1, 0);
@@ -64,7 +71,7 @@ function Screen() {
 
 		// scroll to the newest column
 		vlistRef.current.scrollToIndex(newCols.length - 1, {
-			align: "end",
+			align: "center",
 		});
 	}, 150);
 
@@ -103,12 +110,15 @@ function Screen() {
 	}, [initialColumnList]);
 
 	useEffect(() => {
-		// save state
-		NostrQuery.setColumns(columns);
+		// save current state
+		if (columns?.length) {
+			NostrQuery.setColumns(columns).then(() => console.log("saved"));
+		}
 	}, [columns]);
 
 	useEffect(() => {
 		const unlistenColEvent = listen<EventColumns>("columns", (data) => {
+			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
 			if (data.payload.type === "remove") remove(data.payload.label);
 			if (data.payload.type === "set_title")
@@ -137,9 +147,9 @@ function Screen() {
 				onScrollEnd={() => setIsScroll(false)}
 				className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
 			>
-				{columns.map((column) => (
+				{columns?.map((column) => (
 					<Column
-						key={column.label}
+						key={account + column.label}
 						column={column}
 						account={account}
 						isScroll={isScroll}

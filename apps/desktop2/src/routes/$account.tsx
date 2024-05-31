@@ -22,15 +22,10 @@ import * as Popover from "@radix-ui/react-popover";
 import { LumeWindow, NostrAccount, NostrQuery } from "@lume/system";
 import { Link } from "@tanstack/react-router";
 
-type AccountSearch = {
-	accounts?: string[];
-};
-
 export const Route = createFileRoute("/$account")({
-	validateSearch: (search: Record<string, unknown>): AccountSearch => {
-		return {
-			accounts: (search?.accounts as string[]) || [],
-		};
+	beforeLoad: async () => {
+		const accounts = await NostrAccount.getAccounts();
+		return { accounts };
 	},
 	component: Screen,
 });
@@ -50,7 +45,7 @@ function Screen() {
 				<div className="flex items-center gap-3">
 					<Accounts />
 					<Link
-						to="/landing/"
+						to="/landing"
 						className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
 					>
 						<PlusIcon className="size-5" />
@@ -84,7 +79,7 @@ function Screen() {
 }
 
 function Accounts() {
-	const { accounts } = Route.useSearch();
+	const { accounts } = Route.useRouteContext();
 	const { account } = Route.useParams();
 
 	const [windowWidth, setWindowWidth] = useState<number>(null);
@@ -108,11 +103,20 @@ function Accounts() {
 			return await LumeWindow.openProfile(account);
 		}
 
-		// change current account and update signer
+		// Change current account and update signer
 		const select = await NostrAccount.loadAccount(npub);
 
 		if (select) {
-			return navigate({ to: "/$account/home", params: { account: npub } });
+			// Reset current columns
+			await getCurrent().emit("columns", { type: "reset" });
+
+			// Redirect to new account
+			return navigate({
+				to: "/$account/home",
+				params: { account: npub },
+				resetScroll: true,
+				replace: true,
+			});
 		} else {
 			toast.warning("Something wrong.");
 		}

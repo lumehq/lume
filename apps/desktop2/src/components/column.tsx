@@ -3,7 +3,7 @@ import type { LumeColumn } from "@lume/types";
 import { cn } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export function Column({
 	column,
@@ -17,7 +17,10 @@ export function Column({
 	isResize: boolean;
 }) {
 	const container = useRef<HTMLDivElement>(null);
-	const webviewLabel = `column-${account}_${column.label}`;
+	const webviewLabel = useMemo(
+		() => `column-${account}_${column.label}`,
+		[account],
+	);
 
 	const [isCreated, setIsCreated] = useState(false);
 
@@ -48,6 +51,8 @@ export function Column({
 	}, [isScroll]);
 
 	useEffect(() => {
+		if (!container?.current) return;
+
 		const rect = container.current.getBoundingClientRect();
 		const url = `${column.content}?account=${account}&label=${column.label}&name=${column.name}`;
 
@@ -59,11 +64,16 @@ export function Column({
 			width: rect.width,
 			height: rect.height,
 			url,
-		}).then(() => setIsCreated(true));
+		}).then(() => {
+			console.log("created: ", webviewLabel);
+			setIsCreated(true);
+		});
 
 		// close webview when unmounted
 		return () => {
-			invoke("close_column", { label: webviewLabel });
+			invoke("close_column", { label: webviewLabel }).then(() => {
+				console.log("closed: ", webviewLabel);
+			});
 		};
 	}, [account]);
 

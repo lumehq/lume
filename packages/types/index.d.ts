@@ -110,7 +110,7 @@ export interface LumeColumn {
 }
 
 export interface EventColumns {
-	type: "add" | "remove" | "update" | "left" | "right" | "set_title";
+	type: "reset" | "add" | "remove" | "update" | "left" | "right" | "set_title";
 	label?: string;
 	title?: string;
 	column?: LumeColumn;

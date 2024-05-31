@@ -41,9 +41,6 @@ function Screen() {
 				return navigate({
 					to: "/$account/home",
 					params: { account: npub },
-					search: {
-						accounts: context.accounts,
-					},
 					replace: true,
 				});
 			}
