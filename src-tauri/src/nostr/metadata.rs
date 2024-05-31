@@ -1,3 +1,4 @@
+use super::get_latest_event;
 use crate::Nostr;
 use keyring::Entry;
 use nostr_sdk::prelude::*;
@@ -88,7 +89,7 @@ pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String,
     .await
   {
     Ok(events) => {
-      if let Some(event) = events.first() {
+      if let Some(event) = get_latest_event(&events) {
         if let Ok(metadata) = Metadata::from_json(&event.content) {
           Ok(metadata.as_json())
         } else {
