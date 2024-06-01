@@ -5864,10 +5864,24 @@
           ]
         },
         {
+          "description": "updater:allow-download -> Enables the download command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "updater:allow-download"
+          ]
+        },
+        {
           "description": "updater:allow-download-and-install -> Enables the download_and_install command without any pre-configured scope.",
           "type": "string",
           "enum": [
             "updater:allow-download-and-install"
+          ]
+        },
+        {
+          "description": "updater:allow-install -> Enables the install command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "updater:allow-install"
           ]
         },
         {
@@ -5878,10 +5892,24 @@
           ]
         },
         {
+          "description": "updater:deny-download -> Denies the download command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "updater:deny-download"
+          ]
+        },
+        {
           "description": "updater:deny-download-and-install -> Denies the download_and_install command without any pre-configured scope.",
           "type": "string",
           "enum": [
             "updater:deny-download-and-install"
+          ]
+        },
+        {
+          "description": "updater:deny-install -> Denies the install command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "updater:deny-install"
           ]
         },
         {
@@ -6259,6 +6287,13 @@
           "type": "string",
           "enum": [
             "window:allow-minimize"
+          ]
+        },
+        {
+          "description": "window:allow-monitor-from-point -> Enables the monitor_from_point command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window:allow-monitor-from-point"
           ]
         },
         {
@@ -6696,6 +6731,13 @@
           ]
         },
         {
+          "description": "window:deny-monitor-from-point -> Denies the monitor_from_point command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "window:deny-monitor-from-point"
+          ]
+        },
+        {
           "description": "window:deny-outer-position -> Denies the outer_position command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -6966,54 +7008,6 @@
           "type": "string",
           "enum": [
             "window:deny-unminimize"
-          ]
-        },
-        {
-          "type": "string",
-          "enum": [
-            "window-state:default"
-          ]
-        },
-        {
-          "description": "window-state:allow-filename -> Enables the filename command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "window-state:allow-filename"
-          ]
-        },
-        {
-          "description": "window-state:allow-restore-state -> Enables the restore_state command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "window-state:allow-restore-state"
-          ]
-        },
-        {
-          "description": "window-state:allow-save-window-state -> Enables the save_window_state command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "window-state:allow-save-window-state"
-          ]
-        },
-        {
-          "description": "window-state:deny-filename -> Denies the filename command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "window-state:deny-filename"
-          ]
-        },
-        {
-          "description": "window-state:deny-restore-state -> Denies the restore_state command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "window-state:deny-restore-state"
-          ]
-        },
-        {
-          "description": "window-state:deny-save-window-state -> Denies the save_window_state command without any pre-configured scope.",
-          "type": "string",
-          "enum": [
-            "window-state:deny-save-window-state"
           ]
         }
       ]

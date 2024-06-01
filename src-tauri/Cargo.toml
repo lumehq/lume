@@ -22,23 +22,24 @@ tauri = { version = "2.0.0-beta", features = [
   "native-tls-vendored",
   "protocol-asset",
 ] }
-tauri-plugin-clipboard-manager = "2.1.0-beta"
-tauri-plugin-dialog = "2.0.0-beta"
-tauri-plugin-fs = "2.0.0-beta"
-tauri-plugin-http = "2.0.0-beta"
-tauri-plugin-notification = "2.0.0-beta"
-tauri-plugin-os = "2.0.0-beta"
-tauri-plugin-process = "2.0.0-beta"
-tauri-plugin-shell = "2.0.0-beta"
-tauri-plugin-updater = "2.0.0-beta"
-tauri-plugin-upload = "2.0.0-beta"
-tauri-plugin-window-state = "2.0.0-beta"
+tauri-plugin-clipboard-manager = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-dialog = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-fs = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-http = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-notification = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-decorum = "0.1.0"
 webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
 keyring-search = "0.2.0"
 specta = "=2.0.0-rc.12"
-tauri-specta = { version = "=2.0.0-rc.10", features = ["typescript"] }
+tauri-specta = { git = "https://github.com/cloudcad/tauri-specta", branch = "main", features = [
+  "typescript",
+] }
 tauri-plugin-theme = "0.4.1"
 
 [target.'cfg(target_os = "macos")'.dependencies]
