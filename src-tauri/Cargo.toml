@@ -32,15 +32,16 @@ tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace"
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2" }
+tauri-specta = { git = "https://github.com/cloudcad/tauri-specta", branch = "main", features = [
+  "typescript",
+] }
+tauri-plugin-theme = "0.4.1"
 tauri-plugin-decorum = "0.1.0"
 webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
 keyring-search = "0.2.0"
 specta = "=2.0.0-rc.12"
-tauri-specta = { git = "https://github.com/cloudcad/tauri-specta", branch = "main", features = [
-  "typescript",
-] }
-tauri-plugin-theme = "0.4.1"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"

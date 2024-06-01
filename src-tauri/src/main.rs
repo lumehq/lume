@@ -134,6 +134,7 @@ fn main() {
 
       Ok(())
     })
+    .plugin(tauri_nspanel::init())
     .plugin(tauri_plugin_theme::init(ctx.config_mut()))
     .plugin(tauri_plugin_decorum::init())
     .plugin(tauri_plugin_clipboard_manager::init())

@@ -2951,6 +2951,7 @@ dependencies = [
  "specta",
  "tauri",
  "tauri-build",
+ "tauri-nspanel",
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-decorum",
  "tauri-plugin-dialog",
@@ -5463,6 +5464,22 @@ dependencies = [
  "syn 2.0.66",
  "tauri-codegen",
  "tauri-utils",
+]
+
+[[package]]
+name = "tauri-nspanel"
+version = "2.0.0-beta"
+source = "git+https://github.com/ahkohd/tauri-nspanel?branch=v2#326463faaaa21fd41369207d50cfe5e3c4399997"
+dependencies = [
+ "bitflags 2.5.0",
+ "block",
+ "cocoa",
+ "core-foundation",
+ "core-graphics",
+ "objc",
+ "objc-foundation",
+ "objc_id",
+ "tauri",
 ]
 
 [[package]]
