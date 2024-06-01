@@ -102,7 +102,7 @@ export function NoteContent({
 		<div className="flex flex-col gap-2">
 			<div
 				className={cn(
-					"select-text text-[15px] text-balance break-words overflow-hidden",
+					"select-text text-[15px] text-pretty overflow-hidden",
 					event.content.length > 500 ? "max-h-[300px] gradient-mask-b-0" : "",
 					className,
 				)}

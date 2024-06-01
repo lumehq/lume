@@ -145,9 +145,7 @@ export function NoteContentLarge({
 
 	return (
 		<div className={cn("select-text", className)}>
-			<div className="text-[15px] text-balance content-break leading-normal">
-				{content}
-			</div>
+			<div className="text-[15px] text-pretty leading-normal">{content}</div>
 		</div>
 	);
 }

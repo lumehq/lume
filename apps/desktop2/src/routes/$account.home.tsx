@@ -26,7 +26,7 @@ function Screen() {
 	const initialColumnList = Route.useLoaderData();
 	const vlistRef = useRef<VListHandle>(null);
 
-	const [columns, setColumns] = useState<LumeColumn[]>(null);
+	const [columns, setColumns] = useState<LumeColumn[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(-1);
 	const [isScroll, setIsScroll] = useState(false);
 	const [isResize, setIsResize] = useState(false);
