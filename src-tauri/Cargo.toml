@@ -5,13 +5,14 @@ description = "nostr client"
 authors = ["npub1zfss807aer0j26mwp2la0ume0jqde3823rmu97ra6sgyyg956e0s6xw445"]
 repository = "https://github.com/lumehq/lume"
 edition = "2021"
-rust-version = "1.68"
+rust-version = "1.70"
 
 [build-dependencies]
 tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-nostr-sdk = { version = "0.31", features = ["sqlite"] }
+nostr-rocksdb = "^0.31"
+nostr-sdk = { version = "0.31", features = ["ndb", "rocksdb"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -42,6 +43,9 @@ webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
 keyring-search = "0.2.0"
 specta = "=2.0.0-rc.12"
+
+[target.'cfg(target_family = "unix")'.dependencies]
+nostr-ndb = "^0.31"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"

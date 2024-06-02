@@ -48,7 +48,7 @@ export function MentionNote({
 			</User.Provider>
 			<div
 				className={cn(
-					"px-3 select-text content-break whitespace-normal text-balance leading-normal",
+					"px-3 select-text whitespace-normal text-pretty leading-normal",
 					data.content.length > 100 ? "max-h-[150px] gradient-mask-b-0" : "",
 				)}
 			>
