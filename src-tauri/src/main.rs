@@ -4,8 +4,8 @@
 )]
 
 pub mod commands;
+pub mod fns;
 pub mod nostr;
-pub mod tray;
 
 #[cfg(target_os = "macos")]
 extern crate cocoa;
@@ -17,7 +17,17 @@ extern crate objc;
 use nostr_sdk::prelude::*;
 use std::fs;
 use tauri::Manager;
+use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
+
+#[cfg(target_os = "macos")]
+use crate::fns::{
+  position_menubar_panel, setup_menubar_panel_listeners, swizzle_to_menubar_panel,
+  update_menubar_appearance,
+};
+
+#[cfg(target_os = "macos")]
+use tauri::tray::{MouseButtonState, TrayIconEvent};
 
 pub struct Nostr {
   client: Client,
@@ -90,9 +100,37 @@ fn main() {
       #[cfg(target_os = "macos")]
       main_window.set_traffic_lights_inset(8.0, 16.0).unwrap();
 
-      // Setup app tray
-      let handle = app.handle().clone();
-      tray::create_tray(app.handle()).unwrap();
+      // Create panel
+      #[cfg(target_os = "macos")]
+      swizzle_to_menubar_panel(&app.handle());
+      #[cfg(target_os = "macos")]
+      update_menubar_appearance(&app.handle());
+      #[cfg(target_os = "macos")]
+      setup_menubar_panel_listeners(&app.handle());
+
+      // Setup tray icon
+      #[cfg(target_os = "macos")]
+      let tray = app.tray_by_id("tray_panel").unwrap();
+
+      // Handle tray icon event
+      #[cfg(target_os = "macos")]
+      tray.on_tray_icon_event(|tray, event| match event {
+        TrayIconEvent::Click { button_state, .. } => {
+          if button_state == MouseButtonState::Up {
+            let app = tray.app_handle();
+            let panel = app.get_webview_panel("panel").unwrap();
+
+            match panel.is_visible() {
+              true => panel.order_out(None),
+              false => {
+                position_menubar_panel(&app, 0.0);
+                panel.show();
+              }
+            }
+          }
+        }
+        _ => {}
+      });
 
       // Create data folder if not exist
       let home_dir = app.path().home_dir().unwrap();
@@ -135,7 +173,7 @@ fn main() {
         client.connect().await;
 
         // Update global state
-        handle.manage(Nostr { client })
+        app.handle().manage(Nostr { client })
       });
 
       Ok(())

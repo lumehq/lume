@@ -21,13 +21,16 @@
 				"title": "Lume Panel",
 				"label": "panel",
 				"url": "/panel",
-				"fullscreen": false,
-				"resizable": true,
 				"width": 350,
 				"height": 400,
+				"fullscreen": false,
+				"resizable": false,
 				"decorations": false,
 				"transparent": true,
-				"visible": false
+				"visible": false,
+				"windowEffects": {
+					"effects": ["sheet"]
+				}
 			}
 		]
 	}

@@ -2930,6 +2930,7 @@ dependencies = [
  "cocoa",
  "keyring",
  "keyring-search",
+ "monitor",
  "nostr-ndb",
  "nostr-rocksdb",
  "nostr-sdk",
@@ -3075,6 +3076,20 @@ dependencies = [
  "libc",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "monitor"
+version = "0.1.0"
+source = "git+https://github.com/ahkohd/tauri-toolkit?branch=v2#d43d8b8789752f15d9bfd227cbb36d8f47ac5c73"
+dependencies = [
+ "cocoa",
+ "core-foundation",
+ "core-graphics",
+ "objc",
+ "serde",
+ "tauri",
+ "thiserror",
 ]
 
 [[package]]

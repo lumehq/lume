@@ -13,9 +13,10 @@
 		"macOSPrivateApi": true,
 		"withGlobalTauri": true,
 		"trayIcon": {
-			"id": "main_tray",
+			"id": "tray_panel",
 			"iconPath": "./icons/tray.png",
-			"iconAsTemplate": true
+			"iconAsTemplate": true,
+			"menuOnLeftClick": false
 		},
 		"security": {
 			"assetProtocol": {
