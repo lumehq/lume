@@ -57,7 +57,10 @@ function Screen() {
 	});
 
 	return (
-		<div className="relative flex h-full w-full items-center justify-center">
+		<div
+			data-tauri-drag-region
+			className="relative flex h-full w-full items-center justify-center"
+		>
 			<div className="relative z-20 flex flex-col items-center gap-16">
 				<div className="text-center">
 					<h2 className="text-xl text-neutral-700 dark:text-neutral-300">
