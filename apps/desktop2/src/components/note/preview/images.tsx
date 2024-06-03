@@ -36,6 +36,10 @@ export function Images({ urls }: { urls: string[] }) {
 					style={{ contentVisibility: "auto" }}
 					className="max-h-[400px] w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 					onClick={() => open(urls[0])}
+					onError={({ currentTarget }) => {
+						currentTarget.onerror = null;
+						currentTarget.src = "/404.jpg";
+					}}
 				/>
 			</div>
 		);
@@ -54,6 +58,10 @@ export function Images({ urls }: { urls: string[] }) {
 						style={{ contentVisibility: "auto" }}
 						className="w-full h-full object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 						onClick={() => open(item)}
+						onError={({ currentTarget }) => {
+							currentTarget.onerror = null;
+							currentTarget.src = "/404.jpg";
+						}}
 					/>
 				</CarouselItem>
 			)}

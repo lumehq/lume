@@ -37,10 +37,8 @@ tauri-plugin-decorum = "0.1.0"
 webpage = { version = "2.0", features = ["serde"] }
 keyring = "2"
 keyring-search = "0.2.0"
-specta = "=2.0.0-rc.12"
-tauri-specta = { git = "https://github.com/cloudcad/tauri-specta", branch = "main", features = [
-  "typescript",
-] }
+specta = "^2.0.0-rc.12"
+tauri-specta = { version = "^2.0.0-rc.11", features = ["typescript"] }
 tauri-plugin-theme = "0.4.1"
 
 [target.'cfg(target_family = "unix")'.dependencies]
