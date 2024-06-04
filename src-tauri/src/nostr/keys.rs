@@ -239,7 +239,7 @@ pub async fn connect_remote_account(uri: &str, state: State<'_, Nostr>) -> Resul
           // Update signer
           let _ = client.set_signer(Some(signer.into())).await;
 
-          Ok(remote_npub.into())
+          Ok(remote_npub)
         }
         Err(err) => Err(err.to_string()),
       }
