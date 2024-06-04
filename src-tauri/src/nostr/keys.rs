@@ -107,6 +107,7 @@ pub async fn load_account(
   state: State<'_, Nostr>,
   app: tauri::AppHandle,
 ) -> Result<bool, String> {
+  let handle = app.clone();
   let client = &state.client;
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
@@ -178,20 +179,49 @@ pub async fn load_account(
       }
     };
 
+    // Run sync service
+    tauri::async_runtime::spawn(async move {
+      let window = handle.get_window("main").unwrap();
+      let state = window.state::<Nostr>();
+      let client = &state.client;
+
+      let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+          Kind::TextNote,
+          Kind::Repost,
+          Kind::Reaction,
+          Kind::ZapReceipt,
+        ])
+        .limit(500);
+
+      match client.reconcile(filter, NegentropyOptions::default()).await {
+        Ok(_) => println!("Sync done."),
+        Err(_) => println!("Sync failed."),
+      }
+    });
+
     // Run notification service
     tauri::async_runtime::spawn(async move {
       let window = app.get_window("main").unwrap();
       let state = window.state::<Nostr>();
       let client = &state.client;
-      let subscription = Filter::new()
-        .pubkey(public_key)
-        .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
-        .since(Timestamp::now());
-      let notification_id = SubscriptionId::new("notification");
 
-      // Create a subscription for activity
+      // Create a subscription for notification
+      let notification_id = SubscriptionId::new("notification");
+      let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+          Kind::TextNote,
+          Kind::Repost,
+          Kind::Reaction,
+          Kind::ZapReceipt,
+        ])
+        .since(Timestamp::now());
+
+      // Subscribe
       client
-        .subscribe_with_id(notification_id.clone(), vec![subscription], None)
+        .subscribe_with_id(notification_id.clone(), vec![filter], None)
         .await;
 
       // Handle notifications
@@ -225,6 +255,18 @@ pub async fn load_account(
                     .notification()
                     .builder()
                     .body("Reposted your note.")
+                    .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                    .show()
+                  {
+                    println!("Failed to show notification: {:?}", e);
+                  }
+                }
+                Kind::Reaction => {
+                  let content = event.content();
+                  if let Err(e) = handle
+                    .notification()
+                    .builder()
+                    .body(content)
                     .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
                     .show()
                   {

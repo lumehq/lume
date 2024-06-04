@@ -8,73 +8,6 @@ use url::Url;
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_activities(
-  account: &str,
-  kind: &str,
-  state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
-  let client = &state.client;
-
-  if let Ok(pubkey) = PublicKey::from_str(account) {
-    if let Ok(kind) = Kind::from_str(kind) {
-      let filter = Filter::new()
-        .pubkey(pubkey)
-        .kind(kind)
-        .limit(100)
-        .until(Timestamp::now());
-
-      match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
-        Err(err) => Err(err.to_string()),
-      }
-    } else {
-      Err("Kind is not valid, please check again.".into())
-    }
-  } else {
-    Err("Public Key is not valid, please check again.".into())
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
-  let client = &state.client;
-
-  match PublicKey::from_bech32(npub) {
-    Ok(author) => {
-      let mut contact_list: Vec<Contact> = Vec::new();
-      let contact_list_filter = Filter::new()
-        .author(author)
-        .kind(Kind::ContactList)
-        .limit(1);
-
-      if let Ok(contact_list_events) = client.get_events_of(vec![contact_list_filter], None).await {
-        for event in contact_list_events.into_iter() {
-          for tag in event.into_iter_tags() {
-            if let Some(TagStandard::PublicKey {
-              public_key,
-              relay_url,
-              alias,
-              uppercase: false,
-            }) = tag.to_standardized()
-            {
-              contact_list.push(Contact::new(public_key, relay_url, alias))
-            }
-          }
-        }
-      }
-
-      match client.set_contact_list(contact_list).await {
-        Ok(_) => Ok(true),
-        Err(err) => Err(err.to_string()),
-      }
-    }
-    Err(err) => Err(err.to_string()),
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
   let signer = client.signer().await.unwrap();
@@ -463,5 +396,43 @@ pub async fn zap_event(
     }
   } else {
     Err("Parse public key failed".into())
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+  let client = &state.client;
+
+  match PublicKey::from_bech32(npub) {
+    Ok(author) => {
+      let mut contact_list: Vec<Contact> = Vec::new();
+      let contact_list_filter = Filter::new()
+        .author(author)
+        .kind(Kind::ContactList)
+        .limit(1);
+
+      if let Ok(contact_list_events) = client.get_events_of(vec![contact_list_filter], None).await {
+        for event in contact_list_events.into_iter() {
+          for tag in event.into_iter_tags() {
+            if let Some(TagStandard::PublicKey {
+              public_key,
+              relay_url,
+              alias,
+              uppercase: false,
+            }) = tag.to_standardized()
+            {
+              contact_list.push(Contact::new(public_key, relay_url, alias))
+            }
+          }
+        }
+      }
+
+      match client.set_contact_list(contact_list).await {
+        Ok(_) => Ok(true),
+        Err(err) => Err(err.to_string()),
+      }
+    }
+    Err(err) => Err(err.to_string()),
   }
 }
