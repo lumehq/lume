@@ -474,7 +474,10 @@ pub async fn get_following(
   timeout: Option<u64>,
 ) -> Result<Vec<String>, String> {
   let client = &state.client;
-  let public_key = PublicKey::from_str(public_key).unwrap();
+  let public_key = match PublicKey::from_str(public_key) {
+    Ok(val) => val,
+    Err(err) => return Err(err.to_string()),
+  };
   let duration = timeout.map(Duration::from_secs);
   let filter = Filter::new().kind(Kind::ContactList).author(public_key);
   let events = match client.get_events_of(vec![filter], duration).await {
