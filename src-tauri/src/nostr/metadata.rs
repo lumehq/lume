@@ -499,3 +499,33 @@ pub async fn get_following(
   }
   Ok(ret)
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_followers(
+  state: State<'_, Nostr>,
+  public_key: &str,
+  timeout: Option<u64>,
+) -> Result<Vec<String>, String> {
+  let client = &state.client;
+  let public_key = match PublicKey::from_str(public_key) {
+    Ok(val) => val,
+    Err(err) => return Err(err.to_string()),
+  };
+  let duration = timeout.map(Duration::from_secs);
+
+  let filter = Filter::new().kind(Kind::ContactList).custom_tag(
+    SingleLetterTag::lowercase(Alphabet::P),
+    vec![public_key.to_hex()],
+  );
+  let events = match client.get_events_of(vec![filter], duration).await {
+    Ok(events) => events,
+    Err(err) => return Err(err.to_string()),
+  };
+  let ret: Vec<String> = events
+    .into_iter()
+    .map(|event| event.author().to_hex())
+    .collect();
+  Ok(ret)
+  //todo: get more than 500 events
+}
