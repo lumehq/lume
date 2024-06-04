@@ -465,3 +465,31 @@ pub async fn zap_event(
     Err("Parse public key failed".into())
   }
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_following(
+  client: &Client,
+  public_key: &PublicKey,
+  timeout: Option<std::time::Duration>,
+) -> Result<Vec<String>, String> {
+  let filter = Filter::new().kind(Kind::ContactList).author(*public_key);
+  let events = match client.get_events_of(vec![filter], timeout).await {
+    Ok(events) => events,
+    Err(err) => return Err(err.to_string()),
+  };
+  let mut ret: Vec<String> = vec![];
+  if let Some(latest_event) = events.iter().max_by_key(|event| event.created_at()) {
+    ret.extend(latest_event.tags().iter().filter_map(|tag| {
+      if let Some(TagStandard::PublicKey {
+        uppercase: false, ..
+      }) = <nostr_sdk::Tag as Clone>::clone(tag).to_standardized()
+      {
+        tag.content().map(String::from)
+      } else {
+        None
+      }
+    }));
+  }
+  Ok(ret)
+}
