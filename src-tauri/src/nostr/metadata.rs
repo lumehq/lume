@@ -469,11 +469,13 @@ pub async fn zap_event(
 #[tauri::command]
 #[specta::specta]
 pub async fn get_following(
-  client: &Client,
-  public_key: &PublicKey,
+  state: State<'_, Nostr>,
+  public_key: &str,
   timeout: Option<std::time::Duration>,
 ) -> Result<Vec<String>, String> {
-  let filter = Filter::new().kind(Kind::ContactList).author(*public_key);
+  let client = &state.client;
+  let public_key = PublicKey::from_str(public_key).unwrap();
+  let filter = Filter::new().kind(Kind::ContactList).author(public_key);
   let events = match client.get_events_of(vec![filter], timeout).await {
     Ok(events) => events,
     Err(err) => return Err(err.to_string()),
