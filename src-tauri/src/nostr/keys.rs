@@ -6,7 +6,7 @@ use serde::Serialize;
 use specta::Type;
 use std::str::FromStr;
 use std::time::Duration;
-use tauri::{Manager, State};
+use tauri::{EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 
 #[derive(Serialize, Type)]
@@ -196,13 +196,15 @@ pub async fn load_account(
         .limit(500);
 
       match client.reconcile(filter, NegentropyOptions::default()).await {
-        Ok(_) => println!("Sync done."),
-        Err(_) => println!("Sync failed."),
+        Ok(_) => println!("Sync notification done."),
+        Err(_) => println!("Sync notification failed."),
       }
     });
 
     // Run notification service
     tauri::async_runtime::spawn(async move {
+      println!("Starting notification service...");
+
       let window = app.get_window("main").unwrap();
       let state = window.state::<Nostr>();
       let client = &state.client;
@@ -234,7 +236,16 @@ pub async fn load_account(
           } = notification
           {
             if subscription_id == notification_id {
-              let _ = app.emit("notification", event.as_json());
+              println!("new notification: {}", event.as_json());
+
+              if let Err(_) = app.emit_to(
+                EventTarget::window("panel"),
+                "notification",
+                event.as_json(),
+              ) {
+                println!("Emit new notification failed.")
+              }
+
               let handle = app.app_handle();
               let author = client.metadata(event.pubkey).await.unwrap();
 

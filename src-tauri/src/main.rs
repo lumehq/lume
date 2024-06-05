@@ -137,16 +137,8 @@ fn main() {
       let _ = fs::create_dir_all(home_dir.join("Lume/"));
 
       tauri::async_runtime::block_on(async move {
-        // Create nostr database connection
-        let db_path = home_dir.join(&"Lume/database");
-
-        // #[cfg(target_family = "unix")]
-        // let database = NdbDatabase::open(db_path.to_str().unwrap());
-
-        // #[cfg(target_os = "windows")]
-        let database = RocksDatabase::open(db_path.to_str().unwrap()).await;
-
         // Create nostr connection
+        let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
         let client = match database {
           Ok(db) => ClientBuilder::default().database(db).build(),
           Err(_) => ClientBuilder::default().build(),
