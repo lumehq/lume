@@ -1,5 +1,4 @@
 import {
-	BellIcon,
 	ComposeFilledIcon,
 	HorizontalDotsIcon,
 	PlusIcon,
@@ -12,7 +11,7 @@ import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import * as Popover from "@radix-ui/react-popover";
-import { LumeWindow, NostrAccount, NostrQuery } from "@lume/system";
+import { LumeWindow, NostrAccount } from "@lume/system";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$account")({

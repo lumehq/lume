@@ -29,7 +29,7 @@
 				"transparent": true,
 				"visible": false,
 				"windowEffects": {
-					"effects": ["sheet"]
+					"effects": ["popover"]
 				}
 			}
 		]

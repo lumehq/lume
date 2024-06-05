@@ -64,6 +64,7 @@ fn main() {
       nostr::metadata::zap_profile,
       nostr::metadata::zap_event,
       nostr::metadata::friend_to_friend,
+      nostr::metadata::get_notifications,
       nostr::event::get_event,
       nostr::event::get_replies,
       nostr::event::get_events_by,
@@ -139,10 +140,10 @@ fn main() {
         // Create nostr database connection
         let db_path = home_dir.join(&"Lume/database");
 
-        #[cfg(target_family = "unix")]
-        let database = NdbDatabase::open(db_path.to_str().unwrap());
+        // #[cfg(target_family = "unix")]
+        // let database = NdbDatabase::open(db_path.to_str().unwrap());
 
-        #[cfg(target_os = "windows")]
+        // #[cfg(target_os = "windows")]
         let database = RocksDatabase::open(db_path.to_str().unwrap()).await;
 
         // Create nostr connection

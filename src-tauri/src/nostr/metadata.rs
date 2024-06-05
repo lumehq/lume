@@ -436,3 +436,34 @@ pub async fn friend_to_friend(npub: &str, state: State<'_, Nostr>) -> Result<boo
     Err(err) => Err(err.to_string()),
   }
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+  let client = &state.client;
+
+  match client.signer().await {
+    Ok(signer) => {
+      let public_key = signer.public_key().await.unwrap();
+      let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+          Kind::TextNote,
+          Kind::Repost,
+          Kind::Reaction,
+          Kind::ZapReceipt,
+        ])
+        .limit(20);
+
+      match client
+        .database()
+        .query(vec![filter], Order::default())
+        .await
+      {
+        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
+        Err(err) => Err(err.to_string()),
+      }
+    }
+    Err(err) => Err(err.to_string()),
+  }
+}
