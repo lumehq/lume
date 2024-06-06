@@ -92,7 +92,7 @@ export class LumeWindow {
 		const query = await commands.openWindow(
 			label,
 			"Settings",
-			"/settings",
+			"/settings/general",
 			800,
 			500,
 		);

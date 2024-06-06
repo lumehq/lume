@@ -122,11 +122,11 @@ pub async fn get_local_events(
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
     .limit(20)
-    .authors(authors)
-    .until(as_of);
+    .until(as_of)
+    .authors(authors);
 
   match client
-    .get_events_of(vec![filter], Some(Duration::from_secs(8)))
+    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
     .await
   {
     Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),

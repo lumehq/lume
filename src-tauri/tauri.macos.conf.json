@@ -22,7 +22,7 @@
 				"label": "panel",
 				"url": "/panel",
 				"width": 350,
-				"height": 400,
+				"height": 500,
 				"fullscreen": false,
 				"resizable": false,
 				"decorations": false,

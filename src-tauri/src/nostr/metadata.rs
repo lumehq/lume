@@ -453,7 +453,7 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
           Kind::Reaction,
           Kind::ZapReceipt,
         ])
-        .limit(20);
+        .limit(200);
 
       match client
         .database()
