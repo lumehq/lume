@@ -23,7 +23,7 @@ export function UserAvatar({ className }: { className?: string }) {
 				alt={user.pubkey}
 				loading="eager"
 				decoding="async"
-				className={cn("outline-[.5px] outline-black/5", className)}
+				className={cn("outline-[.5px] outline-black/5 object-cover", className)}
 			/>
 			<Avatar.Fallback delayMs={120}>
 				<img

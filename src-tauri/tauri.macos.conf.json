@@ -16,6 +16,21 @@
 				"windowEffects": {
 					"effects": ["windowBackground"]
 				}
+			},
+			{
+				"title": "Lume Panel",
+				"label": "panel",
+				"url": "/panel",
+				"width": 350,
+				"height": 500,
+				"fullscreen": false,
+				"resizable": false,
+				"decorations": false,
+				"transparent": true,
+				"visible": false,
+				"windowEffects": {
+					"effects": ["popover"]
+				}
 			}
 		]
 	}

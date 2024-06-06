@@ -11,11 +11,11 @@ rust-version = "1.70"
 tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-nostr-rocksdb = "^0.31"
-nostr-sdk = { version = "0.31", features = ["ndb", "rocksdb"] }
+nostr-sdk = { version = "0.31", features = ["sqlite"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
+monitor = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
 tauri = { version = "2.0.0-beta", features = [
   "unstable",
   "tray-icon",
@@ -33,16 +33,13 @@ tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace"
 tauri-plugin-shell = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-upload = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-decorum = "0.1.0"
-webpage = { version = "2.0", features = ["serde"] }
-keyring = "2"
-keyring-search = "0.2.0"
-specta = "^2.0.0-rc.12"
+tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2" }
 tauri-specta = { version = "^2.0.0-rc.11", features = ["typescript"] }
 tauri-plugin-theme = "0.4.1"
-
-[target.'cfg(target_family = "unix")'.dependencies]
-nostr-ndb = "^0.31"
+tauri-plugin-decorum = "0.1.0"
+specta = "^2.0.0-rc.12"
+keyring = "2"
+keyring-search = "0.2.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"

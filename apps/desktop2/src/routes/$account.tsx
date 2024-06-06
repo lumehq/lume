@@ -1,25 +1,17 @@
 import {
-	BellIcon,
 	ComposeFilledIcon,
 	HorizontalDotsIcon,
 	PlusIcon,
 	SearchIcon,
 } from "@lume/icons";
-import { type NostrEvent, Kind } from "@lume/types";
 import { User } from "@/components/user";
-import {
-	cn,
-	decodeZapInvoice,
-	displayNpub,
-	sendNativeNotification,
-} from "@lume/utils";
+import { cn } from "@lume/utils";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
-import { invoke } from "@tauri-apps/api/core";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import * as Popover from "@radix-ui/react-popover";
-import { LumeWindow, NostrAccount, NostrQuery } from "@lume/system";
+import { LumeWindow, NostrAccount } from "@lume/system";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$account")({
@@ -60,7 +52,6 @@ function Screen() {
 						<ComposeFilledIcon className="size-4" />
 						New Post
 					</button>
-					<Bell />
 					<button
 						type="button"
 						onClick={() => LumeWindow.openSearch()}
@@ -193,66 +184,5 @@ function Accounts() {
 				</Popover.Root>
 			) : null}
 		</div>
-	);
-}
-
-function Bell() {
-	const { account } = Route.useParams();
-	const [count, setCount] = useState(0);
-
-	useEffect(() => {
-		const unlisten = getCurrent().listen<string>(
-			"activity",
-			async (payload) => {
-				setCount((prevCount) => prevCount + 1);
-				await invoke("set_badge", { count });
-
-				const event: NostrEvent = JSON.parse(payload.payload);
-				const user = await NostrQuery.getProfile(event.pubkey);
-				const userName =
-					user.display_name || user.name || displayNpub(event.pubkey, 16);
-
-				switch (event.kind) {
-					case Kind.Text: {
-						sendNativeNotification("Mentioned you in a note", userName);
-						break;
-					}
-					case Kind.Repost: {
-						sendNativeNotification("Reposted your note", userName);
-						break;
-					}
-					case Kind.ZapReceipt: {
-						const amount = decodeZapInvoice(event.tags);
-						sendNativeNotification(
-							`Zapped ₿ ${amount.bitcoinFormatted}`,
-							userName,
-						);
-						break;
-					}
-					default:
-						break;
-				}
-			},
-		);
-
-		return () => {
-			unlisten.then((f) => f());
-		};
-	}, []);
-
-	return (
-		<button
-			type="button"
-			onClick={() => {
-				setCount(0);
-				LumeWindow.openActivity(account);
-			}}
-			className="relative inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-		>
-			<BellIcon className="size-5" />
-			{count > 0 ? (
-				<span className="absolute right-0 top-0 block size-2 rounded-full bg-teal-500 ring-1 ring-black/5" />
-			) : null}
-		</button>
 	);
 }

@@ -6,7 +6,8 @@ use serde::Serialize;
 use specta::Type;
 use std::str::FromStr;
 use std::time::Duration;
-use tauri::{Manager, State};
+use tauri::{EventTarget, Manager, State};
+use tauri_plugin_notification::NotificationExt;
 
 #[derive(Serialize, Type)]
 pub struct Account {
@@ -106,6 +107,7 @@ pub async fn load_account(
   state: State<'_, Nostr>,
   app: tauri::AppHandle,
 ) -> Result<bool, String> {
+  let handle = app.clone();
   let client = &state.client;
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
@@ -167,7 +169,7 @@ pub async fn load_account(
 
           // Add relay to relay pool
           let _ = client
-            .add_relay_with_opts(relay_url.clone(), opts)
+            .add_relay_with_opts(&relay_url, opts)
             .await
             .unwrap_or_default();
 
@@ -177,20 +179,51 @@ pub async fn load_account(
       }
     };
 
+    // Run sync service
+    tauri::async_runtime::spawn(async move {
+      let window = handle.get_window("main").unwrap();
+      let state = window.state::<Nostr>();
+      let client = &state.client;
+
+      let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+          Kind::TextNote,
+          Kind::Repost,
+          Kind::Reaction,
+          Kind::ZapReceipt,
+        ])
+        .limit(500);
+
+      match client.reconcile(filter, NegentropyOptions::default()).await {
+        Ok(_) => println!("Sync notification done."),
+        Err(_) => println!("Sync notification failed."),
+      }
+    });
+
     // Run notification service
     tauri::async_runtime::spawn(async move {
+      println!("Starting notification service...");
+
       let window = app.get_window("main").unwrap();
       let state = window.state::<Nostr>();
       let client = &state.client;
-      let subscription = Filter::new()
-        .pubkey(public_key)
-        .kinds(vec![Kind::TextNote, Kind::Repost, Kind::ZapReceipt])
-        .since(Timestamp::now());
-      let activity_id = SubscriptionId::new("activity");
 
-      // Create a subscription for activity
+      // Create a subscription for notification
+      let notification_id = SubscriptionId::new("notification");
+      let filter = Filter::new()
+        .pubkey(public_key)
+        .kinds(vec![
+          Kind::TextNote,
+          Kind::Repost,
+          Kind::Reaction,
+          Kind::ZapReceipt,
+        ])
+        .since(Timestamp::now());
+
+      // Subscribe
       client
-        .subscribe_with_id(activity_id.clone(), vec![subscription], None)
+        .subscribe_with_id(notification_id.clone(), vec![filter], None)
         .await;
 
       // Handle notifications
@@ -202,8 +235,68 @@ pub async fn load_account(
             ..
           } = notification
           {
-            if subscription_id == activity_id {
-              let _ = app.emit("activity", event.as_json());
+            if subscription_id == notification_id {
+              println!("new notification: {}", event.as_json());
+
+              if let Err(_) = app.emit_to(
+                EventTarget::window("panel"),
+                "notification",
+                event.as_json(),
+              ) {
+                println!("Emit new notification failed.")
+              }
+
+              let handle = app.app_handle();
+              let author = client.metadata(event.pubkey).await.unwrap();
+
+              match event.kind() {
+                Kind::TextNote => {
+                  if let Err(e) = handle
+                    .notification()
+                    .builder()
+                    .body("Mentioned you in a thread.")
+                    .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                    .show()
+                  {
+                    println!("Failed to show notification: {:?}", e);
+                  }
+                }
+                Kind::Repost => {
+                  if let Err(e) = handle
+                    .notification()
+                    .builder()
+                    .body("Reposted your note.")
+                    .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                    .show()
+                  {
+                    println!("Failed to show notification: {:?}", e);
+                  }
+                }
+                Kind::Reaction => {
+                  let content = event.content();
+                  if let Err(e) = handle
+                    .notification()
+                    .builder()
+                    .body(content)
+                    .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                    .show()
+                  {
+                    println!("Failed to show notification: {:?}", e);
+                  }
+                }
+                Kind::ZapReceipt => {
+                  if let Err(e) = handle
+                    .notification()
+                    .builder()
+                    .body("Zapped you.")
+                    .title(author.display_name.unwrap_or_else(|| "Lume".to_string()))
+                    .show()
+                  {
+                    println!("Failed to show notification: {:?}", e);
+                  }
+                }
+                _ => {}
+              }
             }
           }
           Ok(false)

@@ -144,20 +144,6 @@ export const commands = {
 			else return { status: "error", error: e as any };
 		}
 	},
-	async getActivities(
-		account: string,
-		kind: string,
-	): Promise<Result<string[], string>> {
-		try {
-			return {
-				status: "ok",
-				data: await TAURI_INVOKE("get_activities", { account, kind }),
-			};
-		} catch (e) {
-			if (e instanceof Error) throw e;
-			else return { status: "error", error: e as any };
-		}
-	},
 	async getCurrentUserProfile(): Promise<Result<string, string>> {
 		try {
 			return {
@@ -329,6 +315,14 @@ export const commands = {
 				status: "ok",
 				data: await TAURI_INVOKE("friend_to_friend", { npub }),
 			};
+		} catch (e) {
+			if (e instanceof Error) throw e;
+			else return { status: "error", error: e as any };
+		}
+	},
+	async getNotifications(): Promise<Result<string[], string>> {
+		try {
+			return { status: "ok", data: await TAURI_INVOKE("get_notifications") };
 		} catch (e) {
 			if (e instanceof Error) throw e;
 			else return { status: "error", error: e as any };

@@ -68,6 +68,18 @@ export class NostrQuery {
 		}
 	}
 
+	static async getNotifications() {
+		const query = await commands.getNotifications();
+
+		if (query.status === "ok") {
+			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
+			return events;
+		} else {
+			console.error(query.error);
+			return [];
+		}
+	}
+
 	static async getProfile(pubkey: string) {
 		const normalize = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 		const query = await commands.getProfile(normalize);
@@ -95,20 +107,6 @@ export class NostrQuery {
 	static async getUserEvents(pubkey: string, asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getEventsBy(pubkey, until);
-
-		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
-			return events;
-		} else {
-			return [];
-		}
-	}
-
-	static async getUserActivities(
-		account: string,
-		kind: "1" | "6" | "9735" = "1",
-	) {
-		const query = await commands.getActivities(account, kind);
 
 		if (query.status === "ok") {
 			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
