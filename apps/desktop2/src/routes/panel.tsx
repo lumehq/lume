@@ -269,40 +269,46 @@ function TextNote({ event }: { event: NostrEvent }) {
 		.slice(0, 3);
 
 	return (
-		<Note.Provider event={event}>
-			<Note.Root className="shrink-0 flex flex-col gap-1 rounded-lg p-2 backdrop-blur-md bg-black/10 dark:bg-white/10">
-				<User.Provider pubkey={event.pubkey}>
-					<User.Root className="inline-flex items-center gap-2">
-						<User.Avatar className="size-9 shrink-0 rounded-full" />
-						<div className="flex-1 flex flex-col">
-							<div className="w-full flex items-baseline justify-between">
-								<User.Name className="leading-tight text-sm font-semibold" />
-								<span className="leading-tight text-sm text-black/50 dark:text-white/50">
-									{formatCreatedAt(event.created_at)}
-								</span>
-							</div>
-							<div className="inline-flex items-baseline gap-1 text-xs">
-								<span className="leading-tight text-black/50 dark:text-white/50">
-									Reply to:
-								</span>
-								<div className="inline-flex items-baseline gap-1">
-									{pTags.map((replyTo) => (
-										<User.Provider pubkey={replyTo}>
-											<User.Root>
-												<User.Name className="leading-tight font-medium" />
-											</User.Root>
-										</User.Provider>
-									))}
+		<button
+			type="button"
+			key={event.id}
+			onClick={() => LumeWindow.openEvent(event)}
+		>
+			<Note.Provider event={event}>
+				<Note.Root className="shrink-0 flex flex-col gap-1 rounded-lg p-2 backdrop-blur-md bg-black/10 dark:bg-white/10">
+					<User.Provider pubkey={event.pubkey}>
+						<User.Root className="inline-flex items-center gap-2">
+							<User.Avatar className="size-9 shrink-0 rounded-full" />
+							<div className="flex-1 flex flex-col">
+								<div className="w-full flex items-baseline justify-between">
+									<User.Name className="leading-tight text-sm font-semibold" />
+									<span className="leading-tight text-sm text-black/50 dark:text-white/50">
+										{formatCreatedAt(event.created_at)}
+									</span>
+								</div>
+								<div className="inline-flex items-baseline gap-1 text-xs">
+									<span className="leading-tight text-black/50 dark:text-white/50">
+										Reply to:
+									</span>
+									<div className="inline-flex items-baseline gap-1">
+										{pTags.map((replyTo) => (
+											<User.Provider pubkey={replyTo}>
+												<User.Root>
+													<User.Name className="leading-tight font-medium" />
+												</User.Root>
+											</User.Provider>
+										))}
+									</div>
 								</div>
 							</div>
-						</div>
-					</User.Root>
-				</User.Provider>
-				<div className="flex gap-2">
-					<div className="w-9 shrink-0" />
-					<div className="line-clamp-1">{event.content}</div>
-				</div>
-			</Note.Root>
-		</Note.Provider>
+						</User.Root>
+					</User.Provider>
+					<div className="flex gap-2">
+						<div className="w-9 shrink-0" />
+						<div className="line-clamp-1">{event.content}</div>
+					</div>
+				</Note.Root>
+			</Note.Provider>
+		</button>
 	);
 }
