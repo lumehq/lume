@@ -22,7 +22,7 @@ export class LumeEvent {
 		return this.tags.filter((tag) => tag[0] === "p").map((tag) => tag[1]);
 	}
 
-	static getEventThread(tags: string[][], gossip?: boolean) {
+	static getEventThread(tags: string[][], gossip = true) {
 		let root: string = null;
 		let reply: string = null;
 
@@ -30,14 +30,22 @@ export class LumeEvent {
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
 
 		if (gossip) {
-			const relays = tags.filter((el) => el[0] === "e" && el[2]?.length);
+			const relays = tags
+				.filter((el) => el[0] === "e" && el[2]?.length)
+				.map((tag) => tag[2]);
 
 			if (relays.length >= 1) {
 				for (const relay of relays) {
-					if (relay[2]?.length)
-						commands
-							.connectRelay(relay[2])
-							.then(() => console.log("[gossip]: ", relay[2]));
+					try {
+						if (relay.length) {
+							const url = new URL(relay);
+							commands
+								.connectRelay(url.toString())
+								.then(() => console.log("[relay hint]: ", url));
+						}
+					} catch (e) {
+						console.log("[relay hint] error: ", relay);
+					}
 				}
 			}
 		}
@@ -81,6 +89,14 @@ export class LumeEvent {
 					if (tags.length > 0) {
 						for (const tag of tags) {
 							const rootIndex = events.findIndex((el) => el.id === tag[1]);
+
+							// Relay Hint
+							if (tag[2]?.length) {
+								const url = new URL(tag[2]);
+								commands
+									.connectRelay(url.toString())
+									.then(() => console.log("[relay hint]: ", url));
+							}
 
 							if (rootIndex !== -1) {
 								const rootEvent = events[rootIndex];

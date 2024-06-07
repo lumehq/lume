@@ -4,7 +4,6 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
 use tauri::State;
-use url::Url;
 
 #[tauri::command]
 #[specta::specta]
@@ -43,7 +42,14 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, St
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::Pubkey(pubkey) => Some(pubkey),
-      Nip19::Profile(profile) => Some(profile.public_key),
+      Nip19::Profile(profile) => {
+        let relays = profile.relays;
+        for relay in relays.into_iter() {
+          let _ = client.add_relay(&relay).await.unwrap_or_default();
+          client.connect_relay(&relay).await.unwrap_or_default();
+        }
+        Some(profile.public_key)
+      }
       _ => None,
     },
     Err(_) => match PublicKey::from_str(id) {
