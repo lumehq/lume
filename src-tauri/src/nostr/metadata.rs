@@ -279,15 +279,12 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
   let client = &state.client;
 
   if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
-    if let Ok(nwc) = NWC::new(nwc_uri).await {
-      let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
-      let _ = keyring.set_password(uri);
-      let _ = client.set_zapper(nwc).await;
+    let nwc = NWC::new(nwc_uri);
+    let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+    let _ = keyring.set_password(uri);
+    let _ = client.set_zapper(nwc).await;
 
-      Ok(true)
-    } else {
-      Err("URI is not valid".into())
-    }
+    Ok(true)
   } else {
     Err("Set NWC failed".into())
   }
@@ -302,12 +299,10 @@ pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
   match keyring.get_password() {
     Ok(val) => {
       let uri = NostrWalletConnectURI::from_str(&val).unwrap();
-      if let Ok(nwc) = NWC::new(uri).await {
-        client.set_zapper(nwc).await;
-        Ok(true)
-      } else {
-        Err("Cannot connect to NWC".into())
-      }
+      let nwc = NWC::new(uri);
+      client.set_zapper(nwc).await;
+
+      Ok(true)
     }
     Err(_) => Ok(false),
   }
@@ -321,14 +316,11 @@ pub async fn get_balance() -> Result<String, String> {
   match keyring.get_password() {
     Ok(val) => {
       let uri = NostrWalletConnectURI::from_str(&val).unwrap();
-      if let Ok(nwc) = NWC::new(uri).await {
-        if let Ok(balance) = nwc.get_balance().await {
-          Ok(balance.to_string())
-        } else {
-          Err("Get balance failed".into())
-        }
+      let nwc = NWC::new(uri);
+      if let Ok(balance) = nwc.get_balance().await {
+        Ok(balance.to_string())
       } else {
-        Err("Cannot connect to NWC".into())
+        Err("Get balance failed".into())
       }
     }
     Err(_) => Err("Something wrong".into()),

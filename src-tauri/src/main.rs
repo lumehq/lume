@@ -139,9 +139,10 @@ fn main() {
       tauri::async_runtime::block_on(async move {
         // Create nostr connection
         let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
+        let opts = Options::new().automatic_authentication(true);
         let client = match database {
-          Ok(db) => ClientBuilder::default().database(db).build(),
-          Err(_) => ClientBuilder::default().build(),
+          Ok(db) => ClientBuilder::default().database(db).opts(opts).build(),
+          Err(_) => ClientBuilder::default().opts(opts).build(),
         };
 
         // Add bootstrap relays
