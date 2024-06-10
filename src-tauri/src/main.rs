@@ -44,6 +44,7 @@ fn main() {
       nostr::relay::get_relays,
       nostr::relay::connect_relay,
       nostr::relay::remove_relay,
+      nostr::relay::save_bootstrap_relays,
       nostr::keys::get_accounts,
       nostr::keys::create_account,
       nostr::keys::save_account,
@@ -149,14 +150,15 @@ fn main() {
           Err(_) => ClientBuilder::default().opts(opts).build(),
         };
 
+        // Get bootstrap relays
         let relays_path = app
           .path()
           .resolve("resources/relays.txt", BaseDirectory::Resource)
           .expect("Bootstrap relays not found.");
-
         let file = std::fs::File::open(&relays_path).unwrap();
         let lines = io::BufReader::new(file).lines();
 
+        // Add bootstrap relays to relay pool
         for line in lines.flatten() {
           if let Some((relay, option)) = line.split_once(',') {
             match RelayMetadata::from_str(option) {
