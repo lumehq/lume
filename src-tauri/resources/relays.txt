@@ -1,2 +1,2 @@
-wss://nostr.wine,
+wss://relay.damus.io,
 wss://relay.nostr.net,

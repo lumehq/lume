@@ -305,7 +305,7 @@ function TextNote({ event }: { event: NostrEvent }) {
 					</User.Provider>
 					<div className="flex gap-2">
 						<div className="w-9 shrink-0" />
-						<div className="line-clamp-1">{event.content}</div>
+						<div className="line-clamp-1 text-start">{event.content}</div>
 					</div>
 				</Note.Root>
 			</Note.Provider>
