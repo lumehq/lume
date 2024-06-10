@@ -59,6 +59,7 @@
 		"fs:allow-read-file",
 		"theme:allow-set-theme",
 		"theme:allow-get-theme",
+		"http:default",
 		"shell:allow-open",
 		{
 			"identifier": "http:default",

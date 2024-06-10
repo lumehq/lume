@@ -184,3 +184,12 @@ export interface Relay {
 	url: string;
 	purpose: "read" | "write" | string;
 }
+
+export interface Meta {
+	content: string;
+	images: string[];
+	videos: string[];
+	events: string[];
+	mentions: string[];
+	hashtags: string[];
+}

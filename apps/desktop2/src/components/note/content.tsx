@@ -1,5 +1,5 @@
-import { NOSTR_EVENTS, NOSTR_MENTIONS, cn, parser } from "@lume/utils";
-import { type ReactNode, useMemo } from "react";
+import { cn, parser } from "@lume/utils";
+import { type ReactNode, useMemo, useState, useEffect } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
@@ -8,6 +8,7 @@ import { Images } from "./preview/images";
 import { Videos } from "./preview/videos";
 import { useNoteContext } from "./provider";
 import { nanoid } from "nanoid";
+import { Meta } from "@lume/types";
 
 export function NoteContent({
 	quote = true,
@@ -20,55 +21,44 @@ export function NoteContent({
 	clean?: boolean;
 	className?: string;
 }) {
+	const [meta, setMeta] = useState<Meta>(null);
+
 	const event = useNoteContext();
-	const data = useMemo(() => {
-		const { content, images, videos } = parser(event.content);
-		const words = content.split(/( |\n)/);
-		const hashtags = words.filter((word) => word.startsWith("#"));
-		const events = words.filter((word) =>
-			NOSTR_EVENTS.some((el) => word.startsWith(el)),
-		);
-		const mentions = words.filter((word) =>
-			NOSTR_MENTIONS.some((el) => word.startsWith(el)),
-		);
-
-		let richContent: ReactNode[] | string = content;
-
+	const content = useMemo(() => {
 		try {
-			if (hashtags.length) {
-				for (const hashtag of hashtags) {
-					const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
-					richContent = reactStringReplace(richContent, regex, (_, index) => {
-						return <Hashtag key={hashtag + index} tag={hashtag} />;
-					});
+			if (!meta) return event.content;
+
+			const { content, hashtags, events, mentions } = meta;
+			let richContent: ReactNode[] | string = content;
+
+			for (const hashtag of hashtags) {
+				const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
+				richContent = reactStringReplace(richContent, regex, (_, index) => {
+					return <Hashtag key={hashtag + index} tag={hashtag} />;
+				});
+			}
+
+			for (const event of events) {
+				if (quote) {
+					richContent = reactStringReplace(richContent, event, (_, index) => (
+						<MentionNote key={event + index} eventId={event} />
+					));
+				}
+
+				if (!quote && clean) {
+					richContent = reactStringReplace(richContent, event, () => null);
 				}
 			}
 
-			if (events.length) {
-				for (const event of events) {
-					if (quote) {
-						richContent = reactStringReplace(richContent, event, (_, index) => (
-							<MentionNote key={event + index} eventId={event} />
-						));
-					}
-
-					if (!quote && clean) {
-						richContent = reactStringReplace(richContent, event, () => null);
-					}
+			for (const user of mentions) {
+				if (mention) {
+					richContent = reactStringReplace(richContent, user, (_, index) => (
+						<MentionUser key={user + index} pubkey={user} />
+					));
 				}
-			}
 
-			if (mentions.length) {
-				for (const user of mentions) {
-					if (mention) {
-						richContent = reactStringReplace(richContent, user, (_, index) => (
-							<MentionUser key={user + index} pubkey={user} />
-						));
-					}
-
-					if (!mention && clean) {
-						richContent = reactStringReplace(richContent, user, () => null);
-					}
+				if (!mention && clean) {
+					richContent = reactStringReplace(richContent, user, () => null);
 				}
 			}
 
@@ -92,25 +82,41 @@ export function NoteContent({
 				<div key={nanoid()} className="h-3" />
 			));
 
-			return { content: richContent, images, videos };
+			return richContent;
 		} catch (e) {
-			return { content, images, videos };
+			console.log("[parser]: ", e);
+			return meta.content;
 		}
-	}, []);
+	}, [meta]);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		let mounted = true;
+
+		(async () => {
+			const data = await parser(event.content, abortController);
+			if (mounted) setMeta(data);
+		})();
+
+		return () => {
+			mounted = false;
+			abortController.abort();
+		};
+	}, [event.content]);
 
 	return (
 		<div className="flex flex-col gap-2">
 			<div
 				className={cn(
-					"select-text text-[15px] text-pretty content-break overflow-hidden",
-					event.content.length > 500 ? "max-h-[300px] gradient-mask-b-0" : "",
+					"select-text text-pretty content-break overflow-hidden",
+					event.content.length > 420 ? "max-h-[250px] gradient-mask-b-0" : "",
 					className,
 				)}
 			>
-				{data.content}
+				{content}
 			</div>
-			{data.images.length ? <Images urls={data.images} /> : null}
-			{data.videos.length ? <Videos urls={data.videos} /> : null}
+			{meta?.images.length ? <Images urls={meta.images} /> : null}
+			{meta?.videos.length ? <Videos urls={meta.images} /> : null}
 		</div>
 	);
 }
