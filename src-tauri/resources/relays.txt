@@ -1,0 +1,2 @@
+wss://nostr.wine,
+wss://relay.nostr.net,

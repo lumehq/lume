@@ -15,8 +15,12 @@ extern crate cocoa;
 extern crate objc;
 
 use nostr_sdk::prelude::*;
-use std::fs;
-use tauri::Manager;
+use std::{
+  fs,
+  io::{self, BufRead},
+  str::FromStr,
+};
+use tauri::{path::BaseDirectory, Manager};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -40,6 +44,8 @@ fn main() {
       nostr::relay::get_relays,
       nostr::relay::connect_relay,
       nostr::relay::remove_relay,
+      nostr::relay::get_bootstrap_relays,
+      nostr::relay::save_bootstrap_relays,
       nostr::keys::get_accounts,
       nostr::keys::create_account,
       nostr::keys::save_account,
@@ -145,22 +151,34 @@ fn main() {
           Err(_) => ClientBuilder::default().opts(opts).build(),
         };
 
-        // Add bootstrap relays
-        client
-          .add_relay("wss://relay.nostr.net")
-          .await
-          .expect("Cannot connect to relay.nostr.net, please try again later.");
-        client
-          .add_relay("wss://relay.damus.io")
-          .await
-          .expect("Cannot connect to relay.damus.io, please try again later.");
-        client
-          .add_relay_with_opts(
-            "wss://directory.yabu.me/",
-            RelayOptions::new().read(true).write(false),
-          )
-          .await
-          .expect("Cannot connect to directory.yabu.me, please try again later.");
+        // Get bootstrap relays
+        let relays_path = app
+          .path()
+          .resolve("resources/relays.txt", BaseDirectory::Resource)
+          .expect("Bootstrap relays not found.");
+        let file = std::fs::File::open(&relays_path).unwrap();
+        let lines = io::BufReader::new(file).lines();
+
+        // Add bootstrap relays to relay pool
+        for line in lines.flatten() {
+          if let Some((relay, option)) = line.split_once(',') {
+            match RelayMetadata::from_str(option) {
+              Ok(meta) => {
+                println!("connecting to bootstrap relay...: {} - {}", relay, meta);
+                let opts = if meta == RelayMetadata::Read {
+                  RelayOptions::new().read(true).write(false)
+                } else {
+                  RelayOptions::new().write(true).read(false)
+                };
+                let _ = client.add_relay_with_opts(relay, opts).await;
+              }
+              Err(_) => {
+                println!("connecting to bootstrap relay...: {}", relay);
+                let _ = client.add_relay(relay).await;
+              }
+            }
+          }
+        }
 
         // Connect
         client.connect().await;
