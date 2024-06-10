@@ -179,3 +179,8 @@ export interface Relays {
 	write: string[];
 	both: string[];
 }
+
+export interface Relay {
+	url: string;
+	purpose: "read" | "write" | string;
+}

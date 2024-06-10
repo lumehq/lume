@@ -44,6 +44,7 @@ fn main() {
       nostr::relay::get_relays,
       nostr::relay::connect_relay,
       nostr::relay::remove_relay,
+      nostr::relay::get_bootstrap_relays,
       nostr::relay::save_bootstrap_relays,
       nostr::keys::get_accounts,
       nostr::keys::create_account,

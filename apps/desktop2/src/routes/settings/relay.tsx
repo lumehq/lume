@@ -1,7 +1,7 @@
 import { CancelIcon, PlusIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -15,21 +15,31 @@ export const Route = createFileRoute("/settings/relay")({
 
 function Screen() {
 	const relayList = Route.useLoaderData();
-	const [relays, setRelays] = useState(relayList.connected);
-
 	const { register, reset, handleSubmit } = useForm();
+
+	const [relays, setRelays] = useState<string[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const onSubmit = async (data: { url: string }) => {
 		try {
+			setIsLoading(true);
+
 			const add = await NostrQuery.connectRelay(data.url);
+
 			if (add) {
 				setRelays((prev) => [...prev, data.url]);
+				setIsLoading(false);
 				reset();
 			}
 		} catch (e) {
+			setIsLoading(false);
 			toast.error(String(e));
 		}
 	};
+
+	useEffect(() => {
+		setRelays(relayList.connected);
+	}, [relayList]);
 
 	return (
 		<div className="mx-auto w-full max-w-xl">
@@ -79,6 +89,7 @@ function Screen() {
 								/>
 								<button
 									type="submit"
+									disabled={isLoading}
 									className="shrink-0 inline-flex h-9 w-16 px-2 items-center justify-center rounded-lg bg-black/20 dark:bg-white/20 font-medium text-sm text-white hover:bg-blue-500 disabled:opacity-50"
 								>
 									<PlusIcon className="size-7" />

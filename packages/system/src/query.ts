@@ -1,4 +1,4 @@
-import { LumeColumn, Metadata, NostrEvent, Settings } from "@lume/types";
+import { LumeColumn, Metadata, NostrEvent, Relay, Settings } from "@lume/types";
 import { commands } from "./commands";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
@@ -6,6 +6,7 @@ import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { open } from "@tauri-apps/plugin-dialog";
 import { dedupEvents } from "./dedup";
 import { invoke } from "@tauri-apps/api/core";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 enum NSTORE_KEYS {
 	settings = "lume_user_settings",
@@ -303,6 +304,40 @@ export class NostrQuery {
 			} else {
 				throw new Error(query.error);
 			}
+		}
+	}
+
+	static async getBootstrapRelays() {
+		const query = await commands.getBootstrapRelays();
+
+		if (query.status === "ok") {
+			let relays: Relay[] = [];
+			console.log(query.data);
+
+			for (const item of query.data) {
+				const line = item.split(",");
+				const url = line[0];
+				const purpose = line[1] ?? "";
+
+				relays.push({ url, purpose });
+			}
+
+			return relays;
+		} else {
+			return [];
+		}
+	}
+
+	static async saveBootstrapRelays(relays: Relay[]) {
+		const text = relays
+			.map((relay) => Object.values(relay).join(","))
+			.join("\n");
+		const query = await commands.saveBootstrapRelays(text);
+
+		if (query.status === "ok") {
+			return await relaunch();
+		} else {
+			throw new Error(query.error);
 		}
 	}
 }

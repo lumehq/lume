@@ -1,4 +1,7 @@
-use std::{fs, io::Write};
+use std::{
+  fs,
+  io::{self, BufRead, Write},
+};
 
 use crate::Nostr;
 use nostr_sdk::prelude::*;
@@ -104,6 +107,26 @@ pub async fn remove_relay(relay: &str, state: State<'_, Nostr>) -> Result<bool, 
   } else {
     Ok(false)
   }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn get_bootstrap_relays(app: tauri::AppHandle) -> Result<Vec<String>, ()> {
+  let relays_path = app
+    .path()
+    .resolve("resources/relays.txt", BaseDirectory::Resource)
+    .expect("Bootstrap relays not found.");
+
+  let file = std::fs::File::open(&relays_path).unwrap();
+  let lines = io::BufReader::new(file).lines();
+
+  let mut relays = Vec::new();
+
+  for line in lines.flatten() {
+    relays.push(line.to_string())
+  }
+
+  Ok(relays)
 }
 
 #[tauri::command]

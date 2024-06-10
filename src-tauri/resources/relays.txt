@@ -1,3 +1,2 @@
 wss://nostr.wine,
 wss://relay.nostr.net,
-wss://directory.yabu.me,read
