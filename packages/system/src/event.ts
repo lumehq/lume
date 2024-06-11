@@ -136,7 +136,7 @@ export class LumeEvent {
 			const queryReply = await commands.getEvent(reply_to);
 
 			if (queryReply.status === "ok") {
-				const replyEvent = JSON.parse(queryReply.data) as NostrEvent;
+				const replyEvent = JSON.parse(queryReply.data.raw) as NostrEvent;
 				const relayHint =
 					replyEvent.tags.find((ev) => ev[0] === "e")?.[0][2] ?? "";
 
