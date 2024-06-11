@@ -170,4 +170,16 @@ mod tests {
     assert_eq!(meta.hashtags, vec!["#cool"]);
     assert_eq!(meta.mentions, vec!["@npub1"]);
   }
+
+  #[tokio::test]
+  async fn test_parse_video() {
+    let content = "Check this video: https://example.com/video.mp4 #cool @npub1";
+    let meta = parse_event(content).await;
+
+    assert_eq!(meta.content, "Check this video: #cool @npub1");
+    assert_eq!(meta.images, Vec::<String>::new());
+    assert_eq!(meta.videos, vec!["https://example.com/video.mp4"]);
+    assert_eq!(meta.hashtags, vec!["#cool"]);
+    assert_eq!(meta.mentions, vec!["@npub1"]);
+  }
 }
