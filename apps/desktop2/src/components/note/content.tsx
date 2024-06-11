@@ -25,7 +25,6 @@ export function NoteContent({
 		try {
 			// Get parsed meta
 			const { content, hashtags, events, mentions } = event.meta;
-			console.log("meta: ", event.meta);
 			
 			// Define rich content
 			let richContent: ReactNode[] | string = content;
@@ -84,7 +83,7 @@ export function NoteContent({
 			return richContent;
 		} catch (e) {
 			console.log("[parser]: ", e);
-			return event.meta.content;
+			return event.content;
 		}
 	}, [event.content]);
 

@@ -67,10 +67,10 @@ pub async fn parse_event(content: &str) -> Meta {
 	let hashtags = words.clone().filter(|word| word.starts_with('#')).collect::<Vec<_>>();
 
 	// Extract nostr events
-	let events = words.clone().filter(|i| NOSTR_EVENTS.contains(i)).collect::<Vec<_>>();
+	let events = words.clone().filter(|word| NOSTR_EVENTS.iter().any(|&el| word.starts_with(el))).collect::<Vec<_>>();
 
 	// Extract nostr mentions
-	let mentions = words.clone().filter(|i| NOSTR_MENTIONS.contains(i)).collect::<Vec<_>>();
+	let mentions = words.clone().filter(|word| NOSTR_MENTIONS.iter().any(|&el| word.starts_with(el))).collect::<Vec<_>>();
 
 	// Extract images and videos from content
 	let mut images = Vec::new();
@@ -100,6 +100,7 @@ pub async fn parse_event(content: &str) -> Meta {
 					}
 				}
 
+				// Check the content type of url via HEAD request
 				if let Ok(res) = client.head(url).send().await {
 					if let Some(content_type) = res.headers().get("Content-Type") {
 						if content_type.to_str().unwrap_or("").starts_with("image") {
