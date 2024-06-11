@@ -1,4 +1,4 @@
-import { EventWithReplies, Kind, NostrEvent } from "@lume/types";
+import type { EventWithReplies, Kind, Meta, NostrEvent } from "@lume/types";
 import { commands } from "./commands";
 import { generateContentTags } from "@lume/utils";
 
@@ -11,6 +11,7 @@ export class LumeEvent {
 	public content: string;
 	public sig: string;
 	public relay?: string;
+	public meta: Meta;
 	#raw: NostrEvent;
 
 	constructor(event: NostrEvent) {

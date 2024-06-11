@@ -244,7 +244,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getEvent(id: string) : Promise<Result<string, string>> {
+async getEvent(id: string) : Promise<Result<RichEvent, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_event", { id }) };
 } catch (e) {
@@ -268,7 +268,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getLocalEvents(pubkeys: string[], until: string | null) : Promise<Result<string[], string>> {
+async getLocalEvents(pubkeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_local_events", { pubkeys, until }) };
 } catch (e) {
@@ -367,7 +367,9 @@ await TAURI_INVOKE("set_badge", { count });
 /** user-defined types **/
 
 export type Account = { npub: string; nsec: string }
+export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
+export type RichEvent = { raw: string; parsed: Meta | null }
 
 /** tauri-specta globals **/
 

@@ -1,5 +1,5 @@
-import { cn, parser } from "@lume/utils";
-import { type ReactNode, useMemo, useState, useEffect } from "react";
+import { cn } from "@lume/utils";
+import { type ReactNode, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
@@ -8,7 +8,6 @@ import { Images } from "./preview/images";
 import { Videos } from "./preview/videos";
 import { useNoteContext } from "./provider";
 import { nanoid } from "nanoid";
-import { Meta } from "@lume/types";
 
 export function NoteContent({
 	quote = true,
@@ -21,14 +20,14 @@ export function NoteContent({
 	clean?: boolean;
 	className?: string;
 }) {
-	const [meta, setMeta] = useState<Meta>(null);
-
 	const event = useNoteContext();
 	const content = useMemo(() => {
 		try {
-			if (!meta) return event.content;
-
-			const { content, hashtags, events, mentions } = meta;
+			// Get parsed meta
+			const { content, hashtags, events, mentions } = event.meta;
+			console.log("meta: ", event.meta);
+			
+			// Define rich content
 			let richContent: ReactNode[] | string = content;
 
 			for (const hashtag of hashtags) {
@@ -71,7 +70,7 @@ export function NoteContent({
 						href={match}
 						target="_blank"
 						rel="noreferrer"
-						className="line-clamp-1 text-blue-500 hover:text-blue-600"
+						className="text-blue-500 line-clamp-1 hover:text-blue-600"
 					>
 						{match}
 					</a>
@@ -85,23 +84,8 @@ export function NoteContent({
 			return richContent;
 		} catch (e) {
 			console.log("[parser]: ", e);
-			return meta.content;
+			return event.meta.content;
 		}
-	}, [meta]);
-
-	useEffect(() => {
-		const abortController = new AbortController();
-		let mounted = true;
-
-		(async () => {
-			const data = await parser(event.content, abortController);
-			if (mounted) setMeta(data);
-		})();
-
-		return () => {
-			mounted = false;
-			abortController.abort();
-		};
 	}, [event.content]);
 
 	return (
@@ -115,8 +99,8 @@ export function NoteContent({
 			>
 				{content}
 			</div>
-			{meta?.images.length ? <Images urls={meta.images} /> : null}
-			{meta?.videos.length ? <Videos urls={meta.images} /> : null}
+			{event.meta?.images.length ? <Images urls={event.meta.images} /> : null}
+			{event.meta?.videos.length ? <Videos urls={event.meta.images} /> : null}
 		</div>
 	);
 }
