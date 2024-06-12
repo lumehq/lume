@@ -33,7 +33,7 @@ export function Spinner({
 				<span
 					aria-hidden
 					style={{ display: "contents", visibility: "hidden" }}
-					// Workaround to use `inert` until https://github.com/facebook/react/pull/24730 is merged.
+					// biome-ignore lint/correctness/noConstantCondition: Workaround to use `inert` until https://github.com/facebook/react/pull/24730 is merged.
 					{...{ inert: true ? "" : undefined }}
 				>
 					{children}
