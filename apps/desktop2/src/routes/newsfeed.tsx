@@ -22,8 +22,8 @@ export const Route = createFileRoute("/newsfeed")({
 	},
 	beforeLoad: async ({ search }) => {
 		const settings = await NostrQuery.getSettings();
-		const contacts = await NostrAccount.getContactList();
 
+		/*
 		if (!contacts.length) {
 			throw redirect({
 				to: "/create-newsfeed/users",
@@ -33,15 +33,16 @@ export const Route = createFileRoute("/newsfeed")({
 				},
 			});
 		}
+		*/
 
-		return { settings, contacts };
+		return { settings };
 	},
 	component: Screen,
 });
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { contacts, settings } = Route.useRouteContext();
+	const { settings } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -53,7 +54,7 @@ export function Screen() {
 		queryKey: [label, account],
 		initialPageParam: 0,
 		queryFn: async ({ pageParam }: { pageParam: number }) => {
-			const events = await NostrQuery.getLocalEvents(contacts, pageParam);
+			const events = await NostrQuery.getLocalEvents(pageParam);
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,

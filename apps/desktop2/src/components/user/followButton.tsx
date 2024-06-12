@@ -1,6 +1,5 @@
 import { cn } from "@lume/utils";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Spinner } from "@lume/ui";
 import { useUserContext } from "./provider";
 import { NostrAccount } from "@lume/system";
@@ -14,34 +13,30 @@ export function UserFollowButton({
 }) {
 	const user = useUserContext();
 
-	const [t] = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [followed, setFollowed] = useState(false);
 
 	const toggleFollow = async () => {
 		setLoading(true);
-		if (!followed) {
-			const add = await NostrAccount.follow(user.pubkey, user.profile?.name);
-			if (add) setFollowed(true);
-		} else {
-			const remove = await NostrAccount.unfollow(user.pubkey);
-			if (remove) setFollowed(false);
+
+		const toggle = await NostrAccount.toggleContact(user.pubkey);
+
+		if (toggle) {
+			setFollowed((prev) => !prev);
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	useEffect(() => {
-		async function status() {
-			setLoading(true);
+		let mounted = true;
 
-			const contacts = await NostrAccount.getContactList();
-			if (contacts?.includes(user.pubkey)) {
-				setFollowed(true);
-			}
+		NostrAccount.checkContact(user.pubkey).then((status) => {
+			if (mounted) setFollowed(status);
+		});
 
-			setLoading(false);
-		}
-		status();
+		return () => {
+			mounted = false;
+		};
 	}, []);
 
 	return (
@@ -55,10 +50,10 @@ export function UserFollowButton({
 				<Spinner className="size-4" />
 			) : followed ? (
 				!simple ? (
-					t("user.unfollow")
+					"Unfollow"
 				) : null
 			) : (
-				t("user.follow")
+				"Follow"
 			)}
 		</button>
 	);

@@ -140,9 +140,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async setContactList(pubkeys: string[]) : Promise<Result<boolean, string>> {
+async setContactList(publicKeys: string[]) : Promise<Result<boolean, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("set_contact_list", { pubkeys }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_contact_list", { publicKeys }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -156,17 +156,17 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async follow(id: string, alias: string | null) : Promise<Result<string, string>> {
+async checkContact(hex: string) : Promise<Result<boolean, null>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("follow", { id, alias }) };
+    return { status: "ok", data: await TAURI_INVOKE("check_contact", { hex }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async unfollow(id: string) : Promise<Result<string, string>> {
+async toggleContact(hex: string, alias: string | null) : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("unfollow", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("toggle_contact", { hex, alias }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -268,9 +268,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getLocalEvents(pubkeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
+async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { pubkeys, until }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

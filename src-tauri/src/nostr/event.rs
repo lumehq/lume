@@ -146,25 +146,19 @@ pub async fn get_events_by(
 #[tauri::command]
 #[specta::specta]
 pub async fn get_local_events(
-  pubkeys: Vec<String>,
   until: Option<&str>,
   state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
+  let contact_list = state.contact_list.lock().unwrap().clone();
+
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
     None => Timestamp::now(),
   };
-  let authors: Vec<PublicKey> = pubkeys
-    .into_iter()
-    .map(|p| {
-      if p.starts_with("npub1") {
-        PublicKey::from_bech32(p).unwrap()
-      } else {
-        PublicKey::from_hex(p).unwrap()
-      }
-    })
-    .collect();
+
+  let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
+
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
     .limit(20)
@@ -177,6 +171,7 @@ pub async fn get_local_events(
   {
     Ok(events) => {
       let dedup = dedup_event(&events, false);
+
       let futures = dedup.into_iter().map(|ev| async move {
         let raw = ev.as_json();
         let parsed = if ev.kind == Kind::TextNote {
@@ -187,6 +182,7 @@ pub async fn get_local_events(
 
         RichEvent { raw, parsed }
       });
+
       let rich_events = join_all(futures).await;
 
       Ok(rich_events)

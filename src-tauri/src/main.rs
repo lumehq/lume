@@ -3,24 +3,24 @@
   windows_subsystem = "windows"
 )]
 
-pub mod commands;
-pub mod fns;
-pub mod nostr;
-
 #[cfg(target_os = "macos")]
 extern crate cocoa;
-
 #[cfg(target_os = "macos")]
 #[macro_use]
 extern crate objc;
 
-use nostr_sdk::prelude::*;
 use std::{
   fs,
   io::{self, BufRead},
   str::FromStr,
 };
-use tauri::{path::BaseDirectory, Manager};
+use std::sync::Mutex;
+
+use nostr_sdk::prelude::*;
+use serde::Serialize;
+use tauri::{Manager, path::BaseDirectory};
+#[cfg(target_os = "macos")]
+use tauri::tray::{MouseButtonState, TrayIconEvent};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -30,11 +30,15 @@ use crate::fns::{
   update_menubar_appearance,
 };
 
-#[cfg(target_os = "macos")]
-use tauri::tray::{MouseButtonState, TrayIconEvent};
+pub mod commands;
+pub mod fns;
+pub mod nostr;
 
+#[derive(Serialize)]
 pub struct Nostr {
+  #[serde(skip_serializing)]
   client: Client,
+  contact_list: Mutex<Vec<Contact>>,
 }
 
 fn main() {
@@ -60,8 +64,8 @@ fn main() {
       nostr::metadata::get_contact_list,
       nostr::metadata::set_contact_list,
       nostr::metadata::create_profile,
-      nostr::metadata::follow,
-      nostr::metadata::unfollow,
+      nostr::metadata::check_contact,
+      nostr::metadata::toggle_contact,
       nostr::metadata::get_nstore,
       nostr::metadata::set_nstore,
       nostr::metadata::set_nwc,
@@ -184,7 +188,10 @@ fn main() {
         client.connect().await;
 
         // Update global state
-        app.handle().manage(Nostr { client })
+        app.handle().manage(Nostr {
+          client,
+          contact_list: Mutex::new(vec![]),
+        })
       });
 
       Ok(())

@@ -140,9 +140,9 @@ export class NostrQuery {
 		}
 	}
 
-	static async getLocalEvents(pubkeys: string[], asOf?: number) {
+	static async getLocalEvents(asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.getLocalEvents(pubkeys, until);
+		const query = await commands.getLocalEvents(until);
 
 		if (query.status === "ok") {
 			const data = query.data.map((item) => {

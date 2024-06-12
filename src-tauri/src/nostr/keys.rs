@@ -1,13 +1,15 @@
-use crate::Nostr;
+use std::str::FromStr;
+use std::time::Duration;
+
 use keyring::Entry;
 use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
 use serde::Serialize;
 use specta::Type;
-use std::str::FromStr;
-use std::time::Duration;
 use tauri::{EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
+
+use crate::Nostr;
 
 #[derive(Serialize, Type)]
 pub struct Account {
@@ -139,22 +141,29 @@ pub async fn load_account(
     let signer = client.signer().await.unwrap();
     let public_key = signer.public_key().await.unwrap();
 
-    let filter = Filter::new()
-      .author(public_key)
-      .kind(Kind::RelayList)
-      .limit(1);
+    // Get user's contact list
+    let contacts = client
+      .get_contact_list(Some(Duration::from_secs(10)))
+      .await
+      .unwrap();
+
+    // Update state
+    *state.contact_list.lock().unwrap() = contacts;
 
     // Connect to user's relay (NIP-65)
-    // #TODO: Let rust-nostr handle it
     if let Ok(events) = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+      .get_events_of(
+        vec![Filter::new()
+          .author(public_key)
+          .kind(Kind::RelayList)
+          .limit(1)],
+        Some(Duration::from_secs(10)),
+      )
       .await
     {
       if let Some(event) = events.first() {
         let relay_list = nip65::extract_relay_list(event);
         for item in relay_list.into_iter() {
-          println!("connecting to relay: {} - {:?}", item.0, item.1);
-
           let relay_url = item.0.to_string();
           let opts = match item.1 {
             Some(val) => {
@@ -164,7 +173,7 @@ pub async fn load_account(
                 RelayOptions::new().write(true).read(false)
               }
             }
-            None => RelayOptions::new(),
+            None => RelayOptions::default(),
           };
 
           // Add relay to relay pool
@@ -175,6 +184,7 @@ pub async fn load_account(
 
           // Connect relay
           client.connect_relay(relay_url).await.unwrap_or_default();
+          println!("connecting to relay: {} - {:?}", item.0, item.1);
         }
       }
     };
