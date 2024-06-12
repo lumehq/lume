@@ -75,9 +75,17 @@ export class LumeEvent {
 		const query = await commands.getReplies(id);
 
 		if (query.status === "ok") {
-			const events = query.data.map(
-				(item) => JSON.parse(item) as EventWithReplies,
-			);
+			const events = query.data.map((item) => {
+				const raw = JSON.parse(item.raw) as EventWithReplies;
+
+				if (item.parsed) {
+					raw.meta = item.parsed;
+				} else {
+					raw.meta = null;
+				}
+
+				return raw;
+			});
 
 			if (events.length > 0) {
 				const replies = new Set();

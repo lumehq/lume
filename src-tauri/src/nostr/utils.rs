@@ -142,7 +142,7 @@ pub async fn parse_event(content: &str) -> Meta {
   }
 
   // Clean up the resulting content string to remove extra spaces
-  let cleaned_text = text.split_whitespace().collect::<Vec<_>>().join(" ");
+  let cleaned_text = text.trim().to_string();
 
   Meta {
     content: cleaned_text,
@@ -157,7 +157,6 @@ pub async fn parse_event(content: &str) -> Meta {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use nostr_sdk::{Event, EventBuilder, Kind, Timestamp};
 
   #[tokio::test]
   async fn test_parse_event() {

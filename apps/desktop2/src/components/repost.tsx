@@ -3,7 +3,7 @@ import { Note } from "@/components/note";
 import { User } from "@/components/user";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import { NostrEvent } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { NostrQuery } from "@lume/system";
 
 export function RepostNote({
@@ -21,12 +21,7 @@ export function RepostNote({
 		queryKey: ["repost", event.id],
 		queryFn: async () => {
 			try {
-				if (event.content.length > 50) {
-					const embed: NostrEvent = JSON.parse(event.content);
-					return embed;
-				}
-
-				const id = event.tags.find((el) => el[0] === "e")?.[1];
+				const id = event.tags.find((el) => el[0] === "e")[1];
 				const repostEvent = await NostrQuery.getEvent(id);
 
 				return repostEvent;
@@ -50,27 +45,27 @@ export function RepostNote({
 					<div className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
 						Reposted by
 					</div>
-					<User.Avatar className="size-6 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+					<User.Avatar className="object-cover rounded-full size-6 shrink-0 ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
 				</User.Root>
 			</User.Provider>
 			{isLoading ? (
-				<div className="flex h-20 items-center justify-center gap-2">
+				<div className="flex items-center justify-center h-20 gap-2">
 					<Spinner />
 					Loading event...
 				</div>
 			) : isError || !repostEvent ? (
-				<div className="flex h-20 items-center justify-center">
+				<div className="flex items-center justify-center h-20">
 					Event not found within your current relay set
 				</div>
 			) : (
 				<Note.Provider event={repostEvent}>
 					<Note.Root>
-						<div className="px-3 h-14 flex items-center justify-between">
+						<div className="flex items-center justify-between px-3 h-14">
 							<Note.User />
 							<Note.Menu />
 						</div>
 						<Note.Content className="px-3" />
-						<div className="mt-3 flex items-center gap-4 h-14 px-3">
+						<div className="flex items-center gap-4 px-3 mt-3 h-14">
 							<Note.Open />
 							<Note.Reply />
 							<Note.Repost />

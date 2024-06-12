@@ -99,7 +99,7 @@ export function NoteContent({
 				{content}
 			</div>
 			{event.meta?.images.length ? <Images urls={event.meta.images} /> : null}
-			{event.meta?.videos.length ? <Videos urls={event.meta.images} /> : null}
+			{event.meta?.videos.length ? <Videos urls={event.meta.videos} /> : null}
 		</div>
 	);
 }
