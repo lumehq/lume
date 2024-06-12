@@ -252,6 +252,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async getEventFrom(id: string, relayHint: string) : Promise<Result<RichEvent, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_event_from", { id, relayHint }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getReplies(id: string) : Promise<Result<RichEvent[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_replies", { id }) };

@@ -52,6 +52,11 @@ export interface EventWithReplies extends NostrEvent {
 	replies: Array<NostrEvent>;
 }
 
+export interface EventTag {
+	id: string;
+	relayHint: string;
+}
+
 export interface Metadata {
 	name?: string;
 	display_name?: string;

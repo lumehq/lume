@@ -2,32 +2,33 @@ import { useEvent } from "@lume/system";
 import { cn } from "@lume/utils";
 import { Note } from ".";
 import { InfoIcon } from "@lume/icons";
+import type { EventTag } from "@lume/types";
 
 export function NoteChild({
-	eventId,
+	event,
 	isRoot,
 }: {
-	eventId: string;
+	event: EventTag;
 	isRoot?: boolean;
 }) {
-	const { isLoading, isError, data } = useEvent(eventId);
+	const { isLoading, isError, data } = useEvent(event.id, event.relayHint);
 
 	if (isLoading) {
 		return (
-			<div className="pt-3 px-3 flex items-center gap-2">
-				<div className="size-8 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-				<div className="animate-pulse rounded-md h-4 w-2/3 bg-neutral-200 dark:bg-neutral-800" />
+			<div className="flex items-center gap-2 px-3 pt-3">
+				<div className="rounded-full size-8 shrink-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+				<div className="w-2/3 h-4 rounded-md animate-pulse bg-neutral-200 dark:bg-neutral-800" />
 			</div>
 		);
 	}
 
 	if (isError || !data) {
 		return (
-			<div className="pt-3 px-3 flex items-center gap-2">
-				<div className="size-8 shrink-0 rounded-full bg-red-500 text-white inline-flex items-center justify-center">
+			<div className="flex items-center gap-2 px-3 pt-3">
+				<div className="inline-flex items-center justify-center text-white bg-red-500 rounded-full size-8 shrink-0">
 					<InfoIcon className="size-5" />
 				</div>
-				<p className="text-red-500 text-sm">
+				<p className="text-sm text-red-500">
 					Event not found with your current relay set
 				</p>
 			</div>
@@ -37,7 +38,7 @@ export function NoteChild({
 	return (
 		<Note.Provider event={data}>
 			<Note.Root className={cn(isRoot ? "mb-3" : "")}>
-				<div className="h-14 px-3 flex items-center justify-between">
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 				</div>
 				<Note.Content className="px-3" />

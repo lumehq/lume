@@ -117,6 +117,26 @@ export class NostrQuery {
 		}
 	}
 
+	static async getEventFrom(id: string, relayHint: string) {
+		const url = new URL(relayHint);
+		const normalize: string = id.replace("nostr:", "").replace(/[^\w\s]/gi, "");
+		const query = await commands.getEventFrom(normalize, url.toString());
+
+		if (query.status === "ok") {
+			const data = query.data;
+			const raw = JSON.parse(data.raw) as NostrEvent;
+
+			if (data?.parsed) {
+				raw.meta = data.parsed;
+			}
+
+			return raw;
+		} else {
+			console.log("[getEventFrom]: ", query.error);
+			return null;
+		}
+	}
+
 	static async getUserEvents(pubkey: string, asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getEventsBy(pubkey, until);

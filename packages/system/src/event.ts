@@ -1,4 +1,10 @@
-import type { EventWithReplies, Kind, Meta, NostrEvent } from "@lume/types";
+import type {
+	EventTag,
+	EventWithReplies,
+	Kind,
+	Meta,
+	NostrEvent,
+} from "@lume/types";
 import { commands } from "./commands";
 import { generateContentTags } from "@lume/utils";
 
@@ -23,45 +29,31 @@ export class LumeEvent {
 		return this.tags.filter((tag) => tag[0] === "p").map((tag) => tag[1]);
 	}
 
-	static getEventThread(tags: string[][], gossip = true) {
-		let root: string = null;
-		let reply: string = null;
+	static getEventThread(tags: string[][]) {
+		let root: EventTag = null;
+		let reply: EventTag = null;
 
-		// Get all event references from tags, ignore mention
+		// Get all event references from tags, ignore mention.
 		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
 
-		if (gossip) {
-			const relays = tags
-				.filter((el) => el[0] === "e" && el[2]?.length)
-				.map((tag) => tag[2]);
+		if (events.length === 1) {
+			root = { id: events[0][1], relayHint: events[0][2] };
+		}
 
-			if (relays.length >= 1) {
-				for (const relay of relays) {
-					try {
-						if (relay.length) {
-							const url = new URL(relay);
-							commands
-								.connectRelay(url.toString())
-								.then(() => console.log("[relay hint]: ", url));
-						}
-					} catch (e) {
-						console.log("[relay hint] error: ", relay);
-					}
-				}
+		if (events.length === 2) {
+			root = { id: events[0][1], relayHint: events[0][2] };
+			reply = { id: events[1][1], relayHint: events[1][2] };
+		}
+
+		if (events.length > 2) {
+			for (const tag of events) {
+				if (tag[3] === "root") root = { id: tag[1], relayHint: tag[2] };
+				if (tag[3] === "reply") reply = { id: tag[1], relayHint: tag[2] };
 			}
 		}
 
-		if (events.length === 1) {
-			root = events[0][1];
-		}
-
-		if (events.length > 1) {
-			root = events.find((el) => el[3] === "root")?.[1] ?? events[0][1];
-			reply = events.find((el) => el[3] === "reply")?.[1] ?? events[1][1];
-		}
-
-		// Fix some rare case when root === reply
-		if (root && reply && root === reply) {
+		// Fix some rare case when root same as reply
+		if (root && reply && root.id === reply.id) {
 			reply = null;
 		}
 
@@ -69,6 +61,14 @@ export class LumeEvent {
 			root,
 			reply,
 		};
+	}
+
+	static getQuote(tags: string[][]) {
+		const tag = tags.filter((tag) => tag[0] === "q" || tag[3] === "mention");
+		const id = tag[0][1];
+		const relayHint = tag[0][2];
+
+		return { id, relayHint };
 	}
 
 	static async getReplies(id: string) {
@@ -98,14 +98,6 @@ export class LumeEvent {
 					if (tags.length > 0) {
 						for (const tag of tags) {
 							const rootIndex = events.findIndex((el) => el.id === tag[1]);
-
-							// Relay Hint
-							if (tag[2]?.length) {
-								const url = new URL(tag[2]);
-								commands
-									.connectRelay(url.toString())
-									.then(() => console.log("[relay hint]: ", url));
-							}
 
 							if (rootIndex !== -1) {
 								const rootEvent = events[rootIndex];

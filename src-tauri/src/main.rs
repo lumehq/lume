@@ -76,6 +76,7 @@ fn main() {
       nostr::metadata::friend_to_friend,
       nostr::metadata::get_notifications,
       nostr::event::get_event,
+      nostr::event::get_event_from,
       nostr::event::get_replies,
       nostr::event::get_events_by,
       nostr::event::get_local_events,

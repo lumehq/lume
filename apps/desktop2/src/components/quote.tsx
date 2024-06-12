@@ -2,6 +2,8 @@ import { QuoteIcon } from "@lume/icons";
 import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
+import { useMemo } from "react";
+import { LumeEvent } from "@lume/system";
 
 export function Quote({
 	event,
@@ -10,9 +12,7 @@ export function Quote({
 	event: NostrEvent;
 	className?: string;
 }) {
-	const quoteEventId = event.tags.find(
-		(tag) => tag[0] === "q" || tag[3] === "mention",
-	)?.[1];
+	const quoteEvent = useMemo(() => LumeEvent.getQuote(event.tags), [event]);
 
 	return (
 		<Note.Provider event={event}>
@@ -23,7 +23,7 @@ export function Quote({
 				)}
 			>
 				<div className="flex flex-col gap-3">
-					<Note.Child eventId={quoteEventId} isRoot />
+					<Note.Child event={quoteEvent} isRoot />
 					<div className="flex items-center gap-2 px-3">
 						<div className="inline-flex items-center gap-1.5 shrink-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">
 							<QuoteIcon className="size-4" />
@@ -32,13 +32,13 @@ export function Quote({
 						<div className="flex-1 h-px bg-neutral-100 dark:bg-white/5" />
 					</div>
 					<div>
-						<div className="px-3 h-14 flex items-center justify-between">
+						<div className="flex items-center justify-between px-3 h-14">
 							<Note.User />
 						</div>
 						<Note.Content className="px-3" quote={false} clean />
 					</div>
 				</div>
-				<div className="flex items-center h-14 px-3">
+				<div className="flex items-center px-3 h-14">
 					<Note.Open />
 				</div>
 			</Note.Root>

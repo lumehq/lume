@@ -22,14 +22,7 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, S
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::EventId(id) => Some(id),
-      Nip19::Event(event) => {
-        let relays = event.relays;
-        for relay in relays.into_iter() {
-          let _ = client.add_relay(&relay).await.unwrap_or_default();
-          client.connect_relay(&relay).await.unwrap_or_default();
-        }
-        Some(event.event_id)
-      }
+      Nip19::Event(event) => Some(event.event_id),
       _ => None,
     },
     Err(_) => match EventId::from_hex(id) {
@@ -40,10 +33,8 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, S
 
   match event_id {
     Some(id) => {
-      let filter = Filter::new().id(id);
-
       match client
-        .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+        .get_events_of(vec![Filter::new().id(id)], Some(Duration::from_secs(10)))
         .await
       {
         Ok(events) => {
@@ -54,6 +45,69 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, S
             } else {
               None
             };
+
+            Ok(RichEvent { raw, parsed })
+          } else {
+            Err("Cannot found this event with current relay list".into())
+          }
+        }
+        Err(err) => Err(err.to_string()),
+      }
+    }
+    None => Err("Event ID is not valid.".into()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_event_from(
+  id: &str,
+  relay_hint: &str,
+  state: State<'_, Nostr>,
+) -> Result<RichEvent, String> {
+  let client = &state.client;
+  let event_id: Option<EventId> = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::EventId(id) => Some(id),
+      Nip19::Event(event) => Some(event.event_id),
+      _ => None,
+    },
+    Err(_) => match EventId::from_hex(id) {
+      Ok(val) => Some(val),
+      Err(_) => None,
+    },
+  };
+
+  // Add relay hint to relay pool
+  let _ = client.add_relay(relay_hint).await.unwrap_or_default();
+
+  // Connect relay
+  client.connect_relay(relay_hint).await.unwrap_or_default();
+
+  match event_id {
+    Some(id) => {
+      match client
+        .get_events_from(
+          vec![relay_hint],
+          vec![Filter::new().id(id)],
+          Some(Duration::from_secs(10)),
+        )
+        .await
+      {
+        Ok(events) => {
+          if let Some(event) = events.first() {
+            let raw = event.as_json();
+            let parsed = if event.kind == Kind::TextNote {
+              Some(parse_event(&event.content).await)
+            } else {
+              None
+            };
+
+            // Disconnect the relay hint after get event
+            client
+              .disconnect_relay(relay_hint)
+              .await
+              .unwrap_or_default();
 
             Ok(RichEvent { raw, parsed })
           } else {
