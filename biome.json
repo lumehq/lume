@@ -11,13 +11,17 @@
 		"rules": {
 			"recommended": true,
 			"style": {
-				"noNonNullAssertion": "warn"
+				"noNonNullAssertion": "warn",
+				"noUselessElse": "off"
 			},
 			"correctness": {
 				"useExhaustiveDependencies": "off"
 			},
 			"a11y": {
 				"noSvgWithoutTitle": "off"
+			},
+			"complexity": {
+				"noStaticOnlyClass": "off"
 			}
 		}
 	}

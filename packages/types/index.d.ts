@@ -28,6 +28,15 @@ export enum Kind {
 	// #TODO: Add all nostr kinds
 }
 
+export interface Meta {
+	content: string;
+	images: string[];
+	videos: string[];
+	events: string[];
+	mentions: string[];
+	hashtags: string[];
+}
+
 export interface NostrEvent {
 	id: string;
 	pubkey: string;
@@ -36,6 +45,7 @@ export interface NostrEvent {
 	tags: string[][];
 	content: string;
 	sig: string;
+	meta: Meta;
 }
 
 export interface EventWithReplies extends NostrEvent {

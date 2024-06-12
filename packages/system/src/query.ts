@@ -1,10 +1,15 @@
-import { LumeColumn, Metadata, NostrEvent, Relay, Settings } from "@lume/types";
+import type {
+	LumeColumn,
+	Metadata,
+	NostrEvent,
+	Relay,
+	Settings,
+} from "@lume/types";
 import { commands } from "./commands";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { open } from "@tauri-apps/plugin-dialog";
-import { dedupEvents } from "./dedup";
 import { invoke } from "@tauri-apps/api/core";
 import { relaunch } from "@tauri-apps/plugin-process";
 
@@ -98,9 +103,16 @@ export class NostrQuery {
 		const query = await commands.getEvent(normalize);
 
 		if (query.status === "ok") {
-			const event: NostrEvent = JSON.parse(query.data);
-			return event;
+			const data = query.data;
+			const raw = JSON.parse(data.raw) as NostrEvent;
+
+			if (data?.parsed) {
+				raw.meta = data.parsed;
+			}
+
+			return raw;
 		} else {
+			console.log("[getEvent]: ", query.error);
 			return null;
 		}
 	}
@@ -110,8 +122,19 @@ export class NostrQuery {
 		const query = await commands.getEventsBy(pubkey, until);
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
-			return events;
+			const data = query.data.map((item) => {
+				const raw = JSON.parse(item.raw) as NostrEvent;
+
+				if (item.parsed) {
+					raw.meta = item.parsed;
+				} else {
+					raw.meta = null;
+				}
+
+				return raw;
+			});
+
+			return data;
 		} else {
 			return [];
 		}
@@ -122,10 +145,19 @@ export class NostrQuery {
 		const query = await commands.getLocalEvents(pubkeys, until);
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
-			const dedup = dedupEvents(events);
+			const data = query.data.map((item) => {
+				const raw = JSON.parse(item.raw) as NostrEvent;
 
-			return dedup;
+				if (item.parsed) {
+					raw.meta = item.parsed;
+				} else {
+					raw.meta = null;
+				}
+
+				return raw;
+			});
+
+			return data;
 		} else {
 			return [];
 		}
@@ -136,10 +168,19 @@ export class NostrQuery {
 		const query = await commands.getGlobalEvents(until);
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
-			const dedup = dedupEvents(events);
+			const data = query.data.map((item) => {
+				const raw = JSON.parse(item.raw) as NostrEvent;
 
-			return dedup;
+				if (item.parsed) {
+					raw.meta = item.parsed;
+				} else {
+					raw.meta = null;
+				}
+
+				return raw;
+			});
+
+			return data;
 		} else {
 			return [];
 		}
@@ -151,10 +192,19 @@ export class NostrQuery {
 		const query = await commands.getHashtagEvents(nostrTags, until);
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
-			const dedup = dedupEvents(events);
+			const data = query.data.map((item) => {
+				const raw = JSON.parse(item.raw) as NostrEvent;
 
-			return dedup;
+				if (item.parsed) {
+					raw.meta = item.parsed;
+				} else {
+					raw.meta = null;
+				}
+
+				return raw;
+			});
+
+			return data;
 		} else {
 			return [];
 		}
@@ -311,8 +361,7 @@ export class NostrQuery {
 		const query = await commands.getBootstrapRelays();
 
 		if (query.status === "ok") {
-			let relays: Relay[] = [];
-			console.log(query.data);
+			const relays: Relay[] = [];
 
 			for (const item of query.data) {
 				const line = item.split(",");

@@ -1,11 +1,23 @@
-use crate::Nostr;
-use nostr_sdk::prelude::*;
 use std::{str::FromStr, time::Duration};
+
+use futures::future::join_all;
+use nostr_sdk::prelude::*;
+use serde::Serialize;
+use specta::Type;
 use tauri::State;
+
+use crate::Nostr;
+use crate::nostr::utils::{dedup_event, Meta, parse_event};
+
+#[derive(Debug, Serialize, Type)]
+pub struct RichEvent {
+  pub raw: String,
+  pub parsed: Option<Meta>,
+}
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, String> {
   let client = &state.client;
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
@@ -36,7 +48,14 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
       {
         Ok(events) => {
           if let Some(event) = events.first() {
-            Ok(event.as_json())
+            let raw = event.as_json();
+            let parsed = if event.kind == Kind::TextNote {
+              Some(parse_event(&event.content).await)
+            } else {
+              None
+            };
+
+            Ok(RichEvent { raw, parsed })
           } else {
             Err("Cannot found this event with current relay list".into())
           }
@@ -50,7 +69,7 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<String, Stri
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<String>, String> {
+pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
 
   match EventId::from_hex(id) {
@@ -58,7 +77,21 @@ pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<String
       let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
       match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
+        Ok(events) => {
+          let futures = events.into_iter().map(|ev| async move {
+            let raw = ev.as_json();
+            let parsed = if ev.kind == Kind::TextNote {
+              Some(parse_event(&ev.content).await)
+            } else {
+              None
+            };
+
+            RichEvent { raw, parsed }
+          });
+          let rich_events = join_all(futures).await;
+
+          Ok(rich_events)
+        }
         Err(err) => Err(err.to_string()),
       }
     }
@@ -72,7 +105,7 @@ pub async fn get_events_by(
   public_key: &str,
   as_of: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
+) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
 
   match PublicKey::from_str(public_key) {
@@ -88,7 +121,21 @@ pub async fn get_events_by(
         .until(until);
 
       match client.get_events_of(vec![filter], None).await {
-        Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
+        Ok(events) => {
+          let futures = events.into_iter().map(|ev| async move {
+            let raw = ev.as_json();
+            let parsed = if ev.kind == Kind::TextNote {
+              Some(parse_event(&ev.content).await)
+            } else {
+              None
+            };
+
+            RichEvent { raw, parsed }
+          });
+          let rich_events = join_all(futures).await;
+
+          Ok(rich_events)
+        }
         Err(err) => Err(err.to_string()),
       }
     }
@@ -102,7 +149,7 @@ pub async fn get_local_events(
   pubkeys: Vec<String>,
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
+) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -128,7 +175,22 @@ pub async fn get_local_events(
     .get_events_of(vec![filter], Some(Duration::from_secs(10)))
     .await
   {
-    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
+    Ok(events) => {
+      let dedup = dedup_event(&events, false);
+      let futures = dedup.into_iter().map(|ev| async move {
+        let raw = ev.as_json();
+        let parsed = if ev.kind == Kind::TextNote {
+          Some(parse_event(&ev.content).await)
+        } else {
+          None
+        };
+
+        RichEvent { raw, parsed }
+      });
+      let rich_events = join_all(futures).await;
+
+      Ok(rich_events)
+    }
     Err(err) => Err(err.to_string()),
   }
 }
@@ -138,7 +200,7 @@ pub async fn get_local_events(
 pub async fn get_global_events(
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
+) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -154,7 +216,22 @@ pub async fn get_global_events(
     .get_events_of(vec![filter], Some(Duration::from_secs(8)))
     .await
   {
-    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
+    Ok(events) => {
+      let dedup = dedup_event(&events, false);
+      let futures = dedup.into_iter().map(|ev| async move {
+        let raw = ev.as_json();
+        let parsed = if ev.kind == Kind::TextNote {
+          Some(parse_event(&ev.content).await)
+        } else {
+          None
+        };
+
+        RichEvent { raw, parsed }
+      });
+      let rich_events = join_all(futures).await;
+
+      Ok(rich_events)
+    }
     Err(err) => Err(err.to_string()),
   }
 }
@@ -165,7 +242,7 @@ pub async fn get_hashtag_events(
   hashtags: Vec<&str>,
   until: Option<&str>,
   state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
+) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
   let as_of = match until {
     Some(until) => Timestamp::from_str(until).unwrap(),
@@ -178,7 +255,22 @@ pub async fn get_hashtag_events(
     .hashtags(hashtags);
 
   match client.get_events_of(vec![filter], None).await {
-    Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
+    Ok(events) => {
+      let dedup = dedup_event(&events, false);
+      let futures = dedup.into_iter().map(|ev| async move {
+        let raw = ev.as_json();
+        let parsed = if ev.kind == Kind::TextNote {
+          Some(parse_event(&ev.content).await)
+        } else {
+          None
+        };
+
+        RichEvent { raw, parsed }
+      });
+      let rich_events = join_all(futures).await;
+
+      Ok(rich_events)
+    }
     Err(err) => Err(err.to_string()),
   }
 }
