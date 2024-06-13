@@ -5,13 +5,14 @@ import type {
 	Relay,
 	Settings,
 } from "@lume/types";
-import { commands } from "./commands";
+import { type Result, type RichEvent, commands } from "./commands";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { relaunch } from "@tauri-apps/plugin-process";
+import { nip19 } from "nostr-tools";
 
 enum NSTORE_KEYS {
 	settings = "lume_user_settings",
@@ -98,9 +99,32 @@ export class NostrQuery {
 		}
 	}
 
-	static async getEvent(id: string) {
-		const normalize: string = id.replace("nostr:", "").replace(/[^\w\s]/gi, "");
-		const query = await commands.getEvent(normalize);
+	static async getEvent(id: string, hint?: string) {
+		// Validate ID
+		const normalizeId: string = id
+			.replace("nostr:", "")
+			.replace(/[^\w\s]/gi, "");
+
+		// Define query
+		let query: Result<RichEvent, string>;
+		let relayHint: string = hint;
+
+		if (normalizeId.startsWith("nevent1")) {
+			const decoded = nip19.decode(normalizeId);
+			if (decoded.type === "nevent") relayHint = decoded.data.relays[0];
+		}
+
+		// Build query
+		if (relayHint) {
+			try {
+				const url = new URL(relayHint);
+				query = await commands.getEventFrom(normalizeId, url.toString());
+			} catch {
+				query = await commands.getEvent(normalizeId);
+			}
+		} else {
+			query = await commands.getEvent(normalizeId);
+		}
 
 		if (query.status === "ok") {
 			const data = query.data;
@@ -113,26 +137,6 @@ export class NostrQuery {
 			return raw;
 		} else {
 			console.log("[getEvent]: ", query.error);
-			return null;
-		}
-	}
-
-	static async getEventFrom(id: string, relayHint: string) {
-		const url = new URL(relayHint);
-		const normalize: string = id.replace("nostr:", "").replace(/[^\w\s]/gi, "");
-		const query = await commands.getEventFrom(normalize, url.toString());
-
-		if (query.status === "ok") {
-			const data = query.data;
-			const raw = JSON.parse(data.raw) as NostrEvent;
-
-			if (data?.parsed) {
-				raw.meta = data.parsed;
-			}
-
-			return raw;
-		} else {
-			console.log("[getEventFrom]: ", query.error);
 			return null;
 		}
 	}

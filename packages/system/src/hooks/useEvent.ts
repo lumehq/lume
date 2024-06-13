@@ -6,12 +6,7 @@ export function useEvent(id: string, relayHint?: string) {
 		queryKey: ["event", id],
 		queryFn: async () => {
 			try {
-				if (relayHint) {
-					const event = await NostrQuery.getEventFrom(id, relayHint);
-					return event;
-				}
-
-				const event = await NostrQuery.getEvent(id);
+				const event = await NostrQuery.getEvent(id, relayHint);
 				return event;
 			} catch (e) {
 				throw new Error(e);

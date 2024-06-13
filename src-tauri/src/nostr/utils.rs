@@ -80,8 +80,10 @@ pub fn dedup_event(events: &[Event], nsfw: bool) -> Vec<Event> {
 
 pub async fn parse_event(content: &str) -> Meta {
   let words: Vec<_> = content.split_whitespace().collect();
+
   let mut finder = LinkFinder::new();
   finder.url_must_have_scheme(false);
+
   let urls: Vec<_> = finder.links(content).collect();
 
   let hashtags = words
@@ -89,11 +91,13 @@ pub async fn parse_event(content: &str) -> Meta {
     .filter(|&&word| word.starts_with('#'))
     .map(|&s| s.to_string())
     .collect::<Vec<_>>();
+
   let events = words
     .iter()
     .filter(|&&word| NOSTR_EVENTS.iter().any(|&el| word.starts_with(el)))
     .map(|&s| s.to_string())
     .collect::<Vec<_>>();
+
   let mentions = words
     .iter()
     .filter(|&&word| NOSTR_MENTIONS.iter().any(|&el| word.starts_with(el)))
