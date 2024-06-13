@@ -168,6 +168,13 @@ pub async fn create_profile(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> {
+  let contact_list = state.contact_list.lock().unwrap();
+  Ok(contact_list.is_empty())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn check_contact(hex: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
   let contact_list = state.contact_list.lock().unwrap();
   let public_key = PublicKey::from_str(hex).unwrap();

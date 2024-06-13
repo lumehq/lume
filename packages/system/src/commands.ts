@@ -156,6 +156,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async isContactListEmpty() : Promise<Result<boolean, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("is_contact_list_empty") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async checkContact(hex: string) : Promise<Result<boolean, null>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("check_contact", { hex }) };
@@ -279,6 +287,14 @@ try {
 async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getGroupEvents(publicKeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_group_events", { publicKeys, until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

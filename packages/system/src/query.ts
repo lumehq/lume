@@ -183,6 +183,29 @@ export class NostrQuery {
 		}
 	}
 
+	static async getGroupEvents(pubkeys: string[], asOf?: number) {
+		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
+		const query = await commands.getGroupEvents(pubkeys, until);
+
+		if (query.status === "ok") {
+			const data = query.data.map((item) => {
+				const raw = JSON.parse(item.raw) as NostrEvent;
+
+				if (item.parsed) {
+					raw.meta = item.parsed;
+				} else {
+					raw.meta = null;
+				}
+
+				return raw;
+			});
+
+			return data;
+		} else {
+			return [];
+		}
+	}
+
 	static async getGlobalEvents(asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getGlobalEvents(until);

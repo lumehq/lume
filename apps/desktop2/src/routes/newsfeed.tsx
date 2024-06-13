@@ -7,8 +7,7 @@ import { NostrAccount, NostrQuery } from "@lume/system";
 import { type ColumnRouteSearch, type NostrEvent, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { redirect } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { Virtualizer } from "virtua";
 
@@ -21,10 +20,8 @@ export const Route = createFileRoute("/newsfeed")({
 		};
 	},
 	beforeLoad: async ({ search }) => {
-		const settings = await NostrQuery.getSettings();
-
-		/*
-		if (!contacts.length) {
+		const isContactListEmpty = await NostrAccount.isContactListEmpty();
+		if (isContactListEmpty) {
 			throw redirect({
 				to: "/create-newsfeed/users",
 				search: {
@@ -33,16 +30,12 @@ export const Route = createFileRoute("/newsfeed")({
 				},
 			});
 		}
-		*/
-
-		return { settings };
 	},
 	component: Screen,
 });
 
 export function Screen() {
 	const { label, account } = Route.useSearch();
-	const { settings } = Route.useRouteContext();
 	const {
 		data,
 		isLoading,
@@ -76,12 +69,7 @@ export function Screen() {
 
 					if (isConversation) {
 						return (
-							<Conversation
-								key={event.id}
-								className="mb-3"
-								event={event}
-								gossip={settings?.gossip}
-							/>
+							<Conversation key={event.id} className="mb-3" event={event} />
 						);
 					}
 

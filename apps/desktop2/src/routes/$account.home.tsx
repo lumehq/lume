@@ -16,8 +16,6 @@ export const Route = createFileRoute("/$account/home")({
 		const columns = await NostrQuery.getColumns();
 		return columns;
 	},
-	gcTime: 0,
-	shouldReload: false,
 	component: Screen,
 });
 
@@ -136,16 +134,16 @@ function Screen() {
 	}, []);
 
 	return (
-		<div className="h-full w-full">
+		<div className="w-full h-full">
 			<VList
 				ref={vlistRef}
 				horizontal
 				tabIndex={-1}
 				itemSize={440}
-				overscan={5}
+				overscan={3}
 				onScroll={() => setIsScroll(true)}
 				onScrollEnd={() => setIsScroll(false)}
-				className="scrollbar-none h-full w-full overflow-x-auto focus:outline-none"
+				className="w-full h-full overflow-x-auto scrollbar-none focus:outline-none"
 			>
 				{columns?.map((column) => (
 					<Column
@@ -162,14 +160,14 @@ function Screen() {
 					<button
 						type="button"
 						onClick={() => goLeft()}
-						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<ArrowLeftIcon className="size-5" />
 					</button>
 					<button
 						type="button"
 						onClick={() => goRight()}
-						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<ArrowRightIcon className="size-5" />
 					</button>

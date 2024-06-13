@@ -247,6 +247,63 @@ pub async fn get_local_events(
 
 #[tauri::command]
 #[specta::specta]
+pub async fn get_group_events(
+  public_keys: Vec<&str>,
+  until: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<Vec<RichEvent>, String> {
+  let client = &state.client;
+
+  let as_of = match until {
+    Some(until) => Timestamp::from_str(until).unwrap(),
+    None => Timestamp::now(),
+  };
+
+  let authors: Vec<PublicKey> = public_keys
+    .into_iter()
+    .map(|p| {
+      if p.starts_with("npub1") {
+        PublicKey::from_bech32(p).unwrap()
+      } else {
+        PublicKey::from_hex(p).unwrap()
+      }
+    })
+    .collect();
+
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .limit(20)
+    .until(as_of)
+    .authors(authors);
+
+  match client
+    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
+    .await
+  {
+    Ok(events) => {
+      let dedup = dedup_event(&events, false);
+
+      let futures = dedup.into_iter().map(|ev| async move {
+        let raw = ev.as_json();
+        let parsed = if ev.kind == Kind::TextNote {
+          Some(parse_event(&ev.content).await)
+        } else {
+          None
+        };
+
+        RichEvent { raw, parsed }
+      });
+
+      let rich_events = join_all(futures).await;
+
+      Ok(rich_events)
+    }
+    Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn get_global_events(
   until: Option<&str>,
   state: State<'_, Nostr>,
