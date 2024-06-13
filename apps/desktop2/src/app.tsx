@@ -1,6 +1,4 @@
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -9,12 +7,37 @@ import "./app.css";
 import i18n from "./locale";
 import { routeTree } from "./router.gen"; // auto generated file
 import { type } from "@tauri-apps/plugin-os";
+import {
+	experimental_createPersister,
+	type AsyncStorage,
+	type PersistedQuery,
+} from "@tanstack/query-persist-client-core";
+import { get, set, del, createStore, type UseStore } from "idb-keyval";
+
+function newIdbStorage(idbStore: UseStore): AsyncStorage<PersistedQuery> {
+	return {
+		getItem: async (key) => await get(key, idbStore),
+		setItem: async (key, value) => await set(key, value, idbStore),
+		removeItem: async (key) => await del(key, idbStore),
+	};
+}
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			gcTime: 1000 * 30, // 30 seconds
+			// @ts-ignore, idk
+			persister: experimental_createPersister<PersistedQuery>({
+				storage: newIdbStorage(createStore("lume", "cache")),
+				maxAge: 1000 * 60 * 60 * 12, // 12 hours,
+				serialize: (persistedQuery) => persistedQuery,
+				deserialize: (cached) => cached,
+			}),
+		},
+	},
+});
 
 const os = await type();
-const queryClient = new QueryClient();
-const persister = createSyncStoragePersister({
-	storage: window.localStorage,
-});
 
 // Set up a Router instance
 const router = createRouter({
@@ -26,12 +49,9 @@ const router = createRouter({
 	Wrap: ({ children }) => {
 		return (
 			<I18nextProvider i18n={i18n} defaultNS={"translation"}>
-				<PersistQueryClientProvider
-					client={queryClient}
-					persistOptions={{ persister }}
-				>
+				<QueryClientProvider client={queryClient}>
 					{children}
-				</PersistQueryClientProvider>
+				</QueryClientProvider>
 			</I18nextProvider>
 		);
 	},
