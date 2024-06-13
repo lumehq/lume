@@ -87,11 +87,7 @@ pub async fn get_event_from(
   match event_id {
     Some(id) => {
       match client
-        .get_events_from(
-          vec![relay_hint],
-          vec![Filter::new().id(id)],
-          Some(Duration::from_secs(10)),
-        )
+        .get_events_from(vec![relay_hint], vec![Filter::new().id(id)], None)
         .await
       {
         Ok(events) => {

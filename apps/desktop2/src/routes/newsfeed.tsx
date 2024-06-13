@@ -85,7 +85,7 @@ export function Screen() {
 	);
 
 	return (
-		<div className="w-full h-full p-2 overflow-y-auto scrollbar-none">
+		<div className="w-full h-full p-3 overflow-y-auto scrollbar-none">
 			{isFetching && !isLoading && !isFetchingNextPage ? (
 				<div className="flex items-center justify-center w-full mb-3 h-11 bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
 					<div className="flex items-center justify-center gap-2">

@@ -342,7 +342,9 @@ export class NostrQuery {
 					return systemColumns;
 				}
 
-				return columns;
+				// Filter "open" column
+				// Reason: deprecated
+				return columns.filter((col) => col.label !== "open");
 			} else {
 				return systemColumns;
 			}

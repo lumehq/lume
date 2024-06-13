@@ -1,6 +1,6 @@
 import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
-import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
+import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
 import type { EventColumns, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
@@ -29,6 +29,16 @@ function Screen() {
 	const [isScroll, setIsScroll] = useState(false);
 	const [isResize, setIsResize] = useState(false);
 
+	const openLumeStore = async () => {
+		const column: LumeColumn = {
+			label: "store",
+			name: "Store",
+			content: "/store/official",
+		};
+		const mainWindow = getCurrent();
+		await mainWindow.emit("columns", { type: "add", column });
+	};
+
 	const reset = () => {
 		setColumns(null);
 		setSelectedIndex(-1);
@@ -54,34 +64,23 @@ function Screen() {
 		// update col label
 		column.label = `${column.label}-${nanoid()}`;
 
-		// create new cols
-		const cols = [...columns];
-		const openColIndex = cols.findIndex((col) => col.label === "open");
-		const newCols = [
-			...cols.slice(0, openColIndex),
-			column,
-			...cols.slice(openColIndex),
-		];
-
-		setColumns(newCols);
-		setSelectedIndex(newCols.length);
+		setColumns((prev) => [...prev, column]);
+		setSelectedIndex(columns.length + 1);
 		setIsScroll(true);
 
 		// scroll to the newest column
-		vlistRef.current.scrollToIndex(newCols.length - 1, {
+		vlistRef.current.scrollToIndex(columns.length + 1, {
 			align: "center",
 		});
 	}, 150);
 
 	const remove = useDebouncedCallback((label: string) => {
-		const newCols = columns.filter((t) => t.label !== label);
-
-		setColumns(newCols);
-		setSelectedIndex(newCols.length);
+		setColumns((prev) => prev.filter((t) => t.label !== label));
+		setSelectedIndex(columns.length - 1);
 		setIsScroll(true);
 
 		// scroll to the first column
-		vlistRef.current.scrollToIndex(newCols.length - 1, {
+		vlistRef.current.scrollToIndex(columns.length - 1, {
 			align: "start",
 		});
 	}, 150);
@@ -108,13 +107,6 @@ function Screen() {
 	}, [initialColumnList]);
 
 	useEffect(() => {
-		// save current state
-		if (columns?.length) {
-			NostrQuery.setColumns(columns).then(() => console.log("saved"));
-		}
-	}, [columns]);
-
-	useEffect(() => {
 		const unlistenColEvent = listen<EventColumns>("columns", (data) => {
 			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
@@ -130,6 +122,11 @@ function Screen() {
 		return () => {
 			unlistenColEvent.then((f) => f());
 			unlistenWindowResize.then((f) => f());
+
+			// save current state
+			if (columns?.length) {
+				NostrQuery.setColumns(columns).then(() => console.log("saved"));
+			}
 		};
 	}, []);
 
@@ -139,7 +136,7 @@ function Screen() {
 				ref={vlistRef}
 				horizontal
 				tabIndex={-1}
-				itemSize={440}
+				itemSize={500}
 				overscan={3}
 				onScroll={() => setIsScroll(true)}
 				onScrollEnd={() => setIsScroll(false)}
@@ -156,20 +153,27 @@ function Screen() {
 				))}
 			</VList>
 			<Toolbar>
-				<div className="flex items-center gap-1">
+				<div className="flex items-center h-8 gap-1 p-[2px] rounded-full bg-black/5 dark:bg-white/5">
 					<button
 						type="button"
 						onClick={() => goLeft()}
-						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
-						<ArrowLeftIcon className="size-5" />
+						<ArrowLeftIcon className="size-4" />
+					</button>
+					<button
+						type="button"
+						onClick={() => openLumeStore()}
+						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+					>
+						<PlusSquareIcon className="size-4" />
 					</button>
 					<button
 						type="button"
 						onClick={() => goRight()}
-						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
-						<ArrowRightIcon className="size-5" />
+						<ArrowRightIcon className="size-4" />
 					</button>
 				</div>
 			</Toolbar>
