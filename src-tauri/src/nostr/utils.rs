@@ -79,12 +79,13 @@ pub fn dedup_event(events: &[Event], nsfw: bool) -> Vec<Event> {
 }
 
 pub async fn parse_event(content: &str) -> Meta {
-  let words: Vec<_> = content.split_whitespace().collect();
-
   let mut finder = LinkFinder::new();
   finder.url_must_have_scheme(false);
 
+  // Get urls
   let urls: Vec<_> = finder.links(content).collect();
+  // Get words
+  let words: Vec<_> = content.split_whitespace().collect();
 
   let hashtags = words
     .iter()
@@ -122,12 +123,14 @@ pub async fn parse_event(content: &str) -> Meta {
           if IMAGES.contains(&ext) {
             text = text.replace(url_str, "");
             images.push(url_str.to_string());
-            break;
+            // Process the next item.
+            continue;
           }
           if VIDEOS.contains(&ext) {
             text = text.replace(url_str, "");
             videos.push(url_str.to_string());
-            break;
+            // Process the next item.
+            continue;
           }
         }
 
@@ -137,7 +140,8 @@ pub async fn parse_event(content: &str) -> Meta {
             if content_type.to_str().unwrap_or("").starts_with("image") {
               text = text.replace(url_str, "");
               images.push(url_str.to_string());
-              break;
+              // Process the next item.
+              continue;
             }
           }
         }
