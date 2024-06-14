@@ -5,7 +5,7 @@ import type {
 	Meta,
 	NostrEvent,
 } from "@lume/types";
-import { commands } from "./commands";
+import { type Result, commands } from "./commands";
 
 export class LumeEvent {
 	public id: string;
@@ -122,42 +122,18 @@ export class LumeEvent {
 
 	static async publish(
 		content: string,
-		reply_to?: string,
 		warning?: string,
 		pow?: boolean,
+		reply_to?: string,
+		root_to?: string,
 	) {
-		/*
+		let query: Result<string, string>;
+
 		if (reply_to) {
-			const queryReply = await commands.getEvent(reply_to);
-
-			if (queryReply.status === "ok") {
-				const replyEvent = JSON.parse(queryReply.data.raw) as NostrEvent;
-				const relayHint =
-					replyEvent.tags.find((ev) => ev[0] === "e")?.[0][2] ?? "";
-
-				if (quote) {
-					eventTags.push(["e", replyEvent.id, relayHint, "mention"]);
-					eventTags.push(["q", replyEvent.id]);
-				} else {
-					const rootEvent = replyEvent.tags.find((ev) => ev[3] === "root");
-
-					if (rootEvent) {
-						eventTags.push([
-							"e",
-							rootEvent[1],
-							rootEvent[2] || relayHint,
-							"root",
-						]);
-					}
-
-					eventTags.push(["e", replyEvent.id, relayHint, "reply"]);
-					eventTags.push(["p", replyEvent.pubkey]);
-				}
-			}
+			query = await commands.reply(content, reply_to, root_to);
+		} else {
+			query = await commands.publish(content, warning, pow);
 		}
-		*/
-
-		const query = await commands.publish(content, warning, pow);
 
 		if (query.status === "ok") {
 			return query.data;

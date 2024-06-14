@@ -324,6 +324,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async reply(content: string, to: string, root: string | null) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("reply", { content, to, root }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async repost(raw: string) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("repost", { raw }) };

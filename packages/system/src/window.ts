@@ -1,4 +1,4 @@
-import { NostrEvent } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
 import { commands } from "./commands";
 
 export class LumeWindow {

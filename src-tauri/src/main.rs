@@ -85,6 +85,7 @@ fn main() {
       nostr::event::get_global_events,
       nostr::event::get_hashtag_events,
       nostr::event::publish,
+      nostr::event::reply,
       nostr::event::repost,
       commands::folder::show_in_folder,
       commands::window::create_column,

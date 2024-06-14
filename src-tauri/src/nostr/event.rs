@@ -7,7 +7,6 @@ use specta::Type;
 use tauri::State;
 
 use crate::Nostr;
-use crate::nostr::get_latest_event;
 use crate::nostr::utils::{create_event_tags, dedup_event, Meta, parse_event};
 
 #[derive(Debug, Serialize, Type)]
@@ -422,6 +421,87 @@ pub async fn publish(
       Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
       Err(err) => Err(err.to_string()),
     },
+    Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn reply(
+  content: String,
+  to: String,
+  root: Option<String>,
+  state: State<'_, Nostr>,
+) -> Result<String, String> {
+  let client = &state.client;
+  let database = client.database();
+
+  // Create tags from content
+  let mut tags = create_event_tags(&content);
+
+  let reply_id = match EventId::from_hex(to) {
+    Ok(val) => val,
+    Err(_) => return Err("Event is not valid.".into()),
+  };
+
+  match database
+    .query(vec![Filter::new().id(reply_id)], Order::Desc)
+    .await
+  {
+    Ok(events) => {
+      if let Some(event) = events.into_iter().next() {
+        let relay_hint =
+          if let Some(relays) = database.event_seen_on_relays(event.id).await.unwrap() {
+            relays.into_iter().next().map(UncheckedUrl::new)
+          } else {
+            None
+          };
+        let t = TagStandard::Event {
+          event_id: event.id,
+          relay_url: relay_hint,
+          marker: Some(Marker::Reply),
+          public_key: Some(event.pubkey),
+        };
+        let tag = Tag::from(t);
+        tags.push(tag)
+      } else {
+        return Err("Reply event is not found.".into());
+      }
+    }
+    Err(err) => return Err(err.to_string()),
+  };
+
+  if let Some(id) = root {
+    let root_id = match EventId::from_hex(id) {
+      Ok(val) => val,
+      Err(_) => return Err("Event is not valid.".into()),
+    };
+
+    if let Ok(events) = database
+      .query(vec![Filter::new().id(root_id)], Order::Desc)
+      .await
+    {
+      if let Some(event) = events.into_iter().next() {
+        let relay_hint =
+          if let Some(relays) = database.event_seen_on_relays(event.id).await.unwrap() {
+            relays.into_iter().next().map(UncheckedUrl::new)
+          } else {
+            None
+          };
+        let t = TagStandard::Event {
+          event_id: event.id,
+          relay_url: relay_hint,
+          marker: Some(Marker::Root),
+          public_key: Some(event.pubkey),
+        };
+        let tag = Tag::from(t);
+        tags.push(tag)
+      }
+    }
+  };
+
+  match client.publish_text_note(content, tags).await {
+    Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
     Err(err) => Err(err.to_string()),
   }
 }

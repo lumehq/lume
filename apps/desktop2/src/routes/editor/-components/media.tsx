@@ -1,15 +1,14 @@
 import { AddMediaIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
-import { cn, insertImage, isImagePath } from "@lume/utils";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { insertImage, isImagePath } from "@lume/utils";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 import { useSlateStatic } from "slate-react";
 import { toast } from "sonner";
 
-export function MediaButton({ className }: { className?: string }) {
+export function MediaButton() {
 	const editor = useSlateStatic();
 	const [loading, setLoading] = useState(false);
 
@@ -61,29 +60,18 @@ export function MediaButton({ className }: { className?: string }) {
 	}, []);
 
 	return (
-		<Tooltip.Provider>
-			<Tooltip.Root delayDuration={150}>
-				<Tooltip.Trigger asChild>
-					<button
-						type="button"
-						onClick={() => upload()}
-						disabled={loading}
-						className={cn("inline-flex items-center justify-center", className)}
-					>
-						{loading ? (
-							<Spinner className="size-4" />
-						) : (
-							<AddMediaIcon className="size-4" />
-						)}
-					</button>
-				</Tooltip.Trigger>
-				<Tooltip.Portal>
-					<Tooltip.Content className="inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-neutral-50 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-50 dark:text-neutral-950">
-						Upload media
-						<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
-					</Tooltip.Content>
-				</Tooltip.Portal>
-			</Tooltip.Root>
-		</Tooltip.Provider>
+		<button
+			type="button"
+			onClick={() => upload()}
+			disabled={loading}
+			className="inline-flex items-center h-8 gap-2 px-2.5 text-sm rounded-lg text-black/70 dark:text-white/70 w-max hover:bg-black/10 dark:hover:bg-white/10"
+		>
+			{loading ? (
+				<Spinner className="size-4" />
+			) : (
+				<AddMediaIcon className="size-4" />
+			)}
+			Add media
+		</button>
 	);
 }
