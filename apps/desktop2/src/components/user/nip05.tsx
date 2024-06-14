@@ -17,6 +17,11 @@ export function UserNip05() {
 			return verify;
 		},
 		enabled: !!user.profile?.nip05,
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
+		staleTime: Number.POSITIVE_INFINITY,
+		retry: 2,
 	});
 
 	if (!user.profile?.nip05?.length) return;
@@ -26,7 +31,7 @@ export function UserNip05() {
 			<Tooltip.Root delayDuration={150}>
 				<Tooltip.Trigger>
 					{!isLoading && verified ? (
-						<VerifiedIcon className="size-4 text-teal-500" />
+						<VerifiedIcon className="text-teal-500 size-4" />
 					) : null}
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

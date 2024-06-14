@@ -316,9 +316,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async publish(content: string, tags: string[][]) : Promise<Result<string, string>> {
+async publish(content: string, warning: string | null, pow: boolean) : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("publish", { content, tags }) };
+    return { status: "ok", data: await TAURI_INVOKE("publish", { content, warning, pow }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

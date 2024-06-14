@@ -7,7 +7,8 @@ use specta::Type;
 use tauri::State;
 
 use crate::Nostr;
-use crate::nostr::utils::{dedup_event, Meta, parse_event};
+use crate::nostr::get_latest_event;
+use crate::nostr::utils::{create_event_tags, dedup_event, Meta, parse_event};
 
 #[derive(Debug, Serialize, Type)]
 pub struct RichEvent {
@@ -381,15 +382,46 @@ pub async fn get_hashtag_events(
 #[tauri::command]
 #[specta::specta]
 pub async fn publish(
-  content: &str,
-  tags: Vec<Vec<&str>>,
+  content: String,
+  warning: Option<String>,
+  pow: bool,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let client = &state.client;
-  let event_tags = tags.into_iter().map(|val| Tag::parse(&val).unwrap());
 
-  match client.publish_text_note(content, event_tags).await {
-    Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
+  // Create tags from content
+  let mut tags = create_event_tags(&content);
+
+  // Add content-warning tag if present
+  if let Some(reason) = warning {
+    let t = TagStandard::ContentWarning {
+      reason: Some(reason),
+    };
+    let tag = Tag::from(t);
+    tags.push(tag)
+  };
+
+  // Get signer
+  let signer = match client.signer().await {
+    Ok(signer) => signer,
+    Err(_) => return Err("Signer is required.".into()),
+  };
+
+  // Get public key
+  let public_key = signer.public_key().await.unwrap();
+
+  // Create unsigned event
+  let unsigned_event = match pow {
+    true => EventBuilder::text_note(content, tags).to_unsigned_pow_event(public_key, 21),
+    false => EventBuilder::text_note(content, tags).to_unsigned_event(public_key),
+  };
+
+  // Publish
+  match signer.sign_event(unsigned_event).await {
+    Ok(event) => match client.send_event(event).await {
+      Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
+      Err(err) => Err(err.to_string()),
+    },
     Err(err) => Err(err.to_string()),
   }
 }

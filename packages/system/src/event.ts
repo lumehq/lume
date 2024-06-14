@@ -6,7 +6,6 @@ import type {
 	NostrEvent,
 } from "@lume/types";
 import { commands } from "./commands";
-import { generateContentTags } from "@lume/utils";
 
 export class LumeEvent {
 	public id: string;
@@ -124,14 +123,10 @@ export class LumeEvent {
 	static async publish(
 		content: string,
 		reply_to?: string,
-		quote?: boolean,
-		nsfw?: boolean,
+		warning?: string,
+		pow?: boolean,
 	) {
-		const g = await generateContentTags(content);
-
-		const eventContent = g.content;
-		const eventTags = g.tags;
-
+		/*
 		if (reply_to) {
 			const queryReply = await commands.getEvent(reply_to);
 
@@ -160,14 +155,9 @@ export class LumeEvent {
 				}
 			}
 		}
+		*/
 
-		if (nsfw) {
-			eventTags.push(["L", "content-warning"]);
-			eventTags.push(["l", "reason", "content-warning"]);
-			eventTags.push(["content-warning", "nsfw"]);
-		}
-
-		const query = await commands.publish(eventContent, eventTags);
+		const query = await commands.publish(content, warning, pow);
 
 		if (query.status === "ok") {
 			return query.data;

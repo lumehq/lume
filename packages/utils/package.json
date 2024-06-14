@@ -8,7 +8,6 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@tanstack/react-query": "^5.40.1",
 		"bitcoin-units": "^1.0.0",
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.11",

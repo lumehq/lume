@@ -7,10 +7,10 @@ export function decodeZapInvoice(tags?: string[][]) {
 
 	const decodedInvoice = decode(invoice);
 	const amountSection = decodedInvoice.sections.find(
-		(s: any) => s.name === "amount",
+		(s: { name: string }) => s.name === "amount",
 	);
 
-	const amount = parseInt(amountSection.value);
+	const amount = Number.parseInt(amountSection.value);
 	const displayValue = getBitcoinDisplayValues(amount);
 
 	return displayValue;
