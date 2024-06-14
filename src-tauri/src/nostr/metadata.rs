@@ -194,16 +194,13 @@ pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<String, Strin
   let contact_list = client.get_contact_list(Some(Duration::from_secs(10))).await;
 
   match contact_list {
-    Ok(mut old_list) => {
-      let index = old_list
-        .iter()
-        .position(|x| x.public_key == public_key)
-        .unwrap();
-      old_list.remove(index);
+    Ok(old_list) => {
+      let contacts: Vec<Contact> = old_list
+        .into_iter()
+        .filter(|contact| contact.public_key != public_key)
+        .collect();
 
-      let new_list = old_list.into_iter();
-
-      match client.set_contact_list(new_list).await {
+      match client.set_contact_list(contacts).await {
         Ok(event_id) => Ok(event_id.to_string()),
         Err(err) => Err(err.to_string()),
       }
