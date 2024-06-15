@@ -17,7 +17,7 @@ export function MentionNote({
 
 	if (isLoading) {
 		return (
-			<div className="mt-2 w-full flex h-20 items-center justify-center rounded-xl border border-black/10 dark:border-white/10">
+			<div className="flex items-center justify-center w-full h-20 mt-2 border rounded-xl border-black/10 dark:border-white/10">
 				<Spinner className="size-5" />
 			</div>
 		);
@@ -25,18 +25,18 @@ export function MentionNote({
 
 	if (isError || !data) {
 		return (
-			<div className="mt-2 w-full rounded-xl border border-black/10 p-3 dark:border-white/10">
+			<div className="w-full p-3 mt-2 border rounded-xl border-black/10 dark:border-white/10">
 				{t("note.error")}
 			</div>
 		);
 	}
 
 	return (
-		<div className="mt-2 flex w-full cursor-default flex-col rounded-xl border border-black/10 dark:border-white/10">
+		<div className="flex flex-col w-full mt-2 border cursor-default rounded-xl border-black/10 dark:border-white/10">
 			<User.Provider pubkey={data.pubkey}>
-				<User.Root className="flex h-12 items-center gap-2 px-3">
-					<User.Avatar className="size-6 shrink-0 rounded-full object-cover" />
-					<div className="inline-flex flex-1 items-center gap-2">
+				<User.Root className="flex items-center gap-2 px-3 h-11">
+					<User.Avatar className="object-cover rounded-full size-6 shrink-0" />
+					<div className="inline-flex items-center flex-1 gap-2">
 						<User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
 						<span className="text-neutral-600 dark:text-neutral-400">·</span>
 						<User.Time
@@ -55,14 +55,14 @@ export function MentionNote({
 				{data.content}
 			</div>
 			{openable ? (
-				<div className="flex h-14 items-center justify-end px-3">
+				<div className="flex items-center justify-end px-3 h-14">
 					<button
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
 							LumeWindow.openEvent(data);
 						}}
-						className="z-10 h-7 w-28 inline-flex items-center justify-center gap-1 text-sm bg-black/10 dark:bg-white/10 rounded-full text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
+						className="z-10 inline-flex items-center justify-center gap-1 text-sm rounded-full h-7 w-28 bg-black/10 dark:bg-white/10 text-neutral-600 hover:text-blue-500 dark:text-neutral-400"
 					>
 						View post
 						<LinkIcon className="size-4" />

@@ -38,12 +38,18 @@ export class LumeWindow {
 		}
 	}
 
-	static async openEditor(reply_to?: string, quote = false) {
+	static async openEditor(reply_to?: string, quote?: string) {
 		let url: string;
 
 		if (reply_to) {
-			url = `/editor?reply_to=${reply_to}&quote=${quote}`;
-		} else {
+			url = `/editor?reply_to=${reply_to}`;
+		}
+
+		if (quote?.length) {
+			url = `/editor?quote=${quote}`;
+		}
+
+		if (!reply_to?.length && !quote?.length) {
 			url = "/editor";
 		}
 

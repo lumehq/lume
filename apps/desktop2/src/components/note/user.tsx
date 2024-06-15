@@ -15,9 +15,9 @@ export function NoteUser({ className }: { className?: string }) {
 				>
 					<div className="flex w-full gap-2">
 						<HoverCard.Trigger className="shrink-0">
-							<User.Avatar className="size-8 rounded-full object-cover outline outline-1 -outline-offset-1 outline-black/15" />
+							<User.Avatar className="object-cover rounded-full size-8 outline outline-1 -outline-offset-1 outline-black/15" />
 						</HoverCard.Trigger>
-						<div className="flex w-full items-center gap-3">
+						<div className="flex items-center w-full gap-3">
 							<div className="flex items-center gap-1">
 								<User.Name className="font-semibold text-neutral-950 dark:text-neutral-50" />
 								<User.NIP05 />
@@ -37,16 +37,17 @@ export function NoteUser({ className }: { className?: string }) {
 						side="right"
 					>
 						<div className="flex flex-col gap-2">
-							<User.Avatar className="size-11 rounded-lg object-cover" />
+							<User.Avatar className="object-cover rounded-lg size-11" />
 							<div className="flex flex-col gap-2">
 								<div className="inline-flex items-center gap-1">
 									<User.Name className="font-semibold leading-tight text-white dark:text-neutral-900" />
 									<User.NIP05 />
 								</div>
-								<User.About className="line-clamp-3 text-sm text-white dark:text-neutral-900" />
+								<User.About className="text-sm text-white line-clamp-3 dark:text-neutral-900" />
 								<button
+									type="button"
 									onClick={() => LumeWindow.openProfile(event.pubkey)}
-									className="mt-2 inline-flex h-9 w-full items-center justify-center rounded-lg bg-white text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+									className="inline-flex items-center justify-center w-full mt-2 text-sm font-medium bg-white rounded-lg h-9 hover:bg-neutral-200 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
 								>
 									View profile
 								</button>

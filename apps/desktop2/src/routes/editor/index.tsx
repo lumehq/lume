@@ -14,14 +14,17 @@ import {
 	withReact,
 } from "slate-react";
 import { MediaButton } from "./-components/media";
-import { LumeEvent } from "@lume/system";
+import { LumeEvent, useEvent } from "@lume/system";
 import { WarningButton } from "./-components/warning";
 import { MentionNote } from "@/components/note/mentions/note";
 import { PowButton } from "./-components/pow";
+import { User } from "@/components/user";
+import { Note } from "@/components/note";
+import { nip19 } from "nostr-tools";
 
 type EditorSearch = {
 	reply_to: string;
-	quote: boolean;
+	quote: string;
 };
 
 type EditorElement = {
@@ -34,21 +37,23 @@ export const Route = createFileRoute("/editor/")({
 	validateSearch: (search: Record<string, string>): EditorSearch => {
 		return {
 			reply_to: search.reply_to,
-			quote: search.quote === "true",
+			quote: search.quote,
 		};
 	},
 	beforeLoad: ({ search }) => {
 		let initialValue: EditorElement[];
 
-		if (search.reply_to && search.quote) {
+		if (search?.quote?.length) {
+			const eventId = nip19.noteEncode(search.quote);
 			initialValue = [
 				{
 					type: "paragraph",
 					children: [{ text: "" }],
 				},
 				{
-					type: "paragraph",
-					children: [{ text: `nostr:${search.reply_to}` }],
+					type: "event",
+					eventId: `nostr:${eventId}`,
+					children: [{ text: "" }],
 				},
 			];
 		} else {
@@ -142,9 +147,10 @@ function Screen() {
 			<Slate editor={editor} initialValue={editorValue}>
 				<div data-tauri-drag-region className="h-9 shrink-0" />
 				<div className="flex flex-col flex-1 overflow-y-auto">
-					{reply_to ? (
-						<div className="px-4 py-4">
-							<MentionNote eventId={reply_to} />
+					{reply_to?.length ? (
+						<div className="flex items-center gap-3 px-2.5 pb-3 border-b border-black/5 dark:border-white/5">
+							<div className="text-sm font-semibold shrink-0">Reply to:</div>
+							<ChildNote id={reply_to} />
 						</div>
 					) : null}
 					<div className="px-4 py-4 overflow-y-auto">
@@ -228,6 +234,31 @@ function Screen() {
 	);
 }
 
+function ChildNote({ id }: { id: string }) {
+	const { isLoading, isError, data } = useEvent(id);
+
+	if (isLoading) {
+		return <Spinner className="size-5" />;
+	}
+
+	if (isError || !data) {
+		return <div>Event not found with your current relay set.</div>;
+	}
+
+	return (
+		<Note.Provider event={data}>
+			<Note.Root className="flex items-center gap-2">
+				<User.Provider pubkey={data.pubkey}>
+					<User.Root className="shrink-0">
+						<User.Avatar className="rounded-full size-8 shrink-0" />
+					</User.Root>
+				</User.Provider>
+				<div className="content-break line-clamp-1">{data.content}</div>
+			</Note.Root>
+		</Note.Provider>
+	);
+}
+
 const withNostrEvent = (editor: ReactEditor) => {
 	const { insertData, isVoid } = editor;
 
@@ -239,7 +270,7 @@ const withNostrEvent = (editor: ReactEditor) => {
 	editor.insertData = (data) => {
 		const text = data.getData("text/plain");
 
-		if (text.startsWith("nevent1") || text.startsWith("note1")) {
+		if (text.startsWith("nevent") || text.startsWith("note")) {
 			insertNostrEvent(editor, text);
 		} else {
 			insertData(data);
@@ -342,10 +373,7 @@ const Event = ({ attributes, element, children }) => {
 				onClick={() => Transforms.removeNodes(editor, { at: path })}
 				onKeyDown={() => Transforms.removeNodes(editor, { at: path })}
 			>
-				<MentionNote
-					eventId={element.eventId.replace("nostr:", "")}
-					openable={false}
-				/>
+				<MentionNote eventId={element.eventId} openable={false} />
 			</div>
 		</div>
 	);

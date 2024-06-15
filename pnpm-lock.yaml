@@ -120,6 +120,9 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
+      nostr-tools:
+        specifier: ^2.7.0
+        version: 2.7.0(typescript@5.4.5)
       react:
         specifier: ^18.3.1
         version: 18.3.1
