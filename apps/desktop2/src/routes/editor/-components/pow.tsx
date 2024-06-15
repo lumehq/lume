@@ -1,40 +1,21 @@
-import { NsfwIcon } from "@lume/icons";
-import { cn } from "@lume/utils";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { PowIcon } from "@lume/icons";
 import type { Dispatch, SetStateAction } from "react";
 
-export function PowToggle({
-	pow,
-	setPow,
-	className,
+export function PowButton({
+	setDifficulty,
 }: {
-	pow: boolean;
-	setPow: Dispatch<SetStateAction<boolean>>;
-	className?: string;
+	setDifficulty: Dispatch<SetStateAction<{ enable: boolean; num: number }>>;
 }) {
 	return (
-		<Tooltip.Provider>
-			<Tooltip.Root delayDuration={150}>
-				<Tooltip.Trigger asChild>
-					<button
-						type="button"
-						onClick={() => setPow((prev) => !prev)}
-						className={cn(
-							"inline-flex items-center justify-center",
-							className,
-							pow ? "bg-blue-500 text-white" : "",
-						)}
-					>
-						<NsfwIcon className="size-4" />
-					</button>
-				</Tooltip.Trigger>
-				<Tooltip.Portal>
-					<Tooltip.Content className="inline-flex h-7 select-none items-center justify-center rounded-md bg-neutral-950 px-3.5 text-sm text-neutral-50 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-50 dark:text-neutral-950">
-						Proof of Work
-						<Tooltip.Arrow className="fill-neutral-950 dark:fill-neutral-50" />
-					</Tooltip.Content>
-				</Tooltip.Portal>
-			</Tooltip.Root>
-		</Tooltip.Provider>
+		<button
+			type="button"
+			onClick={() =>
+				setDifficulty((prev) => ({ ...prev, enable: !prev.enable }))
+			}
+			className="inline-flex items-center h-8 gap-2 px-2.5 text-sm rounded-lg text-black/70 dark:text-white/70 w-max hover:bg-black/10 dark:hover:bg-white/10"
+		>
+			<PowIcon className="size-4" />
+			PoW
+		</button>
 	);
 }

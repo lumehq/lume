@@ -17,6 +17,7 @@ import { MediaButton } from "./-components/media";
 import { LumeEvent } from "@lume/system";
 import { WarningButton } from "./-components/warning";
 import { MentionNote } from "@/components/note/mentions/note";
+import { PowButton } from "./-components/pow";
 
 type EditorSearch = {
 	reply_to: string;
@@ -71,6 +72,7 @@ function Screen() {
 	const [editorValue, setEditorValue] = useState<EditorElement[]>(null);
 	const [loading, setLoading] = useState(false);
 	const [warning, setWarning] = useState({ enable: false, reason: "" });
+	const [difficulty, setDifficulty] = useState({ enable: false, num: 21 });
 	const [editor] = useState(() =>
 		withMentions(withNostrEvent(withImages(withReact(createEditor())))),
 	);
@@ -113,8 +115,8 @@ function Screen() {
 			const content = serialize(editor.children);
 			const eventId = await LumeEvent.publish(
 				content,
-				warning.enable ? warning.reason : null,
-				false,
+				warning.enable && warning.reason.length ? warning.reason : null,
+				difficulty.enable && difficulty.num > 0 ? difficulty.num : null,
 				reply_to,
 			);
 
@@ -160,6 +162,45 @@ function Screen() {
 						/>
 					</div>
 				</div>
+				{warning.enable ? (
+					<div className="flex items-center w-full px-4 border-t h-11 shrink-0 border-black/5 dark:border-white/5">
+						<span className="text-sm shrink-0 text-black/50 dark:text-white/50">
+							Reason:
+						</span>
+						<input
+							type="text"
+							placeholder="NSFW..."
+							value={warning.reason}
+							onChange={(e) =>
+								setWarning((prev) => ({ ...prev, reason: e.target.value }))
+							}
+							className="flex-1 text-sm bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-black/50 dark:placeholder:text-white/50"
+						/>
+					</div>
+				) : null}
+				{difficulty.enable ? (
+					<div className="flex items-center w-full px-4 border-t h-11 shrink-0 border-black/5 dark:border-white/5">
+						<span className="text-sm shrink-0 text-black/50 dark:text-white/50">
+							Difficulty:
+						</span>
+						<input
+							type="text"
+							inputMode="numeric"
+							pattern="[0-9]"
+							onKeyDown={(event) => {
+								if (!/[0-9]/.test(event.key)) {
+									event.preventDefault();
+								}
+							}}
+							placeholder="21"
+							defaultValue={difficulty.num}
+							onChange={(e) =>
+								setWarning((prev) => ({ ...prev, num: Number(e.target.value) }))
+							}
+							className="flex-1 text-sm bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-black/50 dark:placeholder:text-white/50"
+						/>
+					</div>
+				) : null}
 				<div
 					data-tauri-drag-region
 					className="flex items-center w-full h-16 gap-4 px-4 border-t divide-x divide-black/5 dark:divide-white/5 shrink-0 border-black/5 dark:border-white/5"
@@ -179,6 +220,7 @@ function Screen() {
 					<div className="inline-flex items-center flex-1 gap-2 pl-4">
 						<MediaButton />
 						<WarningButton setWarning={setWarning} />
+						<PowButton setDifficulty={setDifficulty} />
 					</div>
 				</div>
 			</Slate>

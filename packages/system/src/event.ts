@@ -123,7 +123,7 @@ export class LumeEvent {
 	static async publish(
 		content: string,
 		warning?: string,
-		pow?: boolean,
+		difficulty?: number,
 		reply_to?: string,
 		root_to?: string,
 	) {
@@ -132,7 +132,7 @@ export class LumeEvent {
 		if (reply_to) {
 			query = await commands.reply(content, reply_to, root_to);
 		} else {
-			query = await commands.publish(content, warning, pow);
+			query = await commands.publish(content, warning, difficulty);
 		}
 
 		if (query.status === "ok") {

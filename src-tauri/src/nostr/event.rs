@@ -383,7 +383,7 @@ pub async fn get_hashtag_events(
 pub async fn publish(
   content: String,
   warning: Option<String>,
-  pow: bool,
+  difficulty: Option<u8>,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let client = &state.client;
@@ -410,9 +410,9 @@ pub async fn publish(
   let public_key = signer.public_key().await.unwrap();
 
   // Create unsigned event
-  let unsigned_event = match pow {
-    true => EventBuilder::text_note(content, tags).to_unsigned_pow_event(public_key, 21),
-    false => EventBuilder::text_note(content, tags).to_unsigned_event(public_key),
+  let unsigned_event = match difficulty {
+    Some(num) => EventBuilder::text_note(content, tags).to_unsigned_pow_event(public_key, num),
+    None => EventBuilder::text_note(content, tags).to_unsigned_event(public_key),
   };
 
   // Publish

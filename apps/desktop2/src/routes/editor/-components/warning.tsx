@@ -9,11 +9,11 @@ export function WarningButton({
 	return (
 		<button
 			type="button"
-			onClick={() => setWarning((prev) => ({ ...prev, enable: !prev }))}
+			onClick={() => setWarning((prev) => ({ ...prev, enable: !prev.enable }))}
 			className="inline-flex items-center h-8 gap-2 px-2.5 text-sm rounded-lg text-black/70 dark:text-white/70 w-max hover:bg-black/10 dark:hover:bg-white/10"
 		>
 			<NsfwIcon className="size-4" />
-			Add warning
+			Mark as sensitive
 		</button>
 	);
 }
