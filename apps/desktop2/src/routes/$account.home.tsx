@@ -103,6 +103,12 @@ function Screen() {
 	);
 
 	useEffect(() => {
+		if (columns?.length) {
+			NostrQuery.setColumns(columns).then(() => console.log("saved"));
+		}
+	}, [columns]);
+
+	useEffect(() => {
 		setColumns(initialColumnList);
 	}, [initialColumnList]);
 
@@ -122,11 +128,6 @@ function Screen() {
 		return () => {
 			unlistenColEvent.then((f) => f());
 			unlistenWindowResize.then((f) => f());
-
-			// save current state
-			if (columns?.length) {
-				NostrQuery.setColumns(columns).then(() => console.log("saved"));
-			}
 		};
 	}, []);
 
