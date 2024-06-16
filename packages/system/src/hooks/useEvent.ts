@@ -3,7 +3,7 @@ import { NostrQuery } from "../query";
 
 export function useEvent(id: string, relayHint?: string) {
 	const { isLoading, isError, data } = useQuery({
-		queryKey: ["event", id],
+		queryKey: ["cache", "event", id],
 		queryFn: async () => {
 			try {
 				const event = await NostrQuery.getEvent(id, relayHint);
@@ -16,7 +16,7 @@ export function useEvent(id: string, relayHint?: string) {
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
+		retry: false,
 	});
 
 	return { isLoading, isError, data };

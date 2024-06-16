@@ -1,19 +1,15 @@
 import { QuoteIcon } from "@lume/icons";
-import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
-import { useMemo } from "react";
-import { LumeEvent } from "@lume/system";
+import type { LumeEvent } from "@lume/system";
 
 export function Quote({
 	event,
 	className,
 }: {
-	event: NostrEvent;
+	event: LumeEvent;
 	className?: string;
 }) {
-	const quoteEvent = useMemo(() => LumeEvent.getQuote(event.tags), [event]);
-
 	return (
 		<Note.Provider event={event}>
 			<Note.Root
@@ -23,7 +19,7 @@ export function Quote({
 				)}
 			>
 				<div className="flex flex-col gap-3">
-					<Note.Child event={quoteEvent} isRoot />
+					<Note.Child event={event.quote} isRoot />
 					<div className="flex items-center gap-2 px-3">
 						<div className="inline-flex items-center gap-1.5 shrink-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">
 							<QuoteIcon className="size-4" />

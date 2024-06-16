@@ -69,7 +69,7 @@ export function NoteContent({
 						href={match}
 						target="_blank"
 						rel="noreferrer"
-						className="text-blue-500 line-clamp-1 hover:text-blue-600"
+						className="inline text-blue-500 hover:text-blue-600"
 					>
 						{match}
 					</a>

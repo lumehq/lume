@@ -13,6 +13,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { nip19 } from "nostr-tools";
+import { LumeEvent } from "./event";
 
 enum NSTORE_KEYS {
 	settings = "lume_user_settings",
@@ -20,6 +21,24 @@ enum NSTORE_KEYS {
 }
 
 export class NostrQuery {
+	static #toLumeEvents(richEvents: RichEvent[]) {
+		const events = richEvents.map((item) => {
+			const nostrEvent = JSON.parse(item.raw) as NostrEvent;
+
+			if (item.parsed) {
+				nostrEvent.meta = item.parsed;
+			} else {
+				nostrEvent.meta = null;
+			}
+
+			const lumeEvent = new LumeEvent(nostrEvent);
+
+			return lumeEvent;
+		});
+
+		return events;
+	}
+
 	static async upload(filePath?: string) {
 		const allowExts = [
 			"png",
@@ -79,7 +98,9 @@ export class NostrQuery {
 		const query = await commands.getNotifications();
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
+			const data = query.data.map((item) => JSON.parse(item) as NostrEvent);
+			const events = data.map((ev) => new LumeEvent(ev));
+
 			return events;
 		} else {
 			console.error(query.error);
@@ -134,7 +155,9 @@ export class NostrQuery {
 				raw.meta = data.parsed;
 			}
 
-			return raw;
+			const event = new LumeEvent(raw);
+
+			return event;
 		} else {
 			console.log("[getEvent]: ", query.error);
 			return null;
@@ -169,18 +192,7 @@ export class NostrQuery {
 		const query = await commands.getLocalEvents(until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -258,8 +270,6 @@ export class NostrQuery {
 	}
 
 	static async verifyNip05(pubkey: string, nip05?: string) {
-		if (!nip05) return false;
-
 		const query = await commands.verifyNip05(pubkey, nip05);
 
 		if (query.status === "ok") {

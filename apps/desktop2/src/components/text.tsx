@@ -1,12 +1,12 @@
-import type { NostrEvent } from "@lume/types";
 import { cn } from "@lume/utils";
 import { Note } from "@/components/note";
+import type { LumeEvent } from "@lume/system";
 
 export function TextNote({
 	event,
 	className,
 }: {
-	event: NostrEvent;
+	event: LumeEvent;
 	className?: string;
 }) {
 	return (
@@ -17,12 +17,12 @@ export function TextNote({
 					className,
 				)}
 			>
-				<div className="px-3 h-14 flex items-center justify-between">
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />
 				</div>
 				<Note.Content className="px-3" />
-				<div className="mt-3 flex items-center gap-4 h-14 px-3">
+				<div className="flex items-center gap-4 px-3 mt-3 h-14">
 					<Note.Open />
 					<Note.Reply />
 					<Note.Repost />

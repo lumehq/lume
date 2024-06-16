@@ -1,18 +1,17 @@
 import { ThreadIcon } from "@lume/icons";
-import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
-import { LumeEvent } from "@lume/system";
+import type { LumeEvent } from "@lume/system";
 import { useMemo } from "react";
 
 export function Conversation({
 	event,
 	className,
 }: {
-	event: NostrEvent;
+	event: LumeEvent;
 	className?: string;
 }) {
-	const thread = useMemo(() => LumeEvent.getEventThread(event.tags), [event]);
+	const thread = useMemo(() => event.thread, [event]);
 
 	return (
 		<Note.Provider event={event}>

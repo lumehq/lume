@@ -3,14 +3,13 @@ import { Note } from "@/components/note";
 import { User } from "@/components/user";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import type { NostrEvent } from "@lume/types";
-import { NostrQuery } from "@lume/system";
+import { type LumeEvent, NostrQuery } from "@lume/system";
 
 export function RepostNote({
 	event,
 	className,
 }: {
-	event: NostrEvent;
+	event: LumeEvent;
 	className?: string;
 }) {
 	const {
@@ -22,9 +21,8 @@ export function RepostNote({
 		queryFn: async () => {
 			try {
 				const id = event.tags.find((el) => el[0] === "e")[1];
-				const repostEvent = await NostrQuery.getEvent(id);
-
-				return repostEvent;
+				const repostedEvent = await NostrQuery.getEvent(id);
+				return repostedEvent;
 			} catch (e) {
 				throw new Error(e);
 			}

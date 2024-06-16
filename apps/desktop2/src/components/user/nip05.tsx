@@ -8,12 +8,15 @@ import { NostrQuery } from "@lume/system";
 export function UserNip05() {
 	const user = useUserContext();
 	const { isLoading, data: verified } = useQuery({
-		queryKey: ["nip05", user?.pubkey],
+		queryKey: ["cache", "nip05", user?.pubkey],
 		queryFn: async () => {
+			if (!user.profile?.nip05?.length) return false;
+
 			const verify = await NostrQuery.verifyNip05(
 				user.pubkey,
 				user.profile?.nip05,
 			);
+
 			return verify;
 		},
 		enabled: !!user.profile?.nip05,
@@ -21,7 +24,7 @@ export function UserNip05() {
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
+		retry: false,
 	});
 
 	if (!user.profile?.nip05?.length) return;

@@ -1,7 +1,7 @@
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { LumeWindow, NostrQuery, useEvent } from "@lume/system";
-import { Kind, type NostrEvent } from "@lume/types";
+import { type LumeEvent, LumeWindow, NostrQuery, useEvent } from "@lume/system";
+import { Kind } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/panel")({
 
 function Screen() {
 	const [account, setAccount] = useState<string>(null);
-	const [events, setEvents] = useState<NostrEvent[]>([]);
+	const [events, setEvents] = useState<LumeEvent[]>([]);
 
 	const texts = useMemo(
 		() => events.filter((ev) => ev.kind === Kind.Text),
@@ -27,7 +27,7 @@ function Screen() {
 	);
 
 	const zaps = useMemo(() => {
-		const groups = new Map<string, NostrEvent[]>();
+		const groups = new Map<string, LumeEvent[]>();
 		const list = events.filter((ev) => ev.kind === Kind.ZapReceipt);
 
 		for (const event of list) {
@@ -46,7 +46,7 @@ function Screen() {
 	}, [events]);
 
 	const reactions = useMemo(() => {
-		const groups = new Map<string, NostrEvent[]>();
+		const groups = new Map<string, LumeEvent[]>();
 		const list = events.filter(
 			(ev) => ev.kind === Kind.Repost || ev.kind === Kind.Reaction,
 		);
@@ -86,7 +86,7 @@ function Screen() {
 		);
 
 		const unlistenNewEvent = getCurrent().listen("notification", (data) => {
-			const event: NostrEvent = JSON.parse(data.payload as string);
+			const event: LumeEvent = JSON.parse(data.payload as string);
 			setEvents((prev) => [event, ...prev]);
 		});
 
@@ -263,7 +263,7 @@ function RootNote({ id }: { id: string }) {
 	);
 }
 
-function TextNote({ event }: { event: NostrEvent }) {
+function TextNote({ event }: { event: LumeEvent }) {
 	const pTags = event.tags
 		.filter((tag) => tag[0] === "p")
 		.map((tag) => tag[1])

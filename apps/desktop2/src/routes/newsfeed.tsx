@@ -3,8 +3,8 @@ import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon } from "@lume/icons";
-import { NostrAccount, NostrQuery } from "@lume/system";
-import { type ColumnRouteSearch, type NostrEvent, Kind } from "@lume/types";
+import { type LumeEvent, NostrAccount, NostrQuery } from "@lume/system";
+import { type ColumnRouteSearch, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -56,27 +56,20 @@ export function Screen() {
 	});
 
 	const renderItem = useCallback(
-		(event: NostrEvent) => {
+		(event: LumeEvent) => {
 			if (!event) return;
 			switch (event.kind) {
 				case Kind.Repost:
 					return <RepostNote key={event.id} event={event} className="mb-3" />;
 				default: {
-					const isConversation =
-						event.tags.filter((tag) => tag[0] === "e" && tag[3] !== "mention")
-							.length > 0;
-					const isQuote = event.tags.filter((tag) => tag[0] === "q").length > 0;
-
-					if (isConversation) {
+					if (event.isConversation) {
 						return (
 							<Conversation key={event.id} className="mb-3" event={event} />
 						);
 					}
-
-					if (isQuote) {
+					if (event.isQuote) {
 						return <Quote key={event.id} event={event} className="mb-3" />;
 					}
-
 					return <TextNote key={event.id} event={event} className="mb-3" />;
 				}
 			}

@@ -15,8 +15,8 @@ export class LumeEvent {
 	public tags: string[][];
 	public content: string;
 	public sig: string;
-	public relay?: string;
 	public meta: Meta;
+	public relay?: string;
 	#raw: NostrEvent;
 
 	constructor(event: NostrEvent) {
@@ -24,16 +24,29 @@ export class LumeEvent {
 		Object.assign(this, event);
 	}
 
+	get isQuote() {
+		return this.tags.filter((tag) => tag[0] === "q").length > 0;
+	}
+
+	get isConversation() {
+		const tags = this.tags.filter(
+			(tag) => tag[0] === "e" && tag[3] !== "mention",
+		);
+		return tags.length > 0;
+	}
+
 	get mentions() {
 		return this.tags.filter((tag) => tag[0] === "p").map((tag) => tag[1]);
 	}
 
-	static getEventThread(tags: string[][]) {
+	get thread() {
 		let root: EventTag = null;
 		let reply: EventTag = null;
 
 		// Get all event references from tags, ignore mention.
-		const events = tags.filter((el) => el[0] === "e" && el[3] !== "mention");
+		const events = this.tags.filter(
+			(el) => el[0] === "e" && el[3] !== "mention",
+		);
 
 		if (events.length === 1) {
 			root = { id: events[0][1], relayHint: events[0][2] };
@@ -62,15 +75,17 @@ export class LumeEvent {
 		};
 	}
 
-	static getQuote(tags: string[][]) {
-		const tag = tags.filter((tag) => tag[0] === "q" || tag[3] === "mention");
+	get quote() {
+		const tag = this.tags.filter(
+			(tag) => tag[0] === "q" || tag[3] === "mention",
+		);
 		const id = tag[0][1];
 		const relayHint = tag[0][2];
 
 		return { id, relayHint };
 	}
 
-	static async getReplies(id: string) {
+	public async getReplies(id: string) {
 		const query = await commands.getReplies(id);
 
 		if (query.status === "ok") {
@@ -120,30 +135,8 @@ export class LumeEvent {
 		}
 	}
 
-	static async publish(
-		content: string,
-		warning?: string,
-		difficulty?: number,
-		reply_to?: string,
-		root_to?: string,
-	) {
-		let query: Result<string, string>;
-
-		if (reply_to) {
-			query = await commands.reply(content, reply_to, root_to);
-		} else {
-			query = await commands.publish(content, warning, difficulty);
-		}
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
-	}
-
-	static async zap(id: string, amount: number, message: string) {
-		const query = await commands.zapEvent(id, amount.toString(), message);
+	public async zap(amount: number, message: string) {
+		const query = await commands.zapEvent(this.id, amount.toString(), message);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -174,6 +167,28 @@ export class LumeEvent {
 
 	public async repost() {
 		const query = await commands.repost(JSON.stringify(this.#raw));
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
+	static async publish(
+		content: string,
+		warning?: string,
+		difficulty?: number,
+		reply_to?: string,
+		root_to?: string,
+	) {
+		let query: Result<string, string>;
+
+		if (reply_to) {
+			query = await commands.reply(content, reply_to, root_to);
+		} else {
+			query = await commands.publish(content, warning, difficulty);
+		}
 
 		if (query.status === "ok") {
 			return query.data;

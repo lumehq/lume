@@ -30,6 +30,7 @@ const queryClient = new QueryClient({
 			persister: experimental_createPersister<PersistedQuery>({
 				storage: newIdbStorage(createStore("lume", "cache")),
 				maxAge: 1000 * 60 * 60 * 12, // 12 hours,
+				filters: { queryKey: ["cache"] },
 				serialize: (persistedQuery) => persistedQuery,
 				deserialize: (cached) => cached,
 			}),

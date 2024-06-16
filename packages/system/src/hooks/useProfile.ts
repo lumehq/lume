@@ -8,7 +8,7 @@ export function useProfile(pubkey: string, embed?: string) {
 		isError,
 		data: profile,
 	} = useQuery({
-		queryKey: ["user", pubkey],
+		queryKey: ["cache", "profile", pubkey],
 		queryFn: async () => {
 			try {
 				if (embed) return JSON.parse(embed) as Metadata;
@@ -29,7 +29,7 @@ export function useProfile(pubkey: string, embed?: string) {
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: 2,
+		retry: false,
 	});
 
 	return { isLoading, isError, profile };
