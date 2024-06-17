@@ -1,8 +1,8 @@
 export function VideoPreview({ url }: { url: string }) {
 	return (
-		<div className="my-1 overflow-hidden rounded-xl">
+		<div className="my-1">
 			<video
-				className="h-auto w-full bg-neutral-100 text-sm dark:bg-neutral-900"
+				className="max-h-[600px] w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 				controls
 				muted
 			>

@@ -28,7 +28,6 @@
 		"@tanstack/react-router": "^1.38.1",
 		"i18next": "^23.11.5",
 		"i18next-resources-to-backend": "^1.2.1",
-		"idb-keyval": "^6.2.1",
 		"minidenticons": "^4.2.1",
 		"nanoid": "^5.0.7",
 		"nostr-tools": "^2.7.0",

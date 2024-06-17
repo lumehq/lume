@@ -26,7 +26,7 @@ export function RepostNote({
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
-		retry: false,
+		retry: 2,
 	});
 
 	return (
@@ -39,7 +39,9 @@ export function RepostNote({
 			{isLoading ? (
 				<div className="flex items-center justify-center h-20 gap-2">
 					<Spinner />
-					Loading event...
+					<span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+						Loading event...
+					</span>
 				</div>
 			) : isError || !data ? (
 				<div className="flex items-center justify-center h-20">
@@ -62,7 +64,7 @@ export function RepostNote({
 							</div>
 							<div>
 								<User.Provider pubkey={event.pubkey}>
-									<User.Root className="flex items-center gap-2 px-3 py-3 border-b border-neutral-100 dark:border-neutral-800/50 rounded-t-xl">
+									<User.Root className="flex items-center gap-2">
 										<div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
 											Reposted by
 										</div>

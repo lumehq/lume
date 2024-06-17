@@ -73,6 +73,7 @@ pub async fn get_event_from(
   state: State<'_, Nostr>,
 ) -> Result<RichEvent, String> {
   let client = &state.client;
+
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
       Nip19::EventId(id) => Some(id),
@@ -86,9 +87,10 @@ pub async fn get_event_from(
   };
 
   // Add relay hint to relay pool
-  let _ = client.add_relay(relay_hint).await.unwrap_or_default();
+  if let Err(err) = client.add_relay(relay_hint).await {
+    return Err(err.to_string());
+  }
 
-  // Connect relay
   if (client.connect_relay(relay_hint).await).is_ok() {
     match event_id {
       Some(id) => {
@@ -104,12 +106,6 @@ pub async fn get_event_from(
               } else {
                 None
               };
-
-              // Disconnect the relay hint after get event
-              client
-                .disconnect_relay(relay_hint)
-                .await
-                .unwrap_or_default();
 
               Ok(RichEvent { raw, parsed })
             } else {

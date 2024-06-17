@@ -4,11 +4,12 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "./provider";
 import { NostrQuery } from "@lume/system";
+import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 
 export function UserNip05() {
 	const user = useUserContext();
 	const { isLoading, data: verified } = useQuery({
-		queryKey: ["cache", "nip05", user?.pubkey],
+		queryKey: ["nip05", user?.pubkey],
 		queryFn: async () => {
 			if (!user.profile?.nip05?.length) return false;
 
@@ -25,6 +26,10 @@ export function UserNip05() {
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
 		retry: false,
+		persister: experimental_createPersister({
+			storage: localStorage,
+			maxAge: 1000 * 60 * 60 * 72, // 72 hours
+		}),
 	});
 
 	if (!user.profile?.nip05?.length) return;

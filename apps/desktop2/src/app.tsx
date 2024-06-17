@@ -7,37 +7,8 @@ import "./app.css";
 import i18n from "./locale";
 import { routeTree } from "./router.gen"; // auto generated file
 import { type } from "@tauri-apps/plugin-os";
-import {
-	experimental_createPersister,
-	type AsyncStorage,
-	type PersistedQuery,
-} from "@tanstack/query-persist-client-core";
-import { get, set, del, createStore, type UseStore } from "idb-keyval";
 
-function newIdbStorage(idbStore: UseStore): AsyncStorage<PersistedQuery> {
-	return {
-		getItem: async (key) => await get(key, idbStore),
-		setItem: async (key, value) => await set(key, value, idbStore),
-		removeItem: async (key) => await del(key, idbStore),
-	};
-}
-
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			gcTime: 1000 * 30, // 30 seconds
-			// @ts-ignore, idk
-			persister: experimental_createPersister<PersistedQuery>({
-				storage: newIdbStorage(createStore("lume", "cache")),
-				maxAge: 1000 * 60 * 60 * 12, // 12 hours,
-				filters: { queryKey: ["cache"] },
-				serialize: (persistedQuery) => persistedQuery,
-				deserialize: (cached) => cached,
-			}),
-		},
-	},
-});
-
+const queryClient = new QueryClient();
 const os = await type();
 
 // Set up a Router instance

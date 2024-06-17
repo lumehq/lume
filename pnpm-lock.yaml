@@ -111,9 +111,6 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
-      idb-keyval:
-        specifier: ^6.2.1
-        version: 6.2.1
       minidenticons:
         specifier: ^4.2.1
         version: 4.2.1
@@ -261,6 +258,9 @@ importers:
       '@lume/utils':
         specifier: workspace:^
         version: link:../utils
+      '@tanstack/query-persist-client-core':
+        specifier: ^5.45.0
+        version: 5.45.0
       '@tanstack/react-query':
         specifier: ^5.45.0
         version: 5.45.0(react@18.3.1)
@@ -3954,10 +3954,6 @@ packages:
     resolution: {integrity: sha512-41pvpVbW9rhZPk5xjCX2TPJi2861LEig/YRhUkY+1FQ2IQPS0bKUDYnEqY8XPPbB48h1uIwLnP9iiEfuSl20CA==}
     dependencies:
       '@babel/runtime': 7.24.7
-    dev: false
-
-  /idb-keyval@6.2.1:
-    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
     dev: false
 
   /immer@10.1.1:

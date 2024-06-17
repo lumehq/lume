@@ -32,7 +32,7 @@ export function MentionNote({
 	}
 
 	return (
-		<div className="flex flex-col w-full mt-2 border cursor-default rounded-xl border-black/10 dark:border-white/10">
+		<div className="flex flex-col w-full border rounded-lg cursor-default border-black/10 dark:border-white/10">
 			<User.Provider pubkey={data.pubkey}>
 				<User.Root className="flex items-center gap-2 px-3 h-11">
 					<User.Avatar className="object-cover rounded-full size-6 shrink-0" />
@@ -49,13 +49,13 @@ export function MentionNote({
 			<div
 				className={cn(
 					"px-3 select-text whitespace-normal text-pretty content-break leading-normal",
-					data.content.length > 100 ? "max-h-[150px] gradient-mask-b-0" : "",
+					data.content.length > 400 ? "max-h-[150px] gradient-mask-b-0" : "",
 				)}
 			>
 				{data.content}
 			</div>
 			{openable ? (
-				<div className="flex items-center justify-end px-3 h-14">
+				<div className="flex items-center justify-end px-2 h-11">
 					<button
 						type="button"
 						onClick={(e) => {
