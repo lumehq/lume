@@ -164,6 +164,37 @@ export class NostrQuery {
 		}
 	}
 
+	static async getRepostEvent(event: LumeEvent) {
+		try {
+			const embed: NostrEvent = JSON.parse(event.content);
+			const query = await commands.getEventMeta(embed.content);
+
+			if (query.status === "ok") {
+				embed.meta = query.data;
+				const lumeEvent = new LumeEvent(embed);
+				return lumeEvent;
+			}
+		} catch {
+			const query = await commands.getEvent(event.repostId);
+
+			if (query.status === "ok") {
+				const data = query.data;
+				const raw = JSON.parse(data.raw) as NostrEvent;
+
+				if (data?.parsed) {
+					raw.meta = data.parsed;
+				}
+
+				const event = new LumeEvent(raw);
+
+				return event;
+			} else {
+				console.log("[getRepostEvent]: ", query.error);
+				return null;
+			}
+		}
+	}
+
 	static async getUserEvents(pubkey: string, asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getEventsBy(pubkey, until);

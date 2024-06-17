@@ -252,6 +252,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async getEventMeta(content: string) : Promise<Result<Meta, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_event_meta", { content }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getEvent(id: string) : Promise<Result<RichEvent, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_event", { id }) };

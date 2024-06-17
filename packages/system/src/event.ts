@@ -39,6 +39,10 @@ export class LumeEvent {
 		return this.tags.filter((tag) => tag[0] === "p").map((tag) => tag[1]);
 	}
 
+	get repostId() {
+		return this.tags.find((tag) => tag[0] === "e")[1];
+	}
+
 	get thread() {
 		let root: EventTag = null;
 		let reply: EventTag = null;

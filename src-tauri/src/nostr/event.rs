@@ -17,6 +17,13 @@ pub struct RichEvent {
 
 #[tauri::command]
 #[specta::specta]
+pub async fn get_event_meta(content: &str) -> Result<Meta, ()> {
+  let meta = parse_event(content).await;
+  Ok(meta)
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, String> {
   let client = &state.client;
   let event_id: Option<EventId> = match Nip19::from_bech32(id) {
@@ -82,38 +89,40 @@ pub async fn get_event_from(
   let _ = client.add_relay(relay_hint).await.unwrap_or_default();
 
   // Connect relay
-  client.connect_relay(relay_hint).await.unwrap_or_default();
+  if (client.connect_relay(relay_hint).await).is_ok() {
+    match event_id {
+      Some(id) => {
+        match client
+          .get_events_from(vec![relay_hint], vec![Filter::new().id(id)], None)
+          .await
+        {
+          Ok(events) => {
+            if let Some(event) = events.first() {
+              let raw = event.as_json();
+              let parsed = if event.kind == Kind::TextNote {
+                Some(parse_event(&event.content).await)
+              } else {
+                None
+              };
 
-  match event_id {
-    Some(id) => {
-      match client
-        .get_events_from(vec![relay_hint], vec![Filter::new().id(id)], None)
-        .await
-      {
-        Ok(events) => {
-          if let Some(event) = events.first() {
-            let raw = event.as_json();
-            let parsed = if event.kind == Kind::TextNote {
-              Some(parse_event(&event.content).await)
+              // Disconnect the relay hint after get event
+              client
+                .disconnect_relay(relay_hint)
+                .await
+                .unwrap_or_default();
+
+              Ok(RichEvent { raw, parsed })
             } else {
-              None
-            };
-
-            // Disconnect the relay hint after get event
-            client
-              .disconnect_relay(relay_hint)
-              .await
-              .unwrap_or_default();
-
-            Ok(RichEvent { raw, parsed })
-          } else {
-            Err("Cannot found this event with current relay list".into())
+              Err("Cannot found this event with current relay list".into())
+            }
           }
+          Err(err) => Err(err.to_string()),
         }
-        Err(err) => Err(err.to_string()),
       }
+      None => Err("Event ID is not valid.".into()),
     }
-    None => Err("Event ID is not valid.".into()),
+  } else {
+    Err("Relay connection failed.".into())
   }
 }
 
