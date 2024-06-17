@@ -7,9 +7,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
 import { nanoid } from "nanoid";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { VList, type VListHandle } from "virtua";
+import useEmblaCarousel from "embla-carousel-react";
 
 export const Route = createFileRoute("/$account/home")({
 	loader: async () => {
@@ -22,67 +22,47 @@ export const Route = createFileRoute("/$account/home")({
 function Screen() {
 	const { account } = Route.useParams();
 	const initialColumnList = Route.useLoaderData();
-	const vlistRef = useRef<VListHandle>(null);
 
 	const [columns, setColumns] = useState<LumeColumn[]>([]);
-	const [selectedIndex, setSelectedIndex] = useState(-1);
-	const [isScroll, setIsScroll] = useState(false);
-	const [isResize, setIsResize] = useState(false);
+	const [emblaRef, emblaApi] = useEmblaCarousel({
+		watchDrag: false,
+		loop: true,
+	});
 
-	const openLumeStore = async () => {
-		const column: LumeColumn = {
-			label: "store",
-			name: "Store",
-			content: "/store/official",
-		};
-		const mainWindow = getCurrent();
-		await mainWindow.emit("columns", { type: "add", column });
-	};
+	const scrollPrev = useCallback(() => {
+		if (emblaApi) emblaApi.scrollPrev(true);
+	}, [emblaApi]);
 
-	const reset = () => {
-		setColumns(null);
-		setSelectedIndex(-1);
-	};
+	const scrollNext = useCallback(() => {
+		if (emblaApi) emblaApi.scrollNext(true);
+	}, [emblaApi]);
 
-	const goLeft = () => {
-		const prevIndex = Math.max(selectedIndex - 1, 0);
-		setSelectedIndex(prevIndex);
-		vlistRef.current.scrollToIndex(prevIndex, {
-			align: "center",
+	const emitScrollEvent = useCallback(() => {
+		getCurrent().emit("window", { scroll: true });
+	}, []);
+
+	const emitResizeEvent = useCallback(() => {
+		getCurrent().emit("window", { resize: true });
+	}, []);
+
+	const openLumeStore = useDebouncedCallback(async () => {
+		await getCurrent().emit("columns", {
+			type: "add",
+			column: {
+				label: "store",
+				name: "Store",
+				content: "/store/official",
+			},
 		});
-	};
-
-	const goRight = () => {
-		const nextIndex = Math.min(selectedIndex + 1, columns.length - 1);
-		setSelectedIndex(nextIndex);
-		vlistRef.current.scrollToIndex(nextIndex, {
-			align: "center",
-		});
-	};
+	}, 150);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
-		// update col label
-		column.label = `${column.label}-${nanoid()}`;
-
+		column.label = `${column.label}-${nanoid()}`; // update col label
 		setColumns((prev) => [...prev, column]);
-		setSelectedIndex(columns.length + 1);
-		setIsScroll(true);
-
-		// scroll to the newest column
-		vlistRef.current.scrollToIndex(columns.length + 1, {
-			align: "center",
-		});
 	}, 150);
 
 	const remove = useDebouncedCallback((label: string) => {
 		setColumns((prev) => prev.filter((t) => t.label !== label));
-		setSelectedIndex(columns.length - 1);
-		setIsScroll(true);
-
-		// scroll to the first column
-		vlistRef.current.scrollToIndex(columns.length - 1, {
-			align: "start",
-		});
 	}, 150);
 
 	const updateName = useDebouncedCallback((label: string, title: string) => {
@@ -97,10 +77,32 @@ function Screen() {
 		setColumns(newCols);
 	}, 150);
 
-	const startResize = useDebouncedCallback(
-		() => setIsResize((prev) => !prev),
-		150,
-	);
+	const reset = useDebouncedCallback(() => setColumns([]), 150);
+
+	const handleKeyDown = useDebouncedCallback((event) => {
+		if (event.defaultPrevented) {
+			return;
+		}
+
+		switch (event.code) {
+			case "ArrowLeft":
+				if (emblaApi) emblaApi.scrollPrev(true);
+				break;
+			case "ArrowRight":
+				if (emblaApi) emblaApi.scrollNext(true);
+				break;
+		}
+
+		event.preventDefault();
+	}, 150);
+
+	useEffect(() => {
+		if (emblaApi) {
+			emblaApi.on("scroll", emitScrollEvent);
+			emblaApi.on("resize", emitResizeEvent);
+			emblaApi.on("slidesChanged", emitScrollEvent);
+		}
+	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
 
 	useEffect(() => {
 		if (columns?.length) {
@@ -113,7 +115,8 @@ function Screen() {
 	}, [initialColumnList]);
 
 	useEffect(() => {
-		const unlistenColEvent = listen<EventColumns>("columns", (data) => {
+		// Listen for columns event
+		const unlisten = listen<EventColumns>("columns", (data) => {
 			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
 			if (data.payload.type === "remove") remove(data.payload.label);
@@ -121,43 +124,33 @@ function Screen() {
 				updateName(data.payload.label, data.payload.title);
 		});
 
-		const unlistenWindowResize = getCurrent().listen("tauri://resize", () => {
-			startResize();
-		});
+		// Listen for keyboard event
+		window.addEventListener("keydown", handleKeyDown);
 
 		return () => {
-			unlistenColEvent.then((f) => f());
-			unlistenWindowResize.then((f) => f());
+			unlisten.then((f) => f());
+			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, []);
 
 	return (
-		<div className="w-full h-full">
-			<VList
-				ref={vlistRef}
-				horizontal
-				tabIndex={-1}
-				itemSize={500}
-				overscan={3}
-				onScroll={() => setIsScroll(true)}
-				onScrollEnd={() => setIsScroll(false)}
-				className="w-full h-full overflow-x-auto scrollbar-none focus:outline-none"
-			>
-				{columns?.map((column) => (
-					<Column
-						key={account + column.label}
-						column={column}
-						account={account}
-						isScroll={isScroll}
-						isResize={isResize}
-					/>
-				))}
-			</VList>
+		<div className="size-full">
+			<div ref={emblaRef} className="overflow-hidden size-full">
+				<div className="flex size-full">
+					{columns?.map((column) => (
+						<Column
+							key={account + column.label}
+							column={column}
+							account={account}
+						/>
+					))}
+				</div>
+			</div>
 			<Toolbar>
 				<div className="flex items-center h-8 gap-1 p-[2px] rounded-full bg-black/5 dark:bg-white/5">
 					<button
 						type="button"
-						onClick={() => goLeft()}
+						onClick={() => scrollPrev()}
 						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<ArrowLeftIcon className="size-4" />
@@ -171,7 +164,7 @@ function Screen() {
 					</button>
 					<button
 						type="button"
-						onClick={() => goRight()}
+						onClick={() => scrollNext()}
 						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
 					>
 						<ArrowRightIcon className="size-4" />

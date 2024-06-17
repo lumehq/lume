@@ -25,7 +25,7 @@ export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
 		snapPointIndexes,
 	} = useSnapCarousel();
 	return (
-		<div className="group relative">
+		<div className="relative group">
 			<ul
 				ref={scrollRef}
 				className="relative flex overflow-auto snap-x scrollbar-none"
@@ -39,9 +39,10 @@ export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
 			</ul>
 			<div
 				aria-hidden
-				className="hidden group-hover:flex z-10 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full justify-between items-center px-5"
+				className="absolute z-10 items-center justify-between hidden w-full px-5 transform -translate-x-1/2 -translate-y-1/2 group-hover:flex left-1/2 top-1/2"
 			>
 				<button
+					type="button"
 					className={cn(
 						"size-11 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white",
 						activePageIndex <= 0 ? "opacity-50" : "",
@@ -51,6 +52,7 @@ export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
 					<ArrowLeftIcon className="size-6" />
 				</button>
 				<button
+					type="button"
 					className={cn(
 						"size-11 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white",
 						activePageIndex <= 0 ? "opacity-50" : "",
@@ -60,7 +62,7 @@ export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
 					<ArrowRightIcon className="size-6" />
 				</button>
 			</div>
-			<div className="absolute top-3 right-3 flex justify-center bg-black mix-blend-multiply bg-opacity-20 backdrop-blur-sm h-6 w-12 items-center rounded-full text-sm font-medium text-white">
+			<div className="absolute flex items-center justify-center w-12 h-6 text-sm font-medium text-white bg-black rounded-full top-3 right-3 mix-blend-multiply bg-opacity-20 backdrop-blur-sm">
 				{activePageIndex + 1} / {pages.length}
 			</div>
 		</div>

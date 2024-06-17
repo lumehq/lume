@@ -2,53 +2,57 @@ import { CancelIcon, CheckIcon } from "@lume/icons";
 import type { LumeColumn } from "@lume/types";
 import { cn } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+type WindowEvent = {
+	scroll: boolean;
+	resize: boolean;
+};
 
 export function Column({
 	column,
 	account,
-	isScroll,
-	isResize,
 }: {
 	column: LumeColumn;
 	account: string;
-	isScroll: boolean;
-	isResize: boolean;
 }) {
 	const container = useRef<HTMLDivElement>(null);
-	const webviewLabel = useMemo(
-		() => `column-${account}_${column.label}`,
-		[account],
-	);
+	const webviewLabel = `column-${account}_${column.label}`;
 
 	const [isCreated, setIsCreated] = useState(false);
 
-	const repositionWebview = async () => {
+	const repositionWebview = useCallback(async () => {
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("reposition_column", {
 			label: webviewLabel,
 			x: newRect.x,
 			y: newRect.y,
 		});
-	};
+	}, []);
 
-	const resizeWebview = async () => {
+	const resizeWebview = useCallback(async () => {
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("resize_column", {
 			label: webviewLabel,
 			width: newRect.width,
 			height: newRect.height,
 		});
-	};
+	}, []);
 
 	useEffect(() => {
-		if (isCreated) resizeWebview();
-	}, [isResize]);
+		if (!isCreated) return;
 
-	useEffect(() => {
-		if (isScroll && isCreated) repositionWebview();
-	}, [isScroll]);
+		const unlisten = listen<WindowEvent>("window", (data) => {
+			if (data.payload.scroll) repositionWebview();
+			if (data.payload.resize) resizeWebview();
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, [isCreated]);
 
 	useEffect(() => {
 		if (!container?.current) return;
