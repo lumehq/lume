@@ -1,7 +1,7 @@
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { LumeWindow, NostrQuery, useEvent } from "@lume/system";
-import { Kind, NostrEvent } from "@lume/types";
+import { type LumeEvent, LumeWindow, NostrQuery, useEvent } from "@lume/system";
+import { Kind } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/panel")({
 
 function Screen() {
 	const [account, setAccount] = useState<string>(null);
-	const [events, setEvents] = useState<NostrEvent[]>([]);
+	const [events, setEvents] = useState<LumeEvent[]>([]);
 
 	const texts = useMemo(
 		() => events.filter((ev) => ev.kind === Kind.Text),
@@ -27,7 +27,7 @@ function Screen() {
 	);
 
 	const zaps = useMemo(() => {
-		const groups = new Map<string, NostrEvent[]>();
+		const groups = new Map<string, LumeEvent[]>();
 		const list = events.filter((ev) => ev.kind === Kind.ZapReceipt);
 
 		for (const event of list) {
@@ -46,7 +46,7 @@ function Screen() {
 	}, [events]);
 
 	const reactions = useMemo(() => {
-		const groups = new Map<string, NostrEvent[]>();
+		const groups = new Map<string, LumeEvent[]>();
 		const list = events.filter(
 			(ev) => ev.kind === Kind.Repost || ev.kind === Kind.Reaction,
 		);
@@ -86,7 +86,7 @@ function Screen() {
 		);
 
 		const unlistenNewEvent = getCurrent().listen("notification", (data) => {
-			const event: NostrEvent = JSON.parse(data.payload as string);
+			const event: LumeEvent = JSON.parse(data.payload as string);
 			setEvents((prev) => [event, ...prev]);
 		});
 
@@ -98,28 +98,28 @@ function Screen() {
 
 	if (!account) {
 		return (
-			<div className="w-full h-full flex items-center justify-center text-sm">
+			<div className="flex items-center justify-center w-full h-full text-sm">
 				Please log in.
 			</div>
 		);
 	}
 
 	return (
-		<div className="w-full h-full flex flex-col">
-			<div className="h-11 shrink-0 flex items-center justify-between border-b border-black/5 px-4">
+		<div className="flex flex-col w-full h-full">
+			<div className="flex items-center justify-between px-4 border-b h-11 shrink-0 border-black/5">
 				<div>
 					<h1 className="text-sm font-semibold">Notifications</h1>
 				</div>
 				<div className="inline-flex items-center gap-2">
 					<User.Provider pubkey={account}>
 						<User.Root>
-							<User.Avatar className="size-7 rounded-full" />
+							<User.Avatar className="rounded-full size-7" />
 						</User.Root>
 					</User.Provider>
 					<button
 						type="button"
 						onClick={() => LumeWindow.openSettings()}
-						className="size-7 inline-flex items-center justify-center bg-black/5 dark:bg-white/5 rounded-full"
+						className="inline-flex items-center justify-center rounded-full size-7 bg-black/5 dark:bg-white/5"
 					>
 						<SettingsIcon className="size-4" />
 					</button>
@@ -127,7 +127,7 @@ function Screen() {
 			</div>
 			<Tabs.Root
 				defaultValue="replies"
-				className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-none"
+				className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-none"
 			>
 				<Tabs.List className="flex items-center">
 					<Tabs.Trigger
@@ -152,25 +152,25 @@ function Screen() {
 				<div className="p-2">
 					<Tabs.Content value="replies" className="flex flex-col gap-2">
 						{texts.map((event) => (
-							<TextNote event={event} />
+							<TextNote key={event.id} event={event} />
 						))}
 					</Tabs.Content>
 					<Tabs.Content value="reactions" className="flex flex-col gap-2">
 						{[...reactions.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="shrink-0 flex flex-col gap-1 rounded-lg p-2 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
 							>
-								<div className="min-w-0 flex-1 flex flex-col gap-2">
-									<div className="pb-2 border-b border-black/5 dark:border-white/5 flex items-center gap-2">
+								<div className="flex flex-col flex-1 min-w-0 gap-2">
+									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
 										<RootNote id={root} />
 									</div>
 									<div className="flex flex-wrap items-center gap-3">
 										{events.map((event) => (
-											<User.Provider pubkey={event.pubkey}>
+											<User.Provider key={event.id} pubkey={event.pubkey}>
 												<User.Root className="shrink-0 flex rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
-													<User.Avatar className="flex-1 size-7 rounded-full" />
-													<div className="flex-1 size-7 rounded-full inline-flex items-center justify-center text-xs truncate">
+													<User.Avatar className="flex-1 rounded-full size-7" />
+													<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
 														{event.kind === Kind.Reaction ? (
 															event.content === "+" ? (
 																"👍"
@@ -178,7 +178,7 @@ function Screen() {
 																event.content
 															)
 														) : (
-															<RepostIcon className="size-4 dark:text-teal-600 text-teal-400" />
+															<RepostIcon className="text-teal-400 size-4 dark:text-teal-600" />
 														)}
 													</div>
 												</User.Root>
@@ -193,19 +193,20 @@ function Screen() {
 						{[...zaps.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="shrink-0 flex flex-col gap-1 rounded-lg p-2 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
 							>
-								<div className="min-w-0 flex-1 flex flex-col gap-2">
-									<div className="pb-2 border-b border-black/5 dark:border-white/5 flex items-center gap-2">
+								<div className="flex flex-col flex-1 min-w-0 gap-2">
+									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
 										<RootNote id={root} />
 									</div>
 									<div className="flex flex-wrap items-center gap-3">
 										{events.map((event) => (
 											<User.Provider
-												pubkey={event.tags.find((tag) => tag[0] == "P")[1]}
+												key={event.id}
+												pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
 											>
 												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
-													<User.Avatar className="flex-1 size-7 rounded-full" />
+													<User.Avatar className="flex-1 rounded-full size-7" />
 													<div className="flex-1 h-7 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-sm truncate">
 														₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
 													</div>
@@ -228,9 +229,9 @@ function RootNote({ id }: { id: string }) {
 
 	if (isLoading) {
 		return (
-			<div className="pb-2 mb-2 flex items-center">
-				<div className="size-8 shrink-0 rounded-full bg-black/20 dark:bg-white/20 animate-pulse" />
-				<div className="animate-pulse rounded-md h-4 w-2/3 bg-black/20 dark:bg-white/20" />
+			<div className="flex items-center pb-2 mb-2">
+				<div className="rounded-full size-8 shrink-0 bg-black/20 dark:bg-white/20 animate-pulse" />
+				<div className="w-2/3 h-4 rounded-md animate-pulse bg-black/20 dark:bg-white/20" />
 			</div>
 		);
 	}
@@ -238,10 +239,10 @@ function RootNote({ id }: { id: string }) {
 	if (isError || !data) {
 		return (
 			<div className="flex items-center gap-2">
-				<div className="size-8 shrink-0 rounded-full bg-red-500 text-white inline-flex items-center justify-center">
+				<div className="inline-flex items-center justify-center text-white bg-red-500 rounded-full size-8 shrink-0">
 					<InfoIcon className="size-5" />
 				</div>
-				<p className="text-red-500 text-sm">
+				<p className="text-sm text-red-500">
 					Event not found with your current relay set
 				</p>
 			</div>
@@ -253,7 +254,7 @@ function RootNote({ id }: { id: string }) {
 			<Note.Root className="flex items-center gap-2">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="shrink-0">
-						<User.Avatar className="size-8 shrink-0 rounded-full" />
+						<User.Avatar className="rounded-full size-8 shrink-0" />
 					</User.Root>
 				</User.Provider>
 				<div className="line-clamp-1">{data.content}</div>
@@ -262,7 +263,7 @@ function RootNote({ id }: { id: string }) {
 	);
 }
 
-function TextNote({ event }: { event: NostrEvent }) {
+function TextNote({ event }: { event: LumeEvent }) {
 	const pTags = event.tags
 		.filter((tag) => tag[0] === "p")
 		.map((tag) => tag[1])
@@ -275,14 +276,14 @@ function TextNote({ event }: { event: NostrEvent }) {
 			onClick={() => LumeWindow.openEvent(event)}
 		>
 			<Note.Provider event={event}>
-				<Note.Root className="shrink-0 flex flex-col gap-1 rounded-lg p-2 backdrop-blur-md bg-black/10 dark:bg-white/10">
+				<Note.Root className="flex flex-col gap-1 p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
 					<User.Provider pubkey={event.pubkey}>
 						<User.Root className="inline-flex items-center gap-2">
-							<User.Avatar className="size-9 shrink-0 rounded-full" />
-							<div className="flex-1 flex flex-col">
-								<div className="w-full flex items-baseline justify-between">
-									<User.Name className="leading-tight text-sm font-semibold" />
-									<span className="leading-tight text-sm text-black/50 dark:text-white/50">
+							<User.Avatar className="rounded-full size-9 shrink-0" />
+							<div className="flex flex-col flex-1">
+								<div className="flex items-baseline justify-between w-full">
+									<User.Name className="text-sm font-semibold leading-tight" />
+									<span className="text-sm leading-tight text-black/50 dark:text-white/50">
 										{formatCreatedAt(event.created_at)}
 									</span>
 								</div>
@@ -292,9 +293,9 @@ function TextNote({ event }: { event: NostrEvent }) {
 									</span>
 									<div className="inline-flex items-baseline gap-1">
 										{pTags.map((replyTo) => (
-											<User.Provider pubkey={replyTo}>
+											<User.Provider key={replyTo} pubkey={replyTo}>
 												<User.Root>
-													<User.Name className="leading-tight font-medium" />
+													<User.Name className="font-medium leading-tight" />
 												</User.Root>
 											</User.Provider>
 										))}

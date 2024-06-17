@@ -1,8 +1,9 @@
-import { NostrEvent } from "@lume/types";
+import type { NostrEvent } from "@lume/types";
+import type { LumeEvent } from "./event";
 import { commands } from "./commands";
 
 export class LumeWindow {
-	static async openEvent(event: NostrEvent) {
+	static async openEvent(event: NostrEvent | LumeEvent) {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
 		const root: string =
 			eTags.find((el) => el[3] === "root")?.[1] ?? eTags[0]?.[1];
@@ -38,12 +39,18 @@ export class LumeWindow {
 		}
 	}
 
-	static async openEditor(reply_to?: string, quote = false) {
+	static async openEditor(reply_to?: string, quote?: string) {
 		let url: string;
 
 		if (reply_to) {
-			url = `/editor?reply_to=${reply_to}&quote=${quote}`;
-		} else {
+			url = `/editor?reply_to=${reply_to}`;
+		}
+
+		if (quote?.length) {
+			url = `/editor?quote=${quote}`;
+		}
+
+		if (!reply_to?.length && !quote?.length) {
 			url = "/editor";
 		}
 

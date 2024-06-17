@@ -1,6 +1,4 @@
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -10,11 +8,8 @@ import i18n from "./locale";
 import { routeTree } from "./router.gen"; // auto generated file
 import { type } from "@tauri-apps/plugin-os";
 
-const os = await type();
 const queryClient = new QueryClient();
-const persister = createSyncStoragePersister({
-	storage: window.localStorage,
-});
+const os = await type();
 
 // Set up a Router instance
 const router = createRouter({
@@ -26,12 +21,9 @@ const router = createRouter({
 	Wrap: ({ children }) => {
 		return (
 			<I18nextProvider i18n={i18n} defaultNS={"translation"}>
-				<PersistQueryClientProvider
-					client={queryClient}
-					persistOptions={{ persister }}
-				>
+				<QueryClientProvider client={queryClient}>
 					{children}
-				</PersistQueryClientProvider>
+				</QueryClientProvider>
 			</I18nextProvider>
 		);
 	},

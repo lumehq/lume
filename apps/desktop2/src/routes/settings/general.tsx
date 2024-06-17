@@ -48,13 +48,6 @@ function Screen() {
 		}));
 	};
 
-	const toggleZap = () => {
-		setNewSettings((prev) => ({
-			...prev,
-			zap: !newSettings.zap,
-		}));
-	};
-
 	const toggleNsfw = () => {
 		setNewSettings((prev) => ({
 			...prev,
@@ -84,14 +77,14 @@ function Screen() {
 	}, [newSettings]);
 
 	return (
-		<div className="mx-auto w-full max-w-xl">
+		<div className="w-full max-w-xl mx-auto">
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
-					<h2 className="font-semibold text-sm text-neutral-700 dark:text-neutral-300">
+					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
 						General
 					</h2>
-					<div className="flex flex-col divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl px-3">
-						<div className="flex w-full items-start justify-between gap-4 py-3">
+					<div className="flex flex-col px-3 divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl">
+						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
 								<h3 className="font-medium">Notification</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -99,7 +92,7 @@ function Screen() {
 									notifications from Lume directly.
 								</p>
 							</div>
-							<div className="w-36 flex justify-end shrink-0">
+							<div className="flex justify-end w-36 shrink-0">
 								<Switch.Root
 									checked={newSettings.notification}
 									onClick={() => toggleNofitication()}
@@ -109,7 +102,7 @@ function Screen() {
 								</Switch.Root>
 							</div>
 						</div>
-						<div className="flex w-full items-start justify-between gap-4 py-3">
+						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
 								<h3 className="font-medium">Relay Hint</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -117,7 +110,7 @@ function Screen() {
 									Relay Hint when fetching a new event.
 								</p>
 							</div>
-							<div className="w-36 flex justify-end shrink-0">
+							<div className="flex justify-end w-36 shrink-0">
 								<Switch.Root
 									checked={newSettings.gossip}
 									onClick={() => toggleGossip()}
@@ -127,7 +120,7 @@ function Screen() {
 								</Switch.Root>
 							</div>
 						</div>
-						<div className="flex w-full items-start justify-between gap-4 py-3">
+						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
 								<h3 className="font-medium">Enhanced Privacy</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -135,7 +128,7 @@ function Screen() {
 									previews in plain text.
 								</p>
 							</div>
-							<div className="w-36 flex justify-end shrink-0">
+							<div className="flex justify-end w-36 shrink-0">
 								<Switch.Root
 									checked={newSettings.enhancedPrivacy}
 									onClick={() => toggleEnhancedPrivacy()}
@@ -145,14 +138,14 @@ function Screen() {
 								</Switch.Root>
 							</div>
 						</div>
-						<div className="flex w-full items-start justify-between gap-4 py-3">
+						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
 								<h3 className="font-medium">Auto Update</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
 									Automatically download and install new version.
 								</p>
 							</div>
-							<div className="w-36 flex justify-end shrink-0">
+							<div className="flex justify-end w-36 shrink-0">
 								<Switch.Root
 									checked={newSettings.autoUpdate}
 									onClick={() => toggleAutoUpdate()}
@@ -162,7 +155,7 @@ function Screen() {
 								</Switch.Root>
 							</div>
 						</div>
-						<div className="flex w-full items-start justify-between gap-4 py-3">
+						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
 								<h3 className="font-semibold">Filter sensitive content</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -170,7 +163,7 @@ function Screen() {
 									Warning tag, it's may include NSFW content.
 								</p>
 							</div>
-							<div className="w-36 flex justify-end shrink-0">
+							<div className="flex justify-end w-36 shrink-0">
 								<Switch.Root
 									checked={newSettings.nsfw}
 									onClick={() => toggleNsfw()}
@@ -183,39 +176,21 @@ function Screen() {
 					</div>
 				</div>
 				<div className="flex flex-col gap-2">
-					<h2 className="font-semibold text-sm text-neutral-700 dark:text-neutral-300">
+					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
 						Interface
 					</h2>
-					<div className="flex flex-col divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl px-3">
-						<div className="flex w-full items-start justify-between gap-4 py-3">
-							<div className="flex-1">
-								<h3 className="font-semibold">Zap</h3>
-								<p className="text-sm text-neutral-700 dark:text-neutral-300">
-									Show the Zap button in each note and user's profile screen,
-									use for send bitcoin tip to other users.
-								</p>
-							</div>
-							<div className="w-36 flex justify-end shrink-0">
-								<Switch.Root
-									checked={newSettings.zap}
-									onClick={() => toggleZap()}
-									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
-								>
-									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-								</Switch.Root>
-							</div>
-						</div>
-						<div className="flex w-full items-start justify-between gap-4 py-3">
+					<div className="flex flex-col px-3 divide-y divide-black/10 dark:divide-white/10 bg-black/5 dark:bg-white/5 rounded-xl">
+						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
 								<h3 className="font-semibold">Appearance</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
 									* Require restarting the app to take effect.
 								</p>
 							</div>
-							<div className="w-36 flex justify-end shrink-0">
+							<div className="flex justify-end w-36 shrink-0">
 								<select
 									name="theme"
-									className="bg-transparent shadow-none outline-none rounded-lg border-1 border-black/10 dark:border-white/10 py-1 w-24"
+									className="w-24 py-1 bg-transparent rounded-lg shadow-none outline-none border-1 border-black/10 dark:border-white/10"
 									defaultValue={settings.theme}
 									onChange={(e) => changeTheme(e.target.value)}
 								>

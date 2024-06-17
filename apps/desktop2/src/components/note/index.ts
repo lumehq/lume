@@ -1,4 +1,3 @@
-import { NoteActivity } from "./activity";
 import { NoteOpenThread } from "./buttons/open";
 import { NoteReply } from "./buttons/reply";
 import { NoteRepost } from "./buttons/repost";
@@ -23,5 +22,4 @@ export const Note = {
 	Zap: NoteZap,
 	Open: NoteOpenThread,
 	Child: NoteChild,
-	Activity: NoteActivity,
 };

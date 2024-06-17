@@ -30,7 +30,7 @@ export function NoteMenu() {
 			<DropdownMenu.Trigger asChild>
 				<button
 					type="button"
-					className="group inline-flex size-7 items-center justify-center text-neutral-600 dark:text-neutral-400"
+					className="inline-flex items-center justify-center group size-7 text-neutral-600 dark:text-neutral-400"
 				>
 					<HorizontalDotsIcon className="size-5" />
 				</button>
@@ -41,7 +41,7 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => LumeWindow.openEvent(event)}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.viewThread")}
 						</button>
@@ -50,7 +50,7 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyLink()}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.copyLink")}
 						</button>
@@ -59,7 +59,7 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyID()}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.copyNoteId")}
 						</button>
@@ -68,25 +68,26 @@ export function NoteMenu() {
 						<button
 							type="button"
 							onClick={() => copyNpub()}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.copyAuthorId")}
 						</button>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item asChild>
 						<button
+							type="button"
 							onClick={() => LumeWindow.openProfile(event.pubkey)}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.viewAuthor")}
 						</button>
 					</DropdownMenu.Item>
-					<DropdownMenu.Separator className="my-1 h-px bg-neutral-900 dark:bg-neutral-100" />
+					<DropdownMenu.Separator className="h-px my-1 bg-neutral-900 dark:bg-neutral-100" />
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
 							onClick={() => copyRaw()}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							{t("note.menu.copyRaw")}
 						</button>

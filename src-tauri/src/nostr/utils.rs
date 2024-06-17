@@ -2,7 +2,8 @@ use std::collections::HashSet;
 use std::str::FromStr;
 
 use linkify::LinkFinder;
-use nostr_sdk::{Alphabet, Event, SingleLetterTag, Tag, TagKind};
+use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
+use nostr_sdk::prelude::Nip19Event;
 use reqwest::Client;
 use serde::Serialize;
 use specta::Type;
@@ -79,21 +80,26 @@ pub fn dedup_event(events: &[Event], nsfw: bool) -> Vec<Event> {
 }
 
 pub async fn parse_event(content: &str) -> Meta {
-  let words: Vec<_> = content.split_whitespace().collect();
   let mut finder = LinkFinder::new();
   finder.url_must_have_scheme(false);
+
+  // Get urls
   let urls: Vec<_> = finder.links(content).collect();
+  // Get words
+  let words: Vec<_> = content.split_whitespace().collect();
 
   let hashtags = words
     .iter()
     .filter(|&&word| word.starts_with('#'))
     .map(|&s| s.to_string())
     .collect::<Vec<_>>();
+
   let events = words
     .iter()
     .filter(|&&word| NOSTR_EVENTS.iter().any(|&el| word.starts_with(el)))
     .map(|&s| s.to_string())
     .collect::<Vec<_>>();
+
   let mentions = words
     .iter()
     .filter(|&&word| NOSTR_MENTIONS.iter().any(|&el| word.starts_with(el)))
@@ -118,12 +124,14 @@ pub async fn parse_event(content: &str) -> Meta {
           if IMAGES.contains(&ext) {
             text = text.replace(url_str, "");
             images.push(url_str.to_string());
-            break;
+            // Process the next item.
+            continue;
           }
           if VIDEOS.contains(&ext) {
             text = text.replace(url_str, "");
             videos.push(url_str.to_string());
-            break;
+            // Process the next item.
+            continue;
           }
         }
 
@@ -133,7 +141,8 @@ pub async fn parse_event(content: &str) -> Meta {
             if content_type.to_str().unwrap_or("").starts_with("image") {
               text = text.replace(url_str, "");
               images.push(url_str.to_string());
-              break;
+              // Process the next item.
+              continue;
             }
           }
         }
@@ -152,6 +161,87 @@ pub async fn parse_event(content: &str) -> Meta {
     images,
     videos,
   }
+}
+
+pub fn create_event_tags(content: &str) -> Vec<Tag> {
+  let mut tags: Vec<Tag> = vec![];
+  let mut tag_set: HashSet<String> = HashSet::new();
+
+  // Get words
+  let words: Vec<_> = content.split_whitespace().collect();
+
+  // Get mentions
+  let mentions = words
+    .iter()
+    .filter(|&&word| ["nostr:", "@"].iter().any(|&el| word.starts_with(el)))
+    .map(|&s| s.to_string())
+    .collect::<Vec<_>>();
+
+  // Get hashtags
+  let hashtags = words
+    .iter()
+    .filter(|&&word| word.starts_with('#'))
+    .map(|&s| s.to_string())
+    .collect::<Vec<_>>();
+
+  for mention in mentions {
+    let entity = mention.replace("nostr:", "").replace("@", "");
+
+    if !tag_set.contains(&entity) {
+      if entity.starts_with("npub") {
+        if let Ok(public_key) = PublicKey::from_bech32(&entity) {
+          let tag = Tag::public_key(public_key);
+          tags.push(tag);
+        } else {
+          continue;
+        }
+      }
+      if entity.starts_with("nprofile") {
+        if let Ok(public_key) = PublicKey::from_bech32(&entity) {
+          let tag = Tag::public_key(public_key);
+          tags.push(tag);
+        } else {
+          continue;
+        }
+      }
+      if entity.starts_with("note") {
+        if let Ok(event_id) = EventId::from_bech32(&entity) {
+          let hex = event_id.to_hex();
+          let tag = Tag::parse(&["e", &hex, "", "mention"]).unwrap();
+          tags.push(tag);
+        } else {
+          continue;
+        }
+      }
+      if entity.starts_with("nevent") {
+        if let Ok(event) = Nip19Event::from_bech32(&entity) {
+          let hex = event.event_id.to_hex();
+          let relay = event.clone().relays.into_iter().next().unwrap_or("".into());
+          let tag = Tag::parse(&["e", &hex, &relay, "mention"]).unwrap();
+
+          if let Some(author) = event.author {
+            let tag = Tag::public_key(author);
+            tags.push(tag);
+          }
+
+          tags.push(tag);
+        } else {
+          continue;
+        }
+      }
+      tag_set.insert(entity);
+    }
+  }
+
+  for hashtag in hashtags {
+    if !tag_set.contains(&hashtag) {
+      let tag = Tag::hashtag(hashtag.clone());
+      tags.push(tag);
+      tag_set.insert(hashtag);
+    }
+  }
+
+  tags
 }
 
 #[cfg(test)]

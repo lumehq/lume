@@ -5,13 +5,15 @@ import type {
 	Relay,
 	Settings,
 } from "@lume/types";
-import { commands } from "./commands";
+import { type Result, type RichEvent, commands } from "./commands";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { relaunch } from "@tauri-apps/plugin-process";
+import { nip19 } from "nostr-tools";
+import { LumeEvent } from "./event";
 
 enum NSTORE_KEYS {
 	settings = "lume_user_settings",
@@ -19,6 +21,24 @@ enum NSTORE_KEYS {
 }
 
 export class NostrQuery {
+	static #toLumeEvents(richEvents: RichEvent[]) {
+		const events = richEvents.map((item) => {
+			const nostrEvent = JSON.parse(item.raw) as NostrEvent;
+
+			if (item.parsed) {
+				nostrEvent.meta = item.parsed;
+			} else {
+				nostrEvent.meta = null;
+			}
+
+			const lumeEvent = new LumeEvent(nostrEvent);
+
+			return lumeEvent;
+		});
+
+		return events;
+	}
+
 	static async upload(filePath?: string) {
 		const allowExts = [
 			"png",
@@ -78,7 +98,9 @@ export class NostrQuery {
 		const query = await commands.getNotifications();
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => JSON.parse(item) as NostrEvent);
+			const data = query.data.map((item) => JSON.parse(item) as NostrEvent);
+			const events = data.map((ev) => new LumeEvent(ev));
+
 			return events;
 		} else {
 			console.error(query.error);
@@ -98,9 +120,32 @@ export class NostrQuery {
 		}
 	}
 
-	static async getEvent(id: string) {
-		const normalize: string = id.replace("nostr:", "").replace(/[^\w\s]/gi, "");
-		const query = await commands.getEvent(normalize);
+	static async getEvent(id: string, hint?: string) {
+		// Validate ID
+		const normalizeId: string = id
+			.replace("nostr:", "")
+			.replace(/[^\w\s]/gi, "");
+
+		// Define query
+		let query: Result<RichEvent, string>;
+		let relayHint: string = hint;
+
+		if (normalizeId.startsWith("nevent1")) {
+			const decoded = nip19.decode(normalizeId);
+			if (decoded.type === "nevent") relayHint = decoded.data.relays[0];
+		}
+
+		// Build query
+		if (relayHint) {
+			try {
+				const url = new URL(relayHint);
+				query = await commands.getEventFrom(normalizeId, url.toString());
+			} catch {
+				query = await commands.getEvent(normalizeId);
+			}
+		} else {
+			query = await commands.getEvent(normalizeId);
+		}
 
 		if (query.status === "ok") {
 			const data = query.data;
@@ -110,10 +155,43 @@ export class NostrQuery {
 				raw.meta = data.parsed;
 			}
 
-			return raw;
+			const event = new LumeEvent(raw);
+
+			return event;
 		} else {
 			console.log("[getEvent]: ", query.error);
 			return null;
+		}
+	}
+
+	static async getRepostEvent(event: LumeEvent) {
+		try {
+			const embed: NostrEvent = JSON.parse(event.content);
+			const query = await commands.getEventMeta(embed.content);
+
+			if (query.status === "ok") {
+				embed.meta = query.data;
+				const lumeEvent = new LumeEvent(embed);
+				return lumeEvent;
+			}
+		} catch {
+			const query = await commands.getEvent(event.repostId);
+
+			if (query.status === "ok") {
+				const data = query.data;
+				const raw = JSON.parse(data.raw) as NostrEvent;
+
+				if (data?.parsed) {
+					raw.meta = data.parsed;
+				}
+
+				const event = new LumeEvent(raw);
+
+				return event;
+			} else {
+				console.log("[getRepostEvent]: ", query.error);
+				return null;
+			}
 		}
 	}
 
@@ -140,9 +218,21 @@ export class NostrQuery {
 		}
 	}
 
-	static async getLocalEvents(pubkeys: string[], asOf?: number) {
+	static async getLocalEvents(asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.getLocalEvents(pubkeys, until);
+		const query = await commands.getLocalEvents(until);
+
+		if (query.status === "ok") {
+			const data = NostrQuery.#toLumeEvents(query.data);
+			return data;
+		} else {
+			return [];
+		}
+	}
+
+	static async getGroupEvents(pubkeys: string[], asOf?: number) {
+		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
+		const query = await commands.getGroupEvents(pubkeys, until);
 
 		if (query.status === "ok") {
 			const data = query.data.map((item) => {
@@ -211,8 +301,6 @@ export class NostrQuery {
 	}
 
 	static async verifyNip05(pubkey: string, nip05?: string) {
-		if (!nip05) return false;
-
 		const query = await commands.verifyNip05(pubkey, nip05);
 
 		if (query.status === "ok") {
@@ -299,7 +387,9 @@ export class NostrQuery {
 					return systemColumns;
 				}
 
-				return columns;
+				// Filter "open" column
+				// Reason: deprecated
+				return columns.filter((col) => col.label !== "open");
 			} else {
 				return systemColumns;
 			}

@@ -2,53 +2,57 @@ import { CancelIcon, CheckIcon } from "@lume/icons";
 import type { LumeColumn } from "@lume/types";
 import { cn } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+type WindowEvent = {
+	scroll: boolean;
+	resize: boolean;
+};
 
 export function Column({
 	column,
 	account,
-	isScroll,
-	isResize,
 }: {
 	column: LumeColumn;
 	account: string;
-	isScroll: boolean;
-	isResize: boolean;
 }) {
 	const container = useRef<HTMLDivElement>(null);
-	const webviewLabel = useMemo(
-		() => `column-${account}_${column.label}`,
-		[account],
-	);
+	const webviewLabel = `column-${account}_${column.label}`;
 
 	const [isCreated, setIsCreated] = useState(false);
 
-	const repositionWebview = async () => {
+	const repositionWebview = useCallback(async () => {
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("reposition_column", {
 			label: webviewLabel,
 			x: newRect.x,
 			y: newRect.y,
 		});
-	};
+	}, []);
 
-	const resizeWebview = async () => {
+	const resizeWebview = useCallback(async () => {
 		const newRect = container.current.getBoundingClientRect();
 		await invoke("resize_column", {
 			label: webviewLabel,
 			width: newRect.width,
 			height: newRect.height,
 		});
-	};
+	}, []);
 
 	useEffect(() => {
-		if (isCreated) resizeWebview();
-	}, [isResize]);
+		if (!isCreated) return;
 
-	useEffect(() => {
-		if (isScroll && isCreated) repositionWebview();
-	}, [isScroll]);
+		const unlisten = listen<WindowEvent>("window", (data) => {
+			if (data.payload.scroll) repositionWebview();
+			if (data.payload.resize) resizeWebview();
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, [isCreated]);
 
 	useEffect(() => {
 		if (!container?.current) return;
@@ -78,7 +82,7 @@ export function Column({
 	}, [account]);
 
 	return (
-		<div className="h-full w-[440px] shrink-0 p-2">
+		<div className="h-full w-[500px] shrink-0 p-2">
 			<div
 				className={cn(
 					"flex flex-col w-full h-full rounded-xl",
@@ -87,9 +91,7 @@ export function Column({
 						: "",
 				)}
 			>
-				{column.label !== "open" ? (
-					<Header label={column.label} name={column.name} />
-				) : null}
+				<Header label={column.label} name={column.name} />
 				<div ref={container} className="flex-1 w-full h-full" />
 			</div>
 		</div>
@@ -122,10 +124,10 @@ function Header({ label, name }: { label: string; name: string }) {
 	}, [title]);
 
 	return (
-		<div className="h-9 w-full flex items-center justify-between shrink-0 px-1">
+		<div className="flex items-center justify-between w-full px-1 h-9 shrink-0">
 			<div className="size-7" />
-			<div className="shrink-0 h-9 flex items-center justify-center">
-				<div className="relative flex gap-2 items-center">
+			<div className="flex items-center justify-center shrink-0 h-9">
+				<div className="relative flex items-center gap-2">
 					<div
 						contentEditable
 						suppressContentEditableWarning={true}
@@ -148,7 +150,7 @@ function Header({ label, name }: { label: string; name: string }) {
 			<button
 				type="button"
 				onClick={() => close()}
-				className="size-7 inline-flex hover:bg-black/10 rounded-lg dark:hover:bg-white/10 items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+				className="inline-flex items-center justify-center rounded-lg size-7 hover:bg-black/10 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
 			>
 				<CancelIcon className="size-4" />
 			</button>

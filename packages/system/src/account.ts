@@ -1,5 +1,5 @@
-import { Metadata } from "@lume/types";
-import { Result, commands } from "./commands";
+import type { Metadata } from "@lume/types";
+import { type Result, commands } from "./commands";
 import { Window } from "@tauri-apps/api/window";
 
 export class NostrAccount {
@@ -123,24 +123,24 @@ export class NostrAccount {
 		const query = await commands.getBalance();
 
 		if (query.status === "ok") {
-			return parseInt(query.data);
+			return Number.parseInt(query.data);
 		} else {
 			return 0;
 		}
 	}
 
-	static async getContactList() {
-		const query = await commands.getContactList();
+	static async isContactListEmpty() {
+		const query = await commands.isContactListEmpty();
 
 		if (query.status === "ok") {
 			return query.data;
 		} else {
-			return [];
+			return true;
 		}
 	}
 
-	static async follow(pubkey: string, alias?: string) {
-		const query = await commands.follow(pubkey, alias);
+	static async checkContact(pubkey: string) {
+		const query = await commands.checkContact(pubkey);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -149,8 +149,8 @@ export class NostrAccount {
 		}
 	}
 
-	static async unfollow(pubkey: string) {
-		const query = await commands.unfollow(pubkey);
+	static async toggleContact(pubkey: string, alias?: string) {
+		const query = await commands.toggleContact(pubkey, alias);
 
 		if (query.status === "ok") {
 			return query.data;

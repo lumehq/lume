@@ -3,24 +3,24 @@
   windows_subsystem = "windows"
 )]
 
-pub mod commands;
-pub mod fns;
-pub mod nostr;
-
 #[cfg(target_os = "macos")]
 extern crate cocoa;
-
 #[cfg(target_os = "macos")]
 #[macro_use]
 extern crate objc;
 
-use nostr_sdk::prelude::*;
 use std::{
   fs,
   io::{self, BufRead},
   str::FromStr,
 };
-use tauri::{path::BaseDirectory, Manager};
+use std::sync::Mutex;
+
+use nostr_sdk::prelude::*;
+use serde::Serialize;
+use tauri::{Manager, path::BaseDirectory};
+#[cfg(target_os = "macos")]
+use tauri::tray::{MouseButtonState, TrayIconEvent};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -30,11 +30,15 @@ use crate::fns::{
   update_menubar_appearance,
 };
 
-#[cfg(target_os = "macos")]
-use tauri::tray::{MouseButtonState, TrayIconEvent};
+pub mod commands;
+pub mod fns;
+pub mod nostr;
 
+#[derive(Serialize)]
 pub struct Nostr {
+  #[serde(skip_serializing)]
   client: Client,
+  contact_list: Mutex<Vec<Contact>>,
 }
 
 fn main() {
@@ -50,6 +54,7 @@ fn main() {
       nostr::keys::create_account,
       nostr::keys::save_account,
       nostr::keys::get_encrypted_key,
+      nostr::keys::get_private_key,
       nostr::keys::connect_remote_account,
       nostr::keys::load_account,
       nostr::keys::event_to_bech32,
@@ -60,8 +65,9 @@ fn main() {
       nostr::metadata::get_contact_list,
       nostr::metadata::set_contact_list,
       nostr::metadata::create_profile,
-      nostr::metadata::follow,
-      nostr::metadata::unfollow,
+      nostr::metadata::is_contact_list_empty,
+      nostr::metadata::check_contact,
+      nostr::metadata::toggle_contact,
       nostr::metadata::get_nstore,
       nostr::metadata::set_nstore,
       nostr::metadata::set_nwc,
@@ -71,13 +77,17 @@ fn main() {
       nostr::metadata::zap_event,
       nostr::metadata::friend_to_friend,
       nostr::metadata::get_notifications,
+      nostr::event::get_event_meta,
       nostr::event::get_event,
+      nostr::event::get_event_from,
       nostr::event::get_replies,
       nostr::event::get_events_by,
       nostr::event::get_local_events,
+      nostr::event::get_group_events,
       nostr::event::get_global_events,
       nostr::event::get_hashtag_events,
       nostr::event::publish,
+      nostr::event::reply,
       nostr::event::repost,
       commands::folder::show_in_folder,
       commands::window::create_column,
@@ -184,7 +194,10 @@ fn main() {
         client.connect().await;
 
         // Update global state
-        app.handle().manage(Nostr { client })
+        app.handle().manage(Nostr {
+          client,
+          contact_list: Mutex::new(vec![]),
+        })
       });
 
       Ok(())

@@ -4,19 +4,32 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { useUserContext } from "./provider";
 import { NostrQuery } from "@lume/system";
+import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 
 export function UserNip05() {
 	const user = useUserContext();
 	const { isLoading, data: verified } = useQuery({
 		queryKey: ["nip05", user?.pubkey],
 		queryFn: async () => {
+			if (!user.profile?.nip05?.length) return false;
+
 			const verify = await NostrQuery.verifyNip05(
 				user.pubkey,
 				user.profile?.nip05,
 			);
+
 			return verify;
 		},
 		enabled: !!user.profile?.nip05,
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
+		staleTime: Number.POSITIVE_INFINITY,
+		retry: false,
+		persister: experimental_createPersister({
+			storage: localStorage,
+			maxAge: 1000 * 60 * 60 * 72, // 72 hours
+		}),
 	});
 
 	if (!user.profile?.nip05?.length) return;
@@ -26,7 +39,7 @@ export function UserNip05() {
 			<Tooltip.Root delayDuration={150}>
 				<Tooltip.Trigger>
 					{!isLoading && verified ? (
-						<VerifiedIcon className="size-4 text-teal-500" />
+						<VerifiedIcon className="text-teal-500 size-4" />
 					) : null}
 				</Tooltip.Trigger>
 				<Tooltip.Portal>

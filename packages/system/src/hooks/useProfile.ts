@@ -1,6 +1,7 @@
 import type { Metadata } from "@lume/types";
 import { useQuery } from "@tanstack/react-query";
 import { commands } from "../commands";
+import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 
 export function useProfile(pubkey: string, embed?: string) {
 	const {
@@ -8,7 +9,7 @@ export function useProfile(pubkey: string, embed?: string) {
 		isError,
 		data: profile,
 	} = useQuery({
-		queryKey: ["user", pubkey],
+		queryKey: ["profile", pubkey],
 		queryFn: async () => {
 			try {
 				if (embed) return JSON.parse(embed) as Metadata;
@@ -30,6 +31,10 @@ export function useProfile(pubkey: string, embed?: string) {
 		refetchOnReconnect: false,
 		staleTime: Number.POSITIVE_INFINITY,
 		retry: 2,
+		persister: experimental_createPersister({
+			storage: localStorage,
+			maxAge: 1000 * 60 * 60 * 24, // 24 hours
+		}),
 	});
 
 	return { isLoading, isError, profile };

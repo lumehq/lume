@@ -26,7 +26,7 @@ function Screen() {
 	const { platform } = Route.useRouteContext();
 
 	return (
-		<div className="flex h-screen w-screen flex-col">
+		<div className="flex flex-col w-screen h-screen">
 			<div
 				data-tauri-drag-region
 				className={cn(
@@ -38,7 +38,7 @@ function Screen() {
 					<Accounts />
 					<Link
 						to="/landing"
-						className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
+						className="inline-flex items-center justify-center rounded-full size-8 shrink-0 bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20"
 					>
 						<PlusIcon className="size-5" />
 					</Link>
@@ -46,19 +46,20 @@ function Screen() {
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
+						onClick={() => LumeWindow.openSearch()}
+						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
+					>
+						<SearchIcon className="size-5" />
+					</button>
+					<button
+						type="button"
 						onClick={() => LumeWindow.openEditor()}
-						className="inline-flex h-8 w-max items-center justify-center gap-1 rounded-full bg-blue-500 px-3 text-sm font-medium text-white hover:bg-blue-600"
+						className="inline-flex items-center justify-center h-8 gap-1 px-3 text-sm font-medium text-white bg-blue-500 rounded-full w-max hover:bg-blue-600"
 					>
 						<ComposeFilledIcon className="size-4" />
 						New Post
 					</button>
-					<button
-						type="button"
-						onClick={() => LumeWindow.openSearch()}
-						className="inline-flex size-8 items-center justify-center rounded-full text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-					>
-						<SearchIcon className="size-5" />
-					</button>
+
 					<div id="toolbar" />
 				</div>
 			</div>
@@ -159,7 +160,7 @@ function Accounts() {
 				))}
 			{accounts.length >= 3 && windowWidth <= 700 ? (
 				<Popover.Root>
-					<Popover.Trigger className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20">
+					<Popover.Trigger className="inline-flex items-center justify-center rounded-full size-8 shrink-0 bg-black/10 text-neutral-800 hover:bg-black/20 dark:bg-white/10 dark:text-neutral-200 dark:hover:bg-white/20">
 						<HorizontalDotsIcon className="size-5" />
 					</Popover.Trigger>
 					<Popover.Portal>
@@ -169,11 +170,11 @@ function Accounts() {
 									key={user}
 									type="button"
 									onClick={() => changeAccount(user)}
-									className="size-9 inline-flex items-center justify-center hover:bg-white/10 rounded-md"
+									className="inline-flex items-center justify-center rounded-md size-9 hover:bg-white/10"
 								>
 									<User.Provider pubkey={user}>
 										<User.Root className="rounded-full ring-1 ring-white/10">
-											<User.Avatar className="size-7 aspect-square h-auto rounded-full object-cover" />
+											<User.Avatar className="object-cover h-auto rounded-full size-7 aspect-square" />
 										</User.Root>
 									</User.Provider>
 								</button>

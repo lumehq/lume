@@ -1,9 +1,12 @@
-use super::get_latest_event;
-use crate::Nostr;
+use std::{str::FromStr, time::Duration};
+
 use keyring::Entry;
 use nostr_sdk::prelude::*;
-use std::{str::FromStr, time::Duration};
 use tauri::State;
+
+use crate::Nostr;
+
+use super::get_latest_event;
 
 #[tauri::command]
 #[specta::specta]
@@ -50,7 +53,7 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, St
   let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
-      Nip19::Pubkey(pubkey) => Some(pubkey),
+      Nip19::Pubkey(key) => Some(key),
       Nip19::Profile(profile) => {
         let relays = profile.relays;
         for relay in relays.into_iter() {
@@ -94,9 +97,12 @@ pub async fn get_profile(id: &str, state: State<'_, Nostr>) -> Result<String, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_contact_list(pubkeys: Vec<&str>, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn set_contact_list(
+  public_keys: Vec<&str>,
+  state: State<'_, Nostr>,
+) -> Result<bool, String> {
   let client = &state.client;
-  let contact_list: Vec<Contact> = pubkeys
+  let contact_list: Vec<Contact> = public_keys
     .into_iter()
     .filter_map(|p| match PublicKey::from_hex(p) {
       Ok(pk) => Some(Contact::new(pk, None, Some(""))),
@@ -174,52 +180,54 @@ pub async fn create_profile(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn follow(
-  id: &str,
-  alias: Option<&str>,
-  state: State<'_, Nostr>,
-) -> Result<String, String> {
-  let client = &state.client;
-  let public_key = match PublicKey::from_str(id) {
-    Ok(pk) => pk,
-    Err(_) => return Err("Invalid public key.".into()),
-  };
-  let contact = Contact::new(public_key, None, alias); // TODO: Add relay_url
-  let contact_list_result = client.get_contact_list(Some(Duration::from_secs(10))).await;
+pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> {
+  let contact_list = state.contact_list.lock().unwrap();
+  Ok(contact_list.is_empty())
+}
 
-  match contact_list_result {
-    Ok(mut old_list) => {
-      old_list.push(contact);
-      let new_list = old_list.into_iter();
+#[tauri::command]
+#[specta::specta]
+pub async fn check_contact(hex: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
+  let contact_list = state.contact_list.lock().unwrap();
+  let public_key = PublicKey::from_str(hex).unwrap();
 
-      match client.set_contact_list(new_list).await {
-        Ok(event_id) => Ok(event_id.to_string()),
-        Err(err) => Err(err.to_string()),
-      }
-    }
-    Err(err) => Err(err.to_string()),
+  match contact_list.iter().position(|x| x.public_key == public_key) {
+    Some(_) => Ok(true),
+    None => Ok(false),
   }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn unfollow(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn toggle_contact(
+  hex: &str,
+  alias: Option<&str>,
+  state: State<'_, Nostr>,
+) -> Result<String, String> {
   let client = &state.client;
-  let public_key = match PublicKey::from_str(id) {
-    Ok(pk) => pk,
-    Err(_) => return Err("Invalid public key.".into()),
-  };
 
-  let contact_list_result = client.get_contact_list(Some(Duration::from_secs(10))).await;
+  match client.get_contact_list(None).await {
+    Ok(mut contact_list) => {
+      let public_key = PublicKey::from_str(hex).unwrap();
 
-  match contact_list_result {
-    Ok(old_list) => {
-      let contacts: Vec<Contact> = old_list
-        .into_iter()
-        .filter(|contact| contact.public_key != public_key)
-        .collect();
+      match contact_list.iter().position(|x| x.public_key == public_key) {
+        Some(index) => {
+          // Remove contact
+          contact_list.remove(index);
+        }
+        None => {
+          // TODO: Add relay_url
+          let new_contact = Contact::new(public_key, None, alias);
+          // Add new contact
+          contact_list.push(new_contact);
+        }
+      }
 
-      match client.set_contact_list(contacts).await {
+      // Update local state
+      state.contact_list.lock().unwrap().clone_from(&contact_list);
+
+      // Publish
+      match client.set_contact_list(contact_list).await {
         Ok(event_id) => Ok(event_id.to_string()),
         Err(err) => Err(err.to_string()),
       }
@@ -365,7 +373,7 @@ pub async fn zap_profile(
   let client = &state.client;
   let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
     Ok(val) => match val {
-      Nip19::Pubkey(pubkey) => Some(pubkey),
+      Nip19::Pubkey(key) => Some(key),
       Nip19::Profile(profile) => Some(profile.public_key),
       _ => None,
     },

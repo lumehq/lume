@@ -25,7 +25,7 @@ export function ImagePreview({ url }: { url: string }) {
 	};
 
 	return (
-		<div className="group relative my-1">
+		<div className="relative my-1 group">
 			<img
 				src={url}
 				alt={url}
@@ -34,6 +34,7 @@ export function ImagePreview({ url }: { url: string }) {
 				style={{ contentVisibility: "auto" }}
 				className="max-h-[600px] w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 				onClick={() => open(url)}
+				onKeyDown={() => open(url)}
 				onError={({ currentTarget }) => {
 					currentTarget.onerror = null;
 					currentTarget.src = "/404.jpg";

@@ -1,23 +1,17 @@
 import { ThreadIcon } from "@lume/icons";
-import type { NostrEvent } from "@lume/types";
 import { Note } from "@/components/note";
 import { cn } from "@lume/utils";
-import { LumeEvent } from "@lume/system";
+import type { LumeEvent } from "@lume/system";
 import { useMemo } from "react";
 
 export function Conversation({
 	event,
-	gossip,
 	className,
 }: {
-	event: NostrEvent;
-	gossip?: boolean;
+	event: LumeEvent;
 	className?: string;
 }) {
-	const thread = useMemo(
-		() => LumeEvent.getEventThread(event.tags, gossip),
-		[event],
-	);
+	const thread = useMemo(() => event.thread, [event]);
 
 	return (
 		<Note.Provider event={event}>
@@ -28,7 +22,7 @@ export function Conversation({
 				)}
 			>
 				<div className="flex flex-col gap-3">
-					{thread?.root ? <Note.Child eventId={thread?.root} isRoot /> : null}
+					{thread?.root?.id ? <Note.Child event={thread?.root} isRoot /> : null}
 					<div className="flex items-center gap-2 px-3">
 						<div className="inline-flex items-center gap-1.5 shrink-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">
 							<ThreadIcon className="size-4" />
@@ -36,15 +30,15 @@ export function Conversation({
 						</div>
 						<div className="flex-1 h-px bg-neutral-100 dark:bg-white/5" />
 					</div>
-					{thread?.reply ? <Note.Child eventId={thread?.reply} /> : null}
+					{thread?.reply?.id ? <Note.Child event={thread?.reply} /> : null}
 					<div>
-						<div className="px-3 h-14 flex items-center justify-between">
+						<div className="flex items-center justify-between px-3 h-14">
 							<Note.User />
 						</div>
 						<Note.Content className="px-3" />
 					</div>
 				</div>
-				<div className="flex items-center h-14 px-3">
+				<div className="flex items-center px-3 h-14">
 					<Note.Open />
 				</div>
 			</Note.Root>

@@ -33,13 +33,6 @@ function Screen() {
 		}));
 	};
 
-	const toggleZap = () => {
-		setNewSettings((prev) => ({
-			...prev,
-			zap: !newSettings.zap,
-		}));
-	};
-
 	const toggleNsfw = () => {
 		setNewSettings((prev) => ({
 			...prev,
@@ -69,9 +62,9 @@ function Screen() {
 	};
 
 	return (
-		<div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
+		<div className="flex flex-col items-center justify-center w-full h-full gap-6 px-5 mx-auto xl:max-w-xl">
 			<div className="flex flex-col items-center gap-5 text-center">
-				<div className="flex size-20 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950 text-teal-500">
+				<div className="flex items-center justify-center text-teal-500 bg-teal-100 rounded-full size-20 dark:bg-teal-950">
 					<LaurelIcon className="size-8" />
 				</div>
 				<div>
@@ -85,7 +78,7 @@ function Screen() {
 			</div>
 			<div className="flex flex-col gap-5">
 				<div className="flex flex-col gap-3">
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
+					<div className="flex items-start justify-between w-full gap-4 px-5 py-4 rounded-lg bg-neutral-100 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Enhanced Privacy</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -101,23 +94,7 @@ function Screen() {
 							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 						</Switch.Root>
 					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
-						<div className="flex-1">
-							<h3 className="font-semibold">Zap</h3>
-							<p className="text-sm text-neutral-700 dark:text-neutral-300">
-								Show the Zap button in each note and user's profile screen, use
-								for send Bitcoin tip to other users.
-							</p>
-						</div>
-						<Switch.Root
-							checked={newSettings.zap}
-							onClick={() => toggleZap()}
-							className="relative mt-1 h-7 w-12 shrink-0 cursor-default rounded-full bg-neutral-200 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/20"
-						>
-							<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-						</Switch.Root>
-					</div>
-					<div className="flex w-full items-start justify-between gap-4 rounded-lg bg-neutral-100 px-5 py-4 dark:bg-white/10">
+					<div className="flex items-start justify-between w-full gap-4 px-5 py-4 rounded-lg bg-neutral-100 dark:bg-white/10">
 						<div className="flex-1">
 							<h3 className="font-semibold">Filter sensitive content</h3>
 							<p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -138,7 +115,7 @@ function Screen() {
 					type="button"
 					onClick={() => submit()}
 					disabled={loading}
-					className="mb-1 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+					className="inline-flex items-center justify-center w-full mb-1 font-semibold text-white bg-blue-500 rounded-lg h-11 shrink-0 hover:bg-blue-600 disabled:opacity-50"
 				>
 					{loading ? <Spinner /> : t("global.continue")}
 				</button>
@@ -149,7 +126,7 @@ function Screen() {
 
 function Pending() {
 	return (
-		<div className="flex h-full w-full items-center justify-center">
+		<div className="flex items-center justify-center w-full h-full">
 			<button type="button" className="size-5" disabled>
 				<Spinner className="size-5" />
 			</button>

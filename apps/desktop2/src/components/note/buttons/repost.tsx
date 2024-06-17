@@ -76,7 +76,7 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 						<button
 							type="button"
 							onClick={() => repost()}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							<RepostIcon className="size-4" />
 							{t("note.buttons.repost")}
@@ -85,8 +85,8 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 					<DropdownMenu.Item asChild>
 						<button
 							type="button"
-							onClick={() => LumeWindow.openEditor(event.id, true)}
-							className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-white hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
+							onClick={() => LumeWindow.openEditor(null, event.id)}
+							className="inline-flex items-center gap-2 px-3 text-sm font-medium text-white rounded-lg h-9 hover:bg-neutral-900 focus:outline-none dark:text-black dark:hover:bg-neutral-100"
 						>
 							<QuoteIcon className="size-4" />
 							{t("note.buttons.quote")}

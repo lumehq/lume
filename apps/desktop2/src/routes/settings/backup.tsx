@@ -1,6 +1,6 @@
 import { User } from "@/components/user";
 import { NostrAccount } from "@lume/system";
-import { displayNsec } from "@lume/utils";
+import { displayNpub, displayNsec } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -13,50 +13,34 @@ interface Account {
 }
 
 export const Route = createFileRoute("/settings/backup")({
-	component: Screen,
-	loader: async () => {
-		const npubs = await NostrAccount.getAccounts();
-		const accounts: Account[] = [];
-
-		for (const npub of npubs) {
-			const nsec: string = await invoke("get_stored_nsec", { npub });
-			accounts.push({ npub, nsec });
-		}
-
-		return accounts;
+	beforeLoad: async () => {
+		const accounts = await NostrAccount.getAccounts();
+		return { accounts };
 	},
+	component: Screen,
 });
 
 function Screen() {
-	const accounts = Route.useLoaderData();
+	const { accounts } = Route.useRouteContext();
 
 	return (
-		<div className="mx-auto w-full max-w-xl">
+		<div className="w-full max-w-xl mx-auto">
 			<div className="flex flex-col gap-3 divide-y divide-neutral-300 dark:divide-neutral-700">
 				{accounts.map((account) => (
-					<List key={account.npub} account={account} />
+					<Account key={account} account={account} />
 				))}
 			</div>
 		</div>
 	);
 }
 
-function List({ account }: { account: Account }) {
-	const [key, setKey] = useState(account.nsec);
+function Account({ account }: { account: string }) {
 	const [copied, setCopied] = useState(false);
-	const [passphase, setPassphase] = useState("");
-
-	const encrypt = async () => {
-		const encrypted: string = await invoke("get_encrypted_key", {
-			npub: account.npub,
-			password: passphase,
-		});
-		setKey(encrypted);
-	};
 
 	const copyKey = async () => {
 		try {
-			await writeText(key);
+			const data: string = await invoke("get_private_key", { npub: account });
+			await writeText(data);
 			setCopied(true);
 		} catch (e) {
 			toast.error(e);
@@ -64,65 +48,26 @@ function List({ account }: { account: Account }) {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col gap-2 py-3">
-			<User.Provider pubkey={account.npub}>
+		<div className="flex items-center justify-between gap-2 py-3">
+			<User.Provider pubkey={account}>
 				<User.Root className="flex items-center gap-2">
-					<User.Avatar className="size-8 rounded-full object-cover" />
+					<User.Avatar className="object-cover rounded-full size-8" />
 					<div className="flex flex-col">
 						<User.Name className="text-sm leading-tight" />
-						<User.NIP05 />
+						<span className="text-sm leading-tight text-black/50 dark:text-white/50">
+							{displayNpub(account, 16)}
+						</span>
 					</div>
 				</User.Root>
 			</User.Provider>
-			<div className="flex flex-col gap-2">
-				<div className="flex w-full flex-col gap-1">
-					<label
-						htmlFor="nsec"
-						className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-					>
-						Private Key
-					</label>
-					<div className="flex items-center gap-2">
-						<input
-							readOnly
-							name="nsec"
-							type="text"
-							value={displayNsec(key, 36)}
-							className="h-9 w-full rounded-lg border-neutral-300 bg-transparent px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:border-neutral-700 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
-						/>
-						<button
-							type="button"
-							onClick={() => copyKey()}
-							className="inline-flex h-9 w-24 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-700"
-						>
-							{copied ? "Copied" : "Copy"}
-						</button>
-					</div>
-				</div>
-				<div className="flex w-full flex-col gap-1">
-					<label
-						htmlFor="passphase"
-						className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-					>
-						Set a passphase to secure your key
-					</label>
-					<div className="flex items-center gap-2">
-						<input
-							name="passphase"
-							type="password"
-							value={passphase}
-							onChange={(e) => setPassphase(e.target.value)}
-							className="h-9 w-full rounded-lg border-neutral-300 bg-transparent px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring focus:ring-blue-200 dark:border-neutral-700 dark:placeholder:text-neutral-400 dark:focus:ring-blue-800"
-						/>
-						<button
-							type="button"
-							onClick={() => encrypt()}
-							className="inline-flex h-9 w-24 items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium hover:bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-700"
-						>
-							Update
-						</button>
-					</div>
-				</div>
+			<div className="flex items-center gap-2">
+				<button
+					type="button"
+					onClick={() => copyKey()}
+					className="inline-flex items-center justify-center h-8 text-sm font-medium rounded-md w-36 bg-neutral-200 hover:bg-neutral-300 dark:bg-white/10 dark:hover:bg-white/20"
+				>
+					{copied ? "Copied" : "Copy Private Key"}
+				</button>
 			</div>
 		</div>
 	);

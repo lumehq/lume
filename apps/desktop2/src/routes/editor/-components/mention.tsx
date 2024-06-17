@@ -61,7 +61,7 @@ export function MentionButton({ className }: { className?: string }) {
 			<DropdownMenu.Portal>
 				<DropdownMenu.Content className="flex w-[220px] h-[220px] scrollbar-none flex-col overflow-y-auto rounded-xl bg-black py-1 shadow-md shadow-neutral-500/20 focus:outline-none dark:bg-white">
 					{contacts.length < 1 ? (
-						<div className="w-full h-full flex items-center justify-center">
+						<div className="flex items-center justify-center w-full h-full">
 							<p className="text-sm text-white">Contact List is empty.</p>
 						</div>
 					) : (
@@ -69,11 +69,11 @@ export function MentionButton({ className }: { className?: string }) {
 							<DropdownMenu.Item
 								key={contact}
 								onClick={() => select(contact)}
-								className="shrink-0 h-11 flex items-center hover:bg-white/10 px-2"
+								className="flex items-center px-2 shrink-0 h-11 hover:bg-white/10"
 							>
 								<User.Provider pubkey={contact}>
 									<User.Root className="flex items-center gap-2">
-										<User.Avatar className="shrink-0 size-8 rounded-full" />
+										<User.Avatar className="rounded-full shrink-0 size-8" />
 										<User.Name className="text-sm font-medium text-white dark:text-black" />
 									</User.Root>
 								</User.Provider>

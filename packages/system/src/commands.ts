@@ -76,6 +76,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async getPrivateKey(npub: string) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_private_key", { npub }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async connectRemoteAccount(uri: string) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("connect_remote_account", { uri }) };
@@ -140,9 +148,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async setContactList(pubkeys: string[]) : Promise<Result<boolean, string>> {
+async setContactList(publicKeys: string[]) : Promise<Result<boolean, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("set_contact_list", { pubkeys }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_contact_list", { publicKeys }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -156,17 +164,25 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async follow(id: string, alias: string | null) : Promise<Result<string, string>> {
+async isContactListEmpty() : Promise<Result<boolean, null>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("follow", { id, alias }) };
+    return { status: "ok", data: await TAURI_INVOKE("is_contact_list_empty") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async unfollow(id: string) : Promise<Result<string, string>> {
+async checkContact(hex: string) : Promise<Result<boolean, null>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("unfollow", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("check_contact", { hex }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async toggleContact(hex: string, alias: string | null) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("toggle_contact", { hex, alias }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -244,9 +260,25 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async getEventMeta(content: string) : Promise<Result<Meta, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_event_meta", { content }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getEvent(id: string) : Promise<Result<RichEvent, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_event", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getEventFrom(id: string, relayHint: string) : Promise<Result<RichEvent, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_event_from", { id, relayHint }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -268,9 +300,17 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getLocalEvents(pubkeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
+async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { pubkeys, until }) };
+    return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getGroupEvents(publicKeys: string[], until: string | null) : Promise<Result<RichEvent[], string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_group_events", { publicKeys, until }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -292,9 +332,17 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async publish(content: string, tags: string[][]) : Promise<Result<string, string>> {
+async publish(content: string, warning: string | null, difficulty: number | null) : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("publish", { content, tags }) };
+    return { status: "ok", data: await TAURI_INVOKE("publish", { content, warning, difficulty }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async reply(content: string, to: string, root: string | null) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("reply", { content, to, root }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
