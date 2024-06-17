@@ -385,24 +385,6 @@ pub fn get_private_key(npub: &str) -> Result<String, String> {
 
 #[tauri::command]
 #[specta::specta]
-pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
-  let event_id = EventId::from_hex(id).unwrap();
-  let event = Nip19Event::new(event_id, relays);
-
-  Ok(event.to_bech32().unwrap())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn user_to_bech32(key: &str, relays: Vec<String>) -> Result<String, ()> {
-  let pubkey = PublicKey::from_str(key).unwrap();
-  let profile = Nip19Profile::new(pubkey, relays).unwrap();
-
-  Ok(profile.to_bech32().unwrap())
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
   match PublicKey::from_str(key) {
     Ok(public_key) => {

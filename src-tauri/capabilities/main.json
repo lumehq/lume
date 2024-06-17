@@ -59,6 +59,8 @@
 		"fs:allow-read-file",
 		"theme:allow-set-theme",
 		"theme:allow-get-theme",
+		"menu:allow-new",
+		"menu:allow-popup",
 		"http:default",
 		"shell:allow-open",
 		{

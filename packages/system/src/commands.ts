@@ -100,22 +100,6 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async eventToBech32(id: string, relays: string[]) : Promise<Result<string, null>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("event_to_bech32", { id, relays }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async userToBech32(key: string, relays: string[]) : Promise<Result<string, null>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("user_to_bech32", { key, relays }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async verifyNip05(key: string, nip05: string) : Promise<Result<boolean, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("verify_nip05", { key, nip05 }) };
@@ -351,6 +335,22 @@ try {
 async repost(raw: string) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("repost", { raw }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async eventToBech32(id: string) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("event_to_bech32", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async userToBech32(user: string) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("user_to_bech32", { user }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

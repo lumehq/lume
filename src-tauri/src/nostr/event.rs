@@ -91,7 +91,7 @@ pub async fn get_event_from(
     return Err(err.to_string());
   }
 
-  if (client.connect_relay(relay_hint).await).is_ok() {
+  if client.connect_relay(relay_hint).await.is_ok() {
     match event_id {
       Some(id) => {
         match client
@@ -520,5 +520,81 @@ pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<String, String
   match client.repost(&event, None).await {
     Ok(event_id) => Ok(event_id.to_string()),
     Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn event_to_bech32(id: &str, state: State<'_, Nostr>) -> Result<String, String> {
+  let client = &state.client;
+
+  let event_id = match EventId::from_hex(id) {
+    Ok(id) => id,
+    Err(_) => return Err("ID is not valid.".into()),
+  };
+
+  let seens = client
+    .database()
+    .event_seen_on_relays(event_id)
+    .await
+    .unwrap();
+
+  match seens {
+    Some(set) => {
+      let relays = set.into_iter().collect::<Vec<_>>();
+      let event = Nip19Event::new(event_id, relays);
+
+      match event.to_bech32() {
+        Ok(id) => Ok(id),
+        Err(err) => Err(err.to_string()),
+      }
+    }
+    None => match event_id.to_bech32() {
+      Ok(id) => Ok(id),
+      Err(err) => Err(err.to_string()),
+    },
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<String, String> {
+  let client = &state.client;
+
+  let public_key = match PublicKey::from_str(user) {
+    Ok(pk) => pk,
+    Err(_) => return Err("Public Key is not valid.".into()),
+  };
+
+  match client
+    .get_events_of(
+      vec![Filter::new()
+        .author(public_key)
+        .kind(Kind::RelayList)
+        .limit(1)],
+      Some(Duration::from_secs(10)),
+    )
+    .await
+  {
+    Ok(events) => match events.first() {
+      Some(event) => {
+        let relay_list = nip65::extract_relay_list(event);
+        let relays = relay_list
+          .into_iter()
+          .map(|i| i.0.to_string())
+          .collect::<Vec<_>>();
+        let profile = Nip19Profile::new(public_key, relays).unwrap();
+
+        Ok(profile.to_bech32().unwrap())
+      }
+      None => match public_key.to_bech32() {
+        Ok(pk) => Ok(pk),
+        Err(err) => Err(err.to_string()),
+      },
+    },
+    Err(_) => match public_key.to_bech32() {
+      Ok(pk) => Ok(pk),
+      Err(err) => Err(err.to_string()),
+    },
   }
 }

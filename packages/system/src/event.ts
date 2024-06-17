@@ -150,7 +150,7 @@ export class LumeEvent {
 	}
 
 	public async idAsBech32() {
-		const query = await commands.eventToBech32(this.id, []);
+		const query = await commands.eventToBech32(this.id);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -160,7 +160,7 @@ export class LumeEvent {
 	}
 
 	public async pubkeyAsBech32() {
-		const query = await commands.userToBech32(this.pubkey, []);
+		const query = await commands.userToBech32(this.pubkey);
 
 		if (query.status === "ok") {
 			return query.data;
