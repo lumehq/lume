@@ -12,29 +12,38 @@ use super::get_latest_event;
 #[specta::specta]
 pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let signer = client.signer().await.unwrap();
-  let public_key = signer.public_key().await.unwrap();
+
+  let signer = match client.signer().await {
+    Ok(signer) => signer,
+    Err(err) => return Err(format!("Failed to get signer: {}", err)),
+  };
+
+  let public_key = match signer.public_key().await {
+    Ok(pk) => pk,
+    Err(err) => return Err(format!("Failed to get public key: {}", err)),
+  };
+
   let filter = Filter::new()
     .author(public_key)
     .kind(Kind::Metadata)
     .limit(1);
 
-  match client
+  let events_result = client
     .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-    .await
-  {
+    .await;
+
+  match events_result {
     Ok(events) => {
       if let Some(event) = get_latest_event(&events) {
-        if let Ok(metadata) = Metadata::from_json(&event.content) {
-          Ok(metadata.as_json())
-        } else {
-          Err("Parse metadata failed".into())
+        match Metadata::from_json(&event.content) {
+          Ok(metadata) => Ok(metadata.as_json()),
+          Err(_) => Err("Failed to parse metadata.".into()),
         }
       } else {
-        Err("Not found".into())
+        Err("No matching events found.".into())
       }
     }
-    Err(_) => Err("Not found".into()),
+    Err(err) => Err(format!("Failed to get events: {}", err)),
   }
 }
 
@@ -95,7 +104,10 @@ pub async fn set_contact_list(
   let client = &state.client;
   let contact_list: Vec<Contact> = public_keys
     .into_iter()
-    .map(|p| Contact::new(PublicKey::from_hex(p).unwrap(), None, Some("")))
+    .filter_map(|p| match PublicKey::from_hex(p) {
+      Ok(pk) => Some(Contact::new(pk, None, Some(""))),
+      Err(_) => None,
+    })
     .collect();
 
   match client.set_contact_list(contact_list).await {
@@ -235,8 +247,15 @@ pub async fn set_nstore(
 
   match client.signer().await {
     Ok(signer) => {
-      let public_key = signer.public_key().await.unwrap();
-      let encrypted = signer.nip44_encrypt(public_key, content).await.unwrap();
+      let public_key = match signer.public_key().await {
+        Ok(pk) => pk,
+        Err(err) => return Err(format!("Failed to get public key: {}", err)),
+      };
+
+      let encrypted = match signer.nip44_encrypt(public_key, content).await {
+        Ok(enc) => enc,
+        Err(err) => return Err(format!("Encryption failed: {}", err)),
+      };
 
       let tag = Tag::identifier(key);
       let builder = EventBuilder::new(Kind::ApplicationSpecificData, encrypted, vec![tag]);
@@ -256,7 +275,11 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
   let client = &state.client;
 
   if let Ok(signer) = client.signer().await {
-    let public_key = signer.public_key().await.unwrap();
+    let public_key = match signer.public_key().await {
+      Ok(pk) => pk,
+      Err(err) => return Err(format!("Failed to get public key: {}", err)),
+    };
+
     let filter = Filter::new()
       .author(public_key)
       .kind(Kind::ApplicationSpecificData)
@@ -292,9 +315,9 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 
   if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
     let nwc = NWC::new(nwc_uri);
-    let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
-    let _ = keyring.set_password(uri);
-    let _ = client.set_zapper(nwc).await;
+    let keyring = Entry::new("Lume Secret Storage", "NWC").map_err(|e| e.to_string())?;
+    keyring.set_password(uri).map_err(|e| e.to_string())?;
+    client.set_zapper(nwc).await;
 
     Ok(true)
   } else {
@@ -306,11 +329,11 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 #[specta::specta]
 pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
-  let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+  let keyring = Entry::new("Lume Secret Storage", "NWC").map_err(|e| e.to_string())?;
 
   match keyring.get_password() {
     Ok(val) => {
-      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+      let uri = NostrWalletConnectURI::from_str(&val).map_err(|e| e.to_string())?;
       let nwc = NWC::new(uri);
       client.set_zapper(nwc).await;
 
@@ -323,17 +346,17 @@ pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
 #[tauri::command]
 #[specta::specta]
 pub async fn get_balance() -> Result<String, String> {
-  let keyring = Entry::new("Lume Secret Storage", "NWC").unwrap();
+  let keyring = Entry::new("Lume Secret Storage", "NWC").map_err(|e| e.to_string())?;
 
   match keyring.get_password() {
     Ok(val) => {
-      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
+      let uri = NostrWalletConnectURI::from_str(&val).map_err(|e| e.to_string())?;
       let nwc = NWC::new(uri);
-      if let Ok(balance) = nwc.get_balance().await {
-        Ok(balance.to_string())
-      } else {
-        Err("Get balance failed".into())
-      }
+      nwc
+        .get_balance()
+        .await
+        .map(|balance| balance.to_string())
+        .map_err(|_| "Get balance failed".into())
     }
     Err(_) => Err("Something wrong".into()),
   }
@@ -362,7 +385,10 @@ pub async fn zap_profile(
 
   if let Some(recipient) = public_key {
     let details = ZapDetails::new(ZapType::Public).message(message);
-    let num = amount.parse::<u64>().unwrap();
+    let num = match amount.parse::<u64>() {
+      Ok(val) => val,
+      Err(_) => return Err("Invalid amount.".into()),
+    };
 
     if client.zap(recipient, num, Some(details)).await.is_ok() {
       Ok(true)
@@ -397,7 +423,10 @@ pub async fn zap_event(
 
   if let Some(recipient) = event_id {
     let details = ZapDetails::new(ZapType::Public).message(message);
-    let num = amount.parse::<u64>().unwrap();
+    let num = match amount.parse::<u64>() {
+      Ok(val) => val,
+      Err(_) => return Err("Invalid amount.".into()),
+    };
 
     if client.zap(recipient, num, Some(details)).await.is_ok() {
       Ok(true)
@@ -405,7 +434,7 @@ pub async fn zap_event(
       Err("Zap event failed".into())
     }
   } else {
-    Err("Parse public key failed".into())
+    Err("Parse event ID failed".into())
   }
 }
 
@@ -504,7 +533,7 @@ pub async fn get_followers(
     .map(|event| event.author().to_hex())
     .collect();
   Ok(ret)
-  //todo: get more than 500 events
+  // TODO: get more than 500 events
 }
 
 #[tauri::command]
