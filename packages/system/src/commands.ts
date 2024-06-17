@@ -76,6 +76,14 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async getPrivateKey(npub: string) : Promise<Result<string, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_private_key", { npub }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async connectRemoteAccount(uri: string) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("connect_remote_account", { uri }) };

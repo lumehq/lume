@@ -54,6 +54,7 @@ fn main() {
       nostr::keys::create_account,
       nostr::keys::save_account,
       nostr::keys::get_encrypted_key,
+      nostr::keys::get_private_key,
       nostr::keys::connect_remote_account,
       nostr::keys::load_account,
       nostr::keys::event_to_bech32,

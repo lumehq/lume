@@ -370,6 +370,19 @@ pub fn get_encrypted_key(npub: &str, password: &str) -> Result<String, String> {
   }
 }
 
+#[tauri::command(async)]
+#[specta::specta]
+pub fn get_private_key(npub: &str) -> Result<String, String> {
+  let keyring = Entry::new(npub, "nostr_secret").unwrap();
+
+  if let Ok(nsec) = keyring.get_password() {
+    let secret_key = SecretKey::from_bech32(nsec).unwrap();
+    Ok(secret_key.to_bech32().unwrap())
+  } else {
+    Err("Key not found".into())
+  }
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn event_to_bech32(id: &str, relays: Vec<String>) -> Result<String, ()> {
