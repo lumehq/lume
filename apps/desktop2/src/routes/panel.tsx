@@ -4,10 +4,17 @@ import { type LumeEvent, LumeWindow, NostrQuery, useEvent } from "@lume/system";
 import { Kind } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/window";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
-import { InfoIcon, RepostIcon, SettingsIcon } from "@lume/icons";
-import { decodeZapInvoice, formatCreatedAt } from "@lume/utils";
+import { HorizontalDotsIcon, InfoIcon, RepostIcon } from "@lume/icons";
+import {
+	checkForAppUpdates,
+	decodeZapInvoice,
+	formatCreatedAt,
+} from "@lume/utils";
+import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+import { open } from "@tauri-apps/plugin-shell";
+import { exit } from "@tauri-apps/plugin-process";
 
 interface EmitAccount {
 	account: string;
@@ -66,6 +73,49 @@ function Screen() {
 		return groups;
 	}, [events]);
 
+	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
+		e.preventDefault();
+
+		const menuItems = await Promise.all([
+			MenuItem.new({
+				text: "Open Lume",
+				action: () => LumeWindow.openMainWindow(),
+			}),
+			MenuItem.new({
+				text: "New Post",
+				action: () => LumeWindow.openEditor(),
+			}),
+			MenuItem.new({
+				text: "Search",
+				action: () => LumeWindow.openSearch(),
+			}),
+			PredefinedMenuItem.new({ item: "Separator" }),
+			MenuItem.new({
+				text: "About Lume",
+				action: async () => await open("https://lume.nu"),
+			}),
+			MenuItem.new({
+				text: "Check for Updates",
+				action: async () => await checkForAppUpdates(false),
+			}),
+			MenuItem.new({
+				text: "Settings",
+				action: () => LumeWindow.openSettings(),
+			}),
+			PredefinedMenuItem.new({ item: "Separator" }),
+			MenuItem.new({
+				text: "Quit",
+				action: async () => await exit(0),
+			}),
+		]);
+
+		const menu = await Menu.new({
+			items: menuItems,
+		});
+
+		await menu.popup().catch((e) => console.error(e));
+	}, []);
+
 	useEffect(() => {
 		if (account?.length && account?.startsWith("npub1")) {
 			NostrQuery.getNotifications()
@@ -118,10 +168,10 @@ function Screen() {
 					</User.Provider>
 					<button
 						type="button"
-						onClick={() => LumeWindow.openSettings()}
+						onClick={(e) => showContextMenu(e)}
 						className="inline-flex items-center justify-center rounded-full size-7 bg-black/5 dark:bg-white/5"
 					>
-						<SettingsIcon className="size-4" />
+						<HorizontalDotsIcon className="size-4" />
 					</button>
 				</div>
 			</div>
@@ -276,7 +326,7 @@ function TextNote({ event }: { event: LumeEvent }) {
 			onClick={() => LumeWindow.openEvent(event)}
 		>
 			<Note.Provider event={event}>
-				<Note.Root className="flex flex-col gap-1 p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
+				<Note.Root className="flex flex-col p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
 					<User.Provider pubkey={event.pubkey}>
 						<User.Root className="inline-flex items-center gap-2">
 							<User.Avatar className="rounded-full size-9 shrink-0" />

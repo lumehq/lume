@@ -95,7 +95,8 @@ fn main() {
       commands::window::reposition_column,
       commands::window::resize_column,
       commands::window::open_window,
-      commands::window::set_badge
+      commands::window::set_badge,
+      commands::window::open_main_window
     ]);
 
     #[cfg(debug_assertions)]
@@ -130,8 +131,8 @@ fn main() {
 
       // Handle tray icon event
       #[cfg(target_os = "macos")]
-      tray.on_tray_icon_event(|tray, event| match event {
-        TrayIconEvent::Click { button_state, .. } => {
+      tray.on_tray_icon_event(|tray, event| {
+        if let TrayIconEvent::Click { button_state, .. } = event {
           if button_state == MouseButtonState::Up {
             let app = tray.app_handle();
             let panel = app.get_webview_panel("panel").unwrap();
@@ -145,7 +146,6 @@ fn main() {
             }
           }
         }
-        _ => {}
       });
 
       // Create data folder if not exist
@@ -170,7 +170,7 @@ fn main() {
         let lines = io::BufReader::new(file).lines();
 
         // Add bootstrap relays to relay pool
-        for line in lines.flatten() {
+        for line in lines.map_while(Result::ok) {
           if let Some((relay, option)) = line.split_once(',') {
             match RelayMetadata::from_str(option) {
               Ok(meta) => {
@@ -216,6 +216,14 @@ fn main() {
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
     .invoke_handler(invoke_handler)
-    .run(ctx)
+    .build(ctx)
     .expect("error while running tauri application")
+    .run(|app, event| {
+      if let tauri::RunEvent::ExitRequested { api, .. } = event {
+        // Hide app icon on macOS
+        // let _ = app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+        // Keep API running
+        api.prevent_exit();
+      }
+    });
 }

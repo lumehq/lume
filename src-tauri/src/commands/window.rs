@@ -1,12 +1,13 @@
+use std::path::PathBuf;
+
 #[cfg(target_os = "macos")]
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
-use std::path::PathBuf;
-use tauri::utils::config::WindowEffectsConfig;
-use tauri::window::Effect;
+use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
+use tauri::utils::config::WindowEffectsConfig;
 use tauri::WebviewWindowBuilder;
-use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
+use tauri::window::Effect;
 use tauri_plugin_decorum::WebviewWindowExt;
 
 #[tauri::command]
@@ -182,5 +183,23 @@ pub fn set_badge(count: i32) {
     };
     let dock_tile: cocoa::base::id = msg_send![NSApp(), dockTile];
     let _: cocoa::base::id = msg_send![dock_tile, setBadgeLabel: label];
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn open_main_window(app: tauri::AppHandle) {
+  if let Some(window) = app.get_window("main") {
+    if window.is_visible().unwrap_or_default() {
+      let _ = window.set_focus();
+    } else {
+      let _ = window.show();
+      let _ = window.set_focus();
+    };
+  } else {
+    let _ = WebviewWindowBuilder::from_config(&app, app.config().app.windows.first().unwrap())
+      .unwrap()
+      .build()
+      .unwrap();
   }
 }

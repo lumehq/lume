@@ -3,6 +3,16 @@ import type { LumeEvent } from "./event";
 import { commands } from "./commands";
 
 export class LumeWindow {
+	static async openMainWindow() {
+		const query = await commands.openMainWindow();
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
 	static async openEvent(event: NostrEvent | LumeEvent) {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
 		const root: string =
