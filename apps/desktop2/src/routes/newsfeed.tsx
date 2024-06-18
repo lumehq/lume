@@ -51,7 +51,7 @@ export function Screen() {
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
-		select: (data) => data?.pages.flatMap((page) => page),
+		select: (data) => data?.pages.flat(),
 		refetchOnWindowFocus: false,
 	});
 

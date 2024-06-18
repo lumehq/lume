@@ -1,6 +1,6 @@
 import { CancelIcon, PlusIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
-import { Relay } from "@lume/types";
+import type { Relay } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -51,16 +51,16 @@ function Screen() {
 	}, [bootstrapRelays]);
 
 	return (
-		<div className="flex flex-col justify-center items-center h-screen w-screen">
-			<div className="mx-auto max-w-sm lg:max-w-lg w-full">
-				<div className="h-11 text-center">
+		<div className="flex flex-col items-center justify-center w-screen h-screen">
+			<div className="w-full max-w-sm mx-auto lg:max-w-lg">
+				<div className="text-center h-11">
 					<h1 className="font-semibold">Customize Bootstrap Relays</h1>
 				</div>
-				<div className="flex w-full flex-col bg-white rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/20 dark:ring-1 ring-neutral-800/50 px-2">
+				<div className="flex flex-col w-full px-2 bg-white rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/20 dark:ring-1 ring-neutral-800/50">
 					{relays.map((relay) => (
 						<div
 							key={relay.url}
-							className="flex justify-between items-center h-11"
+							className="flex items-center justify-between h-11"
 						>
 							<div className="inline-flex items-center gap-2 text-sm font-medium">
 								{relay.url}
@@ -69,7 +69,7 @@ function Screen() {
 								{relay.purpose?.length ? (
 									<button
 										type="button"
-										className="h-7 w-max rounded-md inline-flex items-center justify-center px-2 uppercase text-xs font-medium hover:bg-black/10 dark:hover:bg-white/10"
+										className="inline-flex items-center justify-center px-2 text-xs font-medium uppercase rounded-md h-7 w-max hover:bg-black/10 dark:hover:bg-white/10"
 									>
 										{relay.purpose}
 									</button>
@@ -77,19 +77,19 @@ function Screen() {
 								<button
 									type="button"
 									onClick={() => removeRelay(relay.url)}
-									className="inline-flex items-center justify-center size-7 rounded-md text-neutral-700 dark:text-white/20 hover:bg-black/10 dark:hover:bg-white/10"
+									className="inline-flex items-center justify-center rounded-md size-7 text-neutral-700 dark:text-white/20 hover:bg-black/10 dark:hover:bg-white/10"
 								>
 									<CancelIcon className="size-3" />
 								</button>
 							</div>
 						</div>
 					))}
-					<div className="flex items-center h-14 border-t border-neutral-100 dark:border-white/5">
+					<div className="flex items-center border-t h-14 border-neutral-100 dark:border-white/5">
 						<form
 							onSubmit={handleSubmit(onSubmit)}
-							className="w-full flex items-center gap-2 mb-0"
+							className="flex items-center w-full gap-2 mb-0"
 						>
-							<div className="flex-1 flex items-center gap-2 rounded-lg border border-neutral-300 dark:border-white/20">
+							<div className="flex items-center flex-1 gap-2 border rounded-lg border-neutral-300 dark:border-white/20">
 								<input
 									{...register("url", {
 										required: true,
@@ -98,11 +98,11 @@ function Screen() {
 									name="url"
 									placeholder="wss://..."
 									spellCheck={false}
-									className="h-9 flex-1 bg-transparent border-none rounded-l-lg px-3 placeholder:text-neutral-500 dark:placeholder:text-neutral-400"
+									className="flex-1 px-3 bg-transparent border-none rounded-l-lg h-9 placeholder:text-neutral-500 dark:placeholder:text-neutral-400"
 								/>
 								<select
 									{...register("purpose")}
-									className="flex-1 h-9 p-0 m-0 text-sm bg-transparent border-none ring-0 outline-none focus:outline-none focus:ring-0"
+									className="flex-1 p-0 m-0 text-sm bg-transparent border-none outline-none h-9 ring-0 focus:outline-none focus:ring-0"
 								>
 									<option value="read">Read</option>
 									<option value="write">Write</option>
@@ -111,7 +111,7 @@ function Screen() {
 							</div>
 							<button
 								type="submit"
-								className="shrink-0 inline-flex h-9 w-14 px-2 items-center justify-center rounded-lg bg-black/20 dark:bg-white/20 font-medium text-sm text-white hover:bg-blue-500 disabled:opacity-50"
+								className="inline-flex items-center justify-center px-2 text-sm font-medium text-white rounded-lg shrink-0 h-9 w-14 bg-black/20 dark:bg-white/20 hover:bg-blue-500 disabled:opacity-50"
 							>
 								<PlusIcon className="size-7" />
 							</button>
@@ -122,7 +122,7 @@ function Screen() {
 					type="button"
 					onClick={() => save()}
 					disabled={isLoading}
-					className="mt-4 inline-flex h-10 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 text-sm font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+					className="inline-flex items-center justify-center w-full h-10 mt-4 text-sm font-semibold text-white bg-blue-500 rounded-lg shrink-0 hover:bg-blue-600 disabled:opacity-50"
 				>
 					{isLoading ? <Spinner /> : "Save & Relaunch"}
 				</button>

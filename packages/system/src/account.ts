@@ -129,6 +129,16 @@ export class NostrAccount {
 		}
 	}
 
+	static async getContactList() {
+		const query = await commands.getContactList();
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			return [];
+		}
+	}
+
 	static async isContactListEmpty() {
 		const query = await commands.isContactListEmpty();
 

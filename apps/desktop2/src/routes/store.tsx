@@ -1,17 +1,9 @@
 import { GlobalIcon, LaurelIcon } from "@lume/icons";
-import type { ColumnRouteSearch } from "@lume/types";
 import { cn } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/store")({
-	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
-		return {
-			account: search.account,
-			label: search.label,
-			name: search.name,
-		};
-	},
 	component: Screen,
 });
 
@@ -19,7 +11,7 @@ function Screen() {
 	return (
 		<div className="flex flex-col h-full">
 			<div className="px-3 mt-2 mb-1">
-				<div className="p-1 shrink-0 inline-flex w-full rounded-lg items-center gap-1 bg-black/5 dark:bg-white/5">
+				<div className="inline-flex items-center w-full gap-1 p-1 rounded-lg shrink-0 bg-black/5 dark:bg-white/5">
 					<Link to="/store/official" className="flex-1">
 						{({ isActive }) => (
 							<div

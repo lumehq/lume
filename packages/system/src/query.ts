@@ -200,18 +200,7 @@ export class NostrQuery {
 		const query = await commands.getEventsBy(pubkey, until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -235,18 +224,7 @@ export class NostrQuery {
 		const query = await commands.getGroupEvents(pubkeys, until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -258,18 +236,7 @@ export class NostrQuery {
 		const query = await commands.getGlobalEvents(until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -282,18 +249,7 @@ export class NostrQuery {
 		const query = await commands.getHashtagEvents(nostrTags, until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
