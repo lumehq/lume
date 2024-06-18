@@ -1,7 +1,7 @@
 import { PlusIcon, RelayIcon } from "@lume/icons";
 import { Spinner } from "@lume/ui";
 import { User } from "@/components/user";
-import { checkForAppUpdates } from "@lume/utils";
+import { checkForAppUpdates, displayNpub } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
@@ -10,7 +10,12 @@ import { NostrAccount } from "@lume/system";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: async () => {
-		await checkForAppUpdates(true); // check for app updates
+		// Check for app updates
+		// TODO: move this function to rust
+		await checkForAppUpdates(true);
+
+		// Get all accounts
+		// TODO: use emit & listen
 		const accounts = await NostrAccount.getAccounts();
 
 		if (accounts.length < 1) {
@@ -29,11 +34,11 @@ function Screen() {
 	const navigate = Route.useNavigate();
 	const context = Route.useRouteContext();
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState({ npub: "", status: false });
 
 	const select = async (npub: string) => {
 		try {
-			setLoading(true);
+			setLoading({ npub, status: true });
 
 			const status = await NostrAccount.loadAccount(npub);
 
@@ -45,7 +50,7 @@ function Screen() {
 				});
 			}
 		} catch (e) {
-			setLoading(false);
+			setLoading({ npub: "", status: false });
 			toast.error(String(e));
 		}
 	};
@@ -59,9 +64,9 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="h-full w-full flex flex-col items-center justify-between"
+			className="flex flex-col items-center justify-between w-full h-full"
 		>
-			<div className="w-full flex-1 flex items-end justify-center px-4">
+			<div className="flex items-end justify-center flex-1 w-full px-4 pb-10">
 				<div className="text-center">
 					<h2 className="mb-1 text-lg text-neutral-700 dark:text-neutral-300">
 						{currentDate}
@@ -69,49 +74,60 @@ function Screen() {
 					<h2 className="text-2xl font-semibold">Welcome back!</h2>
 				</div>
 			</div>
-			<div className="w-full flex-1 flex flex-wrap items-center justify-center gap-6 px-3">
-				{loading ? (
-					<div className="inline-flex size-6 items-center justify-center">
-						<Spinner className="size-6" />
-					</div>
-				) : (
-					<>
-						{context.accounts.map((account) => (
-							<button
-								key={account}
-								type="button"
-								onClick={() => select(account)}
-							>
-								<User.Provider pubkey={account}>
-									<User.Root className="flex h-36 w-32 flex-col items-center justify-center gap-3 rounded-2xl p-2 hover:bg-black/10 dark:hover:bg-white/10">
-										<User.Avatar className="size-20 rounded-full object-cover" />
+			<div className="flex flex-col items-center flex-1 w-full gap-3">
+				<div className="flex flex-col w-full max-w-sm mx-auto overflow-hidden bg-white divide-y divide-neutral-100 dark:divide-white/5 rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/10 dark:ring-1 ring-white/15">
+					{context.accounts.map((account) => (
+						<div
+							key={account}
+							onClick={() => select(account)}
+							onKeyDown={() => select(account)}
+							className="flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5"
+						>
+							<User.Provider pubkey={account}>
+								<User.Root className="flex items-center gap-2.5 p-3">
+									<User.Avatar className="object-cover rounded-full size-10 shrink-0" />
+									<div className="inline-flex flex-col items-start">
 										<User.Name className="max-w-[6rem] truncate font-medium leading-tight" />
-									</User.Root>
-								</User.Provider>
-							</button>
-						))}
-						<Link to="/landing">
-							<div className="flex h-36 w-32 flex-col items-center justify-center gap-3 rounded-2xl p-2 hover:bg-black/10 dark:hover:bg-white/10">
-								<div className="flex size-20 items-center justify-center rounded-full bg-black/5 dark:bg-white/5">
-									<PlusIcon className="size-8" />
-								</div>
-								<p className="font-medium leading-tight">Add</p>
+										<span className="text-sm text-neutral-700 dark:text-neutral-300">
+											{displayNpub(account, 16)}
+										</span>
+									</div>
+								</User.Root>
+							</User.Provider>
+							<div className="inline-flex items-center justify-center size-10">
+								{loading.npub === account ? (
+									loading.status ? (
+										<Spinner />
+									) : null
+								) : null}
 							</div>
-						</Link>
-					</>
-				)}
-			</div>
-			<div className="w-full flex-1 flex items-end justify-center pb-4 px-4">
-				<div>
+						</div>
+					))}
+					<Link
+						to="/landing"
+						className="flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5"
+					>
+						<div className="flex items-center gap-2.5 p-3">
+							<div className="inline-flex items-center justify-center rounded-full size-10 bg-neutral-200 dark:bg-white/10">
+								<PlusIcon className="size-5" />
+							</div>
+							<span className="max-w-[6rem] truncate text-sm font-medium leading-tight">
+								Add account
+							</span>
+						</div>
+					</Link>
+				</div>
+				<div className="w-full max-w-sm mx-auto">
 					<Link
 						to="/bootstrap-relays"
-						className="inline-flex items-center justify-center gap-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full h-8 w-36 px-2 text-xs font-medium text-neutral-700 dark:text-white/40"
+						className="inline-flex items-center justify-center w-full h-8 gap-2 px-2 text-xs font-medium rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-neutral-700 dark:text-white/40"
 					>
 						<RelayIcon className="size-4" />
-						Bootstrap Relays
+						Custom Bootstrap Relays
 					</Link>
 				</div>
 			</div>
+			<div className="flex-1" />
 		</div>
 	);
 }

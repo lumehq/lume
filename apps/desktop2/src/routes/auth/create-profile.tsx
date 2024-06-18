@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth/new/profile")({
+export const Route = createFileRoute("/auth/create-profile")({
 	component: Screen,
 	loader: async () => {
 		const account = await NostrAccount.createAccount();
@@ -58,24 +58,24 @@ function Screen() {
 	};
 
 	return (
-		<div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
+		<div className="flex flex-col items-center justify-center w-full h-full gap-6 px-5 mx-auto xl:max-w-xl">
 			<div className="text-center">
 				<h3 className="text-xl font-semibold">Let's set up your profile.</h3>
 			</div>
 			<div>
-				<div className="relative size-24 rounded-full bg-gradient-to-tr from-orange-100 via-red-50 to-blue-200">
+				<div className="relative rounded-full size-24 bg-gradient-to-tr from-orange-100 via-red-50 to-blue-200">
 					{picture ? (
 						<img
 							src={picture}
 							alt="avatar"
 							loading="lazy"
 							decoding="async"
-							className="absolute inset-0 z-10 h-full w-full rounded-full object-cover"
+							className="absolute inset-0 z-10 object-cover w-full h-full rounded-full"
 						/>
 					) : null}
 					<AvatarUploader
 						setPicture={setPicture}
-						className="absolute inset-0 z-20 flex h-full w-full items-center justify-center rounded-full dark:text-black bg-black/10 text-white hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+						className="absolute inset-0 z-20 flex items-center justify-center w-full h-full text-white rounded-full dark:text-black bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
 					>
 						<PlusIcon className="size-8" />
 					</AvatarUploader>
@@ -83,7 +83,7 @@ function Screen() {
 			</div>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="flex w-full flex-col gap-3"
+				className="flex flex-col w-full gap-3"
 			>
 				<div className="flex flex-col gap-1">
 					<label htmlFor="display_name" className="font-medium">
@@ -94,7 +94,7 @@ function Screen() {
 						{...register("display_name", { required: true, minLength: 1 })}
 						placeholder="e.g. Alice in Nostrland"
 						spellCheck={false}
-						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
+						className="px-3 border-transparent rounded-lg h-11 bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
@@ -106,7 +106,7 @@ function Screen() {
 						{...register("name")}
 						placeholder="e.g. alice"
 						spellCheck={false}
-						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
+						className="px-3 border-transparent rounded-lg h-11 bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<div className="flex flex-col gap-1">
@@ -129,12 +129,12 @@ function Screen() {
 						{...register("website")}
 						placeholder="e.g. https://alice.me"
 						spellCheck={false}
-						className="h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-500 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
+						className="px-3 border-transparent rounded-lg h-11 bg-neutral-100 placeholder:text-neutral-500 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 					/>
 				</div>
 				<button
 					type="submit"
-					className="mt-3 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+					className="inline-flex items-center justify-center w-full mt-3 font-semibold text-white bg-blue-500 rounded-lg h-11 shrink-0 hover:bg-blue-600 disabled:opacity-50"
 				>
 					{loading ? <Spinner /> : t("global.continue")}
 				</button>

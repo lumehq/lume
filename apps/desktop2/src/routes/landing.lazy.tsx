@@ -9,27 +9,27 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="flex flex-col justify-center items-center h-screen w-screen"
+			className="flex flex-col items-center justify-center w-screen h-screen"
 		>
-			<div className="mx-auto max-w-xs lg:max-w-md w-full">
-				<div className="flex w-full flex-col gap-2 bg-white rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/20 dark:ring-1 ring-neutral-800/50 px-2">
-					<div className="h-20 flex items-center border-b border-neutral-100 dark:border-white/5">
+			<div className="w-full max-w-xs mx-auto lg:max-w-md">
+				<div className="flex flex-col w-full gap-2 px-2 bg-white rounded-xl shadow-primary backdrop-blur-lg dark:bg-white/20 dark:ring-1 ring-neutral-800/50">
+					<div className="flex items-center h-20 border-b border-neutral-100 dark:border-white/5">
 						<Link
-							to="/auth/new/profile"
-							className="h-14 w-full flex items-center justify-center gap-2 hover:bg-neutral-100 dark:hover:bg-white/10 rounded-lg px-2"
+							to="/auth/create-profile"
+							className="flex items-center justify-center w-full gap-2 px-2 rounded-lg h-14 hover:bg-neutral-100 dark:hover:bg-white/10"
 						>
-							<div className="size-9 shrink-0 rounded-full inline-flex items-center justify-center">
+							<div className="inline-flex items-center justify-center rounded-full size-9 shrink-0">
 								<img
 									src="/icon.jpeg"
 									alt="App Icon"
-									className="size-9 object-cover rounded-full"
+									className="object-cover rounded-full size-9"
 								/>
 							</div>
-							<div className="flex-1 inline-flex flex-col">
-								<span className="leading-tight font-semibold">
+							<div className="inline-flex flex-col flex-1">
+								<span className="font-semibold leading-tight">
 									Create new account
 								</span>
-								<span className="leading-tight text-sm text-neutral-500">
+								<span className="text-sm leading-tight text-neutral-500">
 									Use everywhere
 								</span>
 							</div>
@@ -38,18 +38,18 @@ function Screen() {
 					<div className="flex flex-col gap-1 pb-2.5">
 						<Link
 							to="/auth/privkey"
-							className="inline-flex h-11 w-full items-center gap-2 rounded-lg px-2 hover:bg-neutral-100 dark:hover:bg-white/10"
+							className="inline-flex items-center w-full gap-2 px-2 rounded-lg h-11 hover:bg-neutral-100 dark:hover:bg-white/10"
 						>
-							<div className="size-9 inline-flex items-center justify-center">
+							<div className="inline-flex items-center justify-center size-9">
 								<KeyIcon className="size-5 text-neutral-600 dark:text-neutral-400" />
 							</div>
 							Login with Private Key
 						</Link>
 						<Link
 							to="/auth/remote"
-							className="inline-flex h-11 w-full items-center gap-2 rounded-lg px-2 hover:bg-neutral-100 dark:hover:bg-white/10"
+							className="inline-flex items-center w-full gap-2 px-2 rounded-lg h-11 hover:bg-neutral-100 dark:hover:bg-white/10"
 						>
-							<div className="size-9 inline-flex items-center justify-center">
+							<div className="inline-flex items-center justify-center size-9">
 								<RemoteIcon className="size-5 text-neutral-600 dark:text-neutral-400" />
 							</div>
 							Nostr Connect

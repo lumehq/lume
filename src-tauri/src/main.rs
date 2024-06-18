@@ -218,7 +218,7 @@ fn main() {
     .invoke_handler(invoke_handler)
     .build(ctx)
     .expect("error while running tauri application")
-    .run(|app, event| {
+    .run(|_, event| {
       if let tauri::RunEvent::ExitRequested { api, .. } = event {
         // Hide app icon on macOS
         // let _ = app.set_activation_policy(tauri::ActivationPolicy::Accessory);
