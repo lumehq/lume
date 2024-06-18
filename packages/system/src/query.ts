@@ -5,14 +5,14 @@ import type {
 	Relay,
 	Settings,
 } from "@lume/types";
-import { type Result, type RichEvent, commands } from "./commands";
+import { invoke } from "@tauri-apps/api/core";
 import { resolveResource } from "@tauri-apps/api/path";
+import { open } from "@tauri-apps/plugin-dialog";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { isPermissionGranted } from "@tauri-apps/plugin-notification";
-import { open } from "@tauri-apps/plugin-dialog";
-import { invoke } from "@tauri-apps/api/core";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { nip19 } from "nostr-tools";
+import { type Result, type RichEvent, commands } from "./commands";
 import { LumeEvent } from "./event";
 
 enum NSTORE_KEYS {
@@ -289,42 +289,23 @@ export class NostrQuery {
 		}
 	}
 
-	static async getSettings() {
-		const query = await commands.getNstore(NSTORE_KEYS.settings);
-
-		if (query.status === "ok") {
-			const settings: Settings = query.data ? JSON.parse(query.data) : null;
-			const isGranted = await isPermissionGranted();
-			const theme: "auto" | "light" | "dark" = await invoke(
-				"plugin:theme|get_theme",
-			);
-
-			return { ...settings, theme, notification: isGranted };
-		} else {
-			const initial: Settings = {
-				autoUpdate: false,
-				enhancedPrivacy: false,
-				notification: false,
-				zap: false,
-				nsfw: false,
-				gossip: false,
-				theme: "auto",
-			};
-
-			return initial;
-		}
-	}
-
-	static async setSettings(settings: Settings) {
-		const query = await commands.setNstore(
-			NSTORE_KEYS.settings,
-			JSON.stringify(settings),
-		);
+	static async getUserSettings() {
+		const query = await commands.getSettings();
 
 		if (query.status === "ok") {
 			return query.data;
 		} else {
-			throw new Error(query.error);
+			return query.error;
+		}
+	}
+
+	static async setUserSettings(newSettings: string) {
+		const query = await commands.setNewSettings(newSettings);
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			return query.error;
 		}
 	}
 

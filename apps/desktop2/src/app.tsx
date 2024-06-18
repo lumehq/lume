@@ -4,9 +4,9 @@ import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 import "./app.css";
+import { type } from "@tauri-apps/plugin-os";
 import i18n from "./locale";
 import { routeTree } from "./router.gen"; // auto generated file
-import { type } from "@tauri-apps/plugin-os";
 
 const queryClient = new QueryClient();
 const os = await type();
