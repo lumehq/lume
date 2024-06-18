@@ -18,10 +18,10 @@ function Screen() {
 	const { t } = useTranslation();
 
 	return (
-		<div className="flex h-full w-full flex-col">
+		<div className="flex flex-col w-full h-full">
 			<div
 				data-tauri-drag-region
-				className="flex h-20 w-full shrink-0 items-center justify-center border-b border-black/10 dark:border-white/10"
+				className="flex items-center justify-center w-full h-20 border-b shrink-0 border-black/10 dark:border-white/10"
 			>
 				<div className="flex items-center gap-1">
 					<Link to="/settings/general">
@@ -119,7 +119,7 @@ function Screen() {
 					</Link>
 				</div>
 			</div>
-			<div className="w-full flex-1 overflow-y-auto scrollbar-none px-5 py-4">
+			<div className="flex-1 w-full px-5 py-4 overflow-y-auto scrollbar-none">
 				<Outlet />
 			</div>
 		</div>

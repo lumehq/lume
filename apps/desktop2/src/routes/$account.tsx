@@ -1,18 +1,18 @@
+import { User } from "@/components/user";
 import {
 	ComposeFilledIcon,
 	HorizontalDotsIcon,
 	PlusIcon,
 	SearchIcon,
 } from "@lume/icons";
-import { User } from "@/components/user";
+import { LumeWindow, NostrAccount } from "@lume/system";
 import { cn } from "@lume/utils";
+import * as Popover from "@radix-ui/react-popover";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import * as Popover from "@radix-ui/react-popover";
-import { LumeWindow, NostrAccount } from "@lume/system";
-import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async () => {
@@ -59,7 +59,6 @@ function Screen() {
 						<ComposeFilledIcon className="size-4" />
 						New Post
 					</button>
-
 					<div id="toolbar" />
 				</div>
 			</div>
@@ -127,10 +126,15 @@ function Accounts() {
 			setWindowWidth(getWindowDimensions().width);
 		}
 
-		if (!windowWidth) setWindowWidth(getWindowDimensions().width);
+		if (!windowWidth) {
+			setWindowWidth(getWindowDimensions().width);
+		}
+
 		window.addEventListener("resize", handleResize);
 
-		return () => window.removeEventListener("resize", handleResize);
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
 	}, []);
 
 	return (

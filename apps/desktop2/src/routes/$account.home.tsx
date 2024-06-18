@@ -2,14 +2,14 @@ import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
 import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
-import type { EventColumns, LumeColumn } from "@lume/types";
+import type { ColumnEvent, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
+import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import useEmblaCarousel from "embla-carousel-react";
 
 export const Route = createFileRoute("/$account/home")({
 	loader: async () => {
@@ -116,7 +116,7 @@ function Screen() {
 
 	useEffect(() => {
 		// Listen for columns event
-		const unlisten = listen<EventColumns>("columns", (data) => {
+		const unlisten = listen<ColumnEvent>("columns", (data) => {
 			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
 			if (data.payload.type === "remove") remove(data.payload.label);
