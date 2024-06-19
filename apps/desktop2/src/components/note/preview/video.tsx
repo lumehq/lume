@@ -1,4 +1,21 @@
+import { useRouteContext } from "@tanstack/react-router";
+
 export function VideoPreview({ url }: { url: string }) {
+	const { settings } = useRouteContext({ strict: false });
+
+	if (settings.display_media) {
+		return (
+			<a
+				href={url}
+				target="_blank"
+				rel="noreferrer"
+				className="inline text-blue-500 hover:text-blue-600"
+			>
+				{url}
+			</a>
+		);
+	}
+
 	return (
 		<div className="my-1">
 			<video

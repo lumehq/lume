@@ -1,18 +1,18 @@
+import { User } from "@/components/user";
 import {
 	ComposeFilledIcon,
 	HorizontalDotsIcon,
 	PlusIcon,
 	SearchIcon,
 } from "@lume/icons";
-import { User } from "@/components/user";
+import { LumeWindow, NostrAccount } from "@lume/system";
 import { cn } from "@lume/utils";
+import * as Popover from "@radix-ui/react-popover";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import * as Popover from "@radix-ui/react-popover";
-import { LumeWindow, NostrAccount } from "@lume/system";
-import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async () => {
@@ -46,20 +46,12 @@ function Screen() {
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
-						onClick={() => LumeWindow.openSearch()}
-						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-					>
-						<SearchIcon className="size-5" />
-					</button>
-					<button
-						type="button"
 						onClick={() => LumeWindow.openEditor()}
 						className="inline-flex items-center justify-center h-8 gap-1 px-3 text-sm font-medium text-white bg-blue-500 rounded-full w-max hover:bg-blue-600"
 					>
 						<ComposeFilledIcon className="size-4" />
 						New Post
 					</button>
-
 					<div id="toolbar" />
 				</div>
 			</div>
@@ -127,10 +119,15 @@ function Accounts() {
 			setWindowWidth(getWindowDimensions().width);
 		}
 
-		if (!windowWidth) setWindowWidth(getWindowDimensions().width);
+		if (!windowWidth) {
+			setWindowWidth(getWindowDimensions().width);
+		}
+
 		window.addEventListener("resize", handleResize);
 
-		return () => window.removeEventListener("resize", handleResize);
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
 	}, []);
 
 	return (

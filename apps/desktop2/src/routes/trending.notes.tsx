@@ -1,4 +1,5 @@
 import { TextNote } from "@/components/text";
+import { LumeEvent } from "@lume/system";
 import type { NostrEvent } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { Await, createFileRoute } from "@tanstack/react-router";
@@ -15,7 +16,13 @@ export const Route = createFileRoute("/trending/notes")({
 						signal: abortController.signal,
 					})
 						.then((res) => res.json())
-						.then((res) => res.notes.map((item) => item.event) as NostrEvent[]),
+						.then((res) => {
+							const events: NostrEvent[] = res.notes.map(
+								(item: { event: NostrEvent }) => item.event,
+							);
+							const lumeEvents = events.map((ev) => new LumeEvent(ev));
+							return lumeEvents;
+						}),
 				),
 			};
 		} catch (e) {
@@ -33,7 +40,7 @@ export function Screen() {
 			<Virtualizer overscan={3}>
 				<Suspense
 					fallback={
-						<div className="flex h-20 w-full flex-col items-center justify-center gap-1">
+						<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
 							<button
 								type="button"
 								className="inline-flex items-center gap-2 text-sm font-medium"

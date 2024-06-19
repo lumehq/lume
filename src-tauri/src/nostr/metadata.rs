@@ -4,13 +4,13 @@ use keyring::Entry;
 use nostr_sdk::prelude::*;
 use tauri::State;
 
-use crate::Nostr;
+use crate::{Nostr, Settings};
 
 use super::get_latest_event;
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_current_user_profile(state: State<'_, Nostr>) -> Result<String, String> {
+pub async fn get_current_profile(state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
 
   let signer = match client.signer().await {
@@ -562,6 +562,34 @@ pub async fn get_notifications(state: State<'_, Nostr>) -> Result<Vec<String>, S
         Ok(events) => Ok(events.into_iter().map(|ev| ev.as_json()).collect()),
         Err(err) => Err(err.to_string()),
       }
+    }
+    Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_settings(state: State<'_, Nostr>) -> Result<Settings, ()> {
+  let settings = state.settings.lock().unwrap().clone();
+  Ok(settings)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn set_new_settings(settings: &str, state: State<'_, Nostr>) -> Result<(), ()> {
+  let parsed: Settings = serde_json::from_str(settings).expect("Could not parse settings payload");
+  *state.settings.lock().unwrap() = parsed;
+
+  Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
+  match PublicKey::from_str(key) {
+    Ok(public_key) => {
+      let status = nip05::verify(&public_key, nip05, None).await;
+      Ok(status.is_ok())
     }
     Err(err) => Err(err.to_string()),
   }

@@ -15,9 +15,11 @@ use std::{
   str::FromStr,
 };
 use std::sync::Mutex;
+use std::time::Duration;
 
 use nostr_sdk::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use specta::Type;
 use tauri::{Manager, path::BaseDirectory};
 #[cfg(target_os = "macos")]
 use tauri::tray::{MouseButtonState, TrayIconEvent};
@@ -39,10 +41,39 @@ pub struct Nostr {
   #[serde(skip_serializing)]
   client: Client,
   contact_list: Mutex<Vec<Contact>>,
+  settings: Mutex<Settings>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Type)]
+pub struct Settings {
+  proxy: Option<String>,
+  image_resize_service: Option<String>,
+  use_relay_hint: bool,
+  content_warning: bool,
+  display_avatar: bool,
+  display_zap_button: bool,
+  display_repost_button: bool,
+  display_media: bool,
+}
+
+impl Default for Settings {
+  fn default() -> Self {
+    Self {
+      proxy: None,
+      image_resize_service: Some("https://wsrv.nl/".into()),
+      use_relay_hint: true,
+      content_warning: true,
+      display_avatar: true,
+      display_zap_button: true,
+      display_repost_button: true,
+      display_media: true,
+    }
+  }
 }
 
 fn main() {
   let mut ctx = tauri::generate_context!();
+
   let invoke_handler = {
     let builder = tauri_specta::ts::builder().commands(tauri_specta::collect_commands![
       nostr::relay::get_relays,
@@ -57,8 +88,7 @@ fn main() {
       nostr::keys::get_private_key,
       nostr::keys::connect_remote_account,
       nostr::keys::load_account,
-      nostr::keys::verify_nip05,
-      nostr::metadata::get_current_user_profile,
+      nostr::metadata::get_current_profile,
       nostr::metadata::get_profile,
       nostr::metadata::get_contact_list,
       nostr::metadata::set_contact_list,
@@ -75,6 +105,9 @@ fn main() {
       nostr::metadata::zap_event,
       nostr::metadata::friend_to_friend,
       nostr::metadata::get_notifications,
+      nostr::metadata::get_settings,
+      nostr::metadata::set_new_settings,
+      nostr::metadata::verify_nip05,
       nostr::event::get_event_meta,
       nostr::event::get_event,
       nostr::event::get_event_from,
@@ -95,8 +128,8 @@ fn main() {
       commands::window::reposition_column,
       commands::window::resize_column,
       commands::window::open_window,
-      commands::window::set_badge,
-      commands::window::open_main_window
+      commands::window::open_main_window,
+      commands::window::set_badge
     ]);
 
     #[cfg(debug_assertions)]
@@ -153,9 +186,15 @@ fn main() {
       let _ = fs::create_dir_all(home_dir.join("Lume/"));
 
       tauri::async_runtime::block_on(async move {
-        // Create nostr connection
+        // Setup database
         let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
-        let opts = Options::new().automatic_authentication(true);
+
+        // Config
+        let opts = Options::new()
+          .automatic_authentication(true)
+          .connection_timeout(Some(Duration::from_secs(5)));
+
+        // Setup nostr client
         let client = match database {
           Ok(db) => ClientBuilder::default().database(db).opts(opts).build(),
           Err(_) => ClientBuilder::default().opts(opts).build(),
@@ -197,6 +236,7 @@ fn main() {
         app.handle().manage(Nostr {
           client,
           contact_list: Mutex::new(vec![]),
+          settings: Mutex::new(Settings::default()),
         })
       });
 
@@ -218,7 +258,7 @@ fn main() {
     .invoke_handler(invoke_handler)
     .build(ctx)
     .expect("error while running tauri application")
-    .run(|app, event| {
+    .run(|_, event| {
       if let tauri::RunEvent::ExitRequested { api, .. } = event {
         // Hide app icon on macOS
         // let _ = app.set_activation_policy(tauri::ActivationPolicy::Accessory);

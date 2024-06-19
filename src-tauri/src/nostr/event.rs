@@ -26,22 +26,93 @@ pub async fn get_event_meta(content: &str) -> Result<Meta, ()> {
 #[specta::specta]
 pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, String> {
   let client = &state.client;
-  let event_id: Option<EventId> = match Nip19::from_bech32(id) {
+
+  let event_id = match Nip19::from_bech32(id) {
     Ok(val) => match val {
-      Nip19::EventId(id) => Some(id),
-      Nip19::Event(event) => Some(event.event_id),
-      _ => None,
+      Nip19::EventId(id) => id,
+      Nip19::Event(event) => event.event_id,
+      _ => return Err("Event ID is not valid.".into()),
     },
     Err(_) => match EventId::from_hex(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
+      Ok(id) => id,
+      Err(_) => return Err("Event ID is not valid.".into()),
     },
   };
 
-  match event_id {
-    Some(id) => {
+  match client
+    .get_events_of(vec![Filter::new().id(event_id)], None)
+    .await
+  {
+    Ok(events) => {
+      if let Some(event) = events.first() {
+        let raw = event.as_json();
+        let parsed = if event.kind == Kind::TextNote {
+          Some(parse_event(&event.content).await)
+        } else {
+          None
+        };
+
+        Ok(RichEvent { raw, parsed })
+      } else {
+        Err("Cannot found this event with current relay list".into())
+      }
+    }
+    Err(err) => Err(err.to_string()),
+  }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_event_from(
+  id: &str,
+  relay_hint: &str,
+  state: State<'_, Nostr>,
+) -> Result<RichEvent, String> {
+  let client = &state.client;
+  let settings = state.settings.lock().unwrap().clone();
+
+  let event_id = match Nip19::from_bech32(id) {
+    Ok(val) => match val {
+      Nip19::EventId(id) => id,
+      Nip19::Event(event) => event.event_id,
+      _ => return Err("Event ID is not valid.".into()),
+    },
+    Err(_) => match EventId::from_hex(id) {
+      Ok(id) => id,
+      Err(_) => return Err("Event ID is not valid.".into()),
+    },
+  };
+
+  if !settings.use_relay_hint {
+    match client
+      .get_events_of(vec![Filter::new().id(event_id)], None)
+      .await
+    {
+      Ok(events) => {
+        if let Some(event) = events.first() {
+          let raw = event.as_json();
+          let parsed = if event.kind == Kind::TextNote {
+            Some(parse_event(&event.content).await)
+          } else {
+            None
+          };
+
+          Ok(RichEvent { raw, parsed })
+        } else {
+          return Err("Cannot found this event with current relay list".into());
+        }
+      }
+      Err(err) => return Err(err.to_string()),
+    }
+  } else {
+    // Add relay hint to relay pool
+    if let Err(err) = client.add_relay(relay_hint).await {
+      return Err(err.to_string());
+    }
+
+    if client.connect_relay(relay_hint).await.is_ok() {
       match client
-        .get_events_of(vec![Filter::new().id(id)], Some(Duration::from_secs(10)))
+        .get_events_from(vec![relay_hint], vec![Filter::new().id(event_id)], None)
         .await
       {
         Ok(events) => {
@@ -60,65 +131,9 @@ pub async fn get_event(id: &str, state: State<'_, Nostr>) -> Result<RichEvent, S
         }
         Err(err) => Err(err.to_string()),
       }
+    } else {
+      Err("Relay connection failed.".into())
     }
-    None => Err("Event ID is not valid.".into()),
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_event_from(
-  id: &str,
-  relay_hint: &str,
-  state: State<'_, Nostr>,
-) -> Result<RichEvent, String> {
-  let client = &state.client;
-
-  let event_id: Option<EventId> = match Nip19::from_bech32(id) {
-    Ok(val) => match val {
-      Nip19::EventId(id) => Some(id),
-      Nip19::Event(event) => Some(event.event_id),
-      _ => None,
-    },
-    Err(_) => match EventId::from_hex(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
-    },
-  };
-
-  // Add relay hint to relay pool
-  if let Err(err) = client.add_relay(relay_hint).await {
-    return Err(err.to_string());
-  }
-
-  if client.connect_relay(relay_hint).await.is_ok() {
-    match event_id {
-      Some(id) => {
-        match client
-          .get_events_from(vec![relay_hint], vec![Filter::new().id(id)], None)
-          .await
-        {
-          Ok(events) => {
-            if let Some(event) = events.first() {
-              let raw = event.as_json();
-              let parsed = if event.kind == Kind::TextNote {
-                Some(parse_event(&event.content).await)
-              } else {
-                None
-              };
-
-              Ok(RichEvent { raw, parsed })
-            } else {
-              Err("Cannot found this event with current relay list".into())
-            }
-          }
-          Err(err) => Err(err.to_string()),
-        }
-      }
-      None => Err("Event ID is not valid.".into()),
-    }
-  } else {
-    Err("Relay connection failed.".into())
   }
 }
 
@@ -225,7 +240,7 @@ pub async fn get_local_events(
     .await
   {
     Ok(events) => {
-      let dedup = dedup_event(&events, false);
+      let dedup = dedup_event(&events);
 
       let futures = dedup.into_iter().map(|ev| async move {
         let raw = ev.as_json();
@@ -282,7 +297,7 @@ pub async fn get_group_events(
     .await
   {
     Ok(events) => {
-      let dedup = dedup_event(&events, false);
+      let dedup = dedup_event(&events);
 
       let futures = dedup.into_iter().map(|ev| async move {
         let raw = ev.as_json();
@@ -325,7 +340,7 @@ pub async fn get_global_events(
     .await
   {
     Ok(events) => {
-      let dedup = dedup_event(&events, false);
+      let dedup = dedup_event(&events);
       let futures = dedup.into_iter().map(|ev| async move {
         let raw = ev.as_json();
         let parsed = if ev.kind == Kind::TextNote {
@@ -364,7 +379,7 @@ pub async fn get_hashtag_events(
 
   match client.get_events_of(vec![filter], None).await {
     Ok(events) => {
-      let dedup = dedup_event(&events, false);
+      let dedup = dedup_event(&events);
       let futures = dedup.into_iter().map(|ev| async move {
         let raw = ev.as_json();
         let parsed = if ev.kind == Kind::TextNote {

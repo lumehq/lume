@@ -100,17 +100,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async verifyNip05(key: string, nip05: string) : Promise<Result<boolean, string>> {
+async getCurrentProfile() : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("verify_nip05", { key, nip05 }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getCurrentUserProfile() : Promise<Result<string, string>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("get_current_user_profile") };
+    return { status: "ok", data: await TAURI_INVOKE("get_current_profile") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -239,6 +231,30 @@ try {
 async getNotifications() : Promise<Result<string[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_notifications") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async getSettings() : Promise<Result<Settings, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("get_settings") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async setNewSettings(settings: string) : Promise<Result<null, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("set_new_settings", { settings }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async verifyNip05(key: string, nip05: string) : Promise<Result<boolean, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("verify_nip05", { key, nip05 }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -399,11 +415,11 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async setBadge(count: number) : Promise<void> {
-await TAURI_INVOKE("set_badge", { count });
-},
 async openMainWindow() : Promise<void> {
 await TAURI_INVOKE("open_main_window");
+},
+async setBadge(count: number) : Promise<void> {
+await TAURI_INVOKE("set_badge", { count });
 }
 }
 
@@ -421,6 +437,7 @@ export type Account = { npub: string; nsec: string }
 export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
+export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
 
 /** tauri-specta globals **/
 

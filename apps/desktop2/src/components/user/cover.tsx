@@ -15,7 +15,7 @@ export function UserCover({ className }: { className?: string }) {
 		);
 	}
 
-	if (user && !user.profile.banner) {
+	if (user && !user.profile?.banner) {
 		return (
 			<div
 				className={cn("bg-gradient-to-b from-blue-400 to-teal-200", className)}
@@ -25,7 +25,7 @@ export function UserCover({ className }: { className?: string }) {
 
 	return (
 		<img
-			src={user.profile.banner}
+			src={user?.profile?.banner}
 			alt="banner"
 			loading="lazy"
 			decoding="async"

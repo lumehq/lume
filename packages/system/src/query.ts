@@ -1,24 +1,11 @@
-import type {
-	LumeColumn,
-	Metadata,
-	NostrEvent,
-	Relay,
-	Settings,
-} from "@lume/types";
-import { type Result, type RichEvent, commands } from "./commands";
+import type { LumeColumn, Metadata, NostrEvent, Relay } from "@lume/types";
 import { resolveResource } from "@tauri-apps/api/path";
-import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
-import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { open } from "@tauri-apps/plugin-dialog";
-import { invoke } from "@tauri-apps/api/core";
+import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { nip19 } from "nostr-tools";
+import { type Result, type RichEvent, commands } from "./commands";
 import { LumeEvent } from "./event";
-
-enum NSTORE_KEYS {
-	settings = "lume_user_settings",
-	columns = "lume_user_columns",
-}
 
 export class NostrQuery {
 	static #toLumeEvents(richEvents: RichEvent[]) {
@@ -200,18 +187,7 @@ export class NostrQuery {
 		const query = await commands.getEventsBy(pubkey, until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -235,18 +211,7 @@ export class NostrQuery {
 		const query = await commands.getGroupEvents(pubkeys, until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -258,18 +223,7 @@ export class NostrQuery {
 		const query = await commands.getGlobalEvents(until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -282,18 +236,7 @@ export class NostrQuery {
 		const query = await commands.getHashtagEvents(nostrTags, until);
 
 		if (query.status === "ok") {
-			const data = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as NostrEvent;
-
-				if (item.parsed) {
-					raw.meta = item.parsed;
-				} else {
-					raw.meta = null;
-				}
-
-				return raw;
-			});
-
+			const data = NostrQuery.#toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
@@ -314,9 +257,7 @@ export class NostrQuery {
 		const query = await commands.getNstore(key);
 
 		if (query.status === "ok") {
-			const data: string | string[] = query.data
-				? JSON.parse(query.data)
-				: null;
+			const data = query.data ? JSON.parse(query.data) : null;
 			return data;
 		} else {
 			return null;
@@ -333,51 +274,33 @@ export class NostrQuery {
 		}
 	}
 
-	static async getSettings() {
-		const query = await commands.getNstore(NSTORE_KEYS.settings);
-
-		if (query.status === "ok") {
-			const settings: Settings = query.data ? JSON.parse(query.data) : null;
-			const isGranted = await isPermissionGranted();
-			const theme: "auto" | "light" | "dark" = await invoke(
-				"plugin:theme|get_theme",
-			);
-
-			return { ...settings, theme, notification: isGranted };
-		} else {
-			const initial: Settings = {
-				autoUpdate: false,
-				enhancedPrivacy: false,
-				notification: false,
-				zap: false,
-				nsfw: false,
-				gossip: false,
-				theme: "auto",
-			};
-
-			return initial;
-		}
-	}
-
-	static async setSettings(settings: Settings) {
-		const query = await commands.setNstore(
-			NSTORE_KEYS.settings,
-			JSON.stringify(settings),
-		);
+	static async getUserSettings() {
+		const query = await commands.getSettings();
 
 		if (query.status === "ok") {
 			return query.data;
 		} else {
-			throw new Error(query.error);
+			return query.error;
+		}
+	}
+
+	static async setUserSettings(newSettings: string) {
+		const query = await commands.setNewSettings(newSettings);
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			return query.error;
 		}
 	}
 
 	static async getColumns() {
+		const key = "lume:columns";
 		const systemPath = "resources/system_columns.json";
 		const resourcePath = await resolveResource(systemPath);
 		const resourceFile = await readTextFile(resourcePath);
 		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
-		const query = await commands.getNstore(NSTORE_KEYS.columns);
+		const query = await commands.getNstore(key);
 
 		try {
 			if (query.status === "ok") {
@@ -399,8 +322,9 @@ export class NostrQuery {
 	}
 
 	static async setColumns(columns: LumeColumn[]) {
+		const key = "lume:columns";
 		const content = JSON.stringify(columns);
-		const query = await commands.setNstore(NSTORE_KEYS.columns, content);
+		const query = await commands.setNstore(key, content);
 
 		if (query.status === "ok") {
 			return query.data;

@@ -1,14 +1,18 @@
 use std::path::PathBuf;
+use std::str::FromStr;
 
 #[cfg(target_os = "macos")]
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
-use tauri::{LogicalPosition, LogicalSize, Manager, WebviewUrl};
+use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::utils::config::WindowEffectsConfig;
 use tauri::WebviewWindowBuilder;
 use tauri::window::Effect;
 use tauri_plugin_decorum::WebviewWindowExt;
+use url::Url;
+
+use crate::Nostr;
 
 #[tauri::command]
 #[specta::specta]
@@ -20,18 +24,32 @@ pub fn create_column(
   height: f32,
   url: &str,
   app_handle: tauri::AppHandle,
+  state: State<'_, Nostr>,
 ) -> Result<String, String> {
+  let settings = state.settings.lock().unwrap().clone();
+
   match app_handle.get_window("main") {
     Some(main_window) => match app_handle.get_webview(label) {
       Some(_) => Ok(label.into()),
       None => {
         let path = PathBuf::from(url);
         let webview_url = WebviewUrl::App(path);
-        let builder = tauri::webview::WebviewBuilder::new(label, webview_url)
-          .user_agent("Lume/4.0")
-          .zoom_hotkeys_enabled(true)
-          .enable_clipboard_access()
-          .transparent(true);
+        let builder = match settings.proxy {
+          Some(url) => {
+            let proxy = Url::from_str(&url).unwrap();
+            tauri::webview::WebviewBuilder::new(label, webview_url)
+              .user_agent("Lume/4.0")
+              .zoom_hotkeys_enabled(true)
+              .enable_clipboard_access()
+              .transparent(true)
+              .proxy_url(proxy)
+          }
+          None => tauri::webview::WebviewBuilder::new(label, webview_url)
+            .user_agent("Lume/4.0")
+            .zoom_hotkeys_enabled(true)
+            .enable_clipboard_access()
+            .transparent(true),
+        };
         match main_window.add_child(
           builder,
           LogicalPosition::new(x, y),

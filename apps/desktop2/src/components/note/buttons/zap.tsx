@@ -1,10 +1,14 @@
 import { ZapIcon } from "@lume/icons";
-import { useNoteContext } from "../provider";
-import { cn } from "@lume/utils";
 import { LumeWindow } from "@lume/system";
+import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
+import { useNoteContext } from "../provider";
 
 export function NoteZap({ large = false }: { large?: boolean }) {
 	const event = useNoteContext();
+	const { settings } = useRouteContext({ strict: false });
+
+	if (!settings.display_zap_button) return null;
 
 	return (
 		<button

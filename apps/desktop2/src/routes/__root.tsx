@@ -1,5 +1,5 @@
-import { CheckCircleIcon, InfoCircleIcon, CancelCircleIcon } from "@lume/icons";
-import type { Settings } from "@lume/types";
+import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
+import type { Settings } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
@@ -40,7 +40,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function Pending() {
 	return (
-		<div className="flex h-screen w-screen flex-col items-center justify-center">
+		<div className="flex flex-col items-center justify-center w-screen h-screen">
 			<Spinner className="size-5" />
 		</div>
 	);

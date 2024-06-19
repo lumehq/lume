@@ -1,14 +1,13 @@
-import { NostrQuery, useEvent } from "@lume/system";
-import type { NostrEvent } from "@lume/types";
-import { Box, Container, Spinner } from "@lume/ui";
 import { Note } from "@/components/note";
+import { type LumeEvent, NostrQuery, useEvent } from "@lume/system";
+import { Box, Container, Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { WindowVirtualizer } from "virtua";
 import { ReplyList } from "./-components/replyList";
 
 export const Route = createFileRoute("/events/$eventId")({
 	beforeLoad: async () => {
-		const settings = await NostrQuery.getSettings();
+		const settings = await NostrQuery.getUserSettings();
 		return { settings };
 	},
 	component: Screen,
@@ -20,14 +19,14 @@ function Screen() {
 
 	if (isLoading) {
 		return (
-			<div className="flex h-full w-full items-center justify-center">
+			<div className="flex items-center justify-center w-full h-full">
 				<Spinner className="size-5" />
 			</div>
 		);
 	}
 
 	if (isError) {
-		<div className="flex h-full w-full items-center justify-center">
+		<div className="flex items-center justify-center w-full h-full">
 			<p>Not found.</p>
 		</div>;
 	}
@@ -40,7 +39,7 @@ function Screen() {
 					{data ? (
 						<ReplyList eventId={eventId} />
 					) : (
-						<div className="flex h-full w-full items-center justify-center">
+						<div className="flex items-center justify-center w-full h-full">
 							<Spinner className="size-5" />
 						</div>
 					)}
@@ -50,16 +49,16 @@ function Screen() {
 	);
 }
 
-function MainNote({ data }: { data: NostrEvent }) {
+function MainNote({ data }: { data: LumeEvent }) {
 	return (
 		<Note.Provider event={data}>
 			<Note.Root>
-				<div className="px-3 h-14 flex items-center justify-between">
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />
 				</div>
 				<Note.ContentLarge className="px-3" />
-				<div className="mt-4 h-11 gap-2 flex items-center justify-end px-3">
+				<div className="flex items-center justify-end gap-2 px-3 mt-4 h-11">
 					<Note.Reply large />
 					<Note.Repost large />
 					<Note.Zap large />

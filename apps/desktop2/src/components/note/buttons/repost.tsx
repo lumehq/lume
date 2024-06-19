@@ -1,15 +1,16 @@
 import { RepostIcon } from "@lume/icons";
-import { cn } from "@lume/utils";
-import { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
-import { Spinner } from "@lume/ui";
-import { useNoteContext } from "../provider";
 import { LumeWindow } from "@lume/system";
+import { Spinner } from "@lume/ui";
+import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
+import { useNoteContext } from "../provider";
 
 export function NoteRepost({ large = false }: { large?: boolean }) {
 	const event = useNoteContext();
+	const { settings } = useRouteContext({ strict: false });
 
 	const [loading, setLoading] = useState(false);
 	const [isRepost, setIsRepost] = useState(false);
@@ -55,6 +56,8 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 
 		await menu.popup().catch((e) => console.error(e));
 	}, []);
+
+	if (!settings.display_repost_button) return null;
 
 	return (
 		<button

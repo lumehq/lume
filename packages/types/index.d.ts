@@ -1,14 +1,3 @@
-export interface Settings {
-	notification: boolean;
-	enhancedPrivacy: boolean;
-	autoUpdate: boolean;
-	zap: boolean;
-	nsfw: boolean;
-	gossip: boolean;
-	theme: "auto" | "light" | "dark";
-	[key: string]: string | number | boolean;
-}
-
 export interface Keys {
 	npub: string;
 	nsec: string;
@@ -69,42 +58,6 @@ export interface Metadata {
 	lud16?: string;
 }
 
-export interface Contact {
-	pubkey: string;
-	profile: Metadata;
-}
-
-export interface Account {
-	npub: string;
-	nsec?: string;
-	contacts?: string[];
-	interests?: Interests;
-}
-
-export interface Topic {
-	icon: string;
-	title: string;
-	content: string[];
-}
-
-export interface Interests {
-	hashtags: string[];
-	users: string[];
-	words: string[];
-}
-
-export interface RichContent {
-	parsed: string;
-	images: string[];
-	videos: string[];
-	links: string[];
-	notes: string[];
-}
-
-export interface AppRouteSearch {
-	account: string;
-}
-
 export interface ColumnRouteSearch {
 	account: string;
 	label: string;
@@ -124,68 +77,11 @@ export interface LumeColumn {
 	featured?: boolean;
 }
 
-export interface EventColumns {
+export interface ColumnEvent {
 	type: "reset" | "add" | "remove" | "update" | "left" | "right" | "set_title";
 	label?: string;
 	title?: string;
 	column?: LumeColumn;
-}
-
-export interface Opengraph {
-	url: string;
-	title?: string;
-	description?: string;
-	image?: string;
-}
-
-export interface NostrBuildResponse {
-	ok: boolean;
-	data?: {
-		message: string;
-		status: string;
-		data: Array<{
-			blurhash: string;
-			dimensions: {
-				width: number;
-				height: number;
-			};
-			mime: string;
-			name: string;
-			sha256: string;
-			size: number;
-			url: string;
-		}>;
-	};
-}
-
-export interface NIP11 {
-	name: string;
-	description: string;
-	pubkey: string;
-	contact: string;
-	supported_nips: number[];
-	software: string;
-	version: string;
-	limitation: {
-		[key: string]: string | number | boolean;
-	};
-	relay_countries: string[];
-	language_tags: string[];
-	tags: string[];
-	posting_policy: string;
-	payments_url: string;
-	icon: string[];
-}
-
-export interface NIP05 {
-	names: {
-		[key: string]: string;
-	};
-	nip46: {
-		[key: string]: {
-			[key: string]: string[];
-		};
-	};
 }
 
 export interface Relays {

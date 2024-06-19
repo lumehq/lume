@@ -21,6 +21,8 @@ export const Route = createFileRoute("/newsfeed")({
 	},
 	beforeLoad: async ({ search }) => {
 		const isContactListEmpty = await NostrAccount.isContactListEmpty();
+		const settings = await NostrQuery.getUserSettings();
+
 		if (isContactListEmpty) {
 			throw redirect({
 				to: "/create-newsfeed/users",
@@ -30,6 +32,8 @@ export const Route = createFileRoute("/newsfeed")({
 				},
 			});
 		}
+
+		return { settings };
 	},
 	component: Screen,
 });
@@ -51,7 +55,7 @@ export function Screen() {
 			return events;
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
-		select: (data) => data?.pages.flatMap((page) => page),
+		select: (data) => data?.pages.flat(),
 		refetchOnWindowFocus: false,
 	});
 

@@ -2,14 +2,14 @@ import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
 import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
-import type { EventColumns, LumeColumn } from "@lume/types";
+import type { ColumnEvent, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
+import useEmblaCarousel from "embla-carousel-react";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import useEmblaCarousel from "embla-carousel-react";
 
 export const Route = createFileRoute("/$account/home")({
 	loader: async () => {
@@ -26,7 +26,7 @@ function Screen() {
 	const [columns, setColumns] = useState<LumeColumn[]>([]);
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		watchDrag: false,
-		loop: true,
+		loop: false,
 	});
 
 	const scrollPrev = useCallback(() => {
@@ -38,11 +38,11 @@ function Screen() {
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {
-		getCurrent().emit("window", { scroll: true });
+		getCurrent().emit("child-webview", { scroll: true });
 	}, []);
 
 	const emitResizeEvent = useCallback(() => {
-		getCurrent().emit("window", { resize: true });
+		getCurrent().emit("child-webview", { resize: true, direction: "x" });
 	}, []);
 
 	const openLumeStore = useDebouncedCallback(async () => {
@@ -58,7 +58,7 @@ function Screen() {
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
 		column.label = `${column.label}-${nanoid()}`; // update col label
-		setColumns((prev) => [...prev, column]);
+		setColumns((prev) => [column, ...prev]);
 	}, 150);
 
 	const remove = useDebouncedCallback((label: string) => {
@@ -80,9 +80,7 @@ function Screen() {
 	const reset = useDebouncedCallback(() => setColumns([]), 150);
 
 	const handleKeyDown = useDebouncedCallback((event) => {
-		if (event.defaultPrevented) {
-			return;
-		}
+		if (event.defaultPrevented) return;
 
 		switch (event.code) {
 			case "ArrowLeft":
@@ -90,6 +88,8 @@ function Screen() {
 				break;
 			case "ArrowRight":
 				if (emblaApi) emblaApi.scrollNext(true);
+				break;
+			default:
 				break;
 		}
 
@@ -102,6 +102,12 @@ function Screen() {
 			emblaApi.on("resize", emitResizeEvent);
 			emblaApi.on("slidesChanged", emitScrollEvent);
 		}
+
+		return () => {
+			emblaApi.off("scroll", emitScrollEvent);
+			emblaApi.off("resize", emitResizeEvent);
+			emblaApi.off("slidesChanged", emitScrollEvent);
+		};
 	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
 
 	useEffect(() => {
@@ -114,9 +120,18 @@ function Screen() {
 		setColumns(initialColumnList);
 	}, [initialColumnList]);
 
+	// Listen for keyboard event
 	useEffect(() => {
-		// Listen for columns event
-		const unlisten = listen<EventColumns>("columns", (data) => {
+		window.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [handleKeyDown]);
+
+	// Listen for columns event
+	useEffect(() => {
+		const unlisten = listen<ColumnEvent>("columns", (data) => {
 			if (data.payload.type === "reset") reset();
 			if (data.payload.type === "add") add(data.payload.column);
 			if (data.payload.type === "remove") remove(data.payload.label);
@@ -124,12 +139,8 @@ function Screen() {
 				updateName(data.payload.label, data.payload.title);
 		});
 
-		// Listen for keyboard event
-		window.addEventListener("keydown", handleKeyDown);
-
 		return () => {
 			unlisten.then((f) => f());
-			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, []);
 

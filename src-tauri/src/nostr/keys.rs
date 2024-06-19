@@ -1,4 +1,3 @@
-use std::str::FromStr;
 use std::time::Duration;
 
 use keyring::Entry;
@@ -9,7 +8,7 @@ use specta::Type;
 use tauri::{EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 
-use crate::Nostr;
+use crate::{Nostr, Settings};
 
 #[derive(Serialize, Type)]
 pub struct Account {
@@ -109,7 +108,6 @@ pub async fn load_account(
   state: State<'_, Nostr>,
   app: tauri::AppHandle,
 ) -> Result<bool, String> {
-  let handle = app.clone();
   let client = &state.client;
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
@@ -140,15 +138,6 @@ pub async fn load_account(
     // Verify signer
     let signer = client.signer().await.unwrap();
     let public_key = signer.public_key().await.unwrap();
-
-    // Get user's contact list
-    let contacts = client
-      .get_contact_list(Some(Duration::from_secs(10)))
-      .await
-      .unwrap();
-
-    // Update state
-    *state.contact_list.lock().unwrap() = contacts;
 
     // Connect to user's relay (NIP-65)
     if let Ok(events) = client
@@ -189,7 +178,49 @@ pub async fn load_account(
       }
     };
 
+    // Get user's contact list
+    let contacts = client
+      .get_contact_list(Some(Duration::from_secs(10)))
+      .await
+      .unwrap();
+
+    // Update state
+    *state.contact_list.lock().unwrap() = contacts;
+
+    // Get user's settings
+    let handle = app.clone();
+    // Spawn a thread to handle it
+    tauri::async_runtime::spawn(async move {
+      let window = handle.get_window("main").unwrap();
+      let state = window.state::<Nostr>();
+      let client = &state.client;
+
+      let ident = "lume:settings";
+      let filter = Filter::new()
+        .author(public_key)
+        .kind(Kind::ApplicationSpecificData)
+        .identifier(ident)
+        .limit(1);
+
+      if let Ok(events) = client
+        .get_events_of(vec![filter], Some(Duration::from_secs(5)))
+        .await
+      {
+        if let Some(event) = events.first() {
+          let content = event.content();
+          if let Ok(decrypted) = signer.nip44_decrypt(public_key, content).await {
+            let parsed: Settings =
+              serde_json::from_str(&decrypted).expect("Could not parse settings payload");
+
+            *state.settings.lock().unwrap() = parsed;
+          }
+        }
+      }
+    });
+
     // Run sync service
+    let handle = app.clone();
+    // Spawn a thread to handle it
     tauri::async_runtime::spawn(async move {
       let window = handle.get_window("main").unwrap();
       let state = window.state::<Nostr>();
@@ -212,6 +243,7 @@ pub async fn load_account(
     });
 
     // Run notification service
+    // Spawn a thread to handle it
     tauri::async_runtime::spawn(async move {
       println!("Starting notification service...");
 
@@ -316,7 +348,7 @@ pub async fn load_account(
 
     Ok(true)
   } else {
-    Err("Key not found.".into())
+    Err("Cancelled".into())
   }
 }
 
@@ -380,17 +412,5 @@ pub fn get_private_key(npub: &str) -> Result<String, String> {
     Ok(secret_key.to_bech32().unwrap())
   } else {
     Err("Key not found".into())
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn verify_nip05(key: &str, nip05: &str) -> Result<bool, String> {
-  match PublicKey::from_str(key) {
-    Ok(public_key) => {
-      let status = nip05::verify(&public_key, nip05, None).await;
-      Ok(status.is_ok())
-    }
-    Err(err) => Err(err.to_string()),
   }
 }
