@@ -64,20 +64,14 @@ pub async fn save_account(
   password: &str,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
-  let secret_key: Result<SecretKey, String>;
-
-  if nsec.starts_with("ncryptsec") {
+  let secret_key = if nsec.starts_with("ncryptsec") {
     let encrypted_key = EncryptedSecretKey::from_bech32(nsec).unwrap();
-    secret_key = match encrypted_key.to_secret_key(password) {
-      Ok(val) => Ok(val),
-      Err(err) => Err(err.to_string()),
-    };
+    encrypted_key
+      .to_secret_key(password)
+      .map_err(|err| err.to_string())
   } else {
-    secret_key = match SecretKey::from_bech32(nsec) {
-      Ok(val) => Ok(val),
-      Err(err) => Err(err.to_string()),
-    }
-  }
+    SecretKey::from_bech32(nsec).map_err(|err| err.to_string())
+  };
 
   match secret_key {
     Ok(val) => {
@@ -280,11 +274,14 @@ pub async fn load_account(
             if subscription_id == notification_id {
               println!("new notification: {}", event.as_json());
 
-              if let Err(_) = app.emit_to(
-                EventTarget::window("panel"),
-                "notification",
-                event.as_json(),
-              ) {
+              if app
+                .emit_to(
+                  EventTarget::window("panel"),
+                  "notification",
+                  event.as_json(),
+                )
+                .is_err()
+              {
                 println!("Emit new notification failed.")
               }
 

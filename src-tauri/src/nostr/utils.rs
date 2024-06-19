@@ -2,8 +2,8 @@ use std::collections::HashSet;
 use std::str::FromStr;
 
 use linkify::LinkFinder;
-use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
 use nostr_sdk::prelude::Nip19Event;
+use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
 use reqwest::Client;
 use serde::Serialize;
 use specta::Type;
@@ -176,7 +176,7 @@ pub fn create_event_tags(content: &str) -> Vec<Tag> {
     .collect::<Vec<_>>();
 
   for mention in mentions {
-    let entity = mention.replace("nostr:", "").replace("@", "");
+    let entity = mention.replace("nostr:", "").replace('@', "");
 
     if !tag_set.contains(&entity) {
       if entity.starts_with("npub") {

@@ -6,8 +6,8 @@ use serde::Serialize;
 use specta::Type;
 use tauri::State;
 
+use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
 use crate::Nostr;
-use crate::nostr::utils::{create_event_tags, dedup_event, Meta, parse_event};
 
 #[derive(Debug, Serialize, Type)]
 pub struct RichEvent {
@@ -99,10 +99,10 @@ pub async fn get_event_from(
 
           Ok(RichEvent { raw, parsed })
         } else {
-          return Err("Cannot found this event with current relay list".into());
+          Err("Cannot found this event with current relay list".into())
         }
       }
-      Err(err) => return Err(err.to_string()),
+      Err(err) => Err(err.to_string()),
     }
   } else {
     // Add relay hint to relay pool
