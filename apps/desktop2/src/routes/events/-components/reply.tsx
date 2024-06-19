@@ -1,18 +1,18 @@
-import type { EventWithReplies } from "@lume/types";
+import { Note } from "@/components/note";
+import type { LumeEvent } from "@lume/system";
 import { cn } from "@lume/utils";
 import { SubReply } from "./subReply";
-import { Note } from "@/components/note";
 
-export function Reply({ event }: { event: EventWithReplies }) {
+export function Reply({ event }: { event: LumeEvent }) {
 	return (
 		<Note.Provider event={event}>
 			<Note.Root className="border-t border-neutral-100 dark:border-neutral-900">
-				<div className="px-3 h-14 flex items-center justify-between">
+				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />
 				</div>
 				<Note.ContentLarge className="px-3" />
-				<div className="mt-3 flex items-center gap-4 px-3 h-14">
+				<div className="flex items-center gap-4 px-3 mt-3 h-14">
 					<Note.Reply />
 					<Note.Repost />
 					<Note.Zap />
