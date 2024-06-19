@@ -1,15 +1,7 @@
-import type {
-	LumeColumn,
-	Metadata,
-	NostrEvent,
-	Relay,
-	Settings,
-} from "@lume/types";
-import { invoke } from "@tauri-apps/api/core";
+import type { LumeColumn, Metadata, NostrEvent, Relay } from "@lume/types";
 import { resolveResource } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
-import { isPermissionGranted } from "@tauri-apps/plugin-notification";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { nip19 } from "nostr-tools";
 import { type Result, type RichEvent, commands } from "./commands";
@@ -270,9 +262,7 @@ export class NostrQuery {
 		const query = await commands.getNstore(key);
 
 		if (query.status === "ok") {
-			const data: string | string[] = query.data
-				? JSON.parse(query.data)
-				: null;
+			const data = query.data ? JSON.parse(query.data) : null;
 			return data;
 		} else {
 			return null;

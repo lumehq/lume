@@ -15,6 +15,7 @@ use std::{
   str::FromStr,
 };
 use std::sync::Mutex;
+use std::time::Duration;
 
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -52,8 +53,7 @@ pub struct Settings {
   display_avatar: bool,
   display_zap_button: bool,
   display_repost_button: bool,
-  display_image_link: bool,
-  display_video_link: bool,
+  display_media: bool,
 }
 
 impl Default for Settings {
@@ -66,8 +66,7 @@ impl Default for Settings {
       display_avatar: true,
       display_zap_button: true,
       display_repost_button: true,
-      display_image_link: true,
-      display_video_link: true,
+      display_media: true,
     }
   }
 }
@@ -187,9 +186,15 @@ fn main() {
       let _ = fs::create_dir_all(home_dir.join("Lume/"));
 
       tauri::async_runtime::block_on(async move {
-        // Create nostr connection
+        // Setup database
         let database = SQLiteDatabase::open(home_dir.join("Lume/lume.db")).await;
-        let opts = Options::new().automatic_authentication(true);
+
+        // Config
+        let opts = Options::new()
+          .automatic_authentication(true)
+          .connection_timeout(Some(Duration::from_secs(5)));
+
+        // Setup nostr client
         let client = match database {
           Ok(db) => ClientBuilder::default().database(db).opts(opts).build(),
           Err(_) => ClientBuilder::default().opts(opts).build(),

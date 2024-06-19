@@ -14,18 +14,20 @@ export const Route = createFileRoute("/trending")({
 		};
 	},
 	beforeLoad: async () => {
-		const settings = await NostrQuery.getSettings();
+		const settings = await NostrQuery.getUserSettings();
 		return { settings };
 	},
 	component: Screen,
 });
 
 function Screen() {
+	const search = Route.useSearch();
+
 	return (
 		<div className="flex flex-col h-full">
-			<div className="h-11 shrink-0 inline-flex w-full items-center gap-1 px-3">
-				<div className="inline-flex h-full w-full items-center gap-1">
-					<Link to="/trending/notes">
+			<div className="inline-flex items-center w-full gap-1 px-3 h-11 shrink-0">
+				<div className="inline-flex items-center w-full h-full gap-1">
+					<Link to="/trending/notes" search={search}>
 						{({ isActive }) => (
 							<div
 								className={cn(
@@ -38,7 +40,7 @@ function Screen() {
 							</div>
 						)}
 					</Link>
-					<Link to="/trending/users">
+					<Link to="/trending/users" search={search}>
 						{({ isActive }) => (
 							<div
 								className={cn(
@@ -53,7 +55,7 @@ function Screen() {
 					</Link>
 				</div>
 			</div>
-			<div className="p-2 flex-1 overflow-y-auto w-full h-full scrollbar-none">
+			<div className="flex-1 w-full h-full p-2 overflow-y-auto scrollbar-none">
 				<Outlet />
 			</div>
 		</div>

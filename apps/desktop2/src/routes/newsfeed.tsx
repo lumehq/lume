@@ -21,6 +21,8 @@ export const Route = createFileRoute("/newsfeed")({
 	},
 	beforeLoad: async ({ search }) => {
 		const isContactListEmpty = await NostrAccount.isContactListEmpty();
+		const settings = await NostrQuery.getUserSettings();
+
 		if (isContactListEmpty) {
 			throw redirect({
 				to: "/create-newsfeed/users",
@@ -30,6 +32,8 @@ export const Route = createFileRoute("/newsfeed")({
 				},
 			});
 		}
+
+		return { settings };
 	},
 	component: Screen,
 });

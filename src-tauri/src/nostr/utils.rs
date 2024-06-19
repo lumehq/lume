@@ -50,7 +50,7 @@ pub fn get_latest_event(events: &[Event]) -> Option<&Event> {
   events.iter().max_by_key(|event| event.created_at())
 }
 
-pub fn dedup_event(events: &[Event], nsfw: bool) -> Vec<Event> {
+pub fn dedup_event(events: &[Event]) -> Vec<Event> {
   let mut seen_ids = HashSet::new();
   events
     .iter()
@@ -64,16 +64,7 @@ pub fn dedup_event(events: &[Event], nsfw: bool) -> Vec<Event> {
         seen_ids.insert(*id);
       }
 
-      if nsfw {
-        let w_tags: Vec<&Tag> = event
-          .tags
-          .iter()
-          .filter(|el| el.kind() == TagKind::ContentWarning)
-          .collect();
-        !is_dup && w_tags.is_empty()
-      } else {
-        !is_dup
-      }
+      !is_dup
     })
     .cloned()
     .collect()

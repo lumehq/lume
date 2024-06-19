@@ -24,6 +24,11 @@ export class LumeEvent {
 		Object.assign(this, event);
 	}
 
+	get isWarning() {
+		const tag = this.tags.find((tag) => tag[0] === "content-warning");
+		return tag?.[1]; // return: reason;
+	}
+
 	get isQuote() {
 		return this.tags.filter((tag) => tag[0] === "q").length > 0;
 	}

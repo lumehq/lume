@@ -40,7 +40,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function Pending() {
 	return (
-		<div className="flex flex-col items-center justify-center size-screen">
+		<div className="flex flex-col items-center justify-center w-screen h-screen">
 			<Spinner className="size-5" />
 		</div>
 	);

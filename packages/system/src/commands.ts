@@ -437,7 +437,7 @@ export type Account = { npub: string; nsec: string }
 export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
-export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_image_link: boolean; display_video_link: boolean }
+export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
 
 /** tauri-specta globals **/
 

@@ -19,6 +19,10 @@ export const Route = createFileRoute("/global")({
 			name: search.name,
 		};
 	},
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getUserSettings();
+		return { settings };
+	},
 	component: Screen,
 });
 

@@ -1,4 +1,3 @@
-use std::str::FromStr;
 use std::time::Duration;
 
 use keyring::Entry;

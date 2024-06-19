@@ -4,12 +4,16 @@ import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
 import { ArrowRightCircleIcon } from "@lume/icons";
 import { type LumeEvent, NostrQuery } from "@lume/system";
-import { type ColumnRouteSearch, type Topic, Kind } from "@lume/types";
+import { type ColumnRouteSearch, Kind } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { Virtualizer } from "virtua";
+
+type Topic = {
+	content: string[];
+};
 
 export const Route = createFileRoute("/topic")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
@@ -20,8 +24,9 @@ export const Route = createFileRoute("/topic")({
 		};
 	},
 	beforeLoad: async ({ search }) => {
-		const key = `lume_topic_${search.label}`;
-		const topics = (await NostrQuery.getNstore(key)) as unknown as Topic[];
+		const key = `lume:topic:${search.label}`;
+		const topics: Topic[] = await NostrQuery.getNstore(key);
+		const settings = await NostrQuery.getUserSettings();
 
 		if (!topics?.length) {
 			throw redirect({
@@ -39,7 +44,7 @@ export const Route = createFileRoute("/topic")({
 			hashtags.push(...topic.content);
 		}
 
-		return { hashtags };
+		return { settings, hashtags };
 	},
 	component: Screen,
 });

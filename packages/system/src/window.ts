@@ -1,16 +1,11 @@
 import type { NostrEvent } from "@lume/types";
-import type { LumeEvent } from "./event";
 import { commands } from "./commands";
+import type { LumeEvent } from "./event";
 
 export class LumeWindow {
 	static async openMainWindow() {
 		const query = await commands.openMainWindow();
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
+		return query;
 	}
 
 	static async openEvent(event: NostrEvent | LumeEvent) {

@@ -1,4 +1,6 @@
 import { cn } from "@lume/utils";
+import { useRouteContext } from "@tanstack/react-router";
+import { nanoid } from "nanoid";
 import { type ReactNode, useMemo } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./mentions/hashtag";
@@ -7,7 +9,6 @@ import { MentionUser } from "./mentions/user";
 import { Images } from "./preview/images";
 import { Videos } from "./preview/videos";
 import { useNoteContext } from "./provider";
-import { nanoid } from "nanoid";
 
 export function NoteContent({
 	quote = true,
@@ -20,6 +21,7 @@ export function NoteContent({
 	clean?: boolean;
 	className?: string;
 }) {
+	const { settings } = useRouteContext({ strict: false });
 	const event = useNoteContext();
 	const content = useMemo(() => {
 		try {
@@ -27,7 +29,9 @@ export function NoteContent({
 			const { content, hashtags, events, mentions } = event.meta;
 
 			// Define rich content
-			let richContent: ReactNode[] | string = content;
+			let richContent: ReactNode[] | string = settings.display_media
+				? content
+				: event.content;
 
 			for (const hashtag of hashtags) {
 				const regex = new RegExp(`(|^)${hashtag}\\b`, "g");
@@ -98,8 +102,12 @@ export function NoteContent({
 			>
 				{content}
 			</div>
-			{event.meta?.images.length ? <Images urls={event.meta.images} /> : null}
-			{event.meta?.videos.length ? <Videos urls={event.meta.videos} /> : null}
+			{settings.display_media && event.meta?.images.length ? (
+				<Images urls={event.meta.images} />
+			) : null}
+			{settings.display_media && event.meta?.videos.length ? (
+				<Videos urls={event.meta.videos} />
+			) : null}
 		</div>
 	);
 }

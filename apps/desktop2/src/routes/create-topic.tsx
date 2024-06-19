@@ -1,11 +1,16 @@
 import { CheckCircleIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
-import type { ColumnRouteSearch, Topic } from "@lume/types";
+import type { ColumnRouteSearch } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { TOPICS } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+
+type Topic = {
+	title: string;
+	content: string[];
+};
 
 export const Route = createFileRoute("/create-topic")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {

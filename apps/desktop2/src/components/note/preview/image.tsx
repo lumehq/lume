@@ -1,33 +1,36 @@
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { useRouteContext } from "@tanstack/react-router";
+import { open } from "@tauri-apps/plugin-shell";
+import { useMemo } from "react";
 
 export function ImagePreview({ url }: { url: string }) {
-	const open = async (url: string) => {
-		const name = new URL(url).pathname
-			.split("/")
-			.pop()
-			.replace(/[^a-zA-Z ]/g, "");
-		const label = `viewer-${name}`;
-		const window = WebviewWindow.getByLabel(label);
+	const { settings } = useRouteContext({ strict: false });
 
-		if (!window) {
-			const newWindow = new WebviewWindow(label, {
-				url,
-				title: "Image Viewer",
-				width: 800,
-				height: 800,
-				titleBarStyle: "overlay",
-			});
-
-			return newWindow;
+	const imageUrl = useMemo(() => {
+		if (settings.image_resize_service.length) {
+			const newUrl = `${settings.image_resize_service}?url=${url}&ll&af&default=1&n=-1`;
+			return newUrl;
+		} else {
+			return url;
 		}
+	}, [settings.image_resize_service]);
 
-		return await window.setFocus();
-	};
+	if (!settings.display_media) {
+		return (
+			<a
+				href={url}
+				target="_blank"
+				rel="noreferrer"
+				className="inline text-blue-500 hover:text-blue-600"
+			>
+				{url}
+			</a>
+		);
+	}
 
 	return (
-		<div className="relative my-1 group">
+		<div className="my-1">
 			<img
-				src={url}
+				src={imageUrl}
 				alt={url}
 				loading="lazy"
 				decoding="async"

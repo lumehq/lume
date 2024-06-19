@@ -51,6 +51,9 @@ function Screen() {
 	return (
 		<div className="w-full max-w-xl mx-auto">
 			<div className="flex flex-col gap-6">
+				<div className="flex items-center w-full h-12 px-3 text-sm rounded-xl bg-black/5 dark:bg-white/5">
+					* Setting changes require restarting the app to take effect.
+				</div>
 				<div className="flex flex-col gap-2">
 					<h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
 						General
@@ -222,40 +225,18 @@ function Screen() {
 						</div>
 						<div className="flex items-start justify-between w-full gap-4 py-3">
 							<div className="flex-1">
-								<h3 className="font-medium">Load Remote Image</h3>
+								<h3 className="font-medium">Load Remote Media</h3>
 								<p className="text-sm text-neutral-700 dark:text-neutral-300">
-									View the remote image directly.
+									View the remote media directly.
 								</p>
 							</div>
 							<div className="flex justify-end w-36 shrink-0">
 								<Switch.Root
-									checked={settings.display_image_link}
+									checked={settings.display_media}
 									onClick={() =>
 										setSettings((prev) => ({
 											...prev,
-											display_image_link: !prev.display_image_link,
-										}))
-									}
-									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"
-								>
-									<Switch.Thumb className="block size-6 translate-x-0.5 rounded-full bg-white transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-								</Switch.Root>
-							</div>
-						</div>
-						<div className="flex items-start justify-between w-full gap-4 py-3">
-							<div className="flex-1">
-								<h3 className="font-medium">Load Remote Video</h3>
-								<p className="text-sm text-neutral-700 dark:text-neutral-300">
-									View the remote video directly.
-								</p>
-							</div>
-							<div className="flex justify-end w-36 shrink-0">
-								<Switch.Root
-									checked={settings.display_video_link}
-									onClick={() =>
-										setSettings((prev) => ({
-											...prev,
-											display_video_link: !prev.display_video_link,
+											display_image_link: !prev.display_media,
 										}))
 									}
 									className="relative h-7 w-12 shrink-0 cursor-default rounded-full bg-black/10 outline-none data-[state=checked]:bg-blue-500 dark:bg-white/10"

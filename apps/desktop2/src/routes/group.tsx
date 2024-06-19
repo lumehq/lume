@@ -20,8 +20,9 @@ export const Route = createFileRoute("/group")({
 		};
 	},
 	beforeLoad: async ({ search }) => {
-		const key = `lume_group_${search.label}`;
-		const groups = (await NostrQuery.getNstore(key)) as string[];
+		const key = `lume:group:${search.label}`;
+		const groups: string[] = await NostrQuery.getNstore(key);
+		const settings = await NostrQuery.getUserSettings();
 
 		if (!groups?.length) {
 			throw redirect({
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/group")({
 			});
 		}
 
-		return { groups };
+		return { groups, settings };
 	},
 	component: Screen,
 });
