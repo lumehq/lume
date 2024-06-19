@@ -17,6 +17,7 @@ export class LumeEvent {
 	public sig: string;
 	public meta: Meta;
 	public relay?: string;
+	public replies?: LumeEvent[];
 	#raw: NostrEvent;
 
 	constructor(event: NostrEvent) {
@@ -94,20 +95,22 @@ export class LumeEvent {
 		return { id, relayHint };
 	}
 
-	public async getReplies(id: string) {
-		const query = await commands.getReplies(id);
+	public async getAllReplies() {
+		const query = await commands.getReplies(this.id);
 
 		if (query.status === "ok") {
 			const events = query.data.map((item) => {
-				const raw = JSON.parse(item.raw) as EventWithReplies;
+				const nostrEvent: NostrEvent = JSON.parse(item.raw);
 
 				if (item.parsed) {
-					raw.meta = item.parsed;
+					nostrEvent.meta = item.parsed;
 				} else {
-					raw.meta = null;
+					nostrEvent.meta = null;
 				}
 
-				return raw;
+				const lumeEvent = new LumeEvent(nostrEvent);
+
+				return lumeEvent;
 			});
 
 			if (events.length > 0) {
@@ -115,7 +118,7 @@ export class LumeEvent {
 
 				for (const event of events) {
 					const tags = event.tags.filter(
-						(el) => el[0] === "e" && el[1] !== id && el[3] !== "mention",
+						(el) => el[0] === "e" && el[1] !== this.id && el[3] !== "mention",
 					);
 
 					if (tags.length > 0) {
@@ -141,6 +144,9 @@ export class LumeEvent {
 			}
 
 			return events;
+		} else {
+			console.error(query.error);
+			return [];
 		}
 	}
 

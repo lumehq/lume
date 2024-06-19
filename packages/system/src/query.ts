@@ -10,7 +10,7 @@ import { LumeEvent } from "./event";
 export class NostrQuery {
 	static #toLumeEvents(richEvents: RichEvent[]) {
 		const events = richEvents.map((item) => {
-			const nostrEvent = JSON.parse(item.raw) as NostrEvent;
+			const nostrEvent: NostrEvent = JSON.parse(item.raw);
 
 			if (item.parsed) {
 				nostrEvent.meta = item.parsed;
