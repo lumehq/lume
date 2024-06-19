@@ -44,9 +44,9 @@ export function Column({
 	useEffect(() => {
 		if (!isCreated) return;
 
-		const unlisten = listen<WindowEvent>("window", (data) => {
+		const unlisten = listen<WindowEvent>("child-webview", (data) => {
 			if (data.payload.scroll) repositionWebview();
-			if (data.payload.resize) resizeWebview();
+			if (data.payload.resize) repositionWebview().then(() => resizeWebview());
 		});
 
 		return () => {

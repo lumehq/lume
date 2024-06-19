@@ -7,11 +7,6 @@ import { nip19 } from "nostr-tools";
 import { type Result, type RichEvent, commands } from "./commands";
 import { LumeEvent } from "./event";
 
-enum NSTORE_KEYS {
-	settings = "lume_user_settings",
-	columns = "lume_user_columns",
-}
-
 export class NostrQuery {
 	static #toLumeEvents(richEvents: RichEvent[]) {
 		const events = richEvents.map((item) => {
@@ -300,11 +295,12 @@ export class NostrQuery {
 	}
 
 	static async getColumns() {
+		const key = "lume:columns";
 		const systemPath = "resources/system_columns.json";
 		const resourcePath = await resolveResource(systemPath);
 		const resourceFile = await readTextFile(resourcePath);
 		const systemColumns: LumeColumn[] = JSON.parse(resourceFile);
-		const query = await commands.getNstore(NSTORE_KEYS.columns);
+		const query = await commands.getNstore(key);
 
 		try {
 			if (query.status === "ok") {
@@ -326,8 +322,9 @@ export class NostrQuery {
 	}
 
 	static async setColumns(columns: LumeColumn[]) {
+		const key = "lume:columns";
 		const content = JSON.stringify(columns);
-		const query = await commands.setNstore(NSTORE_KEYS.columns, content);
+		const query = await commands.setNstore(key, content);
 
 		if (query.status === "ok") {
 			return query.data;

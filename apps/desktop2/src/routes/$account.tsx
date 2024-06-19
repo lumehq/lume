@@ -46,13 +46,6 @@ function Screen() {
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
-						onClick={() => LumeWindow.openSearch()}
-						className="inline-flex items-center justify-center rounded-full size-8 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-					>
-						<SearchIcon className="size-5" />
-					</button>
-					<button
-						type="button"
 						onClick={() => LumeWindow.openEditor()}
 						className="inline-flex items-center justify-center h-8 gap-1 px-3 text-sm font-medium text-white bg-blue-500 rounded-full w-max hover:bg-blue-600"
 					>

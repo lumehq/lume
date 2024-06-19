@@ -23,7 +23,7 @@ function Screen() {
 
 	const changeTheme = async (theme: string) => {
 		if (theme === "auto" || theme === "light" || theme === "dark") {
-			await invoke("plugin:theme|set_theme", {
+			invoke("plugin:theme|set_theme", {
 				theme: theme,
 			}).then(() => setTheme(theme));
 		}

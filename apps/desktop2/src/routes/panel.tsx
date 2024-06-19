@@ -1,20 +1,25 @@
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
+import {
+	HorizontalDotsIcon,
+	InfoIcon,
+	RepostIcon,
+	SearchIcon,
+} from "@lume/icons";
 import { type LumeEvent, LumeWindow, NostrQuery, useEvent } from "@lume/system";
 import { Kind } from "@lume/types";
-import { createFileRoute } from "@tanstack/react-router";
-import { getCurrent } from "@tauri-apps/api/window";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import * as Tabs from "@radix-ui/react-tabs";
-import { HorizontalDotsIcon, InfoIcon, RepostIcon } from "@lume/icons";
 import {
 	checkForAppUpdates,
 	decodeZapInvoice,
 	formatCreatedAt,
 } from "@lume/utils";
+import * as Tabs from "@radix-ui/react-tabs";
+import { createFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { open } from "@tauri-apps/plugin-shell";
+import { getCurrent } from "@tauri-apps/api/window";
 import { exit } from "@tauri-apps/plugin-process";
+import { open } from "@tauri-apps/plugin-shell";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface EmitAccount {
 	account: string;
@@ -166,6 +171,13 @@ function Screen() {
 							<User.Avatar className="rounded-full size-7" />
 						</User.Root>
 					</User.Provider>
+					<button
+						type="button"
+						onClick={() => LumeWindow.openSearch()}
+						className="inline-flex items-center justify-center rounded-full size-7 bg-black/5 dark:bg-white/5"
+					>
+						<SearchIcon className="size-4" />
+					</button>
 					<button
 						type="button"
 						onClick={(e) => showContextMenu(e)}
