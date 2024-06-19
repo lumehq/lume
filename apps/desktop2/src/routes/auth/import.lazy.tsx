@@ -4,7 +4,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createLazyFileRoute("/auth/privkey")({
+export const Route = createLazyFileRoute("/auth/import")({
 	component: Screen,
 });
 
@@ -27,11 +27,7 @@ function Screen() {
 			const npub = await NostrAccount.saveAccount(key, password);
 
 			if (npub) {
-				navigate({
-					to: "/$account/home",
-					params: { account: npub },
-					replace: true,
-				});
+				navigate({ to: "/", replace: true });
 			}
 		} catch (e) {
 			setLoading(false);

@@ -37,7 +37,7 @@ function Screen() {
 					</div>
 					<div className="flex flex-col gap-1 pb-2.5">
 						<Link
-							to="/auth/privkey"
+							to="/auth/import"
 							className="inline-flex items-center w-full gap-2 px-2 rounded-lg h-11 hover:bg-neutral-100 dark:hover:bg-white/10"
 						>
 							<div className="inline-flex items-center justify-center size-9">

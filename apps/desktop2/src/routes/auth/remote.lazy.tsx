@@ -26,11 +26,7 @@ function Screen() {
 			const remoteAccount = await NostrAccount.connectRemoteAccount(uri);
 
 			if (remoteAccount?.length) {
-				return navigate({
-					to: "/$account/home",
-					params: { account: remoteAccount },
-					replace: true,
-				});
+				navigate({ to: "/", replace: true });
 			}
 		} catch (e) {
 			setLoading(false);

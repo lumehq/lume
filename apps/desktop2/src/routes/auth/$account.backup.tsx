@@ -32,10 +32,7 @@ function Screen() {
 					return toast.warning("You need to confirm before continue");
 				}
 
-				return navigate({
-					to: "/auth/$account/settings",
-					params: { account },
-				});
+				navigate({ to: "/", replace: true });
 			}
 
 			// start loading
@@ -65,7 +62,7 @@ function Screen() {
 	};
 
 	return (
-		<div className="mx-auto flex h-full w-full flex-col items-center justify-center gap-6 px-5 xl:max-w-xl">
+		<div className="flex flex-col items-center justify-center w-full h-full gap-6 px-5 mx-auto xl:max-w-xl">
 			<div className="flex flex-col text-center">
 				<h3 className="text-xl font-semibold">Backup your sign in keys</h3>
 				<p className="text-neutral-700 dark:text-neutral-300">
@@ -73,7 +70,7 @@ function Screen() {
 					access to your account if you lose this key.
 				</p>
 			</div>
-			<div className="flex w-full flex-col gap-5">
+			<div className="flex flex-col w-full gap-5">
 				<div className="flex flex-col gap-2">
 					<label htmlFor="passphase" className="font-medium">
 						Set a passphase to secure your key
@@ -84,7 +81,7 @@ function Screen() {
 							type="password"
 							value={passphase}
 							onChange={(e) => setPassphase(e.target.value)}
-							className="w-full h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
+							className="w-full px-3 border-transparent rounded-lg h-11 bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 						/>
 					</div>
 				</div>
@@ -100,12 +97,12 @@ function Screen() {
 									type="text"
 									value={displayNsec(key, 36)}
 									readOnly
-									className="w-full h-11 rounded-lg border-transparent bg-neutral-100 px-3 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
+									className="w-full px-3 border-transparent rounded-lg h-11 bg-neutral-100 placeholder:text-neutral-600 focus:border-blue-500 focus:ring-0 dark:bg-white/10 dark:placeholder:text-neutral-400"
 								/>
 								<button
 									type="button"
 									onClick={() => copyKey()}
-									className="inline-flex h-11 w-24 items-center justify-center rounded-lg bg-neutral-200 hover:bg-neutral-300 dark:bg-white/20 dark:hover:bg-white/30"
+									className="inline-flex items-center justify-center w-24 rounded-lg h-11 bg-neutral-200 hover:bg-neutral-300 dark:bg-white/20 dark:hover:bg-white/30"
 								>
 									{copied ? "Copied" : "Copy"}
 								</button>
@@ -120,7 +117,7 @@ function Screen() {
 										onCheckedChange={() =>
 											setConfirm((state) => ({ ...state, c1: !state.c1 }))
 										}
-										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-white/10 dark:hover:bg-white/20"
+										className="flex items-center justify-center rounded-md outline-none appearance-none size-6 bg-neutral-100 dark:bg-white/10 dark:hover:bg-white/20"
 										id="confirm1"
 									>
 										<Checkbox.Indicator className="text-blue-500">
@@ -140,7 +137,7 @@ function Screen() {
 										onCheckedChange={() =>
 											setConfirm((state) => ({ ...state, c2: !state.c2 }))
 										}
-										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-white/10 dark:hover:bg-white/20"
+										className="flex items-center justify-center rounded-md outline-none appearance-none size-6 bg-neutral-100 dark:bg-white/10 dark:hover:bg-white/20"
 										id="confirm2"
 									>
 										<Checkbox.Indicator className="text-blue-500">
@@ -160,7 +157,7 @@ function Screen() {
 										onCheckedChange={() =>
 											setConfirm((state) => ({ ...state, c3: !state.c3 }))
 										}
-										className="flex size-6 appearance-none items-center justify-center rounded-md bg-neutral-100 outline-none dark:bg-white/10 dark:hover:bg-white/20"
+										className="flex items-center justify-center rounded-md outline-none appearance-none size-6 bg-neutral-100 dark:bg-white/10 dark:hover:bg-white/20"
 										id="confirm3"
 									>
 										<Checkbox.Indicator className="text-blue-500">
@@ -183,7 +180,7 @@ function Screen() {
 						type="button"
 						onClick={() => submit()}
 						disabled={loading}
-						className="inline-flex h-11 w-full shrink-0  items-center justify-center rounded-lg bg-blue-500 font-semibold text-white hover:bg-blue-600 disabled:opacity-50"
+						className="inline-flex items-center justify-center w-full font-semibold text-white bg-blue-500 rounded-lg h-11 shrink-0 hover:bg-blue-600 disabled:opacity-50"
 					>
 						{loading ? <Spinner /> : t("global.continue")}
 					</button>
