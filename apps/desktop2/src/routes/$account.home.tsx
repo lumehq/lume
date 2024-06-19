@@ -104,9 +104,9 @@ function Screen() {
 		}
 
 		return () => {
-			emblaApi.off("scroll", emitScrollEvent);
-			emblaApi.off("resize", emitResizeEvent);
-			emblaApi.off("slidesChanged", emitScrollEvent);
+			emblaApi?.off("scroll", emitScrollEvent);
+			emblaApi?.off("resize", emitResizeEvent);
+			emblaApi?.off("slidesChanged", emitScrollEvent);
 		};
 	}, [emblaApi, emitScrollEvent, emitResizeEvent]);
 
