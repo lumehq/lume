@@ -117,12 +117,12 @@ pub fn get_bootstrap_relays(app: tauri::AppHandle) -> Result<Vec<String>, ()> {
     .resolve("resources/relays.txt", BaseDirectory::Resource)
     .expect("Bootstrap relays not found.");
 
-  let file = std::fs::File::open(&relays_path).unwrap();
+  let file = std::fs::File::open(relays_path).unwrap();
   let lines = io::BufReader::new(file).lines();
 
   let mut relays = Vec::new();
 
-  for line in lines.flatten() {
+  for line in lines.map_while(Result::ok) {
     relays.push(line.to_string())
   }
 
@@ -139,7 +139,7 @@ pub fn save_bootstrap_relays(relays: &str, app: tauri::AppHandle) -> Result<(), 
 
   let mut file = fs::OpenOptions::new()
     .write(true)
-    .open(&relays_path)
+    .open(relays_path)
     .unwrap();
 
   match file.write_all(relays.as_bytes()) {

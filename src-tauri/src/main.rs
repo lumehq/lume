@@ -9,20 +9,20 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
+use std::sync::Mutex;
+use std::time::Duration;
 use std::{
   fs,
   io::{self, BufRead},
   str::FromStr,
 };
-use std::sync::Mutex;
-use std::time::Duration;
 
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri::{Manager, path::BaseDirectory};
 #[cfg(target_os = "macos")]
 use tauri::tray::{MouseButtonState, TrayIconEvent};
+use tauri::{path::BaseDirectory, Manager};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -152,11 +152,11 @@ fn main() {
 
       // Create panel
       #[cfg(target_os = "macos")]
-      swizzle_to_menubar_panel(&app.handle());
+      swizzle_to_menubar_panel(app.handle());
       #[cfg(target_os = "macos")]
-      update_menubar_appearance(&app.handle());
+      update_menubar_appearance(app.handle());
       #[cfg(target_os = "macos")]
-      setup_menubar_panel_listeners(&app.handle());
+      setup_menubar_panel_listeners(app.handle());
 
       // Setup tray icon
       #[cfg(target_os = "macos")]
@@ -173,7 +173,7 @@ fn main() {
             match panel.is_visible() {
               true => panel.order_out(None),
               false => {
-                position_menubar_panel(&app, 0.0);
+                position_menubar_panel(app, 0.0);
                 panel.show();
               }
             }
