@@ -13,13 +13,22 @@ import {
 	decodeZapInvoice,
 	formatCreatedAt,
 } from "@lume/utils";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 import * as Tabs from "@radix-ui/react-tabs";
 import { createFileRoute } from "@tanstack/react-router";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { getCurrent } from "@tauri-apps/api/window";
 import { exit } from "@tauri-apps/plugin-process";
 import { open } from "@tauri-apps/plugin-shell";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
+import { Virtualizer } from "virtua";
 
 interface EmitAccount {
 	account: string;
@@ -161,7 +170,7 @@ function Screen() {
 
 	return (
 		<div className="flex flex-col w-full h-full">
-			<div className="flex items-center justify-between px-4 border-b h-11 shrink-0 border-black/5">
+			<div className="flex items-center justify-between px-4 border-b h-11 shrink-0 border-black/5 dark:border-white/5">
 				<div>
 					<h1 className="text-sm font-semibold">Notifications</h1>
 				</div>
@@ -193,35 +202,36 @@ function Screen() {
 			>
 				<Tabs.List className="flex items-center">
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 data-[state=active]:border-black/30 dark:data-[state=active] data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
 						value="replies"
 					>
 						Replies
 					</Tabs.Trigger>
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 data-[state=active]:border-black/30 dark:data-[state=active] data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
 						value="reactions"
 					>
 						Reactions
 					</Tabs.Trigger>
 					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 data-[state=active]:border-black/30 dark:data-[state=active] data-[state=inactive]:opacity-50"
+						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
 						value="zaps"
 					>
 						Zaps
 					</Tabs.Trigger>
 				</Tabs.List>
-				<div className="p-2">
-					<Tabs.Content value="replies" className="flex flex-col gap-2">
-						{texts.map((event) => (
-							<TextNote key={event.id} event={event} />
+				<div className="h-full">
+					<Tab value="replies">
+						{texts.map((event, index) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							<TextNote key={event.id + index} event={event} />
 						))}
-					</Tabs.Content>
-					<Tabs.Content value="reactions" className="flex flex-col gap-2">
+					</Tab>
+					<Tab value="reactions">
 						{[...reactions.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="flex flex-col gap-1 p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
 							>
 								<div className="flex flex-col flex-1 min-w-0 gap-2">
 									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
@@ -250,12 +260,12 @@ function Screen() {
 								</div>
 							</div>
 						))}
-					</Tabs.Content>
-					<Tabs.Content value="zaps" className="flex flex-col gap-2">
+					</Tab>
+					<Tab value="zaps">
 						{[...zaps.entries()].map(([root, events]) => (
 							<div
 								key={root}
-								className="flex flex-col gap-1 p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
 							>
 								<div className="flex flex-col flex-1 min-w-0 gap-2">
 									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
@@ -279,10 +289,35 @@ function Screen() {
 								</div>
 							</div>
 						))}
-					</Tabs.Content>
+					</Tab>
 				</div>
 			</Tabs.Root>
 		</div>
+	);
+}
+
+function Tab({ value, children }: { value: string; children: ReactNode[] }) {
+	const ref = useRef<HTMLDivElement>(null);
+
+	return (
+		<Tabs.Content value={value} className="size-full">
+			<ScrollArea.Root
+				type={"scroll"}
+				scrollHideDelay={300}
+				className="overflow-hidden size-full"
+			>
+				<ScrollArea.Viewport ref={ref} className="h-full px-2 pt-2">
+					<Virtualizer scrollRef={ref}>{children}</Virtualizer>
+				</ScrollArea.Viewport>
+				<ScrollArea.Scrollbar
+					className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
+					orientation="vertical"
+				>
+					<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+				</ScrollArea.Scrollbar>
+				<ScrollArea.Corner className="bg-transparent" />
+			</ScrollArea.Root>
+		</Tabs.Content>
 	);
 }
 
@@ -332,46 +367,40 @@ function TextNote({ event }: { event: LumeEvent }) {
 		.slice(0, 3);
 
 	return (
-		<button
-			type="button"
-			key={event.id}
-			onClick={() => LumeWindow.openEvent(event)}
-		>
-			<Note.Provider event={event}>
-				<Note.Root className="flex flex-col p-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
-					<User.Provider pubkey={event.pubkey}>
-						<User.Root className="inline-flex items-center gap-2">
-							<User.Avatar className="rounded-full size-9 shrink-0" />
-							<div className="flex flex-col flex-1">
-								<div className="flex items-baseline justify-between w-full">
-									<User.Name className="text-sm font-semibold leading-tight" />
-									<span className="text-sm leading-tight text-black/50 dark:text-white/50">
-										{formatCreatedAt(event.created_at)}
-									</span>
-								</div>
-								<div className="inline-flex items-baseline gap-1 text-xs">
-									<span className="leading-tight text-black/50 dark:text-white/50">
-										Reply to:
-									</span>
-									<div className="inline-flex items-baseline gap-1">
-										{pTags.map((replyTo) => (
-											<User.Provider key={replyTo} pubkey={replyTo}>
-												<User.Root>
-													<User.Name className="font-medium leading-tight" />
-												</User.Root>
-											</User.Provider>
-										))}
-									</div>
+		<Note.Provider event={event}>
+			<Note.Root className="flex flex-col p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
+				<User.Provider pubkey={event.pubkey}>
+					<User.Root className="inline-flex items-center gap-2">
+						<User.Avatar className="rounded-full size-9 shrink-0" />
+						<div className="flex flex-col flex-1">
+							<div className="flex items-baseline justify-between w-full">
+								<User.Name className="text-sm font-semibold leading-tight" />
+								<span className="text-sm leading-tight text-black/50 dark:text-white/50">
+									{formatCreatedAt(event.created_at)}
+								</span>
+							</div>
+							<div className="inline-flex items-baseline gap-1 text-xs">
+								<span className="leading-tight text-black/50 dark:text-white/50">
+									Reply to:
+								</span>
+								<div className="inline-flex items-baseline gap-1">
+									{pTags.map((replyTo) => (
+										<User.Provider key={replyTo} pubkey={replyTo}>
+											<User.Root>
+												<User.Name className="font-medium leading-tight" />
+											</User.Root>
+										</User.Provider>
+									))}
 								</div>
 							</div>
-						</User.Root>
-					</User.Provider>
-					<div className="flex gap-2">
-						<div className="w-9 shrink-0" />
-						<div className="line-clamp-1 text-start">{event.content}</div>
-					</div>
-				</Note.Root>
-			</Note.Provider>
-		</button>
+						</div>
+					</User.Root>
+				</User.Provider>
+				<div className="flex gap-2">
+					<div className="w-9 shrink-0" />
+					<div className="line-clamp-1 text-start">{event.content}</div>
+				</div>
+			</Note.Root>
+		</Note.Provider>
 	);
 }

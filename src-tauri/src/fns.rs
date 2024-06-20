@@ -1,5 +1,6 @@
-use cocoa::appkit::NSWindowCollectionBehavior;
 use std::ffi::CString;
+
+use cocoa::appkit::NSWindowCollectionBehavior;
 use tauri::Manager;
 use tauri_nspanel::{
   block::ConcreteBlock,
@@ -8,44 +9,44 @@ use tauri_nspanel::{
     base::{id, nil},
     foundation::{NSPoint, NSRect},
   },
-  objc::{class, msg_send, runtime::NO, sel, sel_impl},
-  panel_delegate, ManagerExt, WebviewWindowExt,
+  ManagerExt,
+  objc::{class, msg_send, runtime::NO, sel, sel_impl}, panel_delegate, WebviewWindowExt,
 };
 
 #[allow(non_upper_case_globals)]
 const NSWindowStyleMaskNonActivatingPanel: i32 = 1 << 7;
 
 pub fn swizzle_to_menubar_panel(app_handle: &tauri::AppHandle) {
-  let window = app_handle.get_webview_window("panel").unwrap();
-  let panel = window.to_panel().unwrap();
-  let handle = app_handle.to_owned();
-
-  let delegate = panel_delegate!(MyPanelDelegate {
-    window_did_become_key,
+  let panel_delegate = panel_delegate!(SpotlightPanelDelegate {
     window_did_resign_key
   });
 
-  delegate.set_listener(Box::new(move |delegate_name: String| {
+  let window = app_handle.get_webview_window("panel").unwrap();
+
+  let panel = window.to_panel().unwrap();
+
+  let handle = app_handle.clone();
+
+  panel_delegate.set_listener(Box::new(move |delegate_name: String| {
     match delegate_name.as_str() {
-      "window_did_become_key" => {
-        let app_name = handle.package_info().name.to_owned();
-        println!("[info]: {:?} panel becomes key window!", app_name);
-      }
       "window_did_resign_key" => {
-        println!("[info]: panel resigned from key window!");
+        let _ = handle.emit("menubar_panel_did_resign_key", ());
       }
       _ => (),
     }
   }));
 
   panel.set_level(NSMainMenuWindowLevel + 1);
+
   panel.set_style_mask(NSWindowStyleMaskNonActivatingPanel);
+
   panel.set_collection_behaviour(
     NSWindowCollectionBehavior::NSWindowCollectionBehaviorCanJoinAllSpaces
       | NSWindowCollectionBehavior::NSWindowCollectionBehaviorStationary
       | NSWindowCollectionBehavior::NSWindowCollectionBehaviorFullScreenAuxiliary,
   );
-  panel.set_delegate(delegate);
+
+  panel.set_delegate(panel_delegate);
 }
 
 pub fn setup_menubar_panel_listeners(app_handle: &tauri::AppHandle) {

@@ -96,7 +96,9 @@ export function NoteContent({
 			<div
 				className={cn(
 					"select-text text-pretty content-break overflow-hidden",
-					event.content.length > 620 ? "max-h-[250px] gradient-mask-b-0" : "",
+					event.meta?.content.length > 400
+						? "max-h-[250px] gradient-mask-b-0"
+						: "",
 					className,
 				)}
 			>

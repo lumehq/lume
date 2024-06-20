@@ -2,18 +2,6 @@
 @tailwind utilities;
 @tailwind components;
 
-*::-webkit-scrollbar {
-  @apply w-[5px];
-}
-
-*::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  @apply rounded bg-black dark:bg-white;
-}
-
 @layer utilities {
   .content-break {
     word-break: break-word;

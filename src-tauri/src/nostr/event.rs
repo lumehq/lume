@@ -6,8 +6,8 @@ use serde::Serialize;
 use specta::Type;
 use tauri::State;
 
-use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
 use crate::Nostr;
+use crate::nostr::utils::{create_event_tags, dedup_event, Meta, parse_event};
 
 #[derive(Debug, Serialize, Type)]
 pub struct RichEvent {

@@ -42,8 +42,8 @@ export function Images({ urls }: { urls: string[] }) {
 	return (
 		<Carousel
 			items={imageUrls}
-			renderItem={({ item, isSnapPoint }) => (
-				<CarouselItem key={item} isSnapPoint={isSnapPoint}>
+			renderItem={({ item, index, isSnapPoint }) => (
+				<CarouselItem key={item + index} isSnapPoint={isSnapPoint}>
 					<img
 						src={item}
 						alt={item}

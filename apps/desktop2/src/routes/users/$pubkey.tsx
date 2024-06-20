@@ -1,17 +1,21 @@
-import { Box, Container, Spinner } from "@lume/ui";
-import { User } from "@/components/user";
-import { createFileRoute, defer } from "@tanstack/react-router";
-import { WindowVirtualizer } from "virtua";
 import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { Kind } from "@lume/types";
-import { Suspense, useCallback } from "react";
-import { Await } from "@tanstack/react-router";
+import { User } from "@/components/user";
 import { type LumeEvent, NostrQuery } from "@lume/system";
+import { Kind } from "@lume/types";
+import { Box, Container, Spinner } from "@lume/ui";
+import { createFileRoute, defer } from "@tanstack/react-router";
+import { Await } from "@tanstack/react-router";
+import { Suspense, useCallback } from "react";
+import { WindowVirtualizer } from "virtua";
 
 export const Route = createFileRoute("/users/$pubkey")({
+	beforeLoad: async () => {
+		const settings = await NostrQuery.getUserSettings();
+		return { settings };
+	},
 	loader: async ({ params }) => {
 		return { data: defer(NostrQuery.getUserEvents(params.pubkey)) };
 	},

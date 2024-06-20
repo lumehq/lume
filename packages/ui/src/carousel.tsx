@@ -11,29 +11,25 @@ interface CarouselProps<T> {
 
 interface CarouselRenderItemProps<T> {
 	readonly item: T;
+	readonly index: number;
 	readonly isSnapPoint: boolean;
 }
 
 export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
-	const {
-		scrollRef,
-		pages,
-		activePageIndex,
-		prev,
-		next,
-		goTo,
-		snapPointIndexes,
-	} = useSnapCarousel();
+	const { scrollRef, pages, activePageIndex, prev, next, snapPointIndexes } =
+		useSnapCarousel();
+
 	return (
 		<div className="relative group">
 			<ul
 				ref={scrollRef}
 				className="relative flex overflow-auto snap-x scrollbar-none"
 			>
-				{items.map((item, i) =>
+				{items.map((item, index) =>
 					renderItem({
 						item,
-						isSnapPoint: snapPointIndexes.has(i),
+						index,
+						isSnapPoint: snapPointIndexes.has(index),
 					}),
 				)}
 			</ul>
@@ -74,13 +70,15 @@ interface CarouselItemProps {
 	readonly children?: React.ReactNode;
 }
 
-export const CarouselItem = ({ isSnapPoint, children }: CarouselItemProps) => (
-	<li
-		className={cn(
-			"w-[240px] h-[320px] shrink-0 pl-3 last:pr-2",
-			isSnapPoint ? "" : "snap-start",
-		)}
-	>
-		{children}
-	</li>
-);
+export const CarouselItem = ({ isSnapPoint, children }: CarouselItemProps) => {
+	return (
+		<li
+			className={cn(
+				"w-[240px] h-[320px] shrink-0 pl-3 last:pr-2",
+				isSnapPoint ? "" : "snap-start",
+			)}
+		>
+			{children}
+		</li>
+	);
+};
