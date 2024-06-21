@@ -310,12 +310,12 @@ pub async fn get_nstore(key: &str, state: State<'_, Nostr>) -> Result<String, St
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn set_wallet(uri: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let client = &state.client;
 
   if let Ok(nwc_uri) = NostrWalletConnectURI::from_str(uri) {
     let nwc = NWC::new(nwc_uri);
-    let keyring = Entry::new("Lume Secret Storage", "NWC").map_err(|e| e.to_string())?;
+    let keyring = Entry::new("Lume Secret", "Bitcoin Connect").map_err(|e| e.to_string())?;
     keyring.set_password(uri).map_err(|e| e.to_string())?;
     client.set_zapper(nwc).await;
 
@@ -327,38 +327,42 @@ pub async fn set_nwc(uri: &str, state: State<'_, Nostr>) -> Result<bool, String>
 
 #[tauri::command]
 #[specta::specta]
-pub async fn load_nwc(state: State<'_, Nostr>) -> Result<bool, String> {
+pub async fn load_wallet(state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let keyring = Entry::new("Lume Secret Storage", "NWC").map_err(|e| e.to_string())?;
+  let keyring = Entry::new("Lume Secret", "Bitcoin Connect").unwrap();
 
   match keyring.get_password() {
     Ok(val) => {
-      let uri = NostrWalletConnectURI::from_str(&val).map_err(|e| e.to_string())?;
+      let uri = NostrWalletConnectURI::from_str(&val).unwrap();
       let nwc = NWC::new(uri);
+
+      // Get current balance
+      let balance = nwc.get_balance().await;
+
+      // Update zapper
       client.set_zapper(nwc).await;
 
-      Ok(true)
+      match balance {
+        Ok(val) => Ok(val.to_string()),
+        Err(_) => Err("Get balance failed.".into()),
+      }
     }
-    Err(_) => Ok(false),
+    Err(_) => Err("NWC not found.".into()),
   }
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_balance() -> Result<String, String> {
-  let keyring = Entry::new("Lume Secret Storage", "NWC").map_err(|e| e.to_string())?;
+pub async fn remove_wallet(state: State<'_, Nostr>) -> Result<(), ()> {
+  let client = &state.client;
+  let keyring = Entry::new("Lume Secret", "Bitcoin Connect").unwrap();
 
-  match keyring.get_password() {
-    Ok(val) => {
-      let uri = NostrWalletConnectURI::from_str(&val).map_err(|e| e.to_string())?;
-      let nwc = NWC::new(uri);
-      nwc
-        .get_balance()
-        .await
-        .map(|balance| balance.to_string())
-        .map_err(|_| "Get balance failed".into())
+  match keyring.delete_password() {
+    Ok(_) => {
+      client.unset_zapper().await;
+      Ok(())
     }
-    Err(_) => Err("Something wrong".into()),
+    Err(_) => Err(()),
   }
 }
 
@@ -371,32 +375,28 @@ pub async fn zap_profile(
   state: State<'_, Nostr>,
 ) -> Result<bool, String> {
   let client = &state.client;
-  let public_key: Option<PublicKey> = match Nip19::from_bech32(id) {
+  let public_key = match Nip19::from_bech32(id) {
     Ok(val) => match val {
-      Nip19::Pubkey(key) => Some(key),
-      Nip19::Profile(profile) => Some(profile.public_key),
-      _ => None,
+      Nip19::Pubkey(key) => key,
+      Nip19::Profile(profile) => profile.public_key,
+      _ => return Err("Public Key is not valid.".into()),
     },
     Err(_) => match PublicKey::from_str(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
+      Ok(val) => val,
+      Err(_) => return Err("Public Key is not valid.".into()),
     },
   };
 
-  if let Some(recipient) = public_key {
-    let details = ZapDetails::new(ZapType::Public).message(message);
-    let num = match amount.parse::<u64>() {
-      Ok(val) => val,
-      Err(_) => return Err("Invalid amount.".into()),
-    };
+  let details = ZapDetails::new(ZapType::Private).message(message);
+  let num = match amount.parse::<u64>() {
+    Ok(val) => val,
+    Err(_) => return Err("Invalid amount.".into()),
+  };
 
-    if client.zap(recipient, num, Some(details)).await.is_ok() {
-      Ok(true)
-    } else {
-      Err("Zap profile failed".into())
-    }
+  if client.zap(public_key, num, Some(details)).await.is_ok() {
+    Ok(true)
   } else {
-    Err("Parse public key failed".into())
+    Err("Zap profile failed".into())
   }
 }
 
@@ -409,32 +409,28 @@ pub async fn zap_event(
   state: State<'_, Nostr>,
 ) -> Result<bool, String> {
   let client = &state.client;
-  let event_id: Option<EventId> = match Nip19::from_bech32(id) {
+  let event_id = match Nip19::from_bech32(id) {
     Ok(val) => match val {
-      Nip19::EventId(id) => Some(id),
-      Nip19::Event(event) => Some(event.event_id),
-      _ => None,
+      Nip19::EventId(id) => id,
+      Nip19::Event(event) => event.event_id,
+      _ => return Err("Event ID is invalid.".into()),
     },
     Err(_) => match EventId::from_hex(id) {
-      Ok(val) => Some(val),
-      Err(_) => None,
+      Ok(val) => val,
+      Err(_) => return Err("Event ID is invalid.".into()),
     },
   };
 
-  if let Some(recipient) = event_id {
-    let details = ZapDetails::new(ZapType::Public).message(message);
-    let num = match amount.parse::<u64>() {
-      Ok(val) => val,
-      Err(_) => return Err("Invalid amount.".into()),
-    };
+  let details = ZapDetails::new(ZapType::Private).message(message);
+  let num = match amount.parse::<u64>() {
+    Ok(val) => val,
+    Err(_) => return Err("Invalid amount.".into()),
+  };
 
-    if client.zap(recipient, num, Some(details)).await.is_ok() {
-      Ok(true)
-    } else {
-      Err("Zap event failed".into())
-    }
+  if client.zap(event_id, num, Some(details)).await.is_ok() {
+    Ok(true)
   } else {
-    Err("Parse event ID failed".into())
+    Err("Zap event failed".into())
   }
 }
 

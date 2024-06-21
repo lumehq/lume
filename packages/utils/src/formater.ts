@@ -81,7 +81,7 @@ export function displayLongHandle(str: string) {
 	const handle = split[0];
 	const service = split[1];
 
-	return handle.substring(0, 16) + "..." + "@" + service;
+	return `${handle.substring(0, 16)}...@${service}`;
 }
 
 // convert number to K, M, B, T, etc.
@@ -127,7 +127,7 @@ export function getBitcoinDisplayValues(satoshis: number) {
 		.reverse()
 		.forEach((c, index) => {
 			if (index > 0 && index % 3 === 0) {
-				res = " " + res;
+				res = ` ${res}`;
 			}
 			res = c + res;
 		});

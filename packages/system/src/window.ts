@@ -18,7 +18,15 @@ export class LumeWindow {
 		const label = `event-${event.id}`;
 		const url = `/events/${root ?? reply ?? event.id}`;
 
-		const query = await commands.openWindow(label, "Thread", url, 500, 800);
+		const query = await commands.openWindow({
+			label,
+			url,
+			title: "Thread",
+			width: 500,
+			height: 800,
+			maximizable: true,
+			minimizable: true,
+		});
 
 		if (query.status === "ok") {
 			return query.data;
@@ -29,13 +37,15 @@ export class LumeWindow {
 
 	static async openProfile(pubkey: string) {
 		const label = `user-${pubkey}`;
-		const query = await commands.openWindow(
+		const query = await commands.openWindow({
 			label,
-			"Profile",
-			`/users/${pubkey}`,
-			500,
-			800,
-		);
+			url: `/users/${pubkey}`,
+			title: "Profile",
+			width: 500,
+			height: 800,
+			maximizable: true,
+			minimizable: true,
+		});
 
 		if (query.status === "ok") {
 			return query.data;
@@ -60,7 +70,15 @@ export class LumeWindow {
 		}
 
 		const label = `editor-${reply_to ? reply_to : 0}`;
-		const query = await commands.openWindow(label, "Editor", url, 560, 340);
+		const query = await commands.openWindow({
+			label,
+			url,
+			title: "Editor",
+			width: 560,
+			height: 340,
+			maximizable: true,
+			minimizable: false,
+		});
 
 		if (query.status === "ok") {
 			return query.data;
@@ -69,45 +87,35 @@ export class LumeWindow {
 		}
 	}
 
-	static async openZap(id: string, pubkey: string) {
-		const nwc = await commands.loadNwc();
+	static async openZap(id: string) {
+		const wallet = await commands.loadWallet();
 
-		if (nwc.status === "ok") {
-			const status = nwc.data;
-
-			if (!status) {
-				const label = "nwc";
-				await commands.openWindow(
-					label,
-					"Nostr Wallet Connect",
-					"/nwc",
-					400,
-					600,
-				);
-			} else {
-				const label = `zap-${id}`;
-				await commands.openWindow(
-					label,
-					"Zap",
-					`/zap/${id}?pubkey=${pubkey}`,
-					400,
-					500,
-				);
-			}
+		if (wallet.status === "ok") {
+			await commands.openWindow({
+				label: `zap-${id}`,
+				url: `/zap/${id}`,
+				title: "Zap",
+				width: 360,
+				height: 460,
+				maximizable: false,
+				minimizable: false,
+			});
 		} else {
-			throw new Error(nwc.error);
+			await LumeWindow.openSettings("bitcoin-connect");
 		}
 	}
 
-	static async openSettings() {
+	static async openSettings(path?: string) {
 		const label = "settings";
-		const query = await commands.openWindow(
+		const query = await commands.openWindow({
 			label,
-			"Settings",
-			"/settings/general",
-			800,
-			500,
-		);
+			url: path ? `/settings/${path}` : "/settings/general",
+			title: "Settings",
+			width: 800,
+			height: 500,
+			maximizable: false,
+			minimizable: false,
+		});
 
 		if (query.status === "ok") {
 			return query.data;
@@ -118,30 +126,15 @@ export class LumeWindow {
 
 	static async openSearch() {
 		const label = "search";
-		const query = await commands.openWindow(
+		const query = await commands.openWindow({
 			label,
-			"Search",
-			"/search",
-			400,
-			600,
-		);
-
-		if (query.status === "ok") {
-			return query.data;
-		} else {
-			throw new Error(query.error);
-		}
-	}
-
-	static async openActivity(account: string) {
-		const label = "activity";
-		const query = await commands.openWindow(
-			label,
-			"Activity",
-			`/activity/${account}/texts`,
-			400,
-			600,
-		);
+			url: "/search",
+			title: "Search",
+			width: 400,
+			height: 600,
+			maximizable: false,
+			minimizable: false,
+		});
 
 		if (query.status === "ok") {
 			return query.data;

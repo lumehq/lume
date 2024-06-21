@@ -79,7 +79,7 @@ function Screen() {
 							);
 						}}
 					</Link>
-					<Link to="/settings/zap">
+					<Link to="/settings/wallet">
 						{({ isActive }) => {
 							return (
 								<div
@@ -91,9 +91,7 @@ function Screen() {
 									)}
 								>
 									<ZapIcon className="size-5 shrink-0" />
-									<p className="text-sm font-medium">
-										{t("settings.zap.title")}
-									</p>
+									<p className="text-sm font-medium">Wallet</p>
 								</div>
 							);
 						}}

@@ -9,20 +9,20 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
-use std::sync::Mutex;
-use std::time::Duration;
 use std::{
   fs,
   io::{self, BufRead},
   str::FromStr,
 };
+use std::sync::Mutex;
+use std::time::Duration;
 
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
+use tauri::{Manager, path::BaseDirectory};
 #[cfg(target_os = "macos")]
 use tauri::tray::{MouseButtonState, TrayIconEvent};
-use tauri::{path::BaseDirectory, Manager};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -98,9 +98,9 @@ fn main() {
       nostr::metadata::toggle_contact,
       nostr::metadata::get_nstore,
       nostr::metadata::set_nstore,
-      nostr::metadata::set_nwc,
-      nostr::metadata::load_nwc,
-      nostr::metadata::get_balance,
+      nostr::metadata::set_wallet,
+      nostr::metadata::load_wallet,
+      nostr::metadata::remove_wallet,
       nostr::metadata::zap_profile,
       nostr::metadata::zap_event,
       nostr::metadata::friend_to_friend,

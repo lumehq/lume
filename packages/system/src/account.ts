@@ -1,6 +1,6 @@
 import type { Metadata } from "@lume/types";
-import { type Result, commands } from "./commands";
 import { Window } from "@tauri-apps/api/window";
+import { type Result, commands } from "./commands";
 
 export class NostrAccount {
 	static async getAccounts() {
@@ -99,8 +99,28 @@ export class NostrAccount {
 		}
 	}
 
+	static async loadWallet() {
+		const query = await commands.loadWallet();
+
+		if (query.status === "ok") {
+			return Number.parseInt(query.data);
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
 	static async setWallet(uri: string) {
-		const query = await commands.setNwc(uri);
+		const query = await commands.setWallet(uri);
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
+	static async removeWallet() {
+		const query = await commands.removeWallet();
 
 		if (query.status === "ok") {
 			return query.data;
@@ -110,22 +130,12 @@ export class NostrAccount {
 	}
 
 	static async getProfile() {
-		const query = await commands.getCurrentUserProfile();
+		const query = await commands.getCurrentProfile();
 
 		if (query.status === "ok") {
 			return JSON.parse(query.data) as Metadata;
 		} else {
 			return null;
-		}
-	}
-
-	static async getBalance() {
-		const query = await commands.getBalance();
-
-		if (query.status === "ok") {
-			return Number.parseInt(query.data);
-		} else {
-			return 0;
 		}
 	}
 

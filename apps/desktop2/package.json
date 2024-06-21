@@ -9,6 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@getalby/bitcoin-connect-react": "^3.5.3",
 		"@lume/icons": "workspace:^",
 		"@lume/system": "workspace:^",
 		"@lume/ui": "workspace:^",

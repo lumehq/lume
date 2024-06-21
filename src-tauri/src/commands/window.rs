@@ -3,6 +3,8 @@ use std::str::FromStr;
 
 #[cfg(target_os = "macos")]
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
+use serde::{Deserialize, Serialize};
+use specta::Type;
 use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
@@ -13,6 +15,17 @@ use tauri_plugin_decorum::WebviewWindowExt;
 use url::Url;
 
 use crate::Nostr;
+
+#[derive(Serialize, Deserialize, Type)]
+pub struct Window {
+  label: String,
+  title: String,
+  url: String,
+  width: f64,
+  height: f64,
+  maximizable: bool,
+  minimizable: bool,
+}
 
 #[tauri::command]
 #[specta::specta]
@@ -121,15 +134,8 @@ pub fn resize_column(
 
 #[tauri::command]
 #[specta::specta]
-pub fn open_window(
-  label: &str,
-  title: &str,
-  url: &str,
-  width: f64,
-  height: f64,
-  app_handle: tauri::AppHandle,
-) -> Result<(), String> {
-  if let Some(window) = app_handle.get_window(label) {
+pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), String> {
+  if let Some(window) = app_handle.get_window(&window.label) {
     if window.is_visible().unwrap_or_default() {
       let _ = window.set_focus();
     } else {
@@ -138,21 +144,27 @@ pub fn open_window(
     };
   } else {
     #[cfg(target_os = "macos")]
-    let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
-      .title(title)
-      .min_inner_size(width, height)
-      .inner_size(width, height)
-      .hidden_title(true)
-      .title_bar_style(TitleBarStyle::Overlay)
-      .transparent(true)
-      .effects(WindowEffectsConfig {
-        state: None,
-        effects: vec![Effect::WindowBackground],
-        radius: None,
-        color: None,
-      })
-      .build()
-      .unwrap();
+    let window = WebviewWindowBuilder::new(
+      &app_handle,
+      &window.label,
+      WebviewUrl::App(PathBuf::from(window.url)),
+    )
+    .title(&window.title)
+    .min_inner_size(window.width, window.height)
+    .inner_size(window.width, window.height)
+    .hidden_title(true)
+    .title_bar_style(TitleBarStyle::Overlay)
+    .transparent(true)
+    .minimizable(window.minimizable)
+    .maximizable(window.maximizable)
+    .effects(WindowEffectsConfig {
+      state: None,
+      effects: vec![Effect::WindowBackground],
+      radius: None,
+      color: None,
+    })
+    .build()
+    .unwrap();
 
     #[cfg(target_os = "windows")]
     let window = WebviewWindowBuilder::new(&app_handle, label, WebviewUrl::App(PathBuf::from(url)))
@@ -180,10 +192,6 @@ pub fn open_window(
     #[cfg(target_os = "windows")]
     // Create a custom titlebar for Windows
     window.create_overlay_titlebar().unwrap();
-
-    // Set a custom inset to the traffic lights
-    #[cfg(target_os = "macos")]
-    window.set_traffic_lights_inset(8.0, 16.0).unwrap();
   }
 
   Ok(())
