@@ -1,7 +1,7 @@
 import { cn } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 import { nanoid } from "nanoid";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import reactStringReplace from "react-string-replace";
 import { Hashtag } from "./mentions/hashtag";
 import { MentionNote } from "./mentions/note";
@@ -23,6 +23,8 @@ export function NoteContent({
 }) {
 	const { settings } = useRouteContext({ strict: false });
 	const event = useNoteContext();
+
+	const warning = useMemo(() => event.warning, [event]);
 	const content = useMemo(() => {
 		try {
 			// Get parsed meta
@@ -91,8 +93,29 @@ export function NoteContent({
 		}
 	}, [event.content]);
 
+	const [blurred, setBlurred] = useState(() => warning?.length > 0);
+
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="relative flex flex-col gap-2">
+			{blurred ? (
+				<div className="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black/80 backdrop-blur-xl">
+					<div className="flex flex-col items-center justify-center gap-2 text-center">
+						<p className="text-sm text-white/60">
+							The content is hidden because the author
+							<br />
+							marked it with a warning for a reason:
+						</p>
+						<p className="text-sm font-medium text-white">{warning}</p>
+						<button
+							type="button"
+							onClick={() => setBlurred(false)}
+							className="inline-flex items-center justify-center px-2 mt-4 text-sm font-medium border rounded-lg text-white/70 h-9 w-max bg-white/20 hover:bg-white/30 border-white/5"
+						>
+							View anyway
+						</button>
+					</div>
+				</div>
+			) : null}
 			<div
 				className={cn(
 					"select-text text-pretty content-break overflow-hidden",
@@ -104,11 +127,15 @@ export function NoteContent({
 			>
 				{content}
 			</div>
-			{settings.display_media && event.meta?.images.length ? (
-				<Images urls={event.meta.images} />
-			) : null}
-			{settings.display_media && event.meta?.videos.length ? (
-				<Videos urls={event.meta.videos} />
+			{settings.display_media ? (
+				<>
+					{event.meta?.images.length ? (
+						<Images urls={event.meta.images} />
+					) : null}
+					{event.meta?.videos.length ? (
+						<Videos urls={event.meta.videos} />
+					) : null}
+				</>
 			) : null}
 		</div>
 	);

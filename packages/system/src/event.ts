@@ -25,11 +25,6 @@ export class LumeEvent {
 		Object.assign(this, event);
 	}
 
-	get isWarning() {
-		const tag = this.tags.find((tag) => tag[0] === "content-warning");
-		return tag?.[1]; // return: reason;
-	}
-
 	get isQuote() {
 		return this.tags.filter((tag) => tag[0] === "q").length > 0;
 	}
@@ -93,6 +88,26 @@ export class LumeEvent {
 		const relayHint = tag[0][2];
 
 		return { id, relayHint };
+	}
+
+	get warning() {
+		const warningTag = this.tags.filter(
+			(tag) => tag[0] === "content-warning",
+		)?.[0];
+
+		if (warningTag) {
+			return warningTag[1];
+		} else {
+			const nsfwTag = this.tags.filter(
+				(tag) => tag[0] === "t" && tag[1] === "NSFW",
+			)?.[0];
+
+			if (nsfwTag) {
+				return "NSFW";
+			} else {
+				return null;
+			}
+		}
 	}
 
 	public async getAllReplies() {
