@@ -95,8 +95,8 @@ export class LumeWindow {
 				label: `zap-${id}`,
 				url: `/zap/${id}`,
 				title: "Zap",
-				width: 400,
-				height: 500,
+				width: 360,
+				height: 460,
 				maximizable: false,
 				minimizable: false,
 			});

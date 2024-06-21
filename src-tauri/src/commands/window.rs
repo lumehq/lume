@@ -192,10 +192,6 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     #[cfg(target_os = "windows")]
     // Create a custom titlebar for Windows
     window.create_overlay_titlebar().unwrap();
-
-    // Set a custom inset to the traffic lights
-    #[cfg(target_os = "macos")]
-    window.set_traffic_lights_inset(8.0, 16.0).unwrap();
   }
 
   Ok(())

@@ -18,7 +18,9 @@ function Screen() {
 	const { balance } = Route.useRouteContext();
 
 	const disconnect = async () => {
+		window.localStorage.removeItem("bc:config");
 		await NostrAccount.removeWallet();
+
 		return redirect({ to: "/settings/bitcoin-connect" });
 	};
 
