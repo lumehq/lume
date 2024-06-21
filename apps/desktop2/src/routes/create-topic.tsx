@@ -4,8 +4,8 @@ import type { ColumnRouteSearch } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { TOPICS } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { toast } from "sonner";
 
 type Topic = {
 	title: string;
@@ -53,7 +53,10 @@ function Screen() {
 			}
 		} catch (e) {
 			setIsLoading(false);
-			toast.error(String(e));
+			await message(String(e), {
+				title: "Create Topic",
+				kind: "error",
+			});
 		}
 	};
 

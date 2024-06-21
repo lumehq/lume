@@ -1,12 +1,12 @@
-import { PlusIcon, RelayIcon } from "@lume/icons";
-import { Spinner } from "@lume/ui";
 import { User } from "@/components/user";
+import { PlusIcon, RelayIcon } from "@lume/icons";
+import { NostrAccount } from "@lume/system";
+import { Spinner } from "@lume/ui";
 import { checkForAppUpdates, displayNpub } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { toast } from "sonner";
-import { NostrAccount } from "@lume/system";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: async () => {
@@ -51,7 +51,10 @@ function Screen() {
 			}
 		} catch (e) {
 			setLoading({ npub: "", status: false });
-			toast.error(String(e));
+			await message(String(e), {
+				title: "Account",
+				kind: "error",
+			});
 		}
 	};
 

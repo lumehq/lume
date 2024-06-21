@@ -4,10 +4,10 @@ import { NostrAccount } from "@lume/system";
 import type { Metadata } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/create-profile")({
 	component: Screen,
@@ -53,7 +53,7 @@ function Screen() {
 			}
 		} catch (e) {
 			setLoading(false);
-			toast.error(String(e));
+			await message(String(e), { title: "Create Profile", kind: "error" });
 		}
 	};
 

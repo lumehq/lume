@@ -1,18 +1,14 @@
 import { User } from "@/components/user";
-import {
-	ComposeFilledIcon,
-	HorizontalDotsIcon,
-	PlusIcon,
-	SearchIcon,
-} from "@lume/icons";
+import { ComposeFilledIcon, HorizontalDotsIcon, PlusIcon } from "@lume/icons";
 import { LumeWindow, NostrAccount } from "@lume/system";
 import { cn } from "@lume/utils";
 import * as Popover from "@radix-ui/react-popover";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { getCurrent } from "@tauri-apps/api/window";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { message } from "@tauri-apps/plugin-dialog";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async () => {
@@ -63,12 +59,12 @@ function Screen() {
 }
 
 function Accounts() {
+	const navigate = Route.useNavigate();
 	const { accounts } = Route.useRouteContext();
 	const { account } = Route.useParams();
 
 	const [windowWidth, setWindowWidth] = useState<number>(null);
 
-	const navigate = Route.useNavigate();
 	const sortedList = useMemo(() => {
 		const list = accounts;
 
@@ -82,9 +78,33 @@ function Accounts() {
 		return list;
 	}, [accounts]);
 
-	const changeAccount = async (npub: string) => {
+	const showContextMenu = useCallback(
+		async (e: React.MouseEvent, npub: string) => {
+			e.preventDefault();
+
+			const menuItems = await Promise.all([
+				MenuItem.new({
+					text: "View Profile",
+					action: () => LumeWindow.openProfile(npub),
+				}),
+				MenuItem.new({
+					text: "Open Settings",
+					action: () => LumeWindow.openSettings(),
+				}),
+			]);
+
+			const menu = await Menu.new({
+				items: menuItems,
+			});
+
+			await menu.popup().catch((e) => console.error(e));
+		},
+		[],
+	);
+
+	const changeAccount = async (e: React.MouseEvent, npub: string) => {
 		if (npub === account) {
-			return await LumeWindow.openProfile(account);
+			return showContextMenu(e, npub);
 		}
 
 		// Change current account and update signer
@@ -102,7 +122,7 @@ function Accounts() {
 				replace: true,
 			});
 		} else {
-			toast.warning("Something wrong.");
+			await message("Something wrong.", { title: "Accounts", kind: "error" });
 		}
 	};
 
@@ -135,7 +155,11 @@ function Accounts() {
 			{sortedList
 				.slice(0, windowWidth > 500 ? account.length : 2)
 				.map((user) => (
-					<button key={user} type="button" onClick={() => changeAccount(user)}>
+					<button
+						key={user}
+						type="button"
+						onClick={(e) => changeAccount(e, user)}
+					>
 						<User.Provider pubkey={user}>
 							<User.Root
 								className={cn(
@@ -161,12 +185,12 @@ function Accounts() {
 						<HorizontalDotsIcon className="size-5" />
 					</Popover.Trigger>
 					<Popover.Portal>
-						<Popover.Content className="flex h-11 select-none items-center justify-center rounded-md bg-neutral-950 p-1 text-sm text-neutral-50 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-50 dark:text-neutral-950">
+						<Popover.Content className="flex h-11 select-none items-center justify-center rounded-md bg-black/20 p-1 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade">
 							{sortedList.slice(2).map((user) => (
 								<button
 									key={user}
 									type="button"
-									onClick={() => changeAccount(user)}
+									onClick={(e) => changeAccount(e, user)}
 									className="inline-flex items-center justify-center rounded-md size-9 hover:bg-white/10"
 								>
 									<User.Provider pubkey={user}>

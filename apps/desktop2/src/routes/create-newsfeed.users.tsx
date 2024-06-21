@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Suspense, useState } from "react";
-import { Await, defer } from "@tanstack/react-router";
 import { User } from "@/components/user";
-import { Spinner } from "@lume/ui";
-import { toast } from "sonner";
-import type { ColumnRouteSearch } from "@lume/types";
 import { NostrAccount } from "@lume/system";
+import type { ColumnRouteSearch } from "@lume/types";
+import { Spinner } from "@lume/ui";
+import { createFileRoute } from "@tanstack/react-router";
+import { Await, defer } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
+import { Suspense, useState } from "react";
 
 export const Route = createFileRoute("/create-newsfeed/users")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
@@ -59,16 +59,19 @@ function Screen() {
 			}
 		} catch (e) {
 			setIsLoading(false);
-			toast.error(String(e));
+			await message(String(e), {
+				title: "Create Group",
+				kind: "error",
+			});
 		}
 	};
 
 	return (
-		<div className="w-full flex flex-col items-center gap-3">
+		<div className="flex flex-col items-center w-full gap-3">
 			<div className="overflow-y-auto scrollbar-none p-2 w-full h-[450px] bg-black/5 dark:bg-white/5 backdrop-blur-lg rounded-xl">
 				<Suspense
 					fallback={
-						<div className="flex h-20 w-full flex-col items-center justify-center gap-1">
+						<div className="flex flex-col items-center justify-center w-full h-20 gap-1">
 							<button
 								type="button"
 								className="inline-flex items-center gap-2 text-sm font-medium"
@@ -85,27 +88,27 @@ function Screen() {
 							users.profiles.map((item: { pubkey: string }) => (
 								<div
 									key={item.pubkey}
-									className="h-max w-full overflow-hidden mb-2 p-2 bg-white dark:bg-black/20 backdrop-blur-lg rounded-lg shadow-primary dark:ring-1 ring-neutral-800/50"
+									className="w-full p-2 mb-2 overflow-hidden bg-white rounded-lg h-max dark:bg-black/20 backdrop-blur-lg shadow-primary dark:ring-1 ring-neutral-800/50"
 								>
 									<User.Provider pubkey={item.pubkey}>
 										<User.Root>
-											<div className="flex h-full w-full flex-col gap-2">
+											<div className="flex flex-col w-full h-full gap-2">
 												<div className="flex items-center justify-between">
 													<div className="flex items-center gap-2">
-														<User.Avatar className="size-7 shrink-0 rounded-full object-cover" />
+														<User.Avatar className="object-cover rounded-full size-7 shrink-0" />
 														<User.Name className="text-sm leadning-tight max-w-[15rem] truncate font-semibold" />
 													</div>
 													<button
 														type="button"
 														onClick={() => toggleFollow(item.pubkey)}
-														className="inline-flex h-7 w-20 items-center justify-center rounded-lg bg-black/10 text-sm font-medium hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+														className="inline-flex items-center justify-center w-20 text-sm font-medium rounded-lg h-7 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
 													>
 														{follows.includes(item.pubkey)
 															? "Unfollow"
 															: "Follow"}
 													</button>
 												</div>
-												<User.About className="line-clamp-3 max-w-none select-text text-neutral-800 dark:text-neutral-400" />
+												<User.About className="select-text line-clamp-3 max-w-none text-neutral-800 dark:text-neutral-400" />
 											</div>
 										</User.Root>
 									</User.Provider>
@@ -119,7 +122,7 @@ function Screen() {
 				type="button"
 				onClick={() => submit()}
 				disabled={isLoading || follows.length < 1}
-				className="inline-flex items-center justify-center w-36 rounded-full h-9 bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 disabled:opacity-50"
+				className="inline-flex items-center justify-center text-sm font-medium text-white bg-blue-500 rounded-full w-36 h-9 hover:bg-blue-600 disabled:opacity-50"
 			>
 				{isLoading ? <Spinner /> : "Confirm"}
 			</button>

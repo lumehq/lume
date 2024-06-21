@@ -5,9 +5,9 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/$account/backup")({
 	component: Screen,
@@ -29,7 +29,10 @@ function Screen() {
 		try {
 			if (key) {
 				if (!confirm.c1 || !confirm.c2 || !confirm.c3) {
-					return toast.warning("You need to confirm before continue");
+					return await message("You need to confirm before continue", {
+						title: "Backup",
+						kind: "info",
+					});
 				}
 
 				navigate({ to: "/", replace: true });
@@ -48,7 +51,10 @@ function Screen() {
 			});
 		} catch (e) {
 			setLoading(false);
-			toast.error(String(e));
+			await message(String(e), {
+				title: "Backup",
+				kind: "error",
+			});
 		}
 	};
 
@@ -57,7 +63,10 @@ function Screen() {
 			await writeText(key);
 			setCopied(true);
 		} catch (e) {
-			toast.error(e);
+			await message(String(e), {
+				title: "Backup",
+				kind: "error",
+			});
 		}
 	};
 

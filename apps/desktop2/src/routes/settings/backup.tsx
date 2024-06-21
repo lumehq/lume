@@ -1,11 +1,11 @@
 import { User } from "@/components/user";
 import { NostrAccount } from "@lume/system";
-import { displayNpub, displayNsec } from "@lume/utils";
+import { displayNpub } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { toast } from "sonner";
 
 interface Account {
 	npub: string;
@@ -43,7 +43,7 @@ function Account({ account }: { account: string }) {
 			await writeText(data);
 			setCopied(true);
 		} catch (e) {
-			toast.error(e);
+			await message(String(e), { title: "Backup", kind: "error" });
 		}
 	};
 

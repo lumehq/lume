@@ -4,9 +4,9 @@ import { Spinner } from "@lume/ui";
 import { insertImage, isImagePath } from "@lume/utils";
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/window";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
 import { useSlateStatic } from "slate-react";
-import { toast } from "sonner";
 
 export function MediaButton() {
 	const editor = useSlateStatic();
@@ -24,7 +24,7 @@ export function MediaButton() {
 			setLoading(false);
 		} catch (e) {
 			setLoading(false);
-			toast.error(`Upload failed, error: ${e}`);
+			await message(String(e), { title: "Upload", kind: "error" });
 		}
 	};
 

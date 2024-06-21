@@ -1,13 +1,13 @@
 import { Balance } from "@/components/balance";
-import { Box, Container } from "@lume/ui";
 import { User } from "@/components/user";
+import { LumeEvent } from "@lume/system";
+import { Box, Container } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
-import { LumeEvent } from "@lume/system";
 
 const DEFAULT_VALUES = [69, 100, 200, 500];
 
@@ -22,7 +22,7 @@ function Screen() {
 	const { pubkey, account } = Route.useSearch();
 
 	const [amount, setAmount] = useState(21);
-	const [message, setMessage] = useState("");
+	const [content, setContent] = useState("");
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +31,7 @@ function Screen() {
 			// start loading
 			setIsLoading(true);
 
-			const val = await LumeEvent.zap(id, amount, message);
+			const val = await LumeEvent.zap(id, amount, content);
 
 			if (val) {
 				setIsCompleted(true);
@@ -41,7 +41,10 @@ function Screen() {
 			}
 		} catch (e) {
 			setIsLoading(false);
-			toast.error(e);
+			await message(String(e), {
+				title: "Zap",
+				kind: "error",
+			});
 		}
 	};
 
@@ -49,19 +52,19 @@ function Screen() {
 		<Container>
 			<Balance account={account} />
 			<Box className="flex flex-col gap-3">
-				<div className="flex h-full flex-col justify-between py-5">
-					<div className="flex h-11 shrink-0 items-center justify-center gap-2">
+				<div className="flex flex-col justify-between h-full py-5">
+					<div className="flex items-center justify-center gap-2 h-11 shrink-0">
 						{t("note.zap.modalTitle")}{" "}
 						<User.Provider pubkey={pubkey}>
-							<User.Root className="inline-flex items-center gap-2 rounded-full bg-neutral-100 p-1 dark:bg-neutral-900">
-								<User.Avatar className="size-6 rounded-full" />
+							<User.Root className="inline-flex items-center gap-2 p-1 rounded-full bg-neutral-100 dark:bg-neutral-900">
+								<User.Avatar className="rounded-full size-6" />
 								<User.Name className="pr-2 text-sm font-medium" />
 							</User.Root>
 						</User.Provider>
 					</div>
-					<div className="flex flex-1 flex-col justify-between px-5">
-						<div className="relative flex flex-1 flex-col pb-8">
-							<div className="inline-flex h-full flex-1 items-center justify-center gap-1">
+					<div className="flex flex-col justify-between flex-1 px-5">
+						<div className="relative flex flex-col flex-1 pb-8">
+							<div className="inline-flex items-center justify-center flex-1 h-full gap-1">
 								<CurrencyInput
 									placeholder="0"
 									defaultValue={21}
@@ -71,9 +74,9 @@ function Screen() {
 									max={10000} // 1M sats
 									maxLength={10000} // 1M sats
 									onValueChange={(value) => setAmount(Number(value))}
-									className="w-full flex-1 border-none bg-transparent text-right text-4xl font-semibold placeholder:text-neutral-600 focus:outline-none focus:ring-0 dark:text-neutral-400"
+									className="flex-1 w-full text-4xl font-semibold text-right bg-transparent border-none placeholder:text-neutral-600 focus:outline-none focus:ring-0 dark:text-neutral-400"
 								/>
-								<span className="w-full flex-1 text-left text-4xl font-semibold text-neutral-500 dark:text-neutral-400">
+								<span className="flex-1 w-full text-4xl font-semibold text-left text-neutral-500 dark:text-neutral-400">
 									sats
 								</span>
 							</div>
@@ -90,11 +93,11 @@ function Screen() {
 								))}
 							</div>
 						</div>
-						<div className="flex w-full flex-col gap-2">
+						<div className="flex flex-col w-full gap-2">
 							<input
 								name="message"
-								value={message}
-								onChange={(e) => setMessage(e.target.value)}
+								value={content}
+								onChange={(e) => setContent(e.target.value)}
 								spellCheck={false}
 								autoComplete="off"
 								autoCorrect="off"

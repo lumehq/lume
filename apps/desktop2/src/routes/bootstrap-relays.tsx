@@ -3,9 +3,9 @@ import { NostrQuery } from "@lume/system";
 import type { Relay } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import { createFileRoute } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/bootstrap-relays")({
 	loader: async () => {
@@ -32,7 +32,7 @@ function Screen() {
 			setRelays((prev) => [...prev, relay]);
 			reset();
 		} catch (e) {
-			toast.error(String(e));
+			await message(String(e), { title: "Bootstrap Relays", kind: "error" });
 		}
 	};
 
@@ -41,8 +41,7 @@ function Screen() {
 			setIsLoading(true);
 			await NostrQuery.saveBootstrapRelays(relays);
 		} catch (e) {
-			setIsLoading(false);
-			toast.error(String(e));
+			await message(String(e), { title: "Bootstrap Relays", kind: "error" });
 		}
 	};
 

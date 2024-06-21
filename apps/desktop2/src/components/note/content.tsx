@@ -87,8 +87,7 @@ export function NoteContent({
 			));
 
 			return richContent;
-		} catch (e) {
-			console.log("[parser]: ", e);
+		} catch {
 			return event.content;
 		}
 	}, [event.content]);

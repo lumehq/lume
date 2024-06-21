@@ -1,13 +1,13 @@
-import { SearchIcon } from "@lume/icons";
-import { type NostrEvent, Kind } from "@lume/types";
-import { Spinner } from "@lume/ui";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { useDebounce } from "use-debounce";
+import { SearchIcon } from "@lume/icons";
 import { LumeEvent, LumeWindow } from "@lume/system";
+import { Kind, type NostrEvent } from "@lume/types";
+import { Spinner } from "@lume/ui";
+import { createFileRoute } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 export const Route = createFileRoute("/search")({
 	component: Screen,
@@ -34,7 +34,10 @@ function Screen() {
 			setEvents(sorted);
 		} catch (e) {
 			setLoading(false);
-			toast.error(String(e));
+			await message(String(e), {
+				title: "Search",
+				kind: "error",
+			});
 		}
 	};
 

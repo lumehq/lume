@@ -4,8 +4,8 @@ import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useCallback, useState } from "react";
-import { toast } from "sonner";
 import { useNoteContext } from "../provider";
 
 export function NoteRepost({ large = false }: { large?: boolean }) {
@@ -27,12 +27,12 @@ export function NoteRepost({ large = false }: { large?: boolean }) {
 			// update state
 			setLoading(false);
 			setIsRepost(true);
-
-			// notify
-			toast.success("You've reposted this post successfully");
 		} catch {
 			setLoading(false);
-			toast.error("Repost failed, try again later");
+			await message("Repost failed, try again later", {
+				title: "Lume",
+				kind: "info",
+			});
 		}
 	};
 

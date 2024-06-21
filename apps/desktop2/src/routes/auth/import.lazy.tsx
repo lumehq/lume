@@ -1,8 +1,8 @@
 import { NostrAccount } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export const Route = createLazyFileRoute("/auth/import")({
 	component: Screen,
@@ -16,10 +16,12 @@ function Screen() {
 	const [loading, setLoading] = useState(false);
 
 	const submit = async () => {
-		if (!key.startsWith("nsec1"))
-			return toast.warning(
+		if (!key.startsWith("nsec1")) {
+			return await message(
 				"You need to enter a valid private key starts with nsec or ncryptsec",
+				{ title: "Import Key", kind: "info" },
 			);
+		}
 
 		try {
 			setLoading(true);
@@ -31,7 +33,7 @@ function Screen() {
 			}
 		} catch (e) {
 			setLoading(false);
-			toast.error(e);
+			await message(String(e), { title: "Import Key", kind: "error" });
 		}
 	};
 

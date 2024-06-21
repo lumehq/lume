@@ -1,13 +1,13 @@
 import { NostrQuery } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
+import { message } from "@tauri-apps/plugin-dialog";
 import {
 	type Dispatch,
 	type ReactNode,
 	type SetStateAction,
 	useState,
 } from "react";
-import { toast } from "sonner";
 
 export function AvatarUploader({
 	setPicture,
@@ -27,7 +27,7 @@ export function AvatarUploader({
 			setPicture(image);
 		} catch (e) {
 			setLoading(false);
-			toast.error(String(e));
+			await message(String(e), { title: "Lume", kind: "error" });
 		}
 	};
 

@@ -1,10 +1,8 @@
-import { CancelCircleIcon, CheckCircleIcon, InfoCircleIcon } from "@lume/icons";
 import type { Settings } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { Platform } from "@tauri-apps/plugin-os";
-import { Toaster } from "sonner";
 
 interface RouterContext {
 	// System
@@ -19,21 +17,7 @@ interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	component: () => (
-		<>
-			<Toaster
-				position="bottom-right"
-				icons={{
-					success: <CheckCircleIcon className="size-5" />,
-					info: <InfoCircleIcon className="size-5" />,
-					error: <CancelCircleIcon className="size-5" />,
-				}}
-				closeButton
-				theme="system"
-			/>
-			<Outlet />
-		</>
-	),
+	component: () => <Outlet />,
 	pendingComponent: Pending,
 	wrapInSuspense: true,
 });

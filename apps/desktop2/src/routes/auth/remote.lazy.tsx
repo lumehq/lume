@@ -1,8 +1,8 @@
 import { NostrAccount } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export const Route = createLazyFileRoute("/auth/remote")({
 	component: Screen,
@@ -15,10 +15,12 @@ function Screen() {
 	const [loading, setLoading] = useState(false);
 
 	const submit = async () => {
-		if (!uri.startsWith("bunker://"))
-			return toast.warning(
+		if (!uri.startsWith("bunker://")) {
+			return await message(
 				"You need to enter a valid Connect URI starts with bunker://",
+				{ title: "Nostr Connect", kind: "info" },
 			);
+		}
 
 		try {
 			setLoading(true);
@@ -30,7 +32,7 @@ function Screen() {
 			}
 		} catch (e) {
 			setLoading(false);
-			toast.error(e);
+			await message(String(e), { title: "Nostr Connect", kind: "error" });
 		}
 	};
 
