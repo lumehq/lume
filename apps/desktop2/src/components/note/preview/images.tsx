@@ -1,4 +1,6 @@
+import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import { Spinner } from "@lume/ui";
+import { cn } from "@lume/utils";
 import { useRouteContext } from "@tanstack/react-router";
 import { open } from "@tauri-apps/plugin-shell";
 import useEmblaCarousel from "embla-carousel-react";
@@ -7,29 +9,53 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 export function Images({ urls }: { urls: string[] }) {
 	const { settings } = useRouteContext({ strict: false });
 
-	const [emblaRef, emblaApi] = useEmblaCarousel({ dragFree: true, loop: true });
 	const [slidesInView, setSlidesInView] = useState([]);
+	const [emblaRef, emblaApi] = useEmblaCarousel({
+		dragFree: true,
+		align: "start",
+		watchSlides: false,
+	});
 
 	const imageUrls = useMemo(() => {
 		if (settings.image_resize_service.length) {
-			const newUrls = urls.map(
-				(url) =>
-					`${settings.image_resize_service}?url=${url}&ll&af&default=1&n=-1`,
-			);
+			let newUrls: string[];
+
+			if (urls.length === 1) {
+				newUrls = urls.map(
+					(url) =>
+						`${settings.image_resize_service}?url=${url}&ll&af&default=1&n=-1`,
+				);
+			} else {
+				newUrls = urls.map(
+					(url) =>
+						`${settings.image_resize_service}?url=${url}&w=480&h=640&ll&af&default=1&n=-1`,
+				);
+			}
+
 			return newUrls;
 		} else {
 			return urls;
 		}
 	}, [settings.image_resize_service]);
 
+	const scrollPrev = useCallback(() => {
+		if (emblaApi) emblaApi.scrollPrev();
+	}, [emblaApi]);
+
+	const scrollNext = useCallback(() => {
+		if (emblaApi) emblaApi.scrollNext();
+	}, [emblaApi]);
+
 	const updateSlidesInView = useCallback((emblaApi) => {
 		setSlidesInView((slidesInView) => {
 			if (slidesInView.length === emblaApi.slideNodes().length) {
 				emblaApi.off("slidesInView", updateSlidesInView);
 			}
+
 			const inView = emblaApi
 				.slidesInView()
 				.filter((index) => !slidesInView.includes(index));
+
 			return slidesInView.concat(inView);
 		});
 	}, []);
@@ -70,16 +96,45 @@ export function Images({ urls }: { urls: string[] }) {
 	}
 
 	return (
-		<div ref={emblaRef} className="relative group">
-			<div className="flex size-full scrollbar-none">
-				{imageUrls.map((url, index) => (
-					<LazyImage
-						/* biome-ignore lint/suspicious/noArrayIndexKey: url can be duplicated */
-						key={url + index}
-						url={url}
-						inView={slidesInView.indexOf(index) > -1}
-					/>
-				))}
+		<div className="relative pl-2 overflow-hidden group">
+			<div ref={emblaRef} className="w-full">
+				<div className="flex w-full gap-2 scrollbar-none">
+					{imageUrls.map((url, index) => (
+						<LazyImage
+							/* biome-ignore lint/suspicious/noArrayIndexKey: url can be duplicated */
+							key={url + index}
+							url={url}
+							inView={slidesInView.indexOf(index) > -1}
+						/>
+					))}
+				</div>
+			</div>
+			<div
+				aria-hidden
+				className="absolute z-10 items-center justify-between hidden w-full px-5 transform -translate-x-1/2 -translate-y-1/2 group-hover:flex left-1/2 top-1/2"
+			>
+				<button
+					type="button"
+					disabled={!emblaApi?.canScrollPrev}
+					className={cn(
+						"size-11 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white",
+						!emblaApi?.canScrollPrev ? "opacity-50" : "",
+					)}
+					onClick={() => scrollPrev()}
+				>
+					<ArrowLeftIcon className="size-6" />
+				</button>
+				<button
+					type="button"
+					disabled={!emblaApi?.canScrollNext}
+					className={cn(
+						"size-11 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white",
+						!emblaApi?.canScrollNext ? "opacity-50" : "",
+					)}
+					onClick={() => scrollNext()}
+				>
+					<ArrowRightIcon className="size-6" />
+				</button>
 			</div>
 		</div>
 	);
@@ -93,13 +148,17 @@ function LazyImage({ url, inView }: { url: string; inView: boolean }) {
 	}, [inView, setHasLoaded]);
 
 	return (
-		<div className="w-[240px] h-[320px] shrink-0 flex items-center justify-center">
-			{!hasLoaded ? <Spinner className="size-4" /> : null}
+		<div className="w-[240px] h-[320px] shrink-0 relative rounded-lg overflow-hidden">
+			{!hasLoaded ? (
+				<div className="flex items-center justify-center size-full bg-black/5 dark:bg-white/5">
+					<Spinner className="size-4" />
+				</div>
+			) : null}
 			<img
 				src={
 					inView
 						? url
-						: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D"
+						: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 				}
 				data-src={url}
 				alt={url}
