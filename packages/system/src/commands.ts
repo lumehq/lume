@@ -180,25 +180,25 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async setNwc(uri: string) : Promise<Result<boolean, string>> {
+async setWallet(uri: string) : Promise<Result<boolean, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("set_nwc", { uri }) };
+    return { status: "ok", data: await TAURI_INVOKE("set_wallet", { uri }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async loadNwc() : Promise<Result<boolean, string>> {
+async loadWallet() : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("load_nwc") };
+    return { status: "ok", data: await TAURI_INVOKE("load_wallet") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
 },
-async getBalance() : Promise<Result<string, string>> {
+async removeWallet() : Promise<Result<null, null>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("get_balance") };
+    return { status: "ok", data: await TAURI_INVOKE("remove_wallet") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -407,9 +407,9 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async openWindow(label: string, title: string, url: string, width: number, height: number) : Promise<Result<null, string>> {
+async openWindow(window: Window) : Promise<Result<null, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("open_window", { label, title, url, width, height }) };
+    return { status: "ok", data: await TAURI_INVOKE("open_window", { window }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -438,6 +438,7 @@ export type Meta = { content: string; images: string[]; videos: string[]; events
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
+export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean }
 
 /** tauri-specta globals **/
 

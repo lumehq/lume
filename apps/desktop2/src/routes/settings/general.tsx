@@ -51,7 +51,7 @@ function Screen() {
 	return (
 		<div className="w-full max-w-xl mx-auto">
 			<div className="flex flex-col gap-6">
-				<div className="flex items-center w-full h-12 px-3 text-sm rounded-xl bg-black/5 dark:bg-white/5">
+				<div className="flex items-center w-full px-3 text-sm rounded-lg h-11 bg-black/5 dark:bg-white/5">
 					* Setting changes require restarting the app to take effect.
 				</div>
 				<div className="flex flex-col gap-2">
