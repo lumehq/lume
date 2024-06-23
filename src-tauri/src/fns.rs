@@ -9,8 +9,8 @@ use tauri_nspanel::{
     base::{id, nil},
     foundation::{NSPoint, NSRect},
   },
-  ManagerExt,
-  objc::{class, msg_send, runtime::NO, sel, sel_impl}, panel_delegate, WebviewWindowExt,
+  objc::{class, msg_send, runtime::NO, sel, sel_impl},
+  panel_delegate, ManagerExt, WebviewWindowExt,
 };
 
 #[allow(non_upper_case_globals)]
@@ -28,11 +28,8 @@ pub fn swizzle_to_menubar_panel(app_handle: &tauri::AppHandle) {
   let handle = app_handle.clone();
 
   panel_delegate.set_listener(Box::new(move |delegate_name: String| {
-    match delegate_name.as_str() {
-      "window_did_resign_key" => {
-        let _ = handle.emit("menubar_panel_did_resign_key", ());
-      }
-      _ => (),
+    if delegate_name.as_str() == "window_did_resign_key" {
+      let _ = handle.emit("menubar_panel_did_resign_key", ());
     }
   }));
 
