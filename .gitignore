@@ -35,4 +35,4 @@ dist/
 .DS_Store
 *.pem
 .vscode/
-ndb/
+.idea/
