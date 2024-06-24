@@ -8,15 +8,12 @@ import {
 import { cn } from "@lume/utils";
 import { Link } from "@tanstack/react-router";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/settings")({
 	component: Screen,
 });
 
 function Screen() {
-	const { t } = useTranslation();
-
 	return (
 		<div className="flex flex-col w-full h-full">
 			<div
@@ -36,9 +33,7 @@ function Screen() {
 									)}
 								>
 									<SettingsIcon className="size-5 shrink-0" />
-									<p className="text-sm font-medium">
-										{t("settings.general.title")}
-									</p>
+									<p className="text-sm font-medium">General</p>
 								</div>
 							);
 						}}
@@ -55,9 +50,7 @@ function Screen() {
 									)}
 								>
 									<UserIcon className="size-5 shrink-0" />
-									<p className="text-sm font-medium">
-										{t("settings.user.title")}
-									</p>
+									<p className="text-sm font-medium">User</p>
 								</div>
 							);
 						}}
@@ -108,9 +101,7 @@ function Screen() {
 									)}
 								>
 									<SecureIcon className="size-5 shrink-0" />
-									<p className="text-sm font-medium">
-										{t("settings.backup.title")}
-									</p>
+									<p className="text-sm font-medium">Backup</p>
 								</div>
 							);
 						}}

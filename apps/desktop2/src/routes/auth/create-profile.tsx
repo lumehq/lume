@@ -7,21 +7,18 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/auth/create-profile")({
-	component: Screen,
 	loader: async () => {
 		const account = await NostrAccount.createAccount();
 		return account;
 	},
+	component: Screen,
 });
 
 function Screen() {
 	const account = Route.useLoaderData();
 	const navigate = useNavigate();
-
-	const { t } = useTranslation();
 	const { register, handleSubmit } = useForm();
 
 	const [picture, setPicture] = useState<string>("");
@@ -87,7 +84,7 @@ function Screen() {
 			>
 				<div className="flex flex-col gap-1">
 					<label htmlFor="display_name" className="font-medium">
-						{t("user.displayName")} *
+						Display Name *
 					</label>
 					<input
 						type={"text"}
@@ -99,7 +96,7 @@ function Screen() {
 				</div>
 				<div className="flex flex-col gap-1">
 					<label htmlFor="name" className="font-medium">
-						{t("user.name")}
+						Name
 					</label>
 					<input
 						type={"text"}
@@ -111,7 +108,7 @@ function Screen() {
 				</div>
 				<div className="flex flex-col gap-1">
 					<label htmlFor="about" className="font-medium">
-						{t("user.bio")}
+						Bio
 					</label>
 					<textarea
 						{...register("about")}
@@ -122,7 +119,7 @@ function Screen() {
 				</div>
 				<div className="flex flex-col gap-1">
 					<label htmlFor="website" className="font-medium">
-						{t("user.website")}
+						Website
 					</label>
 					<input
 						type="url"
@@ -136,7 +133,7 @@ function Screen() {
 					type="submit"
 					className="inline-flex items-center justify-center w-full mt-3 font-semibold text-white bg-blue-500 rounded-lg h-11 shrink-0 hover:bg-blue-600 disabled:opacity-50"
 				>
-					{loading ? <Spinner /> : t("global.continue")}
+					{loading ? <Spinner /> : "Continue"}
 				</button>
 			</form>
 		</div>

@@ -1,6 +1,5 @@
 import { LumeWindow, useEvent } from "@lume/system";
 import { LinkIcon } from "@lume/icons";
-import { useTranslation } from "react-i18next";
 import { cn } from "@lume/utils";
 import { User } from "@/components/user";
 import { Spinner } from "@lume/ui";
@@ -12,7 +11,6 @@ export function MentionNote({
 	eventId: string;
 	openable?: boolean;
 }) {
-	const { t } = useTranslation();
 	const { isLoading, isError, data } = useEvent(eventId);
 
 	if (isLoading) {
@@ -26,7 +24,7 @@ export function MentionNote({
 	if (isError || !data) {
 		return (
 			<div className="w-full p-3 mt-2 border rounded-xl border-black/10 dark:border-white/10">
-				{t("note.error")}
+				Event not found with your current relay set
 			</div>
 		);
 	}

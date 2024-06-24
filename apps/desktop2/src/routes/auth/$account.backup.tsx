@@ -7,7 +7,6 @@ import { invoke } from "@tauri-apps/api/core";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { message } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/auth/$account/backup")({
 	component: Screen,
@@ -15,20 +14,18 @@ export const Route = createFileRoute("/auth/$account/backup")({
 
 function Screen() {
 	const { account } = Route.useParams();
-	const { t } = useTranslation();
+	const navigate = useNavigate();
 
 	const [key, setKey] = useState(null);
 	const [passphase, setPassphase] = useState("");
 	const [copied, setCopied] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [confirm, setConfirm] = useState({ c1: false, c2: false, c3: false });
-
-	const navigate = useNavigate();
+	const [confirm, setConfirm] = useState({ c1: false, c2: false });
 
 	const submit = async () => {
 		try {
 			if (key) {
-				if (!confirm.c1 || !confirm.c2 || !confirm.c3) {
+				if (!confirm.c1 || !confirm.c2) {
 					return await message("You need to confirm before continue", {
 						title: "Backup",
 						kind: "info",
@@ -137,7 +134,7 @@ function Screen() {
 										className="text-sm leading-none text-neutral-800 dark:text-neutral-200"
 										htmlFor="confirm1"
 									>
-										{t("backup.confirm1")}
+										I will make sure keep it safe and not sharing with anyone.
 									</label>
 								</div>
 								<div className="flex items-center gap-2">
@@ -157,27 +154,7 @@ function Screen() {
 										className="text-sm leading-none text-neutral-800 dark:text-neutral-200"
 										htmlFor="confirm2"
 									>
-										{t("backup.confirm2")}
-									</label>
-								</div>
-								<div className="flex items-center gap-2">
-									<Checkbox.Root
-										checked={confirm.c3}
-										onCheckedChange={() =>
-											setConfirm((state) => ({ ...state, c3: !state.c3 }))
-										}
-										className="flex items-center justify-center rounded-md outline-none appearance-none size-6 bg-neutral-100 dark:bg-white/10 dark:hover:bg-white/20"
-										id="confirm3"
-									>
-										<Checkbox.Indicator className="text-blue-500">
-											<CheckIcon className="size-4" />
-										</Checkbox.Indicator>
-									</Checkbox.Root>
-									<label
-										className="text-sm leading-none text-neutral-800 dark:text-neutral-200"
-										htmlFor="confirm3"
-									>
-										{t("backup.confirm3")}
+										I understand I cannot recover private key.
 									</label>
 								</div>
 							</div>
@@ -191,7 +168,7 @@ function Screen() {
 						disabled={loading}
 						className="inline-flex items-center justify-center w-full font-semibold text-white bg-blue-500 rounded-lg h-11 shrink-0 hover:bg-blue-600 disabled:opacity-50"
 					>
-						{loading ? <Spinner /> : t("global.continue")}
+						{loading ? <Spinner /> : "Continue"}
 					</button>
 				</div>
 			</div>

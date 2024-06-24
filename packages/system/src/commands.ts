@@ -4,7 +4,7 @@
          /** user-defined commands **/
 
          export const commands = {
-async getRelays() : Promise<Result<Relays, null>> {
+async getRelays() : Promise<Result<Relays, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_relays") };
 } catch (e) {
@@ -12,7 +12,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async connectRelay(relay: string) : Promise<Result<boolean, null>> {
+async connectRelay(relay: string) : Promise<Result<boolean, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("connect_relay", { relay }) };
 } catch (e) {
@@ -20,7 +20,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async removeRelay(relay: string) : Promise<Result<boolean, null>> {
+async removeRelay(relay: string) : Promise<Result<boolean, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("remove_relay", { relay }) };
 } catch (e) {
@@ -28,7 +28,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async getBootstrapRelays() : Promise<Result<string[], null>> {
+async getBootstrapRelays() : Promise<Result<string[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_bootstrap_relays") };
 } catch (e) {

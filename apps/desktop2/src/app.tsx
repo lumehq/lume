@@ -1,30 +1,18 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import React, { StrictMode } from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { I18nextProvider } from "react-i18next";
-import "./app.css";
-import { type } from "@tauri-apps/plugin-os";
-import i18n from "./locale";
 import { routeTree } from "./router.gen"; // auto generated file
-
-const queryClient = new QueryClient();
-const os = await type();
+import "./app.css";
 
 // Set up a Router instance
+const queryClient = new QueryClient();
 const router = createRouter({
 	routeTree,
-	context: {
-		queryClient,
-		platform: os,
-	},
+	context: { queryClient },
 	Wrap: ({ children }) => {
 		return (
-			<I18nextProvider i18n={i18n} defaultNS={"translation"}>
-				<QueryClientProvider client={queryClient}>
-					{children}
-				</QueryClientProvider>
-			</I18nextProvider>
+			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 		);
 	},
 });
