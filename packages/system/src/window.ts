@@ -26,6 +26,7 @@ export class LumeWindow {
 			height: 800,
 			maximizable: true,
 			minimizable: true,
+			hidden_title: false,
 		});
 
 		if (query.status === "ok") {
@@ -45,6 +46,7 @@ export class LumeWindow {
 			height: 800,
 			maximizable: true,
 			minimizable: true,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {
@@ -78,6 +80,7 @@ export class LumeWindow {
 			height: 340,
 			maximizable: true,
 			minimizable: false,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {
@@ -99,6 +102,7 @@ export class LumeWindow {
 				height: 460,
 				maximizable: false,
 				minimizable: false,
+				hidden_title: true,
 			});
 		} else {
 			await LumeWindow.openSettings("bitcoin-connect");
@@ -115,6 +119,7 @@ export class LumeWindow {
 			height: 500,
 			maximizable: false,
 			minimizable: false,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {
@@ -134,6 +139,7 @@ export class LumeWindow {
 			height: 600,
 			maximizable: false,
 			minimizable: false,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {

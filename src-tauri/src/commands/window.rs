@@ -24,6 +24,7 @@ pub struct Window {
   height: f64,
   maximizable: bool,
   minimizable: bool,
+  hidden_title: bool,
 }
 
 #[derive(Serialize, Deserialize, Type)]
@@ -156,7 +157,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     .title(&window.title)
     .min_inner_size(window.width, window.height)
     .inner_size(window.width, window.height)
-    .hidden_title(true)
+    .hidden_title(window.hidden_title)
     .title_bar_style(TitleBarStyle::Overlay)
     .transparent(true)
     .minimizable(window.minimizable)

@@ -292,6 +292,22 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
+async listenEventReply(label: string, id: string) : Promise<Result<null, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("listen_event_reply", { label, id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async unlistenEventReply(id: string) : Promise<Result<null, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("unlisten_event_reply", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getEventsBy(publicKey: string, asOf: string | null) : Promise<Result<RichEvent[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_events_by", { publicKey, asOf }) };
@@ -439,7 +455,7 @@ export type Meta = { content: string; images: string[]; videos: string[]; events
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }
 export type Settings = { proxy: string | null; image_resize_service: string | null; use_relay_hint: boolean; content_warning: boolean; display_avatar: boolean; display_zap_button: boolean; display_repost_button: boolean; display_media: boolean }
-export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean }
+export type Window = { label: string; title: string; url: string; width: number; height: number; maximizable: boolean; minimizable: boolean; hidden_title: boolean }
 
 /** tauri-specta globals **/
 

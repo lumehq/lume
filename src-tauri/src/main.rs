@@ -112,6 +112,8 @@ fn main() {
       nostr::event::get_event,
       nostr::event::get_event_from,
       nostr::event::get_replies,
+      nostr::event::listen_event_reply,
+      nostr::event::unlisten_event_reply,
       nostr::event::get_events_by,
       nostr::event::get_local_events,
       nostr::event::get_group_events,

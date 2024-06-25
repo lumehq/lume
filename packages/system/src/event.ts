@@ -1,11 +1,6 @@
-import type {
-	EventTag,
-	EventWithReplies,
-	Kind,
-	Meta,
-	NostrEvent,
-} from "@lume/types";
+import type { EventTag, Kind, Meta, NostrEvent } from "@lume/types";
 import { type Result, commands } from "./commands";
+import { getCurrent } from "@tauri-apps/api/window";
 
 export class LumeEvent {
 	public id: string;
@@ -110,58 +105,109 @@ export class LumeEvent {
 		}
 	}
 
-	public async getAllReplies() {
+	public async getEventReplies() {
 		const query = await commands.getReplies(this.id);
 
 		if (query.status === "ok") {
-			const events = query.data.map((item) => {
-				const nostrEvent: NostrEvent = JSON.parse(item.raw);
+			const events = query.data
+				// Create Lume Events
+				.map((item) => LumeEvent.from(item.raw, item.parsed))
+				// Filter quote event
+				.filter(
+					(ev) =>
+						!ev.tags.filter((t) => t[0] === "q" || t[3] === "mention").length,
+				);
 
-				if (item.parsed) {
-					nostrEvent.meta = item.parsed;
-				} else {
-					nostrEvent.meta = null;
-				}
-
-				const lumeEvent = new LumeEvent(nostrEvent);
-
-				return lumeEvent;
-			});
-
-			if (events.length > 0) {
-				const replies = new Set();
+			if (events.length > 1) {
+				const removeQueues = new Set();
 
 				for (const event of events) {
 					const tags = event.tags.filter(
-						(el) => el[0] === "e" && el[1] !== this.id && el[3] !== "mention",
+						(t) => t[0] === "e" && t[1] !== this.id,
 					);
 
-					if (tags.length > 0) {
-						for (const tag of tags) {
-							const rootIndex = events.findIndex((el) => el.id === tag[1]);
+					if (tags.length === 1) {
+						const index = events.findIndex((ev) => ev.id === tags[0][1]);
 
-							if (rootIndex !== -1) {
-								const rootEvent = events[rootIndex];
+						if (index !== -1) {
+							const rootEvent = events[index];
 
-								if (rootEvent?.replies) {
-									rootEvent.replies.push(event);
-								} else {
-									rootEvent.replies = [event];
+							if (rootEvent.replies?.length) {
+								rootEvent.replies.push(event);
+							} else {
+								rootEvent.replies = [event];
+							}
+
+							// Add current event to queue
+							removeQueues.add(event.id);
+
+							continue;
+						}
+					}
+
+					for (const tag of tags) {
+						const id = tag[1];
+						const rootIndex = events.findIndex((ev) => ev.id === id);
+
+						if (rootIndex !== -1) {
+							const rootEvent = events[rootIndex];
+
+							if (rootEvent.replies?.length) {
+								const childIndex = rootEvent.replies.findIndex(
+									(ev) => ev.id === id,
+								);
+
+								if (childIndex !== -1) {
+									const childEvent = rootEvent.replies[rootIndex];
+
+									if (childEvent.replies?.length) {
+										childEvent.replies.push(event);
+									} else {
+										childEvent.replies = [event];
+									}
+
+									// Add current event to queue
+									removeQueues.add(event.id);
 								}
-
-								replies.add(event.id);
+							} else {
+								rootEvent.replies = [event];
+								// Add current event to queue
+								removeQueues.add(event.id);
 							}
 						}
+
+						break;
 					}
 				}
 
-				return events.filter((ev) => !replies.has(ev.id));
+				return events.filter((ev) => !removeQueues.has(ev.id));
 			}
 
 			return events;
 		} else {
 			console.error(query.error);
 			return [];
+		}
+	}
+
+	public async listenEventReply() {
+		const label = getCurrent().label;
+		const query = await commands.listenEventReply(label, this.id);
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
+	public async unlistenEventReplys() {
+		const query = await commands.unlistenEventReply(this.id);
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
 		}
 	}
 
@@ -225,5 +271,17 @@ export class LumeEvent {
 		} else {
 			throw new Error(query.error);
 		}
+	}
+
+	static from(raw: string, parsed?: Meta) {
+		const nostrEvent: NostrEvent = JSON.parse(raw);
+
+		if (parsed) {
+			nostrEvent.meta = parsed;
+		} else {
+			nostrEvent.meta = null;
+		}
+
+		return new this(nostrEvent);
 	}
 }
