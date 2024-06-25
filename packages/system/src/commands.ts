@@ -375,9 +375,9 @@ try {
 async showInFolder(path: string) : Promise<void> {
 await TAURI_INVOKE("show_in_folder", { path });
 },
-async createColumn(label: string, x: number, y: number, width: number, height: number, url: string) : Promise<Result<string, string>> {
+async createColumn(column: Column) : Promise<Result<string, string>> {
 try {
-    return { status: "ok", data: await TAURI_INVOKE("create_column", { label, x, y, width, height, url }) };
+    return { status: "ok", data: await TAURI_INVOKE("create_column", { column }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -434,6 +434,7 @@ await TAURI_INVOKE("set_badge", { count });
 /** user-defined types **/
 
 export type Account = { npub: string; nsec: string }
+export type Column = { label: string; url: string; x: number; y: number; width: number; height: number }
 export type Meta = { content: string; images: string[]; videos: string[]; events: string[]; mentions: string[]; hashtags: string[] }
 export type Relays = { connected: string[]; read: string[] | null; write: string[] | null; both: string[] | null }
 export type RichEvent = { raw: string; parsed: Meta | null }

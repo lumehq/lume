@@ -11,7 +11,6 @@ use tauri::TitleBarStyle;
 use tauri::utils::config::WindowEffectsConfig;
 use tauri::WebviewWindowBuilder;
 use tauri::window::Effect;
-use tauri_plugin_decorum::WebviewWindowExt;
 use url::Url;
 
 use crate::Nostr;
@@ -27,37 +26,42 @@ pub struct Window {
   minimizable: bool,
 }
 
-#[tauri::command]
-#[specta::specta]
-pub fn create_column(
-  label: &str,
+#[derive(Serialize, Deserialize, Type)]
+pub struct Column {
+  label: String,
+  url: String,
   x: f32,
   y: f32,
   width: f32,
   height: f32,
-  url: &str,
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn create_column(
+  column: Column,
   app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let settings = state.settings.lock().unwrap().clone();
 
   match app_handle.get_window("main") {
-    Some(main_window) => match app_handle.get_webview(label) {
-      Some(_) => Ok(label.into()),
+    Some(main_window) => match app_handle.get_webview(&column.label) {
+      Some(_) => Ok(column.label.into()),
       None => {
-        let path = PathBuf::from(url);
+        let path = PathBuf::from(column.url);
         let webview_url = WebviewUrl::App(path);
         let builder = match settings.proxy {
           Some(url) => {
             let proxy = Url::from_str(&url).unwrap();
-            tauri::webview::WebviewBuilder::new(label, webview_url)
+            tauri::webview::WebviewBuilder::new(column.label, webview_url)
               .user_agent("Lume/4.0")
               .zoom_hotkeys_enabled(true)
               .enable_clipboard_access()
               .transparent(true)
               .proxy_url(proxy)
           }
-          None => tauri::webview::WebviewBuilder::new(label, webview_url)
+          None => tauri::webview::WebviewBuilder::new(column.label, webview_url)
             .user_agent("Lume/4.0")
             .zoom_hotkeys_enabled(true)
             .enable_clipboard_access()
@@ -65,8 +69,8 @@ pub fn create_column(
         };
         match main_window.add_child(
           builder,
-          LogicalPosition::new(x, y),
-          LogicalSize::new(width, height),
+          LogicalPosition::new(column.x, column.y),
+          LogicalSize::new(column.width, column.height),
         ) {
           Ok(webview) => Ok(webview.label().into()),
           Err(_) => Err("Create webview failed".into()),
@@ -144,7 +148,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     };
   } else {
     #[cfg(target_os = "macos")]
-    let window = WebviewWindowBuilder::new(
+    let _ = WebviewWindowBuilder::new(
       &app_handle,
       &window.label,
       WebviewUrl::App(PathBuf::from(window.url)),

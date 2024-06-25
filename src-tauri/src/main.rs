@@ -192,7 +192,8 @@ fn main() {
         // Config
         let opts = Options::new()
           .automatic_authentication(true)
-          .connection_timeout(Some(Duration::from_secs(5)));
+          .connection_timeout(Some(Duration::from_secs(5)))
+          .timeout(Duration::from_secs(30));
 
         // Setup nostr client
         let client = match database {
@@ -201,29 +202,30 @@ fn main() {
         };
 
         // Get bootstrap relays
-        let relays_path = app
+        if let Ok(path) = app
           .path()
           .resolve("resources/relays.txt", BaseDirectory::Resource)
-          .expect("Bootstrap relays not found.");
-        let file = std::fs::File::open(&relays_path).unwrap();
-        let lines = io::BufReader::new(file).lines();
+        {
+          let file = std::fs::File::open(&path).unwrap();
+          let lines = io::BufReader::new(file).lines();
 
-        // Add bootstrap relays to relay pool
-        for line in lines.map_while(Result::ok) {
-          if let Some((relay, option)) = line.split_once(',') {
-            match RelayMetadata::from_str(option) {
-              Ok(meta) => {
-                println!("connecting to bootstrap relay...: {} - {}", relay, meta);
-                let opts = if meta == RelayMetadata::Read {
-                  RelayOptions::new().read(true).write(false)
-                } else {
-                  RelayOptions::new().write(true).read(false)
-                };
-                let _ = client.add_relay_with_opts(relay, opts).await;
-              }
-              Err(_) => {
-                println!("connecting to bootstrap relay...: {}", relay);
-                let _ = client.add_relay(relay).await;
+          // Add bootstrap relays to relay pool
+          for line in lines.map_while(Result::ok) {
+            if let Some((relay, option)) = line.split_once(',') {
+              match RelayMetadata::from_str(option) {
+                Ok(meta) => {
+                  println!("connecting to bootstrap relay...: {} - {}", relay, meta);
+                  let opts = if meta == RelayMetadata::Read {
+                    RelayOptions::new().read(true).write(false)
+                  } else {
+                    RelayOptions::new().write(true).read(false)
+                  };
+                  let _ = client.add_relay_with_opts(relay, opts).await;
+                }
+                Err(_) => {
+                  println!("connecting to bootstrap relay...: {}", relay);
+                  let _ = client.add_relay(relay).await;
+                }
               }
             }
           }

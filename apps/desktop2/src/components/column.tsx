@@ -60,15 +60,17 @@ export function Column({
 		const rect = container.current.getBoundingClientRect();
 		const url = `${column.content}?account=${account}&label=${column.label}&name=${column.name}`;
 
-		// create new webview
-		invoke("create_column", {
+		const prop = {
 			label: webviewLabel,
 			x: rect.x,
 			y: rect.y,
 			width: rect.width,
 			height: rect.height,
 			url,
-		}).then(() => {
+		};
+
+		// create new webview
+		invoke("create_column", { column: prop }).then(() => {
 			console.log("created: ", webviewLabel);
 			setIsCreated(true);
 		});
