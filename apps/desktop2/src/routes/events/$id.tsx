@@ -2,7 +2,7 @@ import { Note } from "@/components/note";
 import { LumeEvent, NostrQuery } from "@lume/system";
 import { createFileRoute } from "@tanstack/react-router";
 import { Virtualizer } from "virtua";
-import { NoteParent } from "./-components/parent";
+import NoteParent from "./-components/parent";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useEffect, useRef, useState } from "react";
 
@@ -33,8 +33,8 @@ function Screen() {
 				className="overflow-hidden size-full flex-1"
 			>
 				<ScrollArea.Viewport ref={ref} className="h-full p-3">
+					<RootEvent />
 					<Virtualizer scrollRef={ref}>
-						<RootEvent />
 						<ReplyList />
 					</Virtualizer>
 				</ScrollArea.Viewport>

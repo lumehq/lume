@@ -1,8 +1,9 @@
 import { Note } from "@/components/note";
 import type { LumeEvent } from "@lume/system";
-import { NoteChild } from "./child";
+import NoteChild from "./child";
+import { memo } from "react";
 
-export function NoteParent({ event }: { event: LumeEvent }) {
+const NoteParent = memo(function NoteParent({ event }: { event: LumeEvent }) {
 	return (
 		<Note.Provider event={event}>
 			<Note.Root className="flex flex-col gap-6 mb-3">
@@ -13,12 +14,12 @@ export function NoteParent({ event }: { event: LumeEvent }) {
 					</div>
 					<div className="flex gap-2">
 						<div className="w-8 shrink-0" />
-						<div className="flex flex-col gap-2">
+						<div className="flex-1 flex flex-col gap-2">
 							<Note.ContentLarge />
-							<div className="flex items-center gap-1 -ml-2">
-								<Note.Reply large />
-								<Note.Repost large />
-								<Note.Zap large />
+							<div className="flex items-center gap-1">
+								<Note.Reply />
+								<Note.Repost />
+								<Note.Zap />
 							</div>
 						</div>
 					</div>
@@ -35,4 +36,6 @@ export function NoteParent({ event }: { event: LumeEvent }) {
 			</Note.Root>
 		</Note.Provider>
 	);
-}
+});
+
+export default NoteParent;
