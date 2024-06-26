@@ -49,7 +49,7 @@ pub fn create_column(
 
   match app_handle.get_window("main") {
     Some(main_window) => match app_handle.get_webview(&column.label) {
-      Some(_) => Ok(column.label.into()),
+      Some(_) => Ok(column.label),
       None => {
         let path = PathBuf::from(column.url);
         let webview_url = WebviewUrl::App(path);
@@ -85,7 +85,7 @@ pub fn create_column(
 
 #[tauri::command]
 #[specta::specta]
-pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, ()> {
+pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, String> {
   match app_handle.get_webview(label) {
     Some(webview) => {
       if webview.close().is_ok() {
@@ -94,7 +94,7 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, (
         Ok(false)
       }
     }
-    None => Ok(true),
+    None => Err("Column not found.".into()),
   }
 }
 

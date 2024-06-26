@@ -15,8 +15,8 @@ export class LumeWindow {
 		const reply: string =
 			eTags.find((el) => el[3] === "reply")?.[1] ?? eTags[1]?.[1];
 
-		const label = `event-${event.id}`;
 		const url = `/events/${root ?? reply ?? event.id}`;
+		const label = `event-${root ?? reply ?? event.id}`;
 
 		const query = await commands.openWindow({
 			label,

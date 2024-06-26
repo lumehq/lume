@@ -5,6 +5,13 @@ import { Virtualizer } from "virtua";
 import NoteParent from "./-components/parent";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useEffect, useRef, useState } from "react";
+import { getCurrent } from "@tauri-apps/api/window";
+import type { Meta } from "@lume/types";
+
+type Payload = {
+	raw: string;
+	parsed: Meta;
+};
 
 export const Route = createFileRoute("/events/$id")({
 	beforeLoad: async () => {
@@ -76,11 +83,33 @@ function ReplyList() {
 	const [replies, setReplies] = useState<LumeEvent[]>([]);
 
 	useEffect(() => {
+		const unlistenEvent = getCurrent().listen<Payload>("new_reply", (data) => {
+			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
+			setReplies((prev) => [event, ...prev]);
+		});
+
+		const unlistenWindow = getCurrent().onCloseRequested(async () => {
+			await event.unlistenEventReply();
+			await getCurrent().destroy();
+		});
+
+		return () => {
+			unlistenEvent.then((f) => f());
+			unlistenWindow.then((f) => f());
+		};
+	}, []);
+
+	useEffect(() => {
 		let mounted = true;
 
 		async function getReplies() {
 			const data = await event.getEventReplies();
-			if (mounted) setReplies(data);
+
+			if (mounted) {
+				setReplies(data);
+				// Start listen for new reply
+				event.listenEventReply();
+			}
 		}
 
 		getReplies();
@@ -88,7 +117,7 @@ function ReplyList() {
 		return () => {
 			mounted = false;
 		};
-	}, [event]);
+	}, []);
 
 	return (
 		<div>

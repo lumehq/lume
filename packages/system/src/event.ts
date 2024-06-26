@@ -1,6 +1,5 @@
 import type { EventTag, Kind, Meta, NostrEvent } from "@lume/types";
 import { type Result, commands } from "./commands";
-import { getCurrent } from "@tauri-apps/api/window";
 
 export class LumeEvent {
 	public id: string;
@@ -191,8 +190,7 @@ export class LumeEvent {
 	}
 
 	public async listenEventReply() {
-		const label = getCurrent().label;
-		const query = await commands.listenEventReply(label, this.id);
+		const query = await commands.listenEventReply(this.id);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -201,7 +199,7 @@ export class LumeEvent {
 		}
 	}
 
-	public async unlistenEventReplys() {
+	public async unlistenEventReply() {
 		const query = await commands.unlistenEventReply(this.id);
 
 		if (query.status === "ok") {
