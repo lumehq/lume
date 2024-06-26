@@ -9,20 +9,20 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
+use std::sync::Mutex;
+use std::time::Duration;
 use std::{
   fs,
   io::{self, BufRead},
   str::FromStr,
 };
-use std::sync::Mutex;
-use std::time::Duration;
 
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri::{Manager, path::BaseDirectory};
 #[cfg(target_os = "macos")]
 use tauri::tray::{MouseButtonState, TrayIconEvent};
+use tauri::{path::BaseDirectory, Manager};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -112,6 +112,8 @@ fn main() {
       nostr::event::get_event,
       nostr::event::get_event_from,
       nostr::event::get_replies,
+      nostr::event::listen_event_reply,
+      nostr::event::unlisten_event_reply,
       nostr::event::get_events_by,
       nostr::event::get_local_events,
       nostr::event::get_group_events,
@@ -142,9 +144,13 @@ fn main() {
     .setup(|app| {
       let main_window = app.get_webview_window("main").unwrap();
 
-      // Create a custom titlebar for Windows
+      // Set custom decoration for Windows
       #[cfg(target_os = "windows")]
       main_window.create_overlay_titlebar().unwrap();
+
+      // Make main window transparent
+      #[cfg(target_os = "macos")]
+      main_window.make_transparent().unwrap();
 
       // Set a custom inset to the traffic lights
       #[cfg(target_os = "macos")]
@@ -192,7 +198,8 @@ fn main() {
         // Config
         let opts = Options::new()
           .automatic_authentication(true)
-          .connection_timeout(Some(Duration::from_secs(5)));
+          .connection_timeout(Some(Duration::from_secs(5)))
+          .timeout(Duration::from_secs(30));
 
         // Setup nostr client
         let client = match database {
@@ -201,29 +208,30 @@ fn main() {
         };
 
         // Get bootstrap relays
-        let relays_path = app
+        if let Ok(path) = app
           .path()
           .resolve("resources/relays.txt", BaseDirectory::Resource)
-          .expect("Bootstrap relays not found.");
-        let file = std::fs::File::open(&relays_path).unwrap();
-        let lines = io::BufReader::new(file).lines();
+        {
+          let file = std::fs::File::open(&path).unwrap();
+          let lines = io::BufReader::new(file).lines();
 
-        // Add bootstrap relays to relay pool
-        for line in lines.map_while(Result::ok) {
-          if let Some((relay, option)) = line.split_once(',') {
-            match RelayMetadata::from_str(option) {
-              Ok(meta) => {
-                println!("connecting to bootstrap relay...: {} - {}", relay, meta);
-                let opts = if meta == RelayMetadata::Read {
-                  RelayOptions::new().read(true).write(false)
-                } else {
-                  RelayOptions::new().write(true).read(false)
-                };
-                let _ = client.add_relay_with_opts(relay, opts).await;
-              }
-              Err(_) => {
-                println!("connecting to bootstrap relay...: {}", relay);
-                let _ = client.add_relay(relay).await;
+          // Add bootstrap relays to relay pool
+          for line in lines.map_while(Result::ok) {
+            if let Some((relay, option)) = line.split_once(',') {
+              match RelayMetadata::from_str(option) {
+                Ok(meta) => {
+                  println!("connecting to bootstrap relay...: {} - {}", relay, meta);
+                  let opts = if meta == RelayMetadata::Read {
+                    RelayOptions::new().read(true).write(false)
+                  } else {
+                    RelayOptions::new().write(true).read(false)
+                  };
+                  let _ = client.add_relay_with_opts(relay, opts).await;
+                }
+                Err(_) => {
+                  println!("connecting to bootstrap relay...: {}", relay);
+                  let _ = client.add_relay(relay).await;
+                }
               }
             }
           }

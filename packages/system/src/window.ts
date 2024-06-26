@@ -15,8 +15,8 @@ export class LumeWindow {
 		const reply: string =
 			eTags.find((el) => el[3] === "reply")?.[1] ?? eTags[1]?.[1];
 
-		const label = `event-${event.id}`;
 		const url = `/events/${root ?? reply ?? event.id}`;
+		const label = `event-${root ?? reply ?? event.id}`;
 
 		const query = await commands.openWindow({
 			label,
@@ -26,6 +26,7 @@ export class LumeWindow {
 			height: 800,
 			maximizable: true,
 			minimizable: true,
+			hidden_title: false,
 		});
 
 		if (query.status === "ok") {
@@ -45,6 +46,7 @@ export class LumeWindow {
 			height: 800,
 			maximizable: true,
 			minimizable: true,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {
@@ -76,8 +78,9 @@ export class LumeWindow {
 			title: "Editor",
 			width: 560,
 			height: 340,
-			maximizable: true,
+			maximizable: false,
 			minimizable: false,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {
@@ -99,6 +102,7 @@ export class LumeWindow {
 				height: 460,
 				maximizable: false,
 				minimizable: false,
+				hidden_title: true,
 			});
 		} else {
 			await LumeWindow.openSettings("bitcoin-connect");
@@ -115,6 +119,7 @@ export class LumeWindow {
 			height: 500,
 			maximizable: false,
 			minimizable: false,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {
@@ -134,6 +139,7 @@ export class LumeWindow {
 			height: 600,
 			maximizable: false,
 			minimizable: false,
+			hidden_title: true,
 		});
 
 		if (query.status === "ok") {

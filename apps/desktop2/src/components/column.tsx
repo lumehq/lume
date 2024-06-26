@@ -60,15 +60,17 @@ export function Column({
 		const rect = container.current.getBoundingClientRect();
 		const url = `${column.content}?account=${account}&label=${column.label}&name=${column.name}`;
 
-		// create new webview
-		invoke("create_column", {
+		const prop = {
 			label: webviewLabel,
 			x: rect.x,
 			y: rect.y,
 			width: rect.width,
 			height: rect.height,
 			url,
-		}).then(() => {
+		};
+
+		// create new webview
+		invoke("create_column", { column: prop }).then(() => {
 			console.log("created: ", webviewLabel);
 			setIsCreated(true);
 		});
@@ -87,7 +89,7 @@ export function Column({
 				className={cn(
 					"flex flex-col w-full h-full rounded-xl",
 					column.label !== "open"
-						? "bg-black/5 dark:bg-white/5 backdrop-blur-sm"
+						? "bg-black/5 dark:bg-white/10 backdrop-blur"
 						: "",
 				)}
 			>

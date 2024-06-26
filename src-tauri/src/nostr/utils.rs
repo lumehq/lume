@@ -2,14 +2,14 @@ use std::collections::HashSet;
 use std::str::FromStr;
 
 use linkify::LinkFinder;
-use nostr_sdk::prelude::Nip19Event;
 use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
+use nostr_sdk::prelude::Nip19Event;
 use reqwest::Client;
 use serde::Serialize;
 use specta::Type;
 use url::Url;
 
-#[derive(Debug, Serialize, Type)]
+#[derive(Debug, Clone, Serialize, Type)]
 pub struct Meta {
   pub content: String,
   pub images: Vec<String>,

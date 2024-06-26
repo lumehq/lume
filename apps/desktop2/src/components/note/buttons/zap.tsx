@@ -13,11 +13,11 @@ export function NoteZap({ large = false }: { large?: boolean }) {
 	return (
 		<button
 			type="button"
-			onClick={() => LumeWindow.openZap(event.id, event.pubkey)}
+			onClick={() => LumeWindow.openZap(event.id)}
 			className={cn(
 				"inline-flex items-center justify-center text-neutral-800 dark:text-neutral-200",
 				large
-					? "rounded-full bg-neutral-100 dark:bg-white/10 h-7 gap-1.5 w-24 text-sm font-medium hover:text-blue-500 hover:bg-neutral-200 dark:hover:bg-white/20"
+					? "rounded-full h-7 gap-1.5 w-20 text-sm font-medium hover:bg-black/10 dark:hover:bg-white/10"
 					: "size-7",
 			)}
 		>

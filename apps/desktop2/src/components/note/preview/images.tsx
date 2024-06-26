@@ -97,7 +97,7 @@ export function Images({ urls }: { urls: string[] }) {
 
 	return (
 		<div className="relative pl-2 overflow-hidden group">
-			<div ref={emblaRef} className="w-full">
+			<div ref={emblaRef} className="w-full h-[320px]">
 				<div className="flex w-full gap-2 scrollbar-none">
 					{imageUrls.map((url, index) => (
 						<LazyImage
@@ -109,10 +109,7 @@ export function Images({ urls }: { urls: string[] }) {
 					))}
 				</div>
 			</div>
-			<div
-				aria-hidden
-				className="absolute z-10 items-center justify-between hidden w-full px-5 transform -translate-x-1/2 -translate-y-1/2 group-hover:flex left-1/2 top-1/2"
-			>
+			<div className="absolute z-10 items-center justify-between hidden w-full px-5 transform -translate-x-1/2 -translate-y-1/2 group-hover:flex left-1/2 top-1/2">
 				<button
 					type="button"
 					disabled={!emblaApi?.canScrollPrev}

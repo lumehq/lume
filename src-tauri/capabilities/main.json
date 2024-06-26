@@ -37,6 +37,7 @@
 		"window:allow-start-dragging",
 		"window:allow-create",
 		"window:allow-close",
+		"window:allow-destroy",
 		"window:allow-set-focus",
 		"window:allow-center",
 		"window:allow-minimize",

@@ -35,7 +35,7 @@ export function ImagePreview({ url }: { url: string }) {
 				loading="lazy"
 				decoding="async"
 				style={{ contentVisibility: "auto" }}
-				className="max-h-[600px] w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
+				className="max-h-[400px] max-w-[400px] h-auto w-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 				onClick={() => open(url)}
 				onKeyDown={() => open(url)}
 				onError={({ currentTarget }) => {

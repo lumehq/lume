@@ -5,12 +5,12 @@ use std::str::FromStr;
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
+use tauri::utils::config::WindowEffectsConfig;
+use tauri::window::Effect;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
-use tauri::utils::config::WindowEffectsConfig;
 use tauri::WebviewWindowBuilder;
-use tauri::window::Effect;
+use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
 use tauri_plugin_decorum::WebviewWindowExt;
 use url::Url;
 
@@ -25,39 +25,45 @@ pub struct Window {
   height: f64,
   maximizable: bool,
   minimizable: bool,
+  hidden_title: bool,
+}
+
+#[derive(Serialize, Deserialize, Type)]
+pub struct Column {
+  label: String,
+  url: String,
+  x: f32,
+  y: f32,
+  width: f32,
+  height: f32,
 }
 
 #[tauri::command]
 #[specta::specta]
 pub fn create_column(
-  label: &str,
-  x: f32,
-  y: f32,
-  width: f32,
-  height: f32,
-  url: &str,
+  column: Column,
   app_handle: tauri::AppHandle,
   state: State<'_, Nostr>,
 ) -> Result<String, String> {
   let settings = state.settings.lock().unwrap().clone();
 
   match app_handle.get_window("main") {
-    Some(main_window) => match app_handle.get_webview(label) {
-      Some(_) => Ok(label.into()),
+    Some(main_window) => match app_handle.get_webview(&column.label) {
+      Some(_) => Ok(column.label),
       None => {
-        let path = PathBuf::from(url);
+        let path = PathBuf::from(column.url);
         let webview_url = WebviewUrl::App(path);
         let builder = match settings.proxy {
           Some(url) => {
             let proxy = Url::from_str(&url).unwrap();
-            tauri::webview::WebviewBuilder::new(label, webview_url)
+            tauri::webview::WebviewBuilder::new(column.label, webview_url)
               .user_agent("Lume/4.0")
               .zoom_hotkeys_enabled(true)
               .enable_clipboard_access()
               .transparent(true)
               .proxy_url(proxy)
           }
-          None => tauri::webview::WebviewBuilder::new(label, webview_url)
+          None => tauri::webview::WebviewBuilder::new(column.label, webview_url)
             .user_agent("Lume/4.0")
             .zoom_hotkeys_enabled(true)
             .enable_clipboard_access()
@@ -65,8 +71,8 @@ pub fn create_column(
         };
         match main_window.add_child(
           builder,
-          LogicalPosition::new(x, y),
-          LogicalSize::new(width, height),
+          LogicalPosition::new(column.x, column.y),
+          LogicalSize::new(column.width, column.height),
         ) {
           Ok(webview) => Ok(webview.label().into()),
           Err(_) => Err("Create webview failed".into()),
@@ -79,7 +85,7 @@ pub fn create_column(
 
 #[tauri::command]
 #[specta::specta]
-pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, ()> {
+pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, String> {
   match app_handle.get_webview(label) {
     Some(webview) => {
       if webview.close().is_ok() {
@@ -88,7 +94,7 @@ pub fn close_column(label: &str, app_handle: tauri::AppHandle) -> Result<bool, (
         Ok(false)
       }
     }
-    None => Ok(true),
+    None => Err("Column not found.".into()),
   }
 }
 
@@ -152,14 +158,13 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     .title(&window.title)
     .min_inner_size(window.width, window.height)
     .inner_size(window.width, window.height)
-    .hidden_title(true)
+    .hidden_title(window.hidden_title)
     .title_bar_style(TitleBarStyle::Overlay)
-    .transparent(true)
     .minimizable(window.minimizable)
     .maximizable(window.maximizable)
     .effects(WindowEffectsConfig {
       state: None,
-      effects: vec![Effect::WindowBackground],
+      effects: vec![Effect::UnderWindowBackground],
       radius: None,
       color: None,
     })
@@ -171,7 +176,6 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
       .title(title)
       .min_inner_size(width, height)
       .inner_size(width, height)
-      .transparent(true)
       .effects(WindowEffectsConfig {
         state: None,
         effects: vec![Effect::Mica],
@@ -189,9 +193,12 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
       .build()
       .unwrap();
 
-    #[cfg(target_os = "windows")]
-    // Create a custom titlebar for Windows
+    // Set decoration
     window.create_overlay_titlebar().unwrap();
+
+    // Make main window transparent
+    #[cfg(target_os = "macos")]
+    window.make_transparent().unwrap();
   }
 
   Ok(())
@@ -223,9 +230,13 @@ pub fn open_main_window(app: tauri::AppHandle) {
       let _ = window.set_focus();
     };
   } else {
-    let _ = WebviewWindowBuilder::from_config(&app, app.config().app.windows.first().unwrap())
+    let window = WebviewWindowBuilder::from_config(&app, app.config().app.windows.first().unwrap())
       .unwrap()
       .build()
       .unwrap();
+
+    // Make main window transparent
+    #[cfg(target_os = "macos")]
+    window.make_transparent().unwrap();
   }
 }

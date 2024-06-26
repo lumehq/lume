@@ -8,30 +8,22 @@ import { Link } from "@tanstack/react-router";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { getCurrent } from "@tauri-apps/api/window";
 import { message } from "@tauri-apps/plugin-dialog";
-import { type } from "@tauri-apps/plugin-os";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/$account")({
 	beforeLoad: async () => {
 		const accounts = await NostrAccount.getAccounts();
-		const os = await type();
-
-		return { accounts, os };
+		return { accounts };
 	},
 	component: Screen,
 });
 
 function Screen() {
-	const { os } = Route.useRouteContext();
-
 	return (
 		<div className="flex flex-col w-screen h-screen">
 			<div
 				data-tauri-drag-region
-				className={cn(
-					"flex h-11 shrink-0 items-center justify-between pr-2",
-					os === "macos" ? "ml-2 pl-20" : "pl-4",
-				)}
+				className="flex h-11 shrink-0 items-center justify-between pr-2 ml-2 pl-20"
 			>
 				<div className="flex items-center gap-3">
 					<Accounts />

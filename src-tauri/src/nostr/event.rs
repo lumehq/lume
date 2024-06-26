@@ -9,7 +9,7 @@ use tauri::State;
 use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
 use crate::Nostr;
 
-#[derive(Debug, Serialize, Type)]
+#[derive(Debug, Clone, Serialize, Type)]
 pub struct RichEvent {
   pub raw: String,
   pub parsed: Option<Meta>,
@@ -146,31 +146,67 @@ pub async fn get_event_from(
 pub async fn get_replies(id: &str, state: State<'_, Nostr>) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
 
-  match EventId::from_hex(id) {
-    Ok(event_id) => {
-      let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
+  let event_id = match EventId::from_hex(id) {
+    Ok(id) => id,
+    Err(err) => return Err(err.to_string()),
+  };
 
-      match client.get_events_of(vec![filter], None).await {
-        Ok(events) => {
-          let futures = events.into_iter().map(|ev| async move {
-            let raw = ev.as_json();
-            let parsed = if ev.kind == Kind::TextNote {
-              Some(parse_event(&ev.content).await)
-            } else {
-              None
-            };
+  let filter = Filter::new().kinds(vec![Kind::TextNote]).event(event_id);
 
-            RichEvent { raw, parsed }
-          });
-          let rich_events = join_all(futures).await;
+  match client.get_events_of(vec![filter], None).await {
+    Ok(events) => {
+      let futures = events.into_iter().map(|ev| async move {
+        let raw = ev.as_json();
+        let parsed = if ev.kind == Kind::TextNote {
+          Some(parse_event(&ev.content).await)
+        } else {
+          None
+        };
 
-          Ok(rich_events)
-        }
-        Err(err) => Err(err.to_string()),
-      }
+        RichEvent { raw, parsed }
+      });
+      let rich_events = join_all(futures).await;
+
+      Ok(rich_events)
     }
-    Err(_) => Err("Event ID is not valid".into()),
+    Err(err) => Err(err.to_string()),
   }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn listen_event_reply(id: &str, state: State<'_, Nostr>) -> Result<(), String> {
+  let client = &state.client;
+
+  let mut label = "event-".to_owned();
+  label.push_str(id);
+
+  let sub_id = SubscriptionId::new(label);
+  let event_id = match EventId::from_hex(id) {
+    Ok(id) => id,
+    Err(err) => return Err(err.to_string()),
+  };
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote])
+    .event(event_id)
+    .since(Timestamp::now());
+
+  // Subscribe
+  client.subscribe_with_id(sub_id, vec![filter], None).await;
+
+  Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn unlisten_event_reply(id: &str, state: State<'_, Nostr>) -> Result<(), ()> {
+  let client = &state.client;
+  let sub_id = SubscriptionId::new(id);
+
+  // Remove subscription
+  client.unsubscribe(sub_id).await;
+
+  Ok(())
 }
 
 #[tauri::command]

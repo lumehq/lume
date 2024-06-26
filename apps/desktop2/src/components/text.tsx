@@ -13,7 +13,7 @@ export function TextNote({
 		<Note.Provider event={event}>
 			<Note.Root
 				className={cn(
-					"bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50",
+					"bg-white dark:bg-black/20 backdrop-blur rounded-xl shadow-primary dark:ring-1 dark:ring-white/5",
 					className,
 				)}
 			>
