@@ -1,10 +1,10 @@
-import { ThreadIcon } from "@lume/icons";
 import { Note } from "@/components/note";
-import { cn } from "@lume/utils";
+import { ThreadIcon } from "@lume/icons";
 import type { LumeEvent } from "@lume/system";
-import { useMemo } from "react";
+import { cn } from "@lume/utils";
+import { memo, useMemo } from "react";
 
-export function Conversation({
+export const Conversation = memo(function Conversation({
 	event,
 	className,
 }: {
@@ -44,4 +44,4 @@ export function Conversation({
 			</Note.Root>
 		</Note.Provider>
 	);
-}
+});

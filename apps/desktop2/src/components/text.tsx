@@ -1,14 +1,17 @@
-import { cn } from "@lume/utils";
 import { Note } from "@/components/note";
 import type { LumeEvent } from "@lume/system";
+import { cn } from "@lume/utils";
+import { memo } from "react";
 
-export function TextNote({
+export const TextNote = memo(function TextNote({
 	event,
 	className,
 }: {
 	event: LumeEvent;
 	className?: string;
 }) {
+	console.log("Rendered at: ", event.id, new Date().toLocaleTimeString());
+
 	return (
 		<Note.Provider event={event}>
 			<Note.Root
@@ -31,4 +34,4 @@ export function TextNote({
 			</Note.Root>
 		</Note.Provider>
 	);
-}
+});

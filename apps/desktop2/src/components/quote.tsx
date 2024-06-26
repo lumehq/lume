@@ -1,9 +1,10 @@
-import { QuoteIcon } from "@lume/icons";
 import { Note } from "@/components/note";
-import { cn } from "@lume/utils";
+import { QuoteIcon } from "@lume/icons";
 import type { LumeEvent } from "@lume/system";
+import { cn } from "@lume/utils";
+import { memo } from "react";
 
-export function Quote({
+export const Quote = memo(function Quote({
 	event,
 	className,
 }: {
@@ -40,4 +41,4 @@ export function Quote({
 			</Note.Root>
 		</Note.Provider>
 	);
-}
+});

@@ -1,11 +1,12 @@
-import { Spinner } from "@lume/ui";
 import { Note } from "@/components/note";
 import { User } from "@/components/user";
+import { type LumeEvent, NostrQuery } from "@lume/system";
+import { Spinner } from "@lume/ui";
 import { cn } from "@lume/utils";
 import { useQuery } from "@tanstack/react-query";
-import { type LumeEvent, NostrQuery } from "@lume/system";
+import { memo } from "react";
 
-export function RepostNote({
+export const RepostNote = memo(function RepostNote({
 	event,
 	className,
 }: {
@@ -78,4 +79,4 @@ export function RepostNote({
 			)}
 		</Note.Root>
 	);
-}
+});

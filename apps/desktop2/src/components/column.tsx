@@ -4,14 +4,14 @@ import { cn } from "@lume/utils";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 type WindowEvent = {
 	scroll: boolean;
 	resize: boolean;
 };
 
-export function Column({
+export const Column = memo(function Column({
 	column,
 	account,
 }: {
@@ -98,7 +98,7 @@ export function Column({
 			</div>
 		</div>
 	);
-}
+});
 
 function Header({ label, name }: { label: string; name: string }) {
 	const [title, setTitle] = useState(name);
