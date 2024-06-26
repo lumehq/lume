@@ -6,8 +6,8 @@ use serde::Serialize;
 use specta::Type;
 use tauri::{EventTarget, Manager, State};
 
+use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
 use crate::Nostr;
-use crate::nostr::utils::{create_event_tags, dedup_event, Meta, parse_event};
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct RichEvent {
@@ -69,7 +69,11 @@ pub async fn get_event_from(
   state: State<'_, Nostr>,
 ) -> Result<RichEvent, String> {
   let client = &state.client;
-  let settings = state.settings.lock().unwrap().clone();
+  let settings = state
+    .settings
+    .lock()
+    .map_err(|err| err.to_string())?
+    .clone();
 
   let event_id = match Nip19::from_bech32(id) {
     Ok(val) => match val {
@@ -258,7 +262,7 @@ pub async fn get_events_by(
   match PublicKey::from_str(public_key) {
     Ok(author) => {
       let until = match as_of {
-        Some(until) => Timestamp::from_str(until).unwrap(),
+        Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
         None => Timestamp::now(),
       };
       let filter = Filter::new()
@@ -297,10 +301,14 @@ pub async fn get_local_events(
   state: State<'_, Nostr>,
 ) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
-  let contact_list = state.contact_list.lock().unwrap().clone();
+  let contact_list = state
+    .contact_list
+    .lock()
+    .map_err(|err| err.to_string())?
+    .clone();
 
   let as_of = match until {
-    Some(until) => Timestamp::from_str(until).unwrap(),
+    Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
     None => Timestamp::now(),
   };
 
@@ -348,7 +356,7 @@ pub async fn get_group_events(
   let client = &state.client;
 
   let as_of = match until {
-    Some(until) => Timestamp::from_str(until).unwrap(),
+    Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
     None => Timestamp::now(),
   };
 
@@ -356,12 +364,12 @@ pub async fn get_group_events(
     .into_iter()
     .map(|p| {
       if p.starts_with("npub1") {
-        PublicKey::from_bech32(p).unwrap()
+        PublicKey::from_bech32(p).map_err(|err| err.to_string())
       } else {
-        PublicKey::from_hex(p).unwrap()
+        PublicKey::from_hex(p).map_err(|err| err.to_string())
       }
     })
-    .collect();
+    .collect::<Result<Vec<_>, _>>()?;
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
@@ -403,7 +411,7 @@ pub async fn get_global_events(
 ) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
   let as_of = match until {
-    Some(until) => Timestamp::from_str(until).unwrap(),
+    Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
     None => Timestamp::now(),
   };
 
@@ -445,7 +453,7 @@ pub async fn get_hashtag_events(
 ) -> Result<Vec<RichEvent>, String> {
   let client = &state.client;
   let as_of = match until {
-    Some(until) => Timestamp::from_str(until).unwrap(),
+    Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
     None => Timestamp::now(),
   };
   let filter = Filter::new()
@@ -504,7 +512,7 @@ pub async fn publish(
   };
 
   // Get public key
-  let public_key = signer.public_key().await.unwrap();
+  let public_key = signer.public_key().await.map_err(|err| err.to_string())?;
 
   // Create unsigned event
   let unsigned_event = match difficulty {
@@ -515,7 +523,7 @@ pub async fn publish(
   // Publish
   match signer.sign_event(unsigned_event).await {
     Ok(event) => match client.send_event(event).await {
-      Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
+      Ok(event_id) => Ok(event_id.to_bech32().map_err(|err| err.to_string())?),
       Err(err) => Err(err.to_string()),
     },
     Err(err) => Err(err.to_string()),
@@ -547,12 +555,15 @@ pub async fn reply(
   {
     Ok(events) => {
       if let Some(event) = events.into_iter().next() {
-        let relay_hint =
-          if let Some(relays) = database.event_seen_on_relays(event.id).await.unwrap() {
-            relays.into_iter().next().map(UncheckedUrl::new)
-          } else {
-            None
-          };
+        let relay_hint = if let Some(relays) = database
+          .event_seen_on_relays(event.id)
+          .await
+          .map_err(|err| err.to_string())?
+        {
+          relays.into_iter().next().map(UncheckedUrl::new)
+        } else {
+          None
+        };
         let t = TagStandard::Event {
           event_id: event.id,
           relay_url: relay_hint,
@@ -579,12 +590,15 @@ pub async fn reply(
       .await
     {
       if let Some(event) = events.into_iter().next() {
-        let relay_hint =
-          if let Some(relays) = database.event_seen_on_relays(event.id).await.unwrap() {
-            relays.into_iter().next().map(UncheckedUrl::new)
-          } else {
-            None
-          };
+        let relay_hint = if let Some(relays) = database
+          .event_seen_on_relays(event.id)
+          .await
+          .map_err(|err| err.to_string())?
+        {
+          relays.into_iter().next().map(UncheckedUrl::new)
+        } else {
+          None
+        };
         let t = TagStandard::Event {
           event_id: event.id,
           relay_url: relay_hint,
@@ -598,7 +612,7 @@ pub async fn reply(
   };
 
   match client.publish_text_note(content, tags).await {
-    Ok(event_id) => Ok(event_id.to_bech32().unwrap()),
+    Ok(event_id) => Ok(event_id.to_bech32().map_err(|err| err.to_string())?),
     Err(err) => Err(err.to_string()),
   }
 }
@@ -607,7 +621,7 @@ pub async fn reply(
 #[specta::specta]
 pub async fn repost(raw: &str, state: State<'_, Nostr>) -> Result<String, String> {
   let client = &state.client;
-  let event = Event::from_json(raw).unwrap();
+  let event = Event::from_json(raw).map_err(|err| err.to_string())?;
 
   match client.repost(&event, None).await {
     Ok(event_id) => Ok(event_id.to_string()),
@@ -629,7 +643,7 @@ pub async fn event_to_bech32(id: &str, state: State<'_, Nostr>) -> Result<String
     .database()
     .event_seen_on_relays(event_id)
     .await
-    .unwrap();
+    .map_err(|err| err.to_string())?;
 
   match seens {
     Some(set) => {
@@ -675,9 +689,9 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
           .into_iter()
           .map(|i| i.0.to_string())
           .collect::<Vec<_>>();
-        let profile = Nip19Profile::new(public_key, relays).unwrap();
+        let profile = Nip19Profile::new(public_key, relays).map_err(|err| err.to_string())?;
 
-        Ok(profile.to_bech32().unwrap())
+        Ok(profile.to_bech32().map_err(|err| err.to_string())?)
       }
       None => match public_key.to_bech32() {
         Ok(pk) => Ok(pk),
