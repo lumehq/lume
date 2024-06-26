@@ -1,9 +1,11 @@
 import { Spinner } from "@lume/ui";
 import type { QueryClient } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import type { OsType } from "@tauri-apps/plugin-os";
 
 interface RouterContext {
 	queryClient: QueryClient;
+	platform: OsType;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

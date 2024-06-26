@@ -23,7 +23,10 @@ function Screen() {
 
 	return (
 		<div className="h-full flex flex-col">
-			<div data-tauri-drag-region className="shrink-0 h-11 w-full" />
+			<div
+				data-tauri-drag-region
+				className="shrink-0 h-8 w-full border-b border-black/5 dark:border-white/5"
+			/>
 			<ScrollArea.Root
 				type={"scroll"}
 				scrollHideDelay={300}
@@ -52,7 +55,7 @@ function RootEvent() {
 
 	return (
 		<Note.Provider event={event}>
-			<Note.Root className="bg-white dark:bg-black/20 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
+			<Note.Root className="bg-white dark:bg-black/10 backdrop-blur rounded-xl shadow-primary dark:ring-1 dark:ring-white/5">
 				<div className="flex items-center justify-between px-3 h-14">
 					<Note.User />
 					<Note.Menu />

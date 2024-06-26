@@ -78,7 +78,7 @@ export class LumeWindow {
 			title: "Editor",
 			width: 560,
 			height: 340,
-			maximizable: true,
+			maximizable: false,
 			minimizable: false,
 			hidden_title: true,
 		});

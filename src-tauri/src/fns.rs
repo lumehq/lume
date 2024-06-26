@@ -12,6 +12,7 @@ use tauri_nspanel::{
   objc::{class, msg_send, runtime::NO, sel, sel_impl},
   panel_delegate, ManagerExt, WebviewWindowExt,
 };
+use tauri_plugin_decorum::WebviewWindowExt as WebviewWindowExt2;
 
 #[allow(non_upper_case_globals)]
 const NSWindowStyleMaskNonActivatingPanel: i32 = 1 << 7;
@@ -22,9 +23,9 @@ pub fn swizzle_to_menubar_panel(app_handle: &tauri::AppHandle) {
   });
 
   let window = app_handle.get_webview_window("panel").unwrap();
+  window.make_transparent().unwrap();
 
   let panel = window.to_panel().unwrap();
-
   let handle = app_handle.clone();
 
   panel_delegate.set_listener(Box::new(move |delegate_name: String| {

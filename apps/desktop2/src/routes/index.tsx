@@ -67,8 +67,12 @@ function Screen() {
 	return (
 		<div
 			data-tauri-drag-region
-			className="flex flex-col items-center justify-between w-full h-full"
+			className="relative flex flex-col items-center justify-between w-full h-full"
 		>
+			<div
+				data-tauri-drag-region
+				className="absolute top-0 left-0 h-14 w-full"
+			/>
 			<div className="flex items-end justify-center flex-1 w-full px-4 pb-10">
 				<div className="text-center">
 					<h2 className="mb-1 text-lg text-neutral-700 dark:text-neutral-300">

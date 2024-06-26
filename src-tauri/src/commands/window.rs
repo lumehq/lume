@@ -11,6 +11,7 @@ use tauri::window::Effect;
 use tauri::TitleBarStyle;
 use tauri::WebviewWindowBuilder;
 use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
+use tauri_plugin_decorum::WebviewWindowExt;
 use url::Url;
 
 use crate::Nostr;
@@ -149,7 +150,7 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     };
   } else {
     #[cfg(target_os = "macos")]
-    let _ = WebviewWindowBuilder::new(
+    let window = WebviewWindowBuilder::new(
       &app_handle,
       &window.label,
       WebviewUrl::App(PathBuf::from(window.url)),
@@ -159,12 +160,11 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
     .inner_size(window.width, window.height)
     .hidden_title(window.hidden_title)
     .title_bar_style(TitleBarStyle::Overlay)
-    .transparent(true)
     .minimizable(window.minimizable)
     .maximizable(window.maximizable)
     .effects(WindowEffectsConfig {
       state: None,
-      effects: vec![Effect::WindowBackground],
+      effects: vec![Effect::UnderWindowBackground],
       radius: None,
       color: None,
     })
@@ -176,7 +176,6 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
       .title(title)
       .min_inner_size(width, height)
       .inner_size(width, height)
-      .transparent(true)
       .effects(WindowEffectsConfig {
         state: None,
         effects: vec![Effect::Mica],
@@ -194,9 +193,12 @@ pub fn open_window(window: Window, app_handle: tauri::AppHandle) -> Result<(), S
       .build()
       .unwrap();
 
-    #[cfg(target_os = "windows")]
-    // Create a custom titlebar for Windows
+    // Set decoration
     window.create_overlay_titlebar().unwrap();
+
+    // Make main window transparent
+    #[cfg(target_os = "macos")]
+    window.make_transparent().unwrap();
   }
 
   Ok(())
@@ -228,9 +230,13 @@ pub fn open_main_window(app: tauri::AppHandle) {
       let _ = window.set_focus();
     };
   } else {
-    let _ = WebviewWindowBuilder::from_config(&app, app.config().app.windows.first().unwrap())
+    let window = WebviewWindowBuilder::from_config(&app, app.config().app.windows.first().unwrap())
       .unwrap()
       .build()
       .unwrap();
+
+    // Make main window transparent
+    #[cfg(target_os = "macos")]
+    window.make_transparent().unwrap();
   }
 }

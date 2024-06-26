@@ -27,8 +27,8 @@ importers:
         specifier: 2.0.0-beta.5
         version: 2.0.0-beta.5
       '@tauri-apps/plugin-os':
-        specifier: 2.0.0-beta.5
-        version: 2.0.0-beta.5
+        specifier: github:tauri-apps/tauri-plugin-os#v2
+        version: github.com/tauri-apps/tauri-plugin-os/6ca6f068998b4e8c6f84cdefbc152357a8daafa7
       '@tauri-apps/plugin-process':
         specifier: 2.0.0-beta.5
         version: 2.0.0-beta.5
@@ -2685,12 +2685,6 @@ packages:
 
   /@tauri-apps/plugin-notification@2.0.0-beta.5:
     resolution: {integrity: sha512-5zYK2aT1ZvR+LnuwsnTvg28iEhI7FiZSPvBqQ8y6fj28T4oIHVox19Pk4YRyTyfyJN1nZclXxVAqWLSXLI9SKQ==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.13
-    dev: false
-
-  /@tauri-apps/plugin-os@2.0.0-beta.5:
-    resolution: {integrity: sha512-Qfs/clZ9R05J+OVOGkko+9OaYaL+xJaGICeQ1G5CnLFpUdTfMV10D+1nBBauxDdiLU4ay5I0iprJ5aG5GJBunQ==}
     dependencies:
       '@tauri-apps/api': 2.0.0-beta.13
     dev: false
@@ -6222,4 +6216,12 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
+    dev: false
+
+  github.com/tauri-apps/tauri-plugin-os/6ca6f068998b4e8c6f84cdefbc152357a8daafa7:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-os/tar.gz/6ca6f068998b4e8c6f84cdefbc152357a8daafa7}
+    name: '@tauri-apps/plugin-os'
+    version: 2.0.0-beta.5
+    dependencies:
+      '@tauri-apps/api': 2.0.0-beta.13
     dev: false

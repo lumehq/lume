@@ -89,7 +89,7 @@ export function Column({
 				className={cn(
 					"flex flex-col w-full h-full rounded-xl",
 					column.label !== "open"
-						? "bg-black/5 dark:bg-white/5 backdrop-blur-sm"
+						? "bg-black/5 dark:bg-white/10 backdrop-blur"
 						: "",
 				)}
 			>

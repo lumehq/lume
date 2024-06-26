@@ -9,20 +9,20 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
+use std::sync::Mutex;
+use std::time::Duration;
 use std::{
   fs,
   io::{self, BufRead},
   str::FromStr,
 };
-use std::sync::Mutex;
-use std::time::Duration;
 
 use nostr_sdk::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri::{Manager, path::BaseDirectory};
 #[cfg(target_os = "macos")]
 use tauri::tray::{MouseButtonState, TrayIconEvent};
+use tauri::{path::BaseDirectory, Manager};
 use tauri_nspanel::ManagerExt;
 use tauri_plugin_decorum::WebviewWindowExt;
 
@@ -144,9 +144,13 @@ fn main() {
     .setup(|app| {
       let main_window = app.get_webview_window("main").unwrap();
 
-      // Create a custom titlebar for Windows
+      // Set custom decoration for Windows
       #[cfg(target_os = "windows")]
       main_window.create_overlay_titlebar().unwrap();
+
+      // Make main window transparent
+      #[cfg(target_os = "macos")]
+      main_window.make_transparent().unwrap();
 
       // Set a custom inset to the traffic lights
       #[cfg(target_os = "macos")]

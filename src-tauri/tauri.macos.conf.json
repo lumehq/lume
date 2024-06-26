@@ -11,10 +11,9 @@
 				"minWidth": 500,
 				"minHeight": 800,
 				"hiddenTitle": true,
-				"decorations": true,
-				"transparent": true,
 				"windowEffects": {
-					"effects": ["windowBackground"]
+					"state": "followsWindowActiveState",
+					"effects": ["underWindowBackground"]
 				}
 			},
 			{
@@ -25,9 +24,8 @@
 				"height": 500,
 				"fullscreen": false,
 				"resizable": false,
-				"decorations": false,
-				"transparent": true,
 				"visible": false,
+				"decorations": false,
 				"windowEffects": {
 					"effects": ["popover"]
 				}
