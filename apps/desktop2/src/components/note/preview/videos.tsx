@@ -6,6 +6,7 @@ export function Videos({ urls }: { urls: string[] }) {
 			<div className="group px-3">
 				<video
 					className="w-full h-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
+					preload="metadata"
 					controls
 					muted
 				>
@@ -23,6 +24,7 @@ export function Videos({ urls }: { urls: string[] }) {
 				<CarouselItem key={item} isSnapPoint={isSnapPoint}>
 					<video
 						className="w-full h-full object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
+						preload="metadata"
 						controls={false}
 						muted
 					>

@@ -5,12 +5,12 @@ use std::str::FromStr;
 use cocoa::{appkit::NSApp, base::nil, foundation::NSString};
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
+use tauri::utils::config::WindowEffectsConfig;
+use tauri::window::Effect;
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
-use tauri::utils::config::WindowEffectsConfig;
 use tauri::WebviewWindowBuilder;
-use tauri::window::Effect;
+use tauri::{LogicalPosition, LogicalSize, Manager, State, WebviewUrl};
 use url::Url;
 
 use crate::Nostr;
