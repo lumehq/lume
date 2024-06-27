@@ -96,7 +96,7 @@ export function Images({ urls }: { urls: string[] }) {
 	}
 
 	return (
-		<div className="relative pl-2 overflow-hidden group">
+		<div className="relative px-3 overflow-hidden group">
 			<div ref={emblaRef} className="w-full h-[320px]">
 				<div className="flex w-full gap-2 scrollbar-none">
 					{imageUrls.map((url, index) => (

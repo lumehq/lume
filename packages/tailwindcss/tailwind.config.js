@@ -49,7 +49,7 @@ const config = {
 		require("@tailwindcss/forms"),
 		require("@tailwindcss/typography"),
 		require("tailwind-gradient-mask-image"),
-		require("tailwind-scrollbar")({ nocompatible: true }),
+		require("tailwindcss-content-visibility"),
 	],
 };
 

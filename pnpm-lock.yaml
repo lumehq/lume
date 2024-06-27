@@ -295,6 +295,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.4
+      tailwindcss-content-visibility:
+        specifier: ^0.2.0
+        version: 0.2.0(tailwindcss@3.4.4)
 
   packages/tsconfig: {}
 
@@ -5482,6 +5485,14 @@ packages:
     engines: {node: '>=12.13.0'}
     peerDependencies:
       tailwindcss: 3.x
+    dependencies:
+      tailwindcss: 3.4.4
+    dev: true
+
+  /tailwindcss-content-visibility@0.2.0(tailwindcss@3.4.4):
+    resolution: {integrity: sha512-GsmCKKkyTz7yirk++A1PXZ5rS0Ea8uzEYKKL+czlpgvcLfM7l3EVsTy5HTqhdvRYb4A/zr/nasd/t6oTCqIjUg==}
+    peerDependencies:
+      tailwindcss: ^3.0.0
     dependencies:
       tailwindcss: 3.4.4
     dev: true

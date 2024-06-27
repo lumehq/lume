@@ -1,35 +1,39 @@
 {
-	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
-	"app": {
-		"windows": [
-			{
-				"title": "Lume",
-				"label": "main",
-				"titleBarStyle": "Overlay",
-				"width": 500,
-				"height": 800,
-				"minWidth": 500,
-				"minHeight": 800,
-				"hiddenTitle": true,
-				"windowEffects": {
-					"state": "followsWindowActiveState",
-					"effects": ["underWindowBackground"]
-				}
-			},
-			{
-				"title": "Lume Panel",
-				"label": "panel",
-				"url": "/panel",
-				"width": 350,
-				"height": 500,
-				"fullscreen": false,
-				"resizable": false,
-				"visible": false,
-				"decorations": false,
-				"windowEffects": {
-					"effects": ["popover"]
-				}
-			}
-		]
-	}
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "app": {
+    "windows": [
+      {
+        "title": "Lume",
+        "label": "main",
+        "titleBarStyle": "Overlay",
+        "width": 1045,
+        "height": 800,
+        "minWidth": 500,
+        "minHeight": 800,
+        "hiddenTitle": true,
+        "windowEffects": {
+          "state": "followsWindowActiveState",
+          "effects": [
+            "underWindowBackground"
+          ]
+        }
+      },
+      {
+        "title": "Lume Panel",
+        "label": "panel",
+        "url": "/panel",
+        "width": 350,
+        "height": 500,
+        "fullscreen": false,
+        "resizable": false,
+        "visible": false,
+        "decorations": false,
+        "windowEffects": {
+          "effects": [
+            "popover"
+          ]
+        }
+      }
+    ]
+  }
 }

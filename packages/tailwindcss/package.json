@@ -15,6 +15,7 @@
 		"@tailwindcss/typography": "^0.5.13",
 		"tailwind-gradient-mask-image": "^1.2.0",
 		"tailwind-scrollbar": "^3.1.0",
-		"tailwindcss": "^3.4.4"
+		"tailwindcss": "^3.4.4",
+		"tailwindcss-content-visibility": "^0.2.0"
 	}
 }

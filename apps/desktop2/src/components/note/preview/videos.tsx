@@ -5,7 +5,7 @@ export function Videos({ urls }: { urls: string[] }) {
 		return (
 			<div className="group px-3">
 				<video
-					className="w-full h-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
+					className="max-h-[400px] w-auto  object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 					preload="metadata"
 					controls
 					muted
