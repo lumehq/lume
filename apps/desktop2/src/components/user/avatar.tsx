@@ -37,6 +37,8 @@ export function UserAvatar({ className }: { className?: string }) {
 					<img
 						src={fallbackAvatar}
 						alt={user.pubkey}
+						loading="lazy"
+						decoding="async"
 						className={cn("bg-black dark:bg-white", className)}
 					/>
 				</Avatar.Fallback>
@@ -49,14 +51,19 @@ export function UserAvatar({ className }: { className?: string }) {
 			<Avatar.Image
 				src={picture}
 				alt={user.pubkey}
-				loading="eager"
+				loading="lazy"
 				decoding="async"
-				className={cn("outline-[.5px] outline-black/5 object-cover", className)}
+				className={cn(
+					"outline-[.5px] outline-black/5 object-cover content-visibility-auto contain-intrinsic-size-[auto]",
+					className,
+				)}
 			/>
 			<Avatar.Fallback delayMs={120}>
 				<img
 					src={fallbackAvatar}
 					alt={user.pubkey}
+					loading="lazy"
+					decoding="async"
 					className={cn("bg-black dark:bg-white", className)}
 				/>
 			</Avatar.Fallback>
