@@ -263,7 +263,11 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_window_state::Builder::default().build())
+    .plugin(
+      tauri_plugin_window_state::Builder::new()
+        .with_denylist(&["panel"])
+        .build(),
+    )
     .invoke_handler(invoke_handler)
     .build(ctx)
     .expect("error while running tauri application")

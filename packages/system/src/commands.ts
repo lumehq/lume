@@ -148,7 +148,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async checkContact(hex: string) : Promise<Result<boolean, null>> {
+async checkContact(hex: string) : Promise<Result<boolean, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("check_contact", { hex }) };
 } catch (e) {

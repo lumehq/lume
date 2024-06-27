@@ -1,0 +1,51 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "desktop-capability",
+  "description": "Capability for the column",
+  "platforms": [
+    "linux",
+    "macOS",
+    "windows"
+  ],
+  "windows": [
+    "column-*"
+  ],
+  "permissions": [
+    "resources:default",
+    "tray:default",
+    "os:allow-locale",
+    "os:allow-os-type",
+    "clipboard-manager:allow-write-text",
+    "dialog:allow-open",
+    "dialog:allow-ask",
+    "dialog:allow-message",
+    "fs:allow-read-file",
+    "menu:default",
+    "menu:allow-new",
+    "menu:allow-popup",
+    "http:default",
+    "shell:allow-open",
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "http://**/"
+        },
+        {
+          "url": "https://**/"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-read-text-file",
+      "allow": [
+        {
+          "path": "$RESOURCE/locales/*"
+        },
+        {
+          "path": "$RESOURCE/resources/*"
+        }
+      ]
+    }
+  ]
+}
