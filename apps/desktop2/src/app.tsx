@@ -1,12 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { StrictMode } from "react";
 import { type } from "@tauri-apps/plugin-os";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { routeTree } from "./router.gen"; // auto generated file
 import "./app.css";
 
-// Set up a Router instance
 const queryClient = new QueryClient();
 const platform = type();
 const router = createRouter({

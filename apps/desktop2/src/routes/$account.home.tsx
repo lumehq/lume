@@ -1,6 +1,6 @@
 import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
-import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
 import type { ColumnEvent, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
@@ -44,17 +44,6 @@ function Screen() {
 	const emitResizeEvent = useCallback(() => {
 		getCurrent().emit("child-webview", { resize: true, direction: "x" });
 	}, []);
-
-	const openLumeStore = useDebouncedCallback(async () => {
-		await getCurrent().emit("columns", {
-			type: "add",
-			column: {
-				label: "store",
-				name: "Store",
-				content: "/store/official",
-			},
-		});
-	}, 150);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
 		column.label = `${column.label}-${nanoid()}`; // update col label

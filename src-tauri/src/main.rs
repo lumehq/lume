@@ -124,6 +124,8 @@ fn main() {
       nostr::event::repost,
       nostr::event::event_to_bech32,
       nostr::event::user_to_bech32,
+      nostr::event::search_event,
+      nostr::event::search_user,
       commands::folder::show_in_folder,
       commands::window::create_column,
       commands::window::close_column,

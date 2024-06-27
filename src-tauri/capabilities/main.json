@@ -11,7 +11,7 @@
     "main",
     "panel",
     "settings",
-    "search",
+    "search-*",
     "zap-*",
     "event-*",
     "user-*",

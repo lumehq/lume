@@ -23,9 +23,6 @@ importers:
       '@tauri-apps/plugin-http':
         specifier: 2.0.0-beta.5
         version: 2.0.0-beta.5
-      '@tauri-apps/plugin-notification':
-        specifier: 2.0.0-beta.5
-        version: 2.0.0-beta.5
       '@tauri-apps/plugin-os':
         specifier: github:tauri-apps/tauri-plugin-os#v2
         version: https://codeload.github.com/tauri-apps/tauri-plugin-os/tar.gz/6ca6f068998b4e8c6f84cdefbc152357a8daafa7
@@ -1701,9 +1698,6 @@ packages:
 
   '@tauri-apps/plugin-http@2.0.0-beta.5':
     resolution: {integrity: sha512-zRWWWCNw/TdewCSrBY8Racm2dwMpkzMOnFmHGExEIoklqUUIq3FU/hkqcX/67Nplf+t1y+WljOxKpCHbm1fOQw==}
-
-  '@tauri-apps/plugin-notification@2.0.0-beta.5':
-    resolution: {integrity: sha512-5zYK2aT1ZvR+LnuwsnTvg28iEhI7FiZSPvBqQ8y6fj28T4oIHVox19Pk4YRyTyfyJN1nZclXxVAqWLSXLI9SKQ==}
 
   '@tauri-apps/plugin-os@https://codeload.github.com/tauri-apps/tauri-plugin-os/tar.gz/6ca6f068998b4e8c6f84cdefbc152357a8daafa7':
     resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-os/tar.gz/6ca6f068998b4e8c6f84cdefbc152357a8daafa7}
@@ -4894,10 +4888,6 @@ snapshots:
       '@tauri-apps/api': 2.0.0-beta.13
 
   '@tauri-apps/plugin-http@2.0.0-beta.5':
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.13
-
-  '@tauri-apps/plugin-notification@2.0.0-beta.5':
     dependencies:
       '@tauri-apps/api': 2.0.0-beta.13
 

@@ -129,11 +129,17 @@ export class LumeWindow {
 		}
 	}
 
-	static async openSearch() {
-		const label = "search";
+	static async openSearch(searchType: "notes" | "users", searchQuery: string) {
+		const url = `/search/${searchType}/?query=${searchQuery}`;
+		const label = `search-${searchQuery
+			.toLowerCase()
+			.replace(/[^\w ]+/g, "")
+			.replace(/ +/g, "_")
+			.replace(/_+/g, "_")}`;
+
 		const query = await commands.openWindow({
 			label,
-			url: "/search",
+			url,
 			title: "Search",
 			width: 400,
 			height: 600,
