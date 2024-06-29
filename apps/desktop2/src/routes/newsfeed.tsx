@@ -9,7 +9,8 @@ import { Spinner } from "@lume/ui";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useCallback, useRef } from "react";
+import { listen } from "@tauri-apps/api/event";
+import { useCallback, useEffect, useRef } from "react";
 import { Virtualizer } from "virtua";
 
 export const Route = createFileRoute("/newsfeed")({
@@ -40,6 +41,7 @@ export const Route = createFileRoute("/newsfeed")({
 });
 
 export function Screen() {
+	const { queryClient } = Route.useRouteContext();
 	const { label, account } = Route.useSearch();
 	const {
 		data,
@@ -83,6 +85,16 @@ export function Screen() {
 		},
 		[data],
 	);
+
+	useEffect(() => {
+		const unlisten = listen("synced", async () => {
+			await queryClient.invalidateQueries({ queryKey: [label, account] });
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
 
 	return (
 		<ScrollArea.Root

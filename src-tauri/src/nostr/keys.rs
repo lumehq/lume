@@ -242,8 +242,9 @@ pub async fn load_account(
   };
 
   // Get user's contact list
-  let contacts = client.get_contact_list(None).await.unwrap();
-  *state.contact_list.lock().unwrap() = contacts;
+  if let Ok(contacts) = client.get_contact_list(None).await {
+    *state.contact_list.lock().unwrap() = contacts
+  };
 
   // Create a subscription for notification
   let sub_id = SubscriptionId::new("notification");
@@ -299,8 +300,10 @@ pub async fn load_account(
     let window = handle.get_window("main").unwrap();
     let state = window.state::<Nostr>();
     let client = &state.client;
+    let contact_list = state.contact_list.lock().unwrap().clone();
+    let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
 
-    let filter = Filter::new()
+    let notification = Filter::new()
       .pubkey(public_key)
       .kinds(vec![
         Kind::TextNote,
@@ -308,11 +311,35 @@ pub async fn load_account(
         Kind::Reaction,
         Kind::ZapReceipt,
       ])
+      .limit(100);
+
+    let newsfeed = Filter::new()
+      .authors(authors)
+      .kinds(vec![Kind::TextNote, Kind::Repost])
       .limit(500);
 
-    match client.reconcile(filter, NegentropyOptions::default()).await {
-      Ok(_) => println!("Sync notification done."),
+    match client
+      .reconcile(notification, NegentropyOptions::default())
+      .await
+    {
+      Ok(_) => {
+        if handle.emit_to(EventTarget::Any, "synced", true).is_err() {
+          println!("Emit event failed.")
+        }
+      }
       Err(_) => println!("Sync notification failed."),
+    };
+
+    match client
+      .reconcile(newsfeed, NegentropyOptions::default())
+      .await
+    {
+      Ok(_) => {
+        if handle.emit_to(EventTarget::Any, "synced", true).is_err() {
+          println!("Emit event failed.")
+        }
+      }
+      Err(_) => println!("Sync newsfeed failed."),
     }
   });
 
@@ -324,7 +351,7 @@ pub async fn load_account(
     let client = &state.client;
 
     // Handle notifications
-    if client
+    client
       .handle_notifications(|notification| async {
         if let RelayPoolNotification::Message { message, .. } = notification {
           if let RelayMessage::Event {
@@ -415,6 +442,24 @@ pub async fn load_account(
               {
                 println!("Emit new notification failed.")
               }
+            } else if id.starts_with("newsfeed") {
+              let raw = event.as_json();
+              let parsed = if event.kind == Kind::TextNote {
+                Some(parse_event(&event.content).await)
+              } else {
+                None
+              };
+
+              if app
+                .emit_to(
+                  EventTarget::window(id),
+                  "new_event",
+                  RichEvent { raw, parsed },
+                )
+                .is_err()
+              {
+                println!("Emit new notification failed.")
+              }
             } else {
               println!("new event: {}", event.as_json())
             }
@@ -425,10 +470,6 @@ pub async fn load_account(
         Ok(false)
       })
       .await
-      .is_ok()
-    {
-      print!("Listing for new event...");
-    }
   });
 
   Ok(true)

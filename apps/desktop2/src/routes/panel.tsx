@@ -42,50 +42,41 @@ function Screen() {
 	const [account, setAccount] = useState<string>(null);
 	const [events, setEvents] = useState<LumeEvent[]>([]);
 
-	const texts = useMemo(
-		() => events.filter((ev) => ev.kind === Kind.Text),
-		[events],
-	);
-
-	const zaps = useMemo(() => {
-		const groups = new Map<string, LumeEvent[]>();
-		const list = events.filter((ev) => ev.kind === Kind.ZapReceipt);
-
-		for (const event of list) {
-			const rootId = event.tags.filter((tag) => tag[0] === "e")[0]?.[1];
-
-			if (rootId) {
-				if (groups.has(rootId)) {
-					groups.get(rootId).push(event);
-				} else {
-					groups.set(rootId, [event]);
-				}
-			}
-		}
-
-		return groups;
-	}, [events]);
-
-	const reactions = useMemo(() => {
-		const groups = new Map<string, LumeEvent[]>();
-		const list = events.filter(
+	const { texts, zaps, reactions } = useMemo(() => {
+		const zaps = new Map<string, LumeEvent[]>();
+		const reactions = new Map<string, LumeEvent[]>();
+		const texts = events.filter((ev) => ev.kind === Kind.Text);
+		const zapEvents = events.filter((ev) => ev.kind === Kind.ZapReceipt);
+		const reactEvents = events.filter(
 			(ev) => ev.kind === Kind.Repost || ev.kind === Kind.Reaction,
 		);
 
-		for (const event of list) {
+		for (const event of reactEvents) {
 			const rootId = event.tags.filter((tag) => tag[0] === "e")[0]?.[1];
 
 			if (rootId) {
-				if (groups.has(rootId)) {
-					groups.get(rootId).push(event);
+				if (reactions.has(rootId)) {
+					reactions.get(rootId).push(event);
 				} else {
-					groups.set(rootId, [event]);
+					reactions.set(rootId, [event]);
 				}
 			}
 		}
 
-		return groups;
-	}, [events]);
+		for (const event of zapEvents) {
+			const rootId = event.tags.filter((tag) => tag[0] === "e")[0]?.[1];
+
+			if (rootId) {
+				if (zaps.has(rootId)) {
+					zaps.get(rootId).push(event);
+				} else {
+					zaps.set(rootId, [event]);
+				}
+			}
+		}
+
+		return { texts, zaps, reactions };
+	}, [events?.length]);
 
 	const showContextMenu = useCallback(async (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -98,10 +89,6 @@ function Screen() {
 			MenuItem.new({
 				text: "New Post",
 				action: () => LumeWindow.openEditor(),
-			}),
-			MenuItem.new({
-				text: "Search",
-				action: () => LumeWindow.openSearch(),
 			}),
 			PredefinedMenuItem.new({ item: "Separator" }),
 			MenuItem.new({
@@ -180,13 +167,6 @@ function Screen() {
 							<User.Avatar className="rounded-full size-7" />
 						</User.Root>
 					</User.Provider>
-					<button
-						type="button"
-						onClick={() => LumeWindow.openSearch()}
-						className="inline-flex items-center justify-center rounded-full size-7 bg-black/5 dark:bg-white/5"
-					>
-						<SearchIcon className="size-4" />
-					</button>
 					<button
 						type="button"
 						onClick={(e) => showContextMenu(e)}
