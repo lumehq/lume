@@ -2,8 +2,8 @@ use std::collections::HashSet;
 use std::str::FromStr;
 
 use linkify::LinkFinder;
-use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
 use nostr_sdk::prelude::Nip19Event;
+use nostr_sdk::{Alphabet, Event, EventId, FromBech32, PublicKey, SingleLetterTag, Tag, TagKind};
 use reqwest::Client;
 use serde::Serialize;
 use specta::Type;
@@ -47,7 +47,7 @@ const IMAGES: [&str; 7] = ["jpg", "jpeg", "gif", "png", "webp", "avif", "tiff"];
 const VIDEOS: [&str; 5] = ["mp4", "mov", "avi", "webm", "mkv"];
 
 pub fn get_latest_event(events: &[Event]) -> Option<&Event> {
-  events.iter().max_by_key(|event| event.created_at())
+  events.iter().next()
 }
 
 pub fn dedup_event(events: &[Event]) -> Vec<Event> {
