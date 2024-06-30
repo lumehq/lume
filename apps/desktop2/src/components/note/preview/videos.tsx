@@ -10,7 +10,7 @@ export function Videos({ urls }: { urls: string[] }) {
 					controls
 					muted
 				>
-					<source src={urls[0]} type="video/mp4" />
+					<source src={`${urls[0]}#t=0.1`} type="video/mp4" />
 					Your browser does not support the video tag.
 				</video>
 			</div>
@@ -28,7 +28,7 @@ export function Videos({ urls }: { urls: string[] }) {
 						controls={false}
 						muted
 					>
-						<source src={item} type="video/mp4" />
+						<source src={`${item}#t=0.1`} type="video/mp4" />
 						Your browser does not support the video tag.
 					</video>
 				</CarouselItem>

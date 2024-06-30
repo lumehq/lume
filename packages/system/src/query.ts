@@ -255,31 +255,6 @@ export class NostrQuery {
 		}
 	}
 
-	static async searchEvent(searchQuery: string, asOf?: number) {
-		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.searchEvent(until, searchQuery);
-
-		if (query.status === "ok") {
-			const data = NostrQuery.#toLumeEvents(query.data);
-			return data;
-		} else {
-			return [];
-		}
-	}
-
-	static async searchUser(searchQuery: string, asOf?: number) {
-		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
-		const query = await commands.searchUser(until, searchQuery);
-
-		if (query.status === "ok") {
-			const events: NostrEvent[] = query.data.map((item) => JSON.parse(item));
-			const meta: Metadata[] = events.map((event) => JSON.parse(event.content));
-			return meta;
-		} else {
-			return [];
-		}
-	}
-
 	static async verifyNip05(pubkey: string, nip05?: string) {
 		const query = await commands.verifyNip05(pubkey, nip05);
 

@@ -263,7 +263,7 @@ pub async fn get_local_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(FETCH_LIMIT)
+    .limit(64)
     .until(as_of)
     .authors(authors);
 
@@ -669,75 +669,6 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
       Ok(pk) => Ok(pk),
       Err(err) => Err(err.to_string()),
     },
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn search_event(
-  until: Option<&str>,
-  query: &str,
-  state: State<'_, Nostr>,
-) -> Result<Vec<RichEvent>, String> {
-  let client = &state.client;
-  let as_of = match until {
-    Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
-    None => Timestamp::now(),
-  };
-  let filter = Filter::new()
-    .search(query)
-    .kinds(vec![Kind::TextNote])
-    .limit(FETCH_LIMIT)
-    .until(as_of);
-
-  match client.get_events_of(vec![filter], None).await {
-    Ok(events) => {
-      let futures = events.into_iter().map(|ev| async move {
-        let raw = ev.as_json();
-        let parsed = if ev.kind == Kind::TextNote {
-          Some(parse_event(&ev.content).await)
-        } else {
-          None
-        };
-
-        RichEvent { raw, parsed }
-      });
-      let rich_events = join_all(futures).await;
-
-      Ok(rich_events)
-    }
-    Err(err) => Err(err.to_string()),
-  }
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn search_user(
-  until: Option<&str>,
-  query: &str,
-  state: State<'_, Nostr>,
-) -> Result<Vec<String>, String> {
-  let client = &state.client;
-  let as_of = match until {
-    Some(until) => Timestamp::from_str(until).map_err(|err| err.to_string())?,
-    None => Timestamp::now(),
-  };
-  let filter = Filter::new()
-    .search(query)
-    .kinds(vec![Kind::Metadata])
-    .limit(FETCH_LIMIT)
-    .until(as_of);
-
-  match client.get_events_of(vec![filter], None).await {
-    Ok(events) => {
-      let json = events
-        .into_iter()
-        .map(|ev| ev.as_json())
-        .collect::<Vec<_>>();
-
-      Ok(json)
-    }
-    Err(err) => Err(err.to_string()),
   }
 }
 

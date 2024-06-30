@@ -388,22 +388,6 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async searchEvent(until: string | null, query: string) : Promise<Result<RichEvent[], string>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("search_event", { until, query }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async searchUser(until: string | null, query: string) : Promise<Result<string[], string>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("search_user", { until, query }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async unlisten(id: string) : Promise<Result<null, null>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("unlisten", { id }) };
