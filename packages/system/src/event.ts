@@ -200,7 +200,7 @@ export class LumeEvent {
 	}
 
 	public async unlistenEventReply() {
-		const query = await commands.unlistenEventReply(this.id);
+		const query = await commands.unlisten(this.id);
 
 		if (query.status === "ok") {
 			return query.data;

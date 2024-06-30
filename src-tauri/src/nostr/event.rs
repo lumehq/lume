@@ -7,7 +7,7 @@ use specta::Type;
 use tauri::State;
 
 use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
-use crate::Nostr;
+use crate::{Nostr, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct RichEvent {
@@ -215,7 +215,7 @@ pub async fn get_events_by(
       let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
         .author(author)
-        .limit(20)
+        .limit(FETCH_LIMIT)
         .until(until);
 
       match client.get_events_of(vec![filter], None).await {
@@ -263,7 +263,7 @@ pub async fn get_local_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of)
     .authors(authors);
 
@@ -290,15 +290,18 @@ pub async fn get_local_events(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn listen_local_event(state: State<'_, Nostr>) -> Result<(), String> {
+pub async fn listen_local_event(label: &str, state: State<'_, Nostr>) -> Result<(), String> {
   let client = &state.client;
+
   let contact_list = state
     .contact_list
     .lock()
     .map_err(|err| err.to_string())?
     .clone();
+
   let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
-  let sub_id = SubscriptionId::new("newsfeed");
+  let sub_id = SubscriptionId::new(label);
+
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
     .authors(authors)
@@ -337,7 +340,7 @@ pub async fn get_group_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of)
     .authors(authors);
 
@@ -381,7 +384,7 @@ pub async fn get_global_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of);
 
   match client
@@ -422,7 +425,7 @@ pub async fn get_hashtag_events(
   };
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of)
     .hashtags(hashtags);
 
@@ -684,7 +687,7 @@ pub async fn search_event(
   let filter = Filter::new()
     .search(query)
     .kinds(vec![Kind::TextNote])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of);
 
   match client.get_events_of(vec![filter], None).await {
@@ -722,7 +725,7 @@ pub async fn search_user(
   let filter = Filter::new()
     .search(query)
     .kinds(vec![Kind::Metadata])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of);
 
   match client.get_events_of(vec![filter], None).await {

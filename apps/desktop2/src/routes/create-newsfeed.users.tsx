@@ -95,7 +95,7 @@ function Screen() {
 											<div className="flex flex-col w-full h-full gap-2">
 												<div className="flex items-center justify-between">
 													<div className="flex items-center gap-2">
-														<User.Avatar className="object-cover rounded-full size-7 shrink-0" />
+														<User.Avatar className="rounded-full size-7" />
 														<User.Name className="text-sm leadning-tight max-w-[15rem] truncate font-semibold" />
 													</div>
 													<button

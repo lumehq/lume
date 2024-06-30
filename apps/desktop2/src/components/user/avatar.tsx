@@ -2,7 +2,6 @@ import { cn } from "@lume/utils";
 import * as Avatar from "@radix-ui/react-avatar";
 import { useRouteContext } from "@tanstack/react-router";
 import { minidenticon } from "minidenticons";
-import { nanoid } from "nanoid";
 import { useMemo } from "react";
 import { useUserContext } from "./provider";
 
@@ -22,24 +21,29 @@ export function UserAvatar({ className }: { className?: string }) {
 		}
 	}, [user.profile?.picture]);
 
-	const fallbackAvatar = useMemo(
+	const fallback = useMemo(
 		() =>
 			`data:image/svg+xml;utf8,${encodeURIComponent(
-				minidenticon(user.pubkey || nanoid(), 90, 50),
+				minidenticon(user.pubkey, 60, 50),
 			)}`,
 		[user.pubkey],
 	);
 
 	if (settings && !settings.display_avatar) {
 		return (
-			<Avatar.Root className="shrink-0">
+			<Avatar.Root
+				className={cn(
+					"shrink-0 block overflow-hidden bg-neutral-200 dark:bg-neutral-800",
+					className,
+				)}
+			>
 				<Avatar.Fallback delayMs={120}>
 					<img
-						src={fallbackAvatar}
+						src={fallback}
 						alt={user.pubkey}
 						loading="lazy"
 						decoding="async"
-						className={cn("bg-black dark:bg-white", className)}
+						className="size-full bg-black dark:bg-white outline-[.5px] outline-black/5 content-visibility-auto contain-intrinsic-size-[auto]"
 					/>
 				</Avatar.Fallback>
 			</Avatar.Root>
@@ -47,24 +51,24 @@ export function UserAvatar({ className }: { className?: string }) {
 	}
 
 	return (
-		<Avatar.Root className="shrink-0">
+		<Avatar.Root
+			className={cn(
+				"shrink-0 block overflow-hidden bg-neutral-200 dark:bg-neutral-800",
+				className,
+			)}
+		>
 			<Avatar.Image
 				src={picture}
 				alt={user.pubkey}
 				loading="lazy"
 				decoding="async"
-				className={cn(
-					"outline-[.5px] outline-black/5 object-cover content-visibility-auto contain-intrinsic-size-[auto]",
-					className,
-				)}
+				className="w-full aspect-square object-cover outline-[.5px] outline-black/5 content-visibility-auto contain-intrinsic-size-[auto]"
 			/>
-			<Avatar.Fallback delayMs={120}>
+			<Avatar.Fallback>
 				<img
-					src={fallbackAvatar}
+					src={fallback}
 					alt={user.pubkey}
-					loading="lazy"
-					decoding="async"
-					className={cn("bg-black dark:bg-white", className)}
+					className="size-full bg-black dark:bg-white outline-[.5px] outline-black/5 content-visibility-auto contain-intrinsic-size-[auto]"
 				/>
 			</Avatar.Fallback>
 		</Avatar.Root>

@@ -1,5 +1,5 @@
-import { Spinner } from "@lume/ui";
 import { User } from "@/components/user";
+import { Spinner } from "@lume/ui";
 import { Await, defer } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
@@ -52,7 +52,7 @@ export function Screen() {
 										<div className="flex h-full w-full flex-col gap-2">
 											<div className="flex items-center justify-between">
 												<div className="flex items-center gap-2.5">
-													<User.Avatar className="size-10 shrink-0 rounded-full object-cover" />
+													<User.Avatar className="size-10 rounded-full" />
 													<User.Name className="leadning-tight max-w-[15rem] truncate font-semibold" />
 												</div>
 												<User.Button className="inline-flex h-8 w-20 items-center justify-center rounded-lg bg-black/10 text-sm font-medium hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20" />

@@ -331,7 +331,7 @@ function RootNote({ id }: { id: string }) {
 			<Note.Root className="flex items-center gap-2">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="shrink-0">
-						<User.Avatar className="rounded-full size-8 shrink-0" />
+						<User.Avatar className="rounded-full size-8" />
 					</User.Root>
 				</User.Provider>
 				<div className="line-clamp-1">{data.content}</div>
@@ -351,7 +351,7 @@ function TextNote({ event }: { event: LumeEvent }) {
 			<Note.Root className="flex flex-col p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10">
 				<User.Provider pubkey={event.pubkey}>
 					<User.Root className="inline-flex items-center gap-2">
-						<User.Avatar className="rounded-full size-9 shrink-0" />
+						<User.Avatar className="rounded-full size-9" />
 						<div className="flex flex-col flex-1">
 							<div className="flex items-baseline justify-between w-full">
 								<User.Name className="text-sm font-semibold leading-tight" />

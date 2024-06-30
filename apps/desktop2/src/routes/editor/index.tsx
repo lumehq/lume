@@ -1,7 +1,12 @@
+import { Note } from "@/components/note";
+import { MentionNote } from "@/components/note/mentions/note";
+import { User } from "@/components/user";
 import { ComposeFilledIcon } from "@lume/icons";
+import { LumeEvent, useEvent } from "@lume/system";
 import { Spinner } from "@lume/ui";
 import { cn, insertImage, insertNostrEvent, isImageUrl } from "@lume/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { nip19 } from "nostr-tools";
 import { useEffect, useState } from "react";
 import { type Descendant, Node, Transforms, createEditor } from "slate";
 import {
@@ -14,13 +19,8 @@ import {
 	withReact,
 } from "slate-react";
 import { MediaButton } from "./-components/media";
-import { LumeEvent, useEvent } from "@lume/system";
-import { WarningButton } from "./-components/warning";
-import { MentionNote } from "@/components/note/mentions/note";
 import { PowButton } from "./-components/pow";
-import { User } from "@/components/user";
-import { Note } from "@/components/note";
-import { nip19 } from "nostr-tools";
+import { WarningButton } from "./-components/warning";
 
 type EditorSearch = {
 	reply_to: string;
@@ -250,7 +250,7 @@ function ChildNote({ id }: { id: string }) {
 			<Note.Root className="flex items-center gap-2">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="shrink-0">
-						<User.Avatar className="rounded-full size-8 shrink-0" />
+						<User.Avatar className="rounded-full size-8" />
 					</User.Root>
 				</User.Provider>
 				<div className="content-break line-clamp-1">{data.content}</div>

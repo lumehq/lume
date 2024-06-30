@@ -10,7 +10,7 @@ use tauri_plugin_notification::NotificationExt;
 
 use crate::nostr::event::RichEvent;
 use crate::nostr::utils::parse_event;
-use crate::{Nostr, Settings};
+use crate::{Nostr, Settings, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
 
 #[derive(Serialize, Type)]
 pub struct Account {
@@ -301,7 +301,6 @@ pub async fn load_account(
     let state = window.state::<Nostr>();
     let client = &state.client;
     let contact_list = state.contact_list.lock().unwrap().clone();
-    let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
 
     let notification = Filter::new()
       .pubkey(public_key)
@@ -311,12 +310,7 @@ pub async fn load_account(
         Kind::Reaction,
         Kind::ZapReceipt,
       ])
-      .limit(100);
-
-    let newsfeed = Filter::new()
-      .authors(authors)
-      .kinds(vec![Kind::TextNote, Kind::Repost])
-      .limit(500);
+      .limit(NOTIFICATION_NEG_LIMIT);
 
     match client
       .reconcile(notification, NegentropyOptions::default())
@@ -330,16 +324,25 @@ pub async fn load_account(
       Err(_) => println!("Sync notification failed."),
     };
 
-    match client
-      .reconcile(newsfeed, NegentropyOptions::default())
-      .await
-    {
-      Ok(_) => {
-        if handle.emit_to(EventTarget::Any, "synced", true).is_err() {
-          println!("Emit event failed.")
+    if !contact_list.is_empty() {
+      let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
+
+      let newsfeed = Filter::new()
+        .authors(authors)
+        .kinds(vec![Kind::TextNote, Kind::Repost])
+        .limit(NEWSFEED_NEG_LIMIT);
+
+      match client
+        .reconcile(newsfeed, NegentropyOptions::default())
+        .await
+      {
+        Ok(_) => {
+          if handle.emit_to(EventTarget::Any, "synced", true).is_err() {
+            println!("Emit event failed.")
+          }
         }
+        Err(_) => println!("Sync newsfeed failed."),
       }
-      Err(_) => println!("Sync newsfeed failed."),
     }
   });
 
@@ -442,7 +445,7 @@ pub async fn load_account(
               {
                 println!("Emit new notification failed.")
               }
-            } else if id.starts_with("newsfeed") {
+            } else if id.starts_with("column-") {
               let raw = event.as_json();
               let parsed = if event.kind == Kind::TextNote {
                 Some(parse_event(&event.content).await)

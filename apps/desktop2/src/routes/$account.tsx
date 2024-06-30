@@ -151,7 +151,7 @@ const Accounts = memo(function Accounts() {
 				<button key={npub} type="button" onClick={(e) => changeAccount(npub)}>
 					<User.Provider pubkey={npub}>
 						<User.Root className="shrink-0 rounded-full transition-all ease-in-out duration-150 will-change-auto hover:ring-1 hover:ring-blue-500">
-							<User.Avatar className="size-8 rounded-full object-cover" />
+							<User.Avatar className="rounded-full size-8" />
 						</User.Root>
 					</User.Provider>
 				</button>
@@ -163,7 +163,7 @@ const Accounts = memo(function Accounts() {
 			>
 				<User.Provider pubkey={account}>
 					<User.Root className="shrink-0 rounded-full">
-						<User.Avatar className="size-8 rounded-full" />
+						<User.Avatar className="rounded-full size-8" />
 					</User.Root>
 				</User.Provider>
 				<ChevronDownIcon className="size-3" />

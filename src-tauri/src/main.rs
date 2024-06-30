@@ -71,6 +71,10 @@ impl Default for Settings {
   }
 }
 
+pub const FETCH_LIMIT: usize = 20;
+pub const NEWSFEED_NEG_LIMIT: usize = 256;
+pub const NOTIFICATION_NEG_LIMIT: usize = 64;
+
 fn main() {
   let mut ctx = tauri::generate_context!();
 
