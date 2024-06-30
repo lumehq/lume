@@ -126,7 +126,7 @@ function Screen() {
 										>
 											<User.Provider pubkey={item}>
 												<User.Root className="flex items-center gap-2.5">
-													<User.Avatar className="object-cover rounded-full size-8" />
+													<User.Avatar className="rounded-full size-8" />
 													<div className="flex items-center gap-1">
 														<User.Name className="text-sm font-medium" />
 													</div>
@@ -157,7 +157,7 @@ function Screen() {
 										>
 											<User.Provider pubkey={item}>
 												<User.Root className="flex items-center gap-2.5">
-													<User.Avatar className="object-cover rounded-full size-8" />
+													<User.Avatar className="rounded-full size-8" />
 													<div className="flex items-center gap-1">
 														<User.Name className="text-sm font-medium" />
 													</div>

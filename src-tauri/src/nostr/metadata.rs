@@ -187,13 +187,15 @@ pub async fn is_contact_list_empty(state: State<'_, Nostr>) -> Result<bool, ()> 
 
 #[tauri::command]
 #[specta::specta]
-pub async fn check_contact(hex: &str, state: State<'_, Nostr>) -> Result<bool, ()> {
+pub async fn check_contact(hex: &str, state: State<'_, Nostr>) -> Result<bool, String> {
   let contact_list = state.contact_list.lock().unwrap();
-  let public_key = PublicKey::from_str(hex).unwrap();
 
-  match contact_list.iter().position(|x| x.public_key == public_key) {
-    Some(_) => Ok(true),
-    None => Ok(false),
+  match PublicKey::from_str(hex) {
+    Ok(public_key) => match contact_list.iter().position(|x| x.public_key == public_key) {
+      Some(_) => Ok(true),
+      None => Ok(false),
+    },
+    Err(err) => Err(err.to_string()),
   }
 }
 

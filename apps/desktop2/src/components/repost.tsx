@@ -69,7 +69,7 @@ export const RepostNote = memo(function RepostNote({
 										<div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
 											Reposted by
 										</div>
-										<User.Avatar className="object-cover rounded-full size-6 shrink-0 ring-1 ring-neutral-200/50 dark:ring-neutral-800/50" />
+										<User.Avatar className="rounded-full size-6" />
 									</User.Root>
 								</User.Provider>
 							</div>

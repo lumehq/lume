@@ -200,7 +200,7 @@ export class LumeEvent {
 	}
 
 	public async unlistenEventReply() {
-		const query = await commands.unlistenEventReply(this.id);
+		const query = await commands.unlisten(this.id);
 
 		if (query.status === "ok") {
 			return query.data;
@@ -271,6 +271,17 @@ export class LumeEvent {
 		}
 	}
 
+	static async build(event: NostrEvent) {
+		const query = await commands.getEventMeta(event.content);
+
+		if (query.status === "ok") {
+			event.meta = query.data;
+			return new LumeEvent(event);
+		} else {
+			return new LumeEvent(event);
+		}
+	}
+
 	static from(raw: string, parsed?: Meta) {
 		const nostrEvent: NostrEvent = JSON.parse(raw);
 
@@ -280,6 +291,6 @@ export class LumeEvent {
 			nostrEvent.meta = null;
 		}
 
-		return new this(nostrEvent);
+		return new LumeEvent(nostrEvent);
 	}
 }

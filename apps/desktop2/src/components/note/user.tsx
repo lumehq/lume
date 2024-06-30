@@ -42,7 +42,7 @@ export function NoteUser({ className }: { className?: string }) {
 						onClick={(e) => showContextMenu(e)}
 						className="shrink-0"
 					>
-						<User.Avatar className="object-cover rounded-full size-8 outline outline-1 -outline-offset-1 outline-black/15" />
+						<User.Avatar className="rounded-full size-8" />
 					</button>
 					<div className="flex items-center w-full gap-3">
 						<div className="flex items-center gap-1">

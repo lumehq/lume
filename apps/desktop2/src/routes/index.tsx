@@ -92,7 +92,7 @@ function Screen() {
 						>
 							<User.Provider pubkey={account}>
 								<User.Root className="flex items-center gap-2.5 p-3">
-									<User.Avatar className="object-cover rounded-full size-10 shrink-0" />
+									<User.Avatar className="rounded-full size-10" />
 									<div className="inline-flex flex-col items-start">
 										<User.Name className="max-w-[6rem] truncate font-medium leading-tight" />
 										<span className="text-sm text-neutral-700 dark:text-neutral-300">

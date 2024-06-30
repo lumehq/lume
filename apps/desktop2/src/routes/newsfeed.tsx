@@ -2,15 +2,22 @@ import { Conversation } from "@/components/conversation";
 import { Quote } from "@/components/quote";
 import { RepostNote } from "@/components/repost";
 import { TextNote } from "@/components/text";
-import { ArrowRightCircleIcon } from "@lume/icons";
-import { type LumeEvent, NostrAccount, NostrQuery } from "@lume/system";
-import { type ColumnRouteSearch, Kind } from "@lume/types";
+import { ArrowRightCircleIcon, ArrowUpIcon } from "@lume/icons";
+import { LumeEvent, NostrAccount, NostrQuery } from "@lume/system";
+import { type ColumnRouteSearch, Kind, type Meta } from "@lume/types";
 import { Spinner } from "@lume/ui";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useCallback, useRef } from "react";
+import { listen } from "@tauri-apps/api/event";
+import { getCurrent } from "@tauri-apps/api/window";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Virtualizer } from "virtua";
+
+type Payload = {
+	raw: string;
+	parsed: Meta;
+};
 
 export const Route = createFileRoute("/newsfeed")({
 	validateSearch: (search: Record<string, string>): ColumnRouteSearch => {
@@ -40,6 +47,7 @@ export const Route = createFileRoute("/newsfeed")({
 });
 
 export function Screen() {
+	const { queryClient } = Route.useRouteContext();
 	const { label, account } = Route.useSearch();
 	const {
 		data,
@@ -84,20 +92,31 @@ export function Screen() {
 		[data],
 	);
 
+	useEffect(() => {
+		const unlisten = listen("synced", async () => {
+			await queryClient.invalidateQueries({ queryKey: [label, account] });
+		});
+
+		return () => {
+			unlisten.then((f) => f());
+		};
+	}, []);
+
 	return (
 		<ScrollArea.Root
 			type={"scroll"}
 			scrollHideDelay={300}
 			className="overflow-hidden size-full"
 		>
-			<ScrollArea.Viewport ref={ref} className="h-full px-3 pb-3">
+			<ScrollArea.Viewport ref={ref} className="relative h-full px-3 pb-3">
+				<Listerner />
 				<Virtualizer scrollRef={ref}>
 					{isFetching && !isLoading && !isFetchingNextPage ? (
-						<div className="flex items-center justify-center w-full mb-3 h-11 bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
+						<div className="flex items-center justify-center w-full mb-3 h-12 bg-black/10 dark:bg-white/10 backdrop-blur-lg rounded-xl shadow-primary dark:ring-1 ring-neutral-800/50">
 							<div className="flex items-center justify-center gap-2">
 								<Spinner className="size-5" />
 								<span className="text-sm font-medium">
-									Fetching new notes...
+									Getting new notes...
 								</span>
 							</div>
 						</div>
@@ -143,5 +162,71 @@ export function Screen() {
 			</ScrollArea.Scrollbar>
 			<ScrollArea.Corner className="bg-transparent" />
 		</ScrollArea.Root>
+	);
+}
+
+function Listerner() {
+	const { queryClient } = Route.useRouteContext();
+	const { label, account } = Route.useSearch();
+
+	const [events, setEvents] = useState<LumeEvent[]>([]);
+
+	const pushNewEvents = async () => {
+		await queryClient.setQueryData(
+			[label, account],
+			(oldData: InfiniteData<LumeEvent[], number> | undefined) => {
+				const firstPage = oldData?.pages[0];
+
+				if (firstPage) {
+					return {
+						...oldData,
+						pages: [
+							{
+								...firstPage,
+								posts: [...events, ...firstPage],
+							},
+							...oldData.pages.slice(1),
+						],
+					};
+				}
+			},
+		);
+
+		await queryClient.invalidateQueries({ queryKey: [label, account] });
+	};
+
+	useEffect(() => {
+		const unlistenEvent = getCurrent().listen<Payload>("new_event", (data) => {
+			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
+			setEvents((prev) => [event, ...prev]);
+		});
+
+		const unlistenWindow = getCurrent().onCloseRequested(async () => {
+			await NostrQuery.unlisten();
+			await getCurrent().destroy();
+		});
+
+		// Listen for new event
+		NostrQuery.listenLocalEvent().then(() => console.log("listen"));
+
+		return () => {
+			unlistenEvent.then((f) => f());
+			unlistenWindow.then((f) => f());
+		};
+	}, []);
+
+	if (!events?.length) return null;
+
+	return (
+		<div className="z-50 fixed top-0 left-0 w-full h-14 flex items-center justify-center px-3">
+			<button
+				type="button"
+				onClick={() => pushNewEvents()}
+				className="w-max h-8 pl-2 pr-3 inline-flex items-center justify-center gap-1.5 rounded-full shadow-lg text-sm font-medium text-white bg-black dark:text-black dark:bg-white"
+			>
+				<ArrowUpIcon className="size-4" />
+				{events.length} new notes
+			</button>
+		</div>
 	);
 }

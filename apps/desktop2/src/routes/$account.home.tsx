@@ -1,6 +1,6 @@
 import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
-import { ArrowLeftIcon, ArrowRightIcon, PlusSquareIcon } from "@lume/icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
 import type { ColumnEvent, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
@@ -44,17 +44,6 @@ function Screen() {
 	const emitResizeEvent = useCallback(() => {
 		getCurrent().emit("child-webview", { resize: true, direction: "x" });
 	}, []);
-
-	const openLumeStore = useDebouncedCallback(async () => {
-		await getCurrent().emit("columns", {
-			type: "add",
-			column: {
-				label: "store",
-				name: "Store",
-				content: "/store/official",
-			},
-		});
-	}, 150);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
 		column.label = `${column.label}-${nanoid()}`; // update col label
@@ -158,29 +147,20 @@ function Screen() {
 				</div>
 			</div>
 			<Toolbar>
-				<div className="flex items-center h-8 gap-1 p-[2px] rounded-full bg-black/5 dark:bg-white/5">
-					<button
-						type="button"
-						onClick={() => scrollPrev()}
-						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-					>
-						<ArrowLeftIcon className="size-4" />
-					</button>
-					<button
-						type="button"
-						onClick={() => openLumeStore()}
-						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-					>
-						<PlusSquareIcon className="size-4" />
-					</button>
-					<button
-						type="button"
-						onClick={() => scrollNext()}
-						className="inline-flex items-center justify-center rounded-full size-7 text-neutral-800 hover:bg-black/10 dark:text-neutral-200 dark:hover:bg-white/10"
-					>
-						<ArrowRightIcon className="size-4" />
-					</button>
-				</div>
+				<button
+					type="button"
+					onClick={() => scrollPrev()}
+					className="inline-flex items-center justify-center rounded-full size-8 hover:bg-black/5 dark:hover:bg-white/5"
+				>
+					<ArrowLeftIcon className="size-4" />
+				</button>
+				<button
+					type="button"
+					onClick={() => scrollNext()}
+					className="inline-flex items-center justify-center rounded-full size-8 hover:bg-black/5 dark:hover:bg-white/5"
+				>
+					<ArrowRightIcon className="size-4" />
+				</button>
 			</Toolbar>
 		</div>
 	);

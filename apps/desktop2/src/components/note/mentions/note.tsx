@@ -1,8 +1,8 @@
-import { LumeWindow, useEvent } from "@lume/system";
-import { LinkIcon } from "@lume/icons";
-import { cn } from "@lume/utils";
 import { User } from "@/components/user";
+import { LinkIcon } from "@lume/icons";
+import { LumeWindow, useEvent } from "@lume/system";
 import { Spinner } from "@lume/ui";
+import { cn } from "@lume/utils";
 
 export function MentionNote({
 	eventId,
@@ -40,7 +40,7 @@ export function MentionNote({
 			<div className="pl-4 py-3 flex flex-col w-full border-l-2 border-black/5 dark:border-white/5">
 				<User.Provider pubkey={data.pubkey}>
 					<User.Root className="flex items-center gap-2 h-8">
-						<User.Avatar className="object-cover rounded-full size-6 shrink-0" />
+						<User.Avatar className="rounded-full size-6" />
 						<div className="inline-flex items-center flex-1 gap-2">
 							<User.Name className="font-semibold text-neutral-900 dark:text-neutral-100" />
 							<span className="text-neutral-600 dark:text-neutral-400">·</span>

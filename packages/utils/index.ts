@@ -1,5 +1,4 @@
 export * from "./src/constants";
-export * from "./src/delay";
 export * from "./src/formater";
 export * from "./src/editor";
 export * from "./src/cn";

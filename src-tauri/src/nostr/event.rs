@@ -7,7 +7,7 @@ use specta::Type;
 use tauri::State;
 
 use crate::nostr::utils::{create_event_tags, dedup_event, parse_event, Meta};
-use crate::Nostr;
+use crate::{Nostr, FETCH_LIMIT};
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct RichEvent {
@@ -199,18 +199,6 @@ pub async fn listen_event_reply(id: &str, state: State<'_, Nostr>) -> Result<(),
 
 #[tauri::command]
 #[specta::specta]
-pub async fn unlisten_event_reply(id: &str, state: State<'_, Nostr>) -> Result<(), ()> {
-  let client = &state.client;
-  let sub_id = SubscriptionId::new(id);
-
-  // Remove subscription
-  client.unsubscribe(sub_id).await;
-
-  Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn get_events_by(
   public_key: &str,
   as_of: Option<&str>,
@@ -227,7 +215,7 @@ pub async fn get_events_by(
       let filter = Filter::new()
         .kinds(vec![Kind::TextNote, Kind::Repost])
         .author(author)
-        .limit(20)
+        .limit(FETCH_LIMIT)
         .until(until);
 
       match client.get_events_of(vec![filter], None).await {
@@ -275,17 +263,13 @@ pub async fn get_local_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(64)
     .until(as_of)
     .authors(authors);
 
-  match client
-    .get_events_of(vec![filter], Some(Duration::from_secs(10)))
-    .await
-  {
+  match client.database().query(vec![filter], Order::Desc).await {
     Ok(events) => {
       let dedup = dedup_event(&events);
-
       let futures = dedup.into_iter().map(|ev| async move {
         let raw = ev.as_json();
         let parsed = if ev.kind == Kind::TextNote {
@@ -296,13 +280,37 @@ pub async fn get_local_events(
 
         RichEvent { raw, parsed }
       });
-
       let rich_events = join_all(futures).await;
 
       Ok(rich_events)
     }
     Err(err) => Err(err.to_string()),
   }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn listen_local_event(label: &str, state: State<'_, Nostr>) -> Result<(), String> {
+  let client = &state.client;
+
+  let contact_list = state
+    .contact_list
+    .lock()
+    .map_err(|err| err.to_string())?
+    .clone();
+
+  let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
+  let sub_id = SubscriptionId::new(label);
+
+  let filter = Filter::new()
+    .kinds(vec![Kind::TextNote, Kind::Repost])
+    .authors(authors)
+    .since(Timestamp::now());
+
+  // Subscribe
+  client.subscribe_with_id(sub_id, vec![filter], None).await;
+
+  Ok(())
 }
 
 #[tauri::command]
@@ -332,7 +340,7 @@ pub async fn get_group_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of)
     .authors(authors);
 
@@ -376,7 +384,7 @@ pub async fn get_global_events(
 
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of);
 
   match client
@@ -417,7 +425,7 @@ pub async fn get_hashtag_events(
   };
   let filter = Filter::new()
     .kinds(vec![Kind::TextNote, Kind::Repost])
-    .limit(20)
+    .limit(FETCH_LIMIT)
     .until(as_of)
     .hashtags(hashtags);
 
@@ -662,4 +670,16 @@ pub async fn user_to_bech32(user: &str, state: State<'_, Nostr>) -> Result<Strin
       Err(err) => Err(err.to_string()),
     },
   }
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn unlisten(id: &str, state: State<'_, Nostr>) -> Result<(), ()> {
+  let client = &state.client;
+  let sub_id = SubscriptionId::new(id);
+
+  // Remove subscription
+  client.unsubscribe(sub_id).await;
+
+  Ok(())
 }

@@ -51,7 +51,7 @@ function Account({ account }: { account: string }) {
 		<div className="flex items-center justify-between gap-2 py-3">
 			<User.Provider pubkey={account}>
 				<User.Root className="flex items-center gap-2">
-					<User.Avatar className="object-cover rounded-full size-8" />
+					<User.Avatar className="rounded-full size-8" />
 					<div className="flex flex-col">
 						<User.Name className="text-sm leading-tight" />
 						<span className="text-sm leading-tight text-black/50 dark:text-white/50">

@@ -5,12 +5,12 @@ export function Videos({ urls }: { urls: string[] }) {
 		return (
 			<div className="group px-3">
 				<video
-					className="w-full h-auto object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
+					className="max-h-[400px] w-auto  object-cover rounded-lg outline outline-1 -outline-offset-1 outline-black/15"
 					preload="metadata"
 					controls
 					muted
 				>
-					<source src={urls[0]} type="video/mp4" />
+					<source src={`${urls[0]}#t=0.1`} type="video/mp4" />
 					Your browser does not support the video tag.
 				</video>
 			</div>
@@ -28,7 +28,7 @@ export function Videos({ urls }: { urls: string[] }) {
 						controls={false}
 						muted
 					>
-						<source src={item} type="video/mp4" />
+						<source src={`${item}#t=0.1`} type="video/mp4" />
 						Your browser does not support the video tag.
 					</video>
 				</CarouselItem>

@@ -10,8 +10,6 @@ export const TextNote = memo(function TextNote({
 	event: LumeEvent;
 	className?: string;
 }) {
-	console.log("Rendered at: ", event.id, new Date().toLocaleTimeString());
-
 	return (
 		<Note.Provider event={event}>
 			<Note.Root

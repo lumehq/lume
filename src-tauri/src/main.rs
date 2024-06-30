@@ -71,6 +71,10 @@ impl Default for Settings {
   }
 }
 
+pub const FETCH_LIMIT: usize = 20;
+pub const NEWSFEED_NEG_LIMIT: usize = 256;
+pub const NOTIFICATION_NEG_LIMIT: usize = 64;
+
 fn main() {
   let mut ctx = tauri::generate_context!();
 
@@ -113,9 +117,9 @@ fn main() {
       nostr::event::get_event_from,
       nostr::event::get_replies,
       nostr::event::listen_event_reply,
-      nostr::event::unlisten_event_reply,
       nostr::event::get_events_by,
       nostr::event::get_local_events,
+      nostr::event::listen_local_event,
       nostr::event::get_group_events,
       nostr::event::get_global_events,
       nostr::event::get_hashtag_events,
@@ -124,6 +128,7 @@ fn main() {
       nostr::event::repost,
       nostr::event::event_to_bech32,
       nostr::event::user_to_bech32,
+      nostr::event::unlisten,
       commands::folder::show_in_folder,
       commands::window::create_column,
       commands::window::close_column,
@@ -263,6 +268,11 @@ fn main() {
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_upload::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
+    .plugin(
+      tauri_plugin_window_state::Builder::new()
+        .with_denylist(&["panel"])
+        .build(),
+    )
     .invoke_handler(invoke_handler)
     .build(ctx)
     .expect("error while running tauri application")

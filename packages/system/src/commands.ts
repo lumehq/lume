@@ -148,7 +148,7 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async checkContact(hex: string) : Promise<Result<boolean, null>> {
+async checkContact(hex: string) : Promise<Result<boolean, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("check_contact", { hex }) };
 } catch (e) {
@@ -300,14 +300,6 @@ try {
     else return { status: "error", error: e  as any };
 }
 },
-async unlistenEventReply(id: string) : Promise<Result<null, null>> {
-try {
-    return { status: "ok", data: await TAURI_INVOKE("unlisten_event_reply", { id }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async getEventsBy(publicKey: string, asOf: string | null) : Promise<Result<RichEvent[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_events_by", { publicKey, asOf }) };
@@ -319,6 +311,14 @@ try {
 async getLocalEvents(until: string | null) : Promise<Result<RichEvent[], string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("get_local_events", { until }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async listenLocalEvent(label: string) : Promise<Result<null, string>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("listen_local_event", { label }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -383,6 +383,14 @@ try {
 async userToBech32(user: string) : Promise<Result<string, string>> {
 try {
     return { status: "ok", data: await TAURI_INVOKE("user_to_bech32", { user }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async unlisten(id: string) : Promise<Result<null, null>> {
+try {
+    return { status: "ok", data: await TAURI_INVOKE("unlisten", { id }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };

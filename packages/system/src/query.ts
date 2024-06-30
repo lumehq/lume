@@ -1,5 +1,6 @@
 import type { LumeColumn, Metadata, NostrEvent, Relay } from "@lume/types";
 import { resolveResource } from "@tauri-apps/api/path";
+import { getCurrent } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { relaunch } from "@tauri-apps/plugin-process";
@@ -206,6 +207,17 @@ export class NostrQuery {
 		}
 	}
 
+	static async listenLocalEvent() {
+		const label = getCurrent().label;
+		const query = await commands.listenLocalEvent(label);
+
+		if (query.status === "ok") {
+			return query.data;
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
 	static async getGroupEvents(pubkeys: string[], asOf?: number) {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getGroupEvents(pubkeys, until);
@@ -399,6 +411,17 @@ export class NostrQuery {
 
 		if (query.status === "ok") {
 			return await relaunch();
+		} else {
+			throw new Error(query.error);
+		}
+	}
+
+	static async unlisten(id?: string) {
+		const label = id ? id : getCurrent().label;
+		const query = await commands.unlisten(label);
+
+		if (query.status === "ok") {
+			return query.data;
 		} else {
 			throw new Error(query.error);
 		}
