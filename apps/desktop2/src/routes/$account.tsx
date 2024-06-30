@@ -202,10 +202,10 @@ const Search = memo(function Search() {
 			<button
 				type="button"
 				onClick={(e) => showContextMenu(e)}
-				className="inline-flex items-center gap-1 capitalize text-sm font-medium pr-2 border-r border-black/10 dark:border-white/10"
+				className="inline-flex items-center gap-1 capitalize text-sm font-medium pr-2 border-r border-black/10 dark:border-white/10 text-black/50 dark:text-white/50"
 			>
 				{searchType}
-				<ChevronDownIcon className="size-3 text-black/50 dark:text-white/50" />
+				<ChevronDownIcon className="size-3" />
 			</button>
 			<input
 				type="text"
@@ -217,7 +217,7 @@ const Search = memo(function Search() {
 						LumeWindow.openSearch(searchType, query);
 					}
 				}}
-				className="h-full w-full px-3 text-sm rounded-full border-none ring-0 focus:ring-0 focus:outline-none bg-transparent placeholder:text-black/50 dark:placeholder:text-black/50"
+				className="h-full w-full px-3 text-sm rounded-full border-none ring-0 focus:ring-0 focus:outline-none bg-transparent placeholder:text-black/50 dark:placeholder:text-white/50"
 			/>
 			<SearchIcon className="size-5" />
 		</div>

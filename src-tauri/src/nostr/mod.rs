@@ -1,4 +1,5 @@
 pub mod event;
+mod internal;
 pub mod keys;
 pub mod metadata;
 pub mod relay;

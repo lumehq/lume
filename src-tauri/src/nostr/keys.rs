@@ -1,16 +1,16 @@
-use std::time::Duration;
-
 use keyring::Entry;
 use keyring_search::{Limit, List, Search};
 use nostr_sdk::prelude::*;
 use serde::Serialize;
 use specta::Type;
+use std::time::Duration;
 use tauri::{EventTarget, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 
 use crate::nostr::event::RichEvent;
+use crate::nostr::internal::{get_user_settings, init_nip65};
 use crate::nostr::utils::parse_event;
-use crate::{Nostr, Settings, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
+use crate::{Nostr, NEWSFEED_NEG_LIMIT, NOTIFICATION_NEG_LIMIT};
 
 #[derive(Serialize, Type)]
 pub struct Account {
@@ -167,6 +167,7 @@ pub async fn load_account(
   state: State<'_, Nostr>,
   app: tauri::AppHandle,
 ) -> Result<bool, String> {
+  let handle = app.clone();
   let client = &state.client;
   let keyring = Entry::new(npub, "nostr_secret").unwrap();
 
@@ -198,122 +199,64 @@ pub async fn load_account(
     }
   }
 
-  // Verify signer
-  let signer = client.signer().await.unwrap();
-  let public_key = signer.public_key().await.unwrap();
-
   // Connect to user's relay (NIP-65)
-  if let Ok(events) = client
-    .get_events_of(
-      vec![Filter::new()
-        .author(public_key)
-        .kind(Kind::RelayList)
-        .limit(1)],
-      None,
-    )
-    .await
-  {
-    if let Some(event) = events.first() {
-      let relay_list = nip65::extract_relay_list(event);
-      for item in relay_list.into_iter() {
-        let relay_url = item.0.to_string();
-        let opts = match item.1 {
-          Some(val) => {
-            if val == &RelayMetadata::Read {
-              RelayOptions::new().read(true).write(false)
-            } else {
-              RelayOptions::new().write(true).read(false)
-            }
-          }
-          None => RelayOptions::default(),
-        };
-
-        // Add relay to relay pool
-        let _ = client
-          .add_relay_with_opts(&relay_url, opts)
-          .await
-          .unwrap_or_default();
-
-        // Connect relay
-        client.connect_relay(relay_url).await.unwrap_or_default();
-        println!("connecting to relay: {} - {:?}", item.0, item.1);
-      }
-    }
-  };
+  init_nip65(client).await;
 
   // Get user's contact list
   if let Ok(contacts) = client.get_contact_list(None).await {
     *state.contact_list.lock().unwrap() = contacts
   };
 
-  // Create a subscription for notification
-  let sub_id = SubscriptionId::new("notification");
-  let filter = Filter::new()
-    .pubkey(public_key)
-    .kinds(vec![
-      Kind::TextNote,
-      Kind::Repost,
-      Kind::Reaction,
-      Kind::ZapReceipt,
-    ])
-    .since(Timestamp::now());
-
-  // Subscribe
-  print!("Subscribing for new notification...");
-  client.subscribe_with_id(sub_id, vec![filter], None).await;
-
   // Get user's settings
-  let handle = app.clone();
-  // Spawn a thread to handle it
+  if let Ok(settings) = get_user_settings(client).await {
+    *state.settings.lock().unwrap() = settings
+  };
+
   tauri::async_runtime::spawn(async move {
     let window = handle.get_window("main").unwrap();
-    let state = window.state::<Nostr>();
-    let client = &state.client;
 
-    let ident = "lume:settings";
-    let filter = Filter::new()
-      .author(public_key)
-      .kind(Kind::ApplicationSpecificData)
-      .identifier(ident)
-      .limit(1);
-
-    if let Ok(events) = client
-      .get_events_of(vec![filter], Some(Duration::from_secs(5)))
-      .await
-    {
-      if let Some(event) = events.first() {
-        let content = event.content();
-        if let Ok(decrypted) = signer.nip44_decrypt(public_key, content).await {
-          let parsed: Settings =
-            serde_json::from_str(&decrypted).expect("Could not parse settings payload");
-
-          *state.settings.lock().unwrap() = parsed;
-        }
-      }
-    }
-  });
-
-  // Run sync service
-  let handle = app.clone();
-  // Spawn a thread to handle it
-  tauri::async_runtime::spawn(async move {
-    let window = handle.get_window("main").unwrap();
     let state = window.state::<Nostr>();
     let client = &state.client;
     let contact_list = state.contact_list.lock().unwrap().clone();
 
-    let notification = Filter::new()
-      .pubkey(public_key)
-      .kinds(vec![
-        Kind::TextNote,
-        Kind::Repost,
-        Kind::Reaction,
-        Kind::ZapReceipt,
-      ])
-      .limit(NOTIFICATION_NEG_LIMIT);
+    let signer = client.signer().await.unwrap();
+    let public_key = signer.public_key().await.unwrap();
+
+    if !contact_list.is_empty() {
+      let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
+
+      match client
+        .reconcile(
+          Filter::new()
+            .authors(authors)
+            .kinds(vec![Kind::TextNote, Kind::Repost])
+            .limit(NEWSFEED_NEG_LIMIT),
+          NegentropyOptions::default(),
+        )
+        .await
+      {
+        Ok(_) => {
+          if handle.emit_to(EventTarget::Any, "synced", true).is_err() {
+            println!("Emit event failed.")
+          }
+        }
+        Err(_) => println!("Sync newsfeed failed."),
+      }
+    };
 
     match client
-      .reconcile(notification, NegentropyOptions::default())
+      .reconcile(
+        Filter::new()
+          .pubkey(public_key)
+          .kinds(vec![
+            Kind::TextNote,
+            Kind::Repost,
+            Kind::Reaction,
+            Kind::ZapReceipt,
+          ])
+          .limit(NOTIFICATION_NEG_LIMIT),
+        NegentropyOptions::default(),
+      )
       .await
     {
       Ok(_) => {
@@ -324,34 +267,21 @@ pub async fn load_account(
       Err(_) => println!("Sync notification failed."),
     };
 
-    if !contact_list.is_empty() {
-      let authors: Vec<PublicKey> = contact_list.into_iter().map(|f| f.public_key).collect();
+    let subscription_id = SubscriptionId::new("notification");
+    let subscription = Filter::new()
+      .pubkey(public_key)
+      .kinds(vec![
+        Kind::TextNote,
+        Kind::Repost,
+        Kind::Reaction,
+        Kind::ZapReceipt,
+      ])
+      .since(Timestamp::now());
 
-      let newsfeed = Filter::new()
-        .authors(authors)
-        .kinds(vec![Kind::TextNote, Kind::Repost])
-        .limit(NEWSFEED_NEG_LIMIT);
-
-      match client
-        .reconcile(newsfeed, NegentropyOptions::default())
-        .await
-      {
-        Ok(_) => {
-          if handle.emit_to(EventTarget::Any, "synced", true).is_err() {
-            println!("Emit event failed.")
-          }
-        }
-        Err(_) => println!("Sync newsfeed failed."),
-      }
-    }
-  });
-
-  // Run notification service
-  // Spawn a thread to handle it
-  tauri::async_runtime::spawn(async move {
-    let window = app.get_window("main").unwrap();
-    let state = window.state::<Nostr>();
-    let client = &state.client;
+    // Subscribing for new notification...
+    client
+      .subscribe_with_id(subscription_id, vec![subscription], None)
+      .await;
 
     // Handle notifications
     client

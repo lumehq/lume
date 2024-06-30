@@ -122,6 +122,7 @@ function Screen() {
 			NostrQuery.getNotifications()
 				.then((data) => {
 					const sorted = data.sort((a, b) => b.created_at - a.created_at);
+					console.log("sorted");
 					setEvents(sorted);
 				})
 				.catch((e) => console.log(e));
@@ -156,7 +157,7 @@ function Screen() {
 	}
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex flex-col size-full overflow-hidden">
 			<div className="flex items-center justify-between px-4 border-b h-11 shrink-0 border-black/5 dark:border-white/5">
 				<div>
 					<h1 className="text-sm font-semibold">Notifications</h1>
@@ -176,102 +177,112 @@ function Screen() {
 					</button>
 				</div>
 			</div>
-			<Tabs.Root
-				defaultValue="replies"
-				className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-none"
+			<ScrollArea.Root
+				type={"scroll"}
+				scrollHideDelay={300}
+				className="flex-1 overflow-x-hidden"
 			>
-				<Tabs.List className="flex items-center">
-					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
-						value="replies"
-					>
-						Replies
-					</Tabs.Trigger>
-					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
-						value="reactions"
-					>
-						Reactions
-					</Tabs.Trigger>
-					<Tabs.Trigger
-						className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
-						value="zaps"
-					>
-						Zaps
-					</Tabs.Trigger>
-				</Tabs.List>
-				<div className="h-full">
-					<Tab value="replies">
-						{texts.map((event, index) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-							<TextNote key={event.id + index} event={event} />
-						))}
-					</Tab>
-					<Tab value="reactions">
-						{[...reactions.entries()].map(([root, events]) => (
-							<div
-								key={root}
-								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
-							>
-								<div className="flex flex-col flex-1 min-w-0 gap-2">
-									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
-										<RootNote id={root} />
-									</div>
-									<div className="flex flex-wrap items-center gap-3">
-										{events.map((event) => (
-											<User.Provider key={event.id} pubkey={event.pubkey}>
-												<User.Root className="shrink-0 flex rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
-													<User.Avatar className="flex-1 rounded-full size-7" />
-													<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
-														{event.kind === Kind.Reaction ? (
-															event.content === "+" ? (
-																"👍"
+				<Tabs.Root defaultValue="replies" className="h-full">
+					<Tabs.List className="flex items-center">
+						<Tabs.Trigger
+							className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+							value="replies"
+						>
+							Replies
+						</Tabs.Trigger>
+						<Tabs.Trigger
+							className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+							value="reactions"
+						>
+							Reactions
+						</Tabs.Trigger>
+						<Tabs.Trigger
+							className="flex-1 inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium border-b border-black/10 dark:border-white/10 data-[state=active]:border-black/30 dark:data-[state=active]:border-white/30 data-[state=inactive]:opacity-50"
+							value="zaps"
+						>
+							Zaps
+						</Tabs.Trigger>
+					</Tabs.List>
+					<div className="h-full">
+						<Tab value="replies">
+							{texts.map((event, index) => (
+								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+								<TextNote key={event.id + index} event={event} />
+							))}
+						</Tab>
+						<Tab value="reactions">
+							{[...reactions.entries()].map(([root, events]) => (
+								<div
+									key={root}
+									className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								>
+									<div className="flex flex-col flex-1 min-w-0 gap-2">
+										<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
+											<RootNote id={root} />
+										</div>
+										<div className="flex flex-wrap items-center gap-3">
+											{events.map((event) => (
+												<User.Provider key={event.id} pubkey={event.pubkey}>
+													<User.Root className="shrink-0 flex rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
+														<User.Avatar className="flex-1 rounded-full size-7" />
+														<div className="inline-flex items-center justify-center flex-1 text-xs truncate rounded-full size-7">
+															{event.kind === Kind.Reaction ? (
+																event.content === "+" ? (
+																	"👍"
+																) : (
+																	event.content
+																)
 															) : (
-																event.content
-															)
-														) : (
-															<RepostIcon className="text-teal-400 size-4 dark:text-teal-600" />
-														)}
-													</div>
-												</User.Root>
-											</User.Provider>
-										))}
+																<RepostIcon className="text-teal-400 size-4 dark:text-teal-600" />
+															)}
+														</div>
+													</User.Root>
+												</User.Provider>
+											))}
+										</div>
 									</div>
 								</div>
-							</div>
-						))}
-					</Tab>
-					<Tab value="zaps">
-						{[...zaps.entries()].map(([root, events]) => (
-							<div
-								key={root}
-								className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
-							>
-								<div className="flex flex-col flex-1 min-w-0 gap-2">
-									<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
-										<RootNote id={root} />
-									</div>
-									<div className="flex flex-wrap items-center gap-3">
-										{events.map((event) => (
-											<User.Provider
-												key={event.id}
-												pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
-											>
-												<User.Root className="shrink-0 flex gap-1.5 rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
-													<User.Avatar className="flex-1 rounded-full size-7" />
-													<div className="flex-1 h-7 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-sm truncate">
-														₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
-													</div>
-												</User.Root>
-											</User.Provider>
-										))}
+							))}
+						</Tab>
+						<Tab value="zaps">
+							{[...zaps.entries()].map(([root, events]) => (
+								<div
+									key={root}
+									className="flex flex-col gap-1 p-2 mb-2 rounded-lg shrink-0 backdrop-blur-md bg-black/10 dark:bg-white/10"
+								>
+									<div className="flex flex-col flex-1 min-w-0 gap-2">
+										<div className="flex items-center gap-2 pb-2 border-b border-black/5 dark:border-white/5">
+											<RootNote id={root} />
+										</div>
+										<div className="flex flex-wrap items-center gap-3">
+											{events.map((event) => (
+												<User.Provider
+													key={event.id}
+													pubkey={event.tags.find((tag) => tag[0] === "P")[1]}
+												>
+													<User.Root className="shrink-0 flex gap-1.5 rounded-full h-8 bg-black/10 dark:bg-white/10 backdrop-blur-md p-[2px]">
+														<User.Avatar className="rounded-full size-7" />
+														<div className="flex-1 h-7 w-max pr-1.5 rounded-full inline-flex items-center justify-center text-sm truncate">
+															₿ {decodeZapInvoice(event.tags).bitcoinFormatted}
+														</div>
+													</User.Root>
+												</User.Provider>
+											))}
+										</div>
 									</div>
 								</div>
-							</div>
-						))}
-					</Tab>
-				</div>
-			</Tabs.Root>
+							))}
+						</Tab>
+					</div>
+				</Tabs.Root>
+				<ScrollArea.Scrollbar
+					className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
+					orientation="vertical"
+				>
+					<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
+				</ScrollArea.Scrollbar>
+				<ScrollArea.Corner className="bg-transparent" />
+			</ScrollArea.Root>
 		</div>
 	);
 }
@@ -281,22 +292,9 @@ function Tab({ value, children }: { value: string; children: ReactNode[] }) {
 
 	return (
 		<Tabs.Content value={value} className="size-full">
-			<ScrollArea.Root
-				type={"scroll"}
-				scrollHideDelay={300}
-				className="overflow-hidden size-full"
-			>
-				<ScrollArea.Viewport ref={ref} className="h-full px-2 pt-2">
-					<Virtualizer scrollRef={ref}>{children}</Virtualizer>
-				</ScrollArea.Viewport>
-				<ScrollArea.Scrollbar
-					className="flex select-none touch-none p-0.5 duration-[160ms] ease-out data-[orientation=vertical]:w-2"
-					orientation="vertical"
-				>
-					<ScrollArea.Thumb className="flex-1 bg-black/10 dark:bg-white/10 rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]" />
-				</ScrollArea.Scrollbar>
-				<ScrollArea.Corner className="bg-transparent" />
-			</ScrollArea.Root>
+			<ScrollArea.Viewport ref={ref} className="h-full px-2 pt-2">
+				<Virtualizer scrollRef={ref}>{children}</Virtualizer>
+			</ScrollArea.Viewport>
 		</Tabs.Content>
 	);
 }
