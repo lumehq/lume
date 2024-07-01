@@ -335,7 +335,7 @@ function TextNote({ event }: { event: LumeEvent }) {
 									Reply to:
 								</span>
 								<div className="inline-flex items-baseline gap-1">
-									{pTags.map((replyTo) => (
+									{[...new Set(pTags)].map((replyTo) => (
 										<User.Provider key={replyTo} pubkey={replyTo}>
 											<User.Root>
 												<User.Name className="font-medium leading-tight" />

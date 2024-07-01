@@ -44,7 +44,7 @@ export const Column = memo(function Column({
 	useEffect(() => {
 		if (!isCreated) return;
 
-		const unlisten = listen<WindowEvent>("child-webview", (data) => {
+		const unlisten = listen<WindowEvent>("child_webview", (data) => {
 			if (data.payload.scroll) repositionWebview();
 			if (data.payload.resize) repositionWebview().then(() => resizeWebview());
 		});
@@ -84,15 +84,8 @@ export const Column = memo(function Column({
 	}, [account]);
 
 	return (
-		<div className="h-full w-[500px] shrink-0 p-2">
-			<div
-				className={cn(
-					"flex flex-col w-full h-full rounded-xl",
-					column.label !== "open"
-						? "bg-black/5 dark:bg-white/10 backdrop-blur"
-						: "",
-				)}
-			>
+		<div className="h-full w-[480px] shrink-0 p-2">
+			<div className="flex flex-col w-full h-full rounded-xl bg-black/5 dark:bg-white/10">
 				<Header label={column.label} name={column.name} />
 				<div ref={container} className="flex-1 w-full h-full" />
 			</div>

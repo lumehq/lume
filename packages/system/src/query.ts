@@ -8,26 +8,26 @@ import { nip19 } from "nostr-tools";
 import { type Result, type RichEvent, commands } from "./commands";
 import { LumeEvent } from "./event";
 
-export class NostrQuery {
-	static #toLumeEvents(richEvents: RichEvent[]) {
-		const events = richEvents.map((item) => {
-			const nostrEvent: NostrEvent = JSON.parse(item.raw);
+function toLumeEvents(richEvents: RichEvent[]) {
+	const events = richEvents.map((item) => {
+		const nostrEvent: NostrEvent = JSON.parse(item.raw);
 
-			if (item.parsed) {
-				nostrEvent.meta = item.parsed;
-			} else {
-				nostrEvent.meta = null;
-			}
+		if (item.parsed) {
+			nostrEvent.meta = item.parsed;
+		} else {
+			nostrEvent.meta = null;
+		}
 
-			const lumeEvent = new LumeEvent(nostrEvent);
+		const lumeEvent = new LumeEvent(nostrEvent);
 
-			return lumeEvent;
-		});
+		return lumeEvent;
+	});
 
-		return events;
-	}
+	return events;
+}
 
-	static async upload(filePath?: string) {
+export const NostrQuery = {
+	upload: async (filePath?: string) => {
 		const allowExts = [
 			"png",
 			"jpeg",
@@ -80,9 +80,8 @@ export class NostrQuery {
 		} catch (e) {
 			throw new Error(String(e));
 		}
-	}
-
-	static async getNotifications() {
+	},
+	getNotifications: async () => {
 		const query = await commands.getNotifications();
 
 		if (query.status === "ok") {
@@ -94,9 +93,8 @@ export class NostrQuery {
 			console.error(query.error);
 			return [];
 		}
-	}
-
-	static async getProfile(pubkey: string) {
+	},
+	getProfile: async (pubkey: string) => {
 		const normalize = pubkey.replace("nostr:", "").replace(/[^\w\s]/gi, "");
 		const query = await commands.getProfile(normalize);
 
@@ -106,9 +104,8 @@ export class NostrQuery {
 		} else {
 			return null;
 		}
-	}
-
-	static async getEvent(id: string, hint?: string) {
+	},
+	getEvent: async (id: string, hint?: string) => {
 		// Validate ID
 		const normalizeId: string = id
 			.replace("nostr:", "")
@@ -150,9 +147,8 @@ export class NostrQuery {
 			console.log("[getEvent]: ", query.error);
 			return null;
 		}
-	}
-
-	static async getRepostEvent(event: LumeEvent) {
+	},
+	getRepostEvent: async (event: LumeEvent) => {
 		try {
 			const embed: NostrEvent = JSON.parse(event.content);
 			const query = await commands.getEventMeta(embed.content);
@@ -181,33 +177,30 @@ export class NostrQuery {
 				return null;
 			}
 		}
-	}
-
-	static async getUserEvents(pubkey: string, asOf?: number) {
+	},
+	getUserEvents: async (pubkey: string, asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getEventsBy(pubkey, until);
 
 		if (query.status === "ok") {
-			const data = NostrQuery.#toLumeEvents(query.data);
+			const data = toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
 		}
-	}
-
-	static async getLocalEvents(asOf?: number) {
+	},
+	getLocalEvents: async (asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getLocalEvents(until);
 
 		if (query.status === "ok") {
-			const data = NostrQuery.#toLumeEvents(query.data);
+			const data = toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
 		}
-	}
-
-	static async listenLocalEvent() {
+	},
+	listenLocalEvent: async () => {
 		const label = getCurrent().label;
 		const query = await commands.listenLocalEvent(label);
 
@@ -216,46 +209,42 @@ export class NostrQuery {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async getGroupEvents(pubkeys: string[], asOf?: number) {
+	},
+	getGroupEvents: async (pubkeys: string[], asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getGroupEvents(pubkeys, until);
 
 		if (query.status === "ok") {
-			const data = NostrQuery.#toLumeEvents(query.data);
+			const data = toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
 		}
-	}
-
-	static async getGlobalEvents(asOf?: number) {
+	},
+	getGlobalEvents: async (asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const query = await commands.getGlobalEvents(until);
 
 		if (query.status === "ok") {
-			const data = NostrQuery.#toLumeEvents(query.data);
+			const data = toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
 		}
-	}
-
-	static async getHashtagEvents(hashtags: string[], asOf?: number) {
+	},
+	getHashtagEvents: async (hashtags: string[], asOf?: number) => {
 		const until: string = asOf && asOf > 0 ? asOf.toString() : undefined;
 		const nostrTags = hashtags.map((tag) => tag.replace("#", ""));
 		const query = await commands.getHashtagEvents(nostrTags, until);
 
 		if (query.status === "ok") {
-			const data = NostrQuery.#toLumeEvents(query.data);
+			const data = toLumeEvents(query.data);
 			return data;
 		} else {
 			return [];
 		}
-	}
-
-	static async verifyNip05(pubkey: string, nip05?: string) {
+	},
+	verifyNip05: async (pubkey: string, nip05?: string) => {
 		const query = await commands.verifyNip05(pubkey, nip05);
 
 		if (query.status === "ok") {
@@ -263,9 +252,8 @@ export class NostrQuery {
 		} else {
 			return false;
 		}
-	}
-
-	static async getNstore(key: string) {
+	},
+	getNstore: async (key: string) => {
 		const query = await commands.getNstore(key);
 
 		if (query.status === "ok") {
@@ -274,9 +262,8 @@ export class NostrQuery {
 		} else {
 			return null;
 		}
-	}
-
-	static async setNstore(key: string, value: string) {
+	},
+	setNstore: async (key: string, value: string) => {
 		const query = await commands.setNstore(key, value);
 
 		if (query.status === "ok") {
@@ -284,9 +271,8 @@ export class NostrQuery {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async getUserSettings() {
+	},
+	getUserSettings: async () => {
 		const query = await commands.getSettings();
 
 		if (query.status === "ok") {
@@ -294,9 +280,8 @@ export class NostrQuery {
 		} else {
 			return query.error;
 		}
-	}
-
-	static async setUserSettings(newSettings: string) {
+	},
+	setUserSettings: async (newSettings: string) => {
 		const query = await commands.setNewSettings(newSettings);
 
 		if (query.status === "ok") {
@@ -304,9 +289,8 @@ export class NostrQuery {
 		} else {
 			return query.error;
 		}
-	}
-
-	static async getColumns() {
+	},
+	getColumns: async () => {
 		const key = "lume:columns";
 		const systemPath = "resources/system_columns.json";
 		const resourcePath = await resolveResource(systemPath);
@@ -331,9 +315,8 @@ export class NostrQuery {
 		} catch {
 			return systemColumns;
 		}
-	}
-
-	static async setColumns(columns: LumeColumn[]) {
+	},
+	setColumns: async (columns: LumeColumn[]) => {
 		const key = "lume:columns";
 		const content = JSON.stringify(columns);
 		const query = await commands.setNstore(key, content);
@@ -343,9 +326,8 @@ export class NostrQuery {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async getRelays() {
+	},
+	getRelays: async () => {
 		const query = await commands.getRelays();
 
 		if (query.status === "ok") {
@@ -353,9 +335,8 @@ export class NostrQuery {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async connectRelay(url: string) {
+	},
+	connectRelay: async (url: string) => {
 		const relayUrl = new URL(url);
 
 		if (relayUrl.protocol === "wss:" || relayUrl.protocol === "ws:") {
@@ -367,9 +348,8 @@ export class NostrQuery {
 				throw new Error(query.error);
 			}
 		}
-	}
-
-	static async removeRelay(url: string) {
+	},
+	removeRelay: async (url: string) => {
 		const relayUrl = new URL(url);
 
 		if (relayUrl.protocol === "wss:" || relayUrl.protocol === "ws:") {
@@ -381,9 +361,8 @@ export class NostrQuery {
 				throw new Error(query.error);
 			}
 		}
-	}
-
-	static async getBootstrapRelays() {
+	},
+	getBootstrapRelays: async () => {
 		const query = await commands.getBootstrapRelays();
 
 		if (query.status === "ok") {
@@ -401,9 +380,8 @@ export class NostrQuery {
 		} else {
 			return [];
 		}
-	}
-
-	static async saveBootstrapRelays(relays: Relay[]) {
+	},
+	saveBootstrapRelays: async (relays: Relay[]) => {
 		const text = relays
 			.map((relay) => Object.values(relay).join(","))
 			.join("\n");
@@ -414,9 +392,8 @@ export class NostrQuery {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async unlisten(id?: string) {
+	},
+	unlisten: async (id?: string) => {
 		const label = id ? id : getCurrent().label;
 		const query = await commands.unlisten(label);
 
@@ -425,5 +402,5 @@ export class NostrQuery {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-}
+	},
+};

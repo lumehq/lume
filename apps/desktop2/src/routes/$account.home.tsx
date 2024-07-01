@@ -1,6 +1,6 @@
 import { Column } from "@/components/column";
 import { Toolbar } from "@/components/toolbar";
-import { ArrowLeftIcon, ArrowRightIcon } from "@lume/icons";
+import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from "@lume/icons";
 import { NostrQuery } from "@lume/system";
 import type { ColumnEvent, LumeColumn } from "@lume/types";
 import { createFileRoute } from "@tanstack/react-router";
@@ -38,11 +38,22 @@ function Screen() {
 	}, [emblaApi]);
 
 	const emitScrollEvent = useCallback(() => {
-		getCurrent().emit("child-webview", { scroll: true });
+		getCurrent().emit("child_webview", { scroll: true });
 	}, []);
 
 	const emitResizeEvent = useCallback(() => {
-		getCurrent().emit("child-webview", { resize: true, direction: "x" });
+		getCurrent().emit("child_webview", { resize: true, direction: "x" });
+	}, []);
+
+	const openLumeStore = useCallback(async () => {
+		await getCurrent().emit("columns", {
+			type: "add",
+			column: {
+				label: "store",
+				name: "Store",
+				content: "/store/official",
+			},
+		});
 	}, []);
 
 	const add = useDebouncedCallback((column: LumeColumn) => {
@@ -144,6 +155,18 @@ function Screen() {
 							account={account}
 						/>
 					))}
+					<div className="shrink-0 p-2 h-full w-[480px]">
+						<div className="size-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center justify-center">
+							<button
+								type="button"
+								onClick={() => openLumeStore()}
+								className="inline-flex items-center justify-center gap-0.5 rounded-full text-sm font-medium h-8 w-max pl-1.5 pr-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10"
+							>
+								<PlusIcon className="size-5" />
+								Add Column
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 			<Toolbar>

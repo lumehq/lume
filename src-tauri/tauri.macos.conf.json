@@ -14,8 +14,8 @@
         "titleBarStyle": "Overlay",
         "width": 1045,
         "height": 800,
-        "minWidth": 500,
-        "minHeight": 800,
+        "minWidth": 480,
+        "minHeight": 760,
         "hiddenTitle": true,
         "windowEffects": {
           "state": "followsWindowActiveState",

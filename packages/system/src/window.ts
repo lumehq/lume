@@ -2,13 +2,12 @@ import type { NostrEvent } from "@lume/types";
 import { commands } from "./commands";
 import type { LumeEvent } from "./event";
 
-export class LumeWindow {
-	static async openMainWindow() {
+export const LumeWindow = {
+	openMainWindow: async () => {
 		const query = await commands.openMainWindow();
 		return query;
-	}
-
-	static async openEvent(event: NostrEvent | LumeEvent) {
+	},
+	openEvent: async (event: NostrEvent | LumeEvent) => {
 		const eTags = event.tags.filter((tag) => tag[0] === "e" || tag[0] === "q");
 		const root: string =
 			eTags.find((el) => el[3] === "root")?.[1] ?? eTags[0]?.[1];
@@ -34,9 +33,8 @@ export class LumeWindow {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async openProfile(pubkey: string) {
+	},
+	openProfile: async (pubkey: string) => {
 		const label = `user-${pubkey}`;
 		const query = await commands.openWindow({
 			label,
@@ -54,9 +52,8 @@ export class LumeWindow {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async openEditor(reply_to?: string, quote?: string) {
+	},
+	openEditor: async (reply_to?: string, quote?: string) => {
 		let url: string;
 
 		if (reply_to) {
@@ -88,9 +85,8 @@ export class LumeWindow {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async openZap(id: string) {
+	},
+	openZap: async (id: string) => {
 		const wallet = await commands.loadWallet();
 
 		if (wallet.status === "ok") {
@@ -107,9 +103,8 @@ export class LumeWindow {
 		} else {
 			await LumeWindow.openSettings("bitcoin-connect");
 		}
-	}
-
-	static async openSettings(path?: string) {
+	},
+	openSettings: async (path?: string) => {
 		const label = "settings";
 		const query = await commands.openWindow({
 			label,
@@ -127,9 +122,8 @@ export class LumeWindow {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async openSearch(searchType: "notes" | "users", searchQuery: string) {
+	},
+	openSearch: async (searchType: "notes" | "users", searchQuery: string) => {
 		const url = `/search/${searchType}?query=${searchQuery}`;
 		const label = `search-${searchQuery
 			.toLowerCase()
@@ -153,5 +147,5 @@ export class LumeWindow {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-}
+	},
+};

@@ -2,7 +2,6 @@ import { User } from "@/components/user";
 import { LinkIcon } from "@lume/icons";
 import { LumeWindow, useEvent } from "@lume/system";
 import { Spinner } from "@lume/ui";
-import { cn } from "@lume/utils";
 
 export function MentionNote({
 	eventId,

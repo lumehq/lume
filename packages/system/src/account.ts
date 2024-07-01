@@ -1,8 +1,8 @@
 import type { Metadata } from "@lume/types";
 import { type Result, commands } from "./commands";
 
-export class NostrAccount {
-	static async getAccounts() {
+export const NostrAccount = {
+	getAccounts: async () => {
 		const query = await commands.getAccounts();
 
 		if (query.status === "ok") {
@@ -10,9 +10,8 @@ export class NostrAccount {
 		} else {
 			return [];
 		}
-	}
-
-	static async loadAccount(npub: string) {
+	},
+	loadAccount: async (npub: string) => {
 		const bunker: string = localStorage.getItem(`${npub}_bunker`);
 		let query: Result<boolean, string>;
 
@@ -27,9 +26,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async createAccount() {
+	},
+	createAccount: async () => {
 		const query = await commands.createAccount();
 
 		if (query.status === "ok") {
@@ -37,9 +35,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async createProfile(profile: Metadata) {
+	},
+	createProfile: async (profile: Metadata) => {
 		const query = await commands.createProfile(
 			profile.name || "",
 			profile.display_name || "",
@@ -56,9 +53,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async saveAccount(nsec: string, password = "") {
+	},
+	saveAccount: async (nsec: string, password = "") => {
 		const query = await commands.saveAccount(nsec, password);
 
 		if (query.status === "ok") {
@@ -66,9 +62,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async connectRemoteAccount(uri: string) {
+	},
+	connectRemoteAccount: async (uri: string) => {
 		const connect = await commands.connectRemoteAccount(uri);
 
 		if (connect.status === "ok") {
@@ -83,9 +78,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(connect.error);
 		}
-	}
-
-	static async setContactList(pubkeys: string[]) {
+	},
+	setContactList: async (pubkeys: string[]) => {
 		const query = await commands.setContactList(pubkeys);
 
 		if (query.status === "ok") {
@@ -93,9 +87,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async loadWallet() {
+	},
+	loadWallet: async () => {
 		const query = await commands.loadWallet();
 
 		if (query.status === "ok") {
@@ -103,9 +96,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async setWallet(uri: string) {
+	},
+	setWallet: async (uri: string) => {
 		const query = await commands.setWallet(uri);
 
 		if (query.status === "ok") {
@@ -113,9 +105,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async removeWallet() {
+	},
+	removeWallet: async () => {
 		const query = await commands.removeWallet();
 
 		if (query.status === "ok") {
@@ -123,9 +114,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async getProfile() {
+	},
+	getProfile: async () => {
 		const query = await commands.getCurrentProfile();
 
 		if (query.status === "ok") {
@@ -133,9 +123,8 @@ export class NostrAccount {
 		} else {
 			return null;
 		}
-	}
-
-	static async getContactList() {
+	},
+	getContactList: async () => {
 		const query = await commands.getContactList();
 
 		if (query.status === "ok") {
@@ -143,9 +132,8 @@ export class NostrAccount {
 		} else {
 			return [];
 		}
-	}
-
-	static async isContactListEmpty() {
+	},
+	isContactListEmpty: async () => {
 		const query = await commands.isContactListEmpty();
 
 		if (query.status === "ok") {
@@ -153,9 +141,8 @@ export class NostrAccount {
 		} else {
 			return true;
 		}
-	}
-
-	static async checkContact(pubkey: string) {
+	},
+	checkContact: async (pubkey: string) => {
 		const query = await commands.checkContact(pubkey);
 
 		if (query.status === "ok") {
@@ -163,9 +150,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async toggleContact(pubkey: string, alias?: string) {
+	},
+	toggleContact: async (pubkey: string, alias?: string) => {
 		const query = await commands.toggleContact(pubkey, alias);
 
 		if (query.status === "ok") {
@@ -173,9 +159,8 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-
-	static async f2f(npub: string) {
+	},
+	f2f: async (npub: string) => {
 		const query = await commands.friendToFriend(npub);
 
 		if (query.status === "ok") {
@@ -183,5 +168,5 @@ export class NostrAccount {
 		} else {
 			throw new Error(query.error);
 		}
-	}
-}
+	},
+};

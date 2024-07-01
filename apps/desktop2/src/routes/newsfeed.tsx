@@ -65,7 +65,6 @@ export function Screen() {
 		},
 		getNextPageParam: (lastPage) => lastPage?.at(-1)?.created_at - 1,
 		select: (data) => data?.pages.flat(),
-		refetchOnWindowFocus: false,
 	});
 
 	const ref = useRef<HTMLDivElement>(null);
@@ -196,22 +195,16 @@ function Listerner() {
 	};
 
 	useEffect(() => {
-		const unlistenEvent = getCurrent().listen<Payload>("new_event", (data) => {
+		const unlisten = getCurrent().listen<Payload>("new_event", (data) => {
 			const event = LumeEvent.from(data.payload.raw, data.payload.parsed);
 			setEvents((prev) => [event, ...prev]);
 		});
 
-		const unlistenWindow = getCurrent().onCloseRequested(async () => {
-			await NostrQuery.unlisten();
-			await getCurrent().destroy();
-		});
-
-		// Listen for new event
 		NostrQuery.listenLocalEvent().then(() => console.log("listen"));
 
 		return () => {
-			unlistenEvent.then((f) => f());
-			unlistenWindow.then((f) => f());
+			unlisten.then((f) => f());
+			NostrQuery.unlisten().then(() => console.log("unlisten"));
 		};
 	}, []);
 
